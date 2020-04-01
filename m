@@ -2,251 +2,162 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F0CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F25C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4302074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC4C2074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbgDAFnw (ORCPT
+        id S1731795AbgDAFtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 01:43:52 -0400
-Received: from mga06.intel.com ([134.134.136.31]:58537 "EHLO mga06.intel.com"
+        Wed, 1 Apr 2020 01:49:00 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26449 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731721AbgDAFnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 01:43:52 -0400
-IronPort-SDR: 9r+UcJ2kPXLmleASsmHRRIr/lQpMe36ERG/8xfuAgqO2K50F+BGWPcQYcHcn6zxw2O7iEHJX1P
- tDY4PM3A4ujg==
+        id S1731680AbgDAFtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 01:49:00 -0400
+IronPort-SDR: r+3BODFmMufW3RW++NP/1qV/WJiub9X6caTXzDePWiInSV0YZ53BtXB9RPcMDswsSUIGa+i1Zs
+ 7nqsLadf1mkw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 22:43:51 -0700
-IronPort-SDR: GcFnpFPDo6u6p+fqdxihNuEiWlnDv6OHcrnw8AT7V77kaondCJakSpbBfp35ZvJ3zMwrSwaeh9
- a0AS0tblAUpg==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 22:48:58 -0700
+IronPort-SDR: 7F7PdIS2xCZmhzkXLJ3uAcW5TFuJwjdoFIa5fbsUlAHxTjs+DLBgtElBuNQEzzo3uSmyUEzJO4
+ hqka6yWk4X3w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
-   d="scan'208";a="395832671"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga004.jf.intel.com with ESMTP; 31 Mar 2020 22:43:49 -0700
-Date:   Wed, 1 Apr 2020 13:41:25 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, trix@redhat.com, bhu@redhat.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v3 2/7] fpga: dfl: pci: add irq info for feature devices
-  enumeration
-Message-ID: <20200401054125.GB4618@yilunxu-OptiPlex-7050>
-References: <1585038763-22944-1-git-send-email-yilun.xu@intel.com>
- <1585038763-22944-3-git-send-email-yilun.xu@intel.com>
- <20200331044120.GB8468@hao-dev>
- <20200401025902.GA4212@yilunxu-OptiPlex-7050>
- <20200401034430.GB28603@hao-dev>
+   d="scan'208";a="238014662"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga007.jf.intel.com with ESMTP; 31 Mar 2020 22:48:57 -0700
+Received: from fmsmsx121.amr.corp.intel.com (10.18.125.36) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 31 Mar 2020 22:48:57 -0700
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ fmsmsx121.amr.corp.intel.com (10.18.125.36) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 31 Mar 2020 22:48:57 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.213]) with mapi id 14.03.0439.000;
+ Wed, 1 Apr 2020 13:48:53 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Topic: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Index: AQHWAEUbC4GB74LMekup8jIcF6WIFqhgVMYAgACL5QCAANaCgIAAmyhQgAD31QCAAIZ4AA==
+Date:   Wed, 1 Apr 2020 05:48:52 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A21C370@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF378@SHSMSX104.ccr.corp.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A2184AE@SHSMSX104.ccr.corp.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D801104@SHSMSX104.ccr.corp.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A21B065@SHSMSX104.ccr.corp.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D803B6A@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D803B6A@SHSMSX104.ccr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401034430.GB28603@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 11:44:30AM +0800, Wu Hao wrote:
-> On Wed, Apr 01, 2020 at 10:59:02AM +0800, Xu Yilun wrote:
-> > On Tue, Mar 31, 2020 at 12:41:20PM +0800, Wu Hao wrote:
-> > > On Tue, Mar 24, 2020 at 04:32:38PM +0800, Xu Yilun wrote:
-> > > > Some DFL FPGA PCIe cards (e.g. Intel FPGA Programmable Acceleration
-> > > > Card) support MSI-X based interrupts. This patch allows PCIe driver
-> > > > to prepare and pass interrupt resources to DFL via enumeration API.
-> > > > These interrupt resources could then be assigned to actual features
-> > > > which use them.
-> > > > 
-> > > > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > > ----
-> > > > v2: put irq resources init code inside cce_enumerate_feature_dev()
-> > > >     Some minor changes for Hao's comments.
-> > > > v3: Some minor fix for Hao's comments for v2.
-> > > > ---
-> > > >  drivers/fpga/dfl-pci.c | 76 ++++++++++++++++++++++++++++++++++++++++++++------
-> > > >  1 file changed, 67 insertions(+), 9 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> > > > index 5387550..66027aa 100644
-> > > > --- a/drivers/fpga/dfl-pci.c
-> > > > +++ b/drivers/fpga/dfl-pci.c
-> > > > @@ -39,6 +39,28 @@ static void __iomem *cci_pci_ioremap_bar(struct pci_dev *pcidev, int bar)
-> > > >  	return pcim_iomap_table(pcidev)[bar];
-> > > >  }
-> > > >  
-> > > > +static int cci_pci_alloc_irq(struct pci_dev *pcidev)
-> > > > +{
-> > > > +	int nvec = pci_msix_vec_count(pcidev);
-> > > > +	int ret;
-> > > 
-> > > maybe int ret, nvec = pci_msix..
-> > > 
-> > > > +
-> > > > +	if (nvec <= 0) {
-> > > > +		dev_dbg(&pcidev->dev, "fpga interrupt not supported\n");
-> > > > +		return 0;
-> > > > +	}
-> > > > +
-> > > > +	ret = pci_alloc_irq_vectors(pcidev, nvec, nvec, PCI_IRQ_MSIX);
-> > > > +	if (ret < 0)
-> > > > +		return ret;
-> > > > +
-> > > > +	return nvec;
-> > > > +}
-> > > > +
-> > > > +static void cci_pci_free_irq(struct pci_dev *pcidev)
-> > > > +{
-> > > > +	pci_free_irq_vectors(pcidev);
-> > > > +}
-> > > > +
-> > > >  /* PCI Device ID */
-> > > >  #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
-> > > >  #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
-> > > > @@ -78,17 +100,33 @@ static void cci_remove_feature_devs(struct pci_dev *pcidev)
-> > > >  
-> > > >  	/* remove all children feature devices */
-> > > >  	dfl_fpga_feature_devs_remove(drvdata->cdev);
-> > > > +	cci_pci_free_irq(pcidev);
-> > > > +}
-> > > > +
-> > > > +static int *cci_pci_create_irq_table(struct pci_dev *pcidev, unsigned int nvec)
-> > > > +{
-> > > > +	unsigned int i;
-> > > > +	int *table;
-> > > > +
-> > > > +	table = kcalloc(nvec, sizeof(int), GFP_KERNEL);
-> > > > +	if (table) {
-> > > > +		for (i = 0; i < nvec; i++)
-> > > > +			table[i] = pci_irq_vector(pcidev, i);
-> > > > +	}
-> > > > +
-> > > > +	return table;
-> > > >  }
-> > > >  
-> > > >  /* enumerate feature devices under pci device */
-> > > >  static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> > > >  {
-> > > >  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
-> > > > +	int port_num, bar, i, nvec, ret = 0;
-> > > >  	struct dfl_fpga_enum_info *info;
-> > > >  	struct dfl_fpga_cdev *cdev;
-> > > >  	resource_size_t start, len;
-> > > > -	int port_num, bar, i, ret = 0;
-> > > >  	void __iomem *base;
-> > > > +	int *irq_table;
-> > > >  	u32 offset;
-> > > >  	u64 v;
-> > > >  
-> > > > @@ -97,11 +135,30 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> > > >  	if (!info)
-> > > >  		return -ENOMEM;
-> > > >  
-> > > > +	/* add irq info for enumeration if the device support irq */
-> > > > +	nvec = cci_pci_alloc_irq(pcidev);
-> > > > +	if (nvec < 0) {
-> > > > +		dev_err(&pcidev->dev, "Fail to alloc irq %d.\n", nvec);
-> > > > +		ret = nvec;
-> > > > +		goto enum_info_free_exit;
-> > > > +	} else if (nvec) {
-> > > > +		irq_table = cci_pci_create_irq_table(pcidev, nvec);
-> > > > +		if (!irq_table) {
-> > > > +			ret = -ENOMEM;
-> > > > +			goto irq_free_exit;
-> > > > +		}
-> > > > +
-> > > > +		ret = dfl_fpga_enum_info_add_irq(info, nvec, irq_table);
-> > > > +		kfree(irq_table);
-> > > 
-> > > i see you create a function for cci_pci_free_irq instead of using kernel api
-> > > directly, to make it more readable, so why not have a remove irq table function
-> > > here too.
-> > 
-> > The irq_table is not alloced in cci_pci_alloc_irq,
-> > cci_pci_create_irq_table does. Actually cci_pci_alloc/free_irq are not
-> > related to irq_table for DFL.
-> > 
-> > So maybe we don't have to change this?
-> 
-> I mean, you have cci_pci_alloc/free_irq but cci_pci_create_irq_table/kfree.
-> why don't you use cci_pci_remove_irq_table or something instead of kfree?
-
-Sorry for my misunderstanding. I can make this change. Thanks.
-
-> 
-> Hao
-> 
-> > 
-> > > 
-> > > Actually patch looks good to me, with above minor fixes.
-> > > 
-> > > Acked-by: Wu Hao <hao.wu@intel.com>
-> > > 
-> > > Hao
-> > > 
-> > > > +		if (ret)
-> > > > +			goto irq_free_exit;
-> > > > +	}
-> > > > +
-> > > >  	/* start to find Device Feature List from Bar 0 */
-> > > >  	base = cci_pci_ioremap_bar(pcidev, 0);
-> > > >  	if (!base) {
-> > > >  		ret = -ENOMEM;
-> > > > -		goto enum_info_free_exit;
-> > > > +		goto irq_free_exit;
-> > > >  	}
-> > > >  
-> > > >  	/*
-> > > > @@ -154,7 +211,7 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> > > >  		dfl_fpga_enum_info_add_dfl(info, start, len, base);
-> > > >  	} else {
-> > > >  		ret = -ENODEV;
-> > > > -		goto enum_info_free_exit;
-> > > > +		goto irq_free_exit;
-> > > >  	}
-> > > >  
-> > > >  	/* start enumeration with prepared enumeration information */
-> > > > @@ -162,11 +219,14 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> > > >  	if (IS_ERR(cdev)) {
-> > > >  		dev_err(&pcidev->dev, "Enumeration failure\n");
-> > > >  		ret = PTR_ERR(cdev);
-> > > > -		goto enum_info_free_exit;
-> > > > +		goto irq_free_exit;
-> > > >  	}
-> > > >  
-> > > >  	drvdata->cdev = cdev;
-> > > >  
-> > > > +irq_free_exit:
-> > > > +	if (ret)
-> > > > +		cci_pci_free_irq(pcidev);
-> > > >  enum_info_free_exit:
-> > > >  	dfl_fpga_enum_info_free(info);
-> > > >  
-> > > > @@ -211,12 +271,10 @@ int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
-> > > >  	}
-> > > >  
-> > > >  	ret = cci_enumerate_feature_devs(pcidev);
-> > > > -	if (ret) {
-> > > > -		dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
-> > > > -		goto disable_error_report_exit;
-> > > > -	}
-> > > > +	if (!ret)
-> > > > +		return ret;
-> > > >  
-> > > > -	return ret;
-> > > > +	dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
-> > > >  
-> > > >  disable_error_report_exit:
-> > > >  	pci_disable_pcie_error_reporting(pcidev);
-> > > > -- 
-> > > > 2.7.4
+PiBGcm9tOiBUaWFuLCBLZXZpbiA8a2V2aW4udGlhbkBpbnRlbC5jb20+DQo+IFNlbnQ6IFdlZG5l
+c2RheSwgQXByaWwgMSwgMjAyMCAxOjQzIFBNDQo+IFRvOiBMaXUsIFlpIEwgPHlpLmwubGl1QGlu
+dGVsLmNvbT47IGFsZXgud2lsbGlhbXNvbkByZWRoYXQuY29tOw0KPiBTdWJqZWN0OiBSRTogW1BB
+VENIIHYxIDEvOF0gdmZpbzogQWRkIFZGSU9fSU9NTVVfUEFTSURfUkVRVUVTVChhbGxvYy9mcmVl
+KQ0KPiANCj4gPiBGcm9tOiBMaXUsIFlpIEwgPHlpLmwubGl1QGludGVsLmNvbT4NCj4gPiBTZW50
+OiBUdWVzZGF5LCBNYXJjaCAzMSwgMjAyMCA5OjIyIFBNDQo+ID4NCj4gPiA+IEZyb206IFRpYW4s
+IEtldmluIDxrZXZpbi50aWFuQGludGVsLmNvbT4NCj4gPiA+IFNlbnQ6IFR1ZXNkYXksIE1hcmNo
+IDMxLCAyMDIwIDE6NDEgUE0NCj4gPiA+IFRvOiBMaXUsIFlpIEwgPHlpLmwubGl1QGludGVsLmNv
+bT47IGFsZXgud2lsbGlhbXNvbkByZWRoYXQuY29tOw0KPiA+ID4gZXJpYy5hdWdlckByZWRoYXQu
+Y29tDQo+ID4gPiBTdWJqZWN0OiBSRTogW1BBVENIIHYxIDEvOF0gdmZpbzogQWRkDQo+ID4gVkZJ
+T19JT01NVV9QQVNJRF9SRVFVRVNUKGFsbG9jL2ZyZWUpDQo+ID4gPg0KPiA+ID4gPiBGcm9tOiBM
+aXUsIFlpIEwgPHlpLmwubGl1QGludGVsLmNvbT4NCj4gPiA+ID4gU2VudDogTW9uZGF5LCBNYXJj
+aCAzMCwgMjAyMCAxMDozNyBQTQ0KPiA+ID4gPg0KPiA+ID4gPiA+IEZyb206IFRpYW4sIEtldmlu
+IDxrZXZpbi50aWFuQGludGVsLmNvbT4NCj4gPiA+ID4gPiBTZW50OiBNb25kYXksIE1hcmNoIDMw
+LCAyMDIwIDQ6MzIgUE0NCj4gPiA+ID4gPiBUbzogTGl1LCBZaSBMIDx5aS5sLmxpdUBpbnRlbC5j
+b20+OyBhbGV4LndpbGxpYW1zb25AcmVkaGF0LmNvbTsNCj4gPiA+ID4gPiBTdWJqZWN0OiBSRTog
+W1BBVENIIHYxIDEvOF0gdmZpbzogQWRkDQo+ID4gPiA+IFZGSU9fSU9NTVVfUEFTSURfUkVRVUVT
+VChhbGxvYy9mcmVlKQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBGcm9tOiBMaXUsIFlpIEwgPHlp
+LmwubGl1QGludGVsLmNvbT4NCj4gPiA+ID4gPiA+IFNlbnQ6IFN1bmRheSwgTWFyY2ggMjIsIDIw
+MjAgODozMiBQTQ0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IEZyb206IExpdSBZaSBMIDx5aS5s
+LmxpdUBpbnRlbC5jb20+DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gRm9yIGEgbG9uZyB0aW1l
+LCBkZXZpY2VzIGhhdmUgb25seSBvbmUgRE1BIGFkZHJlc3Mgc3BhY2UgZnJvbQ0KPiA+ID4gPiA+
+ID4gcGxhdGZvcm0gSU9NTVUncyBwb2ludCBvZiB2aWV3LiBUaGlzIGlzIHRydWUgZm9yIGJvdGgg
+YmFyZQ0KPiA+ID4gPiA+ID4gbWV0YWwgYW5kIGRpcmVjdGVkLSBhY2Nlc3MgaW4gdmlydHVhbGl6
+YXRpb24gZW52aXJvbm1lbnQuDQo+ID4gPiA+ID4gPiBSZWFzb24gaXMgdGhlIHNvdXJjZSBJRCBv
+ZiBETUEgaW4gUENJZSBhcmUgQkRGIChidXMvZGV2L2ZuYw0KPiA+ID4gPiA+ID4gSUQpLCB3aGlj
+aCByZXN1bHRzIGluIG9ubHkgZGV2aWNlIGdyYW51bGFyaXR5DQpbLi4uXQ0KPiA+ID4NCj4gPiA+
+ID4NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJCXN3aXRjaCAocmVxLmZsYWdzICYgVkZJ
+T19QQVNJRF9SRVFVRVNUX01BU0spIHsNCj4gPiA+ID4gPiA+ICsJCWNhc2UgVkZJT19JT01NVV9Q
+QVNJRF9BTExPQzoNCj4gPiA+ID4gPiA+ICsJCXsNCj4gPiA+ID4gPiA+ICsJCQlpbnQgcmV0ID0g
+MCwgcmVzdWx0Ow0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKwkJCXJlc3VsdCA9DQo+ID4g
+dmZpb19pb21tdV90eXBlMV9wYXNpZF9hbGxvYyhpb21tdSwNCj4gPiA+ID4gPiA+ICsNCj4gPiAJ
+cmVxLmFsbG9jX3Bhc2lkLm1pbiwNCj4gPiA+ID4gPiA+ICsNCj4gPiAJcmVxLmFsbG9jX3Bhc2lk
+Lm1heCk7DQo+ID4gPiA+ID4gPiArCQkJaWYgKHJlc3VsdCA+IDApIHsNCj4gPiA+ID4gPiA+ICsJ
+CQkJb2Zmc2V0ID0gb2Zmc2V0b2YoDQo+ID4gPiA+ID4gPiArCQkJCQlzdHJ1Y3QNCj4gPiA+ID4g
+PiA+IHZmaW9faW9tbXVfdHlwZTFfcGFzaWRfcmVxdWVzdCwNCj4gPiA+ID4gPiA+ICsJCQkJCWFs
+bG9jX3Bhc2lkLnJlc3VsdCk7DQo+ID4gPiA+ID4gPiArCQkJCXJldCA9IGNvcHlfdG9fdXNlcigN
+Cj4gPiA+ID4gPiA+ICsJCQkJCSAgICAgICh2b2lkIF9fdXNlciAqKSAoYXJnICsNCj4gPiBvZmZz
+ZXQpLA0KPiA+ID4gPiA+ID4gKwkJCQkJICAgICAgJnJlc3VsdCwgc2l6ZW9mKHJlc3VsdCkpOw0K
+PiA+ID4gPiA+ID4gKwkJCX0gZWxzZSB7DQo+ID4gPiA+ID4gPiArCQkJCXByX2RlYnVnKCIlczog
+UEFTSUQgYWxsb2MgZmFpbGVkXG4iLA0KPiA+ID4gPiA+ID4gX19mdW5jX18pOw0KPiA+ID4gPiA+
+ID4gKwkJCQlyZXQgPSAtRUZBVUxUOw0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gbm8sIHRoaXMgYnJh
+bmNoIGlzIG5vdCBmb3IgY29weV90b191c2VyIGVycm9yLiBpdCBpcyBhYm91dCBwYXNpZA0KPiA+
+ID4gPiA+IGFsbG9jIGZhaWx1cmUuIHlvdSBzaG91bGQgaGFuZGxlIGJvdGguDQo+ID4gPiA+DQo+
+ID4gPiA+IEVtbW0sIEkganVzdCB3YW50IHRvIGZhaWwgdGhlIElPQ1RMIGluIHN1Y2ggY2FzZSwg
+c28gdGhlIEByZXN1bHQNCj4gPiA+ID4gZmllbGQgaXMgbWVhbmluZ2xlc3MgaW4gdGhlIHVzZXIg
+c2lkZS4gSG93IGFib3V0IHVzaW5nIGFub3RoZXINCj4gPiA+ID4gcmV0dXJuIHZhbHVlIChlLmcu
+IEVOT1NQQykgdG8gaW5kaWNhdGUgdGhlIElPQ1RMIGZhaWx1cmU/DQo+ID4gPg0KPiA+ID4gSWYg
+cGFzaWRfYWxsb2MgZmFpbHMsIHlvdSByZXR1cm4gaXRzIHJlc3VsdCB0byB1c2Vyc3BhY2UgaWYN
+Cj4gPiA+IGNvcHlfdG9fdXNlciBmYWlscywgdGhlbiByZXR1cm4gLUVGQVVMVC4NCj4gPiA+DQo+
+ID4gPiBob3dldmVyLCBhYm92ZSB5b3UgcmV0dXJuIC1FRkFVTFQgZm9yIHBhc2lkX2FsbG9jIGZh
+aWx1cmUsIGFuZCB0aGVuDQo+ID4gPiB0aGUgbnVtYmVyIG9mIG5vdC1jb3BpZWQgYnl0ZXMgZm9y
+IGNvcHlfdG9fdXNlci4NCj4gPg0KPiA+IG5vdCBxdWl0ZSBnZXQuIExldCBtZSByZS1wYXN0ZSB0
+aGUgY29kZS4gOi0pDQo+ID4NCj4gPiArCQljYXNlIFZGSU9fSU9NTVVfUEFTSURfQUxMT0M6DQo+
+ID4gKwkJew0KPiA+ICsJCQlpbnQgcmV0ID0gMCwgcmVzdWx0Ow0KPiA+ICsNCj4gPiArCQkJcmVz
+dWx0ID0gdmZpb19pb21tdV90eXBlMV9wYXNpZF9hbGxvYyhpb21tdSwNCj4gPiArCQkJCQkJCXJl
+cS5hbGxvY19wYXNpZC5taW4sDQo+ID4gKwkJCQkJCQlyZXEuYWxsb2NfcGFzaWQubWF4KTsNCj4g
+PiArCQkJaWYgKHJlc3VsdCA+IDApIHsNCj4gPiArCQkJCW9mZnNldCA9IG9mZnNldG9mKA0KPiA+
+ICsJCQkJCXN0cnVjdA0KPiA+IHZmaW9faW9tbXVfdHlwZTFfcGFzaWRfcmVxdWVzdCwNCj4gPiAr
+CQkJCQlhbGxvY19wYXNpZC5yZXN1bHQpOw0KPiA+ICsJCQkJcmV0ID0gY29weV90b191c2VyKA0K
+PiA+ICsJCQkJCSAgICAgICh2b2lkIF9fdXNlciAqKSAoYXJnICsgb2Zmc2V0KSwNCj4gPiArCQkJ
+CQkgICAgICAmcmVzdWx0LCBzaXplb2YocmVzdWx0KSk7DQo+ID4gaWYgY29weV90b191c2VyIGZh
+aWxlZCwgcmV0IGlzIHRoZSBudW1iZXIgb2YgdW5jb3BpZWQgYnl0ZXMgYW5kIHdpbGwNCj4gPiBi
+ZSByZXR1cm5lZCB0byB1c2Vyc3BhY2UgdG8gaW5kaWNhdGUgZmFpbHVyZS4gdXNlcnNwYWNlIHdp
+bGwgbm90IHVzZQ0KPiA+IHRoZSBkYXRhIGluIHJlc3VsdCBmaWVsZC4gcGVyaGFwcywgSSBzaG91
+bGQgY2hlY2sgdGhlIHJldCBoZXJlIGFuZA0KPiA+IHJldHVybiAtRUZBVUxUIG9yIGFub3RoZXIg
+ZXJybm8sIGluc3RlYWQgb2YgcmV0dXJuIHRoZSBudW1iZXIgb2YNCj4gPiB1bi1jb3BpZWQgYnl0
+ZXMuDQo+IA0KPiBoZXJlIHNob3VsZCByZXR1cm4gLUVGQVVMVC4NCg0KZ290IGl0LiBzbyBpZiBh
+bnkgZmFpbHVyZSwgdGhlIHJldHVybiB2YWx1ZSBvZiB0aGlzIGlvY3RsIGlzIGEgLUVSUk9SX1ZB
+TC4NCg0KPiANCj4gPiArCQkJfSBlbHNlIHsNCj4gPiArCQkJCXByX2RlYnVnKCIlczogUEFTSUQg
+YWxsb2MgZmFpbGVkXG4iLA0KPiA+IF9fZnVuY19fKTsNCj4gPiArCQkJCXJldCA9IC1FRkFVTFQ7
+DQo+ID4gaWYgdmZpb19pb21tdV90eXBlMV9wYXNpZF9hbGxvYygpIGZhaWxlZCwgbm8gZG91YnQs
+IHJldHVybiAtRUZBVUxUIHRvDQo+ID4gdXNlcnNwYWNlIHRvIGluZGljYXRlIGZhaWx1cmUuDQo+
+IA0KPiBwYXNpZF9hbGxvYyBoYXMgaXRzIG93biBlcnJvciB0eXBlcyByZXR1cm5lZC4gd2h5IGJs
+aW5kbHkgcmVwbGFjZSBpdCB3aXRoIC1FRkFVTFQ/DQoNCnJpZ2h0LCBzaG91bGQgdXNlIGl0cyBv
+d24gZXJyb3IgdHlwZXMuDQoNClRoYW5rcywNCllpIExpdQ0K
