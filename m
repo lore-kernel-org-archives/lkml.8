@@ -2,103 +2,94 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D26EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240CCC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAAA20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixDEoymZ"
+	by mail.kernel.org (Postfix) with ESMTP id EEF7D20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732087AbgDAHss (ORCPT
+        id S1732094AbgDAHtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:48:48 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43407 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731680AbgDAHsr (ORCPT
+        Wed, 1 Apr 2020 03:49:14 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35911 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730426AbgDAHtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:48:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585727326;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ypssZ6zwvTHoDEme2IBh4Wgg7TJtOHNAKmXZ7+9lnoU=;
-        b=ixDEoymZFrUiLu1s8lIpomh/Gr9veM/5/xXQP5cRtiuuiR3riAiNC8X/PWK7KLOWPIUAvk
-        XGpOaYpB/IgzuHYJd3T0eA4bVAXHLpUgIii24/YEydFRV7IavHcg+OP7edFuGxnvaZUsHv
-        5rWIGiWD/6J6tQvhzwawa9GE5APohvg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-NxTG9kOAMS-4iwAdtPooaA-1; Wed, 01 Apr 2020 03:48:45 -0400
-X-MC-Unique: NxTG9kOAMS-4iwAdtPooaA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D59E18C35A0;
-        Wed,  1 Apr 2020 07:48:44 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.40.193.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3E16319C6A;
-        Wed,  1 Apr 2020 07:48:29 +0000 (UTC)
-Date:   Wed, 1 Apr 2020 09:48:21 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v8 13/14] KVM: selftests: Let dirty_log_test async for
- dirty ring test
-Message-ID: <20200401074821.2tii2x2pzungea44@kamzik.brq.redhat.com>
-References: <20200331190000.659614-1-peterx@redhat.com>
- <20200331190000.659614-14-peterx@redhat.com>
+        Wed, 1 Apr 2020 03:49:13 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k18so21426799oib.3;
+        Wed, 01 Apr 2020 00:49:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FYrdAKp2CgTne275+66tY8BoA72AYx10GTI3baIhzE0=;
+        b=DnmMyDvlNYACZ5et5YM0KvBnJHyO+FNOKNrs914QpsGpOsehhYdm4dkohEPnHkCyOU
+         m1edCziVtcWDNzle2HcMlKaiNxIcbOf1nNUXWdMsyGu533Vbu4WK2F0mCy53ieZQAfWD
+         eTYeGCIzhyBPYCoVhOug+eRJCNd/ALbpT0VdhDTi74bRRX/YajKLbzEqUFerexgWou8z
+         Uk1KFVHYv9eDRLv9cHZa7AxxmJeciSEQ13bkEP/84BMPlwCz6VCTOQAIyxM8DL+u8nS4
+         pjD81SByzMAUyDo/volDkbQieQsMoFFVtJdzf3nwp9lBk9o8Hdt2VNJrLEeCRjrtO14A
+         Gxdw==
+X-Gm-Message-State: AGi0PuZykFxcO5QlW1DBIa4YAgrUuuiwJC1z41ZcE2sBgUuW6U7jnox1
+        ATIOu6RrqIWAtkcUJuQUtCmPp+fNLUzTF43jpVw=
+X-Google-Smtp-Source: APiQypLMfOLDMJcHXmUP3QwXPgDS+k345dnEZWOlap5XBnijfxMYRnmrLE2cFly1Zejuc+pWjuRhfKqZAV49JE+ZmAU=
+X-Received: by 2002:aca:4e57:: with SMTP id c84mr1822269oib.148.1585727351875;
+ Wed, 01 Apr 2020 00:49:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331190000.659614-14-peterx@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200401151904.6948af20@canb.auug.org.au>
+In-Reply-To: <20200401151904.6948af20@canb.auug.org.au>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 1 Apr 2020 09:49:00 +0200
+Message-ID: <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the gpio tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 02:59:59PM -0400, Peter Xu wrote:
-> Previously the dirty ring test was working in synchronous way, because
-> only with a vmexit (with that it was the ring full event) we'll know
-> the hardware dirty bits will be flushed to the dirty ring.
-> 
-> With this patch we first introduced the vcpu kick mechanism by using
-> SIGUSR1, meanwhile we can have a guarantee of vmexit and also the
-> flushing of hardware dirty bits.  With all these, we can keep the vcpu
-> dirty work asynchronous of the whole collection procedure now.  Still,
-> we need to be very careful that we can only do it async if the vcpu is
-> not reaching soft limit (no KVM_EXIT_DIRTY_RING_FULL).  Otherwise we
-> must collect the dirty bits before continuing the vcpu.
-> 
-> Further increase the dirty ring size to current maximum to make sure
-> we torture more on the no-ring-full case, which should be the major
-> scenario when the hypervisors like QEMU would like to use this feature.
-> 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  tools/testing/selftests/kvm/dirty_log_test.c  | 126 +++++++++++++-----
->  .../testing/selftests/kvm/include/kvm_util.h  |   1 +
->  tools/testing/selftests/kvm/lib/kvm_util.c    |   9 ++
->  3 files changed, 106 insertions(+), 30 deletions(-)
+Hi Stephen, LinusW,
+
+On Wed, Apr 1, 2020 at 6:21 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 1 Apr 2020 15:14:32 +1100
+> Subject: [PATCH] gpio: export of_pinctrl_get to modules
 >
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-For the vcpu_kick and sem_wait stuff
+Thanks for your patch, which I assume is a quick build fix.
+I see LinusW has already applied it...
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
+> --- a/drivers/pinctrl/devicetree.c
+> +++ b/drivers/pinctrl/devicetree.c
+> @@ -103,6 +103,7 @@ struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
+>  {
+>         return get_pinctrl_dev_from_of_node(np);
+>  }
+> +EXPORT_SYMBOL_GPL(of_pinctrl_get);
+>
+>  static int dt_to_map_one_config(struct pinctrl *p,
+>                                 struct pinctrl_dev *hog_pctldev,
 
+As exporting symbols has its (space) cost, and of_pinctrl_get() is a tiny
+function, what about making it an inline function in
+include/linux/pinctrl/pinctrl.h instead?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
