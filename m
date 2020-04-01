@@ -2,189 +2,163 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B3EC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 01:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F514C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 01:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A930208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 01:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E84B208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 01:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hy3d+uVW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HaLcJN72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731697AbgDABXD (ORCPT
+        id S1731720AbgDABYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 21:23:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36720 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731509AbgDABXC (ORCPT
+        Tue, 31 Mar 2020 21:24:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35941 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731509AbgDABYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 21:23:02 -0400
-Received: by mail-io1-f66.google.com with SMTP id n10so9847470iom.3;
-        Tue, 31 Mar 2020 18:23:01 -0700 (PDT)
+        Tue, 31 Mar 2020 21:24:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i13so11255751pfe.3
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 18:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z2QHlAG4R2a3GsBY1Sh9yeXpBxrWZUKwyn4p8dfZUCs=;
-        b=hy3d+uVWn9fBJjcef03m/QD3vQIZruQ5Af9+40C1Mcybj3hYYW6OtnmNQ6K0Hv1aAf
-         F3+do+pXWHYNusCQv7vpnxT3natkYX6QxYaCc7zJu1EC1skVIIx90eEQlw/t2z/kMYjR
-         HYRxlMlJNZwltiYoW/WwlzDoxi9elcsxQFbXCM+II/ON9tahA72/PLhZ0w3w03oWYLKx
-         +Zzj/SzRSANY0Kh1WciHZiZxfrHZNUhubzoE6IqAugYnttlQXeT0p6Q9SQ04z9EUDMEf
-         DB6CmvhhLRnG1gK2nUHGV/iZdOVvVgDJY4BVON6sTQ5dQbxVnix+1S1cJmZj8qJApNiv
-         gexA==
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Aw32lMi9SSDdJS5PfKnpiYWuSlV1WvfCQUy80vI+qqk=;
+        b=HaLcJN72XZVuHbNNMetMUznMmDpsKnTpYIJ9YHL/1gep0jJFppLHcKhmxVhroiS7ey
+         IRgCd+xMQpwRt+jKzOlB6ycHB/8oF6QtmttD0+KEEId8fo/h4vW8OPRbh8WF4VgU9DAb
+         ymETk39riy8JVKNSpp7zUMf8lAYTshHf+lC3gF7Y7LKS8ALP+9uiLCPlX5/2WNTISwqM
+         2WZXtCTkWbFgsKZeHXWp0AenuxHRI6ai3WmKZHnh4GtLCIdj4d5pJCm2e/oW63Pki1Sh
+         HI7IXhcz7aVonrE8Dp72e2UtZ7bjBzlK7sBxf3a3VAJ47R+4hbwaGtJp17pl8ZMWdIN3
+         NHkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z2QHlAG4R2a3GsBY1Sh9yeXpBxrWZUKwyn4p8dfZUCs=;
-        b=bKgF7EJg5wGcKxxDGrDK6vs/mR9w1oSAQ0Dqg/tORd8XExbAAnIqpVJ0bAYyEDc7lM
-         TywgKeGOMPJrrlhH4MJSeSCHWPbqUq0GNfgJ1cM36kEapimqaGVAGli2RBHDlLGLvZO+
-         8V3x8jZ25Iq62bi/PRVZK29ZOYsIMxOeE2ka7xiUcBAe7wJkzoXfRJmp1SWch/NMTidl
-         TpB32WMXIM3Lt02aF37CKSG3gKHZctkmSXu5GWeCDLObVH4fTUAe25MDNvimJCd0mj8z
-         HnzcFOWFZC9rfBkGH4MfgEu2N+nNmPveQZebt38DTh7c582NbOnZBEX++jzHJDZBiiHG
-         KckA==
-X-Gm-Message-State: ANhLgQ32DGwQrYAw1rnLgB6Ugx0+bDGPUIBb8sAasBL/64TAJyNIrIdm
-        nwfvLxa9d2Xts+1Kmw46MJNcmfVtSlRYVmat20w=
-X-Google-Smtp-Source: ADFU+vua/Mghg3wP2uz1d4+N70EOBTxAQsg9C+j/cD+lu2bR+th4xx/nLCk8XZ+P+5+zM8C5J7zXhb5i/jj3kAVC0OI=
-X-Received: by 2002:a6b:7903:: with SMTP id i3mr9107365iop.66.1585704181384;
- Tue, 31 Mar 2020 18:23:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Aw32lMi9SSDdJS5PfKnpiYWuSlV1WvfCQUy80vI+qqk=;
+        b=kweLmAdkIHl28hNN5kFne4RTUaJDj2kCfCgfXQu7cSZJvcoQtx0yV2ru4Yv8fjxP4f
+         sgbLv12y8XEiIVU0dw0ejYpIg71KojHJi2UXLENZZYNPZh/aUiMKbnt6N4IzgwNqb61f
+         MAQcUYUNFzLRwRraYqWyEbkYNYEDnGRPZbyTv1yBqz/DCTdbVljxv1FpEPCXTd0FGTs4
+         AdZM+2Xtv28Rx8s2ytnY00j0FvCKBQ+9ig1cYqJCU45LU9z3utHmYa0fDGYJfLjJarZ2
+         u6j5brqH51G868XVsyFVw11qD8CGMtkmFWszAWTn45wzcup180sSNEFnOabtIdCpVZ0q
+         4UNw==
+X-Gm-Message-State: ANhLgQ0uyu9JlkWgBLWXvZcfQ+aA+g5CB/gXWdgmwtue84nfy7DqQYlW
+        KvYv7uZZSHpMHQx3QAhUXmo66A==
+X-Google-Smtp-Source: ADFU+vuQYD73cKPi5MMZYK2oJY21kLohB/7K+vWuJRBeR3x3mkSkcST9YRUWoKenBnXiX4Mxu/XGTA==
+X-Received: by 2002:a63:c451:: with SMTP id m17mr20319106pgg.223.1585704271012;
+        Tue, 31 Mar 2020 18:24:31 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2400:8902::f03c:91ff:fe3f:32da])
+        by smtp.gmail.com with ESMTPSA id q27sm297876pfn.173.2020.03.31.18.24.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 31 Mar 2020 18:24:30 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 09:24:17 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Al Grant <Al.Grant@arm.com>, James Clark <James.Clark@arm.com>
+Subject: Re: [PATCH] arm64: perf_event: Fix time_offset for arch timer
+Message-ID: <20200401012417.GA9892@leoy-ThinkPad-X240s>
+References: <20200320093545.28227-1-leo.yan@linaro.org>
 MIME-Version: 1.0
-References: <1585221127-11458-1-git-send-email-laoar.shao@gmail.com>
- <20200326143102.GB342070@cmpxchg.org> <CALOAHbCe9msQ+7uON=7iXnud-hzDcrnz_2er4PMQRXtNLM2BSQ@mail.gmail.com>
- <20200331151103.GB2089@cmpxchg.org>
-In-Reply-To: <20200331151103.GB2089@cmpxchg.org>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Wed, 1 Apr 2020 09:22:24 +0800
-Message-ID: <CALOAHbAG=ehtwveu8DkQLkdeQEu7U3XA+LK4p_A7URQ0bW68=Q@mail.gmail.com>
-Subject: Re: [PATCH 0/2] psi: enhance psi with the help of ebpf
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        mgorman@suse.de, Steven Rostedt <rostedt@goodmis.org>,
-        mingo@redhat.com, Linux MM <linux-mm@kvack.org>,
-        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320093545.28227-1-leo.yan@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:11 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Fri, Mar 27, 2020 at 09:17:59AM +0800, Yafang Shao wrote:
-> > On Thu, Mar 26, 2020 at 10:31 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > >
-> > > On Thu, Mar 26, 2020 at 07:12:05AM -0400, Yafang Shao wrote:
-> > > > PSI gives us a powerful way to anaylze memory pressure issue, but we can
-> > > > make it more powerful with the help of tracepoint, kprobe, ebpf and etc.
-> > > > Especially with ebpf we can flexiblely get more details of the memory
-> > > > pressure.
-> > > >
-> > > > In orderc to achieve this goal, a new parameter is added into
-> > > > psi_memstall_{enter, leave}, which indicates the specific type of a
-> > > > memstall. There're totally ten memstalls by now,
-> > > >         MEMSTALL_KSWAPD
-> > > >         MEMSTALL_RECLAIM_DIRECT
-> > > >         MEMSTALL_RECLAIM_MEMCG
-> > > >         MEMSTALL_RECLAIM_HIGH
-> > > >         MEMSTALL_KCOMPACTD
-> > > >         MEMSTALL_COMPACT
-> > > >         MEMSTALL_WORKINGSET_REFAULT
-> > > >         MEMSTALL_WORKINGSET_THRASHING
-> > > >         MEMSTALL_MEMDELAY
-> > > >         MEMSTALL_SWAPIO
-> > >
-> > > What does this provide over the events tracked in /proc/vmstats?
-> > >
-> >
-> > /proc/vmstat only tells us which events occured, but it can't tell us
-> > how long these events take.
-> > Sometimes we really want to know how long the event takes and PSI can
-> > provide us the data
-> > For example, in the past days when I did performance tuning for a
-> > database service, I monitored that the latency spike is related with
-> > the workingset_refault counter in /proc/vmstat, and at that time I
-> > really want to know the spread of latencies caused by
-> > workingset_refault, but there's no easy way to get it. Now with newly
-> > added MEMSTALL_WORKINGSET_REFAULT, I can get the latencies caused by
-> > workingset refault.
->
-> Okay, but how do you use that information in practice?
->
+On Fri, Mar 20, 2020 at 05:35:45PM +0800, Leo Yan wrote:
+> Between the system powering on and kernel's sched clock registration,
+> the arch timer usually has been enabled at the early time and its
+> counter is incremented during the period of the booting up.  Thus the
+> arch timer's counter is not completely accounted into the sched clock,
+> and has a delta between the arch timer's counter and sched clock.  This
+> delta value should be stored into userpg->time_offset, which later can
+> be retrieved by Perf tool in the user space for sample timestamp
+> calculation.
+> 
+> Now userpg->time_offset is assigned to the negative sched clock with
+> '-now', this value cannot reflect the delta between arch timer's counter
+> and sched clock, so Perf cannot use it to calculate the sample time.
+> 
+> To fix this issue, this patch calculate the delta between the arch
+> timer's and sched clock and assign the delta to userpg->time_offset.
+> The detailed steps are firstly to convert counter to nanoseconds 'ns',
+> then the offset is calculated as 'now' minus 'ns'.
+> 
+>         |<------------------- 'ns' ---------------------->|
+>                                 |<-------- 'now' -------->|
+>         |<---- time_offset ---->|
+>         |-----------------------|-------------------------|
+>         ^                       ^                         ^
+>   Power on system     sched clock registration      Perf starts
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  arch/arm64/kernel/perf_event.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
 
-With the newly added facility,  we can know when these events occur
-and how long each event takes.
-Then we can use these datas to generate a Latency Heat Map[1] and to
-compare whether these latencies match with the application latencies
-recoreded in its log - for example the slow query log in mysql. If the
-refault latencies match with the slow query log, then these slow
-queries are caused by these workingset refault.  If the refault
-latencies don't match with slow query log, IOW much smaller than the
-slow query log, then  the slow query log isn't caused by the
-workingset refault.
+Gentle ping ...
 
-High rate of refaults may not cause high pressure, if the backing
-device is fast enough. While the latencies of refaults give us a
-direct relationship with memory pressure.
+Hi Mike R., Peter,
 
-[1]. http://www.brendangregg.com/HeatMaps/latency.html
+If possible, could you give a look for this patch?
 
-> > > Can you elaborate a bit how you are using this information? It's not
-> > > quite clear to me from the example in patch #2.
-> > >
-> >
-> > From the traced data in patch #2, we can find that the high latencies
-> > of user tasks are always type 7 of memstall , which is
-> > MEMSTALL_WORKINGSET_THRASHING,  and then we should look into the
-> > details of wokingset of the user tasks and think about how to improve
-> > it - for example, by reducing the workingset.
->
-> That's an analyses we run frequently as well: we see high pressure,
-> and then correlate it with the events.
->
-> High rate of refaults? The workingset is too big.
->
-> High rate of compaction work? Somebody is asking for higher order
-> pages under load; check THP events next.
->
-> etc.
->
-> This works fairly reliably. I'm curious what the extra per-event
-> latency breakdown would add and where it would be helpful.
->
-> I'm not really opposed to your patches it if it is, I just don't see
-> the usecase right now.
->
+Thank you,
+Leo
 
-As I explained above, the rate of these events can't give us a full
-view of the memory pressure. High memory pressure may not caused by
-high rate of vmstat events, while it can be caused by low rate of
-events but with high latencies.  Latencies are the application really
-concerns, that's why PSI is very useful for us.
-
-Furthermore, there're some events are not recored in vmstat. e.g.
-
-typf of memstall                                           vmstat event
-
-MEMSTALL_KSWAPD                                pageoutrun, {pgscan,
-pgsteal}_kswapd
-MEMSTALL_RECLAIM_DIRECT                {pgscan,steal}_direct
-MEMSTALL_RECLAIM_MEMCG                /* no event */
-MEMSTALL_RECLAIM_HIGH                     /* no event */
-MEMSTALL_KCOMPACTD                         compact_daemon_wake
-MEMSTALL_COMPACT                              compact_{stall, fail, success}
-MEMSTALL_WORKINGSET_REFAULT     workingset_refault
-MEMSTALL_WORKINGSET_THRASH      /* no event */
-MEMSTALL_MEMDELAY                           /* no event */
-MEMSTALL_SWAPIO                                 pswpin
-
-After we add these types of memstall, we don't need to add these
-missed events one by one.
-
-Thanks
-Yafang
+> 
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index e40b65645c86..226d25d77072 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -1143,6 +1143,7 @@ void arch_perf_update_userpage(struct perf_event *event,
+>  {
+>  	u32 freq;
+>  	u32 shift;
+> +	u64 count, ns, quot, rem;
+>  
+>  	/*
+>  	 * Internal timekeeping for enabled/running/stopped times
+> @@ -1164,5 +1165,21 @@ void arch_perf_update_userpage(struct perf_event *event,
+>  		userpg->time_mult >>= 1;
+>  	}
+>  	userpg->time_shift = (u16)shift;
+> -	userpg->time_offset = -now;
+> +
+> +	/*
+> +	 * Since arch timer is enabled ealier than sched clock registration,
+> +	 * compuate the delta (in nanosecond unit) between the arch timer
+> +	 * counter and sched clock, assign the delta to time_offset and
+> +	 * perf tool can use it for timestamp calculation.
+> +	 *
+> +	 * The formula for conversion arch timer cycle to ns is:
+> +	 *   quot = (cyc >> time_shift);
+> +	 *   rem  = cyc & ((1 << time_shift) - 1);
+> +	 *   ns   = quot * time_mult + ((rem * time_mult) >> time_shift);
+> +	 */
+> +	count = arch_timer_read_counter();
+> +	quot = count >> shift;
+> +	rem = count & ((1 << shift) - 1);
+> +	ns = quot * userpg->time_mult + ((rem * userpg->time_mult) >> shift);
+> +	userpg->time_offset = now - ns;
+>  }
+> -- 
+> 2.17.1
+> 
