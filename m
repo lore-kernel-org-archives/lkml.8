@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A9BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBF9C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D051B20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00482166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759609;
-	bh=ZzzhJnq45pTNG7JkmwY4o7RFjA//TSQkMxWONW6WaZ4=;
+	s=default; t=1585759612;
+	bh=YjbJkWnulZxpZ5AzBSei2JjCsNgi5cGWbkLwlh2FsTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C3VgmzHlFeUPH5f/fQZ42yZDtdFP4KM+geWlcKQX0zXS+oeOL9RP99PM3wSfruTn8
-	 VurvtQODy4Wgv9g+/7puh6+qvMplcswiMROzpJaGWVGfVhfGKiysB/XrZ3jAa9HBfV
-	 WZv6i6EVv+E9zV4BGmZVdxrXAmCTlKjZ17qvmVac=
+	b=W1O7lNRXbimFS3Pi1+5/glW4PFfqVo7GugYlSN7XYTNwFtGf56sqwpRVqi7DiVhyR
+	 6QtH060WXdSKbyuNVxA4VUe06qRtvtrxUNn30WOuwwyYh5rh2L2vTJd2DyfsutE5fG
+	 TnrknLHOyfYjVE6t9lf7qfD+Aha/GpymNSC7IbQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389979AbgDAQqs (ORCPT
+        id S2389644AbgDAQqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:46:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48120 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388548AbgDAQql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:46:41 -0400
+        id S2389983AbgDAQqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:46:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7408B20784;
-        Wed,  1 Apr 2020 16:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C3B120705;
+        Wed,  1 Apr 2020 16:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759600;
-        bh=ZzzhJnq45pTNG7JkmwY4o7RFjA//TSQkMxWONW6WaZ4=;
+        s=default; t=1585759607;
+        bh=YjbJkWnulZxpZ5AzBSei2JjCsNgi5cGWbkLwlh2FsTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZ3+wyMpRxNRKqPSogIN4XIdct+kgKlcY09jYYbKTgK4wwA40IqOhcEsx8YR98EgR
-         2/iXOW3I9OYhLm1/epmXXi5gg+uoCXXLV2wutJcmeG4tK0vpmI42JaGCJirfqzUvZN
-         Og9PtENjCEd66mVDahk4b0vmj9QGYb0gVZ6VCiJ8=
+        b=m2CkVMUDqH0PQxPNK//7X2wYo22W8Gn9t7+IW7s6+G7pV78BihBHxS7gSMM2fYu4U
+         6Ov8UpLY6Ef/+tDSt0hllXIGJvEQgVUbATDNW2tyNix56NjCGI9oo2ytvGdVKEGBKQ
+         ORTGbZ59s38Rsw0pHdSwOn+IhbJjPC7vdoF03EiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 4.14 132/148] vt: selection, introduce vc_is_sel
-Date:   Wed,  1 Apr 2020 18:18:44 +0200
-Message-Id: <20200401161605.028788273@linuxfoundation.org>
+Subject: [PATCH 4.14 134/148] vt: switch vt_dont_switch to bool
+Date:   Wed,  1 Apr 2020 18:18:46 +0200
+Message-Id: <20200401161605.176128991@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,99 +60,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Slaby <jslaby@suse.cz>
 
-commit dce05aa6eec977f1472abed95ccd71276b9a3864 upstream.
+commit f400991bf872debffb01c46da882dc97d7e3248e upstream.
 
-Avoid global variables (namely sel_cons) by introducing vc_is_sel. It
-checks whether the parameter is the current selection console. This will
-help putting sel_cons to a struct later.
+vt_dont_switch is pure boolean, no need for whole char.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200219073951.16151-1-jslaby@suse.cz
+Link: https://lore.kernel.org/r/20200219073951.16151-6-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/selection.c |    5 +++++
- drivers/tty/vt/vt.c        |    7 ++++---
- drivers/tty/vt/vt_ioctl.c  |    2 +-
- include/linux/selection.h  |    4 +++-
- 4 files changed, 13 insertions(+), 5 deletions(-)
+ drivers/tty/vt/vt_ioctl.c |    6 +++---
+ include/linux/vt_kern.h   |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -83,6 +83,11 @@ void clear_selection(void)
- 	}
- }
- 
-+bool vc_is_sel(struct vc_data *vc)
-+{
-+	return vc == sel_cons;
-+}
-+
- /*
-  * User settable table: what characters are to be considered alphabetic?
-  * 128 bits. Locked by the console lock.
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -584,8 +584,9 @@ static void hide_softcursor(struct vc_da
- 
- static void hide_cursor(struct vc_data *vc)
- {
--	if (vc == sel_cons)
-+	if (vc_is_sel(vc))
- 		clear_selection();
-+
- 	vc->vc_sw->con_cursor(vc, CM_ERASE);
- 	hide_softcursor(vc);
- }
-@@ -595,7 +596,7 @@ static void set_cursor(struct vc_data *v
- 	if (!con_is_fg(vc) || console_blanked || vc->vc_mode == KD_GRAPHICS)
- 		return;
- 	if (vc->vc_deccm) {
--		if (vc == sel_cons)
-+		if (vc_is_sel(vc))
- 			clear_selection();
- 		add_softcursor(vc);
- 		if ((vc->vc_cursor_type & 0x0f) != 1)
-@@ -873,7 +874,7 @@ static int vc_do_resize(struct tty_struc
- 	if (!newscreen)
- 		return -ENOMEM;
- 
--	if (vc == sel_cons)
-+	if (vc_is_sel(vc))
- 		clear_selection();
- 
- 	old_rows = vc->vc_rows;
 --- a/drivers/tty/vt/vt_ioctl.c
 +++ b/drivers/tty/vt/vt_ioctl.c
-@@ -43,7 +43,7 @@ char vt_dont_switch;
- extern struct tty_driver *console_driver;
+@@ -39,7 +39,7 @@
+ #include <linux/kbd_diacr.h>
+ #include <linux/selection.h>
  
- #define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
--#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_cons[i].d == sel_cons)
-+#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
+-char vt_dont_switch;
++bool vt_dont_switch;
  
- /*
-  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
---- a/include/linux/selection.h
-+++ b/include/linux/selection.h
-@@ -13,8 +13,8 @@
+ static inline bool vt_in_use(unsigned int i)
+ {
+@@ -1026,12 +1026,12 @@ int vt_ioctl(struct tty_struct *tty,
+ 	case VT_LOCKSWITCH:
+ 		if (!capable(CAP_SYS_TTY_CONFIG))
+ 			return -EPERM;
+-		vt_dont_switch = 1;
++		vt_dont_switch = true;
+ 		break;
+ 	case VT_UNLOCKSWITCH:
+ 		if (!capable(CAP_SYS_TTY_CONFIG))
+ 			return -EPERM;
+-		vt_dont_switch = 0;
++		vt_dont_switch = false;
+ 		break;
+ 	case VT_GETHIFONTMASK:
+ 		ret = put_user(vc->vc_hi_font_mask,
+--- a/include/linux/vt_kern.h
++++ b/include/linux/vt_kern.h
+@@ -142,7 +142,7 @@ static inline bool vt_force_oops_output(
+ 	return false;
+ }
  
- struct tty_struct;
+-extern char vt_dont_switch;
++extern bool vt_dont_switch;
+ extern int default_utf8;
+ extern int global_cursor_default;
  
--extern struct vc_data *sel_cons;
- struct tty_struct;
-+struct vc_data;
- 
- extern void clear_selection(void);
- extern int set_selection(const struct tiocl_selection __user *sel, struct tty_struct *tty);
-@@ -23,6 +23,8 @@ extern int sel_loadlut(char __user *p);
- extern int mouse_reporting(void);
- extern void mouse_report(struct tty_struct * tty, int butt, int mrx, int mry);
- 
-+bool vc_is_sel(struct vc_data *vc);
-+
- extern int console_blanked;
- 
- extern const unsigned char color_table[];
 
 
