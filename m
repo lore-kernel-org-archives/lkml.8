@@ -2,186 +2,150 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5F0C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149B8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E69420772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF71820772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="JrWlu3gM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fJTI/W2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731733AbgDAD7f (ORCPT
+        id S1731554AbgDAEAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 23:59:35 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:60222 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731611AbgDAD7f (ORCPT
+        Wed, 1 Apr 2020 00:00:42 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41456 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgDAEAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 23:59:35 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id EC35520B46F0; Tue, 31 Mar 2020 20:59:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EC35520B46F0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1585713573;
-        bh=T/m0cU/ovq63UEysw2DA0YMO0lHz/8HNpjFSpcuwBgc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:From;
-        b=JrWlu3gM2P4UUw+gd2HLm1FKUaYfQl1A/n0anMMSSkV4LG6U4wueIZyH2W3raYSf1
-         ESQMWLx9c1n8K0c6wa4UQRWBvaCWoMF0ZAVzqguktvtc+IRzCqfBGaZp3C5+n5rtfS
-         p5cTzj8W5uwGVnC/UFf4QgPPiVWohSgkmGBC1dPI=
-From:   longli@linuxonhyperv.com
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH 2/2] cifs: smbd: Do not schedule work to send immediate packet on every receive
-Date:   Tue, 31 Mar 2020 20:59:23 -0700
-Message-Id: <1585713563-4635-2-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1585713563-4635-1-git-send-email-longli@linuxonhyperv.com>
-References: <1585713563-4635-1-git-send-email-longli@linuxonhyperv.com>
-Reply-To: longli@microsoft.com
+        Wed, 1 Apr 2020 00:00:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0313sjWH044988;
+        Wed, 1 Apr 2020 04:00:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
+ message-id : date : from : to : cc : subject : references : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=obROhXjAve/kpZaKiv7NWOZ2z2jo7yzeO27qepEQr7k=;
+ b=fJTI/W2EHKpH+kB3SSlDBzAj/z+tuY2wcGMI5Iyhf/pfi7/9J1WdZq2TIhdiTZV7tJeI
+ AqY6m4egj4B3EnySHxxuRh0K4yKurwkmsWIa0zJ9rADKdKtmO+3ZwU2bFy3AXPPqBuq8
+ v0JeiSR1X4H+wL8mvT6hEaZro2F7KFmeRQ+1w1U8TkdDMCCfmEvOHl7NEdDDEvI+to82
+ kaPWDXXc/aNZ6J2E2S7XBkfiV94pA+ox4IkJUdGw40/blrox6ONxW9mB7AebiybaWKkt
+ CbpUIE2jGxr+Nz7akcWjS4paSdhCaXwyhe8u1vogilr0MM+MkETQD/D722m7Fr8ifkoG SA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 303cev322q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 04:00:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0313qqwE192638;
+        Wed, 1 Apr 2020 04:00:29 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 302g2fgxjc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 04:00:29 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03140Q1b001068;
+        Wed, 1 Apr 2020 04:00:26 GMT
+Received: from localhost (/67.169.218.210) by default (Oracle Beehive Gateway
+ v4.0) with ESMTP ; Tue, 31 Mar 2020 21:00:23 -0700
+USER-AGENT: Mutt/1.9.4 (2018-02-28)
+MIME-Version: 1.0
+Message-ID: <20200401040021.GC56958@magnolia>
+Date:   Wed, 1 Apr 2020 04:00:21 +0000 (UTC)
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>, Dave Chinner <david@fromorbit.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+References: <20200227052442.22524-1-ira.weiny@intel.com>
+ <20200305155144.GA5598@lst.de>
+ <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
+ <20200311033614.GQ1752567@magnolia> <20200311062952.GA11519@lst.de>
+ <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
+ <20200316095224.GF12783@quack2.suse.cz> <20200316095509.GA13788@lst.de>
+In-Reply-To: <20200316095509.GA13788@lst.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9577 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010035
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9577 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
+ clxscore=1011 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+On Mon, Mar 16, 2020 at 10:55:09AM +0100, Christoph Hellwig wrote:
+> On Mon, Mar 16, 2020 at 10:52:24AM +0100, Jan Kara wrote:
+> > > This sounds reasonable to me.
+> > > 
+> > > As for deprecating the mount option, I think at a minimum it needs to
+> > > continue be accepted as an option even if it is ignored to not break
+> > > existing setups.
+> > 
+> > Agreed. But that's how we usually deprecate mount options. Also I'd say
+> > that statx() support for reporting DAX state and some education of
+> > programmers using DAX is required before we deprecate the mount option
+> > since currently applications check 'dax' mount option to determine how much
+> > memory they need to set aside for page cache before they consume everything
+> > else on the machine...
+> 
+> I don't even think we should deprecate it.  It isn't painful to maintain
+> and actually useful for testing.  Instead we should expand it into a
+> tristate:
+> 
+>   dax=off
+>   dax=flag
+>   dax=always
+> 
+> where the existing "dax" option maps to "dax=always" and nodax maps
+> to "dax=off". and dax=flag becomes the default for DAX capable devices.
 
-Immediate packets should only be sent to peer when there are new
-receive credits made available. New credits show up on freeing
-receive buffer, not on receiving data.
+That works for me.  In summary:
 
-Fix this by avoid unnenecessary work schedules.
+ - Applications must call statx to discover the current S_DAX state.
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- fs/cifs/smbdirect.c | 61 ++++++++-------------------------------------
- fs/cifs/smbdirect.h |  1 -
- 2 files changed, 10 insertions(+), 52 deletions(-)
+ - There exists an advisory file inode flag FS_XFLAG_DAX that can be
+   changed on files that have no blocks allocated to them.  Changing
+   this flag does not necessarily change the S_DAX state immediately
+   but programs can query the S_DAX state via statx.
 
-diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-index b961260a6336..6d94bc6525b7 100644
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -380,27 +380,6 @@ static bool process_negotiation_response(
- 	return true;
- }
- 
--/*
-- * Check and schedule to send an immediate packet
-- * This is used to extend credtis to remote peer to keep the transport busy
-- */
--static void check_and_send_immediate(struct smbd_connection *info)
--{
--	if (info->transport_status != SMBD_CONNECTED)
--		return;
--
--	info->send_immediate = true;
--
--	/*
--	 * Promptly send a packet if our peer is running low on receive
--	 * credits
--	 */
--	if (atomic_read(&info->receive_credits) <
--		info->receive_credit_target - 1)
--		queue_delayed_work(
--			info->workqueue, &info->send_immediate_work, 0);
--}
--
- static void smbd_post_send_credits(struct work_struct *work)
- {
- 	int ret = 0;
-@@ -450,8 +429,16 @@ static void smbd_post_send_credits(struct work_struct *work)
- 	info->new_credits_offered += ret;
- 	spin_unlock(&info->lock_new_credits_offered);
- 
--	/* Check if we can post new receive and grant credits to peer */
--	check_and_send_immediate(info);
-+	/* Promptly send an immediate packet as defined in [MS-SMBD] 3.1.1.1 */
-+	info->send_immediate = true;
-+	if (atomic_read(&info->receive_credits) <
-+		info->receive_credit_target - 1) {
-+		if (info->keep_alive_requested == KEEP_ALIVE_PENDING ||
-+		    info->send_immediate) {
-+			log_keep_alive(INFO, "send an empty message\n");
-+			smbd_post_send_empty(info);
-+		}
-+	}
- }
- 
- /* Called from softirq, when recv is done */
-@@ -546,12 +533,6 @@ static void recv_done(struct ib_cq *cq, struct ib_wc *wc)
- 			info->keep_alive_requested = KEEP_ALIVE_PENDING;
- 		}
- 
--		/*
--		 * Check if we need to send something to remote peer to
--		 * grant more credits or respond to KEEP_ALIVE packet
--		 */
--		check_and_send_immediate(info);
--
- 		return;
- 
- 	default:
-@@ -1292,25 +1273,6 @@ static void destroy_receive_buffers(struct smbd_connection *info)
- 		mempool_free(response, info->response_mempool);
- }
- 
--/*
-- * Check and send an immediate or keep alive packet
-- * The condition to send those packets are defined in [MS-SMBD] 3.1.1.1
-- * Connection.KeepaliveRequested and Connection.SendImmediate
-- * The idea is to extend credits to server as soon as it becomes available
-- */
--static void send_immediate_work(struct work_struct *work)
--{
--	struct smbd_connection *info = container_of(
--					work, struct smbd_connection,
--					send_immediate_work.work);
--
--	if (info->keep_alive_requested == KEEP_ALIVE_PENDING ||
--	    info->send_immediate) {
--		log_keep_alive(INFO, "send an empty message\n");
--		smbd_post_send_empty(info);
--	}
--}
--
- /* Implement idle connection timer [MS-SMBD] 3.1.6.2 */
- static void idle_connection_timer(struct work_struct *work)
- {
-@@ -1365,8 +1327,6 @@ void smbd_destroy(struct TCP_Server_Info *server)
- 
- 	log_rdma_event(INFO, "cancelling idle timer\n");
- 	cancel_delayed_work_sync(&info->idle_timer_work);
--	log_rdma_event(INFO, "cancelling send immediate work\n");
--	cancel_delayed_work_sync(&info->send_immediate_work);
- 
- 	log_rdma_event(INFO, "wait for all send posted to IB to finish\n");
- 	wait_event(info->wait_send_pending,
-@@ -1700,7 +1660,6 @@ static struct smbd_connection *_smbd_get_connection(
- 
- 	init_waitqueue_head(&info->wait_send_queue);
- 	INIT_DELAYED_WORK(&info->idle_timer_work, idle_connection_timer);
--	INIT_DELAYED_WORK(&info->send_immediate_work, send_immediate_work);
- 	queue_delayed_work(info->workqueue, &info->idle_timer_work,
- 		info->keep_alive_interval*HZ);
- 
-diff --git a/fs/cifs/smbdirect.h b/fs/cifs/smbdirect.h
-index 07c8f5638c39..a87fca82a796 100644
---- a/fs/cifs/smbdirect.h
-+++ b/fs/cifs/smbdirect.h
-@@ -153,7 +153,6 @@ struct smbd_connection {
- 
- 	struct workqueue_struct *workqueue;
- 	struct delayed_work idle_timer_work;
--	struct delayed_work send_immediate_work;
- 
- 	/* Memory pool for preallocating buffers */
- 	/* request pool for RDMA send */
--- 
-2.17.1
+   If FS_XFLAG_DAX is set and the fs is on pmem then it will always
+   enable S_DAX at inode load time; if FS_XFLAG_DAX is not set, it will
+   never enable S_DAX.  Unless overridden...
 
+ - There exists a dax= mount option.  dax=off means "never set S_DAX,
+   ignore FS_XFLAG_DAX"; dax=always means "always set S_DAX (at least on
+   pmem), ignore FS_XFLAG_DAX"; and dax=iflag means "follow FS_XFLAG_DAX"
+   and is the default.  "dax" by itself means "dax=always".  "nodax"
+   means "dax=off".
+
+ - There exists an advisory directory inode flag FS_XFLAG_DAX that can
+   be changed at any time.  The flag state is copied into any files or
+   subdirectories created within that directory.  If programs require
+   that file access runs in S_DAX mode, they'll have to create those
+   files themselves inside a directory with FS_XFLAG_DAX set, or mount
+   the fs with dax=always.
+
+Ok?  Let's please get this part finished for 5.8, then we can get back
+to arguing about fs-rmap and reflink and dax and whatnot.
+
+--D
