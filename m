@@ -2,52 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07D6C2BA12
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FCAC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390AC21841
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D25D206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759564;
-	bh=TWXVJ2abJK2PzULdKnQoaa3lZFvNE5rGRfuU/rWNGUY=;
+	s=default; t=1585759576;
+	bh=4/QgQEeTLg2cONn6lXbKFlYdnrgyJb7/r7FCCAFagzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVSsbQzm5qyeR76JI7Y6gyLkkG+/8zjOQgUBlY6/BFinLIINazjUVTf83+YTlyEix
-	 /HZQUFiskvazApjl7LZJ5RIR3GUTZkSEmdyOOsKLK1kKORUrlL8Kd7fo3RJQs1I7i0
-	 ljifm7oSmocBgGJ5eFry9mnm/5fzJYfmZY8mgY74=
+	b=FAo+0U6XdpPozbSlSDYT/zKJe+r1sxSncPGCI7NRHxmIKabIQEKIB+ZqdP87yBlNO
+	 RzkXw+BD6F7SBvFsZJA3JnAj+BtiZDsyRYIfBnfHpxBbvfKuCZt5gbCjukzbX9/EMM
+	 KHCjhuIRwoZcTjBeCQutK6omr1NgqoGgvqt5Eeng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389908AbgDAQqC (ORCPT
+        id S2389914AbgDAQqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47346 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:46:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389714AbgDAQqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:46:01 -0400
+        id S2389899AbgDAQqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:46:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D168206E9;
-        Wed,  1 Apr 2020 16:45:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 010A02071A;
+        Wed,  1 Apr 2020 16:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759560;
-        bh=TWXVJ2abJK2PzULdKnQoaa3lZFvNE5rGRfuU/rWNGUY=;
+        s=default; t=1585759572;
+        bh=4/QgQEeTLg2cONn6lXbKFlYdnrgyJb7/r7FCCAFagzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=db+XSP0d26u1lv4GuuQ8jY8Dgpn9oF7yad5jskI4PHs3FxYlvi48Xf08r/RtP+KZR
-         t98YIeciebYPYcNxU/VWMrODcar/Jwx12gWYj6AQ2m5Q/+dYrgJ1pbQMUg7DT9+FZN
-         DWkFExmrV1oNf/LEkQILOsll3j5sYY0iEvATbID8=
+        b=d8HuDyiyvr1zLa/ZfwEXyNsUyW/hgT7wE9bwlt/yZp9TIQvlAha7SzWf+pwsI/Hlv
+         vWuJ1EPYsSqdRxMznzWBVP30YZGihPn9jUtR1s51okqaWxpLoLNE7gVJV8MHbOv/MU
+         Z+XNpGFrrEBWyGn2YBA/iF4d6U9GVXAluDnFmg4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cezary Jackiewicz <cezary@eko.one.pl>,
-        Pawel Dembicki <paweldembicki@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 115/148] USB: serial: option: add BroadMobi BM806U
-Date:   Wed,  1 Apr 2020 18:18:27 +0200
-Message-Id: <20200401161603.552141137@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Xiong <wenxiong@linux.vnet.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 081/148] scsi: ipr: Fix softlockup when rescanning devices in petitboot
+Date:   Wed,  1 Apr 2020 18:17:53 +0200
+Message-Id: <20200401161600.989273159@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,61 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Dembicki <paweldembicki@gmail.com>
+From: Wen Xiong <wenxiong@linux.vnet.ibm.com>
 
-commit 6cb2669cb97fc4fdf526127159ac59caae052247 upstream.
+[ Upstream commit 394b61711f3ce33f75bf70a3e22938464a13b3ee ]
 
-BroadMobi BM806U is an Qualcomm MDM9225 based 3G/4G modem.
-Tested hardware BM806U is mounted on D-Link DWR-921-C3 router.
+When trying to rescan disks in petitboot shell, we hit the following
+softlockup stacktrace:
 
-T:  Bus=01 Lev=01 Prnt=01 Port=01 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
-D:  Ver= 2.01 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=2020 ProdID=2033 Rev= 2.28
-S:  Manufacturer=Mobile Connect
-S:  Product=Mobile Connect
-S:  SerialNumber=f842866cfd5a
-C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
-E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+Kernel panic - not syncing: System is deadlocked on memory
+[  241.223394] CPU: 32 PID: 693 Comm: sh Not tainted 5.4.16-openpower1 #1
+[  241.223406] Call Trace:
+[  241.223415] [c0000003f07c3180] [c000000000493fc4] dump_stack+0xa4/0xd8 (unreliable)
+[  241.223432] [c0000003f07c31c0] [c00000000007d4ac] panic+0x148/0x3cc
+[  241.223446] [c0000003f07c3260] [c000000000114b10] out_of_memory+0x468/0x4c4
+[  241.223461] [c0000003f07c3300] [c0000000001472b0] __alloc_pages_slowpath+0x594/0x6d8
+[  241.223476] [c0000003f07c3420] [c00000000014757c] __alloc_pages_nodemask+0x188/0x1a4
+[  241.223492] [c0000003f07c34a0] [c000000000153e10] alloc_pages_current+0xcc/0xd8
+[  241.223508] [c0000003f07c34e0] [c0000000001577ac] alloc_slab_page+0x30/0x98
+[  241.223524] [c0000003f07c3520] [c0000000001597fc] new_slab+0x138/0x40c
+[  241.223538] [c0000003f07c35f0] [c00000000015b204] ___slab_alloc+0x1e4/0x404
+[  241.223552] [c0000003f07c36c0] [c00000000015b450] __slab_alloc+0x2c/0x48
+[  241.223566] [c0000003f07c36f0] [c00000000015b754] kmem_cache_alloc_node+0x9c/0x1b4
+[  241.223582] [c0000003f07c3760] [c000000000218c48] blk_alloc_queue_node+0x34/0x270
+[  241.223599] [c0000003f07c37b0] [c000000000226574] blk_mq_init_queue+0x2c/0x78
+[  241.223615] [c0000003f07c37e0] [c0000000002ff710] scsi_mq_alloc_queue+0x28/0x70
+[  241.223631] [c0000003f07c3810] [c0000000003005b8] scsi_alloc_sdev+0x184/0x264
+[  241.223647] [c0000003f07c38a0] [c000000000300ba0] scsi_probe_and_add_lun+0x288/0xa3c
+[  241.223663] [c0000003f07c3a00] [c000000000301768] __scsi_scan_target+0xcc/0x478
+[  241.223679] [c0000003f07c3b20] [c000000000301c64] scsi_scan_channel.part.9+0x74/0x7c
+[  241.223696] [c0000003f07c3b70] [c000000000301df4] scsi_scan_host_selected+0xe0/0x158
+[  241.223712] [c0000003f07c3bd0] [c000000000303f04] store_scan+0x104/0x114
+[  241.223727] [c0000003f07c3cb0] [c0000000002d5ac4] dev_attr_store+0x30/0x4c
+[  241.223741] [c0000003f07c3cd0] [c0000000001dbc34] sysfs_kf_write+0x64/0x78
+[  241.223756] [c0000003f07c3cf0] [c0000000001da858] kernfs_fop_write+0x170/0x1b8
+[  241.223773] [c0000003f07c3d40] [c0000000001621fc] __vfs_write+0x34/0x60
+[  241.223787] [c0000003f07c3d60] [c000000000163c2c] vfs_write+0xa8/0xcc
+[  241.223802] [c0000003f07c3db0] [c000000000163df4] ksys_write+0x70/0xbc
+[  241.223816] [c0000003f07c3e20] [c00000000000b40c] system_call+0x5c/0x68
 
-Co-developed-by: Cezary Jackiewicz <cezary@eko.one.pl>
-Signed-off-by: Cezary Jackiewicz <cezary@eko.one.pl>
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+As a part of the scan process Linux will allocate and configure a
+scsi_device for each target to be scanned. If the device is not present,
+then the scsi_device is torn down. As a part of scsi_device teardown a
+workqueue item will be scheduled and the lockups we see are because there
+are 250k workqueue items to be processed.  Accoding to the specification of
+SIS-64 sas controller, max_channel should be decreased on SIS-64 adapters
+to 4.
 
+The patch fixes softlockup issue.
+
+Thanks for Oliver Halloran's help with debugging and explanation!
+
+Link: https://lore.kernel.org/r/1583510248-23672-1-git-send-email-wenxiong@linux.vnet.ibm.com
+Signed-off-by: Wen Xiong <wenxiong@linux.vnet.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/ipr.c | 3 ++-
+ drivers/scsi/ipr.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1998,6 +1998,8 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(1) | RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
- 	  .driver_info = RSVD(4) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2033, 0xff),			/* BroadMobi BM806U */
-+	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2060, 0xff),			/* BroadMobi BM818 */
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x4000, 0xff) },			/* OLICARD300 - MT6225 */
+diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
+index 35d54ee1c5c74..b172f0a020834 100644
+--- a/drivers/scsi/ipr.c
++++ b/drivers/scsi/ipr.c
+@@ -9962,6 +9962,7 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
+ 	ioa_cfg->max_devs_supported = ipr_max_devs;
+ 
+ 	if (ioa_cfg->sis64) {
++		host->max_channel = IPR_MAX_SIS64_BUSES;
+ 		host->max_id = IPR_MAX_SIS64_TARGETS_PER_BUS;
+ 		host->max_lun = IPR_MAX_SIS64_LUNS_PER_TARGET;
+ 		if (ipr_max_devs > IPR_MAX_SIS64_DEVS)
+@@ -9970,6 +9971,7 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
+ 					   + ((sizeof(struct ipr_config_table_entry64)
+ 					       * ioa_cfg->max_devs_supported)));
+ 	} else {
++		host->max_channel = IPR_VSET_BUS;
+ 		host->max_id = IPR_MAX_NUM_TARGETS_PER_BUS;
+ 		host->max_lun = IPR_MAX_NUM_LUNS_PER_TARGET;
+ 		if (ipr_max_devs > IPR_MAX_PHYSICAL_DEVS)
+@@ -9979,7 +9981,6 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
+ 					       * ioa_cfg->max_devs_supported)));
+ 	}
+ 
+-	host->max_channel = IPR_VSET_BUS;
+ 	host->unique_id = host->host_no;
+ 	host->max_cmd_len = IPR_MAX_CDB_LEN;
+ 	host->can_queue = ioa_cfg->max_cmds;
+diff --git a/drivers/scsi/ipr.h b/drivers/scsi/ipr.h
+index 085e6c90f9e6a..89b36987ff309 100644
+--- a/drivers/scsi/ipr.h
++++ b/drivers/scsi/ipr.h
+@@ -1306,6 +1306,7 @@ struct ipr_resource_entry {
+ #define IPR_ARRAY_VIRTUAL_BUS			0x1
+ #define IPR_VSET_VIRTUAL_BUS			0x2
+ #define IPR_IOAFP_VIRTUAL_BUS			0x3
++#define IPR_MAX_SIS64_BUSES			0x4
+ 
+ #define IPR_GET_RES_PHYS_LOC(res) \
+ 	(((res)->bus << 24) | ((res)->target << 8) | (res)->lun)
+-- 
+2.20.1
+
 
 
