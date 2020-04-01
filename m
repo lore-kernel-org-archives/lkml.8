@@ -2,102 +2,216 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F584C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5323C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B03206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2C4206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IoLPirKS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hKNDg57V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733007AbgDAOL3 (ORCPT
+        id S1732902AbgDAOOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:11:29 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43110 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732876AbgDAOL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:11:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=//y7rTWB++mIyon6G1H8Ntxa7+4WAlVqnKhGsqIfAvQ=; b=IoLPirKSmbYazMEMzq/kFwrf9q
-        uU3i/jBhcEpDS63PhX/bwJkjPqvfyUy/dCL2rcQn3skbQG75H+0nt3iEnCv+MicI7Kw0Q0yfcvxxc
-        Q6SboNmTaj35lrGrWJHANouCHfNY8fkhuWWcsLJbRTtFObMXPGBiP5gtSM1vZV346I4M=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jJe5J-000Qte-Ev; Wed, 01 Apr 2020 16:11:13 +0200
-Date:   Wed, 1 Apr 2020 16:11:13 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
-Message-ID: <20200401141113.GC62290@lunn.ch>
-References: <AM0PR04MB544326757B0B510C7C3C6417FBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
+        Wed, 1 Apr 2020 10:14:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43769 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732852AbgDAOOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 10:14:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585750438;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SgMHqO/rrpPCHGR8xK4BkGOVi78dVLWaqsGqMgXXbEE=;
+        b=hKNDg57VY/EoINZtdh+NdUTkaffFR6FqhOLj+VLZn1AKe3hd2Q0S+5ruvSno0Z1RtXCqt5
+        CTimV34echCNTkZrbFCXUE/F3qIBo22h4EjC0Ol2IoljSV4YOaam3N3yhYCHw/qQGmuhFl
+        l17vcxr6f6njTiXEO+J2b17Acae4m3Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-446-m5LNliciMgegU4oo4HtSiA-1; Wed, 01 Apr 2020 10:13:57 -0400
+X-MC-Unique: m5LNliciMgegU4oo4HtSiA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA86F107ACC7;
+        Wed,  1 Apr 2020 14:13:53 +0000 (UTC)
+Received: from [10.72.12.139] (ovpn-12-139.pek2.redhat.com [10.72.12.139])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EB4719C70;
+        Wed,  1 Apr 2020 14:13:30 +0000 (UTC)
+Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
+To:     Christian Borntraeger <borntraeger@de.ibm.com>, mst@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
+        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
+        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
+        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
+        vmireyno@marvell.com, zhangweining@ruijie.com.cn
+References: <20200326140125.19794-1-jasowang@redhat.com>
+ <20200326140125.19794-2-jasowang@redhat.com>
+ <fde312a4-56bd-f11f-799f-8aa952008012@de.ibm.com>
+ <41ee1f6a-3124-d44b-bf34-0f26604f9514@redhat.com>
+ <4726da4c-11ec-3b6e-1218-6d6d365d5038@de.ibm.com>
+ <39b96e3a-9f4e-6e1d-e988-8c4bcfb55879@de.ibm.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <c423c5b1-7817-7417-d7af-e07bef6368e7@redhat.com>
+Date:   Wed, 1 Apr 2020 22:13:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB544326757B0B510C7C3C6417FBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
+In-Reply-To: <39b96e3a-9f4e-6e1d-e988-8c4bcfb55879@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > +     val = phy_read_mmd(bpphy, MDIO_MMD_AN, bp_phy-
-> > >bp_dev.mdio.an_status);
-> > > +     val = phy_read_mmd(bpphy, MDIO_MMD_AN,
-> > > + bp_phy->bp_dev.mdio.an_status);
-> > 
-> > Why not just
-> > 
-> > val = phy_read_mmd(bpphy, MDIO_MMD_AN, MDIO_CTRL1);
-> > 
-> > Or is your hardware not actually conformant to the standard?
-> > 
-> > There has also been a lot of discussion of reading the status twice is correct or
-> > not. Don't you care the link has briefly gone down and up again?
-> > 
-> >         Andrew
-> 
-> This could be changed to use directly the MDIO_STAT1 in order to read
-> AN status (and use MDIO_CTRL1 for writing the control register) but this
-> is more flexible and more readable
 
-Less readale. MDIO_STAT1 is well known. What does
-bp_dev.mdio.an_status mean?
+On 2020/4/1 =E4=B8=8B=E5=8D=889:02, Christian Borntraeger wrote:
+>
+> On 01.04.20 14:56, Christian Borntraeger wrote:
+>> On 01.04.20 14:50, Jason Wang wrote:
+>>> On 2020/4/1 =E4=B8=8B=E5=8D=887:21, Christian Borntraeger wrote:
+>>>> On 26.03.20 15:01, Jason Wang wrote:
+>>>>> Currently, CONFIG_VHOST depends on CONFIG_VIRTUALIZATION. But vhost=
+ is
+>>>>> not necessarily for VM since it's a generic userspace and kernel
+>>>>> communication protocol. Such dependency may prevent archs without
+>>>>> virtualization support from using vhost.
+>>>>>
+>>>>> To solve this, a dedicated vhost menu is created under drivers so
+>>>>> CONIFG_VHOST can be decoupled out of CONFIG_VIRTUALIZATION.
+>>>> FWIW, this now results in vhost not being build with defconfig kerne=
+ls (in todays
+>>>> linux-next).
+>>>>
+>>> Hi Christian:
+>>>
+>>> Did you meet it even with this commit=C2=A0https://git.kernel.org/pub=
+/scm/linux/kernel/git/next/linux-next.git/commit/?id=3Da4be40cbcedba9b5b7=
+14f3c95182e8a45176e42d?
+>> I simply used linux-next. The defconfig does NOT contain CONFIG_VHOST =
+and therefore CONFIG_VHOST_NET and friends
+>> can not be selected.
+>>
+>> $ git checkout next-20200401
+>> $ make defconfig
+>>    HOSTCC  scripts/basic/fixdep
+>>    HOSTCC  scripts/kconfig/conf.o
+>>    HOSTCC  scripts/kconfig/confdata.o
+>>    HOSTCC  scripts/kconfig/expr.o
+>>    LEX     scripts/kconfig/lexer.lex.c
+>>    YACC    scripts/kconfig/parser.tab.[ch]
+>>    HOSTCC  scripts/kconfig/lexer.lex.o
+>>    HOSTCC  scripts/kconfig/parser.tab.o
+>>    HOSTCC  scripts/kconfig/preprocess.o
+>>    HOSTCC  scripts/kconfig/symbol.o
+>>    HOSTCC  scripts/kconfig/util.o
+>>    HOSTLD  scripts/kconfig/conf
+>> *** Default configuration is based on 'x86_64_defconfig'
+>> #
+>> # configuration written to .config
+>> #
+>>
+>> $ grep VHOST .config
+>> # CONFIG_VHOST is not set
+>>
+>>  =20
+>>> If yes, what's your build config looks like?
+>>>
+>>> Thanks
+> This was x86. Not sure if that did work before.
+> On s390 this is definitely a regression as the defconfig files
+> for s390 do select VHOST_NET
+>
+> grep VHOST arch/s390/configs/*
+> arch/s390/configs/debug_defconfig:CONFIG_VHOST_NET=3Dm
+> arch/s390/configs/debug_defconfig:CONFIG_VHOST_VSOCK=3Dm
+> arch/s390/configs/defconfig:CONFIG_VHOST_NET=3Dm
+> arch/s390/configs/defconfig:CONFIG_VHOST_VSOCK=3Dm
+>
+> and this worked with 5.6, but does not work with next. Just adding
+> CONFIG_VHOST=3Dm to the defconfig solves the issue, something like
 
-In general, core code should be KISS, and assume everything follows
-the standard. We don't want to scatter workarounds for non-conformant
-hardware in core code. Such workarounds should be in the drivers where
-they are hidden away.
 
-> + bpkr->mdio.an_control = MDIO_CTRL1;
-> + bpkr->mdio.an_status = MDIO_STAT1;
-> + bpkr->mdio.an_ad_ability_0 = MDIO_PMA_EXTABLE_10GBKR;
-> + bpkr->mdio.an_ad_ability_1 = MDIO_PMA_EXTABLE_10GBKR + 1;
-> + bpkr->mdio.an_lp_base_page_ability_1 = MDIO_PMA_EXTABLE_10GBKR + 4;
+Right, I think we probably need
 
-Please drop this, and use the #defines directly.
+1) add CONFIG_VHOST=3Dm to all defconfigs that enables=20
+CONFIG_VHOST_NET/VSOCK/SCSI.
 
-       Andrew
+or
+
+2) don't use menuconfig for CONFIG_VHOST, let NET/SCSI/VDPA just select i=
+t.
+
+Thanks
+
+
+>
+> ---
+>   arch/s390/configs/debug_defconfig | 5 +++--
+>   arch/s390/configs/defconfig       | 5 +++--
+>   2 files changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debu=
+g_defconfig
+> index 46038bc58c9e..0b83274341ce 100644
+> --- a/arch/s390/configs/debug_defconfig
+> +++ b/arch/s390/configs/debug_defconfig
+> @@ -57,8 +57,6 @@ CONFIG_PROTECTED_VIRTUALIZATION_GUEST=3Dy
+>   CONFIG_CMM=3Dm
+>   CONFIG_APPLDATA_BASE=3Dy
+>   CONFIG_KVM=3Dm
+> -CONFIG_VHOST_NET=3Dm
+> -CONFIG_VHOST_VSOCK=3Dm
+>   CONFIG_OPROFILE=3Dm
+>   CONFIG_KPROBES=3Dy
+>   CONFIG_JUMP_LABEL=3Dy
+> @@ -561,6 +559,9 @@ CONFIG_VFIO_MDEV_DEVICE=3Dm
+>   CONFIG_VIRTIO_PCI=3Dm
+>   CONFIG_VIRTIO_BALLOON=3Dm
+>   CONFIG_VIRTIO_INPUT=3Dy
+> +CONFIG_VHOST=3Dm
+> +CONFIG_VHOST_NET=3Dm
+> +CONFIG_VHOST_VSOCK=3Dm
+>   CONFIG_S390_CCW_IOMMU=3Dy
+>   CONFIG_S390_AP_IOMMU=3Dy
+>   CONFIG_EXT4_FS=3Dy
+> diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
+> index 7cd0648c1f4e..39e69c4e8cf7 100644
+> --- a/arch/s390/configs/defconfig
+> +++ b/arch/s390/configs/defconfig
+> @@ -57,8 +57,6 @@ CONFIG_PROTECTED_VIRTUALIZATION_GUEST=3Dy
+>   CONFIG_CMM=3Dm
+>   CONFIG_APPLDATA_BASE=3Dy
+>   CONFIG_KVM=3Dm
+> -CONFIG_VHOST_NET=3Dm
+> -CONFIG_VHOST_VSOCK=3Dm
+>   CONFIG_OPROFILE=3Dm
+>   CONFIG_KPROBES=3Dy
+>   CONFIG_JUMP_LABEL=3Dy
+> @@ -557,6 +555,9 @@ CONFIG_VFIO_MDEV_DEVICE=3Dm
+>   CONFIG_VIRTIO_PCI=3Dm
+>   CONFIG_VIRTIO_BALLOON=3Dm
+>   CONFIG_VIRTIO_INPUT=3Dy
+> +CONFIG_VHOST=3Dm
+> +CONFIG_VHOST_NET=3Dm
+> +CONFIG_VHOST_VSOCK=3Dm
+>   CONFIG_S390_CCW_IOMMU=3Dy
+>   CONFIG_S390_AP_IOMMU=3Dy
+>   CONFIG_EXT4_FS=3Dy
+
