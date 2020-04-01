@@ -2,114 +2,125 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDC6C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B58BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD57A20658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE26020658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c2ypOqQp"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="J8/Y50VN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733172AbgDAPv4 (ORCPT
+        id S1733177AbgDAPwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:51:56 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26265 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732965AbgDAPv4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:51:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585756314;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9Hue9l1/UJQF2U4lKyhSbPFzaMnHT5K5mJD7PcBNrM4=;
-        b=c2ypOqQpiZB+D9K0IxvRsf2huk/tx7a+qg27vupMRMBFb0oSk0TFcMeyo6+LLabjXxEEkz
-        gt27cysjL68cE7KsZUYdOdTfEINfktwxA+Oq/IBQYE21ZGXqQRyIQXebJ4WTS+Xozg24FX
-        KYt7exPiHq3QvK+/3ZLn9u1gSkv5veA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-W2iZb2t4MKawS3j31oos7A-1; Wed, 01 Apr 2020 11:51:53 -0400
-X-MC-Unique: W2iZb2t4MKawS3j31oos7A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1338113F7;
-        Wed,  1 Apr 2020 15:51:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D631696B87;
-        Wed,  1 Apr 2020 15:51:43 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpeguxACC68bMhS-mNm4m6ytrKgs1--jbF5X3tBiPf_iG1jg@mail.gmail.com>
-References: <CAJfpeguxACC68bMhS-mNm4m6ytrKgs1--jbF5X3tBiPf_iG1jg@mail.gmail.com> <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk> <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com> <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net> <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com> <2465266.1585729649@warthog.procyon.org.uk> <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, Ian Kent <raven@themaw.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
+        Wed, 1 Apr 2020 11:52:23 -0400
+Received: from mout.gmx.net ([212.227.17.21]:55305 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732683AbgDAPwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:52:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1585756335;
+        bh=3eq5ME+gVr4M1P00oIT+Rc42Nsmquyg/D1KhXARjebc=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=J8/Y50VNM29aa4oWf6QVSkMPQ5QldSqWvvWeCCiE8oYn8Qo9Ne/tu8VYbo8F2+pIp
+         ARnjLv4x73vE+/4CSfBtvRcBPhbbnVlRD0wyNB9eA+GY/V89bjEhX5tX8/IGTz56zn
+         gy7/+1Sp5OFpjjiA/16bloA52QB0ACOAlDXHHnu4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MAOJP-1jVSI01FWt-00BxKb; Wed, 01
+ Apr 2020 17:52:15 +0200
+Date:   Wed, 1 Apr 2020 17:52:13 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] staging: vt6656: Define EnCFG_BBType_MASK as OR between
+ previous defines
+Message-ID: <20200401155212.GB3109@ubuntu>
+References: <20200327165802.8445-1-oscar.carter@gmx.com>
+ <20200330122714.GA113453@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2583799.1585756303.1@warthog.procyon.org.uk>
-Date:   Wed, 01 Apr 2020 16:51:43 +0100
-Message-ID: <2583800.1585756303@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330122714.GA113453@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:dB1hbiDlJbRfAbWMS4n1nBjXSFgq/QwnCi6DMfpH0RNAsTOgxgH
+ XCWhs4ZSr/MwKu4I/nOOSHNtvdzH+iYqOmQQnYlAXl0quY/fjEIZQSCP71kySq2b0hlMGRB
+ Sv3JDtW4TPXt4YhaozzHcbnT+315pcpqcKogNwF+PjrX+6rLsHweLHH5BiTJFZQ9UaTwt+0
+ gvM8cYc6Mi8bfkQ2AYZBQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7uJTvMvfw4I=:avgJoEJvY6zy5SsYKojpA1
+ ChGOVZmebOVws/0GN+ZZB5Xvt3AQ6iQzbNxs4D/IbELyI+ZiRAD7MkjmyogUhcq0e5CMRdmKC
+ 61DcSLgnJ6rtfW6k7Oz4PQ/a+PDRJbqban2SWGv9Ol9EaHfx8xWyCj+hY7UEPo6gXfNnKFJEc
+ t9czfb+F62AUgW+cwljyaTjIcdzVcANx246pc/8MqFIk1cm/JJcqHDsh/hPisMJjDYwvk78Nr
+ QcB8bM2EV0X5vIwPTyRNWxd0c2EGn8wpwYTJAjgYAWcsS1eqmzO2dlfIJjFir0Uxm5Wd52Too
+ lDMdfI7TFYuvqtox4VmtNQk705laPv4wz60cB4l5UDoxWIhLNMjtv6sWwW66n4OT35VoakWY4
+ 3+n2MBwoiWONfEzPoqq/viKjiS1JDqF9MNOMpB+52e0OIMT/8aR9khXcbHh3DHWu4nekZPSuS
+ bHGdc+Ld9L88qEtMFu9dqRu8V7lt0nMI4IiSCEBNj51OjOlT+VTccgzc2939GLJKn11SpSt0D
+ P7CzMqsvQF75mqKdh4v0JLsj6B2Gp1t/2KDpgiXPkbzORY82pYC5zPfjAa2JzQj3kADzIM/u9
+ UjIch6GPUL8yU6itbKykrBeDVD91lJPKn63GU9K0PMiVb00IODoIPeGh03flFmN/XdCeAyQnB
+ B2YC/QGdC9tm042h1q/6HGH5yWkxDmTo2avlkfumVLpgfgl9HRxa6xVU0+Mp5zifbjNVp9uA1
+ rml0ipCLbhkAZKnw+UDkErwIarxnJtgXijHflnNs0vsZkSHz4fJwtjHG5iYOluD/QtBR94gYW
+ Hg887eXVgwnkXT6THYbgw/2OCQ/uXDipKTvzlyL5q9NmlN8szm60a14zXv7ISfgomU51gDf5X
+ P5n1TTxtJOsvdgQGuskdBbIFd2uYKbmLMcgPPUqIBoiP0lkEXo8nn0kLMlksv4gdxELo7A42k
+ R4AowL2634Z1CDQJfImXUwlNMtODMw4rBppxvioGWCuugSY85o1AsAAqYd/qPGHP1qfx0Adxx
+ 50pzKBInILBL71WDmI7/D284WwuQA5oQM7yrPUTUqgMuSQHdSQZZFZAtfgE3R06Hx1V2WcWpL
+ dyYjmytQRFFL/0OIz0n2H+xHK7108GUBiBFPSkjH324zskzAbe6owwFjKFja7GysStvewr06E
+ Hygc+/8GyfM75hitsiEO8a5FX+sl2LFIjf629kbbP0wEm8ZS8JY9QSAbGl98C7ETxK/0cnJZq
+ S1x5i87Tpafkt1EZf
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+On Mon, Mar 30, 2020 at 02:27:14PM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Mar 27, 2020 at 05:58:02PM +0100, Oscar Carter wrote:
+> > Define the EnCFG_BBType_MASK bit as an OR operation between two previo=
+us
+> > defines instead of using the OR between two new BIT macros. Thus, the
+> > code is more clear.
+> >
+> > Fixes: a74081b44291 ("staging: vt6656: Use BIT() macro instead of hex =
+value")
+> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> > Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> >  drivers/staging/vt6656/mac.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/staging/vt6656/mac.h b/drivers/staging/vt6656/mac=
+.h
+> > index c532b27de37f..b01d9ee8677e 100644
+> > --- a/drivers/staging/vt6656/mac.h
+> > +++ b/drivers/staging/vt6656/mac.h
+> > @@ -177,7 +177,7 @@
+> >  #define EnCFG_BBType_a		0x00
+> >  #define EnCFG_BBType_b		BIT(0)
+> >  #define EnCFG_BBType_g		BIT(1)
+> > -#define EnCFG_BBType_MASK	(BIT(0) | BIT(1))
+> > +#define EnCFG_BBType_MASK	(EnCFG_BBType_b | EnCFG_BBType_g)
+>
+> This does not "fix" anything, like your "Fixes:" tag implies.  It just
+> cleans up the code some more.  Only use Fixes: if it actually fixes a
+> problem introduced by a previous patch.
+>
+Ok, thanks for the explanation.
 
-> For   30000 mounts, f=    146400us f2=    136766us p=   1406569us p2=
->   221669us; p=9.6*f p=10.3*f2 p=6.3*p2
+> Can you remove that line and resend?
+>
+Yes, I will remove that line, I will create a new version of this patch an=
+d I
+will resend it.
 
-	f =    146400us
-	f2=    136766us
-	p =   1406569us  <--- Order of magnitude slower
-	p2=    221669us
+> thanks.
+>
+> greg k-h
 
-And more memory used because it's added a whole bunch of inodes and dentries
-to the cache.  For each mount that's a pair for each dir and a pair for each
-file within the dir.  So for the two files my test is reading, for 30000
-mounts, that's 90000 dentries and 90000 inodes in mountfs alone.
-
-	(gdb) p sizeof(struct dentry)
-	$1 = 216
-	(gdb) p sizeof(struct inode)
-	$2 = 696
-	(gdb) p (216*696)*30000*3/1024/1024
-	$3 = 615
-
-so 615 MiB of RAM added to the caches in an extreme case.
-
-We're seeing customers with 10000+ mounts - that would be 205 MiB, just to
-read two values from each mount.
-
-I presume you're not going through /proc/fdinfo each time as that would add
-another d+i - for >1GiB added to the caches for 30000 mounts.
-
-David
-
+Thanks,
+oscar carter
