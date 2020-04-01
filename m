@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5582C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B011C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7503820BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CE420857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758383;
-	bh=nl2ZN3Pi4tmBVjj446X5Z8x61Da2qbmYcHGQwxUDZvY=;
+	s=default; t=1585758386;
+	bh=7cLCQJbYCuGFIBQmHvuNG8by+AyvdUQ5Ij+BJvuY5WQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/IPy+0QlBttz4b3YByHuURRYfiICwhqXkt2rra7NjBWXSGhHAL/+7Yr85ZQN6Z7Y
-	 FDHHW3gCGGNSYEnZKIcviX1jLXnSO11/hwNpgykzGao/Q/XBgwbeKoN0Pgw/MWqQGh
-	 /S2/+RYEIo6DlO3HGJEEOODGetAi11pOxSikfOv8=
+	b=d/qj+JgC1O3m03MtMKUlxvDenO/kqmlvkrsu72kZmQsTmQBVTUZ4aOEII6Xwh3/Xe
+	 K1xmC9VKKgkz/sxPyjtNRweBeAOQzNhD26jpIaEtEjwMBi2NdV4tYW/D5jCCXYhl/3
+	 okvsFStqExGOGVTZoooXvLon9h9hB1xa3o/+T6c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387888AbgDAQ0W (ORCPT
+        id S1732775AbgDAQ0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732342AbgDAQ0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:26:17 -0400
+        id S2387672AbgDAQ0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:26:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5041520857;
-        Wed,  1 Apr 2020 16:26:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97B01212CC;
+        Wed,  1 Apr 2020 16:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758376;
-        bh=nl2ZN3Pi4tmBVjj446X5Z8x61Da2qbmYcHGQwxUDZvY=;
+        s=default; t=1585758374;
+        bh=7cLCQJbYCuGFIBQmHvuNG8by+AyvdUQ5Ij+BJvuY5WQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IhJp0mmIaOUJhyWYgW0mBG7I5fHfJSXFeL1+OfaIN3bQcyysiuVYwjxxINbpxa2kU
-         SnoP0elvhrIYMIOekBCLWuhPDZ4TkWyKLyxwTgtV5/KwBSVtoX7luqjqSA7krLPwwg
-         ARumxNsbwCYe02CNXgrKzjpiVgF55kDX8fulTLu8=
+        b=mxdG+NDQ6bWg4BK6X6nvRq/4EPYevLDqU4N6IrF1l8iSAS/Ylg9DBavtkLe6Wnoxu
+         jDUZGNZxoF/ZE/7Z22yQiMkhWjekx+FVQI9zZaspqmdBC091EiXNDpJGUL798UUmVW
+         8IPBcPgfsOC0yUdNq3otT5Z9udOXGqiwJvJwyeck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        =?UTF-8?q?Timo=20Ter=C3=A4s?= <timo.teras@iki.fi>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.19 070/116] xfrm: policy: Fix doulbe free in xfrm_policy_timer
-Date:   Wed,  1 Apr 2020 18:17:26 +0200
-Message-Id: <20200401161552.010151210@linuxfoundation.org>
+Subject: [PATCH 4.19 069/116] xfrm: add the missing verify_sec_ctx_len check in xfrm_add_acquire
+Date:   Wed,  1 Apr 2020 18:17:25 +0200
+Message-Id: <20200401161551.946001126@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -61,70 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 4c59406ed00379c8663f8663d82b2537467ce9d7 upstream.
+commit a1a7e3a36e01ca6e67014f8cf673cb8e47be5550 upstream.
 
-After xfrm_add_policy add a policy, its ref is 2, then
+Without doing verify_sec_ctx_len() check in xfrm_add_acquire(), it may be
+out-of-bounds to access uctx->ctx_str with uctx->ctx_len, as noticed by
+syz:
 
-                             xfrm_policy_timer
-                               read_lock
-                               xp->walk.dead is 0
-                               ....
-                               mod_timer()
-xfrm_policy_kill
-  policy->walk.dead = 1
-  ....
-  del_timer(&policy->timer)
-    xfrm_pol_put //ref is 1
-  xfrm_pol_put  //ref is 0
-    xfrm_policy_destroy
-      call_rcu
-                                 xfrm_pol_hold //ref is 1
-                               read_unlock
-                               xfrm_pol_put //ref is 0
-                                 xfrm_policy_destroy
-                                  call_rcu
+  BUG: KASAN: slab-out-of-bounds in selinux_xfrm_alloc_user+0x237/0x430
+  Read of size 768 at addr ffff8880123be9b4 by task syz-executor.1/11650
 
-xfrm_policy_destroy is called twice, which may leads to
-double free.
+  Call Trace:
+   dump_stack+0xe8/0x16e
+   print_address_description.cold.3+0x9/0x23b
+   kasan_report.cold.4+0x64/0x95
+   memcpy+0x1f/0x50
+   selinux_xfrm_alloc_user+0x237/0x430
+   security_xfrm_policy_alloc+0x5c/0xb0
+   xfrm_policy_construct+0x2b1/0x650
+   xfrm_add_acquire+0x21d/0xa10
+   xfrm_user_rcv_msg+0x431/0x6f0
+   netlink_rcv_skb+0x15a/0x410
+   xfrm_netlink_rcv+0x6d/0x90
+   netlink_unicast+0x50e/0x6a0
+   netlink_sendmsg+0x8ae/0xd40
+   sock_sendmsg+0x133/0x170
+   ___sys_sendmsg+0x834/0x9a0
+   __sys_sendmsg+0x100/0x1e0
+   do_syscall_64+0xe5/0x660
+   entry_SYSCALL_64_after_hwframe+0x6a/0xdf
 
-Call Trace:
-RIP: 0010:refcount_warn_saturate+0x161/0x210
-...
- xfrm_policy_timer+0x522/0x600
- call_timer_fn+0x1b3/0x5e0
- ? __xfrm_decode_session+0x2990/0x2990
- ? msleep+0xb0/0xb0
- ? _raw_spin_unlock_irq+0x24/0x40
- ? __xfrm_decode_session+0x2990/0x2990
- ? __xfrm_decode_session+0x2990/0x2990
- run_timer_softirq+0x5c5/0x10e0
+So fix it by adding the missing verify_sec_ctx_len check there.
 
-Fix this by use write_lock_bh in xfrm_policy_kill.
-
-Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing policy->walk.dead")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Timo Teräs <timo.teras@iki.fi>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 980ebd25794f ("[IPSEC]: Sync series - acquire insert")
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_policy.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/xfrm/xfrm_user.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -309,7 +309,9 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -2275,6 +2275,9 @@ static int xfrm_add_acquire(struct sk_bu
+ 	err = verify_newpolicy_info(&ua->policy);
+ 	if (err)
+ 		goto free_state;
++	err = verify_sec_ctx_len(attrs);
++	if (err)
++		goto free_state;
  
- static void xfrm_policy_kill(struct xfrm_policy *policy)
- {
-+	write_lock_bh(&policy->lock);
- 	policy->walk.dead = 1;
-+	write_unlock_bh(&policy->lock);
- 
- 	atomic_inc(&policy->genid);
- 
+ 	/*   build an XP */
+ 	xp = xfrm_policy_construct(net, &ua->policy, attrs, &err);
 
 
