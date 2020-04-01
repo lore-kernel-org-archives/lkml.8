@@ -7,164 +7,159 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D688C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5797C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E430C206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B57206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VteHLmzK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+n5pwj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732721AbgDANqD (ORCPT
+        id S1732733AbgDANqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:46:03 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42128 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732504AbgDANqD (ORCPT
+        Wed, 1 Apr 2020 09:46:08 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41536 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732504AbgDANqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:46:03 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h15so71800wrx.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 06:46:02 -0700 (PDT)
+        Wed, 1 Apr 2020 09:46:07 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n17so25810112lji.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 06:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4cNryWwLgfk02MQJubNgjaSZbCDMoiiIMtKoOX7YXDI=;
-        b=VteHLmzKgoEfzpQT1w/jhX76LESCf+gm4mvr2xXIqiwhTv2TpXWBbt4Y4ZcRFrHXM5
-         ZH8rUAOdHTvMKVc5NIBAxe5OIiGKoWZlamak03YGSPe1b2LkoLoEDDMyza5RZ+63zO7H
-         MGuKbHbEs5BDD2VJYEB67W0WZgbY4ktCqGKHt70vKyVRIsvcoOefEpLENOV4IQI784b7
-         h01SahB8bQKpM8MCXHS0DVklDLvM98lHC+3svnbLpIUBQf9ktvVmCfuQx5Le8RNFrWlB
-         1WZNbK4SIJGcUVYehFgqpdLV3myf8yVjxpuqWFtD6OFnmj0TJKliqsoo4rFebvSMz6dg
-         umEA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=id2LgVdX5Zbt9LUjt9m/iHuBybgTZCyiEkTXJT43HH0=;
+        b=a+n5pwj80vxevLVnTRMIx4qWSuxW3589cCII700Sn26rl8XSxthgUsEG6dTmoGB7vt
+         0k53FXKC/jOR9z2QXlU3tsKSJ35NYNtKx0sSec158mg+VDWseor1rT7oGZQnGhDj1iE7
+         XtW44XqLXjZAyJjvwPC2tTk3pkr4PdMBMK4tjgDwkBBmR/ctr995EOcjxt20GxFuvOmm
+         VZ+WJ/oO5vcaHLJiZYz3yTdPieEqBiNfOY6ryPLv6bpjvI2hvsz4VPQ2600QHjtzbvMY
+         qhe4mY58TpGb31ulHf/AuWe4vuJLJhWUXYeKs7xaAl8nK7RND5J4gsN48ZZJl7yeksGW
+         Hj6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4cNryWwLgfk02MQJubNgjaSZbCDMoiiIMtKoOX7YXDI=;
-        b=WDJsjcC8G4ZqozXreye66XbNnELQyMlXGIv3TMnYovQyKwS/3ssCFK1UxkW2fJZ9jz
-         pDBpihJZLKQ907YC3wfoA+l6MXxaEoeWAGc+n3dzx1pXnxg0FX36wEQqWw/u3Eo+1I8o
-         5hlHiwLEVtEP7J+VpSaP9Jzv0Y8//+STRZgh1fteJNyrkdfU9o5k586KozR83ASFq1lo
-         3f1l4W4Rj6JIrq8lLNb/D1R3+7Y8RpHgZM6VlaD9PxAewIgVNB/fue6q/T+9n7QiLhBI
-         Ui9iMi7JGKeoupfbfuKBUx/CLUjT8pdoQ4WNxBQz80yw7BiTF2CbjPeihG6A3Ur9kX0l
-         I6Cg==
-X-Gm-Message-State: ANhLgQ2vzOrgIPINamYGwMwfy+Za3Ee6Y2QQSn73iYqwvFRzyZAoIk3g
-        h3Fi/WYUaZ/BHWhjcy91ideQiA==
-X-Google-Smtp-Source: ADFU+vvhdDZCD6jV8ng3HnZclBV2DQ0pInm0Lq5Hk0o80mIiqRvOGy1tJbuXvkh/iSOegt0kXOB/Dg==
-X-Received: by 2002:adf:e44a:: with SMTP id t10mr25806844wrm.322.1585748761807;
-        Wed, 01 Apr 2020 06:46:01 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:6097:1406:6470:33b5])
-        by smtp.gmail.com with ESMTPSA id z1sm3172281wrp.90.2020.04.01.06.46.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 06:46:01 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 15:45:52 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 01/10] iommu/ioasid: Introduce system-wide capacity
-Message-ID: <20200401134552.GD882512@myrica>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1585158931-1825-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=id2LgVdX5Zbt9LUjt9m/iHuBybgTZCyiEkTXJT43HH0=;
+        b=be1Pj0EGqJAeXyc19plSu6ANLBfN+oLjgzJDxF3r2camWQ2x6R2pWF0+YzrzfzHJE+
+         z2tL3FiojUvf87T63fztcMbz+xjp0UU3RLItkwEiMVh9mUTuOhddzsMMEk/Ds0bZZ2Om
+         WvmIDybOarocbcH3DUyk3+QWv1jxmuXYqRajPpWs9WM7xw0uRzJlnQvZH+eoOMpyLAAG
+         j3oDzCl4HlzlvT+YKr1Ko7DbR7BqRc8jd7gJ7fVMn/tk/J5Pd+MkDRDjd2Km5Owx8mcx
+         6Ct2jz63W+zOBkylai5JUoJNRcrnlBNtPDRVBOxpssZ7Oz/6pPaesZNvOijqweLK9DR1
+         maGw==
+X-Gm-Message-State: AGi0PuboB15FwXnoD5zlynJxH5XsuiUzXEvYagoQoJ3tVSsH6oBZaOJ9
+        699uP4pe5wcqYA+1VkCfxy9/oN9fkUIlVMPjziV0eA==
+X-Google-Smtp-Source: APiQypL5fQIT3NYdmUUYCoB3bNsaYBvOwXo555DW5cy8GjYmcdui0/psmUX23p16XcJsMoObjMXsCJ96gbNf1YQPmjY=
+X-Received: by 2002:a2e:868b:: with SMTP id l11mr13154273lji.247.1585748765088;
+ Wed, 01 Apr 2020 06:46:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585158931-1825-2-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <20200331085308.098696461@linuxfoundation.org> <CA+G9fYsZjmf34pQT1DeLN_DDwvxCWEkbzBfF0q2VERHb25dfZQ@mail.gmail.com>
+ <CAHk-=whyW9TXfYxyxUW6hP9e0A=5MnOHrTarr4_k0hiddxq69Q@mail.gmail.com>
+ <20200331192949.GN9917@kernel.org> <CAEUSe7_f8m0dLQT1jdU+87fNThnxMKuoGJkFuGpbT4OmpmE4iA@mail.gmail.com>
+ <20200401124037.GA12534@kernel.org>
+In-Reply-To: <20200401124037.GA12534@kernel.org>
+From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Date:   Wed, 1 Apr 2020 07:45:53 -0600
+Message-ID: <CAEUSe7-ercqbofx93m-d0RNW_dQqr1U7F7JYQ5X81CHSkq4KDw@mail.gmail.com>
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 10:55:22AM -0700, Jacob Pan wrote:
-> IOASID is a limited system-wide resource that can be allocated at
-> runtime. This limitation can be enumerated during boot. For example, on
-> x86 platforms, PCI Process Address Space ID (PASID) allocation uses
-> IOASID service. The number of supported PASID bits are enumerated by
-> extended capability register as defined in the VT-d spec.
-> 
-> This patch adds a helper to set the system capacity, it expected to be
-> set during boot prior to any allocation request.
+Hello!
 
-This one-time setting is a bit awkward. Since multiple IOMMU drivers may
-be loaded, this can't be a module_init() thing. And we generally have
-multiple SMMU instances in the system. So we'd need to call
-install_capacity() only for the first SMMU loaded with an arbitrary 1<<20,
-even though each SMMU can support different numbers of PASID bits.
-Furthermore, modules such as iommu-sva will want to initialize their
-IOASID set at module_init(), which will happen before the SMMU can set up
-the capacity, so ioasid_alloc_set() will return an error.
 
-How about hardcoding ioasid_capacity to 20 bits for now?  It's the PCIe
-limit and probably won't have to increase for a while.
-
-Thanks,
-Jean
-
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+On Wed, 1 Apr 2020 at 06:40, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+> Can you please try the one-liner at the end of this message?
+[...]
+>
+> From 2a88ba6ddf54a4340f5a5f896705d5e42561e210 Mon Sep 17 00:00:00 2001
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date: Wed, 1 Apr 2020 09:33:59 -0300
+> Subject: [PATCH 1/1] perf python: Fix clang detection to strip out option=
+s
+>  passed in $CC
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=3DUTF-8
+> Content-Transfer-Encoding: 8bit
+>
+> The clang check in the python setup.py file expected $CC to be just the
+> name of the compiler, not the compiler + options, i.e. all options were
+> expected to be passed in $CFLAGS, this ends up making it fail in systems
+> where CC is set to, e.g.:
+>
+>  "aarch64-linaro-linux-gcc --sysroot=3D/oe/build/tmp/work/juno-linaro-lin=
+ux/perf/1.0-r9/recipe-sysroot"
+>
+> Like this:
+>
+>   $ python3
+>   >>> from subprocess import Popen
+>   >>> a =3D Popen(["aarch64-linux-gnu-gcc --sysroot=3D/oe/build/tmp/work/=
+juno-linaro-linux/perf/1.0-r9/recipe-sysroot", "-v"])
+>   Traceback (most recent call last):
+>     File "<stdin>", line 1, in <module>
+>     File "/usr/lib/python3.6/subprocess.py", line 729, in __init__
+>       restore_signals, start_new_session)
+>     File "/usr/lib/python3.6/subprocess.py", line 1364, in _execute_child
+>       raise child_exception_type(errno_num, err_msg, err_filename)
+>   FileNotFoundError: [Errno 2] No such file or directory: 'aarch64-linux-=
+gnu-gcc --sysroot=3D/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe=
+-sysroot': 'aarch64-linux-gnu-gcc --sysroot=3D/oe/build/tmp/work/juno-linar=
+o-linux/perf/1.0-r9/recipe-sysroot'
+>   >>>
+>
+> Make it more robust, covering this case, by passing cc.split()[0] as the
+> first arg to popen().
+>
+> Reported-by: Daniel D=C3=ADaz <daniel.diaz@linaro.org>
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->  drivers/iommu/ioasid.c | 15 +++++++++++++++
->  include/linux/ioasid.h |  5 ++++-
->  2 files changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> index 0f8dd377aada..4026e52855b9 100644
-> --- a/drivers/iommu/ioasid.c
-> +++ b/drivers/iommu/ioasid.c
-> @@ -17,6 +17,21 @@ struct ioasid_data {
->  	struct rcu_head rcu;
->  };
->  
-> +static ioasid_t ioasid_capacity;
-> +static ioasid_t ioasid_capacity_avail;
-> +
-> +/* System capacity can only be set once */
-> +void ioasid_install_capacity(ioasid_t total)
-> +{
-> +	if (ioasid_capacity) {
-> +		pr_warn("IOASID capacity already set at %d\n", ioasid_capacity);
-> +		return;
-> +	}
-> +
-> +	ioasid_capacity = ioasid_capacity_avail = total;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_install_capacity);
-> +
->  /*
->   * struct ioasid_allocator_data - Internal data structure to hold information
->   * about an allocator. There are two types of allocators:
-> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> index 6f000d7a0ddc..9711fa0dc357 100644
-> --- a/include/linux/ioasid.h
-> +++ b/include/linux/ioasid.h
-> @@ -40,7 +40,7 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
->  int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
->  void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
->  int ioasid_set_data(ioasid_t ioasid, void *data);
-> -
-> +void ioasid_install_capacity(ioasid_t total);
->  #else /* !CONFIG_IOASID */
->  static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
->  				    ioasid_t max, void *private)
-> @@ -72,5 +72,8 @@ static inline int ioasid_set_data(ioasid_t ioasid, void *data)
->  	return -ENOTSUPP;
->  }
->  
-> +static inline void ioasid_install_capacity(ioasid_t total)
-> +{
-> +}
->  #endif /* CONFIG_IOASID */
->  #endif /* __LINUX_IOASID_H */
-> -- 
-> 2.7.4
-> 
+>  tools/perf/util/setup.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+> index 8a065a6f9713..347b2c0789e4 100644
+> --- a/tools/perf/util/setup.py
+> +++ b/tools/perf/util/setup.py
+> @@ -3,7 +3,7 @@ from subprocess import Popen, PIPE
+>  from re import sub
+>
+>  cc =3D getenv("CC")
+> -cc_is_clang =3D b"clang version" in Popen([cc, "-v"], stderr=3DPIPE).std=
+err.readline()
+> +cc_is_clang =3D b"clang version" in Popen([cc.split()[0], "-v"], stderr=
+=3DPIPE).stderr.readline()
+>
+>  def clang_has_option(option):
+>      return [o for o in Popen([cc, option], stderr=3DPIPE).stderr.readlin=
+es() if b"unknown argument" in o] =3D=3D [ ]
+> --
+> 2.21.1
+
+This worked on top of torvalds/master and linux-stable-rc/linux-5.6.y.
+
+Thanks and greetings!
+
+Daniel D=C3=ADaz
+daniel.diaz@linaro.org
