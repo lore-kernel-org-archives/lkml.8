@@ -2,147 +2,153 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B69C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4F3C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2A120719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:32:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="nkvhrcmU"
+	by mail.kernel.org (Postfix) with ESMTP id 8901F20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585769647;
+	bh=1ziAwZyWgAC9dJ1aazSpPutT4RCKJC3VTwgJQkvvvyw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=TqY7PiUQ4uqv8zaPysbflsJ0Xpa/od6WX+rxickqnZRdxdDu3EETMhtTIdlr3Al/3
+	 AC3wrzvhdgS9Mqey/Pq1v0vXRJM/OiG8dhz56Hxey1xs+2zeOQGhviG6sn4JIkRCVL
+	 OkxwMbL5XalrzMhCkX6pwJ7w4JsdP+gsgrou+1bQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732725AbgDATcn (ORCPT
+        id S1732731AbgDATeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:32:43 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45644 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732244AbgDATcn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:32:43 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c145so1275565qke.12
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 12:32:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id;
-        bh=8sYcdfSwvJ7GU27ydMWlYk6GPFp2IEn+qpWqN6lfgv8=;
-        b=nkvhrcmUfagpr2oQYYqjbotL3Vw0ugDYVnuHKd1hN6z5UqMf/7JJuzuXJBvhm3IR1w
-         cjghLDInZI9fi2X+8gk26/W4tD5pyu5rvsDTZkRpP8fcayYp+LUkIHRXYaKF6+9yxt/U
-         6de6nc0uxXpa8PTG8wVKzwPpOJdl/XR5JsyNTyrp6ueVFekd63TCU3lkX3qxzfJ5UaAT
-         +maDA1h6rLGgXHZJ0WczttOLiHD6Cb3LZNy10bE1jvwQdxvQjFkkhvJ4IbHGkPvSYWWr
-         V8B15YCVgLLydloCG/DjTaQsRI46585Y+gydNkNS3J5V7WkmOXHzCbbChYq78buTdtEQ
-         VTHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=8sYcdfSwvJ7GU27ydMWlYk6GPFp2IEn+qpWqN6lfgv8=;
-        b=RloHn/JShoryiKLMk2aLUUfsb8CDGzpnvYg6nS0KnnKx9AasfIzLLe6g6Xj7zhhmF5
-         0Be9b2MWfnUC6ZK8SaBbAB6sS8rdzqMPz2r7hJ1qSmAxOxaEvgKAEYzOeEZdiG8Pe2vJ
-         6GYFhLBu3z9hO/5bs7PyRDgYXaJn3DhV6T4dksimwQCr0DBdSZ2fdZ90BGPJaGe8vgY/
-         P0G8qXQWb3z3bBmWIjMQR2idrBr7cz/gsmDMKVpXPAlwe8dmeQO/wQPhKJ8+gWboHQSU
-         MQFfSBNLq1k6YIQJl4/gre7TYAyuEWbW7ivk97rLVEGW6JVvhFOEEjgocb6yTbxp84l8
-         SGgQ==
-X-Gm-Message-State: ANhLgQ2X01ztJoYCiqtm3T1W/pKi7cqn8LUS5kaZJmPsZgvbcRPXYLLp
-        EsB9R5/rATqvyZoLggBqDUDLGPJ0x9mMuA==
-X-Google-Smtp-Source: ADFU+vuPQVF2n6nuyNe96HQIiCQgRwZKROr5AyHweWIc1rG+54male7SxFwauWXmFTfMxzBZGD993Q==
-X-Received: by 2002:a37:66cf:: with SMTP id a198mr11805930qkc.203.1585769560393;
-        Wed, 01 Apr 2020 12:32:40 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id y132sm2040516qka.19.2020.04.01.12.32.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 12:32:39 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        mhocko@suse.com, linux-mm@kvack.org, dan.j.williams@intel.com,
-        shile.zhang@linux.alibaba.com, daniel.m.jordan@oracle.com,
-        pasha.tatashin@soleen.com, ktkhai@virtuozzo.com, david@redhat.com,
-        jmorris@namei.org, sashal@kernel.org
-Subject: [PATCH] mm: initialize deferred pages with interrupts enabled
-Date:   Wed,  1 Apr 2020 15:32:38 -0400
-Message-Id: <20200401193238.22544-1-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Apr 2020 15:34:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732148AbgDATeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 15:34:06 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6309220714;
+        Wed,  1 Apr 2020 19:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585769645;
+        bh=1ziAwZyWgAC9dJ1aazSpPutT4RCKJC3VTwgJQkvvvyw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=MXP/dCzeEguEmqrUkbR0Lc9vwOEIXHDkxr40tpnGwm6DWP0BF5auzVcjxwSUn8wgK
+         by661+RJU8b8/bzQaFMLLtPqCDK2qJlBfEYvarJuFYngvS4g15pdFM0IfFiOo1P5VV
+         Ouj6X8nHQNDF3vDf/nuWVXjxMOwj8L2WWOW3HOGE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2877335226B3; Wed,  1 Apr 2020 12:34:05 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 12:34:05 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200401193405.GH19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200331150911.GC236678@google.com>
+ <20200331160119.GA27614@pc636>
+ <20200331183000.GD236678@google.com>
+ <20200401122550.GA32593@pc636>
+ <20200401134745.GV19865@paulmck-ThinkPad-P72>
+ <20200401181601.GA4042@pc636>
+ <20200401182615.GE19865@paulmck-ThinkPad-P72>
+ <20200401183745.GA5960@pc636>
+ <20200401185439.GG19865@paulmck-ThinkPad-P72>
+ <20200401190548.GA6360@pc636>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401190548.GA6360@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initializing struct pages is a long task and keeping interrupts disabled
-for the duration of this operation introduces a number of problems.
+On Wed, Apr 01, 2020 at 09:05:48PM +0200, Uladzislau Rezki wrote:
+> On Wed, Apr 01, 2020 at 11:54:39AM -0700, Paul E. McKenney wrote:
+> > On Wed, Apr 01, 2020 at 08:37:45PM +0200, Uladzislau Rezki wrote:
+> > > On Wed, Apr 01, 2020 at 11:26:15AM -0700, Paul E. McKenney wrote:
+> > > > On Wed, Apr 01, 2020 at 08:16:01PM +0200, Uladzislau Rezki wrote:
+> > > > > > > > 
+> > > > > > > > Right. Per discussion with Paul, we discussed that it is better if we
+> > > > > > > > pre-allocate N number of array blocks per-CPU and use it for the cache.
+> > > > > > > > Default for N being 1 and tunable with a boot parameter. I agree with this.
+> > > > > > > > 
+> > > > > > > As discussed before, we can make use of memory pool API for such
+> > > > > > > purpose. But i am not sure if it should be one pool per CPU or
+> > > > > > > one pool per NR_CPUS, that would contain NR_CPUS * N pre-allocated
+> > > > > > > blocks.
+> > > > > > 
+> > > > > > There are advantages and disadvantages either way.  The advantage of the
+> > > > > > per-CPU pool is that you don't have to worry about something like lock
+> > > > > > contention causing even more pain during an OOM event.  One potential
+> > > > > > problem wtih the per-CPU pool can happen when callbacks are offloaded,
+> > > > > > in which case the CPUs needing the memory might never be getting it,
+> > > > > > because in the offloaded case (RCU_NOCB_CPU=y) the CPU posting callbacks
+> > > > > > might never be invoking them.
+> > > > > > 
+> > > > > > But from what I know now, systems built with CONFIG_RCU_NOCB_CPU=y
+> > > > > > either don't have heavy callback loads (HPC systems) or are carefully
+> > > > > > configured (real-time systems).  Plus large systems would probably end
+> > > > > > up needing something pretty close to a slab allocator to keep from dying
+> > > > > > from lock contention, and it is hard to justify that level of complexity
+> > > > > > at this point.
+> > > > > > 
+> > > > > > Or is there some way to mark a specific slab allocator instance as being
+> > > > > > able to keep some amount of memory no matter what the OOM conditions are?
+> > > > > > If not, the current per-CPU pre-allocated cache is a better choice in the
+> > > > > > near term.
+> > > > > > 
+> > > > > As for mempool API:
+> > > > > 
+> > > > > mempool_alloc() just tries to make regular allocation taking into
+> > > > > account passed gfp_t bitmask. If it fails due to memory pressure,
+> > > > > it uses reserved preallocated pool that consists of number of
+> > > > > desirable elements(preallocated when a pool is created).
+> > > > > 
+> > > > > mempoll_free() returns an element to to pool, if it detects that
+> > > > > current reserved elements are lower then minimum allowed elements,
+> > > > > it will add an element to reserved pool, i.e. refill it. Otherwise
+> > > > > just call kfree() or whatever we define as "element-freeing function."
+> > > > 
+> > > > Unless I am missing something, mempool_alloc() acquires a per-mempool
+> > > > lock on each invocation under OOM conditions.  For our purposes, this
+> > > > is essentially a global lock.  This will not be at all acceptable on a
+> > > > large system.
+> > > > 
+> > > It uses pool->lock to access to reserved objects, so if we have one memory
+> > > pool per one CPU then it would be serialized.
+> > 
+> > I am having difficulty parsing your sentence.  It looks like your thought
+> > is to invoke mempool_create() for each CPU, so that the locking would be
+> > on a per-CPU basis, as in 128 invocations of mempool_init() on a system
+> > having 128 hardware threads.  Is that your intent?
+> > 
+> In order to serialize it, you need to have it per CPU. So if you have 128
+> cpus, it means:
+> 
+> <snip>
+> for_each_possible_cpu(...)
+>     cpu_pool = mempool_create();
+> <snip>
+> 
+> but please keep in mind that it is not my intention, but i had a though
+> about mempool API. Because it has pre-reserve logic inside.
 
-1. jiffies are not updated for long period of time, and thus incorrect time
-   is reported. See proposed solution and discussion here:
-   lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
-2. It prevents farther improving deferred page initialization by allowing
-   inter-node multi-threading.
+OK, fair point on use of mempool API, but my guess is that extending
+the current kfree_rcu() logic will be simpler.
 
-We are keeping interrupts disabled to solve a rather theoretical problem
-that was never observed in real world (See 3a2d7fa8a3d5).
-
-Lets keep interrupts enabled. In case we ever encounter a scenario where
-an interrupt thread wants to allocate large amount of memory this early in
-boot we can deal with that by growing zone (see deferred_grow_zone()) by
-the needed amount before starting deferred_init_memmap() threads.
-
-Before:
-[    1.232459] node 0 initialised, 12058412 pages in 1ms
-
-After:
-[    1.632580] node 0 initialised, 12051227 pages in 436ms
-
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- mm/page_alloc.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3c4eb750a199..4498a13b372d 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1792,6 +1792,13 @@ static int __init deferred_init_memmap(void *data)
- 	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
- 	pgdat->first_deferred_pfn = ULONG_MAX;
- 
-+	/*
-+	 * Once we unlock here, the zone cannot be grown anymore, thus if an
-+	 * interrupt thread must allocate this early in boot, zone must be
-+	 * pre-grown prior to start of deferred page initialization.
-+	 */
-+	pgdat_resize_unlock(pgdat, &flags);
-+
- 	/* Only the highest zone is deferred so find it */
- 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
- 		zone = pgdat->node_zones + zid;
-@@ -1812,8 +1819,6 @@ static int __init deferred_init_memmap(void *data)
- 	while (spfn < epfn)
- 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
- zone_empty:
--	pgdat_resize_unlock(pgdat, &flags);
--
- 	/* Sanity check that the next zone really is unpopulated */
- 	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
- 
-@@ -1854,18 +1859,6 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
- 		return false;
- 
- 	pgdat_resize_lock(pgdat, &flags);
--
--	/*
--	 * If deferred pages have been initialized while we were waiting for
--	 * the lock, return true, as the zone was grown.  The caller will retry
--	 * this zone.  We won't return to this function since the caller also
--	 * has this static branch.
--	 */
--	if (!static_branch_unlikely(&deferred_pages)) {
--		pgdat_resize_unlock(pgdat, &flags);
--		return true;
--	}
--
- 	/*
- 	 * If someone grew this zone while we were waiting for spinlock, return
- 	 * true, as there might be enough pages already.
--- 
-2.17.1
-
+							Thanx, Paul
