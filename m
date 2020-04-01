@@ -2,161 +2,186 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1A5C10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A507BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8483A2078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B62F20675
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732531AbgDAMvf (ORCPT
+        id S1732558AbgDAMwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:51:35 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:24389 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732166AbgDAMvf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:51:35 -0400
-IronPort-SDR: jRJISy966l80lm/tAYjztwcpmEcae8GLhKxE/NyMtHPCnOvX34HRn5Afdp4X9txVYhKKszMmZb
- +OJICKt+TYErsSr+SfMvs/r57nJ8KheHGhif0k+mnqMI66xKlfoYWznZ3RqS1sgavfHSomjzoA
- F1VWZCkeBstmh1g3YFZyAPVD/kYz1RmG6aqk5HliKxQqA26lVn5Zf8axqT7FiTKdfqoOtfOBEE
- UFVuGQeggzpeuqGr2dgY+hHd+IbSTrYrZdAREOhj1dfkvYMv/Qgo+5Rj6bFnG2/HiRcimujCQn
- mqI=
+        Wed, 1 Apr 2020 08:52:05 -0400
+Received: from mga06.intel.com ([134.134.136.31]:17420 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732296AbgDAMwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:52:05 -0400
+IronPort-SDR: wfVLoYYsZe4IK3FbAViubC//Jq9rte9S+OMuaUQiJK/HFl4z26ET1W8bPKI58wf3OeOkaBIRcF
+ pKQ/GWOEE2Ug==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 05:52:04 -0700
+IronPort-SDR: mARSEAqYVJ6C6D6b35OEX3tlAKOtDWH3rdn0XTNobRLr1MupdzSy7Ipt8iOv4A8rs6pJN1Xo26
+ c6oQZydb8TkA==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,331,1580803200"; 
-   d="scan'208";a="47339772"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 01 Apr 2020 04:51:34 -0800
-IronPort-SDR: FH5TaqMIScuQlA4UMm+NWvQaIhpEm+o+vdYX2MNLgbvTrkq3JXWTpFSyg3aHNfg82srUGjm+KE
- mce1WNZIaFNA7TXajzxLK+INC9nX7oxbm2GjMGPRFD+zJv08UOntCTkHIjxXQvYDs462ySG30a
- sVC1bAU77r3fs/Ksk69Jtmio5fmMH4n/o2OI7ERdZo4mpfuIDI9v6ww/ITs5lDE5SE8JONXgfQ
- OtsoOzVJi50XhdotyshISsIfZhMxnvzoyMNzEKbjn9X2e8Hbzo0w1O+d0WFKzhZqfn+ZPbfiyn
- umU=
-Subject: Re: [PATCH v10 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
- entry for touchscreen status
-To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
-        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-53-jiada_wang@mentor.com>
- <63336277-8ed2-a097-a983-6e8ac48d776e@gmail.com>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <1ea292db-d0c3-935e-e74c-7b4afe251edc@mentor.com>
-Date:   Wed, 1 Apr 2020 21:51:28 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <63336277-8ed2-a097-a983-6e8ac48d776e@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+   d="scan'208";a="395967696"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga004.jf.intel.com with ESMTP; 01 Apr 2020 05:52:03 -0700
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 1 Apr 2020 05:52:03 -0700
+Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
+ FMSMSX154.amr.corp.intel.com (10.18.116.70) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 1 Apr 2020 05:52:03 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX108.ccr.corp.intel.com ([169.254.8.7]) with mapi id 14.03.0439.000;
+ Wed, 1 Apr 2020 20:51:59 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Auger Eric <eric.auger@redhat.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Index: AQHWAEUcqZEEdiOKbEGofjWp2Yic+6hjfq+AgAC/vLA=
+Date:   Wed, 1 Apr 2020 12:51:58 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+ <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
+In-Reply-To: <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
-
-Thanks for your comments
-
-On 2020/04/01 0:08, Dmitry Osipenko wrote:
-> 31.03.2020 13:50, Jiada Wang пишет:
-> ...
->> +static void mxt_watchdog_work(struct work_struct *work)
->> +{
->> +	struct mxt_data *data =
->> +		container_of(work, struct mxt_data, watchdog_work.work);
->> +	u16 info_buf;
->> +	int ret;
->> +
->> +	if (data->suspended || data->in_bootloader ||
->> +	    data->mxt_status.intp_triggered)
->> +		goto sched_work;
-> 
-> Won't it become a problem if other thread puts device into suspended /
-> bootloader state in the same time?
-> 
-right, I will use mutex lock to prevent such case.
-also I think data->mxt_status.intp_triggered isn't necessary,
-when lock is used.
-
->> +	ret = __mxt_read_reg(data->client, 0, sizeof(info_buf), &info_buf);
->> +
->> +	if (ret) {
->> +		data->mxt_status.error_count++;
->> +		data->mxt_status.dev_status = false;
->> +	} else {
->> +		data->mxt_status.dev_status = true;
->> +	}
->> +
->> +sched_work:
->> +	schedule_delayed_work(&data->watchdog_work,
->> +			      msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
->> +}
-> ...
-> 
->> @@ -4329,6 +4390,12 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
->>   		msleep(MXT_RESET_TIME);
->>   	}
->>   
->> +	if (debug_state) {
->> +		INIT_DELAYED_WORK(&data->watchdog_work, mxt_watchdog_work);
->> +		schedule_delayed_work(&data->watchdog_work,
->> +				      msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
->> +	}
->> +
->>   	error = mxt_initialize(data);
->>   	if (error)
->>   		goto err_free_object;
->> @@ -4343,6 +4410,8 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
->>   	return 0;
->>   
->>   err_free_object:
->> +	if (debug_state)
->> +		cancel_delayed_work_sync(&data->watchdog_work);
->>   	mxt_free_input_device(data);
->>   	mxt_free_object_table(data);
->>   	if (data->reset_gpio) {
->> @@ -4367,6 +4436,9 @@ static int mxt_remove(struct i2c_client *client)
->>   	mxt_free_input_device(data);
->>   	mxt_free_object_table(data);
->>   
->> +	if (debug_state)
->> +		cancel_delayed_work_sync(&data->watchdog_work);
-> 
-> What will happen if debug_state was false during of mxt_probe() and then
-> the debug_state parameter was changed to true via sysfs?
-
-module_param debug_state is added with permission 0,
-so it's value won't change during driver operation
-> 
-> I think the INIT_DELAYED_WORK() and cancel_delayed_work_sync() should be
-> invoked unconditionally.
-> 
->>   	return 0;
->>   }
->>   
->> @@ -4463,3 +4535,7 @@ module_i2c_driver(mxt_driver);
->>   MODULE_AUTHOR("Joonyoung Shim <jy0922.shim@samsung.com>");
->>   MODULE_DESCRIPTION("Atmel maXTouch Touchscreen driver");
->>   MODULE_LICENSE("GPL");
->> +
->> +module_param(debug_state, bool, 0);
->> +MODULE_PARM_DESC(debug_state, "Enable/Disable watchdog work to check device state (default="
->> +		 __MODULE_STRING(MXT_DEBUG_STATE) ")");
->>
-> 
-> The "default=..." part of MODULE_PARM_DESC() probably isn't really
-> useful and could be omitted, don't you think so?
-> 
-since debug_state can't be updated via sysfs, so I think add it's 
-default in MODULE_PARM_DESC() is useful? what's your opinion?
-
-Thanks,
-Jiada
+SGkgRXJpYywNCg0KPiBGcm9tOiBBdWdlciBFcmljIDxlcmljLmF1Z2VyQHJlZGhhdC5jb20+DQo+
+IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwgMSwgMjAyMCA0OjUxIFBNDQo+IFRvOiBMaXUsIFlpIEwg
+PHlpLmwubGl1QGludGVsLmNvbT47IGFsZXgud2lsbGlhbXNvbkByZWRoYXQuY29tDQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjEgNS84XSB2ZmlvL3R5cGUxOiBSZXBvcnQgMXN0LWxldmVsL3N0YWdl
+LTEgZm9ybWF0IHRvDQo+IHVzZXJzcGFjZQ0KPiANCj4gSGkgWWksDQo+IE9uIDMvMjIvMjAgMToz
+MiBQTSwgTGl1LCBZaSBMIHdyb3RlOg0KPiA+IEZyb206IExpdSBZaSBMIDx5aS5sLmxpdUBpbnRl
+bC5jb20+DQo+ID4NCj4gPiBWRklPIGV4cG9zZXMgSU9NTVUgbmVzdGluZyB0cmFuc2xhdGlvbiAo
+YS5rLmEgZHVhbCBzdGFnZSB0cmFuc2xhdGlvbikNCj4gPiBjYXBhYmlsaXR5IHRvIHVzZXJzcGFj
+ZS4gVGh1cyBhcHBsaWNhdGlvbnMgbGlrZSBRRU1VIGNvdWxkIHN1cHBvcnQNCj4gPiB2SU9NTVUg
+d2l0aCBoYXJkd2FyZSdzIG5lc3RpbmcgdHJhbnNsYXRpb24gY2FwYWJpbGl0eSBmb3IgcGFzcy10
+aHJvdWdoDQo+ID4gZGV2aWNlcy4gQmVmb3JlIHNldHRpbmcgdXAgbmVzdGluZyB0cmFuc2xhdGlv
+biBmb3IgcGFzcy10aHJvdWdoIGRldmljZXMsDQo+ID4gUUVNVSBhbmQgb3RoZXIgYXBwbGljYXRp
+b25zIG5lZWQgdG8gbGVhcm4gdGhlIHN1cHBvcnRlZCAxc3QtbHZsL3N0YWdlLTENCj4gPiB0cmFu
+c2xhdGlvbiBzdHJ1Y3R1cmUgZm9ybWF0IGxpa2UgcGFnZSB0YWJsZSBmb3JtYXQuDQo+ID4NCj4g
+PiBUYWtlIHZTVkEgKHZpcnR1YWwgU2hhcmVkIFZpcnR1YWwgQWRkcmVzc2luZykgYXMgYW4gZXhh
+bXBsZSwgdG8gc3VwcG9ydA0KPiA+IHZTVkEgZm9yIHBhc3MtdGhyb3VnaCBkZXZpY2VzLCBRRU1V
+IHNldHVwIG5lc3RpbmcgdHJhbnNsYXRpb24gZm9yIHBhc3MtDQo+ID4gdGhyb3VnaCBkZXZpY2Vz
+LiBUaGUgZ3Vlc3QgcGFnZSB0YWJsZSBhcmUgY29uZmlndXJlZCB0byBob3N0IGFzIDFzdC1sdmwv
+DQo+ID4gc3RhZ2UtMSBwYWdlIHRhYmxlLiBUaGVyZWZvcmUsIGd1ZXN0IGZvcm1hdCBzaG91bGQg
+YmUgY29tcGF0aWJsZSB3aXRoDQo+ID4gaG9zdCBzaWRlLg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBy
+ZXBvcnRzIHRoZSBzdXBwb3J0ZWQgMXN0LWx2bC9zdGFnZS0xIHBhZ2UgdGFibGUgZm9ybWF0IG9u
+IHRoZQ0KPiA+IGN1cnJlbnQgcGxhdGZvcm0gdG8gdXNlcnNwYWNlLiBRRU1VIGFuZCBvdGhlciBh
+bGlrZSBhcHBsaWNhdGlvbnMgc2hvdWxkDQo+ID4gdXNlIHRoaXMgZm9ybWF0IGluZm8gd2hlbiB0
+cnlpbmcgdG8gc2V0dXAgSU9NTVUgbmVzdGluZyB0cmFuc2xhdGlvbiBvbg0KPiA+IGhvc3QgSU9N
+TVUuDQo+ID4NCj4gPiBDYzogS2V2aW4gVGlhbiA8a2V2aW4udGlhbkBpbnRlbC5jb20+DQo+ID4g
+Q0M6IEphY29iIFBhbiA8amFjb2IuanVuLnBhbkBsaW51eC5pbnRlbC5jb20+DQo+ID4gQ2M6IEFs
+ZXggV2lsbGlhbXNvbiA8YWxleC53aWxsaWFtc29uQHJlZGhhdC5jb20+DQo+ID4gQ2M6IEVyaWMg
+QXVnZXIgPGVyaWMuYXVnZXJAcmVkaGF0LmNvbT4NCj4gPiBDYzogSmVhbi1QaGlsaXBwZSBCcnVj
+a2VyIDxqZWFuLXBoaWxpcHBlQGxpbmFyby5vcmc+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGl1IFlp
+IEwgPHlpLmwubGl1QGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy92ZmlvL3ZmaW9f
+aW9tbXVfdHlwZTEuYyB8IDU2DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrDQo+ID4gIGluY2x1ZGUvdWFwaS9saW51eC92ZmlvLmggICAgICAgfCAgMSArDQo+ID4g
+IDIgZmlsZXMgY2hhbmdlZCwgNTcgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvdmZpby92ZmlvX2lvbW11X3R5cGUxLmMgYi9kcml2ZXJzL3ZmaW8vdmZpb19pb21t
+dV90eXBlMS5jDQo+ID4gaW5kZXggOWFhMmE2Ny4uODJhOWUwYiAxMDA2NDQNCj4gPiAtLS0gYS9k
+cml2ZXJzL3ZmaW8vdmZpb19pb21tdV90eXBlMS5jDQo+ID4gKysrIGIvZHJpdmVycy92ZmlvL3Zm
+aW9faW9tbXVfdHlwZTEuYw0KPiA+IEBAIC0yMjM0LDExICsyMjM0LDY2IEBAIHN0YXRpYyBpbnQg
+dmZpb19pb21tdV90eXBlMV9wYXNpZF9mcmVlKHN0cnVjdA0KPiB2ZmlvX2lvbW11ICppb21tdSwN
+Cj4gPiAgCXJldHVybiByZXQ7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgaW50IHZmaW9faW9t
+bXVfZ2V0X3N0YWdlMV9mb3JtYXQoc3RydWN0IHZmaW9faW9tbXUgKmlvbW11LA0KPiA+ICsJCQkJ
+CSB1MzIgKnN0YWdlMV9mb3JtYXQpDQo+IHZmaW9fcGFzaWRfZm9ybWF0KCkgdG8gYmUgaG9tb2dl
+bmVvdXMgd2l0aCB2ZmlvX3Bnc2l6ZV9iaXRtYXAoKSB3aGljaA0KPiBkb2VzIHRoZSBzYW1lIGtp
+bmQgb2YgZW51bWVyYXRpb24gb2YgdGhlIHZmaW9faW9tbXUgZG9tYWlucw0KDQp5ZXMsIHNpbWls
+YXIuDQoNCj4gPiArew0KPiA+ICsJc3RydWN0IHZmaW9fZG9tYWluICpkb21haW47DQo+ID4gKwl1
+MzIgZm9ybWF0ID0gMCwgdG1wX2Zvcm1hdCA9IDA7DQo+ID4gKwlpbnQgcmV0Ow0KPiByZXQgPSAt
+RUlOVkFMOw0KDQpnb3QgaXQuDQoNCj4gPiArDQo+ID4gKwltdXRleF9sb2NrKCZpb21tdS0+bG9j
+ayk7DQo+ID4gKwlpZiAobGlzdF9lbXB0eSgmaW9tbXUtPmRvbWFpbl9saXN0KSkgew0KPiBnb3Rv
+IG91dF91bmxvY2s7DQoNCnJpZ2h0Lg0KPiA+ICsJCW11dGV4X3VubG9jaygmaW9tbXUtPmxvY2sp
+Ow0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWxpc3RfZm9y
+X2VhY2hfZW50cnkoZG9tYWluLCAmaW9tbXUtPmRvbWFpbl9saXN0LCBuZXh0KSB7DQo+ID4gKwkJ
+aWYgKGlvbW11X2RvbWFpbl9nZXRfYXR0cihkb21haW4tPmRvbWFpbiwNCj4gPiArCQkJRE9NQUlO
+X0FUVFJfUEFTSURfRk9STUFULCAmZm9ybWF0KSkgew0KPiBJIGNhbiBmaW5kIERPTUFJTl9BVFRS
+X1BBU0lEX0ZPUk1BVCBpbiBKYWNvYidzIHY5IGJ1dCBub3QgaW4gdjEwDQoNCm9vcHMsIEkgZ3Vl
+c3MgaGUgc29tZWhvdyBtaXNzZWQuIHlvdSBtYXkgZmluZCBpdCBpbiBiZWxvdyBsaW5rLg0KDQpo
+dHRwczovL2dpdGh1Yi5jb20vbHV4aXMxOTk5L2xpbnV4LXZzdmEvY29tbWl0L2JmMTRiMTFhMTJm
+NzRkNThhZDNlZTYyNmE1ZDg5MWRlMzk1MDgyZWINCg0KPiA+ICsJCQlyZXQgPSAtRUlOVkFMOw0K
+PiBjb3VsZCBiZSByZW1vdmVkDQoNCnN1cmUuDQoNCj4gPiArCQkJZm9ybWF0ID0gMDsNCj4gPiAr
+CQkJZ290byBvdXRfdW5sb2NrOw0KPiA+ICsJCX0NCj4gPiArCQkvKg0KPiA+ICsJCSAqIGZvcm1h
+dCBpcyBhbHdheXMgbm9uLXplcm8gKHRoZSBmaXJzdCBmb3JtYXQgaXMNCj4gPiArCQkgKiBJT01N
+VV9QQVNJRF9GT1JNQVRfSU5URUxfVlREIHdoaWNoIGlzIDEpLiBGb3INCj4gPiArCQkgKiB0aGUg
+cmVhc29uIG9mIHBvdGVudGlhbCBkaWZmZXJlbnQgYmFja2VkIElPTU1VDQo+ID4gKwkJICogZm9y
+bWF0cywgaGVyZSB3ZSBleHBlY3QgdG8gaGF2ZSBpZGVudGljYWwgZm9ybWF0cw0KPiA+ICsJCSAq
+IGluIHRoZSBkb21haW4gbGlzdCwgbm8gbWl4ZWQgZm9ybWF0cyBzdXBwb3J0Lg0KPiA+ICsJCSAq
+IHJldHVybiAtRUlOVkFMIHRvIGZhaWwgdGhlIGF0dGVtcHQgb2Ygc2V0dXANCj4gPiArCQkgKiBW
+RklPX1RZUEUxX05FU1RJTkdfSU9NTVUgaWYgbm9uLWlkZW50aWNhbCBmb3JtYXRzDQo+ID4gKwkJ
+ICogYXJlIGRldGVjdGVkLg0KPiA+ICsJCSAqLw0KPiA+ICsJCWlmICh0bXBfZm9ybWF0ICYmIHRt
+cF9mb3JtYXQgIT0gZm9ybWF0KSB7DQo+ID4gKwkJCXJldCA9IC1FSU5WQUw7DQo+IGNvdWxkIGJl
+IHJlbW92ZWQNCg0KZ290IGl0Lg0KDQo+ID4gKwkJCWZvcm1hdCA9IDA7DQo+ID4gKwkJCWdvdG8g
+b3V0X3VubG9jazsNCj4gPiArCQl9DQo+ID4gKw0KPiA+ICsJCXRtcF9mb3JtYXQgPSBmb3JtYXQ7
+DQo+ID4gKwl9DQo+ID4gKwlyZXQgPSAwOw0KPiA+ICsNCj4gPiArb3V0X3VubG9jazoNCj4gPiAr
+CWlmIChmb3JtYXQpDQo+IGlmICghcmV0KSA/IHRoZW4geW91IGNhbiByZW1vdmUgdGhlIGZvcm1h
+dCA9IDAgaW4gY2FzZSBvZiBlcnJvci4NCg0Kb2gsIHllcy4NCg0KPiA+ICsJCSpzdGFnZTFfZm9y
+bWF0ID0gZm9ybWF0Ow0KPiA+ICsJbXV0ZXhfdW5sb2NrKCZpb21tdS0+bG9jayk7DQo+ID4gKwly
+ZXR1cm4gcmV0Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgaW50IHZmaW9faW9tbXVfaW5m
+b19hZGRfbmVzdGluZ19jYXAoc3RydWN0IHZmaW9faW9tbXUgKmlvbW11LA0KPiA+ICAJCQkJCSBz
+dHJ1Y3QgdmZpb19pbmZvX2NhcCAqY2FwcykNCj4gPiAgew0KPiA+ICAJc3RydWN0IHZmaW9faW5m
+b19jYXBfaGVhZGVyICpoZWFkZXI7DQo+ID4gIAlzdHJ1Y3QgdmZpb19pb21tdV90eXBlMV9pbmZv
+X2NhcF9uZXN0aW5nICpuZXN0aW5nX2NhcDsNCj4gPiArCXUzMiBmb3JtYXRzID0gMDsNCj4gPiAr
+CWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gdmZpb19pb21tdV9nZXRfc3RhZ2UxX2Zvcm1h
+dChpb21tdSwgJmZvcm1hdHMpOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+ICsJCXByX3dhcm4oIkZh
+aWxlZCB0byBnZXQgc3RhZ2UtMSBmb3JtYXRcbiIpOw0KPiB0cmFjZSB0cmlnZ2VyZWQgYnkgdXNl
+cnNwYWNlIHRvIGJlIHJlbW92ZWQ/DQoNCnN1cmUuDQoNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+
+ICsJfQ0KPiA+DQo+ID4gIAloZWFkZXIgPSB2ZmlvX2luZm9fY2FwX2FkZChjYXBzLCBzaXplb2Yo
+Km5lc3RpbmdfY2FwKSwNCj4gPiAgCQkJCSAgIFZGSU9fSU9NTVVfVFlQRTFfSU5GT19DQVBfTkVT
+VElORywgMSk7DQo+ID4gQEAgLTIyNTQsNiArMjMwOSw3IEBAIHN0YXRpYyBpbnQgdmZpb19pb21t
+dV9pbmZvX2FkZF9uZXN0aW5nX2NhcChzdHJ1Y3QNCj4gdmZpb19pb21tdSAqaW9tbXUsDQo+ID4g
+IAkJLyogbmVzdGluZyBpb21tdSB0eXBlIHN1cHBvcnRzIFBBU0lEIHJlcXVlc3RzIChhbGxvYy9m
+cmVlKSAqLw0KPiA+ICAJCW5lc3RpbmdfY2FwLT5uZXN0aW5nX2NhcGFiaWxpdGllcyB8PSBWRklP
+X0lPTU1VX1BBU0lEX1JFUVM7DQo+IFdoYXQgaXMgdGhlIG1lYW5pbmcgZm9yIEFSTT8NCg0KSSB0
+aGluayBpdCdzIGp1c3QgYSBzb2Z0d2FyZSBjYXBhYmlsaXR5IGV4cG9zZWQgdG8gdXNlcnNwYWNl
+LCBvbg0KdXNlcnNwYWNlIHNpZGUsIGl0IGhhcyBhIGNob2ljZSB0byB1c2UgaXQgb3Igbm90LiA6
+LSkgVGhlIHJlYXNvbg0KZGVmaW5lIGl0IGFuZCByZXBvcnQgaXQgaW4gY2FwIG5lc3RpbmcgaXMg
+dGhhdCBJJ2QgbGlrZSB0byBtYWtlDQp0aGUgcGFzaWQgYWxsb2MvZnJlZSBiZSBhdmFpbGFibGUg
+anVzdCBmb3IgSU9NTVUgd2l0aCB0eXBlDQpWRklPX0lPTU1VX1RZUEUxX05FU1RJTkcuIFBsZWFz
+ZSBmZWVsIGZyZWUgdGVsbCBtZSBpZiBpdCBpcyBub3QNCmdvb2QgZm9yIEFSTS4gV2UgY2FuIGZp
+bmQgYSBwcm9wZXIgd2F5IHRvIHJlcG9ydCB0aGUgYXZhaWxhYmlsaXR5Lg0KDQo+ID4gIAl9DQo+
+ID4gKwluZXN0aW5nX2NhcC0+c3RhZ2UxX2Zvcm1hdHMgPSBmb3JtYXRzOw0KPiBhcyBzcG90dGVk
+IGJ5IEtldmluLCBzaW5jZSBhIHNpbmdsZSBmb3JtYXQgaXMgc3VwcG9ydGVkLCByZW5hbWUNCg0K
+b2ssIEkgd2FzIGJlbGlldmluZyBpdCBtYXkgYmUgcG9zc2libGUgb24gQVJNIG9yIHNvLiA6LSkg
+d2lsbA0KcmVuYW1lIGl0Lg0KDQpJJ2xsIHJlZmluZSB0aGUgcGF0Y2ggcGVyIHlvdXIgYWJvdmUg
+Y29tbWVudHMuDQoNClJlZ2FyZHMsDQpZaSBMaXUNCg0K
