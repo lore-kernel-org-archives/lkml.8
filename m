@@ -2,329 +2,151 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7169EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F7BC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38762206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E46206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AIiG70T2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS+PKjPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732947AbgDAOJf (ORCPT
+        id S1733002AbgDAOKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:09:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47021 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732705AbgDAOJe (ORCPT
+        Wed, 1 Apr 2020 10:10:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46622 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732856AbgDAOJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:09:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585750173;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+kdHmlxvV7fNOjmpSHAm/KiztYrW2H3haVanmSw7PZY=;
-        b=AIiG70T2m8mQ2HISa+2GftSUtM1vp3mrIumfSxH/4/NSDtK5NZoQQJRd3yi4iMf+2/0K4O
-        BHM2xFuPfyWD2nJf4Q/mCIhvJEVNJj43oDs2M83VBrv3COD0WTheY2cK5k0r2vAABFRe7o
-        HnqN049OvK8/laaxRJ4PxrFnBLgWc7A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-361-uMleTj1rOEiSPPbbID0kuw-1; Wed, 01 Apr 2020 10:09:27 -0400
-X-MC-Unique: uMleTj1rOEiSPPbbID0kuw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF0C41922962;
-        Wed,  1 Apr 2020 14:09:24 +0000 (UTC)
-Received: from [10.72.12.139] (ovpn-12-139.pek2.redhat.com [10.72.12.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DD7910002D0;
-        Wed,  1 Apr 2020 14:09:00 +0000 (UTC)
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <20200401092004-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6b4d169a-9962-6014-5423-1507059343e9@redhat.com>
-Date:   Wed, 1 Apr 2020 22:08:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 10:09:59 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j17so141950wru.13
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 07:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3UOCBrsLhDTGLPX2D6iB/6Fd9JweEhJ8isj0WlI9VYo=;
+        b=GS+PKjPZdueEZOw07f8wlD524/gBWG9HptdU97U/RJGApgq2iEgM5G15XbY45x5aCH
+         q9BaQ6f6w7coFGDbNBgcXdy07Ox2kLCqOAchGxx9Oaq+xg6lmlwBlGrbSspoIkd7Du/u
+         BC9Rw/g3x3+t70uwn7d0kBu/gIb/FBgOJwna0bdfCrGrzd2m4DJa6gLLvmZlf6wyW9VU
+         0bhuxZu1yTUIGAbuRNLamD/c5AsPZVDb+9PLz6QXUAv8gFUDSVPLwgJuMsmIlHEsGIbq
+         OAejhv/hrMUXWBBf8YspoMo1TXqx3UC0ziP2qXzMhB8MUCFDZIuPGTrZ81q/5xJu/feP
+         bK7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3UOCBrsLhDTGLPX2D6iB/6Fd9JweEhJ8isj0WlI9VYo=;
+        b=WFH/Gv/RWdIy+SYq+SwLb8aPrKlvAz4qQMsqOrsz0jNzXlKzp7uvlBCU6g9M5WCzKb
+         uX23EL/jKlNhoRwiZj7LX8i3qRJyJ2hs9vL/8bpScUkbAXE1Fo3t+XP1b0HKq5es8qxr
+         CvxvznfFVczfA3KqAPHXM338u/9fcEm8eqTL4vEk+IojXoZiTeFUR7R4DgvxbMhcz0iX
+         RX7avxl18gQO2LcH3gnVjImMyEUNGWXLq2mIHxqIczv/lHqZcLKXWT44AycYuAj0Q5zo
+         URgFk9mwpR4l3hMPrkF9DygsnbOICmJPnnnd0YADduLzAuaNdtvCpQmeXv9LGv635Aku
+         ffcQ==
+X-Gm-Message-State: ANhLgQ3x69TmGS+Sj0REsUgXNrmRJarS+OuPphYRHc9ppKQI8Ckzpiyw
+        MxauJztaArzqzbR/5qhdUW+mH9ED03ceU0fgulQ=
+X-Google-Smtp-Source: ADFU+vsZFudrdRTmHThHRp1Kdwv807i/mSI/kjsy9A0RjL6q27gGUig6/lTGxWoN/1Czr+86omvg0X5J5lrvCkjhok4=
+X-Received: by 2002:a5d:674f:: with SMTP id l15mr25618140wrw.196.1585750197939;
+ Wed, 01 Apr 2020 07:09:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200401092004-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+References: <20200401104156.11564-1-david@redhat.com> <20200401104156.11564-2-david@redhat.com>
+In-Reply-To: <20200401104156.11564-2-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Wed, 1 Apr 2020 16:09:46 +0200
+Message-ID: <CAM9Jb+hoWTb1NEOzyTpz_cyW7x9cA_3eiGTEfaKO7+w3c5auzQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] mm/page_alloc: fix RCU stalls during deferred page initialization
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Yiqian Wei <yiwei@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Baoquan He <bhe@redhat.com>, Oscar Salvador <osalvador@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> With CONFIG_DEFERRED_STRUCT_PAGE_INIT and without CONFIG_PREEMPT, it can
+> happen that we get RCU stalls detected when booting up.
+>
+> [   60.474005] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> [   60.475000] rcu:  1-...0: (0 ticks this GP) idle=02a/1/0x4000000000000000 softirq=1/1 fqs=15000
+> [   60.475000] rcu:  (detected by 0, t=60002 jiffies, g=-1199, q=1)
+> [   60.475000] Sending NMI from CPU 0 to CPUs 1:
+> [    1.760091] NMI backtrace for cpu 1
+> [    1.760091] CPU: 1 PID: 20 Comm: pgdatinit0 Not tainted 4.18.0-147.9.1.el8_1.x86_64 #1
+> [    1.760091] Hardware name: Red Hat KVM, BIOS 1.13.0-1.module+el8.2.0+5520+4e5817f3 04/01/2014
+> [    1.760091] RIP: 0010:__init_single_page.isra.65+0x10/0x4f
+> [    1.760091] Code: 48 83 cf 63 48 89 f8 0f 1f 40 00 48 89 c6 48 89 d7 e8 6b 18 80 ff 66 90 5b c3 31 c0 b9 10 00 00 00 49 89 f8 48 c1 e6 33 f3 ab <b8> 07 00 00 00 48 c1 e2 36 41 c7 40 34 01 00 00 00 48 c1 e0 33 41
+> [    1.760091] RSP: 0000:ffffba783123be40 EFLAGS: 00000006
+> [    1.760091] RAX: 0000000000000000 RBX: fffffad34405e300 RCX: 0000000000000000
+> [    1.760091] RDX: 0000000000000000 RSI: 0010000000000000 RDI: fffffad34405e340
+> [    1.760091] RBP: 0000000033f3177e R08: fffffad34405e300 R09: 0000000000000002
+> [    1.760091] R10: 000000000000002b R11: ffff98afb691a500 R12: 0000000000000002
+> [    1.760091] R13: 0000000000000000 R14: 000000003f03ea00 R15: 000000003e10178c
+> [    1.760091] FS:  0000000000000000(0000) GS:ffff9c9ebeb00000(0000) knlGS:0000000000000000
+> [    1.760091] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    1.760091] CR2: 00000000ffffffff CR3: 000000a1cf20a001 CR4: 00000000003606e0
+> [    1.760091] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [    1.760091] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [    1.760091] Call Trace:
+> [    1.760091]  deferred_init_pages+0x8f/0xbf
+> [    1.760091]  deferred_init_memmap+0x184/0x29d
+> [    1.760091]  ? deferred_free_pages.isra.97+0xba/0xba
+> [    1.760091]  kthread+0x112/0x130
+> [    1.760091]  ? kthread_flush_work_fn+0x10/0x10
+> [    1.760091]  ret_from_fork+0x35/0x40
+> [   89.123011] node 0 initialised, 1055935372 pages in 88650ms
+>
+> The issue becomes visible when having a lot of memory (e.g., 4TB)
+> assigned to a single NUMA node - a system that can easily be created
+> using QEMU. Inside VMs on a hypervisor with quite some memory
+> overcommit, this is fairly easy to trigger.
+>
+> Adding the cond_resched() makes RCU happy.
+>
+> Reported-by: Yiqian Wei <yiwei@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Alexander Duyck <alexander.duyck@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/page_alloc.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index ca1453204e66..084cabffc90d 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1877,6 +1877,7 @@ static int __init deferred_init_memmap(void *data)
+>                         prev_nr_pages = nr_pages;
+>                         pgdat->first_deferred_pfn = spfn;
+>                         pgdat_resize_unlock(pgdat, &flags);
+> +                       cond_resched();
+>                         goto again;
+>                 }
+>         }
+> --
 
-On 2020/4/1 =E4=B8=8B=E5=8D=889:22, Michael S. Tsirkin wrote:
-> On Thu, Mar 26, 2020 at 10:01:17PM +0800, Jason Wang wrote:
->> Currently, CONFIG_VHOST depends on CONFIG_VIRTUALIZATION. But vhost is
->> not necessarily for VM since it's a generic userspace and kernel
->> communication protocol. Such dependency may prevent archs without
->> virtualization support from using vhost.
->>
->> To solve this, a dedicated vhost menu is created under drivers so
->> CONIFG_VHOST can be decoupled out of CONFIG_VIRTUALIZATION.
->>
->> While at it, also squash Kconfig.vringh into vhost Kconfig file. This
->> avoids the trick of conditional inclusion from VOP or CAIF. Then it
->> will be easier to introduce new vringh users and common dependency for
->> both vringh and vhost.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> Is this just so we can drop the dependency on CONFIG_VIRTUALIZATION?
-> If yes what happens if we drop this patch?
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-
-The problem is that then VHOST_RING must depend on CONFIG_VIRTUALIZATION=20
-(which enable VHOST_IOTLB) to work.
-
-But it looks to me CAIF and VOP doesn't requires CONFIG_VIRTUALIZATION.
-
-
-> Given the impact it had I'd like to defer it till next release if
-> possible.
+> 2.25.1
 >
 >
->> ---
->>   arch/arm/kvm/Kconfig         |  2 --
->>   arch/arm64/kvm/Kconfig       |  2 --
->>   arch/mips/kvm/Kconfig        |  2 --
->>   arch/powerpc/kvm/Kconfig     |  2 --
->>   arch/s390/kvm/Kconfig        |  4 ----
->>   arch/x86/kvm/Kconfig         |  4 ----
->>   drivers/Kconfig              |  2 ++
->>   drivers/misc/mic/Kconfig     |  4 ----
->>   drivers/net/caif/Kconfig     |  4 ----
->>   drivers/vhost/Kconfig        | 23 ++++++++++++++---------
->>   drivers/vhost/Kconfig.vringh |  6 ------
->>   11 files changed, 16 insertions(+), 39 deletions(-)
->>   delete mode 100644 drivers/vhost/Kconfig.vringh
->>
->> diff --git a/arch/arm/kvm/Kconfig b/arch/arm/kvm/Kconfig
->> index f591026347a5..be97393761bf 100644
->> --- a/arch/arm/kvm/Kconfig
->> +++ b/arch/arm/kvm/Kconfig
->> @@ -54,6 +54,4 @@ config KVM_ARM_HOST
->>   	---help---
->>   	  Provides host support for ARM processors.
->>  =20
->> -source "drivers/vhost/Kconfig"
->> -
->>   endif # VIRTUALIZATION
->> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
->> index a475c68cbfec..449386d76441 100644
->> --- a/arch/arm64/kvm/Kconfig
->> +++ b/arch/arm64/kvm/Kconfig
->> @@ -64,6 +64,4 @@ config KVM_ARM_PMU
->>   config KVM_INDIRECT_VECTORS
->>          def_bool KVM && (HARDEN_BRANCH_PREDICTOR || HARDEN_EL2_VECTOR=
-S)
->>  =20
->> -source "drivers/vhost/Kconfig"
->> -
->>   endif # VIRTUALIZATION
->> diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
->> index eac25aef21e0..b91d145aa2d5 100644
->> --- a/arch/mips/kvm/Kconfig
->> +++ b/arch/mips/kvm/Kconfig
->> @@ -72,6 +72,4 @@ config KVM_MIPS_DEBUG_COP0_COUNTERS
->>  =20
->>   	  If unsure, say N.
->>  =20
->> -source "drivers/vhost/Kconfig"
->> -
->>   endif # VIRTUALIZATION
->> diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
->> index 711fca9bc6f0..12885eda324e 100644
->> --- a/arch/powerpc/kvm/Kconfig
->> +++ b/arch/powerpc/kvm/Kconfig
->> @@ -204,6 +204,4 @@ config KVM_XIVE
->>   	default y
->>   	depends on KVM_XICS && PPC_XIVE_NATIVE && KVM_BOOK3S_HV_POSSIBLE
->>  =20
->> -source "drivers/vhost/Kconfig"
->> -
->>   endif # VIRTUALIZATION
->> diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
->> index d3db3d7ed077..def3b60f1fe8 100644
->> --- a/arch/s390/kvm/Kconfig
->> +++ b/arch/s390/kvm/Kconfig
->> @@ -55,8 +55,4 @@ config KVM_S390_UCONTROL
->>  =20
->>   	  If unsure, say N.
->>  =20
->> -# OK, it's a little counter-intuitive to do this, but it puts it neat=
-ly under
->> -# the virtualization menu.
->> -source "drivers/vhost/Kconfig"
->> -
->>   endif # VIRTUALIZATION
->> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
->> index 991019d5eee1..0dfe70e17af9 100644
->> --- a/arch/x86/kvm/Kconfig
->> +++ b/arch/x86/kvm/Kconfig
->> @@ -94,8 +94,4 @@ config KVM_MMU_AUDIT
->>   	 This option adds a R/W kVM module parameter 'mmu_audit', which all=
-ows
->>   	 auditing of KVM MMU events at runtime.
->>  =20
->> -# OK, it's a little counter-intuitive to do this, but it puts it neat=
-ly under
->> -# the virtualization menu.
->> -source "drivers/vhost/Kconfig"
->> -
->>   endif # VIRTUALIZATION
->> diff --git a/drivers/Kconfig b/drivers/Kconfig
->> index 8befa53f43be..7a6d8b2b68b4 100644
->> --- a/drivers/Kconfig
->> +++ b/drivers/Kconfig
->> @@ -138,6 +138,8 @@ source "drivers/virt/Kconfig"
->>  =20
->>   source "drivers/virtio/Kconfig"
->>  =20
->> +source "drivers/vhost/Kconfig"
->> +
->>   source "drivers/hv/Kconfig"
->>  =20
->>   source "drivers/xen/Kconfig"
->> diff --git a/drivers/misc/mic/Kconfig b/drivers/misc/mic/Kconfig
->> index b6841ba6d922..8f201d019f5a 100644
->> --- a/drivers/misc/mic/Kconfig
->> +++ b/drivers/misc/mic/Kconfig
->> @@ -133,8 +133,4 @@ config VOP
->>   	  OS and tools for MIC to use with this driver are available from
->>   	  <http://software.intel.com/en-us/mic-developer>.
->>  =20
->> -if VOP
->> -source "drivers/vhost/Kconfig.vringh"
->> -endif
->> -
->>   endmenu
->> diff --git a/drivers/net/caif/Kconfig b/drivers/net/caif/Kconfig
->> index e74e2bb61236..9db0570c5beb 100644
->> --- a/drivers/net/caif/Kconfig
->> +++ b/drivers/net/caif/Kconfig
->> @@ -58,8 +58,4 @@ config CAIF_VIRTIO
->>   	---help---
->>   	  The CAIF driver for CAIF over Virtio.
->>  =20
->> -if CAIF_VIRTIO
->> -source "drivers/vhost/Kconfig.vringh"
->> -endif
->> -
->>   endif # CAIF_DRIVERS
->> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
->> index 3d03ccbd1adc..4aef10a54cd1 100644
->> --- a/drivers/vhost/Kconfig
->> +++ b/drivers/vhost/Kconfig
->> @@ -1,8 +1,20 @@
->>   # SPDX-License-Identifier: GPL-2.0-only
->> +config VHOST_RING
->> +	tristate
->> +	help
->> +	  This option is selected by any driver which needs to access
->> +	  the host side of a virtio ring.
->> +
->> +menuconfig VHOST
->> +	tristate "Host kernel accelerator for virtio (VHOST)"
->> +	help
->> +	  This option is selected by any driver which needs to access
->> +	  the core of vhost.
->> +if VHOST
->> +
-> The description here is wrong, isn't it?
-> VHOST and VHOST_RING are no longer selected, right?
-
-
-For VHOST not currently.
-
-For VHOST_RING, it was selected by CAIF, VOP and VDPASIM.
-
-Thanks
-
-
->
->
->>   config VHOST_NET
->>   	tristate "Host kernel accelerator for virtio net"
->>   	depends on NET && EVENTFD && (TUN || !TUN) && (TAP || !TAP)
->> -	select VHOST
->>   	---help---
->>   	  This kernel module can be loaded in host kernel to accelerate
->>   	  guest networking with virtio_net. Not to be confused with virtio_=
-net
->> @@ -14,7 +26,6 @@ config VHOST_NET
->>   config VHOST_SCSI
->>   	tristate "VHOST_SCSI TCM fabric driver"
->>   	depends on TARGET_CORE && EVENTFD
->> -	select VHOST
->>   	default n
->>   	---help---
->>   	Say M here to enable the vhost_scsi TCM fabric module
->> @@ -24,7 +35,6 @@ config VHOST_VSOCK
->>   	tristate "vhost virtio-vsock driver"
->>   	depends on VSOCKETS && EVENTFD
->>   	select VIRTIO_VSOCKETS_COMMON
->> -	select VHOST
->>   	default n
->>   	---help---
->>   	This kernel module can be loaded in the host kernel to provide AF_V=
-SOCK
->> @@ -34,12 +44,6 @@ config VHOST_VSOCK
->>   	To compile this driver as a module, choose M here: the module will =
-be called
->>   	vhost_vsock.
->>  =20
->> -config VHOST
->> -	tristate
->> -	---help---
->> -	  This option is selected by any driver which needs to access
->> -	  the core of vhost.
->> -
->>   config VHOST_CROSS_ENDIAN_LEGACY
->>   	bool "Cross-endian support for vhost"
->>   	default n
->> @@ -54,3 +58,4 @@ config VHOST_CROSS_ENDIAN_LEGACY
->>   	  adds some overhead, it is disabled by default.
->>  =20
->>   	  If unsure, say "N".
->> +endif
->> diff --git a/drivers/vhost/Kconfig.vringh b/drivers/vhost/Kconfig.vrin=
-gh
->> deleted file mode 100644
->> index c1fe36a9b8d4..000000000000
->> --- a/drivers/vhost/Kconfig.vringh
->> +++ /dev/null
->> @@ -1,6 +0,0 @@
->> -# SPDX-License-Identifier: GPL-2.0-only
->> -config VHOST_RING
->> -	tristate
->> -	---help---
->> -	  This option is selected by any driver which needs to access
->> -	  the host side of a virtio ring.
->> --=20
->> 2.20.1
-
