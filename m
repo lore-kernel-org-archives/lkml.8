@@ -2,89 +2,141 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6BDC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6152EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D6120787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A76920772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:31:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Yr1L/GEO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731921AbgDAH3k (ORCPT
+        id S1731955AbgDAHbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:29:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:44370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731680AbgDAH3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:29:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B82A31B;
-        Wed,  1 Apr 2020 00:29:39 -0700 (PDT)
-Received: from [10.37.12.63] (unknown [10.37.12.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB4DD3F52E;
-        Wed,  1 Apr 2020 00:33:46 -0700 (PDT)
-Subject: Re: [PATCH 2/2] thermal: core: Remove pointless debug traces
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200331165449.30355-1-daniel.lezcano@linaro.org>
- <20200331165449.30355-2-daniel.lezcano@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <809b3d48-b8a9-75e6-aafc-0999e78611e2@arm.com>
-Date:   Wed, 1 Apr 2020 08:29:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 03:31:13 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23062 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731725AbgDAHbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 03:31:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585726272; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=KosNbnHtjH3p3D7s3+9XQ5MW0eKcI46fqALRBrUF8A8=; b=Yr1L/GEO0gI4UbdbYdRNYDIR9sUhIFQTVikARL8QXOmCkcXswetRrxcN+Sv0wyMYb8T59mXi
+ hZ1aUbth+AOi7MbQ9w5xzcc4Ja4TJpA/ZL2ukb6Ins1XmNkqVjCaYr+mdQeE/69srCkUl8IX
+ sgC2Mmv3Q0rU0GietU4UATWNbGA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e844332.7f31c0ae7650-smtp-out-n05;
+ Wed, 01 Apr 2020 07:30:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DEE31C433D2; Wed,  1 Apr 2020 07:30:57 +0000 (UTC)
+Received: from Pillair (unknown [183.83.66.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 427C5C433BA;
+        Wed,  1 Apr 2020 07:30:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 427C5C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Rob Herring'" <robh@kernel.org>
+Cc:     <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585134100-5944-1-git-send-email-pillair@codeaurora.org> <1585134100-5944-2-git-send-email-pillair@codeaurora.org> <20200331214051.GA2053@bogus>
+In-Reply-To: <20200331214051.GA2053@bogus>
+Subject: RE: [PATCH v2 1/3] dt-bindings: ath10k: Add wifi-firmware subnode for wifi node
+Date:   Wed, 1 Apr 2020 13:00:50 +0530
+Message-ID: <002001d607f7$7bc8ebd0$735ac370$@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200331165449.30355-2-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQI6fc28eknFIs45cOq24ZTPq1i0fwFvI4SMAkxWCq6nfRN3kA==
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Hi Rob,
+Comments inline.
 
-On 3/31/20 5:54 PM, Daniel Lezcano wrote:
-> The last temperature and the current temperature are show via a
-> dev_debug. The line before, those temperature are also traced.
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Wednesday, April 1, 2020 3:11 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: ath10k@lists.infradead.org; linux-wireless@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v2 1/3] dt-bindings: ath10k: Add wifi-firmware subnode
+> for wifi node
 > 
-> It is pointless to duplicate the traces for the temperatures,
-> remove the dev_dbg traces.
+> On Wed, Mar 25, 2020 at 04:31:38PM +0530, Rakesh Pillai wrote:
+> > Add a wifi-firmware subnode for the wifi node.
+> > This wifi-firmware subnode is needed for the
+> > targets which do not support TrustZone.
+> >
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > ---
+> >  .../devicetree/bindings/net/wireless/qcom,ath10k.txt       | 14
+> ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git
+> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> > index 71bf91f..65ee68e 100644
+> > --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> > +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> > @@ -96,6 +96,17 @@ Optional properties:
+> >  - qcom,coexist-gpio-pin : gpio pin number  information to support coex
+> >  			  which will be used by wifi firmware.
+> >
+> > +* Subnodes
+> > +The ath10k wifi node can contain one optional firmware subnode.
+> > +Firmware subnode is needed when the platform does not have TustZone.
+> > +The firmware subnode must have:
+> > +
+> > +- iommus:
+> > +	Usage: required
+> > +	Value type: <prop-encoded-array>
+> > +	Definition: A list of phandle and IOMMU specifier pairs.
+> > +
+> > +
+> >  Example (to supply PCI based wifi block details):
+> >
+> >  In this example, the node is defined as child node of the PCI
+controller.
+> > @@ -196,4 +207,7 @@ wifi@18000000 {
+> >  		memory-region = <&wifi_msa_mem>;
+> >  		iommus = <&apps_smmu 0x0040 0x1>;
+> >  		qcom,msa-fixed-perm;
+> > +		wifi-firmware {
+> > +			iommus = <&apps_iommu 0xc22 0x1>;
 > 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->   drivers/thermal/thermal_core.c | 6 ------
->   1 file changed, 6 deletions(-)
+> Why can't you just add a 2nd entry to the existing 'iommus' property?
 > 
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 9a321dc548c8..c06550930979 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -447,12 +447,6 @@ static void update_temperature(struct thermal_zone_device *tz)
->   	mutex_unlock(&tz->lock);
->   
->   	trace_thermal_temperature(tz);
-> -	if (tz->last_temperature == THERMAL_TEMP_INVALID)
-> -		dev_dbg(&tz->device, "last_temperature N/A, current_temperature=%d\n",
-> -			tz->temperature);
-> -	else
-> -		dev_dbg(&tz->device, "last_temperature=%d, current_temperature=%d\n",
-> -			tz->last_temperature, tz->temperature);
->   }
->   
->   static void thermal_zone_device_init(struct thermal_zone_device *tz)
-> 
+> A driver doing of_dma_configure() is generally not the right thing to
+> do.
 
-This prints really deserve to be removed.
+The SIDs mentioned in the wifi-firmware node will be belonging to the
+firmware and not any HLOS.
+In other targets with TZ, the hypervisor takes care of configuring the SIDs
+(for its master).
+In this target (sc7180 IDP) we are not having TZ (no hypervisor), hence
+these need to be configured by HLOS.
+The wifi-firmware node is added in-order to differentiate the SID between
+driver and firmware.
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+This is same as the approach followed by Venus video driver in the below
+patch
+https://patchwork.kernel.org/patch/11315765/ 
 
-Regards,
-Lukasz
+> 
+> Rob
