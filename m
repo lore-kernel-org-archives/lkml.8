@@ -2,157 +2,220 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E517C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178E4C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3CC207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:21:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="nOcgW+vJ"
+	by mail.kernel.org (Postfix) with ESMTP id E1BFA2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732100AbgDAIVd (ORCPT
+        id S1730843AbgDAIWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:21:33 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35074 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgDAIVd (ORCPT
+        Wed, 1 Apr 2020 04:22:32 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45937 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgDAIWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:21:33 -0400
-Received: by mail-vs1-f68.google.com with SMTP id u11so15345560vsg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TMiys8vgh/zVs+g/WqcrVmGnSmA9w/d7OqJQQ7up1M4=;
-        b=nOcgW+vJIDaeDBEdtqPJ13SjXnUQ8tvB/zXLpC8eEDmJa1qx0uTZpc4I94TQiNjE9T
-         msVtL4CTE33K//fw+xBNn9GaFPpRVLqyj5PGNxcqEoozzzRecgBLsoLIzAt/5NSW01AE
-         Ynl8VeIjsvYaiV6k4IVQfovLO0c12hxq3kZ41k3nh4TKrIk6ubCen/TswPapWoaThDNB
-         9A40s6iX1mVNOTpDe99mHNmQWlLJ2JxmLsTGu/yT5GmlhdDZoMZyZkyiPOJJq5FGqIcO
-         ti5blWz6lQahfcXM/qyBmUasrIWl9sVGvCfjPhfLX4CFLf8PQa13p+ye9/v/eTpjxdgF
-         Q1/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TMiys8vgh/zVs+g/WqcrVmGnSmA9w/d7OqJQQ7up1M4=;
-        b=KxQbxrrDY8bWbfRdHrI0n0MC2MWwPI3jMUAQ9ZV4kYMVXRUUDbgfvwE56e19lMqclU
-         rZKun/1CHuOhzD47lRUufLIywjHpIwLKQCqihS1z9cIpF6GVKjJW1FuKBCLvaVQNRgGd
-         O5+9fRzfnwETlmQ+bMuHUPti6jGTQIWHTyxSAzcUEvkS7Xqj8QSPQt3QWGNCRpsWROGj
-         UynqtVXGXty+8FK1VK/33OEhL6EzP8UXwga34rPaqfpcsdmAZSvj5s9ExuRJbuc5WEoj
-         ig8Cx+nhtRGSCQ/V+NjRqgz/ezE06Bn23Fj13xs6+XmcU/FZvBvpYgryDKekUmsNuWu/
-         CuoQ==
-X-Gm-Message-State: AGi0PuaeBTo7niRrjlstFmPTXUgJR0cOTNA0pmL05iPr5tW6M7MMm/gm
-        akg1YXRvEAaKoaokg6aMgjLzxQ8wZJlTOsegXgQFpQ==
-X-Google-Smtp-Source: APiQypIFgzuZyqDqF5vQmkoXOgF4Gs4J+CyGROUlmGOe4oP6uK3MuXRnZum585qhaQzu2hPT5+Qkz4Vz+TJF0gMrJP0=
-X-Received: by 2002:a67:69d5:: with SMTP id e204mr14355392vsc.159.1585729291733;
- Wed, 01 Apr 2020 01:21:31 -0700 (PDT)
+        Wed, 1 Apr 2020 04:22:32 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jJYdo-0007pE-MB; Wed, 01 Apr 2020 10:22:28 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jJYdn-0000Pf-AB; Wed, 01 Apr 2020 10:22:27 +0200
+Date:   Wed, 1 Apr 2020 10:22:27 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+Message-ID: <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+ <20200312042210.17344-5-lokeshvutla@ti.com>
+ <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+ <20200330141436.GG2431644@ulmo>
+ <20200330191654.waoocllctanh5nk5@pengutronix.de>
+ <20200331204559.GB2954599@ulmo>
 MIME-Version: 1.0
-References: <20200331165449.30355-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20200331165449.30355-1-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 1 Apr 2020 13:51:20 +0530
-Message-ID: <CAHLCerPrCLNqcK8E1T917_HyV3uuP9U3e6sR335KiJn4ho72aw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] thermal: core: Make thermal_zone_set_trips private
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200331204559.GB2954599@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:26 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> The function thermal_zone_set_trips() is used by the thermal core code
-> in order to update the next trip points, there are no other users.
->
-> Move the function definition in the thermal_core.h, remove the
-> EXPORT_SYMBOL_GPL and document the function.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Hello Thierry,
 
-> ---
->  drivers/thermal/thermal_core.h    |  3 +++
->  drivers/thermal/thermal_helpers.c | 13 ++++++++++++-
->  include/linux/thermal.h           |  3 ---
->  3 files changed, 15 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-> index a9bf00e91d64..37cd4e2bead2 100644
-> --- a/drivers/thermal/thermal_core.h
-> +++ b/drivers/thermal/thermal_core.h
-> @@ -69,6 +69,9 @@ void thermal_zone_device_unbind_exception(struct thermal_zone_device *,
->  int thermal_zone_device_set_policy(struct thermal_zone_device *, char *);
->  int thermal_build_list_of_policies(char *buf);
->
-> +/* Helpers */
-> +void thermal_zone_set_trips(struct thermal_zone_device *tz);
-> +
->  /* sysfs I/F */
->  int thermal_zone_create_device_groups(struct thermal_zone_device *, int);
->  void thermal_zone_destroy_device_groups(struct thermal_zone_device *);
-> diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
-> index 2ba756af76b7..59eaf2d0fdb3 100644
-> --- a/drivers/thermal/thermal_helpers.c
-> +++ b/drivers/thermal/thermal_helpers.c
-> @@ -113,6 +113,18 @@ int thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp)
->  }
->  EXPORT_SYMBOL_GPL(thermal_zone_get_temp);
->
-> +/**
-> + * thermal_zone_set_trips - Computes the next trip points for the driver
-> + * @tz: a pointer to a thermal zone device structure
-> + *
-> + * The function computes the next temperature boundaries by browsing
-> + * the trip points. The result is the closer low and high trip points
-> + * to the current temperature. These values are passed to the backend
-> + * driver to let it set its own notification mechanism (usually an
-> + * interrupt).
-> + *
-> + * It does not return a value
-> + */
->  void thermal_zone_set_trips(struct thermal_zone_device *tz)
->  {
->         int low = -INT_MAX;
-> @@ -161,7 +173,6 @@ void thermal_zone_set_trips(struct thermal_zone_device *tz)
->  exit:
->         mutex_unlock(&tz->lock);
->  }
-> -EXPORT_SYMBOL_GPL(thermal_zone_set_trips);
->
->  void thermal_cdev_update(struct thermal_cooling_device *cdev)
->  {
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index c91b1e344d56..448841ab0dca 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -439,7 +439,6 @@ int thermal_zone_unbind_cooling_device(struct thermal_zone_device *, int,
->                                        struct thermal_cooling_device *);
->  void thermal_zone_device_update(struct thermal_zone_device *,
->                                 enum thermal_notify_event);
-> -void thermal_zone_set_trips(struct thermal_zone_device *);
->
->  struct thermal_cooling_device *thermal_cooling_device_register(const char *,
->                 void *, const struct thermal_cooling_device_ops *);
-> @@ -497,8 +496,6 @@ static inline int thermal_zone_unbind_cooling_device(
->  static inline void thermal_zone_device_update(struct thermal_zone_device *tz,
->                                               enum thermal_notify_event event)
->  { }
-> -static inline void thermal_zone_set_trips(struct thermal_zone_device *tz)
-> -{ }
->  static inline struct thermal_cooling_device *
->  thermal_cooling_device_register(char *type, void *devdata,
->         const struct thermal_cooling_device_ops *ops)
-> --
-> 2.17.1
->
+On Tue, Mar 31, 2020 at 10:45:59PM +0200, Thierry Reding wrote:
+> On Mon, Mar 30, 2020 at 09:16:54PM +0200, Uwe Kleine-König wrote:
+> > On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
+> > > On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
+> > > > On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
+> > > > > Only the Timer control register(TCLR) cannot be updated when the timer
+> > > > > is running. Registers like Counter register(TCRR), loader register(TLDR),
+> > > > > match register(TMAR) can be updated when the counter is running. Since
+> > > > > TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
+> > > > > timer for period/duty_cycle update.
+> > > > 
+> > > > I'm not sure what is sensible here. Stopping the PWM for a short period
+> > > > is bad, but maybe emitting a wrong period isn't better. You can however
+> > > > optimise it if only one of period or duty_cycle changes.
+> > > > 
+> > > > @Thierry, what is your position here? I tend to say a short stop is
+> > > > preferable.
+> > > 
+> > > It's not clear to me from the above description how exactly the device
+> > > behaves, but I suspect that it may latch the values in those registers
+> > > and only update the actual signal output once a period has finished. I
+> > > know of a couple of other devices that do that, so it wouldn't be
+> > > surprising.
+> > > 
+> > > Even if that was not the case, I think this is just the kind of thing
+> > > that we have to live with. Sometimes it just isn't possible to have all
+> > > supported devices adhere strictly to an API. So I think the best we can
+> > > do is have an API that loosely defines what's supposed to happen and
+> > > make a best effort to implement those semantics. If a device deviates
+> > > slightly from those expectations, we can always cross fingers and hope
+> > > that things still work. And it looks like they are.
+> > > 
+> > > So I think if Lokesh and Tony agree that this is the right thing to do
+> > > and have verified that things still work after this, that's about as
+> > > good as it's going to get.
+> > 
+> > I'd say this isn't for the platform people to decide. My position here
+> > is that the PWM drivers should behave as uniform as possible to minimize
+> > surprises for consumers. And so it's a "PWM decision" that is to be made
+> > here, not an "omap decision".
+> 
+> I think there's a fine line to be walked here. I agree that we should
+> aim to have as much consistency between drivers as possible. At the same
+> time I think we need to be pragmatic. As Lokesh said, the particular use
+> case here requires this type of on-the-fly adjustment of the PWM period
+> without stopping and restarting the PWM. It doesn't work otherwise. So
+> th alternative that you're proposing is to say that we don't support
+> that use-case, even though it works just fine given this particular
+> hardware. That's not really an option.
+
+I understand your opinion here. The situation now is that in current
+mainline the driver stops the hardware for reconfiguration and it
+doesn't fit Lokesh's use case so he changed to on-the-fly update
+(accepting that maybe a wrong period is emitted). What if someone relies
+on the old behaviour? What if in a year someone comes and claims the
+wrong period is bad for their usecase and changes back to
+stop-to-update?
+
+When I write a consumer driver, do I have a chance to know how the PWM,
+that I happen to use, behaves? To be able to get my consumer driver
+reliable I might need to know that however.
+
+> > > I know this is perhaps cheating a little, or turning a blind eye, but I
+> > > don't know what the alternative would be. Do we want to tell people that
+> > > a given PWM controller can't be used if it doesn't work according to our
+> > > expectations? That's hard to argue if that controller works just fine
+> > > for all known use-cases.
+> > 
+> > I'd like have some official policy here which of the alternatives is the
+> > preferred cheat.
+> > 
+> > The situation here is that period and duty_cycle cannot be updated
+> > atomically. So the two options are:
+> > 
+> >  - stop shortly
+> >  - update with hardware running and maybe emit a broken period
+> 
+> I think we can already support both of those with the existing API. If
+> a consumer wants to stop the PWM while reconfiguring, they should be
+> able to do pwm_enable(), pwm_config(), pwm_enable() (or the atomic
+> equivalent) and for the second case they can just do pwm_config() (or
+> the atomic equivalent).
+
+Yes, the consumer can force the stop and update. But assume I'm "only" a
+consumer driver author and I want: atomic update and if this is not
+possible I prefer "stop-to-update" over "on-the-fly-and-maybe-faulty".
+So I cannot benefit from a good driver/hardware that can do atomic
+updates? Or I have to patch each driver that I actually use to use
+stop-to-update?
+
+> Some hardware may actually require the PWM to be disabled before
+> reconfiguring, so they won't be able to strictly adhere to the second
+> use-case.
+> 
+> But as discussed above, I don't want to strive for a lowest common
+> denominator that would preclude some more specific use-cases from
+> working if the hardware supports it.
+> 
+> So I think we should aim for drivers to implement the semantics as
+> closely as possible. If the hardware doesn't support some of these
+> requirements strictly while a particular use-case depends on that, then
+> that just means that the hardware isn't compatible with that use-case.
+> Chances are that the system just isn't going to be designed to support
+> that use-case in the first place if the hardware can't do it.
+> 
+> The sysfs interface is a bit of a special case here because it isn't
+> possible to know what use-cases people are going to come up with.
+
+In my eyes the sysfs interface isn't special here. You also don't know
+what the OMAP PWM hardware is used for.
+
+> It's most likely that they'll try something and if it doesn't work
+> they can see if a driver patch can improve things.
+
+So either the group who prefers "stop-to-update" or the group who
+prefers "on-the-fly-and-maybe-faulty" has to carry a system specific
+driver patch?
+
+> One possible extension that I can imagine would be to introduce some
+> sort of capability structure that drivers can fill in to describe the
+> behaviour of the hardware. Drivers like pwm-omap-dmtimer, for example,
+> could describe that they are able to change the period and/or duty cycle
+> while the PWM is on. There could be another capability bit that says
+> that the current period will finish before new settings are applied. Yet
+> another capability could describe that duty-cycle and period can be
+> applied atomically. Consumers could then check those capabilities to see
+> if they match their requirements.
+> 
+> But then again, I think that would just make things overly complicated.
+> None of the existing consumers need that, so it doesn't seem like there
+> is much demand for that feature. In practice I suspect most consumers
+> work fine despite potentially small deviations in how the PWM behaves.
+
+I think the status quo is what I asked about above: People use sysfs and
+if the PWM behaves different than needed, the driver is patched and most
+of the time not mainlined. If your focus is to support a certain
+industrial system with a defined use case, this is fine. If however you
+target for an universal framework that works for any combination of
+consumer + lowlevel driver without patching (that at least is able to
+diagnose: This PWM cannot provide what my consumer needs), this is bad.
+Also this means that whenever a system designer changes something on
+their machine (kernel update, different hardware, an new usecase for a
+PWM) they might have to reverify if the given PWM driver behaves as
+needed.
+
+My suggestion for now is to start documenting how the drivers behave
+expanding how limitations are documented in some drivers. So maybe
+change from "Limitations" to "Implementation and Hardware Details"?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
