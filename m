@@ -2,151 +2,153 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F59FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2153FC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C1220714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:03:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="YfALPzGA"
+	by mail.kernel.org (Postfix) with ESMTP id 01FD0207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbgDAGDv (ORCPT
+        id S1731800AbgDAGHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:03:51 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:41270 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731721AbgDAGDu (ORCPT
+        Wed, 1 Apr 2020 02:07:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6966 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731721AbgDAGHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:03:50 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 9CB872E15AB;
-        Wed,  1 Apr 2020 09:03:46 +0300 (MSK)
-Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
-        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id 5s7A5tV1Tc-3jZeji0t;
-        Wed, 01 Apr 2020 09:03:46 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1585721026; bh=1bAHvSB3kmRgmi7tuFuA6Fe/PqgZGvIRR5VswNBqy+Q=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=YfALPzGAC6zjrqj4KLwLgQrUp2Jgykdgm5P/IsAz49/3PlbuZQCVHf0jt3Y8IDSWG
-         2W/G0oynp9cNGWT37lf1aWhTPshOpu2Va5aUs06ssAtNvEMpnqa7bazieO2vVAMD3A
-         upWnmJjWk5+mxuYs7aOHiICf/FtpjVsj5vJwYRis=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:7613::1:5])
-        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id zG2YiQjTrL-3jWWQ0xO;
-        Wed, 01 Apr 2020 09:03:45 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] /proc/PID/smaps: Add PMD migration entry parsing
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Zi Yan <ziy@nvidia.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-References: <20200331085604.1260162-1-ying.huang@intel.com>
- <49386753-5984-f708-4153-e9c6de632439@yandex-team.ru>
- <87mu7whr88.fsf@yhuang-dev.intel.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <a2ee2441-8ac7-84d2-8c7d-e28d80a6c413@yandex-team.ru>
-Date:   Wed, 1 Apr 2020 09:03:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 1 Apr 2020 02:07:46 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03163hH6003637
+        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 02:07:45 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 303uj41nb8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 02:07:45 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <chandan@linux.ibm.com>;
+        Wed, 1 Apr 2020 07:07:27 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Apr 2020 07:07:24 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03166a6s33358136
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 06:06:36 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 973E5AE045;
+        Wed,  1 Apr 2020 06:07:39 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB6EDAE04D;
+        Wed,  1 Apr 2020 06:07:37 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.52.194])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 06:07:37 +0000 (GMT)
+From:   Chandan Rajendra <chandan@linux.ibm.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Qian Cai <cai@lca.pw>, Christoph Hellwig <hch@lst.de>,
+        linux-xfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: xfs metadata corruption since 30 March
+Date:   Wed, 01 Apr 2020 11:40:39 +0530
+Organization: IBM
+In-Reply-To: <20200401044528.GE56958@magnolia>
+References: <990EDC4E-1A4E-4AC3-84D9-078ACF5EB9CC@lca.pw> <FDCFF269-C30C-42A8-B926-A8731E110848@lca.pw> <20200401044528.GE56958@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <87mu7whr88.fsf@yhuang-dev.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-TM-AS-GCONF: 00
+x-cbid: 20040106-0020-0000-0000-000003BF6A9D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040106-0021-0000-0000-000022180E96
+Message-Id: <72081949.TPG3Dqxxrz@localhost.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=56
+ impostorscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 clxscore=1015
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/04/2020 05.31, Huang, Ying wrote:
-> Konstantin Khlebnikov <khlebnikov@yandex-team.ru> writes:
-> 
->> On 31/03/2020 11.56, Huang, Ying wrote:
->>> From: Huang Ying <ying.huang@intel.com>
->>>
->>> Now, when read /proc/PID/smaps, the PMD migration entry in page table is simply
->>> ignored.  To improve the accuracy of /proc/PID/smaps, its parsing and processing
->>> is added.
->>>
->>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->>> Cc: Andrea Arcangeli <aarcange@redhat.com>
->>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->>> Cc: Zi Yan <ziy@nvidia.com>
->>> Cc: Vlastimil Babka <vbabka@suse.cz>
->>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
->>> Cc: Michal Hocko <mhocko@suse.com>
->>> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->>> Cc: "Jérôme Glisse" <jglisse@redhat.com>
->>> Cc: Yang Shi <yang.shi@linux.alibaba.com>
->>> ---
->>>    fs/proc/task_mmu.c | 16 ++++++++++++----
->>>    1 file changed, 12 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
->>> index 8d382d4ec067..b5b3aef8cb3b 100644
->>> --- a/fs/proc/task_mmu.c
->>> +++ b/fs/proc/task_mmu.c
->>> @@ -548,8 +548,17 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
->>>    	bool locked = !!(vma->vm_flags & VM_LOCKED);
->>>    	struct page *page;
->>
->>          struct page *page = NULL;
-> 
-> Looks good.  Will do this in the next version.
-> 
->>>    -	/* FOLL_DUMP will return -EFAULT on huge zero page */
->>> -	page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
->>> +	if (pmd_present(*pmd)) {
->>> +		/* FOLL_DUMP will return -EFAULT on huge zero page */
->>> +		page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
->>> +	} else if (unlikely(is_swap_pmd(*pmd))) {
->>> +		swp_entry_t entry = pmd_to_swp_entry(*pmd);
->>> +
->>> +		VM_BUG_ON(!is_migration_entry(entry));
->>> +		page = migration_entry_to_page(entry);
->>
->>                  if (is_migration_entry(entry))
->>                          page = migration_entry_to_page(entry);
->>
->> Seems safer and doesn't add much code.
-> 
-> With this, we lose an opportunity to capture some bugs during debugging.
-> Right?
+On Wednesday, April 1, 2020 10:15 AM Darrick J. Wong wrote: 
+> On Wed, Apr 01, 2020 at 12:15:32AM -0400, Qian Cai wrote:
+> > 
+> > 
+> > > On Apr 1, 2020, at 12:14 AM, Chandan Rajendra <chandan@linux.ibm.com> wrote:
+> > > 
+> > > On Wednesday, April 1, 2020 3:27 AM Qian Cai wrote: 
+> > >> Ever since two days ago, linux-next starts to trigger xfs metadata corruption
+> > >> during compilation workloads on both powerpc and arm64,
+> > > 
+> > > Can you please provide the filesystem geometry information?
+> > > You can get that by executing "xfs_info <mount-point>" command.
+> > > 
+>
 
-You can keep VM_BUG_ON or VM_WARN_ON_ONCE
+I wasn't able to recreate this issue on my P8 kvm guest. Can you provide,
+1. The build command line you are using.
+2. The number of online CPUs and amount of system memory.
+2. As Darrick pointed out, Can you please provide the kconfig used (especially
+   the one used for powerpc build).
 
-Off-by-page in statistics isn't a big deal and not a good reason to crash (even debug) kernel.
-But for normal build should use safe behaviour if this isn't hard.
+> Hmm.   Do the arm/ppc systems have 64k pages?  kconfigs might be a good
+> starting place.  Also, does the xfs for-next branch exhibit this
+> problem, or is it just the big -next branch that Stephen Rothwell puts
+> out?
+> 
+> 
+> --D
+> 
+> > == arm64 ==
+> > # xfs_info /home/
+> > meta-data=/dev/mapper/rhel_hpe--apollo--cn99xx--11-home isize=512    agcount=4, agsize=113568256 blks
+> >          =                       sectsz=4096  attr=2, projid32bit=1
+> >          =                       crc=1        finobt=1, sparse=1, rmapbt=0
+> >          =                       reflink=1
+> > data     =                       bsize=4096   blocks=454273024, imaxpct=5
+> >          =                       sunit=0      swidth=0 blks
+> > naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+> > log      =internal log           bsize=4096   blocks=221813, version=2
+> >          =                       sectsz=4096  sunit=1 blks, lazy-count=1
+> > realtime =none                   extsz=4096   blocks=0, rtextents=0
+> > 
+> > 
+> > == powerpc ==
+> > # xfs_info /home/
+> > meta-data=/dev/mapper/rhel_ibm--p9wr--01-home isize=512    agcount=4, agsize=118489856 blks
+> >          =                       sectsz=4096  attr=2, projid32bit=1
+> >          =                       crc=1        finobt=1, sparse=1, rmapbt=0
+> >          =                       reflink=1
+> > data     =                       bsize=4096   blocks=473959424, imaxpct=5
+> >          =                       sunit=0      swidth=0 blks
+> > naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+> > log      =internal log           bsize=4096   blocks=231425, version=2
+> >          =                       sectsz=4096  sunit=1 blks, lazy-count=1
+> > realtime =none                   extsz=4096   blocks=0, rtextents=0
+> > 
+> > == x86 (not yet reproduced)  ==
+> > meta-data=/dev/mapper/rhel_hpe--dl380gen9--01-home isize=512    agcount=16, agsize=3283776 blks
+> >          =                       sectsz=512   attr=2, projid32bit=1
+> >          =                       crc=1        finobt=1, sparse=1, rmapbt=0
+> >          =                       reflink=1
+> > data     =                       bsize=4096   blocks=52540416, imaxpct=25
+> >          =                       sunit=64     swidth=64 blks
+> > naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+> > log      =internal log           bsize=4096   blocks=25664, version=2
+> >          =                       sectsz=512   sunit=0 blks, lazy-count=1
+> > realtime =none                   extsz=4096   blocks=0, rtextents=0
+> 
 
-> 
-> Best Regards,
-> Huang, Ying
-> 
->>> +	} else {
->>> +		return;
->>> +	}
->>>    	if (IS_ERR_OR_NULL(page))
->>>    		return;
->>>    	if (PageAnon(page))
->>> @@ -578,8 +587,7 @@ static int smaps_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
->>>      	ptl = pmd_trans_huge_lock(pmd, vma);
->>>    	if (ptl) {
->>> -		if (pmd_present(*pmd))
->>> -			smaps_pmd_entry(pmd, addr, walk);
->>> +		smaps_pmd_entry(pmd, addr, walk);
->>>    		spin_unlock(ptl);
->>>    		goto out;
->>>    	}
->>>
+
+-- 
+chandan
+
+
+
