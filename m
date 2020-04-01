@@ -2,103 +2,166 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DDBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4284C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A003220719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8489A20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:39:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="XDKO5hKX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HJQlZaka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733097AbgDAOjK (ORCPT
+        id S1733105AbgDAOjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:39:10 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37626 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732791AbgDAOjK (ORCPT
+        Wed, 1 Apr 2020 10:39:23 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36045 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732976AbgDAOjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:39:10 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u65so19812pfb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 07:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/iSahkJrDdRH98cZT/cX3kV0qB8bHq3dASQvxelaFiI=;
-        b=XDKO5hKXn2DMYhWrIMoaz0M1LCBQ5bWgbe+A9FWmdvQqBjQ5xzL4tIATz/7ApRHAe7
-         LlvzUHEdWS4WLuJd55HvvFFLehO+s4FmlKTJNmr7zec7zFmvZKL/yoCMa6PcHa/hPAMt
-         DFHNCajQW8e25GQG+2fkWC9kCI5LjlB6+p5nM2Gf7EZtyq0O1VW3KDSUyqEKc85S5Qkm
-         AvrPfq0mHHD9YCoQArnQTPk44andN4j35y7V9mjrJ0Gy1hjdLSsYTWSO+kr0JIVMB0r5
-         3dC/sadMWay83rMFwyVpqrUDOTGlw0N//Ii6kj10E45ZkxE3WXTBCOn/EwF6lb9njt7n
-         DwkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/iSahkJrDdRH98cZT/cX3kV0qB8bHq3dASQvxelaFiI=;
-        b=ij3AJyfBMXJ/oJhoAMFgter08Npga3FsP6BOghc7nWrfGDjo7Mdm7p8CH0lcfD+WvZ
-         caiGhO7b3ttrTlKFYjYI/NyaWZgWJ2lXeRziFK2O5uxA1DWvmIcsTfktkkgpWr/84cXr
-         FomqNgRNcih9BRZnUaSXQyxwV0VBE99ZbNAOBZNf+xdo5rtDUIh9Nc8D6KHyXRCmBIbz
-         6CC9/IXYFg4j/P0Kj1juCk5vkpM6xic0GQhB2/3fiyXoV3ygB6Buc3tjPLWOu4FZSiXt
-         yrJiLoS1K0SSG4IXVidw+Si4XTw134qmTkgYsimYd/KVu1lCR/cJp8V1Y6O8rf/7Y70S
-         KEhg==
-X-Gm-Message-State: ANhLgQ1MDErEU3mpLKCcv6AF+v0OFqxmk73fD86DAxuJF4gY4j7SL2L4
-        RCYl7bSDrD/gABLhitrQ4zUqkxM0izz9Hg==
-X-Google-Smtp-Source: ADFU+vs1K3XbUKt2pUIj6nGOeR0U4WdhzPE3aaDRwPfMWcjeCtYwU22aLlfZHAJFof/nWYI3VteC0A==
-X-Received: by 2002:aa7:9481:: with SMTP id z1mr22815516pfk.185.1585751948699;
-        Wed, 01 Apr 2020 07:39:08 -0700 (PDT)
-Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id f45sm1765981pjg.29.2020.04.01.07.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 07:39:07 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: [PATCH] tty/sysrq: Export sysrq_mask()
-Date:   Wed,  1 Apr 2020 15:39:04 +0100
-Message-Id: <20200401143904.423450-1-dima@arista.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 1 Apr 2020 10:39:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585751962;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RpUXP8laC9RyobE1gvL0sU8pGwybPyvUGTH+WRG12+4=;
+        b=HJQlZaka6R/tjs/dKiuiyyg3op/lo+lrA//gRdLufpOEIoYrEe2VVm43RjVIpjoNJBc/R0
+        KU2fLqhdUeOgpFgI4A7u7pjQU5DlKAoG+YZhoWtBjbVu/nhTCaDDFu4t7raZjBvaMBvBYT
+        lksHjJM/SRAJhF7tNOCKLTSOrok7MN4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-128-jU89qjhQPXuRw-w6e6IVkQ-1; Wed, 01 Apr 2020 10:39:21 -0400
+X-MC-Unique: jU89qjhQPXuRw-w6e6IVkQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 765DB1005055;
+        Wed,  1 Apr 2020 14:39:19 +0000 (UTC)
+Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8CEE4D768F;
+        Wed,  1 Apr 2020 14:39:18 +0000 (UTC)
+Date:   Wed, 1 Apr 2020 09:39:16 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
+Message-ID: <20200401143916.h5keq55yabetyv5u@treble>
+References: <20200330190205.k5ssixd5hpshpjjq@treble>
+ <20200330200254.GV20713@hirez.programming.kicks-ass.net>
+ <20200331111652.GH20760@hirez.programming.kicks-ass.net>
+ <20200331202315.zialorhlxmml6ec7@treble>
+ <20200331204047.GF2452@worktop.programming.kicks-ass.net>
+ <20200331211755.pb7f3wa6oxzjnswc@treble>
+ <20200331212040.7lrzmj7tbbx2jgrj@treble>
+ <20200331222703.GH2452@worktop.programming.kicks-ass.net>
+ <20200401141402.m4klvezp5futb7ff@treble>
+ <20200401142226.GU20696@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200401142226.GU20696@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Build fix for serial_core being module:
-  ERROR: modpost: "sysrq_mask" [drivers/tty/serial/serial_core.ko] undefined!
+On Wed, Apr 01, 2020 at 04:22:26PM +0200, Peter Zijlstra wrote:
+> > > --- a/arch/x86/include/asm/orc_types.h
+> > > +++ b/arch/x86/include/asm/orc_types.h
+> > > @@ -58,8 +58,13 @@
+> > >  #define ORC_TYPE_CALL			0
+> > >  #define ORC_TYPE_REGS			1
+> > >  #define ORC_TYPE_REGS_IRET		2
+> > > -#define UNWIND_HINT_TYPE_SAVE		3
+> > > -#define UNWIND_HINT_TYPE_RESTORE	4
+> > > +
+> > > +/*
+> > > + * RET_OFFSET: Used on instructions that terminate a function; mostly RETURN
+> > > + * and sibling calls. On these, sp_offset denotes the expected offset from
+> > > + * initial_func_cfi.
+> > > + */
+> > > +#define UNWIND_HINT_TYPE_RET_OFFSET	3
+> > 
+> > I think this comment belongs at the UNWIND_HINT_RET_OFFSET macro
+> > definition.
+> 
+> Humph, ok, but there's two of those :/
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- drivers/tty/sysrq.c | 1 +
- 1 file changed, 1 insertion(+)
+Just commenting the asm one should be fine I think.
 
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 5e0d0813da55..a0760bcd7a97 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -74,6 +74,7 @@ int sysrq_mask(void)
- 		return 1;
- 	return sysrq_enabled;
- }
-+EXPORT_SYMBOL_GPL(sysrq_mask);
- 
- /*
-  * A value of 1 means 'all', other nonzero values are an op mask:
+That way a reader of code using the macro is more likely to understand
+its purpose.
+
+> > > --- a/arch/x86/kernel/ftrace.c
+> > > +++ b/arch/x86/kernel/ftrace.c
+> > > @@ -282,7 +282,8 @@ static inline void tramp_free(void *tram
+> > > 
+> > >  /* Defined as markers to the end of the ftrace default trampolines */
+> > >  extern void ftrace_regs_caller_end(void);
+> > > -extern void ftrace_epilogue(void);
+> > > +extern void ftrace_regs_caller_ret(void);
+> > > +extern void ftrace_caller_end(void);
+> > >  extern void ftrace_caller_op_ptr(void);
+> > >  extern void ftrace_regs_caller_op_ptr(void);
+> > > 
+> > > @@ -334,7 +335,7 @@ create_trampoline(struct ftrace_ops *ops
+> > >  		call_offset = (unsigned long)ftrace_regs_call;
+> > >  	} else {
+> > >  		start_offset = (unsigned long)ftrace_caller;
+> > > -		end_offset = (unsigned long)ftrace_epilogue;
+> > > +		end_offset = (unsigned long)ftrace_caller_end;
+> > >  		op_offset = (unsigned long)ftrace_caller_op_ptr;
+> > >  		call_offset = (unsigned long)ftrace_call;
+> > >  	}
+> > > @@ -366,6 +367,13 @@ create_trampoline(struct ftrace_ops *ops
+> > >  	if (WARN_ON(ret < 0))
+> > >  		goto fail;
+> > > 
+> > > +	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
+> > > +		ip = ftrace_regs_caller_ret;
+> > > +		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
+> > > +		if (WARN_ON(ret < 0))
+> > > +			goto fail;
+> > > +	}
+> > > +
+> > 
+> > Hm?  This function creates a trampoline but it looks like this change is
+> > overwriting the original ftrace_64 code itself?
+> 
+> Ahh. So if you look at what the trampoline copies, you'll note we'll
+> copy until -- but *NOT* including -- the jmp ftrace_epilogue. Instead
+> we'll write a RET at the end.
+> 
+> However, due to splitting the return path, such that each instruction
+> has a unique stack offset, we now have a second jmp ftrace_epilogue in
+> the middle of the function. That too needs to be overwritten by a RET.
+
+Right, but 'ip' needs to point to the trampoline's version of
+'ftrace_regs_caller_ret', not the original ftrace_64 version.
+
+> > > --- a/tools/objtool/Makefile
+> > > +++ b/tools/objtool/Makefile
+> > > @@ -31,7 +31,7 @@ INCLUDES := -I$(srctree)/tools/include \
+> > >  	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+> > >  	    -I$(srctree)/tools/arch/$(SRCARCH)/include
+> > >  WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+> > > -CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+> > > +CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -ggdb3 $(INCLUDES) $(LIBELF_FLAGS)
+> > >  LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+> > 
+> > Why?  Smells like a separate patch at least.
+> 
+> Oh, whoops :-) I keep doing this every time I need to run gdb on it.
+> I'll make it go away.
+
+Ha, I do something similar, I just add -O0 to CFLAGS.
+
 -- 
-2.25.1
+Josh
 
