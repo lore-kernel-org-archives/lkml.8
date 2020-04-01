@@ -2,83 +2,110 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26987C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15634C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026842073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D638F20784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585730305;
+	bh=Bvhmmc0BPGknPaf0rghM2JRllR9P2T5itF8OtzXxVa4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0c6l0mhEcNf1lD4RAfzhS6VXZ169RTeKTzir9Lz5ie+N5s7Zfjleo7Yp/34ctduH9
+	 qFpIHbu0ENNqonxIF3BBG8S99XY2TSbWIOdJevImzR0iHmonhZzf1AndGB6619yO9O
+	 Q0PVK8qPfCwjo/YVIp4pUBIlhyQ0RTpH4OV1Mptc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731828AbgDAIhm (ORCPT
+        id S1731830AbgDAIiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:37:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:4228 "EHLO mga18.intel.com"
+        Wed, 1 Apr 2020 04:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730821AbgDAIhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:37:36 -0400
-IronPort-SDR: AcdjHQV8OvQKXXJ5fpFG+xxnofjEeyp1ovN3+DpD60MFBOJbom9Q8BmBvO0+v5A+5ABAB8BJsg
- K060/dbiKm8Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 01:37:35 -0700
-IronPort-SDR: /b9M4uVVdfFwYF+eLcG0YgHzbAm+2wMrLNO/iMT7tdQjqU/n6RCUDHEDg1dQhNsSmXKOCvkOF6
- EtGE4tXUYcpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,331,1580803200"; 
-   d="scan'208";a="422630387"
-Received: from vikasjox-mobl.amr.corp.intel.com (HELO localhost) ([10.249.39.53])
-  by orsmga005.jf.intel.com with ESMTP; 01 Apr 2020 01:37:31 -0700
-Date:   Wed, 1 Apr 2020 11:37:29 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>, rjw@rjwysocki.net
-Cc:     linux-integrity@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v3] acpi: Extend TPM2 ACPI table with missing log fields
-Message-ID: <20200401083729.GD17325@linux.intel.com>
-References: <20200331214949.883781-1-stefanb@linux.vnet.ibm.com>
+        id S1726536AbgDAIiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:38:24 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75CF82073B;
+        Wed,  1 Apr 2020 08:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585730303;
+        bh=Bvhmmc0BPGknPaf0rghM2JRllR9P2T5itF8OtzXxVa4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J2s9ykdXJR83vU5mD6OAAenGxi5Bw2B/QKskuClc1jza0jHl4blJXrDruApIoiNgN
+         IVIMXXI/VarPS8bmC4RFYcQJu2Rrc+i/0nIrN6/uGlt54YRZuGI5y5XylmsEd0mchJ
+         tqvVb/cwwDMpD1Q1wXn+9j0WTJFPOWJGSOUsbJ7o=
+Date:   Wed, 1 Apr 2020 09:38:19 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com, cai@lca.pw, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] kcsan: Change data_race() to no longer require
+ marking racing accesses
+Message-ID: <20200401083818.GA16446@willie-the-truck>
+References: <20200331193233.15180-1-elver@google.com>
+ <20200331193233.15180-2-elver@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331214949.883781-1-stefanb@linux.vnet.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200331193233.15180-2-elver@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 05:49:49PM -0400, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
+On Tue, Mar 31, 2020 at 09:32:33PM +0200, Marco Elver wrote:
+> Thus far, accesses marked with data_race() would still require the
+> racing access to be marked in some way (be it with READ_ONCE(),
+> WRITE_ONCE(), or data_race() itself), as otherwise KCSAN would still
+> report a data race.  This requirement, however, seems to be unintuitive,
+> and some valid use-cases demand *not* marking other accesses, as it
+> might hide more serious bugs (e.g. diagnostic reads).
 > 
-> Recent extensions of the TPM2 ACPI table added 3 more fields
-> including 12 bytes of start method specific parameters and Log Area
-> Minimum Length (u32) and Log Area Start Address (u64). So, we extend
-> the existing structure with these fields to allow non-UEFI systems
-> to access the TPM2's log.
+> Therefore, this commit changes data_race() to no longer require marking
+> racing accesses (although it's still recommended if possible).
 > 
-> The specification that has the new fields is the following:
->   TCG ACPI Specification
->   Family "1.2" and "2.0"
->   Version 1.2, Revision 8
-> 
-> Adapt all existing table size calculations to use
-> offsetof(struct acpi_table_tpm2, start_method_specific)
-> [where start_method_specific is a newly added field]
-> rather than sizeof(struct acpi_table_tpm2) so that the addition
-> of the new fields does not affect current systems that may not
-> have them.
-> 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Cc: linux-acpi@vger.kernel.org
+> The alternative would have been introducing another variant of
+> data_race(), however, since usage of data_race() already needs to be
+> carefully reasoned about, distinguishing between these cases likely adds
+> more complexity in the wrong place.
 
-I think I'm cool with this but needs an ack from ACPI maintainer.
+Just a thought, but perhaps worth extending scripts/checkpatch.pl to
+check for use of data_race() without a comment? We already have that for
+memory barriers, so should be easy enough to extend with any luck.
 
-Rafael, given that this not an intrusive change in any possible means,
-can I pick this patch and put it to my next pull request?
+> Link: https://lkml.kernel.org/r/20200331131002.GA30975@willie-the-truck
+> Signed-off-by: Marco Elver <elver@google.com>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Qian Cai <cai@lca.pw>
+> ---
+>  include/linux/compiler.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> index f504edebd5d7..1729bd17e9b7 100644
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+> @@ -326,9 +326,9 @@ unsigned long read_word_at_a_time(const void *addr)
+>  #define data_race(expr)                                                        \
+>  	({                                                                     \
+>  		typeof(({ expr; })) __val;                                     \
+> -		kcsan_nestable_atomic_begin();                                 \
+> +		kcsan_disable_current();                                       \
+>  		__val = ({ expr; });                                           \
+> -		kcsan_nestable_atomic_end();                                   \
+> +		kcsan_enable_current();                                        \
+>  		__val;                                                         \
+>  	})
+>  #else
 
-/Jarkko
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
