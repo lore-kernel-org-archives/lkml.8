@@ -2,94 +2,78 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77326C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24945C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5671F20787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E404420787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:19:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P4hZJ/gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732036AbgDAHTa (ORCPT
+        id S1732055AbgDAHTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:19:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:44124 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731680AbgDAHT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:19:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAD1831B;
-        Wed,  1 Apr 2020 00:19:28 -0700 (PDT)
-Received: from [10.37.12.63] (unknown [10.37.12.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69E453F52E;
-        Wed,  1 Apr 2020 00:23:27 -0700 (PDT)
-Subject: Re: [PATCH v5 2/5] OPP: refactor dev_pm_opp_of_register_em() and
- update related drivers
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, viresh.kumar@linaro.org
-Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
-        javi.merino@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        nm@ti.com, sboyd@kernel.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, daniel.lezcano@linaro.org,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200318114548.19916-1-lukasz.luba@arm.com>
- <20200318114548.19916-3-lukasz.luba@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <4326bd75-e892-63ca-5757-5befd9bbac14@arm.com>
-Date:   Wed, 1 Apr 2020 08:19:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 03:19:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52620 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731850AbgDAHTo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 03:19:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fPytuYQ/JdQCWUd22nsWE2zEPawJqmoUpVmAz126Jd8=; b=P4hZJ/gj3h2zcEfGmd64cFKCwQ
+        4wzBF643oVaiZbd/OGTJTaKylNCTaYedjOaZD1HoamEFwAcv8X6xtHt8bm11j9rI1JzREUmNfyuZE
+        fRVWqnF7T9DQJoC+XYC3zTAEJvqT6uE5uEqaJyXiJv1UMLmimSpa+eaKB8FIQL/N6hjL+Fz32Wipb
+        YNDlURRdfG1anocuFqQpa402m2vylh3cQjtYQp2YqDXl7E/4vZ1TovhjRcfin+WX6u9/Rfb8gXcyR
+        zZIuAoe4OCAcjBPMJ2r/t5kePEQ6kW2LZRqKA3G9TYaY1IUqQicah9qQzOK8HXUikrrff5gWawFAk
+        HA/OAPpA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJXex-0002fW-Lk; Wed, 01 Apr 2020 07:19:35 +0000
+Date:   Wed, 1 Apr 2020 00:19:35 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com,
+        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com
+Subject: Re: [PATCH 4/6] device: add cmdmem support for MMIO address
+Message-ID: <20200401071935.GB31076@infradead.org>
+References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
+ <158560363242.6059.17603442699301479734.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318114548.19916-3-lukasz.luba@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158560363242.6059.17603442699301479734.stgit@djiang5-desk3.ch.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> +/**
+> + * devm_cmdmem_remap - Managed wrapper for cmdmem ioremap()
+> + * @dev: Generic device to remap IO address for
+> + * @offset: Resource address to map
+> + * @size: Size of map
+> + *
+> + * Managed cmdmem ioremap() wrapper.  Map is automatically unmapped on
+> + * driver detach.
+> + */
+> +void __iomem *devm_cmdmem_remap(struct device *dev, resource_size_t offset,
+> +				 resource_size_t size)
+> +{
+> +	if (!device_supports_cmdmem(dev))
+> +		return NULL;
+> +
+> +	return devm_ioremap(dev, offset, size);
 
-
-On 3/18/20 11:45 AM, Lukasz Luba wrote:
-> The Energy Model framework supports both: CPUs and devfreq devices. Drop
-> the CPU specific interface with cpumask and add struct device. Add also a
-> return value. This new interface provides easy way to create a simple
-> Energy Model, which then might be used in i.e. thermal subsystem.
-> 
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> ---
->   drivers/cpufreq/cpufreq-dt.c           |  2 +-
->   drivers/cpufreq/imx6q-cpufreq.c        |  2 +-
->   drivers/cpufreq/mediatek-cpufreq.c     |  2 +-
->   drivers/cpufreq/omap-cpufreq.c         |  2 +-
->   drivers/cpufreq/qcom-cpufreq-hw.c      |  2 +-
->   drivers/cpufreq/scpi-cpufreq.c         |  2 +-
->   drivers/cpufreq/vexpress-spc-cpufreq.c |  2 +-
->   drivers/opp/of.c                       | 71 ++++++++++++++++----------
->   include/linux/pm_opp.h                 | 15 +++++-
->   9 files changed, 65 insertions(+), 35 deletions(-)
-
-
-Gentle ping.
-
-Viresh could you have a look at it?
-
-Regards,
-Lukasz
+All this could be trivially open coded in the caller.
