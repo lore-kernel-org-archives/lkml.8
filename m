@@ -2,195 +2,169 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BA4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64492C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AA02082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B779206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="4rKfMTmB"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="jfklC9tX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732909AbgDAOFd (ORCPT
+        id S1732921AbgDAOFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:05:33 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:28058 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732791AbgDAOFc (ORCPT
+        Wed, 1 Apr 2020 10:05:49 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34887 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732854AbgDAOFs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:05:32 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031E0NXr016607;
-        Wed, 1 Apr 2020 10:05:19 -0400
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2106.outbound.protection.outlook.com [104.47.70.106])
-        by mx0b-00128a01.pphosted.com with ESMTP id 302wsq8h7h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 10:05:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H1HDlPftv9A7pYmeiMFPxUsqBM/O89SSZaSgPIVhv4rKaKi3f2iZFKuKIXJNoHnK0zpF0XuXrVjnrBrfuSwM+O3rf9LCbEsE+xQHvR6K3OQCk9AQHi1Apv/0m92+MOb6gZXUBnMKNYmqjF4tDO6xsLiMF6HSOrDsPpotq4MnmREL9ckkjShyp2ddddPmzrslCEZjZOmSgkisCG+PLIKYTxU77gPOf26llbMNgDZ7EcjTp/RM+5s76Yw7qjKJbr8K2pIdKaQhnj/iLBLbmmhutN5Kg8YLdQ+RM5OTW0660Ra/H+KWbw6jRcIcNKP4usfqXhVDWlF5GfH7IzOMqoW8ZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ntjdIKvp6NycPbgizn4YOEFmsqgCdaCSoOIXI9YKcA=;
- b=CG7FI1PMJZpVAw79o+/66Pv1ETwn2AGvAKSAyrIl17oC0TD+rNFh0TZTzLVqj5bQKqOXxEw4pUULFhLIgXudUY9U2cEBG2LcYQVo6lpSbGOxp80v5GaeFMlVmFa21ttKAHIER3surrcWdCnlAKSx4EFSiqvEvZqC7RVK9dXvPsGYlAUpj93erUd7GkwvdO+DToRAroLIxq4rqA2f2HzlaGcVBz9iBoXQGeuFDMUw/xR7fU3fU85d9hJEPztFnkvWr2gq1mDvwZi4DKvgYDMpyvRv94LAlb7DvyMT8ldxbW9rLch4xYhPEUI0cM+qJtv86adfaws0sCw7YF47h8AznQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+        Wed, 1 Apr 2020 10:05:48 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k21so25921193ljh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 07:05:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ntjdIKvp6NycPbgizn4YOEFmsqgCdaCSoOIXI9YKcA=;
- b=4rKfMTmB9ab/9O7BlpHGxtaVXQkKyiemvvrUlygOMstJosO/uRhTDkk0aecseO7zO2TIDo0yv+puR63lig4CQEYb5zELQAmp60rGysoDJ/SoZvjxCo/fcyS8claXPQC99cFn/D3fS7B8mKFcVwbvnlDiwuikDHeFJOEMGlx17yU=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB3436.namprd03.prod.outlook.com (2603:10b6:5:ae::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Wed, 1 Apr
- 2020 14:05:17 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 14:05:17 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH v4 1/4] Input: adp5589: Add default platform data
-Thread-Topic: [PATCH v4 1/4] Input: adp5589: Add default platform data
-Thread-Index: AQHV8u+O7N5xfhZBlkOICFf8gFvLHKhkd0QA
-Date:   Wed, 1 Apr 2020 14:05:17 +0000
-Message-ID: <44fc70102430d4d13221907a3d5ccd2d8021b854.camel@analog.com>
-References: <20200305131405.6598-1-alexandru.ardelean@analog.com>
-In-Reply-To: <20200305131405.6598-1-alexandru.ardelean@analog.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.27.135.58]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 41ebee41-86c3-4add-90d7-08d7d645b523
-x-ms-traffictypediagnostic: DM6PR03MB3436:
-x-microsoft-antispam-prvs: <DM6PR03MB34362273E7705BCF23D8E260F9C90@DM6PR03MB3436.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(346002)(136003)(366004)(376002)(396003)(39860400002)(76116006)(186003)(6486002)(8936002)(26005)(2906002)(66946007)(316002)(71200400001)(5660300002)(66446008)(36756003)(4326008)(54906003)(66476007)(6506007)(66556008)(91956017)(86362001)(2616005)(64756008)(81166006)(81156014)(110136005)(6512007)(8676002)(478600001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: S/9+q5eQYNHZBKQegHTpiM/Xpq3u0ixB0wIZwDp+OaocWDyjfnNWDVwY/VX6EuS9gl1Endmo0ltjPFtpjTkIecb2kUdpmYRjJG7Pc0cqvdubALAWUZU82Jc1SIOjT78Lux++vzgLUsjOmVt7G6mfs9IGbUeuiDuEc7UHRN4HXSsNPP8QYqlPTMHqVIGLygXTKwMa1EfQArZU4lUgo5UkgM3YopMDtZA/TybIZHclJFolER4X5LbbXpqOKomfLFND35l7yG8e3YKFs3RNd9dqlIFe2JQHSReyLIX6yqWZ2PSe3lu72eup5tDHgeeo5a1pXuhfV//kW6nBuOG16dXoHKPgG+2rWRcccfGcEzLgCGN9tdmYXQ/NK7TPHzBSWf0yQPrMXX0XdQmNCL/Cw2oSUjl6QOWpZJtgmGQCvZSonKO2PwJYiDH4tyjR3My1pQun
-x-ms-exchange-antispam-messagedata: QjjifSh6f2FpTkPFgCFMgoePhhAa9J8Nvw3mkke/k6A0j06LIfDui994kZcYjP6yRXIBAgxlhUok4nOpAHlm7kHEiop2XSXK8Gkt7j9E5g9makrxwO00RqAQKifhdPEhV3TkbK1NQV5vfNa9xIlzkQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <62F85B7160BEF14ABB50E4D8538806A1@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DX54l6mXZgvg8fNpjxDfkSkS7a7YXpNmjQ66Zp5QZwk=;
+        b=jfklC9tXAS2ZFL+y9Q7gH4nZZ7YnfJHqPBdCK1oMtQTsFEAaEdcWhbSxHq9hmP0Lpl
+         GV5N6ZofZpSSv9pg0jxtoYArNo3d+4ZDGUkXSkHuknLnSDOLQJAMHN4buq4HzDbUveED
+         aZyH4HmDjF5plF7q6ujTQzRgMt09SwHAaf6M8AKL+wRcKqVe+5xUyGX6JqVmZvKipbin
+         XHrLDj2GHRRndj9fm8ptwKmyWNOK6CwozSav+H4ChEFTRMSZVbB94fJl/L1FwUdPl6ET
+         OeBcV6N2BcItxUDf8iv0TFHg1EUHt96T1/QMrcx6Ub89/ECxQ3O7CE/FxQxEQFVJmmqw
+         /4sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DX54l6mXZgvg8fNpjxDfkSkS7a7YXpNmjQ66Zp5QZwk=;
+        b=MPeWPHbMKct09BP1FA/NOY+bYEgkPJhZzQ9t7TqjYwM85M4Jct8DjHjMQpGt/gpaX8
+         AHgcCtedFVr87UZ8aIPGtBAMOAS45sl/SBJaVQgkE9arWnf41+iBmFM3e/wr/gT955gI
+         NxdH2prVPapgW++WhXqYDyYiKdDzBjq+KFf61UNxkZkW8NjUQZPVOC5dbIOWyyk6HDzT
+         ATyLbTIgH/yzH576YnD0vULcTdVF9l5/9QSB41U3lm3QAGNKC6pD48PHt3JT5crR5D1e
+         ZQOzGWZeri8UrR/eoO7W9xN4gb2hRI6vF5LIYW0j0525zlEJVQ0KS80g7e6rSSL4Z9FY
+         HK4w==
+X-Gm-Message-State: AGi0PubqhOj4fn3DGgg7QSjWfmD6GaH/hVA0jrumqio2RSZ11JlI0riP
+        zjzTNHAuMzKWLlexoQoFf3+nSAVbavk=
+X-Google-Smtp-Source: APiQypKHorHX7t1AMghmwqPTG5hZghSH9yGsQdrU3naHV7seLQRyJU/BjPlzWXNzLdpcl6oyqKkOgA==
+X-Received: by 2002:a05:651c:1102:: with SMTP id d2mr13519723ljo.102.1585749946356;
+        Wed, 01 Apr 2020 07:05:46 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id e1sm1297999ljo.16.2020.04.01.07.05.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 07:05:45 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 24CDE1020AE; Wed,  1 Apr 2020 17:05:44 +0300 (+03)
+Date:   Wed, 1 Apr 2020 17:05:44 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] mm, dump_page(): do not crash with invalid mapping
+ pointer
+Message-ID: <20200401140544.pkhgfmo5pks3dw6v@box>
+References: <20200331165454.12263-1-vbabka@suse.cz>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41ebee41-86c3-4add-90d7-08d7d645b523
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 14:05:17.5709
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gCg1eTxEv6sjizV1Ay6yYyOe9ye1F5F81UxrOkLTEdI0z9JClGkKSV4C2CW3W0FfmEfl1xaArQs1aIJ2Yn3UIGITVhxMpA8UDy3VB3VQnO8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3436
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- bulkscore=0 impostorscore=0 malwarescore=0 spamscore=0 mlxscore=0
- adultscore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010127
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331165454.12263-1-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAzLTA1IGF0IDE1OjE0ICswMjAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
-dGU6DQo+IEZyb206IExhcnMtUGV0ZXIgQ2xhdXNlbiA8bGFyc0BtZXRhZm9vLmRlPg0KPiANCj4g
-SWYgbm8gcGxhdGZvcm0gZGF0YSBpcyBzdXBwbGllZCB1c2UgYSBkdW1teSBwbGF0Zm9ybSBkYXRh
-IHRoYXQgY29uZmlndXJlcw0KPiB0aGUgZGV2aWNlIGluIEdQSU8gb25seSBtb2RlLiBUaGlzIGNo
-YW5nZSBhZGRzIGEgYWRwNTU4OV9rcGFkX3BkYXRhX2dldCgpDQo+IGhlbHBlciB0aGF0IHJldHVy
-bnMgdGhlIGRlZmF1bHQgcGxhdGZvcm0tZGF0YS4gVGhpcyBjYW4gYmUgbGF0ZXIgZXh0ZW5kZWQN
-Cj4gdG8gbG9hZCBjb25maWd1cmF0aW9uIGZyb20gZGV2aWNlLXRyZWVzIG9yIEFDUEkuDQoNCnBp
-bmcNCg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTGFycy1QZXRlciBDbGF1c2VuIDxsYXJzQG1ldGFm
-b28uZGU+DQo+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFy
-ZGVsZWFuQGFuYWxvZy5jb20+DQo+IC0tLQ0KPiANCj4gQ2hhbmdlbG9nIHYzIC0+IHY0Og0KPiAq
-IEZpeGVkIHNtYXRjaCB3YXJuaW5ncyBhYm91dCBwb3RlbnRpYWwgbGVhayBiZWluZyBjcmVhdGVk
-OyByZXN1bHRlZCBpbiAyDQo+ICAgbW9yZSBwYXRjaGVzOg0KPiAgIC0gSW5wdXQ6IGFkcDU1ODk6
-IHVuaWZ5IHJldCAmIGVycm9yIHZhcmlhYmxlcw0KPiAgIC0gSW5wdXQ6IGFkcDU1ODk6IGZpeCBw
-b3NzaWJsZSBtZW1sZWFrIG9mICdrcGFkJw0KPiANCj4gQ2hhbmdlbG9nIHYyIC0+IHYzOg0KPiAq
-IGZpeCBgLVdwb2ludGVyLXRvLWludC1jYXN0YCB3YXJuaW5ncyBmb3IgcGF0Y2ggYGlucHV0OiBh
-ZHA1NTg5OiBBZGQgYmFzaWMNCj4gICBkZXZpY2V0cmVlIHN1cHBvcnRgIDsgd2FybmluZ3Mgc2hv
-d3MgdXAgb24gNjQgYml0IEFSQ0hzDQo+IA0KPiBDaGFuZ2Vsb2cgdjEgLT4gdjI6DQo+ICogYWRq
-dXN0ZWQgcGF0Y2ggYGlucHV0OiBhZHA1NTg5OiBBZGQgZGVmYXVsdCBwbGF0Zm9ybSBkYXRhYCBi
-eQ0KPiAgIGludHJvZHVjdGluZyBhIGBhZHA1NTg5X2twYWRfcGRhdGFfZ2V0KClgIGhlbHBlciwg
-d2hpY2ggcmV0dXJucyB0aGUNCj4gICBwbGF0Zm9ybS1kYXRhOyB0aGUgcHJldmlvcyBwYXRjaCB3
-YXMgYmFzZWQgb24gYW4gb2xkZXIgdmVyc2lvbiBvZiB0aGUNCj4gICBrZXJuZWwgZnJvbSB0aGUg
-QURJIGtlcm5lbC10cmVlOyB0aGUgZHJpdmVyIHdhcyBzeW5jLWVkIHdpdGggdGhlIHVwc3RyZWFt
-DQo+ICAgdmVyc2lvbg0KPiANCj4gIGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvYWRwNTU4OS1rZXlz
-LmMgfCAzNiArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
-NiBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2lucHV0L2tleWJvYXJkL2FkcDU1ODkta2V5cy5jDQo+IGIvZHJpdmVycy9pbnB1dC9rZXli
-b2FyZC9hZHA1NTg5LWtleXMuYw0KPiBpbmRleCBlN2Q1OGU3ZjAyNTcuLmM2YTgwMWJjZGY5MCAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9hZHA1NTg5LWtleXMuYw0KPiAr
-KysgYi9kcml2ZXJzL2lucHV0L2tleWJvYXJkL2FkcDU1ODkta2V5cy5jDQo+IEBAIC0zNjksNiAr
-MzY5LDI1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgYWRwX2NvbnN0YW50cyBjb25zdF9hZHA1NTg1
-ID0gew0KPiAgCS5yZWcJCQk9IGFkcDU1ODVfcmVnLA0KPiAgfTsNCj4gIA0KPiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBhZHA1NTg5X2dwaW9fcGxhdGZvcm1fZGF0YSBhZHA1NTg5X2RlZmF1bHRfZ3Bp
-b19wZGF0YSA9IHsNCj4gKwkuZ3Bpb19zdGFydCA9IC0xLA0KPiArfTsNCj4gKw0KPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBhZHA1NTg5X2twYWRfcGxhdGZvcm1fZGF0YSBhZHA1NTg5X2RlZmF1bHRf
-cGRhdGEgPSB7DQo+ICsJLmdwaW9fZGF0YSA9ICZhZHA1NTg5X2RlZmF1bHRfZ3Bpb19wZGF0YSwN
-Cj4gK307DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYWRwNTU4OV9rcGFkX3BsYXRmb3Jt
-X2RhdGEgKmFkcDU1ODlfa3BhZF9wZGF0YV9nZXQoDQo+ICsJc3RydWN0IGRldmljZSAqZGV2KQ0K
-PiArew0KPiArCWNvbnN0IHN0cnVjdCBhZHA1NTg5X2twYWRfcGxhdGZvcm1fZGF0YSAqcGRhdGEg
-PSBkZXZfZ2V0X3BsYXRkYXRhKGRldik7DQo+ICsNCj4gKwlpZiAoIXBkYXRhKQ0KPiArCQlwZGF0
-YSA9ICZhZHA1NTg5X2RlZmF1bHRfcGRhdGE7DQo+ICsNCj4gKwlyZXR1cm4gcGRhdGE7DQo+ICt9
-DQo+ICsNCj4gIHN0YXRpYyBpbnQgYWRwNTU4OV9yZWFkKHN0cnVjdCBpMmNfY2xpZW50ICpjbGll
-bnQsIHU4IHJlZykNCj4gIHsNCj4gIAlpbnQgcmV0ID0gaTJjX3NtYnVzX3JlYWRfYnl0ZV9kYXRh
-KGNsaWVudCwgcmVnKTsNCj4gQEAgLTQ5OCw3ICs1MTcsOCBAQCBzdGF0aWMgaW50IGFkcDU1ODlf
-YnVpbGRfZ3Bpb21hcChzdHJ1Y3QgYWRwNTU4OV9rcGFkDQo+ICprcGFkLA0KPiAgc3RhdGljIGlu
-dCBhZHA1NTg5X2dwaW9fYWRkKHN0cnVjdCBhZHA1NTg5X2twYWQgKmtwYWQpDQo+ICB7DQo+ICAJ
-c3RydWN0IGRldmljZSAqZGV2ID0gJmtwYWQtPmNsaWVudC0+ZGV2Ow0KPiAtCWNvbnN0IHN0cnVj
-dCBhZHA1NTg5X2twYWRfcGxhdGZvcm1fZGF0YSAqcGRhdGEgPSBkZXZfZ2V0X3BsYXRkYXRhKGRl
-dik7DQo+ICsJY29uc3Qgc3RydWN0IGFkcDU1ODlfa3BhZF9wbGF0Zm9ybV9kYXRhICpwZGF0YSA9
-DQo+ICsJCWFkcDU1ODlfa3BhZF9wZGF0YV9nZXQoZGV2KTsNCj4gIAljb25zdCBzdHJ1Y3QgYWRw
-NTU4OV9ncGlvX3BsYXRmb3JtX2RhdGEgKmdwaW9fZGF0YSA9IHBkYXRhLT5ncGlvX2RhdGE7DQo+
-ICAJaW50IGksIGVycm9yOw0KPiAgDQo+IEBAIC01NTMsNyArNTczLDggQEAgc3RhdGljIGludCBh
-ZHA1NTg5X2dwaW9fYWRkKHN0cnVjdCBhZHA1NTg5X2twYWQgKmtwYWQpDQo+ICBzdGF0aWMgdm9p
-ZCBhZHA1NTg5X2dwaW9fcmVtb3ZlKHN0cnVjdCBhZHA1NTg5X2twYWQgKmtwYWQpDQo+ICB7DQo+
-ICAJc3RydWN0IGRldmljZSAqZGV2ID0gJmtwYWQtPmNsaWVudC0+ZGV2Ow0KPiAtCWNvbnN0IHN0
-cnVjdCBhZHA1NTg5X2twYWRfcGxhdGZvcm1fZGF0YSAqcGRhdGEgPSBkZXZfZ2V0X3BsYXRkYXRh
-KGRldik7DQo+ICsJY29uc3Qgc3RydWN0IGFkcDU1ODlfa3BhZF9wbGF0Zm9ybV9kYXRhICpwZGF0
-YSA9DQo+ICsJCWFkcDU1ODlfa3BhZF9wZGF0YV9nZXQoZGV2KTsNCj4gIAljb25zdCBzdHJ1Y3Qg
-YWRwNTU4OV9ncGlvX3BsYXRmb3JtX2RhdGEgKmdwaW9fZGF0YSA9IHBkYXRhLT5ncGlvX2RhdGE7
-DQo+ICAJaW50IGVycm9yOw0KPiAgDQo+IEBAIC02NTYsNyArNjc3LDcgQEAgc3RhdGljIGludCBh
-ZHA1NTg5X3NldHVwKHN0cnVjdCBhZHA1NTg5X2twYWQgKmtwYWQpDQo+ICB7DQo+ICAJc3RydWN0
-IGkyY19jbGllbnQgKmNsaWVudCA9IGtwYWQtPmNsaWVudDsNCj4gIAljb25zdCBzdHJ1Y3QgYWRw
-NTU4OV9rcGFkX3BsYXRmb3JtX2RhdGEgKnBkYXRhID0NCj4gLQkJZGV2X2dldF9wbGF0ZGF0YSgm
-Y2xpZW50LT5kZXYpOw0KPiArCQlhZHA1NTg5X2twYWRfcGRhdGFfZ2V0KCZjbGllbnQtPmRldik7
-DQo+ICAJdTggKCpyZWcpICh1OCkgPSBrcGFkLT52YXItPnJlZzsNCj4gIAl1bnNpZ25lZCBjaGFy
-IGV2dF9tb2RlMSA9IDAsIGV2dF9tb2RlMiA9IDAsIGV2dF9tb2RlMyA9IDA7DQo+ICAJdW5zaWdu
-ZWQgY2hhciBwdWxsX21hc2sgPSAwOw0KPiBAQCAtODYxLDcgKzg4Miw3IEBAIHN0YXRpYyBpbnQg
-YWRwNTU4OV9rZXlwYWRfYWRkKHN0cnVjdCBhZHA1NTg5X2twYWQgKmtwYWQsDQo+IHVuc2lnbmVk
-IGludCByZXZpZCkNCj4gIHsNCj4gIAlzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0ga3BhZC0+
-Y2xpZW50Ow0KPiAgCWNvbnN0IHN0cnVjdCBhZHA1NTg5X2twYWRfcGxhdGZvcm1fZGF0YSAqcGRh
-dGEgPQ0KPiAtCQlkZXZfZ2V0X3BsYXRkYXRhKCZjbGllbnQtPmRldik7DQo+ICsJCWFkcDU1ODlf
-a3BhZF9wZGF0YV9nZXQoJmNsaWVudC0+ZGV2KTsNCj4gIAlzdHJ1Y3QgaW5wdXRfZGV2ICppbnB1
-dDsNCj4gIAl1bnNpZ25lZCBpbnQgaTsNCj4gIAlpbnQgZXJyb3I7DQo+IEBAIC05OTIsNyArMTAx
-Myw3IEBAIHN0YXRpYyBpbnQgYWRwNTU4OV9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50
-LA0KPiAgew0KPiAgCXN0cnVjdCBhZHA1NTg5X2twYWQgKmtwYWQ7DQo+ICAJY29uc3Qgc3RydWN0
-IGFkcDU1ODlfa3BhZF9wbGF0Zm9ybV9kYXRhICpwZGF0YSA9DQo+IC0JCWRldl9nZXRfcGxhdGRh
-dGEoJmNsaWVudC0+ZGV2KTsNCj4gKwkJYWRwNTU4OV9rcGFkX3BkYXRhX2dldCgmY2xpZW50LT5k
-ZXYpOw0KPiAgCXVuc2lnbmVkIGludCByZXZpZDsNCj4gIAlpbnQgZXJyb3IsIHJldDsNCj4gIA0K
-PiBAQCAtMTAwMiwxMSArMTAyMyw2IEBAIHN0YXRpYyBpbnQgYWRwNTU4OV9wcm9iZShzdHJ1Y3Qg
-aTJjX2NsaWVudCAqY2xpZW50LA0KPiAgCQlyZXR1cm4gLUVJTzsNCj4gIAl9DQo+ICANCj4gLQlp
-ZiAoIXBkYXRhKSB7DQo+IC0JCWRldl9lcnIoJmNsaWVudC0+ZGV2LCAibm8gcGxhdGZvcm0gZGF0
-YT9cbiIpOw0KPiAtCQlyZXR1cm4gLUVJTlZBTDsNCj4gLQl9DQo+IC0NCj4gIAlrcGFkID0ga3ph
-bGxvYyhzaXplb2YoKmtwYWQpLCBHRlBfS0VSTkVMKTsNCj4gIAlpZiAoIWtwYWQpDQo+ICAJCXJl
-dHVybiAtRU5PTUVNOw0K
+On Tue, Mar 31, 2020 at 06:54:54PM +0200, Vlastimil Babka wrote:
+> We have seen a following problem on a RPi4 with 1G RAM:
+> 
+> BUG: Bad page state in process systemd-hwdb  pfn:35601
+> page:ffff7e0000d58040 refcount:15 mapcount:131221 mapping:efd8fe765bc80080 index:0x1 compound_mapcount: -32767
+> Unable to handle kernel paging request at virtual address efd8fe765bc80080
+> Mem abort info:
+>   ESR = 0x96000004
+>   Exception class = DABT (current EL), IL = 32 bits
+>   SET = 0, FnV = 0
+>   EA = 0, S1PTW = 0
+> Data abort info:
+>   ISV = 0, ISS = 0x00000004
+>   CM = 0, WnR = 0
+> [efd8fe765bc80080] address between user and kernel address ranges
+> Internal error: Oops: 96000004 [#1] SMP
+> Modules linked in: btrfs libcrc32c xor xor_neon zlib_deflate raid6_pq mmc_block xhci_pci xhci_hcd usbcore sdhci_iproc sdhci_pltfm sdhci mmc_core clk_raspberrypi gpio_raspberrypi_exp pcie_brcmstb bcm2835_dma gpio_regulator phy_generic fixed sg scsi_mod efivarfs
+> Supported: No, Unreleased kernel
+> CPU: 3 PID: 408 Comm: systemd-hwdb Not tainted 5.3.18-8-default #1 SLE15-SP2 (unreleased)
+> Hardware name: raspberrypi rpi/rpi, BIOS 2020.01 02/21/2020
+> pstate: 40000085 (nZcv daIf -PAN -UAO)
+> pc : __dump_page+0x268/0x368
+> lr : __dump_page+0xc4/0x368
+> sp : ffff000012563860
+> x29: ffff000012563860 x28: ffff80003ddc4300
+> x27: 0000000000000010 x26: 000000000000003f
+> x25: ffff7e0000d58040 x24: 000000000000000f
+> x23: efd8fe765bc80080 x22: 0000000000020095
+> x21: efd8fe765bc80080 x20: ffff000010ede8b0
+> x19: ffff7e0000d58040 x18: ffffffffffffffff
+> x17: 0000000000000001 x16: 0000000000000007
+> x15: ffff000011689708 x14: 3030386362353637
+> x13: 6566386466653a67 x12: 6e697070616d2031
+> x11: 32323133313a746e x10: 756f6370616d2035
+> x9 : ffff00001168a840 x8 : ffff00001077a670
+> x7 : 000000000000013d x6 : ffff0000118a43b5
+> x5 : 0000000000000001 x4 : ffff80003dd9e2c8
+> x3 : ffff80003dd9e2c8 x2 : 911c8d7c2f483500
+> x1 : dead000000000100 x0 : efd8fe765bc80080
+> Call trace:
+>  __dump_page+0x268/0x368
+>  bad_page+0xd4/0x168
+>  check_new_page_bad+0x80/0xb8
+>  rmqueue_bulk.constprop.26+0x4d8/0x788
+>  get_page_from_freelist+0x4d4/0x1228
+>  __alloc_pages_nodemask+0x134/0xe48
+>  alloc_pages_vma+0x198/0x1c0
+>  do_anonymous_page+0x1a4/0x4d8
+>  __handle_mm_fault+0x4e8/0x560
+>  handle_mm_fault+0x104/0x1e0
+>  do_page_fault+0x1e8/0x4c0
+>  do_translation_fault+0xb0/0xc0
+>  do_mem_abort+0x50/0xb0
+>  el0_da+0x24/0x28
+> Code: f9401025 8b8018a0 9a851005 17ffffca (f94002a0)
+> ---[ end trace 703ac54becfd8094 ]---
+> 
+> Besides the underlying issue with page->mapping containing a bogus value for
+> some reason, we can see that __dump_page() crashed by trying to read the
+> pointer at mapping->host, turning a recoverable warning into full Oops.
+> 
+> It can be expected that when page is reported as bad state for some reason, the
+> pointers there should not be trusted blindly. So this patch treats all data in
+> __dump_page() that depends on page->mapping as lava, using
+> probe_kernel_read_strict(). Ideally this would include the dentry->d_parent
+> recursively, but that would mean changing printk handler for %pd. Chances of
+> reaching the dentry printing part with an initially bogus mapping pointer
+> should be rather low, though.
+> 
+> Also prefix printing mapping->a_ops with a description of what is being
+> printed.  In case the value is bogus, %ps will print raw value instead of
+> the symbol name and then it's not obvious at all that it's printing a_ops.
+> 
+> Reported-by: Petr Tesarik <ptesarik@suse.cz>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  mm/debug.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 50 insertions(+), 6 deletions(-)
+
+I'm not sure it worth the effort. It looks way too complex for what it
+does.
+
+I also expect it to slowdown dump_page(), which is hotpath for some debug
+scenarios :P
+
+Maybe just move printing this info to the end, so we would see the rest
+even if ->mapping is bogus?
+
+-- 
+ Kirill A. Shutemov
