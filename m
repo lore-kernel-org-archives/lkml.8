@@ -2,100 +2,179 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A230AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A240C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F38D206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD29820719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:18:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dn5mU/W/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387513AbgDAXKW (ORCPT
+        id S1733218AbgDAXS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:10:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48304 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732537AbgDAXKW (ORCPT
+        Wed, 1 Apr 2020 19:18:26 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42923 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732537AbgDAXSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:10:22 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jJmUu-0006TV-Ta; Wed, 01 Apr 2020 23:10:13 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Boris Brezillon <bbrezillon@kernel.org>,
-        Arnaud Ebalard <arno@natisbad.org>,
-        Srujana Challa <schalla@marvell.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Lukasz Bartosik <lbartosik@marvell.com>,
-        linux-crypto@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] crypto: marvell: fix double free of ptr
-Date:   Thu,  2 Apr 2020 00:10:12 +0100
-Message-Id: <20200401231012.407946-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 1 Apr 2020 19:18:25 -0400
+Received: by mail-il1-f193.google.com with SMTP id f16so1731292ilj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aStNwHGcg4HXgGp/sSqVaH0OjggLXkpoemAa7H6Bkb0=;
+        b=Dn5mU/W/+GRdMM3sDBTNeLnkiFRb44aiL0YQOTntjU8euIcQFhES3L/oeOm6yB5HBU
+         CSSOyEy5QLInpY8AwQGo1wsgahYyQxtjbuyj65M8BaG3zzG+oGp1/w/DrLbXolu6yTa0
+         HPmC8ADsY5vjV20y5HB0hkOOHJHZWG2x+uyFxKL9w0uc9x0ttsSN/EqS0jLy+U9j6VmE
+         ADgrnsI372y7EiFFnB+ELkTKx6NlLQweK85wf6oLvY1pkc0QaiL+5waFQlm8V8+/Ooz/
+         cKv5MLodezEM8O9O2GwczBvLZlh6+3iIMq6fA7n4H7pUQOWNJI2kHrIzBM8D6qcKDuR2
+         raPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aStNwHGcg4HXgGp/sSqVaH0OjggLXkpoemAa7H6Bkb0=;
+        b=EEauClJkPu7YIFUsa0ED1iqYp2xDlqV13XxGCUg9oQc+WA+8YMj0tMMjpOFR822ory
+         x2i5WhxofB6qoxYw+izNt4g5GoViTvGJKH6AcU9Cs7qOc0GZNnCeuhVufFdE+8HlZCVa
+         KeDvmIRY9inEhUKl24XSdF8bDvcxRWLMYdoTrQB6lsT+s54Rc6TDjFxSewZvvlark2jq
+         8/oPGjI1hR/orUCzLqmRZUa8nWzc4r1GN6g6lv3Zrv+eK4fm1+cw7d9Qf0E07qJ2YJm9
+         ArYP5Kzj6inFCkofmbsBDpju69ualoMZsezri1Msquo5D0u68+RaPV5hq84HotdDwbOX
+         876w==
+X-Gm-Message-State: AGi0PuapcWTAHjHUhGo5JOIa2sK2/NvPEgBmOVAGNQ3jYL1UuiVvUzsv
+        EqbRYshyzSFjcJZUbXQyKygfzg==
+X-Google-Smtp-Source: APiQypIQ8hziB4HtU+Sptx7pxo5HpJG46+Do1IdUouYHx80x6LVgUrDQUTOsWZ32D3yWbT7UHYbWSw==
+X-Received: by 2002:a92:d108:: with SMTP id a8mr443859ilb.107.1585783104162;
+        Wed, 01 Apr 2020 16:18:24 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id p76sm939011iod.13.2020.04.01.16.18.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 16:18:23 -0700 (PDT)
+Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200311024240.26834-1-elder@linaro.org>
+ <20200401173515.142249-1-ndesaulniers@google.com>
+ <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org>
+ <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
+ <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org>
+ <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
+ <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org>
+ <CAKwvOdnZ9KL1Esmdjvk-BTP2a+C24bOWguNVaU3RSXKi1Ouh+w@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <5635b511-64f8-b612-eb25-20b43ced4ed3@linaro.org>
+Date:   Wed, 1 Apr 2020 18:18:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKwvOdnZ9KL1Esmdjvk-BTP2a+C24bOWguNVaU3RSXKi1Ouh+w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 4/1/20 5:26 PM, Nick Desaulniers wrote:
+> On Wed, Apr 1, 2020 at 1:21 PM Alex Elder <elder@linaro.org> wrote:
+>>
+>> On 4/1/20 2:54 PM, Nick Desaulniers wrote:
+>>> On Wed, Apr 1, 2020 at 12:44 PM Alex Elder <elder@linaro.org> wrote:
+>>>>
+>>>> Can you tell me where I can find the commit id of the kernel
+>>>> that is being built when this error is reported?  I would
+>>>> like to examine things and build it myself so I can fix it.
+>>>> But so far haven't found what I need to check out.
+>>>
+>>> From the report: https://groups.google.com/g/clang-built-linux/c/pX-kr_t5l_A
+>>
+>> That link doesn't work for me.
+> 
+> Sigh, second internal bug filed against google groups this
+> week...settings look correct but I too see a 404 when in private
+> browsing mode.
+> 
+>>
+>>> Configuration details:
+>>> rr[llvm_url]="https://github.com/llvm/llvm-project.git"
+>>> rr[linux_url]="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
+>>> rr[linux_branch]="7111951b8d4973bda27ff663f2cf18b663d15b48"
+>>
+>> That commit is just the one in which Linux v5.6 is tagged.
+>> It doesn't include any of this code (but it's the last
+>> tagged release that current linus/master is built on).
+>>
+>> It doesn't answer my question about what commit id was
+>> used for this build, unfortunately.
+> 
+> 7111951b8d4973bda27ff663f2cf18b663d15b48 *is* the commit id that was
+> used for the build.  It sync'd the mainline tree at that commit.
+> 
+>>> the linux_branch looks like a SHA of what the latest ToT of mainline
+>>> was when the CI ran.
+>>>
+>>> I was suspecting that maybe there was a small window between the
+>>> regression, and the fix, and when the bot happened to sync.  But it
+>>> seems that: e31a50162feb352147d3fc87b9e036703c8f2636 landed before
+>>> 7111951b8d4973bda27ff663f2cf18b663d15b48 IIUC.
+>>
+>> Yes, this:
+>>   e31a50162feb bitfield.h: add FIELD_MAX() and field_max()
+>> landed about 200 commits after the code that needed it.
+>>
+>> So there's a chance the kernel that got built was somewhere
+>> between those two, and I believe the problem you point out
+>> would happen in that case.  This is why I started by asking
+>> whether it was something built during a bisect.
+>>
+>> It's still not clear to me what happened here.  I can explain
+>> how this *could* happen, but I don't believe problem exists
+>> in the latest upstream kernel commit.
+>>
+>> Is there something else you think I should do?
+> 
+> mainline is hosed for aarch64 due to some dtc failures.  I'm not sure
+> how TCWG's CI chooses the bisection starting point, but if mainline
+> was broken, and it jumped back say 300 commits, then the automated
+> bisection may have converged on your first patch, but not the second.
 
-Currently in the case where eq->src != req->ds, the allocation of
-ptr is kfree'd at the end of the code block. However later on in
-the case where enc is not null any of the error return paths that
-return via the error handling return path end up performing an
-erroneous second kfree of ptr.
+This is similar to the situation I discussed with Maxim this
+morning.  A different failure (yes, DTC related) led to an
+automated bisect process, which landed on my commit. And my
+commit unfortunately has the the known issue that was later
+corrected.
 
-Fix this by adding an error exit label error_free and only jump to
-this when ptr needs kfree'ing thus avoiding the double free issue.
+Maxim said this was what started the automated bisect:
+===
++# 00:01:41 make[2]: *** [arch/arm64/boot/dts/ti/k3-am654-base-board.dtb] Error 2
++# 00:01:41 make[2]: *** [arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dtb] Error 2
++# 00:01:41 make[1]: *** [arch/arm64/boot/dts/ti] Error 2
++# 00:01:41 make: *** [dtbs] Error 2
+===
 
-Addresses-Coverity: ("Double free")
-Fixes: 10b4f09491bf ("crypto: marvell - add the Virtual Function driver for CPT")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/crypto/marvell/octeontx/otx_cptvf_algs.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+> I just checked out mainline @ 7111951b8d4973bda27ff663f2cf18b663d15b48
+> and couldn't reproduce, so I assume the above is what happened.  So
+> sorry for the noise, I'll go investigate the dtc failure.  Not sure
+> how that skipped -next coverage.
 
-diff --git a/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c b/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
-index 946fb62949b2..06202bcffb33 100644
---- a/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
-+++ b/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
-@@ -1161,13 +1161,13 @@ static inline u32 create_aead_null_output_list(struct aead_request *req,
- 					   inputlen);
- 		if (status != inputlen) {
- 			status = -EINVAL;
--			goto error;
-+			goto error_free;
- 		}
- 		status = sg_copy_from_buffer(req->dst, sg_nents(req->dst), ptr,
- 					     inputlen);
- 		if (status != inputlen) {
- 			status = -EINVAL;
--			goto error;
-+			goto error_free;
- 		}
- 		kfree(ptr);
- 	}
-@@ -1209,8 +1209,10 @@ static inline u32 create_aead_null_output_list(struct aead_request *req,
- 
- 	req_info->outcnt = argcnt;
- 	return 0;
--error:
-+
-+error_free:
- 	kfree(ptr);
-+error:
- 	return status;
- }
- 
--- 
-2.25.1
+Thank you for following up.
 
+					-Alex
