@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8EAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90CCC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF1320658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC69A2137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758075;
-	bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
+	s=default; t=1585758077;
+	bh=PIZTE+EIbLccDU1QGRu3mlihSm17nSu7NpAVqp4qfqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gzz1L+xoZoWMkT6XlxQykDJeihYI1FejLaF/j/9PPV1WgFAdjs2Ze+e5CPnzOGfq6
-	 Ajsv/u7haWwIubpWasYplvjm16gK67ip6BP7C/AOo0fVDvLEAkSVkJjvImO0hmM2zL
-	 t2rsJmL22ujUVLPijhnP7MEXHblilhIwb4pixxAQ=
+	b=woHfSC0Rthr1Moj95tyqC4rmP4Z0ddGR2pNYHCsIiPRNtSk0x0Z4+T+IXvxTIv4Ox
+	 pBtuOq7xzOt2JO0AiOTKZdwNMOmXma/jO+NV+kkBkkh4WK/v8DBOLir78C37xuBn+m
+	 XsjMCCagJYMKM+GvSmv2PDMQNWO2jlkbV2WxpFiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733253AbgDAQVO (ORCPT
+        id S1732459AbgDAQVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43988 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733230AbgDAQVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:21:08 -0400
+        id S1733241AbgDAQVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:21:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E47220658;
-        Wed,  1 Apr 2020 16:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27E89212CC;
+        Wed,  1 Apr 2020 16:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758068;
-        bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
+        s=default; t=1585758070;
+        bh=PIZTE+EIbLccDU1QGRu3mlihSm17nSu7NpAVqp4qfqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0TzFrJrZn7a6At3Ns4LsavwEJIFvs3wqJXtYGhgsyEglJoNqnqBYeSTkRYhAXvKW
-         x94jIcGTcahIq5gIBGR8vCfUzREX84/SX7Yzwla/Lwpi9YeMNXz24soME4aS6NbW+K
-         tTmimMKIsQAPq4altFt+dU3XQZHHiqJcQdklVIeo=
+        b=RBsKylpSVF7ptQf9NBvHKYG7/Q6v1VKLIpq1PSkdkvxjGmF+uVzDnT8G3BF0zTHlo
+         UTC9uMaaJuQunKnwRRQCFAirbJDKOuuENR8x4iqIR4B0VkSN0vLR52orJ3UtNWKoMB
+         ukTv067KiAZBEmF/0o1LJwZNRhXZa14Ce2nHXPPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.5 26/30] ARM: dts: imx6: phycore-som: fix arm and soc minimum voltage
-Date:   Wed,  1 Apr 2020 18:17:30 +0200
-Message-Id: <20200401161433.901882726@linuxfoundation.org>
+        stable@vger.kernel.org, Arthur Demchenkov <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.5 27/30] ARM: dts: N900: fix onenand timings
+Date:   Wed,  1 Apr 2020 18:17:31 +0200
+Message-Id: <20200401161434.679865096@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.345528747@linuxfoundation.org>
 References: <20200401161414.345528747@linuxfoundation.org>
@@ -59,42 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Arthur Demchenkov <spinal.by@gmail.com>
 
-commit 636b45b8efa91db05553840b6c0120d6fa6b94fa upstream.
+commit 0c5220a3c1242c7a2451570ed5f5af69620aac75 upstream.
 
-The current set minimum voltage of 730000µV seems to be wrong. I don't
-know the document which specifies that but the imx6qdl datasheets says
-that the minimum voltage should be 0.925V for VDD_ARM (LDO bypassed,
-lowest opp) and 1.15V for VDD_SOC (LDO bypassed, lowest opp).
+Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+started using DT specified timings for GPMC, and as a result the
+OneNAND stopped working on N900 as we had wrong values in the DT.
+Fix by updating the values to bootloader timings that have been tested
+to be working on Nokia N900 with OneNAND manufacturers: Samsung,
+Numonyx.
 
-Fixes: ddec5d1c0047 ("ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Reviewed-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/omap3-n900.dts |   44 ++++++++++++++++++++++++---------------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
 
---- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
-@@ -107,14 +107,14 @@
- 		regulators {
- 			vdd_arm: buck1 {
- 				regulator-name = "vdd_arm";
--				regulator-min-microvolt = <730000>;
-+				regulator-min-microvolt = <925000>;
- 				regulator-max-microvolt = <1380000>;
- 				regulator-always-on;
- 			};
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -849,34 +849,46 @@
+ 		compatible = "ti,omap2-onenand";
+ 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
  
- 			vdd_soc: buck2 {
- 				regulator-name = "vdd_soc";
--				regulator-min-microvolt = <730000>;
-+				regulator-min-microvolt = <1150000>;
- 				regulator-max-microvolt = <1380000>;
- 				regulator-always-on;
- 			};
++		/*
++		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
++		 * bootloader set values when booted with v5.1
++		 * (OneNAND Manufacturer: Samsung):
++		 *
++		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
++		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
++		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
++		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
++		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
++		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
++		 */
+ 		gpmc,sync-read;
+ 		gpmc,sync-write;
+ 		gpmc,burst-length = <16>;
+ 		gpmc,burst-read;
+ 		gpmc,burst-wrap;
+ 		gpmc,burst-write;
+-		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
+-		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
++		gpmc,device-width = <2>;
++		gpmc,mux-add-data = <2>;
+ 		gpmc,cs-on-ns = <0>;
+-		gpmc,cs-rd-off-ns = <87>;
+-		gpmc,cs-wr-off-ns = <87>;
++		gpmc,cs-rd-off-ns = <102>;
++		gpmc,cs-wr-off-ns = <102>;
+ 		gpmc,adv-on-ns = <0>;
+-		gpmc,adv-rd-off-ns = <10>;
+-		gpmc,adv-wr-off-ns = <10>;
+-		gpmc,oe-on-ns = <15>;
+-		gpmc,oe-off-ns = <87>;
++		gpmc,adv-rd-off-ns = <12>;
++		gpmc,adv-wr-off-ns = <12>;
++		gpmc,oe-on-ns = <12>;
++		gpmc,oe-off-ns = <102>;
+ 		gpmc,we-on-ns = <0>;
+-		gpmc,we-off-ns = <87>;
+-		gpmc,rd-cycle-ns = <112>;
+-		gpmc,wr-cycle-ns = <112>;
+-		gpmc,access-ns = <81>;
+-		gpmc,page-burst-access-ns = <15>;
++		gpmc,we-off-ns = <102>;
++		gpmc,rd-cycle-ns = <132>;
++		gpmc,wr-cycle-ns = <132>;
++		gpmc,access-ns = <96>;
++		gpmc,page-burst-access-ns = <18>;
+ 		gpmc,bus-turnaround-ns = <0>;
+ 		gpmc,cycle2cycle-delay-ns = <0>;
+ 		gpmc,wait-monitoring-ns = <0>;
+-		gpmc,clk-activation-ns = <5>;
+-		gpmc,wr-data-mux-bus-ns = <30>;
+-		gpmc,wr-access-ns = <81>;
++		gpmc,clk-activation-ns = <6>;
++		gpmc,wr-data-mux-bus-ns = <36>;
++		gpmc,wr-access-ns = <96>;
+ 		gpmc,sync-clk-ps = <15000>;
+ 
+ 		/*
 
 
