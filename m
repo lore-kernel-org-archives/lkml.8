@@ -2,148 +2,170 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D94C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDF0C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F61120705
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCDEF20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:15:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FLoiFyV9"
+	dkim=pass (2048-bit key) header.d=nigauri-org.20150623.gappssmtp.com header.i=@nigauri-org.20150623.gappssmtp.com header.b="H+s+nfy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732986AbgDAOPD (ORCPT
+        id S1732999AbgDAOPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:15:03 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:58452 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732826AbgDAOPD (ORCPT
+        Wed, 1 Apr 2020 10:15:11 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34388 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732826AbgDAOPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:15:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CG4OmPa/gJjzatQG79XkzsR0JM6D3FtKUESWPgDFYUI=; b=FLoiFyV9GBN4e5K2JSJFsYsLy
-        eQEiCGTHai8I/AIPsdax4gnpxe1sTozOowESIDOeFOHX6PXaLlaOIa1qCKZD2OHOOJ6BP1fQJ3bsG
-        yOmw5xJo828E6kLdA7vqcOoooAnPu+C/dHp2sm21JTA2wlMZmwLqK+GGcOfV8GOGy7s730Q/2meIn
-        I9iPGDwRX4pbJIzxJ2BG9NQl/yXBP59v8n1kQUNFxw1uh/gJoOuvlGRxHByXAnU5Xq4BR9o+H2Hev
-        MHu19blJGnmGCDkaY6T3g9vCEjVUFOjs7ae8+ltAm1ZjPUtbLlL5/ukGo3KKgYK80Q/xmLiTaLpj/
-        VLsSYYRNA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44274)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jJe8r-0006LQ-Nb; Wed, 01 Apr 2020 15:14:53 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jJe8m-0000lb-QQ; Wed, 01 Apr 2020 15:14:48 +0100
-Date:   Wed, 1 Apr 2020 15:14:48 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
-Message-ID: <20200401141448.GU25745@shell.armlinux.org.uk>
-References: <AM0PR04MB544326757B0B510C7C3C6417FBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
+        Wed, 1 Apr 2020 10:15:10 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a23so9689927plm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 07:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nigauri-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LEOmiIfnZf4UuskndEqwJK0t3v/ejJbeSlL/pR1DNyY=;
+        b=H+s+nfy/mK20JNRHDfxWOWd+Eu1wky61/AsKXrnLiemzPhc0oG6THAVOQLhUN4ezbU
+         nLEkYb1P6HSIMGxNNd8MvbzSKzDUqxlYLqbyoV6XGa+QcAdrl/DXnGVMdq7q947FyYju
+         o6rdjgCKc7fpUgxjE7KHoGgd1tZOZcQuIA7k22VU0kDUPBs4IIpg+BCy9qW/uiN9fUSa
+         54oEd2DXtNwycXx4WJouzTnOWNnvm1dry7hX8MsulEJU9xGBxDN4D1muHElbWFsme9KR
+         XlVYMCrHajBoqBUDV4egDmJnWUZ3/p8j9W4JV1xK8bdnzNYzN9VdFbBfAeWsVt5wv5Lq
+         QQVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LEOmiIfnZf4UuskndEqwJK0t3v/ejJbeSlL/pR1DNyY=;
+        b=j9Ac67Dnb3ri2t81lvqHt/YBNF5u+T0lbFXThAGdKVbywRNW1FBc0uNef+i2FTGBGo
+         vW6OMj3nxRACjofpzMA7eERPFKGJU2dm/6FB0z57D5uuYnsXtxiGd0Y3vs03BJwf+gyF
+         z2hddXE86CiqWfxVoKSD+CceV6UaPTIx/uLaLP2RHTohckY8r2uEDVTo1d0OrPv3wNtP
+         7yZJD0JoavAHVtQCjNudgvijvx1uINncBx8U/KiEH/2X+3FIZFCCpa3eXnGFMHJlwvdI
+         suvauNb4ZqNp33nVlyMSejhPIMBs3e1LSVWP74CXo4DkTnC1Ok/0nMapxqH7OCEeiNBw
+         xNYA==
+X-Gm-Message-State: AGi0PuZ/22bkwVfrpwJozShQFD/+8bYHJQo3I5IOJe4kJnnnBcKshC5y
+        SZjM/VMV6OTwdL95q+OwwHyZ
+X-Google-Smtp-Source: APiQypLNOzalB+9BmXgPPToTEm9YjtpcDjXL+lQ7eO0oK9Emyww38AV+GlPIy2FJZ++aU4Ft04axJA==
+X-Received: by 2002:a17:90b:1888:: with SMTP id mn8mr5243859pjb.115.1585750509254;
+        Wed, 01 Apr 2020 07:15:09 -0700 (PDT)
+Received: from localhost ([2405:6581:5360:1800:bf52:1f8e:88d2:6ec])
+        by smtp.gmail.com with ESMTPSA id r59sm1805406pjb.45.2020.04.01.07.15.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 07:15:08 -0700 (PDT)
+From:   Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+To:     devicetree@vger.kernel.org
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+Subject: [PATCH] dt-bindings: timer: cadence_ttc: Migrate timer-cadence-ttc documentation to YAML
+Date:   Wed,  1 Apr 2020 23:14:49 +0900
+Message-Id: <20200401141449.66905-1-iwamatsu@nigauri.org>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB544326757B0B510C7C3C6417FBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 02:01:25PM +0000, Florinel Iordache wrote:
-> > On Thu, Mar 26, 2020 at 03:51:19PM +0200, Florinel Iordache wrote:
-> > > Add support for backplane kr generic driver including link training
-> > > (ieee802.3ap/ba) and fixed equalization algorithm
-> > >
-> > > Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-> > > +/* Read AN Link Status */
-> > > +static int is_an_link_up(struct phy_device *bpphy) {
-> > > +     struct backplane_phy_info *bp_phy = bpphy->priv;
-> > > +     int ret, val = 0;
-> > > +
-> > > +     mutex_lock(&bp_phy->bpphy_lock);
-> > > +
-> > > +     /* Read twice because Link_Status is LL (Latched Low) bit */
-> > > +     val = phy_read_mmd(bpphy, MDIO_MMD_AN, bp_phy-
-> > >bp_dev.mdio.an_status);
-> > > +     val = phy_read_mmd(bpphy, MDIO_MMD_AN,
-> > > + bp_phy->bp_dev.mdio.an_status);
-> > 
-> > Why not just
-> > 
-> > val = phy_read_mmd(bpphy, MDIO_MMD_AN, MDIO_CTRL1);
-> > 
-> > Or is your hardware not actually conformant to the standard?
-> > 
-> > There has also been a lot of discussion of reading the status twice is correct or
-> > not. Don't you care the link has briefly gone down and up again?
-> > 
-> >         Andrew
-> 
-> This could be changed to use directly the MDIO_STAT1 in order to read
-> AN status (and use MDIO_CTRL1 for writing the control register) but this
-> is more flexible and more readable since we defined the structure
-> kr_mdio_info that contains all registers offsets required by backplane
-> driver like: LT(link training) registers, AN registers, PMD registers.
-> So we wanted to put all these together to be clear that all these
-> offsets are essential for backplane driver and they can be setup
-> automatically by calling the function: backplane_setup_mdio_c45.
-> 
-> + void backplane_setup_mdio_c45(struct backplane_kr_info *bpkr)
-> + /* KX/KR AN registers: IEEE802.3 Clause 45 (MMD 7) */
-> + bpkr->mdio.an_control = MDIO_CTRL1;
-> + bpkr->mdio.an_status = MDIO_STAT1;
-> + bpkr->mdio.an_ad_ability_0 = MDIO_PMA_EXTABLE_10GBKR;
-> + bpkr->mdio.an_ad_ability_1 = MDIO_PMA_EXTABLE_10GBKR + 1;
-> + bpkr->mdio.an_lp_base_page_ability_1 = MDIO_PMA_EXTABLE_10GBKR + 4;
+The document was migrated to YAML format and renamed cdns,ttc.yaml.
+And updated the example to the latest format.
 
-Where they are IEEE 802.3 standard registers, just use the standard
-definitions, do not indirect.
+Signed-off-by: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+---
+ .../bindings/timer/cadence,ttc-timer.txt      | 21 --------
+ .../devicetree/bindings/timer/cdns,ttc.yaml   | 48 +++++++++++++++++++
+ 2 files changed, 48 insertions(+), 21 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/cdns,ttc.yaml
 
-> This approach is more flexible because it lets open the possibility for
-> extension on other non-standard devices (devices non-compliant with
-> clause 45) to still use this driver for backplane operation.
-
-That's an entirely false argument.  If something is going to be
-non-standard, why do you think that the only thing they'll do is
-have non-standard register offsets?  Wouldn't they also have
-non-standard register contents as well - and if they do, your
-"flexible" model will no longer work there.
-
-This seems to me to be a classic case of over-design.
-
-We have seem some PHYs with multiple different PHY blocks within the
-clause 45 space, but these are merely at offsets and follow the
-standard IEEE 802.3 register sets at various offsets.  The minimum
-that would be required in that case would be to carry a single register
-offset - but there is no point until we encounter a PHY that actually
-requires that for this support.
-
+diff --git a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt b/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
+deleted file mode 100644
+index eeee6cd51e5ce..0000000000000
+--- a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
++++ /dev/null
+@@ -1,21 +0,0 @@
+-Cadence TTC - Triple Timer Counter
+-
+-Required properties:
+-- compatible : Should be "cdns,ttc".
+-- reg : Specifies base physical address and size of the registers.
+-- interrupts : A list of 3 interrupts; one per timer channel.
+-- clocks: phandle to the source clock
+-
+-Optional properties:
+-- timer-width: Bit width of the timer, necessary if not 16.
+-
+-Example:
+-
+-ttc0: ttc0@f8001000 {
+-	interrupt-parent = <&intc>;
+-	interrupts = < 0 10 4 0 11 4 0 12 4 >;
+-	compatible = "cdns,ttc";
+-	reg = <0xF8001000 0x1000>;
+-	clocks = <&cpu_clk 3>;
+-	timer-width = <32>;
+-};
+diff --git a/Documentation/devicetree/bindings/timer/cdns,ttc.yaml b/Documentation/devicetree/bindings/timer/cdns,ttc.yaml
+new file mode 100644
+index 0000000000000..c532b60b9c631
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/cdns,ttc.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/cdns,ttc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cadence TTC - Triple Timer Counter
++
++maintainers:
++  - Michal Simek <michal.simek@xilinx.com>
++
++properties:
++  compatible:
++    const: cdns,ttc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 3
++    maxItems: 3
++    description: |
++      A list of 3 interrupts; one per timer channel.
++
++  clocks:
++    maxItems: 1
++
++  timer-width:
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    description: |
++      Bit width of the timer, necessary if not 16.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++examples:
++  - |
++    ttc0: ttc0@f8001000 {
++        interrupt-parent = <&intc>;
++        interrupts = <0 10 4>, <0 11 4>, <0 12 4>;
++        compatible = "cdns,ttc";
++        reg = <0xF8001000 0x1000>;
++        clocks = <&cpu_clk 3>;
++        timer-width = <32>;
++    };
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.26.0
+
