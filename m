@@ -2,216 +2,179 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5323C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE18C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2C4206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02818206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hKNDg57V"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="IyNSd6it"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732902AbgDAOOA (ORCPT
+        id S1732927AbgDAOOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:14:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43769 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732852AbgDAOOA (ORCPT
+        Wed, 1 Apr 2020 10:14:03 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:48239 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732858AbgDAOOB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:14:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585750438;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SgMHqO/rrpPCHGR8xK4BkGOVi78dVLWaqsGqMgXXbEE=;
-        b=hKNDg57VY/EoINZtdh+NdUTkaffFR6FqhOLj+VLZn1AKe3hd2Q0S+5ruvSno0Z1RtXCqt5
-        CTimV34echCNTkZrbFCXUE/F3qIBo22h4EjC0Ol2IoljSV4YOaam3N3yhYCHw/qQGmuhFl
-        l17vcxr6f6njTiXEO+J2b17Acae4m3Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-446-m5LNliciMgegU4oo4HtSiA-1; Wed, 01 Apr 2020 10:13:57 -0400
-X-MC-Unique: m5LNliciMgegU4oo4HtSiA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA86F107ACC7;
-        Wed,  1 Apr 2020 14:13:53 +0000 (UTC)
-Received: from [10.72.12.139] (ovpn-12-139.pek2.redhat.com [10.72.12.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EB4719C70;
-        Wed,  1 Apr 2020 14:13:30 +0000 (UTC)
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-To:     Christian Borntraeger <borntraeger@de.ibm.com>, mst@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <fde312a4-56bd-f11f-799f-8aa952008012@de.ibm.com>
- <41ee1f6a-3124-d44b-bf34-0f26604f9514@redhat.com>
- <4726da4c-11ec-3b6e-1218-6d6d365d5038@de.ibm.com>
- <39b96e3a-9f4e-6e1d-e988-8c4bcfb55879@de.ibm.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <c423c5b1-7817-7417-d7af-e07bef6368e7@redhat.com>
-Date:   Wed, 1 Apr 2020 22:13:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 10:14:01 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id Je7rjWPinBr2bJe7vjkqWT; Wed, 01 Apr 2020 16:13:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1585750439; bh=4Z1xsv5MJPNLqbY2JbEN3CWbNZXwsTFDoO6fRUQq8Z8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=IyNSd6itD/wGS7WzJWs/dM4HUrhm4dr8re8yF3KX4FCoMbbHfexrnHpYLL/AqOn15
+         7Lfo2bscJ5Tv+wtt0xoYuI0IbfO9NGo00WyjUGXOuMePe19bSb+rcaPnHd3sLipLQg
+         5WTK2oPH6Q3jLG8+EpWuCh+vD3EFZdkq95zWUJZ68iSo1U9Jx1dm0Yv4U/LKEniKLv
+         USlJDTN5j3fjSech4lWAie2R6+CcS+eDMlV09WLUE86/Pp4Rm1ejPnuKuhAS67NZsK
+         COwfjQx3JKInzAy8KrHtdfsO/atELkmg3UgVeybrFuPhGh3QnzHe8CcJzDuREe1z7X
+         U7R0WvPawuwTg==
+Subject: Re: [PATCH 1/1] lib/vsprintf: Add support for printing V4L2 and DRM
+ fourccs
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20200401140522.966-1-sakari.ailus@linux.intel.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <080ddddf-717e-61dc-8522-fbdbe52da94a@xs4all.nl>
+Date:   Wed, 1 Apr 2020 16:13:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <39b96e3a-9f4e-6e1d-e988-8c4bcfb55879@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200401140522.966-1-sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMk1IXknwDM4YmvP/lQa3Wn+ijgDMHwhGqoI8aB+utiUiu9Lnc6n4h2UYXu7wz51oBsvbGHGG9TYwjhRmL+0U2byi27gti5Dkl55B8z7c+AVv/Q9XHj1
+ o/WnC3Z/PeC0XuFKPI6wwfAhSw0G1DoS9bvK6u0X80y37pJZKxeeRwud/rg0zhMTw4O5OXrISijVnxaVcTi4HtTe0MNdDvmnfWuChnnJFTZ106nv/u6n5/9X
+ lMlaHzccOrMOEYV7bCN+/KXb5yNzJcuI/8XsdTD+bjwK+BFN0AaoM0E/ek4zTkHj1Po4DKYE3oSUu+8q7AFoqQtEfRRquooJP7G7QuRmKa3XFvDz08P4XwWf
+ x+YpcqQfYb8iFogqPzJVZ92BU/oVR83DeurZ80tQvCmYccUbqZVBvsAHbUGAlBTc9/MH4ygNdo8EamET9yVN5wlRVj4Xb5W6LFrq59KhLOq4KAi9m7IU65vA
+ 2FO9WahGnoWuDUL/ObJyXeILYTKOF4oiV1ULv5cUH98wdR1BcfJdlBDcWed+zhkFcO1rIUePwIZzZNv1oX1qEqoAAg2KknknJiVIJPWxNfUcUbD+lfFSjjHc
+ BAk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/4/1 =E4=B8=8B=E5=8D=889:02, Christian Borntraeger wrote:
->
-> On 01.04.20 14:56, Christian Borntraeger wrote:
->> On 01.04.20 14:50, Jason Wang wrote:
->>> On 2020/4/1 =E4=B8=8B=E5=8D=887:21, Christian Borntraeger wrote:
->>>> On 26.03.20 15:01, Jason Wang wrote:
->>>>> Currently, CONFIG_VHOST depends on CONFIG_VIRTUALIZATION. But vhost=
- is
->>>>> not necessarily for VM since it's a generic userspace and kernel
->>>>> communication protocol. Such dependency may prevent archs without
->>>>> virtualization support from using vhost.
->>>>>
->>>>> To solve this, a dedicated vhost menu is created under drivers so
->>>>> CONIFG_VHOST can be decoupled out of CONFIG_VIRTUALIZATION.
->>>> FWIW, this now results in vhost not being build with defconfig kerne=
-ls (in todays
->>>> linux-next).
->>>>
->>> Hi Christian:
->>>
->>> Did you meet it even with this commit=C2=A0https://git.kernel.org/pub=
-/scm/linux/kernel/git/next/linux-next.git/commit/?id=3Da4be40cbcedba9b5b7=
-14f3c95182e8a45176e42d?
->> I simply used linux-next. The defconfig does NOT contain CONFIG_VHOST =
-and therefore CONFIG_VHOST_NET and friends
->> can not be selected.
->>
->> $ git checkout next-20200401
->> $ make defconfig
->>    HOSTCC  scripts/basic/fixdep
->>    HOSTCC  scripts/kconfig/conf.o
->>    HOSTCC  scripts/kconfig/confdata.o
->>    HOSTCC  scripts/kconfig/expr.o
->>    LEX     scripts/kconfig/lexer.lex.c
->>    YACC    scripts/kconfig/parser.tab.[ch]
->>    HOSTCC  scripts/kconfig/lexer.lex.o
->>    HOSTCC  scripts/kconfig/parser.tab.o
->>    HOSTCC  scripts/kconfig/preprocess.o
->>    HOSTCC  scripts/kconfig/symbol.o
->>    HOSTCC  scripts/kconfig/util.o
->>    HOSTLD  scripts/kconfig/conf
->> *** Default configuration is based on 'x86_64_defconfig'
->> #
->> # configuration written to .config
->> #
->>
->> $ grep VHOST .config
->> # CONFIG_VHOST is not set
->>
->>  =20
->>> If yes, what's your build config looks like?
->>>
->>> Thanks
-> This was x86. Not sure if that did work before.
-> On s390 this is definitely a regression as the defconfig files
-> for s390 do select VHOST_NET
->
-> grep VHOST arch/s390/configs/*
-> arch/s390/configs/debug_defconfig:CONFIG_VHOST_NET=3Dm
-> arch/s390/configs/debug_defconfig:CONFIG_VHOST_VSOCK=3Dm
-> arch/s390/configs/defconfig:CONFIG_VHOST_NET=3Dm
-> arch/s390/configs/defconfig:CONFIG_VHOST_VSOCK=3Dm
->
-> and this worked with 5.6, but does not work with next. Just adding
-> CONFIG_VHOST=3Dm to the defconfig solves the issue, something like
-
-
-Right, I think we probably need
-
-1) add CONFIG_VHOST=3Dm to all defconfigs that enables=20
-CONFIG_VHOST_NET/VSOCK/SCSI.
-
-or
-
-2) don't use menuconfig for CONFIG_VHOST, let NET/SCSI/VDPA just select i=
-t.
-
-Thanks
-
-
->
+On 4/1/20 4:05 PM, Sakari Ailus wrote:
+> Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
+> pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
+> the same implementation can be used.
+> 
+> Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > ---
->   arch/s390/configs/debug_defconfig | 5 +++--
->   arch/s390/configs/defconfig       | 5 +++--
->   2 files changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debu=
-g_defconfig
-> index 46038bc58c9e..0b83274341ce 100644
-> --- a/arch/s390/configs/debug_defconfig
-> +++ b/arch/s390/configs/debug_defconfig
-> @@ -57,8 +57,6 @@ CONFIG_PROTECTED_VIRTUALIZATION_GUEST=3Dy
->   CONFIG_CMM=3Dm
->   CONFIG_APPLDATA_BASE=3Dy
->   CONFIG_KVM=3Dm
-> -CONFIG_VHOST_NET=3Dm
-> -CONFIG_VHOST_VSOCK=3Dm
->   CONFIG_OPROFILE=3Dm
->   CONFIG_KPROBES=3Dy
->   CONFIG_JUMP_LABEL=3Dy
-> @@ -561,6 +559,9 @@ CONFIG_VFIO_MDEV_DEVICE=3Dm
->   CONFIG_VIRTIO_PCI=3Dm
->   CONFIG_VIRTIO_BALLOON=3Dm
->   CONFIG_VIRTIO_INPUT=3Dy
-> +CONFIG_VHOST=3Dm
-> +CONFIG_VHOST_NET=3Dm
-> +CONFIG_VHOST_VSOCK=3Dm
->   CONFIG_S390_CCW_IOMMU=3Dy
->   CONFIG_S390_AP_IOMMU=3Dy
->   CONFIG_EXT4_FS=3Dy
-> diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
-> index 7cd0648c1f4e..39e69c4e8cf7 100644
-> --- a/arch/s390/configs/defconfig
-> +++ b/arch/s390/configs/defconfig
-> @@ -57,8 +57,6 @@ CONFIG_PROTECTED_VIRTUALIZATION_GUEST=3Dy
->   CONFIG_CMM=3Dm
->   CONFIG_APPLDATA_BASE=3Dy
->   CONFIG_KVM=3Dm
-> -CONFIG_VHOST_NET=3Dm
-> -CONFIG_VHOST_VSOCK=3Dm
->   CONFIG_OPROFILE=3Dm
->   CONFIG_KPROBES=3Dy
->   CONFIG_JUMP_LABEL=3Dy
-> @@ -557,6 +555,9 @@ CONFIG_VFIO_MDEV_DEVICE=3Dm
->   CONFIG_VIRTIO_PCI=3Dm
->   CONFIG_VIRTIO_BALLOON=3Dm
->   CONFIG_VIRTIO_INPUT=3Dy
-> +CONFIG_VHOST=3Dm
-> +CONFIG_VHOST_NET=3Dm
-> +CONFIG_VHOST_VSOCK=3Dm
->   CONFIG_S390_CCW_IOMMU=3Dy
->   CONFIG_S390_AP_IOMMU=3Dy
->   CONFIG_EXT4_FS=3Dy
+>  Documentation/core-api/printk-formats.rst | 11 +++++++++
+>  lib/vsprintf.c                            | 29 +++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+> 
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index 8ebe46b1af39..b6249f513c09 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -545,6 +545,17 @@ For printing netdev_features_t.
+>  
+>  Passed by reference.
+>  
+> +V4L2 and DRM fourcc code (pixel format)
+> +---------------------------------------
+> +
+> +::
+> +
+> +	%ppf
+> +
+> +Print a 4cc code used by V4L2 or DRM.
 
+FourCC appears to be the more-or-less official name (https://en.wikipedia.org/wiki/FourCC)
+
+I would explain about the -BE suffix for bigendian fourcc variants.
+
+> +
+> +Passed by reference.
+> +
+>  Thanks
+>  ======
+>  
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 7c488a1ce318..b39f0ac317c5 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1721,6 +1721,32 @@ char *netdev_bits(char *buf, char *end, const void *addr,
+>  	return special_hex_number(buf, end, num, size);
+>  }
+>  
+> +static noinline_for_stack
+> +char *pixel_format_string(char *buf, char *end, const u32 *fourcc,
+> +			  struct printf_spec spec, const char *fmt)
+> +{
+> +	char ch[2] = { 0 };
+
+This can just be '{ };'
+
+> +	unsigned int i;
+> +
+> +	if (check_pointer(&buf, end, fourcc, spec))
+> +		return buf;
+> +
+> +	switch (fmt[1]) {
+> +	case 'f':
+> +		for (i = 0; i < sizeof(*fourcc); i++) {
+> +			ch[0] = *fourcc >> (i << 3);
+
+You need to AND with 0x7f, otherwise a big endian fourcc (bit 31 is set)
+will look wrong. Also, each character is standard 7 bit ascii, bit 7 isn't
+used except to indicate a BE variant.
+
+> +			buf = string(buf, end, ch, spec);
+> +		}
+> +
+> +		if (*fourcc & BIT(31))
+> +			buf = string(buf, end, "-BE", spec);
+> +
+> +		return buf;
+> +	default:
+> +		return error_string(buf, end, "(%pp?)", spec);
+> +	}
+> +}
+> +
+>  static noinline_for_stack
+>  char *address_val(char *buf, char *end, const void *addr,
+>  		  struct printf_spec spec, const char *fmt)
+> @@ -2131,6 +2157,7 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+>   *       correctness of the format string and va_list arguments.
+>   * - 'K' For a kernel pointer that should be hidden from unprivileged users
+>   * - 'NF' For a netdev_features_t
+> + * - 'pf' V4L2 or DRM pixel format.
+
+I'd say 'FourCC format' instead of 'pixel format'.
+
+>   * - 'h[CDN]' For a variable-length buffer, it prints it as a hex string with
+>   *            a certain separator (' ' by default):
+>   *              C colon
+> @@ -2223,6 +2250,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  		return restricted_pointer(buf, end, ptr, spec);
+>  	case 'N':
+>  		return netdev_bits(buf, end, ptr, spec, fmt);
+> +	case 'p':
+> +		return pixel_format_string(buf, end, ptr, spec, fmt);
+>  	case 'a':
+>  		return address_val(buf, end, ptr, spec, fmt);
+>  	case 'd':
+> 
+
+Regards,
+
+	Hans
