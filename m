@@ -2,152 +2,133 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A702C10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E51C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C1A207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CCCB207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="TsV8RV0S"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U3heV/E0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731961AbgDAIS3 (ORCPT
+        id S1732045AbgDAISq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:18:29 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39217 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731745AbgDAIS2 (ORCPT
+        Wed, 1 Apr 2020 04:18:46 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:48510 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731729AbgDAISp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:18:28 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a43so28587060edf.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5NfTZ1psxcbruTelVq920UEZMKP5Q8CYhbx3Of3ZlPA=;
-        b=TsV8RV0SNk0duVRe8v/Jj4pUvxKHMnpiNZJsAeg9dXLkJzcr28I12rPobiFSrxekML
-         lZvjBSqesoMNZcw1jplpdWMUlDPvIYiCa5VHqqtrXDqBvhuLrRMLZ7+aBc6IpMGq+fcW
-         2/z6FfT4AnvWnPiH8aQdExL1Q5n0l2QdZdKhI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5NfTZ1psxcbruTelVq920UEZMKP5Q8CYhbx3Of3ZlPA=;
-        b=kO1aB45TwXoX82C61wm118otzBaVZpeOUJuv2jv3PL+GpWC6cEklWsDeXVkjMEL6cZ
-         KApdaOgzc4vdUhE19m1HZ5wBCa9VxFAGrhXdWzKWJDZo/yr3O43MK46CogxSofuC91Iz
-         sa/moGAYA4qdM3RtYLcUliulkixkNIICPGBHmgmM2RKraKk71ewFXH8/aFZPGkIUwxfY
-         GPjJjcvN4UPO9yyF2Yk3VXJ+NmcaIQZLccO173AoT0kGXKOIQYEpgnHibWG65TapJgtr
-         oSo48mCsKr01+zNTDw/+07elABodO7Gll5gxVUQkQw1w9E6c2o1MDez4xDb5knmZmxXD
-         g7Dg==
-X-Gm-Message-State: ANhLgQ3sHLVHk6bW/chO/nZ7JoJgoWjzXtWJLU0Vxos44TVQn2k3ldEU
-        fWcxVsjUESrEwURphii+qnGg9PFsFLtmXG2IJ5qnhw==
-X-Google-Smtp-Source: ADFU+vtzbMBDUSOP6hzS0q+rekhXxHRVTRf1V7Qotd7o9b2HuU0+vYqetl4dyF5TMa+9BSocqVggTTfkwZ/JTmGjJJE=
-X-Received: by 2002:a17:906:9ca:: with SMTP id r10mr18691109eje.151.1585729105602;
- Wed, 01 Apr 2020 01:18:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
- <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com> <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net>
-In-Reply-To: <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 1 Apr 2020 10:18:14 +0200
-Message-ID: <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com>
-Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
-To:     Ian Kent <raven@themaw.net>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
+        Wed, 1 Apr 2020 04:18:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585729125; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=7PsHfH50Qa4x11/cHlqtR7JN55Rk0n8ciHDiIs770ho=; b=U3heV/E05kY6b5H1kHmQdYKYC1zucWlQB60xSdgjZbSVUKcjZ4V4j801oAi1k2ZlEorYAuW+
+ rLKuSPlgSmczwM7+jvoCSIBc6m2/8Uoz9URwJBFateSbKSY3bpO1qfvrwYwSEYiBDR1Whder
+ V/wvYZsOP1PuFhclzq+fpmDLoT4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e844e63.7f9b87da01b8-smtp-out-n02;
+ Wed, 01 Apr 2020 08:18:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 49461C4478C; Wed,  1 Apr 2020 08:18:42 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.199.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4056AC433D2;
+        Wed,  1 Apr 2020 08:18:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4056AC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [RFT PATCH v2 04/10] drivers: qcom: rpmh-rsc: Remove
+ get_tcs_of_type() abstraction
+To:     Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        evgreen@chromium.org, Lina Iyer <ilina@codeaurora.org>,
+        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20200311231348.129254-1-dianders@chromium.org>
+ <20200311161104.RFT.v2.4.Ia348ade7c6ed1d0d952ff2245bc854e5834c8d9a@changeid>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <24620fdc-4ac7-b54a-45aa-906da3dc3fa9@codeaurora.org>
+Date:   Wed, 1 Apr 2020 13:48:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200311161104.RFT.v2.4.Ia348ade7c6ed1d0d952ff2245bc854e5834c8d9a@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 7:22 AM Ian Kent <raven@themaw.net> wrote:
->
-> On Wed, 2020-03-18 at 17:05 +0100, Miklos Szeredi wrote:
-> > On Wed, Mar 18, 2020 at 4:08 PM David Howells <dhowells@redhat.com>
-> > wrote:
-> >
-> > > ============================
-> > > WHY NOT USE PROCFS OR SYSFS?
-> > > ============================
-> > >
-> > > Why is it better to go with a new system call rather than adding
-> > > more magic
-> > > stuff to /proc or /sysfs for each superblock object and each mount
-> > > object?
-> > >
-> > >  (1) It can be targetted.  It makes it easy to query directly by
-> > > path.
-> > >      procfs and sysfs cannot do this easily.
-> > >
-> > >  (2) It's more efficient as we can return specific binary data
-> > > rather than
-> > >      making huge text dumps.  Granted, sysfs and procfs could
-> > > present the
-> > >      same data, though as lots of little files which have to be
-> > >      individually opened, read, closed and parsed.
-> >
-> > Asked this a number of times, but you haven't answered yet:  what
-> > application would require such a high efficiency?
->
-> Umm ... systemd and udisks2 and about 4 others.
->
-> A problem I've had with autofs for years is using autofs direct mount
-> maps of any appreciable size cause several key user space applications
-> to consume all available CPU while autofs is starting or stopping which
-> takes a fair while with a very large mount table. I saw a couple of
-> applications affected purely because of the large mount table but not
-> as badly as starting or stopping autofs.
->
-> Maps of 5,000 to 10,000 map entries can almost be handled, not uncommon
-> for heavy autofs users in spite of the problem, but much larger than
-> that and you've got a serious problem.
->
-> There are problems with expiration as well but that's more an autofs
-> problem that I need to fix.
->
-> To be clear it's not autofs that needs the improvement (I need to
-> deal with this in autofs itself) it's the affect that these large
-> mount tables have on the rest of the user space and that's quite
-> significant.
+Hi,
 
-
-According to dhowell's measurements processing 100k mounts would take
-about a few seconds of system time (that's the time spent by the
-kernel to retrieve the data, obviously the userspace processing would
-add to that, but that's independent of the kernel patchset).  I think
-that sort of time spent by the kernel is entirely reasonable and is
-probably not worth heavy optimization, since userspace is probably
-going to spend as much, if not more time with each mount entry.
-
-> I can't even think about resolving my autofs problem until this
-> problem is resolved and handling very large numbers of mounts
-> as efficiently as possible must be part of that solution for me
-> and I think for the OS overall too.
-
-The key to that is allowing userspace to retrieve individual mount
-entries instead of having to parse the complete mount table on every
-change.
+Tested-by: Maulik Shah <mkshah@codeaurora.org>
 
 Thanks,
-Miklos
+Maulik
+
+On 3/12/2020 4:43 AM, Douglas Anderson wrote:
+> The get_tcs_of_type() function doesn't provide any value.  It's not
+> conceptually difficult to access a value in an array, even if that
+> value is in a structure and we want a pointer to the value.  Having
+> the function in there makes me feel like it's doing something fancier
+> like looping or searching.  Remove it.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>
+> Changes in v2: None
+>
+>   drivers/soc/qcom/rpmh-rsc.c | 13 +++----------
+>   1 file changed, 3 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index 799847b08038..c9f29cbd5ee5 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -170,17 +170,10 @@ static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
+>   	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id);
+>   }
+>   
+> -static struct tcs_group *get_tcs_of_type(struct rsc_drv *drv, int type)
+> -{
+> -	return &drv->tcs[type];
+> -}
+> -
+>   static int tcs_invalidate(struct rsc_drv *drv, int type)
+>   {
+>   	int m;
+> -	struct tcs_group *tcs;
+> -
+> -	tcs = get_tcs_of_type(drv, type);
+> +	struct tcs_group *tcs = &drv->tcs[type];
+>   
+>   	spin_lock(&tcs->lock);
+>   	if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS)) {
+> @@ -246,9 +239,9 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+>   	 * dedicated AMC, and therefore would invalidate the sleep and wake
+>   	 * TCSes before making an active state request.
+>   	 */
+> -	tcs = get_tcs_of_type(drv, type);
+> +	tcs = &drv->tcs[type];
+>   	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
+> -		tcs = get_tcs_of_type(drv, WAKE_TCS);
+> +		tcs = &drv->tcs[WAKE_TCS];
+>   		if (tcs->num_tcs) {
+>   			ret = rpmh_rsc_invalidate(drv);
+>   			if (ret)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
