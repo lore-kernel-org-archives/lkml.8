@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F40C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1DBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10A1206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7909420772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758974;
-	bh=kwfdmyOyKsHxsGInYzGNknrEDmNZxretW2FYu9TVLxo=;
+	s=default; t=1585758980;
+	bh=LFojRfP+Ryk/Ggz7Q1TEtogALZDvsONa+izl2jHtNXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t2Qb2PORJSx7fggM5u2IDYVE4Gtf155G/bc+jPBnfXUL5e805IscMeU91V84j1Fvd
-	 4rWnsrRMofk9iyXYrNdts9GHLbZbho4En5AGKC199ZVONU43Q7APanIWChAk/puVYm
-	 JFKNFOUwn8rGzj4ku0IvLiSn2xU9Jv4bZnHrR5fk=
+	b=a90OgITUkbLNo3Uce4SHS6fS+glOJXGi3JAl/ILNgEMQmLdNu9dWFuW8gt/k3pBzK
+	 xRlVB07OY+VL2L+knZgdd6DKkgUtHC1WjedtpLPm7T26w1BQMz9maLRj1NPUpKflh5
+	 9+bk507wklK1wotQ5wXz6FwZ28a2VxbBXFaxA9O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388821AbgDAQgL (ORCPT
+        id S2388835AbgDAQgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:36:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34934 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:36:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388803AbgDAQgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:36:05 -0400
+        id S2387983AbgDAQgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:36:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFD57206F8;
-        Wed,  1 Apr 2020 16:36:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CE0D20857;
+        Wed,  1 Apr 2020 16:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758965;
-        bh=kwfdmyOyKsHxsGInYzGNknrEDmNZxretW2FYu9TVLxo=;
+        s=default; t=1585758967;
+        bh=LFojRfP+Ryk/Ggz7Q1TEtogALZDvsONa+izl2jHtNXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qfj8G/RJuTfTJMltI1ZzmxO746xBQ6OgLSEqBfOk6AahcTl2NfqDUupfmEg0xeHoE
-         uXeFyj9yrB82wXbyibRV8ThFtHF9qw4C45C0tA17mrpMNoa3PBnz/07lOEQ7mjFKzq
-         QJ8an1dCTQOccgyWllLj+G2yUCQ9CVQmUjEQz2TU=
+        b=Wrg0y1zgHSef1K8ImiOuQ9PsFA2oxhs6mYQlYT0ZSqfFef1ugm7e6DQMhvTirlkmL
+         H9jC9SOIxcU62/THysMeY+/W2JEinW193SvKCkxzYhg9hm9povmy15otcNKdVMnVhm
+         Jztx3OeK+Jv/uI2FcWi5RlsCJLdLnQ/QfSotzFjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rong Chen <rong.a.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 032/102] futex: Unbreak futex hashing
-Date:   Wed,  1 Apr 2020 18:17:35 +0200
-Message-Id: <20200401161539.048152724@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 033/102] ALSA: hda/realtek: Fix pop noise on ALC225
+Date:   Wed,  1 Apr 2020 18:17:36 +0200
+Message-Id: <20200401161539.129583761@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -60,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 8d67743653dce5a0e7aa500fcccb237cde7ad88e upstream.
+commit 3b36b13d5e69d6f51ff1c55d1b404a74646c9757 upstream.
 
-The recent futex inode life time fix changed the ordering of the futex key
-union struct members, but forgot to adjust the hash function accordingly,
+Commit 317d9313925c ("ALSA: hda/realtek - Set default power save node to
+0") makes the ALC225 have pop noise on S3 resume and cold boot.
 
-As a result the hashing omits the leading 64bit and even hashes beyond the
-futex key causing a bad hash distribution which led to a ~100% performance
-regression.
+So partially revert this commit for ALC225 to fix the regression.
 
-Hand in the futex key pointer instead of a random struct member and make
-the size calculation based of the struct offset.
-
-Fixes: 8019ad13ef7f ("futex: Fix inode life-time issue")
-Reported-by: Rong Chen <rong.a.chen@intel.com>
-Decoded-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Rong Chen <rong.a.chen@intel.com>
-Link: https://lkml.kernel.org/r/87h7yy90ve.fsf@nanos.tec.linutronix.de
+Fixes: 317d9313925c ("ALSA: hda/realtek - Set default power save node to 0")
+BugLink: https://bugs.launchpad.net/bugs/1866357
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200311061328.17614-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/futex.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -390,9 +390,9 @@ static inline int hb_waiters_pending(str
-  */
- static struct futex_hash_bucket *hash_futex(union futex_key *key)
- {
--	u32 hash = jhash2((u32*)&key->both.word,
--			  (sizeof(key->both.word)+sizeof(key->both.ptr))/4,
-+	u32 hash = jhash2((u32 *)key, offsetof(typeof(*key), both.offset) / 4,
- 			  key->both.offset);
-+
- 	return &futex_queues[hash & (futex_hashsize - 1)];
- }
- 
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -4212,6 +4212,8 @@ static void alc_determine_headset_type(s
+ 		is_ctia = (val & 0x1c02) == 0x1c02;
+ 		break;
+ 	case 0x10ec0225:
++		codec->power_save_node = 1;
++		/* fall through */
+ 	case 0x10ec0295:
+ 	case 0x10ec0299:
+ 		alc_process_coef_fw(codec, coef0225);
 
 
