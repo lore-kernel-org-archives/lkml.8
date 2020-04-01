@@ -2,52 +2,53 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3FAC2BA12
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FE2C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC95206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4583420857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758960;
-	bh=Dxdis/KJKogw06PdKI7YE6I+j6JbrgSMNU1dghE2T48=;
+	s=default; t=1585758965;
+	bh=y93Yqnkx4Hl3ZA0sTp1vcKVcdEB/pEvRT2wpcf1fUPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JoOvm2ecLi5lA9uXIdSiDJ1k23VEEVs0vgHCPyl8pJwWNyMakpSBCW+9/1D5O6pX5
-	 dozwnr0yFF7TnAEFh7T1VU097cCEksupjA+dARUiu/Phug83hbYoAe67nnA2ka60Ls
-	 uZnKpCP6pBGCNdv7PjdAB/TDUlDEMhMEFar1DNEg=
+	b=l3sakjHEry36wN+NYmRPSf8IYOxBMVCSwKCNb1R02BCJ6cKvK83kF86sBFmGnGMgx
+	 hTO+VfzNd4/k0H3fRQ8NHLviEvu2Nyl3Evc6vsvvsuqWyuMZeckTzcamwpt0dm/sn3
+	 TCj//kjE7Jg+WpYSOnhNEfGb2RbPDhU0TK0S3n6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388802AbgDAQf7 (ORCPT
+        id S2388697AbgDAQgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:35:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388795AbgDAQf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:35:56 -0400
+        id S2388557AbgDAQgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:36:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A55220857;
-        Wed,  1 Apr 2020 16:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2977120BED;
+        Wed,  1 Apr 2020 16:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758955;
-        bh=Dxdis/KJKogw06PdKI7YE6I+j6JbrgSMNU1dghE2T48=;
+        s=default; t=1585758959;
+        bh=y93Yqnkx4Hl3ZA0sTp1vcKVcdEB/pEvRT2wpcf1fUPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTJbRmISy47bfK4xp6NBU4z6Tr0KkFwJ82zrrWv6Td0Rjrdf+0rlHgW8iXvkxg6dm
-         RFAkVUrhQwOcs1Ts8SCaRKP1QlqaixtuMOgI3/3cv5vJMB1qHZLIwDjQmLGzxQ3XDa
-         DOAn/eSH53tsEeYXjWyGiM06wq4YXvQC9jXqaY5w=
+        b=Lf6Q6a708oqWAE/ywEjYDyDsHCJ6nqWAzWL5UzlxK+OUZPb3cWQjOQYb7zrALTAj9
+         T9Ve/Wow9va2e6wCxZRPJo+wRTJoyaMWyyqBgsKvMXuJmLWZdH49h83+CwupVUF+cX
+         whBbrBp7hxXnzrnRE4YXVM9l3UvMbJZZGUopXeXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 003/102] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
-Date:   Wed,  1 Apr 2020 18:17:06 +0200
-Message-Id: <20200401161532.006689044@linuxfoundation.org>
+Subject: [PATCH 4.9 030/102] kbuild: Disable -Wpointer-to-enum-cast
+Date:   Wed,  1 Apr 2020 18:17:33 +0200
+Message-Id: <20200401161538.731202411@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -60,44 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 27f13774654ea6bd0b6fc9b97cce8d19e5735661 ]
+commit 82f2bc2fcc0160d6f82dd1ac64518ae0a4dd183f upstream.
 
-'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
-devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
-has RAM above 32-bit boundary (accessible with LPAE config) though the
-PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
-property in PCIe RC DT nodes to indicate the host bridge can access
-only 32 bits.
+Clang's -Wpointer-to-int-cast deviates from GCC in that it warns when
+casting to enums. The kernel does this in certain places, such as device
+tree matches to set the version of the device being used, which allows
+the kernel to avoid using a gigantic union.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+https://elixir.bootlin.com/linux/v5.5.8/source/drivers/ata/ahci_brcm.c#L428
+https://elixir.bootlin.com/linux/v5.5.8/source/drivers/ata/ahci_brcm.c#L402
+https://elixir.bootlin.com/linux/v5.5.8/source/include/linux/mod_devicetable.h#L264
+
+To avoid a ton of false positive warnings, disable this particular part
+of the warning, which has been split off into a separate diagnostic so
+that the entire warning does not need to be turned off for clang. It
+will be visible under W=1 in case people want to go about fixing these
+easily and enabling the warning treewide.
+
+Cc: stable@vger.kernel.org
+Link: https://github.com/ClangBuiltLinux/linux/issues/887
+Link: https://github.com/llvm/llvm-project/commit/2a41b31fcdfcb67ab7038fc2ffb606fd50b83a84
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra7.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ scripts/Makefile.extrawarn | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index a1a928064b53d..f94064c687789 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -282,6 +282,7 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
-+				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
-@@ -319,6 +320,7 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
-+				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index d08b6fbdfa853..1532038f60055 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -70,5 +70,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, format)
+ KBUILD_CFLAGS += $(call cc-disable-warning, sign-compare)
+ KBUILD_CFLAGS += $(call cc-disable-warning, format-zero-length)
+ KBUILD_CFLAGS += $(call cc-disable-warning, uninitialized)
++KBUILD_CFLAGS += $(call cc-disable-warning, pointer-to-enum-cast)
+ endif
+ endif
 -- 
 2.20.1
 
