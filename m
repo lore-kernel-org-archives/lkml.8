@@ -2,135 +2,339 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C75EC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDB4C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC3A20BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585765579;
-	bh=g5rW8mNTdi3VagM9mgwi86mVK6L7YuGisX9m9WlMVeM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=QUKP9Wm4O+fZsh/Zy8nj/KQD109IiHOOdfXQvirucEgzgeNfEmqzpdL5fpRfQImor
-	 a+nGGlgGpFw8YjGUwF2WnJHTUNMZtTvzWkCcYAkYW4NFUfNoc8NPuNZnqkAtgNh5Kj
-	 +XUfVMcnFLYfRBn0qvU+u7kFQx0Bw3w6dJEX8kUw=
+	by mail.kernel.org (Postfix) with ESMTP id 8581C208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IB1PXBe2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732938AbgDAS0R (ORCPT
+        id S1732997AbgDAS0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732316AbgDAS0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:26:17 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3126720787;
-        Wed,  1 Apr 2020 18:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585765576;
-        bh=g5rW8mNTdi3VagM9mgwi86mVK6L7YuGisX9m9WlMVeM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=IClBs5dYySQ82cb01rO7lAJp3sYnbRIgHn0i5zmMl60flqGa447whUZtMaHtPgVWO
-         w2ZHoy+n0AkoNDyFdo8QpqFtYndJ7vkGQ7aNcVfrwyh8bwDPafD9gDGQS9XlRDe+gV
-         pDf2eUunVwpK5YZp6RttIN40h/4WqQrtOcNkRhsE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id BA12235226B3; Wed,  1 Apr 2020 11:26:15 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 11:26:15 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200401182615.GE19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200331131628.153118-1-joel@joelfernandes.org>
- <20200331140433.GA26498@pc636>
- <20200331150911.GC236678@google.com>
- <20200331160119.GA27614@pc636>
- <20200331183000.GD236678@google.com>
- <20200401122550.GA32593@pc636>
- <20200401134745.GV19865@paulmck-ThinkPad-P72>
- <20200401181601.GA4042@pc636>
+        Wed, 1 Apr 2020 14:26:22 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53288 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732316AbgDAS0V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 14:26:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585765580;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Acn/JRNYZl9LcndQ8j8QhECk/FmgXfJf7w+PhnRfkkA=;
+        b=IB1PXBe2vXZvB0ao2jn1LHyRpqeHO5nCy4v7wNg7gBf4iwWfORC2m13KkbTwiE4RMrZk9X
+        5M1AOBRv6Qz8uDZE/8a7dWkUOvowanfV0whV8FGv1HgqfPw9hXkJ2W0cJcCAbwkUAFh5BM
+        49K5VYJajvMTcN/Hzi8AWLaU3lF/fCY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-19-tR-Kbl1yPEunDSd-p93M3w-1; Wed, 01 Apr 2020 14:26:19 -0400
+X-MC-Unique: tR-Kbl1yPEunDSd-p93M3w-1
+Received: by mail-wr1-f71.google.com with SMTP id y1so250338wrp.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 11:26:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Acn/JRNYZl9LcndQ8j8QhECk/FmgXfJf7w+PhnRfkkA=;
+        b=DOB4OkGoBD0yatNqnFgkvP19rG5byo6Lw0sjYdBUNfEfmBqpAVpenc/kNc0Mc0oeQO
+         /uHH+i+YyLpXQAd9KzF547vzRoaZ0B1l3W3i/LAafvx4LKZMZAcRzY1wY9Be5rlI+mOo
+         Z00fZLFR28LPL6kbd+Mg2p/Old985yWhOVTwvh3iVESky9d5I7FRS3ymOsJpBFL/+WWz
+         2UvO09ofJggkwyDYff0OemoinoarJh7LYAIoZXfhqlqiek1lsoX05BnzvCZcP/2Lfvv4
+         2u7Ukrgrw4dhSzsftcLpqF1MhpXgGg525sPczUaIu+aaCOodILerItxQUx+PLHO8qOSm
+         pzUw==
+X-Gm-Message-State: AGi0Pua9XmoSPRcFgtfgydKdDx8BDZOlDuh3rkjv83S/wVRsydqKC2o2
+        dTx6VzeRF1VM0tNb3pk/jyKxjxsCQNrHVUkdIGls5H6UfhPvwkBtNp2y1t8HRpi3cs7wuwtWiHO
+        pKXdOdTMyI7FCkp3G9tiPg9xX
+X-Received: by 2002:a1c:4805:: with SMTP id v5mr5398249wma.98.1585765577986;
+        Wed, 01 Apr 2020 11:26:17 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLx23H4C+MO+AA+AAeCfEZ3Mg44k3QvPtK+gZW+sUI+wJitu8GFgVoWhoYiOuzVaD+ha6hNiA==
+X-Received: by 2002:a1c:4805:: with SMTP id v5mr5398218wma.98.1585765577635;
+        Wed, 01 Apr 2020 11:26:17 -0700 (PDT)
+Received: from x1-7.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id c85sm3655872wmd.48.2020.04.01.11.26.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 11:26:17 -0700 (PDT)
+Subject: Re: [PATCH 5.6 regression fix 1/2] ACPI: PM: Add
+ acpi_s2idle_register_wake_callback()
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "5 . 4+" <stable@vger.kernel.org>
+References: <20200329223419.122796-1-hdegoede@redhat.com>
+ <20200329223419.122796-2-hdegoede@redhat.com>
+ <CAJZ5v0iapuqnfsQHhTQTWXdEtzX_MMTBUqdAzCej19AF9rtrNA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <daea7dad-73ac-3f2a-75a1-58017988ec89@redhat.com>
+Date:   Wed, 1 Apr 2020 20:26:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401181601.GA4042@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAJZ5v0iapuqnfsQHhTQTWXdEtzX_MMTBUqdAzCej19AF9rtrNA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 08:16:01PM +0200, Uladzislau Rezki wrote:
-> > > > 
-> > > > Right. Per discussion with Paul, we discussed that it is better if we
-> > > > pre-allocate N number of array blocks per-CPU and use it for the cache.
-> > > > Default for N being 1 and tunable with a boot parameter. I agree with this.
-> > > > 
-> > > As discussed before, we can make use of memory pool API for such
-> > > purpose. But i am not sure if it should be one pool per CPU or
-> > > one pool per NR_CPUS, that would contain NR_CPUS * N pre-allocated
-> > > blocks.
-> > 
-> > There are advantages and disadvantages either way.  The advantage of the
-> > per-CPU pool is that you don't have to worry about something like lock
-> > contention causing even more pain during an OOM event.  One potential
-> > problem wtih the per-CPU pool can happen when callbacks are offloaded,
-> > in which case the CPUs needing the memory might never be getting it,
-> > because in the offloaded case (RCU_NOCB_CPU=y) the CPU posting callbacks
-> > might never be invoking them.
-> > 
-> > But from what I know now, systems built with CONFIG_RCU_NOCB_CPU=y
-> > either don't have heavy callback loads (HPC systems) or are carefully
-> > configured (real-time systems).  Plus large systems would probably end
-> > up needing something pretty close to a slab allocator to keep from dying
-> > from lock contention, and it is hard to justify that level of complexity
-> > at this point.
-> > 
-> > Or is there some way to mark a specific slab allocator instance as being
-> > able to keep some amount of memory no matter what the OOM conditions are?
-> > If not, the current per-CPU pre-allocated cache is a better choice in the
-> > near term.
-> > 
-> As for mempool API:
-> 
-> mempool_alloc() just tries to make regular allocation taking into
-> account passed gfp_t bitmask. If it fails due to memory pressure,
-> it uses reserved preallocated pool that consists of number of
-> desirable elements(preallocated when a pool is created).
-> 
-> mempoll_free() returns an element to to pool, if it detects that
-> current reserved elements are lower then minimum allowed elements,
-> it will add an element to reserved pool, i.e. refill it. Otherwise
-> just call kfree() or whatever we define as "element-freeing function."
+Hi,
 
-Unless I am missing something, mempool_alloc() acquires a per-mempool
-lock on each invocation under OOM conditions.  For our purposes, this
-is essentially a global lock.  This will not be at all acceptable on a
-large system.
-
-							Thanx, Paul
-
-> > If not, the current per-CPU pre-allocated cache is a better choice in the
-> > near term.
-> >
-> OK. I see your point.
+On 4/1/20 6:32 PM, Rafael J. Wysocki wrote:
+> On Mon, Mar 30, 2020 at 12:34 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+>> waking up the system") the SCI triggering without there being a wakeup
+>> cause recognized by the ACPI sleep code will no longer wakeup the system.
+>>
+>> This works as intended, but this is a problem for devices where the SCI
+>> is shared with another device which is also a wakeup source.
+>>
+>> In the past these, from the pov of the ACPI sleep code, spurious SCIs
+>> would still cause a wakeup so the wakeup from the device sharing the
+>> interrupt would actually wakeup the system. This now no longer works.
+>>
+>> This is a problem on e.g. Bay Trail-T and Cherry Trail devices where
+>> some peripherals (typically the XHCI controller) can signal a
+>> Power Management Event (PME) to the Power Management Controller (PMC)
+>> to wakeup the system, this uses the same interrupt as the SCI.
+>> These wakeups are handled through a special INT0002 ACPI device which
+>> checks for events in the GPE0a_STS for this and takes care of acking
+>> the PME so that the shared interrupt stops triggering.
+>>
+>> The change to the ACPI sleep code to ignore the spurious SCI, causes
+>> the system to no longer wakeup on these PME events. To make things
+>> worse this means that the INT0002 device driver interrupt handler will
+>> no longer run, causing the PME to not get cleared and resulting in the
+>> system hanging. Trying to wakeup the system after such a PME through e.g.
+>> the power button no longer works.
+>>
+>> Add an acpi_s2idle_register_wake_callback() function which registers
+>> a callback to be called from acpi_s2idle_wake() and when the callback
+>> returns true, return true from acpi_s2idle_wake().
+>>
+>> The INT0002 driver will use this mechanism to check the GPE0a_STS
+>> register from acpi_s2idle_wake() and to tell the system to wakeup
+>> if a PME is signaled in the register.
+>>
+>> Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+>> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> Thank you for your comments and view :)
+> I generally agree with the approach, but I would make some, mostly
+> cosmetic, changes.
 > 
-> --
-> Vlad Rezki
+> First off, I'd put the new code into drivers/acpi/wakeup.c.
+> 
+> I'd export one function from there to be called from
+> acpi_s2idle_wake() and the install/uninstall routines for the users.
+
+Ok.
+
+>> ---
+>>   drivers/acpi/sleep.c | 70 ++++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/acpi.h |  7 +++++
+>>   2 files changed, 77 insertions(+)
+>>
+>> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+>> index e5f95922bc21..e360e51afa8e 100644
+>> --- a/drivers/acpi/sleep.c
+>> +++ b/drivers/acpi/sleep.c
+>> @@ -943,6 +943,65 @@ static struct acpi_scan_handler lps0_handler = {
+>>          .attach = lps0_device_attach,
+>>   };
+>>
+>> +struct s2idle_wake_callback {
+> 
+> I'd call this acpi_wakeup_handler.
+> 
+>> +       struct list_head list;
+> 
+> list_node?
+> 
+>> +       bool (*function)(void *data);
+> 
+> bool (*wakeup)(void *context)?
+> 
+>> +       void *user_data;
+> 
+> context?
+
+Sure (for all of the above).
+
+> 
+>> +};
+>> +
+>> +static LIST_HEAD(s2idle_wake_callback_head);
+>> +static DEFINE_MUTEX(s2idle_wake_callback_mutex);
+>> +
+>> +/*
+>> + * Drivers which may share an IRQ with the SCI can use this to register
+>> + * a callback which returns true when the device they are managing wants
+>> + * to trigger a wakeup.
+>> + */
+>> +int acpi_s2idle_register_wake_callback(
+>> +       int wake_irq, bool (*function)(void *data), void *user_data)
+>> +{
+>> +       struct s2idle_wake_callback *callback;
+>> +
+>> +       /*
+>> +        * If the device is not sharing its IRQ with the SCI, there is no
+>> +        * need to register the callback.
+>> +        */
+>> +       if (!acpi_sci_irq_valid() || wake_irq != acpi_sci_irq)
+>> +               return 0;
+>> +
+>> +       callback = kmalloc(sizeof(*callback), GFP_KERNEL);
+>> +       if (!callback)
+>> +               return -ENOMEM;
+>> +
+>> +       callback->function = function;
+>> +       callback->user_data = user_data;
+>> +
+>> +       mutex_lock(&s2idle_wake_callback_mutex);
+>> +       list_add(&callback->list, &s2idle_wake_callback_head);
+>> +       mutex_unlock(&s2idle_wake_callback_mutex);
+>> +
+>> +       return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(acpi_s2idle_register_wake_callback);
+>> +
+>> +void acpi_s2idle_unregister_wake_callback(
+>> +       bool (*function)(void *data), void *user_data)
+>> +{
+>> +       struct s2idle_wake_callback *cb;
+>> +
+>> +       mutex_lock(&s2idle_wake_callback_mutex);
+>> +       list_for_each_entry(cb, &s2idle_wake_callback_head, list) {
+>> +               if (cb->function == function &&
+>> +                   cb->user_data == user_data) {
+>> +                       list_del(&cb->list);
+>> +                       kfree(cb);
+>> +                       break;
+>> +               }
+>> +       }
+>> +       mutex_unlock(&s2idle_wake_callback_mutex);
+>> +}
+>> +EXPORT_SYMBOL_GPL(acpi_s2idle_unregister_wake_callback);
+>> +
+>>   static int acpi_s2idle_begin(void)
+>>   {
+>>          acpi_scan_lock_acquire();
+>> @@ -992,6 +1051,8 @@ static void acpi_s2idle_sync(void)
+>>
+>>   static bool acpi_s2idle_wake(void)
+>>   {
+>> +       struct s2idle_wake_callback *cb;
+>> +
+>>          if (!acpi_sci_irq_valid())
+>>                  return pm_wakeup_pending();
+>>
+>> @@ -1025,6 +1086,15 @@ static bool acpi_s2idle_wake(void)
+>>                  if (acpi_any_gpe_status_set() && !acpi_ec_dispatch_gpe())
+>>                          return true;
+>>
+>> +               /*
+>> +                * Check callbacks registered by drivers sharing the SCI.
+>> +                * Note no need to lock, nothing else is running.
+>> +                */
+>> +               list_for_each_entry(cb, &s2idle_wake_callback_head, list) {
+>> +                       if (cb->function(cb->user_data))
+>> +                               return true;
+>> +               }
+> 
+> AFAICS this needs to be done in acpi_s2idle_restore() too to clear the
+> status bits in case one of these wakeup sources triggers along with a
+> GPE or a fixed event and the other one wins the race.
+
+The "wakeup" callback does not actually clear the interrupt source, just like
+for normal interrupts it relies on the actual interrupt handling (which at this
+point is still suspended) to do this.
+
+All the wakeup callback does is check if the flag which the shared IRQ handler
+checks to see if it should handle the IRQ (so if it should return IRQ_HANDLED
+vs IRQ_NONE) is set and if the flag is set so that the actual IRQ handler
+would return IRQ_HANDLED (IOW the shared IRQ is relevant for the device)
+then it returns true from the wakeup callback.
+
+The actual handling of the IRQ and clearing of the PME status bit is
+then done by normal IRQ handling.
+
+The idea here is to have the IRQ be handled as any other IRQ even though it
+happens to be shared with the SCI, so in essence we want to behave as
+if the first if check here:
+
+         while (pm_wakeup_pending()) {
+                 /*
+                  * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the
+                  * SCI has not triggered while suspended, so bail out (the
+                  * wakeup is pending anyway and the SCI is not the source of
+                  * it).
+                  */
+                 if (irqd_is_wakeup_armed(irq_get_irq_data(acpi_sci_irq)))
+                         return true;
+
+Is triggering, the idea here is that yes the SCI IRQ is no longer armed,
+but the cause for that is (*) not an actual SCI but another device which
+shares the IRQ line. If any other IRQ is the cause for the wakeup then
+we would exit the loop here, so in this case we want to treat the non SCI
+IRQ event on the shared line the same as any other IRQ.
+
+*) potentially, there could be multiple causes
+
+Does this make sense ?  Note you know this code a lot better then me, so
+you may be right we need to do something extra in s2idle_restore here
+but ATM I'm not seeing what we should do there. As I've tried to explain
+the wakeup callback only checks for events, it does not actually process
+them and as such also does not ack them / clear any flags.
+
+Regards,
+
+Hans
+
+
+
+
+
+> 
+>> +
+>>                  /*
+>>                   * Cancel the wakeup and process all pending events in case
+>>                   * there are any wakeup ones in there.
+>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>> index 0f24d701fbdc..9f06e1dc79c1 100644
+>> --- a/include/linux/acpi.h
+>> +++ b/include/linux/acpi.h
+>> @@ -488,6 +488,13 @@ void __init acpi_nvs_nosave_s3(void);
+>>   void __init acpi_sleep_no_blacklist(void);
+>>   #endif /* CONFIG_PM_SLEEP */
+>>
+>> +#ifdef CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT
+>> +int acpi_s2idle_register_wake_callback(
+>> +       int wake_irq, bool (*function)(void *data), void *user_data);
+>> +void acpi_s2idle_unregister_wake_callback(
+>> +       bool (*function)(void *data), void *user_data);
+>> +#endif
+>> +
+>>   struct acpi_osc_context {
+>>          char *uuid_str;                 /* UUID string */
+>>          int rev;
+>> --
+> 
+> Thanks!
+> 
+
