@@ -1,74 +1,165 @@
 Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA7FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A33C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40128206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6A620784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l8fvTKtC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJ4dU1KA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732114AbgDAJjP (ORCPT
+        id S1732157AbgDAJlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:39:15 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37280 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgDAJjO (ORCPT
+        Wed, 1 Apr 2020 05:41:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37954 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726063AbgDAJlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:39:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RksYf+q6dSBUyZMkDcFmWmu9Hr1Fry3FcTH7BUg8obI=; b=l8fvTKtCgOlxGfXClvJyCWI6p6
-        aCkUuOvh+WWwyTaHw7Diz4G3KUbksL20hm4UMkQa6BBQTGdgf+JzYJ8ENK/r8Ck4onz3RYDfVeo8J
-        OQLLaHrfKjgRRB/KjNrL7dj42aJVzjY6UdDQ4cosoI+m3x0P1vX6QCiRB6WblUaSwEYNv3qDPYlol
-        HmZAfqFTTx3GUc07RIgv2SXmYKG1QKNWEYAu6Ez+R7jDkSXAnJC9ak28gAW9m1hSI6M2J2FGzt2vF
-        pfSKlMZMpMTugUsr1lGeb30zntwmWyAJMQdaGoLcIq4yWtGZk+6MCKL3chcZ8K6DevXC/vrG7uqCV
-        vZlcqvUg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJZq0-0008PU-4k; Wed, 01 Apr 2020 09:39:08 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1D8B73025C3;
-        Wed,  1 Apr 2020 11:39:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F3A6F29DB2524; Wed,  1 Apr 2020 11:39:04 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 11:39:04 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     liyueyi <liyueyi@live.com>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        liyueyi <liyueyi@xiaomi.com>
-Subject: Re: [PATCH] kthread: set kthread state to TASK_IDLE.
-Message-ID: <20200401093904.GX20713@hirez.programming.kicks-ass.net>
-References: <DM6PR11MB3531D3B164357B2DC476102DDFC90@DM6PR11MB3531.namprd11.prod.outlook.com>
+        Wed, 1 Apr 2020 05:41:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585734090;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ljSBuTDshyjfWDIFiCj71fILGTvbhkgJDDa/MPsZiCk=;
+        b=DJ4dU1KA/YyoDji7Gcv3BnSl66wJw9UXOkQWDsPbtMNy4TlDiOLSAVSwN+PKoRjBaCJkR7
+        v0C9XYIBvJp9t7eRqG1d6peUUg3xqBk4TBXeQzYWqfCJoiZMeOtjfM7+hHEHC9M6pz3oW2
+        asT/g+5hbEijRaf7MBzbRU6yXl+txOc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-116-Jxw7ZyuKNJKiFRnZIQ0tPQ-1; Wed, 01 Apr 2020 05:41:26 -0400
+X-MC-Unique: Jxw7ZyuKNJKiFRnZIQ0tPQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E97F9107B118;
+        Wed,  1 Apr 2020 09:41:21 +0000 (UTC)
+Received: from [10.36.112.58] (ovpn-112-58.ams2.redhat.com [10.36.112.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 318D4118F20;
+        Wed,  1 Apr 2020 09:41:11 +0000 (UTC)
+Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
+ userspace
+To:     "Liu, Yi L" <yi.l.liu@intel.com>, alex.williamson@redhat.com
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        joro@8bytes.org, ashok.raj@intel.com, jun.j.tian@intel.com,
+        yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hao.wu@intel.com
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-4-git-send-email-yi.l.liu@intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <1b720777-8334-936e-5edb-802b3dae7b05@redhat.com>
+Date:   Wed, 1 Apr 2020 11:41:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR11MB3531D3B164357B2DC476102DDFC90@DM6PR11MB3531.namprd11.prod.outlook.com>
+In-Reply-To: <1584880325-10561-4-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 02:52:15PM +0800, liyueyi wrote:
-> From: liyueyi <liyueyi@xiaomi.com>
+Yi,
+On 3/22/20 1:32 PM, Liu, Yi L wrote:
+> From: Liu Yi L <yi.l.liu@intel.com>
 > 
-> Currently kthread() sleeps in TASK_UNINTERRUPTIBLE state waiting
-> for the first wakeup, it may be detected by DETECT_HUNG_TASK if
-> the first wakeup is coming later. Since kernel has introduced
-> TASK_IDLE, change kthread state to TASK_IDLE.
+> This patch reports PASID alloc/free availability to userspace (e.g. QEMU)
+> thus userspace could do a pre-check before utilizing this feature.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 28 ++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h       |  8 ++++++++
+>  2 files changed, 36 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index e40afc0..ddd1ffe 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -2234,6 +2234,30 @@ static int vfio_iommu_type1_pasid_free(struct vfio_iommu *iommu,
+>  	return ret;
+>  }
+>  
+> +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+> +					 struct vfio_info_cap *caps)
+> +{
+> +	struct vfio_info_cap_header *header;
+> +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
+> +
+> +	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+> +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+> +	if (IS_ERR(header))
+> +		return PTR_ERR(header);
+> +
+> +	nesting_cap = container_of(header,
+> +				struct vfio_iommu_type1_info_cap_nesting,
+> +				header);
+> +
+> +	nesting_cap->nesting_capabilities = 0;
+> +	if (iommu->nesting) {
+> +		/* nesting iommu type supports PASID requests (alloc/free) */
+> +		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
+Supporting nesting does not necessarily mean supporting PASID.
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  				   unsigned int cmd, unsigned long arg)
+>  {
+> @@ -2283,6 +2307,10 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  		if (ret)
+>  			return ret;
+>  
+> +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
+> +		if (ret)
+> +			return ret;
+> +
+>  		if (caps.size) {
+>  			info.flags |= VFIO_IOMMU_INFO_CAPS;
+>  
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 298ac80..8837219 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -748,6 +748,14 @@ struct vfio_iommu_type1_info_cap_iova_range {
+>  	struct	vfio_iova_range iova_ranges[];
+>  };
+>  
+> +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  2
+> +
+> +struct vfio_iommu_type1_info_cap_nesting {
+> +	struct	vfio_info_cap_header header;
+> +#define VFIO_IOMMU_PASID_REQS	(1 << 0)
+PASID_REQS sounds a bit far from the claimed host managed alloc/free
+capability.
+VFIO_IOMMU_SYSTEM_WIDE_PASID?
+> +	__u32	nesting_capabilities;
+> +};
+> +
+>  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+>  
+>  /**
+> 
+Thanks
 
-How the heck can that ever happen anyway? Is this some virt
-brain-damage?
+Eric
 
-And how is it not a real problem when it takes this long? 
