@@ -2,85 +2,157 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA187C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E7DC10F26
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8BC22078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:41:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JFkliO2P"
+	by mail.kernel.org (Postfix) with ESMTP id A58FE2078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732555AbgDAMlX (ORCPT
+        id S1732520AbgDAMnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:41:23 -0400
-Received: from m12-18.163.com ([220.181.12.18]:58128 "EHLO m12-18.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732316AbgDAMlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:41:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=NrNcQ
-        5AcP/v9wCkl8YeFZmZSdYI+aBTdNLOjG71q84k=; b=JFkliO2PlIRcxv+M5acv7
-        19DFA2x63Uatkx4AFtVXEnKrakbw7AJAejN7faNnQxRBphK5Nx/TqRm0O+Ui0T7z
-        grcoyEcKSAMssSGsWo0sYllqEGa9zxq5W4EBqZYnaJQ3bNluKbGla79V4xsh2jnv
-        pQXPz+QWF/Geh6WuZIwF5Y=
-Received: from localhost.localdomain (unknown [125.82.11.8])
-        by smtp14 (Coremail) with SMTP id EsCowABnHIrUi4Rer6NlCA--.30791S4;
-        Wed, 01 Apr 2020 20:40:54 +0800 (CST)
-From:   Hu Haowen <xianfengting221@163.com>
-To:     aelior@marvell.com, skalluru@marvell.com,
-        GR-everest-linux-l2@marvell.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hu Haowen <xianfengting221@163.com>
-Subject: [PATCH] bnx2x: correct a comment mistake in grammar
-Date:   Wed,  1 Apr 2020 20:40:50 +0800
-Message-Id: <20200401124050.19742-1-xianfengting221@163.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 1 Apr 2020 08:43:43 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40614 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732396AbgDAMnn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:43:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r19so19880795otn.7;
+        Wed, 01 Apr 2020 05:43:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1vh+DX2tAhYs6+PDevSpb/NO4sCDEVuknd0dV8w8BSo=;
+        b=dHejEFlOZZqs9L6Gk64zWthaUn5ws44bC4Y++S+HOLsbPSU0m9j0ffl5rbC2bU+n2Q
+         moZEcPFkQ7HvijhIKiy4DYif4Su7gusLcWgfMqwEf0MyMcoz4kxe3GXjY54ja03BWPVW
+         JN9sRE1QTnW0fBIJ68QOTUQ4je6VOZU08EABs1tKnS/1J42myYjY545/gNoeNzYFW2za
+         M3F+AwTJGqEf/3fpgtFHcBsS2px/1da6hrPDjRRXNzrn159b9HCPfuoEd3A70Zeq4l8D
+         3U3LCpTs9+a07n+oHNj+gBjj1Jd/A4N9haS76mXU0M5LTv9bNKB9q62zJ7iRjcjaqg6B
+         IWYw==
+X-Gm-Message-State: ANhLgQ2Q+YlShRaBBJ9luL1wFyrG8WcRAZH6pVE1kbL9RHqa9aQ5TYTn
+        LWUfX0yJC9isLgwcj2Wg/0Kwgp/FuM1YCj7y47g=
+X-Google-Smtp-Source: ADFU+vtUz+RY34REyRl5kqWjcWR1CgcXAs9LuKt2og/SMgqD/vMvp/yuphIzJ2k9nfoyLINce3qtBY5U6892Ch95JjQ=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr16595986otk.250.1585745022432;
+ Wed, 01 Apr 2020 05:43:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: EsCowABnHIrUi4Rer6NlCA--.30791S4
-X-Coremail-Antispam: 1Uf129KBjvdXoWruFWUZw4fAw18tF4rKw45KFg_yoWkJFc_Kr
-        yUXF4fXr45WrWS9r48Cr43Xa4Sk3y8W348WF4ag3ySyr9Fkr4UAan5AF1fJw15Ww48JF9x
-        Gryfta47AwnIgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUboUDtUUUUU==
-X-Originating-IP: [125.82.11.8]
-X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/xtbBDxb4AFPALKSxVAAAsf
+References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
+ <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com> <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 1 Apr 2020 14:43:31 +0200
+Message-ID: <CAMuHMdXmfQ0x7mCZ-E7OPQFv2z-=mFDT20hJ2_JKax=OePB8eA@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
+ in correct sequence
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hao Bui <hao.bui.yg@renesas.com>,
+        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Chris Brandt <Chris.Brandt@renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not right in grammar to spell "Its not". The right one is "It's
-not".
+Hi Prabhakar,
 
-And this line is also over 80 characters. So I broke it into two lines
-as well in order to make that line not be more than 80 characters.
+On Tue, Mar 31, 2020 at 5:58 PM Prabhakar Mahadev Lad
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > -----Original Message-----
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > On Fri, Mar 27, 2020 at 7:17 PM Kazuhiro Fujita
+> > <kazuhiro.fujita.jg@renesas.com> wrote:
+> > > For SCIF and HSCIF interfaces the SCxSR register holds the status of
+> > > data that is to be read next from SCxRDR register, But where as for
+> > > SCIFA and SCIFB interfaces SCxSR register holds status of data that is
+> > > previously read from SCxRDR register.
+> > >
+> > > This patch makes sure the status register is read depending on the port
+> > > types so that errors are caught accordingly.
+> > >
+> > > Cc: <stable@vger.kernel.org>
+> > > Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
+> > > Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
+> > > Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Hu Haowen <xianfengting221@163.com>
----
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> > Nevertheless, this patch will need some testing on various hardware.
+> > Do you have a test case to verify the broken/fixed behavior?
+> >
+> Agreed, its been tested on RZ/G2x & RZ/G1x  by doing a loopback test, configure one interface as CS8 mode(8-bits data, No parity) and other as CS7 mode (7-bits data, 1-bit Parity) and parity errors should be detected.
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
-index 9638d65d8261..517caedc0a87 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
-@@ -6874,7 +6874,8 @@ int bnx2x_link_update(struct link_params *params, struct link_vars *vars)
- 			case PORT_HW_CFG_PHY_SELECTION_FIRST_PHY_PRIORITY:
- 			/* In this option, the first PHY makes sure to pass the
- 			 * traffic through itself only.
--			 * Its not clear how to reset the link on the second phy
-+			 * It's not clear how to reset the link on the second
-+			 * phy.
- 			 */
- 				active_external_phy = EXT_PHY1;
- 				break;
+This can easily be tested on the console.  Basic testing can even be
+done with an unmodified kernel, as there is already a "parity error"
+notice message in the driver.
+
+Enable even parity on the console:
+
+$ stty evenp
+
+(use "oddp" for odd parity, and invert all below)
+
+Typing e.g. a single "p" should trigger a parity error.
+Typing "o" shouldn't.
+Without this patch, no parity error is detected on SCIF.
+
+Likewise, pasting a sequence of "p" characters should trigger a lot of
+parity errors, "o" shouldn't.
+Without this patch, parity errors are detected on SCIF, except for the
+first character.
+
+For more advanced testing, make the following change to the driver:
+
+- dev_notice(port->dev, "parity error\n");
++ dev_notice(port->dev, "parity error for char 0x%02x hweight %u\n",
+c, hweight8(c));
+
+Pasting an alternating sequence of "p" and "o" characters should trigger
+parity errors for the "p" characters.
+Without this patch, they are triggered for the "o" characters instead.
+
+With this patch, the issues above are fixed on SCIF.
+This has been verified on:
+  1. SCIF on R-Car Gen 2,
+  2. SCIF on R-Car Gen3
+  3. SCIF on RZ/A1H,
+  4. SCIF on RZ/A2M.
+
+However, I also tried this on HSCIF on R-Car Gen3, where I cannot
+trigger parity errors at all.
+Parabhakar: have you tried HSCIF on RZ/G1 and RZ/G2? Can you trigger
+parity errors on HSCIF?
+
+This has been regression-tested on:
+  1. SCIFA on SH-Mobile AG5, R-Mobile A1, and R-Mobile APE6.
+
+I haven't tested it yet on:
+  1. SCIFB on SH/R-Mobile (needs wiring up),
+  2. SCIFA, SCIFB, and HSCIF on R-Car Gen2 (needs wiring up),
+  3. (H)SCIF on R-Car Gen1 (remote boards unaccessible at the moment),
+  4. SuperH (only remote Migo-R available, but unaccessible).
+
+I can test 1 and 2 (and perhaps 3 and 4) later, if needed.
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
