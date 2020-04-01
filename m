@@ -2,124 +2,140 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F0CC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84883C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD402063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD9820714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="dLRSLCXF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pV/3AZI7"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XQI6xGSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387946AbgDAQzm (ORCPT
+        id S2387642AbgDAQzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:55:42 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:45731 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733298AbgDAQzi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:55:38 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A2F2C5800E4;
-        Wed,  1 Apr 2020 12:55:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 01 Apr 2020 12:55:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=1
-        HvVrQVgf8h1xwI4xlSisY5uAmH78ioNToEd5ZqROGo=; b=dLRSLCXF4QI/ZvstT
-        RTK/iKO7vJFrPwPmtUOFhf71BqNsFb9xL5thVfMoFcY8Z1KdDJrtiBN9x0XDxX6R
-        WDYmkfZ0VtyLDjfvKrF0t6rRZ3TUVu9kU0i2UzUWfKhSSIFbDnraFtPppKAJB7be
-        kiYF8FWjEAQR3qeifFoLajBSPF43EP0JqkTXcOq6rDlRn7s5fC1SzUIfVzVargsI
-        iuF9dj8uYJhodSktI7ajo2LwysdyM/5iDLWJhT6Ykzp5EkJef8qAR57TafoLwAuW
-        EJo5wDMk8sinT6vK9NIZcTGJ68eH8PvkpnKd1mYYwgB2p62neUW+7rpbqnU+S4Sn
-        I5vvw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=1HvVrQVgf8h1xwI4xlSisY5uAmH78ioNToEd5ZqRO
-        Go=; b=pV/3AZI7xio9jPNP/fQsHuqkYqEftJWH2VRcjCrZpmJ5hn7/JJ1nXZj0U
-        zxQq6KAnO+Dx/QIbe4KTTMGLw0OJKJ2zrwoJlHTOOhHKvWOhWPbM4t4t27hCXvBJ
-        pyd6NLuCV82QXwlN57vspRGKjTXNGtMtAxnvD24VXi9LxaKvVxM/h6rWkZ/QFiZn
-        QVvCWY8+3wP40ns/o7yt7etVkCHQ1RCk6keyLgywj1DVnd9jt3zhrPiHkBisYqNK
-        n/laYmia4QoMeAOCmU6tNTwsl2o2uVjszN6aBFwOyPE0n5oOD42i1cA6WLtvVtIF
-        x+om72uu9LgFVzPzURFYCtuScpbOg==
-X-ME-Sender: <xms:h8eEXi_AC7cBT8VflyA_pQ4vzWVbRahRqpTXNfmfILTHnHsDFFJS1g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtddvgddutdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuff
-    homhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepjedtrddufeehrddugeekrdduhedu
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmh
-    huvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:h8eEXjA83Kbeeuchm-TFfZ-_rgepSDMLFcq6TLmo-TQ6RkH4jBXvfg>
-    <xmx:h8eEXvqjowOwm8XxVq6BQhy3O4iesWDDdywZyitqcrxONwrF05ZIow>
-    <xmx:h8eEXlEfqVLVCSou99VtCYzV9opFB3iwNNE99Q3kmsEEQolVgonZGA>
-    <xmx:iMeEXhRRLxhty-Sm4IOQ0Odd5b6pnsFRi6C9HwCwbRdbaPBi-OpyJA>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DF8CD3280065;
-        Wed,  1 Apr 2020 12:55:34 -0400 (EDT)
-Subject: Re: [PATCH v7 0/6] Allwinner sun6i message box support
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-References: <20200223040853.2658-1-samuel@sholland.org>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <59dc1ee9-a369-7cf9-df6a-4b5b99e24324@sholland.org>
-Date:   Wed, 1 Apr 2020 11:55:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 1 Apr 2020 12:55:55 -0400
+Received: from mout.gmx.net ([212.227.15.19]:37843 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732246AbgDAQzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:55:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1585760141;
+        bh=jufOl9LToMfDMpVOPWx78HZPLIFoXwerAO2+O83FXV4=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=XQI6xGSNwQQ+Vb7W2guxnfhA09G4esx/7qIH0ovYyGso7e7lG9NfoBhDAoKAZ0y8Q
+         eEvzdQlUtiLuQHCKXgKqHGHJyDnw/NSkMsHpeQ3ikHJNHqNSprwne8z1B9cEus5C7l
+         YjFGLEtSkwUwoXkgS0EKHJ4HUVAFcwHZ6x3KNruc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1M6lpM-1jPkva3J3m-008Gl9; Wed, 01
+ Apr 2020 18:55:40 +0200
+Date:   Wed, 1 Apr 2020 18:55:38 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: vt6656: Use defines in vnt_mac_reg_bits_*
+ functions
+Message-ID: <20200401165537.GC3109@ubuntu>
+References: <20200328095433.7879-1-oscar.carter@gmx.com>
+ <20200331102906.GA2066@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20200223040853.2658-1-samuel@sholland.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331102906.GA2066@kadam>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:+gPfFoS721r+mvPOMeEJLs+3wcGSjyf6c/ZvFKIvawJoJwQJjOB
+ laYts9bS+jFq9IaO1hPlLoO8I1IpU79ypPH5pQNr7SrMdSIiNxkmuVcP/7lNyxQoxYuGqii
+ WYTWbPvSqFgARZEuCY6XXJub6t6xpSnkIRh+ZWFYgNZKlDfj3NLI3IqEHXRXxz2gsHh+IPU
+ RmK9g9WJlKuUJEJi0qDiQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TThDrtfsJsQ=:2H6KhCTRNDVxktbJMpTT43
+ lvHtTWfY88j2YOMRksIFIAYrFOTSfqr6BpAhC0Y5TNlDh5snnZkyOcER1C0C2Wvk+KJsB+7lt
+ /z3i6Po6kdOQMpw2oGjOsE9mAYBITN4iBuLvne+kk7DTfQbcVQR/40p/1e2qZnBtJv4S9ULyR
+ WvnD7dC6AlriMEYRBkEgzCws/vDCwHbsE9CJwx5j2CsP/bX+1mzTSjn4Sn3rLuJWSYW+gCE5z
+ oi8+K7SJ1ulSfIydzwGM/86C1zaNPw2be2ForDkRsfCIPeQjuoO6PjE7/DNaFQ/5O3D0Taqvu
+ UnEMzZkGnLhtF4l1JtxqqRMF2C8ee7o5GzshphljEH8G1zh/HAa5+p/aPc1QDqMsMZQ/XFj2O
+ wBMWtADYK1K2Gl5ruTmUZM4XCtm0fsZNAJCPOHb7IaCURxfd+RdJ+Y8zqbd7+qAb2kAS5oUnn
+ 5lr4bYA/gfZcB21qxeZX/MZqcoa7DrI0HRwRBsXJhbi0LVuHKk+UoufivarbcTR4zMLGaSofu
+ mqF9yLMziE0bC+X4wIN0VmsmH6UJ1jW89NXHeUJdaKxtTdtGCCb23C3xUxSgLnZlZqQ/BR5+y
+ DmReS54laoLvdc/AVQI+IvP9j38OFbXqdGwwd+Ila21pB9lFkocr2ZP9o3qG1a6lifhp6XaZb
+ cpwAnDRUTklZgNJ5uFY5uIeNHe1FcTCo7MnuloMPBsE1URLhnfDLJzFsYWOtXVjeZ8cbYBrVJ
+ ITVuaPype9EOk/RS5IxZb64zMGZ8IHG6wXP3G7QuFaARIQ8yrTyd/AaJ5ks70pGwEN6zkYNwN
+ eJTtNSfqUDTcn5LMISiKX1bLP+3or+reJzywqxeCZlbk3IA9CNgvzk0a7G3uqDjqtLw8hZlPq
+ WTxGSPOO3BTQDho7H69AElxVHfdmmejfcAQA+sq4orlkOZO95rbuvo6WVG7nZcXeqfwaXspjN
+ 6JOrlK9FaTWCIscdrTRdkXUFpT5ssonN/5WSTovyEsRrfGXinY5iJYk9deH/4aRlyhQaFL7Wu
+ hj8WRXAQ4L7DfHukUfSx1eG5g+xD+q+eStAww26OGgK/m23o1wuZSFOeUah206enlpuNO0p2P
+ HUxa8We3NaPCf2zZMPdiIDBR2j/4lRFZtSuo/anDYCJODRdI/TWV/HWo5lUNcKGi0Zc4y3gyK
+ 3KxOWqEyswL+ySn0BvCosyanMr9xYh/6W/XgPSGNh2nn5mGkkJ1UDa/O+ThPer/r3prE5r11z
+ 3R7Xe1CqCzF4TcvwK
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/22/20 10:08 PM, Samuel Holland wrote:
-> Samuel Holland (6):
->   dt-bindings: mailbox: Add a binding for the sun6i msgbox
->   mailbox: sun6i-msgbox: Add a new mailbox driver
+On Tue, Mar 31, 2020 at 01:29:06PM +0300, Dan Carpenter wrote:
+> On Sat, Mar 28, 2020 at 10:54:33AM +0100, Oscar Carter wrote:
+> > Define the necessary bits in the CHANNEL, PAPEDELAY and GPIOCTL0
+> > registers to can use them in the calls to vnt_mac_reg_bits_on and
+> > vnt_mac_reg_bits_off functions. In this way, avoid the use of BIT()
+> > macros and clarify the code.
+> >
+> > Fixes: 3017e587e368 ("staging: vt6656: Use BIT() macro in vnt_mac_reg_=
+bits_* functions")
+> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> > ---
+> >  drivers/staging/vt6656/baseband.c |  6 ++++--
+> >  drivers/staging/vt6656/card.c     |  3 +--
+> >  drivers/staging/vt6656/mac.h      | 12 ++++++++++++
+> >  drivers/staging/vt6656/main_usb.c |  2 +-
+> >  4 files changed, 18 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt665=
+6/baseband.c
+> > index a19a563d8bcc..dd3c3bf5e8b5 100644
+> > --- a/drivers/staging/vt6656/baseband.c
+> > +++ b/drivers/staging/vt6656/baseband.c
+> > @@ -442,7 +442,8 @@ int vnt_vt3184_init(struct vnt_private *priv)
+> >  		if (ret)
+> >  			goto end;
+> >
+> > -		ret =3D vnt_mac_reg_bits_on(priv, MAC_REG_PAPEDELAY, BIT(0));
+> > +		ret =3D vnt_mac_reg_bits_on(priv, MAC_REG_PAPEDELAY,
+> > +					  PAPEDELAY_B0);
+>
+> This doesn't clarify anything.  It makes it less clear because someone
+> would assume B0 means something but it's just hiding a magic number
+> behind a meaningless define.  B0 means BIT(0) which means nothing.  So
+> now we have to jump through two hoops to find out that we don't know
+> anything.
+>
+I created this names due to the lack of information about the hardware. I
+searched but I did not find anything.
 
-These two patches have been applied for 5.7[1], so the DTS changes should be
-ready to apply as well.
+> Just leave it as-is.  Same for the rest.
+Ok.
 
-[1]:
-https://lore.kernel.org/lkml/CABb+yY0-q+5+pqP-rBHCYpw-LmT+h80+OU26XL34fTrXhO+T3Q@mail.gmail.com/
+>
+> There problem is a hardware spec which explains what this stuff is.
+>
+It's possible to find a datasheet of this hardware to make this modificati=
+on
+accordingly to the correct bit names of registers ?
 
-Cheers,
-Samuel
-
->   ARM: dts: sunxi: a83t: Add msgbox node
->   ARM: dts: sunxi: h3/h5: Add msgbox node
->   arm64: dts: allwinner: a64: Add msgbox node
->   arm64: dts: allwinner: h6: Add msgbox node
-> 
->  .../mailbox/allwinner,sun6i-a31-msgbox.yaml   |  80 +++++
->  arch/arm/boot/dts/sun8i-a83t.dtsi             |  10 +
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  10 +
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  10 +
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
->  drivers/mailbox/Kconfig                       |   9 +
->  drivers/mailbox/Makefile                      |   2 +
->  drivers/mailbox/sun6i-msgbox.c                | 326 ++++++++++++++++++
->  8 files changed, 457 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
->  create mode 100644 drivers/mailbox/sun6i-msgbox.c
-> 
-
+> regards,
+> dan carpenter
+>
+Thanks,
+oscar carter
