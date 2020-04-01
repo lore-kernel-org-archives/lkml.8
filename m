@@ -2,150 +2,126 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BFEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE71C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45AD20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D8B20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rJs5UtD3"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BWMgP7SW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731674AbgDAEPf (ORCPT
+        id S1731773AbgDAETM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 00:15:35 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:33159 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbgDAEPf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 00:15:35 -0400
-Received: by mail-qk1-f180.google.com with SMTP id v7so25810290qkc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 21:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ZjcrYW/aDVAKzWpGPbODFCrUFQNHJCyNrGbNk09sdLY=;
-        b=rJs5UtD3QTXJ3rqk1LvxnBOXyBiv0BbSm3yZdDWntrkTjoetaxwar2z0AaadTNtytX
-         rU+b1NuWvxKjRqUMNGfMVeMQZ/8f0pjp/0z6Z2ya9qTQtibf5E/cYyKLtg9wA6BihAJ3
-         Mrlcrxdcrb/zMUmdoXGe4sD5K59FRPthyYjNIlu1pQOmQP3NLB7SxaM6e6AwyXIKVQ32
-         gMLrgvotcMgSfvUeY2r2lbnjo6lCtA7MBv5ksjcHdLnIR1zXuDaTwApijiNsjPQRlZpu
-         WA1gaQko/rOjMSecuxwLUpci+qQpobWrIRSV8c+6nTwvi3Umfv1mfPMD5xsCzWxWjEMs
-         1c9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ZjcrYW/aDVAKzWpGPbODFCrUFQNHJCyNrGbNk09sdLY=;
-        b=Tznb43DJJleJp1JIhyEJAobfy3voP+T0A14BrMzhnNIWbAP6JbBGqI7+8AHWkfnW+G
-         y3d+5Kpl0RGDkzRyJP6zOacDNNJjMm0sWXNmU5/nIdqWiLTHjKHPr4KGXdqf6FuWrnSo
-         Z7YlS8d2swUx+qovSe5x3nKq5HPPNLHliEMX3nzEGZaUMWn+4UV87jarAzn7enbCe9PQ
-         AFVSDEdYvXM3R1srf5IHK8a5bzZbb4M07oiGIlFphH5j++qqIaIEe1+IUNb73CcXWIaT
-         1VwxYQM6ANTCGYZ7zKr4pSCyWrGV0ObndzkMV0K+M562uZk3uh3HHDLoZ1/8zkBaSbJW
-         iH/g==
-X-Gm-Message-State: ANhLgQ23cURGbyUEtgzjTvrG8MgKRMSgC5O1DIYFIQ9B8aMSZCypgumG
-        ZG5C6igWDIzzDBC07//s5+c8Hw==
-X-Google-Smtp-Source: ADFU+vsGU/+YWiqw4a0Mqfe5XtYPrISpqIqQgG13q+CHJ3GKwhtnnawpZF7GXGn5Fa/ywvPA2mJELA==
-X-Received: by 2002:a37:ad6:: with SMTP id 205mr7886299qkk.294.1585714534245;
-        Tue, 31 Mar 2020 21:15:34 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id a136sm750681qkb.15.2020.03.31.21.15.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 31 Mar 2020 21:15:33 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: linux-next: xfs metadata corruption since 30 March
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <11749734.KdfBBZeIvc@localhost.localdomain>
-Date:   Wed, 1 Apr 2020 00:15:32 -0400
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FDCFF269-C30C-42A8-B926-A8731E110848@lca.pw>
-References: <990EDC4E-1A4E-4AC3-84D9-078ACF5EB9CC@lca.pw>
- <11749734.KdfBBZeIvc@localhost.localdomain>
-To:     Chandan Rajendra <chandan@linux.ibm.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 1 Apr 2020 00:19:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57801 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731589AbgDAETM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 00:19:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sXyQ1lnNz9sR4;
+        Wed,  1 Apr 2020 15:19:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585714750;
+        bh=Ip9w489n84fN4lJPHrqx/kGSK1wuNSUz56EVAHU0vIY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BWMgP7SW5RNf4nTV0Td2uQDVfvMAWSzKg+wljSgebOwn+9gaMJRq0e0622KhyxYz6
+         UFstpIBkeyjTNCRUNfhtaxaP1aMLoWpJXX9PahRQ39JQFLv0CPaVGzs8CRD9fkqlsr
+         pMI2De2EeG1hNrg6EkwEM/uR29JmRi5JmH24ORy7CJtm4tV9e0pDKucSl0GdCl5kf4
+         y0Kpd9C16BASqkc56YcZoZkbQQCeaLXjfK8FoxLBls+kPmAh80pxcSy9s4LpoEK0/M
+         E76BArAQQt57Yg6BhxCA1Gsheth1JqRqkun32vzXntsT8tg2RQN5NKlOZpbfsFQy3Z
+         f7RdV8ZJHlwog==
+Date:   Wed, 1 Apr 2020 15:19:04 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>
+Subject: linux-next: build failure after merge of the gpio tree
+Message-ID: <20200401151904.6948af20@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/mRsf+L7XTQT3RnhT7qNvor_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/mRsf+L7XTQT3RnhT7qNvor_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-> On Apr 1, 2020, at 12:14 AM, Chandan Rajendra <chandan@linux.ibm.com> =
-wrote:
->=20
-> On Wednesday, April 1, 2020 3:27 AM Qian Cai wrote:=20
->> Ever since two days ago, linux-next starts to trigger xfs metadata =
-corruption
->> during compilation workloads on both powerpc and arm64,
->=20
-> Can you please provide the filesystem geometry information?
-> You can get that by executing "xfs_info <mount-point>" command.
->=20
+After merging the gpio tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-=3D=3D arm64 =3D=3D
-# xfs_info /home/
-meta-data=3D/dev/mapper/rhel_hpe--apollo--cn99xx--11-home isize=3D512    =
-agcount=3D4, agsize=3D113568256 blks
-         =3D                       sectsz=3D4096  attr=3D2, =
-projid32bit=3D1
-         =3D                       crc=3D1        finobt=3D1, sparse=3D1, =
-rmapbt=3D0
-         =3D                       reflink=3D1
-data     =3D                       bsize=3D4096   blocks=3D454273024, =
-imaxpct=3D5
-         =3D                       sunit=3D0      swidth=3D0 blks
-naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0, ftype=3D1
-log      =3Dinternal log           bsize=3D4096   blocks=3D221813, =
-version=3D2
-         =3D                       sectsz=3D4096  sunit=3D1 blks, =
-lazy-count=3D1
-realtime =3Dnone                   extsz=3D4096   blocks=3D0, =
-rtextents=3D0
+ERROR: modpost: "of_pinctrl_get" [drivers/gpio/gpio-tegra186.ko] undefined!
 
+Caused by commit
 
-=3D=3D powerpc =3D=3D
-# xfs_info /home/
-meta-data=3D/dev/mapper/rhel_ibm--p9wr--01-home isize=3D512    =
-agcount=3D4, agsize=3D118489856 blks
-         =3D                       sectsz=3D4096  attr=3D2, =
-projid32bit=3D1
-         =3D                       crc=3D1        finobt=3D1, sparse=3D1, =
-rmapbt=3D0
-         =3D                       reflink=3D1
-data     =3D                       bsize=3D4096   blocks=3D473959424, =
-imaxpct=3D5
-         =3D                       sunit=3D0      swidth=3D0 blks
-naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0, ftype=3D1
-log      =3Dinternal log           bsize=3D4096   blocks=3D231425, =
-version=3D2
-         =3D                       sectsz=3D4096  sunit=3D1 blks, =
-lazy-count=3D1
-realtime =3Dnone                   extsz=3D4096   blocks=3D0, =
-rtextents=3D0
+  b64d6c9a6a05 ("gpio: tegra186: Add support for pin ranges")
 
-=3D=3D x86 (not yet reproduced)  =3D=3D
-meta-data=3D/dev/mapper/rhel_hpe--dl380gen9--01-home isize=3D512    =
-agcount=3D16, agsize=3D3283776 blks
-         =3D                       sectsz=3D512   attr=3D2, =
-projid32bit=3D1
-         =3D                       crc=3D1        finobt=3D1, sparse=3D1, =
-rmapbt=3D0
-         =3D                       reflink=3D1
-data     =3D                       bsize=3D4096   blocks=3D52540416, =
-imaxpct=3D25
-         =3D                       sunit=3D64     swidth=3D64 blks
-naming   =3Dversion 2              bsize=3D4096   ascii-ci=3D0, ftype=3D1
-log      =3Dinternal log           bsize=3D4096   blocks=3D25664, =
-version=3D2
-         =3D                       sectsz=3D512   sunit=3D0 blks, =
-lazy-count=3D1
-realtime =3Dnone                   extsz=3D4096   blocks=3D0, =
-rtextents=3D0=
+and not fixed by commit
+
+  e45ee71ae101 ("pinctrl: Define of_pinctrl_get() dummy for !PINCTRL")
+
+CONFIG_OF=3Dy
+CONFIG_PINCTRL=3Dy
+CONFIG_GPIO_TEGRA186=3Dm
+
+I applied this patch:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 1 Apr 2020 15:14:32 +1100
+Subject: [PATCH] gpio: export of_pinctrl_get to modules
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/pinctrl/devicetree.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 1ed20ac2243f..c6fe7d64c913 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -103,6 +103,7 @@ struct pinctrl_dev *of_pinctrl_get(struct device_node *=
+np)
+ {
+ 	return get_pinctrl_dev_from_of_node(np);
+ }
++EXPORT_SYMBOL_GPL(of_pinctrl_get);
+=20
+ static int dt_to_map_one_config(struct pinctrl *p,
+ 				struct pinctrl_dev *hog_pctldev,
+--=20
+2.25.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/mRsf+L7XTQT3RnhT7qNvor_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6EFjgACgkQAVBC80lX
+0GzG4ggAmeAd11AKyKyb9YJREascIZWfbQe6eXDmdJVh/7ZOzObQKyTngmCN0XPg
+m2Un89Ykqcton7KmhHNRwTsjLTqOfrjfzOLpFg8cDydsqN6FxTmYy/DHJjnyszZR
+XMbtNiBy7m4YyEZnGP+RzoPdczcqvvVt9uDm5mvStIUOtmCQXRMws3ZElaKExnz5
+zVYT/VRXM+e6kiS5zeEJJItXBsd6O0OA3t/7z8MjewNyh0n/XP17b1noAcGgMdc4
+/mBnaOgkbxMTj5HuxvvGyTs+jRdYDdRieOc3KSh631bP2lzm3QIZ+pbI7sXPVhn0
+Jlwaj9HDR0H3nsNYY2EvyyPb3VSBJA==
+=KLU6
+-----END PGP SIGNATURE-----
+
+--Sig_/mRsf+L7XTQT3RnhT7qNvor_--
