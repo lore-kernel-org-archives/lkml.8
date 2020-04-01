@@ -2,93 +2,313 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972D2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D52C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653272071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:10:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cPYiWF/6"
+	by mail.kernel.org (Postfix) with ESMTP id 2CCC72071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731979AbgDAHK2 (ORCPT
+        id S1731940AbgDAHME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:10:28 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38993 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731765AbgDAHK2 (ORCPT
+        Wed, 1 Apr 2020 03:12:04 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:52004 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731848AbgDAHMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:10:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id k15so6539415pfh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 00:10:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=q3YpiEN9c0q7gtTc0xgNqKBZ8J1CYe0h5Njvo6qLBqc=;
-        b=cPYiWF/6kIM7c7xd0hz8A3KchAwfdZf/WBjYHWlm/sRzmaapKKkhvB+xM+o9ExkBwu
-         uI+vYZU+DEYJA+34/MvfpCsiHGXfetTpnUhEWprqfuBG6LkAHbm54C4O8FnDf43h0M1k
-         3al6T2FOJA+agQa3CKSPh/T+VrSktO5sni+COXnkfh8oAlcxH3EYD7awYMjmiLX0KR7B
-         NahVO1n9PiR928wCk+0u1GW2/qXX102bzWpS64sACXk3Am6+dgJd1YiU6CkX+2VzABYn
-         D/nK2Wo0ASQJtn6jIZadn8VM7MefKiUkJEWk+jVDIxm1V84vY+t3I6FS5gKv4uTmKKra
-         h2/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=q3YpiEN9c0q7gtTc0xgNqKBZ8J1CYe0h5Njvo6qLBqc=;
-        b=K3mh2L24YH490PObjWhgwC6rs8h7d9D+KxzRqPHu7Ge8+U2klH5G6gf0N5Olvph+zU
-         V2U6GidfEHPrWqXaJ1L8OYDXwCXlz8/yDTFy4BUL5PnG4DZsidmZu115Gmc608e1k5yd
-         NaCZQya1jPDeIvGUKN+uXTvD8rtyjmCoqqMJOLJovavrRoY/YcbUyFz/QBvSbeUzfbrr
-         rtpGdo2OmDYUbyyuG+bDFrcauOuJHkGM12tFL+6AATi2LZ7EV8XYzpJ9TEYjqISj/D5s
-         wEf4SXlq7YHYqaIO4HDaziXiWOwRD6zpukz2Kv+F17HIiooDkjwmy7IiXn5x7FVTM+DN
-         JRCg==
-X-Gm-Message-State: ANhLgQ1Hw5w/zlYDT9SI4oCnxg024eSaoTFf2CWVZsisstco3mK1rZ5G
-        c4MY0Pc4f5YppXFVPVbxXOdCZw==
-X-Google-Smtp-Source: ADFU+vv0GaG87lZWdspiXpoeNM3S1HoJf278awHnmC0uQGmwJkgdIPHnBFsC5+Ddmr7OhhkCGjWpeQ==
-X-Received: by 2002:aa7:9ec7:: with SMTP id r7mr22171606pfq.191.1585725026717;
-        Wed, 01 Apr 2020 00:10:26 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 144sm870769pfx.184.2020.04.01.00.10.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 00:10:25 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 00:10:23 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     gregkh@linuxfoundation.org, davem@davemloft.net,
-        smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 2/3] net: qrtr: Add MHI transport layer
-Message-ID: <20200401071023.GD663905@yoga>
-References: <20200401064435.12676-1-manivannan.sadhasivam@linaro.org>
- <20200401064435.12676-3-manivannan.sadhasivam@linaro.org>
+        Wed, 1 Apr 2020 03:12:03 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 9BDF027E0838;
+        Wed,  1 Apr 2020 09:12:01 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id xJfPBX6lBuZC; Wed,  1 Apr 2020 09:12:01 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id F1EE727E087A;
+        Wed,  1 Apr 2020 09:12:00 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id b6oGcJgFmnPO; Wed,  1 Apr 2020 09:12:00 +0200 (CEST)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id D892A27E0838;
+        Wed,  1 Apr 2020 09:12:00 +0200 (CEST)
+Date:   Wed, 1 Apr 2020 09:12:00 +0200 (CEST)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalrayinc.com>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        psodagud <psodagud@codeaurora.org>, tsoni <tsoni@codeaurora.org>,
+        sidgup <sidgup@codeaurora.org>
+Message-ID: <1808621854.13146176.1585725120655.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <1585699438-14394-1-git-send-email-rishabhb@codeaurora.org>
+References: <1585699438-14394-1-git-send-email-rishabhb@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] remoteproc: Add character device interface
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401064435.12676-3-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC80 (Linux)/8.8.15_GA_3895)
+Thread-Topic: remoteproc: Add character device interface
+Thread-Index: aYJZh7zfz1Q/b6NDi2Jk4BWAbqBfGA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 31 Mar 23:44 PDT 2020, Manivannan Sadhasivam wrote:
-> diff --git a/net/qrtr/mhi.c b/net/qrtr/mhi.c
-[..]
-> +static void qcom_mhi_qrtr_ul_callback(struct mhi_device *mhi_dev,
-> +				      struct mhi_result *mhi_res)
-> +{
-> +	struct sk_buff *skb = (struct sk_buff *)mhi_res->buf_addr;
+Hi Rishabh,
+
+----- On 1 Apr, 2020, at 02:03, Rishabh Bhatnagar rishabhb@codeaurora.org wrote:
+
+> Add the character device interface for userspace applications.
+> This interface can be used in order to boot up and shutdown
+> remote subsystems. Currently there is only a sysfs interface
+> which the userspace clients can use. If a usersapce application
+
+Typo: usersapce -> userspace.
+
+> crashes after booting the remote processor does not get any
+> indication about the crash. It might still assume that the
+> application is running. For example modem uses remotefs service
+> to fetch data from disk/flash memory. If the remotefs service
+> crashes, modem keeps on requesting data which might lead to a
+> crash. Adding a character device interface makes the remote
+> processor tightly coupled with the user space application.
+
+Should probably use userspace for coherency.
+
+> A crash of the application leads to a close on the file descriptors
+> therefore shutting down the remoteproc.
+> 
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> ---
+> drivers/remoteproc/Kconfig               |   9 +++
+> drivers/remoteproc/Makefile              |   1 +
+> drivers/remoteproc/remoteproc_cdev.c     | 100 +++++++++++++++++++++++++++++++
+> drivers/remoteproc/remoteproc_internal.h |  22 +++++++
+> include/linux/remoteproc.h               |   2 +
+> 5 files changed, 134 insertions(+)
+> create mode 100644 drivers/remoteproc/remoteproc_cdev.c
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index de3862c..6374b79 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -14,6 +14,15 @@ config REMOTEPROC
+> 
+> if REMOTEPROC
+> 
+> +config REMOTEPROC_CDEV
+> +	bool "Remoteproc character device interface"
+> +	help
+> +	  Say y here to have a character device interface for Remoteproc
+
+Not sure about the capital Remoteproc 'R' here, but maybe others can
+comment.
+
+> +	  framework. Userspace can boot/shutdown remote processors through
+> +	  this interface.
 > +
-> +	consume_skb(skb);
-> +	if (skb->sk)
-> +		sock_put(skb->sk);
+> +	  It's safe to say N if you don't want to use this interface.
+> +
+> config IMX_REMOTEPROC
+> 	tristate "IMX6/7 remoteproc support"
+> 	depends on ARCH_MXC
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index e30a1b1..b7d4f77 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -9,6 +9,7 @@ remoteproc-y				+= remoteproc_debugfs.o
+> remoteproc-y				+= remoteproc_sysfs.o
+> remoteproc-y				+= remoteproc_virtio.o
+> remoteproc-y				+= remoteproc_elf_loader.o
+> +obj-$(CONFIG_REMOTEPROC_CDEV)		+= remoteproc_cdev.o
+> obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+> obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
+> obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+> diff --git a/drivers/remoteproc/remoteproc_cdev.c
+> b/drivers/remoteproc/remoteproc_cdev.c
+> new file mode 100644
+> index 0000000..8182bd1
+> --- /dev/null
+> +++ b/drivers/remoteproc/remoteproc_cdev.c
+> @@ -0,0 +1,100 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Character device interface driver for Remoteproc framework.
+> + *
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/cdev.h>
+> +#include <linux/fs.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/remoteproc.h>
+> +
+> +#include "remoteproc_internal.h"
+> +
+> +#define NUM_RPROC_DEVICES	64
+> +static dev_t rproc_cdev;
+> +static DEFINE_IDA(cdev_minor_ida);
+> +
+> +static int rproc_cdev_open(struct inode *inode, struct file *file)
+> +{
+> +	struct rproc *rproc;
+> +
+> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
+> +
+> +	if (!rproc)
+> +		return -EINVAL;
+> +
+> +	if (rproc->state == RPROC_RUNNING)
+> +		return -EBUSY;
+> +
+> +	return rproc_boot(rproc);
+> +}
+> +
+> +static int rproc_cdev_release(struct inode *inode, struct file *file)
+> +{
+> +	struct rproc *rproc;
+> +
+> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
+> +
+> +	if (!rproc || rproc->state != RPROC_RUNNING)
 
-Don't you need to do this in opposite order, to avoid a use after free?
+rproc state != RUNNING can probably happen if the remoteproc
+crashed I think. However, you'll return EINVAL, though I'm not
+sure about what the user could do in such cases, maybe returning
+another more meaningful value could be useful.
 
-Regards,
-Bjorn
+> +		return -EINVAL;
+> +
+> +	rproc_shutdown(rproc);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations rproc_fops = {
+> +	.open = rproc_cdev_open,
+> +	.release = rproc_cdev_release,
+> +};
+> +
+> +int rproc_char_device_add(struct rproc *rproc)
+> +{
+> +	int ret, minor;
+> +	dev_t cdevt;
+> +
+> +	minor = ida_simple_get(&cdev_minor_ida, 0, NUM_RPROC_DEVICES,
+> +			       GFP_KERNEL);
+> +	if (minor < 0) {
+> +		dev_err(&rproc->dev, "%s: No more minor numbers left! rc:%d\n",
+> +			__func__, minor);
+> +		return -ENODEV;
+> +	}
+> +
+> +	cdev_init(&rproc->char_dev, &rproc_fops);
+> +	rproc->char_dev.owner = THIS_MODULE;
+> +
+> +	cdevt = MKDEV(MAJOR(rproc_cdev), minor);
+> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
+> +	if (ret < 0)
+> +		ida_simple_remove(&cdev_minor_ida, minor);
+> +
+> +	rproc->dev.devt = cdevt;
+> +	return ret;
+> +}
+> +
+> +void rproc_char_device_remove(struct rproc *rproc)
+> +{
+> +	__unregister_chrdev(MAJOR(rproc->dev.devt), MINOR(rproc->dev.devt), 1,
+> +			    "rproc");
+> +	ida_simple_remove(&cdev_minor_ida, MINOR(rproc->dev.devt));
+> +}
+> +
+> +void __init rproc_init_cdev(void)
+> +{
+> +	int ret;
+> +
+> +	ret = alloc_chrdev_region(&rproc_cdev, 0, NUM_RPROC_DEVICES, "rproc");
+> +	if (ret < 0) {
+> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
+> +		return;
+> +	}
+> +}
+> +
+> +void __exit rproc_exit_cdev(void)
+> +{
+> +	__unregister_chrdev(MAJOR(rproc_cdev), 0, NUM_RPROC_DEVICES, "rproc");
+> +}
+> diff --git a/drivers/remoteproc/remoteproc_internal.h
+> b/drivers/remoteproc/remoteproc_internal.h
+> index 493ef92..28d61a1 100644
+> --- a/drivers/remoteproc/remoteproc_internal.h
+> +++ b/drivers/remoteproc/remoteproc_internal.h
+> @@ -47,6 +47,27 @@ struct dentry *rproc_create_trace_file(const char *name,
+> struct rproc *rproc,
+> int rproc_init_sysfs(void);
+> void rproc_exit_sysfs(void);
+> 
+> +#ifdef CONFIG_REMOTEPROC_CDEV
+> +void rproc_init_cdev(void);
+> +void rproc_exit_cdev(void);
+> +int rproc_char_device_add(struct rproc *rproc);
+> +void rproc_char_device_remove(struct rproc *rproc);
+> +#else
+> +static inline void rproc_init_cdev(void)
+> +{
+> +}
+> +static inline void rproc_exit_cdev(void)
+> +{
+> +}
+> +static inline int rproc_char_device_add(struct rproc *rproc)
+> +{
+> +	return 0;
+> +}
+> +static inline void  rproc_char_device_remove(struct rproc *rproc)
+> +{
+> +}
+> +#endif
+> +
+> void rproc_free_vring(struct rproc_vring *rvring);
+> int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
+> 
+> @@ -63,6 +84,7 @@ struct resource_table *rproc_elf_find_loaded_rsc_table(struct
+> rproc *rproc,
+> struct rproc_mem_entry *
+> rproc_find_carveout_by_name(struct rproc *rproc, const char *name, ...);
+> 
+> +
+
+Useless newline ?
+
+> static inline
+> int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
+> {
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 16ad666..c4ca796 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -37,6 +37,7 @@
+> 
+> #include <linux/types.h>
+> #include <linux/mutex.h>
+> +#include <linux/cdev.h>
+> #include <linux/virtio.h>
+> #include <linux/completion.h>
+> #include <linux/idr.h>
+> @@ -514,6 +515,7 @@ struct rproc {
+> 	bool auto_boot;
+> 	struct list_head dump_segments;
+> 	int nb_vdev;
+> +	struct cdev char_dev;
+> };
+> 
+> /**
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
