@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FA4C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD95CC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD2F2071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BF3207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="DJxNhL+z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wuLMWW3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733228AbgDAWPS (ORCPT
+        id S1733247AbgDAWPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:15:18 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:10810 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732537AbgDAWPR (ORCPT
+        Wed, 1 Apr 2020 18:15:21 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:55217 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732537AbgDAWPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:15:17 -0400
+        Wed, 1 Apr 2020 18:15:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1585779316; x=1617315316;
+  t=1585779320; x=1617315320;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=K3miLFKrYLPIkEbM2MSg4gmUTaLvb4ricn3OFJzRkdI=;
-  b=DJxNhL+zFfwJZjqHE2CEM0SDOG0GqLt+XuVIimkKPNnM0vj+5GviffZd
-   DTnqlMkBj8zTlGw2mOTkhIdEO+JsVPbkq8JnLwDbNLqZkJxeM/zytvAxA
-   PmxIHu3V0ilONkIrJOxHL3bKneRvImhk7PZAJGBX5Uvc+uC2iPoykfq1C
-   lpSA1h7JPefWwO5ahTaNdc0asVoSLmzxnKOsOPhC0m0OGa8XTthC166/L
-   mKnyx3uOO2EFl6AQz21VWy3t+EVRO10acGvxBQ95tQKNI8F8/wZltJvYW
-   tL/jhGJXkl/gw4qK8qCLRbIFKi+f6HuQ31zq3SRLjBWvLcykNuPycCoBz
-   Q==;
-IronPort-SDR: 6zap22IBfi4TcnWYCqrLeBZPMSliWsCclyeMk4EPI0Hnwd2GCsMKryQyH08EXoTeiwIV1UO8fD
- EjFWzIxhjYo3YQRw8cUe7PPTLc8QWGDXT+CCqX/PkmxwU/WYjDKfiM777jq7BKgaG3ggmTsP7M
- kCB2S5vI1oww5F9EisU14REzmtRhkI0N9s6k729OdamqQt2CddMx8C97AaUCgZabTv+0W/d/VP
- NOXpA8vhLIsDbJzt8IKs8nlwnZijNBjOZIPNDE/kFyySYG+GPGymATZ6PgkNUzxhi7Nc281/O8
- r2s=
+  bh=roL7pAuCeMrEZzb4jmaWDZnAb9YNN/kPLY9E/yXOwSY=;
+  b=wuLMWW3FwXRruyJ33UkHlrlVcehiMNACtH1cCOHZv3CnT90Dy3YCU8is
+   GjYOqNmULz+G4p4fKsmCx3erUsv8tjys6t4zwUa/OH69fxzScHCGLwxyG
+   1WwSScGhXS2axAM7fTiFu7FhKAaBFgfgXgg92e6jHYEbqFNF28CfOVOPC
+   8VpOofB2MxeSa7ORxn4Mv+HJ8DVXJLz2vmIbjtaWKOZYPIz/ZTvm8wjys
+   GqlKJyLyT8vSX+PW0BJNRSNBG+7LtZP9a821dEHqt30GkWHs+qgzcQOpe
+   7RhfXZPUT31ZOLteed34lC52IYcyMXVw0kcLVQFXw3xCPBQwmVlmKv9y4
+   w==;
+IronPort-SDR: vvADddCKU7kNsFIzXcUbE7USJheeTdMZyZITxJSybmvRyMmYssg7QDrD405rrEpdHWrSL+Z8TZ
+ wEI3VWAmmwshtLWNJM/clfXC1N/s5C7kMBXUvPjtCc1Es3F+rnrSHcRSELmrcjACS1bqevmDJe
+ Vrj2V3EhBfmXyS/3rRJVOTIv5eXL9mwQ/2RiHQ95A0yBaTtB2Pvj1maPt2R0yUEmAa0LMpxNka
+ c3g0KUxJgEO5WklD9AIVKpHAoWB8/cLH3BYACMyNu5z/HSxpxLqAlwTRNgiCjngWZL5qg91O0e
+ Xeg=
 X-IronPort-AV: E=Sophos;i="5.72,333,1580799600"; 
-   d="scan'208";a="72005448"
+   d="scan'208";a="71132656"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Apr 2020 15:15:16 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Apr 2020 15:15:19 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 1 Apr 2020 15:15:22 -0700
+ 15.1.1713.5; Wed, 1 Apr 2020 15:15:25 -0700
 Received: from sekiro.microchip.com (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 1 Apr 2020 15:15:19 -0700
+ 15.1.1713.5 via Frontend Transport; Wed, 1 Apr 2020 15:15:22 -0700
 From:   Ludovic Desroches <ludovic.desroches@microchip.com>
 To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
         <robh+dt@kernel.org>
@@ -59,11 +59,10 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <Tudor.Ambarus@microchip.com>, <Cristian.Birsan@microchip.com>,
         <Codrin.Ciubotariu@microchip.com>,
-        "Ludovic Desroches" <ludovic.desroches@microchip.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH 2/5] ARM: dts: at91: sama5d2_ptc_ek: fix vbus pin
-Date:   Thu, 2 Apr 2020 00:15:01 +0200
-Message-ID: <20200401221504.41196-2-ludovic.desroches@microchip.com>
+        "Ludovic Desroches" <ludovic.desroches@microchip.com>
+Subject: [PATCH 3/5] ARM: dts: at91: sama5d2_ptc_ek: add PB_USER as wakeup source
+Date:   Thu, 2 Apr 2020 00:15:02 +0200
+Message-ID: <20200401221504.41196-3-ludovic.desroches@microchip.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401221504.41196-1-ludovic.desroches@microchip.com>
 References: <20200401221504.41196-1-ludovic.desroches@microchip.com>
@@ -75,29 +74,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The gpio property for the vbus pin doesn't watch the pinctrl and is
-not correct.
+Add the push button PB_USER as wakeup source
 
 Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Fixes: 42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
-Cc: stable@vger.kernel.org # 4.19 and later
 ---
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-index 772809c54c1f3..b803fa1f20391 100644
+index b803fa1f20391..32435ce1dab22 100644
 --- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
 +++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -40,7 +40,7 @@ main_xtal {
+@@ -412,6 +412,7 @@ bp1 {
+ 			label = "PB_USER";
+ 			gpios = <&pioA PIN_PA10 GPIO_ACTIVE_LOW>;
+ 			linux,code = <0x104>;
++			wakeup-source;
+ 		};
+ 	};
  
- 	ahb {
- 		usb0: gadget@300000 {
--			atmel,vbus-gpio = <&pioA PIN_PA27 GPIO_ACTIVE_HIGH>;
-+			atmel,vbus-gpio = <&pioA PIN_PB11 GPIO_ACTIVE_HIGH>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usba_vbus>;
- 			status = "okay";
 -- 
 2.26.0
 
