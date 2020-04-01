@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DDAC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF23AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7CA20787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B4320787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759371;
-	bh=nSL2VlQVTb3GPKokrRs/RPqS8c005cAw2vMQezf9gH0=;
+	s=default; t=1585759374;
+	bh=E/byX9SXEwMNRNF7M3hp6IOB4XLc9sVP0AoWLhCugrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJT2UmFh6el+vqkgfhcq2DAhiuRQUjOpJWgkfPjmMyX5LnyTaz2UHnWdS3KcGe4gc
-	 FDmNNeLiKepOjPtdVZiw2zA0RctG5fPGcBg+/M4DucTTlM/96KjwokH7BquvQSSMyS
-	 xnky1GZiJ9nEO6GqxH5lVFmmO3Tn4dpltM0FRvjw=
+	b=iBy8Z1zS/yUBmklrAVqm//7GUyqksLKrXUjcZ8f+jQ2LE8nTohlbUC9MieKG8QN/b
+	 cgcr/d7HLsB0TRfvJvfheNrp1/7oX++zi4W9ZtTyrQ5SCsidBL+QQacsZqyFdeo77z
+	 8CihH5wB+SyGdAMiNB777hPz040f45BuI9E4ZaQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389026AbgDAQmu (ORCPT
+        id S2389565AbgDAQmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:42:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43406 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:42:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389549AbgDAQmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:42:46 -0400
+        id S2389556AbgDAQmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:42:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A668120658;
-        Wed,  1 Apr 2020 16:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C30720719;
+        Wed,  1 Apr 2020 16:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759366;
-        bh=nSL2VlQVTb3GPKokrRs/RPqS8c005cAw2vMQezf9gH0=;
+        s=default; t=1585759368;
+        bh=E/byX9SXEwMNRNF7M3hp6IOB4XLc9sVP0AoWLhCugrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j++y4RL1QHywzNAWXE53M6NMweabNQe6cbW/qU8LHG1nOqaXS6QemQoP8gWy3T2J2
-         l/VEywtbg5St6In71R2F7bvQ23+FuAOsGmYT6pbHN1G0q9Xv3ceP2IkntUrZq7OcWf
-         Zjun5PBE5mQ594CaUOwO6wkR0umJvBH1KzsGo4xc=
+        b=ajkEMOnZYNLteDvLW/pNvWRvEAOZlgysPZpithIs3ZSpImLGHHraQZ15eQnJ3Xp+z
+         FlkvXWFBh1Ru5h+Qek0Q8O8IaZPbp/sxb7XIHW75T2ekXxzQ+oB4OlRW9Vxo6J2epr
+         vbaB9t5lGCskjixaY67BSu4H3/Pm3t+ZBuMWqDgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Maxime Bizon <mbizon@freebox.fr>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 057/148] macsec: restrict to ethernet devices
-Date:   Wed,  1 Apr 2020 18:17:29 +0200
-Message-Id: <20200401161558.433370616@linuxfoundation.org>
+Subject: [PATCH 4.14 058/148] net: dsa: Fix duplicate frames flooded by learning
+Date:   Wed,  1 Apr 2020 18:17:30 +0200
+Message-Id: <20200401161558.509685033@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,46 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit b06d072ccc4b1acd0147b17914b7ad1caa1818bb ]
+[ Upstream commit 0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ]
 
-Only attach macsec to ethernet devices.
+When both the switch and the bridge are learning about new addresses,
+switch ports attached to the bridge would see duplicate ARP frames
+because both entities would attempt to send them.
 
-Syzbot was able to trigger a KMSAN warning in macsec_handle_frame
-by attaching to a phonet device.
-
-Macvlan has a similar check in macvlan_port_create.
-
-v1->v2
-  - fix commit message typo
-
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
+Fixes: 5037d532b83d ("net: dsa: add Broadcom tag RX/TX handler")
+Reported-by: Maxime Bizon <mbizon@freebox.fr>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/macsec.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/dsa/tag_brcm.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -19,6 +19,7 @@
- #include <net/genetlink.h>
- #include <net/sock.h>
- #include <net/gro_cells.h>
-+#include <linux/if_arp.h>
+--- a/net/dsa/tag_brcm.c
++++ b/net/dsa/tag_brcm.c
+@@ -134,6 +134,8 @@ static struct sk_buff *brcm_tag_rcv(stru
  
- #include <uapi/linux/if_macsec.h>
+ 	skb->dev = ds->ports[source_port].netdev;
  
-@@ -3219,6 +3220,8 @@ static int macsec_newlink(struct net *ne
- 	real_dev = __dev_get_by_index(net, nla_get_u32(tb[IFLA_LINK]));
- 	if (!real_dev)
- 		return -ENODEV;
-+	if (real_dev->type != ARPHRD_ETHER)
-+		return -EINVAL;
- 
- 	dev->priv_flags |= IFF_MACSEC;
++	skb->offload_fwd_mark = 1;
++
+ 	return skb;
+ }
  
 
 
