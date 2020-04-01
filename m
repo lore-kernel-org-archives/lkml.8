@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CDAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808E4C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79542137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530FB2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758762;
-	bh=JL1j4Baacd3Nm5cyUBNnMdvD7STn1dIkzds8vD8e5Oo=;
+	s=default; t=1585758766;
+	bh=xRdhyKnGuxjusTLw/aAf27RdDFu0veOQA6/4JO0PSEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qwho5Am+axC2b+AR0Ii8dsolfGhUG0yDMj9bbgc427zS5nvgaGfw252qEN+lplIUn
-	 7pX6SexvmI9JG0bZebEr/zV04bKTDvvoCHuHlhrpuiHaFB0P442jCw3j8HIUBqdfy2
-	 sQwPPGPakxnafIrhB/TZXRlItWTW2f0KY6edlwl8=
+	b=x6SJ+2Ugi2jGb+MwThTusaaZPMYnYC8NXIQ9rl7SGPVow7rw5zHqIx+2a+7nuB80S
+	 q2wyHnRzdce71ATdqcz08IH1WxSm6vqy8vhkPG+AOxaof8igjG+97/NImirkuXXXBn
+	 m3sIf/Cld4SANRLJxvQROHoydr99SDL7L2Mw9bz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388454AbgDAQcl (ORCPT
+        id S2388097AbgDAQcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59084 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:32:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388068AbgDAQci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:32:38 -0400
+        id S2388452AbgDAQcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:32:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D42392063A;
-        Wed,  1 Apr 2020 16:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64A832137B;
+        Wed,  1 Apr 2020 16:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758758;
-        bh=JL1j4Baacd3Nm5cyUBNnMdvD7STn1dIkzds8vD8e5Oo=;
+        s=default; t=1585758760;
+        bh=xRdhyKnGuxjusTLw/aAf27RdDFu0veOQA6/4JO0PSEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLKeb49pDflWahjZv4xu4+tQV+7Cbn7OvwVi9qKuOn8CZyyCZ7fA5aUtRjL3MtQMO
-         Rh1Rl57GdlMw3ohcZ4PEmmViUHojOwn9nrgwEI5YUZI74XFGKBCMJx7de07hCcg1zf
-         OIwzy11wdlHHa3OGAfVxRQuCPryFf1OjLgP9P/r0=
+        b=PyC/qcx7MM5gBRC/6kFEkVEiVSZPZhlg4gNOQfJ3c/dK/+9kCA1BnHZCZFVJEIt8G
+         J46Vq8Dy/tJxfCvq8y1aYpph1nJa7f27MIllG2YrAe+qnlykpS7n1TdR8TFI8rG0qj
+         O+i5YtOYfoAKrCTzCFhkyNdjrlNPkr5PLq/UER+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 60/91] genirq: Fix reference leaks on irq affinity notifiers
-Date:   Wed,  1 Apr 2020 18:17:56 +0200
-Message-Id: <20200401161533.755031533@linuxfoundation.org>
+        stable@vger.kernel.org, Pawel Dembicki <paweldembicki@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 69/91] USB: serial: option: add Wistron Neweb D19Q1
+Date:   Wed,  1 Apr 2020 18:18:05 +0200
+Message-Id: <20200401161536.188091245@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -60,60 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Cree <ecree@solarflare.com>
+From: Pawel Dembicki <paweldembicki@gmail.com>
 
-commit df81dfcfd6991d547653d46c051bac195cd182c1 upstream.
+commit dfee7e2f478346b12ea651d5c28b069f6a4af563 upstream.
 
-The handling of notify->work did not properly maintain notify->kref in two
- cases:
-1) where the work was already scheduled, another irq_set_affinity_locked()
-   would get the ref and (no-op-ly) schedule the work.  Thus when
-   irq_affinity_notify() ran, it would drop the original ref but not the
-   additional one.
-2) when cancelling the (old) work in irq_set_affinity_notifier(), if there
-   was outstanding work a ref had been got for it but was never put.
-Fix both by checking the return values of the work handling functions
- (schedule_work() for (1) and cancel_work_sync() for (2)) and put the
- extra ref if the return value indicates preexisting work.
+This modem is embedded on dlink dwr-960 router.
+The oem configuration states:
 
-Fixes: cd7eab44e994 ("genirq: Add IRQ affinity notifiers")
-Fixes: 59c39840f5ab ("genirq: Prevent use-after-free and work list corruption")
-Signed-off-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Ben Hutchings <ben@decadent.org.uk>
-Link: https://lkml.kernel.org/r/24f5983f-2ab5-e83a-44ee-a45b5f9300f5@solarflare.com
+T: Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 2 Spd=480 MxCh= 0
+D: Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs= 1
+P: Vendor=1435 ProdID=d191 Rev=ff.ff
+S: Manufacturer=Android
+S: Product=Android
+S: SerialNumber=0123456789ABCDEF
+C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+E: Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+E: Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E: Ad=84(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
+E: Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E: Ad=86(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
+E: Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E: Ad=88(I) Atr=03(Int.) MxPS= 8 Ivl=32ms
+E: Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
+E: Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
+
+Tested on openwrt distribution
+
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/manage.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -220,7 +220,11 @@ int irq_set_affinity_locked(struct irq_d
- 
- 	if (desc->affinity_notify) {
- 		kref_get(&desc->affinity_notify->kref);
--		schedule_work(&desc->affinity_notify->work);
-+		if (!schedule_work(&desc->affinity_notify->work)) {
-+			/* Work was already scheduled, drop our extra ref */
-+			kref_put(&desc->affinity_notify->kref,
-+				 desc->affinity_notify->release);
-+		}
- 	}
- 	irqd_set(data, IRQD_AFFINITY_SET);
- 
-@@ -320,7 +324,10 @@ irq_set_affinity_notifier(unsigned int i
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
- 
- 	if (old_notify) {
--		cancel_work_sync(&old_notify->work);
-+		if (cancel_work_sync(&old_notify->work)) {
-+			/* Pending work had a ref, put that one too */
-+			kref_put(&old_notify->kref, old_notify->release);
-+		}
- 		kref_put(&old_notify->kref, old_notify->release);
- 	}
- 
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1983,6 +1983,8 @@ static const struct usb_device_id option
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
++	{ USB_DEVICE_INTERFACE_CLASS(0x1435, 0xd191, 0xff),			/* Wistron Neweb D19Q1 */
++	  .driver_info = RSVD(1) | RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x1690, 0x7588, 0xff),			/* ASKEY WWHC050 */
+ 	  .driver_info = RSVD(1) | RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
 
 
