@@ -2,242 +2,265 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DAFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF88C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCA620BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CBRcBUpt"
+	by mail.kernel.org (Postfix) with ESMTP id 86B1F20BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733217AbgDAP52 (ORCPT
+        id S1733221AbgDAP5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:57:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50591 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733164AbgDAP51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:57:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585756645;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MJvti0HQwxkGVr50UmLlXHEkmoOLavfcErw++olR+Jo=;
-        b=CBRcBUptPGzJgM8ONDMF1CcAKgsQK+zb0NzJn8gyfabDOELw6+tghnJfJEIZs2QWHgnj1g
-        wlNo/bmWkdsq5MRXXLJqhV2x4ltdvYiQWEN+w+czhzQxPtD54/f5r81e9n8VEG7coPDis9
-        RzT2ytmQebccjm9q9tpQntOsiyaYQbw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-166--tdhvSYpO6yjqwCsmGO7SQ-1; Wed, 01 Apr 2020 11:57:20 -0400
-X-MC-Unique: -tdhvSYpO6yjqwCsmGO7SQ-1
-Received: by mail-wr1-f72.google.com with SMTP id t25so35927wrb.16
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 08:57:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=MJvti0HQwxkGVr50UmLlXHEkmoOLavfcErw++olR+Jo=;
-        b=dPU/fSyGPNR2mym37gRMr09tM7iAl1N2UqdlD3IwjOLZDDoPxAxyoe82qzqcwHoFvx
-         WzAZdv/wnTRwJlMVCGf3V8levR4yyrqrnpAevpgq5sBLKjVpO/2XqNX6rgUmyCBI88ky
-         dsZCkUpirUbaRgiJi2qB5sQ5bnRKbEp0mlYryIHTeLrseGIvJUHc4vHTHPSKAP8SoXXZ
-         76qR+YbbLtgJKXTET937LWHqzjrCWarjNeS2tkyVbHpgnowYednoTuk0pGyl4nbp0mN4
-         JA4Tu9PpF1/7VTKWBwaPU+TD2JGSlyYwPEsVO3vRkBYMMV0xBSTcbXd47dVw6Dy0lXUK
-         rU5w==
-X-Gm-Message-State: AGi0PuYGMNTpwWJF2ORdE6cxUAYWaNl7K1FtwKEgVh7hLffX5N6WqjPM
-        rZ0GCYFQiXr4zPEyUK49yRj5bE6H57+Z/8OZ6OfdvXCI1H0tvfoTW93K2pEQI9cDfNakkU5zKi+
-        PsZEPOkN9AfXFhZuyU2/VS6aM
-X-Received: by 2002:a1c:1942:: with SMTP id 63mr5209043wmz.133.1585756639449;
-        Wed, 01 Apr 2020 08:57:19 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKA2aA36/p1yS+4iSBINIMZYbsrQcGfbJmIXDjaLpAeYKGxwb5JBIS+CYjNIECD0H1M4kXpUQ==
-X-Received: by 2002:a1c:1942:: with SMTP id 63mr5209012wmz.133.1585756639201;
-        Wed, 01 Apr 2020 08:57:19 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id a8sm2954348wmb.39.2020.04.01.08.57.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 08:57:18 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 11:57:14 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-Message-ID: <20200401115650-mutt-send-email-mst@kernel.org>
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <fde312a4-56bd-f11f-799f-8aa952008012@de.ibm.com>
- <41ee1f6a-3124-d44b-bf34-0f26604f9514@redhat.com>
- <4726da4c-11ec-3b6e-1218-6d6d365d5038@de.ibm.com>
- <39b96e3a-9f4e-6e1d-e988-8c4bcfb55879@de.ibm.com>
- <c423c5b1-7817-7417-d7af-e07bef6368e7@redhat.com>
- <20200401102631-mutt-send-email-mst@kernel.org>
- <5e409bb4-2b06-5193-20c3-a9ddaafacf5a@redhat.com>
+        Wed, 1 Apr 2020 11:57:52 -0400
+Received: from mga01.intel.com ([192.55.52.88]:57428 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732980AbgDAP5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:57:51 -0400
+IronPort-SDR: T9Ggzsxav7n9EjnAoUMgcMYNLZl8HeEi4Q5amPDKd57jJ8yOICawdWoFv53fihWbNoSXI5+tTh
+ KNXlEkV6f5tg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 08:57:51 -0700
+IronPort-SDR: R5qywkNEyuyciznhRnV8XzvA+/gIvj8UOXCgWtUh6FpG/PTUBTUA9EGvieHCSyo5fBxw8tmIyO
+ lq0B79f2wlqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,332,1580803200"; 
+   d="scan'208";a="249497966"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga003.jf.intel.com with ESMTP; 01 Apr 2020 08:57:46 -0700
+Date:   Wed, 1 Apr 2020 09:03:34 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
+Message-ID: <20200401090334.05b12e9b@jacob-builder>
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A21C475@SHSMSX104.ccr.corp.intel.com>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1584746861-76386-9-git-send-email-jacob.jun.pan@linux.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
+        <20200331111332.0718ffd2@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D803C1B@SHSMSX104.ccr.corp.intel.com>
+        <A2975661238FB949B60364EF0F2C25743A21C475@SHSMSX104.ccr.corp.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5e409bb4-2b06-5193-20c3-a9ddaafacf5a@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 10:50:50PM +0800, Jason Wang wrote:
-> 
-> On 2020/4/1 下午10:27, Michael S. Tsirkin wrote:
-> > On Wed, Apr 01, 2020 at 10:13:29PM +0800, Jason Wang wrote:
-> > > On 2020/4/1 下午9:02, Christian Borntraeger wrote:
-> > > > On 01.04.20 14:56, Christian Borntraeger wrote:
-> > > > > On 01.04.20 14:50, Jason Wang wrote:
-> > > > > > On 2020/4/1 下午7:21, Christian Borntraeger wrote:
-> > > > > > > On 26.03.20 15:01, Jason Wang wrote:
-> > > > > > > > Currently, CONFIG_VHOST depends on CONFIG_VIRTUALIZATION. But vhost is
-> > > > > > > > not necessarily for VM since it's a generic userspace and kernel
-> > > > > > > > communication protocol. Such dependency may prevent archs without
-> > > > > > > > virtualization support from using vhost.
-> > > > > > > > 
-> > > > > > > > To solve this, a dedicated vhost menu is created under drivers so
-> > > > > > > > CONIFG_VHOST can be decoupled out of CONFIG_VIRTUALIZATION.
-> > > > > > > FWIW, this now results in vhost not being build with defconfig kernels (in todays
-> > > > > > > linux-next).
-> > > > > > > 
-> > > > > > Hi Christian:
-> > > > > > 
-> > > > > > Did you meet it even with this commit https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=a4be40cbcedba9b5b714f3c95182e8a45176e42d?
-> > > > > I simply used linux-next. The defconfig does NOT contain CONFIG_VHOST and therefore CONFIG_VHOST_NET and friends
-> > > > > can not be selected.
-> > > > > 
-> > > > > $ git checkout next-20200401
-> > > > > $ make defconfig
-> > > > >     HOSTCC  scripts/basic/fixdep
-> > > > >     HOSTCC  scripts/kconfig/conf.o
-> > > > >     HOSTCC  scripts/kconfig/confdata.o
-> > > > >     HOSTCC  scripts/kconfig/expr.o
-> > > > >     LEX     scripts/kconfig/lexer.lex.c
-> > > > >     YACC    scripts/kconfig/parser.tab.[ch]
-> > > > >     HOSTCC  scripts/kconfig/lexer.lex.o
-> > > > >     HOSTCC  scripts/kconfig/parser.tab.o
-> > > > >     HOSTCC  scripts/kconfig/preprocess.o
-> > > > >     HOSTCC  scripts/kconfig/symbol.o
-> > > > >     HOSTCC  scripts/kconfig/util.o
-> > > > >     HOSTLD  scripts/kconfig/conf
-> > > > > *** Default configuration is based on 'x86_64_defconfig'
-> > > > > #
-> > > > > # configuration written to .config
-> > > > > #
-> > > > > 
-> > > > > $ grep VHOST .config
-> > > > > # CONFIG_VHOST is not set
-> > > > > 
-> > > > > > If yes, what's your build config looks like?
-> > > > > > 
-> > > > > > Thanks
-> > > > This was x86. Not sure if that did work before.
-> > > > On s390 this is definitely a regression as the defconfig files
-> > > > for s390 do select VHOST_NET
-> > > > 
-> > > > grep VHOST arch/s390/configs/*
-> > > > arch/s390/configs/debug_defconfig:CONFIG_VHOST_NET=m
-> > > > arch/s390/configs/debug_defconfig:CONFIG_VHOST_VSOCK=m
-> > > > arch/s390/configs/defconfig:CONFIG_VHOST_NET=m
-> > > > arch/s390/configs/defconfig:CONFIG_VHOST_VSOCK=m
-> > > > 
-> > > > and this worked with 5.6, but does not work with next. Just adding
-> > > > CONFIG_VHOST=m to the defconfig solves the issue, something like
-> > > 
-> > > Right, I think we probably need
-> > > 
-> > > 1) add CONFIG_VHOST=m to all defconfigs that enables
-> > > CONFIG_VHOST_NET/VSOCK/SCSI.
-> > > 
-> > > or
-> > > 
-> > > 2) don't use menuconfig for CONFIG_VHOST, let NET/SCSI/VDPA just select it.
-> > > 
-> > > Thanks
-> > OK I tried this:
-> > 
-> > diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> > index 2523a1d4290a..a314b900d479 100644
-> > --- a/drivers/vhost/Kconfig
-> > +++ b/drivers/vhost/Kconfig
-> > @@ -19,11 +19,10 @@ menuconfig VHOST
-> >   	  This option is selected by any driver which needs to access
-> >   	  the core of vhost.
-> > -if VHOST
-> > -
-> >   config VHOST_NET
-> >   	tristate "Host kernel accelerator for virtio net"
-> >   	depends on NET && EVENTFD && (TUN || !TUN) && (TAP || !TAP)
-> > +	select VHOST
-> >   	---help---
-> >   	  This kernel module can be loaded in host kernel to accelerate
-> >   	  guest networking with virtio_net. Not to be confused with virtio_net
-> > @@ -35,6 +34,7 @@ config VHOST_NET
-> >   config VHOST_SCSI
-> >   	tristate "VHOST_SCSI TCM fabric driver"
-> >   	depends on TARGET_CORE && EVENTFD
-> > +	select VHOST
-> >   	default n
-> >   	---help---
-> >   	Say M here to enable the vhost_scsi TCM fabric module
-> > @@ -44,6 +44,7 @@ config VHOST_VSOCK
-> >   	tristate "vhost virtio-vsock driver"
-> >   	depends on VSOCKETS && EVENTFD
-> >   	select VIRTIO_VSOCKETS_COMMON
-> > +	select VHOST
-> >   	default n
-> >   	---help---
-> >   	This kernel module can be loaded in the host kernel to provide AF_VSOCK
-> > @@ -57,6 +58,7 @@ config VHOST_VDPA
-> >   	tristate "Vhost driver for vDPA-based backend"
-> >   	depends on EVENTFD
-> >   	select VDPA
-> > +	select VHOST
-> >   	help
-> >   	  This kernel module can be loaded in host kernel to accelerate
-> >   	  guest virtio devices with the vDPA-based backends.
-> > @@ -78,5 +80,3 @@ config VHOST_CROSS_ENDIAN_LEGACY
-> >   	  adds some overhead, it is disabled by default.
-> >   	  If unsure, say "N".
-> > -
-> > -endif
-> > 
-> > 
-> > But now CONFIG_VHOST is always "y", never "m".
-> > Which I think will make it a built-in.
-> > Didn't figure out why yet.
-> 
-> 
-> Is it because the dependency of EVENTFD for CONFIG_VHOST?
+On Wed, 1 Apr 2020 06:57:42 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-Oh no, it's because I forgot to change menuconfig to config.
-
-
-> Remove that one for this patch, I can get CONFIG_VHOST=m.
-> 
-> But according to documentation/kbuild/kconfig.rst, select is used for option
-> without prompt.
-> 
-> Thanks
-> 
-> 
+> > From: Tian, Kevin <kevin.tian@intel.com>
+> > Sent: Wednesday, April 1, 2020 2:24 PM
+> > To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Subject: RE: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate
+> > function 
+> > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > Sent: Wednesday, April 1, 2020 2:14 AM
+> > >
+> > > On Sat, 28 Mar 2020 10:01:42 +0000
+> > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> > >  
+> > > > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > > Sent: Saturday, March 21, 2020 7:28 AM
+> > > > >
+> > > > > When Shared Virtual Address (SVA) is enabled for a guest OS
+> > > > > via vIOMMU, we need to provide invalidation support at IOMMU
+> > > > > API and driver level. This patch adds Intel VT-d specific
+> > > > > function to implement iommu passdown invalidate API for
+> > > > > shared virtual address.
+> > > > >
+> > > > > The use case is for supporting caching structure invalidation
+> > > > > of assigned SVM capable devices. Emulated IOMMU exposes
+> > > > > queue  
+> > > >
+> > > > emulated IOMMU -> vIOMMU, since virito-iommu could use the
+> > > > interface as well.
+> > > >  
+> > > True, but it does not invalidate this statement about emulated
+> > > IOMMU. I will add another statement saying "the same interface
+> > > can be used for virtio-IOMMU as well". OK?  
 > > 
+> > sure
+> >   
+> > >  
+> > > > > invalidation capability and passes down all descriptors from
+> > > > > the guest to the physical IOMMU.
+> > > > >
+> > > > > The assumption is that guest to host device ID mapping should
+> > > > > be resolved prior to calling IOMMU driver. Based on the
+> > > > > device handle, host IOMMU driver can replace certain fields
+> > > > > before submit to the invalidation queue.
+> > > > >
+> > > > > ---
+> > > > > v7 review fixed in v10
+> > > > > ---
+> > > > >
+> > > > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> > > > > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > ---
+> > > > >  drivers/iommu/intel-iommu.c | 182
+> > > > > ++++++++++++++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 182 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/iommu/intel-iommu.c
+> > > > > b/drivers/iommu/intel-iommu.c index b1477cd423dd..a76afb0fd51a
+> > > > > 100644 --- a/drivers/iommu/intel-iommu.c
+> > > > > +++ b/drivers/iommu/intel-iommu.c
+> > > > > @@ -5619,6 +5619,187 @@ static void
+> > > > > intel_iommu_aux_detach_device(struct iommu_domain *domain,
+> > > > >  	aux_domain_remove_dev(to_dmar_domain(domain), dev);
+> > > > >  }
+> > > > >
+> > > > > +/*
+> > > > > + * 2D array for converting and sanitizing IOMMU generic TLB
+> > > > > granularity to
+> > > > > + * VT-d granularity. Invalidation is typically included in
+> > > > > the unmap operation
+> > > > > + * as a result of DMA or VFIO unmap. However, for assigned
+> > > > > devices guest
+> > > > > + * owns the first level page tables. Invalidations of
+> > > > > translation caches in the
+> > > > > + * guest are trapped and passed down to the host.
+> > > > > + *
+> > > > > + * vIOMMU in the guest will only expose first level page
+> > > > > tables, therefore
+> > > > > + * we do not include IOTLB granularity for request without
+> > > > > PASID (second level).  
+> > > >
+> > > > I would revise above as "We do not support IOTLB granularity for
+> > > > request without PASID (second level), therefore any vIOMMU
+> > > > implementation that exposes the SVA capability to the guest
+> > > > should only expose the first level page tables, implying all
+> > > > invalidation requests from the guest will include a valid PASID"
+> > > >  
+> > > Sounds good.
+> > >  
+> > > > > + *
+> > > > > + * For example, to find the VT-d granularity encoding for
+> > > > > IOTLB
+> > > > > + * type and page selective granularity within PASID:
+> > > > > + * X: indexed by iommu cache type
+> > > > > + * Y: indexed by enum iommu_inv_granularity
+> > > > > + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
+> > > > > + *
+> > > > > + * Granu_map array indicates validity of the table. 1:
+> > > > > valid, 0: invalid
+> > > > > + *
+> > > > > + */
+> > > > > +const static int
+> > > > >  
+> > > inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_  
+> > > > > NR] = {
+> > > > > +	/*
+> > > > > +	 * PASID based IOTLB invalidation: PASID selective
+> > > > > (per PASID),
+> > > > > +	 * page selective (address granularity)
+> > > > > +	 */
+> > > > > +	{0, 1, 1},
+> > > > > +	/* PASID based dev TLBs, only support all PASIDs or
+> > > > > single PASID */
+> > > > > +	{1, 1, 0},  
+> > > >
+> > > > Is this combination correct? when single PASID is being
+> > > > specified, it is essentially a page-selective invalidation
+> > > > since you need provide Address and Size.
+> > > >  
+> > > This is for translation between generic UAPI granu to VT-d granu,
+> > > it has nothing to do with address and size.  
+> > 
+> > Generic UAPI defines three granularities: domain, pasid and addr.
+> > from the definition domain applies all entries related to did, pasid
+> > applies to all entries related to pasid, while addr is specific for
+> > a range.
+> > 
+> > from what we just confirmed internally with VT-d spec owner, our
+> > PASID based dev TLB invalidation always requires addr and size,
+> > while current uAPI doesn't support multiple PASIDs based range
+> > invaliation. It sounds to me that you want to use domain to replace
+> > multiple PASIDs case (G=1), but it then changes the meaning of
+> > the domain granularity and easily lead to confusion.
+> >
+> > I feel Eric's proposal makes more sense. Here we'd better use {0,
+> > 0, 1} to indicate only addr range invalidation is allowed, matching
+> > the spec definition. We may use a special flag in
+> > iommu_inv_addr_info to indicate G=1 case, if necessary.  
+> 
+> I agree. G=1 case should be supported. I think we had a flag for
+> global as there is GL bit in p_iotlb_inv_dsc (a.k.a
+> ext_iotlb_inv_dsc), but it was dropped as 3.0 spec dropped GL bit.
+> Let's add it back as for DevTLB flush case.
+> 
+Make sense. I will change that to
 
+--- a/drivers/iommu/intel-iommu.c                                                                      
++++ b/drivers/iommu/intel-iommu.c                                                                      
+@@ -5741,7 +5741,7 @@ const static int inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_NR] 
+         */                                                                                            
+        {0, 1, 1},                                                                                     
+        /* PASID based dev TLBs, only support all PASIDs or single PASID */                            
+-       {1, 1, 0},                                                                                     
++       {0, 0, 1},                                                                                     
+        /* PASID cache */                                                                              
+        {1, 1, 0}                                                                                      
+ };                                                                                                    
+@@ -5750,7 +5750,7 @@ const static int inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_N 
+        /* PASID based IOTLB */                                                                        
+        {0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},                                                    
+        /* PASID based dev TLBs */                                                                     
+-       {QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},                                       
++       {0, 0, QI_DEV_IOTLB_GRAN_PASID_SEL},                                                           
+        /* PASID cache */                                                                              
+        {QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},                                                        
+ };                                                                                                    
+
+> > > e.g.
+> > > If user passes IOMMU_INV_GRANU_PASID for the single PASID case as
+> > > you mentioned, this map table shows it is valid.
+> > >
+> > > Then the lookup result will get VT-d granu:
+> > > QI_DEV_IOTLB_GRAN_PASID_SEL, which means G=0.
+> > >
+> > >  
+> > > > > +	/* PASID cache */  
+> > > >
+> > > > PASID cache is fully managed by the host. Guest PASID cache
+> > > > invalidation is interpreted by vIOMMU for bind and unbind
+> > > > operations. I don't think we should accept any PASID cache
+> > > > invalidation from userspace or guest.
+> > > >  
+> > >
+> > > True for vIOMMU, this is here for completeness. Can be used by
+> > > virtio IOMMU, since PC flush is inclusive (IOTLB, devTLB), it is
+> > > more efficient.  
+> > 
+> > I think it is not correct in concept. We should not allow the
+> > userspace or guest to request an operation which is beyond its
+> > privilege (just because doing so may bring some performance
+> > benefit). You can always introduce new cmd for such purpose.  
+> 
+> I guess it was added for the pasid table binding case? Now, our
+> platform doesn't support it. So I guess we can just make it as
+> unsupported in the 2D table.
+Sounds good.
