@@ -2,263 +2,124 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A593DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACB3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F5220787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:00:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LrhWpXSX"
+	by mail.kernel.org (Postfix) with ESMTP id 6750F20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732138AbgDAJAF (ORCPT
+        id S1732167AbgDAJAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:00:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45225 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730333AbgDAJAF (ORCPT
+        Wed, 1 Apr 2020 05:00:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44746 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727627AbgDAJA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:00:05 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l22so21488524oii.12
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 02:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tua3ateR5u2S61JvWw0wOYnH9G34YeISa9gzNpfiTsM=;
-        b=LrhWpXSXR+GjELfoDy+MltpvcJP8hquI1b+B+OBmXNrrXFfAYDdNO3PHyN5CahnjA3
-         oKCqnJqB0BscWVWQGEEmAEGTSnkCtxK4VNdZYF+lBHQzkuTsLO2f+zfGjtV9pTSlfEL4
-         Jn5RRq8kuj7uk/gmh5M9Zo7LkD+GxAY3p41yo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tua3ateR5u2S61JvWw0wOYnH9G34YeISa9gzNpfiTsM=;
-        b=MdS3uN3H60aXvzHBDLY6e1ua+KpkOVQQOH8+Wi2b9aD2Q0BOw47Yf1nQZEaaEV83Tl
-         7iv4VI9BfmK+05eh/Z600XfHLQDSuc774sO7ncYLY+x4obcdY6mOS25VvZNRzeEpkqqv
-         g3FYrMW9zjYlIcB1S6fcIEOWdqSC08EvWYlhna2EcT+G5Oldrd1zNVZ7LdR3zYCjsPg/
-         4/xHR4TlC/Rvb3EppizsldT3HP95QqLBB/juSWJyXVKOG9cYipQsDS0ablbWE0i8waHL
-         sE/4SwAqx9gJ2CPtsxsiz2CYW+XfO//Bnui++dIi7OYHAgx2cpmTgPPx6iDA5HGo50hB
-         5XLA==
-X-Gm-Message-State: AGi0PuappSwWpQStfSVro6YU5PAwgZEzeqn+3+N5mkhtujy+eEzZLO7e
-        eUyXGT7bm5Fjjo8zC1cxAmV/uqkOjbLGBJpmQN9Nqg==
-X-Google-Smtp-Source: APiQypJbch+wNP3JvxQ5mDbge7Me82aOIapEem1oPuiKzU4EaoA5Z6UueklCo60T8cD8EA2dAQpmlqPixm/t55ZCY4A=
-X-Received: by 2002:a54:4189:: with SMTP id 9mr2088613oiy.128.1585731602603;
- Wed, 01 Apr 2020 02:00:02 -0700 (PDT)
+        Wed, 1 Apr 2020 05:00:29 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0318YnB3109042
+        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 05:00:28 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 301yfgmswk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 05:00:28 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 1 Apr 2020 10:00:15 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Apr 2020 10:00:11 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03190KlS62259290
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 09:00:21 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5A6742056;
+        Wed,  1 Apr 2020 09:00:20 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E8D842041;
+        Wed,  1 Apr 2020 09:00:17 +0000 (GMT)
+Received: from [9.199.48.114] (unknown [9.199.48.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 09:00:16 +0000 (GMT)
+Subject: Re: [PATCH v2 08/16] powerpc/watchpoint: Disable all available
+ watchpoints when !dawr_force_enable
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
+        paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
+ <20200401061309.92442-9-ravi.bangoria@linux.ibm.com>
+ <1bef7056-b862-3b20-c3b8-8b161511c60a@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 1 Apr 2020 14:30:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <000000000000ec257905a21f7415@google.com> <20200331095737.GO20730@hirez.programming.kicks-ass.net>
- <CGME20200331101907eucas1p1ce5d3f7c49c2c724c4e85f5c19c7108d@eucas1p1.samsung.com>
- <CACT4Y+bqBCqDPQZ1Nk8G+8y2vu8aaT2S54J4UqRPaFNUcusbYw@mail.gmail.com>
- <7641fb29-20ec-0963-d04c-bfbf49fd3ebc@samsung.com> <CAKMK7uF5zZH3CaHueWsLR96-AzT==wP8=MpymTqx-T+SRsXWHA@mail.gmail.com>
- <CACT4Y+Y_i86-MPG_3jo-+_5WTLvcNi6HTR=mQkVdwJb5ATqDsQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+Y_i86-MPG_3jo-+_5WTLvcNi6HTR=mQkVdwJb5ATqDsQ@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 1 Apr 2020 10:59:51 +0200
-Message-ID: <CAKMK7uHCZK8L_Ho3yBq-=QnKm9F60KtRTqr8pAHxVjUcFjnd_w@mail.gmail.com>
-Subject: Re: INFO: trying to register non-static key in try_to_wake_up
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Matthew Garrett <mjg59@google.com>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzbot <syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1bef7056-b862-3b20-c3b8-8b161511c60a@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040109-0008-0000-0000-000003685C24
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040109-0009-0000-0000-00004A89E3C2
+Message-Id: <3042ffeb-0587-79cb-1401-070715d3adb6@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 impostorscore=0 mlxscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=945 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 10:47 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Tue, Mar 31, 2020 at 2:50 PM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Tue, Mar 31, 2020 at 2:18 PM Bartlomiej Zolnierkiewicz
-> > <b.zolnierkie@samsung.com> wrote:
-> > >
-> > >
-> > > On 3/31/20 12:18 PM, Dmitry Vyukov wrote:
-> > > > On Tue, Mar 31, 2020 at 11:57 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >>
-> > > >> On Mon, Mar 30, 2020 at 10:01:12PM -0700, syzbot wrote:
-> > > >>> Hello,
-> > > >>>
-> > > >>> syzbot found the following crash on:
-> > > >>>
-> > > >>> HEAD commit:    9420e8ad Merge tag 'for-linus' of git://git.kernel.org/pub..
-> > > >>> git tree:       upstream
-> > > >>> console output: https://protect2.fireeye.com/url?k=0756a78d-5a9a6c49-07572cc2-0cc47a314e9a-e4dc8b657d340686&u=https://syzkaller.appspot.com/x/log.txt?x=1206ed4be00000
-> > > >>> kernel config:  https://protect2.fireeye.com/url?k=43211072-1eeddbb6-43209b3d-0cc47a314e9a-3bd45a19932c37c8&u=https://syzkaller.appspot.com/x/.config?x=27392dd2975fd692
-> > > >>> dashboard link: https://protect2.fireeye.com/url?k=bf7a6153-e2b6aa97-bf7bea1c-0cc47a314e9a-c64073ee605efb7b&u=https://syzkaller.appspot.com/bug?extid=e84d7ebd1361da13c356
-> > > >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > >>>
-> > > >>> Unfortunately, I don't have any reproducer for this crash yet.
-> > > >>>
-> > > >>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > >>> Reported-by: syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com
-> > > >>>
-> > > >>> INFO: trying to register non-static key.
-> > > >>> the code is fine but needs lockdep annotation.
-> > > >>> turning off the locking correctness validator.
-> > > >>> CPU: 1 PID: 1014 Comm: syz-executor.0 Not tainted 5.6.0-rc7-syzkaller #0
-> > > >>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > >>> Call Trace:
-> > > >>>  <IRQ>
-> > > >>>  __dump_stack lib/dump_stack.c:77 [inline]
-> > > >>>  dump_stack+0x188/0x20d lib/dump_stack.c:118
-> > > >>>  assign_lock_key kernel/locking/lockdep.c:880 [inline]
-> > > >>>  register_lock_class+0x14c4/0x1540 kernel/locking/lockdep.c:1189
-> > > >>>  __lock_acquire+0xfc/0x3ca0 kernel/locking/lockdep.c:3836
-> > > >>>  lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-> > > >>>  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-> > > >>>  _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
-> > > >>>  try_to_wake_up+0x9f/0x17c0 kernel/sched/core.c:2547
-> > > >>
-> > > >> That's p->pi_lock, which gets initialized in rt_mutex_init_task() in
-> > > >> copy_process(). This should be impossible. Very odd.
-> > > >
-> > > > The stack mentions fbdev, which is a red flag at the moment. There are
-> > > > a dozen of bad bugs in fbdev and around. Just few days ago Andy
-> > > > pointed to another "impossible" crash "general protection fault in
-> > > > do_syscall_64" which is related to dri:
-> > > > https://protect2.fireeye.com/url?k=0cb8ad06-517466c2-0cb92649-0cc47a314e9a-a20c11191483c65b&u=https://syzkaller.appspot.com/bug?id=0ec7b2602b1ff40f0d34f38baa4ba1640727c3d9
-> > > > https://protect2.fireeye.com/url?k=614292e3-3c8e5927-614319ac-0cc47a314e9a-aeda6d72c01a7b0e&u=https://groups.google.com/forum/#!msg/syzkaller-bugs/ePqhfYx0-8M/Q_Urt97iAAAJ
-> > > >
-> > > > There are probably more random manifestations of these bugs already,
-> > > > and I guess we will be getting more.
-> > > >
-> > > > +fbdev maintainers
-> > >
-> > > Thank you for the report.
-> > >
-> > > fbdev is in the maintenance mode and no new features or drivers are
-> > > being added so syzbot reports are not for a new bugs (regressions) and
-> > > are not a priority (at least to me).
-> >
-> > Yup same here, I've seen a pile of syzbot reports for fbdev (and also
-> > vt, or combinations of them since fbdev is linked to vt through fbcon)
-> > fly by. But I really don't have to deal with these, my recommendation
-> > to anyone who cares about security are:
-> > - Don't enable vt
-> > - Don't enable fbdev
->
-> 1. How do we deliver this message to relevant people?
->
-> Because:
->
-> $ grep FBDEV syzkaller/dashboard/config/upstream-kasan.config
-> CONFIG_DRM_FBDEV_EMULATION=y
-> CONFIG_DRM_FBDEV_OVERALLOC=100
-> # CONFIG_DRM_FBDEV_LEAK_PHYS_SMEM is not set
-> CONFIG_XEN_FBDEV_FRONTEND=y
->
-> and my current work machine:
->
-> $ grep FBDEV /boot/config-5.2.17-1-amd64
-> CONFIG_DRM_FBDEV_EMULATION=y
-> CONFIG_DRM_FBDEV_OVERALLOC=100
-> # CONFIG_DRM_FBDEV_LEAK_PHYS_SMEM is not set
-> CONFIG_XEN_FBDEV_FRONTEND=y
-
-Yeah I know it's been like this since forever. In theory you could
-build a fbdev/fbcon less distro since years (the last bit for a proof
-of concept was kmscon/systemd-consoled), but the amount of investment
-into classic linux desktop is so little that it's impossible to get
-this funded. CrOS fixed this a while ago iirc though.
-
-I think to fix the syzbot issues all we'd need is a competent intern
-for a few months, that should take care of the worst stuff. Obviously
-wont include getting a test suite going, nor fixing any of the
-fundamental issues. But duct-taping over all the bugs should be
-possible (it's what we've been doing for well over 10 years by now in
-fbdev/fbocn/vt code anyway). I'd be willing to help mentoring, but
-that's about all I can do.
-
-Adding Matthew Garret, I have discussed with him in the past finding
-some funding for linux desktop stuff like this.
-
-> 2. What do we do with fbdev testing on syzbot? Is there a way to
-> disable all of the unsupported stuff? But if we disable it, we don't
-> find any regressions as well. And in the end that's what is in the
-> mainline kernel and is still enabled in distros (at least in the 2
-> real configs I can grep now).
-
-This would be bad I agree, but it's not any worse than the state of
-things the past 10 years. That's roughly for as long as fbdev has been
-in maintainance only mode, meaning "we'll apply patches if they come".
-Without Bart volunteering, we wouldn't even have that much really.
--Daniel
-
-> > All that code has been developed long ago, in a much more innocent
-> > time. If someone wants to fix this you'd not just need to fix all the
-> > syzbot stuff, but also ramp up a full testsuite for all the ioctl, and
-> > all the corner-cases. Plus also fix some of the horrendous locking in
-> > there, probably.
-> >
-> > Multi-year effort, easily.
-> >
-> > Regressions I'll obviously try to handle, but none of these are. It's
-> > just syzbot has become smarter at hitting bugs in fbdev and vt
-> > subsystems (or maybe the hw the virtual machines emulate has become
-> > more varied, some of the reports are for fun stuff like vgacon ...).
-> >
-> > Cheers, Daniel
-> >
-> > > I have only resources to review/merge pending fbdev patches from time
-> > > to time so any help in fixing these syzbot reports is welcomed (there
-> > > have been a few fbdev related syzbot reports recently).
-> > >
-> > > Also please note that fbdev is maintained through drm-misc tree so
-> > > patches can also be handled by other drm-misc maintainers in case I'm
-> > > not available / busy with other things.
-> > >
-> > > Best regards,
-> > > --
-> > > Bartlomiej Zolnierkiewicz
-> > > Samsung R&D Institute Poland
-> > > Samsung Electronics
-> > >
-> > > >>>  wake_up_worker kernel/workqueue.c:836 [inline]
-> > > >>>  insert_work+0x2ad/0x3a0 kernel/workqueue.c:1337
-> > > >>>  __queue_work+0x50d/0x1280 kernel/workqueue.c:1488
-> > > >>>  call_timer_fn+0x195/0x760 kernel/time/timer.c:1404
-> > > >>>  expire_timers kernel/time/timer.c:1444 [inline]
-> > > >>>  __run_timers kernel/time/timer.c:1773 [inline]
-> > > >>>  __run_timers kernel/time/timer.c:1740 [inline]
-> > > >>>  run_timer_softirq+0x412/0x1600 kernel/time/timer.c:1786
-> > > >>>  __do_softirq+0x26c/0x99d kernel/softirq.c:292
-> > > >>>  invoke_softirq kernel/softirq.c:373 [inline]
-> > > >>>  irq_exit+0x192/0x1d0 kernel/softirq.c:413
-> > > >>>  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
-> > > >>>  smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1146
-> > > >>>  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-> > > >>>  </IRQ>
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >
-> >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
 
 
+On 4/1/20 12:03 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 01/04/2020 à 08:13, Ravi Bangoria a écrit :
+>> Instead of disabling only first watchpoint, disable all available
+>> watchpoints while clearing dawr_force_enable.
+> 
+> Can you also explain why you change the function name ?
 
---
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Right. I should have. Will add it in next version.
+
+> 
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>> ---
+>>   arch/powerpc/kernel/dawr.c | 10 +++++++---
+>>   1 file changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/powerpc/kernel/dawr.c b/arch/powerpc/kernel/dawr.c
+>> index 311e51ee09f4..5c882f07ac7d 100644
+>> --- a/arch/powerpc/kernel/dawr.c
+>> +++ b/arch/powerpc/kernel/dawr.c
+>> @@ -50,9 +50,13 @@ int set_dawr(struct arch_hw_breakpoint *brk, int nr)
+>>       return 0;
+>>   }
+>> -static void set_dawr_cb(void *info)
+>> +static void disable_dawrs(void *info)
+> 
+> Wouldn't it be better to keep _cb at the end of the function ?
+
+Sure.
+
+Ravi
+
