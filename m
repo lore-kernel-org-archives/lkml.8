@@ -2,144 +2,100 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E31C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0ECC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9FF20784
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D64320784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585773356;
+	bh=vHDI4wN2SPf1XvuhvxmPj3PE+achyV04p1AulW+Wqc0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hDTYOd5Oh4Ud3WXSwPGMrsCkmopODyLw31MoESxZRtJn+19Nvh4zD1bFoadMZ1YMK
+	 teQTM1fNG7Hzq2EuLgf0vA5naw3lD5XtH1r5SwVwZLWGtBv3OKdjo8adcEFheMSA/J
+	 KSTy5fCcZZueZx6Tmv62BYNRf270jLwZBB+Eoxzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733183AbgDAUfP (ORCPT
+        id S1732896AbgDAUfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 16:35:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29936 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733171AbgDAUfO (ORCPT
+        Wed, 1 Apr 2020 16:35:55 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41103 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732337AbgDAUfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 16:35:14 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031KXk7S037737
-        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 16:35:12 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 303uj4s3n8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:35:10 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
-        Wed, 1 Apr 2020 21:34:54 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 1 Apr 2020 21:34:48 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031KZ1Go12583122
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Apr 2020 20:35:01 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E4A1A405C;
-        Wed,  1 Apr 2020 20:35:01 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C9E3A4054;
-        Wed,  1 Apr 2020 20:34:55 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.38.236])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Apr 2020 20:34:54 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
-        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
-        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
-        kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de, kjain@linux.ibm.com
-Subject: [PATCH v8 7/7] perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric events
-Date:   Thu,  2 Apr 2020 02:03:40 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200401203340.31402-1-kjain@linux.ibm.com>
-References: <20200401203340.31402-1-kjain@linux.ibm.com>
+        Wed, 1 Apr 2020 16:35:55 -0400
+Received: by mail-qk1-f194.google.com with SMTP id q188so1535818qke.8;
+        Wed, 01 Apr 2020 13:35:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0lGrPvexvbIcjwodeNp9Jn6H21gUFw8RbboRfmI5YEA=;
+        b=e2tHQ5uvUcMCZsVSLUqlEwZtsU+LsYUWcM0gFVIoF5KGg+vxD0lUK+V+8NAbbQndUB
+         L7HP5OdCyhdJ/AXVqPShbwsELihcK14zZHKQ8XGTYk+1k+f6/DRgm8EBRzVY8bHJeRN7
+         3GzUf9nrm5dqIuzMZZi6NJYP1Xf88xu0FyIVPWseygbXW0Zc6AeolZRcAUAVFZCdWI8k
+         RlNxDGOuqyKM8hJA6se5puMZoUCBkmThmGyqbIizVI5w2dy2mSMuaqZu2hCaGrgu4O+5
+         ptE2Eqop7UTOuC90rFhAvq7JoelgboRTifLkhSoLUMXjR24zKRI0Vgjrj0AkJFAbmTyW
+         T3Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=0lGrPvexvbIcjwodeNp9Jn6H21gUFw8RbboRfmI5YEA=;
+        b=mB6+mvmAS/oU+JajdmEJzZ1/tn0grIwGOeLbPEcebSjP9VQR5NCMSugDu4qIjpCDrK
+         KtL8JVmtJ5rYWUaiMA4J3fwDvVWnxdFSAnRQnojlFZUhkeemp/RtC2aYLVPIQKd9Se7/
+         sFaVC+QannAYetM+71eaogeqsID+dKY2JM5YQw6qnuhsM655QHYIFGhz3Z+zaQQpATGE
+         h7UbP0hHcq89+FU6ibx7YXbau9D4vqpGgx9Kx4FXkm6aWHImWT7kjCEpPL1sDOnLhM2J
+         IK9NaYdESKLtx6dXewWoEaz63x5b4Un0kuzrWcU823ZucMKp4jWDLB6P6CGrBe91wyC8
+         w65w==
+X-Gm-Message-State: AGi0PuYoSvGkr9mo3t5UmYwRgAeR4bmrlUykLYaPf/80gm35w5IjxXhy
+        0ta0Q4AtveKMXgYg+wgh5Uw=
+X-Google-Smtp-Source: APiQypI5J+wwK2P5GMhbFC6Z+ZRgIYib9jJYZWPn2AKkufm/ALocH/wD5W0oaiJLIy/0MVXyBi5j1w==
+X-Received: by 2002:a05:620a:e:: with SMTP id j14mr162480qki.100.1585773353587;
+        Wed, 01 Apr 2020 13:35:53 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::f621])
+        by smtp.gmail.com with ESMTPSA id i186sm2156279qke.5.2020.04.01.13.35.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 13:35:52 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 16:35:51 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 2/2] blkcg: don't offline parent blkcg first
+Message-ID: <20200401203551.GV162390@mtj.duckdns.org>
+References: <20190724173517.GA559934@devbig004.ftw2.facebook.com>
+ <20190724173722.GA569612@devbig004.ftw2.facebook.com>
+ <20190724173755.GB569612@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040120-4275-0000-0000-000003B7CDC1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040120-4276-0000-0000-000038CD21AD
-Message-Id: <20200401203340.31402-8-kjain@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- impostorscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010165
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724173755.GB569612@devbig004.ftw2.facebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
-facility to continuously collect large numbers of hardware performance
-metrics efficiently and accurately.
-This patch adds hv_24x7  metric file for different Socket/chip
-resources.
+On Wed, Jul 24, 2019 at 10:37:55AM -0700, Tejun Heo wrote:
+> blkcg->cgwb_refcnt is used to delay blkcg offlining so that blkgs
+> don't get offlined while there are active cgwbs on them.  However, it
+> ends up making offlining unordered sometimes causing parents to be
+> offlined before children.
+> 
+> Let's fix this by making child blkcgs pin the parents' online states.
+> 
+> Note that pin/unpin names are chosen over get/put intentionally
+> because css uses get/put online for something different.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
 
-Result:
+Jens, these two patches slipped through the cracks. Can you please take a look
+at them?
 
-power9 platform:
+Thanks.
 
-command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0 -I 1000
-
-     1.000096188                      0.9                      0.3
-     2.000285720                      0.5                      0.1
-     3.000424990                      0.4                      0.1
-
-command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
-
-     1.000097981                        2.3                        2.3
-     2.000291713                        2.3                        2.3
-     3.000421719                        2.3                        2.3
-     4.000550912                        2.3                        2.3
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../arch/powerpc/power9/nest_metrics.json     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-new file mode 100644
-index 000000000000..c121e526442a
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -0,0 +1,19 @@
-+[
-+    {
-+        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+        "MetricName": "Memory_RD_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+	"MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
-+        "MetricName": "Memory_WR_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-+        "MetricName": "PowerBUS_Frequency",
-+        "ScaleUnit": "2.5e-7GHz"
-+    }
-+]
 -- 
-2.21.0
-
+tejun
