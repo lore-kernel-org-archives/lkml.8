@@ -2,420 +2,227 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA35BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14104C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA55120714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D137E20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:26:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bAFfLXaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732958AbgDAOZW (ORCPT
+        id S1732983AbgDAO0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:25:22 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2628 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732749AbgDAOZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:25:21 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id A0082D264FB7FA61CA29;
-        Wed,  1 Apr 2020 15:25:19 +0100 (IST)
-Received: from localhost (10.47.91.72) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Wed, 1 Apr 2020
- 15:25:17 +0100
-Date:   Wed, 1 Apr 2020 15:24:56 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 04/15] mm/damon: Implement region based sampling
-Message-ID: <20200401152456.00006406@Huawei.com>
-In-Reply-To: <20200401082222.21242-1-sjpark@amazon.com>
-References: <20200331170233.0000543f@Huawei.com>
-        <20200401082222.21242-1-sjpark@amazon.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 1 Apr 2020 10:26:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24802 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732749AbgDAO0N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 10:26:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585751172;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=8tB83+dbj/600s4YRU2mDkikcjzMDvEbsmaON6HB5KA=;
+        b=bAFfLXaWXaeM2mGfBdr8IkWAeipznvWwB/McBCJWmYSBDNSOllkP7Wh8EkA52Ror1zu+im
+        qA8rib2IRZWArudCzdOG2fYyK+8XqtZAKYFt++7+Qv93vNNWb6nwQp56LbOfRiqr/7xxzH
+        lqKgdddrY9mUazWKuYOGF1VwGHytd/0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-sfGd8DJKOUGMlyAd9TRAOg-1; Wed, 01 Apr 2020 10:26:10 -0400
+X-MC-Unique: sfGd8DJKOUGMlyAd9TRAOg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66A8918AB2E4;
+        Wed,  1 Apr 2020 14:26:08 +0000 (UTC)
+Received: from [10.36.114.59] (ovpn-114-59.ams2.redhat.com [10.36.114.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E859410016EB;
+        Wed,  1 Apr 2020 14:26:06 +0000 (UTC)
+Subject: Re: [PATCH v3] mm: fix tick timer stall during deferred page init
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <1ca342ec-23e7-7884-5758-2b14675266e4@redhat.com>
+Date:   Wed, 1 Apr 2020 16:26:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.91.72]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020 10:22:22 +0200
-SeongJae Park <sjpark@amazon.com> wrote:
+On 11.03.20 13:38, Shile Zhang wrote:
+> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdatinit' kthread wil=
+l
+> initialise the deferred pages with local interrupts disabled. It is
+> introduced by commit 3a2d7fa8a3d5 ("mm: disable interrupts while
+> initializing deferred pages").
+>=20
+> On machine with NCPUS <=3D 2, the 'pgdatinit' kthread could be bound to
+> the boot CPU, which could caused the tick timer long time stall, system
+> jiffies not be updated in time.
+>=20
+> The dmesg shown that:
+>=20
+>     [    0.197975] node 0 initialised, 32170688 pages in 1ms
+>=20
+> Obviously, 1ms is unreasonable.
+>=20
+> Now, fix it by restore in the pending interrupts for every 32*1204 page=
+s
+> (128MB) initialized, give the chance to update the systemd jiffies.
+> The reasonable demsg shown likes:
+>=20
+>     [    1.069306] node 0 initialised, 32203456 pages in 894ms
+>=20
+> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferre=
+d pages").
+>=20
+> Co-developed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+> ---
+>  mm/page_alloc.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..a3a47845e150 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1763,12 +1763,17 @@ deferred_init_maxorder(u64 *i, struct zone *zon=
+e, unsigned long *start_pfn,
+>  	return nr_pages;
+>  }
+> =20
+> +/*
+> + * Release the pending interrupts for every TICK_PAGE_COUNT pages.
+> + */
+> +#define TICK_PAGE_COUNT	(32 * 1024)
+> +
+>  /* Initialise remaining memory on a node */
+>  static int __init deferred_init_memmap(void *data)
+>  {
+>  	pg_data_t *pgdat =3D data;
+>  	const struct cpumask *cpumask =3D cpumask_of_node(pgdat->node_id);
+> -	unsigned long spfn =3D 0, epfn =3D 0, nr_pages =3D 0;
+> +	unsigned long spfn =3D 0, epfn =3D 0, nr_pages =3D 0, prev_nr_pages =3D=
+ 0;
+>  	unsigned long first_init_pfn, flags;
+>  	unsigned long start =3D jiffies;
+>  	struct zone *zone;
+> @@ -1779,6 +1784,7 @@ static int __init deferred_init_memmap(void *data=
+)
+>  	if (!cpumask_empty(cpumask))
+>  		set_cpus_allowed_ptr(current, cpumask);
+> =20
+> +again:
+>  	pgdat_resize_lock(pgdat, &flags);
+>  	first_init_pfn =3D pgdat->first_deferred_pfn;
+>  	if (first_init_pfn =3D=3D ULONG_MAX) {
+> @@ -1790,7 +1796,6 @@ static int __init deferred_init_memmap(void *data=
+)
+>  	/* Sanity check boundaries */
+>  	BUG_ON(pgdat->first_deferred_pfn < pgdat->node_start_pfn);
+>  	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
+> -	pgdat->first_deferred_pfn =3D ULONG_MAX;
+> =20
+>  	/* Only the highest zone is deferred so find it */
+>  	for (zid =3D 0; zid < MAX_NR_ZONES; zid++) {
+> @@ -1809,9 +1814,23 @@ static int __init deferred_init_memmap(void *dat=
+a)
+>  	 * that we can avoid introducing any issues with the buddy
+>  	 * allocator.
+>  	 */
+> -	while (spfn < epfn)
+> +	while (spfn < epfn) {
+>  		nr_pages +=3D deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +		/*
+> +		 * Release the interrupts for every TICK_PAGE_COUNT pages
+> +		 * (128MB) to give tick timer the chance to update the
 
-> On Tue, 31 Mar 2020 17:02:33 +0100 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> > On Wed, 18 Mar 2020 12:27:11 +0100
-> > SeongJae Park <sjpark@amazon.com> wrote:
-> >   
-> > > From: SeongJae Park <sjpark@amazon.de>
-> > > 
-> > > This commit implements DAMON's basic access check and region based
-> > > sampling mechanisms.  This change would seems make no sense, mainly
-> > > because it is only a part of the DAMON's logics.  Following two commits
-> > > will make more sense.
-> > > 
-> > > Basic Access Check
-> > > ------------------
-> > > 
-> > > DAMON basically reports what pages are how frequently accessed.  Note
-> > > that the frequency is not an absolute number of accesses, but a relative
-> > > frequency among the pages of the target workloads.
-> > > 
-> > > Users can control the resolution of the reports by setting two time
-> > > intervals, ``sampling interval`` and ``aggregation interval``.  In
-> > > detail, DAMON checks access to each page per ``sampling interval``,
-> > > aggregates the results (counts the number of the accesses to each page),
-> > > and reports the aggregated results per ``aggregation interval``.  For
-> > > the access check of each page, DAMON uses the Accessed bits of PTEs.
-> > > 
-> > > This is thus similar to common periodic access checks based access
-> > > tracking mechanisms, which overhead is increasing as the size of the
-> > > target process grows.
-> > > 
-> > > Region Based Sampling
-> > > ---------------------
-> > > 
-> > > To avoid the unbounded increase of the overhead, DAMON groups a number
-> > > of adjacent pages that assumed to have same access frequencies into a
-> > > region.  As long as the assumption (pages in a region have same access
-> > > frequencies) is kept, only one page in the region is required to be
-> > > checked.  Thus, for each ``sampling interval``, DAMON randomly picks one
-> > > page in each region and clears its Accessed bit.  After one more
-> > > ``sampling interval``, DAMON reads the Accessed bit of the page and
-> > > increases the access frequency of the region if the bit has set
-> > > meanwhile.  Therefore, the monitoring overhead is controllable by
-> > > setting the number of regions.
-> > > 
-> > > Nonetheless, this scheme cannot preserve the quality of the output if
-> > > the assumption is not kept.  Following commit will introduce how we can
-> > > make the guarantee with best effort.
-> > > 
-> > > Signed-off-by: SeongJae Park <sjpark@amazon.de>  
-> > 
-> > Hi.
-> > 
-> > A few comments inline.
-> > 
-> > I've still not replicated your benchmarks so may well have some more
-> > feedback once I've managed that on one of our servers.  
-> 
-> Appreciate your comments.  If you need any help for the replication, please let
-> me know.  I basically use my parsec3 wrapper scripts[1] to run parsec3 and
-> splash2x workloads and `damo` tool, which resides in the kernel tree at
-> `/tools/damon/`.
-> 
-> For example, below commands will reproduce ethp applied splash2x/fft run.
->     
->     $ echo "2M      null    5       null    null    null    hugepage
->     2M      null    null    5       1s      null    nohugepage" > ethp
->     $ parsec3_on_ubuntu/run.sh splash2x.fft
->     $ linux/tools/damon/damo schemes -c ethp `pidof fft`
-> 
-> [1] https://github.com/sjp38/parsec3_on_ubuntu
+Nit: 128MB is only true for 4k pages.
 
+> +		 * system jiffies.
+> +		 */
+> +		if ((nr_pages - prev_nr_pages) > TICK_PAGE_COUNT) {
+> +			prev_nr_pages =3D nr_pages;
+> +			pgdat->first_deferred_pfn =3D spfn;
+> +			pgdat_resize_unlock(pgdat, &flags);
+> +			goto again;
+> +		}
+> +	}
+> +
 
-No significant problem, more a case of fitting this in between other things :)
-+ some fixes needed for parsec3 to build for arm64.
+I find that deferred page init code horribly complicated to understand,
+but that's a different story.
 
-> 
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> > > ---
-> > >  include/linux/damon.h |  24 ++
-> > >  mm/damon.c            | 553 ++++++++++++++++++++++++++++++++++++++++++
-> > >  2 files changed, 577 insertions(+)
-> > >   
-> [...]
-> > > diff --git a/mm/damon.c b/mm/damon.c
-> > > index d7e6226ab7f1..018016793555 100644
-> > > --- a/mm/damon.c
-> > > +++ b/mm/damon.c
-> > > @@ -10,8 +10,14 @@
-> > >  #define pr_fmt(fmt) "damon: " fmt
-> > >  
-> > >  #include <linux/damon.h>
-> > > +#include <linux/delay.h>
-> > > +#include <linux/kthread.h>
-> > >  #include <linux/mm.h>
-> > >  #include <linux/module.h>
-> > > +#include <linux/page_idle.h>
-> > > +#include <linux/random.h>
-> > > +#include <linux/sched/mm.h>
-> > > +#include <linux/sched/task.h>
-> > >  #include <linux/slab.h>
-> > >    
-> [...]
-> > > +/*
-> > > + * Size-evenly split a region into 'nr_pieces' small regions
-> > > + *
-> > > + * Returns 0 on success, or negative error code otherwise.
-> > > + */
-> > > +static int damon_split_region_evenly(struct damon_ctx *ctx,
-> > > +		struct damon_region *r, unsigned int nr_pieces)
-> > > +{
-> > > +	unsigned long sz_orig, sz_piece, orig_end;
-> > > +	struct damon_region *piece = NULL, *next;
-> > > +	unsigned long start;
-> > > +
-> > > +	if (!r || !nr_pieces)
-> > > +		return -EINVAL;
-> > > +
-> > > +	orig_end = r->vm_end;
-> > > +	sz_orig = r->vm_end - r->vm_start;
-> > > +	sz_piece = sz_orig / nr_pieces;
-> > > +
-> > > +	if (!sz_piece)
-> > > +		return -EINVAL;
-> > > +
-> > > +	r->vm_end = r->vm_start + sz_piece;
+Your change looks sane to me and survives my basic testing. Thanks!
 
-This is the end where it is unlikely the sampling address is
-still in region.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-(see below)
-
-> > > +	next = damon_next_region(r);
-> > > +	for (start = r->vm_end; start + sz_piece <= orig_end;
-> > > +			start += sz_piece) {
-> > > +		piece = damon_new_region(ctx, start, start + sz_piece);  
-> > piece may be n  
-> 
-> Yes, that name is short and more intuitive.  I will rename so.
-> 
-> > > +		damon_insert_region(piece, r, next);
-> > > +		r = piece;
-> > > +	}
-> > > +	/* complement last region for possible rounding error */
-> > > +	if (piece)
-> > > +		piece->vm_end = orig_end;  
-> > 
-> > Update the sampling address to ensure it's in the region?  
-> 
-> I think `piece->vm_end` should be equal or smaller than `orig_end` and
-> therefore the sampling address of `piece` will be still in the region.
-
-Good point.  The one above however is more of an issue I think..
-So the region we modify before adding the new regions.
-
-> 
-> >   
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +  
-> [...]
-> > > +static void damon_pte_pmd_mkold(pte_t *pte, pmd_t *pmd)
-> > > +{
-> > > +	if (pte) {
-> > > +		if (pte_young(*pte)) {
-> > > +			clear_page_idle(pte_page(*pte));
-> > > +			set_page_young(pte_page(*pte));
-> > > +		}
-> > > +		*pte = pte_mkold(*pte);
-> > > +		return;
-> > > +	}
-> > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > +	if (pmd) {
-> > > +		if (pmd_young(*pmd)) {
-> > > +			clear_page_idle(pmd_page(*pmd));
-> > > +			set_page_young(pmd_page(*pmd));
-> > > +		}
-> > > +		*pmd = pmd_mkold(*pmd);
-> > > +	}
-> > > +#endif /* CONFIG_TRANSPARENT_HUGEPAGE */  
-> > 
-> > No need to flush the TLBs?  
-> 
-> Good point!
-> 
-> I have intentionally skipped TLB flushing here to minimize the performance
-> effect to the target workload.  I also thought this might not degrade the
-> monitoring accuracy so much because we are targetting for the DRAM level
-> accesses of memory-intensive workloads, which might make TLB flood frequently.
-> 
-> However, your comment makes me thinking differently now.  By flushing the TLB
-> here, we will increase up to `number_of_regions` TLB misses for sampling
-> interval.  This might be not a huge overhead.  Also, improving the monitoring
-> accuracy makes no harm at all.  I even didn't measured the overhead.
-> 
-> I will test the overhead and if it is not significant, I will make this code to
-> flush TLB, in the next spin.
-> 
-> >   
-> > > +}
-> > > +  
-> [...]
-> > > +/*
-> > > + * The monitoring daemon that runs as a kernel thread
-> > > + */
-> > > +static int kdamond_fn(void *data)
-> > > +{
-> > > +	struct damon_ctx *ctx = data;
-> > > +	struct damon_task *t;
-> > > +	struct damon_region *r, *next;
-> > > +	struct mm_struct *mm;
-> > > +
-> > > +	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
-> > > +	kdamond_init_regions(ctx);  
-> > 
-> > We haven't called mkold on the initial regions so first check will
-> > get us fairly random state.  
-> 
-> Yes, indeed.  However, the early results will not be accurate anyway because
-> the adaptive regions adjustment algorithm will not take effect yet.  I would
-> like to leave this part as is but add some comments about this point to keep
-> the code simple.
-
-I'd argue in favour of it being a low overhead and better to put them
-in for 'correctness'.  It's much easier to discuss code that conforms to
-a simple model (even if that makes the code more complex!)
-
-
-> 
-> >   
-> > > +	while (!kdamond_need_stop(ctx)) {
-> > > +		damon_for_each_task(ctx, t) {
-> > > +			mm = damon_get_mm(t);
-> > > +			if (!mm)
-> > > +				continue;
-> > > +			damon_for_each_region(r, t)
-> > > +				kdamond_check_access(ctx, mm, r);
-> > > +			mmput(mm);
-> > > +		}
-> > > +
-> > > +		if (kdamond_aggregate_interval_passed(ctx))
-> > > +			kdamond_reset_aggregated(ctx);
-> > > +
-> > > +		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
-> > > +	}
-> > > +	damon_for_each_task(ctx, t) {
-> > > +		damon_for_each_region_safe(r, next, t)
-> > > +			damon_destroy_region(r);
-> > > +	}
-> > > +	pr_debug("kdamond (%d) finishes\n", ctx->kdamond->pid);
-> > > +	mutex_lock(&ctx->kdamond_lock);
-> > > +	ctx->kdamond = NULL;
-> > > +	mutex_unlock(&ctx->kdamond_lock);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +  
-> [...]
-> > > +/*
-> > > + * Start or stop the kdamond
-> > > + *
-> > > + * Returns 0 if success, negative error code otherwise.
-> > > + */
-> > > +static int damon_turn_kdamond(struct damon_ctx *ctx, bool on)
-> > > +{
-> > > +	int err = -EBUSY;
-> > > +
-> > > +	mutex_lock(&ctx->kdamond_lock);
-> > > +	if (!ctx->kdamond && on) {  
-> > 
-> > Given there is very little shared code between on and off, I would
-> > suggest just splitting it into two functions.  
-> 
-> Good point, I will do so in next spin.
-> 
-> >   
-> > > +		err = 0;
-> > > +		ctx->kdamond = kthread_run(kdamond_fn, ctx, "kdamond");
-> > > +		if (IS_ERR(ctx->kdamond))
-> > > +			err = PTR_ERR(ctx->kdamond);
-> > > +	} else if (ctx->kdamond && !on) {
-> > > +		mutex_unlock(&ctx->kdamond_lock);
-> > > +		kthread_stop(ctx->kdamond);
-> > > +		while (damon_kdamond_running(ctx))
-> > > +			usleep_range(ctx->sample_interval,
-> > > +					ctx->sample_interval * 2);
-> > > +		return 0;
-> > > +	}
-> > > +	mutex_unlock(&ctx->kdamond_lock);
-> > > +
-> > > +	return err;
-> > > +}
-> > > +  
-> [...]
-> > > +
-> > > +/*  
-> > 
-> > Why not make these actual kernel-doc?  That way you can use the
-> > kernel-doc scripts to sanity check them.  
-> 
-> Oops, I just forgot that it should start with '/**'.  Will fix it in next spin.
-
-cool.
-
+--=20
 Thanks,
 
-Jonathan
-
-> 
-> 
-> Thanks,
-> SeongJae Park
-> 
-> > 
-> > /**
-> >   
-> > > + * damon_set_attrs() - Set attributes for the monitoring.
-> > > + * @ctx:		monitoring context
-> > > + * @sample_int:		time interval between samplings
-> > > + * @aggr_int:		time interval between aggregations
-> > > + * @min_nr_reg:		minimal number of regions
-> > > + *
-> > > + * This function should not be called while the kdamond is running.
-> > > + * Every time interval is in micro-seconds.
-> > > + *
-> > > + * Return: 0 on success, negative error code otherwise.
-> > > + */
-> > > +int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-> > > +		unsigned long aggr_int, unsigned long min_nr_reg)
-> > > +{
-> > > +	if (min_nr_reg < 3) {
-> > > +		pr_err("min_nr_regions (%lu) should be bigger than 2\n",
-> > > +				min_nr_reg);
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	ctx->sample_interval = sample_int;
-> > > +	ctx->aggr_interval = aggr_int;
-> > > +	ctx->min_nr_regions = min_nr_reg;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static int __init damon_init(void)
-> > >  {
-> > >  	return 0;  
-> >   
-
+David / dhildenb
 
