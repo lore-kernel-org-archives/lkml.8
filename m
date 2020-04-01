@@ -2,54 +2,53 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4733C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85A2C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4872063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653882063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759582;
-	bh=I2oYdk8F22AfoJfmc1204FRw4JaaneDeqgX+3KuBpV0=;
+	s=default; t=1585759585;
+	bh=Ueg9Zw03/bC0jrpPrYe2uRa++2Dy+9cvjAOMfNFrvYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zra93VBMRG4S7cfB3k52LpJl+kLvQydT+Zh8v7+L0krovbKOvas9Msw9mdXWAeepE
-	 sc1i9KHPKoqmJqsfY/5YRU778KQ+pNwfZbLOFvLDNlOb1VEJQczWIkqz/Ee5PoZn6K
-	 0pIH2wLzlJIsy3x3BRMAzpKOJVWK2Cu9yqWzWcaw=
+	b=gHIVtJ2+3Dz2xS1s8KSehfFk3pqvIjF+dqWXm0BwILVv2MjH7Ch3ADURBLB1zY6Wy
+	 vqJfPCU0o2hhgEpBbEdHxG641hpj2XQk99a3y3OW6kC/+3WksoTZmZ8gqLJrVOQ7x0
+	 IWaS5w3EVZeOB7rqd9U94teBBJgocQSmnPFayRJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389929AbgDAQqU (ORCPT
+        id S2389766AbgDAQqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47664 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:46:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389919AbgDAQqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:46:19 -0400
+        id S1732692AbgDAQqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:46:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FB912063A;
-        Wed,  1 Apr 2020 16:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABF4520705;
+        Wed,  1 Apr 2020 16:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759578;
-        bh=I2oYdk8F22AfoJfmc1204FRw4JaaneDeqgX+3KuBpV0=;
+        s=default; t=1585759581;
+        bh=Ueg9Zw03/bC0jrpPrYe2uRa++2Dy+9cvjAOMfNFrvYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VATjR6NIEdur4e8tN1CRm7fwDviWhBO7KpfDCri8pY5ynDad0pevDOzBjYeK4lNC3
-         RMJnCQ+xJ6nATMRsFHERd81CVoLX5mXu/StuiPfErR1Z7jmAaMM6wsqeyFCqmOrDbE
-         EZ/cGNflSxcUKcn9MXX9joAF5LUeLREjLASN08zs=
+        b=iKB8cuUkB3O9RAKfkIQg8OfyB7FIA9nVzgNBfIawuBwMgdy/MtGTZJZOsxw1ksGtM
+         WMssZsTDsiaYmNryMDmPyhE5hN8xWrd1Gjkb1h5FaZ13+ul0TnEY+AHT0B0/uWl8uc
+         KiK7sf2Cuas4cuf6T5tKpyYVCtdMqfjjFUAd2IyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Dominik Czarnota <dominik.b.czarnota@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 083/148] dpaa_eth: Remove unnecessary boolean expression in dpaa_get_headroom
-Date:   Wed,  1 Apr 2020 18:17:55 +0200
-Message-Id: <20200401161601.126682785@linuxfoundation.org>
+Subject: [PATCH 4.14 084/148] sxgbe: Fix off by one in samsung driver strncpy size arg
+Date:   Wed,  1 Apr 2020 18:17:56 +0200
+Message-Id: <20200401161601.195347861@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -62,55 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Dominik Czarnota <dominik.b.czarnota@gmail.com>
 
-[ Upstream commit 7395f62d95aafacdb9bd4996ec2f95b4a655d7e6 ]
+[ Upstream commit f3cc008bf6d59b8d93b4190e01d3e557b0040e15 ]
 
-Clang warns:
+This patch fixes an off-by-one error in strncpy size argument in
+drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c. The issue is that in:
 
-drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2860:9: warning:
-converting the result of '?:' with integer constants to a boolean always
-evaluates to 'true' [-Wtautological-constant-compare]
-        return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
-               ^
-drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:131:34: note: expanded
-from macro 'DPAA_FD_DATA_ALIGNMENT'
-\#define DPAA_FD_DATA_ALIGNMENT  (fman_has_errata_a050385() ? 64 : 16)
-                                 ^
-1 warning generated.
+        strncmp(opt, "eee_timer:", 6)
 
-This was exposed by commit 3c68b8fffb48 ("dpaa_eth: FMan erratum A050385
-workaround") even though it appears to have been an issue since the
-introductory commit 9ad1a3749333 ("dpaa_eth: add support for DPAA
-Ethernet") since DPAA_FD_DATA_ALIGNMENT has never been able to be zero.
+the passed string literal: "eee_timer:" has 10 bytes (without the NULL
+byte) and the passed size argument is 6. As a result, the logic will
+also accept other, malformed strings, e.g. "eee_tiXXX:".
 
-Just replace the whole boolean expression with the true branch, as it is
-always been true.
+This bug doesn't seem to have any security impact since its present in
+module's cmdline parsing code.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/928
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Signed-off-by: Dominik Czarnota <dominik.b.czarnota@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index 39b8b6730e77c..67246d42c3d9f 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2646,9 +2646,7 @@ static inline u16 dpaa_get_headroom(struct dpaa_buffer_layout *bl)
- 	headroom = (u16)(bl->priv_data_size + DPAA_PARSE_RESULTS_SIZE +
- 		DPAA_TIME_STAMP_SIZE + DPAA_HASH_RESULTS_SIZE);
- 
--	return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
--					      DPAA_FD_DATA_ALIGNMENT) :
--					headroom;
-+	return ALIGN(headroom, DPAA_FD_DATA_ALIGNMENT);
- }
- 
- static int dpaa_eth_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
+index 89831adb8eb75..6d27eec85fcef 100644
+--- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
++++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
+@@ -2284,7 +2284,7 @@ static int __init sxgbe_cmdline_opt(char *str)
+ 	if (!str || !*str)
+ 		return -EINVAL;
+ 	while ((opt = strsep(&str, ",")) != NULL) {
+-		if (!strncmp(opt, "eee_timer:", 6)) {
++		if (!strncmp(opt, "eee_timer:", 10)) {
+ 			if (kstrtoint(opt + 10, 0, &eee_timer))
+ 				goto err;
+ 		}
 -- 
 2.20.1
 
