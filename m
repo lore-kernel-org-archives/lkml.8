@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3EEC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE08C2BA13
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6040206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C0C212CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759318;
-	bh=Wk5vG2jvv3zKm1H8ZHIEKdgfGVZnA91k1WpdRvzFCCI=;
+	s=default; t=1585759321;
+	bh=q1aL0a/VJCfQ9m9whGxRTfJG3Nlqhr4LwQIGM1UqscI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WOvm+S96ut29AIAVI6+mmKhOOMPXVetLqlQBM1m/kvE169sl0w6fe4ncwDIDxO+87
-	 SL6uOq3gBPFQ9RgJrrYsxojWJJg/88lvIgf1DHksMdtYgOSAPzdWoB/ztMLrvGFr/b
-	 /L5iguiW2ucSsKoN4QxHqbIXR1VnkfnMGs7aaCj8=
+	b=BxDWIi4ynhRVTYckE+Fxs81wc5KmsRzEjhHrIGST1K7sdLRV7FiBTaVvDz06KiVJc
+	 96DHPZ0dTzx/D/T8mBCpnb2UV4vK4WvMOpJiJ8aCjVm6KfBkPqqXHwd4ki6lD0PVDj
+	 PdBn9oXJxkMqfqFYQVCYePScP59QpmV198Kne/js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389452AbgDAQlu (ORCPT
+        id S2389472AbgDAQl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:41:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42146 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389438AbgDAQln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:41:43 -0400
+        id S2389162AbgDAQl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:41:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81751206F8;
-        Wed,  1 Apr 2020 16:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B314820719;
+        Wed,  1 Apr 2020 16:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759303;
-        bh=Wk5vG2jvv3zKm1H8ZHIEKdgfGVZnA91k1WpdRvzFCCI=;
+        s=default; t=1585759315;
+        bh=q1aL0a/VJCfQ9m9whGxRTfJG3Nlqhr4LwQIGM1UqscI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tfYHMleEFfSjTyFa0bmIeJFfl7mui7iq0Oy3a4E1iaNQ6UCdoNI7EbvZ7aN6PUDsV
-         EeeIja8h7OYo3gAtqM2DkN6ycLIZuBwyZ5/dtXvbRj4Rhtence6NY8QCz9aD5oXcSL
-         QZPp2ALWxDn3iiZVwOHfMb5jaQ6sttn3upwWf+so=
+        b=TwXydI7m8BH4IVMRFd60BmeiWUMtmJUlA0i3JqOWqt6iZLiZk2hVCYFA643ztUZKM
+         SVuTEdLWRdC/3Oe648CDZ8LSVBX64GR3U5t83r7qUz/116wTXrOLwi6vIrRemIG2HN
+         1QtbzphdNXoxQ0TswAFe++WypzU3JhNPExPwAOmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Igor M. Liplianin" <liplianin@netup.ru>,
-        Daniel Axtens <dja@axtens.net>,
-        Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 009/148] altera-stapl: altera_get_note: prevent write beyond end of key
-Date:   Wed,  1 Apr 2020 18:16:41 +0200
-Message-Id: <20200401161553.112812078@linuxfoundation.org>
+Subject: [PATCH 4.14 043/148] iio: adc: at91-sama5d2_adc: fix differential channels in triggered mode
+Date:   Wed,  1 Apr 2020 18:17:15 +0200
+Message-Id: <20200401161556.982068569@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -61,97 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit 3745488e9d599916a0b40d45d3f30e3d4720288e ]
+[ Upstream commit a500f3bd787f8224341e44b238f318c407b10897 ]
 
-altera_get_note is called from altera_init, where key is kzalloc(33).
+The differential channels require writing the channel offset register (COR).
+Otherwise they do not work in differential mode.
+The configuration of COR is missing in triggered mode.
 
-When the allocation functions are annotated to allow the compiler to see
-the sizes of objects, and with FORTIFY_SOURCE, we see:
-
-In file included from drivers/misc/altera-stapl/altera.c:14:0:
-In function ‘strlcpy’,
-    inlined from ‘altera_init’ at drivers/misc/altera-stapl/altera.c:2189:5:
-include/linux/string.h:378:4: error: call to ‘__write_overflow’ declared with attribute error: detected write beyond size of object passed as 1st parameter
-    __write_overflow();
-    ^~~~~~~~~~~~~~~~~~
-
-That refers to this code in altera_get_note:
-
-    if (key != NULL)
-            strlcpy(key, &p[note_strings +
-                            get_unaligned_be32(
-                            &p[note_table + (8 * i)])],
-                    length);
-
-The error triggers because the length of 'key' is 33, but the copy
-uses length supplied as the 'length' parameter, which is always
-256. Split the size parameter into key_len and val_len, and use the
-appropriate length depending on what is being copied.
-
-Detected by compiler error, only compile-tested.
-
-Cc: "Igor M. Liplianin" <liplianin@netup.ru>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Link: https://lore.kernel.org/r/20200120074344.504-2-dja@axtens.net
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/202002251042.D898E67AC@keescook
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 5e1a1da0f8c9 ("iio: adc: at91-sama5d2_adc: add hw trigger and buffer support")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/altera-stapl/altera.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/iio/adc/at91-sama5d2_adc.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/misc/altera-stapl/altera.c b/drivers/misc/altera-stapl/altera.c
-index 494e263daa748..b7ee8043a133e 100644
---- a/drivers/misc/altera-stapl/altera.c
-+++ b/drivers/misc/altera-stapl/altera.c
-@@ -2126,8 +2126,8 @@ static int altera_execute(struct altera_state *astate,
- 	return status;
- }
+diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+index 0898f40c2b892..34639ee2d2ce6 100644
+--- a/drivers/iio/adc/at91-sama5d2_adc.c
++++ b/drivers/iio/adc/at91-sama5d2_adc.c
+@@ -339,9 +339,24 @@ static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
  
--static int altera_get_note(u8 *p, s32 program_size,
--			s32 *offset, char *key, char *value, int length)
-+static int altera_get_note(u8 *p, s32 program_size, s32 *offset,
-+			   char *key, char *value, int keylen, int vallen)
- /*
-  * Gets key and value of NOTE fields in the JBC file.
-  * Can be called in two modes:  if offset pointer is NULL,
-@@ -2184,7 +2184,7 @@ static int altera_get_note(u8 *p, s32 program_size,
- 						&p[note_table + (8 * i) + 4])];
+ 	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
+ 		struct iio_chan_spec const *chan = at91_adc_chan_get(indio, bit);
++		u32 cor;
  
- 				if (value != NULL)
--					strlcpy(value, value_ptr, length);
-+					strlcpy(value, value_ptr, vallen);
- 
- 			}
- 		}
-@@ -2203,13 +2203,13 @@ static int altera_get_note(u8 *p, s32 program_size,
- 				strlcpy(key, &p[note_strings +
- 						get_unaligned_be32(
- 						&p[note_table + (8 * i)])],
--					length);
-+					keylen);
- 
- 			if (value != NULL)
- 				strlcpy(value, &p[note_strings +
- 						get_unaligned_be32(
- 						&p[note_table + (8 * i) + 4])],
--					length);
-+					vallen);
- 
- 			*offset = i + 1;
- 		}
-@@ -2463,7 +2463,7 @@ int altera_init(struct altera_config *config, const struct firmware *fw)
- 			__func__, (format_version == 2) ? "Jam STAPL" :
- 						"pre-standardized Jam 1.1");
- 		while (altera_get_note((u8 *)fw->data, fw->size,
--					&offset, key, value, 256) == 0)
-+					&offset, key, value, 32, 256) == 0)
- 			printk(KERN_INFO "%s: NOTE \"%s\" = \"%s\"\n",
- 					__func__, key, value);
- 	}
+ 		if (!chan)
+ 			continue;
++		if (state) {
++			cor = at91_adc_readl(st, AT91_SAMA5D2_COR);
++
++			if (chan->differential)
++				cor |= (BIT(chan->channel) |
++					BIT(chan->channel2)) <<
++					AT91_SAMA5D2_COR_DIFF_OFFSET;
++			else
++				cor &= ~(BIT(chan->channel) <<
++				       AT91_SAMA5D2_COR_DIFF_OFFSET);
++
++			at91_adc_writel(st, AT91_SAMA5D2_COR, cor);
++		}
++
+ 		if (state) {
+ 			at91_adc_writel(st, AT91_SAMA5D2_CHER,
+ 					BIT(chan->channel));
 -- 
 2.20.1
 
