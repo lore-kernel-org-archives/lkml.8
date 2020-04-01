@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F06C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E89FC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2FEA21582
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC43B2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758167;
-	bh=PIZTE+EIbLccDU1QGRu3mlihSm17nSu7NpAVqp4qfqM=;
+	s=default; t=1585758170;
+	bh=mPMg+GIZNgjPNi6MOWo6soVJy6BjBjhd20BrzjGqz2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UkWJ0Lpy7nuGEP7CxM8DVRK5EwKQvbHT07UFBWJ6EDBMUMD9NtEjQTacDer29eizK
-	 lWV0GuCkmkrT6BK1OXMSaUw3UJYR4j29ocVXsMvkXLmzxwr0mOAIlyswNxrRNnBncW
-	 PfLy5m6m//qi/mn+JkVSJg1y130qX/hv248+T0VM=
+	b=gLDRf2Xnw2bYiEpxbxVsCGzBSVfRjbtWz5z7StR57R1NbgJCbhNYFgEVAOvqCsbeH
+	 ukr5uO7MW68IGxaJGNmWSIXfxhqvH3aLF5ypLkCTPh0nkLg+RUTzCdkGCTNOpetv8F
+	 DqD3k+pSEN5WmF+QY3hfb34nXB9dM4ip1ccWmrQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387533AbgDAQWq (ORCPT
+        id S2387540AbgDAQWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:22:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45836 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:22:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732328AbgDAQWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:22:43 -0400
+        id S2387527AbgDAQWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:22:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7654212CC;
-        Wed,  1 Apr 2020 16:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F4952137B;
+        Wed,  1 Apr 2020 16:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758162;
-        bh=PIZTE+EIbLccDU1QGRu3mlihSm17nSu7NpAVqp4qfqM=;
+        s=default; t=1585758164;
+        bh=mPMg+GIZNgjPNi6MOWo6soVJy6BjBjhd20BrzjGqz2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WlZryx18NzHhbNaUW8Op+UMrw6qqSheOYMKcDXewrRvEIOkNC7dQm9d7ikL7lI4pL
-         2dDb4F1T6qHtYDjhzLSpvgA6KHDbwyHiBbKIUkN7y0ybtQsGn/iwoq/PDcx6Auhq4d
-         PggTX1ZCU44Nls22iRlKFXPvnuEXkDgpMuh5NPLA=
+        b=EKJ0qQ1lb5JXgoRmvkfrwJl2xBQbElKnCUQuD/mNmw3tKOFYFkQp7Jg8UqSB9Eyab
+         ydybLfZacxrlu/7ZafjEogWbGX5odBskzX8VYDSyTrSzeecq1Xyf7U9j/7a/mZikMX
+         QIYq85NjFwv5/VsAWSvVWeL6Bm2ONws+SZmnKdHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arthur Demchenkov <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.4 24/27] ARM: dts: N900: fix onenand timings
-Date:   Wed,  1 Apr 2020 18:17:52 +0200
-Message-Id: <20200401161433.837031632@linuxfoundation.org>
+        stable@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 5.4 25/27] ARM: dts: sun8i: r40: Move AHCI device node based on address order
+Date:   Wed,  1 Apr 2020 18:17:53 +0200
+Message-Id: <20200401161434.337279705@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
 References: <20200401161414.352722470@linuxfoundation.org>
@@ -60,92 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Demchenkov <spinal.by@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit 0c5220a3c1242c7a2451570ed5f5af69620aac75 upstream.
+commit fe3a04824f75786e39ed74e82fb6cb2534c95fe4 upstream.
 
-Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-started using DT specified timings for GPMC, and as a result the
-OneNAND stopped working on N900 as we had wrong values in the DT.
-Fix by updating the values to bootloader timings that have been tested
-to be working on Nokia N900 with OneNAND manufacturers: Samsung,
-Numonyx.
+When the AHCI device node was added, it was added in the wrong location
+in the device tree file. The device nodes should be sorted by register
+address.
 
-Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
-Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-Reviewed-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Move the device node to before EHCI1, where it belongs.
+
+Fixes: 41c64d3318aa ("ARM: dts: sun8i: r40: add sata node")
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/omap3-n900.dts |   44 ++++++++++++++++++++++++---------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+ arch/arm/boot/dts/sun8i-r40.dtsi |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -849,34 +849,46 @@
- 		compatible = "ti,omap2-onenand";
- 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -266,6 +266,16 @@
+ 			#phy-cells = <1>;
+ 		};
  
-+		/*
-+		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
-+		 * bootloader set values when booted with v5.1
-+		 * (OneNAND Manufacturer: Samsung):
-+		 *
-+		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
-+		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
-+		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
-+		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
-+		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
-+		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
-+		 */
- 		gpmc,sync-read;
- 		gpmc,sync-write;
- 		gpmc,burst-length = <16>;
- 		gpmc,burst-read;
- 		gpmc,burst-wrap;
- 		gpmc,burst-write;
--		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
--		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
-+		gpmc,device-width = <2>;
-+		gpmc,mux-add-data = <2>;
- 		gpmc,cs-on-ns = <0>;
--		gpmc,cs-rd-off-ns = <87>;
--		gpmc,cs-wr-off-ns = <87>;
-+		gpmc,cs-rd-off-ns = <102>;
-+		gpmc,cs-wr-off-ns = <102>;
- 		gpmc,adv-on-ns = <0>;
--		gpmc,adv-rd-off-ns = <10>;
--		gpmc,adv-wr-off-ns = <10>;
--		gpmc,oe-on-ns = <15>;
--		gpmc,oe-off-ns = <87>;
-+		gpmc,adv-rd-off-ns = <12>;
-+		gpmc,adv-wr-off-ns = <12>;
-+		gpmc,oe-on-ns = <12>;
-+		gpmc,oe-off-ns = <102>;
- 		gpmc,we-on-ns = <0>;
--		gpmc,we-off-ns = <87>;
--		gpmc,rd-cycle-ns = <112>;
--		gpmc,wr-cycle-ns = <112>;
--		gpmc,access-ns = <81>;
--		gpmc,page-burst-access-ns = <15>;
-+		gpmc,we-off-ns = <102>;
-+		gpmc,rd-cycle-ns = <132>;
-+		gpmc,wr-cycle-ns = <132>;
-+		gpmc,access-ns = <96>;
-+		gpmc,page-burst-access-ns = <18>;
- 		gpmc,bus-turnaround-ns = <0>;
- 		gpmc,cycle2cycle-delay-ns = <0>;
- 		gpmc,wait-monitoring-ns = <0>;
--		gpmc,clk-activation-ns = <5>;
--		gpmc,wr-data-mux-bus-ns = <30>;
--		gpmc,wr-access-ns = <81>;
-+		gpmc,clk-activation-ns = <6>;
-+		gpmc,wr-data-mux-bus-ns = <36>;
-+		gpmc,wr-access-ns = <96>;
- 		gpmc,sync-clk-ps = <15000>;
++		ahci: sata@1c18000 {
++			compatible = "allwinner,sun8i-r40-ahci";
++			reg = <0x01c18000 0x1000>;
++			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
++			resets = <&ccu RST_BUS_SATA>;
++			reset-names = "ahci";
++			status = "disabled";
++		};
++
+ 		ehci1: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
+ 			reg = <0x01c19000 0x100>;
+@@ -557,17 +567,6 @@
+ 			#size-cells = <0>;
+ 		};
  
- 		/*
+-		ahci: sata@1c18000 {
+-			compatible = "allwinner,sun8i-r40-ahci";
+-			reg = <0x01c18000 0x1000>;
+-			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
+-			resets = <&ccu RST_BUS_SATA>;
+-			reset-names = "ahci";
+-			status = "disabled";
+-
+-		};
+-
+ 		gmac: ethernet@1c50000 {
+ 			compatible = "allwinner,sun8i-r40-gmac";
+ 			syscon = <&ccu>;
 
 
