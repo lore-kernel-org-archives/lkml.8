@@ -2,96 +2,135 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F019EC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09033C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BF12078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2CAA2082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585731352;
-	bh=2lkU7aDUNcZPy67HrpmmAS88AU2gOLJri4GVeA1yePc=;
+	s=default; t=1585731384;
+	bh=pZfkpzV/DA6TJrp3HueXSBW9yxX80ESU1n7+BOkQquc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tcGHOFRkos0khyBNeH/PYPGQSN8xc/h5ga8yH+mIoKxs5piIhGhKN+NoDHfZOxW6O
-	 8PDLJ/6bsCouPtxuJQv9SwD/0dbztBRTFl/lAQaY3G39pVROIe0ZVL5plkcigl2vV7
-	 1r+N32tTyyck48nE3sDRYEwFh1HNt4bcRbj69SMM=
+	b=heoYCm+Z1GA9T8eMuPDhC847KSZqvkTyTWYu1S43QbFzcWijWE6E9hbMkI0aWC84k
+	 ca0ISYY/a7bcTX2CHTB8cZUR/s95uJay7aYG9S1LtxljgUpLSmWA/8suQZzl0RnihP
+	 27mg1HQpJLLArQSR3shTEin7LUlTDZmYGFL1iMPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731721AbgDAIzv (ORCPT
+        id S1731981AbgDAI4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:55:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54190 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 04:56:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgDAIzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:55:51 -0400
+        id S1727322AbgDAI4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:56:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5EEC20784;
-        Wed,  1 Apr 2020 08:55:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95AB620784;
+        Wed,  1 Apr 2020 08:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585731350;
-        bh=2lkU7aDUNcZPy67HrpmmAS88AU2gOLJri4GVeA1yePc=;
+        s=default; t=1585731383;
+        bh=pZfkpzV/DA6TJrp3HueXSBW9yxX80ESU1n7+BOkQquc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bth9ooTGpGk47WkFhb8ZQYTHCLL4rF2ytX6k7MDqKodh7FaLEhpwBDK9nsj5akxoq
-         sJQKhJJYAEUN4P5GvCTRkwN8NCD/SyPzdzhJKHcZCAJmsT0wlGanc15oucvzFFbrqk
-         z70oKRvJNBQHcZbfxpespBB/JAkbiJKjw3rf1bYg=
-Date:   Wed, 1 Apr 2020 10:55:48 +0200
+        b=Os3MhArKMK5pr15JDTv+GuhUZA2z26WCPoNodnEur3UTs7+7Lwh3XVqLAj2qqcLVM
+         c8DWL6v+4M5n71Cu9YE1IwMSRlNnXg3oN4ieQ7YbnLJ0xfXJRqvgQDolrPzIqrtQxn
+         42lXpvbIaEju92IXHKsXjfPxVlqShCvg+T44u6j0=
+Date:   Wed, 1 Apr 2020 10:56:20 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     hyunki00.koo@gmail.com, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty: samsung_tty: 32-bit access for TX/RX hold registers
-Message-ID: <20200401085548.GC2026666@kroah.com>
-References: <CGME20200401082749epcas2p2a774da515805bc3f761b6b5a8dc9e3d2@epcas2p2.samsung.com>
- <20200401082721.19431-1-hyunki00.koo@samsung.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        john.fastabend@gmail.com, komachi.yoshiki@gmail.com,
+        Andrii Nakryiko <andriin@fb.com>, lukenels@cs.washington.edu,
+        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH 5.5 000/171] 5.5.14-rc2 review
+Message-ID: <20200401085620.GD2026666@kroah.com>
+References: <20200331141450.035873853@linuxfoundation.org>
+ <CA+G9fYuU-5o5DG1VSQuCPx=TSs61-1jBekdGb5yvMRz4ur3BQg@mail.gmail.com>
+ <20200401061131.GA1907105@kroah.com>
+ <dc2cee11-84fc-70a7-41d8-2de23942697c@iogearbox.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dc2cee11-84fc-70a7-41d8-2de23942697c@iogearbox.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 05:27:20PM +0900, Hyunki Koo wrote:
-> -	if (np)
-> +	if (np) {
->  		of_property_read_u32(np,
->  			"samsung,uart-fifosize", &ourport->port.fifosize);
->  
-> +		if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
-> +			switch (prop) {
-> +			case 1:
-> +				ourport->port.iotype = UPIO_MEM;
-> +				break;
-> +			case 4:
-> +				ourport->port.iotype = UPIO_MEM32;
-> +				break;
-> +			default:
-> +				dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
-> +						prop);
-> +				ret = -EINVAL;
-> +				break;
-> +			}
-> +		}
-> +	}
-> +
+On Wed, Apr 01, 2020 at 10:03:16AM +0200, Daniel Borkmann wrote:
+> On 4/1/20 8:11 AM, Greg Kroah-Hartman wrote:
+> > On Wed, Apr 01, 2020 at 04:18:41AM +0530, Naresh Kamboju wrote:
+> > > On Tue, 31 Mar 2020 at 21:02, Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > > 
+> > > > This is the start of the stable review cycle for the 5.5.14 release.
+> > > > There are 171 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Thu, 02 Apr 2020 14:12:02 +0000.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > > The whole patch series can be found in one patch at:
+> > > >          https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.14-rc2.gz
+> > > > or in the git tree and branch at:
+> > > >          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> > > > and the diffstat can be found below.
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > 
+> > > Results from Linaro’s test farm.
+> > > Regressions on x86_64 and i386.
+> > > 
+> > > selftests bpf test_verifier reports as failed.
+> > > This test PASSED on v5.5.13
+> > > 
+> > > #554/p jgt32: range bound deduction, reg op imm FAIL
+> > > Failed to load prog 'Success'!
+> > > R8 unbounded memory access, make sure to bounds check any array access
+> > > into a map
+> > > verification time 141 usec
+> > > stack depth 8
+> > > processed 16 insns (limit 1000000) max_states_per_insn 0 total_states
+> > > 1 peak_states 1 mark_read 1
+> > > #555/p jgt32: range bound deduction, reg1 op reg2, reg1 unknown FAIL
+> > > Failed to load prog 'Success'!
+> > > R8 unbounded memory access, make sure to bounds check any array access
+> > > into a map
+> > > verification time 94 usec
+> > > stack depth 8
+> > > processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
+> > > 1 peak_states 1 mark_read 1
+> > > #556/p jle32: range bound deduction, reg1 op reg2, reg2 unknown FAIL
+> > > Failed to load prog 'Success'!
+> > > R8 unbounded memory access, make sure to bounds check any array access
+> > > into a map
+> > > verification time 68 usec
+> > > stack depth 8
+> > > processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
+> > > 1 peak_states 1 mark_read 1
+> > 
+> > Can you run 'git bisect' to find the offending patch?
+> 
+> No need, I'll send you a patch to update the selftests. It's expected that they
+> fail now due to the revert we had to do, so if this is the only issue it shouldn't
+> hold up the release. In any case, I'll send them over to you next.
 
-Does this mean that reg-io-width is now a required property for all
-samsung uarts?  Does this break older dts files?  Or should you
-fall-back to the previous operation if the attribute is not there?
-
-And please fix your email client, the headers were all messed up,
-causing my initial response to be only sent to you :(
-
-thanks,
+Great, thanks for letting me know this isn't a "real" issue :)
 
 greg k-h
-
