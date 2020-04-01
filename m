@@ -2,124 +2,124 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6568AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04FDC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390862073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A6220772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eL4q4H6Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdr8z+g6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732128AbgDAJ7j (ORCPT
+        id S1732172AbgDAKAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:59:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41964 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgDAJ7i (ORCPT
+        Wed, 1 Apr 2020 06:00:35 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34482 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727627AbgDAKAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:59:38 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a24so5035504pfc.8;
-        Wed, 01 Apr 2020 02:59:36 -0700 (PDT)
+        Wed, 1 Apr 2020 06:00:35 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c195so3101664wme.1;
+        Wed, 01 Apr 2020 03:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZFJYkNTLPTvW0oZP4hQZw69H17w9e4DABkwJauGrsvo=;
-        b=eL4q4H6Zt5YlAbKdGHOx9nPUwYyeVLd8gWzbyNjMb+PArhgTPXrdrN0vGoqynXZCHM
-         bTUPxgvwyvLNWUmWikJB96MLc/q7p99Whot2IDvpAIih7IkuqqqpeulUjoycInqlmtTz
-         YYmW/quAM6JvZw5EebP81bK1FWO7Or2oWQEgHHB7Qp5EucBuXAUo/tpH6nLmP4Pu4deI
-         BDr/gtXlNYrPdo6qGq+tWu/4tF/J4zy6pwOwonWdWGK1vzHLgzaTzQrugJVUQyR1Q8si
-         I18MVUBIkyFE4nbqLvVPzFJCYfNZsP2QALovJcqotQZWuZMfZsc9ilUVp6SPZcX+vOTf
-         uNwQ==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=VmRm3oXm0ZsfcD5pHRu8dORso7GRuFbKemZGwhJZ3mg=;
+        b=sdr8z+g6zb/yzMTnL+GD4R49HG1WbT+cnMmqP2SA+LDzot4nhVXtqbrotKTLFuJ0UP
+         J8UwNjZqDVpXluSarDMuFbpHrj9iMaadChZ2cOai2Mn582jaI9JqD1fYeIoeNWiCM16z
+         7fNs/AqvO7YJjPkRgdEC0rqG9mZUEY99AN2YyucbWm6uT/iVCfJkeLEFm78pBSNmqEFU
+         LeV1rl43zuAVS+oO8/jLBKbPtThBfCzJNIPLZdjK3xqX/TLJQloptJVLYuRs2FLBiI1I
+         lIM2o3n/6gYzOPbRCu90Yb95O0EPQxTXY5WpbdbPgrhNH4a8x0MwZlQ7IyS0r5lPiFCj
+         smCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZFJYkNTLPTvW0oZP4hQZw69H17w9e4DABkwJauGrsvo=;
-        b=WE4OWrjVgyGCl4FfBlaJCTpIcFSAljMKKuXpDy09SD57kSJoZ6amWyxhFEWqCEImHg
-         TSQs5lEDXUD6pRCdcZ+sohxWWhYsFzYKkyII0zflT3s9iYJtRY3DOzwbbosnBWU1R73I
-         QxvBcvcx5G3nNMyadRKyJD9IxPIF0n5EgKhUM7nkkVfpbQHvrVXrRqiJSQeAQ83/ubsl
-         nGo57t1pLcAYfWLL+1QnrglGXJpGF5E1AkmwAIwm2kizNM526Ut+lE/b8XnAIWencLy3
-         FO0REpeY0ILPu4XtIgANGvdLYljZBvWiVFIjM9iDxHYmQgHWoMvokXq3wrqXY658zGH2
-         t5Ow==
-X-Gm-Message-State: ANhLgQ31OEcyJexyJ4GMRXlUUdAHkt6ONDP7elvyhooEpGOyM6JyX/iI
-        08X7hDaPPhvSHUaGiR7JfhM=
-X-Google-Smtp-Source: ADFU+vu9WPaFbRtOf34kOndOIVRRGnNKP2ecacE/QeJKWr0KIdaMENcjJk3uMNIgv0dOfNUHrIEdSQ==
-X-Received: by 2002:a63:f454:: with SMTP id p20mr22194762pgk.149.1585735176370;
-        Wed, 01 Apr 2020 02:59:36 -0700 (PDT)
-Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id v25sm1132712pgl.55.2020.04.01.02.59.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 01 Apr 2020 02:59:35 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "gpio: eic-sprd: Use devm_platform_ioremap_resource()"
-Date:   Wed,  1 Apr 2020 17:59:25 +0800
-Message-Id: <8d3579f4b49bb675dc805035960f24852898be28.1585734060.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=VmRm3oXm0ZsfcD5pHRu8dORso7GRuFbKemZGwhJZ3mg=;
+        b=lxpOVhf+qop5Ce1Qua8jhnk3lpdZOiLWuUnY6AI2Dzd9ny7EcHkwJD0Ars3DS9Sz5C
+         GBSjMTHiAKsGmKpeFNn63RNpYpF/E+DmcuCv2KvQI2W6E0DDccF+4wfC7zuLjF5Pi5hP
+         EbR8ac27vehdY2wqEFIzhcag5OMCo3ZYX4LFvoGfkMRL3PG3+0eH+K0hKo+fYA/bcqDf
+         neoR31TQykBYhDAmzUOL9HEXuxnQuMA+WHiMuEcss8p4/d9uoYhHWsuXyBSILsv6kdFg
+         YBkqz/fvbd8SJgKD/MXoWLs/2ZP7fIPtLDSCWX+WkQ8Q2oJfcYhsP4M1+XRzCDp8uoDM
+         UHXw==
+X-Gm-Message-State: AGi0PuY2i1prS2zjTo61SIN91LwzvflBLy0XVhr4ARWivZ0JOBVmGVbo
+        DEOWYSO9qM7JYOMqnqS0hwIrpOyWU6+549l1INs=
+X-Google-Smtp-Source: APiQypKclNINS76hUttgDW/hApv0JqcrQoSocfVi7rT3jY0DpMxb6iTfwOWHlSA3xqsqdePfLh0i/TJHiM+pcRnNWpg=
+X-Received: by 2002:a05:600c:2202:: with SMTP id z2mr3324034wml.64.1585735232912;
+ Wed, 01 Apr 2020 03:00:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
+ <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com> <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
+ <5F9D2C8D-B1DE-4F95-992E-524E02851CF4@fb.com> <20200401072725.GB27371@angband.pl>
+In-Reply-To: <20200401072725.GB27371@angband.pl>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 1 Apr 2020 12:00:35 +0200
+Message-ID: <CA+icZUXufL22Fp7ge9uzZ7K5K2MfX-C+HJcDcr06KKNYQOBXoA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and initramfs
+To:     Adam Borowski <kilobyte@angband.pl>
+Cc:     Nick Terrell <terrelln@fb.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Patrick Williams <patrickw3@fb.com>,
+        Michael van der Westhuizen <rmikey@fb.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 0f5cb8cc27a266c81e6523b436479802e9aafc9e.
+On Wed, Apr 1, 2020 at 9:27 AM Adam Borowski <kilobyte@angband.pl> wrote:
+>
+> On Wed, Apr 01, 2020 at 02:52:06AM +0000, Nick Terrell wrote:
+> > > On Mar 31, 2020, at 8:11 AM, Sedat Dilek <sedat.dilek@gmail.com> wrot=
+e:
+> > > On Tue, Mar 31, 2020 at 6:15 AM Nick Terrell <terrelln@fb.com> wrote:
 
-This commit will cause below warnings, since our EIC controller can support
-differnt banks on different Spreadtrum SoCs, and each bank has its own base
-address, we will get invalid resource warning if the bank number is less than
-SPRD_EIC_MAX_BANK on some Spreadtrum SoCs.
+[...]
 
-So we should not use devm_platform_ioremap_resource() here to remove the
-warnings.
+> > I don=E2=80=99t expect any distro specific changes are required to cont=
+inue operating
+> > as-is. However, if a distro wanted to switch to a zstd compressed initr=
+amfs
+> > they would need to update their toolchain to compress with zstd.
+>
+> Just setting COMPRESS=3Dzstd is enough -- it'll say:
+> W: Unknown compression command zstd
+> but will do everything right.
+>
+> Also, just minutes ago someone filed https://bugs.debian.org/955469
+>
 
-[    1.118508] sprd-eic 40210000.gpio: invalid resource
-[    1.118535] sprd-eic 40210000.gpio: invalid resource
-[    1.119034] sprd-eic 40210080.gpio: invalid resource
-[    1.119055] sprd-eic 40210080.gpio: invalid resource
-[    1.119462] sprd-eic 402100a0.gpio: invalid resource
-[    1.119482] sprd-eic 402100a0.gpio: invalid resource
-[    1.119893] sprd-eic 402100c0.gpio: invalid resource
-[    1.119913] sprd-eic 402100c0.gpio: invalid resource
+Hi Adam,
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/gpio/gpio-eic-sprd.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+thanks for your feedback and the pointer to the Debian bug #955469.
 
-diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-index bb287f3..8c97577 100644
---- a/drivers/gpio/gpio-eic-sprd.c
-+++ b/drivers/gpio/gpio-eic-sprd.c
-@@ -569,6 +569,7 @@ static int sprd_eic_probe(struct platform_device *pdev)
- 	const struct sprd_eic_variant_data *pdata;
- 	struct gpio_irq_chip *irq;
- 	struct sprd_eic *sprd_eic;
-+	struct resource *res;
- 	int ret, i;
- 
- 	pdata = of_device_get_match_data(&pdev->dev);
-@@ -595,9 +596,13 @@ static int sprd_eic_probe(struct platform_device *pdev)
- 		 * have one bank EIC, thus base[1] and base[2] can be
- 		 * optional.
- 		 */
--		sprd_eic->base[i] = devm_platform_ioremap_resource(pdev, i);
--		if (IS_ERR(sprd_eic->base[i]))
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
-+		if (!res)
- 			continue;
-+
-+		sprd_eic->base[i] = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(sprd_eic->base[i]))
-+			return PTR_ERR(sprd_eic->base[i]);
- 	}
- 
- 	sprd_eic->chip.label = sprd_eic_label_name[sprd_eic->type];
--- 
-1.9.1
+With "distro-specific changes" I meant the ones to userland - for
+Debian - namely initramfs-tools{,-core} packages.
+For generating, inspecting and unpacking an initramfs the Debian way
+you need a bit more.
 
+In the Bug-BR a patch called "enable_zstd.patch" is attached - seems
+to have all what I mentioned in [1].
+
+Regards,
+- Sedat -
+
+[1] LINK: https://lore.kernel.org/lkml/CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1x=
+YhwkA5k3B3U-5vQ@mail.gmail.com/
