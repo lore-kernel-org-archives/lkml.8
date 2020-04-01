@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653E6C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18568C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C8C21556
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27EC20857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758142;
-	bh=XUZVInl2yIRIheP1ctm3J4tTtc4UpxGu/clhuSn6aSc=;
+	s=default; t=1585758144;
+	bh=VnwcAXK+UHzOBiGQchBKglHd/sU6Gq8vZVgDLz7TTZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SR0cXt2L43K+Kcgdwt6yJQ2cMTjlBHofmU87nAb7RVTgsAQdKSHOYbEc3pSEa4rxd
-	 CPDWZeZN2gfmz1jIx5XInZdZxxbs3Ye/KlQ80mySu/P4Nk9lIPDqm8Oyd/aWuGR+wy
-	 CKlw0XeCGa/OIg9hiL2yaL5gxV0pMyXAkI229X1c=
+	b=B4D47XKPBtLUAlR5k1Wf4OXx24uD2YbmwsvZEUoY2S+SVfC59VNaem2lH3jZMdCfA
+	 OlZI4tYQUFFjhpFCpf7oFASQvLtJalCxD6npwlOheFUDzZBXJ1AJC/9YhZvKmvXAf/
+	 8KsiJ/rR1CQmN6GNLOGBo3qVAfuPZNWo9iQ0V3gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387462AbgDAQWV (ORCPT
+        id S2387486AbgDAQWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387476AbgDAQWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:22:18 -0400
+        id S2387463AbgDAQWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:22:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7455E20857;
-        Wed,  1 Apr 2020 16:22:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D7220857;
+        Wed,  1 Apr 2020 16:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758137;
-        bh=XUZVInl2yIRIheP1ctm3J4tTtc4UpxGu/clhuSn6aSc=;
+        s=default; t=1585758140;
+        bh=VnwcAXK+UHzOBiGQchBKglHd/sU6Gq8vZVgDLz7TTZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1eSwn0hVygkN5PHSnUwXRueo80NKEJsq+VVMLJ4f3ec2dqCcb9mhUbNa3npYjN/0N
-         il1ePRJrC7Dl12/mr/Ndgu09jQA+FUFIYCib5kWjWOGPF4UEfALQaZufbcezmo46eE
-         Mu/yC0RrWZPqSQE5ChV62TEcs90Ts2FwmoeRRQNo=
+        b=VdG0fngmfc/zQMrTU6R6yQtUl9a9EbmVR65yJvnGSvHv9N7/aGWugzoVTH3og6gC5
+         eVMbg5YAFxP80guLg/TltnbCEcVGvCL35U9kkuyYDFvwWskmHSYiwVnA0roRs5NpaM
+         q69n6aiiIUWL7tjzljjrEm5ym9XlNZ4rNO+p3f5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Lanqing Liu <liuhhome@gmail.com>
-Subject: [PATCH 5.4 03/27] serial: sprd: Fix a dereference warning
-Date:   Wed,  1 Apr 2020 18:17:31 +0200
-Message-Id: <20200401161417.599861325@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 5.4 04/27] vt: selection, introduce vc_is_sel
+Date:   Wed,  1 Apr 2020 18:17:32 +0200
+Message-Id: <20200401161418.604647666@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
 References: <20200401161414.352722470@linuxfoundation.org>
@@ -59,44 +58,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lanqing Liu <liuhhome@gmail.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit efc176929a3505a30c3993ddd393b40893649bd2 upstream.
+commit dce05aa6eec977f1472abed95ccd71276b9a3864 upstream.
 
-We should validate if the 'sup' is NULL or not before freeing DMA
-memory, to fix below warning.
+Avoid global variables (namely sel_cons) by introducing vc_is_sel. It
+checks whether the parameter is the current selection console. This will
+help putting sel_cons to a struct later.
 
-"drivers/tty/serial/sprd_serial.c:1141 sprd_remove()
- error: we previously assumed 'sup' could be null (see line 1132)"
-
-Fixes: f4487db58eb7 ("serial: sprd: Add DMA mode support")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/e2bd92691538e95b04a2c2a728f3292e1617018f.1584325957.git.liuhhome@gmail.com
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200219073951.16151-1-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sprd_serial.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/tty/vt/selection.c |    5 +++++
+ drivers/tty/vt/vt.c        |    7 ++++---
+ drivers/tty/vt/vt_ioctl.c  |    2 +-
+ include/linux/selection.h  |    4 +++-
+ 4 files changed, 13 insertions(+), 5 deletions(-)
 
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -1103,14 +1103,13 @@ static int sprd_remove(struct platform_d
- 	if (sup) {
- 		uart_remove_one_port(&sprd_uart_driver, &sup->port);
- 		sprd_port[sup->port.line] = NULL;
-+		sprd_rx_free_buf(sup);
- 		sprd_ports_num--;
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -88,6 +88,11 @@ void clear_selection(void)
+ }
+ EXPORT_SYMBOL_GPL(clear_selection);
+ 
++bool vc_is_sel(struct vc_data *vc)
++{
++	return vc == sel_cons;
++}
++
+ /*
+  * User settable table: what characters are to be considered alphabetic?
+  * 128 bits. Locked by the console lock.
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -890,8 +890,9 @@ static void hide_softcursor(struct vc_da
+ 
+ static void hide_cursor(struct vc_data *vc)
+ {
+-	if (vc == sel_cons)
++	if (vc_is_sel(vc))
+ 		clear_selection();
++
+ 	vc->vc_sw->con_cursor(vc, CM_ERASE);
+ 	hide_softcursor(vc);
+ }
+@@ -901,7 +902,7 @@ static void set_cursor(struct vc_data *v
+ 	if (!con_is_fg(vc) || console_blanked || vc->vc_mode == KD_GRAPHICS)
+ 		return;
+ 	if (vc->vc_deccm) {
+-		if (vc == sel_cons)
++		if (vc_is_sel(vc))
+ 			clear_selection();
+ 		add_softcursor(vc);
+ 		if ((vc->vc_cursor_type & 0x0f) != 1)
+@@ -1207,7 +1208,7 @@ static int vc_do_resize(struct tty_struc
+ 		}
  	}
  
- 	if (!sprd_ports_num)
- 		uart_unregister_driver(&sprd_uart_driver);
+-	if (vc == sel_cons)
++	if (vc_is_sel(vc))
+ 		clear_selection();
  
--	sprd_rx_free_buf(sup);
--
- 	return 0;
- }
+ 	old_rows = vc->vc_rows;
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -43,7 +43,7 @@ char vt_dont_switch;
+ extern struct tty_driver *console_driver;
  
+ #define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
+-#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_cons[i].d == sel_cons)
++#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
+ 
+ /*
+  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
+--- a/include/linux/selection.h
++++ b/include/linux/selection.h
+@@ -11,8 +11,8 @@
+ #include <linux/tiocl.h>
+ #include <linux/vt_buffer.h>
+ 
+-extern struct vc_data *sel_cons;
+ struct tty_struct;
++struct vc_data;
+ 
+ extern void clear_selection(void);
+ extern int set_selection_user(const struct tiocl_selection __user *sel,
+@@ -24,6 +24,8 @@ extern int sel_loadlut(char __user *p);
+ extern int mouse_reporting(void);
+ extern void mouse_report(struct tty_struct * tty, int butt, int mrx, int mry);
+ 
++bool vc_is_sel(struct vc_data *vc);
++
+ extern int console_blanked;
+ 
+ extern const unsigned char color_table[];
 
 
