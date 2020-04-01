@@ -2,107 +2,232 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A99C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F88FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DDB20776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3554420776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:01:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732305AbgDAL5I (ORCPT
+        id S1732297AbgDAMBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:57:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:49962 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbgDAL5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:57:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 398A930E;
-        Wed,  1 Apr 2020 04:57:07 -0700 (PDT)
-Received: from [10.57.60.204] (unknown [10.57.60.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9841D3F68F;
-        Wed,  1 Apr 2020 04:57:05 -0700 (PDT)
-Subject: Re: [PATCH] driver/perf: Add PMU driver for the ARM DMC-620 memory
- controller.
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
-References: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
- <20200319151646.GC4876@lakrids.cambridge.arm.com>
- <23AD5E45-15E3-4487-9B0D-0D9554DD9DE8@amperemail.onmicrosoft.com>
- <20200320105315.GA35932@C02TD0UTHF1T.local>
- <A50AA800-3F65-4761-9BCF-F86A028E107D@amperemail.onmicrosoft.com>
- <20200401095226.GA17163@C02TD0UTHF1T.local>
- <20200401102724.GA17575@willie-the-truck>
- <4d843ec7-ed74-4431-d8c7-d5aa6bd83c18@arm.com>
- <20200401112739.GD17163@C02TD0UTHF1T.local>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3efa118a-5c85-6af9-e676-44087f1d398e@arm.com>
-Date:   Wed, 1 Apr 2020 12:57:03 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 1 Apr 2020 08:01:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31258 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732246AbgDAMBo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:01:44 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031BXM2D060103;
+        Wed, 1 Apr 2020 08:01:35 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 304h3w82w3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 08:01:34 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 031C0XXi025589;
+        Wed, 1 Apr 2020 12:01:33 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03wdc.us.ibm.com with ESMTP id 301x76rpef-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 12:01:33 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031C1WD257999766
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 12:01:32 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C187BE04F;
+        Wed,  1 Apr 2020 12:01:32 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7B5FCBE05A;
+        Wed,  1 Apr 2020 12:01:31 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.72.142])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 12:01:31 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id EA34F2E33D3; Wed,  1 Apr 2020 17:31:27 +0530 (IST)
+Date:   Wed, 1 Apr 2020 17:31:27 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 6/6] pseries/sysfs: Minimise IPI noise while reading
+ [idle_][s]purr
+Message-ID: <20200401120127.GC17237@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1585308760-28792-7-git-send-email-ego@linux.vnet.ibm.com>
+ <1585734367.oqwn7dzljo.naveen@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200401112739.GD17163@C02TD0UTHF1T.local>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585734367.oqwn7dzljo.naveen@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-01 12:27 pm, Mark Rutland wrote:
-> On Wed, Apr 01, 2020 at 12:12:23PM +0100, Robin Murphy wrote:
->> On 2020-04-01 11:27 am, Will Deacon wrote:
->>> On Wed, Apr 01, 2020 at 10:52:26AM +0100, Mark Rutland wrote:
->>>> On Tue, Mar 31, 2020 at 03:14:59PM -0700, Tuan Phan wrote:
->>>>> I looked at the SMMUv3 PMU driver and it also uses IRQF_SHARED. SMMUv3
->>>>> PMU and DMC620 PMU are very much similar in which counters can be
->>>>> accessed by any cores using memory map. Any special reasons
->>>>> IRQF_SHARED works with SMMUv3 PMU driver?
->>>>
->>>> No; I believe that is a bug in the SMMUv3 PMU driver. If the IRQ were
->>>> shared, and another driver that held the IRQ changed the affinity,
->>>> things would go very wrong.
->>>
->>> I *think* the idea is that the SMMUv3 PMU driver manages multiple PMCG
->>> devices, which may all share an irq line, rather than the irq line being
->>> shared by some other driver that might change the affinity. So I suspect
->>> dropping IRQF_SHARED will break things.
->>
->> Each PMCG is conceptually a distinct PMU with its own interrupt - for
->> instance, MMU-600 has one PMCG for its TCU and one for each TBU, each with a
->> distinct interrupt output signal. Of course, integrators can and will mash
->> them all together into a single SPI (particularly since they're all part of
->> "the SMMU"), but that boils down to the same case as here.
->>
->> This is going to continue to happen, so we could really do with figuring out
->> a way to let MMIO system PMU drivers properly cope with shared interrupts in
->> general :/
-> 
-> It does seem so, but I think we can only reasonably do that where it's
-> only being shared across instances of the same driver, rather than when
-> the IRQ is muxed across completely independent drivers. I'd like to
-> avoid that latter case if we can.
-> 
-> The driver would have to handle migration on a cross-instance basis.
-> e.g. all the contexts need to be migrated before the IRQ is, to avoid a
-> screaming IRQ on the target CPU, or the IRQ handler on the target racing
-> with migration from the source.
-> 
-> Is there a neat way to do that in a driver without using IRQF_SHARED, so
-> that we don't end up accidentally sharing with other drivers? We can
-> probably librify the code to handle this under drivers/pmu/.
+Hello Naveen,
 
-I can envision a fairly straightforward approach of flipping things 
-upside-down such that we register a hotplug instance for the IRQ rather 
-than the PMU, then handle the association of PMUs to IRQs internally to 
-the driver. I believe I need to support this case in my CMN PMU driver 
-too, so I'll prototype something there and see how it looks.
 
-Robin.
+On Wed, Apr 01, 2020 at 03:28:48PM +0530, Naveen N. Rao wrote:
+> Gautham R. Shenoy wrote:
+> >From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> >
+ [..snip..]
+
+> >-static DEVICE_ATTR(spurr, 0400, show_spurr, NULL);
+> >-static DEVICE_ATTR(purr, 0400, show_purr, store_purr);
+> > static DEVICE_ATTR(pir, 0400, show_pir, NULL);
+> > static DEVICE_ATTR(tscr, 0600, show_tscr, store_tscr);
+> > #endif /* CONFIG_PPC64 */
+> >@@ -761,22 +757,110 @@ static void create_svm_file(void)
+> > }
+> > #endif /* CONFIG_PPC_SVM */
+> >
+> >+#ifdef CONFIG_PPC64
+> >+/*
+> >+ * The duration (in ms) from the last IPI to the target CPU until
+> >+ * which a cached value of purr, spurr, idle_purr, idle_spurr can be
+> >+ * reported to the user on a corresponding sysfs file read. Beyond
+> >+ * this duration, fresh values need to be obtained by sending IPIs to
+> >+ * the target CPU when the sysfs files are read.
+> >+ */
+> >+static unsigned long util_stats_staleness_tolerance_ms = 10;
+> 
+> This is a nice optimization for our use in lparstat, though I have a concern
+> below.
+> 
+> >+struct util_acct_stats {
+> >+	u64 latest_purr;
+> >+	u64 latest_spurr;
+> >+#ifdef CONFIG_PPC_PSERIES
+> >+	u64 latest_idle_purr;
+> >+	u64 latest_idle_spurr;
+> >+#endif
+> 
+> You can probably drop the 'latest_' prefix.
+
+
+Sure.
+
+> 
+> >+	unsigned long last_update_jiffies;
+> >+};
+> >+
+> >+DEFINE_PER_CPU(struct util_acct_stats, util_acct_stats);
+> 
+> Per snowpatch, this should be static, and so should get_util_stats_ptr()
+> below:
+> https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/16601//artifact/linux/report.txt
+
+Ok, will fix this in v5.
+
+> 
+> >+
+> >+static void update_util_acct_stats(void *ptr)
+> >+{
+> >+	struct util_acct_stats *stats = ptr;
+> >+
+> >+	stats->latest_purr = mfspr(SPRN_PURR);
+> >+	stats->latest_spurr = mfspr(SPRN_SPURR);
+> > #ifdef CONFIG_PPC_PSERIES
+> >-static void read_idle_purr(void *val)
+> >+	stats->latest_idle_purr = read_this_idle_purr();
+> >+	stats->latest_idle_spurr = read_this_idle_spurr();
+> >+#endif
+> >+	stats->last_update_jiffies = jiffies;
+> >+}
+> >+
+> >+struct util_acct_stats *get_util_stats_ptr(int cpu)
+> >+{
+> >+	struct util_acct_stats *stats = per_cpu_ptr(&util_acct_stats, cpu);
+> >+	unsigned long delta_jiffies;
+> >+
+> >+	delta_jiffies = jiffies - stats->last_update_jiffies;
+> >+
+> >+	/*
+> >+	 * If we have a recent enough data, reuse that instead of
+> >+	 * sending an IPI.
+> >+	 */
+> >+	if (jiffies_to_msecs(delta_jiffies) < util_stats_staleness_tolerance_ms)
+> >+		return stats;
+> >+
+> >+	smp_call_function_single(cpu, update_util_acct_stats, stats, 1);
+> >+	return stats;
+> >+}
+> >+
+> >+static ssize_t show_purr(struct device *dev,
+> >+			 struct device_attribute *attr, char *buf)
+> > {
+> >-	u64 *ret = val;
+> >+	struct cpu *cpu = container_of(dev, struct cpu, dev);
+> >+	struct util_acct_stats *stats;
+> >
+> >-	*ret = read_this_idle_purr();
+> >+	stats = get_util_stats_ptr(cpu->dev.id);
+> >+	return sprintf(buf, "%llx\n", stats->latest_purr);
+> 
+> This alters the behavior of the current sysfs purr file. I am not sure if it
+> is reasonable to return the same PURR value across a 10ms window.
+
+
+It does reduce it to 10ms window. I am not sure if anyone samples PURR
+etc faster than that rate.
+
+I measured how much time it takes to read the purr, spurr, idle_purr,
+idle_spurr files back-to-back. It takes not more than 150us.  From
+lparstat will these values be read back-to-back ? If so, we can reduce
+the staleness_tolerance to something like 500us and still avoid extra
+IPIs. If not, what is the maximum delay between the first sysfs file
+read and the last sysfs file read ?
+
+>
+> I wonder if we should introduce a sysctl interface to control thresholding.
+> It can default to 0, which disables thresholding so that the existing
+> behavior continues. Applications (lparstat) can optionally set it to suit
+> their use.
+
+We would be introducing 3 new sysfs interfaces that way instead of
+two.
+
+/sys/devices/system/cpu/purr_spurr_staleness
+/sys/devices/system/cpu/cpuX/idle_purr
+/sys/devices/system/cpu/cpuX/idle_spurr
+
+I don't have a problem with this. Nathan, Michael, thoughts on this?
+
+
+The alternative is to have a procfs interface, something like
+/proc/powerpc/resource_util_stats
+
+which gives a listing similar to /proc/stat, i.e
+
+      CPUX  <purr>  <idle_purr>  <spurr>  <idle_spurr>
+
+Even in this case, the values can be obtained in one-shot with a
+single IPI and be printed in the row corresponding to the CPU.
+
+> 
+> - Naveen
+> 
+
+--
+Thanks and Regards
+gautham.
