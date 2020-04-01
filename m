@@ -2,83 +2,185 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E7EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A9DC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8BA6206CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2392212CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ms/2VCoQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733126AbgDAPjP (ORCPT
+        id S1733138AbgDAPkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733099AbgDAPjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:39:14 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 442C1214DB;
-        Wed,  1 Apr 2020 15:39:13 +0000 (UTC)
-Date:   Wed, 1 Apr 2020 11:39:11 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz
-Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
-Message-ID: <20200401113911.21b67c0a@gandalf.local.home>
-In-Reply-To: <20200401143916.h5keq55yabetyv5u@treble>
-References: <20200330190205.k5ssixd5hpshpjjq@treble>
-        <20200330200254.GV20713@hirez.programming.kicks-ass.net>
-        <20200331111652.GH20760@hirez.programming.kicks-ass.net>
-        <20200331202315.zialorhlxmml6ec7@treble>
-        <20200331204047.GF2452@worktop.programming.kicks-ass.net>
-        <20200331211755.pb7f3wa6oxzjnswc@treble>
-        <20200331212040.7lrzmj7tbbx2jgrj@treble>
-        <20200331222703.GH2452@worktop.programming.kicks-ass.net>
-        <20200401141402.m4klvezp5futb7ff@treble>
-        <20200401142226.GU20696@hirez.programming.kicks-ass.net>
-        <20200401143916.h5keq55yabetyv5u@treble>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 1 Apr 2020 11:40:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44954 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732651AbgDAPkL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:40:11 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m17so549463wrw.11;
+        Wed, 01 Apr 2020 08:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7LhY+xgdF/kTo0yqSoNNI08Cln8Sgej67du4avA4Iik=;
+        b=ms/2VCoQImC4vOVpi0xT1QMP+mrGcgqm99NuifOyiBQl67q/G6i9UNBJ+jvaO03nWk
+         Ph9lCPvNC0kjTgdmf87Oom6DGtemW2e6l95AJkOw26/UNeQPp5+03wDEQFW3vJxEyEB0
+         NORdFyP4nuou+axyZ7fk17BgzeXgptHQNjvtjmkaSCsGGpJYlAvoyKgjHCO4vP9TG7y2
+         T0jy7XtsfPpLJZsXoiBZymDeb5HFH+aBivnsGu3LiMTHWtat4+gMr5Ye5+9iICwsce9F
+         7QyX0u5jUSj17ZGuDnh5Jg4NDY5RtQnhjT/gB/Opj69D78BHxXvK3k9WG9tCIFkugGqb
+         JcBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7LhY+xgdF/kTo0yqSoNNI08Cln8Sgej67du4avA4Iik=;
+        b=iJpe17KTL5Pm6wvaYVM/aVFkkXU4fuGo1I4st0/FHK0tFHVim0RN+FWh/AFSHUb7cH
+         muHT2/5mnQIs8n5k75w4ArqNVfRd83Jp9mIkedeybWh4jBZOXYrU/7JJGVstYMlPjHm7
+         Scnzoih2W8q4+6/IC6PQ0uUtvLLR4IqxfT/jBOfdTI6KV/iRT8Hsvh1vShqOQgg6RqQg
+         FoHOBOOGcOL3THv98DxVwncjAFb2S3n+HExkiD8zpQ52Aj08+8L20t77vmEv79jLX9L9
+         pmzGOt+WfLMtFccbYWm24sDQlkm4Bz/jlRrhOoyrQNNIKAev99GNBGesFVGmzayGolf3
+         dI9w==
+X-Gm-Message-State: ANhLgQ3Ebus8BnScvmPTQoGtoBgocyLCd8e925XbU++8r5I5KYPWPsSr
+        aG8qbHPg/aYaNH4QK3Zvgs4=
+X-Google-Smtp-Source: ADFU+vs9jCJ2ZIqDbK8bA0l9KhzK94UsEetS8e0dQ+8/GEeB638PFXkXf072aP0upyrzo+OIF+4exA==
+X-Received: by 2002:a5d:5106:: with SMTP id s6mr26128767wrt.24.1585755608685;
+        Wed, 01 Apr 2020 08:40:08 -0700 (PDT)
+Received: from debian64.daheim (p5B0D7F77.dip0.t-ipconnect.de. [91.13.127.119])
+        by smtp.gmail.com with ESMTPSA id a124sm3029186wmd.37.2020.04.01.08.40.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 08:40:07 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64 with esmtp (Exim 4.93)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1jJfTF-00089J-Uj; Wed, 01 Apr 2020 17:40:01 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas =?ISO-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/5] usb: xhci: Add support for Renesas controller with memory
+Date:   Wed, 01 Apr 2020 17:39:55 +0200
+Message-ID: <9854066.43zovN3OMW@debian64>
+In-Reply-To: <20200401125748.GC72691@vkoul-mobl>
+References: <20200323170601.419809-1-vkoul@kernel.org> <20200326115117.GZ72691@vkoul-mobl> <20200401125748.GC72691@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020 09:39:16 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+Hello,
 
-> > > > +	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-> > > > +		ip = ftrace_regs_caller_ret;
-> > > > +		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
-> > > > +		if (WARN_ON(ret < 0))
-> > > > +			goto fail;
-> > > > +	}
-> > > > +  
+On Wednesday, 1 April 2020 14:57:48 CEST Vinod Koul wrote:
+> On 26-03-20, 17:21, Vinod Koul wrote:
+> > On 26-03-20, 13:29, Mathias Nyman wrote:
+> > > On 23.3.2020 19.05, Vinod Koul wrote:
+> > > > Some rensas controller like uPD720201 and uPD720202 need firmware to be
+> > > > loaded. Add these devices in table and invoke renesas firmware loader
+> > > > functions to check and load the firmware into device memory when
+> > > > required.
+> > > > 
+> > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > > ---
+> > > >  drivers/usb/host/xhci-pci-renesas.c |  1 +
+> > > >  drivers/usb/host/xhci-pci.c         | 29 ++++++++++++++++++++++++++++-
+> > > >  drivers/usb/host/xhci-pci.h         |  3 +++
+> > > >  3 files changed, 32 insertions(+), 1 deletion(-)
+> > > > 
 > > > 
-> > > Hm?  This function creates a trampoline but it looks like this change is
-> > > overwriting the original ftrace_64 code itself?  
+> > > It's unfortunate if firmware loading couldn't be initiated in a PCI fixup hook
+> > > for this Renesas controller. What was the reason it failed?
+> > > 
+> > > Nicolas Saenz Julienne just submitted a solution like that for Raspberry Pi 4
+> > > where firmware loading is initiated in pci-quirks.c quirk_usb_early_handoff()
+> > > 
+> > > https://lore.kernel.org/lkml/20200324182812.20420-1-nsaenzjulienne@suse.de
+> > > 
+> > > Is he doing something different than what was done for the Renesas controller?
 > > 
-> > Ahh. So if you look at what the trampoline copies, you'll note we'll
-> > copy until -- but *NOT* including -- the jmp ftrace_epilogue. Instead
-> > we'll write a RET at the end.
+> > I tried and everytime ended up not getting firmware. Though I did not
+> > investigate a lot. Christian seemed to have tested sometime back as
+> > well.
 > > 
-> > However, due to splitting the return path, such that each instruction
-> > has a unique stack offset, we now have a second jmp ftrace_epilogue in
-> > the middle of the function. That too needs to be overwritten by a RET.  
+> > Another problem is that we dont get driver_data in the quirk and there
+> > didnt seem a way to find the firmware name.
+> > 
+> > > > diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
+> > > > index c588277ac9b8..d413d53df94b 100644
+> > > > --- a/drivers/usb/host/xhci-pci-renesas.c
+> > > > +++ b/drivers/usb/host/xhci-pci-renesas.c
+> > > > @@ -336,6 +336,7 @@ static void renesas_fw_callback(const struct firmware *fw,
+> > > >  		goto cleanup;
+> > > >  	}
+> > > >  
+> > > > +	xhci_pci_probe(pdev, ctx->id);
+> > > >  	return;
+> > > 
+> > > I haven't looked into this but instead of calling xhci_pci_probe() here in the async fw
+> > > loading callback could we just return -EPROBE_DEFER until firmware is loaded when
+> > > xhci_pci_probe() is originally called?
+> > 
+> > Hmm, initially my thinking was how to tell device core to probe again,
+> > and then digging up I saw wait_for_device_probe() which can be used, let
+> > me try that
 > 
-> Right, but 'ip' needs to point to the trampoline's version of
-> 'ftrace_regs_caller_ret', not the original ftrace_64 version.
+> Sorry to report back that it doesn't work as planned :(
+> 
+> I modified the code to invoke the request_firmware_nowait() which will load
+> the firmware and provide the firmware in callback. Meanwhile return -EPROBE_DEFER.
+> 
+> After a bit, the core invokes the driver probe again and we hit the
+> roadblock. The request_firmware uses devres and allocates resources for
+> loading the firmware. The problem is that device core checks for this:
+> 
+> bus: 'pci': really_probe: probing driver xhci_hcd_pci with device 0000:01:00.0
+> pci 0000:01:00.0: Resources present before probing
+> 
+> And here the probe fails. In some cases the firmware_callback finishes
+> before this and we can probe again, but that is not very reliable.
+> 
+> I tested another way to use request_firmware() (sync version) and then
+> load the firmware in probe and load. The request is done only for
+> renesas devices if they dont have firmware already running.
+> So rest of the devices wont have any impact.
+> 
+> Now should we continue this way in the patchset or move to sync version.
+> Am okay either way.
 
-I noticed the same thing. And after applying just this patch (with tweaking
-the obtool mark ups to make it compile) it crashed.
+Just a word of caution.
 
--- Steve
+The problem with the usage of "sync" request_firmware in drivers is that if the
+code is built into the kernel the request_firmware() could be called before the
+(root) filesystem on which the firmware resides is ready.... So this will get
+weird during boot because what is the sync request_firmware() going to do? From what
+I know, this is why the funny _async firmware request APIs are even a thing...
+
+(I took a quick peek into the RPI 4 code, but unlike this code it seems to fetch
+from nvmem/eeprom, is this right? I had a tons-of-fun dealing with caldata and
+firmware on UBIFS in UBI Volumes. So I'm prepared to test this cases. :D )
+
+(Another possibility would be to use request_firmware_direct() here.
+Though, I don't know if it would be considered API Abuse to -EPROBE_DEFER
+on errors of request_firmware_direct() in order to wait for FSes to appear )
+
+Regards,
+Christian
+
+
