@@ -2,92 +2,97 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BF4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D14AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56EE20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF4C520772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgDAJwh (ORCPT
+        id S1731544AbgDAJ5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:52:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:47414 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725860AbgDAJwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:52:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDB611FB;
-        Wed,  1 Apr 2020 02:52:35 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96DBF3F52E;
-        Wed,  1 Apr 2020 02:52:34 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 10:52:26 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
-Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] driver/perf: Add PMU driver for the ARM DMC-620 memory
- controller.
-Message-ID: <20200401095226.GA17163@C02TD0UTHF1T.local>
-References: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
- <20200319151646.GC4876@lakrids.cambridge.arm.com>
- <23AD5E45-15E3-4487-9B0D-0D9554DD9DE8@amperemail.onmicrosoft.com>
- <20200320105315.GA35932@C02TD0UTHF1T.local>
- <A50AA800-3F65-4761-9BCF-F86A028E107D@amperemail.onmicrosoft.com>
+        Wed, 1 Apr 2020 05:57:54 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36865 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbgDAJ5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 05:57:53 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jJa7u-0002Hr-19; Wed, 01 Apr 2020 11:57:38 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jJa7p-00067a-CQ; Wed, 01 Apr 2020 11:57:33 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        netdev@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>
+Subject: [PATCH] net: phy: at803x: fix clock sink configuration on ATH8030 and ATH8035
+Date:   Wed,  1 Apr 2020 11:57:32 +0200
+Message-Id: <20200401095732.23197-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <A50AA800-3F65-4761-9BCF-F86A028E107D@amperemail.onmicrosoft.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 03:14:59PM -0700, Tuan Phan wrote:
-> > On Mar 20, 2020, at 4:25 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Thu, Mar 19, 2020 at 12:03:43PM -0700, Tuan Phan wrote:
-> >>> On Mar 19, 2020, at 8:16 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >>> On Tue, Mar 17, 2020 at 05:29:38PM -0700, Tuan Phan wrote:
-> >>>> +static int arm_dmc620_pmu_dev_init(struct arm_dmc620_pmu *dmc620_pmu)
-> >>>> +{
-> >>>> +	struct platform_device *pdev = dmc620_pmu->pdev;
-> >>>> +	int ret;
-> >>>> +
-> >>>> +	ret = devm_request_irq(&pdev->dev, dmc620_pmu->irq,
-> >>>> +				arm_dmc620_pmu_handle_irq,
-> >>>> +				IRQF_SHARED,
-> >>>> +				dev_name(&pdev->dev), dmc620_pmu);
-> >>> 
-> >>> This should have IRQF_NOBALANCING | IRQF_NO_THREAD. I don't think we
-> >>> should have IRQF_SHARED.
-> >> => I agree on having IRQF_NOBALANCING and IRQF_NO_THREAD. But
-> >> IRQF_SHARED is needed. In our platform all DMC620s share same IRQs and
-> >> any cpus can access the pmu registers.
-> > 
-> > Linux needs to ensure that the same instance is concistently accessed
-> > from the same CPU, and needs to migrate the IRQ to handle that. Given we
-> > do that on a per-instance basis, we cannot share the IRQ with another
-> > instance.
-> > 
-> > Please feed back to you HW designers that muxing IRQs like this causes
-> > significant problems for software.
-> 
-> I looked at the SMMUv3 PMU driver and it also uses IRQF_SHARED. SMMUv3
-> PMU and DMC620 PMU are very much similar in which counters can be
-> accessed by any cores using memory map. Any special reasons
-> IRQF_SHARED works with SMMUv3 PMU driver?
+The masks in priv->clk_25m_reg and priv->clk_25m_mask are one-bits-set
+for the values that comprise the fields, not zero-bits-set.
 
-No; I believe that is a bug in the SMMUv3 PMU driver. If the IRQ were
-shared, and another driver that held the IRQ changed the affinity,
-things would go very wrong.
+This patch fixes the clock frequency configuration for ATH8030 and
+ATH8035 Atheros PHYs by removing the erroneous "~".
 
-Note that it's also missing IRQF_NOBALANCING, which is also necessary to
-avoid such issues.
+To reproduce this bug, configure the PHY  with the device tree binding
+"qca,clk-out-frequency" and remove the machine specific PHY fixups.
 
-Thanks,
-Mark.
+Fixes: 2f664823a47021 ("net: phy: at803x: add device tree binding")
+Reported-by: Russell King <linux@armlinux.org.uk>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/at803x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index 481cf48c9b9e4..31f731e6df720 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -425,8 +425,8 @@ static int at803x_parse_dt(struct phy_device *phydev)
+ 		 */
+ 		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
+ 		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
+-			priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
+-			priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
++			priv->clk_25m_reg &= AT8035_CLK_OUT_MASK;
++			priv->clk_25m_mask &= AT8035_CLK_OUT_MASK;
+ 		}
+ 	}
+ 
+-- 
+2.26.0.rc2
+
