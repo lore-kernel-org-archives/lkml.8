@@ -2,132 +2,69 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D171C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53517C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81B620719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:40:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a+aLqsr/"
+	by mail.kernel.org (Postfix) with ESMTP id 2E27420719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733131AbgDAOkA (ORCPT
+        id S1733048AbgDAOlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:40:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34787 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732970AbgDAOj6 (ORCPT
+        Wed, 1 Apr 2020 10:41:13 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:49886 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbgDAOlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:39:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585751997;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3dF1PbHxH2PUjMb+4bV/GaRouljVSwT6GLw7f2p2RYE=;
-        b=a+aLqsr/I9qHDHqMIPi7scK5MVwbPEEdIBla0d6m7ayy6yBUHF/kQJFrZAvlnwVWvmBeIc
-        9qZTq2VR14TXBaMsgVsUFLCywExGEQnflQz8oDe5YNrbb8CJ0vC/FWR/Dl6z9K70fpFiZs
-        oh/2nJgYFgigzbL++jOe4F/W5qpezrc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-151-C322hxx7Nt6lcsGRbTY05w-1; Wed, 01 Apr 2020 10:39:55 -0400
-X-MC-Unique: C322hxx7Nt6lcsGRbTY05w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B5DCD8017FB;
-        Wed,  1 Apr 2020 14:39:52 +0000 (UTC)
-Received: from [10.72.12.139] (ovpn-12-139.pek2.redhat.com [10.72.12.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A66DE19C69;
-        Wed,  1 Apr 2020 14:39:35 +0000 (UTC)
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <20200401092004-mutt-send-email-mst@kernel.org>
- <6b4d169a-9962-6014-5423-1507059343e9@redhat.com>
- <20200401100954-mutt-send-email-mst@kernel.org>
- <3dd3b7e7-e3d9-dba4-00fc-868081f95ab7@redhat.com>
- <20200401103311-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <51e43cc8-63fe-94c1-54f6-1200e5ef772d@redhat.com>
-Date:   Wed, 1 Apr 2020 22:39:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 10:41:12 -0400
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+        by gardel.0pointer.net (Postfix) with ESMTP id 25D0AE814E8;
+        Wed,  1 Apr 2020 16:41:10 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 9A065160704; Wed,  1 Apr 2020 16:41:09 +0200 (CEST)
+Date:   Wed, 1 Apr 2020 16:41:09 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        dray@redhat.com, kzak@redhat.com, mszeredi@redhat.com,
+        swhiteho@redhat.com, jlayton@redhat.com, raven@themaw.net,
+        andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cyphar@cyphar.com
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+Message-ID: <20200401144109.GA29945@gardel-login>
+References: <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
+ <1445647.1585576702@warthog.procyon.org.uk>
+ <2418286.1585691572@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200401103311-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2418286.1585691572@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Di, 31.03.20 22:52, David Howells (dhowells@redhat.com) wrote:
 
-On 2020/4/1 =E4=B8=8B=E5=8D=8810:35, Michael S. Tsirkin wrote:
->> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
->> index 2523a1d4290a..362b832f5338 100644
->> --- a/drivers/vhost/Kconfig
->> +++ b/drivers/vhost/Kconfig
->> @@ -11,19 +11,23 @@ config VHOST_RING
->>   	  This option is selected by any driver which needs to access
->>   	  the host side of a virtio ring.
->>  =20
->> -menuconfig VHOST
->> -	tristate "Host kernel accelerator for virtio (VHOST)"
->> -	depends on EVENTFD
->> +config VHOST
->> +	tristate
->>   	select VHOST_IOTLB
->>   	help
->>   	  This option is selected by any driver which needs to access
->>   	  the core of vhost.
->>  =20
->> -if VHOST
->> +menuconfig VHOST_MENU
->> +	bool "VHOST drivers"
->> +	default y
->> +
->> +if VHOST_MENU
-> Will this not still have the problem with defconfigs? They don't set
-> VHOST_MENU ...
+> Christian Brauner <christian.brauner@ubuntu.com> wrote:
+>
+> > querying all properties of a mount atomically all-at-once,
+>
+> I don't actually offer that, per se.
+>
+> Having an atomic all-at-once query for a single mount is actually quite a
+> burden on the system.  There's potentially a lot of state involved, much of
+> which you don't necessarily need.
 
+Hmm, do it like with statx() and specify a mask for the fields userspace
+wants? Then it would be as lightweight as it possibly could be?
 
-Looks not, since it was enabled by default.
+Lennart
 
-I tested this on s390/ppc defconfigs:
-
-# make ARCH=3Ds390 defconfig
-*** Default configuration is based on 'defconfig'
-#
-# No change to .config
-#
-# grep CONFIG_VHOST .config
-CONFIG_VHOST_IOTLB=3Dm
-CONFIG_VHOST=3Dm
-CONFIG_VHOST_MENU=3Dy
-CONFIG_VHOST_NET=3Dm
-CONFIG_VHOST_VSOCK=3Dm
-# CONFIG_VHOST_VDPA is not set
-# CONFIG_VHOST_CROSS_ENDIAN_LEGACY is not set
-
-Thanks
-
+--
+Lennart Poettering, Berlin
