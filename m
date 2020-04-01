@@ -2,143 +2,130 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F90C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6495C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32B320787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED0A20787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D3f/2242"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHHvm2+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731727AbgDAEpi (ORCPT
+        id S1731750AbgDAEsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 00:45:38 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51566 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727727AbgDAEph (ORCPT
+        Wed, 1 Apr 2020 00:48:10 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36102 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgDAEsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 00:45:37 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0314dh6u006195;
-        Wed, 1 Apr 2020 04:45:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=YdM67ldAhHFfeDw9nUHOdcdwI+KPiQC/GZZKaa1lFK0=;
- b=D3f/2242QKG9Hze6Cr9Y+7RFEJN9Bxy2wSUpcvnmNP+Wjpk21qmAQdlKpCXW8VoVyhGr
- 8DmSFRkv3jR/0FCpo83ElEnYVBSvHEpkpTIebUi+DI1NOaM7kgtbR7fShtbqZvBkb3DY
- 5pRifF4g19pEk9zD0LLq/tcjOH+DmkXeMe5HtfqYqr/Ggegzs1WzbLMuiHe/IVcm+XuH
- 39rta1TEzjJUpGzhcel7/Fp2ZGYe0R/WP5Uk0CsBsieaKk7jKELWDzztQ2LlcueWU+Tq
- c+6+9sQ9Y7+0jRRfYS2Qkp2QuFe07OwDX+u3D+OirN2RcBd57WA/Vr78WAgKDGBDLoiJ xg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 303yun5s11-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Apr 2020 04:45:31 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0314h1kR190293;
-        Wed, 1 Apr 2020 04:45:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 302gcepp85-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Apr 2020 04:45:31 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0314jUxN016795;
-        Wed, 1 Apr 2020 04:45:30 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Mar 2020 21:45:29 -0700
-Date:   Tue, 31 Mar 2020 21:45:28 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Chandan Rajendra <chandan@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: xfs metadata corruption since 30 March
-Message-ID: <20200401044528.GE56958@magnolia>
-References: <990EDC4E-1A4E-4AC3-84D9-078ACF5EB9CC@lca.pw>
- <11749734.KdfBBZeIvc@localhost.localdomain>
- <FDCFF269-C30C-42A8-B926-A8731E110848@lca.pw>
+        Wed, 1 Apr 2020 00:48:09 -0400
+Received: by mail-il1-f194.google.com with SMTP id p13so21754039ilp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 21:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=yBNtDDyEZFLUMk99HIbSZunA51hK1hAXkAOVSNWlPhE=;
+        b=gHHvm2+EYiTjiYnXL9ZQC35zh8qy4MzJo/SxFMKVeirEvOXDfWObiT+GJVmi2tHFH1
+         qS8IWcfYxxcJRGfkUR/Tge7RS4pMc6LJa8zxcGgq+Go7O8BsToi+FjD7DQhoYtgWYuj3
+         87S6JMzI1P4zTqoH9LUyQ7Od67OL6v6WqlhtnSdG+NGwxuBbWsp8jBqi17h+vvsWWNbv
+         YRr5WP/8YHqN/S5Upjusaq+c5k80vXOXzw7/CfPf6a+VGT+6i8edQG0xDqoMLO1GC2wJ
+         eleNmILDjveiVyFGQ7bYU5UumjrVsRw8Pd9Yw3T0AEmXh/KID0c12pInY0cynlGPvHwR
+         SlTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=yBNtDDyEZFLUMk99HIbSZunA51hK1hAXkAOVSNWlPhE=;
+        b=EMwJqrhVX9ihiguN+nVd+YGzE/+cSaazJtDGpUPw5TgLu7HQQ8n1biVBe0gLxZS/9c
+         eq6GyBuOLUjhdL5KKLyL227ceSlHAuBxpfpiAvOglHn8jo94f2/LQ7+VCPJeQ3a4xrVr
+         j/a5vSxzeAiocIGy9MET8w9xMmyfkeRcTklp90YSzn+7ahMHV1fZARw0QP37ljzZHj3T
+         nCTX63uW2NW1tsWKovmlaRqTmhtGGEgqctPpTWhhRGaEMLBG3xZ3JPmSojA+MP+FObqX
+         +BcbT1+g+UJPRJsRLklySv9acbfzYacETsmQXBgXxIDtyvwF17r36Alf+1aYpylvdubk
+         49JQ==
+X-Gm-Message-State: ANhLgQ217qHlVg7c6c7XYuwH1aw4BpdsLHMt3drILP6+OiLk2sg9m0sM
+        hASfFujJSQPjtezgW6X9/ku8xkECXe6AA/A0rDg=
+X-Google-Smtp-Source: ADFU+vv3ujcF3LXkt0pbsCBwIDFrWPnbm2URgmFYXVqHOeM458ygbF9LTJKfV6jzpTxLc86+wXzKR4a0/jckOotShuM=
+X-Received: by 2002:a92:c787:: with SMTP id c7mr18189425ilk.87.1585716487274;
+ Tue, 31 Mar 2020 21:48:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <FDCFF269-C30C-42A8-B926-A8731E110848@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9577 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 suspectscore=27 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004010041
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9577 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- suspectscore=27 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004010040
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Tue, 31 Mar 2020 23:47:56 -0500
+Message-ID: <CABb+yY0-q+5+pqP-rBHCYpw-LmT+h80+OU26XL34fTrXhO+T3Q@mail.gmail.com>
+Subject: [GIT PULL] Mailbox changes for v5.7
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 12:15:32AM -0400, Qian Cai wrote:
-> 
-> 
-> > On Apr 1, 2020, at 12:14 AM, Chandan Rajendra <chandan@linux.ibm.com> wrote:
-> > 
-> > On Wednesday, April 1, 2020 3:27 AM Qian Cai wrote: 
-> >> Ever since two days ago, linux-next starts to trigger xfs metadata corruption
-> >> during compilation workloads on both powerpc and arm64,
-> > 
-> > Can you please provide the filesystem geometry information?
-> > You can get that by executing "xfs_info <mount-point>" command.
-> > 
+Hi Linus,
 
-Hmm.   Do the arm/ppc systems have 64k pages?  kconfigs might be a good
-starting place.  Also, does the xfs for-next branch exhibit this
-problem, or is it just the big -next branch that Stephen Rothwell puts
-out?
+The following changes since commit 6c90b86a745a446717fdf408c4a8a4631a5e8ee3:
 
---D
+  Merge tag 'mmc-v5.6-rc6' of
+git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc (2020-03-19
+12:45:14 -0700)
 
-> == arm64 ==
-> # xfs_info /home/
-> meta-data=/dev/mapper/rhel_hpe--apollo--cn99xx--11-home isize=512    agcount=4, agsize=113568256 blks
->          =                       sectsz=4096  attr=2, projid32bit=1
->          =                       crc=1        finobt=1, sparse=1, rmapbt=0
->          =                       reflink=1
-> data     =                       bsize=4096   blocks=454273024, imaxpct=5
->          =                       sunit=0      swidth=0 blks
-> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
-> log      =internal log           bsize=4096   blocks=221813, version=2
->          =                       sectsz=4096  sunit=1 blks, lazy-count=1
-> realtime =none                   extsz=4096   blocks=0, rtextents=0
-> 
-> 
-> == powerpc ==
-> # xfs_info /home/
-> meta-data=/dev/mapper/rhel_ibm--p9wr--01-home isize=512    agcount=4, agsize=118489856 blks
->          =                       sectsz=4096  attr=2, projid32bit=1
->          =                       crc=1        finobt=1, sparse=1, rmapbt=0
->          =                       reflink=1
-> data     =                       bsize=4096   blocks=473959424, imaxpct=5
->          =                       sunit=0      swidth=0 blks
-> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
-> log      =internal log           bsize=4096   blocks=231425, version=2
->          =                       sectsz=4096  sunit=1 blks, lazy-count=1
-> realtime =none                   extsz=4096   blocks=0, rtextents=0
-> 
-> == x86 (not yet reproduced)  ==
-> meta-data=/dev/mapper/rhel_hpe--dl380gen9--01-home isize=512    agcount=16, agsize=3283776 blks
->          =                       sectsz=512   attr=2, projid32bit=1
->          =                       crc=1        finobt=1, sparse=1, rmapbt=0
->          =                       reflink=1
-> data     =                       bsize=4096   blocks=52540416, imaxpct=25
->          =                       sunit=64     swidth=64 blks
-> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
-> log      =internal log           bsize=4096   blocks=25664, version=2
->          =                       sectsz=512   sunit=0 blks, lazy-count=1
-> realtime =none                   extsz=4096   blocks=0, rtextents=0
+are available in the Git repository at:
+
+  git://git.linaro.org/landing-teams/working/fujitsu/integration.git
+tags/mailbox-v5.7
+
+for you to fetch changes up to 0a67003b1985c79811160af1b01aca07cd5fbc53:
+
+  mailbox: imx: add SCU MU support (2020-03-19 23:04:32 -0500)
+
+----------------------------------------------------------------
+- imx: add support for i.MX8/8X to existing driver
+- mediatek: drop the atomix execution feature, add flush
+- allwinner: new 'msgbox' controller driver
+- armada: misc: drop redundant error print
+- bcm: misc: catch error in probe and snprintf buffer overflow
+
+----------------------------------------------------------------
+Bibby Hsieh (3):
+      dt-binding: gce: remove atomic_exec in mboxes property
+      mailbox: mediatek: implement flush function
+      mailbox: mediatek: remove implementation related to atomic_exec
+
+Peng Fan (3):
+      dt-bindings: mailbox: imx-mu: add SCU MU support
+      mailbox: imx: restructure code to make easy for new MU
+      mailbox: imx: add SCU MU support
+
+Rayagonda Kokatanur (1):
+      maillbox: bcm-flexrm-mailbox: handle cmpl_pool dma allocation failure
+
+Samuel Holland (2):
+      dt-bindings: mailbox: Add a binding for the sun6i msgbox
+      mailbox: sun6i-msgbox: Add a new mailbox driver
+
+Takashi Iwai (1):
+      mailbox: bcm-pdc: Use scnprintf() for avoiding potential buffer overflow
+
+Tang Bin (1):
+      mailbox:armada-37xx-rwtm:remove duplicate print in
+armada_37xx_mbox_probe()
+
+ .../mailbox/allwinner,sun6i-a31-msgbox.yaml        |  80 +++++
+ .../devicetree/bindings/mailbox/fsl,mu.txt         |   2 +
+ .../devicetree/bindings/mailbox/mtk-gce.txt        |  10 +-
+ drivers/mailbox/Kconfig                            |   9 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/armada-37xx-rwtm-mailbox.c         |   8 +-
+ drivers/mailbox/bcm-flexrm-mailbox.c               |   2 +
+ drivers/mailbox/bcm-pdc-mailbox.c                  |  20 +-
+ drivers/mailbox/imx-mailbox.c                      | 288 ++++++++++++++----
+ drivers/mailbox/mtk-cmdq-mailbox.c                 | 128 ++++----
+ drivers/mailbox/sun6i-msgbox.c                     | 326 +++++++++++++++++++++
+ 11 files changed, 733 insertions(+), 142 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
+ create mode 100644 drivers/mailbox/sun6i-msgbox.c
