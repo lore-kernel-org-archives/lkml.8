@@ -2,113 +2,143 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62C5C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C39DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7485820719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CBF2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:16:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDN9Lw4V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+d7Rorm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732803AbgDASQi (ORCPT
+        id S1732826AbgDASQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:16:38 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:50561 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732316AbgDASQi (ORCPT
+        Wed, 1 Apr 2020 14:16:40 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41364 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727723AbgDASQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Apr 2020 14:16:38 -0400
-Received: by mail-wm1-f46.google.com with SMTP id t128so775200wma.0;
-        Wed, 01 Apr 2020 11:16:35 -0700 (PDT)
+Received: by mail-lf1-f66.google.com with SMTP id z23so496724lfh.8;
+        Wed, 01 Apr 2020 11:16:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BBfUFSmU8zvUnDHqRC5Mz8a2y8QFA/TqUJ1aNUh3AOs=;
-        b=XDN9Lw4VT7+8iCHmEh0XU2gv3/ozIxXfd+MR1/SDI305t46ys2PDgbzeKaBYcN4rUk
-         fRrkEy0muuSv0VEPcm0VyLhjBG2AB0mvGWxTxfEyW0NlFxvNz575aMEYM6cKDJ2FqHqb
-         kP/0EUngflH4WTqE/GHfWBgC7rHFPCseoKaul+RgXxXJYJG7+rIG5sXnFgda1UG5ET3y
-         t0yJSCysR6ZF+CoK2kcYjyBY0g7PoJyn+RdSDLKWGxTNQ8c01mqmEiTizuZ1KCGcnv3L
-         WvwQZdgHQSN/k0mRsfbAWtvjsLisbSvGKeuexz1hs27OUFNlgHL6anKL9r/65zvHLWh7
-         2QZg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ohKhIvr0zaGkZNZ8iCKmPfOv0u8WbM7PXyOQtVWyFt8=;
+        b=K+d7Rorms1Cni3yLww4dnDdrJOs14OO60FrW3zNhaJMt4znxIyzrsMPueYF6XwN29x
+         uw01a0igiJEkp4Pqos6HPFTtFqeJc7Mt/ioE/Hx+si9FW41oZ4MsMclcGXAMd+he1DyU
+         4Z6N4MWZoI64SqGI+BgU3YQ+XJxOc6wbqJQJ7X2bRJFJD4aMWPugN6dB1GfFVMWXV59V
+         FDGHyJVKb4Nhe8nvWOOZfNb+3wylIfpCjNTWAMnuwuCnxBQPuyij8XzEqEOWaqnbQqOD
+         X1azb/qNUAmS8rQAjCdXEYpBtO0M2Wtn1Lvpz0SnCUWA+8gZ85Xg/gdI0vu2RfFOti/s
+         CyUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BBfUFSmU8zvUnDHqRC5Mz8a2y8QFA/TqUJ1aNUh3AOs=;
-        b=ZDjfFcFGSxpECZxD9lEkxzFjw31OYS+rr+ML1RmYDpRo7z2mYzVLlj/pD3JPFYVRtV
-         nzynlOZ9Ps7bdty328owhFlEt3KQnNvfuKIWR3is4fr77H3ZB+tgWvQ5nwdOrkgm4X3y
-         LkuJ2OUC7sc8usa8ZUM7hZumS/xhh0D9Ugr2r9jywZEa97MVfoJHlX4YDqKn0Rdml2Ha
-         PFl7szqK8mFnGyeTKn/O4tmEqNyIc1M+33MFTl0VtaFMVk2CMfGONhkgacbwX+9vRCYQ
-         ejToBPWsO+CEL8cUqxn4UVA6WV3bxiznDrFZDVcwR7H+h5PSn9icE0hRAzQSU+f1LO52
-         GW9g==
-X-Gm-Message-State: AGi0PuZHzSFh4jPeAEJMbbnCs6jdxlxsB8bxX7effnDm82uHdA44zhPR
-        lQnvK2I6CzA3aXm5l1c3iNAIN5Ol7xP9EDTKF1w=
-X-Google-Smtp-Source: APiQypJ7+9mjMttUBHn6NWR20sM60GQuCanYIuty4mLmSFnz8TD2ROhWoUQ+0V8GY/ltD/73QWIeNZwVmN+k4F1tII4=
-X-Received: by 2002:a1c:2842:: with SMTP id o63mr5497490wmo.73.1585764994404;
- Wed, 01 Apr 2020 11:16:34 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ohKhIvr0zaGkZNZ8iCKmPfOv0u8WbM7PXyOQtVWyFt8=;
+        b=lmzj1OZuXO+RiK5cEcwOyOfAnxfLuqBlwysPEqZ1vLofZfuieqs9FOLCT2pHqNHOrc
+         qzMaoVvieMIGXS3cVlMWlCZe+5XyphLE2WLpH/0lojfaz2mmvT60/KVYaVeOl9/SxgU9
+         jEF1ichBksqaqm3jAFS+W1UZoIlESeh9sZj3g6p19k8na5d/Qzr32s5eIMOJqIOTkkg2
+         ZYBoNPScVkNbrEwaa1djfpDiOa9ct3Dec4OfkkyMp/kZR8ZApn2MzW8WfVE4VMuvyexK
+         tYw7/KDtUrVv4NOvi4NfeNm8Bhvgka9LDfsffooui87YayzKAzh6yoR9yvOnAqajsmJS
+         95Lw==
+X-Gm-Message-State: AGi0PuYURct7AvRM6WsBjtor8OFP65a21zfBV9TMEHbG03MRhDQl6ajX
+        O//Yip6i/7oqsOhfCnm95b4=
+X-Google-Smtp-Source: APiQypLUT/Urx2WPTfjLpIiARF0DyHJ3Fb08TbT+Qv/xlBHs3Zk7A9+cT+CQ8O/7hciGtwRKiKAabA==
+X-Received: by 2002:a19:4843:: with SMTP id v64mr15013886lfa.171.1585764996901;
+        Wed, 01 Apr 2020 11:16:36 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id b28sm1854143ljp.90.2020.04.01.11.16.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 11:16:35 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 1 Apr 2020 20:16:01 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200401181601.GA4042@pc636>
+References: <20200331131628.153118-1-joel@joelfernandes.org>
+ <20200331140433.GA26498@pc636>
+ <20200331150911.GC236678@google.com>
+ <20200331160119.GA27614@pc636>
+ <20200331183000.GD236678@google.com>
+ <20200401122550.GA32593@pc636>
+ <20200401134745.GV19865@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20200401163545.263372-1-colin.king@canonical.com>
-In-Reply-To: <20200401163545.263372-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 1 Apr 2020 14:16:22 -0400
-Message-ID: <CADnq5_OZ2Wfqpby69aTXy1OCE25ncMNZ=PqZh=jN7gX1s1h2ew@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/amdgpu/vcn: fix spelling mistake "fimware" -> "firmware"
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Leo Liu <leo.liu@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401134745.GV19865@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 12:35 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a spelling mistake in a dev_err error message. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > > 
+> > > Right. Per discussion with Paul, we discussed that it is better if we
+> > > pre-allocate N number of array blocks per-CPU and use it for the cache.
+> > > Default for N being 1 and tunable with a boot parameter. I agree with this.
+> > > 
+> > As discussed before, we can make use of memory pool API for such
+> > purpose. But i am not sure if it should be one pool per CPU or
+> > one pool per NR_CPUS, that would contain NR_CPUS * N pre-allocated
+> > blocks.
+> 
+> There are advantages and disadvantages either way.  The advantage of the
+> per-CPU pool is that you don't have to worry about something like lock
+> contention causing even more pain during an OOM event.  One potential
+> problem wtih the per-CPU pool can happen when callbacks are offloaded,
+> in which case the CPUs needing the memory might never be getting it,
+> because in the offloaded case (RCU_NOCB_CPU=y) the CPU posting callbacks
+> might never be invoking them.
+> 
+> But from what I know now, systems built with CONFIG_RCU_NOCB_CPU=y
+> either don't have heavy callback loads (HPC systems) or are carefully
+> configured (real-time systems).  Plus large systems would probably end
+> up needing something pretty close to a slab allocator to keep from dying
+> from lock contention, and it is hard to justify that level of complexity
+> at this point.
+> 
+> Or is there some way to mark a specific slab allocator instance as being
+> able to keep some amount of memory no matter what the OOM conditions are?
+> If not, the current per-CPU pre-allocated cache is a better choice in the
+> near term.
+> 
+As for mempool API:
 
-Applied.  thanks!
+mempool_alloc() just tries to make regular allocation taking into
+account passed gfp_t bitmask. If it fails due to memory pressure,
+it uses reserved preallocated pool that consists of number of
+desirable elements(preallocated when a pool is created).
 
-Alex
+mempoll_free() returns an element to to pool, if it detects that
+current reserved elements are lower then minimum allowed elements,
+it will add an element to reserved pool, i.e. refill it. Otherwise
+just call kfree() or whatever we define as "element-freeing function."
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
-> index 328b6ceb80de..d653a18dcbc3 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
-> @@ -187,7 +187,7 @@ int amdgpu_vcn_sw_init(struct amdgpu_device *adev)
->                                 PAGE_SIZE, AMDGPU_GEM_DOMAIN_VRAM, &adev->vcn.inst[i].fw_shared_bo,
->                                 &adev->vcn.inst[i].fw_shared_gpu_addr, &adev->vcn.inst[i].fw_shared_cpu_addr);
->                 if (r) {
-> -                       dev_err(adev->dev, "VCN %d (%d) failed to allocate fimware shared bo\n", i, r);
-> +                       dev_err(adev->dev, "VCN %d (%d) failed to allocate firmware shared bo\n", i, r);
->                         return r;
->                 }
->         }
-> --
-> 2.25.1
+> If not, the current per-CPU pre-allocated cache is a better choice in the
+> near term.
 >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+OK. I see your point.
+
+Thank you for your comments and view :)
+
+--
+Vlad Rezki
