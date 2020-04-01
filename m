@@ -2,218 +2,126 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C877C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D649C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73EE0206D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 197AC206D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387485AbgDAXyR (ORCPT
+        id S2387505AbgDAXyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:54:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38802 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732682AbgDAXyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:54:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9C669ACE3;
-        Wed,  1 Apr 2020 23:54:14 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>
-Date:   Thu, 02 Apr 2020 10:54:07 +1100
-Cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] Deprecate NR_UNSTABLE_NFS, use NR_WRITEBACK
-In-Reply-To: <87sghmyd8v.fsf@notabene.neil.brown.name>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87sghmyd8v.fsf@notabene.neil.brown.name>
-Message-ID: <87pncqyd7k.fsf@notabene.neil.brown.name>
+        Wed, 1 Apr 2020 19:54:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46802 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732682AbgDAXye (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 19:54:34 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031NYt6D027340;
+        Wed, 1 Apr 2020 19:53:49 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 304gsstyww-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 19:53:49 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 031NpI4U002885;
+        Wed, 1 Apr 2020 23:53:48 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01dal.us.ibm.com with ESMTP id 301x77nuq5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 23:53:48 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031NrlTM57082224
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 23:53:47 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC82E7805E;
+        Wed,  1 Apr 2020 23:53:46 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3EA327805F;
+        Wed,  1 Apr 2020 23:53:40 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.162.156])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 23:53:39 +0000 (GMT)
+Message-ID: <e304952f5177f85faff4560ded5aa1dad7af5fe2.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 1/1] ppc/crash: Reset spinlocks during crash
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Enrico Weigelt <info@metux.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Wed, 01 Apr 2020 20:53:31 -0300
+In-Reply-To: <20200401092618.GW20713@hirez.programming.kicks-ass.net>
+References: <20200401000020.590447-1-leonardo@linux.ibm.com>
+         <20200401092618.GW20713@hirez.programming.kicks-ass.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-KDf7FjQwdoNO4X4hfXtK"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=879 mlxscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+
+--=-KDf7FjQwdoNO4X4hfXtK
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+Hello Peter,=20
 
-After an NFS page has been written it is considered "unstable" until a
-COMMIT request succeeds.  If the COMMIT fails, the page will be
-re-written.
+On Wed, 2020-04-01 at 11:26 +0200, Peter Zijlstra wrote:
+> You might want to add a note to your asm/spinlock.h that you rely on
+> spin_unlock() unconditionally clearing a lock.
+>=20
+> This isn't naturally true for all lock implementations. Consider ticket
+> locks, doing a surplus unlock will wreck your lock state in that case.
+> So anybody poking at the powerpc spinlock implementation had better know
+> you rely on this.
 
-These "unstable" pages are currently accounted as "reclaimable",
-either in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
-'reclaimable' count.  This might have made sense when sending the COMMIT
-required a separate action by the VFS/MM (e.g. releasepage() used to
-send a COMMIT).  However now that all writes generated by ->writepages()
-will automatically be followed by a COMMIT, it makes more sense to
-treat them as writeback pages.
+Good idea. I will add this to my changes and generate a v4.
 
-So this page deprecates NR_UNSTABLE_NFS and accounts unstable pages in
-NR_WRITEBACK and WB_WRITEBACK.
+Thank you,
 
-A particular effect of this change is that when
-wb_check_background_flush() calls wb_over_bg_threshold(), the latter
-will report 'true' a lot less often as the 'unstable' pages are no
-longer considered 'dirty' (and there is nothing that writeback can do
-about them anyway).
-
-Currently wb_check_background_flush() will trigger writeback to NFS even
-when there are relatively few dirty pages (if there are lots of unstable
-pages), this can result in small writes going to the server (10s of
-Kilobytes rather than a Megabyte) which hurts throughput.
-With this that, there are fewer writes which are each larger on average.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
- fs/fs-writeback.c      | 1 -
- fs/nfs/internal.h      | 7 +++++--
- fs/nfs/write.c         | 4 ++--
- include/linux/mmzone.h | 2 +-
- mm/memcontrol.c        | 1 -
- mm/page-writeback.c    | 7 ++-----
- 6 files changed, 10 insertions(+), 12 deletions(-)
-
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 76ac9c7d32ec..c5bdf46e3b4b 100644
-=2D-- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -1070,7 +1070,6 @@ static void bdi_split_work_to_wbs(struct backing_dev_=
-info *bdi,
- static unsigned long get_nr_dirty_pages(void)
- {
- 	return global_node_page_state(NR_FILE_DIRTY) +
-=2D		global_node_page_state(NR_UNSTABLE_NFS) +
- 		get_nr_dirty_inodes();
- }
-=20
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index f80c47d5ff27..ba1ff5adeccd 100644
-=2D-- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -660,8 +660,11 @@ void nfs_mark_page_unstable(struct page *page, struct =
-nfs_commit_info *cinfo)
- 	if (!cinfo->dreq) {
- 		struct inode *inode =3D page_file_mapping(page)->host;
-=20
-=2D		inc_node_page_state(page, NR_UNSTABLE_NFS);
-=2D		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_RECLAIMABLE);
-+		/* This page is really still in write-back - just that the
-+		 * writeback is happening on the server now.
-+		 */
-+		inc_node_page_state(page, NR_WRITEBACK);
-+		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
- 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
- 	}
- }
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index c478b772cc49..2e15a56620b3 100644
-=2D-- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -958,9 +958,9 @@ nfs_mark_request_commit(struct nfs_page *req, struct pn=
-fs_layout_segment *lseg,
- static void
- nfs_clear_page_commit(struct page *page)
- {
-=2D	dec_node_page_state(page, NR_UNSTABLE_NFS);
-+	dec_node_page_state(page, NR_WRITEBACK);
- 	dec_wb_stat(&inode_to_bdi(page_file_mapping(page)->host)->wb,
-=2D		    WB_RECLAIMABLE);
-+		    WB_WRITEBACK);
- }
-=20
- /* Called holding the request lock on @req */
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 462f6873905a..227fcb8cd0e6 100644
-=2D-- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -237,7 +237,7 @@ enum node_stat_item {
- 	NR_FILE_THPS,
- 	NR_FILE_PMDMAPPED,
- 	NR_ANON_THPS,
-=2D	NR_UNSTABLE_NFS,	/* NFS unstable pages */
-+	NR_UNSTABLE_NFS,	/* NFS unstable pages - DEPRECATED DO NOT USE */
- 	NR_VMSCAN_WRITE,
- 	NR_VMSCAN_IMMEDIATE,	/* Prioritise for reclaim when writeback ends */
- 	NR_DIRTIED,		/* page dirtyings since bootup */
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 7ddf91c4295f..fad8e8a23235 100644
-=2D-- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4317,7 +4317,6 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, un=
-signed long *pfilepages,
-=20
- 	*pdirty =3D memcg_exact_page_state(memcg, NR_FILE_DIRTY);
-=20
-=2D	/* this should eventually include NR_UNSTABLE_NFS */
- 	*pwriteback =3D memcg_exact_page_state(memcg, NR_WRITEBACK);
- 	*pfilepages =3D memcg_exact_page_state(memcg, NR_INACTIVE_FILE) +
- 			memcg_exact_page_state(memcg, NR_ACTIVE_FILE);
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 2afb09fa2fe0..d1f03c799d11 100644
-=2D-- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -504,7 +504,6 @@ bool node_dirty_ok(struct pglist_data *pgdat)
- 	unsigned long nr_pages =3D 0;
-=20
- 	nr_pages +=3D node_page_state(pgdat, NR_FILE_DIRTY);
-=2D	nr_pages +=3D node_page_state(pgdat, NR_UNSTABLE_NFS);
- 	nr_pages +=3D node_page_state(pgdat, NR_WRITEBACK);
-=20
- 	return nr_pages <=3D limit;
-@@ -1595,8 +1594,7 @@ static void balance_dirty_pages(struct bdi_writeback =
-*wb,
- 		 * written to the server's write cache, but has not yet
- 		 * been flushed to permanent storage.
- 		 */
-=2D		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY) +
-=2D					global_node_page_state(NR_UNSTABLE_NFS);
-+		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY);
- 		gdtc->avail =3D global_dirtyable_memory();
- 		gdtc->dirty =3D nr_reclaimable + global_node_page_state(NR_WRITEBACK);
-=20
-@@ -1940,8 +1938,7 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb)
- 	 * as we're trying to decide whether to put more under writeback.
- 	 */
- 	gdtc->avail =3D global_dirtyable_memory();
-=2D	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY) +
-=2D		      global_node_page_state(NR_UNSTABLE_NFS);
-+	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY);
- 	domain_dirty_limits(gdtc);
-=20
- 	if (gdtc->dirty > gdtc->bg_thresh)
-=2D-=20
-2.26.0
-
-
---=-=-=
+--=-KDf7FjQwdoNO4X4hfXtK
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6FKZ8ACgkQOeye3VZi
-gblLJA/9Gfox05USaTaiOe2VF+TKwLQmcTQoIIkSD/9KH4RCz4kenbeVDitMuU3G
-0sNCkE6Ug4aWGQtHsJ+o9IhdwuLG8mN+4GfNt1fRoV3/JUEmNyIaE9HB5ZYAyOCK
-ahLPXBkhKW2ISGyweva/ic1FIsEIFz6NmOaUFM5ulFLMfoSRTTMTyUbZGZrUzVbI
-C6S9PXACbOYkVmSXxUOMcO04pleJzhyB0zkykWPkDenwleB4rBCw6I6YOdpf1EXp
-HCMMXwJTfzgFYXuN5wClvRxp3SSsWoyR/do+IR+I7xGRFotHT4f3zdM85f4PhEeI
-LBoGykHo/c38RySt3fnraDiGrokHGM3n8SIxVIHCnu5lssCuZgMW9QEmX3R1NBIs
-3U/fXAbSiGkXYAWscDKQhOMFZFBvLMSdu719EcbsuuRuMMNKvjNyHXiQyLdiX/hn
-veUgBytz/7fio+WfhC2h+xLZKqkLTU0tuO4rSNopADnZfWl9ieQPE4G88eP6LeIS
-/WNgdmY1Mh2/0AsZtny4oWQskpm+T8ahAcS6zz5MlQu9Qtk7hxMEbBIYkHrepH8D
-D6MMJMCEViCF2UZUb+FHNjbqJeVoaD8VvuAQL9PHVL72Kxg1N0HUOI25piszdGmI
-q4Dq9wkeEzMt6KnFivkqRMQJClziBcQe6Qk0/7izZCBdPWTLORk=
-=+oK6
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6FKXsACgkQlQYWtz9S
+ttT6PRAAlfpMg9qZK9Q7d5BJCzhUZdsE2wsPmmI7ynbk+XKYd4VHECBE6Lf7u1t+
+ShKanwxHRz0Bk1UxzP3UBLP5e7twvXcmgrZehNaT2kQd457B40Oli44JsBFZXsi4
+inN/HVcPaI+c5imygIb9tlae7hNX6XBfdj0sH4uRXcgafm/dJIRzc8OHUrfPBh7G
+GEDP72loBYwOqqt7n6nz03GCeHvV97Lq4frpx8fca70+u7+JH4gK9Hv21/gwuwSA
+yfF6vgY4xBMN7aWpeE+lw1A0xVfQv4aw6d4SgkDVUKTPV1jhWP44EfURwcyRl7ID
+OhOQ2ppYkuH7AIjCgaAYKClJ9JU/9TCRz2gJJ0/5ebZ6sPdD8fhcpz6WSQQMES6g
+mxhjXi2uram2KPf6OCA2TIyxgkRsez8XODU6qqxhV9QPxJjt8x0KeL2oHkl1SU7U
+H4u/ckxesRL0eFT/BbMCFaksPyQP9+GgzvRSPqueQHjjsqLf6zotwRCHVdF1diYg
+7FWKuFfNLHz19aq7M427+AhNTXhkSqzE5c2qa6MU+DMc31r1XRTJ9nCGB0omQ7h6
+NRaBkvn0ZXI0NlTBQXMVtrLfPJucsVM14PbTSgayttDQThAG9ulIHmeFsxQypTv/
+pB6LDSZVOdhFNI+RX/hG6GVIXpBoz7yZxeExeFWEYjYoOqMkKu0=
+=Ustc
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--=-KDf7FjQwdoNO4X4hfXtK--
+
