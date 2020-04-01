@@ -2,117 +2,129 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FA8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98126C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C6D2071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A5B2071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:05:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tn0ISNgF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXpjA8rT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733137AbgDAQEp (ORCPT
+        id S1730590AbgDAQFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:04:45 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42052 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732605AbgDAQEo (ORCPT
+        Wed, 1 Apr 2020 12:05:11 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44722 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgDAQFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:04:44 -0400
-Received: by mail-lf1-f67.google.com with SMTP id s13so98139lfb.9;
-        Wed, 01 Apr 2020 09:04:41 -0700 (PDT)
+        Wed, 1 Apr 2020 12:05:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m17so659593wrw.11;
+        Wed, 01 Apr 2020 09:05:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iWNS7KHFyQ5bu6U8NMaMjkVtL1KiyZGuoLdbDiyhEvM=;
-        b=tn0ISNgF98ws96k/2OHGrVRl8eUWsYbFOx42rO9b/fIzZP3QuhqIpUcSpz3FQo5Mmj
-         IabfzgwkA9Iacz2BrVM4Bg0tbJqT5kgtdqJynXyemmpOWU5lG8VL7jMJzpTPrlyadhZX
-         lJ7ndQFYVbYpvvPxh1a3pBORKBijIpygx5NG+OohDj6A0OnWOVbqGH0lqu5ygo3up8Es
-         HVNW/DPnZAv4zP+IzOgTucjiBDpJXwNOfK2582XBHGGLYe6NitAldOXx32qiS9wPzaOV
-         PeASkLkgkmTwhBc1ThcmUl+VdQ53w1aJerFOTq1snCLOedDhi1+P/ZEHTqfNSCojAkIF
-         ncAQ==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=x0iGf5X4LVYTv3/i+3RQO+ppyXBQZXoUL8LL0fm5I0w=;
+        b=EXpjA8rTQUsKE+qdZqP/OdGd6eCxiipdusbCGRdMgrzSFDoTFfrG8GcWy5dSL+FGAu
+         ZmAiMwADAOV9LvQ0JMLfaxNcfPTrWpQPuPaPxkK5bZQwQt4WNNGxNy2baRVZYXVIP5rT
+         6UR1mJoZ5uwMwQR09xEaxeei29Umc1sb9HHkqSPRgThc+AkTmVWz8YPHKtYWLcItT0IF
+         rv4j9Om54xQbV/ZQtczS930PXJ/ze/EcF3UEvLj0otsGO+DW7cena5EZ7doG/84pnfO+
+         CO4Dlu39M6co2U7plhwPYNFD+2FDjGLuLuk7vU057+iIupH64dmPnABgUU6YlwoYav9W
+         x7hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iWNS7KHFyQ5bu6U8NMaMjkVtL1KiyZGuoLdbDiyhEvM=;
-        b=b/WLyO5DtjJH4UqyjzN2Htz1k9LFR/HPKsyQWOK382HyMTn+PZbP7E1boVB9I7YnSf
-         kidhRH0CSAO+KNeQA/5BiL5yqdldY5ISquN9y4mNRLlzm6K/N2tSJC85FsWmj2BDBrmr
-         hQyevSMmLqXYJll3cMomtFf6jg1M8b4lX+dIzoCPDKHTO74ZzkoufBPAT4ZjQ5ZdE+Fn
-         T/+Y2/ZfCIhNCOXuyAM8ZvK4+Xh12ryECtMXj9eR6kD3C+NKXrMkuRRYHyLaGvAjCZkA
-         WdHdM9WvCkOmcwRy0R+teeasdkE6Yy+D6SI0PnYo5Ft8AMD5wDj8K+hfAQpHtGtOB5m3
-         mUWg==
-X-Gm-Message-State: AGi0PubpFLyKXurBWESeYuGNHiDTxyzn2LOGEFKBj9lAnWx1wO5SYDkw
-        aA9eF+sHxEEhAH86/pj7s2w=
-X-Google-Smtp-Source: APiQypJU1YqCB9vJfCLpdFLUNS5UY3yUTkwDgqWyE/X6+1zGYi8cVwDX5cWNow77G/IfuQWoFhoH6w==
-X-Received: by 2002:ac2:414f:: with SMTP id c15mr10444547lfi.2.1585757080432;
-        Wed, 01 Apr 2020 09:04:40 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id b28sm1638162ljp.90.2020.04.01.09.04.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 09:04:39 -0700 (PDT)
-Subject: Re: [PATCH v10 54/55] Input: atmel_mxt_ts: Implement synchronization
- during various operation
-To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-55-jiada_wang@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c53637ef-8e5d-3243-7236-5da360021f21@gmail.com>
-Date:   Wed, 1 Apr 2020 19:04:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=x0iGf5X4LVYTv3/i+3RQO+ppyXBQZXoUL8LL0fm5I0w=;
+        b=E2ezo9q0H6eKqlm34YpZYkwP88sl6PEfMO0c1MDcgSvVlcldNCMdpuBnL+s7w26HeA
+         UxGNvQ0qXX68JjEKzaQaSUP8VkNlW2WNUKxz70Su6OfSw3D2E2QfZqs5gqNngNGFmkgl
+         OOC5kz6SZnhXjyac9RxhQf2/Obtp/b+ClVMoamJHAQaSe7CjPcYvXomzimI7AiCE+bM3
+         ZZbFx+wcjzVmbjb+KSgfcQzjS79LrLIPw+j342ZtvjrmtqHT/5KoQNB134fRnJB7epYv
+         Zhtnohvrv9YxQckEJw+OrJyPFoC6tpuevOCm/XvKnL7CBc82q+48pKgNVyWb2xRgC11e
+         OSjA==
+X-Gm-Message-State: ANhLgQ0DfYFa5NRUQsHf2vRZTs9zFQbab2IZB+GLvU7luYpynSYA3Z7p
+        1o27bHZNXvo7fuG/17JHGg==
+X-Google-Smtp-Source: ADFU+vsGgsO5O4k/Oz4y3nId5ruptaNQ0NK34qLOhjZcXf6pDS0gcYHgxF/Tk6yhVtQY7TgTs81tYg==
+X-Received: by 2002:a5d:460f:: with SMTP id t15mr26748856wrq.413.1585757108643;
+        Wed, 01 Apr 2020 09:05:08 -0700 (PDT)
+Received: from earth.lan (host-92-23-85-227.as13285.net. [92.23.85.227])
+        by smtp.gmail.com with ESMTPSA id i21sm3321949wmb.23.2020.04.01.09.05.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 09:05:08 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+X-Google-Original-From: Jules Irenge <djed@earth.lan>
+Date:   Wed, 1 Apr 2020 17:04:54 +0100 (BST)
+To:     Jan Kara <jack@suse.cz>
+cc:     Jules Irenge <jbi.octave@gmail.com>, linux-kernel@vger.kernel.org,
+        boqun.feng@gmail.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:FILESYSTEM DIRECT ACCESS (DAX)" 
+        <linux-nvdimm@lists.01.org>
+Subject: Re: [PATCH 3/7] dax: Add missing annotation for
+ wait_entry_unlocked()
+In-Reply-To: <20200401100125.GB19466@quack2.suse.cz>
+Message-ID: <alpine.LFD.2.21.2004011702002.25676@earth.lan>
+References: <0/7> <20200331204643.11262-1-jbi.octave@gmail.com> <20200331204643.11262-4-jbi.octave@gmail.com> <20200401100125.GB19466@quack2.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200331105051.58896-55-jiada_wang@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.03.2020 13:50, Jiada Wang пишет:
-> From: Sanjeev Chugh <sanjeev_chugh@mentor.com>
-> 
-> There could be scope of race conditions when sysfs is being handled
-> and at the same time, device removal is occurring. For example,
-> we don't want the device removal to begin if the Atmel device
-> cfg update is going on or firmware update is going on. In such
-> cases, wait for device update to be completed before the removal
-> continues.
-> 
->     Thread                                          Thread 2:
-> =========================                       =========================
-> mxt_update_fw_store()                           mxt_remove()
-> mutex_lock(&data->lock)                         ...
-> mxt_initialize()                                //Tries to acquire lock
->   request_firmware_nowait()                     mutex_lock(&data->lock)
-> ...                                             ==>waits for lock()
-> ...                                             .
-> ...                                             .
-> mutex_unlock(&data->lock)                       .
->                                                 //Gets lock and proceeds
->                                                 mxt_free_input_device();
->                                                 ...
->                                                 mutex_unlock(&data->lock)
->                                                 //Frees atmel driver data
->                                                 kfree(data)
-> 
-> If the request_firmware_nowait() completes after the driver removal,
-> and callback is triggered. But kernel crashes since the module is
-> already removed.
-> 
-> This commit adds state machine to serialize such scenarios.
 
-Won't it be easier to bump driver's module use-count by __module_get()
-while firmware is updating? Or remove sysfs during of mxt_remove()?
+
+On Wed, 1 Apr 2020, Jan Kara wrote:
+
+> On Tue 31-03-20 21:46:39, Jules Irenge wrote:
+>> Sparse reports a warning at wait_entry_unlocked()
+>>
+>> warning: context imbalance in wait_entry_unlocked()
+>> 	- unexpected unlock
+>>
+>> The root cause is the missing annotation at wait_entry_unlocked()
+>> Add the missing __releases(xa) annotation.
+>>
+>> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+>> ---
+>>  fs/dax.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/fs/dax.c b/fs/dax.c
+>> index 1f1f0201cad1..adcd2a57fbad 100644
+>> --- a/fs/dax.c
+>> +++ b/fs/dax.c
+>> @@ -244,6 +244,7 @@ static void *get_unlocked_entry(struct xa_state *xas, unsigned int order)
+>>   * After we call xas_unlock_irq(), we cannot touch xas->xa.
+>>   */
+>>  static void wait_entry_unlocked(struct xa_state *xas, void *entry)
+>> +	__releases(xa)
+>
+> Thanks for the patch but is this a proper sparse annotation? I'd rather
+> expect something like __releases(xas->xa->xa_lock) here...
+>
+> 								Honza
+>
+>>  {
+>>  	struct wait_exceptional_entry_queue ewait;
+>>  	wait_queue_head_t *wq;
+>> --
+>> 2.24.1
+>>
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+>
+Thanks for the kind reply. I learned and changed. If there is a further 
+issue, please do not hesitate to contact me.
+Thanks,
+Jules
