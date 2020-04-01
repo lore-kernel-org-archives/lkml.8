@@ -2,108 +2,203 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700F5C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BA3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3273D206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D497206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LYTp9ksr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5KKPNVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733196AbgDAXgr (ORCPT
+        id S1733288AbgDAXhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:36:47 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34038 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732503AbgDAXgq (ORCPT
+        Wed, 1 Apr 2020 19:37:43 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45043 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732503AbgDAXhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:36:46 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a23so627219plm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:36:46 -0700 (PDT)
+        Wed, 1 Apr 2020 19:37:43 -0400
+Received: by mail-lj1-f195.google.com with SMTP id p14so1272208lji.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:37:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sQjK7qegajNFKiTPiHQ5Z456M8UVRRDL3FiaA3tyTGs=;
-        b=LYTp9ksrfOguPgd3XflLQaiRWyQXN2zGAWee6altMkkc2NYCumREpFdzZpExQW1Qq6
-         H8ZK7mzZ37Z7HLmx7GiNCrpchU54WVA51+coaid+eY4HnF3doY4Bz6inL0koZuy2NFm+
-         myL0WIcVxF+sjBOXLcspklxcfpViozESXgSbwrR6fXFLGxxXOmGleluSQRGL4ByE3r2Z
-         iTfxXwBN81CuR21mLL2wMwJpZBiOM5UYcYhp4lAdlLa+DdMXxsp1ligXXoRMqRrzzeYn
-         HZcOLvEQ+CKuDVUiZoqRasDJnI/9VYQ1xXn48wUYREmgLpyrAXI4xbbEXqXfYwFJnCYa
-         hb+Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vaEwhKzYh+esdrS+zsnAFLt/hs58JrgfVkhu1l8Vw2I=;
+        b=j5KKPNVGYu2o585DNi9+bxWpfCgtnw9/ky+To5RepGt/igy9pFKVIFK7gwid+7S/4Z
+         XNWvqNuC+XDfoVVC5kx18GZ/N4ge7YG3Criti6WRl/S2yfVjCIAWxiK8K9NzAE+T5QfY
+         esfbUOrI7sqPMSDl1sZkOaeN1eE3GHNT8RbSqXUUDA9qgNV3nxfJg3BIF8le84hKV7+1
+         nsr6rfFXN8QbwHRZyl66rSV9YafdY5w8ZaaqinYWnLmxZMv4Upb6knX0ua3uBj/Ns41s
+         jHme40iA8VPDDl7u2FrE3JPBkYOvRML2CCu8dUKCcqUDcWmIuulDGzgqCbruxRtW0XsM
+         26wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sQjK7qegajNFKiTPiHQ5Z456M8UVRRDL3FiaA3tyTGs=;
-        b=WMutjvechzkkhD9cyjhQRo2x7cnmLxmfvm3+68eF0D0JChEQILfRE/N6jZjk5LH2Wd
-         pErgYRdqtWToBHFSQ+2JFmXnyHh21COgHnwbpu7Q1/OHu04wxzMvr5qmedjZoibjlckk
-         ZfcorNV/oLnfS+JcIqvnw/olyMEyotIQV3r2NToKPrWLRzU3bovMLw36J1Cx8E+1Qq0v
-         ZTO4L95J73dbUMlWGEVOUfWKX8WyviingM25hmPh24YyzKVbP+CLDBiXdo1sllbIWVI9
-         I7YE0PI2pq6LM5btRbpMJ398JEED95Ckeep0pO1tXQ5GZXvdOvIRtmVQY0kGw2doKuD8
-         YyMA==
-X-Gm-Message-State: AGi0PuYaCsp0PhDKn9a8SpkSM4gWBwHOPdugptgLTjXEz4akqxLupxUY
-        waJd/YxFoYa0r5NMXotvvs0K0A==
-X-Google-Smtp-Source: APiQypIJCdx4hNppaFM2XL2D9B8R+4Fnma25HLV1H6qHB+zBdia/d//vCt3FUseVJwiQZfZ1RwBbVw==
-X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr275281plv.297.1585784205324;
-        Wed, 01 Apr 2020 16:36:45 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a15sm2369442pfg.77.2020.04.01.16.36.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 16:36:44 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 16:36:42 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     robdclark@gmail.com, agross@kernel.org, joro@8bytes.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/qcom:fix local_base status check
-Message-ID: <20200401233642.GI254911@minitux>
-References: <20200401152008.16740-1-tangbin@cmss.chinamobile.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vaEwhKzYh+esdrS+zsnAFLt/hs58JrgfVkhu1l8Vw2I=;
+        b=T0FrwZVzWfIKbCeMBM7vzE/i6hqEkPVg+NpzvN4N8kl6+d++mOA1ymOsSfFn3HUft7
+         /p5phxSiK3yGxnOC7a9otAXYXSVnRYi019SSqGMG7j9xpLtC94LmSE0gcJ+yBGcJZBbL
+         JszvodVy2h4uyrS4fHO52KMctIs+sZz8BYoc8LY91GMU0+EqGY8hoYmjidC8/TQ2Fdg/
+         63vsTl5S2WOYwonqaEalvtrXq0+3Ef2eG1qlDYNQhcA9zfG4vTgtWwCauNfTv0ILfGNg
+         oCM6x/boUUA5AAxXo+sMbUjXY98OclrCSPgx3pdGaCSLJn4RQRUcmWSQWgZdTS6YnJPX
+         gwtg==
+X-Gm-Message-State: AGi0PuazHIM7JsAh+13bnLvAowwKBHz8UqHu5VIF5mX3NFo0/ZAarxei
+        1nhrkOxyWNXIBr8ji9ivD0FsmC79jk3AdMvCI70B6A==
+X-Google-Smtp-Source: APiQypJKP6HEf732WKAQ8BS0ipIdwjEib9HruAq/oVHEHyCM3/BNRHLrOL+y8npLGjaJtkYy7Y3U+LOpeZoxf3ResDk=
+X-Received: by 2002:a2e:9247:: with SMTP id v7mr313238ljg.215.1585784259500;
+ Wed, 01 Apr 2020 16:37:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401152008.16740-1-tangbin@cmss.chinamobile.com>
+References: <20200324215049.GA3710@pi3.com.pl> <202003291528.730A329@keescook> <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 2 Apr 2020 01:37:13 +0200
+Message-ID: <CAG48ez3nYr7dj340Rk5-QbzhsFq0JTKPf2MvVJ1-oi1Zug1ftQ@mail.gmail.com>
+Subject: Re: [PATCH] signal: Extend exec_id to 64bits
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Adam Zabrocki <pi3@pi3.com.pl>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01 Apr 08:20 PDT 2020, Tang Bin wrote:
++memory model folks because this seems like a pretty sharp corner
 
-> Release resources when exiting on error.
-> 
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+On Wed, Apr 1, 2020 at 10:50 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> Replace the 32bit exec_id with a 64bit exec_id to make it impossible
+> to wrap the exec_id counter.  With care an attacker can cause exec_id
+> wrap and send arbitrary signals to a newly exec'd parent.  This
+> bypasses the signal sending checks if the parent changes their
+> credentials during exec.
+>
+> The severity of this problem can been seen that in my limited testing
+> of a 32bit exec_id it can take as little as 19s to exec 65536 times.
+> Which means that it can take as little as 14 days to wrap a 32bit
+> exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
+> days.  Even my slower timing is in the uptime of a typical server.
+> Which means self_exec_id is simply a speed bump today, and if exec
+> gets noticably faster self_exec_id won't even be a speed bump.
+>
+> Extending self_exec_id to 64bits introduces a problem on 32bit
+> architectures where reading self_exec_id is no longer atomic and can
+> take two read instructions.  Which means that is is possible to hit
+> a window where the read value of exec_id does not match the written
+> value.  So with very lucky timing after this change this still
+> remains expoiltable.
+>
+> I have updated the update of exec_id on exec to use WRITE_ONCE
+> and the read of exec_id in do_notify_parent to use READ_ONCE
+> to make it clear that there is no locking between these two
+> locations.
+>
+> Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
+> Fixes: 2.3.23pre2
+> Cc: stable@vger.kernel.org
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 > ---
->  drivers/iommu/qcom_iommu.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-> index 4328da0b0..d4ec38b1e 100644
-> --- a/drivers/iommu/qcom_iommu.c
-> +++ b/drivers/iommu/qcom_iommu.c
-> @@ -815,6 +815,8 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	if (res)
->  		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(qcom_iommu->local_base))
+>
+> Linus would you prefer to take this patch directly or I could put it in
+> a brach and send you a pull request.
+>
+>  fs/exec.c             | 2 +-
+>  include/linux/sched.h | 4 ++--
+>  kernel/signal.c       | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 0e46ec57fe0a..d55710a36056 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1413,7 +1413,7 @@ void setup_new_exec(struct linux_binprm * bprm)
+>
+>         /* An exec changes our domain. We are no longer part of the thread
+>            group */
+> -       current->self_exec_id++;
+> +       WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
 
-Good catch! But while it works, this is not under the if (res). So
-please add some {} around this chunk.
+GCC will generate code for this without complaining, but I think it'll
+probably generate a tearing store on 32-bit platforms:
 
-Regards,
-Bjorn
+$ cat volatile-8.c
+typedef unsigned long long u64;
+static volatile u64 n;
+void blah(void) {
+  n = n + 1;
+}
+$ gcc -O2 -m32 -c -o volatile-8.o volatile-8.c -Wall
+$ objdump --disassemble=blah volatile-8.o
+[...]
+   b: 8b 81 00 00 00 00    mov    0x0(%ecx),%eax
+  11: 8b 91 04 00 00 00    mov    0x4(%ecx),%edx
+  17: 83 c0 01              add    $0x1,%eax
+  1a: 83 d2 00              adc    $0x0,%edx
+  1d: 89 81 00 00 00 00    mov    %eax,0x0(%ecx)
+  23: 89 91 04 00 00 00    mov    %edx,0x4(%ecx)
+[...]
+$
 
-> +			return PTR_ERR(qcom_iommu->local_base);
->  
->  	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
->  	if (IS_ERR(qcom_iommu->iface_clk)) {
-> -- 
-> 2.20.1.windows.1
-> 
-> 
-> 
+You could maybe use atomic64_t to work around that? atomic64_read()
+and atomic64_set() should be straightforward READ_ONCE() /
+WRITE_ONCE() on 64-bit systems while compiling into something more
+complicated on 32-bit.
+
+>         flush_signal_handlers(current, 0);
+>  }
+>  EXPORT_SYMBOL(setup_new_exec);
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 04278493bf15..0323e4f0982a 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -939,8 +939,8 @@ struct task_struct {
+>         struct seccomp                  seccomp;
+>
+>         /* Thread group tracking: */
+> -       u32                             parent_exec_id;
+> -       u32                             self_exec_id;
+> +       u64                             parent_exec_id;
+> +       u64                             self_exec_id;
+>
+>         /* Protection against (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed, mempolicy: */
+>         spinlock_t                      alloc_lock;
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 9ad8dea93dbb..5383b562df85 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1926,7 +1926,7 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+>                  * This is only possible if parent == real_parent.
+>                  * Check if it has changed security domain.
+>                  */
+> -               if (tsk->parent_exec_id != tsk->parent->self_exec_id)
+> +               if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
+>                         sig = SIGCHLD;
+>         }
+>
+> --
+> 2.20.1
+>
