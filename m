@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1194DC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C55C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E9A214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F1E21582
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758836;
-	bh=tmjogg9yI+Opax21DufBCCunzR9HJWzo5dAUBKQVx3A=;
+	s=default; t=1585758841;
+	bh=yXadSQ9F2tnMwUrUijn2sYpFTDOy+4AoejV+z9xvtvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tqWG/gHGDEu257iLZcClVv6M+3qZpANQSkkt+gKtqEeSu6TvxKTr+e3e/nkk5pl2e
-	 ID+0LDi5o7MdismWV9efQ0P1hKw1mpACQKMWdC2F+YuUINTI0+pTbSLFOEaL0IljNL
-	 5aZ5/RrnTZGhSy9TMfOyefLkOlp0QxaFzZUIqe9U=
+	b=hjyrfE1rVEzW8moYvxcu6VfDL5X/4VddqcO1cFNp8jtEnnvqJc2O33571UnEHe8Bg
+	 X78q/oG9STHMIpKmVEpMFPcZjDobhw7L+7ixtL31nXigqf1f0D5EyMY3CXbghSK0EH
+	 9YakVGI6BkQSgKQqJLNL7TGAKGsgsQSsU1KFqGfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388609AbgDAQdz (ORCPT
+        id S1733256AbgDAQd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60482 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388595AbgDAQdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:33:53 -0400
+        id S2388359AbgDAQd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:33:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46515214D8;
-        Wed,  1 Apr 2020 16:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C65E920658;
+        Wed,  1 Apr 2020 16:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758832;
-        bh=tmjogg9yI+Opax21DufBCCunzR9HJWzo5dAUBKQVx3A=;
+        s=default; t=1585758835;
+        bh=yXadSQ9F2tnMwUrUijn2sYpFTDOy+4AoejV+z9xvtvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MG0ocWR7Mm9WCIWajE7sug4Mu/d+Vo4lkZZyIaoqU5IqWrE0u0KMRl+WPkup3sxNY
-         HUROa/ZHErGOi5LVPIK3jlOGFGbwCXS3MBYIwmyyONz9w33fS5lhOo2By+YCyRAVx8
-         T+q+WJ7PPX4K2juoL0aiuUYrV/O7B7/YOVkr+Hlw=
+        b=djLpVWerAgXAmcUJoHUpPBHeiGiFRhlMm4B0OT8QarckTuAhyFqlDxMtRJOMZqgFZ
+         Tjb5Od8B6tv5TIBvkMPdBGL+mtNRT8tJ1Ptjyz7uSq+nYS/3dnfVVEsbMBSzf48QEG
+         vBYD9Zsan24b2EMJVV2EMdfgKbT5o9Je6SWV0MFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.4 62/91] xfrm: fix uctx len check in verify_sec_ctx_len
-Date:   Wed,  1 Apr 2020 18:17:58 +0200
-Message-Id: <20200401161534.360943180@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>
+Subject: [PATCH 4.4 89/91] bpf: Explicitly memset the bpf_attr structure
+Date:   Wed,  1 Apr 2020 18:18:25 +0200
+Message-Id: <20200401161540.336640428@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -59,37 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 171d449a028573b2f0acdc7f31ecbb045391b320 upstream.
+commit 8096f229421f7b22433775e928d506f0342e5907 upstream.
 
-It's not sufficient to do 'uctx->len != (sizeof(struct xfrm_user_sec_ctx) +
-uctx->ctx_len)' check only, as uctx->len may be greater than nla_len(rt),
-in which case it will cause slab-out-of-bounds when accessing uctx->ctx_str
-later.
+For the bpf syscall, we are relying on the compiler to properly zero out
+the bpf_attr union that we copy userspace data into. Unfortunately that
+doesn't always work properly, padding and other oddities might not be
+correctly zeroed, and in some tests odd things have been found when the
+stack is pre-initialized to other values.
 
-This patch is to fix it by return -EINVAL when uctx->len > nla_len(rt).
+Fix this by explicitly memsetting the structure to 0 before using it.
 
-Fixes: df71837d5024 ("[LSM-IPSec]: Security association restriction.")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Reported-by: Maciej Żenczykowski <maze@google.com>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Reported-by: Alexander Potapenko <glider@google.com>
+Reported-by: Alistair Delva <adelva@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://android-review.googlesource.com/c/kernel/common/+/1235490
+Link: https://lore.kernel.org/bpf/20200320094813.GA421650@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_user.c |    3 ++-
+ kernel/bpf/syscall.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -109,7 +109,8 @@ static inline int verify_sec_ctx_len(str
- 		return 0;
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -667,7 +667,7 @@ static int bpf_obj_get(const union bpf_a
  
- 	uctx = nla_data(rt);
--	if (uctx->len != (sizeof(struct xfrm_user_sec_ctx) + uctx->ctx_len))
-+	if (uctx->len > nla_len(rt) ||
-+	    uctx->len != (sizeof(struct xfrm_user_sec_ctx) + uctx->ctx_len))
- 		return -EINVAL;
+ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, size)
+ {
+-	union bpf_attr attr = {};
++	union bpf_attr attr;
+ 	int err;
  
- 	return 0;
+ 	if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
+@@ -703,6 +703,7 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf
+ 	}
+ 
+ 	/* copy attributes from user space, may be less than sizeof(bpf_attr) */
++	memset(&attr, 0, sizeof(attr));
+ 	if (copy_from_user(&attr, uattr, size) != 0)
+ 		return -EFAULT;
+ 
 
 
