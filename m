@@ -2,126 +2,137 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7142C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3489AC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D7320772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF9820772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="I6/Plgav"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gePLR3I5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732133AbgDAJMF (ORCPT
+        id S1732048AbgDAJNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:12:05 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37749 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727627AbgDAJME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:12:04 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48sgSK4qdgz9txmR;
-        Wed,  1 Apr 2020 11:12:01 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=I6/Plgav; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 3OuDUj6fhu3g; Wed,  1 Apr 2020 11:12:01 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48sgSK2RwQz9txmQ;
-        Wed,  1 Apr 2020 11:12:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585732321; bh=v/M1qlUNLZHKi5q5xeuGllGSHSgakulgXfO0VNVJ6NY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=I6/Plgav0YcsyHzBZIlcsCiKkXb7KabxBRp0Jp3jQFBwOEM+fOfsRAX3nCboA+rpE
-         3fpsluZTKTbRqBDY/IOHQzgSugq9xvAG5h3kt13sXWyKYMrkwrDf+e8Qid3gGRdO1U
-         R9bUe8NNCmVxOAocY/ypEEnw7AqpnU4R8pRA+r5c=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 748458B778;
-        Wed,  1 Apr 2020 11:12:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id a3-4XKS6Ledk; Wed,  1 Apr 2020 11:12:02 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 62FD68B752;
-        Wed,  1 Apr 2020 11:12:01 +0200 (CEST)
-Subject: Re: [PATCH v2 06/16] powerpc/watchpoint: Provide DAWR number to
- __set_breakpoint
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
-        paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
- <20200401061309.92442-7-ravi.bangoria@linux.ibm.com>
- <89f43001-0fa4-1394-4158-878fca4962e3@c-s.fr>
- <cb9ccaa1-9ea2-c3d7-4724-f75ebff4b66d@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <d62efd40-4aa6-01e5-a669-3590b121c0f8@c-s.fr>
-Date:   Wed, 1 Apr 2020 11:11:51 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 1 Apr 2020 05:13:10 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:36505 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgDAJNJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 05:13:09 -0400
+Received: by mail-qv1-f68.google.com with SMTP id z13so12444485qvw.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 02:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jkMgyGLx/BAkeNtxDN6Xm/ZbanBZQvNQbU7eOJcnXos=;
+        b=gePLR3I5HlC84w7tgJzEsRDClSwTX0vkukGGPouc74j9tPxnFXOnMxG8zqKusXyLSD
+         P1CXTLsHgRD/S8Q8S5YIH4ka/bNjg1DuR3op0rVEU8qu0/3qvutPbOxc2nl/iI4PR1x3
+         kISWfSQmZqfiL2nFZ6Rb5KCWgl65Wka5UzT/xrbBgOXxVwSphSnqGCN+0f7ErOkgeCzo
+         pdkfIyKq3i2TpWjKqfjvvvBKyxACnt5KZbkN1iV4yOXUi95SDk+EdLX7WIfIWb+0/FFM
+         axOTi9LYHzFUG7NygICZeM4Vfcw9ZoImKssVQE87l7r8QgXtWFHq59KR2dylCJRYjYsK
+         0DmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jkMgyGLx/BAkeNtxDN6Xm/ZbanBZQvNQbU7eOJcnXos=;
+        b=PoZF48U52L8FDdB1zpwdzNB6+Sm2g6DV03Oc7UgRlRh0t2fe6umjqT7YgzLM4A3Eg4
+         iQ0N6/KZoecB8llwxVBGezDJBShZsu/GubP6Zq3EntY+TWcEB9/SHmFguf8Unuz5Lxgi
+         yIAoHdm3JUOb1WlehTrDv6KuMLr7PhgNVAk6R23V4QDpXgrEDL1nWMrjb2j3SZyZQ2nl
+         8uZWxGu9JKItB1ZxkgDsTOgTyXFU0SrbqPmrcsUC9SIDDwVWbJMXP1weZdmvtY4asjaL
+         u5k4Vg7hGR1TzlTtJnOuR5LI01zLTBKD5oK/PQLiYxQrkSU7lhHLuJtgWW1X99IjW/Y3
+         grAA==
+X-Gm-Message-State: ANhLgQ1ad3NTmPEGEGbUHWcHtVyxqBkdtWkkIOCCkqUhQoMgJCR7Uy6V
+        RMCoI4H4kGcM77ZFBEAv+5kw0MsqFnRJt+Zqw269Pg==
+X-Google-Smtp-Source: ADFU+vs06wImJZ2EPBdCY2ie1qh0IX+7CluGHJHL2V6FICU7OeYMC84ibT4JTW0BL1dvRyCt/qMHZuA5ONrD8dluF/U=
+X-Received: by 2002:ad4:49d1:: with SMTP id j17mr21052173qvy.80.1585732387345;
+ Wed, 01 Apr 2020 02:13:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cb9ccaa1-9ea2-c3d7-4724-f75ebff4b66d@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <000000000000da6059059fcfdcf9@google.com> <0000000000005b022005a22a0050@google.com>
+ <20200331174116.GA1844017@kroah.com> <CANEJEGuhZChGXFzbwaEwArM4UKjUxZo=WNbREPH3887xtu62Nw@mail.gmail.com>
+In-Reply-To: <CANEJEGuhZChGXFzbwaEwArM4UKjUxZo=WNbREPH3887xtu62Nw@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 1 Apr 2020 11:12:55 +0200
+Message-ID: <CACT4Y+Yk_93iScH6F0hhR2yo+pCx_0J32TaTC-_QfXy69pauMA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in skb_release_data (2)
+To:     Grant Grundler <grundler@chromium.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        syzbot <syzbot+a66a7c2e996797bb4acb@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>, festevam@gmail.com,
+        Hayes Wang <hayeswang@realtek.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>, kernel@pengutronix.de,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>, nishadkamdar@gmail.com,
+        peter.chen@nxp.com, Prashant Malani <pmalani@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 31, 2020 at 7:44 PM Grant Grundler <grundler@chromium.org> wrote:
+>
+> On Tue, Mar 31, 2020 at 10:41 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Mar 31, 2020 at 10:36:01AM -0700, syzbot wrote:
+> > > syzbot suspects this bug was fixed by commit:
+> > >
+> > > commit d9958306d4be14f4c7466242b38ed3893a7b1386
+> > > Author: Nishad Kamdar <nishadkamdar@gmail.com>
+> > > Date:   Sun Mar 15 10:55:07 2020 +0000
+> > >
+> > >     USB: chipidea: Use the correct style for SPDX License Identifier
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16d4940be00000
+> > > start commit:   63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+> > > git tree:       upstream
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=a66a7c2e996797bb4acb
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c25a81e00000
+> > >
+> > > If the result looks correct, please mark the bug fixed by replying with:
+> > >
+> > > #syz fix: USB: chipidea: Use the correct style for SPDX License Identifier
+> >
+> > I really doubt a comment change fixed a syzbot bug :)
+>
+> Just as I don't believe the bug was caused by pmalani's patch to r8152.
+>
+> syzbot is just having trouble automatically bisecting/tracking this
+> bug since it appears only intermittently.
 
+Checking if vmlinux changes after applying the patch looked like a
+smart and simple way to detect all of:
+- Comment-only change
+- Documentation-only change
+- Change to a non-current arch
+- Changed to non-enabled configs
+- Changes to tests only
 
-Le 01/04/2020 à 10:57, Ravi Bangoria a écrit :
-> 
-> 
-> On 4/1/20 12:33 PM, Christophe Leroy wrote:
->>
->>
->> Le 01/04/2020 à 08:12, Ravi Bangoria a écrit :
->>> Introduce new parameter 'nr' to __set_breakpoint() which indicates
->>> which DAWR should be programed. Also convert current_brk variable
->>> to an array.
->>>
->>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
->>> ---
->>>   arch/powerpc/include/asm/debug.h         |  2 +-
->>>   arch/powerpc/include/asm/hw_breakpoint.h |  2 +-
->>>   arch/powerpc/kernel/hw_breakpoint.c      |  8 ++++----
->>>   arch/powerpc/kernel/process.c            | 14 +++++++-------
->>>   arch/powerpc/kernel/signal.c             |  2 +-
->>>   arch/powerpc/xmon/xmon.c                 |  2 +-
->>>   6 files changed, 15 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/arch/powerpc/include/asm/debug.h 
->>> b/arch/powerpc/include/asm/debug.h
->>> index 7756026b95ca..6228935a8b64 100644
->>> --- a/arch/powerpc/include/asm/debug.h
->>> +++ b/arch/powerpc/include/asm/debug.h
->>> @@ -45,7 +45,7 @@ static inline int debugger_break_match(struct 
->>> pt_regs *regs) { return 0; }
->>>   static inline int debugger_fault_handler(struct pt_regs *regs) { 
->>> return 0; }
->>>   #endif
->>> -void __set_breakpoint(struct arch_hw_breakpoint *brk);
->>> +void __set_breakpoint(struct arch_hw_breakpoint *brk, int nr);
->>
->> Same, I think it would make more sense to have nr as first argument.
-> 
-> Sorry, didn't get your point. How will that help?
-> 
+But it's not working in reality, there is some bug in kernel or compiler:
+https://github.com/google/syzkaller/issues/1271#issuecomment-559093018
 
-Well, it is a tiny detail but for me it is more natural to first tel 
-which element you modify before telling how you modify it.
+You may see in this bisection log as well:
+culprit signature:
+85ed07d5a8769c26fa0d170475624841e367ea0d08ea79f55ca450a9e97429a0
+parent  signature:
+2244116b3fcae3bb24003990bcd2b06a03861effee2d94675e527446c3da078f
 
-Christophe
+So this commit somehow does very realistically affect the kernel
+binary. So far nobody figured out why...
+
+Before you ask, syzkaller filters out debug info, etc:
+https://github.com/google/syzkaller/blob/master/pkg/build/linux.go#L168-L178
