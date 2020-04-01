@@ -3,104 +3,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C908C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A66C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19AF20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C278920772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:19:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="SkwqLLE+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qV7Egt69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbgDAAIm (ORCPT
+        id S1731561AbgDAATd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 20:08:42 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38444 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731424AbgDAAIl (ORCPT
+        Tue, 31 Mar 2020 20:19:33 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34194 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731470AbgDAATd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 20:08:41 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z12so20179020qtq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 17:08:39 -0700 (PDT)
+        Tue, 31 Mar 2020 20:19:33 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l14so4060986pgb.1;
+        Tue, 31 Mar 2020 17:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=2ZJH2bqoeAK0auR/UMe60BRQ+wnm6Zhq3FSNSqtWLpQ=;
-        b=SkwqLLE+Fow7/6Cah0e/j95l9bMReiVaYR4axf2TUigtGS/eaMdShdCnE1kPmtW8xR
-         /2az1sR0MrFLXdNwIqYBsyjiDUKNnfELPUgcNOobar7ZtpNdp71qiqvD1LrukFi0CpgA
-         J5FAkULaIxv4Ug5J2eypaO5WiiHNqJrCiCqTH4dU1J+r6tnbMHtNkwd7fNCXvIIvklvt
-         9KwDKFX3E7bH2UUTKBdZIx/lHXRCJ/+99lUGzjOaXf3lY5oyFAuqifMyjkfjPGhm8ukf
-         n88tUjgzfiFmlrNd+in4y5NvLTdL+hVNEBxm7PoZTDrQ9zX6o87y87BT2HzzK8pOTv7n
-         /nzw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8Z8cYPNA1Nnx+ynlfYUK6Uh1qA4I2RWYXKrKRt2N0YE=;
+        b=qV7Egt69AFSYm63oan9OEeaDZCWNVhxRplH9ijcJinhqTPrM/ZGkiqPbKmU8fTx2Yn
+         sdAno83KlgvyAT7AxdzAGOzk1JBDZFky9/yTNV6jYBfe2iUy+eODWvlMPOVSNnjBr8PC
+         LMsn5q0GBsIUWIEM3ZiQxfcS0Jy/9SNx2hizD27ai+aVMAX4HjQ2NEm7GFMmcoP39JC1
+         Wz8pU4/8gRyBREb7ZdQolpMu9mNcr5xZBu1Qq7S5FNNRnops2NqT5ZPGwJFqNDUq7At+
+         AbXqAqsdSyfWZmRrzP7bpo/12+Kw7jw+BHEhPeqQBFUeZqzqQiTYh7Eg4z4O06E92eZ5
+         xEfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=2ZJH2bqoeAK0auR/UMe60BRQ+wnm6Zhq3FSNSqtWLpQ=;
-        b=aeqyMxj9Zhq7Jv6pcoVF6TADjLQK64fL2W2v+0t/HQrmcMP9X5IteLn1Q1vG5mT2U6
-         DJIr3S8AxHvBDLrUH5qi4vaoPRuBQA+Gawdc4GCnP741YtmQlQxUWZFQC+McL8rDiaGC
-         WlkbhsvYvvPXPMOZz+qchrZbWG36SZLH6Q285MEuBvvuoI63h02y1P30BcL9cLYYva9U
-         RGTXTjRbii+PcsqEQbL6vOt2P6Q//ZouhcEuOFNthhmmwLkY7V48DxM2xrH/uVXqwWi5
-         Gf4y8cRpJOQe16ia+i5DxUKCwypAnE+4YlC/4HZwK0zPHHnpSwmZicijZ16apwqLgGaU
-         9Ocg==
-X-Gm-Message-State: ANhLgQ26qbmy8F80TQ4vBheYndoULcbdIg835iT7ghmDX5dD1/5TJoiz
-        oydfMFgKRmHtTucEUla9DGmhFg==
-X-Google-Smtp-Source: ADFU+vt+sCovG6L+oIaQ3zQdeuF6yYCHLi+70BqvCcjee5mfo7yd78UD47UhE9xaOFer2GPikk3WbQ==
-X-Received: by 2002:ac8:2921:: with SMTP id y30mr7807073qty.161.1585699718754;
-        Tue, 31 Mar 2020 17:08:38 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id b7sm383592qkc.61.2020.03.31.17.08.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 17:08:38 -0700 (PDT)
-Message-ID: <6a307032bbd05a7405c5e6a6629071ae03f62a8c.camel@massaru.org>
-Subject: Re: [PATCH 1/2] Documentation: filesystems: Convert sysfs-pci to
- ReST
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-doc@vger.kernel.org, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org
-Date:   Tue, 31 Mar 2020 21:08:35 -0300
-In-Reply-To: <20200401000439.GE21484@bombadil.infradead.org>
-References: <cover.1585693146.git.vitor@massaru.org>
-         <637c0379a76fcf4eb6cdde0de3cc727203fd942f.1585693146.git.vitor@massaru.org>
-         <20200401000439.GE21484@bombadil.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8Z8cYPNA1Nnx+ynlfYUK6Uh1qA4I2RWYXKrKRt2N0YE=;
+        b=iJ6eHLI3V7OEzQZFNvPelCJ41HLIKaSlP0BWjRgikvVEQ9GyiSRlcb1JFsAwGzMCHW
+         GBS5DLpJzRw3P3HpiTm/IhXqR/ffdtx7ahkressPzUsTTCr2+ZC/xHa7oTlcTXJVyDVS
+         52+QKJCBK9CLj0yD2xF1w82UguvoOgSbIptm3taQLM2Y76Hnxb8UXb2FIKyv+yNzjbO/
+         wMQRkTWMK40klL42k0oy0TK/vdpJ06+cg7+TWz7DaX9cpwmlECEJyy8FzZtp1K/IZ93N
+         vvuk5483GiA8dxEq2sh4lfANPnCCvIMWi1MwWLlKbsMQDif3MjrSoaQ9ekKIOljRvjSz
+         xbxg==
+X-Gm-Message-State: ANhLgQ3wXLmIEVVv+Z1aONHd3WtjRn0ZNbgoD2mmS+RrM0cH+o6/U1Yt
+        6MVnP62AgQcuvuNkhmnXW+b/zX/r
+X-Google-Smtp-Source: ADFU+vuyLauhhsGiDnxRt45W7U5JB4YVBUGUkpBSElEOAwA/hE43H+Hki5xQrb+Z9SntSrnZUNFKRA==
+X-Received: by 2002:aa7:9844:: with SMTP id n4mr19644750pfq.98.1585700371738;
+        Tue, 31 Mar 2020 17:19:31 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id ci18sm206978pjb.23.2020.03.31.17.19.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 31 Mar 2020 17:19:31 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH v2 1/2] KVM: X86: Filter out the broadcast dest for IPI fastpath
+Date:   Wed,  1 Apr 2020 08:19:21 +0800
+Message-Id: <1585700362-11892-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-31 at 17:04 -0700, Matthew Wilcox wrote:
-> On Tue, Mar 31, 2020 at 07:28:56PM -0300, Vitor Massaru Iha wrote:
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > ---
-> >  .../{sysfs-pci.txt => sysfs-pci.rst}          | 40 ++++++++++-----
-> > ----
-> >  1 file changed, 22 insertions(+), 18 deletions(-)
-> >  rename Documentation/filesystems/{sysfs-pci.txt => sysfs-pci.rst}
-> > (82%)
-> > 
-> > diff --git a/Documentation/filesystems/sysfs-pci.txt
-> > b/Documentation/filesystems/sysfs-pci.rst
-> 
-> In addition to Jon's comments, for the next version, I would suggest
-> cc'ing the linux-pci@vger.kernel.org mailing list.  
-> 
-> Also, maybe add:
-> 
-> F: Documentation/filesystems/sysfs-pci.rst
-> 
-> to the 'PCI SUBSYSTEM' section of MAINTAINERS.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Thanks Matthew.
+Except destination shorthand, a destination value 0xffffffff is used to
+broadcast interrupts, let's also filter out this for single target IPI 
+fastpath.
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+v1 -> v2:
+ * update subject and patch description
+
+ arch/x86/kvm/lapic.c | 3 ---
+ arch/x86/kvm/lapic.h | 3 +++
+ arch/x86/kvm/x86.c   | 3 ++-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index e24d405..d528bed 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -59,9 +59,6 @@
+ #define MAX_APIC_VECTOR			256
+ #define APIC_VECTORS_PER_REG		32
+ 
+-#define APIC_BROADCAST			0xFF
+-#define X2APIC_BROADCAST		0xFFFFFFFFul
+-
+ static bool lapic_timer_advance_dynamic __read_mostly;
+ #define LAPIC_TIMER_ADVANCE_ADJUST_MIN	100	/* clock cycles */
+ #define LAPIC_TIMER_ADVANCE_ADJUST_MAX	10000	/* clock cycles */
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index bc76860..25b77a6 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -17,6 +17,9 @@
+ #define APIC_BUS_CYCLE_NS       1
+ #define APIC_BUS_FREQUENCY      (1000000000ULL / APIC_BUS_CYCLE_NS)
+ 
++#define APIC_BROADCAST			0xFF
++#define X2APIC_BROADCAST		0xFFFFFFFFul
++
+ enum lapic_mode {
+ 	LAPIC_MODE_DISABLED = 0,
+ 	LAPIC_MODE_INVALID = X2APIC_ENABLE,
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5e95950..5a645df 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1559,7 +1559,8 @@ static int handle_fastpath_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64 data
+ 
+ 	if (((data & APIC_SHORT_MASK) == APIC_DEST_NOSHORT) &&
+ 		((data & APIC_DEST_MASK) == APIC_DEST_PHYSICAL) &&
+-		((data & APIC_MODE_MASK) == APIC_DM_FIXED)) {
++		((data & APIC_MODE_MASK) == APIC_DM_FIXED) &&
++		((u32)(data >> 32) != X2APIC_BROADCAST)) {
+ 
+ 		data &= ~(1 << 12);
+ 		kvm_apic_send_ipi(vcpu->arch.apic, (u32)data, (u32)(data >> 32));
+-- 
+2.7.4
 
