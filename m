@@ -2,240 +2,697 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C46BC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966E3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F0A20776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA2E20776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:48:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="m1gkJzkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732358AbgDALrh (ORCPT
+        id S1732363AbgDALsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:47:37 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44397 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgDALrg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:47:36 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJbqH-0005t0-Ev; Wed, 01 Apr 2020 13:47:33 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJbqG-0007Yi-HE; Wed, 01 Apr 2020 13:47:32 +0200
-Date:   Wed, 1 Apr 2020 13:47:32 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200401114732.cxy3fsluzag7pxff@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
- <20200330191654.waoocllctanh5nk5@pengutronix.de>
- <20200331204559.GB2954599@ulmo>
- <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
- <c1785cf8-4231-feb5-9a54-2374df85c33b@ti.com>
+        Wed, 1 Apr 2020 07:48:20 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:47596 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726427AbgDALsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 07:48:19 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48skwc0Bfdz9v0BV;
+        Wed,  1 Apr 2020 13:48:16 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=m1gkJzkk; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id nonBOuKkKTqH; Wed,  1 Apr 2020 13:48:15 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48skwb68rNz9v0BT;
+        Wed,  1 Apr 2020 13:48:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585741695; bh=5ZZ5XUrDuCNQ5F1CiVlcHW6wmhDOsO5dUaU73SgStLU=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=m1gkJzkkhUs+kzC/AbeIoJmjFsTJpqKtSIWcXw0UiiIPdTSplSuRRkmB3S1n1YD3H
+         Ahql4qzS6AEIoU6dL+R0qzYBMTX7RBfgjh3VNwn6q00t73vdvNLTBjwJ9+vQIzxedl
+         DNiFDNGWEXzKJHbD+VIoYluyDkZ4eOfPbqbQIUEg=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 269B18B8F8;
+        Wed,  1 Apr 2020 13:48:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id tQqixZovqe0z; Wed,  1 Apr 2020 13:48:17 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C7D878B8C6;
+        Wed,  1 Apr 2020 13:48:13 +0200 (CEST)
+Subject: Re: [RFC WIP PATCH] powerpc/32: system call implement entry/exit
+ logic in C
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        msuchanek@suse.de
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <bbc0a09cfaf523bc00893253a7101362c98b31eb.1585667934.git.christophe.leroy@c-s.fr>
+Message-ID: <059c1abd-6be2-25ea-83e0-dcd411b7951b@c-s.fr>
+Date:   Wed, 1 Apr 2020 13:48:09 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <bbc0a09cfaf523bc00893253a7101362c98b31eb.1585667934.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c1785cf8-4231-feb5-9a54-2374df85c33b@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 03:52:21PM +0530, Lokesh Vutla wrote:
-> Hi Uwe,
+
+
+Le 31/03/2020 Ã  17:22, Christophe Leroy a Ã©critÂ :
+> That's first try to port PPC64 syscall entry/exit logic in C to PPC32.
+> I've do the minimum to get it work. I have not reworked calls
+> to sys_fork() and friends for instance.
 > 
-> On 01/04/20 1:52 PM, Uwe Kleine-König wrote:
-> > Hello Thierry,
-> > 
-> > On Tue, Mar 31, 2020 at 10:45:59PM +0200, Thierry Reding wrote:
-> >> On Mon, Mar 30, 2020 at 09:16:54PM +0200, Uwe Kleine-König wrote:
-> >>> On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
-> >>>> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
-> >>>>> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
-> >>>>>> Only the Timer control register(TCLR) cannot be updated when the timer
-> >>>>>> is running. Registers like Counter register(TCRR), loader register(TLDR),
-> >>>>>> match register(TMAR) can be updated when the counter is running. Since
-> >>>>>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> >>>>>> timer for period/duty_cycle update.
-> >>>>>
-> >>>>> I'm not sure what is sensible here. Stopping the PWM for a short period
-> >>>>> is bad, but maybe emitting a wrong period isn't better. You can however
-> >>>>> optimise it if only one of period or duty_cycle changes.
-> >>>>>
-> >>>>> @Thierry, what is your position here? I tend to say a short stop is
-> >>>>> preferable.
-> >>>>
-> >>>> It's not clear to me from the above description how exactly the device
-> >>>> behaves, but I suspect that it may latch the values in those registers
-> >>>> and only update the actual signal output once a period has finished. I
-> >>>> know of a couple of other devices that do that, so it wouldn't be
-> >>>> surprising.
-> >>>>
-> >>>> Even if that was not the case, I think this is just the kind of thing
-> >>>> that we have to live with. Sometimes it just isn't possible to have all
-> >>>> supported devices adhere strictly to an API. So I think the best we can
-> >>>> do is have an API that loosely defines what's supposed to happen and
-> >>>> make a best effort to implement those semantics. If a device deviates
-> >>>> slightly from those expectations, we can always cross fingers and hope
-> >>>> that things still work. And it looks like they are.
-> >>>>
-> >>>> So I think if Lokesh and Tony agree that this is the right thing to do
-> >>>> and have verified that things still work after this, that's about as
-> >>>> good as it's going to get.
-> >>>
-> >>> I'd say this isn't for the platform people to decide. My position here
-> >>> is that the PWM drivers should behave as uniform as possible to minimize
-> >>> surprises for consumers. And so it's a "PWM decision" that is to be made
-> >>> here, not an "omap decision".
-> >>
-> >> I think there's a fine line to be walked here. I agree that we should
-> >> aim to have as much consistency between drivers as possible. At the same
-> >> time I think we need to be pragmatic. As Lokesh said, the particular use
-> >> case here requires this type of on-the-fly adjustment of the PWM period
-> >> without stopping and restarting the PWM. It doesn't work otherwise. So
-> >> th alternative that you're proposing is to say that we don't support
-> >> that use-case, even though it works just fine given this particular
-> >> hardware. That's not really an option.
-> > 
-> > I understand your opinion here. The situation now is that in current
-> > mainline the driver stops the hardware for reconfiguration and it
-> > doesn't fit Lokesh's use case so he changed to on-the-fly update
-> > (accepting that maybe a wrong period is emitted). What if someone relies
-> > on the old behaviour? What if in a year someone comes and claims the
-> > wrong period is bad for their usecase and changes back to
-> > stop-to-update?
-> > 
-> > When I write a consumer driver, do I have a chance to know how the PWM,
-> > that I happen to use, behaves? To be able to get my consumer driver
-> > reliable I might need to know that however.
-> > 
-> >>>> I know this is perhaps cheating a little, or turning a blind eye, but I
-> >>>> don't know what the alternative would be. Do we want to tell people that
-> >>>> a given PWM controller can't be used if it doesn't work according to our
-> >>>> expectations? That's hard to argue if that controller works just fine
-> >>>> for all known use-cases.
-> >>>
-> >>> I'd like have some official policy here which of the alternatives is the
-> >>> preferred cheat.
-> >>>
-> >>> The situation here is that period and duty_cycle cannot be updated
-> >>> atomically. So the two options are:
-> >>>
-> >>>  - stop shortly
-> >>>  - update with hardware running and maybe emit a broken period
-> >>
-> >> I think we can already support both of those with the existing API. If
-> >> a consumer wants to stop the PWM while reconfiguring, they should be
-> >> able to do pwm_enable(), pwm_config(), pwm_enable() (or the atomic
-> >> equivalent) and for the second case they can just do pwm_config() (or
-> >> the atomic equivalent).
-> > 
-> > Yes, the consumer can force the stop and update. But assume I'm "only" a
-> > consumer driver author and I want: atomic update and if this is not
-> > possible I prefer "stop-to-update" over "on-the-fly-and-maybe-faulty".
-> > So I cannot benefit from a good driver/hardware that can do atomic
-> > updates? Or I have to patch each driver that I actually use to use
-> > stop-to-update?
-> > 
-> >> Some hardware may actually require the PWM to be disabled before
-> >> reconfiguring, so they won't be able to strictly adhere to the second
-> >> use-case.
-> >>
-> >> But as discussed above, I don't want to strive for a lowest common
-> >> denominator that would preclude some more specific use-cases from
-> >> working if the hardware supports it.
-> >>
-> >> So I think we should aim for drivers to implement the semantics as
-> >> closely as possible. If the hardware doesn't support some of these
-> >> requirements strictly while a particular use-case depends on that, then
-> >> that just means that the hardware isn't compatible with that use-case.
-> >> Chances are that the system just isn't going to be designed to support
-> >> that use-case in the first place if the hardware can't do it.
-> >>
-> >> The sysfs interface is a bit of a special case here because it isn't
-> >> possible to know what use-cases people are going to come up with.
-> > 
-> > In my eyes the sysfs interface isn't special here. You also don't know
-> > what the OMAP PWM hardware is used for.
-> > 
-> >> It's most likely that they'll try something and if it doesn't work
-> >> they can see if a driver patch can improve things.
-> > 
-> > So either the group who prefers "stop-to-update" or the group who
-> > prefers "on-the-fly-and-maybe-faulty" has to carry a system specific
-> > driver patch?
-> > 
-> >> One possible extension that I can imagine would be to introduce some
-> >> sort of capability structure that drivers can fill in to describe the
-> >> behaviour of the hardware. Drivers like pwm-omap-dmtimer, for example,
-> >> could describe that they are able to change the period and/or duty cycle
-> >> while the PWM is on. There could be another capability bit that says
-> >> that the current period will finish before new settings are applied. Yet
-> >> another capability could describe that duty-cycle and period can be
-> >> applied atomically. Consumers could then check those capabilities to see
-> >> if they match their requirements.
-> >>
-> >> But then again, I think that would just make things overly complicated.
-> >> None of the existing consumers need that, so it doesn't seem like there
-> >> is much demand for that feature. In practice I suspect most consumers
-> >> work fine despite potentially small deviations in how the PWM behaves.
-> > 
-> > I think the status quo is what I asked about above: People use sysfs and
-> > if the PWM behaves different than needed, the driver is patched and most
-> > of the time not mainlined. If your focus is to support a certain
-> > industrial system with a defined use case, this is fine. If however you
-> > target for an universal framework that works for any combination of
-> > consumer + lowlevel driver without patching (that at least is able to
-> > diagnose: This PWM cannot provide what my consumer needs), this is bad.
-> > Also this means that whenever a system designer changes something on
-> > their machine (kernel update, different hardware, an new usecase for a
-> > PWM) they might have to reverify if the given PWM driver behaves as
-> > needed.
-> > 
-> > My suggestion for now is to start documenting how the drivers behave
-> > expanding how limitations are documented in some drivers. So maybe
-> > change from "Limitations" to "Implementation and Hardware Details"?
+> For the time being, it seems to work more or less but:
+> - ping reports EINVAL on recvfrom
+> - strace shows NULL instead of strings in call like open() for instance.
+
+For the two above problems, that's because system_call_exception() 
+doesn't set orig_gpr3 whereas DoSycall() does in entry_32.S . Is that 
+only done on PPC32 ?
+
+With the following line at the begining of system_call_exception(), it 
+works perfectly:
+
+	regs->orig_gpr3 = r3;
+
+I will now focus on performance to see if we can do something about it.
+
+Christophe
+
+> - the performance is definitively bad
 > 
-> Does it help if a new DT property is introduced across PWM subsystem,
-> representing dynamic period/duty-cycle updates. Based on this property driver
-> can handle the updates. If the property is not present existing behaviour can be
-> restored. This way based on the use-case things can be changed and need not
-> patch the driver :). Does this sound good or you have other thoughts?
-
-That's something that I'd rather see in the pwm API. (Either by a rule
-that drivers should prefer one or the other, or by making it
-configurable.) IMHO this property doesn't belong into the hardware
-description as it is a software property.
-
-That's not constructive though as I don't have an idea how to map this
-into the API.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> On an 8xx, null_syscall test is about 30% slower after this patch:
+> - Without the patch: 284 cycles
+> - With the patch: 371 cycles
+> 
+> @nick and others, any suggestion to fix and improve ?
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>   arch/powerpc/include/asm/book3s/32/kup.h      |  21 ++
+>   .../powerpc/include/asm/book3s/64/kup-radix.h |  12 +-
+>   arch/powerpc/include/asm/hw_irq.h             |  15 +
+>   arch/powerpc/include/asm/kup.h                |   2 +
+>   arch/powerpc/include/asm/nohash/32/kup-8xx.h  |  13 +
+>   arch/powerpc/kernel/Makefile                  |   5 +-
+>   arch/powerpc/kernel/entry_32.S                | 259 ++----------------
+>   arch/powerpc/kernel/head_32.h                 |   3 +-
+>   .../kernel/{syscall_64.c => syscall.c}        |  25 +-
+>   9 files changed, 102 insertions(+), 253 deletions(-)
+>   rename arch/powerpc/kernel/{syscall_64.c => syscall.c} (97%)
+> 
+> diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
+> index 3c0ba22dc360..c85bc5b56366 100644
+> --- a/arch/powerpc/include/asm/book3s/32/kup.h
+> +++ b/arch/powerpc/include/asm/book3s/32/kup.h
+> @@ -102,6 +102,27 @@ static inline void kuap_update_sr(u32 sr, u32 addr, u32 end)
+>   	isync();	/* Context sync required after mtsrin() */
+>   }
+>   
+> +static inline void kuap_restore(struct pt_regs *regs)
+> +{
+> +	u32 kuap = current->thread.kuap;
+> +	u32 addr = kuap & 0xf0000000;
+> +	u32 end = kuap << 28;
+> +
+> +	if (unlikely(!kuap))
+> +		return;
+> +
+> +	current->thread.kuap = 0;
+> +	kuap_update_sr(mfsrin(addr) & ~SR_KS, addr, end);	/* Clear Ks */
+> +}
+> +
+> +static inline void kuap_check(void)
+> +{
+> +	if (!IS_ENABLED(CONFIG_PPC_KUAP_DEBUG))
+> +		return;
+> +
+> +	WARN_ON_ONCE(current->thread.kuap != 0);
+> +}
+> +
+>   static __always_inline void allow_user_access(void __user *to, const void __user *from,
+>   					      u32 size, unsigned long dir)
+>   {
+> diff --git a/arch/powerpc/include/asm/book3s/64/kup-radix.h b/arch/powerpc/include/asm/book3s/64/kup-radix.h
+> index 3bcef989a35d..1f2716a0dcd8 100644
+> --- a/arch/powerpc/include/asm/book3s/64/kup-radix.h
+> +++ b/arch/powerpc/include/asm/book3s/64/kup-radix.h
+> @@ -60,13 +60,13 @@
+>   #include <asm/mmu.h>
+>   #include <asm/ptrace.h>
+>   
+> -static inline void kuap_restore_amr(struct pt_regs *regs)
+> +static inline void kuap_restore(struct pt_regs *regs)
+>   {
+>   	if (mmu_has_feature(MMU_FTR_RADIX_KUAP))
+>   		mtspr(SPRN_AMR, regs->kuap);
+>   }
+>   
+> -static inline void kuap_check_amr(void)
+> +static inline void kuap_check(void)
+>   {
+>   	if (IS_ENABLED(CONFIG_PPC_KUAP_DEBUG) && mmu_has_feature(MMU_FTR_RADIX_KUAP))
+>   		WARN_ON_ONCE(mfspr(SPRN_AMR) != AMR_KUAP_BLOCKED);
+> @@ -141,14 +141,6 @@ bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
+>   		    (regs->kuap & (is_write ? AMR_KUAP_BLOCK_WRITE : AMR_KUAP_BLOCK_READ)),
+>   		    "Bug: %s fault blocked by AMR!", is_write ? "Write" : "Read");
+>   }
+> -#else /* CONFIG_PPC_KUAP */
+> -static inline void kuap_restore_amr(struct pt_regs *regs)
+> -{
+> -}
+> -
+> -static inline void kuap_check_amr(void)
+> -{
+> -}
+>   #endif /* CONFIG_PPC_KUAP */
+>   
+>   #endif /* __ASSEMBLY__ */
+> diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
+> index e0e71777961f..6ccf07de6665 100644
+> --- a/arch/powerpc/include/asm/hw_irq.h
+> +++ b/arch/powerpc/include/asm/hw_irq.h
+> @@ -321,6 +321,16 @@ static inline void arch_local_irq_disable(void)
+>   		mtmsr(mfmsr() & ~MSR_EE);
+>   }
+>   
+> +static inline void arch_local_recovery_disable(void)
+> +{
+> +	if (IS_ENABLED(CONFIG_BOOKE))
+> +		wrtee(0);
+> +	else if (IS_ENABLED(CONFIG_PPC_8xx))
+> +		wrtspr(SPRN_NRI);
+> +	else
+> +		mtmsr(mfmsr() & ~(MSR_EE | MSR_RI));
+> +}
+> +
+>   static inline void arch_local_irq_enable(void)
+>   {
+>   	if (IS_ENABLED(CONFIG_BOOKE))
+> @@ -343,6 +353,11 @@ static inline bool arch_irqs_disabled(void)
+>   
+>   #define hard_irq_disable()		arch_local_irq_disable()
+>   
+> +#define __hard_irq_enable()		arch_local_irq_enable()
+> +#define __hard_irq_disable()		arch_local_irq_disable()
+> +#define __hard_EE_RI_disable()		arch_local_recovery_disable()
+> +#define __hard_RI_enable()		arch_local_irq_disable()
+> +
+>   static inline bool arch_irq_disabled_regs(struct pt_regs *regs)
+>   {
+>   	return !(regs->msr & MSR_EE);
+> diff --git a/arch/powerpc/include/asm/kup.h b/arch/powerpc/include/asm/kup.h
+> index 92bcd1a26d73..1100c13b6d9e 100644
+> --- a/arch/powerpc/include/asm/kup.h
+> +++ b/arch/powerpc/include/asm/kup.h
+> @@ -62,6 +62,8 @@ bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
+>   {
+>   	return false;
+>   }
+> +static inline void kuap_restore(struct pt_regs *regs) { }
+> +static inline void kuap_check(void) { }
+>   #endif /* CONFIG_PPC_KUAP */
+>   
+>   static inline void allow_read_from_user(const void __user *from, unsigned long size)
+> diff --git a/arch/powerpc/include/asm/nohash/32/kup-8xx.h b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
+> index 85ed2390fb99..1918d2e55da3 100644
+> --- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
+> +++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
+> @@ -34,6 +34,19 @@
+>   
+>   #include <asm/reg.h>
+>   
+> +static inline void kuap_restore(struct pt_regs *regs)
+> +{
+> +	mtspr(SPRN_MD_AP, regs->kuap);
+> +}
+> +
+> +static inline void kuap_check(void)
+> +{
+> +	if (!IS_ENABLED(CONFIG_PPC_KUAP_DEBUG))
+> +		return;
+> +
+> +	WARN_ON_ONCE((mfspr(SPRN_MD_AP) & 0xffff0000) != (MD_APG_KUAP & 0xffff0000));
+> +}
+> +
+>   static inline void allow_user_access(void __user *to, const void __user *from,
+>   				     unsigned long size, unsigned long dir)
+>   {
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index 570660efbb3d..e4be425b7718 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -45,11 +45,10 @@ obj-y				:= cputable.o syscalls.o \
+>   				   signal.o sysfs.o cacheinfo.o time.o \
+>   				   prom.o traps.o setup-common.o \
+>   				   udbg.o misc.o io.o misc_$(BITS).o \
+> -				   of_platform.o prom_parse.o
+> +				   of_platform.o prom_parse.o syscall.o
+>   obj-y				+= ptrace/
+>   obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o signal_64.o \
+> -				   paca.o nvram_64.o firmware.o note.o \
+> -				   syscall_64.o
+> +				   paca.o nvram_64.o firmware.o note.o
+>   obj-$(CONFIG_VDSO32)		+= vdso32/
+>   obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
+>   obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+> diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+> index a6371fb8f761..103f5158bc44 100644
+> --- a/arch/powerpc/kernel/entry_32.S
+> +++ b/arch/powerpc/kernel/entry_32.S
+> @@ -315,162 +315,37 @@ stack_ovf:
+>   	RFI
+>   #endif
+>   
+> -#ifdef CONFIG_TRACE_IRQFLAGS
+> -trace_syscall_entry_irq_off:
+> -	/*
+> -	 * Syscall shouldn't happen while interrupts are disabled,
+> -	 * so let's do a warning here.
+> -	 */
+> -0:	trap
+> -	EMIT_BUG_ENTRY 0b,__FILE__,__LINE__, BUGFLAG_WARNING
+> -	bl	trace_hardirqs_on
+> -
+> -	/* Now enable for real */
+> -	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL | MSR_EE)
+> -	mtmsr	r10
+> -
+> -	REST_GPR(0, r1)
+> -	REST_4GPRS(3, r1)
+> -	REST_2GPRS(7, r1)
+> -	b	DoSyscall
+> -#endif /* CONFIG_TRACE_IRQFLAGS */
+> -
+>   	.globl	transfer_to_syscall
+>   transfer_to_syscall:
+> -#ifdef CONFIG_TRACE_IRQFLAGS
+> -	andi.	r12,r9,MSR_EE
+> -	beq-	trace_syscall_entry_irq_off
+> -#endif /* CONFIG_TRACE_IRQFLAGS */
+> -
+> -/*
+> - * Handle a system call.
+> - */
+> -	.stabs	"arch/powerpc/kernel/",N_SO,0,0,0f
+> -	.stabs	"entry_32.S",N_SO,0,0,0f
+> -0:
+> -
+> -_GLOBAL(DoSyscall)
+> -	stw	r3,ORIG_GPR3(r1)
+> -	li	r12,0
+> -	stw	r12,RESULT(r1)
+> -#ifdef CONFIG_TRACE_IRQFLAGS
+> -	/* Make sure interrupts are enabled */
+> -	mfmsr	r11
+> -	andi.	r12,r11,MSR_EE
+> -	/* We came in with interrupts disabled, we WARN and mark them enabled
+> -	 * for lockdep now */
+> -0:	tweqi	r12, 0
+> -	EMIT_BUG_ENTRY 0b,__FILE__,__LINE__, BUGFLAG_WARNING
+> -#endif /* CONFIG_TRACE_IRQFLAGS */
+> -	lwz	r11,TI_FLAGS(r2)
+> -	andi.	r11,r11,_TIF_SYSCALL_DOTRACE
+> -	bne-	syscall_dotrace
+> -syscall_dotrace_cont:
+> -	cmplwi	0,r0,NR_syscalls
+> -	lis	r10,sys_call_table@h
+> -	ori	r10,r10,sys_call_table@l
+> -	slwi	r0,r0,2
+> -	bge-	66f
+> -
+> -	barrier_nospec_asm
+> -	/*
+> -	 * Prevent the load of the handler below (based on the user-passed
+> -	 * system call number) being speculatively executed until the test
+> -	 * against NR_syscalls and branch to .66f above has
+> -	 * committed.
+> -	 */
+> -
+> -	lwzx	r10,r10,r0	/* Fetch system call handler [ptr] */
+> -	mtlr	r10
+> -	addi	r9,r1,STACK_FRAME_OVERHEAD
+> -	PPC440EP_ERR42
+> -	blrl			/* Call handler */
+> -	.globl	ret_from_syscall
+> +	mr	r9, r0
+> +	addi	r10, r1, STACK_FRAME_OVERHEAD
+> +	bl	system_call_exception
+>   ret_from_syscall:
+> -#ifdef CONFIG_DEBUG_RSEQ
+> -	/* Check whether the syscall is issued inside a restartable sequence */
+> -	stw	r3,GPR3(r1)
+> -	addi    r3,r1,STACK_FRAME_OVERHEAD
+> -	bl      rseq_syscall
+> -	lwz	r3,GPR3(r1)
+> -#endif
+> -	mr	r6,r3
+> -	/* disable interrupts so current_thread_info()->flags can't change */
+> -	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)	/* doesn't include MSR_EE */
+> -	/* Note: We don't bother telling lockdep about it */
+> -	SYNC
+> -	mtmsr	r10
+> -	lwz	r9,TI_FLAGS(r2)
+> -	li	r8,-MAX_ERRNO
+> -	andi.	r0,r9,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP|_TIF_USER_WORK_MASK|_TIF_PERSYSCALL_MASK)
+> -	bne-	syscall_exit_work
+> -	cmplw	0,r3,r8
+> -	blt+	syscall_exit_cont
+> -	lwz	r11,_CCR(r1)			/* Load CR */
+> -	neg	r3,r3
+> -	oris	r11,r11,0x1000	/* Set SO bit in CR */
+> -	stw	r11,_CCR(r1)
+> -syscall_exit_cont:
+> -	lwz	r8,_MSR(r1)
+> -#ifdef CONFIG_TRACE_IRQFLAGS
+> -	/* If we are going to return from the syscall with interrupts
+> -	 * off, we trace that here. It shouldn't normally happen.
+> -	 */
+> -	andi.	r10,r8,MSR_EE
+> -	bne+	1f
+> -	stw	r3,GPR3(r1)
+> -	bl      trace_hardirqs_off
+> -	lwz	r3,GPR3(r1)
+> -1:
+> -#endif /* CONFIG_TRACE_IRQFLAGS */
+> -#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
+> -	/* If the process has its own DBCR0 value, load it up.  The internal
+> -	   debug mode bit tells us that dbcr0 should be loaded. */
+> -	lwz	r0,THREAD+THREAD_DBCR0(r2)
+> -	andis.	r10,r0,DBCR0_IDM@h
+> -	bnel-	load_dbcr0
+> -#endif
+> -#ifdef CONFIG_44x
+> -BEGIN_MMU_FTR_SECTION
+> -	lis	r4,icache_44x_need_flush@ha
+> -	lwz	r5,icache_44x_need_flush@l(r4)
+> -	cmplwi	cr0,r5,0
+> -	bne-	2f
+> -1:
+> -END_MMU_FTR_SECTION_IFCLR(MMU_FTR_TYPE_47x)
+> -#endif /* CONFIG_44x */
+> -BEGIN_FTR_SECTION
+> -	lwarx	r7,0,r1
+> -END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+> -	stwcx.	r0,0,r1			/* to clear the reservation */
+> -	ACCOUNT_CPU_USER_EXIT(r2, r5, r7)
+> -#ifdef CONFIG_PPC_BOOK3S_32
+> -	kuep_unlock r5, r7
+> -#endif
+> -	kuap_check r2, r4
+> -	lwz	r4,_LINK(r1)
+> -	lwz	r5,_CCR(r1)
+> -	mtlr	r4
+> -	mtcr	r5
+> -	lwz	r7,_NIP(r1)
+> -	lwz	r2,GPR2(r1)
+> -	lwz	r1,GPR1(r1)
+> -#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
+> -	mtspr	SPRN_NRI, r0
+> -#endif
+> -	mtspr	SPRN_SRR0,r7
+> -	mtspr	SPRN_SRR1,r8
+> -	SYNC
+> -	RFI
+> -#ifdef CONFIG_44x
+> -2:	li	r7,0
+> -	iccci	r0,r0
+> -	stw	r7,icache_44x_need_flush@l(r4)
+> +	addi    r4, r1, STACK_FRAME_OVERHEAD
+> +	bl	syscall_exit_prepare
+> +	lwz	r2, _CCR(r1)
+> +	lwz	r4, _NIP(r1)
+> +	lwz	r5, _MSR(r1)
+> +	lwz	r6, _LINK(r1)
+> +	mtspr	SPRN_SRR0, r4
+> +	mtspr	SPRN_SRR1, r5
+> +	mtlr	r6
+> +	cmpwi	r3, 0
+> +	bne	2f
+> +1:	mtcr	r2
+> +	REST_GPR(2, r1)
+> +	REST_GPR(3, r1)
+> +	REST_GPR(1, r1)
+> +	rfi
+> +2:	lwz	r3, _CTR(r1)
+> +	lwz	r4, _XER(r1)
+> +	REST_NVGPRS(r1)
+> +	mtctr	r3
+> +	mtspr	SPRN_XER, r4
+> +	REST_GPR(0, r1)
+> +	REST_8GPRS(4, r1)
+> +	REST_GPR(12, r1)
+>   	b	1b
+> -#endif  /* CONFIG_44x */
+> -
+> -66:	li	r3,-ENOSYS
+> -	b	ret_from_syscall
+>   
+>   	.globl	ret_from_fork
+>   ret_from_fork:
+> @@ -490,86 +365,6 @@ ret_from_kernel_thread:
+>   	li	r3,0
+>   	b	ret_from_syscall
+>   
+> -/* Traced system call support */
+> -syscall_dotrace:
+> -	SAVE_NVGPRS(r1)
+> -	li	r0,0xc00
+> -	stw	r0,_TRAP(r1)
+> -	addi	r3,r1,STACK_FRAME_OVERHEAD
+> -	bl	do_syscall_trace_enter
+> -	/*
+> -	 * Restore argument registers possibly just changed.
+> -	 * We use the return value of do_syscall_trace_enter
+> -	 * for call number to look up in the table (r0).
+> -	 */
+> -	mr	r0,r3
+> -	lwz	r3,GPR3(r1)
+> -	lwz	r4,GPR4(r1)
+> -	lwz	r5,GPR5(r1)
+> -	lwz	r6,GPR6(r1)
+> -	lwz	r7,GPR7(r1)
+> -	lwz	r8,GPR8(r1)
+> -	REST_NVGPRS(r1)
+> -
+> -	cmplwi	r0,NR_syscalls
+> -	/* Return code is already in r3 thanks to do_syscall_trace_enter() */
+> -	bge-	ret_from_syscall
+> -	b	syscall_dotrace_cont
+> -
+> -syscall_exit_work:
+> -	andi.	r0,r9,_TIF_RESTOREALL
+> -	beq+	0f
+> -	REST_NVGPRS(r1)
+> -	b	2f
+> -0:	cmplw	0,r3,r8
+> -	blt+	1f
+> -	andi.	r0,r9,_TIF_NOERROR
+> -	bne-	1f
+> -	lwz	r11,_CCR(r1)			/* Load CR */
+> -	neg	r3,r3
+> -	oris	r11,r11,0x1000	/* Set SO bit in CR */
+> -	stw	r11,_CCR(r1)
+> -
+> -1:	stw	r6,RESULT(r1)	/* Save result */
+> -	stw	r3,GPR3(r1)	/* Update return value */
+> -2:	andi.	r0,r9,(_TIF_PERSYSCALL_MASK)
+> -	beq	4f
+> -
+> -	/* Clear per-syscall TIF flags if any are set.  */
+> -
+> -	li	r11,_TIF_PERSYSCALL_MASK
+> -	addi	r12,r2,TI_FLAGS
+> -3:	lwarx	r8,0,r12
+> -	andc	r8,r8,r11
+> -#ifdef CONFIG_IBM405_ERR77
+> -	dcbt	0,r12
+> -#endif
+> -	stwcx.	r8,0,r12
+> -	bne-	3b
+> -	
+> -4:	/* Anything which requires enabling interrupts? */
+> -	andi.	r0,r9,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP)
+> -	beq	ret_from_except
+> -
+> -	/* Re-enable interrupts. There is no need to trace that with
+> -	 * lockdep as we are supposed to have IRQs on at this point
+> -	 */
+> -	ori	r10,r10,MSR_EE
+> -	SYNC
+> -	mtmsr	r10
+> -
+> -	/* Save NVGPRS if they're not saved already */
+> -	lwz	r4,_TRAP(r1)
+> -	andi.	r4,r4,1
+> -	beq	5f
+> -	SAVE_NVGPRS(r1)
+> -	li	r4,0xc00
+> -	stw	r4,_TRAP(r1)
+> -5:
+> -	addi	r3,r1,STACK_FRAME_OVERHEAD
+> -	bl	do_syscall_trace_leave
+> -	b	ret_from_except_full
+> -
+>   	/*
+>   	 * System call was called from kernel. We get here with SRR1 in r9.
+>   	 * Mark the exception as recoverable once we have retrieved SRR0,
+> diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
+> index 9abec6cd099c..97691931a306 100644
+> --- a/arch/powerpc/kernel/head_32.h
+> +++ b/arch/powerpc/kernel/head_32.h
+> @@ -174,12 +174,13 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
+>   	stw	r2,GPR2(r11)
+>   	addi	r10,r10,STACK_FRAME_REGS_MARKER@l
+>   	stw	r9,_MSR(r11)
+> -	li	r2, \trapno + 1
+> +	li	r2, \trapno
+>   	stw	r10,8(r11)
+>   	stw	r2,_TRAP(r11)
+>   	SAVE_GPR(0, r11)
+>   	SAVE_4GPRS(3, r11)
+>   	SAVE_2GPRS(7, r11)
+> +	SAVE_NVGPRS(r11)
+>   	addi	r11,r1,STACK_FRAME_OVERHEAD
+>   	addi	r2,r12,-THREAD
+>   	stw	r11,PT_REGS(r12)
+> diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall.c
+> similarity index 97%
+> rename from arch/powerpc/kernel/syscall_64.c
+> rename to arch/powerpc/kernel/syscall.c
+> index cf06eb443a80..a07702a85f81 100644
+> --- a/arch/powerpc/kernel/syscall_64.c
+> +++ b/arch/powerpc/kernel/syscall.c
+> @@ -1,8 +1,9 @@
+>   // SPDX-License-Identifier: GPL-2.0-or-later
+>   
+>   #include <linux/err.h>
+> +#include <linux/compat.h>
+> +
+>   #include <asm/asm-prototypes.h>
+> -#include <asm/book3s/64/kup-radix.h>
+>   #include <asm/cputime.h>
+>   #include <asm/hw_irq.h>
+>   #include <asm/kprobes.h>
+> @@ -25,16 +26,20 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>   	unsigned long ti_flags;
+>   	syscall_fn f;
+>   
+> +#ifdef CONFIG_PPC64
+>   	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+>   		BUG_ON(irq_soft_mask_return() != IRQS_ALL_DISABLED);
+> +#endif
+>   
+>   	trace_hardirqs_off(); /* finish reconciling */
+>   
+> -	if (IS_ENABLED(CONFIG_PPC_BOOK3S))
+> +	if (!IS_ENABLED(CONFIG_PPC_BOOK3E))
+>   		BUG_ON(!(regs->msr & MSR_RI));
+>   	BUG_ON(!(regs->msr & MSR_PR));
+>   	BUG_ON(!FULL_REGS(regs));
+> +#ifdef CONFIG_PPC64
+>   	BUG_ON(regs->softe != IRQS_ENABLED);
+> +#endif
+>   
+>   	account_cpu_user_entry();
+>   
+> @@ -48,7 +53,7 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>   	}
+>   #endif
+>   
+> -	kuap_check_amr();
+> +	kuap_check();
+>   
+>   	/*
+>   	 * This is not required for the syscall exit path, but makes the
+> @@ -56,7 +61,9 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>   	 * frame, or if the unwinder was taught the first stack frame always
+>   	 * returns to user with IRQS_ENABLED, this store could be avoided!
+>   	 */
+> +#ifdef CONFIG_PPC64
+>   	regs->softe = IRQS_ENABLED;
+> +#endif
+>   
+>   	local_irq_enable();
+>   
+> @@ -86,7 +93,7 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>   	/* May be faster to do array_index_nospec? */
+>   	barrier_nospec();
+>   
+> -	if (unlikely(ti_flags & _TIF_32BIT)) {
+> +	if (is_compat_task()) {
+>   		f = (void *)compat_sys_call_table[r0];
+>   
+>   		r3 &= 0x00000000ffffffffULL;
+> @@ -148,7 +155,9 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
+>   		ret |= _TIF_RESTOREALL;
+>   	}
+>   
+> +#ifdef CONFIG_PPC64
+>   again:
+> +#endif
+>   	local_irq_disable();
+>   	ti_flags = READ_ONCE(*ti_flagsp);
+>   	while (unlikely(ti_flags & (_TIF_USER_WORK_MASK & ~_TIF_RESTORE_TM))) {
+> @@ -191,6 +200,7 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
+>   
+>   	/* This pattern matches prep_irq_for_idle */
+>   	__hard_EE_RI_disable();
+> +#ifdef CONFIG_PPC64
+>   	if (unlikely(lazy_irq_pending())) {
+>   		__hard_RI_enable();
+>   		trace_hardirqs_off();
+> @@ -201,12 +211,13 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
+>   	}
+>   	local_paca->irq_happened = 0;
+>   	irq_soft_mask_set(IRQS_ENABLED);
+> +#endif
+>   
+>   #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+>   	local_paca->tm_scratch = regs->msr;
+>   #endif
+>   
+> -	kuap_check_amr();
+> +	kuap_check();
+>   
+>   	account_cpu_user_exit();
+>   
+> @@ -294,7 +305,7 @@ notrace unsigned long interrupt_exit_user_prepare(struct pt_regs *regs, unsigned
+>   	local_paca->tm_scratch = regs->msr;
+>   #endif
+>   
+> -	kuap_check_amr();
+> +	kuap_check();
+>   
+>   	account_cpu_user_exit();
+>   
+> @@ -372,7 +383,7 @@ notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs, unsign
+>   	 * We don't need to restore AMR on the way back to userspace for KUAP.
+>   	 * The value of AMR only matters while we're in the kernel.
+>   	 */
+> -	kuap_restore_amr(regs);
+> +	kuap_restore(regs);
+>   
+>   	return ret;
+>   }
+> 
