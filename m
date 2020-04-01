@@ -2,108 +2,158 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17782C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AE4C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D846D20776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC4720678
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="JyJ+gy9/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pC20x8sP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731657AbgDADMz (ORCPT
+        id S1731670AbgDADOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 23:12:55 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17817 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731608AbgDADMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 23:12:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585710570;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=KcAzchodFlHrCft8V2AwyHfzu9rilizY3Z6FGXX3y14=;
-        b=JyJ+gy9/NxNNe5zeYbTkc2ynPUYF/KFmz8AqZs/lElhDoux5BlGDaJFZv34m1C15
-        4+6qRl/zGc/SQQs14dizVehpX10ZzA1AbBqVzWIVt3wLgElhOjJrWi+uVGw0s2zYwnR
-        JrYxrCFXwPuihr+cu5Td3xv/hUxF8++r6pZ8k3TI=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1585710568507865.2339431988825; Wed, 1 Apr 2020 11:09:28 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <20200401030658.1174045-5-jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
-Date:   Wed,  1 Apr 2020 11:06:48 +0800
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
-References: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
+        Tue, 31 Mar 2020 23:14:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:47957 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731556AbgDADON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 23:14:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sWWQ2WXjz9sPF;
+        Wed,  1 Apr 2020 14:14:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585710852;
+        bh=qppD3VaBMroI5+kNa0d+EAkJTB/0+a4Msi+tMCBmFF0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pC20x8sPHjqGIHNic38SUWahdy0y1+QHMg6pxSpzOacDGDHrYQjTXCF1HBnYdGOrF
+         24FlgA1Ssp1dvvSDYQcmCjmyFoVt5dYwcszXA5Ca6Zk5LS4lEtMsd0Fj6JJCFZn7ao
+         fGgG4xQ5nAdqID4HsOliea/xLqHnKfn1MKs3JwMNKN+AqGyfSYJZsSsz4UtSWKiT0A
+         lRC9rUVJU0ndhW3NBbhwYHjIdNcYzmkw5VJv4BfOuzhivdOEQi04J8vOyvdfZDawyr
+         Qwt79AVC6K01aBUFAgr2qFhbJ+FxuNs7qBwvTNQ/Fb3U+Vm9qqGh6uhvWDfT44vkaC
+         vchWG/iJr4k9g==
+Date:   Wed, 1 Apr 2020 14:14:09 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: linux-next: manual merge of the drivers-x86 tree with the tip
+ tree
+Message-ID: <20200401141409.446e989b@canb.auug.org.au>
+In-Reply-To: <20200326150523.02c4ec48@canb.auug.org.au>
+References: <20200326150523.02c4ec48@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: multipart/signed; boundary="Sig_/UCk/pWw7YoTr5yoPdAvwp5g";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCI Host controller node for Loongson64 with RS780E PCH dts.
-Note that PCI interrupts are probed via legacy way, as different
-machine have different interrupt arrangement, we can't cover all
-of them in dt.
+--Sig_/UCk/pWw7YoTr5yoPdAvwp5g
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
---
-v2: Clean-up
----
- arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+Hi all,
 
-diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/d=
-ts/loongson/rs780e-pch.dtsi
-index 45c54d555fa4..8766f97306c6 100644
---- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-+++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-@@ -5,10 +5,25 @@ bus@10000000 {
- =09=09compatible =3D "simple-bus";
- =09=09#address-cells =3D <2>;
- =09=09#size-cells =3D <2>;
--=09=09ranges =3D <0 0x10000000 0 0x10000000 0 0x10000000
-+=09=09ranges =3D <0 0x00000000 0 0x00000000 0 0x00010000 /* ioports */
-+=09=09=09=090 0x10000000 0 0x10000000 0 0x10000000
- =09=09=09=090 0x40000000 0 0x40000000 0 0x40000000
- =09=09=09=090xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Spa=
-ce */>;
-=20
-+=09=09pci@1a000000 {
-+=09=09=09compatible =3D "loongson,rs780e-pci";
-+=09=09=09device_type =3D "pci";
-+=09=09=09#address-cells =3D <3>;
-+=09=09=09#size-cells =3D <2>;
-+
-+=09=09=09reg =3D <0 0x1a000000 0 0x02000000>;
-+
-+=09=09=09ranges =3D <0x01000000 0 0x00004000 0 0x00004000 0 0x00004000>,
-+=09=09=09=09 <0x02000000 0 0x40000000 0 0x40000000 0 0x40000000>;
-+
-+=09=09=09bus-range =3D <0x00 0xff>;
-+=09=09};
-+
- =09=09isa {
- =09=09=09compatible =3D "isa";
- =09=09=09#address-cells =3D <2>;
+On Thu, 26 Mar 2020 15:05:23 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the drivers-x86 tree got a conflict in:
+>=20
+>   drivers/platform/x86/intel_pmc_core.c
+>=20
+> between commit:
+>=20
+>   a69b3b1d4cf0 ("platform/x86: Convert to new CPU match macros")
+>=20
+> from the tip tree and commit:
+>=20
+>   16292bed9c56 ("platform/x86: intel_pmc_core: Add Atom based Jasper Lake=
+ (JSL) platform support")
+>=20
+> from the drivers-x86 tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc drivers/platform/x86/intel_pmc_core.c
+> index 3df33ff50faa,d265cd5b1f45..000000000000
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@@ -871,18 -1144,19 +1144,19 @@@ static inline void pmc_core_dbgfs_unreg
+>   #endif /* CONFIG_DEBUG_FS */
+>  =20
+>   static const struct x86_cpu_id intel_pmc_core_ids[] =3D {
+>  -	INTEL_CPU_FAM6(SKYLAKE_L, spt_reg_map),
+>  -	INTEL_CPU_FAM6(SKYLAKE, spt_reg_map),
+>  -	INTEL_CPU_FAM6(KABYLAKE_L, spt_reg_map),
+>  -	INTEL_CPU_FAM6(KABYLAKE, spt_reg_map),
+>  -	INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
+>  -	INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
+>  -	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+>  -	INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
+>  -	INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
+>  -	INTEL_CPU_FAM6(TIGERLAKE_L, tgl_reg_map),
+>  -	INTEL_CPU_FAM6(TIGERLAKE, tgl_reg_map),
+>  -	INTEL_CPU_FAM6(ATOM_TREMONT, tgl_reg_map),
+>  -	INTEL_CPU_FAM6(ATOM_TREMONT_L, tgl_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&spt_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&spt_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&spt_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&spt_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	&cnp_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&icl_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,	&icl_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&cnp_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&cnp_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&tgl_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		&tgl_reg_map),
+>  +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	&tgl_reg_map),
+> ++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&tgl_reg_map),
+>   	{}
+>   };
+>  =20
+
+
+This is now a conflict between the drivers-x86 tree and Linus' tree.
 --=20
-2.26.0.rc2
+Cheers,
+Stephen Rothwell
 
+--Sig_/UCk/pWw7YoTr5yoPdAvwp5g
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6EBwEACgkQAVBC80lX
+0Gxm8wf/S+jju3n5XIGVmNeohmJdVMA6fIb3xe2owDjd5Fgb+Arkk6YFodbksHWb
+ce+Snn0W6nWyj8FjskI42ng2VQulHwWIOdEsRLEpG1bpiasMO1h2pqHNDYx28YtL
+GP2kWRLRnVT4Iw+Xjy0OlHZN8uF/o8aXc1NvhtbItdmFWpDGfrhXM4Y9RrE92oXW
+eGSkfhF0ndyC6TPlYk5yN6NWUZa7KKMYw2NIiB993xMYPzV4zK8gn1SgikoGL0gX
+AOUv5ioolioyi2QFFuBOYJJZ905TRR13ej4ea9YmYouuNlPiJ2XkLuIXZAAwNpHb
+aMG+IppKi3p8mJ3dvcFWfnc3/uP+2g==
+=hn46
+-----END PGP SIGNATURE-----
+
+--Sig_/UCk/pWw7YoTr5yoPdAvwp5g--
