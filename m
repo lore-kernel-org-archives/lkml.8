@@ -2,81 +2,150 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF30DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C9CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8468A20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710882071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WTskXwYC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PSwVlgPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733192AbgDAWUB (ORCPT
+        id S1732742AbgDAW1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:20:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43488 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732385AbgDAWUB (ORCPT
+        Wed, 1 Apr 2020 18:27:06 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38678 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732537AbgDAW1F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:20:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Cn/ndoIwzwK43LpR6SDiN0Eo3un+SI37/NqAeATzZdA=; b=WTskXwYClkflxWhu6scBAWo21K
-        figHGRnz54kd7bZNx6lipvYypoSxX08cf0z0c7VeJqqJ3CtOKecwJisPzU8sUxAFUKOnLoqxD2OGG
-        DuyQbWym7FOBnJdDjx5jl8hRPHPyvvgXXh8BWAohB3SFLyJqR+ckder+cvuJDf2eKoVMgI6QI0sPX
-        7km/3OKPobqmRjagir1ygAIEdrcMvTJbl0+1nL5ZUZv1Hu6Z31H1vYbIpMSUinkCwlaqg8Tl5/JaO
-        qAbQ0zYhvHki4ZhdeS0u8RNFzurFATm4PBqtsDh7m3haRFwDUJ+5HCKjOzgtRMJkJzEVcQVai6VFm
-        D4ABlSyw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJliK-0007eG-Vv; Wed, 01 Apr 2020 22:20:00 +0000
-Date:   Wed, 1 Apr 2020 15:20:00 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
- node
-Message-ID: <20200401222000.GK21484@bombadil.infradead.org>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
- <20200330123643.17120-6-richard.weiyang@gmail.com>
- <20200330124842.GY22483@bombadil.infradead.org>
- <20200330141558.soeqhstone2liqud@master>
- <20200330142821.GD22483@bombadil.infradead.org>
- <20200331134208.gfkyym6n3gpgk3x3@master>
- <20200331164212.GC21484@bombadil.infradead.org>
- <20200331220440.roq4pv6wk7tq23gx@master>
- <20200331235912.GD21484@bombadil.infradead.org>
- <20200401221021.v6igvcpqyeuo2cws@master>
+        Wed, 1 Apr 2020 18:27:05 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w3so553094plz.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 15:27:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/5I5n44oluC7i5iMGc1kCApSIMH8aU+TEHJYNftWu74=;
+        b=PSwVlgPtuIY/hJbpB3m2prpdGLQvhpH1sfXsOEzX7CzUuAZ1h/SMVcUjR75F0HJb33
+         F626YuNjcRK4M1QEgz/Ng7ZDyADmtbfWc3sTyqpSM9ZPyRWssvVUAoF2aRXSVlLEpAHU
+         C00grz1kxYmJOgxOpIqsvDI5AVVRLjvNmz121Q96uUIG4WucrydsJsyqD795OU+A1M0C
+         4PxbUycDLk2pWZK5osYG1a14Nj3S3qwp57uxvaueuyLA+1+7GtxBxh3Wukisq5wCDtjo
+         ecL5yRbgh1Le8MvvKJ85oOmDFlXclOrCTjs9BnjOLhtFmNhH8OcPQTH3Z4lSTgKMRwbb
+         eM0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/5I5n44oluC7i5iMGc1kCApSIMH8aU+TEHJYNftWu74=;
+        b=llDXvmLIWIoQfjSVxyWU6OLi4/2UsQAc2TjOuoBsMwrqMEyq//qfwZ6jJ5RRT5WZwi
+         6LMl9On6b8/YUrrr/Zro7e0YIQTMhWj7Dit51ArYUqjlS4c44TsesiA0WZSdnEdJaJfl
+         ptuVkzV9z5IQwxBDaDatTkK+Dbn7tFre529NbVJKXPuUFAvmnURRJLEojZF4gBg9wReC
+         I5b7v0wGiN2frgYzN5xuyc88DJm+buYMb8j5SSTNE9q8L3MLJuBioE2QBjiebLHAj0zE
+         /XSFsXeeoJJR/bVptB7K0y/Pz3xdLPw9aORcgYNyWsVmsuLveIjjPGmhws+iAHvotPAq
+         ce5w==
+X-Gm-Message-State: AGi0Puboae/odOJTSjDJQmbtQ9kL1sTCKXYCXGlYGbcqY/qtJBi2OvS4
+        kdHx1LCIwO7sBn5OJHckeY+FAMmRettmYvH/Qy/H00KT7j0=
+X-Google-Smtp-Source: APiQypKFmS9i5vrVXurU9AIyS4H2bg7yQQ8XLjc9cH4MSta9jqwsJx028ulHFt+NlUrYgc4aJURFgE1cqiSLrH6cnRs=
+X-Received: by 2002:a17:90b:230d:: with SMTP id mt13mr247965pjb.164.1585780024565;
+ Wed, 01 Apr 2020 15:27:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401221021.v6igvcpqyeuo2cws@master>
+References: <20200311024240.26834-1-elder@linaro.org> <20200401173515.142249-1-ndesaulniers@google.com>
+ <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org> <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
+ <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org> <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
+ <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org>
+In-Reply-To: <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 1 Apr 2020 15:26:53 -0700
+Message-ID: <CAKwvOdnZ9KL1Esmdjvk-BTP2a+C24bOWguNVaU3RSXKi1Ouh+w@mail.gmail.com>
+Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
+To:     Alex Elder <elder@linaro.org>
+Cc:     Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 10:10:21PM +0000, Wei Yang wrote:
-> On Tue, Mar 31, 2020 at 04:59:12PM -0700, Matthew Wilcox wrote:
-> >On Tue, Mar 31, 2020 at 10:04:40PM +0000, Wei Yang wrote:
-> >> cc -I. -I../../include -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined   -c -o main.o main.c
-> >> In file included from ./linux/../../../../include/linux/radix-tree.h:15,
-> >>                  from ./linux/radix-tree.h:5,
-> >>                  from main.c:10:
-> >> ./linux/rcupdate.h:5:10: fatal error: urcu.h: No such file or directory
-> >>     5 | #include <urcu.h>
-> >>       |          ^~~~~~~~
-> >> compilation terminated.
-> >> make: *** [<builtin>: main.o] Error 1
+On Wed, Apr 1, 2020 at 1:21 PM Alex Elder <elder@linaro.org> wrote:
+>
+> On 4/1/20 2:54 PM, Nick Desaulniers wrote:
+> > On Wed, Apr 1, 2020 at 12:44 PM Alex Elder <elder@linaro.org> wrote:
+> >>
+> >> Can you tell me where I can find the commit id of the kernel
+> >> that is being built when this error is reported?  I would
+> >> like to examine things and build it myself so I can fix it.
+> >> But so far haven't found what I need to check out.
 > >
-> >Oh, you need liburcu installed.  On Debian, that's liburcu-dev ... probably
-> >liburcu-devel on Red Hat style distros.
-> 
-> The bad news is I didn't find the package on Fedora.
+> > From the report: https://groups.google.com/g/clang-built-linux/c/pX-kr_t5l_A
+>
+> That link doesn't work for me.
 
-Really?  https://www.google.com/search?q=fedora+liburcu has the -devel
-package as the second hit from https://pkgs.org/search/?q=liburcu
+Sigh, second internal bug filed against google groups this
+week...settings look correct but I too see a 404 when in private
+browsing mode.
+
+>
+> > Configuration details:
+> > rr[llvm_url]="https://github.com/llvm/llvm-project.git"
+> > rr[linux_url]="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
+> > rr[linux_branch]="7111951b8d4973bda27ff663f2cf18b663d15b48"
+>
+> That commit is just the one in which Linux v5.6 is tagged.
+> It doesn't include any of this code (but it's the last
+> tagged release that current linus/master is built on).
+>
+> It doesn't answer my question about what commit id was
+> used for this build, unfortunately.
+
+7111951b8d4973bda27ff663f2cf18b663d15b48 *is* the commit id that was
+used for the build.  It sync'd the mainline tree at that commit.
+
+> > the linux_branch looks like a SHA of what the latest ToT of mainline
+> > was when the CI ran.
+> >
+> > I was suspecting that maybe there was a small window between the
+> > regression, and the fix, and when the bot happened to sync.  But it
+> > seems that: e31a50162feb352147d3fc87b9e036703c8f2636 landed before
+> > 7111951b8d4973bda27ff663f2cf18b663d15b48 IIUC.
+>
+> Yes, this:
+>   e31a50162feb bitfield.h: add FIELD_MAX() and field_max()
+> landed about 200 commits after the code that needed it.
+>
+> So there's a chance the kernel that got built was somewhere
+> between those two, and I believe the problem you point out
+> would happen in that case.  This is why I started by asking
+> whether it was something built during a bisect.
+>
+> It's still not clear to me what happened here.  I can explain
+> how this *could* happen, but I don't believe problem exists
+> in the latest upstream kernel commit.
+>
+> Is there something else you think I should do?
+
+mainline is hosed for aarch64 due to some dtc failures.  I'm not sure
+how TCWG's CI chooses the bisection starting point, but if mainline
+was broken, and it jumped back say 300 commits, then the automated
+bisection may have converged on your first patch, but not the second.
+
+I just checked out mainline @ 7111951b8d4973bda27ff663f2cf18b663d15b48
+and couldn't reproduce, so I assume the above is what happened.  So
+sorry for the noise, I'll go investigate the dtc failure.  Not sure
+how that skipped -next coverage.
+-- 
+Thanks,
+~Nick Desaulniers
