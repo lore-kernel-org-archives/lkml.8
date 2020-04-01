@@ -2,52 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA4BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D97DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D53C721655
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272DC21582
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758329;
-	bh=/sxCgI7m/KNwNNLDpk1oZ+muSRGWzY76oNLMuJCpNmA=;
+	s=default; t=1585758332;
+	bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SgZtddZrdz+9MgVIZFAyLj0Hshuwxkgr2WeFqILJU+ehMCaJ7Yw1m7EbcArW3G8W+
-	 PRCHBBsF6Kyh6vQPdiZN2df9ZeEerlL+sr/6x4GJLGoq2wkdKZzJwe8BDrjPUuJOkR
-	 BkBvis1fh6bXeDuuR2dzIpCd+jt6MY+03Fp6qQRY=
+	b=fBiUyXbaH0mcixtmZXHgiol9RCy/eHyfmRrrLqI0dav2MiECmwOya4WixK5ean+65
+	 A2VblmYR8r/39lHkGaOIVykDT7nulvBfFmKOTOi2EReXttOtXWk9b7sYiaLwLwpIrR
+	 XQO5BP2zozpUkrwEF4DDIWpgYdDcCFSmpEJYjpuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387831AbgDAQZ2 (ORCPT
+        id S2387836AbgDAQZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:25:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:25:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387599AbgDAQZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:25:27 -0400
+        id S2387601AbgDAQZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:25:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40B6C21582;
-        Wed,  1 Apr 2020 16:25:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 433BD20BED;
+        Wed,  1 Apr 2020 16:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758326;
-        bh=/sxCgI7m/KNwNNLDpk1oZ+muSRGWzY76oNLMuJCpNmA=;
+        s=default; t=1585758329;
+        bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qz3+sowoWhJEwmW8DyBYSNUHznKMoeIiWljZCYDwy1+hfkfwPB6lQ0SU8SHBqwJOG
-         CopaKJFQGxpNa21axl4ilp9KnWORpFizQPCv0SucKoHCfTBC9pRjkrofyZ53ZZPf94
-         IN40fjd4XQLylljQfRkXBzTb5QfptlT4E04zpVAw=
+        b=aKaEej/WHmV696O3WjwH06E+n8BeFp+TPcFado4wjXB8hv4Fd94o8/CadOFbxkdSj
+         5ETEgWgC8uS4JIoJa9wriLCYqkVkj6lJCTmzWkEClsJdNpVmtWwlWmD+AMwHFPPi21
+         gY/gcq+E5iCFqJmNKkLfejaI+gWe4B26CbY5EpiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dirk Mueller <dmueller@suse.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.19 056/116] scripts/dtc: Remove redundant YYLOC global declaration
-Date:   Wed,  1 Apr 2020 18:17:12 +0200
-Message-Id: <20200401161549.821884956@linuxfoundation.org>
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 039/116] arm64: dts: ls1043a: FMan erratum A050385
+Date:   Wed,  1 Apr 2020 18:16:55 +0200
+Message-Id: <20200401161547.420888040@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -60,52 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dirk Mueller <dmueller@suse.com>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
+[ Upstream commit b54d3900862374e1bb2846e6b39d79c896c0b200 ]
 
-gcc 10 will default to -fno-common, which causes this error at link
-time:
+The LS1043A SoC is affected by the A050385 erratum stating that
+FMAN DMA read or writes under heavy traffic load may cause FMAN
+internal resource leak thus stopping further packet processing.
 
-  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
-
-This is because both dtc-lexer as well as dtc-parser define the same
-global symbol yyloc. Before with -fcommon those were merged into one
-defintion. The proper solution would be to to mark this as "extern",
-however that leads to:
-
-  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
-   26 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-In file included from dtc-lexer.l:24:
-dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
-  127 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-cc1: all warnings being treated as errors
-
-which means the declaration is completely redundant and can just be
-dropped.
-
-Signed-off-by: Dirk Mueller <dmueller@suse.com>
-Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-[robh: cherry-pick from upstream]
-Cc: stable@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/dtc/dtc-lexer.l |    1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/scripts/dtc/dtc-lexer.l
-+++ b/scripts/dtc/dtc-lexer.l
-@@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+index 6082ae0221364..d237162a87446 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+@@ -20,6 +20,8 @@
+ };
  
--YYLTYPE yylloc;
- extern bool treesource_error;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+ &fman0 {
++	fsl,erratum-a050385;
++
+ 	/* these aliases provide the FMan ports mapping */
+ 	enet0: ethernet@e0000 {
+ 	};
+-- 
+2.20.1
+
 
 
