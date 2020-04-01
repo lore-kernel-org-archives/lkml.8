@@ -2,147 +2,121 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1773C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F41C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0AE207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35372206CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:31:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GGemJhZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732978AbgDASbD (ORCPT
+        id S1733023AbgDASbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:31:03 -0400
-Received: from mga14.intel.com ([192.55.52.115]:5040 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732316AbgDASa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:30:59 -0400
-IronPort-SDR: i285Qq+YQYgVWafNweVX1IrQg3WrA3onyjFM873HV2phugeu/iVo8Rew+qpIsWlzx2A6oYAw9J
- hPHqIUBYEPfg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 11:30:58 -0700
-IronPort-SDR: tnndSZF9txte6F/9oSlc03r0JHMTicmx8nQxyAdDlE0hzEQ8UuRWOj5bLNbppg3Q/X868un7jN
- LgVLo/ESuGag==
-X-IronPort-AV: E=Sophos;i="5.72,332,1580803200"; 
-   d="scan'208";a="249552585"
-Received: from rchatre-s.jf.intel.com ([10.54.70.76])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 11:30:57 -0700
-From:   Reinette Chatre <reinette.chatre@intel.com>
-To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
-        tony.luck@intel.com
-Cc:     kuo-lang.tseng@intel.com, mingo@redhat.com, babu.moger@amd.com,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 2/2] x86/resctrl: Use appropriate API for strings terminated by newline
-Date:   Wed,  1 Apr 2020 11:30:48 -0700
-Message-Id: <2a51c327497738ad7012e4f185046c530dba4594.1585765499.git.reinette.chatre@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1585765499.git.reinette.chatre@intel.com>
-References: <cover.1585765499.git.reinette.chatre@intel.com>
+        Wed, 1 Apr 2020 14:31:34 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50025 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732864AbgDASbd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 14:31:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585765892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=XFWPG187HUhkSGxk00FG9TA0iVCphDpDrVtIpYx7KzE=;
+        b=GGemJhZ/6PQUlz9m/ZAOmIZjrgjUPXJNQwZvmJKZvkev7f+kz8C6aRXhf3So11FgezWrzp
+        XaOmcO5lTVa+Je0Ynq/RQjGzPrxoYiGO9cjDpez1fTLjh0KdXxm/ax9Ay5s6DNW5qsnGmu
+        YXHW0E75YXwBYdRpxQVJmXrIb9DlB4U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-o8ufVN_IPVGhpVSDAjVHrw-1; Wed, 01 Apr 2020 14:31:29 -0400
+X-MC-Unique: o8ufVN_IPVGhpVSDAjVHrw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9962918C8C19;
+        Wed,  1 Apr 2020 18:31:27 +0000 (UTC)
+Received: from eperezma.remote.csb (ovpn-113-73.ams2.redhat.com [10.36.113.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0887196F83;
+        Wed,  1 Apr 2020 18:31:22 +0000 (UTC)
+From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH v4 0/7] vhost: Reset batched descriptors on SET_VRING_BASE call
+Date:   Wed,  1 Apr 2020 20:31:11 +0200
+Message-Id: <20200401183118.8334-1-eperezma@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The user input to files in the resctrl filesystem are expected to be
-terminated with a newline. Testing the user input includes a test for
-the presence of a newline and then replacing the newline with NUL
-byte followed by comparison using strcmp().
+Vhost did not reset properly the batched descriptors on SET_VRING_BASE
+event. Because of that, is possible to return an invalid descriptor to
+the guest.
 
-sysfs_streq() exists to test if strings are equal, treating both NUL and
-newline-then-NUL as equivalent string terminations. Even more,
-sysfs_match_string() exists to match a given string in an array using
-sysfs_streq().
+This series ammend this, resetting them every time backend changes, and
+creates a test to assert correct behavior. To do that, they need to
+expose a new function in virtio_ring, virtqueue_reset_free_head, only
+on test code.
 
-Replace existing strcmp() comparisons of strings that are terminated
-with a newline with more appropriate sysfs_streq() via the
-sysfs_match_string() API that can perform the match across the different
-mode strings that are already maintained in an array.
+Another useful thing would be to check if mutex is properly get in
+vq private_data accessors. Not sure if mutex debug code allow that,
+similar to C++ unique lock::owns_lock. Not acquiring in the function
+because caller code holds the mutex in order to perform more actions.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+v4:
+* Rebase with vhost_iotlb changes.
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index fbee891a7d6e..623e33c0a290 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1412,11 +1412,11 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 	struct rdtgroup *rdtgrp;
- 	enum rdtgrp_mode mode;
- 	int ret = 0;
-+	int user_m;
- 
- 	/* Valid input requires a trailing newline */
- 	if (nbytes == 0 || buf[nbytes - 1] != '\n')
- 		return -EINVAL;
--	buf[nbytes - 1] = '\0';
- 
- 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
- 	if (!rdtgrp) {
-@@ -1428,11 +1428,15 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 
- 	mode = rdtgrp->mode;
- 
--	if ((!strcmp(buf, "shareable") && mode == RDT_MODE_SHAREABLE) ||
--	    (!strcmp(buf, "exclusive") && mode == RDT_MODE_EXCLUSIVE) ||
--	    (!strcmp(buf, "pseudo-locksetup") &&
--	     mode == RDT_MODE_PSEUDO_LOCKSETUP) ||
--	    (!strcmp(buf, "pseudo-locked") && mode == RDT_MODE_PSEUDO_LOCKED))
-+	user_m = sysfs_match_string(rdt_mode_str, buf);
-+	if (user_m < 0) {
-+		rdt_last_cmd_puts("Unknown or unsupported mode\n");
-+		ret = user_m;
-+		goto out;
-+	}
-+
-+	/* Do nothing and return success if user asks for current mode */
-+	if (user_m == mode)
- 		goto out;
- 
- 	if (mode == RDT_MODE_PSEUDO_LOCKED) {
-@@ -1441,14 +1445,14 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 		goto out;
- 	}
- 
--	if (!strcmp(buf, "shareable")) {
-+	if (user_m == RDT_MODE_SHAREABLE) {
- 		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
- 			ret = rdtgroup_locksetup_exit(rdtgrp);
- 			if (ret)
- 				goto out;
- 		}
- 		rdtgrp->mode = RDT_MODE_SHAREABLE;
--	} else if (!strcmp(buf, "exclusive")) {
-+	} else if (user_m == RDT_MODE_EXCLUSIVE) {
- 		if (!rdtgroup_mode_test_exclusive(rdtgrp)) {
- 			ret = -EINVAL;
- 			goto out;
-@@ -1459,14 +1463,11 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 				goto out;
- 		}
- 		rdtgrp->mode = RDT_MODE_EXCLUSIVE;
--	} else if (!strcmp(buf, "pseudo-locksetup")) {
-+	} else if (user_m == RDT_MODE_PSEUDO_LOCKSETUP) {
- 		ret = rdtgroup_locksetup_enter(rdtgrp);
- 		if (ret)
- 			goto out;
- 		rdtgrp->mode = RDT_MODE_PSEUDO_LOCKSETUP;
--	} else {
--		rdt_last_cmd_puts("Unknown or unsupported mode\n");
--		ret = -EINVAL;
- 	}
- 
- out:
--- 
-2.21.0
+v3:
+* Rename accesors functions.
+* Make scsi and test use the accesors too.
+
+v2:
+* Squashed commits.
+* Create vq private_data accesors (mst).
+
+This serie is meant to be applied on top of
+38dd2ba72ece18ec8398c8ddd13cfb02870b0309 in
+git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git.
+
+Eugenio P=C3=A9rez (4):
+  tools/virtio: Add --batch option
+  tools/virtio: Add --batch=3Drandom option
+  tools/virtio: Add --reset=3Drandom
+  tools/virtio: Make --reset reset ring idx
+
+Michael S. Tsirkin (3):
+  vhost: option to fetch descriptors through an independent struct
+  vhost: use batched version by default
+  vhost: batching fetches
+
+ drivers/vhost/test.c         |  59 +++++++-
+ drivers/vhost/test.h         |   1 +
+ drivers/vhost/vhost.c        | 271 +++++++++++++++++++++++------------
+ drivers/vhost/vhost.h        |  17 ++-
+ drivers/virtio/virtio_ring.c |  29 ++++
+ tools/virtio/linux/virtio.h  |   2 +
+ tools/virtio/virtio_test.c   | 123 ++++++++++++++--
+ 7 files changed, 395 insertions(+), 107 deletions(-)
+
+--=20
+2.18.1
 
