@@ -2,182 +2,195 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B0AC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C242AC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51B52071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E37020842
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="erpNZ8My"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s2hg2htp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731969AbgDAHDq (ORCPT
+        id S1731985AbgDAHEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:03:46 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38105 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731792AbgDAHDp (ORCPT
+        Wed, 1 Apr 2020 03:04:23 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44811 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731922AbgDAHEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:03:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585724624;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=peXFAP/tNqhduATvqLwoltzsPFD/EhXv4vwTpmobIrQ=;
-        b=erpNZ8MypcB6NOZV65f/uFU8SmUyvWvr8mTLYrjMrpQMnPpa3wfQVITGKYh7ZvSsCJwfpN
-        dNE9UB0PHEWfyfZ/iP+aX5QbmeydwmEUwkHPOw4qkFHHKo2ohL+RXZt5lUrRbkN0iy46IK
-        rmNgCpxou4XqdX+xMI14fFhxAKLStwU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-110-Q5TMCUgcOFClZTm4UNkHzw-1; Wed, 01 Apr 2020 03:03:41 -0400
-X-MC-Unique: Q5TMCUgcOFClZTm4UNkHzw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D42A1107ACC7;
-        Wed,  1 Apr 2020 07:03:39 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.40.193.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F159F5E000;
-        Wed,  1 Apr 2020 07:03:25 +0000 (UTC)
-Date:   Wed, 1 Apr 2020 09:03:22 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v8 11/14] KVM: selftests: Introduce after_vcpu_run hook
- for dirty log test
-Message-ID: <20200401070322.yqdp5g2amzlbftk6@kamzik.brq.redhat.com>
-References: <20200331190000.659614-1-peterx@redhat.com>
- <20200331190000.659614-12-peterx@redhat.com>
+        Wed, 1 Apr 2020 03:04:22 -0400
+Received: by mail-qk1-f196.google.com with SMTP id j4so25974769qkc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 00:04:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=El2QKEKkvpg6iAWNInUHfxZbiEumudKWoBkgubLXWZA=;
+        b=s2hg2htp5hxoEWqtFZrybH253BnBuQZC/c0U+8hvebmFiQtkag4z9EhA/VJNkOnXwe
+         y+obuAWSIsWOpse5qXc3sud4KwnYfQTkDRFwqGJ1xIs7a7Ghs5Dwx9vQcZ1gEER9tyWY
+         Q17Anv/lWhT7McaHWAQE/1HeSSFxApEeLbcLPdk1v7TKw6/DsH/bzMHi+ckTG97/hvcm
+         I/qEnik5ZAcvV+h71O0P/xwU6gqLXsRLKB7/3VZXuVzRW8Mg4JSAtvzTyA9f7cLBME8l
+         5faDnwVDBpgKekEzmm5yMzZemyunI3qEBP48FzW51grEdzWJM3STVyF6doy8SvFx6+gp
+         Sy6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=El2QKEKkvpg6iAWNInUHfxZbiEumudKWoBkgubLXWZA=;
+        b=CwAT+VyNHJjorGDxrRdmFELc37P6Yxtp9X2U1gZZsDUq9Duor0jB+DaevUAnQh+zjg
+         iJ1WWdtY7UzsUUzt270JlW7la5uhxkn51VB7UlbwzMMwVk6kYI+0kreuwwZ4WS+Moqsd
+         /pMIwb+d2WehADgqoMF97bQFMJ8/yAnaRKEg0HglPJE3RhPqxt6skD5XA+4Y5TWZFJVQ
+         HVYPNlHBTfCwHms1OWvqrdJP8VZGWYGRjY+H9ckqcnbKFr0Yps6lUA+LEQw+iL3DSy+y
+         leNTejrDqS/Q1Ztj6kEY+BpkpkiRaY5hpegTkt5kJomgs48q8MhJVi9YXhC7bk8p/P2k
+         KVJw==
+X-Gm-Message-State: ANhLgQ0I1kI0S08RjI9nbMx63QHBvBAD/56Co2kuZv/AZP6mwm1VE9bV
+        B62ZDGLyZQX14UKaJTmAb+QEE8916nfyRJx+tToOBQ==
+X-Google-Smtp-Source: ADFU+vuy057DXLdO0dRHxTb9pVmk5NJNDwnCh8OY/djQ716fL1PpAmxCQddIqpx3KaHqqAo9ftsvkmk929QeZ3/HlEo=
+X-Received: by 2002:a37:664d:: with SMTP id a74mr8311709qkc.256.1585724661328;
+ Wed, 01 Apr 2020 00:04:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331190000.659614-12-peterx@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <0000000000009d5cef05a22baa95@google.com> <20200331202706.GA127606@gmail.com>
+In-Reply-To: <20200331202706.GA127606@gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 1 Apr 2020 09:04:10 +0200
+Message-ID: <CACT4Y+ZSTjPmPmiL_1JEdroNZXYgaKewDBEH6RugnhsDVd+bUQ@mail.gmail.com>
+Subject: Re: KCSAN: data-race in glue_cbc_decrypt_req_128bit / glue_cbc_decrypt_req_128bit
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     syzbot <syzbot+6a6bca8169ffda8ce77b@syzkaller.appspotmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        David Miller <davem@davemloft.net>,
+        Marco Elver <elver@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 02:59:57PM -0400, Peter Xu wrote:
-> Provide a hook for the checks after vcpu_run() completes.  Preparation
-> for the dirty ring test because we'll need to take care of another
-> exit reason.
-> 
-> Since at it, drop the pages_count because after all we have a better
-> summary right now with statistics, and clean it up a bit.
+On Tue, Mar 31, 2020 at 10:27 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Tue, Mar 31, 2020 at 12:35:13PM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    b12d66a6 mm, kcsan: Instrument SLAB free with ASSERT_EXCLU..
+> > git tree:       https://github.com/google/ktsan.git kcsan
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=111f0865e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=10bc0131c4924ba9
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=6a6bca8169ffda8ce77b
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+6a6bca8169ffda8ce77b@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KCSAN: data-race in glue_cbc_decrypt_req_128bit / glue_cbc_decrypt_req_128bit
+> >
+> > write to 0xffff88809966e128 of 8 bytes by task 24119 on cpu 0:
+> >  u128_xor include/crypto/b128ops.h:67 [inline]
+> >  glue_cbc_decrypt_req_128bit+0x396/0x460 arch/x86/crypto/glue_helper.c:144
+> >  cbc_decrypt+0x26/0x40 arch/x86/crypto/serpent_avx2_glue.c:152
+> >  crypto_skcipher_decrypt+0x65/0x90 crypto/skcipher.c:652
+> >  _skcipher_recvmsg crypto/algif_skcipher.c:142 [inline]
+> >  skcipher_recvmsg+0x7fa/0x8c0 crypto/algif_skcipher.c:161
+> >  skcipher_recvmsg_nokey+0x5e/0x80 crypto/algif_skcipher.c:279
+> >  sock_recvmsg_nosec net/socket.c:886 [inline]
+> >  sock_recvmsg net/socket.c:904 [inline]
+> >  sock_recvmsg+0x92/0xb0 net/socket.c:900
+> >  ____sys_recvmsg+0x167/0x3a0 net/socket.c:2566
+> >  ___sys_recvmsg+0xb2/0x100 net/socket.c:2608
+> >  __sys_recvmsg+0x9d/0x160 net/socket.c:2642
+> >  __do_sys_recvmsg net/socket.c:2652 [inline]
+> >  __se_sys_recvmsg net/socket.c:2649 [inline]
+> >  __x64_sys_recvmsg+0x51/0x70 net/socket.c:2649
+> >  do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > read to 0xffff88809966e128 of 8 bytes by task 24118 on cpu 1:
+> >  u128_xor include/crypto/b128ops.h:67 [inline]
+> >  glue_cbc_decrypt_req_128bit+0x37c/0x460 arch/x86/crypto/glue_helper.c:144
+> >  cbc_decrypt+0x26/0x40 arch/x86/crypto/serpent_avx2_glue.c:152
+> >  crypto_skcipher_decrypt+0x65/0x90 crypto/skcipher.c:652
+> >  _skcipher_recvmsg crypto/algif_skcipher.c:142 [inline]
+> >  skcipher_recvmsg+0x7fa/0x8c0 crypto/algif_skcipher.c:161
+> >  skcipher_recvmsg_nokey+0x5e/0x80 crypto/algif_skcipher.c:279
+> >  sock_recvmsg_nosec net/socket.c:886 [inline]
+> >  sock_recvmsg net/socket.c:904 [inline]
+> >  sock_recvmsg+0x92/0xb0 net/socket.c:900
+> >  ____sys_recvmsg+0x167/0x3a0 net/socket.c:2566
+> >  ___sys_recvmsg+0xb2/0x100 net/socket.c:2608
+> >  __sys_recvmsg+0x9d/0x160 net/socket.c:2642
+> >  __do_sys_recvmsg net/socket.c:2652 [inline]
+> >  __se_sys_recvmsg net/socket.c:2649 [inline]
+> >  __x64_sys_recvmsg+0x51/0x70 net/socket.c:2649
+> >  do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > Reported by Kernel Concurrency Sanitizer on:
+> > CPU: 1 PID: 24118 Comm: syz-executor.1 Not tainted 5.6.0-rc1-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > ==================================================================
+> >
+>
+> I think this is a problem for almost all the crypto code.  Due to AF_ALG, both
+> the source and destination buffers can be userspace pages that were gotten with
+> get_user_pages().  Such pages can be concurrently modified, not just by the
+> kernel but also by userspace.
+>
+> I'm not sure what can be done about this.
 
-I don't see what you mean by "drop the pages_count", because it's still
-there. But otherwise
+Oh, I thought it's something more serious like a shared crypto object.
+Thanks for debugging.
+I think I've seen this before in another context (b/149818448):
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
+BUG: KCSAN: data-race in copyin / copyin
 
-> 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  tools/testing/selftests/kvm/dirty_log_test.c | 36 +++++++++++++-------
->  1 file changed, 24 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> index 139ccb550618..a2160946bcf5 100644
-> --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> @@ -178,6 +178,15 @@ static void clear_log_collect_dirty_pages(struct kvm_vm *vm, int slot,
->  	kvm_vm_clear_dirty_log(vm, slot, bitmap, 0, num_pages);
->  }
->  
-> +static void default_after_vcpu_run(struct kvm_vm *vm)
-> +{
-> +	struct kvm_run *run = vcpu_state(vm, VCPU_ID);
-> +
-> +	TEST_ASSERT(get_ucall(vm, VCPU_ID, NULL) == UCALL_SYNC,
-> +		    "Invalid guest sync status: exit_reason=%s\n",
-> +		    exit_reason_str(run->exit_reason));
-> +}
-> +
->  struct log_mode {
->  	const char *name;
->  	/* Return true if this mode is supported, otherwise false */
-> @@ -187,16 +196,20 @@ struct log_mode {
->  	/* Hook to collect the dirty pages into the bitmap provided */
->  	void (*collect_dirty_pages) (struct kvm_vm *vm, int slot,
->  				     void *bitmap, uint32_t num_pages);
-> +	/* Hook to call when after each vcpu run */
-> +	void (*after_vcpu_run)(struct kvm_vm *vm);
->  } log_modes[LOG_MODE_NUM] = {
->  	{
->  		.name = "dirty-log",
->  		.collect_dirty_pages = dirty_log_collect_dirty_pages,
-> +		.after_vcpu_run = default_after_vcpu_run,
->  	},
->  	{
->  		.name = "clear-log",
->  		.supported = clear_log_supported,
->  		.create_vm_done = clear_log_create_vm_done,
->  		.collect_dirty_pages = clear_log_collect_dirty_pages,
-> +		.after_vcpu_run = default_after_vcpu_run,
->  	},
->  };
->  
-> @@ -247,6 +260,14 @@ static void log_mode_collect_dirty_pages(struct kvm_vm *vm, int slot,
->  	mode->collect_dirty_pages(vm, slot, bitmap, num_pages);
->  }
->  
-> +static void log_mode_after_vcpu_run(struct kvm_vm *vm)
-> +{
-> +	struct log_mode *mode = &log_modes[host_log_mode];
-> +
-> +	if (mode->after_vcpu_run)
-> +		mode->after_vcpu_run(vm);
-> +}
-> +
->  static void generate_random_array(uint64_t *guest_array, uint64_t size)
->  {
->  	uint64_t i;
-> @@ -261,25 +282,16 @@ static void *vcpu_worker(void *data)
->  	struct kvm_vm *vm = data;
->  	uint64_t *guest_array;
->  	uint64_t pages_count = 0;
-> -	struct kvm_run *run;
-> -
-> -	run = vcpu_state(vm, VCPU_ID);
->  
->  	guest_array = addr_gva2hva(vm, (vm_vaddr_t)random_array);
-> -	generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
->  
->  	while (!READ_ONCE(host_quit)) {
-> +		generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
-> +		pages_count += TEST_PAGES_PER_LOOP;
->  		/* Let the guest dirty the random pages */
->  		ret = _vcpu_run(vm, VCPU_ID);
->  		TEST_ASSERT(ret == 0, "vcpu_run failed: %d\n", ret);
-> -		if (get_ucall(vm, VCPU_ID, NULL) == UCALL_SYNC) {
-> -			pages_count += TEST_PAGES_PER_LOOP;
-> -			generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
-> -		} else {
-> -			TEST_FAIL("Invalid guest sync status: "
-> -				  "exit_reason=%s\n",
-> -				  exit_reason_str(run->exit_reason));
-> -		}
-> +		log_mode_after_vcpu_run(vm);
->  	}
->  
->  	pr_info("Dirtied %"PRIu64" pages\n", pages_count);
-> -- 
-> 2.24.1
-> 
+write to 0xffff888103c8b000 of 4096 bytes by task 20917 on cpu 0:
+ instrument_copy_from_user include/linux/instrumented.h:106 [inline]
+ copyin+0xab/0xc0 lib/iov_iter.c:151
+ copy_page_from_iter_iovec lib/iov_iter.c:296 [inline]
+ copy_page_from_iter+0x23f/0x5f0 lib/iov_iter.c:942
+ process_vm_rw_pages mm/process_vm_access.c:46 [inline]
+ process_vm_rw_single_vec mm/process_vm_access.c:120 [inline]
+ process_vm_rw_core.isra.0+0x448/0x820 mm/process_vm_access.c:218
+ process_vm_rw+0x1c4/0x1e0 mm/process_vm_access.c:286
+ __do_sys_process_vm_writev mm/process_vm_access.c:308 [inline]
+ __se_sys_process_vm_writev mm/process_vm_access.c:303 [inline]
+ __x64_sys_process_vm_writev+0x8b/0xb0 mm/process_vm_access.c:303
+ do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
+write to 0xffff888103c8b000 of 4096 bytes by task 20918 on cpu 1:
+ instrument_copy_from_user include/linux/instrumented.h:106 [inline]
+ copyin+0xab/0xc0 lib/iov_iter.c:151
+ copy_page_from_iter_iovec lib/iov_iter.c:296 [inline]
+ copy_page_from_iter+0x23f/0x5f0 lib/iov_iter.c:942
+ process_vm_rw_pages mm/process_vm_access.c:46 [inline]
+ process_vm_rw_single_vec mm/process_vm_access.c:120 [inline]
+ process_vm_rw_core.isra.0+0x448/0x820 mm/process_vm_access.c:218
+ process_vm_rw+0x1c4/0x1e0 mm/process_vm_access.c:286
+ __do_sys_process_vm_writev mm/process_vm_access.c:308 [inline]
+ __se_sys_process_vm_writev mm/process_vm_access.c:303 [inline]
+ __x64_sys_process_vm_writev+0x8b/0xb0 mm/process_vm_access.c:303
+ do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+Marco, I think we need to ignore all memory that comes from
+get_user_pages() somehow. Either not set watchpoints at all, or
+perhaps filter them out later if the check is not totally free.
