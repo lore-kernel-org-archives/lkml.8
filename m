@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E7DC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89923C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9ABF212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1CC20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758812;
-	bh=NnPdleigmo/cA/VjQbdgKHuDwHFZNPrfkOgfkaKtv5Y=;
+	s=default; t=1585758815;
+	bh=u7OLazOSlSIWCsLffa6IuGDxnh9pPXQR+T/jnWj3Frw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=adz9yGhQAA5efNPg+qdnSmXUfGXdnd9KZopOhuR5+d5VwXkXF8NEpJzsV6yDo1jyu
-	 l5pAyP5U75iW9pCseod9ixoi8KOjsxnOQEleW0O26flvtT08RCBZwF/RnPs8fl3glO
-	 6FhHSVdvJlPqfArtr75+FTjxK7tHbIcr5cERONp8=
+	b=SU1OppLZ6h9MCJkUXJcpcnnorj6DUmxBJmxmktIs8XWiylyV62++37yT6mvVQZIqj
+	 IC0WTsvr/3x5+4f5yd6xmSKXg0uHM9AwespWqD0zEaihv8BTVSDC1f9UplqQ4pM5XF
+	 YJKFUt50iZxZoHqXoUX+yLp+0XPcJxzISVLoc/kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388553AbgDAQdb (ORCPT
+        id S2388562AbgDAQdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:33:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59916 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:33:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388534AbgDAQdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:33:24 -0400
+        id S2387586AbgDAQdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:33:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C174920658;
-        Wed,  1 Apr 2020 16:33:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7E1520658;
+        Wed,  1 Apr 2020 16:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758803;
-        bh=NnPdleigmo/cA/VjQbdgKHuDwHFZNPrfkOgfkaKtv5Y=;
+        s=default; t=1585758810;
+        bh=u7OLazOSlSIWCsLffa6IuGDxnh9pPXQR+T/jnWj3Frw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YeoeCJByMye8YfFPAIYz8L1/6cuOhfY8WAJNg/rfjd13IGM89pipcnA28R7GSHBvV
-         A5HGF22Wozjv2EBM5Js7zlo2RFzq5cIg6rYwHn3avTsiKzdsshAsHNGAWhOWAgymgk
-         ytuwwxmS3NF23FfKi7fH2+F30FKlP3cuIEAyvbT8=
+        b=x/GWLfbGmqs8t5sZ44UwhD2t7Z7yrku2UkrU20jot/wsOVV8JxwnWI0kfODU7IPio
+         QDKLEC8yxRptyHjcjoZ/a/Q0DjqFw2UvqflLk0wD0rnYrE1l7vyye1Ysv1v49XYj5x
+         u2wEEWDgCkeG1GImoIhpCqh6G9P9gv3b7D3aRy/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.4 80/91] media: stv06xx: add missing descriptor sanity checks
-Date:   Wed,  1 Apr 2020 18:18:16 +0200
-Message-Id: <20200401161538.581300191@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 4.4 82/91] vt: selection, introduce vc_is_sel
+Date:   Wed,  1 Apr 2020 18:18:18 +0200
+Message-Id: <20200401161539.007738954@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -61,93 +58,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 485b06aadb933190f4bc44e006076bc27a23f205 upstream.
+commit dce05aa6eec977f1472abed95ccd71276b9a3864 upstream.
 
-Make sure to check that we have two alternate settings and at least one
-endpoint before accessing the second altsetting structure and
-dereferencing the endpoint arrays.
+Avoid global variables (namely sel_cons) by introducing vc_is_sel. It
+checks whether the parameter is the current selection console. This will
+help putting sel_cons to a struct later.
 
-This specifically avoids dereferencing NULL-pointers or corrupting
-memory when a device does not have the expected descriptors.
-
-Note that the sanity checks in stv06xx_start() and pb0100_start() are
-not redundant as the driver is mixing looking up altsettings by index
-and by number, which may not coincide.
-
-Fixes: 8668d504d72c ("V4L/DVB (12082): gspca_stv06xx: Add support for st6422 bridge and sensor")
-Fixes: c0b33bdc5b8d ("[media] gspca-stv06xx: support bandwidth changing")
-Cc: stable <stable@vger.kernel.org>     # 2.6.31
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200219073951.16151-1-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/stv06xx/stv06xx.c        |   19 ++++++++++++++++++-
- drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c |    4 ++++
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ drivers/tty/vt/selection.c |    5 +++++
+ drivers/tty/vt/vt.c        |    7 ++++---
+ drivers/tty/vt/vt_ioctl.c  |    2 +-
+ include/linux/selection.h  |    4 +++-
+ 4 files changed, 13 insertions(+), 5 deletions(-)
 
---- a/drivers/media/usb/gspca/stv06xx/stv06xx.c
-+++ b/drivers/media/usb/gspca/stv06xx/stv06xx.c
-@@ -293,6 +293,9 @@ static int stv06xx_start(struct gspca_de
- 		return -EIO;
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -80,6 +80,11 @@ void clear_selection(void)
  	}
+ }
  
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
++bool vc_is_sel(struct vc_data *vc)
++{
++	return vc == sel_cons;
++}
 +
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	err = stv06xx_write_bridge(sd, STV_ISO_SIZE_L, packet_size);
- 	if (err < 0)
-@@ -317,11 +320,21 @@ out:
+ /*
+  * User settable table: what characters are to be considered alphabetic?
+  * 256 bits. Locked by the console lock.
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -600,8 +600,9 @@ static void hide_softcursor(struct vc_da
  
- static int stv06xx_isoc_init(struct gspca_dev *gspca_dev)
+ static void hide_cursor(struct vc_data *vc)
  {
-+	struct usb_interface_cache *intfc;
- 	struct usb_host_interface *alt;
- 	struct sd *sd = (struct sd *) gspca_dev;
+-	if (vc == sel_cons)
++	if (vc_is_sel(vc))
+ 		clear_selection();
++
+ 	vc->vc_sw->con_cursor(vc, CM_ERASE);
+ 	hide_softcursor(vc);
+ }
+@@ -612,7 +613,7 @@ static void set_cursor(struct vc_data *v
+ 	    vc->vc_mode == KD_GRAPHICS)
+ 		return;
+ 	if (vc->vc_deccm) {
+-		if (vc == sel_cons)
++		if (vc_is_sel(vc))
+ 			clear_selection();
+ 		add_softcursor(vc);
+ 		if ((vc->vc_cursor_type & 0x0f) != 1)
+@@ -878,7 +879,7 @@ static int vc_do_resize(struct tty_struc
+ 	if (!newscreen)
+ 		return -ENOMEM;
  
-+	intfc = gspca_dev->dev->actconfig->intf_cache[0];
-+
-+	if (intfc->num_altsetting < 2)
-+		return -ENODEV;
-+
-+	alt = &intfc->altsetting[1];
-+
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	/* Start isoc bandwidth "negotiation" at max isoc bandwidth */
--	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	alt->endpoint[0].desc.wMaxPacketSize =
- 		cpu_to_le16(sd->sensor->max_packet_size[gspca_dev->curr_mode]);
+-	if (vc == sel_cons)
++	if (vc_is_sel(vc))
+ 		clear_selection();
  
-@@ -334,6 +347,10 @@ static int stv06xx_isoc_nego(struct gspc
- 	struct usb_host_interface *alt;
- 	struct sd *sd = (struct sd *) gspca_dev;
+ 	old_rows = vc->vc_rows;
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -42,7 +42,7 @@ char vt_dont_switch;
+ extern struct tty_driver *console_driver;
  
-+	/*
-+	 * Existence of altsetting and endpoint was verified in
-+	 * stv06xx_isoc_init()
-+	 */
- 	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	min_packet_size = sd->sensor->min_packet_size[gspca_dev->curr_mode];
---- a/drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c
-+++ b/drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c
-@@ -198,6 +198,10 @@ static int pb0100_start(struct sd *sd)
- 	alt = usb_altnum_to_altsetting(intf, sd->gspca_dev.alt);
- 	if (!alt)
- 		return -ENODEV;
-+
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
+ #define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
+-#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_cons[i].d == sel_cons)
++#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
  
- 	/* If we don't have enough bandwidth use a lower framerate */
+ /*
+  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
+--- a/include/linux/selection.h
++++ b/include/linux/selection.h
+@@ -12,8 +12,8 @@
+ 
+ struct tty_struct;
+ 
+-extern struct vc_data *sel_cons;
+ struct tty_struct;
++struct vc_data;
+ 
+ extern void clear_selection(void);
+ extern int set_selection(const struct tiocl_selection __user *sel, struct tty_struct *tty);
+@@ -22,6 +22,8 @@ extern int sel_loadlut(char __user *p);
+ extern int mouse_reporting(void);
+ extern void mouse_report(struct tty_struct * tty, int butt, int mrx, int mry);
+ 
++bool vc_is_sel(struct vc_data *vc);
++
+ extern int console_blanked;
+ 
+ extern unsigned char color_table[];
 
 
