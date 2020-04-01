@@ -2,211 +2,160 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E998CC10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AEAC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C3A20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E0220714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:35:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QgvxBeaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732398AbgDAMep (ORCPT
+        id S1732466AbgDAMfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:34:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:50672 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbgDAMeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:34:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 128C130E;
-        Wed,  1 Apr 2020 05:34:44 -0700 (PDT)
-Received: from [10.37.12.63] (unknown [10.37.12.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89A7A3F68F;
-        Wed,  1 Apr 2020 05:34:41 -0700 (PDT)
-Subject: Re: [PATCH v4 2/3] dt-bindings: thermal: Add yaml bindings for
- thermal cooling-devices
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <cover.1585738725.git.amit.kucheria@linaro.org>
- <d1884aed542fdd5ac1178f7195fb7c189179c631.1585738725.git.amit.kucheria@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <44bef00a-ffd1-4154-1b8c-77aae9ccc20d@arm.com>
-Date:   Wed, 1 Apr 2020 13:34:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 08:35:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31825 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726974AbgDAMfA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:35:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585744498;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0hkQiofsaQ+EvtO4nNTBnzKTRIkIKedtjX/5LG3UUqM=;
+        b=QgvxBeaIaMm47KslV4LVLpWvrCimzwWZlVQqYuT/OpW6mZ3qsA86MMMAkCJi3PjAfAk5iF
+        Y+CWbaWd+1+YxJLLm5xVJQ8AQWGWlG50vuKa/wYx+8sm2u+b9+lnADPpgtnV1zm6jJlQm/
+        FaOV5aOkGTxRq8slNBILvekJBQQQhMg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-381-04Vrd8dQPraHODDX3EkHOA-1; Wed, 01 Apr 2020 08:34:53 -0400
+X-MC-Unique: 04Vrd8dQPraHODDX3EkHOA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2CDCC8017FD;
+        Wed,  1 Apr 2020 12:34:51 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 60455A63C6;
+        Wed,  1 Apr 2020 12:34:49 +0000 (UTC)
+Date:   Wed, 1 Apr 2020 08:34:47 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: xfs metadata corruption since 30 March
+Message-ID: <20200401123447.GA58968@bfoster>
+References: <990EDC4E-1A4E-4AC3-84D9-078ACF5EB9CC@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <d1884aed542fdd5ac1178f7195fb7c189179c631.1585738725.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <990EDC4E-1A4E-4AC3-84D9-078ACF5EB9CC@lca.pw>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/1/20 12:15 PM, Amit Kucheria wrote:
-> As part of moving the thermal bindings to YAML, split it up into 3
-> bindings: thermal sensors, cooling devices and thermal zones.
+On Tue, Mar 31, 2020 at 05:57:24PM -0400, Qian Cai wrote:
+> Ever since two days ago, linux-next starts to trigger xfs metadata corruption
+> during compilation workloads on both powerpc and arm64,
 > 
-> The property #cooling-cells is required in each device that acts as a
-> cooling device - whether active or passive. So any device that can
-> throttle its performance to passively reduce heat dissipation (e.g.
-> cpus, gpus) and any device that can actively dissipate heat at different
-
-maybe CPUs, GPUs
-
-> levels (e.g. fans) will contain this property.
+> I suspect it could be one of those commits,
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes since v3:
->   - Clarify example by using cooling state numbers and a comment
+> https://lore.kernel.org/linux-xfs/20200328182533.GM29339@magnolia/
 > 
->   .../thermal/thermal-cooling-devices.yaml      | 116 ++++++++++++++++++
->   1 file changed, 116 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> Especially, those commits that would mark corruption more aggressively?
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-> new file mode 100644
-> index 0000000000000..0dc4a743a1351
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-> @@ -0,0 +1,116 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
-> +# Copyright 2020 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/thermal-cooling-devices.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Thermal cooling device binding
-> +
-> +maintainers:
-> +  - Amit Kucheria <amitk@kernel.org>
-> +
-> +description: |
-> +  Thermal management is achieved in devicetree by describing the sensor hardware
-> +  and the software abstraction of cooling devices and thermal zones required to
-> +  take appropriate action to mitigate thermal overload.
-> +
-> +  The following node types are used to completely describe a thermal management
-> +  system in devicetree:
-> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
-> +   - cooling-device: device used to dissipate heat either passively or artively
+>       [8d57c21600a5] xfs: add a function to deal with corrupt buffers post-verifiers
+>       [e83cf875d67a] xfs: xfs_buf_corruption_error should take __this_address
+>       [ce99494c9699] xfs: fix buffer corruption reporting when xfs_dir3_free_header_check fails
+>       [1cb5deb5bc09] xfs: don't ever return a stale pointer from __xfs_dir3_free_read
+>       [6fb5aac73310] xfs: check owner of dir3 free blocks
+>       [a10c21ed5d52] xfs: check owner of dir3 data blocks
+>       [1b2c1a63b678] xfs: check owner of dir3 blocks
+>       [2e107cf869ee] xfs: mark dir corrupt when lookup-by-hash fails
+>       [806d3909a57e] xfs: mark extended attr corrupt when lookup-by-hash fails
+> 
+> 
+> [29331.182313][  T665] XFS (dm-2): Metadata corruption detected at xfs_inode_buf_verify+0x2b8/0x350 [xfs], xfs_inode block 0xa9b97900 xfs_inode_buf_verify
+> xfs_inode_buf_verify at fs/xfs/libxfs/xfs_inode_buf.c:101
+> [29331.182373][  T665] XFS (dm-2): Unmount and run xfs_repair
+> [29331.182386][  T665] XFS (dm-2): First 128 bytes of corrupted metadata buffer:
+> [29331.182402][  T665] 00000000: 2f 2a 20 53 50 44 58 2d 4c 69 63 65 6e 73 65 2d  /* SPDX-License-
+> [29331.182426][  T665] 00000010: 49 64 65 6e 74 69 66 69 65 72 3a 20 47 50 4c 2d  Identifier: GPL-
+> [29331.182442][  T665] 00000020: 32 2e 30 2d 6f 72 2d 6c 61 74 65 72 20 2a 2f 0a  2.0-or-later */.
+> [29331.182467][  T665] 00000030: 2f 2a 0a 20 2a 20 44 65 66 69 6e 69 74 69 6f 6e  /*. * Definition
+> [29331.182492][  T665] 00000040: 73 20 61 6e 64 20 70 6c 61 74 66 6f 72 6d 20 64  s and platform d
+> [29331.182517][  T665] 00000050: 61 74 61 20 66 6f 72 20 41 6e 61 6c 6f 67 20 44  ata for Analog D
+> [29331.182541][  T665] 00000060: 65 76 69 63 65 73 0a 20 2a 20 41 44 50 35 35 32  evices. * ADP552
+> [29331.182566][  T665] 00000070: 30 2f 41 44 50 35 35 30 31 20 4d 46 44 20 50 4d  0/ADP5501 MFD PM
+> [29331.182700][ T7490] XFS (dm-2): metadata I/O error in "xfs_imap_to_bp+0x88/0x130 [xfs]" at daddr 0xa9b97900 len 32 error 117
+> xfs_trans_read_buf at fs/xfs/xfs_trans.h:209
+> (inlined by) xfs_imap_to_bp at fs/xfs/libxfs/xfs_inode_buf.c:171
+> [29331.182812][ T7490] XFS (dm-2): xfs_imap_to_bp: xfs_trans_read_buf() returned error -117.
+> [29331.345347][ T7490] XFS (dm-2): xfs_do_force_shutdown(0x8) called from line 3754 of file fs/xfs/xfs_inode.c. Return address = 0000000058be213e
+> [29331.345378][ T7490] XFS (dm-2): Corruption of in-memory data detected.  Shutting down filesystem
+> [29331.345402][ T7490] XFS (dm-2): Please unmount the filesystem and rectify the problem(s)
 
-s/artively/actively
+I've actually been seeing similar corruption errors in the past day or
+two but I'd chalked it up to the work and testing I'm doing in my
+development branch. I'm also on a system/storage configuration that I
+haven't established trust in yet, fwiw. I have recently rebased to
+for-next, so I installed that baseline kernel and hit a similar crash
+after 20 minutes or so of running fsstress. I'm not sure how consistent
+this failure is yet but I'll see if I can back off from there and narrow
+it down to a patch...
 
-> +   - thermal-zones: a container of the following node types used to describe all
-> +     thermal data for the platform
-> +
-> +  This binding describes the cooling devices.
-> +
-> +  There are essentially two ways to provide control on power dissipation:
-> +    - Passive cooling: by means of regulating device performance. A typical
-> +      passive cooling mechanism is a CPU that has dynamic voltage and frequency
-> +      scaling (DVFS), and uses lower frequencies as cooling states.
-> +    - Active cooling: by means of activating devices in order to remove the
-> +      dissipated heat, e.g. regulating fan speeds.
-> +
-> +  Any cooling device has a range of cooling states (i.e. different levels of
-> +  heat dissipation). They also have a way to determine the state of cooling in
-> +  which the device is. For example, a fan's cooling states correspond to the
-> +  different fan speeds possible. Cooling states are referred to by single
-> +  unsigned integers, where larger numbers mean greater heat dissipation. The
-> +  precise set of cooling states associated with a device should be defined in
-> +  a particular device's binding.
-> +
-> +select: true
-> +
-> +properties:
-> +  "#cooling-cells":
-> +    description:
-> +        Must be 2, in order to specify minimum and maximum cooling state used in
-> +        the cooling-maps reference. The first cell is the minimum cooling state
-> +        and the second cell is the maximum cooling state requested.
-> +    const: 2
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/thermal/thermal.h>
-> +
-> +    // Example 1: Cpufreq cooling device on CPU0
-> +    cpus {
-> +            #address-cells = <2>;
-> +            #size-cells = <0>;
-> +
-> +            CPU0: cpu@0 {
-> +                    device_type = "cpu";
-> +                    compatible = "qcom,kryo385";
-> +                    reg = <0x0 0x0>;
-> +                    enable-method = "psci";
-> +                    cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-> +                                       &LITTLE_CPU_SLEEP_1
-> +                                       &CLUSTER_SLEEP_0>;
-> +                    capacity-dmips-mhz = <607>;
-> +                    dynamic-power-coefficient = <100>;
-> +                    qcom,freq-domain = <&cpufreq_hw 0>;
-> +                    #cooling-cells = <2>;
-> +                    next-level-cache = <&L2_0>;
-> +                    L2_0: l2-cache {
-> +                            compatible = "cache";
-> +                            next-level-cache = <&L3_0>;
-> +                            L3_0: l3-cache {
-> +                                    compatible = "cache";
-> +                            };
-> +                    };
-> +          };
-> +
-> +          /* ... */
-> +
-> +    };
-> +
-> +    /* ... */
-> +
-> +    thermal-zones {
-> +            cpu0-thermal {
-> +                    polling-delay-passive = <250>;
-> +                    polling-delay = <1000>;
-> +
-> +                    thermal-sensors = <&tsens0 1>;
-> +
-> +                    trips {
-> +                            cpu0_alert0: trip-point0 {
-> +                                    temperature = <90000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                            };
-> +                    };
-> +
-> +                    cooling-maps {
-> +                            map0 {
-> +                                    trip = <&cpu0_alert0>;
-> +                                    /* Corresponds to 1000MHz in OPP table */
-> +                                    cooling-device = <&CPU0 5 5>;
-> +                            };
-> +                    };
-> +            };
-> +
-> +            /* ... */
-> +    };
-> +...
+Brian
+
+> [29331.346474][  T498] dm-2: writeback error on inode 934606, offset 0, sector 961072
+> [29331.346502][  T498] dm-2: writeback error on inode 934607, offset 0, sector 961080
+> [29331.346624][  T498] dm-2: writeback error on inode 934608, offset 0, sector 961088
+> [29331.346683][  T498] dm-2: writeback error on inode 1074331758, offset 0, sector 948449704
+> [29331.347306][  T498] dm-2: writeback error on inode 1074331762, offset 0, sector 948558816
+> [29331.349165][  T498] dm-2: writeback error on inode 1074331759, offset 0, sector 948560984
+> [29331.349227][  T498] dm-2: writeback error on inode 1074331760, offset 0, sector 948562944
+> [29331.349303][  T498] dm-2: writeback error on inode 1074331761, offset 0, sector 948568000
+> 
+> [ 7762.204313][T124538] XFS (dm-2): Metadata corruption detected at xfs_inode_buf_verify+0x2b8/0x350 [xfs], xfs_inode block 0x712398e0 xfs_inode_buf_verify
+> [ 7762.204599][T124538] XFS (dm-2): Unmount and run xfs_repair
+> [ 7762.204625][T124538] XFS (dm-2): First 128 bytes of corrupted metadata buffer:
+> [ 7762.204654][T124538] 00000000: 77 65 72 70 63 2f 69 6e 63 6c 75 64 65 2f 67 65  werpc/include/ge
+> [ 7762.204672][T124538] 00000010: 6e 65 72 61 74 65 64 2f 75 61 70 69 2f 61 73 6d  nerated/uapi/asm
+> [ 7762.204699][T124538] 00000020: 2f 72 65 73 6f 75 72 63 65 2e 68 20 5c 0a 20 69  /resource.h \. i
+> [ 7762.204727][T124538] 00000030: 6e 63 6c 75 64 65 2f 61 73 6d 2d 67 65 6e 65 72  nclude/asm-gener
+> [ 7762.204745][T124538] 00000040: 69 63 2f 72 65 73 6f 75 72 63 65 2e 68 20 69 6e  ic/resource.h in
+> [ 7762.204783][T124538] 00000050: 63 6c 75 64 65 2f 75 61 70 69 2f 61 73 6d 2d 67  clude/uapi/asm-g
+> [ 7762.204820][T124538] 00000060: 65 6e 65 72 69 63 2f 72 65 73 6f 75 72 63 65 2e  eneric/resource.
+> [ 7762.204858][T124538] 00000070: 68 20 5c 0a 20 69 6e 63 6c 75 64 65 2f 6c 69 6e  h \. include/lin
+> [ 7762.205068][ T7510] XFS (dm-2): metadata I/O error in "xfs_imap_to_bp+0x88/0x130 [xfs]" at daddr 0x712398e0 len 32 error 117
+> [ 7762.205466][ T7510] XFS (dm-2): xfs_imap_to_bp: xfs_trans_read_buf() returned error -117.
+> [ 7762.219267][ T7510] XFS (dm-2): xfs_do_force_shutdown(0x8) called from line 3754 of file fs/xfs/xfs_inode.c. Return address = 000000006bce0de3
+> [ 7762.219291][ T7510] XFS (dm-2): Corruption of in-memory data detected.  Shutting down filesystem
+> [ 7762.219306][ T7510] XFS (dm-2): Please unmount the filesystem and rectify the problem(s)
+> 
+> 
+> [ 1032.162278][ T1515] XFS (dm-2): Metadata corruption detected at xfs_inode_buf_verify+0x244/0x2bc [xfs], xfs_inode block 0xa2b75dc0 xfs_inode_buf_verify
+> [ 1032.176156][ T1515] XFS (dm-2): Unmount and run xfs_repair
+> [ 1032.181835][ T1515] XFS (dm-2): First 128 bytes of corrupted metadata buffer:
+> [ 1032.189140][ T1515] 00000000: 6e 29 20 22 22 20 76 61 6c 75 65 20 22 22 20 73  n) "" value "" s
+> [ 1032.197988][ T1515] 00000010: 75 62 73 74 72 28 6c 69 6e 65 2c 20 6c 65 6e 20  ubstr(line, len 
+> [ 1032.206723][ T1515] 00000020: 2b 20 6b 65 79 6c 65 6e 20 2b 20 33 29 0a 20 20  + keylen + 3).  
+> [ 1032.215675][ T1515] 00000030: 20 20 20 20 6c 65 6e 20 2b 3d 20 6c 65 6e 67 74      len += lengt
+> [ 1032.224537][ T1515] 00000040: 68 28 76 61 6c 75 65 29 20 2b 20 6c 65 6e 67 74  h(value) + lengt
+> [ 1032.233388][ T1515] 00000050: 68 28 66 69 65 6c 64 5b 2b 2b 69 5d 29 0a 20 20  h(field[++i]).  
+> [ 1032.242234][ T1515] 00000060: 20 20 20 20 73 75 62 73 74 65 64 20 3d 20 31 0a      substed = 1.
+> [ 1032.251077][ T1515] 00000070: 20 20 20 20 7d 20 65 6c 73 65 0a 20 20 20 20 20      } else.     
+> [ 1032.260792][ T4119] XFS (dm-2): metadata I/O error in "xfs_imap_to_bp+0xd8/0x18c [xfs]" at daddr 0xa2b75dc0 len 32 error 117
+> [ 1032.273096][ T4119] XFS (dm-2): xfs_imap_to_bp: xfs_trans_read_buf() returned error -117.
+> [ 1032.283283][ T4119] XFS (dm-2): xfs_do_force_shutdown(0x8) called from line 3754 of file fs/xfs/xfs_inode.c. Return address = 00000000d99a2721
+> [ 1032.296214][ T4119] XFS (dm-2): Corruption of in-memory data detected.  Shutting down filesystem
+> [ 1032.305158][ T4119] XFS (dm-2): Please unmount the filesystem and rectify the problem(s)
 > 
 
-Apart from that, looks good:
-
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-
-Regards,
-Lukasz
