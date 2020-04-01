@@ -2,45 +2,49 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECECAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C653C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46F420719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 439312071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rCXecuMI"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dM5bmioO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733159AbgDAWKh (ORCPT
+        id S1733203AbgDAWKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:10:37 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51676 "EHLO
+        Wed, 1 Apr 2020 18:10:40 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:51686 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732687AbgDAWKh (ORCPT
+        with ESMTP id S1732849AbgDAWKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:10:37 -0400
+        Wed, 1 Apr 2020 18:10:38 -0400
 Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 53766A2A;
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D825CA35;
         Thu,  2 Apr 2020 00:10:35 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1585779035;
-        bh=wHKLfpdAC0w82LZRBlafZmjxebP+MvOxfa8J/ja108w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rCXecuMI/ix20LqZsj2bFTryDX0XJrUqIjyfPAlUeWesdXyoFQTgP8e4lmPjNMS29
-         gbT64zJKCHT0yfFVqJNBaZRQqoJkr77C0hteMQYppWsjtuzooVJxm37mVwWg0gjLcI
-         SKA/3dY1YIFaR9tv7tIwgE+LQ2fVDaUoZZj0W6wA=
+        s=mail; t=1585779036;
+        bh=zk/g/UFjif2Z1RVqfuVlAwk1ZZtD/4CvaH9ZJVJBIM8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dM5bmioOymkqQ2jk5Xs0en27wHUEXnHmlAznC8JkkUVZjV0k05fZ4mzVfoPh+CthQ
+         ZiCKZ8FoG1r0qiPt9x9HO6RkGbZEu+DSsSUSqSNxbtANpRwX0a/BFV3rhHvGCPBakE
+         KbAmae+zhEcAopCfYcecOup1o6+qqdGc3/2fgLvY=
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v7 0/3] phy: zynqmp: Add PHY driver for the Xilinx ZynqMP Gigabit Transceiver
-Date:   Thu,  2 Apr 2020 01:10:22 +0300
-Message-Id: <20200401221025.26087-1-laurent.pinchart@ideasonboard.com>
+        Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v7 1/3] dt-bindings: phy: Add DT bindings for Xilinx ZynqMP PSGTR PHY
+Date:   Thu,  2 Apr 2020 01:10:23 +0300
+Message-Id: <20200401221025.26087-2-laurent.pinchart@ideasonboard.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200401221025.26087-1-laurent.pinchart@ideasonboard.com>
+References: <20200401221025.26087-1-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,48 +52,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 
-The patch series adds a PHY driver for the Xilinx ZynqMP gigabit serial
-transceivers (PS-GTR). The PS-GTR is a set of 4 PHYs that can be used by
-the PCIe, USB 3.0, DisplayPort, SATA and Ethernet controllers that are
-part of the Serial I/O Unit (SIOU).
+Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+Processing System Gigabit Transceiver which provides PHY capabilities to
+USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
 
-The code is based on a previous version sent by Anurag Kumar Vulisha and
-available at [1]. The DT bindings have been converted to YAML, and both
-the bindings and the driver have been considerably reworked (and
-simplified). The most notable changes is the removal of manual handling
-of the reset lines of the PHY users (which belongs to the PHY users
-themselves), and moving to the standard PHY .power_on() and .configure()
-operations to replace functions that were previously exported by the
-driver. Please see individual patches for a more detailed changelog.
+Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+Changes since v6:
 
-Compared to v6, review comments on the DT bindings have been taken into
-account.
+- Fixed specification of compatible-dependent xlnx,tx-termination-fix
+  property
+- Dropped status property from example
+- Use 4 spaces to indent example
 
-The code is based on v5.6 and has been tested with DisplayPort on the
-Xilinx ZC106 board.
+Changes since v5:
 
-[1] https://patchwork.kernel.org/cover/10735681/
-
-Anurag Kumar Vulisha (2):
-  dt-bindings: phy: Add DT bindings for Xilinx ZynqMP PSGTR PHY
-  phy: zynqmp: Add PHY driver for the Xilinx ZynqMP Gigabit Transceiver
-
-Laurent Pinchart (1):
-  arm64: dts: zynqmp: Add GTR transceivers
-
- .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++
- MAINTAINERS                                   |   9 +
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi        |  10 +
- drivers/phy/Kconfig                           |   8 +
- drivers/phy/Makefile                          |   1 +
- drivers/phy/phy-zynqmp.c                      | 995 ++++++++++++++++++
+- Document clocks and clock-names properties
+- Document resets and reset-names properties
+- Replace subnodes with an additional entry in the PHY cells
+- Drop lane frequency PHY cell, replaced by reference clock phandle
+- Convert bindings to YAML
+- Reword the subject line
+- Drop Rob's R-b as the bindings have significantly changed
+- Drop resets and reset-names properties
+---
+ .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
  include/dt-bindings/phy/phy.h                 |   1 +
- 7 files changed, 1129 insertions(+)
+ 2 files changed, 106 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
- create mode 100644 drivers/phy/phy-zynqmp.c
 
+diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+new file mode 100644
+index 000000000000..d28ddca7b90e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++
++description: |
++  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
++  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
++  Ethernet SGMII controllers.
++
++properties:
++  "#phy-cells":
++    const: 4
++    description: |
++      The cells contain the following arguments.
++
++      - description: The GTR lane
++        minimum: 0
++        maximum: 3
++      - description: The PHY type
++        enum:
++          - PHY_TYPE_DP
++          - PHY_TYPE_PCIE
++          - PHY_TYPE_SATA
++          - PHY_TYPE_SGMII
++          - PHY_TYPE_USB
++      - description: The PHY instance
++        minimum: 0
++        maximum: 1 # for DP, SATA or USB
++        maximum: 3 # for PCIE or SGMII
++      - description: The reference clock number
++        minimum: 0
++        maximum: 3
++
++  compatible:
++    enum:
++      - xlnx,zynqmp-psgtr-v1.1
++      - xlnx,zynqmp-psgtr
++
++  clocks:
++    minItems: 1
++    maxItems: 4
++    description: |
++      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
++      inputs shall not have an entry.
++
++  clock-names:
++    minItems: 1
++    maxItems: 4
++    items:
++      pattern: "^ref[0-3]$"
++
++  reg:
++    items:
++      - description: SERDES registers block
++      - description: SIOU registers block
++
++  reg-names:
++    items:
++      - const: serdes
++      - const: siou
++
++  xlnx,tx-termination-fix:
++    description: |
++      Include this for fixing functional issue with the TX termination
++      resistance in GT, which can be out of spec for the XCZU9EG silicon
++      version.
++    type: boolean
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - reg-names
++
++if:
++  properties:
++    compatible:
++      const: xlnx,zynqmp-psgtr-v1.1
++
++then:
++  properties:
++    xlnx,tx-termination-fix: false
++
++additionalProperties: false
++
++examples:
++  - |
++    phy: phy@fd400000 {
++        compatible = "xlnx,zynqmp-psgtr-v1.1";
++        reg = <0x0 0xfd400000 0x0 0x40000>,
++              <0x0 0xfd3d0000 0x0 0x1000>;
++        reg-names = "serdes", "siou";
++        clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
++        clock-names = "ref1", "ref2", "ref3";
++        #phy-cells = <4>;
++    };
++
++...
+diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+index 1f3f866fae7b..f6bc83b66ae9 100644
+--- a/include/dt-bindings/phy/phy.h
++++ b/include/dt-bindings/phy/phy.h
+@@ -17,5 +17,6 @@
+ #define PHY_TYPE_USB3		4
+ #define PHY_TYPE_UFS		5
+ #define PHY_TYPE_DP		6
++#define PHY_TYPE_SGMII		7
+ 
+ #endif /* _DT_BINDINGS_PHY */
 -- 
 Regards,
 
