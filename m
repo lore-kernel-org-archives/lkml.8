@@ -2,96 +2,144 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF278C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FA3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D385206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C058206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="a0agqxK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731978AbgDAHSW (ORCPT
+        id S1731989AbgDAHTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:18:22 -0400
-Received: from tartarus.angband.pl ([54.37.238.230]:45160 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731680AbgDAHSW (ORCPT
+        Wed, 1 Apr 2020 03:19:03 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43871 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731680AbgDAHTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:18:22 -0400
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1jJXdf-0008SI-Nb; Wed, 01 Apr 2020 09:18:15 +0200
-Date:   Wed, 1 Apr 2020 09:18:15 +0200
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Nick Terrell <terrelln@fb.com>,
-        Nick Terrell <nickrterrell@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Patrick Williams <patrickw3@fb.com>,
-        Michael van der Westhuizen <rmikey@fb.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and
- initramfs
-Message-ID: <20200401071815.GA27371@angband.pl>
-References: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
- <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com>
- <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
+        Wed, 1 Apr 2020 03:19:03 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a6so24882855otb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 00:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xWNb23bvG43tvtDYflVRLL7xRdiOM0I/bVuwrcZ+sjE=;
+        b=a0agqxK22RUr8z9MxKv9tv14LtU8MonFWWz7niFaVWHguVjdgtQfydx9atK7qk3dbs
+         2gDzIP9xM2xaF3U27R655p7/PV9fULM/chP8iVji/p32gvrB4KyjdvJEejjzSju4N78l
+         nDamZuEOyC9aECrt2a85JdHMNiU6kw09IJ+N8XN6oG7VMvWLXto6jcd7VATWHEu6mO6S
+         wu+hTVFqus+Vx7Av9A0q2OX+RdlTrChEB/uwL5ApRRuZ6Kx7oDh3t4GX5mzti1Jjj9ko
+         uUDGz3o4AcGjIhnOQSiKHJ4ENCXkS9SefXTAMezuCmwGIJ83KxWL41Taim/Jw3Mprk15
+         kgWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xWNb23bvG43tvtDYflVRLL7xRdiOM0I/bVuwrcZ+sjE=;
+        b=ukZATAgDyoWPoWbKQ0IQT7XOhUNck9mxIYPLbwFHpBGMJauckv1JGzsh6NCLunifst
+         pegsUbyir2paxmJABRzO3aw5oTXfxr3vcgoKZJU4kjqQGb/PvZsdd5xghWi21h0g7B/o
+         z+vV6odSQsIRSY2rRZdVlg6wJOv2s7Uiyjjh4ICMYjkrKHGt/T65bCFcLSjtE81B5jee
+         Igm1e6Hr82rZbEV6e5qa9iNZ6wLDLrObumrsfO3YVmvA1X5Up/NbNMxHHvCr+wF9NY7P
+         GkwDLi9a0szWBDq6tNnAflpBXD9QBeK8dQr6u83iv1y2FvE6vm8NHQo360oPqmn9PCkm
+         /5Dg==
+X-Gm-Message-State: ANhLgQ0yAzKNgCyHrAl9/o4L5JZmn4b1cMJRJiyAMrv9TUcuZaLOr0sf
+        UnmxI8NVj1cPU43wBmfNApdn4RXyVB12htQSuiDbag==
+X-Google-Smtp-Source: ADFU+vtzKsxY68182TQ7PSwuGG29gx2NjzcuiOIGWaybfm5PYHXJTIV0ibgQlUPctKZxdt1NZIfA9bk1Pdza1/Pl31s=
+X-Received: by 2002:a9d:2002:: with SMTP id n2mr4368298ota.127.1585725542448;
+ Wed, 01 Apr 2020 00:19:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
+References: <cover.1583772574.git.zong.li@sifive.com> <20200331223254.919b92750962fefed5a6646f@kernel.org>
+In-Reply-To: <20200331223254.919b92750962fefed5a6646f@kernel.org>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Wed, 1 Apr 2020 15:18:52 +0800
+Message-ID: <CANXhq0rD5kWf=ZDeA0bWdnd2A_iFS-mX_=X8DdJTH4fw09_sKQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] Support strict kernel memory permissions for security
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 05:11:35PM +0200, Sedat Dilek wrote:
-> I have re-tested zstd-v3 patchset with Linux version 5.6 final and
-> Clang/LLD version 10.0.0 final (from Debian/unstable repository).
+On Tue, Mar 31, 2020 at 9:32 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> Hi Zong,
+>
+> On Tue, 10 Mar 2020 00:55:35 +0800
+> Zong Li <zong.li@sifive.com> wrote:
+>
+> > The main purpose of this patch series is changing the kernel mapping permission
+> > , make sure that code is not writeable, data is not executable, and read-only
+> > data is neither writable nor executable.
+> >
+> > This patch series also supports the relevant implementations such as
+> > ARCH_HAS_SET_MEMORY, ARCH_HAS_SET_DIRECT_MAP,
+> > ARCH_SUPPORTS_DEBUG_PAGEALLOC and DEBUG_WX.
+>
+> The order of the patches seems a bit strange. Since the first 7 patches
+> makes kernel read-only, at that point ftrace is broken and it is fixed
+> by the last 2 patches. That is not bisect-friendly. Can you move the
+> last 2 patches to the top?
+>
 
-So did I and a bunch of other folks.  I for one run v1 since 2017 on
-a bunch of boxes (amd64/BIOS, amd64/EFI, arm64, armhf), without a glitch
-(not counting trying to boot zstd initrd _without_ the patchset :p).
+OK. Let me rearrange the order. Thanks.
 
-I've tried v2 on all of the above configurations, v3 on all but armhf, v4 on
-amd64/EFI -- all is fine.
-
-Back in the days, folks reported success on IIRC ppc64, sparc64 and more.
-
-(Obviously, initrd only on !x86.)
-
-> Is it possible to mention that there might distro-specific changes
-> needed to initramfs-handling?
-> For Debian you are welcome to include below Link [1].
-> [1] LINK: https://lore.kernel.org/lkml/CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com/
-
-+zstd)  compress="zstd -19 -v" ;;
-
-I'm not sure if hard-coding -19 is always right.  It's good for production
-machines but slows down dev cycles.
-
-But that's a matter for userland, not a problem with Nick's patchset.
-
-
-Meow!
--- 
-⢀⣴⠾⠻⢶⣦⠀
-⣾⠁⢠⠒⠀⣿⡁ in the beginning was the boot and root floppies and they were good.
-⢿⡄⠘⠷⠚⠋⠀                                       -- <willmore> on #linux-sunxi
-⠈⠳⣄⠀⠀⠀⠀
+> Thank you,
+>
+> >
+> > Changes in v3:
+> >  - Fix build error on nommu configuration. We already support nommu on
+> >    RISC-V, so we should consider nommu case and test not only rv32/64,
+> >    but also nommu.
+> >
+> > Changes in v2:
+> >  - Use _data to specify the start of data section with write permission.
+> >  - Change ftrace patch text implementaion.
+> >  - Separate DEBUG_WX patch to another patchset.
+> >
+> > Zong Li (9):
+> >   riscv: add ARCH_HAS_SET_MEMORY support
+> >   riscv: add ARCH_HAS_SET_DIRECT_MAP support
+> >   riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
+> >   riscv: move exception table immediately after RO_DATA
+> >   riscv: add alignment for text, rodata and data sections
+> >   riscv: add STRICT_KERNEL_RWX support
+> >   riscv: add macro to get instruction length
+> >   riscv: introduce interfaces to patch kernel code
+> >   riscv: patch code by fixmap mapping
+> >
+> >  arch/riscv/Kconfig                  |   6 +
+> >  arch/riscv/include/asm/bug.h        |   8 ++
+> >  arch/riscv/include/asm/fixmap.h     |   2 +
+> >  arch/riscv/include/asm/patch.h      |  12 ++
+> >  arch/riscv/include/asm/set_memory.h |  48 +++++++
+> >  arch/riscv/kernel/Makefile          |   4 +-
+> >  arch/riscv/kernel/ftrace.c          |  13 +-
+> >  arch/riscv/kernel/patch.c           | 120 ++++++++++++++++++
+> >  arch/riscv/kernel/traps.c           |   3 +-
+> >  arch/riscv/kernel/vmlinux.lds.S     |  11 +-
+> >  arch/riscv/mm/Makefile              |   2 +-
+> >  arch/riscv/mm/init.c                |  44 +++++++
+> >  arch/riscv/mm/pageattr.c            | 187 ++++++++++++++++++++++++++++
+> >  13 files changed, 445 insertions(+), 15 deletions(-)
+> >  create mode 100644 arch/riscv/include/asm/patch.h
+> >  create mode 100644 arch/riscv/include/asm/set_memory.h
+> >  create mode 100644 arch/riscv/kernel/patch.c
+> >  create mode 100644 arch/riscv/mm/pageattr.c
+> >
+> > --
+> > 2.25.1
+> >
+>
+>
+> --
+> Masami Hiramatsu <mhiramat@kernel.org>
