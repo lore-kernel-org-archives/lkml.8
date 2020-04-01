@@ -2,74 +2,132 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0A3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB5420BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30280206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733302AbgDAX1k (ORCPT
+        id S1733262AbgDAX3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:27:40 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48608 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732503AbgDAX1k (ORCPT
+        Wed, 1 Apr 2020 19:29:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35925 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732503AbgDAX3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:27:40 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jJmlk-0007s0-IS; Wed, 01 Apr 2020 23:27:36 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Igor Russkikh <irusskikh@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mark Starovoytov <mstarovoitov@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] net: atlantic: fix missing | operator when assigning rec->llc
-Date:   Thu,  2 Apr 2020 00:27:36 +0100
-Message-Id: <20200401232736.410028-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 1 Apr 2020 19:29:20 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jJmnL-00028F-Fy; Thu, 02 Apr 2020 01:29:15 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id EB0EC100D52; Thu,  2 Apr 2020 01:29:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>
+Subject: Re: [PATCH] sched/isolation: Allow "isolcpus=" to skip unknown sub-parameters
+In-Reply-To: <20200401230105.GF648829@xz-x1>
+References: <20200204161639.267026-1-peterx@redhat.com> <87d08rosof.fsf@nanos.tec.linutronix.de> <20200401230105.GF648829@xz-x1>
+Date:   Thu, 02 Apr 2020 01:29:14 +0200
+Message-ID: <87wo6yokdx.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Peter Xu <peterx@redhat.com> writes:
 
-rec->llc is currently being assigned twice, once with the lower 8 bits
-from packed_record[8] and then re-assigned afterwards with data from
-packed_record[9].  This looks like a type, I believe the second assignment
-should be using the |= operator rather than a direct assignment.
+> On Wed, Apr 01, 2020 at 10:30:08PM +0200, Thomas Gleixner wrote:
+>> Peter Xu <peterx@redhat.com> writes:
+>> > @@ -169,8 +169,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
+>> >  			continue;
+>> >  		}
+>> >  
+>> > -		pr_warn("isolcpus: Error, unknown flag\n");
+>> > -		return 0;
+>> > +		str = strchr(str, ',');
+>> > +		if (str)
+>> > +			/* Skip unknown sub-parameter */
+>> > +			str++;
+>> > +		else
+>> > +			return 0;
+>> 
+>> Just looked at it again because I wanted to apply this and contrary to
+>> last time I figured out that this is broken:
+>> 
+>>      isolcpus=nohz,domain1,3,5
+>> 
+>> is a malformatted option, but the above will make it "valid" and result
+>> in:
+>> 
+>>      HK_FLAG_TICK and a cpumask of 3,5.
+>
+> I would think this is no worse than applying nothing - I read the
+> first "isalpha()" check as something like "the subparameter's first
+> character must not be a digit", so to differenciate with the cpu list.
+> If we keep this, we can still have subparams like "double-word".
 
-Addresses-Coverity: ("Unused value")
-Fixes: b8f8a0b7b5cb ("net: atlantic: MACSec ingress offload HW bindings")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It _is_ worse. If the intention is to write 'nohz,domain,1,3,5' and
+that missing comma morphs it silently into 'nohz,3,5' then this is
+really a step backwards. The upstream version would tell you that you
+screwed up.
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
-index 97901c114bfa..fbe9d88b13c7 100644
---- a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
-@@ -491,7 +491,7 @@ get_ingress_preclass_record(struct aq_hw_s *hw,
- 	rec->snap[1] = packed_record[8] & 0xFF;
- 
- 	rec->llc = (packed_record[8] >> 8) & 0xFF;
--	rec->llc = packed_record[9] << 8;
-+	rec->llc |= packed_record[9] << 8;
- 
- 	rec->mac_sa[0] = packed_record[10];
- 	rec->mac_sa[0] |= packed_record[11] << 16;
--- 
-2.25.1
+>>  static int __init housekeeping_isolcpus_setup(char *str)
+>>  {
+>>  	unsigned int flags = 0;
+>> +	char *par;
+>> +	int len;
+>>  
+>>  	while (isalpha(*str)) {
+>>  		if (!strncmp(str, "nohz,", 5)) {
+>> @@ -169,8 +171,17 @@ static int __init housekeeping_isolcpus_
+>>  			continue;
+>>  		}
+>>  
+>> -		pr_warn("isolcpus: Error, unknown flag\n");
+>> -		return 0;
+>> +		/*
+>> +		 * Skip unknown sub-parameter and validate that it is not
+>> +		 * containing an invalid character.
+>> +		 */
+>> +		for (par = str, len = 0; isalpha(*str); str++, len++);
+>> +		if (*str != ',') {
+>> +			pr_warn("isolcpus: Invalid flag %*s\n", len, par);
+>
+> ... this will dump "isolcpus: Invalid flag domain1,3,5", is this what
+> we wanted?  Maybe only dumps "domain1"?
 
+No, it will dump: "domain1" at least if my understanding of is_alpha()
+and the '%*s' format option is halfways correct
+
+> For me so far I would still prefer the original one, giving more
+> freedom to the future params and the patch is also a bit easier (but I
+
+Again. It does not matter whether the patch is easier or not. What
+matters is correctness and usability. Silently converting a typo into
+something else is horrible at best.
+
+> definitely like the pr_warn when there's unknown subparams).  But just
+> let me know your preference and I'll follow yours when repost.
+
+Enforcing a pure 'is_alpha()' subparam space is not really a substantial
+restriction. Feel free to extend it by adding '|| *str == '_' if you
+really think that provides a value. 
+
+Thanks,
+
+        tglx
