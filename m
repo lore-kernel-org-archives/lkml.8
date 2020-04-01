@@ -2,234 +2,301 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07CCC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711E6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B22320714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:14:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BCf919XB"
+	by mail.kernel.org (Postfix) with ESMTP id 2DFFB20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732093AbgDAIOP (ORCPT
+        id S1732104AbgDAIOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:14:15 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32530 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731849AbgDAIOP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:14:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585728854; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
- Subject: From: Sender; bh=VEK+xKqqL07PbO0Tpfl9yU5mpA/DT2wGBLGIVg93tCU=;
- b=BCf919XB06WYxx7pPyTxl+rx5zf4eYM8eubaMy6+nWzW65sLlS28Q0xhQE8e7EmefgUQt/qU
- Zwac4k6EMWot8/ocMt4Eduy2AS6+1ngLrnlg4+AEL0qU4kVkawvCWev0oR9+e80yXX+gxft3
- yrXDAQ3bpd9JiTnaFwlL0G2vVB4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e844d52.7f8c2d28b928-smtp-out-n02;
- Wed, 01 Apr 2020 08:14:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8EB10C433F2; Wed,  1 Apr 2020 08:14:10 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.199.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 29024C433D2;
-        Wed,  1 Apr 2020 08:14:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 29024C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [RFT PATCH v2 02/10] drivers: qcom: rpmh-rsc: Document the
- register layout better
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        evgreen@chromium.org, Lina Iyer <ilina@codeaurora.org>,
-        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200311231348.129254-1-dianders@chromium.org>
- <20200311161104.RFT.v2.2.Iaddc29b72772e6ea381238a0ee85b82d3903e5f2@changeid>
-Message-ID: <1fd57a5e-067c-5b2e-c9d5-5a1836e55273@codeaurora.org>
-Date:   Wed, 1 Apr 2020 13:44:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 1 Apr 2020 04:14:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:45310 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731849AbgDAIOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:14:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 754A631B;
+        Wed,  1 Apr 2020 01:14:29 -0700 (PDT)
+Received: from [10.163.1.70] (unknown [10.163.1.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E7123F52E;
+        Wed,  1 Apr 2020 01:14:26 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [RFC 1/2] arm64/mm: Change THP helpers to comply with generic MM
+ semantics
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <1561639696-16361-1-git-send-email-anshuman.khandual@arm.com>
+ <1561639696-16361-2-git-send-email-anshuman.khandual@arm.com>
+ <20190628102003.GA56463@arrakis.emea.arm.com>
+ <82237e21-1f14-ab6e-0f80-9706141e2172@arm.com>
+ <20190703175250.GF48312@arrakis.emea.arm.com>
+ <b710f91e-3c8a-6e50-ce84-2f6869891589@arm.com>
+Message-ID: <5425f013-b6c1-6a27-c602-687762f26635@arm.com>
+Date:   Wed, 1 Apr 2020 13:44:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200311161104.RFT.v2.2.Iaddc29b72772e6ea381238a0ee85b82d3903e5f2@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+In-Reply-To: <b710f91e-3c8a-6e50-ce84-2f6869891589@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 3/12/2020 4:43 AM, Douglas Anderson wrote:
-> Perhaps it's just me, it took a really long time to understand what
-> the register layout of rpmh-rsc was just from the #defines.  Let's add
-> a bunch of comments describing which blocks are part of other blocks.
->
-> Signed-off-by: Douglas Anderson<dianders@chromium.org>
-> ---
->
-> Changes in v2:
-> - Now prose in comments instead of struct definitions.
-> - Pretty ASCII art from Stephen.
->
->   drivers/soc/qcom/rpmh-rsc.c | 78 ++++++++++++++++++++++++++++++++++---
->   1 file changed, 73 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index b87b79f0347d..02c8e0ffbbe4 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -37,14 +37,24 @@
->   #define DRV_NCPT_MASK			0x1F
->   #define DRV_NCPT_SHIFT			27
->   
-> -/* Register offsets */
-> +/*
-> + * Register offsets within a TCS.
-
-Change this to
-
-/* Offsets for common TCS Registers, one bit per TCS */
-
-> + *
-> + * TCSs are stored one after another; multiply tcs_id by RSC_DRV_TCS_OFFSET
-> + * to find a given TCS and add one of the below to find a register.
-> + */
-Move above comment after these 3 common IRQ registers.
->   #define RSC_DRV_IRQ_ENABLE		0x00
->   #define RSC_DRV_IRQ_STATUS		0x04
-> -#define RSC_DRV_IRQ_CLEAR		0x08
-
-please add line break between RSC_DRV_IRQ_CLEAR and 
-RSC_DRV_CMD_WAIT_FOR_CMPL
-
-you may want to add one more comment inbetween saying
-
-/* Offsets for per TCS Registers */
-
-> -#define RSC_DRV_CMD_WAIT_FOR_CMPL	0x10
-> +#define RSC_DRV_IRQ_CLEAR		0x08	/* w/o; write 1 to clear */
-> +#define RSC_DRV_CMD_WAIT_FOR_CMPL	0x10	/* 1 bit per command */
->   #define RSC_DRV_CONTROL			0x14
-> -#define RSC_DRV_STATUS			0x18
-> -#define RSC_DRV_CMD_ENABLE		0x1C
-> +#define RSC_DRV_STATUS			0x18	/* zero if tcs is busy */
-> +#define RSC_DRV_CMD_ENABLE		0x1C	/* 1 bit per command */
-> +
-> +/*
-> + * Commands (up to 16) start at 0x30 in a TCS; multiply command index
-> + * by RSC_DRV_CMD_OFFSET and add one of the below to find a register.
-> + */
-you may also add /* Offsets for per command in a TCS */
->   #define RSC_DRV_CMD_MSGID		0x30
->   #define RSC_DRV_CMD_ADDR		0x34
->   #define RSC_DRV_CMD_DATA		0x38
-> @@ -61,6 +71,64 @@
->   #define CMD_STATUS_ISSUED		BIT(8)
->   #define CMD_STATUS_COMPL		BIT(16)
->   
-> +/*
-> + * Here's a high level overview of how all the registers in RPMH work
-> + * together:
-> + *
-> + * - The main rpmh-rsc address is the base of a register space that can
-> + *   be used to find overall configuration of the hardware
-> + *   (DRV_PRNT_CHLD_CONFIG).  Also found within the rpmh-rsc register
-> + *   space are all the TCS blocks.  The offset of the TCS blocks is
-> + *   specified in the device tree by "qcom,tcs-offset" and used to
-> + *   compute tcs_base.
-> + * - TCS blocks come one after another.  Type, count, and order are
-> + *   specified by the device tree as "qcom,tcs-config".
-> + * - Each TCS block has some registers, then space for up to 16 commands.
-> + *   Note that though address space is reserved for 16 commands, fewer
-> + *   might be present.  See ncpt (num cmds per TCS).
-> + * - The first TCS block is special in that it has registers to control
-> + *   interrupts (RSC_DRV_IRQ_XXX).  Space for these registers is reserved
-> + *   in all TCS blocks to make the math easier, but only the first one
-> + *   matters.
-
-First TCS block is not special, the RSC_DRV_IRQ_XXX registers are common 
-for all
-
-TCSes.  can you please drop this last paragraph and then add one more 
-block in
-
-ASCII diagram to have TCS common IRQ registers like below to represent 
-it more clear.
-
-+----------------------------------------------+
-|TCS                                           |
-| IRQ                                          |
-|                                              |
-| +------------------------------------------+ |
-| |TCS0  |  |  |  |  |  |  |  |  |  |  |  |  | |
-| |      | 0| 1| 2| 3| 4| 5| .| .| .| .|14|15| |
-| | ctrl |  |  |  |  |  |  |  |  |  |  |  |  | |
-| +------------------------------------------+ |
-+----------------------------------------------+
 
 
-> + *
-> + * Here's a picture:
-> + *
-> + *  +---------------------------------------------------+
-> + *  |RSC                                                |
-> + *  | ctrl                                              |
-> + *  |                                                   |
-> + *  | Drvs:                                             |
-> + *  | +-----------------------------------------------+ |
-> + *  | |DRV0                                           | |
-> + *  | | ctrl                                          | |
-> + *  | |                                               | |
-> + *  | | TCSs:                                         | |
-> + *  | | +------------------------------------------+  | |
-> + *  | | |TCS0  |  |  |  |  |  |  |  |  |  |  |  |  |  | |
-> + *  | | | IRQ  | 0| 1| 2| 3| 4| 5| .| .| .| .|14|15|  | |
-> + *  | | | ctrl |  |  |  |  |  |  |  |  |  |  |  |  |  | |
-> + *  | | +------------------------------------------+  | |
-> + *  | | +------------------------------------------+  | |
-> + *  | | |TCS1  |  |  |  |  |  |  |  |  |  |  |  |  |  | |
-> + *  | | |      | 0| 1| 2| 3| 4| 5| .| .| .| .|14|15|  | |
-> + *  | | | ctrl |  |  |  |  |  |  |  |  |  |  |  |  |  | |
-> + *  | | +------------------------------------------+  | |
-> + *  | | +------------------------------------------+  | |
-> + *  | | |TCS2  |  |  |  |  |  |  |  |  |  |  |  |  |  | |
-> + *  | | |      | 0| 1| 2| 3| 4| 5| .| .| .| .|14|15|  | |
-> + *  | | | ctrl |  |  |  |  |  |  |  |  |  |  |  |  |  | |
-> + *  | | +------------------------------------------+  | |
-> + *  | |                    ......                     | |
-> + *  | +-----------------------------------------------+ |
-> + *  | +-----------------------------------------------+ |
-> + *  | |DRV1                                           | |
-> + *  | | (same as DRV0)                                | |
-> + *  | +-----------------------------------------------+ |
-> + *  |                      ......                       |
-> + *  +---------------------------------------------------+
-> + */
-> +
-> +
+On 07/08/2019 09:57 AM, Anshuman Khandual wrote:
+> 
+> On 07/03/2019 11:22 PM, Catalin Marinas wrote:
+>> On Tue, Jul 02, 2019 at 09:07:28AM +0530, Anshuman Khandual wrote:
+>>> On 06/28/2019 03:50 PM, Catalin Marinas wrote:
+>>>> On Thu, Jun 27, 2019 at 06:18:15PM +0530, Anshuman Khandual wrote:
+>>>>> pmd_present() and pmd_trans_huge() are expected to behave in the following
+>>>>> manner during various phases of a given PMD. It is derived from a previous
+>>>>> detailed discussion on this topic [1] and present THP documentation [2].
+>>>>>
+>>>>> pmd_present(pmd):
+>>>>>
+>>>>> - Returns true if pmd refers to system RAM with a valid pmd_page(pmd)
+>>>>> - Returns false if pmd does not refer to system RAM - Invalid pmd_page(pmd)
+>>>>>
+>>>>> pmd_trans_huge(pmd):
+>>>>>
+>>>>> - Returns true if pmd refers to system RAM and is a trans huge mapping
+>> [...]
+>>>> Before we actually start fixing this, I would strongly suggest that you
+>>>> add a boot selftest (see lib/Kconfig.debug for other similar cases)
+>>>> which checks the consistency of the page table macros w.r.t. the
+>>>> expected mm semantics. Once the mm maintainers agreed with the
+>>>> semantics, it will really help architecture maintainers in implementing
+>>>> them correctly.
+>>> Sure and it will help all architectures to be in sync wrt semantics.
+>>>
+>>>> You wouldn't need actual page tables, just things like assertions on
+>>>> pmd_trans_huge(pmd_mkhuge(pmd)) == true. You could go further and have
+>>>> checks on pmdp_invalidate(&dummy_vma, dummy_addr, &dummy_pmd) with the
+>>>> dummy_* variables on the stack.
+>>> Hmm. I guess macros which operate directly on a page table entry will be
+>>> okay but the ones which check on specific states for VMA or MM might be
+>>> bit tricky. Try to emulate VMA/MM states while on stack ?. But sure, will
+>>> explore adding such a test.
+>> You can pretend that the page table is on the stack. See the _pmd
+>> variable in do_huge_pmd_wp_page_fallback() and
+>> __split_huge_zero_page_pmd(). Similarly, the vma and even the mm can be
+>> faked on the stack (see the arm64 tlb_flush()).
+> Sure will explore them and other similar examples. I am already working on a module
+> which will test various architecture page table accessors semantics as expected from
+> generic MM. This should help us making sure that all architectures are on same page.
+> 
+>>>>> The problem:
+>>>>>
+>>>>> PMD is first invalidated with pmdp_invalidate() before it's splitting. This
+>>>>> invalidation clears PMD_SECT_VALID as below.
+>>>>>
+>>>>> PMD Split -> pmdp_invalidate() -> pmd_mknotpresent -> Clears PMD_SECT_VALID
+>>>>>
+>>>>> Once PMD_SECT_VALID gets cleared, it results in pmd_present() return false
+>>>>> on the PMD entry.
+>>>> I think that's an inconsistency in the expected semantics here. Do you
+>>>> mean that pmd_present(pmd_mknotpresent(pmd)) should be true? If not, do
+>> [...]
+>>> pmd_present() and pmd_mknotpresent() are not exact inverse.
+>> I find this very confusing (not your fault, just the semantics expected
+>> by the core code). I can see that x86 is using _PAGE_PSE to make
+>> pmd_present(pmd_mknotpresent()) == true. However, for pud that's not the
+>> case (because it's not used for transhuge).
+>>
+>> I'd rather have this renamed to pmd_mknotvalid().
+> Right, it makes sense to do the renaming even without considering this proposal.
+> 
+>>> In absence of a positive section mapping bit on arm64, PTE_SPECIAL is being set
+>>> temporarily to remember that it was a mapped PMD which got invalidated recently
+>>> but which still points to memory. Hence pmd_present() must evaluate true.
+>> I wonder if we can encode this safely for arm64 in the bottom two bits
+>> of a pmd :
+>>
+>> 0b00 - not valid, not present
+>> 0b10 - not valid, present, huge
+>> 0b01 - valid, present, huge
+>> 0b11 - valid, table (not huge)
+>>
+>> Do we ever call pmdp_invalidate() on a table entry? I don't think we do.
+>>
+>> So a pte_mknotvalid would set bit 1 and I think swp_entry_to_pmd() would
+>> have to clear it so that pmd_present() actually returns false for a swp
+>> pmd entry.
+> All these makes it riskier for collision with other core MM paths as compared to
+> using a an isolated SW bit like PTE_SPECIAL exclusively for this purpose. This
+> is in line with using PTE_PROTNONE. PTE_SPECIAL seems to be well away from core
+> PMD path. Is there any particular concern about using PTE_SPECIAL ? Nonetheless
+> I will evaluate above proposal of using (0b10) to represent invalid but present
+> huge PMD entry during splitting.
 
-nit: two blank lines at the end, you can drop one.
+Tried to implement the proposed encoding scheme from Catalin and it does
+seem to work with (or even without) clearing the PMD_TABLE_BIT bit during
+__swp_entry_to_pmd(). It clears basic memory stress test with THP enabled.
 
-Thanks,
-Maulik
->   static u32 read_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
->   {
->   	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
+0b00 - not valid, not present
+0b10 - not valid, present, huge		/* Invalidated splitting PMD */
+0b01 - valid, present, huge		/* Valid mapped PMD */
+0b11 - valid, table (not huge)
 
+Will continue testing this change.
+
+----------->
+From 9593fb80eb41984de484fd151cd1140f4cbead7e Mon Sep 17 00:00:00 2001
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+Date: Tue, 31 Mar 2020 11:38:53 +0100
+Subject: [PATCH] arm64/mm: Change THP helpers to comply with generic MM
+ semantics
+
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ arch/arm64/include/asm/pgtable.h | 74 ++++++++++++++++++++++++++++----
+ arch/arm64/mm/hugetlbpage.c      |  2 +-
+ 2 files changed, 67 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 44883038dbe6..86c22a4fa427 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -348,15 +348,72 @@ static inline int pmd_protnone(pmd_t pmd)
+ }
+ #endif
+ 
++#define pmd_table(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
++				 PMD_TYPE_TABLE)
++#define pmd_sect(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
++				 PMD_TYPE_SECT)
++static pmd_t pmd_mksplitting(pmd_t pmd)
++{
++	unsigned long mask = PMD_TYPE_MASK;
++	unsigned long val = pmd_val(pmd);
++
++	val = (val & ~mask) | PMD_TABLE_BIT;
++
++	return __pmd(val);
++}
++
++static bool pmd_splitting(pmd_t pmd)
++{
++	unsigned long mask = PMD_TYPE_MASK;
++	unsigned long val = pmd_val(pmd);
++
++	if ((val & mask) == PMD_TABLE_BIT)
++		return true;
++
++	return false;
++}
++
++static bool pmd_mapped(pmd_t pmd)
++{
++	return pmd_sect(pmd);
++}
++
++static inline int pmd_present(pmd_t pmd)
++{
++	pte_t pte = pmd_pte(pmd);
++
++	if (pte_present(pte))
++		return 1;
++
++	if (pmd_splitting(pmd))
++		return 1;
++
++	return 0;
++}
++
+ /*
+  * THP definitions.
+  */
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-#define pmd_trans_huge(pmd)	(pmd_val(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT))
++static inline int pmd_trans_huge(pmd_t pmd)
++{
++	if (!pmd_present(pmd))
++		return 0;
++
++	if (!pmd_val(pmd))
++		return 0;
++
++	if (pmd_mapped(pmd))
++		return 1;
++
++	if (pmd_splitting(pmd))
++		return 1;
++
++	return 0;
++}
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+-#define pmd_present(pmd)	pte_present(pmd_pte(pmd))
+ #define pmd_dirty(pmd)		pte_dirty(pmd_pte(pmd))
+ #define pmd_young(pmd)		pte_young(pmd_pte(pmd))
+ #define pmd_valid(pmd)		pte_valid(pmd_pte(pmd))
+@@ -366,7 +423,12 @@ static inline int pmd_protnone(pmd_t pmd)
+ #define pmd_mkclean(pmd)	pte_pmd(pte_mkclean(pmd_pte(pmd)))
+ #define pmd_mkdirty(pmd)	pte_pmd(pte_mkdirty(pmd_pte(pmd)))
+ #define pmd_mkyoung(pmd)	pte_pmd(pte_mkyoung(pmd_pte(pmd)))
+-#define pmd_mknotvalid(pmd)	(__pmd(pmd_val(pmd) & ~PMD_SECT_VALID))
++
++static inline pmd_t pmd_mknotvalid(pmd_t pmd)
++{
++	BUG_ON(pmd_table(pmd));
++	return pmd_mksplitting(pmd);
++}
+ 
+ #define pmd_thp_or_huge(pmd)	(pmd_huge(pmd) || pmd_trans_huge(pmd))
+ 
+@@ -437,10 +499,6 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+ 
+ #define pmd_bad(pmd)		(!(pmd_val(pmd) & PMD_TABLE_BIT))
+ 
+-#define pmd_table(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
+-				 PMD_TYPE_TABLE)
+-#define pmd_sect(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
+-				 PMD_TYPE_SECT)
+ #define pmd_leaf(pmd)		pmd_sect(pmd)
+ 
+ #if defined(CONFIG_ARM64_64K_PAGES) || CONFIG_PGTABLE_LEVELS < 3
+@@ -834,7 +892,7 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
+ 
+ #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+ #define __pmd_to_swp_entry(pmd)        ((swp_entry_t) { pmd_val(pmd) })
+-#define __swp_entry_to_pmd(swp)        __pmd((swp).val)
++#define __swp_entry_to_pmd(swp)        __pmd((swp).val & ~PMD_TABLE_BIT)
+ #endif
+ 
+ /*
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index bbeb6a5a6ba6..056fe716b9f8 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -283,7 +283,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
+ 	if (!(sz == PMD_SIZE || sz == CONT_PMD_SIZE) &&
+ 	    pmd_none(pmd))
+ 		return NULL;
+-	if (pmd_huge(pmd) || !pmd_present(pmd))
++	if (pmd_huge(pmd) || !pte_present(pmd_pte(pmd)))
+ 		return (pte_t *)pmdp;
+ 
+ 	if (sz == CONT_PTE_SIZE)
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.20.1
+
+
+
