@@ -2,108 +2,119 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374E7C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE39C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E562063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:53:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585760035;
-	bh=iQ3XSb+1+W70hL2bq3JLGymvdhOzpDA6tBAKKyNBbk0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kzd9NMsA9QYcUD07EbxsINhIeTbiPcrf+ht/UljY5gIklhcBMOp+bbtRt4tzbZuZg
-	 7UFcnn3vJAolPgqNWKZtSugR/PAZJbcRVyqvJ47XU2GK//YvDjsfCfCycyZPy+Y9eh
-	 GtPaCHUtfqn6Xo0RlA3CKcTOdnTGQG7ZUYXih2IQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4A5432063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tT8N+coB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388306AbgDAQb0 (ORCPT
+        id S2388286AbgDAQyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388284AbgDAQbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:31:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D7B02063A;
-        Wed,  1 Apr 2020 16:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758673;
-        bh=iQ3XSb+1+W70hL2bq3JLGymvdhOzpDA6tBAKKyNBbk0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGHOg6CXVBFjbLjLqzGmP/CTPgu9YRHQSr+fV4mhC6javsGZX4ml3fcsM/fd6mBiI
-         D+yZVELrX6B4DEppzy4oI2w5FvIaeENr0WJyqJy9MDspJR5WnKHUON/eS0Rjk4va6p
-         7GmBIZFlkDoqNmTTQpYLurNt4wkHNwhcRWgRLHKk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 40/91] vxlan: check return value of gro_cells_init()
-Date:   Wed,  1 Apr 2020 18:17:36 +0200
-Message-Id: <20200401161527.519383441@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
-References: <20200401161512.917494101@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 1 Apr 2020 12:54:01 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:60014 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388271AbgDAQbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:31:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tp5LnUbTw56wHyeSPmfUWY8H/MgTJs6JAtDGyeNVTzc=; b=tT8N+coBdBtUClsXB6A4SoeJZ
+        hwlRmpnvuLLQSa/T0TnqqrvLH/3DFotSNFVmlrTgyuPyJWsTzc7J7rvDQmCHQePT2kqi/TW2iEcj5
+        6/SJxWwR805Zf7N0TdPtnwWqeneYvKYjC/uPyeirSmOZAqVlWlFlWi9DkJgHv6Rcogd7aqsXgpuPZ
+        0h2ij+q4rAVPqas/VGjPuxuuHCVEEHSEojiIeCk6nGtoLjqdYIJNrmnt8jaBSUYmberLkrqYshzAh
+        npGj/8O0mvkybocAtlGF1CZ1kS7uwJKcHUriIQJfG4BkHDN0tOTzuFY7+pLT+ELJH+KawSG9NihKD
+        9Ds2ZDuAA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60886)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jJgGc-0006uC-Kf; Wed, 01 Apr 2020 17:31:02 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jJgGb-0000pz-Ge; Wed, 01 Apr 2020 17:31:01 +0100
+Date:   Wed, 1 Apr 2020 17:31:01 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCH] ARM: exynos: update l2c_aux_mask to fix alert message
+Message-ID: <20200401163101.GV25745@shell.armlinux.org.uk>
+References: <b29f34870380093e6268c11d3033033d6def61b7.1585756648.git.guillaume.tucker@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b29f34870380093e6268c11d3033033d6def61b7.1585756648.git.guillaume.tucker@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+On Wed, Apr 01, 2020 at 05:08:03PM +0100, Guillaume Tucker wrote:
+> Allow setting the number of cycles for RAM reads in the pl310 cache
+> controller L2 auxiliary control register mask (bits 0-2) since it
+> needs to be changed in software.  This only affects exynos4210 and
+> exynos4412 as they use the pl310 cache controller.
+> 
+> With the mask used until now, the following warnings were generated,
+> the 2nd one being a pr_alert():
+> 
+>   L2C: platform modifies aux control register: 0x02070000 -> 0x3e470001
+>   L2C: platform provided aux values permit register corruption.
+> 
+> This latency cycles value has always been set in software in spite of
+> the warnings.  Keep it this way but clear the alert message about
+> register corruption to acknowledge it is a valid thing to do.
 
-[ Upstream commit 384d91c267e621e0926062cfb3f20cb72dc16928 ]
+This is telling you that you are doing something you should not be
+doing.  The L2C controller should be configured by board firmware
+first and foremost, because if, for example, u-boot makes use of the
+L2 cache, or any other pre-main kernel code (in other words,
+decompressor) the setup of the L2 controller will be wrong.
 
-gro_cells_init() returns error if memory allocation is failed.
-But the vxlan module doesn't check the return value of gro_cells_init().
+So, NAK.
 
-Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")`
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/vxlan.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> Tested on exynos4412-odroid-x2.
+> 
+> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> ---
+>  arch/arm/mach-exynos/exynos.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+> index 7a8d1555db40..ed1bba49210d 100644
+> --- a/arch/arm/mach-exynos/exynos.c
+> +++ b/arch/arm/mach-exynos/exynos.c
+> @@ -194,7 +194,7 @@ static void __init exynos_dt_fixup(void)
+>  
+>  DT_MACHINE_START(EXYNOS_DT, "Samsung Exynos (Flattened Device Tree)")
+>  	.l2c_aux_val	= 0x3c400001,
+> -	.l2c_aux_mask	= 0xc20fffff,
+> +	.l2c_aux_mask	= 0xc20ffff8,
+>  	.smp		= smp_ops(exynos_smp_ops),
+>  	.map_io		= exynos_init_io,
+>  	.init_early	= exynos_firmware_init,
+> -- 
+> 2.20.1
+> 
+> 
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2303,10 +2303,19 @@ static void vxlan_vs_add_dev(struct vxla
- /* Setup stats when device is created */
- static int vxlan_init(struct net_device *dev)
- {
-+	struct vxlan_dev *vxlan = netdev_priv(dev);
-+	int err;
-+
- 	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
- 	if (!dev->tstats)
- 		return -ENOMEM;
- 
-+	err = gro_cells_init(&vxlan->gro_cells, dev);
-+	if (err) {
-+		free_percpu(dev->tstats);
-+		return err;
-+	}
-+
- 	return 0;
- }
- 
-@@ -2584,8 +2593,6 @@ static void vxlan_setup(struct net_devic
- 
- 	vxlan->dev = dev;
- 
--	gro_cells_init(&vxlan->gro_cells, dev);
--
- 	for (h = 0; h < FDB_HASH_SIZE; ++h)
- 		INIT_HLIST_HEAD(&vxlan->fdb_head[h]);
- }
-
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
