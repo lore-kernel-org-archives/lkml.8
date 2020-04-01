@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808E4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE07CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530FB2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874BA2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758766;
-	bh=xRdhyKnGuxjusTLw/aAf27RdDFu0veOQA6/4JO0PSEE=;
+	s=default; t=1585758771;
+	bh=O4kjnvhC3zvxd7cwHWaB9JReiJed4iUZpZu3OVqfhlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x6SJ+2Ugi2jGb+MwThTusaaZPMYnYC8NXIQ9rl7SGPVow7rw5zHqIx+2a+7nuB80S
-	 q2wyHnRzdce71ATdqcz08IH1WxSm6vqy8vhkPG+AOxaof8igjG+97/NImirkuXXXBn
-	 m3sIf/Cld4SANRLJxvQROHoydr99SDL7L2Mw9bz4=
+	b=cX65bHd3tDIyiAD+MjxJcB5vGanTrSa01M6J5FuTgcY/RvDgfqjP4jL7cggwcgsTK
+	 +rDbtWaJvIMP/8smH0zKJFmefWEvZ7+W8S9CBkDGGjYqQ/FfaqKr46JQj0CWDGbj10
+	 ZjrIeENmtGHvaoMi7zYNYKsyfcuF1kQqHIg/QCx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388097AbgDAQcp (ORCPT
+        id S2388246AbgDAQcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59176 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:32:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388452AbgDAQcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:32:41 -0400
+        id S2388063AbgDAQct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:32:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64A832137B;
-        Wed,  1 Apr 2020 16:32:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08DA820658;
+        Wed,  1 Apr 2020 16:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758760;
-        bh=xRdhyKnGuxjusTLw/aAf27RdDFu0veOQA6/4JO0PSEE=;
+        s=default; t=1585758768;
+        bh=O4kjnvhC3zvxd7cwHWaB9JReiJed4iUZpZu3OVqfhlo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PyC/qcx7MM5gBRC/6kFEkVEiVSZPZhlg4gNOQfJ3c/dK/+9kCA1BnHZCZFVJEIt8G
-         J46Vq8Dy/tJxfCvq8y1aYpph1nJa7f27MIllG2YrAe+qnlykpS7n1TdR8TFI8rG0qj
-         O+i5YtOYfoAKrCTzCFhkyNdjrlNPkr5PLq/UER+g=
+        b=wCdB+8vi0kCi8GgfJoVOIbPTMKj5l32UBIx+WxZ2Rqet8SFBLto2N+FneEN8oACQE
+         Ne1YepOT/aON7OwB9X/IaP+b2wYRf1aazzRcSl2kIIkxdW4tFTRcLGy4vYHD/fz0ho
+         q3nXFxTwq1i9zwO/nDs28nRquccgbp7to4nP3NqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pawel Dembicki <paweldembicki@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 69/91] USB: serial: option: add Wistron Neweb D19Q1
-Date:   Wed,  1 Apr 2020 18:18:05 +0200
-Message-Id: <20200401161536.188091245@linuxfoundation.org>
+        stable@vger.kernel.org, Anthony Mallet <anthony.mallet@laas.fr>,
+        Oliver Neukum <oneukum@suse.com>,
+        Matthias Reichl <hias@horus.com>
+Subject: [PATCH 4.4 70/91] USB: cdc-acm: restore capability check order
+Date:   Wed,  1 Apr 2020 18:18:06 +0200
+Message-Id: <20200401161536.413344369@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -59,63 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Dembicki <paweldembicki@gmail.com>
+From: Matthias Reichl <hias@horus.com>
 
-commit dfee7e2f478346b12ea651d5c28b069f6a4af563 upstream.
+commit 62d65bdd9d05158aa2547f8ef72375535f3bc6e3 upstream.
 
-This modem is embedded on dlink dwr-960 router.
-The oem configuration states:
+commit b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
+introduced a regression by changing the order of capability and close
+settings change checks. When running with CAP_SYS_ADMIN setting the
+close settings to the values already set resulted in -EOPNOTSUPP.
 
-T: Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 2 Spd=480 MxCh= 0
-D: Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs= 1
-P: Vendor=1435 ProdID=d191 Rev=ff.ff
-S: Manufacturer=Android
-S: Product=Android
-S: SerialNumber=0123456789ABCDEF
-C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-E: Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
-E: Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E: Ad=84(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
-E: Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E: Ad=86(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
-E: Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E: Ad=88(I) Atr=03(Int.) MxPS= 8 Ivl=32ms
-E: Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
-E: Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
+Fix this by changing the check order back to how it was before.
 
-Tested on openwrt distribution
-
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Fixes: b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
+Cc: Anthony Mallet <anthony.mallet@laas.fr>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Matthias Reichl <hias@horus.com>
+Link: https://lore.kernel.org/r/20200327150350.3657-1-hias@horus.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/class/cdc-acm.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1983,6 +1983,8 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x1435, 0xd191, 0xff),			/* Wistron Neweb D19Q1 */
-+	  .driver_info = RSVD(1) | RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x1690, 0x7588, 0xff),			/* ASKEY WWHC050 */
- 	  .driver_info = RSVD(1) | RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -876,16 +876,16 @@ static int set_serial_info(struct acm *a
+ 
+ 	mutex_lock(&acm->port.mutex);
+ 
+-	if ((new_serial.close_delay != old_close_delay) ||
+-            (new_serial.closing_wait != old_closing_wait)) {
+-		if (!capable(CAP_SYS_ADMIN))
++	if (!capable(CAP_SYS_ADMIN)) {
++		if ((new_serial.close_delay != old_close_delay) ||
++	            (new_serial.closing_wait != old_closing_wait))
+ 			retval = -EPERM;
+-		else {
+-			acm->port.close_delay  = close_delay;
+-			acm->port.closing_wait = closing_wait;
+-		}
+-	} else
+-		retval = -EOPNOTSUPP;
++		else
++			retval = -EOPNOTSUPP;
++	} else {
++		acm->port.close_delay  = close_delay;
++		acm->port.closing_wait = closing_wait;
++	}
+ 
+ 	mutex_unlock(&acm->port.mutex);
+ 	return retval;
 
 
