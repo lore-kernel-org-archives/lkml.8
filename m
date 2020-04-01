@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31FEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A092E2137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C086620658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758011;
-	bh=HsCChBE2uN+o3G5hip3xHzTuQMmKXg4EexNwo7TnVJQ=;
+	s=default; t=1585758015;
+	bh=P+GooYUFK3Pccb6Amu3B4jgl9MFOXUfZT2mMUAm1KtI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V2FQdsUbscIO4rPS2a57H6RNLTvalrU/GzhIyWnC7mE+KWr5m5AAhoDZYmummsgKe
-	 QG3uteecOzJ7+wAACJ3/MOYioSRJU+rF0/QfIbE7N97XaMkvGxQ0DguKsj8DDAIuIr
-	 iA6aRqYDRxOXV2I4ihrafJzKSZLG5KBtMN/GHvKI=
+	b=WPTqkyORpp5GbsqE19KjE9a+kVFrUJzO2qcNw3qlgQZgyZW8DjDLCKvfo1mfuMDHV
+	 /s9Xxsm2P4Mkqpf0tyyNE8wPzauZd7HoX5iZSrxs8xJPcIGmw8RzcQnrXO9N2VLhFb
+	 XyTkqfbBnCSip985uQ/chY+EDGbvVyu2Egpf2IoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732788AbgDAQUK (ORCPT
+        id S1732855AbgDAQUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:20:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732692AbgDAQUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:20:07 -0400
+        id S1732807AbgDAQUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:20:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30FDC212CC;
-        Wed,  1 Apr 2020 16:20:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69AC120658;
+        Wed,  1 Apr 2020 16:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758006;
-        bh=HsCChBE2uN+o3G5hip3xHzTuQMmKXg4EexNwo7TnVJQ=;
+        s=default; t=1585758011;
+        bh=P+GooYUFK3Pccb6Amu3B4jgl9MFOXUfZT2mMUAm1KtI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EmSZg7PkggpWLdRZZg4U/AkdLRtq2dALHSyCM3SVmvfJeFBs5Ld8cm6nnvuelf0F5
-         niDuBt3TqVIc2malh6W/wksx+TrOTTnE7H7Ev1HlN6RdOZJqLVa2ATpFouwvHBWetZ
-         ocwjaJenowb3FCY8O9J/rpfqQMWLqA8Ogdt+jQQ0=
+        b=rUhuxvnXz4JSw6gXUCMI64NW+mVfH4x7Rj3+hjKexOlmw/872W/JP0DGDPEQV4yCs
+         Iea9VSSjLm4g2dPhXPagMIolwohRZhRgikvKwtStNHLzQoTUNBag7wWJ4r5OSev+dG
+         bCpUdxW13PO9GEVSq6Z0QDx/Fo5gQUoKAdA672rE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>
-Subject: [PATCH 5.5 13/30] bpf: Explicitly memset some bpf info structures declared on the stack
-Date:   Wed,  1 Apr 2020 18:17:17 +0200
-Message-Id: <20200401161425.668337924@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Lehmann <schmorp@schmorp.de>
+Subject: [PATCH 5.5 15/30] gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 CHT + AXP288 model
+Date:   Wed,  1 Apr 2020 18:17:19 +0200
+Message-Id: <20200401161427.338245964@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.345528747@linuxfoundation.org>
 References: <20200401161414.345528747@linuxfoundation.org>
@@ -59,82 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 5c6f25887963f15492b604dd25cb149c501bbabf upstream.
+commit 0c625ccfe6f754d0896b8881f5c85bcb81699f1f upstream.
 
-Trying to initialize a structure with "= {};" will not always clean out
-all padding locations in a structure. So be explicit and call memset to
-initialize everything for a number of bpf information structures that
-are then copied from userspace, sometimes from smaller memory locations
-than the size of the structure.
+There are at least 3 models of the HP x2 10 models:
 
-Reported-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200320162258.GA794295@kroah.com
+Bay Trail SoC + AXP288 PMIC
+Cherry Trail SoC + AXP288 PMIC
+Cherry Trail SoC + TI PMIC
+
+Like on the other HP x2 10 models we need to ignore wakeup for ACPI GPIO
+events on the external embedded-controller pin to avoid spurious wakeups
+on the HP x2 10 CHT + AXP288 model too.
+
+This commit adds an extra DMI based quirk for the HP x2 10 CHT + AXP288
+model, ignoring wakeups for ACPI GPIO events on the EC interrupt pin
+on this model. This fixes spurious wakeups from suspend on this model.
+
+Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
+Reported-and-tested-by: Marc Lehmann <schmorp@schmorp.de>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200302111225.6641-4-hdegoede@redhat.com
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/btf.c     |    3 ++-
- kernel/bpf/syscall.c |    6 ++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpio/gpiolib-acpi.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -4218,7 +4218,7 @@ int btf_get_info_by_fd(const struct btf
- 		       union bpf_attr __user *uattr)
- {
- 	struct bpf_btf_info __user *uinfo;
--	struct bpf_btf_info info = {};
-+	struct bpf_btf_info info;
- 	u32 info_copy, btf_copy;
- 	void __user *ubtf;
- 	u32 uinfo_len;
-@@ -4227,6 +4227,7 @@ int btf_get_info_by_fd(const struct btf
- 	uinfo_len = attr->info.info_len;
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -1437,6 +1437,21 @@ static const struct dmi_system_id gpioli
+ 			.ignore_wake = "INT33FC:02@28",
+ 		},
+ 	},
++	{
++		/*
++		 * HP X2 10 models with Cherry Trail SoC + AXP288 PMIC use an
++		 * external embedded-controller connected via I2C + an ACPI GPIO
++		 * event handler on INT33FF:01 pin 0, causing spurious wakeups.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion x2 Detachable"),
++			DMI_MATCH(DMI_BOARD_NAME, "813E"),
++		},
++		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
++			.ignore_wake = "INT33FF:01@0",
++		},
++	},
+ 	{} /* Terminating entry */
+ };
  
- 	info_copy = min_t(u32, uinfo_len, sizeof(info));
-+	memset(&info, 0, sizeof(info));
- 	if (copy_from_user(&info, uinfo, info_copy))
- 		return -EFAULT;
- 
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2477,7 +2477,7 @@ static int bpf_prog_get_info_by_fd(struc
- 				   union bpf_attr __user *uattr)
- {
- 	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
--	struct bpf_prog_info info = {};
-+	struct bpf_prog_info info;
- 	u32 info_len = attr->info.info_len;
- 	struct bpf_prog_stats stats;
- 	char __user *uinsns;
-@@ -2489,6 +2489,7 @@ static int bpf_prog_get_info_by_fd(struc
- 		return err;
- 	info_len = min_t(u32, sizeof(info), info_len);
- 
-+	memset(&info, 0, sizeof(info));
- 	if (copy_from_user(&info, uinfo, info_len))
- 		return -EFAULT;
- 
-@@ -2752,7 +2753,7 @@ static int bpf_map_get_info_by_fd(struct
- 				  union bpf_attr __user *uattr)
- {
- 	struct bpf_map_info __user *uinfo = u64_to_user_ptr(attr->info.info);
--	struct bpf_map_info info = {};
-+	struct bpf_map_info info;
- 	u32 info_len = attr->info.info_len;
- 	int err;
- 
-@@ -2761,6 +2762,7 @@ static int bpf_map_get_info_by_fd(struct
- 		return err;
- 	info_len = min_t(u32, sizeof(info), info_len);
- 
-+	memset(&info, 0, sizeof(info));
- 	info.type = map->map_type;
- 	info.id = map->id;
- 	info.key_size = map->key_size;
 
 
