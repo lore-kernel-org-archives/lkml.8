@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F63CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F2DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD6F20BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26728212CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758518;
-	bh=WM4pyHeczIls59bM+v5rLTOAhhCKoKCjnRL4t3xqhIU=;
+	s=default; t=1585758523;
+	bh=TnaegqLutaCcUAWij8JhdcO3zXmQdHFlD4ZdAEXwmjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKqsUNn5fusAHHN/5vhGfpCkb2/m3OqwYMDBDUIocDBfsvJX+dtEj4NKBb+GvmhLU
-	 Dkg/pS/yoQSAHfGBd+oCT2PBEqk/fvVWWI/GmSMS9kMrGwrIvkTBmFaE1ifRPTkdHu
-	 Pc3uTseXUf6F/+OHm5k7NlV2HQNYdiROQ5nAB1oc=
+	b=dwesb/CVnH0zlScZKNS9Ci/1ySrrv9b64HMbx3UsJJKovL7umwGrljY8ejwMlLapY
+	 KjYgojBiy3C3TumLqZ6/lRgm3GIHOA0TDH5N3qQvKaGZAsGLye2I2oKLRKVVq9ClaB
+	 BEprGmsdOJxEkuypTKPXh7poOJT6raMRutXCNhC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388103AbgDAQ2V (ORCPT
+        id S1732794AbgDAQ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:28:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53612 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387687AbgDAQ2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:28:19 -0400
+        id S2387611AbgDAQ2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:28:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 215A3216FD;
-        Wed,  1 Apr 2020 16:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7164320857;
+        Wed,  1 Apr 2020 16:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758497;
-        bh=WM4pyHeczIls59bM+v5rLTOAhhCKoKCjnRL4t3xqhIU=;
+        s=default; t=1585758516;
+        bh=TnaegqLutaCcUAWij8JhdcO3zXmQdHFlD4ZdAEXwmjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LABdHkOqXpT1XrNvaFqLW+mjtnDNHV7+5N5fNf+wYIKNDS2Qiqn/EIP/F07CZrPsi
-         wpKrAb8qSeRo2ShZnpsxvGvS//Joye2FNcLEOe/6MM+Gntaq3L8BLSFo3pm2AhNYCd
-         aUqfdr5pkMJJYETxFjUFUakwc55ZWWEYJTme+fxA=
+        b=x2wWylVxEWjvTNkfpYKyIiPc8pt52lc0mFM2uaoEV+1J2zglbY75PO3U5USbLjm5t
+         ubE8MoTLNg5J/De9TUDeHQ6PydVyh1DtWLiDTx052Sm4VH449bhcvp4ti7mlx+LBfA
+         1TL8xWM30CKcUvA581W2PSfjf2x2yMRF5DGPU+NE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH 4.19 108/116] net: ks8851-ml: Fix IO operations, again
-Date:   Wed,  1 Apr 2020 18:18:04 +0200
-Message-Id: <20200401161555.959171624@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Hudson <skrll@netbsd.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 4.19 112/116] ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
+Date:   Wed,  1 Apr 2020 18:18:08 +0200
+Message-Id: <20200401161556.458997100@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -61,137 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Nick Hudson <skrll@netbsd.org>
 
-commit 8262e6f9b1034ede34548a04dec4c302d92c9497 upstream.
+commit 6687c201fdc3139315c2ea7ef96c157672805cdc upstream.
 
-This patch reverts 58292104832f ("net: ks8851-ml: Fix 16-bit IO operation")
-and edacb098ea9c ("net: ks8851-ml: Fix 16-bit data access"), because it
-turns out these were only necessary due to buggy hardware. This patch adds
-a check for such a buggy hardware to prevent any such mistakes again.
+Define the sdhci pinctrl state as "default" so it gets applied
+correctly and to match all other RPis.
 
-While working further on the KS8851 driver, it came to light that the
-KS8851-16MLL is capable of switching bus endianness by a hardware strap,
-EESK pin. If this strap is incorrect, the IO accesses require such endian
-swapping as is being reverted by this patch. Such swapping also impacts
-the performance significantly.
-
-Hence, in addition to removing it, detect that the hardware is broken,
-report to user, and fail to bind with such hardware.
-
-Fixes: 58292104832f ("net: ks8851-ml: Fix 16-bit IO operation")
-Fixes: edacb098ea9c ("net: ks8851-ml: Fix 16-bit data access")
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2c7c040c73e9 ("ARM: dts: bcm2835: Add Raspberry Pi Zero W")
+Signed-off-by: Nick Hudson <skrll@netbsd.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c |   56 ++++++++++++++++++++++++++++---
- 1 file changed, 52 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -476,6 +476,50 @@ static int msg_enable;
-  */
- 
- /**
-+ * ks_check_endian - Check whether endianness of the bus is correct
-+ * @ks	  : The chip information
-+ *
-+ * The KS8851-16MLL EESK pin allows selecting the endianness of the 16bit
-+ * bus. To maintain optimum performance, the bus endianness should be set
-+ * such that it matches the endianness of the CPU.
-+ */
-+
-+static int ks_check_endian(struct ks_net *ks)
-+{
-+	u16 cider;
-+
-+	/*
-+	 * Read CIDER register first, however read it the "wrong" way around.
-+	 * If the endian strap on the KS8851-16MLL in incorrect and the chip
-+	 * is operating in different endianness than the CPU, then the meaning
-+	 * of BE[3:0] byte-enable bits is also swapped such that:
-+	 *    BE[3,2,1,0] becomes BE[1,0,3,2]
-+	 *
-+	 * Luckily for us, the byte-enable bits are the top four MSbits of
-+	 * the address register and the CIDER register is at offset 0xc0.
-+	 * Hence, by reading address 0xc0c0, which is not impacted by endian
-+	 * swapping, we assert either BE[3:2] or BE[1:0] while reading the
-+	 * CIDER register.
-+	 *
-+	 * If the bus configuration is correct, reading 0xc0c0 asserts
-+	 * BE[3:2] and this read returns 0x0000, because to read register
-+	 * with bottom two LSbits of address set to 0, BE[1:0] must be
-+	 * asserted.
-+	 *
-+	 * If the bus configuration is NOT correct, reading 0xc0c0 asserts
-+	 * BE[1:0] and this read returns non-zero 0x8872 value.
-+	 */
-+	iowrite16(BE3 | BE2 | KS_CIDER, ks->hw_addr_cmd);
-+	cider = ioread16(ks->hw_addr);
-+	if (!cider)
-+		return 0;
-+
-+	netdev_err(ks->netdev, "incorrect EESK endian strap setting\n");
-+
-+	return -EINVAL;
-+}
-+
-+/**
-  * ks_rdreg16 - read 16 bit register from device
-  * @ks	  : The chip information
-  * @offset: The register address
-@@ -485,7 +529,7 @@ static int msg_enable;
- 
- static u16 ks_rdreg16(struct ks_net *ks, int offset)
- {
--	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
-+	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
- 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
- 	return ioread16(ks->hw_addr);
- }
-@@ -500,7 +544,7 @@ static u16 ks_rdreg16(struct ks_net *ks,
- 
- static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
- {
--	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
-+	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
- 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
- 	iowrite16(value, ks->hw_addr);
- }
-@@ -516,7 +560,7 @@ static inline void ks_inblk(struct ks_ne
- {
- 	len >>= 1;
- 	while (len--)
--		*wptr++ = be16_to_cpu(ioread16(ks->hw_addr));
-+		*wptr++ = (u16)ioread16(ks->hw_addr);
- }
- 
- /**
-@@ -530,7 +574,7 @@ static inline void ks_outblk(struct ks_n
- {
- 	len >>= 1;
- 	while (len--)
--		iowrite16(cpu_to_be16(*wptr++), ks->hw_addr);
-+		iowrite16(*wptr++, ks->hw_addr);
- }
- 
- static void ks_disable_int(struct ks_net *ks)
-@@ -1540,6 +1584,10 @@ static int ks8851_probe(struct platform_
- 		goto err_free;
- 	}
- 
-+	err = ks_check_endian(ks);
-+	if (err)
-+		goto err_free;
-+
- 	netdev->irq = platform_get_irq(pdev, 0);
- 
- 	if ((int)netdev->irq < 0) {
+--- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+@@ -118,6 +118,7 @@
+ &sdhci {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
+ 	mmc-pwrseq = <&wifi_pwrseq>;
+ 	non-removable;
 
 
