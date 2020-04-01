@@ -2,98 +2,123 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853C3C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B96C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1882082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:06:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585764388;
-	bh=wGJfsStv/o8iBthUPnKYXV5sqz3tNFOfYyySNd33CNM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EbNTGrP1HHCXDOEFhPIc2dvZwm+5B3TRWVZtCnUmHjAxtL2RnuIWNdwEycWj142o7
-	 cakf6VAF/kPEX31XOwjfTAoFjc32vLORmaPuQWo/E9qphzt2X37L0pxMmHnSJYrfAA
-	 uGuo1fZWT4BrmEP2eg4/CceEBWu2wjOocK7a21AY=
+	by mail.kernel.org (Postfix) with ESMTP id 9A7FB2071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:09:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rv2jM3Dg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732582AbgDASG0 (ORCPT
+        id S1732750AbgDASJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732316AbgDASG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:06:26 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08B1C2071A;
-        Wed,  1 Apr 2020 18:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585764385;
-        bh=wGJfsStv/o8iBthUPnKYXV5sqz3tNFOfYyySNd33CNM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i+cOOUiGgpBf5MwOavDQT/S4h1rU9K3h2C6yvBXiKEMnJ/+RuoSfv0JMJjLPFk99M
-         6dmg8frVngWLpQCurTw8LF49EqpA+y30cx7Kbh4y2oEgMXGac+QviplThwcHvIABr8
-         qHOF+tNyTNAqnswPulNeLjHQDp1GydPzgw1c8svU=
-Date:   Wed, 1 Apr 2020 11:06:24 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Yiqian Wei <yiwei@redhat.com>
-Subject: Re: [PATCH v1 0/2] mm/page_alloc: fix stalls/soft lockups with huge
- VMs
-Message-Id: <20200401110624.e5caf6632215004a18a3757b@linux-foundation.org>
-In-Reply-To: <20200401144529.7zkqq4rfdnitg32h@ca-dmjordan1.us.oracle.com>
-References: <20200401104156.11564-1-david@redhat.com>
-        <596d593e-7f36-0e24-6c67-311bd6971e89@redhat.com>
-        <CAM9Jb+hYPUZXVLr2T8x6Njcscw_+W0e2SCmr_B1fLZuOwgLZuw@mail.gmail.com>
-        <20200401144529.7zkqq4rfdnitg32h@ca-dmjordan1.us.oracle.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Wed, 1 Apr 2020 14:09:14 -0400
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:44730 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732121AbgDASJO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 14:09:14 -0400
+Received: by mail-pj1-f74.google.com with SMTP id t7so802069pjb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 11:09:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=jmllqegwWYAse5zHietOLbFHZdle7VlA5/QFT40kKC8=;
+        b=Rv2jM3DgzSP4Xgu5R0bGlbm/XbkjWgjn9ZfxagNK/fsTGyOPNrB1GQnZB7E9xUQGhM
+         HymPJy1XezMr1M8wxNVgCxl2s3SL5YIMRiHzHxQ+N8Tm9g4CE8l/eV769aP0lmhUqw30
+         WO5cecwf8lips48fgnBJrCUMGiNTl3nZg0xnRu/8Ey0ZlaEygBY6633+f66FFnmvZfdU
+         a1E5N43q18UK6/1lSXUufsmbfBBAKTiOJ7uEdKbGRWLUHgPpOE38ux5OJezhCj2tD2v6
+         NHs/R55WHObGci9vAS1nbsO/jOXONQSHDsebLkOgWVwkfwTura+ZUaSU0yZibHZ0ntM2
+         nZhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=jmllqegwWYAse5zHietOLbFHZdle7VlA5/QFT40kKC8=;
+        b=jpcDbcjJd3JsKA6y7J1CBsTcmGpuA/jv2Ttmt5gYGnhEb8ZtnW9/gcmDuxdni28Rji
+         dtj+dWKUyDVet061Oy8SmmAsQsWgzMKgDNjRIyWIQbDs8Q5nckus539TWsc5GtQNghkF
+         wrVAmb0v7N6O/38xycIvEPMRyxJYqmHCGrU8pkkfbBqXa+j07k1Ps5+xskLCXBvbdBRp
+         FoBwVV30xO/vtWNJehGS0QEwMSbl5+t/mY0CRRsKJV86L6mt2UiAZ8rVyp+piV3tGYKo
+         YveWj/PpnYnq0gpI1zTPaKhEMELmRUZ0QYA9Vq0KBP8B5FAsgbY9g0gH4ftN6PUXXTnW
+         2Ykg==
+X-Gm-Message-State: AGi0PuYfuXKBYtwt5ZXeuakLcWYSC2EdxNzp5W+4Jts5xDyzlZIrZV4m
+        RDrmbtIf8VbR5SZXnxJeY9dE4/BcCsSoWXriyus=
+X-Google-Smtp-Source: APiQypJThTvE5BVy1/uDkIgtR6oC6K45RKp+7YCT9Dy8l4iKdORgDudBLxhldR7SZFjRpPEx8cKSPb5x2GDuF+Dv+9Q=
+X-Received: by 2002:a17:90a:25a8:: with SMTP id k37mr6384885pje.14.1585764551345;
+ Wed, 01 Apr 2020 11:09:11 -0700 (PDT)
+Date:   Wed,  1 Apr 2020 11:09:03 -0700
+Message-Id: <20200401180907.202604-1-trishalfonso@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH v3 0/4] KUnit-KASAN Integration
+From:   Patricia Alfonso <trishalfonso@google.com>
+To:     davidgow@google.com, brendanhiggins@google.com,
+        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org
+Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        Patricia Alfonso <trishalfonso@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020 10:45:29 -0400 Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+This patchset contains everything needed to integrate KASAN and KUnit.
 
-> On Wed, Apr 01, 2020 at 04:31:51PM +0200, Pankaj Gupta wrote:
-> > > On 01.04.20 12:41, David Hildenbrand wrote:
-> > > > Two fixes for misleading stall messages / soft lockups with huge nodes /
-> > > > zones during boot without CONFIG_PREEMPT.
-> > > >
-> > > > David Hildenbrand (2):
-> > > >   mm/page_alloc: fix RCU stalls during deferred page initialization
-> > > >   mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
-> > > >
-> > > >  mm/page_alloc.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > >
-> > > Patch #1 requires "[PATCH v3] mm: fix tick timer stall during deferred
-> > > page init"
-> > >
-> > > https://lkml.kernel.org/r/20200311123848.118638-1-shile.zhang@linux.alibaba.com
-> > 
-> > Thanks! Took me some time to figure it out.
-> 
-> FYI, I'm planning to post an alternate version of that fix, hopefully today if
-> all goes well with my testing.
+KUnit will be able to:
+(1) Fail tests when an unexpected KASAN error occurs
+(2) Pass tests when an expected KASAN error occurs
 
-I assume you'll redo this two-patch series to apply on top of this
-forthcoming patch?
+Convert KASAN tests to KUnit with the exception of copy_user_test
+because KUnit is unable to test those.
+
+Add documentation on how to run the KASAN tests with KUnit and what to
+expect when running these tests.
+
+Depends on [1].
+
+Changes since v2:
+ - Due to Alan's changes in [1], KUnit can be built as a module.
+ - The name of the tests that could not be run with KUnit has been
+ changed to be more generic: test_kasan_module.
+ - Documentation on how to run the new KASAN tests and what to expect
+ when running them has been added.
+ - Some variables and functions are now static.
+ - Now save/restore panic_on_warn in a similar way to kasan_multi_shot
+ and renamed the init/exit functions to be more generic to accommodate.
+ - Due to [2] in kasan_strings, kasan_memchr, and
+ kasan_memcmp will fail if CONFIG_AMD_MEM_ENCRYPT is enabled so return
+ early and print message explaining this circumstance.
+ - Changed preprocessor checks to C checks where applicable.
+
+[1] https://lore.kernel.org/linux-kselftest/1585313122-26441-1-git-send-email-alan.maguire@oracle.com/T/#t
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=206337
+
+Patricia Alfonso (4):
+  Add KUnit Struct to Current Task
+  KUnit: KASAN Integration
+  KASAN: Port KASAN Tests to KUnit
+  KASAN: Testing Documentation
+
+ Documentation/dev-tools/kasan.rst |  70 +++
+ include/kunit/test.h              |   5 +
+ include/linux/kasan.h             |   6 +
+ include/linux/sched.h             |   4 +
+ lib/Kconfig.kasan                 |  15 +-
+ lib/Makefile                      |   3 +-
+ lib/kunit/test.c                  |  13 +-
+ lib/test_kasan.c                  | 686 +++++++++++++-----------------
+ lib/test_kasan_module.c           |  76 ++++
+ mm/kasan/report.c                 |  33 ++
+ 10 files changed, 521 insertions(+), 390 deletions(-)
+ create mode 100644 lib/test_kasan_module.c
+
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
 
