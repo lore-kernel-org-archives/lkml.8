@@ -2,232 +2,127 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F88FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2D6C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3554420776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C9A20857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585742708;
+	bh=NhoPRsRq/YyLa+Vf1+G6SIlFLJ5p1f4hh/gZAzLwVPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uWGbCLrcQnyI0hFx4fJgMHqjv3g97wzbprLvZs7wSnEecGdEZD9l1WzDuR2cGZSB1
+	 A4Ob73/jO/RJvjdFQx47UDbaXDanqnZh/pK3SUL1piOZjSO+zZrQzSPDfwk9JUkpSE
+	 2RYxtfrVmt6rTcr97MGk+PfJ1Fu/rpmVUSQ2aUdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732297AbgDAMBp (ORCPT
+        id S1732323AbgDAMFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:01:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31258 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732246AbgDAMBo (ORCPT
+        Wed, 1 Apr 2020 08:05:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35475 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732246AbgDAMFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:01:44 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031BXM2D060103;
-        Wed, 1 Apr 2020 08:01:35 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 304h3w82w3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 08:01:34 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 031C0XXi025589;
-        Wed, 1 Apr 2020 12:01:33 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03wdc.us.ibm.com with ESMTP id 301x76rpef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 12:01:33 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031C1WD257999766
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Apr 2020 12:01:32 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C187BE04F;
-        Wed,  1 Apr 2020 12:01:32 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B5FCBE05A;
-        Wed,  1 Apr 2020 12:01:31 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.72.142])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Apr 2020 12:01:31 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id EA34F2E33D3; Wed,  1 Apr 2020 17:31:27 +0530 (IST)
-Date:   Wed, 1 Apr 2020 17:31:27 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 6/6] pseries/sysfs: Minimise IPI noise while reading
- [idle_][s]purr
-Message-ID: <20200401120127.GC17237@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
- <1585308760-28792-7-git-send-email-ego@linux.vnet.ibm.com>
- <1585734367.oqwn7dzljo.naveen@linux.ibm.com>
+        Wed, 1 Apr 2020 08:05:06 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d5so30308548wrn.2;
+        Wed, 01 Apr 2020 05:05:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2qHESkVe3nhbeIsGwZeWdkb1tB2ydLYFVJb0HdBY5Q8=;
+        b=sZdOXshtKPrMdliQmaplnIfrDHfyEt5qZQZcBHJXaYh04rnsOysfI19HxdOyMyqhDl
+         /JsNfA4qQWIWzLTn1ug5HAffO4AWvl2l6R6zRVUnqNT5kEQh9zbVKL3lxs4cQvFJ9/z0
+         17FG592k+FTvwoYa1/Y/rHhxKt7ATH4J0EgiGxKoKIqNlcJbE8RRY7vNJ+rrjM6FINqs
+         4u0hPoCyAPbVzVR1SpGyepJxm7TbZ9iT5jy8wLPa8M6icCpOSmVM+fFLtN5/8/fyGU9a
+         GyDTbhCzAljzwjZToDl4pKMKRP/S6lI8WnUmaa6mGU51fbREPQEJqrijIQap9ay1Itpa
+         shKw==
+X-Gm-Message-State: ANhLgQ3mcdKZ238CBuiWydXFQHLRPnY83537t7v/33H1YbXKrMZaFEBJ
+        bfuYdUpuS9GygNRoPzxyr7lhbTn/
+X-Google-Smtp-Source: ADFU+vtfgdGL9hubYcT6d3Hh/gPXpmGPiuRY7Uj/WWVpV52yieI7MXiVPFLc68WpRZK+6w4X9jUCVw==
+X-Received: by 2002:adf:8187:: with SMTP id 7mr26810166wra.358.1585742704551;
+        Wed, 01 Apr 2020 05:05:04 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id h132sm2546019wmf.18.2020.04.01.05.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 05:05:03 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 14:05:02 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     joel@joelfernandes.org
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200401120502.GH22681@dhcp22.suse.cz>
+References: <20200331131628.153118-1-joel@joelfernandes.org>
+ <20200331145806.GB236678@google.com>
+ <20200331153450.GM30449@dhcp22.suse.cz>
+ <20200331160117.GA170994@google.com>
+ <20200401072359.GC22681@dhcp22.suse.cz>
+ <30295C90-34DB-469C-9DCD-55DB91938BA9@joelfernandes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585734367.oqwn7dzljo.naveen@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010104
+In-Reply-To: <30295C90-34DB-469C-9DCD-55DB91938BA9@joelfernandes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Naveen,
+On Wed 01-04-20 07:14:16, joel@joelfernandes.org wrote:
+[...]
+> I am in support of this documentation patch. I would say "consumption of the reserve".
 
+Like this?
 
-On Wed, Apr 01, 2020 at 03:28:48PM +0530, Naveen N. Rao wrote:
-> Gautham R. Shenoy wrote:
-> >From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> >
- [..snip..]
+From afc9c4e56c6dd5f59c1cf5f95ad42a0e7cd78b2e Mon Sep 17 00:00:00 2001
+From: Michal Hocko <mhocko@suse.com>
+Date: Wed, 1 Apr 2020 14:00:56 +0200
+Subject: [PATCH] mm: clarify __GFP_MEMALLOC usage
 
-> >-static DEVICE_ATTR(spurr, 0400, show_spurr, NULL);
-> >-static DEVICE_ATTR(purr, 0400, show_purr, store_purr);
-> > static DEVICE_ATTR(pir, 0400, show_pir, NULL);
-> > static DEVICE_ATTR(tscr, 0600, show_tscr, store_tscr);
-> > #endif /* CONFIG_PPC64 */
-> >@@ -761,22 +757,110 @@ static void create_svm_file(void)
-> > }
-> > #endif /* CONFIG_PPC_SVM */
-> >
-> >+#ifdef CONFIG_PPC64
-> >+/*
-> >+ * The duration (in ms) from the last IPI to the target CPU until
-> >+ * which a cached value of purr, spurr, idle_purr, idle_spurr can be
-> >+ * reported to the user on a corresponding sysfs file read. Beyond
-> >+ * this duration, fresh values need to be obtained by sending IPIs to
-> >+ * the target CPU when the sysfs files are read.
-> >+ */
-> >+static unsigned long util_stats_staleness_tolerance_ms = 10;
-> 
-> This is a nice optimization for our use in lparstat, though I have a concern
-> below.
-> 
-> >+struct util_acct_stats {
-> >+	u64 latest_purr;
-> >+	u64 latest_spurr;
-> >+#ifdef CONFIG_PPC_PSERIES
-> >+	u64 latest_idle_purr;
-> >+	u64 latest_idle_spurr;
-> >+#endif
-> 
-> You can probably drop the 'latest_' prefix.
+It seems that the existing documentation is not explicit about the
+expected usage and potential risks enough. While it is calls out
+that users have to free memory when using this flag it is not really
+apparent that users have to careful to not deplete memory reserves
+and that they should implement some sort of throttling wrt. freeing
+process.
 
+This is partly based on Neil's explanation [1].
 
-Sure.
+[1] http://lkml.kernel.org/r/877dz0yxoa.fsf@notabene.neil.brown.name
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+---
+ include/linux/gfp.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> 
-> >+	unsigned long last_update_jiffies;
-> >+};
-> >+
-> >+DEFINE_PER_CPU(struct util_acct_stats, util_acct_stats);
-> 
-> Per snowpatch, this should be static, and so should get_util_stats_ptr()
-> below:
-> https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/16601//artifact/linux/report.txt
+diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+index e5b817cb86e7..e3ab1c0d9140 100644
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -110,6 +110,9 @@ struct vm_area_struct;
+  * the caller guarantees the allocation will allow more memory to be freed
+  * very shortly e.g. process exiting or swapping. Users either should
+  * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
++ * Users of this flag have to be extremely careful to not deplete the reserve
++ * completely and implement a throttling mechanism which controls the consumption
++ * of the reserve based on the amount of freed memory.
+  *
+  * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency reserves.
+  * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
+-- 
+2.25.1
 
-Ok, will fix this in v5.
-
-> 
-> >+
-> >+static void update_util_acct_stats(void *ptr)
-> >+{
-> >+	struct util_acct_stats *stats = ptr;
-> >+
-> >+	stats->latest_purr = mfspr(SPRN_PURR);
-> >+	stats->latest_spurr = mfspr(SPRN_SPURR);
-> > #ifdef CONFIG_PPC_PSERIES
-> >-static void read_idle_purr(void *val)
-> >+	stats->latest_idle_purr = read_this_idle_purr();
-> >+	stats->latest_idle_spurr = read_this_idle_spurr();
-> >+#endif
-> >+	stats->last_update_jiffies = jiffies;
-> >+}
-> >+
-> >+struct util_acct_stats *get_util_stats_ptr(int cpu)
-> >+{
-> >+	struct util_acct_stats *stats = per_cpu_ptr(&util_acct_stats, cpu);
-> >+	unsigned long delta_jiffies;
-> >+
-> >+	delta_jiffies = jiffies - stats->last_update_jiffies;
-> >+
-> >+	/*
-> >+	 * If we have a recent enough data, reuse that instead of
-> >+	 * sending an IPI.
-> >+	 */
-> >+	if (jiffies_to_msecs(delta_jiffies) < util_stats_staleness_tolerance_ms)
-> >+		return stats;
-> >+
-> >+	smp_call_function_single(cpu, update_util_acct_stats, stats, 1);
-> >+	return stats;
-> >+}
-> >+
-> >+static ssize_t show_purr(struct device *dev,
-> >+			 struct device_attribute *attr, char *buf)
-> > {
-> >-	u64 *ret = val;
-> >+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-> >+	struct util_acct_stats *stats;
-> >
-> >-	*ret = read_this_idle_purr();
-> >+	stats = get_util_stats_ptr(cpu->dev.id);
-> >+	return sprintf(buf, "%llx\n", stats->latest_purr);
-> 
-> This alters the behavior of the current sysfs purr file. I am not sure if it
-> is reasonable to return the same PURR value across a 10ms window.
-
-
-It does reduce it to 10ms window. I am not sure if anyone samples PURR
-etc faster than that rate.
-
-I measured how much time it takes to read the purr, spurr, idle_purr,
-idle_spurr files back-to-back. It takes not more than 150us.  From
-lparstat will these values be read back-to-back ? If so, we can reduce
-the staleness_tolerance to something like 500us and still avoid extra
-IPIs. If not, what is the maximum delay between the first sysfs file
-read and the last sysfs file read ?
-
->
-> I wonder if we should introduce a sysctl interface to control thresholding.
-> It can default to 0, which disables thresholding so that the existing
-> behavior continues. Applications (lparstat) can optionally set it to suit
-> their use.
-
-We would be introducing 3 new sysfs interfaces that way instead of
-two.
-
-/sys/devices/system/cpu/purr_spurr_staleness
-/sys/devices/system/cpu/cpuX/idle_purr
-/sys/devices/system/cpu/cpuX/idle_spurr
-
-I don't have a problem with this. Nathan, Michael, thoughts on this?
-
-
-The alternative is to have a procfs interface, something like
-/proc/powerpc/resource_util_stats
-
-which gives a listing similar to /proc/stat, i.e
-
-      CPUX  <purr>  <idle_purr>  <spurr>  <idle_spurr>
-
-Even in this case, the values can be obtained in one-shot with a
-single IPI and be printed in the row corresponding to the CPU.
-
-> 
-> - Naveen
-> 
-
---
-Thanks and Regards
-gautham.
+-- 
+Michal Hocko
+SUSE Labs
