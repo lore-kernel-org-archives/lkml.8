@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3094C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74A9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C4920772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8FC206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759127;
-	bh=ED4gUPkZoLoNisjrheP355LpjjFe9jLTa6yMO10W2AE=;
+	s=default; t=1585759131;
+	bh=nhJQxQCFLz20+3m0GlqbdNdv+16PiSrAntecgskSFgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cRrx5V4iAD8RX/zrq6DXbX40Y262UmhZO2obLS4SyoRI83ucxsLu2xFisngb1lfA2
-	 640ePGnipO+5UQB8aOKQIOsxzUoh+9PL7D6da6FhMeEEOZ9694tJaimsnn/ecAstgc
-	 9MFqpKHb3VkQXjmJJhYl7rh/N/zt2T0cCsq9NQxc=
+	b=N0ttpMH4pGYl54g1WM+Jk5uuT/rupTBR+tXolBAcxU19ZmQd70au1Z9yaJf5TYIhX
+	 WnVN2Cb82XCZDkgzEc+gcoE7tUNLlBeBbPkC0hjXrv93jTBw+fUwu+O43yF2e8MZVT
+	 9V7V00DKiyr0BE74DhLOssjw2MTl/y6iCHhhXC+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389124AbgDAQip (ORCPT
+        id S2388842AbgDAQiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:38:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38440 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:38:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388962AbgDAQik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:38:40 -0400
+        id S2389114AbgDAQio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:38:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9915F20772;
-        Wed,  1 Apr 2020 16:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B4C020658;
+        Wed,  1 Apr 2020 16:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759119;
-        bh=ED4gUPkZoLoNisjrheP355LpjjFe9jLTa6yMO10W2AE=;
+        s=default; t=1585759124;
+        bh=nhJQxQCFLz20+3m0GlqbdNdv+16PiSrAntecgskSFgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lQwVCp0j2VwSiKhTRetlEgvem1KvozWOpiYiHRtj1Dr7CPv+mNGvgmjT8bFCF9YL4
-         3p9jmnvH/35fwK1CBNU/WovU7OssFMG7Zy0DS6cCucZcxZ0WzjN0a2cIebD3IbdlxO
-         9t+D540q/GxUxtxlfjdJ3EfSMsNegp3W3h5Yw7Xo=
+        b=Sq5GEn8dffsbC8X6ak0/EbluNk5CuednwJafdSosUNFbdxqsjFE8PPt3b/Zb1Ii9p
+         hW6Ykg3MQl8qJKFh0IHeb6Tadau0O4gbHDH0cLOe1vnnFOMP+IPc+Jti4fZO5ADkyx
+         ryly0M+Bi6s+lh+cJ33AOIPW75QIMpdAhQcbDPAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com,
-        syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 042/102] net_sched: keep alloc_hash updated after hash allocation
-Date:   Wed,  1 Apr 2020 18:17:45 +0200
-Message-Id: <20200401161540.798375716@linuxfoundation.org>
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 044/102] slcan: not call free_netdev before rtnl_unlock in slcan_open
+Date:   Wed,  1 Apr 2020 18:17:47 +0200
+Message-Id: <20200401161541.094258753@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -63,39 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Oliver Hartkopp <socketcan@hartkopp.net>
 
-[ Upstream commit 0d1c3530e1bd38382edef72591b78e877e0edcd3 ]
+[ Upstream commit 2091a3d42b4f339eaeed11228e0cbe9d4f92f558 ]
 
-In commit 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
-I moved cp->hash calculation before the first
-tcindex_alloc_perfect_hash(), but cp->alloc_hash is left untouched.
-This difference could lead to another out of bound access.
+As the description before netdev_run_todo, we cannot call free_netdev
+before rtnl_unlock, fix it by reorder the code.
 
-cp->alloc_hash should always be the size allocated, we should
-update it after this tcindex_alloc_perfect_hash().
+This patch is a 1:1 copy of upstream slip.c commit f596c87005f7
+("slip: not call free_netdev before rtnl_unlock in slip_open").
 
-Reported-and-tested-by: syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com
-Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reported-by: yangerkun <yangerkun@huawei.com>
+Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_tcindex.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/can/slcan.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -325,6 +325,7 @@ tcindex_set_parms(struct net *net, struc
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -621,7 +621,10 @@ err_free_chan:
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
+ 	slc_free_netdev(sl->dev);
++	/* do not call free_netdev before rtnl_unlock */
++	rtnl_unlock();
+ 	free_netdev(sl->dev);
++	return err;
  
- 		if (tcindex_alloc_perfect_hash(cp) < 0)
- 			goto errout;
-+		cp->alloc_hash = cp->hash;
- 		for (i = 0; i < min(cp->hash, p->hash); i++)
- 			cp->perfect[i].res = p->perfect[i].res;
- 		balloc = 1;
+ err_exit:
+ 	rtnl_unlock();
 
 
