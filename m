@@ -2,69 +2,123 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53517C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DD3C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E27420719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B19E20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="hILXlyNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733048AbgDAOlN (ORCPT
+        id S1733076AbgDAOlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:41:13 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:49886 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgDAOlM (ORCPT
+        Wed, 1 Apr 2020 10:41:37 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36718 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733022AbgDAOlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:41:12 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-        by gardel.0pointer.net (Postfix) with ESMTP id 25D0AE814E8;
-        Wed,  1 Apr 2020 16:41:10 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 9A065160704; Wed,  1 Apr 2020 16:41:09 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 16:41:09 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        dray@redhat.com, kzak@redhat.com, mszeredi@redhat.com,
-        swhiteho@redhat.com, jlayton@redhat.com, raven@themaw.net,
-        andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cyphar@cyphar.com
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-Message-ID: <20200401144109.GA29945@gardel-login>
-References: <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
- <1445647.1585576702@warthog.procyon.org.uk>
- <2418286.1585691572@warthog.procyon.org.uk>
+        Wed, 1 Apr 2020 10:41:37 -0400
+Received: by mail-pj1-f68.google.com with SMTP id nu11so37595pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 07:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HfPFNwmDkfOnPIp3KtUBPjXsLI4JkbyQkGj/q/lYOhA=;
+        b=hILXlyNm5rm7/90fu4LZHfY8txVlENFOCqA4PZl86jm8x2OBMfsHvUZ5pdiUliB7Hu
+         cv9JY4xBiLTe6uc2ub02+xaJuTc3BaebPjgHNOKmxUeJ//gdmwM3Hl/A/iwgyKHSGleO
+         a/QJNazm72wndR0thboWymnLEjA3/IpeYzEmAoToZjCeaKvcA5BqRXR2mjMFi+rvs49D
+         Z3CMHZW8kq+WVp3psWkogqjtIOmZVmz210VSzg/08nAZbEk9H5nQQ2gcsHFWKgv2hBN+
+         qbMqlyE85zkniXlwJEWqR72C9LcezWglQ1OddmoyVuNcqWOaUzQx2IGOiCfh+LTz/ur4
+         mp7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HfPFNwmDkfOnPIp3KtUBPjXsLI4JkbyQkGj/q/lYOhA=;
+        b=G4LC7uHK3u3vEeQSa3Vhuysfp3+2gt4UXTw0h6b2vf9DlIqZvyHdwo4VCt5M0dll4d
+         7CTxP2a2xQRMD5zwiP1tPwdP/KHYO3QW59rMeGD5w7pjXZ2PoNjZWc6li/bXEcZrD/96
+         QQAaLLsIjs0hzusgp0cdJfyHqJJfGhV33VGevF8x6PH1umezUaR198P4H2kpVQpwTuot
+         yJjqPLZfKdQUiicIz9rGW90lQKC3153B415/EsrXyCiTofEtX8E1k9gSHwmjFQJMyM1h
+         R8WZEG6WXyIRqXaz34gjp5JOGq3LNn4kWJ5l0E5PQFcCF5bKw5bba3OogYSN0lP2q4Or
+         ua4Q==
+X-Gm-Message-State: AGi0PuarNBUw0RUBk+Doa4EfuEwVQ7Js46ZoEca38c5RBv45aWKPFivm
+        eKQLm0//cJZBkTOrAlGZNNob0w==
+X-Google-Smtp-Source: APiQypJHLsC2dVtdtQ3xLsn8BhVe1AEHtj2of90gLEdROpcJkWt08CvYqtJlTaMbh5SGXzO/+fyCwQ==
+X-Received: by 2002:a17:90b:3747:: with SMTP id ne7mr5091522pjb.181.1585752095779;
+        Wed, 01 Apr 2020 07:41:35 -0700 (PDT)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id 135sm1779210pfu.207.2020.04.01.07.41.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 07:41:34 -0700 (PDT)
+Subject: Re: [PATCHv3 1/2] sysctl/sysrq: Remove __sysrq_enabled copy
+To:     Michael Ellerman <mpe@ellerman.id.au>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Jiri Slaby <jslaby@suse.com>, Joe Perches <joe@perches.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel@vger.kernel.org
+References: <20200302175135.269397-1-dima@arista.com>
+ <20200302175135.269397-2-dima@arista.com> <87tv23tmy1.fsf@mpe.ellerman.id.au>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <daf484e9-7f3d-9c76-d4c4-a054dcf236c1@arista.com>
+Date:   Wed, 1 Apr 2020 15:41:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2418286.1585691572@warthog.procyon.org.uk>
+In-Reply-To: <87tv23tmy1.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Di, 31.03.20 22:52, David Howells (dhowells@redhat.com) wrote:
+Hi Michael,
 
-> Christian Brauner <christian.brauner@ubuntu.com> wrote:
->
-> > querying all properties of a mount atomically all-at-once,
->
-> I don't actually offer that, per se.
->
-> Having an atomic all-at-once query for a single mount is actually quite a
-> burden on the system.  There's potentially a lot of state involved, much of
-> which you don't necessarily need.
+On 4/1/20 1:22 PM, Michael Ellerman wrote:
+[..]
+>>  
+>> +/**
+>> + * sysrq_mask - Getter for sysrq_enabled mask.
+>> + *
+>> + * Return: 1 if sysrq is always enabled, enabled sysrq_key_op mask otherwise.
+>> + */
+>> +int sysrq_mask(void)
+>> +{
+>> +	if (sysrq_always_enabled)
+>> +		return 1;
+>> +	return sysrq_enabled;
+>> +}
+> 
+> This seems to have broken several configs, when serial_core is modular, with:
+> 
+>   ERROR: modpost: "sysrq_mask" [drivers/tty/serial/serial_core.ko] undefined!
+> 
+> See:
+> 
+>   http://kisskb.ellerman.id.au/kisskb/buildresult/14169386/
+> 
+> It's also being reported by the kernelci bot:
+> 
+>   https://lore.kernel.org/linux-next/5e677bd0.1c69fb81.c43fe.7f7d@mx.google.com/
 
-Hmm, do it like with statx() and specify a mask for the fields userspace
-wants? Then it would be as lightweight as it possibly could be?
 
-Lennart
+Thanks for reporting this,
 
---
-Lennart Poettering, Berlin
+I've reproduced it and sent a fix:
+https://lkml.kernel.org/r/20200401143904.423450-1-dima@arista.com
+
+Thanks,
+          Dmitry
