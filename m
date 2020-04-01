@@ -2,56 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30033C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28F9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B532063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2AF2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759701;
-	bh=HDBfyDI3oU4l6pCi6L0fG4nqaOCEBqvamVW1rdWlQQ4=;
+	s=default; t=1585759713;
+	bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NfHexyaQNH/CjDQbWuJMlWO9eONpb2d0ZpCUljLqAHIx13OOSxmfKRP1cYJfGc2Li
-	 /0JRUSRv2fS5FWcwbjiaq9aY75Ng/kavO7mD3Kaxsr2QKzOP5t4AeAU32ZmbWLvwBc
-	 JhscG6/hTOSfsHGJ5ofGSmoS+IfcQA7ooARoK0/c=
+	b=Ntqy1aR5PsNtB7oE8Rd5PITQPIZHljINW/YyOx2UzdpivqwqouEcLGz4aHKmJLfS2
+	 6whkf74D5TAYT+qiVnUcrN95FTssNmL4whlF08haGXXeOuMtDtFPp2N6wJQL01VYCR
+	 Lmd8l6K3EmtIv0Y2+AJV6JrjeWrXj+TmQ27CGllw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389305AbgDAQsU (ORCPT
+        id S2389755AbgDAQq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:48:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:46:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390024AbgDAQrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:47:06 -0400
+        id S2389934AbgDAQqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:46:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05C2420705;
-        Wed,  1 Apr 2020 16:47:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 362DB2063A;
+        Wed,  1 Apr 2020 16:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759625;
-        bh=HDBfyDI3oU4l6pCi6L0fG4nqaOCEBqvamVW1rdWlQQ4=;
+        s=default; t=1585759583;
+        bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kbeDJkFl8auA/6XUm4fa6nGsOSqLNOADuezHhPZfwl5krStoQtR2kngJ1UR+QgLBy
-         FXMMluXD+/md92+2st1LfUPrrMwMewBYsmgrIaz/uL2cyP3xSykL8ovK4SJaoK6QZu
-         jzvsnyFcqbb3flzxC8Rb5GF/gI4rpO96IrghB8bQ=
+        b=preZccWftvEH++3qt4VoN2MY1xdXE5FAcdIttiDSf6uXtbEMZ/6qOUiKSo6TzuYHL
+         fmP+ueI6XyNoJS0zKRu0lLB1CUMnE7DLiR27b8622KwPY3kOGqdellDaQFPYHSU23m
+         RkiGGzvEfl20Cub2ECpuucKVNKIKXaycASrMlFNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>
-Subject: [PATCH 4.14 139/148] bpf: Explicitly memset the bpf_attr structure
-Date:   Wed,  1 Apr 2020 18:18:51 +0200
-Message-Id: <20200401161605.547925593@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Gilbert <floppym@gentoo.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 075/148] cpupower: avoid multiple definition with gcc -fno-common
+Date:   Wed,  1 Apr 2020 18:17:47 +0200
+Message-Id: <20200401161600.559036786@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -64,51 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Mike Gilbert <floppym@gentoo.org>
 
-commit 8096f229421f7b22433775e928d506f0342e5907 upstream.
+[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
 
-For the bpf syscall, we are relying on the compiler to properly zero out
-the bpf_attr union that we copy userspace data into. Unfortunately that
-doesn't always work properly, padding and other oddities might not be
-correctly zeroed, and in some tests odd things have been found when the
-stack is pre-initialized to other values.
+Building cpupower with -fno-common in CFLAGS results in errors due to
+multiple definitions of the 'cpu_count' and 'start_time' variables.
 
-Fix this by explicitly memsetting the structure to 0 before using it.
+./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
+multiple definition of `cpu_count';
+./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
+first defined here
+...
+./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
+multiple definition of `start_time';
+./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
+first defined here
 
-Reported-by: Maciej Żenczykowski <maze@google.com>
-Reported-by: John Stultz <john.stultz@linaro.org>
-Reported-by: Alexander Potapenko <glider@google.com>
-Reported-by: Alistair Delva <adelva@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://android-review.googlesource.com/c/kernel/common/+/1235490
-Link: https://lore.kernel.org/bpf/20200320094813.GA421650@kroah.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The -fno-common option will be enabled by default in GCC 10.
 
+Bug: https://bugs.gentoo.org/707462
+Signed-off-by: Mike Gilbert <floppym@gentoo.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/syscall.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
+ tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
 
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1474,7 +1474,7 @@ static int bpf_obj_get_info_by_fd(const
+diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
+index 2116df9ad8325..c097a3748674f 100644
+--- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
++++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
+@@ -83,7 +83,7 @@ static struct pci_access *pci_acc;
+ static struct pci_dev *amd_fam14h_pci_dev;
+ static int nbp1_entered;
  
- SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, size)
- {
--	union bpf_attr attr = {};
-+	union bpf_attr attr;
- 	int err;
+-struct timespec start_time;
++static struct timespec start_time;
+ static unsigned long long timediff;
  
- 	if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
-@@ -1486,6 +1486,7 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf
- 	size = min_t(u32, size, sizeof(attr));
+ #ifdef DEBUG
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+index 5b3205f162174..5277df27191f3 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+@@ -21,7 +21,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
  
- 	/* copy attributes from user space, may be less than sizeof(bpf_attr) */
-+	memset(&attr, 0, sizeof(attr));
- 	if (copy_from_user(&attr, uattr, size) != 0)
- 		return -EFAULT;
+ static unsigned long long **previous_count;
+ static unsigned long long **current_count;
+-struct timespec start_time;
++static struct timespec start_time;
+ static unsigned long long timediff;
  
+ static int cpuidle_get_count_percent(unsigned int id, double *percent,
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+index 05f953f0f0a0c..80a21cb67d94f 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+@@ -29,6 +29,8 @@ struct cpuidle_monitor *all_monitors[] = {
+ 0
+ };
+ 
++int cpu_count;
++
+ static struct cpuidle_monitor *monitors[MONITORS_MAX];
+ static unsigned int avail_monitors;
+ 
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+index 9e43f3371fbc6..3558bbae2b5dc 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+@@ -18,7 +18,7 @@
+ #define CSTATE_NAME_LEN 5
+ #define CSTATE_DESC_LEN 60
+ 
+-int cpu_count;
++extern int cpu_count;
+ 
+ /* Hard to define the right names ...: */
+ enum power_range_e {
+-- 
+2.20.1
+
 
 
