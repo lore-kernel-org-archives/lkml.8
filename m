@@ -2,242 +2,104 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA151C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E5FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF7820784
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6437A214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ln2+bUNX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="EYOeNZex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732294AbgDASsz (ORCPT
+        id S1732333AbgDAStP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:48:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42873 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbgDASsz (ORCPT
+        Wed, 1 Apr 2020 14:49:15 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.161]:35232 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727541AbgDAStO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:48:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 22so426210pfa.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 11:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ulhOw4stYNMJI54bH35cjH5xFB2S7Dajjn042iFhlAk=;
-        b=ln2+bUNX3IYbT39875VObE1yUtmBMva3t4VVBd1h9kJmOV5CiaWYRaASBOMr0NFMWN
-         QM7pjk832AFgMpB5ZMjur7BjF2+e32lnw1K11fT2ieeFUKBUi2Bm/kQUx+fU9iNsj5f3
-         6A+staF/q7hNn90hN55oTFJbZJksRHC+anShor0skqvE4bN/jAW51494pJ7FxhYVjtkf
-         dVFjMvS+KfQQAuE6uJXxXsjmuuclN9ATmat2zYkjOxE703XanidHkvKNXFgHb0NI+4tn
-         X62wHa1LXJmZI96g93oPzlX+d1HHgTLRR3IhoBza2ajxtaG8q9gJemPc74aEujN3ywvv
-         zeAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ulhOw4stYNMJI54bH35cjH5xFB2S7Dajjn042iFhlAk=;
-        b=ZiRa6BCZxE69tnIy50n49FYl/8ftaH639iV1VOgJlO2KISnIsNKqA+neFho+ZvCirN
-         0sUSRT2FBnMyg8wATQgH+RtXArd2ksCEzAUOERXA1AYk9hPn1plQJeQtAsK0hdsUfu0x
-         RkvCtd4rkxQWylp55EtDFKY428cDpaF2jhGqdb97icg3PSMRldGcM2U6B8xQreFOS38D
-         YtWAzyaGkkc/xEGr11paHAOg1/ovPZZssLKnWAO+Ut498eDUmZkqjxd4nacUB1kvlDCo
-         SuAO5oA05o33Vj5jrQ4shChQ89V2R2byA8dtmibVKCiCHDz6CIAZUdqmV1YGQtIXW9ee
-         DFOg==
-X-Gm-Message-State: AGi0PuYQ9bSIoQcB7d8MCW0mNMRc9JGHicAalo/wj65DuW1IwG/1Dd6H
-        WhYC5o8rMv4Gc4n1BfuQuceDTd8Jd0a0D3e7Ywgv/A==
-X-Google-Smtp-Source: APiQypI2HZUUxGoH2263hX+0V33Waac14jbJ/InoRrxuPaarHNJHGn8YvcMK3io31gtf28si3KlZBW+Hl7Z/YFLOgbI=
-X-Received: by 2002:aa7:99cd:: with SMTP id v13mr20824814pfi.106.1585766931503;
- Wed, 01 Apr 2020 11:48:51 -0700 (PDT)
+        Wed, 1 Apr 2020 14:49:14 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id AD9EA7DF7
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Apr 2020 13:25:13 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Ji37jriQTEfyqJi37joWU6; Wed, 01 Apr 2020 13:25:13 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gnjG3Cjg1W4Jhy4V+ZuGT3Ocg2dyV9Ka7zvFl8JmdDE=; b=EYOeNZexYs8sceG4s4RZtHLh/i
+        2AaB++N8/ZmBvDCs/327eDM4FTMMGo/O8bNuw9CHdNGPIbshUZ+3LvVRTvPhgdsxDYXdjUNqFx6i6
+        PfiBchPugIO8O3ldVl5sYwywzOgckbQWBDtuDm0MiRYfa5mdmmjiqagcF0Jxo70zZdjg97ENYuelY
+        NHBu58THhepj6rUWsKYIgLs8rGL39Sv2X4KShB5quliQB7KDlPJD0Y24Pc6nAwoSNk4raWENRU9A+
+        MPJ9oZ/YAIZPVkPmmv7jKW3S0iistgH6dfp0UFQaiQXxGEK45JWQIUdGA7PUXrHePomvgt31U0TLd
+        Krtfcrsw==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:58494 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jJi34-001vCl-Qc; Wed, 01 Apr 2020 13:25:10 -0500
+Date:   Wed, 1 Apr 2020 13:28:55 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] lkdtm: bugs: Fix spelling mistake
+Message-ID: <20200401182855.GA16253@embeddedor>
 MIME-Version: 1.0
-References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
- <285da2166eadc1d46667dd9659d8dae74d28b0b9.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
- <CAFd5g460hY9uOtwicWHK2rhgLdL+gStbKGmLN5KLWi5JXDQEog@mail.gmail.com> <4f915b8b8bee36a61ebea62ebf34c61845170ad5.camel@fi.rohmeurope.com>
-In-Reply-To: <4f915b8b8bee36a61ebea62ebf34c61845170ad5.camel@fi.rohmeurope.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 1 Apr 2020 11:48:40 -0700
-Message-ID: <CAFd5g44gBrNti5Y_ctQKOE1_pWX3NAdTji1uH8m6dGj+tsJCew@mail.gmail.com>
-Subject: Re: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the 'linear_ranges'
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "talgi@mellanox.com" <talgi@mellanox.com>,
-        "olteanv@gmail.com" <olteanv@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davidgow@google.com" <davidgow@google.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jJi34-001vCl-Qc
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:58494
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 1:45 AM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
->
-> Hello Brendan,
->
-> Thanks for taking a look at this :) Much appreciated! I have always
-> admired you guys who have the patience to do all the reviewing... It's
-> definitely not my favourite job :/
+Fix spelling mistake s/Intentially/Intentionally
 
-Huh, you know, I thought the same thing like 3 years ago. I guess it
-got the point where I had to do reviews for the things I maintained
-that I got used to it. Then I got to a point where I was requesting so
-many reviews from others that I felt that I owed the community
-reviews. So no thanks necessary, I feel that I am just paying it
-forward. :-)
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/misc/lkdtm/bugs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On Tue, 2020-03-31 at 11:08 -0700, Brendan Higgins wrote:
-> > On Tue, Mar 31, 2020 at 5:23 AM Matti Vaittinen
-> > <matti.vaittinen@fi.rohmeurope.com> wrote:
-> > >     Add a KUnit test for the linear_ranges helper.
-> > >
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> >
-> > One minor nit, other than that:
-> >
-> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> >
-> > > ---
-> > >
->
-> /// Snip
->
-> > > +
-> > > +/* First things first. I deeply dislike unit-tests. I have seen
-> > > all the hell
-> > > + * breaking loose when people who think the unit tests are "the
-> > > silver bullet"
-> > > + * to kill bugs get to decide how a company should implement
-> > > testing strategy...
-> > > + *
-> > > + * Believe me, it may get _really_ ridiculous. It is tempting to
-> > > think that
-> > > + * walking through all the possible execution branches will nail
-> > > down 100% of
-> > > + * bugs. This may lead to ideas about demands to get certain % of
-> > > "test
-> > > + * coverage" - measured as line coverage. And that is one of the
-> > > worst things
-> > > + * you can do.
-> > > + *
-> > > + * Ask people to provide line coverage and they do. I've seen
-> > > clever tools
-> > > + * which generate test cases to test the existing functions - and
-> > > by default
-> > > + * these tools expect code to be correct and just generate checks
-> > > which are
-> > > + * passing when ran against current code-base. Run this generator
-> > > and you'll get
-> > > + * tests that do not test code is correct but just verify nothing
-> > > changes.
-> > > + * Problem is that testing working code is pointless. And if it is
-> > > not
-> > > + * working, your test must not assume it is working. You won't
-> > > catch any bugs
-> > > + * by such tests. What you can do is to generate a huge amount of
-> > > tests.
-> > > + * Especially if you were are asked to proivde 100% line-coverage
-> > > x_x. So what
-> > > + * does these tests - which are not finding any bugs now - do?
-> >
-> > I don't entirely disagree. I have worked on projects that do testing
-> > well where it actually makes development faster, and I have worked on
-> > projects that do testing poorly where it never improves code quality
-> > and is just an encumbrance, and I have never seen a project get to
-> > 100% coverage (nor would I want to).
-> >
-> > Do you feel differently about incremental coverage vs. absolute
-> > coverage? I have found incremental coverage to be a lot more valuable
-> > in my experiences.
->
-> I think I have only been dealing with projects measuring absolute
-> coverage. I think seeing a coverage as %-number is mostly not
-> interesting to me. What I think could be interesting is showing the
-> code-paths test has walked through. I believe that code spots that
-> should be tested should be hand picked by a human. When we look at any
-> %-number, we do not know what kind of code the test has tested.
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 886459e0ddd9..736675f0a246 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -208,7 +208,7 @@ void lkdtm_OVERFLOW_UNSIGNED(void)
+ 	ignored = value;
+ }
+ 
+-/* Intentially using old-style flex array definition of 1 byte. */
++/* Intentionally using old-style flex array definition of 1 byte. */
+ struct array_bounds_flex_array {
+ 	int one;
+ 	int two;
+-- 
+2.26.0
 
-Ah, okay, code coverage by functions called is a thing and GCOV + LCOV
-for the Linux kernel can actually give these nice reports that show
-the code paths that have been executed. It requires a bit of manual
-review, but I have found it pretty handy. Let me try to find you an
-example...
-
-> > You seem pretty passionate about this. Would you like to be included
-> > in our unit testing discussions in the future?
->
-> I think it would be nice :) I don't expect I will be active talker
-> there but I really like to know what direction things are proceeding in
-> general. And who knows, maybe I will have a word to say at times :) So
-> please, include me if it is not a big thing for you.
-
-Absolutely! Would you be interested in joining our mailing list:
-
-https://groups.google.com/g/kunit-dev
-
-> //Snip
->
-> > > +
-> > > +static void range_test_get_value(struct kunit *test)
-> > > +{
-> > > +       int ret, i;
-> > > +       unsigned int sel, val;
-> > > +
-> > > +       for (i = 0; i < RANGE1_NUM_VALS; i++) {
-> > > +               sel = range1_sels[i];
-> > > +               ret = linear_range_get_value_array(&testr[0], 2,
-> > > sel, &val);
-> > > +               KUNIT_EXPECT_EQ(test, 0, ret);
-> >
-> > nit: It looks like the next line might crash if this expectation
-> > fails. If this is the case, you might want to use a KUNIT_ASSERT_*
-> > here.
->
-> Huh. I re-read this and almost agreed with you. Then I re-re-read this
-> and disagreed. Perhaps we should write an unit-test to test this ;)
->
-> The range1_sels and range1_vals arrays should always be of same size.
-> Thus the crash should not occur here. If RANGE1_NUM_VALS was bad then
-> we would get the crash already at
->
-> > > +               sel = range1_sels[i];
->
-> The linear_range_get_value_array() may return non zero value if value
-> contained in range1_sels[i] is not in the range - but range1_vals[i]
-> should still be valid memory.
-
-Got it. Sorry, I just assumed the second check was invalid if the
-first one was invalid.
-
-All looks good to me then!
