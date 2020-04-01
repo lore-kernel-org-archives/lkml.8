@@ -2,111 +2,143 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88529C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 01:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAE4C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 01:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38DC1206CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 01:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B192071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 01:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="bZT2zMyZ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vGMde35p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731659AbgDABO0 (ORCPT
+        id S1731696AbgDABOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 21:14:26 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:51870 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731470AbgDABOZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 21:14:25 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 8425F5F88E;
-        Tue, 31 Mar 2020 21:14:23 -0400 (EDT)
-        (envelope-from daniel.santos@pobox.com)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=subject:to:cc
-        :references:from:message-id:date:mime-version:in-reply-to
-        :content-type:content-transfer-encoding; s=sasl; bh=CDrTBsI/C2cd
-        72MmvNIWAUzbW2k=; b=bZT2zMyZNVdO/oLMGv6sskK/RxaaNbn77dsMRR9jrkc7
-        JGSBOF7quTj7xvmnQXu+ojSPQaUdPTEOSGLq8tHIaCqlVozDA5a7sPMPVPdWGwtW
-        7p0MpXx5fSFq9imBXUTRIcjRApgi+zayR1mWlfcJxklLPh5lPFIyI5aXuKiNIiM=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=subject:to:cc
-        :references:from:message-id:date:mime-version:in-reply-to
-        :content-type:content-transfer-encoding; q=dns; s=sasl; b=wWIDYw
-        aGvnQpkcU9WoqnQXo+F9c1W/1GvhVMJ8lMKanKCrIJGd194jy6+PWHGWt+wVHNKI
-        RbB6m9bc9JOGiyTQTtC60z8FXt8r6vTpySqGGyJqZaGxIppbSr8EERXGmFfcYWxw
-        onk5xlz3ljD87GAsJRC7ar85H86bQN9ZSmuXU=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 7B9F65F88D;
-        Tue, 31 Mar 2020 21:14:23 -0400 (EDT)
-        (envelope-from daniel.santos@pobox.com)
-Received: from [192.168.0.8] (unknown [76.183.130.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 31 Mar 2020 21:14:39 -0400
+Received: from ozlabs.org ([203.11.71.1]:48885 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731470AbgDABOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 21:14:38 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 3C8B65F88C;
-        Tue, 31 Mar 2020 21:14:20 -0400 (EDT)
-        (envelope-from daniel.santos@pobox.com)
-Subject: Re: [PATCH] compiler.h: fix error in BUILD_BUG_ON() reporting
-To:     Vegard Nossum <vegard.nossum@oracle.com>,
-        Joe Perches <joe@perches.com>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ian Abbott <abbotti@mev.co.uk>
-References: <20200331112637.25047-1-vegard.nossum@oracle.com>
- <dc53b8704ec674cba636b41d7f55bf507a7bd7aa.camel@perches.com>
- <123d3606-cebf-4261-4b04-7d53d1fcdb07@prevas.dk>
- <ae25b7b1efcfe4eda9465c4fb4712ede928a33c4.camel@perches.com>
- <f3b392d2-d8a4-6788-91b9-d74d98f035a5@oracle.com>
-From:   Daniel Santos <daniel.santos@pobox.com>
-Message-ID: <c5bf64f2-fac9-ccc5-c65e-f187e55c3aba@pobox.com>
-Date:   Tue, 31 Mar 2020 20:12:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sSsQ2Yjjz9sSb;
+        Wed,  1 Apr 2020 12:14:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585703675;
+        bh=ajyckYv+u7ahqzGEdiJfo/3/p/3PVm0LAcAr/PX9ZgA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vGMde35pzFK0JcmCYgfOMT/Qr2pBgM+m712lfi3O1tkjHmXSuxUtq8rcwoR6nZSVt
+         A8I3vTJ65Q2d5T9JY8ivr5erU85spmzWCAuN5Pz/SUmb+fs7iz57lV6khRsRHICVUQ
+         xirzDoQx+RNswpSBABzoXH1Cvs9n/FZF9v58vBvM/Q+GT8af3+XS4jax5MtnJCUW7e
+         Ioi8Uh0EBbR7mZdUzhyk+hPtd2rOyoTcp8mdUl6AvqsOZ+2kZTxoiAOzQXNi4qUprA
+         oEllEx+iJPSPZFSzaytGDIZm3gepUD7nNS2U8T3ByiWLC07sDvwExz+QUpgnwVUM3V
+         Kr4WqQCBz1f6g==
+Date:   Wed, 1 Apr 2020 12:14:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Baolin Wang <baolin.wang7@gmail.com>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20200401121431.6a996244@canb.auug.org.au>
+In-Reply-To: <20200326135258.2764f0de@canb.auug.org.au>
+References: <20200326135258.2764f0de@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <f3b392d2-d8a4-6788-91b9-d74d98f035a5@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Pobox-Relay-ID: 1F02B496-73B6-11EA-B06B-C28CBED8090B-06139138!pb-smtp1.pobox.com
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/EE0Ofmjpu3aeRePYz//AchO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 2:08 PM, Vegard Nossum wrote:
->
-> __LINE__ is only used currently for creating a unique identifier, as fa=
-r
-> as I can tell.
->
-> The way it works is that it creates a function declaration with the
-> attribute __attribute__((error(message))), which makes gcc throw an
-> error if the function is ever used (i.e. calls are not compiled out).
+--Sig_/EE0Ofmjpu3aeRePYz//AchO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Back before __attribute__((error())), these macros used to just declare
-a function that isn't defined and you only got an error at link-time --
-the line number did matter then.=C2=A0 Then there was the negative array
-index thing.
+Hi all,
 
+On Thu, 26 Mar 2020 13:52:58 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> The number does appear in the output, but it's not even really obvious
-> that it's a line number. And the compiler's diagnostics are pretty good
-> at showing the whole "stack trace" of where the call came from
-> (including the proper line numbers).
->
->
-> Vegard
+> Hi all,
+>=20
+> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
+>=20
+> drivers/power/reset/sc27xx-poweroff.c: In function 'sc27xx_poweroff_shutd=
+own':
+> drivers/power/reset/sc27xx-poweroff.c:38:4: error: implicit declaration o=
+f function 'cpu_down' [-Werror=3Dimplicit-function-declaration]
+>    38 |    cpu_down(cpu);
+>       |    ^~~~~~~~
+>=20
+> Caused by commit
+>=20
+>   33c3736ec888 ("cpu/hotplug: Hide cpu_up/down()")
+>=20
+> interacting with commit
+>=20
+>   274afbc3ad33 ("power: reset: sc27xx: Change to use cpu_down()")
+>=20
+> from the battery tree.
+>=20
+> I have added the following merge fix patch:
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Thu, 26 Mar 2020 13:42:00 +1100
+> Subject: [PATCH] power: reset: sc27xx: use remove_cpu instead of cpu_down
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/power/reset/sc27xx-poweroff.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/reset/sc27xx-poweroff.c b/drivers/power/reset/=
+sc27xx-poweroff.c
+> index 69863074daf6..90287c31992c 100644
+> --- a/drivers/power/reset/sc27xx-poweroff.c
+> +++ b/drivers/power/reset/sc27xx-poweroff.c
+> @@ -35,7 +35,7 @@ static void sc27xx_poweroff_shutdown(void)
+> =20
+>  	for_each_online_cpu(cpu) {
+>  		if (cpu !=3D smp_processor_id())
+> -			cpu_down(cpu);
+> +			remove_cpu(cpu);
+>  	}
+>  #endif
+>  }
+> --=20
+> 2.25.0
 
-And the stack trace used to be useless without -g or -g3, but I believe
-gcc gives the macro expansion back trace without it now.=C2=A0 But imo, t=
-he
-macro expansion back trace is a lot of noise that we can eliminate with
-a direct gcc mechanism to break the build on some __builtin_constant_p()
-expression.
+This fixup is now needed when the battery tree is merged into Linus' tree.
 
-Daniel
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/EE0Ofmjpu3aeRePYz//AchO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6D6vcACgkQAVBC80lX
+0GzB5Af/b4130sQwkHhETtaNc69+wdGBdLK1AHOynid/N8HyByA3EaRuS/gPGyE5
+CnljVYDOabEHf2jzCAbzXUodcgOdTnakGXug8gcT3nstlNtHkx5bs0teQAEJgMlR
+azVB45vxInpGLR3wGpm3Lh/17XqFE+CivQX4sRnFIwZirXOyYfShMTNdzdB2vNkM
+Pnu8WU+DpbNDjOuh4bzIlwm1yMBXocZA6Y+vL8SHdlJr29zrOcpUfEh7+JKqmRaJ
+3j8PMsGD3QbG1hcXn5lfNfmIJvPy02VcDTfINW2IRdUsDM4G7audeLUpl6brojwl
+AC7gXd7gK3yvdo0rODKqVpEjNGxZ6A==
+=k642
+-----END PGP SIGNATURE-----
+
+--Sig_/EE0Ofmjpu3aeRePYz//AchO--
