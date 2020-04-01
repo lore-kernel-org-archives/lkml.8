@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7442C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A7AC2BA12
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D133D21655
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816F12137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758669;
-	bh=IVevopt4tpFjF//N5RzWcfrUTFmM9C5XwhNWWFkXLCE=;
+	s=default; t=1585758673;
+	bh=JJOM3HjLV6LrQLoIliOpDZuu/rXCRNIy89pDV+AUuIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qmhxyG4ysupQDDPziytiAZ4luIwLjOH+1foJS19UhfvizBjLi2vriS/ar9KJPM8Ki
-	 7usu3LndkKeKVoqkoXYxQQoFkzYqqXUg5mvnR9VleeMWFVm/HUifL5yX9UanXuTp6T
-	 DnWL/wktgkvI924jBISRkfFX0p2msx/bNgtivTkM=
+	b=KuSEnL4exC0f5rj0L75mHHv9WZPf0xApHJWD9mPRQlarzTlrRrdt+IN97d6OAzi2S
+	 NqUYg97qGGSBChfXhjVsxNsLG38iIIfuOaeGTKKABSMYaNisIWle/H26xhCXiigr82
+	 QrZxYbWPWCTO8xhm/qgaJC5SCGr6ETGyt0nrKAJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388168AbgDAQbF (ORCPT
+        id S2387877AbgDAQbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:31:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56942 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:31:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387793AbgDAQa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:30:56 -0400
+        id S2387811AbgDAQbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:31:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E90A212CC;
-        Wed,  1 Apr 2020 16:30:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFF262137B;
+        Wed,  1 Apr 2020 16:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758655;
-        bh=IVevopt4tpFjF//N5RzWcfrUTFmM9C5XwhNWWFkXLCE=;
+        s=default; t=1585758668;
+        bh=JJOM3HjLV6LrQLoIliOpDZuu/rXCRNIy89pDV+AUuIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RhjuoKuzWlcecfzvi1jgGzvbfUdugdsqm4879Q/FHzwbP/XgkxZp3qD9S6nqg4Bfj
-         bk2/DCxK/hgNIPwydwmVOruq22MRivI1pPjqGQsFb+Ho3lcpRzWItPGC1CuixHTBOl
-         9hTLm1p9D9g6JgV6gitQGjzM8nqcAE+eGUFEPaQw=
+        b=eE3Mzxg25o+hCW4TXD1++I7qCr0eeocJ4HTaKXot3oAguo5Wf/aNkEW6dYGrif0T7
+         RQnP8etmheuWgc0suaMtR1smKEshnPymuBWr3pD3X/Cunma7qVFtdqoXFXIZ1ovEjz
+         qa37EdZwY7iWFkAVCb38WhOpFc+0xzStYe2VamAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Bizon <mbizon@freebox.fr>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 35/91] net: dsa: Fix duplicate frames flooded by learning
-Date:   Wed,  1 Apr 2020 18:17:31 +0200
-Message-Id: <20200401161526.553430929@linuxfoundation.org>
+Subject: [PATCH 4.4 38/91] NFC: fdp: Fix a signedness bug in fdp_nci_send_patch()
+Date:   Wed,  1 Apr 2020 18:17:34 +0200
+Message-Id: <20200401161527.174558949@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -61,34 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ]
+[ Upstream commit 0dcdf9f64028ec3b75db6b691560f8286f3898bf ]
 
-When both the switch and the bridge are learning about new addresses,
-switch ports attached to the bridge would see duplicate ARP frames
-because both entities would attempt to send them.
+The nci_conn_max_data_pkt_payload_size() function sometimes returns
+-EPROTO so "max_size" needs to be signed for the error handling to
+work.  We can make "payload_size" an int as well.
 
-Fixes: 5037d532b83d ("net: dsa: add Broadcom tag RX/TX handler")
-Reported-by: Maxime Bizon <mbizon@freebox.fr>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Fixes: a06347c04c13 ("NFC: Add Intel Fields Peak NFC solution driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/tag_brcm.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nfc/fdp/fdp.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/net/dsa/tag_brcm.c
-+++ b/net/dsa/tag_brcm.c
-@@ -84,6 +84,8 @@ static struct sk_buff *brcm_tag_xmit(str
- 		brcm_tag[2] = BRCM_IG_DSTMAP2_MASK;
- 	brcm_tag[3] = (1 << p->port) & BRCM_IG_DSTMAP1_MASK;
+--- a/drivers/nfc/fdp/fdp.c
++++ b/drivers/nfc/fdp/fdp.c
+@@ -191,7 +191,7 @@ static int fdp_nci_send_patch(struct nci
+ 	const struct firmware *fw;
+ 	struct sk_buff *skb;
+ 	unsigned long len;
+-	u8 max_size, payload_size;
++	int max_size, payload_size;
+ 	int rc = 0;
  
-+	skb->offload_fwd_mark = 1;
-+
- 	return skb;
+ 	if ((type == NCI_PATCH_TYPE_OTP && !info->otp_patch) ||
+@@ -214,8 +214,7 @@ static int fdp_nci_send_patch(struct nci
  
- out_free:
+ 	while (len) {
+ 
+-		payload_size = min_t(unsigned long, (unsigned long) max_size,
+-				     len);
++		payload_size = min_t(unsigned long, max_size, len);
+ 
+ 		skb = nci_skb_alloc(ndev, (NCI_CTRL_HDR_SIZE + payload_size),
+ 				    GFP_KERNEL);
 
 
