@@ -2,140 +2,174 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665F2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BC0C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E0C20737
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C820F206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qvi7+I0C"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZGY1Lrw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732820AbgDATwQ (ORCPT
+        id S1732796AbgDATy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:52:16 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35196 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732537AbgDATwP (ORCPT
+        Wed, 1 Apr 2020 15:54:58 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39945 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732554AbgDATy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:52:15 -0400
-Received: by mail-pj1-f67.google.com with SMTP id g9so530566pjp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 12:52:15 -0700 (PDT)
+        Wed, 1 Apr 2020 15:54:57 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h11so393601plk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 12:54:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LsDMheC8SS62q9waKXWddWs2pH91G3pR665kWUXQLBM=;
-        b=qvi7+I0CwiG+b1dWM/ewIw01MXMuU2u/wTjiTt3mNr3fhIQUObT+bJnEdMS5Zn+ndh
-         ugDvKS1ZN5nTm1Od948Yk0AKj+Ee8vRzdBdRxxlmROyfUxXK36YZaWsMdrUQEnaK8oNI
-         rVjduDmIUqXK8r2jnljeTCi/0XBT55wIoBedpFiZBBIOdFyoNepbqyuwu9tvQ0thu5cO
-         DCqn6cZKntk9hx7UVPSAW9fjszJxoJYXe/1+2OPpWSarYP2Mk+9W7Br50uLMgdU5XM7X
-         7bRU3KuPB/oovfPvyjflnASQvzgJQ5ge9rX/tNBaOOOq15CUwrWsxtKEwO69mFCYIZgh
-         glZg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ug9xvso2ibAozuMtdH282Ae+5uQpIAI7JbIiApWivYY=;
+        b=ZGY1Lrw15EmGLMr9MBH/js6pVH4l6VCDnlhGqVA62hkZItw1g5GZOUYg1HNTAE8t/E
+         GOBfiE0Aa3DsGUFZBk1kUv4UZCqVeeLuRSaTSPyVnRzvDqdGdtxPVK/uhTRZMOumjCGp
+         TyiTnWP1ss/XBV/Ozmuzvc97naoA0cWrOjBzHUVXl8Pk4totnKmOjKbAwPelHW4gqrdK
+         z+RyV3fDkXnTNW8LeC2cSdSVutNe7UJdyFSmjAiMNUxwz+vsAHBJeUzVlLRjX+yk3kN2
+         UXehzLotn9PgGxbU3ar+jky4WPV8bjykAKwQ73S+oLmEvfsVyFdPP/nnojEb9ER7p2Ma
+         ulsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LsDMheC8SS62q9waKXWddWs2pH91G3pR665kWUXQLBM=;
-        b=EV3gwqgD4YXmn/KMlUhbdcvUgEtM8WONvK+OQSR98ACG9GrqilYeux4KjJniW6uoBw
-         kkjMOqq+DHzdI95lX+sagavWmUB537NA8e50oRzzBFk31H97rFlHZU6+MFi70VzT8gb4
-         Olfrey5tNsz/WW6kox1e+3mT4MLqLbv34/dHq5G1hq6e5nWyEwb9bc4R2VOhzvGYaKT3
-         rnvjAKL9c/fJNp9l4gJVgU37wkfTIHBoh3q715vfFmarXN2o0LTEfZujOQjMojy+nX+Z
-         JEil0oIy6Wq38IjvzrnVphQcl/f1+JXIbqFlciGFKsaM9UJT1I3REU3BweS37/MbDCab
-         CgiA==
-X-Gm-Message-State: ANhLgQ0CXGCwttNjIPgaz85sYSxaPHBz5AdlqWazZz9OYX9sV0W0gxZH
-        mL/zWRVTPYHMGPT1d9s1ZU4jxtR0QVI=
-X-Google-Smtp-Source: ADFU+vvpc/6uMzWruwdm5siDvuuiApCBsoPPLFIXQ1F6mKFsyZX99eITg7b4zOqX8E3ZyfHwlPqbHA==
-X-Received: by 2002:a17:902:fe0f:: with SMTP id g15mr25314360plj.25.1585770734529;
-        Wed, 01 Apr 2020 12:52:14 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k4sm2214701pfh.0.2020.04.01.12.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 12:52:13 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 12:52:11 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        sidgup@codeaurora.org
-Subject: Re: [PATCH v2 2/2] remoteproc: core: Register the character device
- interface
-Message-ID: <20200401195211.GE267644@minitux>
-References: <1585699438-14394-1-git-send-email-rishabhb@codeaurora.org>
- <1585699438-14394-2-git-send-email-rishabhb@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ug9xvso2ibAozuMtdH282Ae+5uQpIAI7JbIiApWivYY=;
+        b=jVzquqfabfskep+ms2y+vClMs0dQme2mG8GH1ob1t6YRBIHrdR94FDMN0oynLQ8xPW
+         8lYgV5KUUXWqC9mw3GsLOqGPSY7NrzSx5U9DUKXnn6gXviAuEp1l35hT9U7GGWbLgCRY
+         +ntSS6WLH4DL5h03fhfVtlHPSx/nPP7mK2VkYwznpyEr7kfQHj9BI7xWIqrOhUbh5Qli
+         tG9boz05C0/M2qRZmNaeSwXOOuyOPYvaTFl3j9gSFoXSJWk+OhManMYMptr6R+0Fr7CF
+         p51R1zoeIIR5+rVq6M/ZXCM5TWDNAiah8EQzOyT5c3UimVjgAldtk8rGOOU+i2tS1UNN
+         NYvg==
+X-Gm-Message-State: AGi0PubJ5qR9dC4VAKwR4LnxlYTnbHc9DVu0mKb0mgyzYoBJeDZqH58N
+        4uAFxeExNStT/VwIXbwfOjLRez4EGI6HUivMuQ8KwA==
+X-Google-Smtp-Source: APiQypJf4+2YJ/aF3pSAGQFATdNBl3ECkQ8IRop38d8YG546Uof7o3BD6iliDJzeXh9MoP1xMdNtFcsxeCorxtqdU4A=
+X-Received: by 2002:a17:90b:230d:: with SMTP id mt13mr6803649pjb.164.1585770895190;
+ Wed, 01 Apr 2020 12:54:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585699438-14394-2-git-send-email-rishabhb@codeaurora.org>
+References: <20200311024240.26834-1-elder@linaro.org> <20200401173515.142249-1-ndesaulniers@google.com>
+ <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org> <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
+ <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org>
+In-Reply-To: <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 1 Apr 2020 12:54:43 -0700
+Message-ID: <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
+Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
+To:     Alex Elder <elder@linaro.org>
+Cc:     Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 31 Mar 17:03 PDT 2020, Rishabh Bhatnagar wrote:
+On Wed, Apr 1, 2020 at 12:44 PM Alex Elder <elder@linaro.org> wrote:
+>
+> On 4/1/20 2:13 PM, Nick Desaulniers wrote:
+> > On Wed, Apr 1, 2020 at 11:24 AM Alex Elder <elder@linaro.org> wrote:
+> >>
+> >> On 4/1/20 12:35 PM, Nick Desaulniers wrote:
+> >>>> Define FIELD_MAX(), which supplies the maximum value that can be
+> >>>> represented by a field value.  Define field_max() as well, to go
+> >>>> along with the lower-case forms of the field mask functions.
+> >>>>
+> >>>> Signed-off-by: Alex Elder <elder@linaro.org>
+> >>>> Acked-by: Jakub Kicinski <kuba@kernel.org>
+> >>>> ---
+> >>>> v3: Rebased on latest netdev-next/master.
+> >>>>
+> >>>> David, please take this into net-next as soon as possible.  When the
+> >>>> IPA code was merged the other day this prerequisite patch was not
+> >>>> included, and as a result the IPA driver fails to build.  Thank you.
+> >>>>
+> >>>>   See: https://lkml.org/lkml/2020/3/10/1839
+> >>>>
+> >>>>                                      -Alex
+> >>>
+> >>> In particular, this seems to now have regressed into mainline for the 5.7
+> >>> merge window as reported by Linaro's ToolChain Working Group's CI.
+> >>> Link: https://github.com/ClangBuiltLinux/linux/issues/963
+> >>
+> >> Is the problem you're referring to the result of a build done
+> >> in the midst of a bisect?
+> >>
+> >> The fix for this build error is currently present in the
+> >> torvalds/linux.git master branch:
+> >>     6fcd42242ebc soc: qcom: ipa: kill IPA_RX_BUFFER_ORDER
+> >
+> > Is that right? That patch is in mainline, but looks unrelated to what
+> > I'm referring to.
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6fcd42242ebcc98ebf1a9a03f5e8cb646277fd78
+> > From my github link above, the issue I'm referring to is a
+> > -Wimplicit-function-declaration warning related to field_max.
+> > 6fcd42242ebc doesn't look related.
+>
+> I'm very sorry, I pointed you at the wrong commit.  This one is
+> also present in torvalds/linux.git master:
+>
+>   e31a50162feb bitfield.h: add FIELD_MAX() and field_max()
+>
+> It defines field_max() as a macro in <linux/bitfield.h>, and
+> "gsi.c" includes that header file.
+>
+> This was another commit that got added late, after the initial
+> IPA code was accepted.
 
-> Add the character device during rproc_add. This would create
-> a character device node at /dev/remoteproc<index>. Userspace
-> applications can interact with the remote processor using this
-> interface.
-> 
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
+Yep, that looks better.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>
+> >> I may be mistaken, but I believe this is the same problem I discussed
+> >> with Maxim Kuvyrkov this morning.  A different build problem led to
+> >> an automated bisect, which conluded this was the cause because it
+> >> landed somewhere between the initial pull of the IPA code and the fix
+> >> I reference above.
+> >
+> > Yes, Maxim runs Linaro's ToolChain Working Group (IIUC, but you work
+> > there, so you probably know better than I do), that's the CI I was
+> > referring to.
+> >
+> > I'm more concerned when I see reports of regressions *in mainline*.
+> > The whole point of -next is that warnings reported there get fixed
+> > BEFORE the merge window opens, so that we don't regress mainline.  Or
+> > we drop the patches in -next.
+>
+> Can you tell me where I can find the commit id of the kernel
+> that is being built when this error is reported?  I would
+> like to examine things and build it myself so I can fix it.
+> But so far haven't found what I need to check out.
 
-Regards,
-Bjorn
+From the report: https://groups.google.com/g/clang-built-linux/c/pX-kr_t5l_A
+Configuration details:
+rr[llvm_url]="https://github.com/llvm/llvm-project.git"
+rr[linux_url]="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
+rr[linux_branch]="7111951b8d4973bda27ff663f2cf18b663d15b48"
 
->  drivers/remoteproc/remoteproc_core.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e..76ba171 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1916,6 +1916,13 @@ int rproc_add(struct rproc *rproc)
->  	/* create debugfs entries */
->  	rproc_create_debug_dir(rproc);
->  
-> +	/* add char device for this remoteproc */
-> +	ret = rproc_char_device_add(rproc);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add char dev for %s\n", rproc->name);
-> +		return ret;
-> +	}
-> +
->  	/* if rproc is marked always-on, request it to boot */
->  	if (rproc->auto_boot) {
->  		ret = rproc_trigger_auto_boot(rproc);
-> @@ -2137,6 +2144,7 @@ int rproc_del(struct rproc *rproc)
->  	mutex_unlock(&rproc->lock);
->  
->  	rproc_delete_debug_dir(rproc);
-> +	rproc_char_device_remove(rproc);
->  
->  	/* the rproc is downref'ed as soon as it's removed from the klist */
->  	mutex_lock(&rproc_list_mutex);
-> @@ -2220,6 +2228,7 @@ static int __init remoteproc_init(void)
->  {
->  	rproc_init_sysfs();
->  	rproc_init_debugfs();
-> +	rproc_init_cdev();
->  
->  	return 0;
->  }
-> @@ -2231,6 +2240,7 @@ static void __exit remoteproc_exit(void)
->  
->  	rproc_exit_debugfs();
->  	rproc_exit_sysfs();
-> +	rproc_exit_cdev();
->  }
->  module_exit(remoteproc_exit);
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+the linux_branch looks like a SHA of what the latest ToT of mainline
+was when the CI ran.
+
+I was suspecting that maybe there was a small window between the
+regression, and the fix, and when the bot happened to sync.  But it
+seems that: e31a50162feb352147d3fc87b9e036703c8f2636 landed before
+7111951b8d4973bda27ff663f2cf18b663d15b48 IIUC.
+
+So I think the bot had your change when it ran, so still seeing a
+failure is curious.  Unless I've misunderstood something.
+-- 
+Thanks,
+~Nick Desaulniers
