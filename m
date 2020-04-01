@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8800BC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14914C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D97206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B529720772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759122;
-	bh=Jb477QnmVOumNiQUhTwmrb7ruwSZE2FwDmZGJD3j1d4=;
+	s=default; t=1585759125;
+	bh=IAoZwNTw/LJYfeiRAw+x03kYdpq+o+xNOD7CYcRqTAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i81KXCvV5idio1o02yTHGbS+IqEm33Vd9bDyMrX/r7k72bkAMnYmifdyTnkEAVzm5
-	 mVydGLmdJsi/OIV6Ct2uid3or+vZUGC1Pd5bSE9BXtNps/PfW1+2b/D5Z3Jca6Lm+Q
-	 dExdYUmV7jImLV9ue5F7tTeSZoXFuw4IUCvhpdcs=
+	b=omqQQZKLERFjHsnN+or7liBC66Bw7e1hcW06eVaOHNIq0f8GQuPvyNjTxFcBBWAJu
+	 /Y232vFtw+4hA1a20XMDNOEUraWkZI9Hnp/1fq/612qEn1UAhS5PEmlRBSYNGfbIGw
+	 ZX0p8Ly+Kqz45bnwVHLmUtD65M/zy3bJY5EaSN40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389110AbgDAQil (ORCPT
+        id S2389118AbgDAQio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387520AbgDAQif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:38:35 -0400
+        id S2388959AbgDAQim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:38:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66A0020658;
-        Wed,  1 Apr 2020 16:38:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F10120658;
+        Wed,  1 Apr 2020 16:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759114;
-        bh=Jb477QnmVOumNiQUhTwmrb7ruwSZE2FwDmZGJD3j1d4=;
+        s=default; t=1585759121;
+        bh=IAoZwNTw/LJYfeiRAw+x03kYdpq+o+xNOD7CYcRqTAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K+7ktAI8vaDdio9psPxFwv5oEEfvAQwnXDYCr8muZk6RHdlWmHwzC1QRW2bMdPpW7
-         SWLTKi94+OzBhMehpXHdBtfocfHZ5Kmx9hK60sywxnXxvSbimq+Og28S/7lKFwqQBJ
-         kHX2+dT/n0ZJa0oyk8qzr8RAf7nxN37b/FayKCNQ=
+        b=iUU4k1VyG29hEcQB52BFLsfiQsKrzDVga8OoCUX4Dk4+QIPWL1fOv2dKTS++LntN7
+         7czRZHFYTMNAEsOqXnAzhk76GrGCdV/P1g4j+qiDXNJORPNojjrPp0vpaYi5SO2LyC
+         Nmq7tlYmgOfuvFRule7x1yimmsXVOq/9Jiu3mvZk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
-        Bin Liu <b-liu@ti.com>
-Subject: [PATCH 4.9 079/102] usb: musb: fix crash with highmen PIO and usbmon
-Date:   Wed,  1 Apr 2020 18:18:22 +0200
-Message-Id: <20200401161545.845950601@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 043/102] NFC: fdp: Fix a signedness bug in fdp_nci_send_patch()
+Date:   Wed,  1 Apr 2020 18:17:46 +0200
+Message-Id: <20200401161540.913982783@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -59,79 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mans Rullgard <mans@mansr.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 52974d94a206ce428d9d9b6eaa208238024be82a upstream.
+[ Upstream commit 0dcdf9f64028ec3b75db6b691560f8286f3898bf ]
 
-When handling a PIO bulk transfer with highmem buffer, a temporary
-mapping is assigned to urb->transfer_buffer.  After the transfer is
-complete, an invalid address is left behind in this pointer.  This is
-not ordinarily a problem since nothing touches that buffer before the
-urb is released.  However, when usbmon is active, usbmon_urb_complete()
-calls (indirectly) mon_bin_get_data() which does access the transfer
-buffer if it is set.  To prevent an invalid memory access here, reset
-urb->transfer_buffer to NULL when finished (musb_host_rx()), or do not
-set it at all (musb_host_tx()).
+The nci_conn_max_data_pkt_payload_size() function sometimes returns
+-EPROTO so "max_size" needs to be signed for the error handling to
+work.  We can make "payload_size" an int as well.
 
-Fixes: 8e8a55165469 ("usb: musb: host: Handle highmem in PIO mode")
-Signed-off-by: Mans Rullgard <mans@mansr.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200316211136.2274-8-b-liu@ti.com
+Fixes: a06347c04c13 ("NFC: Add Intel Fields Peak NFC solution driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/musb/musb_host.c |   17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+ drivers/nfc/fdp/fdp.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/musb/musb_host.c
-+++ b/drivers/usb/musb/musb_host.c
-@@ -1494,10 +1494,7 @@ done:
- 	 * We need to map sg if the transfer_buffer is
- 	 * NULL.
- 	 */
--	if (!urb->transfer_buffer)
--		qh->use_sg = true;
--
--	if (qh->use_sg) {
-+	if (!urb->transfer_buffer) {
- 		/* sg_miter_start is already done in musb_ep_program */
- 		if (!sg_miter_next(&qh->sg_miter)) {
- 			dev_err(musb->controller, "error: sg list empty\n");
-@@ -1505,9 +1502,8 @@ done:
- 			status = -EINVAL;
- 			goto done;
- 		}
--		urb->transfer_buffer = qh->sg_miter.addr;
- 		length = min_t(u32, length, qh->sg_miter.length);
--		musb_write_fifo(hw_ep, length, urb->transfer_buffer);
-+		musb_write_fifo(hw_ep, length, qh->sg_miter.addr);
- 		qh->sg_miter.consumed = length;
- 		sg_miter_stop(&qh->sg_miter);
- 	} else {
-@@ -1516,11 +1512,6 @@ done:
+--- a/drivers/nfc/fdp/fdp.c
++++ b/drivers/nfc/fdp/fdp.c
+@@ -192,7 +192,7 @@ static int fdp_nci_send_patch(struct nci
+ 	const struct firmware *fw;
+ 	struct sk_buff *skb;
+ 	unsigned long len;
+-	u8 max_size, payload_size;
++	int max_size, payload_size;
+ 	int rc = 0;
  
- 	qh->segsize = length;
+ 	if ((type == NCI_PATCH_TYPE_OTP && !info->otp_patch) ||
+@@ -215,8 +215,7 @@ static int fdp_nci_send_patch(struct nci
  
--	if (qh->use_sg) {
--		if (offset + length >= urb->transfer_buffer_length)
--			qh->use_sg = false;
--	}
--
- 	musb_ep_select(mbase, epnum);
- 	musb_writew(epio, MUSB_TXCSR,
- 			MUSB_TXCSR_H_WZC_BITS | MUSB_TXCSR_TXPKTRDY);
-@@ -2040,8 +2031,10 @@ finish:
- 	urb->actual_length += xfer_len;
- 	qh->offset += xfer_len;
- 	if (done) {
--		if (qh->use_sg)
-+		if (qh->use_sg) {
- 			qh->use_sg = false;
-+			urb->transfer_buffer = NULL;
-+		}
+ 	while (len) {
  
- 		if (urb->status == -EINPROGRESS)
- 			urb->status = status;
+-		payload_size = min_t(unsigned long, (unsigned long) max_size,
+-				     len);
++		payload_size = min_t(unsigned long, max_size, len);
+ 
+ 		skb = nci_skb_alloc(ndev, (NCI_CTRL_HDR_SIZE + payload_size),
+ 				    GFP_KERNEL);
 
 
