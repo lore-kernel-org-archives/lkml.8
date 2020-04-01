@@ -2,220 +2,204 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178E4C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50206C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1BFA2078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19856207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:22:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qPPQsTnj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730843AbgDAIWc (ORCPT
+        id S1731741AbgDAIWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:22:32 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45937 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgDAIWc (ORCPT
+        Wed, 1 Apr 2020 04:22:43 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:46444 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgDAIWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:22:32 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJYdo-0007pE-MB; Wed, 01 Apr 2020 10:22:28 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJYdn-0000Pf-AB; Wed, 01 Apr 2020 10:22:27 +0200
-Date:   Wed, 1 Apr 2020 10:22:27 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
- <20200330191654.waoocllctanh5nk5@pengutronix.de>
- <20200331204559.GB2954599@ulmo>
+        Wed, 1 Apr 2020 04:22:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585729362; x=1617265362;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=J0S4DL9mCxwT+hAkweovoiwr/8l14+JA8SrvT6gRPNQ=;
+  b=qPPQsTnjyDp5Mq8ISRXvB2+WOkHjEvtKmOO2RFpR7+lnD1xhGEV/zOvL
+   OdrnkS5dG2ecHe2Ncswzsmo16thS9sQ9xQimQxfDZFeR31dSIXa2Y/BWf
+   7NbY/m/nkTCWbDwdJlrC9idualfKm0ug4n3qbApKAxg60QWeoRLoWtWZ7
+   Y=;
+IronPort-SDR: s9KoWN8K5QgmRvuUHAFPWzhNO3NQk6hDfHxY0UJlBb55RZ5TdJJbJvTa9jy0J/w/eZBM2Z1Zjy
+ xo8NaQYsP+9g==
+X-IronPort-AV: E=Sophos;i="5.72,330,1580774400"; 
+   d="scan'208";a="25060967"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 01 Apr 2020 08:22:30 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id C6450A16D3;
+        Wed,  1 Apr 2020 08:22:19 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 1 Apr 2020 08:22:19 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.134) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 1 Apr 2020 08:22:05 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        <alexander.shishkin@linux.intel.com>, <linux-mm@kvack.org>,
+        <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <aarcange@redhat.com>, <acme@kernel.org>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [RFC v5 0/7] Implement Data Access Monitoring-based Memory Operation Schemes
+Date:   Wed, 1 Apr 2020 10:21:50 +0200
+Message-ID: <20200401082150.21124-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200331173908.0000696f@Huawei.com> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200331204559.GB2954599@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.134]
+X-ClientProxiedBy: EX13D37UWC004.ant.amazon.com (10.43.162.212) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thierry,
+On Tue, 31 Mar 2020 17:39:08 +0100 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-On Tue, Mar 31, 2020 at 10:45:59PM +0200, Thierry Reding wrote:
-> On Mon, Mar 30, 2020 at 09:16:54PM +0200, Uwe Kleine-König wrote:
-> > On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
-> > > On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
-> > > > On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
-> > > > > Only the Timer control register(TCLR) cannot be updated when the timer
-> > > > > is running. Registers like Counter register(TCRR), loader register(TLDR),
-> > > > > match register(TMAR) can be updated when the counter is running. Since
-> > > > > TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> > > > > timer for period/duty_cycle update.
+> On Tue, 31 Mar 2020 18:18:19 +0200
+> SeongJae Park <sjpark@amazon.com> wrote:
+> 
+> > On Tue, 31 Mar 2020 16:51:55 +0100 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > 
+> > > On Mon, 30 Mar 2020 13:50:35 +0200
+> > > SeongJae Park <sjpark@amazon.com> wrote:
+> > >   
+> > > > From: SeongJae Park <sjpark@amazon.de>
 > > > > 
-> > > > I'm not sure what is sensible here. Stopping the PWM for a short period
-> > > > is bad, but maybe emitting a wrong period isn't better. You can however
-> > > > optimise it if only one of period or duty_cycle changes.
+> > > > DAMON[1] can be used as a primitive for data access awared memory management
+> > > > optimizations.  That said, users who want such optimizations should run DAMON,
+> > > > read the monitoring results, analyze it, plan a new memory management scheme,
+> > > > and apply the new scheme by themselves.  Such efforts will be inevitable for
+> > > > some complicated optimizations.
 > > > > 
-> > > > @Thierry, what is your position here? I tend to say a short stop is
-> > > > preferable.
+> > > > However, in many other cases, the users could simply want the system to apply a
+> > > > memory management action to a memory region of a specific size having a
+> > > > specific access frequency for a specific time.  For example, "page out a memory
+> > > > region larger than 100 MiB keeping only rare accesses more than 2 minutes", or
+> > > > "Do not use THP for a memory region larger than 2 MiB rarely accessed for more
+> > > > than 1 seconds".
+> > > > 
+> > > > This RFC patchset makes DAMON to handle such data access monitoring-based
+> > > > operation schemes.  With this change, users can do the data access awared
+> > > > optimizations by simply specifying their schemes to DAMON.  
+[...]
+> > > > 
+> > > > Efficient THP
+> > > > ~~~~~~~~~~~~~
+> > > > 
+> > > > THP 'always' enabled policy achieves 5.57% speedup but incurs 7.29% memory
+> > > > overhead.  It achieves 41.62% speedup in best case, but 79.98% memory overhead
+> > > > in worst case.  Interestingly, both the best and worst case are with
+> > > > 'splash2x/ocean_ncp').  
 > > > 
-> > > It's not clear to me from the above description how exactly the device
-> > > behaves, but I suspect that it may latch the values in those registers
-> > > and only update the actual signal output once a period has finished. I
-> > > know of a couple of other devices that do that, so it wouldn't be
-> > > surprising.
-> > > 
-> > > Even if that was not the case, I think this is just the kind of thing
-> > > that we have to live with. Sometimes it just isn't possible to have all
-> > > supported devices adhere strictly to an API. So I think the best we can
-> > > do is have an API that loosely defines what's supposed to happen and
-> > > make a best effort to implement those semantics. If a device deviates
-> > > slightly from those expectations, we can always cross fingers and hope
-> > > that things still work. And it looks like they are.
-> > > 
-> > > So I think if Lokesh and Tony agree that this is the right thing to do
-> > > and have verified that things still work after this, that's about as
-> > > good as it's going to get.
+> > > The results above don't seems to support this any more? 
+> > >   
+> > > > runtime                 orig     rec      (overhead) thp      (overhead) ethp     (overhead) prcl     (overhead)
+> > > > splash2x/ocean_ncp      86.927   87.065   (0.16)     50.747   (-41.62)   86.855   (-0.08)    199.553  (129.57)   
 > > 
-> > I'd say this isn't for the platform people to decide. My position here
-> > is that the PWM drivers should behave as uniform as possible to minimize
-> > surprises for consumers. And so it's a "PWM decision" that is to be made
-> > here, not an "omap decision".
+> > Hmm... But, I don't get what point you meaning...  In the data, column of 'thp'
+> > means the THP 'always' enabled policy.  And, the following column shows the
+> > overhead of it compared to that of 'orig', in percent.  Thus, the data says THP
+> > 'always' enabled policy enabled kernel consumes 50.747 seconds to finish
+> > splash2x/ocean_ncp, while THP disabled original kernel consumes 86.927 seconds.
 > 
-> I think there's a fine line to be walked here. I agree that we should
-> aim to have as much consistency between drivers as possible. At the same
-> time I think we need to be pragmatic. As Lokesh said, the particular use
-> case here requires this type of on-the-fly adjustment of the PWM period
-> without stopping and restarting the PWM. It doesn't work otherwise. So
-> th alternative that you're proposing is to say that we don't support
-> that use-case, even though it works just fine given this particular
-> hardware. That's not really an option.
+> ah. I got myself confused. 
+> 
+> However, I was expecting to see a significant performance advantage
+> to ethp for this particular case as we did in the previous version.
+> 
+> In the previous version (you posted in reply to v6 of Damon), for ethp we had a significant gain with:
+> 
+> runtime                 orig     rec      (overhead) thp      (overhead) ethp     (overhead) prcl     (overhead)
+> splash2x/ocean_ncp      81.360   81.434   (0.09)     51.157   (-37.12)   66.711   (-18.00)   91.611   (12.60) 
+> 
+> So, in ethp we got roughly half the performance back (at the cost of some of the memory)
+> 
+> That was a result I have been trying to replicate, hence was at the front of my mind!
+> 
+> Any idea why that changed so much? 
 
-I understand your opinion here. The situation now is that in current
-mainline the driver stops the hardware for reconfiguration and it
-doesn't fit Lokesh's use case so he changed to on-the-fly update
-(accepting that maybe a wrong period is emitted). What if someone relies
-on the old behaviour? What if in a year someone comes and claims the
-wrong period is bad for their usecase and changes back to
-stop-to-update?
+Ah, I forgot to explain about this change.  Thank you for let me know.
 
-When I write a consumer driver, do I have a chance to know how the PWM,
-that I happen to use, behaves? To be able to get my consumer driver
-reliable I might need to know that however.
+Overall, ETHP in DAMON-based Operations Schemes RFC v5 shows worse peak
+performance gains.
 
-> > > I know this is perhaps cheating a little, or turning a blind eye, but I
-> > > don't know what the alternative would be. Do we want to tell people that
-> > > a given PWM controller can't be used if it doesn't work according to our
-> > > expectations? That's hard to argue if that controller works just fine
-> > > for all known use-cases.
+For example, splash2x/fft shows best case speedup with ETHP for both this
+version and previous version.  The speedup changed from 19% to 12%.  In case of
+splash2x/ocean_ncp, it changed from 18% to only 0.08%.
+
+That said, total performance speedup is improved.  It was 1.83% before, and
+2.21% now.  Also, there are several workloads showing better speedup.  In case
+of parsec3/canneal, the speedup changed from 3.86% to 6.34%.
+
+Also note that ETHP's memory savings for the workloads showing less speedup are
+much improved.  For example, the memory overhead of ETHP for splash2x/ocean_ncp
+was 24.4% before, but only 3.5% now.
+
+This is due to the fact that I didn't update the schemes for the updated DAMON.
+Basically, the effect of the schemes are access pattern dependent.  In this
+case, because DAMON has changed so that it might report access pattern that
+different from that of previous version, the schemes should also be modified to
+make best performance.  However, I didn't update the schemes because those are
+for only proof of the concepts, not for productions.
+
+The change of report was not so huge, fortunately.  I also confirmed this with
+my human eyes by comparing the visualized access patterns of the two version.
+The overall trend (better performance, less memory overhead) also changed only
+subtle.  However, some individual workloads got some remarkable changes.
+
+
+Thanks,
+SeongJae Park
+
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> 
+> > Thus, the overhead is ``(50.747 - 86.927) / 86.927 = -0.4162``.  In other
+> > words, 41.62% speedup.
 > > 
-> > I'd like have some official policy here which of the alternatives is the
-> > preferred cheat.
+> > Also, 5.57% speedup and 7.29% memory overhead is for _total_.  This data shows
+> > it.
 > > 
-> > The situation here is that period and duty_cycle cannot be updated
-> > atomically. So the two options are:
+> > > > runtime                 orig     rec      (overhead) thp      (overhead) ethp     (overhead) prcl     (overhead)
+> > > > total                   3020.570 3028.080 (0.25)     2852.190 (-5.57)    2953.960 (-2.21)    3276.550 (8.47)      
 > > 
-> >  - stop shortly
-> >  - update with hardware running and maybe emit a broken period
+> > Maybe I made you confused by ambiguously saying this.  Sorry if so.  Or, if I'm
+> > still misunderstanding your point, please let me know.
 > 
-> I think we can already support both of those with the existing API. If
-> a consumer wants to stop the PWM while reconfiguring, they should be
-> able to do pwm_enable(), pwm_config(), pwm_enable() (or the atomic
-> equivalent) and for the second case they can just do pwm_config() (or
-> the atomic equivalent).
-
-Yes, the consumer can force the stop and update. But assume I'm "only" a
-consumer driver author and I want: atomic update and if this is not
-possible I prefer "stop-to-update" over "on-the-fly-and-maybe-faulty".
-So I cannot benefit from a good driver/hardware that can do atomic
-updates? Or I have to patch each driver that I actually use to use
-stop-to-update?
-
-> Some hardware may actually require the PWM to be disabled before
-> reconfiguring, so they won't be able to strictly adhere to the second
-> use-case.
 > 
-> But as discussed above, I don't want to strive for a lowest common
-> denominator that would preclude some more specific use-cases from
-> working if the hardware supports it.
+> > 
+> > 
+> > Thanks,
+> > SeongJae Park
+> >  
+> > [...]
 > 
-> So I think we should aim for drivers to implement the semantics as
-> closely as possible. If the hardware doesn't support some of these
-> requirements strictly while a particular use-case depends on that, then
-> that just means that the hardware isn't compatible with that use-case.
-> Chances are that the system just isn't going to be designed to support
-> that use-case in the first place if the hardware can't do it.
-> 
-> The sysfs interface is a bit of a special case here because it isn't
-> possible to know what use-cases people are going to come up with.
-
-In my eyes the sysfs interface isn't special here. You also don't know
-what the OMAP PWM hardware is used for.
-
-> It's most likely that they'll try something and if it doesn't work
-> they can see if a driver patch can improve things.
-
-So either the group who prefers "stop-to-update" or the group who
-prefers "on-the-fly-and-maybe-faulty" has to carry a system specific
-driver patch?
-
-> One possible extension that I can imagine would be to introduce some
-> sort of capability structure that drivers can fill in to describe the
-> behaviour of the hardware. Drivers like pwm-omap-dmtimer, for example,
-> could describe that they are able to change the period and/or duty cycle
-> while the PWM is on. There could be another capability bit that says
-> that the current period will finish before new settings are applied. Yet
-> another capability could describe that duty-cycle and period can be
-> applied atomically. Consumers could then check those capabilities to see
-> if they match their requirements.
-> 
-> But then again, I think that would just make things overly complicated.
-> None of the existing consumers need that, so it doesn't seem like there
-> is much demand for that feature. In practice I suspect most consumers
-> work fine despite potentially small deviations in how the PWM behaves.
-
-I think the status quo is what I asked about above: People use sysfs and
-if the PWM behaves different than needed, the driver is patched and most
-of the time not mainlined. If your focus is to support a certain
-industrial system with a defined use case, this is fine. If however you
-target for an universal framework that works for any combination of
-consumer + lowlevel driver without patching (that at least is able to
-diagnose: This PWM cannot provide what my consumer needs), this is bad.
-Also this means that whenever a system designer changes something on
-their machine (kernel update, different hardware, an new usecase for a
-PWM) they might have to reverify if the given PWM driver behaves as
-needed.
-
-My suggestion for now is to start documenting how the drivers behave
-expanding how limitations are documented in some drivers. So maybe
-change from "Limitations" to "Implementation and Hardware Details"?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
