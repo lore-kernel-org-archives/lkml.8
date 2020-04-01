@@ -2,122 +2,173 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E320CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCDFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833DB21707
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B331A2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758850;
-	bh=Tmn5oleCgqpuxbdTFU9DQWUHW4JqZTaDz7bSMafc/Eo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GAykQfRs7DffqvK2v6ItpjbVqhtZ5Bb+ZFfUEn8bgEC0wG5hKd2FFA7MXjJLivJ1U
-	 helO0lgBlDGg2+isrfRebqvC0s93uPpBXifBQ/ThmQW8u9XxAvHNSuONN97KNixTmF
-	 QlvhsFnO0PE1+vy5WNZ7VBL64PFTjwRGYhCuVSWM=
+	s=default; t=1585758854;
+	bh=uTdpVzB4sMS1kq2S/jZxD1mCnBHts7WJPO28p1TG1uE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=rCaLQEdK1Hek3yyTOCttkSAtjj7n7hZQzrkAgGS+m1ifqT5v1Bytotp3pwBnygby4
+	 WVw5uL/o6gz8mkwuAtK94UzdI2NX+VUFcV0aflYNFfqLdKFeOQXRNo7xGoyum1JIpK
+	 BKNE2QzzUA0xu037hLMLE5+mKtMu2tl+GYd2RMLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388463AbgDAQeJ (ORCPT
+        id S2388625AbgDAQeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60746 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:34:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388194AbgDAQeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:34:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2387696AbgDAQeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:34:11 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F4C2063A;
-        Wed,  1 Apr 2020 16:34:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD3A21582;
+        Wed,  1 Apr 2020 16:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758847;
-        bh=Tmn5oleCgqpuxbdTFU9DQWUHW4JqZTaDz7bSMafc/Eo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g7moX7g5++nD4lVsmLg/f1/XIc/elxt1gy0P9bm022imSLmzLbQTjOoZO1LomD4Yf
-         tQrh+kq56EtSeI6rekqvN6BhNwa19sCyxU1EDITPPIbJAzDOQH8vXhRxEkSBcgVNar
-         AN0z7ON5oqKf4Ef5AVzDIsOYNMWchkfs36P2dp3U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        disconnect3d <dominik.b.czarnota@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, John Keeping <john@metanate.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Lentine <mlentine@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        s=default; t=1585758850;
+        bh=uTdpVzB4sMS1kq2S/jZxD1mCnBHts7WJPO28p1TG1uE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=AhSy97Z1a0DxYTbCKWG0HJI/YELNG8gYEXfmmUZX1BJgMC11K9JvlWVCo8nKsaWZo
+         rwIUvsyGwTgmJuZ0vGCLOBluG/GGOsf1rEJ+XnrLIRui/ddMT1j98D8l+VvRDCfvP7
+         I4f/4LTlxHoxJd8X6Ob88mKUCkJblsp80vb0w828=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B64FA3522887; Wed,  1 Apr 2020 09:34:09 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 09:34:09 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.4 91/91] perf map: Fix off by one in strncpy() size argument
-Date:   Wed,  1 Apr 2020 18:18:27 +0200
-Message-Id: <20200401161540.700043497@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
-References: <20200401161512.917494101@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] Documentation/litmus-tests: Add litmus tests for
+ atomic APIs
+Message-ID: <20200401163409.GZ19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200326024022.7566-1-boqun.feng@gmail.com>
+ <20200327221843.GA226939@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327221843.GA226939@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: disconnect3d <dominik.b.czarnota@gmail.com>
+On Fri, Mar 27, 2020 at 06:18:43PM -0400, Joel Fernandes wrote:
+> On Thu, Mar 26, 2020 at 10:40:18AM +0800, Boqun Feng wrote:
+> > A recent discussion raises up the requirement for having test cases for
+> > atomic APIs:
+> > 
+> > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
+> > 
+> > , and since we already have a way to generate a test module from a
+> > litmus test with klitmus[1]. It makes sense that we add more litmus
+> > tests for atomic APIs. And based on the previous discussion, I create a
+> > new directory Documentation/atomic-tests and put these litmus tests
+> > here.
+> > 
+> > This patchset starts the work by adding the litmus tests which are
+> > already used in atomic_t.txt, and also improve the atomic_t.txt to make
+> > it consistent with the litmus tests.
+> > 
+> > Previous version:
+> > v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
+> > v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
+> > v3: https://lore.kernel.org/linux-doc/20200227004049.6853-1-boqun.feng@gmail.com/
+> 
+> For full series:
+> 
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-commit db2c549407d4a76563c579e4768f7d6d32afefba upstream.
+Queued in place of the following commits, with Joel's and Alan's tags
+added, thank you all!
 
-This patch fixes an off-by-one error in strncpy size argument in
-tools/perf/util/map.c. The issue is that in:
+							Thanx, Paul
 
-        strncmp(filename, "/system/lib/", 11)
+c13c55d4 tools/memory-model: Add an exception for limitations on _unless() family
+59ffd85 Documentation/locking/atomic: Fix atomic-set litmus test
+23c19c8 Documentation/locking/atomic: Introduce atomic-tests directory
+3bd201c Documentation/locking/atomic: Add a litmus test for atomic_set()
+833f53b Documentation/locking/atomic: Add a litmus test smp_mb__after_atomic()
 
-the passed string literal: "/system/lib/" has 12 bytes (without the NULL
-byte) and the passed size argument is 11. As a result, the logic won't
-match the ending "/" byte and will pass filepaths that are stored in
-other directories e.g. "/system/libmalicious/bin" or just
-"/system/libmalicious".
-
-This functionality seems to be present only on Android. I assume the
-/system/ directory is only writable by the root user, so I don't think
-this bug has much (or any) security impact.
-
-Fixes: eca818369996 ("perf tools: Add automatic remapping of Android libraries")
-Signed-off-by: disconnect3d <dominik.b.czarnota@gmail.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Keeping <john@metanate.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Lentine <mlentine@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20200309104855.3775-1-dominik.b.czarnota@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- tools/perf/util/map.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -85,7 +85,7 @@ static inline bool replace_android_lib(c
- 		return true;
- 	}
- 
--	if (!strncmp(filename, "/system/lib/", 11)) {
-+	if (!strncmp(filename, "/system/lib/", 12)) {
- 		char *ndk, *app;
- 		const char *arch;
- 		size_t ndk_length;
-
-
+> One question I had was in the existing atomic_set() documentation, it talks
+> about atomic_add_unless() implementation based on locking could have issues.
+> It says the way to fix such cases is:
+> 
+> Quote:
+>     the typical solution is to then implement atomic_set{}() with
+>     atomic_xchg().
+> 
+> I didn't get how using atomic_xchg() fixes it. Is the assumption there that
+> atomic_xchg() would be implemented using locking to avoid atomic_set() having
+> issues? If so, we could clarify that in the document.
+> 
+> thanks,
+> 
+>  - Joel
+> 
+> > 
+> > Changes since v3:
+> > 
+> > *	Merge two patches on atomic-set litmus test into one as per
+> > 	Alan. (Alan, you have acked only one of the two patches, so I
+> > 	don't add you acked-by for the combined patch).
+> > 
+> > *	Move the atomic litmus tests into litmus-tests/atomic to align
+> > 	with Joel's recent patches on RCU litmus tests.
+> > 
+> > I think we still haven't reach to a conclusion for the difference of
+> > atomic_add_unless() in herdtools, and I'm currently reading the source
+> > code of herd to resovle this. This is just an updated version to resolve
+> > ealier comments and react on Joel's RCU litmus tests.
+> > 
+> > Regards,
+> > Boqun
+> > 
+> > [1]: http://diy.inria.fr/doc/litmus.html#klitmus
+> > 
+> > Boqun Feng (4):
+> >   tools/memory-model: Add an exception for limitations on _unless()
+> >     family
+> >   Documentation/litmus-tests: Introduce atomic directory
+> >   Documentation/litmus-tests/atomic: Add a test for atomic_set()
+> >   Documentation/litmus-tests/atomic: Add a test for
+> >     smp_mb__after_atomic()
+> > 
+> >  Documentation/atomic_t.txt                    | 24 +++++++-------
+> >  ...ter_atomic-is-stronger-than-acquire.litmus | 32 +++++++++++++++++++
+> >  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++
+> >  Documentation/litmus-tests/atomic/README      | 16 ++++++++++
+> >  tools/memory-model/README                     | 10 ++++--
+> >  5 files changed, 91 insertions(+), 15 deletions(-)
+> >  create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
+> >  create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> >  create mode 100644 Documentation/litmus-tests/atomic/README
+> > 
+> > -- 
+> > 2.25.1
+> > 
