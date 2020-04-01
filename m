@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BDEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EABC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B39206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A71C2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759666;
-	bh=fkqJgZcXEk3ANMHQV2zr7kHP0YWWYnpw4faPhGrgKl4=;
+	s=default; t=1585759669;
+	bh=QQ6ebnUvoHQNHZ6qn9BQCIRm9XiS9wC5bt9itZPaTN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=16F81ao7JSAjiW1VBhnr+lkO2a+6vuWQQduwtbXWf80blCtNlafGjLKQMw+Pm3RWl
-	 1/1XeDw0prEUOEyTWTg4di85KbljjkRGZheN0z4XMqyZqvsc8I9m46sLIydZXvWUP/
-	 W83hJ1O81X4uqTLnJjbPLp751cz6a2aXc324/TFQ=
+	b=2W9gQ5WPQ7bS+rXZzwi+uLi0lFc9UGlXZ2eeHmHmbknaprDLOQwYNmdiN5QoUQ2s9
+	 feTop/IrG7eoZDAeqSRMTTl9ff4HrlYaQGTdFgSh/oWbsNYU9kG7odN+8hH3dh3gPc
+	 uFKJeYHiLml/42VHkduBLxiwerAY5uOo1BAEVbbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389602AbgDAQro (ORCPT
+        id S2390088AbgDAQrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:47:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49512 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389820AbgDAQrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:47:40 -0400
+        id S2389882AbgDAQrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:47:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B2A7206E9;
-        Wed,  1 Apr 2020 16:47:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E0B6206E9;
+        Wed,  1 Apr 2020 16:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759659;
-        bh=fkqJgZcXEk3ANMHQV2zr7kHP0YWWYnpw4faPhGrgKl4=;
+        s=default; t=1585759662;
+        bh=QQ6ebnUvoHQNHZ6qn9BQCIRm9XiS9wC5bt9itZPaTN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g3pF6pIGKhzQZ41Wg5xgpn4g2yYK/Qdm4VAVrmdrofXnVTQxSZjhIhgTiR1pN5Clr
-         LbHNPJXOI6pfPvT2ETpIYBwoHTprWoTJO34MHHI2myvQqiucnsa2LwfWO19WFzOaS2
-         HNE5YXvPvLBbWk8efy/0/A2e5aHjhBGYgbz++wgs=
+        b=v1bMtr9gt0xOtdKTYpstzN59/gl2qsxJCgihYtqKieU5L5n1ITKRlymjq8hWxTlCc
+         fjEs/pOI79fGoHjbLb74vtxbMKvpTSWEtXC9TK+St2vnphSW/2e7+48h7GM6TJKcA8
+         jCS0QkU/EpVHDjAQz1YbXU2trmhQozCezDKvKzzI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        kovi <zraetn@gmail.com>
-Subject: [PATCH 4.14 122/148] staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
-Date:   Wed,  1 Apr 2020 18:18:34 +0200
-Message-Id: <20200401161604.144252449@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6d2e7f6fa90e27be9d62@syzkaller.appspotmail.com,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH 4.14 123/148] staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
+Date:   Wed,  1 Apr 2020 18:18:35 +0200
+Message-Id: <20200401161604.241662319@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,32 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 38ef48f7d4b7342f145a1b4f96023bde99aeb245 upstream.
+commit a1f165a6b738f0c9d744bad4af7a53909278f5fc upstream.
 
-The ASUS USB-N10 Nano B1 has been reported as a new RTL8188EU device.
-Add it to the device tables.
+We should cancel hw->usb_work before kfree(hw).
 
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Reported-by: kovi <zraetn@gmail.com>
-Cc: Stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200321180011.26153-1-Larry.Finger@lwfinger.net
+Reported-by: syzbot+6d2e7f6fa90e27be9d62@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1585120006-30042-1-git-send-email-hqjagain@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
+ drivers/staging/wlan-ng/prism2usb.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -40,6 +40,7 @@ static const struct usb_device_id rtw_us
- 	/****** 8188EUS ********/
- 	{USB_DEVICE(0x056e, 0x4008)}, /* Elecom WDC-150SU2M */
- 	{USB_DEVICE(0x07b8, 0x8179)}, /* Abocom - Abocom */
-+	{USB_DEVICE(0x0B05, 0x18F0)}, /* ASUS USB-N10 Nano B1 */
- 	{USB_DEVICE(0x2001, 0x330F)}, /* DLink DWA-125 REV D1 */
- 	{USB_DEVICE(0x2001, 0x3310)}, /* Dlink DWA-123 REV D1 */
- 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
+--- a/drivers/staging/wlan-ng/prism2usb.c
++++ b/drivers/staging/wlan-ng/prism2usb.c
+@@ -180,6 +180,7 @@ static void prism2sta_disconnect_usb(str
+ 
+ 		cancel_work_sync(&hw->link_bh);
+ 		cancel_work_sync(&hw->commsqual_bh);
++		cancel_work_sync(&hw->usb_work);
+ 
+ 		/* Now we complete any outstanding commands
+ 		 * and tell everyone who is waiting for their
 
 
