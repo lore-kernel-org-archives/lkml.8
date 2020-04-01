@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A2FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7B9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D342071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F472071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPVFrVjW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uiUngpcw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732008AbgDAHM1 (ORCPT
+        id S1732023AbgDAHMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:12:27 -0400
-Received: from mail-pl1-f179.google.com ([209.85.214.179]:46892 "EHLO
-        mail-pl1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731725AbgDAHM0 (ORCPT
+        Wed, 1 Apr 2020 03:12:31 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42079 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731725AbgDAHM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:12:26 -0400
-Received: by mail-pl1-f179.google.com with SMTP id s23so9233718plq.13;
-        Wed, 01 Apr 2020 00:12:25 -0700 (PDT)
+        Wed, 1 Apr 2020 03:12:29 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h8so11678093pgs.9;
+        Wed, 01 Apr 2020 00:12:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5KAdQlZkZucdmB3trGRi9PLnnMN8nfwPNpw1u3apZq4=;
-        b=dPVFrVjWbj9FLuvfYXpdX4zfEnHNrCL65Wmxp/7L5+gmHoKpHxqZrLLicmOFTwn6LG
-         sTU7vvtxJ7y0crwfBqjknTuq/hExS2W5MUbuidaUmPCcm0fj20WU0/b+MSNBZmPQRLyx
-         4eN8Q6i0jcd/PD8X/RC0E1x8F7aQnjQXg70TkJx1TEDUoPF0sKIIWJI2WAV575t/GNt9
-         UurBqLO0z3mGuyD5kp9sorAiebw0qqBlzwBIYsqLrKBLIgAaC6b6cGhQ9SBIDTGlgD9X
-         at5QB6oyW44HOZn1K/jUZRCNAcvIhorPEHb6US5AsXFT33Ry+VSiS+Jc+IWdXradWEyQ
-         DrQg==
+        bh=B3hOtuYx2qEFqAvN/dFn1En7OfC2UzEXV8qVkkGMlOE=;
+        b=uiUngpcwOC8F3/6uoxQp7s8GmF7oqVnVmTMMRbRXKM64s6Lq8YfMvgnYlSqNyTV+eJ
+         MJwZU/Ijxq7Xe6EMGDI61kJhwQesukIHq41fF6cnG2fNo7H3FIX4RV8pBsvfn2QKEume
+         OptFai9Ob7DugbYUnoork2+xHwI9ttzh7RydmThY1PKdvIIzhm1aN355zNJtAUI3PCt8
+         bwzjvIYYA7qkzYew5tdVpneLAvsqiNPRDT3Ldd1NqxDmgFtsosgs5enz4Ce6ArRFOOwH
+         +6oDWBchh9VfB/tjYDYJcCX7G0o1I7qLy2geFx9tfP4zX/hqFeiM//zyuePS00cPEHkH
+         8o/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5KAdQlZkZucdmB3trGRi9PLnnMN8nfwPNpw1u3apZq4=;
-        b=AzvFOh1jMKxgVZcVpxPTLrzpkxZZk/1wBE+h9hqe2EXIHqNHx/oSKlMPulvdL6y0ki
-         DASRMSKAV9VcFSTFk6W177G5UP8PlIbtlbZL4plliWreRuyZH507Ahxx5k++nuUt/0wp
-         f/SKSQJJKEw8RnzNCozH92l83dUQMfX/rm6LERY05Tvi5IsVilqB4hpwOsSth7TGuyIR
-         T//fYr94/4ZdMNG6gk3/W0WxclvOHbk1whsRyPEhjmbI0/hMCSQZPWLEMX+PS4I56kFt
-         5qqCoiyPsKybzP5Ua7CazW0LA1WsTrLw3EgSqiBx3YczrylS8+9FB13pnmKlYYXhcryg
-         qhzg==
-X-Gm-Message-State: ANhLgQ1QpVQvIdOZ60n6L0aK1zzn2MGyQc2qZ5p5+iXn15bToBU4j8Dq
-        LXje2QdrG6ayCKwHNJBCvCo=
-X-Google-Smtp-Source: ADFU+vsTb7yMmocQDiYbBd/Q7D2CwqHGG0zydGcYlu5fuPasG/DB5HZiGDr+ZHizQxmbo705d7eCYQ==
-X-Received: by 2002:a17:902:9b95:: with SMTP id y21mr21218346plp.101.1585725144667;
-        Wed, 01 Apr 2020 00:12:24 -0700 (PDT)
+        bh=B3hOtuYx2qEFqAvN/dFn1En7OfC2UzEXV8qVkkGMlOE=;
+        b=oj8QJVinwOdZpkx85V88mqqgRTqp5AAl5pVIfPE+07RLJsBHsy2JCddE93pbS7u517
+         X3FDerI3ZOzD9X+/JDL2DLbdnigxGv6zutEpcC7ra5NfXqolV8kbf7Q6EbJueBXTCXHk
+         ygj0I8pUbcxoIrzjHmKvpVeIDr+wqs4QNM1hGgDGj2rcxF3jPTmtjb5CBJRYXMOUKSn0
+         BbxXMFk2+OBvYzY58RuejIkvGjvIZPK91Lk/rWfNd2RWOp4AcVy91dSK0sJyCrVnLVyy
+         i04rOG2T/JaooXcZMa4DzD1mHLrMcwxpJULw87SulamU2yGYxAP8Xp9Oy6wnW+goYs/t
+         Ncdw==
+X-Gm-Message-State: AGi0PuZYhspX+dGLWzbUKNpu+iDb/qXyc7ps96TDvKhGPQQSxomWSMlD
+        40oNRiCuYJh6g41XpouDnOVOljdk
+X-Google-Smtp-Source: APiQypLyBd7s6JV3zjT87uX/15+MDZZWtntLDX01WXIkpSydLpFlVa7z3J4DxQfm6MCwtVb1uWDmhg==
+X-Received: by 2002:aa7:9839:: with SMTP id q25mr8375506pfl.2.1585725148445;
+        Wed, 01 Apr 2020 00:12:28 -0700 (PDT)
 Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id n7sm784519pgm.28.2020.04.01.00.12.21
+        by smtp.gmail.com with ESMTPSA id n7sm784519pgm.28.2020.04.01.00.12.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 00:12:24 -0700 (PDT)
+        Wed, 01 Apr 2020 00:12:27 -0700 (PDT)
 From:   Chunyan Zhang <zhang.lyra@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
@@ -65,9 +65,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Baolin Wang <baolin.wang7@gmail.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH 1/2] arm64: dts: Add SC9863A clock nodes
-Date:   Wed,  1 Apr 2020 15:11:43 +0800
-Message-Id: <20200401071144.10424-2-zhang.lyra@gmail.com>
+Subject: [PATCH 2/2] arm64: dts: Add SC9863A emmc and sd card nodes
+Date:   Wed,  1 Apr 2020 15:11:44 +0800
+Message-Id: <20200401071144.10424-3-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200401071144.10424-1-zhang.lyra@gmail.com>
 References: <20200401071144.10424-1-zhang.lyra@gmail.com>
@@ -80,228 +80,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-add clock devicetree nodes for SC9863A.
+Add emmc and sd card devicetree nodes for SC9863A.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 ---
- arch/arm64/boot/dts/sprd/sc9863a.dtsi |  24 ++++
- arch/arm64/boot/dts/sprd/sharkl3.dtsi | 164 ++++++++++++++++++++++++++
- 2 files changed, 188 insertions(+)
+ arch/arm64/boot/dts/sprd/sc9863a.dtsi | 42 +++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-index cd80756c888d..586c7488c12b 100644
+index 586c7488c12b..2003fa0293b6 100644
 --- a/arch/arm64/boot/dts/sprd/sc9863a.dtsi
 +++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-@@ -159,6 +159,30 @@
- 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2019, Unisoc Inc.
+  */
+ 
++#include <dt-bindings/clock/sprd,sc9863a-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include "sharkl3.dtsi"
+ 
+@@ -543,5 +544,46 @@
+ 				};
+ 			};
  		};
- 
-+		ap_clk: clock-controller@21500000 {
-+			compatible = "sprd,sc9863a-ap-clk";
-+			reg = <0 0x21500000 0 0x1000>;
-+			clocks = <&ext_32k>, <&ext_26m>;
-+			clock-names = "ext-32k", "ext-26m";
-+			#clock-cells = <1>;
-+		};
 +
-+		aon_clk: clock-controller@402d0000 {
-+			compatible = "sprd,sc9863a-aon-clk";
-+			reg = <0 0x402d0000 0 0x1000>;
-+			clocks = <&ext_26m>, <&rco_100m>,
-+				 <&ext_32k>, <&ext_4m>;
-+			clock-names = "ext-26m", "rco-100m",
-+				      "ext-32k", "ext-4m";
-+			#clock-cells = <1>;
-+		};
++		ap-ahb {
++			compatible = "simple-bus";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
 +
-+		mm_clk: clock-controller@60900000 {
-+			compatible = "sprd,sc9863a-mm-clk";
-+			reg = <0 0x60900000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
++			sdio0: sdio@20300000 {
++				compatible  = "sprd,sdhci-r11";
++				reg = <0 0x20300000 0 0x1000>;
++				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
 +
- 		funnel@10001000 {
- 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 			reg = <0 0x10001000 0 0x1000>;
-diff --git a/arch/arm64/boot/dts/sprd/sharkl3.dtsi b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-index 0222128b10f7..206a4afdab1c 100644
---- a/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-+++ b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-@@ -16,6 +16,149 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		ap_ahb_regs: syscon@20e00000 {
-+			compatible = "sprd,sc9863a-glbregs", "syscon",
-+				     "simple-mfd";
-+			reg = <0 0x20e00000 0 0x4000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x20e00000 0x4000>;
++				clock-names = "sdio", "enable";
++				clocks = <&aon_clk CLK_SDIO0_2X>,
++					 <&apahb_gate CLK_SDIO0_EB>;
++				assigned-clocks = <&aon_clk CLK_SDIO0_2X>;
++				assigned-clock-parents = <&rpll CLK_RPLL_390M>;
 +
-+			apahb_gate: apahb-gate {
-+				compatible = "sprd,sc9863a-apahb-gate";
-+				reg = <0x0 0x1020>;
-+				#clock-cells = <1>;
++				bus-width = <4>;
++				no-sdio;
++				no-mmc;
++			};
++
++			sdio3: sdio@20600000 {
++				compatible  = "sprd,sdhci-r11";
++				reg = <0 0x20600000 0 0x1000>;
++				interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++
++				clock-names = "sdio", "enable";
++				clocks = <&aon_clk CLK_EMMC_2X>,
++					 <&apahb_gate CLK_EMMC_EB>;
++				assigned-clocks = <&aon_clk CLK_EMMC_2X>;
++				assigned-clock-parents = <&rpll CLK_RPLL_390M>;
++
++				bus-width = <8>;
++				non-removable;
++				no-sdio;
++				no-sd;
++				cap-mmc-hw-reset;
 +			};
 +		};
-+
-+		pmu_regs: syscon@402b0000 {
-+			compatible = "sprd,sc9863a-glbregs", "syscon",
-+				     "simple-mfd";
-+			reg = <0 0x402b0000 0 0x4000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x402b0000 0x4000>;
-+
-+			pmu_gate: pmu-gate {
-+				compatible = "sprd,sc9863a-pmu-gate";
-+				reg = <0 0x1200>;
-+				clocks = <&ext_26m>;
-+				clock-names = "ext-26m";
-+				#clock-cells = <1>;
-+			};
-+		};
-+
-+		aon_apb_regs: syscon@402e0000 {
-+			compatible = "sprd,sc9863a-glbregs", "syscon",
-+				     "simple-mfd";
-+			reg = <0 0x402e0000 0 0x4000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x402e0000 0x4000>;
-+
-+			aonapb_gate: aonapb-gate {
-+				compatible = "sprd,sc9863a-aonapb-gate";
-+				reg = <0 0x1100>;
-+				#clock-cells = <1>;
-+			};
-+		};
-+
-+		anlg_phy_g2_regs: syscon@40353000 {
-+			compatible = "sprd,sc9863a-glbregs", "syscon",
-+				     "simple-mfd";
-+			reg = <0 0x40353000 0 0x3000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x40353000 0x3000>;
-+
-+			pll: pll {
-+				compatible = "sprd,sc9863a-pll";
-+				reg = <0 0x100>;
-+				clocks = <&ext_26m>;
-+				clock-names = "ext-26m";
-+				#clock-cells = <1>;
-+			};
-+		};
-+
-+		anlg_phy_g4_regs: syscon@40359000 {
-+			compatible = "sprd,sc9863a-glbregs", "syscon",
-+				     "simple-mfd";
-+			reg = <0 0x40359000 0 0x3000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x40359000 0x3000>;
-+
-+			mpll: mpll {
-+				compatible = "sprd,sc9863a-mpll";
-+				reg = <0 0x100>;
-+				#clock-cells = <1>;
-+			};
-+		};
-+
-+		anlg_phy_g5_regs: syscon@4035c000 {
-+			compatible = "sprd,sc9863a-glbregs", "syscon",
-+				     "simple-mfd";
-+			reg = <0 0x4035c000 0 0x3000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x4035c000 0x3000>;
-+
-+			rpll: rpll {
-+				compatible = "sprd,sc9863a-rpll";
-+				reg = <0 0x100>;
-+				clocks = <&ext_26m>;
-+				clock-names = "ext-26m";
-+				#clock-cells = <1>;
-+			};
-+		};
-+
-+		anlg_phy_g7_regs: syscon@40363000 {
-+			compatible = "sprd,sc9863a-glbregs", "syscon",
-+				     "simple-mfd";
-+			reg = <0 0x40363000 0 0x3000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x40363000 0x3000>;
-+
-+			dpll: dpll {
-+				compatible = "sprd,sc9863a-dpll";
-+				reg = <0 0x100>;
-+				#clock-cells = <1>;
-+			};
-+		};
-+
-+		mm_ahb_regs: syscon@60800000 {
-+			compatible = "sprd,sc9863a-glbregs", "syscon",
-+				     "simple-mfd";
-+			reg = <0 0x60800000 0 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x60800000 0x3000>;
-+
-+			mm_gate: mm-gate {
-+				compatible = "sprd,sc9863a-mm-gate";
-+				reg = <0 0x1100>;
-+				#clock-cells = <1>;
-+			};
-+		};
-+
-+		ap_apb_regs: syscon@71300000 {
-+			compatible = "sprd,sc9863a-glbregs", "syscon",
-+				     "simple-mfd";
-+			reg = <0 0x71300000 0 0x4000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x71300000 0x4000>;
-+
-+			apapb_gate: apapb-gate {
-+				compatible = "sprd,sc9863a-apapb-gate";
-+				reg = <0 0x1000>;
-+				clocks = <&ext_26m>;
-+				clock-names = "ext-26m";
-+				#clock-cells = <1>;
-+			};
-+		};
-+
- 		apb@70000000 {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
-@@ -75,4 +218,25 @@
- 		clock-frequency = <26000000>;
- 		clock-output-names = "ext-26m";
  	};
-+
-+	ext_32k: ext-32k {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "ext-32k";
-+	};
-+
-+	ext_4m: ext-4m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <4000000>;
-+		clock-output-names = "ext-4m";
-+	};
-+
-+	rco_100m: rco-100m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <100000000>;
-+		clock-output-names = "rco-100m";
-+	};
  };
 -- 
 2.20.1
