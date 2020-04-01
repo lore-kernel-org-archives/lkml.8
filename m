@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0351C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB0DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99062063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5E92063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759678;
-	bh=2ylRiHjtK90gxi61cOd673GSv59weoK+DS/Xe0pyLX8=;
+	s=default; t=1585759683;
+	bh=h74ejmZRkUXqWK9qRDs8IjDoU7X8jdD/ST0PfyG2Zlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uLrNdf1WqGljpT5R1qerjmAOfNqYFQGQSWziW+5ZC/IDKid+7GpFudYmI1RU9Hnse
-	 7fMBwf6F4sc57StiC3MFNITN6+9kd0V61q9nnGRGRAFjpNKcuBcyw8hvuVN4GFKo/d
-	 dnRO1bJIkQaEbTL4dvxk+E7voh3eafNl7c0b/mX0=
+	b=ZFzl5p/eZTq+A03jXzgFTFHFTN5qSIjDpWIx/9BU12kEdT04cnCExtE1KSf751kuF
+	 1Svk/2T/MQvlrixDc8OCud8oe9xBm2/SCpYuFqfLK6ItKKyy3wQfVum8b3/tfeQUfe
+	 nYIONhDVk5bxifbOZt9JVfj0OQKYZ6R/YQcc/G1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390103AbgDAQr5 (ORCPT
+        id S2390108AbgDAQsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49818 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:48:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389677AbgDAQry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:47:54 -0400
+        id S2390100AbgDAQr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:47:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 132522063A;
-        Wed,  1 Apr 2020 16:47:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB143206E9;
+        Wed,  1 Apr 2020 16:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759673;
-        bh=2ylRiHjtK90gxi61cOd673GSv59weoK+DS/Xe0pyLX8=;
+        s=default; t=1585759676;
+        bh=h74ejmZRkUXqWK9qRDs8IjDoU7X8jdD/ST0PfyG2Zlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qnx09vuTLgJJ57e5NuFtc4Zs+VrQ4CAz2lM5gXosMp0MyVI235PH8apwUcE6wG7p7
-         D0y3uTBUm3pVAZvDTyETa/WRLB/k4iLtEGSDbarhIG8gyEUaiO/LL8FojBOGEbvUXy
-         MULABzy9PpOWcChlBhqAEKVXh5FKquBPvTGe6Rpw=
+        b=q2tNbqQujL9cyBUsvE5CL3xqGwXT+M+t6TqXyDakPrIWp7lcIXFVf8iodcOEaNMzU
+         FUAKVkJU+afIH0X4m1v+C7uOIYfAB0sS6ftI5HrTWHU558MsfJaNn39d4X+F5YLXJJ
+         ReqD2br20+1WYg8RME96YCrpuxJBzlrTnvIm7kVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.14 126/148] media: ov519: add missing endpoint sanity checks
-Date:   Wed,  1 Apr 2020 18:18:38 +0200
-Message-Id: <20200401161604.489452271@linuxfoundation.org>
+Subject: [PATCH 4.14 127/148] media: dib0700: fix rc endpoint lookup
+Date:   Wed,  1 Apr 2020 18:18:39 +0200
+Message-Id: <20200401161604.577970711@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -63,53 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 998912346c0da53a6dbb71fab3a138586b596b30 upstream.
+commit f52981019ad8d6718de79b425a574c6bddf81f7c upstream.
 
-Make sure to check that we have at least one endpoint before accessing
-the endpoint array to avoid dereferencing a NULL-pointer on stream
-start.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid submitting an URB to an invalid endpoint.
 
-Note that these sanity checks are not redundant as the driver is mixing
-looking up altsettings by index and by number, which need not coincide.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: 1876bb923c98 ("V4L/DVB (12079): gspca_ov519: add support for the ov511 bridge")
-Fixes: b282d87332f5 ("V4L/DVB (12080): gspca_ov519: Fix ov518+ with OV7620AE (Trust spacecam 320)")
-Cc: stable <stable@vger.kernel.org>     # 2.6.31
-Cc: Hans de Goede <hdegoede@redhat.com>
+Fixes: c4018fa2e4c0 ("[media] dib0700: fix RC support on Hauppauge Nova-TD")
+Cc: stable <stable@vger.kernel.org>     # 3.16
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/ov519.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/media/usb/dvb-usb/dib0700_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/media/usb/gspca/ov519.c
-+++ b/drivers/media/usb/gspca/ov519.c
-@@ -3478,6 +3478,11 @@ static void ov511_mode_init_regs(struct
- 		return;
- 	}
+--- a/drivers/media/usb/dvb-usb/dib0700_core.c
++++ b/drivers/media/usb/dvb-usb/dib0700_core.c
+@@ -821,7 +821,7 @@ int dib0700_rc_setup(struct dvb_usb_devi
  
-+	if (alt->desc.bNumEndpoints < 1) {
-+		sd->gspca_dev.usb_err = -ENODEV;
-+		return;
-+	}
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	reg_w(sd, R51x_FIFO_PSIZE, packet_size >> 5);
+ 	/* Starting in firmware 1.20, the RC info is provided on a bulk pipe */
  
-@@ -3604,6 +3609,11 @@ static void ov518_mode_init_regs(struct
- 		return;
- 	}
+-	if (intf->altsetting[0].desc.bNumEndpoints < rc_ep + 1)
++	if (intf->cur_altsetting->desc.bNumEndpoints < rc_ep + 1)
+ 		return -ENODEV;
  
-+	if (alt->desc.bNumEndpoints < 1) {
-+		sd->gspca_dev.usb_err = -ENODEV;
-+		return;
-+	}
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	ov518_reg_w32(sd, R51x_FIFO_PSIZE, packet_size & ~7, 2);
- 
+ 	purb = usb_alloc_urb(0, GFP_KERNEL);
+@@ -841,7 +841,7 @@ int dib0700_rc_setup(struct dvb_usb_devi
+ 	 * Some devices like the Hauppauge NovaTD model 52009 use an interrupt
+ 	 * endpoint, while others use a bulk one.
+ 	 */
+-	e = &intf->altsetting[0].endpoint[rc_ep].desc;
++	e = &intf->cur_altsetting->endpoint[rc_ep].desc;
+ 	if (usb_endpoint_dir_in(e)) {
+ 		if (usb_endpoint_xfer_bulk(e)) {
+ 			pipe = usb_rcvbulkpipe(d->udev, rc_ep);
 
 
