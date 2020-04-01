@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3451C2BA13
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080C4C2BA14
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7377C20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92692063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759242;
-	bh=vd9KQm5lJKIzHUK1AZOmpGTXDgVDFpKR0xg/ZSIl5jY=;
+	s=default; t=1585759244;
+	bh=/89VXsffS546Tb9JnIosWXjGKC99SR3dCtBPfqrh4aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lCb5tcso9+fXAQ0eD3IDRfdl0TSXfhd5F5gyY6j4omlr9bsTs4Jvdn9XpRWwIi8gB
-	 LfA+P4YFsWLvN9Sx+yWFSBZjVcfzMHGwUTvZeMVvgO+bRu/uVQhdT5hERX6sv/jBpi
-	 3A/g7EVuFzLAvQt9pXtAU3UUkxCZp3JOgYY3jkhs=
+	b=aXkINeIJkDJK8oCQzVG9bO3O1e8wXOynsZa5Vp+ITYcSA7fCYD1/YOFX45aD6pE9B
+	 Lybpf6crTGnPApFsb+bLFtZQZrbRyV/lXs1xxWTAqItkQVShO1ADDICUHcr9GyMkph
+	 OTDgnMaQJRpDkex703PVT1ByeycLZTmXcsbInE0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389347AbgDAQkk (ORCPT
+        id S2389350AbgDAQkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40820 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:40:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389331AbgDAQkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:40:37 -0400
+        id S2389328AbgDAQkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:40:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17C6120719;
-        Wed,  1 Apr 2020 16:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB882063A;
+        Wed,  1 Apr 2020 16:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759235;
-        bh=vd9KQm5lJKIzHUK1AZOmpGTXDgVDFpKR0xg/ZSIl5jY=;
+        s=default; t=1585759238;
+        bh=/89VXsffS546Tb9JnIosWXjGKC99SR3dCtBPfqrh4aw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fTuYIeRidxyj+XC142pu/FSbjOROt5AkUcI0Fu+e8677sYhFQ14xcHsQnL9dD7K5f
-         3OOwmKMzDk/ZjPTmgFV+QRu6tqmQ8suDAO3IT5wREP8AQkDK+35zCdXOj4Rc3AyoLd
-         mkEPq6XnI0Tif1kQK8hCgV3YnMhOBezHmZ1ME9yk=
+        b=vJ2fPKVoIMQ4f6EwRK16n73UlIxEYNe3iFcKgI0zD0r7HN9B4dXj7JwTzM9AGnyXP
+         Th2d5j31sgwrnqkl1NUxYjJzD0oT2aNLETewZOOQiMgjoYAQsHJ75QckH2lmyofpZs
+         UF14IjmjTom23RaF4jIrBeOti9DausuubzcxZw3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 017/148] USB: serial: option: add ME910G1 ECM composition 0x110b
-Date:   Wed,  1 Apr 2020 18:16:49 +0200
-Message-Id: <20200401161553.986490775@linuxfoundation.org>
+        stable@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.14 018/148] usb: host: xhci-plat: add a shutdown
+Date:   Wed,  1 Apr 2020 18:16:50 +0200
+Message-Id: <20200401161554.130335859@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,32 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Ran Wang <ran.wang_1@nxp.com>
 
-commit 8e852a7953be2a6ee371449f7257fe15ace6a1fc upstream.
+commit b433e340e7565110b0ce9ca4b3e26f4b97a1decf upstream.
 
-Add ME910G1 ECM composition 0x110b: tty, tty, tty, ecm
+When loading new kernel via kexec, we need to shutdown host controller to
+avoid any un-expected memory accessing during new kernel boot.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Link: https://lore.kernel.org/r/20200304104310.2938-1-dnlplm@gmail.com
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200306092328.41253-1-ran.wang_1@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/host/xhci-plat.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1186,6 +1186,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) },
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110a, 0xff),	/* Telit ME910G1 */
- 	  .driver_info = NCTRL(0) | RSVD(3) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110b, 0xff),	/* Telit ME910G1 (ECM) */
-+	  .driver_info = NCTRL(0) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -416,6 +416,7 @@ MODULE_DEVICE_TABLE(acpi, usb_xhci_acpi_
+ static struct platform_driver usb_xhci_driver = {
+ 	.probe	= xhci_plat_probe,
+ 	.remove	= xhci_plat_remove,
++	.shutdown = usb_hcd_platform_shutdown,
+ 	.driver	= {
+ 		.name = "xhci-hcd",
+ 		.pm = &xhci_plat_pm_ops,
 
 
