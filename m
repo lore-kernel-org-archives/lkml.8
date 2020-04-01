@@ -2,164 +2,172 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A33C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0581C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6A620784
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:41:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJ4dU1KA"
+	by mail.kernel.org (Postfix) with ESMTP id B10FD2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732157AbgDAJlb (ORCPT
+        id S1732173AbgDAJml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:41:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37954 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726063AbgDAJlb (ORCPT
+        Wed, 1 Apr 2020 05:42:41 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41930 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731544AbgDAJml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:41:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585734090;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ljSBuTDshyjfWDIFiCj71fILGTvbhkgJDDa/MPsZiCk=;
-        b=DJ4dU1KA/YyoDji7Gcv3BnSl66wJw9UXOkQWDsPbtMNy4TlDiOLSAVSwN+PKoRjBaCJkR7
-        v0C9XYIBvJp9t7eRqG1d6peUUg3xqBk4TBXeQzYWqfCJoiZMeOtjfM7+hHEHC9M6pz3oW2
-        asT/g+5hbEijRaf7MBzbRU6yXl+txOc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-Jxw7ZyuKNJKiFRnZIQ0tPQ-1; Wed, 01 Apr 2020 05:41:26 -0400
-X-MC-Unique: Jxw7ZyuKNJKiFRnZIQ0tPQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E97F9107B118;
-        Wed,  1 Apr 2020 09:41:21 +0000 (UTC)
-Received: from [10.36.112.58] (ovpn-112-58.ams2.redhat.com [10.36.112.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 318D4118F20;
-        Wed,  1 Apr 2020 09:41:11 +0000 (UTC)
-Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
- userspace
-To:     "Liu, Yi L" <yi.l.liu@intel.com>, alex.williamson@redhat.com
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        joro@8bytes.org, ashok.raj@intel.com, jun.j.tian@intel.com,
-        yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hao.wu@intel.com
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-4-git-send-email-yi.l.liu@intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <1b720777-8334-936e-5edb-802b3dae7b05@redhat.com>
-Date:   Wed, 1 Apr 2020 11:41:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 1 Apr 2020 05:42:41 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f52so25240221otf.8;
+        Wed, 01 Apr 2020 02:42:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9NFB4A2CPVwSz9Sg1U5/CRoks4HY24v+VcMc1LJYhlA=;
+        b=p1WRaOvxvULH8ETXZWUa2OKQudPCObw8EmvnL7gmHglr6xirhDFra5OFJqOh4iP94/
+         l3YFXm2BRljkuXohvkeRMQMMo1k9wohT5Ds3OEShcqfs7hkXHJkfd1YTtJq5X2+hxgNM
+         V19sT2eM4pcmDr24KvWP//l6XaJ3YCKyNSaXcxp3AbUxXAJJVS3667eziHptQVg9UTTA
+         1QWlQ0FbZ7BEkgvdMh+OQzhGKSmbHW4Npte2e5mcE17pnkDQl0gvrOk1cNiHU7hnXdr3
+         pgomRw8EREWcbAk6LY89/zI2J0iRb9/7B7U+NkRqq7pW9t1x2zrEWgTmODmbY3hKvEzR
+         voIg==
+X-Gm-Message-State: ANhLgQ3z56mS8WqiuuPgVFSXvAV/nGlVIbNOJJiuZjdfH4+WNKZDXSP/
+        bsknkJyGroQeuT6wXsN/Q9EwjXMATaAlXUeEeV0=
+X-Google-Smtp-Source: ADFU+vvaJkvIXHbATb21lCcc0MJLscOCEDsiXUahQfh8sCQeWQkEkYa7KZWVyEhPq2xVAduTUBjZdSJVtLeQCzJ8nlk=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr16100426otk.250.1585734160600;
+ Wed, 01 Apr 2020 02:42:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1584880325-10561-4-git-send-email-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 1 Apr 2020 11:42:29 +0200
+Message-ID: <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for
+ AISTARVISION MIPI Adapter V2.1
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yi,
-On 3/22/20 1:32 PM, Liu, Yi L wrote:
-> From: Liu Yi L <yi.l.liu@intel.com>
-> 
-> This patch reports PASID alloc/free availability to userspace (e.g. QEMU)
-> thus userspace could do a pre-check before utilizing this feature.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Hi Prabhakar,
+
+On Sun, Mar 22, 2020 at 3:13 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
+> to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
+> which have the camera endpoint nodes for imx219 and ov5645 so that this can
+> be re-used with other G2x platforms.
+>
+> r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
+> default ties ov5645 camera endpoint to CSI2.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  drivers/vfio/vfio_iommu_type1.c | 28 ++++++++++++++++++++++++++++
->  include/uapi/linux/vfio.h       |  8 ++++++++
->  2 files changed, 36 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index e40afc0..ddd1ffe 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -2234,6 +2234,30 @@ static int vfio_iommu_type1_pasid_free(struct vfio_iommu *iommu,
->  	return ret;
->  }
->  
-> +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
-> +					 struct vfio_info_cap *caps)
-> +{
-> +	struct vfio_info_cap_header *header;
-> +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
+>  Changes for v2:
+>  * Dropped #{address,size}-cells
+>  * Dropped unit address and reg for port
+
+Thanks for the update!
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+> @@ -0,0 +1,75 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
+> + * connected with aistarvision-mipi-v2-adapter board
+> + *
+> + * Copyright (C) 2020 Renesas Electronics Corp.
+> + */
 > +
-> +	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
-> +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-> +	if (IS_ERR(header))
-> +		return PTR_ERR(header);
+> +/dts-v1/;
+> +#include "r8a774c0-ek874.dts"
+> +#define MIPI_PARENT_I2C i2c3
+> +#include "aistarvision-mipi-adapter-2.1.dtsi"
 > +
-> +	nesting_cap = container_of(header,
-> +				struct vfio_iommu_type1_info_cap_nesting,
-> +				header);
-> +
-> +	nesting_cap->nesting_capabilities = 0;
-> +	if (iommu->nesting) {
-> +		/* nesting iommu type supports PASID requests (alloc/free) */
-> +		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
-Supporting nesting does not necessarily mean supporting PASID.
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static long vfio_iommu_type1_ioctl(void *iommu_data,
->  				   unsigned int cmd, unsigned long arg)
->  {
-> @@ -2283,6 +2307,10 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
->  		if (ret)
->  			return ret;
->  
-> +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
-> +		if (ret)
-> +			return ret;
-> +
->  		if (caps.size) {
->  			info.flags |= VFIO_IOMMU_INFO_CAPS;
->  
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 298ac80..8837219 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -748,6 +748,14 @@ struct vfio_iommu_type1_info_cap_iova_range {
->  	struct	vfio_iova_range iova_ranges[];
->  };
->  
-> +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  2
-> +
-> +struct vfio_iommu_type1_info_cap_nesting {
-> +	struct	vfio_info_cap_header header;
-> +#define VFIO_IOMMU_PASID_REQS	(1 << 0)
-PASID_REQS sounds a bit far from the claimed host managed alloc/free
-capability.
-VFIO_IOMMU_SYSTEM_WIDE_PASID?
-> +	__u32	nesting_capabilities;
+> +/ {
+> +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
+> +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
 > +};
 > +
->  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
->  
->  /**
-> 
-Thanks
+> +&i2c3 {
+> +       status = "okay";
+> +};
+> +
+> +&vin4 {
+> +       status = "okay";
+> +};
+> +
+> +&vin5 {
+> +       status = "okay";
+> +};
+> +
+> +&csi40 {
+> +       status = "okay";
+> +
+> +       ports {
+> +               port {
+> +                       csi40_in: endpoint {
+> +                               clock-lanes = <0>;
+> +                               data-lanes = <1 2>;
+> +                               remote-endpoint = <&ov5645_ep>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&ov5645 {
+> +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
+> +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
+> +
+> +       clocks = <&cpg CPG_MOD 716>;
 
-Eric
+I'm still a bit puzzled here.
 
+CPG_MOD 716 is the CSI40 module clock, which runs at 25 MHz, and is
+presumably output to the CSI0_CLKP/N pair? Or is its rate controlled
+by the CSI driver?
+On the MIPI board[*], that signal becomes MIPI1_CP/N.
+However, the MIPI board also has a "Clock Source Selection" header,
+which allows you to choose one of:
+  1. The fixed 24 MHz crystal, which is apparently used for the imx219
+     camera, as described by imx219_clk above, and matches the wanted
+     clock rate specified below?
+  2. CSI1_CLK,
+  3. CSI2_CLK.
+The last two become CLK0/1 on the CAT874 board, which are driven by
+TPU0TO0/1.
+
+Which setting do you use for the ov5645 camera?
+
+> +       clock-frequency = <24000000>;
+
+After your patch for the ov5645 driver, this should be replaced by
+assigned-clock-rates?
+
+The rest looks good to me, but I'm not a multi-media/camera expert.
+
+[*] https://github.com/Kevin-WSCU/96Boards-Camera
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
