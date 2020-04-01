@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19200C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16787C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3208212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A692320658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758817;
-	bh=FGNU3TYBhXMnbZGkwfxzJZXIqiI4/tL2Rs1aZdf+Y2Q=;
+	s=default; t=1585758823;
+	bh=a3ZuDnxMQgCSScO4KDDz8FyS389uR0PmI/11HSciiD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vjGipqEmbrdUy4wR+yUoGKoW07upmN/2MReoK4DZ9ByNAcifHz1ZFYxs1eUpYAxlA
-	 kwH8YoyYbLHHwMnoAtGRbD01fl48f9fA/3OpckYSNHDzc0c1dKfvMGUX/jRkQ+ai/s
-	 8pU4gi0p4Lrxd/DivC19HDjTwe8iwbvSYfdzDksw=
+	b=fhijqKKBKE8AqVxiqAvTct8VI1GeSHacZEQnhAjakORZlpA4lZVu6gfVaDAC5oIqm
+	 l2mQDSeKA8i2h9X6GRCIwmQNlbIfXBub4jiYCTeZASe9tthTGvWy3ajLU2/CFM329g
+	 BuTpDvHy067Im4hatHWFSX3S1hEv9LkNnxpyzybg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388567AbgDAQdg (ORCPT
+        id S2388399AbgDAQdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:33:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388556AbgDAQdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:33:33 -0400
+        id S2388573AbgDAQdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:33:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A4120658;
-        Wed,  1 Apr 2020 16:33:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD19520658;
+        Wed,  1 Apr 2020 16:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758812;
-        bh=FGNU3TYBhXMnbZGkwfxzJZXIqiI4/tL2Rs1aZdf+Y2Q=;
+        s=default; t=1585758819;
+        bh=a3ZuDnxMQgCSScO4KDDz8FyS389uR0PmI/11HSciiD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjOgzJML57S/806jFd11TZSHKLbiebo8H4rWwQj9BOplmmRUSW6xJ6eBI7saa2Zj6
-         DQH1K90m9G05yMz0zc3AhVWjNEZvvFxv85rZBEQE03ANvcOiVuQyQl7gwA6nQ6Ni9S
-         ECpagkwBqVrVQK7UwTsKRBmPiQWnaMRv8rz36Pv8=
+        b=XmLwIOKcqcTbC6m47Az+1fSc0vjjOjaA75qt0Vub7eOM+p5dEjrl5c1YkIop1edGS
+         leXcuQI9o7asl7iK9jt4+g4+w6PNqzTiInLCm9whLhJZb4hfJbm2DUrghH5uijJZKn
+         HyqGjbnnUhZ0S8qU/II0DmpU3TDgDMvZB/xbT67Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 4.4 83/91] vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
-Date:   Wed,  1 Apr 2020 18:18:19 +0200
-Message-Id: <20200401161539.126358264@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 4.4 85/91] vt: vt_ioctl: remove unnecessary console allocation checks
+Date:   Wed,  1 Apr 2020 18:18:21 +0200
+Message-Id: <20200401161539.366293605@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -58,87 +58,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Eric Biggers <ebiggers@google.com>
 
-commit e587e8f17433ddb26954f0edf5b2f95c42155ae9 upstream.
+commit 1aa6e058dd6cd04471b1f21298270014daf48ac9 upstream.
 
-These two were macros. Switch them to static inlines, so that it's more
-understandable what they are doing.
+The vc_cons_allocated() checks in vt_ioctl() and vt_compat_ioctl() are
+unnecessary because they can only be reached by calling ioctl() on an
+open tty, which implies the corresponding virtual console is allocated.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200219073951.16151-2-jslaby@suse.cz
+And even if the virtual console *could* be freed concurrently, then
+these checks would be broken since they aren't done under console_lock,
+and the vc_data is dereferenced before them anyway.
+
+So, remove these unneeded checks to avoid confusion.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Link: https://lore.kernel.org/r/20200224080326.295046-1-ebiggers@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt_ioctl.c |   29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ drivers/tty/vt/vt_ioctl.c |   21 ++-------------------
+ 1 file changed, 2 insertions(+), 19 deletions(-)
 
 --- a/drivers/tty/vt/vt_ioctl.c
 +++ b/drivers/tty/vt/vt_ioctl.c
-@@ -39,10 +39,25 @@
- #include <linux/selection.h>
- 
- char vt_dont_switch;
--extern struct tty_driver *console_driver;
- 
--#define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
--#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
-+static inline bool vt_in_use(unsigned int i)
-+{
-+	extern struct tty_driver *console_driver;
-+
-+	return console_driver->ttys[i] && console_driver->ttys[i]->count;
-+}
-+
-+static inline bool vt_busy(int i)
-+{
-+	if (vt_in_use(i))
-+		return true;
-+	if (i == fg_console)
-+		return true;
-+	if (vc_is_sel(vc_cons[i].d))
-+		return true;
-+
-+	return false;
-+}
- 
- /*
-  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
-@@ -292,7 +307,7 @@ static int vt_disallocate(unsigned int v
+@@ -353,22 +353,13 @@ int vt_ioctl(struct tty_struct *tty,
+ {
+ 	struct vc_data *vc = tty->driver_data;
+ 	struct console_font_op op;	/* used in multiple places here */
+-	unsigned int console;
++	unsigned int console = vc->vc_num;
+ 	unsigned char ucval;
+ 	unsigned int uival;
+ 	void __user *up = (void __user *)arg;
+ 	int i, perm;
  	int ret = 0;
  
- 	console_lock();
--	if (VT_BUSY(vc_num))
-+	if (vt_busy(vc_num))
- 		ret = -EBUSY;
- 	else if (vc_num)
- 		vc = vc_deallocate(vc_num);
-@@ -314,7 +329,7 @@ static void vt_disallocate_all(void)
+-	console = vc->vc_num;
+-
+-
+-	if (!vc_cons_allocated(console)) { 	/* impossible? */
+-		ret = -ENOIOCTLCMD;
+-		goto out;
+-	}
+-
+-
+ 	/*
+ 	 * To have permissions to do most of the vt ioctls, we either have
+ 	 * to be the owner of the tty, or have CAP_SYS_TTY_CONFIG.
+@@ -1208,18 +1199,10 @@ long vt_compat_ioctl(struct tty_struct *
+ {
+ 	struct vc_data *vc = tty->driver_data;
+ 	struct console_font_op op;	/* used in multiple places here */
+-	unsigned int console;
+ 	void __user *up = (void __user *)arg;
+ 	int perm;
+ 	int ret = 0;
  
- 	console_lock();
- 	for (i = 1; i < MAX_NR_CONSOLES; i++)
--		if (!VT_BUSY(i))
-+		if (!vt_busy(i))
- 			vc[i] = vc_deallocate(i);
- 		else
- 			vc[i] = NULL;
-@@ -651,7 +666,7 @@ int vt_ioctl(struct tty_struct *tty,
- 			state = 1;	/* /dev/tty0 is always open */
- 			for (i = 0, mask = 2; i < MAX_NR_CONSOLES && mask;
- 							++i, mask <<= 1)
--				if (VT_IS_IN_USE(i))
-+				if (vt_in_use(i))
- 					state |= mask;
- 			ret = put_user(state, &vtstat->v_state);
- 		}
-@@ -664,7 +679,7 @@ int vt_ioctl(struct tty_struct *tty,
- 	case VT_OPENQRY:
- 		/* FIXME: locking ? - but then this is a stupid API */
- 		for (i = 0; i < MAX_NR_CONSOLES; ++i)
--			if (! VT_IS_IN_USE(i))
-+			if (!vt_in_use(i))
- 				break;
- 		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
- 		goto setint;		 
+-	console = vc->vc_num;
+-
+-	if (!vc_cons_allocated(console)) { 	/* impossible? */
+-		ret = -ENOIOCTLCMD;
+-		goto out;
+-	}
+-
+ 	/*
+ 	 * To have permissions to do most of the vt ioctls, we either have
+ 	 * to be the owner of the tty, or have CAP_SYS_TTY_CONFIG.
+@@ -1279,7 +1262,7 @@ long vt_compat_ioctl(struct tty_struct *
+ 		arg = (unsigned long)compat_ptr(arg);
+ 		goto fallback;
+ 	}
+-out:
++
+ 	return ret;
+ 
+ fallback:
 
 
