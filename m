@@ -2,209 +2,372 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66134C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D784EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDF02071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949DB206EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdpjtdE1"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="FN32Obsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731934AbgDAGig (ORCPT
+        id S1731860AbgDAGoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:38:36 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42295 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731908AbgDAGif (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:38:35 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h15so29084188wrx.9;
-        Tue, 31 Mar 2020 23:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=u7qzTLhWhtQ+4ksRWWT0iCnZlieYp50htwnA74AfNuM=;
-        b=OdpjtdE14ZEsiCtuHCsfDHAkoRhqvtvfrGsCgG++nLESkSz0pcq2UBrEBNvCDzprCW
-         dmlM5gX1y8Tm6so4QYNvJmgQxl3z7RiT4ERWXhbMt46VZ0HaDP5zjTWSlThjaN3AVYJD
-         DLNDK0Edvewv5ebCdiVAjZw1ss/EuqaraqE+NxMTHj1yT9MX+1Tj4ohJJka60rVTXzT+
-         2LKRvDXPbAIVQXIBNLIot8sUyFkzLN/ftPkCQmqB2+BrX0gStl/vL0RHYiSa0cqybaTD
-         AfcJbgvKu+q5FcuzK/5JwW49GG2okf3SrMEAtUdlqE9EdRPsKvUt9/mhLJeNRbgpHyKu
-         U8Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u7qzTLhWhtQ+4ksRWWT0iCnZlieYp50htwnA74AfNuM=;
-        b=Y9PheYqlpUj93vrIU9jnEq68nozznGYvvMJxFQ9oJmdXl/5Ki3gbaUYBCql8uKQtfo
-         /x8J1MYVsAow56tWFTiHusVkMPPIqYzSzJvsxAmAnNNganoVE98ICYDSWXrS4/945Tp7
-         i0kyw39q5pvbi6feISYRQeIILZmsagC9/YLNMb38z65VJapBz/0UznxNRnzV5rq6VmBL
-         0Glsy94TwWbrwfCIrqRNd+O7IvHB5Tix5GtXE5JWvkNHRLbS1uifwzlu9+CC4p2gxXm7
-         gIRi2aJzuYom2BeguzvucOHiB1vNiQ3Y4Lzn9B6no7Gn3CVa4Ti5I5iCJOu/Plwzwevc
-         am4w==
-X-Gm-Message-State: ANhLgQ0A8tqn6p/isqLipPfRDzyx7b0/ClMfqhb5UB5dHqQxQ8RjweLq
-        KcEcBHGcYLYy4LBDEAkE50DikcRd
-X-Google-Smtp-Source: ADFU+vsGt7fHvFHWI6/jEJLu+44G71UgYE2sbgFQAduQzIv8MVFyAupGe9DXvtjw75oECDTe2yQIrg==
-X-Received: by 2002:adf:e44a:: with SMTP id t10mr24060598wrm.322.1585723113198;
-        Tue, 31 Mar 2020 23:38:33 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id b67sm1346031wmh.29.2020.03.31.23.38.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 23:38:32 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Wed, 1 Apr 2020 02:44:05 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:35118 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730426AbgDAGoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 02:44:05 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48sc9Y1N7Lz9tyYt;
+        Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=FN32Obsp; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id LfJ-CBpdfzbp; Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48sc9Y00mcz9tyYB;
+        Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585723441; bh=EJxaAM8iaxCoKvwnCcqzzUCDRBm8vznM2R2KHic5ohw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FN32Obsp1rPQUh1rFzsVLF87dmCSh7UZ51+tKQG3FaXi9kX88VGuU/mZSBaIYgWWo
+         Sxblhq3vUR3mF/P3rJYpIY68eG+gf8hLN+R/v9mS9AMKezaSHGN1mCrUnVCX6knFV5
+         8KJ5kaAsPk8wJdiQ5FabmGL5iamWy0qrJtzy326k=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DA0EB8B7B3;
+        Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 65prwT2dX8la; Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3C7A08B778;
+        Wed,  1 Apr 2020 08:43:59 +0200 (CEST)
+Subject: Re: [PATCH v2 09/16] powerpc/watchpoint: Convert
+ thread_struct->hw_brk to an array
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
+        mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2)
- syscall
-To:     Aleksa Sarai <cyphar@cyphar.com>
-References: <20200202151907.23587-1-cyphar@cyphar.com>
- <20200202151907.23587-3-cyphar@cyphar.com>
- <1567baea-5476-6d21-4f03-142def0f62e3@gmail.com>
- <20200331143911.lokfoq3lqfri2mgy@yavin.dot.cyphar.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <cd3a6aad-b906-ee57-1b5b-5939b9602ad0@gmail.com>
-Date:   Wed, 1 Apr 2020 08:38:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+References: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
+ <20200401061309.92442-10-ravi.bangoria@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <e5af5ed7-b9df-e334-1bdb-e7f82ae32697@c-s.fr>
+Date:   Wed, 1 Apr 2020 08:43:57 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200331143911.lokfoq3lqfri2mgy@yavin.dot.cyphar.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
+In-Reply-To: <20200401061309.92442-10-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Aleksa,
 
-On 3/31/20 4:39 PM, Aleksa Sarai wrote:
-> On 2020-03-30, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
->> Hello Aleksa,
->>
->> On 2/2/20 4:19 PM, Aleksa Sarai wrote:
->>> Rather than trying to merge the new syscall documentation into open.2
->>> (which would probably result in the man-page being incomprehensible),
->>> instead the new syscall gets its own dedicated page with links between
->>> open(2) and openat2(2) to avoid duplicating information such as the list
->>> of O_* flags or common errors.
->>>
->>> In addition to describing all of the key flags, information about the
->>> extensibility design is provided so that users can better understand why
->>> they need to pass sizeof(struct open_how) and how their programs will
->>> work across kernels. After some discussions with David Laight, I also
->>> included explicit instructions to zero the structure to avoid issues
->>> when recompiling with new headers.
->>>
->>> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
->>
->> Thanks. I've applied this patch, but also done quite a lot of
->> editing of the page. The current draft is below (and also pushed 
->> to Git). Could I ask you to review the page, to see if I injected
->> any error during my edits.
+
+Le 01/04/2020 à 08:13, Ravi Bangoria a écrit :
+> So far powerpc hw supported only one watchpoint. But Future Power
+> architecture is introducing 2nd DAWR. Convert thread_struct->hw_brk
+> into an array.
 > 
-> Looks good to me.
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>   arch/powerpc/include/asm/processor.h      |  2 +-
+>   arch/powerpc/kernel/process.c             | 61 ++++++++++++++---------
+>   arch/powerpc/kernel/ptrace/ptrace-noadv.c | 40 +++++++++++----
+>   arch/powerpc/kernel/ptrace/ptrace32.c     |  4 +-
+>   arch/powerpc/kernel/signal.c              |  9 +++-
+>   5 files changed, 77 insertions(+), 39 deletions(-)
 > 
->> In addition, I've added a number of FIXMEs in comments
->> in the page source. Can you please check these, and let me
->> know your thoughts.
+> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+> index 90f6dbc7ff00..65b03162cd67 100644
+> --- a/arch/powerpc/include/asm/processor.h
+> +++ b/arch/powerpc/include/asm/processor.h
+> @@ -187,7 +187,7 @@ struct thread_struct {
+>   	 */
+>   	struct perf_event *last_hit_ubp;
+>   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
+> -	struct arch_hw_breakpoint hw_brk; /* info on the hardware breakpoint */
+> +	struct arch_hw_breakpoint hw_brk[HBP_NUM_MAX]; /* hardware breakpoint info */
+>   	unsigned long	trap_nr;	/* last trap # on this thread */
+>   	u8 load_slb;			/* Ages out SLB preload cache entries */
+>   	u8 load_fp;
+> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+> index e0275fcd0c55..f5b4f21e822b 100644
+> --- a/arch/powerpc/kernel/process.c
+> +++ b/arch/powerpc/kernel/process.c
+> @@ -704,21 +704,50 @@ void switch_booke_debug_regs(struct debug_reg *new_debug)
+>   EXPORT_SYMBOL_GPL(switch_booke_debug_regs);
+>   #else	/* !CONFIG_PPC_ADV_DEBUG_REGS */
+>   #ifndef CONFIG_HAVE_HW_BREAKPOINT
+> -static void set_breakpoint(struct arch_hw_breakpoint *brk)
+> +static void set_breakpoint(struct arch_hw_breakpoint *brk, int i)
+>   {
+>   	preempt_disable();
+> -	__set_breakpoint(brk, 0);
+> +	__set_breakpoint(brk, i);
+>   	preempt_enable();
+>   }
+>   
+>   static void set_debug_reg_defaults(struct thread_struct *thread)
+>   {
+> -	thread->hw_brk.address = 0;
+> -	thread->hw_brk.type = 0;
+> -	thread->hw_brk.len = 0;
+> -	thread->hw_brk.hw_len = 0;
+> -	if (ppc_breakpoint_available())
+> -		set_breakpoint(&thread->hw_brk);
+> +	int i;
+> +
+> +	for (i = 0; i < nr_wp_slots(); i++) {
+
+Maybe you could add the following that you added other places:
+
+	struct arch_hw_breakpoint null_brk = {0};
+
+Then do
+
+	thread->hw_brk[i] = null_brk;
+
+> +		thread->hw_brk[i].address = 0;
+> +		thread->hw_brk[i].type = 0;
+> +		thread->hw_brk[i].len = 0;
+> +		thread->hw_brk[i].hw_len = 0;
+> +		if (ppc_breakpoint_available())
+> +			set_breakpoint(&thread->hw_brk[i], i);
+> +	}
+> +}
+> +
+> +static inline bool hw_brk_match(struct arch_hw_breakpoint *a,
+> +				struct arch_hw_breakpoint *b)
+> +{
+> +	if (a->address != b->address)
+> +		return false;
+> +	if (a->type != b->type)
+> +		return false;
+> +	if (a->len != b->len)
+> +		return false;
+> +	/* no need to check hw_len. it's calculated from address and len */
+> +	return true;
+> +}
+> +
+> +static void switch_hw_breakpoint(struct task_struct *new)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nr_wp_slots(); i++) {
+> +		if (unlikely(!hw_brk_match(this_cpu_ptr(&current_brk[i]),
+> +					   &new->thread.hw_brk[i]))) {
+> +			__set_breakpoint(&new->thread.hw_brk[i], i);
+> +		}
+
+Or could be:
+
+		if (likely(hw_brk_match(this_cpu_ptr(&current_brk[i]),
+					&new->thread.hw_brk[i])))
+			continue;
+		__set_breakpoint(&new->thread.hw_brk[i], i);
+
+
+> +	}
+>   }
+>   #endif /* !CONFIG_HAVE_HW_BREAKPOINT */
+>   #endif	/* CONFIG_PPC_ADV_DEBUG_REGS */
+> @@ -822,19 +851,6 @@ bool ppc_breakpoint_available(void)
+>   }
+>   EXPORT_SYMBOL_GPL(ppc_breakpoint_available);
+>   
+> -static inline bool hw_brk_match(struct arch_hw_breakpoint *a,
+> -			      struct arch_hw_breakpoint *b)
+> -{
+> -	if (a->address != b->address)
+> -		return false;
+> -	if (a->type != b->type)
+> -		return false;
+> -	if (a->len != b->len)
+> -		return false;
+> -	/* no need to check hw_len. it's calculated from address and len */
+> -	return true;
+> -}
+> -
+>   #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+>   
+>   static inline bool tm_enabled(struct task_struct *tsk)
+> @@ -1167,8 +1183,7 @@ struct task_struct *__switch_to(struct task_struct *prev,
+>    * schedule DABR
+>    */
+>   #ifndef CONFIG_HAVE_HW_BREAKPOINT
+> -	if (unlikely(!hw_brk_match(this_cpu_ptr(&current_brk[0]), &new->thread.hw_brk)))
+> -		__set_breakpoint(&new->thread.hw_brk, 0);
+> +	switch_hw_breakpoint(new);
+>   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
+>   #endif
+>   
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> index 12962302d6a4..0dbb35392dd2 100644
+> --- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> +++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> @@ -67,11 +67,16 @@ int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
+>   	/* We only support one DABR and no IABRS at the moment */
+>   	if (addr > 0)
+>   		return -EINVAL;
+> -	dabr_fake = ((child->thread.hw_brk.address & (~HW_BRK_TYPE_DABR)) |
+> -		     (child->thread.hw_brk.type & HW_BRK_TYPE_DABR));
+> +	dabr_fake = ((child->thread.hw_brk[0].address & (~HW_BRK_TYPE_DABR)) |
+> +		     (child->thread.hw_brk[0].type & HW_BRK_TYPE_DABR));
+>   	return put_user(dabr_fake, datalp);
+>   }
+>   
+> +/*
+> + * ptrace_set_debugreg() fakes DABR and DABR is only one. So even if
+> + * internal hw supports more than one watchpoint, we support only one
+> + * watchpoint with this interface.
+> + */
+>   int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned long data)
+>   {
+>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
+> @@ -137,7 +142,7 @@ int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned l
+>   			return ret;
+>   
+>   		thread->ptrace_bps[0] = bp;
+> -		thread->hw_brk = hw_brk;
+> +		thread->hw_brk[0] = hw_brk;
+>   		return 0;
+>   	}
+>   
+> @@ -159,12 +164,24 @@ int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned l
+>   	if (set_bp && (!ppc_breakpoint_available()))
+>   		return -ENODEV;
+>   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
+> -	task->thread.hw_brk = hw_brk;
+> +	task->thread.hw_brk[0] = hw_brk;
+>   	return 0;
+>   }
+>   
+> +static int find_empty_hw_brk(struct thread_struct *thread)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nr_wp_slots(); i++) {
+> +		if (!thread->hw_brk[i].address)
+> +			return i;
+> +	}
+> +	return -1;
+> +}
+> +
+>   long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_info)
+>   {
+> +	int i;
+>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
+>   	int len = 0;
+>   	struct thread_struct *thread = &child->thread;
+> @@ -223,15 +240,16 @@ long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_inf
+>   	if (bp_info->addr_mode != PPC_BREAKPOINT_MODE_EXACT)
+>   		return -EINVAL;
+>   
+> -	if (child->thread.hw_brk.address)
+> +	i = find_empty_hw_brk(&child->thread);
+> +	if (i < 0)
+>   		return -ENOSPC;
+>   
+>   	if (!ppc_breakpoint_available())
+>   		return -ENODEV;
+>   
+> -	child->thread.hw_brk = brk;
+> +	child->thread.hw_brk[i] = brk;
+>   
+> -	return 1;
+> +	return i + 1;
+>   }
+>   
+>   long ppc_del_hwdebug(struct task_struct *child, long data)
+> @@ -241,7 +259,7 @@ long ppc_del_hwdebug(struct task_struct *child, long data)
+>   	struct thread_struct *thread = &child->thread;
+>   	struct perf_event *bp;
+>   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
+> -	if (data != 1)
+> +	if (data < 1 || data > nr_wp_slots())
+>   		return -EINVAL;
+>   
+>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
+> @@ -254,11 +272,11 @@ long ppc_del_hwdebug(struct task_struct *child, long data)
+>   	}
+>   	return ret;
+>   #else /* CONFIG_HAVE_HW_BREAKPOINT */
+> -	if (child->thread.hw_brk.address == 0)
+> +	if (child->thread.hw_brk[data - 1].address == 0)
+>   		return -ENOENT;
+>   
+> -	child->thread.hw_brk.address = 0;
+> -	child->thread.hw_brk.type = 0;
+> +	child->thread.hw_brk[data - 1].address = 0;
+> +	child->thread.hw_brk[data - 1].type = 0;
+>   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
+>   
+>   	return 0;
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace32.c b/arch/powerpc/kernel/ptrace/ptrace32.c
+> index 7976ddf29c0e..7589a9665ffb 100644
+> --- a/arch/powerpc/kernel/ptrace/ptrace32.c
+> +++ b/arch/powerpc/kernel/ptrace/ptrace32.c
+> @@ -259,8 +259,8 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+>   		ret = put_user(child->thread.debug.dac1, (u32 __user *)data);
+>   #else
+>   		dabr_fake = (
+> -			(child->thread.hw_brk.address & (~HW_BRK_TYPE_DABR)) |
+> -			(child->thread.hw_brk.type & HW_BRK_TYPE_DABR));
+> +			(child->thread.hw_brk[0].address & (~HW_BRK_TYPE_DABR)) |
+> +			(child->thread.hw_brk[0].type & HW_BRK_TYPE_DABR));
+>   		ret = put_user(dabr_fake, (u32 __user *)data);
+>   #endif
+>   		break;
+> diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
+> index bbf237f072d4..b559b114d03d 100644
+> --- a/arch/powerpc/kernel/signal.c
+> +++ b/arch/powerpc/kernel/signal.c
+> @@ -107,6 +107,9 @@ static void do_signal(struct task_struct *tsk)
+>   	struct ksignal ksig = { .sig = 0 };
+>   	int ret;
+>   	int is32 = is_32bit_task();
+> +#ifndef CONFIG_PPC_ADV_DEBUG_REGS
+> +	int i;
+> +#endif >
+>   	BUG_ON(tsk != current);
+>   
+> @@ -128,8 +131,10 @@ static void do_signal(struct task_struct *tsk)
+>   	 * user space. The DABR will have been cleared if it
+>   	 * triggered inside the kernel.
+>   	 */
+> -	if (tsk->thread.hw_brk.address && tsk->thread.hw_brk.type)
+> -		__set_breakpoint(&tsk->thread.hw_brk, 0);
+> +	for (i = 0; i < nr_wp_slots(); i++) {
+> +		if (tsk->thread.hw_brk[i].address && tsk->thread.hw_brk[i].type)
+> +			__set_breakpoint(&tsk->thread.hw_brk[i], i);
+> +	}
+
+thread.hwbrk also exists when CONFIG_PPC_ADV_DEBUG_REGS is selected.
+
+You could replace the #ifndef CONFIG_PPC_ADV_DEBUG_REGS by an if 
+(!IS_ENABLED(CONFIG_PPC_ADV_DEBUG_REGS)) and then no need of an ifdef 
+when declaring the int i;
+
+>   #endif
+>   	/* Re-enable the breakpoints for the signal stack */
+>   	thread_change_pc(tsk, tsk->thread.regs);
 > 
-> Will do, see below.
-> 
->> .\" FIXME I find the "previously-functional systems" in the previous
->> .\" sentence a little odd (since openat2() ia new sysycall), so I would
->> .\" like to clarify a little...
->> .\" Are you referring to the scenario where someone might take an
->> .\" existing application that uses openat() and replaces the uses
->> .\" of openat() with openat2()? In which case, is it correct to
->> .\" understand that you mean that one should not just indiscriminately
->> .\" add the RESOLVE_NO_XDEV flag to all of the openat2() calls?
->> .\" If I'm not on the right track, could you point me in the right
->> .\" direction please.
-> 
-> This is mostly meant as a warning to hopefully avoid applications
-> because the developer didn't realise that system paths may contain
-> symlinks or bind-mounts. For an application which has switched to
-> openat2() and then uses RESOLVE_NO_SYMLINKS for a non-security reason,
-> it's possible that on some distributions (or future versions of a
-> distribution) that their application will stop working because a system
-> path suddenly contains a symlink or is a bind-mount.
-> 
-> This was a concern which was brought up on LWN some time ago. If you can
-> think of a phrasing that makes this more clear, I'd appreciate it.
 
-Thanks. I've made the text:
-
-                     Applications  that  employ  the RESOLVE_NO_XDEV flag
-                     are encouraged to make its use configurable  (unless
-                     it is used for a specific security purpose), as bind
-                     mounts are widely used by end-users.   Setting  this
-                     flag indiscriminately—i.e., for purposes not specif‐
-                     ically related to security—for all uses of openat2()
-                     may  result  in  spurious errors on previously-func‐
-                     tional systems.  This may occur if, for  example,  a
-                     system  pathname  that  is used by an application is
-                     modified (e.g., in a new  distribution  release)  so
-                     that  a  pathname  component  (now)  contains a bind
-                     mount.
-
-Okay?
-
->> .\" FIXME: what specific details in symlink(7) are being referred
->> .\" by the following sentence? It's not clear.
-> 
-> The section on magic-links, but you're right that the sentence ordering
-> is a bit odd. It should probably go after the first sentence.
-
-I must admit that I'm still confused. There's only the briefest of 
-mentions of magic links in symlink(7). Perhaps that needs to be fixed?
-
-And, while I think of it, the text just preceding that FIXME says:
-
-    Due to the potential danger of unknowingly opening 
-    these magic links, it may be preferable for users to 
-    disable their resolution entirely.
-
-This sentence reads a little strangely. Could you please give me some
-concrete examples, and I will try rewording that sentence a bit.
-
->> .\" FIXME I found the following hard to understand (in particular, the
->> .\" meaning of "scoped" is unclear) , and reworded as below. Is it okay?
->> .\"     Absolute symbolic links and ".." path components will be scoped to
->> .\"     .IR dirfd .
-> 
-> Scoped does broadly mean "interpreted relative to", though the
-> difference is mainly that when I said scoped it's meant to be more of an
-> assertive claim ("the kernel promises to always treat this path inside
-> dirfd"). But "interpreted relative to" is a clearer way of phrasing the
-> semantics, so I'm okay with this change.
-
-Okay.
-
->> .\" FIXME The next piece is unclear (to me). What kind of ".." escape
->> .\" attempts does chroot() not detect that RESOLVE_IN_ROOT does?
-> 
-> If the root is moved, you can escape from a chroot(2). But this sentence
-> might not really belong in a man-page since it's describing (important)
-> aspects of the implementation and not the semantics.
-
-So, should I just remove the sentence?
-
-Thanks,
-
-Michael
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Christophe
