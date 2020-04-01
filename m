@@ -2,50 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6597CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61287C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C931206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8A120714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585760076;
-	bh=62H8q4wS2U8H3WVXq49tHHl0V1M2VnJlDoEkzXF2fzQ=;
+	s=default; t=1585760085;
+	bh=QwssEJY9YhkmdjyuruQXGe5BxtQkNAjH9XpgNWCscko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kIHhOvCDRQvSleYKXiDfn2FunitKUoVVn4kP4k6Ry104eD3DRVOGFWKUpMSBX04hy
-	 ro+tKOxrZsoM++VqasoN/FnRcc781f+N51Fa9oT8xbeFrBb9FKpHP7I71vWdBumuAu
-	 A40Ro51pUwzhXQ9Q40vZfY9xa+cNElc+b/dRjHqQ=
+	b=ndBQLQXxT7GlGVYsYFOIPnE1lR9/UsLz66NldR5z469LIFZP2hSuE+r0apO4SETSQ
+	 mN87y0sXMtoUq5GM4UMKGgIc2QzZdS9GhmrKV2Q2/zU5r/NZJpFxlJAsJoBT3PsGiH
+	 268WmDhCWdVYwsyRTJSfrrpBl02JlsfGqzLkRsj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388161AbgDAQye (ORCPT
+        id S2387930AbgDAQ0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:54:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52896 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:26:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387513AbgDAQ1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:27:51 -0400
+        id S1733241AbgDAQ0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:26:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C05FB20857;
-        Wed,  1 Apr 2020 16:27:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6422C212CC;
+        Wed,  1 Apr 2020 16:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758470;
-        bh=62H8q4wS2U8H3WVXq49tHHl0V1M2VnJlDoEkzXF2fzQ=;
+        s=default; t=1585758406;
+        bh=QwssEJY9YhkmdjyuruQXGe5BxtQkNAjH9XpgNWCscko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GKo1aaCno4AHwmPHexijbulR2ayfiovO5eU2PfVDKUit39Opv++nqz/R7HkDIlRWZ
-         w7Tbyp8YDTM3mG62aCqFbVy4lhpmaxBkYKLhoyupxDjsTeZIfhmtb+PDc3T+Ir2EsE
-         t4wKQMupz6A0p1aT+lrePYrNRHHK4UkGpeeJMZnY=
+        b=Q9EVuZUFN0VCgocg1gmQUuxsKscKRYraEMvIayi8eTUAOf25xwXqA9PCPCuB5kc1p
+         Au722mttpZFQUkfCxPd45gTvY3MN8F03jh2mnRKtUT/fUGyBiP5a3SkO8HvRr8ZDil
+         LjDWiK9pPsXL7Z1LdoCOoRxKOnkSq1uHK/w/aKQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 4.19 099/116] vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
-Date:   Wed,  1 Apr 2020 18:17:55 +0200
-Message-Id: <20200401161554.972628750@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Xiong <wenxiong@linux.vnet.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 042/116] scsi: ipr: Fix softlockup when rescanning devices in petitboot
+Date:   Wed,  1 Apr 2020 18:16:58 +0200
+Message-Id: <20200401161547.818626221@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -58,87 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Wen Xiong <wenxiong@linux.vnet.ibm.com>
 
-commit e587e8f17433ddb26954f0edf5b2f95c42155ae9 upstream.
+[ Upstream commit 394b61711f3ce33f75bf70a3e22938464a13b3ee ]
 
-These two were macros. Switch them to static inlines, so that it's more
-understandable what they are doing.
+When trying to rescan disks in petitboot shell, we hit the following
+softlockup stacktrace:
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200219073951.16151-2-jslaby@suse.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Kernel panic - not syncing: System is deadlocked on memory
+[  241.223394] CPU: 32 PID: 693 Comm: sh Not tainted 5.4.16-openpower1 #1
+[  241.223406] Call Trace:
+[  241.223415] [c0000003f07c3180] [c000000000493fc4] dump_stack+0xa4/0xd8 (unreliable)
+[  241.223432] [c0000003f07c31c0] [c00000000007d4ac] panic+0x148/0x3cc
+[  241.223446] [c0000003f07c3260] [c000000000114b10] out_of_memory+0x468/0x4c4
+[  241.223461] [c0000003f07c3300] [c0000000001472b0] __alloc_pages_slowpath+0x594/0x6d8
+[  241.223476] [c0000003f07c3420] [c00000000014757c] __alloc_pages_nodemask+0x188/0x1a4
+[  241.223492] [c0000003f07c34a0] [c000000000153e10] alloc_pages_current+0xcc/0xd8
+[  241.223508] [c0000003f07c34e0] [c0000000001577ac] alloc_slab_page+0x30/0x98
+[  241.223524] [c0000003f07c3520] [c0000000001597fc] new_slab+0x138/0x40c
+[  241.223538] [c0000003f07c35f0] [c00000000015b204] ___slab_alloc+0x1e4/0x404
+[  241.223552] [c0000003f07c36c0] [c00000000015b450] __slab_alloc+0x2c/0x48
+[  241.223566] [c0000003f07c36f0] [c00000000015b754] kmem_cache_alloc_node+0x9c/0x1b4
+[  241.223582] [c0000003f07c3760] [c000000000218c48] blk_alloc_queue_node+0x34/0x270
+[  241.223599] [c0000003f07c37b0] [c000000000226574] blk_mq_init_queue+0x2c/0x78
+[  241.223615] [c0000003f07c37e0] [c0000000002ff710] scsi_mq_alloc_queue+0x28/0x70
+[  241.223631] [c0000003f07c3810] [c0000000003005b8] scsi_alloc_sdev+0x184/0x264
+[  241.223647] [c0000003f07c38a0] [c000000000300ba0] scsi_probe_and_add_lun+0x288/0xa3c
+[  241.223663] [c0000003f07c3a00] [c000000000301768] __scsi_scan_target+0xcc/0x478
+[  241.223679] [c0000003f07c3b20] [c000000000301c64] scsi_scan_channel.part.9+0x74/0x7c
+[  241.223696] [c0000003f07c3b70] [c000000000301df4] scsi_scan_host_selected+0xe0/0x158
+[  241.223712] [c0000003f07c3bd0] [c000000000303f04] store_scan+0x104/0x114
+[  241.223727] [c0000003f07c3cb0] [c0000000002d5ac4] dev_attr_store+0x30/0x4c
+[  241.223741] [c0000003f07c3cd0] [c0000000001dbc34] sysfs_kf_write+0x64/0x78
+[  241.223756] [c0000003f07c3cf0] [c0000000001da858] kernfs_fop_write+0x170/0x1b8
+[  241.223773] [c0000003f07c3d40] [c0000000001621fc] __vfs_write+0x34/0x60
+[  241.223787] [c0000003f07c3d60] [c000000000163c2c] vfs_write+0xa8/0xcc
+[  241.223802] [c0000003f07c3db0] [c000000000163df4] ksys_write+0x70/0xbc
+[  241.223816] [c0000003f07c3e20] [c00000000000b40c] system_call+0x5c/0x68
 
+As a part of the scan process Linux will allocate and configure a
+scsi_device for each target to be scanned. If the device is not present,
+then the scsi_device is torn down. As a part of scsi_device teardown a
+workqueue item will be scheduled and the lockups we see are because there
+are 250k workqueue items to be processed.  Accoding to the specification of
+SIS-64 sas controller, max_channel should be decreased on SIS-64 adapters
+to 4.
+
+The patch fixes softlockup issue.
+
+Thanks for Oliver Halloran's help with debugging and explanation!
+
+Link: https://lore.kernel.org/r/1583510248-23672-1-git-send-email-wenxiong@linux.vnet.ibm.com
+Signed-off-by: Wen Xiong <wenxiong@linux.vnet.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/vt/vt_ioctl.c |   29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ drivers/scsi/ipr.c | 3 ++-
+ drivers/scsi/ipr.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -40,10 +40,25 @@
- #include <linux/selection.h>
+diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
+index 271990bc065b9..1b04a8223eb01 100644
+--- a/drivers/scsi/ipr.c
++++ b/drivers/scsi/ipr.c
+@@ -9958,6 +9958,7 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
+ 	ioa_cfg->max_devs_supported = ipr_max_devs;
  
- char vt_dont_switch;
--extern struct tty_driver *console_driver;
+ 	if (ioa_cfg->sis64) {
++		host->max_channel = IPR_MAX_SIS64_BUSES;
+ 		host->max_id = IPR_MAX_SIS64_TARGETS_PER_BUS;
+ 		host->max_lun = IPR_MAX_SIS64_LUNS_PER_TARGET;
+ 		if (ipr_max_devs > IPR_MAX_SIS64_DEVS)
+@@ -9966,6 +9967,7 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
+ 					   + ((sizeof(struct ipr_config_table_entry64)
+ 					       * ioa_cfg->max_devs_supported)));
+ 	} else {
++		host->max_channel = IPR_VSET_BUS;
+ 		host->max_id = IPR_MAX_NUM_TARGETS_PER_BUS;
+ 		host->max_lun = IPR_MAX_NUM_LUNS_PER_TARGET;
+ 		if (ipr_max_devs > IPR_MAX_PHYSICAL_DEVS)
+@@ -9975,7 +9977,6 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
+ 					       * ioa_cfg->max_devs_supported)));
+ 	}
  
--#define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
--#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
-+static inline bool vt_in_use(unsigned int i)
-+{
-+	extern struct tty_driver *console_driver;
-+
-+	return console_driver->ttys[i] && console_driver->ttys[i]->count;
-+}
-+
-+static inline bool vt_busy(int i)
-+{
-+	if (vt_in_use(i))
-+		return true;
-+	if (i == fg_console)
-+		return true;
-+	if (vc_is_sel(vc_cons[i].d))
-+		return true;
-+
-+	return false;
-+}
+-	host->max_channel = IPR_VSET_BUS;
+ 	host->unique_id = host->host_no;
+ 	host->max_cmd_len = IPR_MAX_CDB_LEN;
+ 	host->can_queue = ioa_cfg->max_cmds;
+diff --git a/drivers/scsi/ipr.h b/drivers/scsi/ipr.h
+index f6baa23513139..9fbcdc283cdbb 100644
+--- a/drivers/scsi/ipr.h
++++ b/drivers/scsi/ipr.h
+@@ -1313,6 +1313,7 @@ struct ipr_resource_entry {
+ #define IPR_ARRAY_VIRTUAL_BUS			0x1
+ #define IPR_VSET_VIRTUAL_BUS			0x2
+ #define IPR_IOAFP_VIRTUAL_BUS			0x3
++#define IPR_MAX_SIS64_BUSES			0x4
  
- /*
-  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
-@@ -289,7 +304,7 @@ static int vt_disallocate(unsigned int v
- 	int ret = 0;
- 
- 	console_lock();
--	if (VT_BUSY(vc_num))
-+	if (vt_busy(vc_num))
- 		ret = -EBUSY;
- 	else if (vc_num)
- 		vc = vc_deallocate(vc_num);
-@@ -311,7 +326,7 @@ static void vt_disallocate_all(void)
- 
- 	console_lock();
- 	for (i = 1; i < MAX_NR_CONSOLES; i++)
--		if (!VT_BUSY(i))
-+		if (!vt_busy(i))
- 			vc[i] = vc_deallocate(i);
- 		else
- 			vc[i] = NULL;
-@@ -648,7 +663,7 @@ int vt_ioctl(struct tty_struct *tty,
- 			state = 1;	/* /dev/tty0 is always open */
- 			for (i = 0, mask = 2; i < MAX_NR_CONSOLES && mask;
- 							++i, mask <<= 1)
--				if (VT_IS_IN_USE(i))
-+				if (vt_in_use(i))
- 					state |= mask;
- 			ret = put_user(state, &vtstat->v_state);
- 		}
-@@ -661,7 +676,7 @@ int vt_ioctl(struct tty_struct *tty,
- 	case VT_OPENQRY:
- 		/* FIXME: locking ? - but then this is a stupid API */
- 		for (i = 0; i < MAX_NR_CONSOLES; ++i)
--			if (! VT_IS_IN_USE(i))
-+			if (!vt_in_use(i))
- 				break;
- 		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
- 		goto setint;		 
+ #define IPR_GET_RES_PHYS_LOC(res) \
+ 	(((res)->bus << 24) | ((res)->target << 8) | (res)->lun)
+-- 
+2.20.1
+
 
 
