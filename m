@@ -2,102 +2,176 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916D7C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605D8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFD72078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF57207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VmNm2ujX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="K0sebAsj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731487AbgDAISO (ORCPT
+        id S1731685AbgDAISQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:18:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49503 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727723AbgDAISO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:18:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 1 Apr 2020 04:18:16 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:48510 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726536AbgDAISP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:18:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585729094; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=SKNU/5JuA0idnU/jM/1z9VAiodpO0TKAOVp9ofIqYlI=; b=K0sebAsjch+at5FP5g4QaJD9zCn+IzTzSq9DPjmJdtfGtol3vWR8mrXX21puifscL3CVc1Z1
+ rY7tvsaPHPgKM3nAkPBwUiSbh10H1rs5lrUFvTNkuRl9Bm7ui6iRnLv37UgDniPDW/hAzLIh
+ fvHbZuEubwlB0P9B8zCBYSyn+9A=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e844e3a.7f736bcd60d8-smtp-out-n04;
+ Wed, 01 Apr 2020 08:18:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C4396C433BA; Wed,  1 Apr 2020 08:18:02 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.199.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sfGC5sDKz9sRf;
-        Wed,  1 Apr 2020 19:18:11 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585729092;
-        bh=45h8GqJFGQK7xxRFCLSuE/+5xYhWiLofyTdYqaSBfHE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VmNm2ujXqgQIF8s2wrreao8RO2PnOz7oyD6tW10IZMBuMkCMmUjy1KRNNnaR/LTu/
-         t6vUC0/3cilkY/s8JGo9zEdqE6gNyTW3EWTvAcbA5Ngp3ehOFu1GB7U5VcfHSauIaR
-         ECF/1pk6t6QX9hPzBl/TaYhNIn873Whkl9AkYUfLi1dVn5eypWUTV7ecULKGp9w4/H
-         wybyBMsNcbNJcMCu7jwYeyogT7URcljatA+UanrTyda2U6lDIhDGTbO8X7rL1WLCzd
-         3yU1x+pOX5IAtpB+b2i0ovC1jsmJcX3FC1dxl/2D00G+aIoG8fh9c4O5jzKEA35e9c
-         w7e7nbSnj/0kw==
-Date:   Wed, 1 Apr 2020 19:18:10 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio: turn of_pinctrl_get() into a static inline
-Message-ID: <20200401191810.1c06ead6@canb.auug.org.au>
-In-Reply-To: <20200401190810.7a2cfa07@canb.auug.org.au>
-References: <20200401190810.7a2cfa07@canb.auug.org.au>
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A545AC433D2;
+        Wed,  1 Apr 2020 08:17:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A545AC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [RFT PATCH v2 03/10] drivers: qcom: rpmh-rsc: Fold
+ tcs_ctrl_write() into its single caller
+To:     Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        evgreen@chromium.org, Lina Iyer <ilina@codeaurora.org>,
+        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200311231348.129254-1-dianders@chromium.org>
+ <20200311161104.RFT.v2.3.Ie88ce5ccfc0c6055903ccca5286ae28ed3b85ed3@changeid>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <09d34360-c471-6c6f-7417-63bc36ff6e6a@codeaurora.org>
+Date:   Wed, 1 Apr 2020 13:47:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+ilK2whdFO0nYeXvZmTtTS1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200311161104.RFT.v2.3.Ie88ce5ccfc0c6055903ccca5286ae28ed3b85ed3@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+ilK2whdFO0nYeXvZmTtTS1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+Tested-by: Maulik Shah <mkshah@codeaurora.org>
 
-On Wed, 1 Apr 2020 19:08:10 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+Thanks,
+Maulik
+
+On 3/12/2020 4:43 AM, Douglas Anderson wrote:
+> I was trying to write documentation for the functions in rpmh-rsc and
+> I got to tcs_ctrl_write().  The documentation for the function would
+> have been: "This is the core of rpmh_rsc_write_ctrl_data(); all the
+> caller does is error-check and then call this".
 >
-> This avoids the overheads of an EXPORTed function.
->=20
-> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Having the error checks in a separate function doesn't help for
+> anything since:
+> - There are no other callers that need to bypass the error checks.
+> - It's less documenting.  When I read tcs_ctrl_write() I kept
+>    wondering if I need to handle cases other than ACTIVE_ONLY or cases
+>    with more commands than could fit in a TCS.  This is obvious when
+>    the error checks and code are together.
+> - The function just isn't that long, so there's no problem
+>    understanding the combined function.
+>
+> Things were even more confusing because the two functions names didn't
+> make obvious (at least to me) their relationship.
+>
+> Simplify by folding one function into the other.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
 > ---
->  drivers/pinctrl/devicetree.c    | 6 ------
->  include/linux/pinctrl/pinctrl.h | 9 +++------
->  2 files changed, 3 insertions(+), 12 deletions(-)
->=20
-> This is not even build tested, but is this what you meant, Geert?
+>
+> Changes in v2: None
+>
+>   drivers/soc/qcom/rpmh-rsc.c | 39 ++++++++++++++++---------------------
+>   1 file changed, 17 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index 02c8e0ffbbe4..799847b08038 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -550,27 +550,6 @@ static int find_slots(struct tcs_group *tcs, const struct tcs_request *msg,
+>   	return 0;
+>   }
+>   
+> -static int tcs_ctrl_write(struct rsc_drv *drv, const struct tcs_request *msg)
+> -{
+> -	struct tcs_group *tcs;
+> -	int tcs_id = 0, cmd_id = 0;
+> -	unsigned long flags;
+> -	int ret;
+> -
+> -	tcs = get_tcs_for_msg(drv, msg);
+> -	if (IS_ERR(tcs))
+> -		return PTR_ERR(tcs);
+> -
+> -	spin_lock_irqsave(&tcs->lock, flags);
+> -	/* find the TCS id and the command in the TCS to write to */
+> -	ret = find_slots(tcs, msg, &tcs_id, &cmd_id);
+> -	if (!ret)
+> -		__tcs_buffer_write(drv, tcs_id, cmd_id, msg);
+> -	spin_unlock_irqrestore(&tcs->lock, flags);
+> -
+> -	return ret;
+> -}
+> -
+>   /**
+>    * rpmh_rsc_write_ctrl_data: Write request to the controller
+>    *
+> @@ -581,6 +560,11 @@ static int tcs_ctrl_write(struct rsc_drv *drv, const struct tcs_request *msg)
+>    */
+>   int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
+>   {
+> +	struct tcs_group *tcs;
+> +	int tcs_id = 0, cmd_id = 0;
+> +	unsigned long flags;
+> +	int ret;
+> +
+>   	if (!msg || !msg->cmds || !msg->num_cmds ||
+>   	    msg->num_cmds > MAX_RPMH_PAYLOAD) {
+>   		pr_err("Payload error\n");
+> @@ -591,7 +575,18 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
+>   	if (msg->state == RPMH_ACTIVE_ONLY_STATE)
+>   		return -EINVAL;
+>   
+> -	return tcs_ctrl_write(drv, msg);
+> +	tcs = get_tcs_for_msg(drv, msg);
+> +	if (IS_ERR(tcs))
+> +		return PTR_ERR(tcs);
+> +
+> +	spin_lock_irqsave(&tcs->lock, flags);
+> +	/* find the TCS id and the command in the TCS to write to */
+> +	ret = find_slots(tcs, msg, &tcs_id, &cmd_id);
+> +	if (!ret)
+> +		__tcs_buffer_write(drv, tcs_id, cmd_id, msg);
+> +	spin_unlock_irqrestore(&tcs->lock, flags);
+> +
+> +	return ret;
+>   }
+>   
+>   static int rpmh_probe_tcs_config(struct platform_device *pdev,
 
-Actually this won't work because get_pinctrl_dev_from_of_node() is
-declared in the private header file drivers/pinctrl/core.h :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+ilK2whdFO0nYeXvZmTtTS1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6ETkIACgkQAVBC80lX
-0GwaTwf/ZXqXcE6OngE9UJ98CrEiUipSNOOyd3RoZQ2b8ddk92Mpafwx8aHt+KpP
-o3dRDhrQF7m/L6caa8kYzu12G5dUvn+Y/W+rn7jqZ8UlJr/rKHaR67YSgQtI2yDn
-1NS8RY2oiqvjVWD0KjSEat2VSWwsGZgvd6Dm71Tr5WBysBFQr9YvRZjltp0W1w1h
-JY0Qq8tdXA+RQ7lGMXBlODPy54IryxTw81wb7f57FbjT0huK1t1w16yz+DgzpgA/
-1Ybf71SzyLpadhZxPTgHIF5vgirYs59I2ITm7ZqCi6yYa4bOPzdF0QAErg4jA1Q5
-F1BphVn5143L3ziuwkzQHnJPJ1Z2Ew==
-=hkY7
------END PGP SIGNATURE-----
-
---Sig_/+ilK2whdFO0nYeXvZmTtTS1--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
