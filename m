@@ -2,126 +2,183 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B06C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730A7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA2320776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A6420776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="drXfHyn/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732759AbgDAPIK (ORCPT
+        id S1732762AbgDAPJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:08:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33124 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732687AbgDAPIK (ORCPT
+        Wed, 1 Apr 2020 11:09:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50248 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732677AbgDAPJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:08:10 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031F4I9S075063;
-        Wed, 1 Apr 2020 11:07:43 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 303uj4gujr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 11:07:43 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 031F16GH031835;
-        Wed, 1 Apr 2020 15:07:42 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04dal.us.ibm.com with ESMTP id 301x76t8nu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 15:07:42 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031F7fWh45613404
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Apr 2020 15:07:41 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60210AE05C;
-        Wed,  1 Apr 2020 15:07:41 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2AE29AE060;
-        Wed,  1 Apr 2020 15:07:38 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.228.30])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Apr 2020 15:07:37 +0000 (GMT)
-Message-ID: <33333c2ffe9fedbee252a1731d7c10cd3308252b.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/1] powerpc/kernel: Enables memory hot-remove
- after reboot on pseries guests
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Anderson <andmike@linux.ibm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        bharata.rao@in.ibm.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 01 Apr 2020 12:07:33 -0300
-In-Reply-To: <20200305233231.174082-1-leonardo@linux.ibm.com>
-References: <20200305233231.174082-1-leonardo@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-VynV9rUX+88/vxShdVMp"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 1 Apr 2020 11:09:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t128so75697wma.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 08:09:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QsyC5XbpdA/rmlnfYe4iva3k7o6K19W7aGVX/8LE71s=;
+        b=drXfHyn/Sgn/OQv1If63LxfC2slBajC0r8s8otOEk+FQczecih3n6j44CKfWyCZPc8
+         rK3gbuRyGSnRn188TuhWL1ESm1LdOcRtYLwwkpi4AVRqxzdsDFr14JIeE0ZQ15cqMBxn
+         2hVkkUWjIsVivWqAEwQS513sfDOGRlL/Jkr+k7h15OIMMJi5CtVSCw7HddnIp9CHFXqP
+         yxY9ZOXj26HvIa3rm5udKyFVzdihal6q+oJgyuprERWuh3NPKBjxKinCiCp0AlBgsRvw
+         1ldlE5eF+RwYGcFHTSXCqEH9VD2YHC76OYah5Vq3yannF6Maz9YB613bJdG3n3N312/R
+         TwEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QsyC5XbpdA/rmlnfYe4iva3k7o6K19W7aGVX/8LE71s=;
+        b=uUAEX8dz1PSMcm81M5GxmcNIFLhtvGETDDUXMAlfIv825BJSYfLN30WB9VxHdpkz2m
+         nAdaTdqq0Or8YuMCXAzNUFv87VoZ78qh0Gg6wHNXhiFg4BUWPs6Ac6iUtvyAwLM87US/
+         5A6/75jXxNS0DbTEOIoIVctvZ6VpomryP8ZSKjBVLCFWvzcA2EhZvSMKGr4MNO/cGrmH
+         th5FlaksiOMEYi3gx9BOzP3nzqQ2QE0qGPRrct2G89dQdev7vo75sk66zCGGiO3WzqvN
+         7O1H2dU0zda12gHdsnXUxtgHrY0vEyRxv31OzIhba4cjWX/3EpW5oDjEmZwa8B+XuAsV
+         ShVg==
+X-Gm-Message-State: AGi0PuaJx5uTYQkVB/HIQIqxfz4vo7V70hRyfRpBRyGIwPZeF6R43C03
+        dOUgIehpqD+vzjuM0clvaEfrdgezZd0=
+X-Google-Smtp-Source: APiQypJaF4faY8l/5iAT9eY/9dKjhFsuJY2Qtseh5JoQOXF3ILTEkl8vRYMSOY5CmJmhoXVeWiwtvA==
+X-Received: by 2002:a05:600c:4145:: with SMTP id h5mr4648989wmm.3.1585753753742;
+        Wed, 01 Apr 2020 08:09:13 -0700 (PDT)
+Received: from [192.168.0.136] ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id d1sm3361008wrm.86.2020.04.01.08.09.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Apr 2020 08:09:12 -0700 (PDT)
+Subject: Re: [PATCH V4 00/13] Add driver for dvfsrc, support for active state
+ of scpsys
+To:     Henry Chen <henryc.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Arvin Wang <arvin.wang@mediatek.com>,
+        Mike Turquette <mturquette@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
+References: <1584092066-24425-1-git-send-email-henryc.chen@mediatek.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <2737cc5c-3876-6861-c44f-fc9f552bbdb9@linaro.org>
+Date:   Wed, 1 Apr 2020 18:09:11 +0300
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- impostorscore=0 adultscore=0 mlxlogscore=829 lowpriorityscore=0
- malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010130
+In-Reply-To: <1584092066-24425-1-git-send-email-henryc.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Henry,
 
---=-VynV9rUX+88/vxShdVMp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 3/13/20 11:34, Henry Chen wrote:
+> The patchsets add support for MediaTek hardware module named DVFSRC
+> (dynamic voltage and frequency scaling resource collector). The DVFSRC is
+> a HW module which is used to collect all the requests from both software
+> and hardware and turn into the decision of minimum operating voltage and
+> minimum DRAM frequency to fulfill those requests.
+> 
+> So, This series is to implement the dvfsrc driver to collect all the
+> requests of operating voltage or DRAM bandwidth from other device drivers
+> likes GPU/Camera through 3 frameworks basically:
+> 
+> 1. interconnect framework: to aggregate the bandwidth
+>    requirements from different clients
+> 
+> [1] https://patchwork.kernel.org/cover/10766329/
+> 
+> Below is the emi bandwidth map of mt8183. There has a hw module "DRAM scheduler"
+> which used to control the throughput. The DVFSRC will collect forecast data
+> of dram bandwidth from SW consumers(camera/gpu...), and according the forecast
+> to change the DRAM frequency
+> 
+>            ICC provider         ICC Nodes
+>                             ----          ----
+>            ---------       |CPU |   |--->|VPU |
+>   -----   |         |-----> ----    |     ----
+>  |DRAM |--|DRAM     |       ----    |     ----
+>  |     |--|scheduler|----->|GPU |   |--->|DISP|
+>  |     |--|(EMI)    |       ----    |     ----
+>  |     |--|         |       -----   |     ----
+>   -----   |         |----->|MMSYS|--|--->|VDEC|
+>            ---------        -----   |     ----
+>              /|\                    |     ----
+>               |change DRAM freq     |--->|VENC|
+>            ----------               |     ----
+>           |  DVFSR   |              |
+>           |          |              |     ----
+>            ----------               |--->|IMG |
+>                                     |     ----
+>                                     |     ----
+>                                     |--->|CAM |
+>                                           ----
 
-On Thu, 2020-03-05 at 20:32 -0300, Leonardo Bras wrote:
-> ---
-> The new flag was already proposed on Power Architecture documentation,
-> and it's waiting for approval.
->=20
-> I would like to get your comments on this change, but it's still not
-> ready for being merged.
+It would be useful to also add the above diagram into the commit text of
+patch 09/13. By doing so, it will be saved into the history, as cover letters
+are discarded.
 
-New flag got approved on the documentation.
-Please review this patch.
-
---=-VynV9rUX+88/vxShdVMp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6ErjUACgkQlQYWtz9S
-ttTBKhAAlHs4fzgLuSqNlQADyKsBH7BIUd0lzkGIYBuyBmswiNXSgvCNjT6Dm5MX
-o2xXMdLwhSyg4B82Vjt3ykc5OBqphBtF4X9FBGAag+D0FsodTkmSRIJZgM6uwbn+
-RSboIpXmches0B9OLGCW286RWU1aVO2hIZqhWLgORNFsnH8zzYuYHDHhaJ8gXiOA
-CrNn0IpTNtdjjsMkxtzoh3FTEgsafcQWmicMhPk3GK6SvF8BkB8xTyADqQgHV95r
-5zscp72pYhEO86m1ZEJjUCEkoL4bLlrONeVDD5ZRAG95+Okf5Q6wYDC42rCYoHhH
-CqMiLcfnBfow1DExc8nv8yIYGIaMitR2n27sGgzgg6l4CgYrZvHsMyQoxT5umXM7
-7sFOsVNND4hnMGs5WEUm5SuSn03tYaV6e59WI8ihiqOk2wsuIqmtPxP7XyA3Aw7d
-ocKqN9hajO2ylltq7NeTm1xitlWYShX+BZ0q9Z4/7iyk0Z57QRAi6GBHf+/jmCUc
-o68jcF0CIVLZFK/FyXcNMV0ndd2g0Q5OqtJLTbujtV494clWOzTa4zYB/h0QnS49
-MSElbBVgbD7JheuCSoHKj5KRL0QPHKAzmGydngqhJiV7ngC3CEbX1ddW5+euZuSb
-Hxrrbj9KUDsNm9UoqX11MMzomkjYWZxQzJEcVv1eUXdm4t0NVBs=
-=AaxG
------END PGP SIGNATURE-----
-
---=-VynV9rUX+88/vxShdVMp--
-
+Thanks,
+Georgi
