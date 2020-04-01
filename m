@@ -2,88 +2,115 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4EFC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F58C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D3820776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:18:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585739927;
-	bh=sYBeYzQQ4hfKuB0dBhCd6enF1aFyI2NQI0caO8q7VE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MhkN8ktyZjM4iSRHMmo6JRPNwQ390HaBQeyWHfVlYq+HMqtgcct95HF42rLkJ0e9r
-	 FYQZIuvy5l0Ofl2HG8U8bNAXBmTyKgTVH/rVsD/+G3ae2obTxEbda8Basd5+0HMzgl
-	 THK6qVQD//fy+hit0Y/hxF07agSZ+F0Oc9T9EtTQ=
+	by mail.kernel.org (Postfix) with ESMTP id 46B9920776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732433AbgDALSq (ORCPT
+        id S1732473AbgDALTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 07:19:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:49296 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732150AbgDALSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:18:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 212BD206E9;
-        Wed,  1 Apr 2020 11:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585739925;
-        bh=sYBeYzQQ4hfKuB0dBhCd6enF1aFyI2NQI0caO8q7VE8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e13ePXmJYdal5tuhVDXMd7BZprXIsrO0LCHM28pDaCKfYRgMw9k/KiPHA83HHC/n2
-         VD3eaSllUzsX166M8EyPGmN2DQqtVVBf2Duw4GLB6t9U88ZCTF9Yu5EDdKaWYsp1iu
-         6iU0DDuwPxwmMlL8mLJgUxcAvH4S9oVA+DbYkQxk=
-Date:   Wed, 1 Apr 2020 13:18:43 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Woody Suwalski <terraluna977@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
-Message-ID: <20200401111843.GC2144013@kroah.com>
-References: <20200331085308.098696461@linuxfoundation.org>
- <6cdfe0e5-408f-2d88-cb08-c7675d78637c@gmail.com>
- <20200401055152.GA1903194@kroah.com>
- <20200401055309.GA1903746@kroah.com>
- <2e853806-264d-cf74-4298-146900ab32a1@gmail.com>
+        id S1732150AbgDALTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 07:19:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 019A330E;
+        Wed,  1 Apr 2020 04:19:07 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B89B53F68F;
+        Wed,  1 Apr 2020 04:19:05 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 12:19:03 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Tuan Phan <tuanphan@amperemail.onmicrosoft.com>,
+        Tuan Phan <tuanphan@os.amperecomputing.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] driver/perf: Add PMU driver for the ARM DMC-620 memory
+ controller.
+Message-ID: <20200401111903.GC17163@C02TD0UTHF1T.local>
+References: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
+ <20200319151646.GC4876@lakrids.cambridge.arm.com>
+ <23AD5E45-15E3-4487-9B0D-0D9554DD9DE8@amperemail.onmicrosoft.com>
+ <20200320105315.GA35932@C02TD0UTHF1T.local>
+ <A50AA800-3F65-4761-9BCF-F86A028E107D@amperemail.onmicrosoft.com>
+ <20200401095226.GA17163@C02TD0UTHF1T.local>
+ <20200401102724.GA17575@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2e853806-264d-cf74-4298-146900ab32a1@gmail.com>
+In-Reply-To: <20200401102724.GA17575@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 07:06:47AM -0400, Woody Suwalski wrote:
-> Greg Kroah-Hartman wrote:
-> > On Wed, Apr 01, 2020 at 07:51:52AM +0200, Greg Kroah-Hartman wrote:
-> > > On Tue, Mar 31, 2020 at 11:06:16PM -0400, Woody Suwalski wrote:
-> > > > Greg Kroah-Hartman wrote:
-> > > > I think you have missed the
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=be8c827f50a0bcd56361b31ada11dc0a3c2fd240
-> > > It should come in soon, in another release or so, when the next set of
-> > > networking patches get sent to me.
-> > And also didn't hit Linus's tree until after this set of -rc patches
-> > went out, so it's not like I missed it or anything :)
+On Wed, Apr 01, 2020 at 11:27:25AM +0100, Will Deacon wrote:
+> On Wed, Apr 01, 2020 at 10:52:26AM +0100, Mark Rutland wrote:
+> > On Tue, Mar 31, 2020 at 03:14:59PM -0700, Tuan Phan wrote:
+> > > > On Mar 20, 2020, at 4:25 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > > > On Thu, Mar 19, 2020 at 12:03:43PM -0700, Tuan Phan wrote:
+> > > >>> On Mar 19, 2020, at 8:16 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > > >>> On Tue, Mar 17, 2020 at 05:29:38PM -0700, Tuan Phan wrote:
+> > > >>>> +static int arm_dmc620_pmu_dev_init(struct arm_dmc620_pmu *dmc620_pmu)
+> > > >>>> +{
+> > > >>>> +	struct platform_device *pdev = dmc620_pmu->pdev;
+> > > >>>> +	int ret;
+> > > >>>> +
+> > > >>>> +	ret = devm_request_irq(&pdev->dev, dmc620_pmu->irq,
+> > > >>>> +				arm_dmc620_pmu_handle_irq,
+> > > >>>> +				IRQF_SHARED,
+> > > >>>> +				dev_name(&pdev->dev), dmc620_pmu);
+> > > >>> 
+> > > >>> This should have IRQF_NOBALANCING | IRQF_NO_THREAD. I don't think we
+> > > >>> should have IRQF_SHARED.
+> > > >> => I agree on having IRQF_NOBALANCING and IRQF_NO_THREAD. But
+> > > >> IRQF_SHARED is needed. In our platform all DMC620s share same IRQs and
+> > > >> any cpus can access the pmu registers.
+> > > > 
+> > > > Linux needs to ensure that the same instance is concistently accessed
+> > > > from the same CPU, and needs to migrate the IRQ to handle that. Given we
+> > > > do that on a per-instance basis, we cannot share the IRQ with another
+> > > > instance.
+> > > > 
+> > > > Please feed back to you HW designers that muxing IRQs like this causes
+> > > > significant problems for software.
+> > > 
+> > > I looked at the SMMUv3 PMU driver and it also uses IRQF_SHARED. SMMUv3
+> > > PMU and DMC620 PMU are very much similar in which counters can be
+> > > accessed by any cores using memory map. Any special reasons
+> > > IRQF_SHARED works with SMMUv3 PMU driver?
 > > 
-> > thanks,
-> > 
-> > greg k-h
-> My bad. It was supposed to be: I think that that patch should be considered
-> soon...
+> > No; I believe that is a bug in the SMMUv3 PMU driver. If the IRQ were
+> > shared, and another driver that held the IRQ changed the affinity,
+> > things would go very wrong.
+> 
+> I *think* the idea is that the SMMUv3 PMU driver manages multiple PMCG
+> devices, which may all share an irq line, rather than the irq line being
+> shared by some other driver that might change the affinity. So I suspect
+> dropping IRQF_SHARED will break things.
 
-It will be, give us a chance.  I know the normal problem of "the only
-drivers that matter are the ones I use" applies here, but luckily I
-don't use that driver :)
+Ok. So long as each of the contexts are migrated before the IRQ is, I
+think that's sound. Otherwise there's a small window where the IRQ
+handler for an instance won't see the state expected (and could end up
+treated as a screaming IRQ).
 
-thanks,
+Otherwise, in that case I think that's not so bad.
 
-greg k-h
+> > Note that it's also missing IRQF_NOBALANCING, which is also necessary to
+> > avoid such issues.
+> 
+>   unsigned long flags = IRQF_NOBALANCING | IRQF_SHARED | IRQF_NO_THREAD;
+> 
+> so it looks like IRQF_NOBALANCING is already taken care of.
+
+Whoops; I'd misread thhe DMC-620 code above assuming it was the SMMUv3
+PMU.
+
+Thanks,
+Mark.
