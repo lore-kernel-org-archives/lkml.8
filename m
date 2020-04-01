@@ -2,180 +2,91 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44195C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DBBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158C920719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:36:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jDS6BAHq"
+	by mail.kernel.org (Postfix) with ESMTP id A197A2071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733081AbgDAOgv (ORCPT
+        id S1733082AbgDAOhf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:36:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22103 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733022AbgDAOgu (ORCPT
+        Wed, 1 Apr 2020 10:37:35 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:60292 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733022AbgDAOhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:36:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585751809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r3kMlhd9LGGbDeZac0FUzE3oyqJ5Q+lDzgiNb4487e4=;
-        b=jDS6BAHqEOujk5FKuexDrPvXWeNEaL3UDpO6Kl8uS6AHVbhSUjpL9K6SXNEsuxNvtzFE1G
-        Ax3JL/8kKNc8mH0paMEiF19Ag1r9AACoyKRoOrejA2RtWx4XxTNxMMZcxv07xD8byhjPr7
-        18dGQXadLIsAq9KoDR0qyvcfdUQUmeE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-frmlcPUUObukrR01-oFmKg-1; Wed, 01 Apr 2020 10:36:31 -0400
-X-MC-Unique: frmlcPUUObukrR01-oFmKg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E2D9107ACC7;
-        Wed,  1 Apr 2020 14:36:28 +0000 (UTC)
-Received: from [10.72.12.139] (ovpn-12-139.pek2.redhat.com [10.72.12.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B6EC5E000;
-        Wed,  1 Apr 2020 14:36:09 +0000 (UTC)
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <fde312a4-56bd-f11f-799f-8aa952008012@de.ibm.com>
- <41ee1f6a-3124-d44b-bf34-0f26604f9514@redhat.com>
- <4726da4c-11ec-3b6e-1218-6d6d365d5038@de.ibm.com>
- <39b96e3a-9f4e-6e1d-e988-8c4bcfb55879@de.ibm.com>
- <c423c5b1-7817-7417-d7af-e07bef6368e7@redhat.com>
- <20200401101634-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <45fbf320-90e5-9eed-6f07-c5a4dd2ca8f5@redhat.com>
-Date:   Wed, 1 Apr 2020 22:36:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200401101634-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 1 Apr 2020 10:37:35 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-247-kZ-q67PqNDK7_iboeSQpxg-1; Wed, 01 Apr 2020 15:37:29 +0100
+X-MC-Unique: kZ-q67PqNDK7_iboeSQpxg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 1 Apr 2020 15:37:28 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 1 Apr 2020 15:37:28 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Steven Rostedt' <rostedt@goodmis.org>
+CC:     'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
+Subject: RE: ftrace not showing the process names for all processes on syscall
+ events
+Thread-Topic: ftrace not showing the process names for all processes on
+ syscall events
+Thread-Index: AdYGnj+cWqFtVCqqTmCXgoqvHM5xrf///P+A///qkvCAAEdbAP//7aKg//zzjTA=
+Date:   Wed, 1 Apr 2020 14:37:28 +0000
+Message-ID: <985e88f06c2140dcba09b7aa73121e6c@AcuMS.aculab.com>
+References: <3cdef49951734e83a14959628233d4f0@AcuMS.aculab.com>
+        <20200330110855.437fe854@gandalf.local.home>
+        <7dec110c2dc14792ba744419a4eb907e@AcuMS.aculab.com>
+ <20200330140736.4b5f1667@gandalf.local.home>
+ <ffd8aa59d88146fbb5a4cb02ea9b7440@AcuMS.aculab.com>
+In-Reply-To: <ffd8aa59d88146fbb5a4cb02ea9b7440@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: David Laight
+> Sent: 30 March 2020 19:15
+> From: Steven Rostedt
+> > Sent: 30 March 2020 19:08
+> > On Mon, 30 Mar 2020 15:34:08 +0000
+> > David Laight <David.Laight@ACULAB.COM> wrote:
+> >
+> > > Oh, does the 'function_graph' code ignore tail calls?
+> >
+> > Yes and no ;-)  It works by dumb luck. As it was a year after function
+> > graph tracing was live (some time in 2010 I believe) that someone brought
+> > up tail calls, and I had to take a look at how it never crashed, and was
+> > surprised that it "just worked". Here's a summary:
+> 
+> 'Dumb luck' seems to be failing me :-)
+> I'll look more closely tomorrow.
 
-On 2020/4/1 =E4=B8=8B=E5=8D=8810:18, Michael S. Tsirkin wrote:
-> On Wed, Apr 01, 2020 at 10:13:29PM +0800, Jason Wang wrote:
->> On 2020/4/1 =E4=B8=8B=E5=8D=889:02, Christian Borntraeger wrote:
->>> On 01.04.20 14:56, Christian Borntraeger wrote:
->>>> On 01.04.20 14:50, Jason Wang wrote:
->>>>> On 2020/4/1 =E4=B8=8B=E5=8D=887:21, Christian Borntraeger wrote:
->>>>>> On 26.03.20 15:01, Jason Wang wrote:
->>>>>>> Currently, CONFIG_VHOST depends on CONFIG_VIRTUALIZATION. But vho=
-st is
->>>>>>> not necessarily for VM since it's a generic userspace and kernel
->>>>>>> communication protocol. Such dependency may prevent archs without
->>>>>>> virtualization support from using vhost.
->>>>>>>
->>>>>>> To solve this, a dedicated vhost menu is created under drivers so
->>>>>>> CONIFG_VHOST can be decoupled out of CONFIG_VIRTUALIZATION.
->>>>>> FWIW, this now results in vhost not being build with defconfig ker=
-nels (in todays
->>>>>> linux-next).
->>>>>>
->>>>> Hi Christian:
->>>>>
->>>>> Did you meet it even with this commithttps://git.kernel.org/pub/scm=
-/linux/kernel/git/next/linux-next.git/commit/?id=3Da4be40cbcedba9b5b714f3=
-c95182e8a45176e42d?
->>>> I simply used linux-next. The defconfig does NOT contain CONFIG_VHOS=
-T and therefore CONFIG_VHOST_NET and friends
->>>> can not be selected.
->>>>
->>>> $ git checkout next-20200401
->>>> $ make defconfig
->>>>     HOSTCC  scripts/basic/fixdep
->>>>     HOSTCC  scripts/kconfig/conf.o
->>>>     HOSTCC  scripts/kconfig/confdata.o
->>>>     HOSTCC  scripts/kconfig/expr.o
->>>>     LEX     scripts/kconfig/lexer.lex.c
->>>>     YACC    scripts/kconfig/parser.tab.[ch]
->>>>     HOSTCC  scripts/kconfig/lexer.lex.o
->>>>     HOSTCC  scripts/kconfig/parser.tab.o
->>>>     HOSTCC  scripts/kconfig/preprocess.o
->>>>     HOSTCC  scripts/kconfig/symbol.o
->>>>     HOSTCC  scripts/kconfig/util.o
->>>>     HOSTLD  scripts/kconfig/conf
->>>> *** Default configuration is based on 'x86_64_defconfig'
->>>> #
->>>> # configuration written to .config
->>>> #
->>>>
->>>> $ grep VHOST .config
->>>> # CONFIG_VHOST is not set
->>>>
->>>>> If yes, what's your build config looks like?
->>>>>
->>>>> Thanks
->>> This was x86. Not sure if that did work before.
->>> On s390 this is definitely a regression as the defconfig files
->>> for s390 do select VHOST_NET
->>>
->>> grep VHOST arch/s390/configs/*
->>> arch/s390/configs/debug_defconfig:CONFIG_VHOST_NET=3Dm
->>> arch/s390/configs/debug_defconfig:CONFIG_VHOST_VSOCK=3Dm
->>> arch/s390/configs/defconfig:CONFIG_VHOST_NET=3Dm
->>> arch/s390/configs/defconfig:CONFIG_VHOST_VSOCK=3Dm
->>>
->>> and this worked with 5.6, but does not work with next. Just adding
->>> CONFIG_VHOST=3Dm to the defconfig solves the issue, something like
->> Right, I think we probably need
->>
->> 1) add CONFIG_VHOST=3Dm to all defconfigs that enables
->> CONFIG_VHOST_NET/VSOCK/SCSI.
->>
->> or
->>
->> 2) don't use menuconfig for CONFIG_VHOST, let NET/SCSI/VDPA just selec=
-t it.
->>
->> Thanks
-> I think I prefer 2, but does it auto-select VHOST_IOTLB then?
+The 'problem' is that some files like lib/iov_iter.c don't have the
+tracepoints compiled in.
 
+So calls I was expecting to see were absent.
 
-I think so. E.g VHOST_NET will select VHOST,=C2=A0 and VHOST will select=20
-VHOST_IOTLB.
+	David
 
-
-> Generally what was the reason to drop select VHOST from devices?
->
->
-
-The reason is a sub menu is needed for VHOST devices, then I use=20
-menuconfig for CONFIG_VHOST.
-
-Then select is not necessary anymore.
-
-Thanks
-
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
