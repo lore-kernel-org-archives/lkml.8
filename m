@@ -2,183 +2,267 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DA5C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6FEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8482071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:52:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IBefbRWh";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="WF6bf7U7"
+	by mail.kernel.org (Postfix) with ESMTP id 0173B2072E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731616AbgDACwc (ORCPT
+        id S1731639AbgDACyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 22:52:32 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:53920 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731531AbgDACwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 22:52:31 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0312mgNG019414;
-        Tue, 31 Mar 2020 19:52:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=7srY/tkQ8MjFr7QRMk08/e45fYePFCeBn86qLeX4h6A=;
- b=IBefbRWh2wglrTwwFt2qSbugpczDUHTF9vntu2eOWIFiZNFyhxrMEd/zjUNkx0+Igi/z
- KcXDaRip8B3y4eR+kHITKYMmulLqpqj6DutSVb1dXptrkoYJTsLmqmw4Z7COCpOsHlre
- MCf08C5jhY6VuH2uDyQD3j+BPNx9pJdwYJE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 304cxbhcga-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 31 Mar 2020 19:52:15 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 31 Mar 2020 19:52:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bOCSlRq55jE7tLf9XwqQKING2VjwJ/d9N9gwws8bUqVtzNFtEQ7FHpCGA9HZds0GXseiid1E4zCRVHUGuRryNC9fcyOX9s5rG38+WhT8W2lNamr7qPD9aMu9F3DM1SDTjKdABB1dkYai2Ht1oEZA1DjPCW541TPZwCi4cv55jjjtRHJJst6u79ttTElzeCzUfmlQvNCEFPT8wUfbKOGcjtbgaC0m2MKrUuks+s7klBSUWdmZIMRpv67dwmmucARTQwxGBg3XBcOo4kIA2WUesTLWp0pSRLLJHKCXc7C2qpnq6XrCnBNi/QpWygthrF91wy/N7EC7ocY0Xl4BJKbyZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7srY/tkQ8MjFr7QRMk08/e45fYePFCeBn86qLeX4h6A=;
- b=cN/sMGOCLQ1rZKRbmK/UYjMqNUf4AdipHAlJvkT9+8Ocz9JoRMukrQ3QSS4ocVI/iuiGFeYOR+NP6xgBi+7K1QXlFtQgW6WrCzUriyuqvKe2IjN1xqCOI920BoFwCplHtjQftTz+FUXOP5odIBKM5TdbkNfgOK/3/1kHGWKlmVGfVn1LeNjn/92Xz3P/MAbeWlGV8OnraGniW5OJ9zm6pBmr4bBwh8MhXo2Yc1WZNmbKyMgrNAoaiSof9uUQZyX2uUO2qpb5L7yjUkRBjCMKtRnumGiNMil5JxuiZySRZ74RkkbcFoA3fPjPQcVd6LLqvQtrL1ecwJCnRWlL51OSDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7srY/tkQ8MjFr7QRMk08/e45fYePFCeBn86qLeX4h6A=;
- b=WF6bf7U70FhGJlEL7iYhZ2tj+/kutlYbuzZsEbwrFySWDuJU3hh7/eEJhDqS+mU2SC2F9s0HfW+TkuxgUqigPiWo5AnwyuHaacC6ZrSz4Gaoh3dFRToTEW43dmeiaaidBHe+rek77gCi28D4MLM9NAKiLNtxLqe7BJ9RdVrj5OU=
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com (2603:10b6:303:50::17)
- by MW3PR15MB3996.namprd15.prod.outlook.com (2603:10b6:303:41::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Wed, 1 Apr
- 2020 02:52:07 +0000
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c]) by MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 02:52:07 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     "sedat.dilek@gmail.com" <sedat.dilek@gmail.com>
-CC:     Nick Terrell <nickrterrell@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>,
-        "Michael van der Westhuizen" <rmikey@fb.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Patrick Williams" <patrick@stwcx.xyz>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and
- initramfs
-Thread-Topic: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and
- initramfs
-Thread-Index: AQHWBeEQDgWL3aTsC0eAZqS0g1IF3qhiGjEAgAC3YoCAAMO5AA==
-Date:   Wed, 1 Apr 2020 02:52:06 +0000
-Message-ID: <5F9D2C8D-B1DE-4F95-992E-524E02851CF4@fb.com>
-References: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
- <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com>
- <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
-In-Reply-To: <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:400::5:365f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bafdd016-ac60-420d-1159-08d7d5e7aa87
-x-ms-traffictypediagnostic: MW3PR15MB3996:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR15MB3996E8760A517EDFDCCB387BABC90@MW3PR15MB3996.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR15MB3753.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(396003)(346002)(136003)(376002)(366004)(39860400002)(186003)(6512007)(6486002)(66476007)(76116006)(6916009)(966005)(36756003)(2906002)(64756008)(478600001)(54906003)(8676002)(316002)(66946007)(7416002)(66446008)(66556008)(4326008)(86362001)(2616005)(81166006)(71200400001)(81156014)(8936002)(5660300002)(6506007)(53546011)(33656002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4FoCToDfgan86RgT9qWM9j5SHb2WUAQZ5TlbziLdRPKXQH4VCMSXZQhbGZEjZxg8sVI7Hvzr8vSYRm3ybECU3KM0dhX6NfNFQAZLOUvOAdhUBN8J2ZGcwCsbjAmivMQHY63W67x4FSe3gxCmeOgkvY+zwYP6Dw1kG0a2Q6Y5ZAKd2+fEk/viAp7CzARDipjZ1dYQFCC4KYN7nLanf66GJvmNrnXvsCGEuVS/fc3wKt5ONf7u7TqHQceZFuGejvPXHsrL4bzBUqHYo90F6IiGu3BB2AD4J59DqiPTRB+09RAvnKRx6g4sl8CSi2ucDd7UcdJJ071PPtxzRCGqKLIGzsLTzqZ+OUNZfpi0Fkovu2mvnjQgaKwXMNhAWhi2AL1tgPdEVME65PunCqlCp7RdI+w5+JQVqxp3LH7kCIxOX32EZ0ua6SNu2jUBVWTH376KEA+TnkPSmlrqNQ3IdwI1Faf87zkJdUzKKwC6xOzH5ZjMGr8Lxg66X7hzB/R5kn+orgkpIYJQ5Ec2skn1ppOtfw==
-x-ms-exchange-antispam-messagedata: 8qz1j/v/ycCnx4L2ucLvVVDvMbTg0YXzNXK1SjhZ3L2PFEgKW1SXDzN3cU7/K8BEtnqEfaGygCiEvL7TtvDbGXlK2RTDbZCQ+CvRDvTWyu0rDgIivUsgclQDx5S4doXRA1GZZq+HP+QQ7FG7d8snM/7FuuzdtH8olFb2gYoxHVR0GZzmETlLRtrxI1AWW47f
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C512C6B60894E04E9D4F60AD0759CAC0@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 31 Mar 2020 22:54:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42446 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731531AbgDACyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 22:54:17 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B3D37C7476AA77FA5ADD;
+        Wed,  1 Apr 2020 10:54:06 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 1 Apr 2020
+ 10:54:01 +0800
+Subject: Re: [PATCH] f2fs: prevent meta updates while checkpoint is in
+ progress
+To:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sahitya Tummala <stummala@codeaurora.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
+ <20200331035419.GB79749@google.com> <20200331090608.GZ20234@codeaurora.org>
+ <20200331184307.GA198665@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <a56deb76-bf7f-dd86-301f-fbe56413ab9b@huawei.com>
+Date:   Wed, 1 Apr 2020 10:54:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bafdd016-ac60-420d-1159-08d7d5e7aa87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 02:52:06.9572
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XYCR+mrJvhkz60tj+uxdcmdKqNSSPjwiFgP+Qb7AsPMDjeU7FCoaPsbSVZGzdKOu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3996
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015
- spamscore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010025
-X-FB-Internal: deliver
+In-Reply-To: <20200331184307.GA198665@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gTWFyIDMxLCAyMDIwLCBhdCA4OjExIEFNLCBTZWRhdCBEaWxlayA8c2VkYXQuZGls
-ZWtAZ21haWwuY29tPiB3cm90ZToNCj4gDQo+IE9uIFR1ZSwgTWFyIDMxLCAyMDIwIGF0IDY6MTUg
-QU0gTmljayBUZXJyZWxsIDx0ZXJyZWxsbkBmYi5jb20+IHdyb3RlOg0KPiANCj4gWy4uLl0NCj4g
-DQo+Pj4gRG8geW91IHBsYW4gdG8gcHVzaCB0aGlzIGZvciBMaW51eCB2NS43Pw0KPj4gDQo+PiBJ
-IGhvcGUgdGhhdCBpdCB3aWxsIGJlIGFjY2VwdGVkLiBGcm9tIG15IHBvaW50IG9mIHZpZXcgdGhp
-cyBwYXRjaCBzZXQgaXMNCj4+IHJlYWR5IGZvciBtZXJnZSwgZXhjZXB0IGZvciB0aGUgbWF4aW11
-bSB3aW5kb3cgc2l6ZSBpbmNyZWFzZQ0KPj4gcmVxdWVzdGVkIGJ5IFBldHIuDQo+PiANCj4gDQo+
-IEhpIE5pY2ssDQo+IA0KPiB0aGFua3MgZm9yIHlvdXIgYW5zd2VyLg0KPiANCj4gRGlkIHlvdSBz
-ZW5kIG91dCBhIHB1bGwtcmVxdWVzdCBhbHJlYWR5Pw0KDQpJIGhhdmVu4oCZdCBzZW50IG91dCBh
-IHB1bGwgcmVxdWVzdC4gSWYgdGhhdCBpcyBzb21ldGhpbmcgdGhhdCBJIG5lZWQgdG8NCmRvLCBv
-ciBpZiBpdCBtYWtlcyB0aGUgcHJvY2VzcyBlYXNpZXIgZm9yIGEgbWFpbnRhaW5lciB0byBtZXJn
-ZSB0aGVuDQpJIGNhbiBkbyB0aGF0Lg0KDQo+IENhbiB5b3UgcG9pbnQgbWUgdG8gdGhhdCByZXF1
-ZXN0IG9yIHBhdGNoIG9mIFBldHI/DQo+IElzIGl0IHJlbGV2YW50IG9yIG9wdGlvbmFsIGZvciB0
-aGUgcHVsbC1yZXF1ZXN0Pw0KDQpUaGUgcGF0Y2hlcyBmcm9tIFBldHIgYXJlIGEgcGFyYWxsZWwg
-aW1wbGVtZW50YXRpb24gb2YgaW5pdHJhbWZzDQpkZWNvbXByZXNzaW9uIGFuZCBhcmUgYXZhaWxh
-YmxlIGhlcmUgWzBdLiBUaGV5IHN1cHBvcnQgaW5pdHJhbWZzDQpjb21wcmVzc2lvbiB3ZWxsLCBi
-dXQgYXJlIG1pc3Npbmcgc29tZSBwaWVjZXMgZm9yIGNvcnJlY3QgYW5kDQpwZXJmb3JtYW50IHpz
-dGQga2VybmVsIGRlY29tcHJlc3Npb24uIE5hbWVseSB0aGUgZXF1aXZhbGVudCBvZg0KcGF0Y2gg
-NiBpbiB0aGlzIHNlcmllcyB0byBpbmNyZWFzZSBaT196X2V4dHJhX2J5dGVzLCB0aGUNCnBlcmZv
-cm1hbmNlIGZpeCBpbiBwYXRjaCAxIHRoYXQgc3dpdGNoZXMgbWVtY3B5KCkgdG8NCl9fYnVpbHRp
-bl9tZW1jcHkoKSwgYW5kIHRoZSBkZWNvbXByZXNzX3NpbmdsZSgpIGZ1bmN0aW9uIGluIHBhdGNo
-IDMuDQoNCldpdGhvdXQgdGhvc2UgY2hhbmdlcyBhIHZlcnkgY29tcHJlc3NpYmxlIGtlcm5lbCBt
-YXkgZmFpbCB0bw0KZGVjb21wcmVzcyBzdWNjZXNzZnVsbHksIGFuZCB3aWxsIGJlIGNvcnJ1cHRl
-ZC4gQW5kIHRoZSBwZXJmb3JtYW5jZQ0KaXMgYWJvdXQgNHggd29yc2Ugb24geDg2XzY0LiBNeSBw
-YXRjaGVzIHRvb2sgNzAgbXMgdG8gZGVjb21wcmVzcyB2cw0KMzE4IG1zIHdpdGggUGV0cuKAmXMu
-IFNlZSB0aGUgZGV0YWlsZWQgY29tcGFyaXNvbiBoZXJlIFsxXS4NCg0KPj4+IEZlZWwgZnJlZSB0
-byBhZGQgY3JlZGl0cyBmb3IgdGhlIHdob2xlIHNlcmllczoNCj4+PiANCj4+PiAgVGVzdGVkLWJ5
-OiBTZWRhdCBEaWxlayA8c2VkYXQuZGlsZWtAZ21haWwuY29tPg0KPj4gDQo+PiBUaGFua3MgZm9y
-IHRlc3RpbmcgdGhlIHBhdGNoIHNldCBTZWRhdCENCj4+IA0KPiANCj4gSSBoYXZlIHJlLXRlc3Rl
-ZCB6c3RkLXYzIHBhdGNoc2V0IHdpdGggTGludXggdmVyc2lvbiA1LjYgZmluYWwgYW5kDQo+IENs
-YW5nL0xMRCB2ZXJzaW9uIDEwLjAuMCBmaW5hbCAoZnJvbSBEZWJpYW4vdW5zdGFibGUgcmVwb3Np
-dG9yeSkuDQo+IA0KPiBJcyBpdCBwb3NzaWJsZSB0byBtZW50aW9uIHRoYXQgdGhlcmUgbWlnaHQg
-ZGlzdHJvLXNwZWNpZmljIGNoYW5nZXMNCj4gbmVlZGVkIHRvIGluaXRyYW1mcy1oYW5kbGluZz8N
-Cj4gRm9yIERlYmlhbiB5b3UgYXJlIHdlbGNvbWUgdG8gaW5jbHVkZSBiZWxvdyBMaW5rIFsxXS4N
-Cj4gTm90IHN1cmUgSSB3aWxsIHNlbmQvYXNrIHRvL29uIHRoZSBkZWJpYW4ta2VybmVsIG1haWxp
-bmcgbGlzdCBpbiB0aGlzIHRvcGljLg0KDQpJIGRvbuKAmXQgZXhwZWN0IGFueSBkaXN0cm8gc3Bl
-Y2lmaWMgY2hhbmdlcyBhcmUgcmVxdWlyZWQgdG8gY29udGludWUgb3BlcmF0aW5nDQphcy1pcy4g
-SG93ZXZlciwgaWYgYSBkaXN0cm8gd2FudGVkIHRvIHN3aXRjaCB0byBhIHpzdGQgY29tcHJlc3Nl
-ZCBpbml0cmFtZnMgDQp0aGV5IHdvdWxkIG5lZWQgdG8gdXBkYXRlIHRoZWlyIHRvb2xjaGFpbiB0
-byBjb21wcmVzcyB3aXRoIHpzdGQuDQoNCj4gVGhhbmtzIGFuZCBib25uZSBjaGFuY2UuDQo+IA0K
-PiBSZWdhcmRzLA0KPiAtIFNlZGF0IC0NCj4gDQo+IFsxXSBMSU5LOiBodHRwczovL2xvcmUua2Vy
-bmVsLm9yZy9sa21sL0NBK2ljWlVYQ24yYW45YU5Ecm0rLWVuZVNBT3lHaWJ6MFcxeFlod2tBNWsz
-QjNVLTV2UUBtYWlsLmdtYWlsLmNvbS8NCg0KWzBdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDIw
-LzMvMTYvNDYxDQpbMV0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMjAvMy8zMS8xNTczDQoNCg==
+On 2020/4/1 2:43, Jaegeuk Kim wrote:
+> On 03/31, Sahitya Tummala wrote:
+>> On Mon, Mar 30, 2020 at 08:54:19PM -0700, Jaegeuk Kim wrote:
+>>> On 03/26, Sahitya Tummala wrote:
+>>>> allocate_segment_for_resize() can cause metapage updates if
+>>>> it requires to change the current node/data segments for resizing.
+>>>> Stop these meta updates when there is a checkpoint already
+>>>> in progress to prevent inconsistent CP data.
+>>>
+>>> I'd prefer to use f2fs_lock_op() in bigger coverage.
+>>
+>> Do you mean to cover the entire free_segment_range() function within
+>> f2fs_lock_op()? Please clarify.
+> 
+> I didn't test tho, something like this?
+> 
+> ---
+>  fs/f2fs/checkpoint.c        |  6 ++++--
+>  fs/f2fs/f2fs.h              |  2 +-
+>  fs/f2fs/gc.c                | 28 ++++++++++++++--------------
+>  fs/f2fs/super.c             |  1 -
+>  include/trace/events/f2fs.h |  4 +++-
+>  5 files changed, 22 insertions(+), 19 deletions(-)
+> 
+> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> index 852890b72d6ac..531995192b714 100644
+> --- a/fs/f2fs/checkpoint.c
+> +++ b/fs/f2fs/checkpoint.c
+> @@ -1553,7 +1553,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>  			return 0;
+>  		f2fs_warn(sbi, "Start checkpoint disabled!");
+>  	}
+> -	mutex_lock(&sbi->cp_mutex);
+> +	if (cpc->reason != CP_RESIZE)
+> +		mutex_lock(&sbi->cp_mutex);
+>  
+>  	if (!is_sbi_flag_set(sbi, SBI_IS_DIRTY) &&
+>  		((cpc->reason & CP_FASTBOOT) || (cpc->reason & CP_SYNC) ||
+> @@ -1622,7 +1623,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>  	f2fs_update_time(sbi, CP_TIME);
+>  	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
+>  out:
+> -	mutex_unlock(&sbi->cp_mutex);
+> +	if (cpc->reason != CP_RESIZE)
+> +		mutex_unlock(&sbi->cp_mutex);
+>  	return err;
+>  }
+>  
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index c84442eefc56d..7c98dca3ec1d6 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -193,6 +193,7 @@ enum {
+>  #define	CP_DISCARD	0x00000010
+>  #define CP_TRIMMED	0x00000020
+>  #define CP_PAUSE	0x00000040
+> +#define CP_RESIZE 	0x00000080
+>  
+>  #define MAX_DISCARD_BLOCKS(sbi)		BLKS_PER_SEC(sbi)
+>  #define DEF_MAX_DISCARD_REQUEST		8	/* issue 8 discards per round */
+> @@ -1417,7 +1418,6 @@ struct f2fs_sb_info {
+>  	unsigned int segs_per_sec;		/* segments per section */
+>  	unsigned int secs_per_zone;		/* sections per zone */
+>  	unsigned int total_sections;		/* total section count */
+> -	struct mutex resize_mutex;		/* for resize exclusion */
+>  	unsigned int total_node_count;		/* total node block count */
+>  	unsigned int total_valid_node_count;	/* valid node block count */
+>  	loff_t max_file_blocks;			/* max block index of file */
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 26248c8936db0..1e5a06fda09d3 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -1402,8 +1402,9 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
+>  static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+>  							unsigned int end)
+>  {
+> -	int type;
+>  	unsigned int segno, next_inuse;
+> +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+> +	int type;
+>  	int err = 0;
+>  
+>  	/* Move out cursegs from the target range */
+> @@ -1417,16 +1418,14 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+>  			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
+>  		};
+>  
+> -		down_write(&sbi->gc_lock);
+>  		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
+> -		up_write(&sbi->gc_lock);
+>  		put_gc_inode(&gc_list);
+>  
+>  		if (get_valid_blocks(sbi, segno, true))
+>  			return -EAGAIN;
+>  	}
+>  
+> -	err = f2fs_sync_fs(sbi->sb, 1);
+> +	err = f2fs_write_checkpoint(sbi, &cpc);
+>  	if (err)
+>  		return err;
+>  
+> @@ -1502,6 +1501,7 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+>  int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  {
+>  	__u64 old_block_count, shrunk_blocks;
+> +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+>  	unsigned int secs;
+>  	int gc_mode, gc_type;
+>  	int err = 0;
+> @@ -1538,7 +1538,9 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  		return -EINVAL;
+>  	}
+>  
+> -	freeze_bdev(sbi->sb->s_bdev);
+> +	freeze_super(sbi->sb);
+
+Look at this again, I guess holding freeze lock here may cause potential
+hang task issue, imaging that in a low-end storage, shrinking large size
+address space, free_segment_range() needs very long time to migrate all
+valid blocks in the tail of device, that's why previously we do block
+migration with small gc_lock coverage.
+
+Quoted:
+
+Changelog v5 ==> v6:
+ - In free_segment_range(), reduce granularity of gc_mutex.
+
+Thanks,
+
+> +	down_write(&sbi->gc_lock);
+> +	mutex_lock(&sbi->cp_mutex);
+>  
+>  	shrunk_blocks = old_block_count - block_count;
+>  	secs = div_u64(shrunk_blocks, BLKS_PER_SEC(sbi));
+> @@ -1551,11 +1553,12 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  		sbi->user_block_count -= shrunk_blocks;
+>  	spin_unlock(&sbi->stat_lock);
+>  	if (err) {
+> -		thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+> +		mutex_unlock(&sbi->cp_mutex);
+> +		up_write(&sbi->gc_lock);
+> +		thaw_super(sbi->sb);
+>  		return err;
+>  	}
+>  
+> -	mutex_lock(&sbi->resize_mutex);
+>  	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+>  
+>  	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+> @@ -1587,17 +1590,13 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  		goto out;
+>  	}
+>  
+> -	mutex_lock(&sbi->cp_mutex);
+>  	update_fs_metadata(sbi, -secs);
+>  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+>  	set_sbi_flag(sbi, SBI_IS_DIRTY);
+> -	mutex_unlock(&sbi->cp_mutex);
+>  
+> -	err = f2fs_sync_fs(sbi->sb, 1);
+> +	err = f2fs_write_checkpoint(sbi, &cpc);
+>  	if (err) {
+> -		mutex_lock(&sbi->cp_mutex);
+>  		update_fs_metadata(sbi, secs);
+> -		mutex_unlock(&sbi->cp_mutex);
+>  		update_sb_metadata(sbi, secs);
+>  		f2fs_commit_super(sbi, false);
+>  	}
+> @@ -1612,7 +1611,8 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  		spin_unlock(&sbi->stat_lock);
+>  	}
+>  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> -	mutex_unlock(&sbi->resize_mutex);
+> -	thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+> +	mutex_unlock(&sbi->cp_mutex);
+> +	up_write(&sbi->gc_lock);
+> +	thaw_super(sbi->sb);
+>  	return err;
+>  }
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index b83b17b54a0a6..1e7b1d21d0177 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -3412,7 +3412,6 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>  	init_rwsem(&sbi->gc_lock);
+>  	mutex_init(&sbi->writepages);
+>  	mutex_init(&sbi->cp_mutex);
+> -	mutex_init(&sbi->resize_mutex);
+>  	init_rwsem(&sbi->node_write);
+>  	init_rwsem(&sbi->node_change);
+>  
+> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+> index d97adfc327f03..f5eb03c54e96f 100644
+> --- a/include/trace/events/f2fs.h
+> +++ b/include/trace/events/f2fs.h
+> @@ -50,6 +50,7 @@ TRACE_DEFINE_ENUM(CP_RECOVERY);
+>  TRACE_DEFINE_ENUM(CP_DISCARD);
+>  TRACE_DEFINE_ENUM(CP_TRIMMED);
+>  TRACE_DEFINE_ENUM(CP_PAUSE);
+> +TRACE_DEFINE_ENUM(CP_RESIZE);
+>  
+>  #define show_block_type(type)						\
+>  	__print_symbolic(type,						\
+> @@ -126,7 +127,8 @@ TRACE_DEFINE_ENUM(CP_PAUSE);
+>  		{ CP_RECOVERY,	"Recovery" },				\
+>  		{ CP_DISCARD,	"Discard" },				\
+>  		{ CP_PAUSE,	"Pause" },				\
+> -		{ CP_TRIMMED,	"Trimmed" })
+> +		{ CP_TRIMMED,	"Trimmed" },				\
+> +		{ CP_RESIZE,	"Resize" })
+>  
+>  #define show_fsync_cpreason(type)					\
+>  	__print_symbolic(type,						\
+> 
