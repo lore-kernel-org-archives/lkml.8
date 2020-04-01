@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADB7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FFFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1493212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E436212CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758728;
-	bh=igs7xu7r/XChIxqWV7J9GvhZVftoNLULHWSoR+aDak0=;
+	s=default; t=1585758732;
+	bh=fuZdubD077dq0B7HOwQ6mfwjuba+ZeVl7JU27HhDW0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B9b1j+zIvqXXdw/Sc0KoA8HzT1Vt8n8OeTL5LnWoCqKpyxJ6v9E18sSGyQZq8uTCp
-	 iggJ21vttla2cR+hTnuJYfSmfhreQ7EymR+j4ReLKCPVjCDNthCLnU0CZ8Ss1tWdpw
-	 CAQsWXdZuuAnCbLvaKXcw7ipTZ6Owfv5hVXFZ7ss=
+	b=bg5CB0s4zEQPbz/6VvUMuD4QqUxCQRDb5gVGd9UK+vY6UMc0O3jkoU4ATgRuS9hxa
+	 CBB3VjPur+TejIzuJH3PoBF+5/wlEFvGp75rJG29uf4si8dGe4hVQIXwF+epwfrcug
+	 YE3GhdjnxiazVbx8r8j5o4S1jWdE4zwGO13HBeEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388388AbgDAQcG (ORCPT
+        id S2388394AbgDAQcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58408 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:32:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388378AbgDAQcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:32:04 -0400
+        id S2388222AbgDAQcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:32:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C3D72063A;
-        Wed,  1 Apr 2020 16:32:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C959220658;
+        Wed,  1 Apr 2020 16:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758723;
-        bh=igs7xu7r/XChIxqWV7J9GvhZVftoNLULHWSoR+aDak0=;
+        s=default; t=1585758727;
+        bh=fuZdubD077dq0B7HOwQ6mfwjuba+ZeVl7JU27HhDW0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fCe2n3E/pQCQZ75o1vScldzCOcGjjoYMK/u9yI2usH+7nuFjFOhESgiGo2xy8yJ10
-         znj5/9V7g8jQyx6VOZ2sDRy05WPyG9nVhwR/6IteYYY3N94sIRR16b/6ziV24xmm7D
-         AB7oESctyDaCNuYaEMtlGKMKWZmAMvnTLgCHTSWc=
+        b=jOMgxWa1StBgNapMiGuf45C5TWFQ9SV3ZfC1vfqcAYZKXnq4skx5kaeBWqAQhpvlt
+         miyLhkU5c2U2UOrGP9Hem6cs5QMV1TSHMrrmRpsRx38pjas59saMMng3+7zx/Bj4Qi
+         crjdiq15v9tgoRH5jp5GeFtwYe5MJhPsMIU0NXDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
-Subject: [PATCH 4.4 55/91] i2c: hix5hd2: add missed clk_disable_unprepare in remove
-Date:   Wed,  1 Apr 2020 18:17:51 +0200
-Message-Id: <20200401161532.491799620@linuxfoundation.org>
+        stable@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.4 56/91] perf probe: Do not depend on dwfl_module_addrsym()
+Date:   Wed,  1 Apr 2020 18:17:52 +0200
+Message-Id: <20200401161532.691187361@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -59,31 +65,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit e1b9f99ff8c40bba6e59de9ad4a659447b1e4112 upstream.
+commit 1efde2754275dbd9d11c6e0132a4f09facf297ab upstream.
 
-The driver forgets to disable and unprepare clk when remove.
-Add a call to clk_disable_unprepare to fix it.
+Do not depend on dwfl_module_addrsym() because it can fail on user-space
+shared libraries.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org
+Actually, same bug was fixed by commit 664fee3dc379 ("perf probe: Do not
+use dwfl_module_addrsym if dwarf_diename finds symbol name"), but commit
+07d369857808 ("perf probe: Fix wrong address verification) reverted to
+get actual symbol address from symtab.
+
+This fixes it again by getting symbol address from DIE, and only if the
+DIE has only address range, it uses dwfl_module_addrsym().
+
+Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
+Reported-by: Alexandre Ghiti <alex@ghiti.fr>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Link: http://lore.kernel.org/lkml/158281812176.476.14164573830975116234.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-hix5hd2.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/probe-finder.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/i2c/busses/i2c-hix5hd2.c
-+++ b/drivers/i2c/busses/i2c-hix5hd2.c
-@@ -500,6 +500,7 @@ static int hix5hd2_i2c_remove(struct pla
- 	i2c_del_adapter(&priv->adap);
- 	pm_runtime_disable(priv->dev);
- 	pm_runtime_set_suspended(priv->dev);
-+	clk_disable_unprepare(priv->clk);
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -608,14 +608,19 @@ static int convert_to_trace_point(Dwarf_
+ 		return -EINVAL;
+ 	}
  
- 	return 0;
- }
+-	/* Try to get actual symbol name from symtab */
+-	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
++	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
++		/* If the DIE has entrypc, use it. */
++		symbol = dwarf_diename(sp_die);
++	} else {
++		/* Try to get actual symbol name and address from symtab */
++		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
++		eaddr = sym.st_value;
++	}
+ 	if (!symbol) {
+ 		pr_warning("Failed to find symbol at 0x%lx\n",
+ 			   (unsigned long)paddr);
+ 		return -ENOENT;
+ 	}
+-	eaddr = sym.st_value;
+ 
+ 	tp->offset = (unsigned long)(paddr - eaddr);
+ 	tp->address = (unsigned long)paddr;
 
 
