@@ -2,141 +2,182 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FE1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3090C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7589020BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lneG3+by"
+	by mail.kernel.org (Postfix) with ESMTP id 648622137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585758938;
+	bh=einYLTSBpG4uznAjnAOOIsoBhlfGFMKvf1YfhGMwuB0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aGKjUll/DRxPnKOAZMO9+CbDNq61SDMtfmO1RPpPoRZOiauG+S/M0nDHyOF3AY3Og
+	 u5S3fJzuSJ/V35kEDvlYsvh2saVsj1Egm7v3YebqysrLHMQ+95ufrVC4o0QBlsut7j
+	 j0RrnM+gXfJFukX6f0vtYAkQD0r0HFBGlOS/Iyto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387860AbgDAQfa (ORCPT
+        id S2388600AbgDAQfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:35:30 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36007 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388749AbgDAQf1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:35:27 -0400
-Received: by mail-pf1-f193.google.com with SMTP id n10so198199pff.3;
-        Wed, 01 Apr 2020 09:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nv0PB7OQMBhmTUY0yfkOYmQ8lz6lTwWj9RPSvbAhmZg=;
-        b=lneG3+bylYOe+VWYyx4URUoJhBOrtwSx6J84qh6JImO1KXK/y81BfpHS4Nk6jmrx6f
-         FwQKNwiRF3ngj47XOZFQOlKHuobZfGkexsOKYMu7HCsMKMxgSTAtSQaoEAm4Gh9YxNEX
-         GLYGo2iIEac6fJtC9JZJmUUYPwPBoI6ATPHgnT4YGLXqWydHtqaVR879GefrAbQ919Yc
-         3FQgClxUMNncLsRQfiyCg5EyGg+5Npvbi7xzcXRdQ7tRjKxdTHLmsCn/1lIn44HWaUlF
-         dNOgBL/Hg5vUKGc/7Ve/y8ao6GKTalXDk5WU2q6bJPMQ9PoC/wqQqj0wzfGWB8IujmLm
-         +dXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nv0PB7OQMBhmTUY0yfkOYmQ8lz6lTwWj9RPSvbAhmZg=;
-        b=Wc/Y7/PMd/bq/1DMeR7iS81uSq+B38hPcLIV0Ne9V6fNhVfn0XMlHFroP1aWVrGRLC
-         /fPF+za3A1LadFrKbBLRKsoI4gcwlgkqRda7BMeot/fs0DeYKUS+HDiwg77Ln5kHWksj
-         r6eRY9Afdx+vCtyq+E/0DyyjX3SHKS5LkOYh0k8VIdIZL7njwO3yHPN/GehN9lGSU8rY
-         XxWesk4uJqMsj1inApwrJQ2IUtAN2kh+5oKdNReHaf/EIpB11wdBpi44xhLz9/OFgBly
-         yeth6APBaXONaotyhDF8KbeIp5z7KJ1LRuj038TmIpXqYmStoqaRbsp/ouzu6nieFttf
-         /JcQ==
-X-Gm-Message-State: AGi0PuZHvsVup4LfqluyGZHeia6uu28491FAQQ5puog08m88VNCtm2ig
-        DmoZYKD57DaaMJWaNDluQKg/btUFmrNN+KtxPrE=
-X-Google-Smtp-Source: APiQypIYInYnpmxVEVR4+As3ewJkYDPICTo9pnPQ8lnEBYfZhcIldzFXAraLEALorMmUdTYnZ6YizL46WjW0pqghLyM=
-X-Received: by 2002:a63:5859:: with SMTP id i25mr9501810pgm.74.1585758926434;
- Wed, 01 Apr 2020 09:35:26 -0700 (PDT)
+        Wed, 1 Apr 2020 12:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388089AbgDAQfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:35:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9314206F8;
+        Wed,  1 Apr 2020 16:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585758932;
+        bh=einYLTSBpG4uznAjnAOOIsoBhlfGFMKvf1YfhGMwuB0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w5eNlpmD6DBpKd0VJZ2U3L6kwIYBlHnI/6xf/ZnvTb0VkCXzdKoijo9dmB3cBHwFr
+         BqoeS6OQAbntXybSpgaer/W0zjGEu0+yIoPfBTf+s3hBQ4/pqcF421Raew9DxCFp7M
+         iS0fOkvjcCTlCkzIPFk99PzxbLBLRhpMA2uI4grs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chunguang Xu <brookxu@tencent.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 024/102] memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister_event
+Date:   Wed,  1 Apr 2020 18:17:27 +0200
+Message-Id: <20200401161537.685569388@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
+References: <20200401161530.451355388@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200401162416.24474-1-i.mikhaylov@yadro.com> <20200401162416.24474-3-i.mikhaylov@yadro.com>
-In-Reply-To: <20200401162416.24474-3-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 1 Apr 2020 19:35:19 +0300
-Message-ID: <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
->
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
+From: Chunguang Xu <brookxu@tencent.com>
 
-Thank you for an update, my comments below.
+commit 7d36665a5886c27ca4c4d0afd3ecc50b400f3587 upstream.
 
-...
+An eventfd monitors multiple memory thresholds of the cgroup, closes them,
+the kernel deletes all events related to this eventfd.  Before all events
+are deleted, another eventfd monitors the memory threshold of this cgroup,
+leading to a crash:
 
-> +static int get_and_apply_property(struct vcnl3020_data *data, const char *prop,
-> +                                 u32 reg)
-> +{
-> +       int rc;
-> +       u32 val;
-> +
-> +       rc = device_property_read_u32(data->dev, prop, &val);
-> +       if (rc)
-> +               return 0;
-> +
-> +       rc = regmap_write(data->regmap, reg, val);
-> +       if (rc)
+  BUG: kernel NULL pointer dereference, address: 0000000000000004
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0002) - not-present page
+  PGD 800000033058e067 P4D 800000033058e067 PUD 3355ce067 PMD 0
+  Oops: 0002 [#1] SMP PTI
+  CPU: 2 PID: 14012 Comm: kworker/2:6 Kdump: loaded Not tainted 5.6.0-rc4 #3
+  Hardware name: LENOVO 20AWS01K00/20AWS01K00, BIOS GLET70WW (2.24 ) 05/21/2014
+  Workqueue: events memcg_event_remove
+  RIP: 0010:__mem_cgroup_usage_unregister_event+0xb3/0x190
+  RSP: 0018:ffffb47e01c4fe18 EFLAGS: 00010202
+  RAX: 0000000000000001 RBX: ffff8bb223a8a000 RCX: 0000000000000001
+  RDX: 0000000000000001 RSI: ffff8bb22fb83540 RDI: 0000000000000001
+  RBP: ffffb47e01c4fe48 R08: 0000000000000000 R09: 0000000000000010
+  R10: 000000000000000c R11: 071c71c71c71c71c R12: ffff8bb226aba880
+  R13: ffff8bb223a8a480 R14: 0000000000000000 R15: 0000000000000000
+  FS:  0000000000000000(0000) GS:ffff8bb242680000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000004 CR3: 000000032c29c003 CR4: 00000000001606e0
+  Call Trace:
+    memcg_event_remove+0x32/0x90
+    process_one_work+0x172/0x380
+    worker_thread+0x49/0x3f0
+    kthread+0xf8/0x130
+    ret_from_fork+0x35/0x40
+  CR2: 0000000000000004
 
-> +               dev_err(data->dev, "Error (%d) setting property (%s)",
-> +                       rc, prop);
+We can reproduce this problem in the following ways:
 
-This requires {} according to the coding style.
+1. We create a new cgroup subdirectory and a new eventfd, and then we
+   monitor multiple memory thresholds of the cgroup through this eventfd.
 
-> +       return rc;
-> +}
+2.  closing this eventfd, and __mem_cgroup_usage_unregister_event ()
+   will be called multiple times to delete all events related to this
+   eventfd.
 
-...
+The first time __mem_cgroup_usage_unregister_event() is called, the
+kernel will clear all items related to this eventfd in thresholds->
+primary.
 
-> +static int vcnl3020_probe(struct i2c_client *client)
-> +{
+Since there is currently only one eventfd, thresholds-> primary becomes
+empty, so the kernel will set thresholds-> primary and hresholds-> spare
+to NULL.  If at this time, the user creates a new eventfd and monitor
+the memory threshold of this cgroup, kernel will re-initialize
+thresholds-> primary.
 
-> +       indio_dev->name = VCNL_DRV_NAME;
+Then when __mem_cgroup_usage_unregister_event () is called for the
+second time, because thresholds-> primary is not empty, the system will
+access thresholds-> spare, but thresholds-> spare is NULL, which will
+trigger a crash.
 
-It's definitely not a driver name. You have to put part number here.
+In general, the longer it takes to delete all events related to this
+eventfd, the easier it is to trigger this problem.
 
-> +}
+The solution is to check whether the thresholds associated with the
+eventfd has been cleared when deleting the event.  If so, we do nothing.
 
-...
+[akpm@linux-foundation.org: fix comment, per Kirill]
+Fixes: 907860ed381a ("cgroups: make cftype.unregister_event() void-returning")
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> +static struct i2c_driver vcnl3020_driver = {
-> +       .driver = {
+---
+ mm/memcontrol.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-> +               .name   = VCNL_DRV_NAME,
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3481,7 +3481,7 @@ static void __mem_cgroup_usage_unregiste
+ 	struct mem_cgroup_thresholds *thresholds;
+ 	struct mem_cgroup_threshold_ary *new;
+ 	unsigned long usage;
+-	int i, j, size;
++	int i, j, size, entries;
+ 
+ 	mutex_lock(&memcg->thresholds_lock);
+ 
+@@ -3501,14 +3501,20 @@ static void __mem_cgroup_usage_unregiste
+ 	__mem_cgroup_threshold(memcg, type == _MEMSWAP);
+ 
+ 	/* Calculate new number of threshold */
+-	size = 0;
++	size = entries = 0;
+ 	for (i = 0; i < thresholds->primary->size; i++) {
+ 		if (thresholds->primary->entries[i].eventfd != eventfd)
+ 			size++;
++		else
++			entries++;
+ 	}
+ 
+ 	new = thresholds->spare;
+ 
++	/* If no items related to eventfd have been cleared, nothing to do */
++	if (!entries)
++		goto unlock;
++
+ 	/* Set thresholds array to NULL if we don't have thresholds */
+ 	if (!size) {
+ 		kfree(new);
 
-Better to spell it explicitly.
 
-> +               .of_match_table = vcnl3020_of_match,
-> +       },
-> +       .probe_new  = vcnl3020_probe,
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
