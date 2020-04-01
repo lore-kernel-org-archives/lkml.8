@@ -2,118 +2,147 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97416C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B43C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753E5206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E360A206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:09:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfVSzmTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732491AbgDATIT (ORCPT
+        id S1732576AbgDATJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:08:19 -0400
-Received: from mga07.intel.com ([134.134.136.100]:29382 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgDATIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:08:19 -0400
-IronPort-SDR: 6rPHb3i30bmshs2l1nA7fsTqzRgqpXAiWsbkxVGSA7U79LyUZg30INaqM9m7wtH10/ziDzfxV5
- A3irZdjC5Tbw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 12:08:18 -0700
-IronPort-SDR: in2xdzjovyULgkguc9M6PuUxwD1BffwldF242QJfyCpxPS5pR3+7QyNM7BfJFISOePMd2m+Ifb
- Yaqs2nxNS4bw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,332,1580803200"; 
-   d="scan'208";a="252735857"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga006.jf.intel.com with ESMTP; 01 Apr 2020 12:08:17 -0700
-Message-ID: <6f68d7af6a618c087a85d2db6ad40b346e055452.camel@intel.com>
-Subject: Re: [RFC PATCH v9 09/27] x86/mm: Introduce _PAGE_DIRTY_SW
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Date:   Wed, 01 Apr 2020 12:08:16 -0700
-In-Reply-To: <325d3a25-0016-ea19-c0c9-7958066fc94e@intel.com>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
-         <20200205181935.3712-10-yu-cheng.yu@intel.com>
-         <325d3a25-0016-ea19-c0c9-7958066fc94e@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 1 Apr 2020 15:09:02 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43186 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732148AbgDATJC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 15:09:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585768141;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fxjc2faGUuidInE7GQX8+k3Ww+5cqbigEP6zGWTotOQ=;
+        b=CfVSzmTwh+IhyjG2Y4OwNKtNCvAIC34Kl2zwxev+weZjloopS6xCegmSaTaacfYSVtgYn4
+        Ju58cBHeWT4VbygTyMh5BA1EEyztuaiBgiPp6m8/DtHVUb4B8+ATXA7/07/pXzUiihb6d9
+        MN2FEycwd30/Q2hbFslBAKPOJ5ybmAA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-m4nIgWddMrSTUt7mi-QG0Q-1; Wed, 01 Apr 2020 15:08:59 -0400
+X-MC-Unique: m4nIgWddMrSTUt7mi-QG0Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15BE38017FA;
+        Wed,  1 Apr 2020 19:08:58 +0000 (UTC)
+Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D5C950BEE;
+        Wed,  1 Apr 2020 19:08:57 +0000 (UTC)
+Date:   Wed, 1 Apr 2020 14:08:55 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>,
+        Julien Thierry <jthierry@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH 3/5] objtool: Support Clang non-section symbols in ORC
+ generation
+Message-ID: <20200401190855.yvk4lc3ijaexoxal@treble>
+References: <cover.1585761021.git.jpoimboe@redhat.com>
+ <9a9cae7fcf628843aabe5a086b1a3c5bf50f42e8.1585761021.git.jpoimboe@redhat.com>
+ <20200401184953.GZ20730@hirez.programming.kicks-ass.net>
+ <20200401190548.rodiauk3iolknvfe@treble>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200401190548.rodiauk3iolknvfe@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 13:35 -0800, Dave Hansen wrote:
-> On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
-> > When Shadow Stack (SHSTK) is introduced, a R/O and Dirty PTE exists in the
-> > following cases:
+On Wed, Apr 01, 2020 at 02:05:51PM -0500, Josh Poimboeuf wrote:
+> On Wed, Apr 01, 2020 at 08:49:53PM +0200, Peter Zijlstra wrote:
+> > On Wed, Apr 01, 2020 at 01:23:27PM -0500, Josh Poimboeuf wrote:
 > > 
-> > (a) A modified, copy-on-write (COW) page;
-> > (b) A R/O page that has been COW'ed;
-> > (c) A SHSTK page.
-[...]
-
-> > diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-> > index e647e3c75578..826823df917f 100644
-> > --- a/arch/x86/include/asm/pgtable_types.h
-> > +++ b/arch/x86/include/asm/pgtable_types.h
-> > @@ -23,7 +23,8 @@
-> >  #define _PAGE_BIT_SOFTW2	10	/* " */
-> >  #define _PAGE_BIT_SOFTW3	11	/* " */
-> >  #define _PAGE_BIT_PAT_LARGE	12	/* On 2MB or 1GB pages */
-> > -#define _PAGE_BIT_SOFTW4	58	/* available for programmer */
-> > +#define _PAGE_BIT_SOFTW4	57	/* available for programmer */
-> > +#define _PAGE_BIT_SOFTW5	58	/* available for programmer */
-> >  #define _PAGE_BIT_PKEY_BIT0	59	/* Protection Keys, bit 1/4 */
-> >  #define _PAGE_BIT_PKEY_BIT1	60	/* Protection Keys, bit 2/4 */
-> >  #define _PAGE_BIT_PKEY_BIT2	61	/* Protection Keys, bit 3/4 */
-> > @@ -35,6 +36,12 @@
-> >  #define _PAGE_BIT_SOFT_DIRTY	_PAGE_BIT_SOFTW3 /* software dirty tracking */
-> >  #define _PAGE_BIT_DEVMAP	_PAGE_BIT_SOFTW4
-> >  
-> > +/*
-> > + * This bit indicates a copy-on-write page, and is different from
-> > + * _PAGE_BIT_SOFT_DIRTY, which tracks which pages a task writes to.
-> > + */
-> > +#define _PAGE_BIT_DIRTY_SW	_PAGE_BIT_SOFTW5 /* was written to */
+> > > @@ -105,8 +100,32 @@ static int create_orc_entry(struct elf *elf, struct section *u_sec, struct secti
+> > >  	}
+> > >  	memset(rela, 0, sizeof(*rela));
+> > >  
+> > > -	rela->sym = insn_sec->sym;
+> > > -	rela->addend = insn_off;
+> > > +	if (insn_sec->sym) {
+> > > +		rela->sym = insn_sec->sym;
+> > > +		rela->addend = insn_off;
+> > > +	} else {
+> > > +		/*
+> > > +		 * The Clang assembler doesn't produce section symbols, so we
+> > > +		 * have to reference the function symbol instead:
+> > > +		 */
+> > > +		rela->sym = find_symbol_containing(insn_sec, insn_off);
+> > 
+> > It's a good thing I made that a lot faster I suppose ;-)
 > 
-> Does it *only* indicate a copy-on-write (or copy-on-access) page?  If
-> so, haven't we misnamed it?
+> :-)
+> 
+> > > +		if (!rela->sym) {
+> > > +			/*
+> > > +			 * Hack alert.  This happens when we need to reference
+> > > +			 * the NOP pad insn immediately after the function.
+> > > +			 */
+> > > +			rela->sym = find_symbol_containing(insn_sec,
+> > > +							   insn_off - 1);
+> > 
+> > Urgh, when does that happen? 
+> 
+> It happens naturally in the padding between functions, since objtool
+> doesn't traverse those instructions.  So they have undefined entries
+> like
+> 
+>  .text+68: sp:(und) bp:(und) type:call end:0
+> 
+> I suppose those aren't technically necessary.
 
-It indicates either a copy-on-write page or a read-only page that has been
-cow'ed.  What about _PAGE_BIT_COW?
+In fact, we could probably get substantial savings in the ORC table if
+we skipped those, i.e.
 
-Yu-cheng
+  .text+0: sp:sp+8 bp:(und) type:call end:0
+  .text+8: sp:(und) bp:(und) type:call end:0
+  .text+10: sp:sp+8 bp:(und) type:call end:0
+  .text+17: sp:sp+16 bp:(und) type:call end:0
+  .text+18: sp:sp+24 bp:prevsp-24 type:call end:0
+  .text+1c: sp:sp+32 bp:prevsp-24 type:call end:0
+  .text+5a: sp:sp+24 bp:prevsp-24 type:call end:0
+  .text+61: sp:sp+16 bp:(und) type:call end:0
+  .text+63: sp:sp+8 bp:(und) type:call end:0
+  .text+68: sp:(und) bp:(und) type:call end:0
+  .text+70: sp:sp+8 bp:(und) type:call end:0
+  .text+8c: sp:(und) bp:(und) type:call end:0
+  .text+90: sp:sp+8 bp:(und) type:call end:0
+  .text+cd: sp:(und) bp:(und) type:call end:0
+  .text+d0: sp:sp+8 bp:(und) type:call end:0
 
+would be compressed to
+
+  .text+0: sp:sp+8 bp:(und) type:call end:0
+  .text+17: sp:sp+16 bp:(und) type:call end:0
+  .text+18: sp:sp+24 bp:prevsp-24 type:call end:0
+  .text+1c: sp:sp+32 bp:prevsp-24 type:call end:0
+  .text+5a: sp:sp+24 bp:prevsp-24 type:call end:0
+  .text+61: sp:sp+16 bp:(und) type:call end:0
+  .text+63: sp:sp+8 bp:(und) type:call end:0
+
+but I can do that in a separate patch, and if it works I can remove this
+hack.
+
+-- 
+Josh
 
