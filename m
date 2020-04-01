@@ -3,131 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0A3C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795AEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30280206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503F9206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733262AbgDAX3V (ORCPT
+        id S1733235AbgDAXcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:29:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35925 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732503AbgDAX3U (ORCPT
+        Wed, 1 Apr 2020 19:32:36 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:37860 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732503AbgDAXcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:29:20 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jJmnL-00028F-Fy; Thu, 02 Apr 2020 01:29:15 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id EB0EC100D52; Thu,  2 Apr 2020 01:29:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>
-Subject: Re: [PATCH] sched/isolation: Allow "isolcpus=" to skip unknown sub-parameters
-In-Reply-To: <20200401230105.GF648829@xz-x1>
-References: <20200204161639.267026-1-peterx@redhat.com> <87d08rosof.fsf@nanos.tec.linutronix.de> <20200401230105.GF648829@xz-x1>
-Date:   Thu, 02 Apr 2020 01:29:14 +0200
-Message-ID: <87wo6yokdx.fsf@nanos.tec.linutronix.de>
+        Wed, 1 Apr 2020 19:32:36 -0400
+Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
+        with ESMTP id S23993316AbgDAXcamxzAZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 01:32:30 +0200
+Date:   Thu, 2 Apr 2020 00:32:30 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@linux-mips.org>
+To:     Andrew Cooper <andrew.cooper3@citrix.com>
+cc:     Thomas Gleixner <tglx@linutronix.de>, hpa@zytor.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        jailhouse-dev@googlegroups.com
+Subject: Re: [PATCH] x86/smpboot: Remove 486-isms from the modern AP boot
+ path
+In-Reply-To: <beefca46-ac7c-374b-e80a-4e7c3af2eb2b@citrix.com>
+Message-ID: <alpine.LFD.2.21.2004012353100.4156324@eddie.linux-mips.org>
+References: <20200325101431.12341-1-andrew.cooper3@citrix.com> <601E644A-B046-4030-B3BD-280ABF15BF53@zytor.com> <87r1xgxzy6.fsf@nanos.tec.linutronix.de> <alpine.LFD.2.21.2004010001460.3939520@eddie.linux-mips.org>
+ <beefca46-ac7c-374b-e80a-4e7c3af2eb2b@citrix.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Xu <peterx@redhat.com> writes:
+On Wed, 1 Apr 2020, Andrew Cooper wrote:
 
-> On Wed, Apr 01, 2020 at 10:30:08PM +0200, Thomas Gleixner wrote:
->> Peter Xu <peterx@redhat.com> writes:
->> > @@ -169,8 +169,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
->> >  			continue;
->> >  		}
->> >  
->> > -		pr_warn("isolcpus: Error, unknown flag\n");
->> > -		return 0;
->> > +		str = strchr(str, ',');
->> > +		if (str)
->> > +			/* Skip unknown sub-parameter */
->> > +			str++;
->> > +		else
->> > +			return 0;
->> 
->> Just looked at it again because I wanted to apply this and contrary to
->> last time I figured out that this is broken:
->> 
->>      isolcpus=nohz,domain1,3,5
->> 
->> is a malformatted option, but the above will make it "valid" and result
->> in:
->> 
->>      HK_FLAG_TICK and a cpumask of 3,5.
->
-> I would think this is no worse than applying nothing - I read the
-> first "isalpha()" check as something like "the subparameter's first
-> character must not be a digit", so to differenciate with the cpu list.
-> If we keep this, we can still have subparams like "double-word".
+> >  Even though we supported them by spec I believe we never actually ran MP 
+> > on any 486 SMP system (Alan Cox might be able to straighten me out on 
+> > this); none that I know of implemented the MPS even though actual hardware 
+> > might have used the APIC architecture.  Compaq had its competing solution 
+> > for 486 and newer SMP, actually deployed, the name of which I long forgot.  
+> > We never supported it due to the lack of documentation combined with the 
+> > lack of enough incentive for someone to reverse-engineer it.
+> 
+> :)
+> 
+> I chose "486-ism" based on what the MP spec said about external vs
+> integrated Local APICs.  I can't claim to have any experience of those days.
 
-It _is_ worse. If the intention is to write 'nohz,domain,1,3,5' and
-that missing comma morphs it silently into 'nohz,3,5' then this is
-really a step backwards. The upstream version would tell you that you
-screwed up.
+ The spec is quite clear about the use of discrete APICs actually:
 
->>  static int __init housekeeping_isolcpus_setup(char *str)
->>  {
->>  	unsigned int flags = 0;
->> +	char *par;
->> +	int len;
->>  
->>  	while (isalpha(*str)) {
->>  		if (!strncmp(str, "nohz,", 5)) {
->> @@ -169,8 +171,17 @@ static int __init housekeeping_isolcpus_
->>  			continue;
->>  		}
->>  
->> -		pr_warn("isolcpus: Error, unknown flag\n");
->> -		return 0;
->> +		/*
->> +		 * Skip unknown sub-parameter and validate that it is not
->> +		 * containing an invalid character.
->> +		 */
->> +		for (par = str, len = 0; isalpha(*str); str++, len++);
->> +		if (*str != ',') {
->> +			pr_warn("isolcpus: Invalid flag %*s\n", len, par);
->
-> ... this will dump "isolcpus: Invalid flag domain1,3,5", is this what
-> we wanted?  Maybe only dumps "domain1"?
+"5.1 Discrete APIC Configurations
 
-No, it will dump: "domain1" at least if my understanding of is_alpha()
-and the '%*s' format option is halfways correct
+"   Figure 5-1 shows the default configuration for systems that use the 
+    discrete 82489 APIC.  The Intel486 processor is shown as an example; 
+    however, this configuration can also employ Pentium processors.  In 
+    Pentium processor systems, PRST is connected to INIT instead of to 
+    RESET."
 
-> For me so far I would still prefer the original one, giving more
-> freedom to the future params and the patch is also a bit easier (but I
+:)  And if in the way the internal local APIC in P54C processors can be
+permanently disabled (causing it not to be reported in CPUID flags) via a 
+reset strap, e.g. to support an unusual configuration.
 
-Again. It does not matter whether the patch is easier or not. What
-matters is correctness and usability. Silently converting a typo into
-something else is horrible at best.
+ As I recall the integrated APIC would in principle support SMP configs 
+beyond dual (the inter-APIC bus was serial at the time and supported 15 
+APIC IDs with the P54C), but at the time the P54C processor was released 
+the only compatible I/O APICs were available as a part of Intel PCI south 
+bridges (the 82375EB/SB ESC and the 82379AB SIO.A).  Those chips were not 
+necessarily compatible with whatever custom chipset was developed to 
+support e.g. a quad-SMP P54C system.  Or there were political reasons 
+preventing them from being used.
 
-> definitely like the pr_warn when there's unknown subparams).  But just
-> let me know your preference and I'll follow yours when repost.
+ Then the 82489DX used an incompatible protocol (supporting 254 APIC IDs 
+among others, and as I recall the serial bus had a different number of 
+wires even), so it couldn't be mixed with integrated local APICs.  That's 
+why discrete APICs were sometimes used even with P54C processors.
 
-Enforcing a pure 'is_alpha()' subparam space is not really a substantial
-restriction. Feel free to extend it by adding '|| *str == '_' if you
-really think that provides a value. 
+ And the 82093AA standalone I/O APIC was only introduced a few years 
+later, along with the Intel HX (Triton II) SMP chipset.  I still have a 
+nice working machine equipped with this chipset and dual P55C processors 
+@233MHz.  Even the original CPU fans are going strong. :)  Its MP table is 
+however buggy and difficult to work with if the I/O APIC is to be used, 
+especially if PCI-PCI bridges are involved (there's none onboard, but you 
+can have these easily in multiple quantities on option cards nowadays).
 
-Thanks,
-
-        tglx
+  Maciej
