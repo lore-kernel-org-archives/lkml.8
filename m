@@ -2,212 +2,127 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863B5C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20B9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509822071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B8252063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:40:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajprIKKw"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="SXQzFB2+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732789AbgDARhs (ORCPT
+        id S1732624AbgDARkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:37:48 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44522 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgDARhs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:37:48 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v134so192760oie.11;
-        Wed, 01 Apr 2020 10:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zsQ+CdOVb24V2BAprd8p1XllEy9+EN0Dhep/xWpJ87Q=;
-        b=ajprIKKwv+dueHWTPMNqkQe2LuNgg4lh96IinPEFHmrCeJTFtViEZUxW9z2QWE/PDH
-         Sx2D3ZDf1DwThSCl3I+xZUXxOdQM3YS1LnSnwaYyvUYYoH36qP/eq5tzoUwnhHdBX8Yn
-         su38DI78spLbvC8/1PSh6bzXv0uCioZLfkNVZpHiWsYMnzPdt2Clt8yVEXQw1zdIFrRV
-         lvA9OQ5fuHszWv7f+yfgmhzfwTdEK2OwfBNcOVcnM12x5l2e7gDjIcq2isr/61mT7f6U
-         7f9cfk1IiIY4ss1cNbtcbQjYupvAkuPlgDLmbUqg5KQ4+DbjusR80Fpb129eS5AwN/u4
-         1Bsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zsQ+CdOVb24V2BAprd8p1XllEy9+EN0Dhep/xWpJ87Q=;
-        b=KHYrTz1eVv6O5+hVfSgMtVKGg7+mIuixqY0jb4rIOGU5Bf1Ef/21M+StWaVid2fXaP
-         L9eioU5321tBWAqwBBftu2/IxM5JyZIXYLBrxyOXdFcANZfowbFMMStomE5F4k9XO6/u
-         CeS/MuR2IgHWW48I2MEjwiB1uFtiSRwfwYhRl4SByQ+EMsV2QeWSf+SW1XrHYwQbp/Yb
-         J2uC0de5q+AafCKL9AZr1eX/Qd7ww7mYFx325W8ZZytaLTAS8iq93tRF+15tMffQkjNa
-         G6cDEt3h0asMixRnAkg3SzlTcHBd1QZsrRUuHwAJSDI1jXCsfR92CbIBbJF6awMe8DiM
-         qVTA==
-X-Gm-Message-State: AGi0PubgAEpbnD56REQg/eMudRorwKAP++DGSQgyuQzBL2YEXmVTELnm
-        PkxJKgC0gZKoKxz6oeJ+OY7AO1TMsdDSdW4BXjU=
-X-Google-Smtp-Source: APiQypLVoagopL2LC5fv3WBtfUn4dJ6lfyRk+nZW8iJ4g+qJWR3D3El0wlnEgwGCNQ77KzGiyo/Iso2KZOY63vUG27E=
-X-Received: by 2002:aca:cf0d:: with SMTP id f13mr3508187oig.162.1585762666999;
- Wed, 01 Apr 2020 10:37:46 -0700 (PDT)
+        Wed, 1 Apr 2020 13:40:09 -0400
+Received: from mail-dm6nam10on2051.outbound.protection.outlook.com ([40.107.93.51]:6258
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732196AbgDARkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 13:40:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DURm36is+2TC7ZtH3dElPsA6DTrkPfUUHpmIewyuK6N4iMQia1p6gt1rcyCyJkFsoXhsXYXXbSNgnAwCQ6Nyk2F4EwsdLpJ/sb94t1b9zaY5U1KbxBjpX88GURgtvOmHm+2CSjKpj4m1i4xulxXYPpg+iCyRytfLIoAQQ8K1yehFeZr+yn/iMKGtwIPAvV7VqE1iO2Rwv78EnhFBvDijmtiDiD7lLHU8CpUZgbSSoZckDDN4qccvYGmDn+2t9WZ+c1qYRQ62mPHfgI4jc9WIkiAN20t/Sg+xKOzl+HYSbi3Uod6Xt6fJUZxKhkS/LR32IPX/nYKsCglgvrGwXZPlZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wDYAm6jc1dFCcRrsvJRJ7Jy52PoDFHrZOT9z2Ed/tbM=;
+ b=PrZO3TP6wdHo8+GqpjP65FGsjVOfeFGxG2WKkvUp3SQg8vmyd8EtnzMbJ8XE2s7plwsF/F/r0ippxcEggSJ59dsDL0byvuvXad43TOnCziPJvL6RAP7o8Ggpugpudl/zUpqZWrIz2rhZAFUVuaLz6/yVp47uDbir9l8FiN5yAaRiSzpIprSnlcLOURzHJoZCzGv4Z+58IuEoLNoFqcQAEzr3dhK27PLVuMrHUGDLOAXr8WkgsoBthLklJgLtc0WdYbJEODXBBG4Q57UCQGZcqjwsery9MCHPPWSn7V/uj+x/u0rM36dzJ7fUmopJnHceT3NeIBLrKrTq2i0MoRTUIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wDYAm6jc1dFCcRrsvJRJ7Jy52PoDFHrZOT9z2Ed/tbM=;
+ b=SXQzFB2+dx0+69JwnCdFv/EoWYGF9OOGU3SS5OhFYAGnbAntOYNvLNQHWMLmkeWmOgy11nyYQvRN6CWX8b86/HroiB+Uwj3FpUoH+NLdlDFsQ327kWAm9oNWxa75SehTnIV65qUO/FpreW113s+hNj4MMdIgb3qaNPeaiLT1mb0=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (2603:10b6:a03:4a::18)
+ by BYAPR05MB4997.namprd05.prod.outlook.com (2603:10b6:a03:9d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.13; Wed, 1 Apr
+ 2020 17:40:03 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::7c65:25af:faf7:5331]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::7c65:25af:faf7:5331%2]) with mapi id 15.20.2878.014; Wed, 1 Apr 2020
+ 17:40:03 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v2 2/2] KVM: LAPIC: Don't need to clear IPI delivery
+ status in x2apic mode
+Thread-Topic: [PATCH v2 2/2] KVM: LAPIC: Don't need to clear IPI delivery
+ status in x2apic mode
+Thread-Index: AQHWB/FWdzgWY4YnU0q2HQ5H9CdmBahkiUOA
+Date:   Wed, 1 Apr 2020 17:40:03 +0000
+Message-ID: <CE34AD16-64A7-4AA0-9928-507C6F3FF6CD@vmware.com>
+References: <1585700362-11892-1-git-send-email-wanpengli@tencent.com>
+ <1585700362-11892-2-git-send-email-wanpengli@tencent.com>
+ <6de1a454-60fc-2bda-841d-f9ceb606d4c6@redhat.com>
+ <CANRm+CzB3dWatF7qOO_WajXM_ZBn1U6Z8+uq4NxCuLG3TgwY1Q@mail.gmail.com>
+In-Reply-To: <CANRm+CzB3dWatF7qOO_WajXM_ZBn1U6Z8+uq4NxCuLG3TgwY1Q@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [2601:647:4700:9b2:4568:145a:b450:27e3]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e7dcce41-d5e0-4363-5d60-08d7d663b5f6
+x-ms-traffictypediagnostic: BYAPR05MB4997:
+x-microsoft-antispam-prvs: <BYAPR05MB4997FE8B1C2D17072321BA5ED0C90@BYAPR05MB4997.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 03607C04F0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB4776.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(376002)(346002)(136003)(396003)(39860400002)(4744005)(36756003)(478600001)(33656002)(6486002)(8676002)(2616005)(6512007)(8936002)(2906002)(81156014)(81166006)(86362001)(6506007)(53546011)(66446008)(66556008)(76116006)(5660300002)(316002)(71200400001)(186003)(4326008)(6916009)(66476007)(64756008)(66946007)(54906003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2wzi9A0P+GSFuHAuTiLPH5le6RTAxO2QRTsMgIpvrrWBbbqFrGwuKbi/7krpwICpjmHyoD8vHEvWZkbOywUHKdjU534si+NOm6cz9fEwbxFYqLlm5RIhLL1enJZuvIjuhm9xZ4PhNmIj8ixR/SB0oBLs1f7LzpccNBOI9nwXhm4v3TSua5ciwgaBO4IXCiG/Iy9Aif/3dOWCo0+Iyr1lRqKJ+Kvqp4qyyn/sy7lvpmvkpL2W+yCD5Sxzksd+Otyhr6y+2/L/DbStDvhJBD8xnZk3Fw9wCYvZ6Kye70VkNfBr0vY3EDClxYVdjooLIVc6/W95DH5W5AT4rcs/CS4g6TkrrI72qkj3A1Y5+CkE987l97J/x2RszaoJKPn9WxROYfieOK+rhnv9zH36lkzfrYe4sMSwh7kAr3Vx5PPAsR2MIAGcynHo1xtuo2t1Ontg
+x-ms-exchange-antispam-messagedata: E6EY15vsF0NK5qbQ29HVqSuCC0YLxcAcK8QZvDTa+DMlHY7R6377ocZ7RSyZebpPHEqSJ9dHB2TOdvhjOgI7hHR40uFlaZhl1yDpixHtEc5y98NkB9w/HZlfw9ozk70iV0VHXRIk1BJVt1/ZYCK+4iznba3s8H8Gkc972SqkTIMMycXtqPmbWfEfWGU/3MozIxG8gHHAy0DA9VwWYhweYg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9F187A50EFA04A4B8361CED49AD3EAD8@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
-In-Reply-To: <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 1 Apr 2020 18:37:20 +0100
-Message-ID: <CA+V-a8ujOD1k+Oc2f+tSHPvt128oO9hT3zEFHghnxq5RAOMb7w@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for
- AISTARVISION MIPI Adapter V2.1
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7dcce41-d5e0-4363-5d60-08d7d663b5f6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 17:40:03.7953
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aNIyci8QvJj1KaMJpM+0AARB5myi0o2U1v6s1gYpFH8YV3o5q2Hc6SFJajNdvEEmfPqcx+qJ/RlaJputQla/gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4997
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+> On Mar 31, 2020, at 11:46 PM, Wanpeng Li <kernellwp@gmail.com> wrote:
+>=20
+> Cc more people,
+> On Wed, 1 Apr 2020 at 08:35, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>> On 01/04/20 02:19, Wanpeng Li wrote:
+>>> -             /* No delay here, so we always clear the pending bit */
+>>> -             val &=3D ~(1 << 12);
+>>> +             /* Immediately clear Delivery Status in xAPIC mode */
+>>> +             if (!apic_x2apic_mode(apic))
+>>> +                     val &=3D ~(1 << 12);
+>>=20
+>> This adds a conditional, and the old behavior was valid according to the
+>> SDM: "software should not assume the value returned by reading the ICR
+>> is the last written value".
+>=20
+> Nadav, Sean, what do you think?
 
-Thank you for the review.
+I do not know. But if you write a KVM unit-test, I can run it on bare-metal
+and give you feedback about how it behaves.
 
-
-On Wed, Apr 1, 2020 at 10:45 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Sun, Mar 22, 2020 at 3:13 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
-> > to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-> > which have the camera endpoint nodes for imx219 and ov5645 so that this can
-> > be re-used with other G2x platforms.
-> >
-> > r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
-> > default ties ov5645 camera endpoint to CSI2.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  Changes for v2:
-> >  * Dropped #{address,size}-cells
-> >  * Dropped unit address and reg for port
->
-> Thanks for the update!
->
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-> > @@ -0,0 +1,75 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-> > + * connected with aistarvision-mipi-v2-adapter board
-> > + *
-> > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "r8a774c0-ek874.dts"
-> > +#define MIPI_PARENT_I2C i2c3
-> > +#include "aistarvision-mipi-adapter-2.1.dtsi"
-> > +
-> > +/ {
-> > +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-> > +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-> > +};
-> > +
-> > +&i2c3 {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&vin4 {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&vin5 {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&csi40 {
-> > +       status = "okay";
-> > +
-> > +       ports {
-> > +               port {
-> > +                       csi40_in: endpoint {
-> > +                               clock-lanes = <0>;
-> > +                               data-lanes = <1 2>;
-> > +                               remote-endpoint = <&ov5645_ep>;
-> > +                       };
-> > +               };
-> > +       };
-> > +};
-> > +
-> > +&ov5645 {
-> > +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-> > +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-> > +
-> > +       clocks = <&cpg CPG_MOD 716>;
->
-> I'm still a bit puzzled here.
->
-> CPG_MOD 716 is the CSI40 module clock, which runs at 25 MHz, and is
-> presumably output to the CSI0_CLKP/N pair? Or is its rate controlled
-> by the CSI driver?
-> On the MIPI board[*], that signal becomes MIPI1_CP/N.
-> However, the MIPI board also has a "Clock Source Selection" header,
-> which allows you to choose one of:
->   1. The fixed 24 MHz crystal, which is apparently used for the imx219
->      camera, as described by imx219_clk above, and matches the wanted
->      clock rate specified below?
->   2. CSI1_CLK,
->   3. CSI2_CLK.
-> The last two become CLK0/1 on the CAT874 board, which are driven by
-> TPU0TO0/1.
->
-Yes my bad for not looking into this earlier, for both ov5645 and
-imx219 I do short
-pins 3-4 and 5-6 of J14, so for both the sensors the clocks should be
-fixed clock
-of 24Mhz, so I changed it imx219_clk to osc25250_clk and passed the same to
-ov5645 node. (imx219 sensor can take in a external clock from 6-27Mhz [2])
-
-> Which setting do you use for the ov5645 camera?
->
-> > +       clock-frequency = <24000000>;
->
-> After your patch for the ov5645 driver, this should be replaced by
-> assigned-clock-rates?
->
-After v4 [1] it was decided that the frequency should be set by driver itself,
-so I'll be revisiting ov5645 driver.
-
-[1] https://patchwork.linuxtv.org/patch/62185/
-[2] https://publiclab.org/system/images/photos/000/023/294/original/RASPBERRY_PI_CAMERA_V2_DATASHEET_IMX219PQH5_7.0.0_Datasheet_XXX.PDF
-
-Cheers,
---Prabhakar
-
-> The rest looks good to me, but I'm not a multi-media/camera expert.
->
-> [*] https://github.com/Kevin-WSCU/96Boards-Camera
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
