@@ -2,329 +2,278 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF0BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7236C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB322078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8422A20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fCPEChtC"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="axZXezGT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733012AbgDAOPR (ORCPT
+        id S1732898AbgDAORy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:15:17 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49400 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732826AbgDAOPR (ORCPT
+        Wed, 1 Apr 2020 10:17:54 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:26188 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732205AbgDAORy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:15:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585750515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i1f7HGkvLeJwtZr/nhHBwLAndJ8z678Q44dIY0gzIYM=;
-        b=fCPEChtC8vZnXFt2Ps1pK7eB+Bt9HnkUDJYikk+7+l+xLgu0PLnNUzpcSEtNQiMWmL1BJX
-        OvsCIdf64LOeRxDHlFr7d8WXMqppzoTHfJrHY8Zd7fYs0uX1yRo2XyumH0CF6wb9gquAMR
-        0G+zaghyNfqmxX1BDTQPnUT7bE3kwSc=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-tL46n0ADOsSqsDfON6DnNw-1; Wed, 01 Apr 2020 10:13:22 -0400
-X-MC-Unique: tL46n0ADOsSqsDfON6DnNw-1
-Received: by mail-wm1-f71.google.com with SMTP id l13so21762wme.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 07:13:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=i1f7HGkvLeJwtZr/nhHBwLAndJ8z678Q44dIY0gzIYM=;
-        b=G4yfkjN5wZx/ui9Qg64/cCL3SgXjQ0t9f78cukn3dupA3efGEbsQD2n7D3nJ8xGsXl
-         19hI9TfNv9LjOoLnDVqYVwjSu5v8ffv9cn0eYXXs9mlCGnsZ559xRW7OcCrwwn0uD04m
-         7JjSBtYYBx95KEpuspB9dhz7cp18BbMBXzUt4EcET1dH1NIWGezoEMDm95ZSn31BgtZP
-         CKmfUpBwAi15+71RqIYFAOnFsozNDG336OQIF/AmR8njmEBVu2MwbNfXcqPQuPUtjD2L
-         IfqCzGxnimJ725/jiUYKmTAPQshbVefpzuELDd8gNSn/2KkU7PhLI4dYIxboJkL5bAe8
-         DljA==
-X-Gm-Message-State: AGi0PuboIXQfKJlsGfrC7gFHyWrS6arm16BS6QT4fZugmO0G1RyDf9wI
-        dx5HygNMTYCO5QdojBF7RYzjopDU8Eqm+gXUTFLvsD8GyuQ/fChfcqUoqRnven0wdvMaB9WkN5S
-        obNAPpxlxuRtUNsICQ4qDwxdk
-X-Received: by 2002:a1c:9658:: with SMTP id y85mr4492423wmd.63.1585750399944;
-        Wed, 01 Apr 2020 07:13:19 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJs5EbWmst7DVw5ihLG2s2hFAxQ8npMW8uVZXgFKCJBe3IpzUUywXMdNRtaqWDIUaHL2OcOmg==
-X-Received: by 2002:a1c:9658:: with SMTP id y85mr4492386wmd.63.1585750399582;
-        Wed, 01 Apr 2020 07:13:19 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id c85sm2806878wmd.48.2020.04.01.07.13.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 07:13:18 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 10:13:14 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-Message-ID: <20200401100954-mutt-send-email-mst@kernel.org>
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <20200401092004-mutt-send-email-mst@kernel.org>
- <6b4d169a-9962-6014-5423-1507059343e9@redhat.com>
+        Wed, 1 Apr 2020 10:17:54 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031EHLwk010045;
+        Wed, 1 Apr 2020 16:17:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=Z6VNMqTZ2uwRu8WKkNLiLmvYTadoYga3ntG3YOu/TiU=;
+ b=axZXezGT3396UNnC/EOneTFB4Ge+MsYYlB6WJYBw23fMIBAMstAdfT5iosNkfoeWrmiG
+ QjiVjJU3hWbDM+udH6oMluKvd6ANYjoRN5Ep0qtF3yLSKjb4FRctObHLpUrzACjiX6j/
+ xB7anIR2pyKMRB2LJEoK8ufv/H57M24T//zkoM/cohpHmJPMzjCU3QxdSx2zKW3lTcp2
+ 1qs9hBrYaFLVS3Uel2Hk3AqwX1q8m3L40579XlELlncXsvIuy1YVzRI+AtBUDOTWiqpn
+ Rh8DqbHZUf8R5jzG1lFpvVykUHWDlKGkMaqPo1Mn9l1iQOsyAFN0oKxSWXR0EuPhmEsL CQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 301vkdx483-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 16:17:34 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C603910002A;
+        Wed,  1 Apr 2020 16:17:30 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AE0A32B0D50;
+        Wed,  1 Apr 2020 16:17:30 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Apr
+ 2020 16:17:23 +0200
+Subject: Re: [PATCHv2 1/1] net: ethernet: stmmac: simplify phy modes
+ management for stm32
+To:     Christophe Roullier <christophe.roullier@st.com>,
+        <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <peppe.cavallaro@st.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>
+References: <20200316090907.18488-1-christophe.roullier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <cb0a5dd3-02da-7d60-7069-a8ee080ad239@st.com>
+Date:   Wed, 1 Apr 2020 16:17:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6b4d169a-9962-6014-5423-1507059343e9@redhat.com>
+In-Reply-To: <20200316090907.18488-1-christophe.roullier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 10:08:59PM +0800, Jason Wang wrote:
-> 
-> On 2020/4/1 下午9:22, Michael S. Tsirkin wrote:
-> > On Thu, Mar 26, 2020 at 10:01:17PM +0800, Jason Wang wrote:
-> > > Currently, CONFIG_VHOST depends on CONFIG_VIRTUALIZATION. But vhost is
-> > > not necessarily for VM since it's a generic userspace and kernel
-> > > communication protocol. Such dependency may prevent archs without
-> > > virtualization support from using vhost.
-> > > 
-> > > To solve this, a dedicated vhost menu is created under drivers so
-> > > CONIFG_VHOST can be decoupled out of CONFIG_VIRTUALIZATION.
-> > > 
-> > > While at it, also squash Kconfig.vringh into vhost Kconfig file. This
-> > > avoids the trick of conditional inclusion from VOP or CAIF. Then it
-> > > will be easier to introduce new vringh users and common dependency for
-> > > both vringh and vhost.
-> > > 
-> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > Is this just so we can drop the dependency on CONFIG_VIRTUALIZATION?
-> > If yes what happens if we drop this patch?
-> 
-> 
-> The problem is that then VHOST_RING must depend on CONFIG_VIRTUALIZATION
-> (which enable VHOST_IOTLB) to work.
-> 
-> But it looks to me CAIF and VOP doesn't requires CONFIG_VIRTUALIZATION.
+Hi Christophe
 
-How about stubs for IOTLB so VHOST_RING does not depend on VHOST_IOTLB?
-I'm pretty sure neither user of vringh can actually use IOTLB, it's a
-software only thing.
+On 3/16/20 10:09 AM, Christophe Roullier wrote:
+> No new feature, just to simplify stm32 part to be easier to use.
+> Add by default all Ethernet clocks in DT, and activate or not in function
+> of phy mode, clock frequency, if property "st,ext-phyclk" is set or not.
+> Keep backward compatibility
+> -----------------------------------------------------------------------
+> |PHY_MODE | Normal | PHY wo crystal|   PHY wo crystal   |  No 125Mhz  |
+> |         |        |      25MHz    |        50MHz       |  from PHY   |
+> -----------------------------------------------------------------------
+> |  MII    |	 -    |     eth-ck    |       n/a          |	    n/a  |
+> |         |        | st,ext-phyclk |                    |             |
+> -----------------------------------------------------------------------
+> |  GMII   |	 -    |     eth-ck    |       n/a          |	    n/a  |
+> |         |        | st,ext-phyclk |                    |             |
+> -----------------------------------------------------------------------
+> | RGMII   |	 -    |     eth-ck    |       n/a          |      eth-ck  |
+> |         |        | st,ext-phyclk |                    |st,eth-clk-sel|
+> |         |        |               |                    |       or     |
+> |         |        |               |                    | st,ext-phyclk|
+> ------------------------------------------------------------------------
+> | RMII    |	 -    |     eth-ck    |      eth-ck        |	     n/a  |
+> |         |        | st,ext-phyclk | st,eth-ref-clk-sel |              |
+> |         |        |               | or st,ext-phyclk   |              |
+> ------------------------------------------------------------------------
+> 
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> 
+> ---
 
-> 
-> > Given the impact it had I'd like to defer it till next release if
-> > possible.
-> > 
-> > 
-> > > ---
-> > >   arch/arm/kvm/Kconfig         |  2 --
-> > >   arch/arm64/kvm/Kconfig       |  2 --
-> > >   arch/mips/kvm/Kconfig        |  2 --
-> > >   arch/powerpc/kvm/Kconfig     |  2 --
-> > >   arch/s390/kvm/Kconfig        |  4 ----
-> > >   arch/x86/kvm/Kconfig         |  4 ----
-> > >   drivers/Kconfig              |  2 ++
-> > >   drivers/misc/mic/Kconfig     |  4 ----
-> > >   drivers/net/caif/Kconfig     |  4 ----
-> > >   drivers/vhost/Kconfig        | 23 ++++++++++++++---------
-> > >   drivers/vhost/Kconfig.vringh |  6 ------
-> > >   11 files changed, 16 insertions(+), 39 deletions(-)
-> > >   delete mode 100644 drivers/vhost/Kconfig.vringh
-> > > 
-> > > diff --git a/arch/arm/kvm/Kconfig b/arch/arm/kvm/Kconfig
-> > > index f591026347a5..be97393761bf 100644
-> > > --- a/arch/arm/kvm/Kconfig
-> > > +++ b/arch/arm/kvm/Kconfig
-> > > @@ -54,6 +54,4 @@ config KVM_ARM_HOST
-> > >   	---help---
-> > >   	  Provides host support for ARM processors.
-> > > -source "drivers/vhost/Kconfig"
-> > > -
-> > >   endif # VIRTUALIZATION
-> > > diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-> > > index a475c68cbfec..449386d76441 100644
-> > > --- a/arch/arm64/kvm/Kconfig
-> > > +++ b/arch/arm64/kvm/Kconfig
-> > > @@ -64,6 +64,4 @@ config KVM_ARM_PMU
-> > >   config KVM_INDIRECT_VECTORS
-> > >          def_bool KVM && (HARDEN_BRANCH_PREDICTOR || HARDEN_EL2_VECTORS)
-> > > -source "drivers/vhost/Kconfig"
-> > > -
-> > >   endif # VIRTUALIZATION
-> > > diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
-> > > index eac25aef21e0..b91d145aa2d5 100644
-> > > --- a/arch/mips/kvm/Kconfig
-> > > +++ b/arch/mips/kvm/Kconfig
-> > > @@ -72,6 +72,4 @@ config KVM_MIPS_DEBUG_COP0_COUNTERS
-> > >   	  If unsure, say N.
-> > > -source "drivers/vhost/Kconfig"
-> > > -
-> > >   endif # VIRTUALIZATION
-> > > diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
-> > > index 711fca9bc6f0..12885eda324e 100644
-> > > --- a/arch/powerpc/kvm/Kconfig
-> > > +++ b/arch/powerpc/kvm/Kconfig
-> > > @@ -204,6 +204,4 @@ config KVM_XIVE
-> > >   	default y
-> > >   	depends on KVM_XICS && PPC_XIVE_NATIVE && KVM_BOOK3S_HV_POSSIBLE
-> > > -source "drivers/vhost/Kconfig"
-> > > -
-> > >   endif # VIRTUALIZATION
-> > > diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
-> > > index d3db3d7ed077..def3b60f1fe8 100644
-> > > --- a/arch/s390/kvm/Kconfig
-> > > +++ b/arch/s390/kvm/Kconfig
-> > > @@ -55,8 +55,4 @@ config KVM_S390_UCONTROL
-> > >   	  If unsure, say N.
-> > > -# OK, it's a little counter-intuitive to do this, but it puts it neatly under
-> > > -# the virtualization menu.
-> > > -source "drivers/vhost/Kconfig"
-> > > -
-> > >   endif # VIRTUALIZATION
-> > > diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-> > > index 991019d5eee1..0dfe70e17af9 100644
-> > > --- a/arch/x86/kvm/Kconfig
-> > > +++ b/arch/x86/kvm/Kconfig
-> > > @@ -94,8 +94,4 @@ config KVM_MMU_AUDIT
-> > >   	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
-> > >   	 auditing of KVM MMU events at runtime.
-> > > -# OK, it's a little counter-intuitive to do this, but it puts it neatly under
-> > > -# the virtualization menu.
-> > > -source "drivers/vhost/Kconfig"
-> > > -
-> > >   endif # VIRTUALIZATION
-> > > diff --git a/drivers/Kconfig b/drivers/Kconfig
-> > > index 8befa53f43be..7a6d8b2b68b4 100644
-> > > --- a/drivers/Kconfig
-> > > +++ b/drivers/Kconfig
-> > > @@ -138,6 +138,8 @@ source "drivers/virt/Kconfig"
-> > >   source "drivers/virtio/Kconfig"
-> > > +source "drivers/vhost/Kconfig"
-> > > +
-> > >   source "drivers/hv/Kconfig"
-> > >   source "drivers/xen/Kconfig"
-> > > diff --git a/drivers/misc/mic/Kconfig b/drivers/misc/mic/Kconfig
-> > > index b6841ba6d922..8f201d019f5a 100644
-> > > --- a/drivers/misc/mic/Kconfig
-> > > +++ b/drivers/misc/mic/Kconfig
-> > > @@ -133,8 +133,4 @@ config VOP
-> > >   	  OS and tools for MIC to use with this driver are available from
-> > >   	  <http://software.intel.com/en-us/mic-developer>.
-> > > -if VOP
-> > > -source "drivers/vhost/Kconfig.vringh"
-> > > -endif
-> > > -
-> > >   endmenu
-> > > diff --git a/drivers/net/caif/Kconfig b/drivers/net/caif/Kconfig
-> > > index e74e2bb61236..9db0570c5beb 100644
-> > > --- a/drivers/net/caif/Kconfig
-> > > +++ b/drivers/net/caif/Kconfig
-> > > @@ -58,8 +58,4 @@ config CAIF_VIRTIO
-> > >   	---help---
-> > >   	  The CAIF driver for CAIF over Virtio.
-> > > -if CAIF_VIRTIO
-> > > -source "drivers/vhost/Kconfig.vringh"
-> > > -endif
-> > > -
-> > >   endif # CAIF_DRIVERS
-> > > diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> > > index 3d03ccbd1adc..4aef10a54cd1 100644
-> > > --- a/drivers/vhost/Kconfig
-> > > +++ b/drivers/vhost/Kconfig
-> > > @@ -1,8 +1,20 @@
-> > >   # SPDX-License-Identifier: GPL-2.0-only
-> > > +config VHOST_RING
-> > > +	tristate
-> > > +	help
-> > > +	  This option is selected by any driver which needs to access
-> > > +	  the host side of a virtio ring.
-> > > +
-> > > +menuconfig VHOST
-> > > +	tristate "Host kernel accelerator for virtio (VHOST)"
-> > > +	help
-> > > +	  This option is selected by any driver which needs to access
-> > > +	  the core of vhost.
-> > > +if VHOST
-> > > +
-> > The description here is wrong, isn't it?
-> > VHOST and VHOST_RING are no longer selected, right?
-> 
-> 
-> For VHOST not currently.
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-Can we just bring it back and select it?
 
-> For VHOST_RING, it was selected by CAIF, VOP and VDPASIM.
+>   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 74 +++++++++++--------
+>   1 file changed, 44 insertions(+), 30 deletions(-)
 > 
-> Thanks
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+> index b2dc99289687..5d4df4c5254e 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+> @@ -29,6 +29,11 @@
+>   #define SYSCFG_PMCR_ETH_CLK_SEL		BIT(16)
+>   #define SYSCFG_PMCR_ETH_REF_CLK_SEL	BIT(17)
+>   
+> +/* CLOCK feed to PHY*/
+> +#define ETH_CK_F_25M	25000000
+> +#define ETH_CK_F_50M	50000000
+> +#define ETH_CK_F_125M	125000000
+> +
+>   /*  Ethernet PHY interface selection in register SYSCFG Configuration
+>    *------------------------------------------
+>    * src	 |BIT(23)| BIT(22)| BIT(21)|BIT(20)|
+> @@ -58,33 +63,20 @@
+>    *|         |        |      25MHz    |        50MHz       |                  |
+>    * ---------------------------------------------------------------------------
+>    *|  MII    |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
+> - *|         |        |		     |                    |		     |
+> + *|         |        | st,ext-phyclk |                    |		     |
+>    * ---------------------------------------------------------------------------
+>    *|  GMII   |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
+> - *|         |        |               |                    |		     |
+> + *|         |        | st,ext-phyclk |                    |		     |
+>    * ---------------------------------------------------------------------------
+> - *| RGMII   |	 -   |     eth-ck    |	      n/a	  |  eth-ck (no pin) |
+> - *|         |        |               |                    |  st,eth-clk-sel  |
+> + *| RGMII   |	 -   |     eth-ck    |	      n/a	  |      eth-ck      |
+> + *|         |        | st,ext-phyclk |                    | st,eth-clk-sel or|
+> + *|         |        |               |                    | st,ext-phyclk    |
+>    * ---------------------------------------------------------------------------
+>    *| RMII    |	 -   |     eth-ck    |	    eth-ck        |	  n/a        |
+> - *|         |        |		     | st,eth-ref-clk-sel |		     |
+> + *|         |        | st,ext-phyclk | st,eth-ref-clk-sel |		     |
+> + *|         |        |               | or st,ext-phyclk   |		     |
+>    * ---------------------------------------------------------------------------
+>    *
+> - * BIT(17) : set this bit in RMII mode when you have PHY without crystal 50MHz
+> - * BIT(16) : set this bit in GMII/RGMII PHY when you do not want use 125Mhz
+> - * from PHY
+> - *-----------------------------------------------------
+> - * src	 |         BIT(17)       |       BIT(16)      |
+> - *-----------------------------------------------------
+> - * MII   |           n/a	 |         n/a        |
+> - *-----------------------------------------------------
+> - * GMII  |           n/a         |   st,eth-clk-sel   |
+> - *-----------------------------------------------------
+> - * RGMII |           n/a         |   st,eth-clk-sel   |
+> - *-----------------------------------------------------
+> - * RMII  |   st,eth-ref-clk-sel	 |         n/a        |
+> - *-----------------------------------------------------
+> - *
+>    */
+>   
+>   struct stm32_dwmac {
+> @@ -93,6 +85,8 @@ struct stm32_dwmac {
+>   	struct clk *clk_eth_ck;
+>   	struct clk *clk_ethstp;
+>   	struct clk *syscfg_clk;
+> +	int ext_phyclk;
+> +	int enable_eth_ck;
+>   	int eth_clk_sel_reg;
+>   	int eth_ref_clk_sel_reg;
+>   	int irq_pwr_wakeup;
+> @@ -155,14 +149,17 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
+>   		ret = clk_prepare_enable(dwmac->syscfg_clk);
+>   		if (ret)
+>   			return ret;
+> -		ret = clk_prepare_enable(dwmac->clk_eth_ck);
+> -		if (ret) {
+> -			clk_disable_unprepare(dwmac->syscfg_clk);
+> -			return ret;
+> +		if (dwmac->enable_eth_ck) {
+> +			ret = clk_prepare_enable(dwmac->clk_eth_ck);
+> +			if (ret) {
+> +				clk_disable_unprepare(dwmac->syscfg_clk);
+> +				return ret;
+> +			}
+>   		}
+>   	} else {
+>   		clk_disable_unprepare(dwmac->syscfg_clk);
+> -		clk_disable_unprepare(dwmac->clk_eth_ck);
+> +		if (dwmac->enable_eth_ck)
+> +			clk_disable_unprepare(dwmac->clk_eth_ck);
+>   	}
+>   	return ret;
+>   }
+> @@ -170,24 +167,34 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
+>   static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+>   {
+>   	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+> -	u32 reg = dwmac->mode_reg;
+> +	u32 reg = dwmac->mode_reg, clk_rate;
+>   	int val;
+>   
+> +	clk_rate = clk_get_rate(dwmac->clk_eth_ck);
+> +	dwmac->enable_eth_ck = false;
+>   	switch (plat_dat->interface) {
+>   	case PHY_INTERFACE_MODE_MII:
+> +		if (clk_rate == ETH_CK_F_25M && dwmac->ext_phyclk)
+> +			dwmac->enable_eth_ck = true;
+>   		val = SYSCFG_PMCR_ETH_SEL_MII;
+>   		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
+>   		break;
+>   	case PHY_INTERFACE_MODE_GMII:
+>   		val = SYSCFG_PMCR_ETH_SEL_GMII;
+> -		if (dwmac->eth_clk_sel_reg)
+> +		if (clk_rate == ETH_CK_F_25M &&
+> +		    (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
+> +			dwmac->enable_eth_ck = true;
+>   			val |= SYSCFG_PMCR_ETH_CLK_SEL;
+> +		}
+>   		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
+>   		break;
+>   	case PHY_INTERFACE_MODE_RMII:
+>   		val = SYSCFG_PMCR_ETH_SEL_RMII;
+> -		if (dwmac->eth_ref_clk_sel_reg)
+> +		if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_50M) &&
+> +		    (dwmac->eth_ref_clk_sel_reg || dwmac->ext_phyclk)) {
+> +			dwmac->enable_eth_ck = true;
+>   			val |= SYSCFG_PMCR_ETH_REF_CLK_SEL;
+> +		}
+>   		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RMII\n");
+>   		break;
+>   	case PHY_INTERFACE_MODE_RGMII:
+> @@ -195,8 +202,11 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+>   	case PHY_INTERFACE_MODE_RGMII_RXID:
+>   	case PHY_INTERFACE_MODE_RGMII_TXID:
+>   		val = SYSCFG_PMCR_ETH_SEL_RGMII;
+> -		if (dwmac->eth_clk_sel_reg)
+> +		if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_125M) &&
+> +		    (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
+> +			dwmac->enable_eth_ck = true;
+>   			val |= SYSCFG_PMCR_ETH_CLK_SEL;
+> +		}
+>   		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RGMII\n");
+>   		break;
+>   	default:
+> @@ -294,6 +304,9 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+>   	struct device_node *np = dev->of_node;
+>   	int err = 0;
+>   
+> +	/* Ethernet PHY have no crystal */
+> +	dwmac->ext_phyclk = of_property_read_bool(np, "st,ext-phyclk");
+> +
+>   	/* Gigabit Ethernet 125MHz clock selection. */
+>   	dwmac->eth_clk_sel_reg = of_property_read_bool(np, "st,eth-clk-sel");
+>   
+> @@ -431,7 +444,8 @@ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
+>   
+>   	clk_disable_unprepare(dwmac->clk_tx);
+>   	clk_disable_unprepare(dwmac->syscfg_clk);
+> -	clk_disable_unprepare(dwmac->clk_eth_ck);
+> +	if (dwmac->enable_eth_ck)
+> +		clk_disable_unprepare(dwmac->clk_eth_ck);
+>   
+>   	return ret;
+>   }
 > 
-> 
-> > 
-> > 
-> > >   config VHOST_NET
-> > >   	tristate "Host kernel accelerator for virtio net"
-> > >   	depends on NET && EVENTFD && (TUN || !TUN) && (TAP || !TAP)
-> > > -	select VHOST
-> > >   	---help---
-> > >   	  This kernel module can be loaded in host kernel to accelerate
-> > >   	  guest networking with virtio_net. Not to be confused with virtio_net
-> > > @@ -14,7 +26,6 @@ config VHOST_NET
-> > >   config VHOST_SCSI
-> > >   	tristate "VHOST_SCSI TCM fabric driver"
-> > >   	depends on TARGET_CORE && EVENTFD
-> > > -	select VHOST
-> > >   	default n
-> > >   	---help---
-> > >   	Say M here to enable the vhost_scsi TCM fabric module
-> > > @@ -24,7 +35,6 @@ config VHOST_VSOCK
-> > >   	tristate "vhost virtio-vsock driver"
-> > >   	depends on VSOCKETS && EVENTFD
-> > >   	select VIRTIO_VSOCKETS_COMMON
-> > > -	select VHOST
-> > >   	default n
-> > >   	---help---
-> > >   	This kernel module can be loaded in the host kernel to provide AF_VSOCK
-> > > @@ -34,12 +44,6 @@ config VHOST_VSOCK
-> > >   	To compile this driver as a module, choose M here: the module will be called
-> > >   	vhost_vsock.
-> > > -config VHOST
-> > > -	tristate
-> > > -	---help---
-> > > -	  This option is selected by any driver which needs to access
-> > > -	  the core of vhost.
-> > > -
-> > >   config VHOST_CROSS_ENDIAN_LEGACY
-> > >   	bool "Cross-endian support for vhost"
-> > >   	default n
-> > > @@ -54,3 +58,4 @@ config VHOST_CROSS_ENDIAN_LEGACY
-> > >   	  adds some overhead, it is disabled by default.
-> > >   	  If unsure, say "N".
-> > > +endif
-> > > diff --git a/drivers/vhost/Kconfig.vringh b/drivers/vhost/Kconfig.vringh
-> > > deleted file mode 100644
-> > > index c1fe36a9b8d4..000000000000
-> > > --- a/drivers/vhost/Kconfig.vringh
-> > > +++ /dev/null
-> > > @@ -1,6 +0,0 @@
-> > > -# SPDX-License-Identifier: GPL-2.0-only
-> > > -config VHOST_RING
-> > > -	tristate
-> > > -	---help---
-> > > -	  This option is selected by any driver which needs to access
-> > > -	  the host side of a virtio ring.
-> > > -- 
-> > > 2.20.1
-
