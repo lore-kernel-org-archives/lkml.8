@@ -7,281 +7,322 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441B1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C28C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C8220787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A757720784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:22:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GglleGnH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="IhTK0RSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731872AbgDAJWW (ORCPT
+        id S1732075AbgDAJWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:22:22 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23937 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726368AbgDAJWW (ORCPT
+        Wed, 1 Apr 2020 05:22:34 -0400
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:37845 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731889AbgDAJWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:22:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585732941; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=Fr4eLSS9JjdItQxHTVAk0mj70SYgvnZ0Ya8DUUDv4RU=; b=GglleGnHXyw+ARi1UVI436bJ7eGvSt9svzoTbxUzhXIUB3liOjjK5pgqvDC4qMXCQoz5ghAr
- o7/9E99lQw0wAv3/b5MeKs74dYjVvDuSLZesyiltgYlxLub+6mZxGSNMu6Zgucj3lHBIP9/o
- qakFqDHTfl8fst9YOWUsencv+YM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e845d43.7f5d79e29b90-smtp-out-n05;
- Wed, 01 Apr 2020 09:22:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EAB38C43637; Wed,  1 Apr 2020 09:22:10 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90A72C433D2;
-        Wed,  1 Apr 2020 09:22:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 90A72C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Wed, 1 Apr 2020 14:52:01 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, stummala@codeaurora.org
-Subject: Re: [PATCH v3] f2fs: fix long latency due to discard during umount
-Message-ID: <20200401092201.GB20234@codeaurora.org>
-References: <1585550730-1858-1-git-send-email-stummala@codeaurora.org>
- <20200331184655.GB198665@google.com>
+        Wed, 1 Apr 2020 05:22:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1585732953;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=fFF9OUeXr1h4Pp47sdoLaY1EMBBVAx8Wu/mPO2HYv8U=;
+  b=IhTK0RSJ6c1qLJMqkWi+S8xjK617hFRIbonHpVIoNRv90xXr5LJJofpw
+   zAyldCn/V1IumYorkJWzxYRS1F1OV9QwDbswUwhWY1jScu0HY5+U19yT5
+   xslShqefBZNNcbueJGGbw41ar49p77b7WLCdyZfAQICuCm31lQZyXF2P6
+   c=;
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: 47JPB1ufd71MwYKC3AM8prCu8I1IjLXO5EQQCaMwtAITzLQJv0Wp0LBs3UbGfA8rS2xuKjsHeh
+ eXAsBLMZSjrMOyof7KevSjCBWzHUn8PuRIpFsWlwglJuG/kdNNOearKX7lmw+ViPQ25XY+r6ZI
+ 3sV9x0c02Bwz1FRcOX6hvJXrxwWtKpdyobJAUuUKwnsbRDbWnzLGqVr1fZqzvG/68XIPpF8Jdh
+ cfkxHwHIRagklFTWCtVW+9d5WWlPdLtCl6gOAKh6doAXExBHXLFsQXF5GLa/pgA9iRtXTFDl3n
+ qrE=
+X-SBRS: 2.7
+X-MesageID: 15394601
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,331,1580792400"; 
+   d="scan'208";a="15394601"
+Subject: Re: [PATCH v2] x86/smpboot: Remove 486-isms from the modern AP boot
+ path
+To:     Brian Gerst <brgerst@gmail.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        <jailhouse-dev@googlegroups.com>
+References: <20200325101431.12341-1-andrew.cooper3@citrix.com>
+ <20200331175810.30204-1-andrew.cooper3@citrix.com>
+ <CAMzpN2i6Nf0VDZ82mXyFixN879FC4eZfqe-LzWGkvygcz1gH_Q@mail.gmail.com>
+ <c46bcb6d-4256-2d65-9cd9-33e010846de4@citrix.com>
+ <CAMzpN2gdkmYYbQatFk66QMpiuZSfnUQUVtJ30VYF7nsX_+XVgA@mail.gmail.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <bdf7995d-2d50-9bb9-8066-6c4ccfaa5b52@citrix.com>
+Date:   Wed, 1 Apr 2020 10:22:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331184655.GB198665@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAMzpN2gdkmYYbQatFk66QMpiuZSfnUQUVtJ30VYF7nsX_+XVgA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaegeuk,
+On 31/03/2020 23:53, Brian Gerst wrote:
+> On Tue, Mar 31, 2020 at 6:44 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>> On 31/03/2020 23:23, Brian Gerst wrote:
+>>> On Tue, Mar 31, 2020 at 1:59 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>>>> Linux has an implementation of the Universal Start-up Algorithm (MP spec,
+>>>> Appendix B.4, Application Processor Startup), which includes unconditionally
+>>>> writing to the Bios Data Area and CMOS registers.
+>>>>
+>>>> The warm reset vector is only necessary in the non-integrated Local APIC case.
+>>>> UV and Jailhouse already have an opt-out for this behaviour, but blindly using
+>>>> the BDA and CMOS on a UEFI or other reduced hardware system isn't clever.
+>>>>
+>>>> We could make this conditional on the integrated-ness of the Local APIC, but
+>>>> 486-era SMP isn't supported.  Drop the logic completely, tidying up the includ
+>>>> list and header files as appropriate.
+>>>>
+>>>> CC: Thomas Gleixner <tglx@linutronix.de>
+>>>> CC: Ingo Molnar <mingo@redhat.com>
+>>>> CC: Borislav Petkov <bp@alien8.de>
+>>>> CC: "H. Peter Anvin" <hpa@zytor.com>
+>>>> CC: x86@kernel.org
+>>>> CC: Jan Kiszka <jan.kiszka@siemens.com>
+>>>> CC: James Morris <jmorris@namei.org>
+>>>> CC: David Howells <dhowells@redhat.com>
+>>>> CC: Andrew Cooper <andrew.cooper3@citrix.com>
+>>>> CC: Matthew Garrett <mjg59@google.com>
+>>>> CC: Josh Boyer <jwboyer@redhat.com>
+>>>> CC: Steve Wahl <steve.wahl@hpe.com>
+>>>> CC: Mike Travis <mike.travis@hpe.com>
+>>>> CC: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+>>>> CC: Arnd Bergmann <arnd@arndb.de>
+>>>> CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+>>>> CC: Giovanni Gherdovich <ggherdovich@suse.cz>
+>>>> CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>>>> CC: Len Brown <len.brown@intel.com>
+>>>> CC: Kees Cook <keescook@chromium.org>
+>>>> CC: Martin Molnar <martin.molnar.programming@gmail.com>
+>>>> CC: Pingfan Liu <kernelfans@gmail.com>
+>>>> CC: linux-kernel@vger.kernel.org
+>>>> CC: jailhouse-dev@googlegroups.com
+>>>> Suggested-by: "H. Peter Anvin" <hpa@zytor.com>
+>>>> Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+>>>> ---
+>>>> v2:
+>>>>  * Drop logic entirely, rather than retaining support in 32bit builds.
+>>>> ---
+>>>>  arch/x86/include/asm/apic.h        |  6 -----
+>>>>  arch/x86/include/asm/x86_init.h    |  1 -
+>>>>  arch/x86/kernel/apic/x2apic_uv_x.c |  1 -
+>>>>  arch/x86/kernel/jailhouse.c        |  1 -
+>>>>  arch/x86/kernel/platform-quirks.c  |  1 -
+>>>>  arch/x86/kernel/smpboot.c          | 50 --------------------------------------
+>>>>  6 files changed, 60 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+>>>> index 19e94af9cc5d..5c33f9374b28 100644
+>>>> --- a/arch/x86/include/asm/apic.h
+>>>> +++ b/arch/x86/include/asm/apic.h
+>>>> @@ -472,12 +472,6 @@ static inline unsigned default_get_apic_id(unsigned long x)
+>>>>                 return (x >> 24) & 0x0F;
+>>>>  }
+>>>>
+>>>> -/*
+>>>> - * Warm reset vector position:
+>>>> - */
+>>>> -#define TRAMPOLINE_PHYS_LOW            0x467
+>>>> -#define TRAMPOLINE_PHYS_HIGH           0x469
+>>>> -
+>>>>  extern void generic_bigsmp_probe(void);
+>>>>
+>>>>  #ifdef CONFIG_X86_LOCAL_APIC
+>>>> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+>>>> index 96d9cd208610..006a5d7fd7eb 100644
+>>>> --- a/arch/x86/include/asm/x86_init.h
+>>>> +++ b/arch/x86/include/asm/x86_init.h
+>>>> @@ -229,7 +229,6 @@ enum x86_legacy_i8042_state {
+>>>>  struct x86_legacy_features {
+>>>>         enum x86_legacy_i8042_state i8042;
+>>>>         int rtc;
+>>>> -       int warm_reset;
+>>>>         int no_vga;
+>>>>         int reserve_bios_regions;
+>>>>         struct x86_legacy_devices devices;
+>>>> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+>>>> index ad53b2abc859..5afcfd193592 100644
+>>>> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
+>>>> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+>>>> @@ -343,7 +343,6 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
+>>>>         } else if (!strcmp(oem_table_id, "UVH")) {
+>>>>                 /* Only UV1 systems: */
+>>>>                 uv_system_type = UV_NON_UNIQUE_APIC;
+>>>> -               x86_platform.legacy.warm_reset = 0;
+>>>>                 __this_cpu_write(x2apic_extra_bits, pnodeid << uvh_apicid.s.pnode_shift);
+>>>>                 uv_set_apicid_hibit();
+>>>>                 uv_apic = 1;
+>>>> diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
+>>>> index 6eb8b50ea07e..d628fe92d6af 100644
+>>>> --- a/arch/x86/kernel/jailhouse.c
+>>>> +++ b/arch/x86/kernel/jailhouse.c
+>>>> @@ -210,7 +210,6 @@ static void __init jailhouse_init_platform(void)
+>>>>         x86_platform.calibrate_tsc      = jailhouse_get_tsc;
+>>>>         x86_platform.get_wallclock      = jailhouse_get_wallclock;
+>>>>         x86_platform.legacy.rtc         = 0;
+>>>> -       x86_platform.legacy.warm_reset  = 0;
+>>>>         x86_platform.legacy.i8042       = X86_LEGACY_I8042_PLATFORM_ABSENT;
+>>>>
+>>>>         legacy_pic                      = &null_legacy_pic;
+>>>> diff --git a/arch/x86/kernel/platform-quirks.c b/arch/x86/kernel/platform-quirks.c
+>>>> index b348a672f71d..d922c5e0c678 100644
+>>>> --- a/arch/x86/kernel/platform-quirks.c
+>>>> +++ b/arch/x86/kernel/platform-quirks.c
+>>>> @@ -9,7 +9,6 @@ void __init x86_early_init_platform_quirks(void)
+>>>>  {
+>>>>         x86_platform.legacy.i8042 = X86_LEGACY_I8042_EXPECTED_PRESENT;
+>>>>         x86_platform.legacy.rtc = 1;
+>>>> -       x86_platform.legacy.warm_reset = 1;
+>>>>         x86_platform.legacy.reserve_bios_regions = 0;
+>>>>         x86_platform.legacy.devices.pnpbios = 1;
+>>>>
+>>>> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+>>>> index fe3ab9632f3b..a9f5b511d0b4 100644
+>>>> --- a/arch/x86/kernel/smpboot.c
+>>>> +++ b/arch/x86/kernel/smpboot.c
+>>>> @@ -72,7 +72,6 @@
+>>>>  #include <asm/fpu/internal.h>
+>>>>  #include <asm/setup.h>
+>>>>  #include <asm/uv/uv.h>
+>>>> -#include <linux/mc146818rtc.h>
+>>>>  #include <asm/i8259.h>
+>>>>  #include <asm/misc.h>
+>>>>  #include <asm/qspinlock.h>
+>>>> @@ -119,34 +118,6 @@ int arch_update_cpu_topology(void)
+>>>>         return retval;
+>>>>  }
+>>>>
+>>>> -static inline void smpboot_setup_warm_reset_vector(unsigned long start_eip)
+>>>> -{
+>>>> -       unsigned long flags;
+>>>> -
+>>>> -       spin_lock_irqsave(&rtc_lock, flags);
+>>>> -       CMOS_WRITE(0xa, 0xf);
+>>>> -       spin_unlock_irqrestore(&rtc_lock, flags);
+>>>> -       *((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_HIGH)) =
+>>>> -                                                       start_eip >> 4;
+>>>> -       *((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) =
+>>>> -                                                       start_eip & 0xf;
+>>>> -}
+>>>> -
+>>>> -static inline void smpboot_restore_warm_reset_vector(void)
+>>>> -{
+>>>> -       unsigned long flags;
+>>>> -
+>>>> -       /*
+>>>> -        * Paranoid:  Set warm reset code and vector here back
+>>>> -        * to default values.
+>>>> -        */
+>>>> -       spin_lock_irqsave(&rtc_lock, flags);
+>>>> -       CMOS_WRITE(0, 0xf);
+>>>> -       spin_unlock_irqrestore(&rtc_lock, flags);
+>>>> -
+>>>> -       *((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
+>>>> -}
+>>>> -
+>>>>  static void init_freq_invariance(void);
+>>>>
+>>>>  /*
+>>>> @@ -1049,20 +1020,6 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
+>>>>          * the targeted processor.
+>>>>          */
+>>>>
+>>>> -       if (x86_platform.legacy.warm_reset) {
+>>>> -
+>>>> -               pr_debug("Setting warm reset code and vector.\n");
+>>>> -
+>>>> -               smpboot_setup_warm_reset_vector(start_ip);
+>>>> -               /*
+>>>> -                * Be paranoid about clearing APIC errors.
+>>>> -               */
+>>>> -               if (APIC_INTEGRATED(boot_cpu_apic_version)) {
+>>>> -                       apic_write(APIC_ESR, 0);
+>>>> -                       apic_read(APIC_ESR);
+>>>> -               }
+>>>> -       }
+>>>> -
+>>>>         /*
+>>>>          * AP might wait on cpu_callout_mask in cpu_init() with
+>>>>          * cpu_initialized_mask set if previous attempt to online
+>>>> @@ -1118,13 +1075,6 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
+>>>>                 }
+>>>>         }
+>>>>
+>>>> -       if (x86_platform.legacy.warm_reset) {
+>>>> -               /*
+>>>> -                * Cleanup possible dangling ends...
+>>>> -                */
+>>>> -               smpboot_restore_warm_reset_vector();
+>>>> -       }
+>>>> -
+>>>>         return boot_error;
+>>>>  }
+>>> You removed x86_platform.legacy.warm_reset in the original patch, but
+>>> that is missing in V2.
+>> Second hunk?  Or are you referring to something different?
+> Removing the warm_reset field from struct x86_legacy_features.
 
-On Tue, Mar 31, 2020 at 11:46:55AM -0700, Jaegeuk Kim wrote:
-> On 03/30, Sahitya Tummala wrote:
-> > F2FS already has a default timeout of 5 secs for discards that
-> > can be issued during umount, but it can take more than the 5 sec
-> > timeout if the underlying UFS device queue is already full and there
-> > are no more available free tags to be used. In that case, submit_bio()
-> > will wait for the already queued discard requests to complete to get
-> > a free tag, which can potentially take way more than 5 sec.
-> > 
-> > Fix this by submitting the discard requests with REQ_NOWAIT
-> > flags during umount. This will return -EAGAIN for UFS queue/tag full
-> > scenario without waiting in the context of submit_bio(). The FS can
-> > then handle these requests by retrying again within the stipulated
-> > discard timeout period to avoid long latencies.
-> 
-> Sorry, Sahitya, but, do we really need to do like this? How about just
-> controlling # of outstanding discarding bios in __issue_discard_cmd()?
+Ok, but that is still present as the 2nd hunk of the patch.
 
-Do you mean something like this?
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 1a62b27..860dd43 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1099,7 +1099,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
-        } else if (discard_type == DPOLICY_FSTRIM) {
-                dpolicy->io_aware = false;
-        } else if (discard_type == DPOLICY_UMOUNT) {
--               dpolicy->max_requests = UINT_MAX;
-+               dpolicy->max_requests = 30;
-                dpolicy->io_aware = false;
-                /* we need to issue all to keep CP_TRIMMED_FLAG */
-                dpolicy->granularity = 1;
-@@ -1470,12 +1470,14 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-        struct list_head *pend_list;
-        struct discard_cmd *dc, *tmp;
-        struct blk_plug plug;
--       int i, issued = 0;
-+       int i, issued;
-        bool io_interrupted = false;
-
-        if (dpolicy->timeout != 0)
-                f2fs_update_time(sbi, dpolicy->timeout);
-
-+retry:
-+       issued = 0;
-        for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
-                if (dpolicy->timeout != 0 &&
-                                f2fs_time_over(sbi, dpolicy->timeout))
-@@ -1522,6 +1524,11 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-                        break;
-        }
-
-+       if (dpolicy->type == DPOLICY_UMOUNT && issued) {
-+               __wait_all_discard_cmd(sbi, dpolicy);
-+               goto retry;
-+       }
-+
-        if (!issued && io_interrupted)
-                issued = -1;
-
-Thanks,
-
-> 
-> > 
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > ---
-> > v3:
-> > -Handle the regression reported by Chao with v2.
-> > -simplify the logic to split the dc with multiple bios incase any bio returns
-> >  EAGAIN and retry those new dc within 5 sec timeout.
-> > 
-> >  fs/f2fs/segment.c | 65 +++++++++++++++++++++++++++++++++++++++++++------------
-> >  1 file changed, 51 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index fb3e531..55d18c7 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
-> >  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
-> >  	unsigned long flags;
-> >  
-> > -	dc->error = blk_status_to_errno(bio->bi_status);
-> > -
-> >  	spin_lock_irqsave(&dc->lock, flags);
-> > +	if (!dc->error)
-> > +		dc->error = blk_status_to_errno(bio->bi_status);
-> > +
-> >  	dc->bio_ref--;
-> > -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
-> > -		dc->state = D_DONE;
-> > -		complete_all(&dc->wait);
-> > +	if (!dc->bio_ref) {
-> > +		if (dc->error || dc->state == D_SUBMIT) {
-> > +			dc->state = D_DONE;
-> > +			complete_all(&dc->wait);
-> > +		}
-> >  	}
-> >  	spin_unlock_irqrestore(&dc->lock, flags);
-> >  	bio_put(bio);
-> > @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
-> >  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> > +	int flag;
-> >  	block_t lstart, start, len, total_len;
-> >  	int err = 0;
-> >  
-> > +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > +
-> >  	if (dc->state != D_PREP)
-> >  		return 0;
-> >  
-> > @@ -1192,10 +1198,6 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >  		dc->bio_ref++;
-> >  		spin_unlock_irqrestore(&dc->lock, flags);
-> >  
-> > -		atomic_inc(&dcc->queued_discard);
-> > -		dc->queued++;
-> > -		list_move_tail(&dc->list, wait_list);
-> > -
-> >  		/* sanity check on discard range */
-> >  		__check_sit_bitmap(sbi, lstart, lstart + len);
-> >  
-> > @@ -1203,6 +1205,29 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >  		bio->bi_end_io = f2fs_submit_discard_endio;
-> >  		bio->bi_opf |= flag;
-> >  		submit_bio(bio);
-> > +		if (flag & REQ_NOWAIT) {
-> > +			if (dc->error == -EAGAIN) {
-> > +				spin_lock_irqsave(&dc->lock, flags);
-> > +				dc->len -= len;
-> > +				if (!dc->len) {
-> > +					dc->len = total_len;
-> > +					dc->state = D_PREP;
-> > +					reinit_completion(&dc->wait);
-> > +				} else {
-> > +					dcc->undiscard_blks -= total_len;
-> > +					if (dc->state == D_PARTIAL)
-> > +						dc->state = D_SUBMIT;
-> > +				}
-> > +				err = dc->error;
-> > +				dc->error = 0;
-> > +				spin_unlock_irqrestore(&dc->lock, flags);
-> > +				break;
-> > +			}
-> > +		}
-> > +
-> > +		atomic_inc(&dcc->queued_discard);
-> > +		dc->queued++;
-> > +		list_move_tail(&dc->list, wait_list);
-> >  
-> >  		atomic_inc(&dcc->issued_discard);
-> >  
-> > @@ -1214,8 +1239,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> >  		len = total_len;
-> >  	}
-> >  
-> > -	if (!err && len)
-> > -		__update_discard_tree_range(sbi, bdev, lstart, start, len);
-> > +	if ((!err || err == -EAGAIN) && total_len && dc->start != start)
-> > +		__update_discard_tree_range(sbi, bdev, lstart, start,
-> > +					total_len);
-> >  	return err;
-> >  }
-> >  
-> > @@ -1470,12 +1496,15 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> >  	struct list_head *pend_list;
-> >  	struct discard_cmd *dc, *tmp;
-> >  	struct blk_plug plug;
-> > -	int i, issued = 0;
-> > +	int i, err, issued = 0;
-> >  	bool io_interrupted = false;
-> > +	bool retry;
-> >  
-> >  	if (dpolicy->timeout != 0)
-> >  		f2fs_update_time(sbi, dpolicy->timeout);
-> >  
-> > +retry:
-> > +	retry = false;
-> >  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
-> >  		if (dpolicy->timeout != 0 &&
-> >  				f2fs_time_over(sbi, dpolicy->timeout))
-> > @@ -1509,7 +1538,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> >  				break;
-> >  			}
-> >  
-> > -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > +			if (err == -EAGAIN) {
-> > +				congestion_wait(BLK_RW_ASYNC,
-> > +						DEFAULT_IO_TIMEOUT);
-> > +				retry = true;
-> > +			}
-> >  
-> >  			if (issued >= dpolicy->max_requests)
-> >  				break;
-> > @@ -1522,6 +1556,9 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> >  			break;
-> >  	}
-> >  
-> > +	if (retry)
-> > +		goto retry;
-> > +
-> >  	if (!issued && io_interrupted)
-> >  		issued = -1;
-> >  
-> > -- 
-> > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+~Andrew
