@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD930C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210E6C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A75120719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D523C20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759227;
-	bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
+	s=default; t=1585759230;
+	bh=dmhLfHVWp2qxWaMfTfJhVl2xwkEquJBqtbaqRq3rT9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ks05Fki3uHtcoTdzBQO4UHP2eGbDi7DvuT7ZlemoxE+sSNl16iLmOFMQWoS6cnzOY
-	 EkVRb/Ccb1HoFIxK1NIadlaD4gNUCu7n3MT3tjggP/dWA+3n2qrcYJS7A4203OmXse
-	 G/eE/2SN1ng+/hpzMW9Qj8maayS7RPzZZe5Luyv8=
+	b=2bYltlLnB3wmbjUh5XPDfvbydvF05zMT3dW9HtHi2mSVvHyrva7f9f9fjuVB3iPPQ
+	 7/7GRHEsw71DFxvXUV3ITcHfUAaYvpNoVaJmOQ52gnrWgwF8uMGvOuNoXJbCErTEqA
+	 r9WqaQMTUmCzWhT6LeQxW/oHdfL5i/VdI9JBI+WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732963AbgDAQk0 (ORCPT
+        id S2389323AbgDAQk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:40:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40500 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389041AbgDAQkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:40:20 -0400
+        id S2389289AbgDAQkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:40:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CD932063A;
-        Wed,  1 Apr 2020 16:40:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1972920719;
+        Wed,  1 Apr 2020 16:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759219;
-        bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
+        s=default; t=1585759221;
+        bh=dmhLfHVWp2qxWaMfTfJhVl2xwkEquJBqtbaqRq3rT9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1ZPHvn2fUrb4XIP7pH7nfSjZLxgFXxG1Cw1GLnt79fr2CLfF/PIt4bjEGsUVE+Es
-         JK3rbNehlgNNOQCh54DV7KWMfdCTJYjf0f+x2IqhvoHOSwGjb39UAJor8eeCR2WkKE
-         aBpjgaNWHnxaJmxrNG4V5qDvpkB9mYUOKuQ1FQV4=
+        b=N2KLh9oz8IpezgrM4eUYJdbhIqC4JQCUa9S88+hyk4K6Yg6I8ie9nS2Loz7EQI5LD
+         6HZ6qLTcqPOzdkZfnL+F2fxQGkL0//RYIII9phP9X8ToBDfylX7e8WG2hqASwed3Uu
+         Ts7lLWAFZcPo7XNQJiUNG7+98vRIL15P9xdeWkA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Julien Grall <jgrall@amazon.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/148] xenbus: req->err should be updated before req->state
-Date:   Wed,  1 Apr 2020 18:16:44 +0200
-Message-Id: <20200401161553.400413476@linuxfoundation.org>
+        stable@vger.kernel.org, Kwon Je Oh <kwonje.oh2@gmail.com>,
+        Carlo Nonato <carlo.nonato95@gmail.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 013/148] block, bfq: fix overwrite of bfq_group pointer in bfq_find_set_group()
+Date:   Wed,  1 Apr 2020 18:16:45 +0200
+Message-Id: <20200401161553.506542958@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -61,38 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Carlo Nonato <carlo.nonato95@gmail.com>
 
-[ Upstream commit 8130b9d5b5abf26f9927b487c15319a187775f34 ]
+[ Upstream commit 14afc59361976c0ba39e3a9589c3eaa43ebc7e1d ]
 
-This patch adds the barrier to guarantee that req->err is always updated
-before req->state.
+The bfq_find_set_group() function takes as input a blkcg (which represents
+a cgroup) and retrieves the corresponding bfq_group, then it updates the
+bfq internal group hierarchy (see comments inside the function for why
+this is needed) and finally it returns the bfq_group.
+In the hierarchy update cycle, the pointer holding the correct bfq_group
+that has to be returned is mistakenly used to traverse the hierarchy
+bottom to top, meaning that in each iteration it gets overwritten with the
+parent of the current group. Since the update cycle stops at root's
+children (depth = 2), the overwrite becomes a problem only if the blkcg
+describes a cgroup at a hierarchy level deeper than that (depth > 2). In
+this case the root's child that happens to be also an ancestor of the
+correct bfq_group is returned. The main consequence is that processes
+contained in a cgroup at depth greater than 2 are wrongly placed in the
+group described above by BFQ.
 
-Otherwise, read_reply() would not return ERR_PTR(req->err) but
-req->body, when process_writes()->xb_write() is failed.
+This commits fixes this problem by using a different bfq_group pointer in
+the update cycle in order to avoid the overwrite of the variable holding
+the original group reference.
 
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Link: https://lore.kernel.org/r/20200303221423.21962-2-dongli.zhang@oracle.com
-Reviewed-by: Julien Grall <jgrall@amazon.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reported-by: Kwon Je Oh <kwonje.oh2@gmail.com>
+Signed-off-by: Carlo Nonato <carlo.nonato95@gmail.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_comms.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/bfq-cgroup.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
-index 852ed161fc2a7..eb5151fc8efab 100644
---- a/drivers/xen/xenbus/xenbus_comms.c
-+++ b/drivers/xen/xenbus/xenbus_comms.c
-@@ -397,6 +397,8 @@ static int process_writes(void)
- 	if (state.req->state == xb_req_state_aborted)
- 		kfree(state.req);
- 	else {
-+		/* write err, then update state */
-+		virt_wmb();
- 		state.req->state = xb_req_state_got_reply;
- 		wake_up(&state.req->wq);
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index afbbe5750a1f8..7d7aee024ece2 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -499,12 +499,13 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
+ 	 */
+ 	entity = &bfqg->entity;
+ 	for_each_entity(entity) {
+-		bfqg = container_of(entity, struct bfq_group, entity);
+-		if (bfqg != bfqd->root_group) {
+-			parent = bfqg_parent(bfqg);
++		struct bfq_group *curr_bfqg = container_of(entity,
++						struct bfq_group, entity);
++		if (curr_bfqg != bfqd->root_group) {
++			parent = bfqg_parent(curr_bfqg);
+ 			if (!parent)
+ 				parent = bfqd->root_group;
+-			bfq_group_set_parent(bfqg, parent);
++			bfq_group_set_parent(curr_bfqg, parent);
+ 		}
  	}
+ 
 -- 
 2.20.1
 
