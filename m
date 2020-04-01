@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF44C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC83C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B38FA212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE2120BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758500;
-	bh=w8IrY9r12WpYReH7DJwsZobqRrfkWlvu+9LYqSSptVc=;
+	s=default; t=1585758505;
+	bh=MpayfXopxg/rWdzTRI0RFVYc1nBvqXgUxTLUgzl8GvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dUvwBKucXHTqV2+wmQ1MkUnSyefwbo5c1Bk7Fl8IM4VRnziV/DPFKB3lv3iH+nzc+
-	 4CARtqkAdj2YTGRJUIUjOCCVYkU4Gkua4j6NDxH1tsDaYuBevJYqf1RusmmvDLjgZw
-	 fOzDdX1jCoFPWDpy4EenN4eRJynkjqqIW2xKrBl0=
+	b=rtqZUCk9XH4Mbzr/CzmInNvOsMRZdUhxm4ju5TlH7XB5FfxErI5U0lRyeFQ8hIbY4
+	 T7sX/NFymeceRnFCBqvMh81aUhM88b2rTQM2O+UJ5EWv85REGXSy2EiMTcXOpXlVqq
+	 4476ly858X4YGwb6gg+cf0ErKZywXqGtx1Q+2SO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388078AbgDAQ2T (ORCPT
+        id S2388111AbgDAQ2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:28:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53468 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:28:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387582AbgDAQ2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:28:12 -0400
+        id S2388100AbgDAQ2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:28:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C59021582;
-        Wed,  1 Apr 2020 16:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF8C820BED;
+        Wed,  1 Apr 2020 16:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758492;
-        bh=w8IrY9r12WpYReH7DJwsZobqRrfkWlvu+9LYqSSptVc=;
+        s=default; t=1585758500;
+        bh=MpayfXopxg/rWdzTRI0RFVYc1nBvqXgUxTLUgzl8GvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDY/Vo+v27r6waFvVspuFPwEsSDxCtqv1h1eQkhGVzEBVEYwSbFdCmlwEryu0CfBq
-         739py7nK+jpxzwncrcKq5ST4oxuyZy/kf/t1IJ0hKedh/LLvE3hdY+TQvUtxAzj7HA
-         IRez9A3TDDl/AG+XjgYMSj1a6Gn/jO/64HJclkK0=
+        b=V50Ra+LpI2fJqf8lSyT8oXN/COyoWp5SDyBHJYv7/RnY//nDGTASxH1+/Tyntcbmr
+         KK7k24uo+f8a5zbwn/tCkkAZVyG0dkU4+fcdrNB7zYYx+sJdzcKd80x1tHop9pBM0Y
+         tzAbEyXA0KcNSmVMo1LIBIPonjLcp8KSfneA6Y7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>
-Subject: [PATCH 4.19 106/116] bpf: Explicitly memset some bpf info structures declared on the stack
-Date:   Wed,  1 Apr 2020 18:18:02 +0200
-Message-Id: <20200401161555.744987196@linuxfoundation.org>
+        stable@vger.kernel.org, Anthony Mallet <anthony.mallet@laas.fr>,
+        Oliver Neukum <oneukum@suse.com>,
+        Matthias Reichl <hias@horus.com>
+Subject: [PATCH 4.19 082/116] USB: cdc-acm: restore capability check order
+Date:   Wed,  1 Apr 2020 18:17:38 +0200
+Message-Id: <20200401161553.051896608@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -59,82 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Matthias Reichl <hias@horus.com>
 
-commit 5c6f25887963f15492b604dd25cb149c501bbabf upstream.
+commit 62d65bdd9d05158aa2547f8ef72375535f3bc6e3 upstream.
 
-Trying to initialize a structure with "= {};" will not always clean out
-all padding locations in a structure. So be explicit and call memset to
-initialize everything for a number of bpf information structures that
-are then copied from userspace, sometimes from smaller memory locations
-than the size of the structure.
+commit b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
+introduced a regression by changing the order of capability and close
+settings change checks. When running with CAP_SYS_ADMIN setting the
+close settings to the values already set resulted in -EOPNOTSUPP.
 
-Reported-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200320162258.GA794295@kroah.com
+Fix this by changing the check order back to how it was before.
+
+Fixes: b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
+Cc: Anthony Mallet <anthony.mallet@laas.fr>
+Cc: stable <stable@vger.kernel.org>
+Cc: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Matthias Reichl <hias@horus.com>
+Link: https://lore.kernel.org/r/20200327150350.3657-1-hias@horus.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/btf.c     |    3 ++-
- kernel/bpf/syscall.c |    6 ++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/class/cdc-acm.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -2387,7 +2387,7 @@ int btf_get_info_by_fd(const struct btf
- 		       union bpf_attr __user *uattr)
- {
- 	struct bpf_btf_info __user *uinfo;
--	struct bpf_btf_info info = {};
-+	struct bpf_btf_info info;
- 	u32 info_copy, btf_copy;
- 	void __user *ubtf;
- 	u32 uinfo_len;
-@@ -2396,6 +2396,7 @@ int btf_get_info_by_fd(const struct btf
- 	uinfo_len = attr->info.info_len;
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -949,16 +949,16 @@ static int set_serial_info(struct acm *a
  
- 	info_copy = min_t(u32, uinfo_len, sizeof(info));
-+	memset(&info, 0, sizeof(info));
- 	if (copy_from_user(&info, uinfo, info_copy))
- 		return -EFAULT;
+ 	mutex_lock(&acm->port.mutex);
  
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1958,7 +1958,7 @@ static int bpf_prog_get_info_by_fd(struc
- 				   union bpf_attr __user *uattr)
- {
- 	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
--	struct bpf_prog_info info = {};
-+	struct bpf_prog_info info;
- 	u32 info_len = attr->info.info_len;
- 	char __user *uinsns;
- 	u32 ulen;
-@@ -1969,6 +1969,7 @@ static int bpf_prog_get_info_by_fd(struc
- 		return err;
- 	info_len = min_t(u32, sizeof(info), info_len);
+-	if ((new_serial.close_delay != old_close_delay) ||
+-            (new_serial.closing_wait != old_closing_wait)) {
+-		if (!capable(CAP_SYS_ADMIN))
++	if (!capable(CAP_SYS_ADMIN)) {
++		if ((new_serial.close_delay != old_close_delay) ||
++	            (new_serial.closing_wait != old_closing_wait))
+ 			retval = -EPERM;
+-		else {
+-			acm->port.close_delay  = close_delay;
+-			acm->port.closing_wait = closing_wait;
+-		}
+-	} else
+-		retval = -EOPNOTSUPP;
++		else
++			retval = -EOPNOTSUPP;
++	} else {
++		acm->port.close_delay  = close_delay;
++		acm->port.closing_wait = closing_wait;
++	}
  
-+	memset(&info, 0, sizeof(info));
- 	if (copy_from_user(&info, uinfo, info_len))
- 		return -EFAULT;
- 
-@@ -2136,7 +2137,7 @@ static int bpf_map_get_info_by_fd(struct
- 				  union bpf_attr __user *uattr)
- {
- 	struct bpf_map_info __user *uinfo = u64_to_user_ptr(attr->info.info);
--	struct bpf_map_info info = {};
-+	struct bpf_map_info info;
- 	u32 info_len = attr->info.info_len;
- 	int err;
- 
-@@ -2145,6 +2146,7 @@ static int bpf_map_get_info_by_fd(struct
- 		return err;
- 	info_len = min_t(u32, sizeof(info), info_len);
- 
-+	memset(&info, 0, sizeof(info));
- 	info.type = map->map_type;
- 	info.id = map->id;
- 	info.key_size = map->key_size;
+ 	mutex_unlock(&acm->port.mutex);
+ 	return retval;
 
 
