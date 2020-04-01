@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF23AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7AEC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B4320787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA02420772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759374;
-	bh=E/byX9SXEwMNRNF7M3hp6IOB4XLc9sVP0AoWLhCugrM=;
+	s=default; t=1585759376;
+	bh=WvLCvBXXSeuO4j7AzsiO4SGgDd89/vSH9GevxoNu3Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iBy8Z1zS/yUBmklrAVqm//7GUyqksLKrXUjcZ8f+jQ2LE8nTohlbUC9MieKG8QN/b
-	 cgcr/d7HLsB0TRfvJvfheNrp1/7oX++zi4W9ZtTyrQ5SCsidBL+QQacsZqyFdeo77z
-	 8CihH5wB+SyGdAMiNB777hPz040f45BuI9E4ZaQ8=
+	b=SvdNCCns3LnKGnAQzlSiqx+FBtrDTUaSVEYENUpagZGZLy4YzDJmYw11AWGNYfkHQ
+	 nLg3L+BwlCluyVDw7bu7wIv3etu1uElzeHPG+E0w4Dmb3MRvon9qhoXmbOsUJqnc+e
+	 BDR12yOZrDA0BGGnvf5TgSRM01g9WIUC2WfhGjYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389565AbgDAQmw (ORCPT
+        id S2389566AbgDAQmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:42:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43464 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:42:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389556AbgDAQmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:42:49 -0400
+        id S2389558AbgDAQmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:42:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C30720719;
-        Wed,  1 Apr 2020 16:42:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2E920857;
+        Wed,  1 Apr 2020 16:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759368;
-        bh=E/byX9SXEwMNRNF7M3hp6IOB4XLc9sVP0AoWLhCugrM=;
+        s=default; t=1585759371;
+        bh=WvLCvBXXSeuO4j7AzsiO4SGgDd89/vSH9GevxoNu3Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajkEMOnZYNLteDvLW/pNvWRvEAOZlgysPZpithIs3ZSpImLGHHraQZ15eQnJ3Xp+z
-         FlkvXWFBh1Ru5h+Qek0Q8O8IaZPbp/sxb7XIHW75T2ekXxzQ+oB4OlRW9Vxo6J2epr
-         vbaB9t5lGCskjixaY67BSu4H3/Pm3t+ZBuMWqDgw=
+        b=WicWOMviZJCcLA360l3JcTIjgHifHs09tGRktaEvNoadMAL8qr26dZ3ZpPCfNU2Lh
+         Pkh112jX/jS7YwL/mekYdaOjRBmVGenqCZeIl+VjRZ3Smivy+aBdPYlOgkOokKKSzS
+         YI6kW0r3/BBiAuEz2FFHRLlW0+MNXdnRmAvRFttk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Bizon <mbizon@freebox.fr>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        stable@vger.kernel.org,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 058/148] net: dsa: Fix duplicate frames flooded by learning
-Date:   Wed,  1 Apr 2020 18:17:30 +0200
-Message-Id: <20200401161558.509685033@linuxfoundation.org>
+Subject: [PATCH 4.14 059/148] net: mvneta: Fix the case where the last poll did not process all rx
+Date:   Wed,  1 Apr 2020 18:17:31 +0200
+Message-Id: <20200401161558.583760860@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -61,34 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit 0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ]
+[ Upstream commit 065fd83e1be2e1ba0d446a257fd86a3cc7bddb51 ]
 
-When both the switch and the bridge are learning about new addresses,
-switch ports attached to the bridge would see duplicate ARP frames
-because both entities would attempt to send them.
+For the case where the last mvneta_poll did not process all
+RX packets, we need to xor the pp->cause_rx_tx or port->cause_rx_tx
+before claculating the rx_queue.
 
-Fixes: 5037d532b83d ("net: dsa: add Broadcom tag RX/TX handler")
-Reported-by: Maxime Bizon <mbizon@freebox.fr>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Fixes: 2dcf75e2793c ("net: mvneta: Associate RX queues with each CPU")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/tag_brcm.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/marvell/mvneta.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/dsa/tag_brcm.c
-+++ b/net/dsa/tag_brcm.c
-@@ -134,6 +134,8 @@ static struct sk_buff *brcm_tag_rcv(stru
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -2759,11 +2759,10 @@ static int mvneta_poll(struct napi_struc
+ 	/* For the case where the last mvneta_poll did not process all
+ 	 * RX packets
+ 	 */
+-	rx_queue = fls(((cause_rx_tx >> 8) & 0xff));
+-
+ 	cause_rx_tx |= pp->neta_armada3700 ? pp->cause_rx_tx :
+ 		port->cause_rx_tx;
  
- 	skb->dev = ds->ports[source_port].netdev;
- 
-+	skb->offload_fwd_mark = 1;
-+
- 	return skb;
- }
- 
++	rx_queue = fls(((cause_rx_tx >> 8) & 0xff));
+ 	if (rx_queue) {
+ 		rx_queue = rx_queue - 1;
+ 		if (pp->bm_priv)
 
 
