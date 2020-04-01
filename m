@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71899C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BDEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19E3E20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B39206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759662;
-	bh=OJk05znDwBNzrtl7qwWp1XcMT+oENkFkHzaJeU+U+Ms=;
+	s=default; t=1585759666;
+	bh=fkqJgZcXEk3ANMHQV2zr7kHP0YWWYnpw4faPhGrgKl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qLFjfH/hC5DVQqtiMtlDjaAkUL4jIijr+YZPCxOxfJlB/Ip0YsUF2czMfxGFsGYI1
-	 glen8vkf8Xhkgp1LQKlwJCLYaNbplanYsPCWsoU3kL3yMKk5lsiJl7vw2yzYPHi4vK
-	 6Qw17TpuhFDznJgPniByeveoT2j7BPv/w42XOsVE=
+	b=16F81ao7JSAjiW1VBhnr+lkO2a+6vuWQQduwtbXWf80blCtNlafGjLKQMw+Pm3RWl
+	 1/1XeDw0prEUOEyTWTg4di85KbljjkRGZheN0z4XMqyZqvsc8I9m46sLIydZXvWUP/
+	 W83hJ1O81X4uqTLnJjbPLp751cz6a2aXc324/TFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389624AbgDAQrk (ORCPT
+        id S2389602AbgDAQro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:47:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49452 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389554AbgDAQrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:47:37 -0400
+        id S2389820AbgDAQrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:47:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8806F20705;
-        Wed,  1 Apr 2020 16:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B2A7206E9;
+        Wed,  1 Apr 2020 16:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759657;
-        bh=OJk05znDwBNzrtl7qwWp1XcMT+oENkFkHzaJeU+U+Ms=;
+        s=default; t=1585759659;
+        bh=fkqJgZcXEk3ANMHQV2zr7kHP0YWWYnpw4faPhGrgKl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQadTsG8OAcG2g0Mqun9dyqJ11tYZaNmGbh/STiLkEFvjZ8AO34h2JLrc2HjgB9xs
-         b7Rpo1a7gJoiUmvlkUraVhCI0q+nZdekLcQDS9AYgI64SETdDCgfxTLnuI9SX+qKWX
-         /h1JQxXDaeOlftvbGHTwCgsUnpo4YkPLbXdiEYog=
+        b=g3pF6pIGKhzQZ41Wg5xgpn4g2yYK/Qdm4VAVrmdrofXnVTQxSZjhIhgTiR1pN5Clr
+         LbHNPJXOI6pfPvT2ETpIYBwoHTprWoTJO34MHHI2myvQqiucnsa2LwfWO19WFzOaS2
+         HNE5YXvPvLBbWk8efy/0/A2e5aHjhBGYgbz++wgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 148/148] arm64: dts: ls1046ardb: set RGMII interfaces to RGMII_ID mode
-Date:   Wed,  1 Apr 2020 18:19:00 +0200
-Message-Id: <20200401161606.196310048@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        kovi <zraetn@gmail.com>
+Subject: [PATCH 4.14 122/148] staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
+Date:   Wed,  1 Apr 2020 18:18:34 +0200
+Message-Id: <20200401161604.144252449@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,47 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit d79e9d7c1e4ba5f95f2ff3541880c40ea9722212 upstream.
+commit 38ef48f7d4b7342f145a1b4f96023bde99aeb245 upstream.
 
-The correct setting for the RGMII ports on LS1046ARDB is to
-enable delay on both Rx and Tx so the interface mode used must
-be PHY_INTERFACE_MODE_RGMII_ID.
+The ASUS USB-N10 Nano B1 has been reported as a new RTL8188EU device.
+Add it to the device tables.
 
-Since commit 1b3047b5208a80 ("net: phy: realtek: add support for
-configuring the RX delay on RTL8211F") the Realtek 8211F PHY driver
-has control over the RGMII RX delay and it is disabling it for
-RGMII_TXID. The LS1046ARDB uses two such PHYs in RGMII_ID mode but
-in the device tree the mode was described as "rgmii".
-
-Changing the phy-connection-type to "rgmii-id" to address the issue.
-
-Fixes: 3fa395d2c48a ("arm64: dts: add LS1046A DPAA FMan nodes")
-Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Reported-by: kovi <zraetn@gmail.com>
+Cc: Stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200321180011.26153-1-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-@@ -162,12 +162,12 @@
- &fman0 {
- 	ethernet@e4000 {
- 		phy-handle = <&rgmii_phy1>;
--		phy-connection-type = "rgmii";
-+		phy-connection-type = "rgmii-id";
- 	};
- 
- 	ethernet@e6000 {
- 		phy-handle = <&rgmii_phy2>;
--		phy-connection-type = "rgmii";
-+		phy-connection-type = "rgmii-id";
- 	};
- 
- 	ethernet@e8000 {
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -40,6 +40,7 @@ static const struct usb_device_id rtw_us
+ 	/****** 8188EUS ********/
+ 	{USB_DEVICE(0x056e, 0x4008)}, /* Elecom WDC-150SU2M */
+ 	{USB_DEVICE(0x07b8, 0x8179)}, /* Abocom - Abocom */
++	{USB_DEVICE(0x0B05, 0x18F0)}, /* ASUS USB-N10 Nano B1 */
+ 	{USB_DEVICE(0x2001, 0x330F)}, /* DLink DWA-125 REV D1 */
+ 	{USB_DEVICE(0x2001, 0x3310)}, /* Dlink DWA-123 REV D1 */
+ 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
 
 
