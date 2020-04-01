@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74E3C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA3AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB1920714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D1020719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759542;
-	bh=IpskLDqHHZRm9edhwLu30IHxKAr24vBmtaA+c2F/oaA=;
+	s=default; t=1585759546;
+	bh=vHUjieBU5aslM55rEOP09v3yMqm7chbEbPX1sJ1IF44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KcQNSTNp9yU6NMZF2LyDjluBw8ioGoLoAi+Ek1TkRk/LyCOMQ9w05Ah3syBsGoQiq
-	 wy+z4oCK3hnUuOQAgjIfJ/kPDW9duqE3zm3I+qU7DthXgaTbWb8rJzzjbdsWh4h3ww
-	 bqpR3Xkx6RW9Miar7i2SgfyzOhvs89mCfUCDE5t8=
+	b=EysDxY3GWK4sVAEeZw1XYFvg7VOdcRxP3KiIeZrjLRrHblxDlRmLE6QqO5Wkb6xeT
+	 RuQjBfCFwCfYnz0lXXIKoVXsr5VQRLu75662f1PEW344dkw+IeGUc81fScTRDTksW7
+	 5nlULMA48zlGngMT24gdT4mNatiaF3zwr5NfgxBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389866AbgDAQpl (ORCPT
+        id S2389867AbgDAQpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:45:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46828 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:45:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389853AbgDAQpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:45:36 -0400
+        id S2389403AbgDAQpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:45:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F5C720719;
-        Wed,  1 Apr 2020 16:45:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B31D12063A;
+        Wed,  1 Apr 2020 16:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759535;
-        bh=IpskLDqHHZRm9edhwLu30IHxKAr24vBmtaA+c2F/oaA=;
+        s=default; t=1585759538;
+        bh=vHUjieBU5aslM55rEOP09v3yMqm7chbEbPX1sJ1IF44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g5GEzTVlcRPUCaG7dcH4QeS0vjTsEIXR27Er+tg7L9+DlcZUb1q2XOiUsJR062rq3
-         b0a9ex/hMgE1R1XlCXL7FJPSYIhUXq7kVJX4Aljk9UtKCkf7Zza+rMAds4u1ip1LQo
-         8Mlp6Im8MQj6RsUYJgNH+3wF2gheba1z4PCWutHM=
+        b=wIU7nbsGF5P0nQNgOxJ/lO3Llts9VHJOz9c8ULyrGvSAPw3lmY3JBpLxzI3LhixP8
+         6c33ImlPnQPndqp6ue5kbiJwsNsCmYT4BcQT7i+K3v08T4FqG0apgW4sPe7ZdqOGFo
+         IV+5iYmAz9KPaLvh7GO4PDFH1zNvU7Pz1ztE+EgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.14 109/148] netfilter: nft_fwd_netdev: validate family and chain type
-Date:   Wed,  1 Apr 2020 18:18:21 +0200
-Message-Id: <20200401161603.061574431@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Torsten Hilbrich <torsten.hilbrich@secunet.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.14 110/148] vti6: Fix memory leak of skb if input policy check fails
+Date:   Wed,  1 Apr 2020 18:18:22 +0200
+Message-Id: <20200401161603.129286885@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -58,43 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Torsten Hilbrich <torsten.hilbrich@secunet.com>
 
-commit 76a109fac206e158eb3c967af98c178cff738e6a upstream.
+commit 2a9de3af21aa8c31cd68b0b39330d69f8c1e59df upstream.
 
-Make sure the forward action is only used from ingress.
+The vti6_rcv function performs some tests on the retrieved tunnel
+including checking the IP protocol, the XFRM input policy, the
+source and destination address.
 
-Fixes: 39e6dea28adc ("netfilter: nf_tables: add forward expression to the netdev family")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+In all but one places the skb is released in the error case. When
+the input policy check fails the network packet is leaked.
+
+Using the same goto-label discard in this case to fix this problem.
+
+Fixes: ed1efb2aefbb ("ipv6: Add support for IPsec virtual tunnel interfaces")
+Signed-off-by: Torsten Hilbrich <torsten.hilbrich@secunet.com>
+Reviewed-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_fwd_netdev.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/ipv6/ip6_vti.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/netfilter/nft_fwd_netdev.c
-+++ b/net/netfilter/nft_fwd_netdev.c
-@@ -62,6 +62,13 @@ nla_put_failure:
- 	return -1;
- }
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -315,7 +315,7 @@ static int vti6_rcv(struct sk_buff *skb)
  
-+static int nft_fwd_validate(const struct nft_ctx *ctx,
-+			    const struct nft_expr *expr,
-+			    const struct nft_data **data)
-+{
-+	return nft_chain_validate_hooks(ctx->chain, (1 << NF_NETDEV_INGRESS));
-+}
-+
- static struct nft_expr_type nft_fwd_netdev_type;
- static const struct nft_expr_ops nft_fwd_netdev_ops = {
- 	.type		= &nft_fwd_netdev_type,
-@@ -69,6 +76,7 @@ static const struct nft_expr_ops nft_fwd
- 	.eval		= nft_fwd_netdev_eval,
- 	.init		= nft_fwd_netdev_init,
- 	.dump		= nft_fwd_netdev_dump,
-+	.validate	= nft_fwd_validate,
- };
+ 		if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb)) {
+ 			rcu_read_unlock();
+-			return 0;
++			goto discard;
+ 		}
  
- static struct nft_expr_type nft_fwd_netdev_type __read_mostly = {
+ 		ipv6h = ipv6_hdr(skb);
 
 
