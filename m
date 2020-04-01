@@ -2,90 +2,108 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2F5C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9380EC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88C720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:09:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IIJj23PN"
+	by mail.kernel.org (Postfix) with ESMTP id 72E5120757
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731770AbgDAJJN (ORCPT
+        id S1731958AbgDAJKm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:09:13 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50824 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgDAJJM (ORCPT
+        Wed, 1 Apr 2020 05:10:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57744 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730833AbgDAJKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:09:12 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0319937l056756;
-        Wed, 1 Apr 2020 04:09:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585732143;
-        bh=BapP4GEMaD/hKUSz20udM/d8F9FfG6LyZICrAcSFl2c=;
-        h=From:To:CC:Subject:Date;
-        b=IIJj23PNMe0sCJogXud2CaB/x2DWAOiQIeJzYchJ1JVUXOCg2gT1+iH6Z/oM4NZMp
-         GrBjGSvVD0OR5xnj5n+Ugjp3TIibTEXHh7RRvAJDQg/Xss/AjRrEt+qDjE/J7LW+5h
-         NnKr/4kJH0r1G89OOknqr8MYMAK0LwCGAcRcFp0g=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 031993CR094643
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Apr 2020 04:09:03 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 1 Apr
- 2020 04:09:03 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 1 Apr 2020 04:09:02 -0500
-Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03198xRE032742;
-        Wed, 1 Apr 2020 04:08:59 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
-        <bcousson@baylibre.com>, <faiz_abbas@ti.com>
-Subject: [PATCH] ARM: dts: am574x-idk: Disable m_can node
-Date:   Wed, 1 Apr 2020 14:38:58 +0530
-Message-ID: <20200401090858.18523-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 1 Apr 2020 05:10:42 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03194Bpi057443
+        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 05:10:41 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 304hja2887-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 05:10:40 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sachinp@linux.vnet.ibm.com>;
+        Wed, 1 Apr 2020 10:10:27 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Apr 2020 10:10:24 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0319AXeI52953092
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 09:10:33 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D910A4C044;
+        Wed,  1 Apr 2020 09:10:33 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 13A504C050;
+        Wed,  1 Apr 2020 09:10:32 +0000 (GMT)
+Received: from [9.102.26.109] (unknown [9.102.26.109])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 09:10:31 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2] qtpm2: Export tpm2_get_cc_attrs_tbl for ibmvtpm driver
+ as module
+From:   Sachin Sant <sachinp@linux.vnet.ibm.com>
+In-Reply-To: <20200319195706.GD24804@linux.intel.com>
+Date:   Wed, 1 Apr 2020 14:40:30 +0530
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-next@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        Stefan Berger <stefanb@linux.ibm.com>
+Content-Transfer-Encoding: 8BIT
+References: <20200319010017.738677-1-stefanb@linux.vnet.ibm.com>
+ <20200319195706.GD24804@linux.intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-TM-AS-GCONF: 00
+x-cbid: 20040109-0008-0000-0000-000003685D2C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040109-0009-0000-0000-00004A89E4CF
+Message-Id: <2BF66599-184A-4647-BC57-105A1512F119@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
+ malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit bcbb63b80284 ("ARM: dts: dra7: Separate AM57 dtsi files"),
-the m_can node was inherited from dra76x.dtsi but the IP is not
-connected on the idk board. Disable the node to reflect this.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- arch/arm/boot/dts/am574x-idk.dts | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
-index fa0088025b2c..85c95cc551dd 100644
---- a/arch/arm/boot/dts/am574x-idk.dts
-+++ b/arch/arm/boot/dts/am574x-idk.dts
-@@ -40,3 +40,7 @@
- 	status = "okay";
- 	dual_emac;
- };
-+
-+&m_can0 {
-+	status = "disabled";
-+};
--- 
-2.17.1
+> On 20-Mar-2020, at 1:27 AM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> 
+> On Wed, Mar 18, 2020 at 09:00:17PM -0400, Stefan Berger wrote:
+>> From: Stefan Berger <stefanb@linux.ibm.com>
+>> 
+>> This patch fixes the following problem when the ibmvtpm driver
+>> is built as a module:
+>> 
+>> ERROR: modpost: "tpm2_get_cc_attrs_tbl" [drivers/char/tpm/tpm_ibmvtpm.ko] undefined!
+>> make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
+>> make: *** [Makefile:1298: modules] Error 2
+>> 
+>> Fixes: 18b3670d79ae ("tpm: ibmvtpm: Add support for TPM2")
+>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+>> Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+>> Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+> 
 
+Ping. This failure can now be seen in mainline (cad18da0af) as well.
+
+Thanks
+-Sachin
