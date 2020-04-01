@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116D4C2BA13
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9154C2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC369206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04022063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758906;
-	bh=wyLKa9e4fnj7moQyCDcCfUz9jCeCcmM9gRIIhMtIa1U=;
+	s=default; t=1585758908;
+	bh=sBir27o/Pb8WIzswOqkdHncGGar33AnRwyEMUFF4b2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YeOX7jIeJKcE0vOVzslca3mjGhVrYIniVwXZKKekyr7j1HHdhLdpzYtbpOH0CqjSH
-	 gzUnDBIv1SkMZPeXcD1aRbnmn9GX4lCvxHRMR5Qq48iWLOxSKqGbHY1sm47uwiD6fA
-	 7EZj1Iu/7QpwdDyVkRkV8O6IfpHx4FDFMo5sTUeE=
+	b=KE6ZhuNc0ZtzEgWWMqo7SJy94dSLxEPXS9ECijSpWRB/SzkXr8Yug14+bIhniX5ym
+	 5PAlQNonHLn/kPU1JWJnoXWJDdMyX+A8quABwtjZBxyk9zmmesM3JZmAipoh7yM/9y
+	 lQM+EDG8jozUhirDXjXO2AZAu70P3reWnYpEJxJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388447AbgDAQfG (ORCPT
+        id S2388711AbgDAQfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33732 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:35:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388054AbgDAQfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:35:03 -0400
+        id S2387563AbgDAQfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:35:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C8B020658;
-        Wed,  1 Apr 2020 16:35:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5C3920658;
+        Wed,  1 Apr 2020 16:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758902;
-        bh=wyLKa9e4fnj7moQyCDcCfUz9jCeCcmM9gRIIhMtIa1U=;
+        s=default; t=1585758905;
+        bh=sBir27o/Pb8WIzswOqkdHncGGar33AnRwyEMUFF4b2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFy2TsQwvcukvh/TeCdzkzCOEDnHizdK4cOnw/1knZj8w105RbDQlzk9Y/6TK2upb
-         cUu4izRVUS9VXempaFGWebyNLAwarad8ZzRAP3YcJd6zW/q0txsFOhbsT7VExRb21r
-         CNhtpBZYIriDSH6hnLNH5JweQoMGE3nbkweccHtI=
+        b=mgEQPAKjYi/4ZqFvdt54Y1sIdbnCUoIBDg2R6HAQLhlqWXHz/ArVWAK6GQ1V9TsW8
+         KhZ503CsAAgQ6F4Eqa7QwtwtcVtmMLRnyjYmaUh/VONoRnKi+IFGebv8Ae5Cp3cK6X
+         m2EWcbmvpHCFL3coIBpnN6yBYPPY0GJgyKghnsh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 017/102] ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
-Date:   Wed,  1 Apr 2020 18:17:20 +0200
-Message-Id: <20200401161535.494978264@linuxfoundation.org>
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Linus Waleij <linus.walleij@linaro.org>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.9 018/102] iio: magnetometer: ak8974: Fix negative raw values in sysfs
+Date:   Wed,  1 Apr 2020 18:17:21 +0200
+Message-Id: <20200401161536.017379826@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -60,46 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 5461e0530c222129dfc941058be114b5cbc00837 upstream.
+commit b500c086e4110829a308c23e83a7cdc65b26228a upstream.
 
-The return value checks in snd_pcm_plug_alloc() are covered with
-snd_BUG_ON() macro that may trigger a kernel WARNING depending on the
-kconfig.  But since the error condition can be triggered by a weird
-user space parameter passed to OSS layer, we shouldn't give the kernel
-stack trace just for that.  As it's a normal error condition, let's
-remove snd_BUG_ON() macro usage there.
+At the moment, reading from in_magn_*_raw in sysfs tends to return
+large values around 65000, even though the output of ak8974 is actually
+limited to ±32768. This happens because the value is never converted
+to the signed 16-bit integer variant.
 
-Reported-by: syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200312155730.7520-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Add an explicit cast to s16 to fix this.
+
+Fixes: 7c94a8b2ee8c ("iio: magn: add a driver for AK8974")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Waleij <linus.walleij@linaro.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/pcm_plugin.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/magnetometer/ak8974.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_su
- 		while (plugin->next) {
- 			if (plugin->dst_frames)
- 				frames = plugin->dst_frames(plugin, frames);
--			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
-+			if ((snd_pcm_sframes_t)frames <= 0)
- 				return -ENXIO;
- 			plugin = plugin->next;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
-@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_su
- 		while (plugin->prev) {
- 			if (plugin->src_frames)
- 				frames = plugin->src_frames(plugin, frames);
--			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
-+			if ((snd_pcm_sframes_t)frames <= 0)
- 				return -ENXIO;
- 			plugin = plugin->prev;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
+--- a/drivers/iio/magnetometer/ak8974.c
++++ b/drivers/iio/magnetometer/ak8974.c
+@@ -477,7 +477,7 @@ static int ak8974_read_raw(struct iio_de
+ 		 * We read all axes and discard all but one, for optimized
+ 		 * reading, use the triggered buffer.
+ 		 */
+-		*val = le16_to_cpu(hw_values[chan->address]);
++		*val = (s16)le16_to_cpu(hw_values[chan->address]);
+ 
+ 		ret = IIO_VAL_INT;
+ 	}
 
 
