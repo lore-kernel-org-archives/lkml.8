@@ -2,228 +2,102 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AB7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C65AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27EF120719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EC42071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="QYGtk3AH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L1GphxYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389265AbgDAWvy (ORCPT
+        id S2389316AbgDAWwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:51:54 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:36270 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389253AbgDAWvx (ORCPT
+        Wed, 1 Apr 2020 18:52:11 -0400
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:52357 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389284AbgDAWwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:51:53 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 563302DC3330;
-        Thu,  2 Apr 2020 09:51:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1585781508;
-        bh=FgXrMZd5jgFgYwvk1rKNQ23NCAQq9Sxrzfkt7yVUPjk=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=QYGtk3AH0W2GW3xDqwILT4tWdRvwfukt/wtJfKxP3GeMIkwOcvxi4+bFTLeK7yG+2
-         QK6xQdg24HsMsrO96pzQzp7thT9OnH+T4/yu3go19x9bxZsYO5NlJv0CgTU9pVxohW
-         KQJ7ZDAHLWkxg0LJ1OqUPhVMKcRhKtqvaK49TPOa4J4swSpzhvwUlGWHpq8nMLY9Ly
-         Vu3DiOuAL2gubxA9ZbFj1JqQ4K9IlkSRcenYLBtTXq75bzFD851m4uhGrpdiUVXn/C
-         xYFvA/Rmp5IP5yiGKQYiTLklvSDRR5jvaZQIEyqlOE1mS5D0AvD28BhaUjAKTArCoN
-         xLLK+baQf/RyPZIGfFrlZcSyldovGznoCpUkK/BkN4eWPPuv3B4poiPOfQgWwQSfQg
-         sHkxPI/TVU4tfkhNhDZIguM19nktovwPOgel+sGFHwKc3FPYkVGpat3Dr1kExYM2vc
-         JJoWJhUH+zFmC6FT0WZMRa1HPdgoqc9nDa26VkS6riRQurzPFP7TrD10cEg99H5sMs
-         U2tRswqCKr3RZ+yNiF41Vk8wrSpOlJFKm/gwDUHJhB93pS3IQx3r0NyJOFU6P009EI
-         4HDOv8cMGWuycKRawzl/BzpGQYXFmELX9appWWgEVeqyT8RUVn5oEkkYgQzQdJlkgd
-         jakKdOir6MI9bh8Dme2Lw/KY=
-Received: from Hawking (ntp.lan [10.0.1.1])
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id 031Mpf9D088148
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 2 Apr 2020 09:51:41 +1100 (AEDT)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     "'Dan Williams'" <dan.j.williams@intel.com>
-Cc:     "'Aneesh Kumar K . V'" <aneesh.kumar@linux.ibm.com>,
-        "'Oliver O'Halloran'" <oohall@gmail.com>,
-        "'Benjamin Herrenschmidt'" <benh@kernel.crashing.org>,
-        "'Paul Mackerras'" <paulus@samba.org>,
-        "'Michael Ellerman'" <mpe@ellerman.id.au>,
-        "'Frederic Barrat'" <fbarrat@linux.ibm.com>,
-        "'Andrew Donnellan'" <ajd@linux.ibm.com>,
-        "'Arnd Bergmann'" <arnd@arndb.de>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Vishal Verma'" <vishal.l.verma@intel.com>,
-        "'Dave Jiang'" <dave.jiang@intel.com>,
-        "'Ira Weiny'" <ira.weiny@intel.com>,
-        "'Andrew Morton'" <akpm@linux-foundation.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Rob Herring'" <robh@kernel.org>,
-        "'Anton Blanchard'" <anton@ozlabs.org>,
-        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
-        "'Mahesh Salgaonkar'" <mahesh@linux.vnet.ibm.com>,
-        "'Madhavan Srinivasan'" <maddy@linux.vnet.ibm.com>,
-        "=?utf-8?Q?'C=C3=A9dric_Le_Goater'?=" <clg@kaod.org>,
-        "'Anju T Sudhakar'" <anju@linux.vnet.ibm.com>,
-        "'Hari Bathini'" <hbathini@linux.ibm.com>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Greg Kurz'" <groug@kaod.org>,
-        "'Nicholas Piggin'" <npiggin@gmail.com>,
-        "'Masahiro Yamada'" <yamada.masahiro@socionext.com>,
-        "'Alexey Kardashevskiy'" <aik@ozlabs.ru>,
-        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
-        "'linuxppc-dev'" <linuxppc-dev@lists.ozlabs.org>,
-        "'linux-nvdimm'" <linux-nvdimm@lists.01.org>,
-        "'Linux MM'" <linux-mm@kvack.org>
-References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-2-alastair@d-silva.org> <CAPcyv4hX9RTWKSLB8OcYY6MK-z5u5WWSaYSGa-8oqPbWU7st8w@mail.gmail.com>
-In-Reply-To: <CAPcyv4hX9RTWKSLB8OcYY6MK-z5u5WWSaYSGa-8oqPbWU7st8w@mail.gmail.com>
-Subject: RE: [PATCH v4 01/25] powerpc/powernv: Add OPAL calls for LPC memory alloc/release
-Date:   Thu, 2 Apr 2020 09:51:40 +1100
-Message-ID: <2d6d01d60878$1c8c68f0$55a53ad0$@d-silva.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-au
-Thread-Index: AQJ5L4Hn/mp5p0p1jYAFWLJ+xmWSbgKnRjTFARH8J02nAMbrEA==
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Thu, 02 Apr 2020 09:51:42 +1100 (AEDT)
+        Wed, 1 Apr 2020 18:52:11 -0400
+Received: by mail-pj1-f73.google.com with SMTP id go23so1621571pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 15:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=q4ZMYmBcDBfZ3/eKhJPvc8UL2Mx5kdXJ4d7Xvr4DvUY=;
+        b=L1GphxYwE+P1HgKdoSybxCMrbn+Boz7nmON5n7k3g9V4dXrhW0rWOJGJePJlYea17Y
+         F7VInZKMeB5rMmSNjL+Bh/e1T7sgowsYWQYLaYDS4SXzZRVNcIl3Ql72Du4dMjtUP2yw
+         PoKfo+L22F7cJitsf3BcJuOKx8Nxc6lRK542wFVheb6BlwDiPiNhkNP7ofG1bcOKnLKg
+         ZrOpfq+QHbannMNS/YaAb/nm/fhKvRLo6G4ihXHtXcwm6yZhhzFkLqhSoK82MR0PVxpV
+         SmRXlFfRq8f4JMoKGNwoltsal/Tf/Bv/8fbuXIU13Y6oeF07QEVmuK6mNQJ1IS8urF+A
+         t0mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=q4ZMYmBcDBfZ3/eKhJPvc8UL2Mx5kdXJ4d7Xvr4DvUY=;
+        b=Y3RPm0+aB0+XoByvujlHB6whNbOMZaF1NwGeBQVi35NpE3yECFnbRdC6lr963N7Njc
+         6BmSYnOv757cD0STFqAw4rq/yTEeRyQ4CgX6/U/+KUmtPT4ty9wXvRsvTkAPsv46Iffk
+         ku7EZ1Os+sVZYeT6POezkHVBu1HqX0BY8z24oKIoPFYFQbikZivxfJ5NUjk4E7xXfhAQ
+         4UgODYy6NwrMBI3ab++cpdT8lCG3pChGDOL+BNg2sKj+UOjwo1OQm+BrsV9l+m4EHjgR
+         mqNLiMszV/BRu2XDYhHr7kexd2Vu1uyOdijgzO6lneUCSrhRs31+m4YWK9G5gcKfQjzp
+         ebMA==
+X-Gm-Message-State: AGi0PuaYksWAy2hNK3ozplz41KNq2iyuiEyftRuSR4wqUSJhVmXOzb/p
+        Bj2qRSfn2O0q1qpbUsO7hZRAwEKhcaNXSxA=
+X-Google-Smtp-Source: APiQypL0Vn5cplei/vqShyJo71u2PrrvdfFxnXkPwm+A/1r+1xEltM5Wv4/QfJ8XSc9zgYbwYXbLn7ONiaEq75A=
+X-Received: by 2002:a17:90b:388e:: with SMTP id mu14mr361788pjb.122.1585781528023;
+ Wed, 01 Apr 2020 15:52:08 -0700 (PDT)
+Date:   Wed,  1 Apr 2020 15:52:03 -0700
+Message-Id: <20200401225203.163155-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH v1] of: property: Add device link support for extcon
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Dan Williams <dan.j.williams@intel.com>
-> Sent: Wednesday, 1 April 2020 7:48 PM
-> To: Alastair D'Silva <alastair@d-silva.org>
-> Cc: Aneesh Kumar K . V <aneesh.kumar@linux.ibm.com>; Oliver O'Halloran
-> <oohall@gmail.com>; Benjamin Herrenschmidt
-> <benh@kernel.crashing.org>; Paul Mackerras <paulus@samba.org>; Michael
-> Ellerman <mpe@ellerman.id.au>; Frederic Barrat =
-<fbarrat@linux.ibm.com>;
-> Andrew Donnellan <ajd@linux.ibm.com>; Arnd Bergmann
-> <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>;
-> Vishal Verma <vishal.l.verma@intel.com>; Dave Jiang
-> <dave.jiang@intel.com>; Ira Weiny <ira.weiny@intel.com>; Andrew Morton
-> <akpm@linux-foundation.org>; Mauro Carvalho Chehab
-> <mchehab+samsung@kernel.org>; David S. Miller <davem@davemloft.net>;
-> Rob Herring <robh@kernel.org>; Anton Blanchard <anton@ozlabs.org>;
-> Krzysztof Kozlowski <krzk@kernel.org>; Mahesh Salgaonkar
-> <mahesh@linux.vnet.ibm.com>; Madhavan Srinivasan
-> <maddy@linux.vnet.ibm.com>; C=C3=A9dric Le Goater <clg@kaod.org>; Anju =
-T
-> Sudhakar <anju@linux.vnet.ibm.com>; Hari Bathini
-> <hbathini@linux.ibm.com>; Thomas Gleixner <tglx@linutronix.de>; Greg
-> Kurz <groug@kaod.org>; Nicholas Piggin <npiggin@gmail.com>; Masahiro
-> Yamada <yamada.masahiro@socionext.com>; Alexey Kardashevskiy
-> <aik@ozlabs.ru>; Linux Kernel Mailing List =
-<linux-kernel@vger.kernel.org>;
-> linuxppc-dev <linuxppc-dev@lists.ozlabs.org>; linux-nvdimm <linux-
-> nvdimm@lists.01.org>; Linux MM <linux-mm@kvack.org>
-> Subject: Re: [PATCH v4 01/25] powerpc/powernv: Add OPAL calls for LPC
-> memory alloc/release
->=20
-> On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva =
-<alastair@d-silva.org>
-> wrote:
-> >
-> > Add OPAL calls for LPC memory alloc/release
-> >
->=20
-> This seems to be referencing an existing api definition, can you =
-include a
-> pointer to the spec in case someone wanted to understand what these
-> routines do? I suspect this is not allocating memory in the =
-traditional sense as
-> much as it's allocating physical address space for a device to be =
-mapped?
->=20
+Add support for creating device links out of more DT properties.
 
-These API calls were introduced in the following skiboot commit:
-https://github.com/open-power/skiboot/commit/1a548857ce1f02f43585b326a891=
-eed18a7b43b3
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/of/property.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I'll add it to the description.
-
->=20
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
-> > Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-> > ---
-> >  arch/powerpc/include/asm/opal-api.h        | 2 ++
-> >  arch/powerpc/include/asm/opal.h            | 2 ++
-> >  arch/powerpc/platforms/powernv/opal-call.c | 2 ++
-> >  3 files changed, 6 insertions(+)
-> >
-> > diff --git a/arch/powerpc/include/asm/opal-api.h
-> > b/arch/powerpc/include/asm/opal-api.h
-> > index c1f25a760eb1..9298e603001b 100644
-> > --- a/arch/powerpc/include/asm/opal-api.h
-> > +++ b/arch/powerpc/include/asm/opal-api.h
-> > @@ -208,6 +208,8 @@
-> >  #define OPAL_HANDLE_HMI2                       166
-> >  #define        OPAL_NX_COPROC_INIT                     167
-> >  #define OPAL_XIVE_GET_VP_STATE                 170
-> > +#define OPAL_NPU_MEM_ALLOC                     171
-> > +#define OPAL_NPU_MEM_RELEASE                   172
-> >  #define OPAL_MPIPL_UPDATE                      173
-> >  #define OPAL_MPIPL_REGISTER_TAG                        174
-> >  #define OPAL_MPIPL_QUERY_TAG                   175
-> > diff --git a/arch/powerpc/include/asm/opal.h
-> > b/arch/powerpc/include/asm/opal.h index 9986ac34b8e2..301fea46c7ca
-> > 100644
-> > --- a/arch/powerpc/include/asm/opal.h
-> > +++ b/arch/powerpc/include/asm/opal.h
-> > @@ -39,6 +39,8 @@ int64_t opal_npu_spa_clear_cache(uint64_t phb_id,
-> uint32_t bdfn,
-> >                                 uint64_t PE_handle);  int64_t
-> > opal_npu_tl_set(uint64_t phb_id, uint32_t bdfn, long cap,
-> >                         uint64_t rate_phys, uint32_t size);
-> > +int64_t opal_npu_mem_alloc(u64 phb_id, u32 bdfn, u64 size, __be64
-> > +*bar); int64_t opal_npu_mem_release(u64 phb_id, u32 bdfn);
-> >
-> >  int64_t opal_console_write(int64_t term_number, __be64 *length,
-> >                            const uint8_t *buffer); diff --git
-> > a/arch/powerpc/platforms/powernv/opal-call.c
-> > b/arch/powerpc/platforms/powernv/opal-call.c
-> > index 5cd0f52d258f..f26e58b72c04 100644
-> > --- a/arch/powerpc/platforms/powernv/opal-call.c
-> > +++ b/arch/powerpc/platforms/powernv/opal-call.c
-> > @@ -287,6 +287,8 @@ OPAL_CALL(opal_pci_set_pbcq_tunnel_bar,
-> OPAL_PCI_SET_PBCQ_TUNNEL_BAR);
-> >  OPAL_CALL(opal_sensor_read_u64,
-> OPAL_SENSOR_READ_U64);
-> >  OPAL_CALL(opal_sensor_group_enable,
-> OPAL_SENSOR_GROUP_ENABLE);
-> >  OPAL_CALL(opal_nx_coproc_init,                 =
-OPAL_NX_COPROC_INIT);
-> > +OPAL_CALL(opal_npu_mem_alloc,                  OPAL_NPU_MEM_ALLOC);
-> > +OPAL_CALL(opal_npu_mem_release,
-> OPAL_NPU_MEM_RELEASE);
-> >  OPAL_CALL(opal_mpipl_update,                   OPAL_MPIPL_UPDATE);
-> >  OPAL_CALL(opal_mpipl_register_tag,
-> OPAL_MPIPL_REGISTER_TAG);
-> >  OPAL_CALL(opal_mpipl_query_tag,
-> OPAL_MPIPL_QUERY_TAG);
-> > --
-> > 2.24.1
-> >
->=20
->=20
-> --
-> This email has been checked for viruses by AVG.
-> https://www.avg.com
-
-
---=20
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva     msn: alastair@d-silva.org
-blog: http://alastair.d-silva.org    Twitter: @EvilDeece
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index b4916dcc9e72..252e4f600155 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1206,6 +1206,7 @@ DEFINE_SIMPLE_PROP(interrupt_parent, "interrupt-parent", NULL)
+ DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-cells")
+ DEFINE_SIMPLE_PROP(power_domains, "power-domains", "#power-domain-cells")
+ DEFINE_SIMPLE_PROP(hwlocks, "hwlocks", "#hwlock-cells")
++DEFINE_SIMPLE_PROP(extcon, "extcon", NULL)
+ DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
+ DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
+ DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
+@@ -1230,6 +1231,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{ .parse_prop = parse_dmas, },
+ 	{ .parse_prop = parse_power_domains, },
+ 	{ .parse_prop = parse_hwlocks, },
++	{ .parse_prop = parse_extcon, },
+ 	{ .parse_prop = parse_regulators, },
+ 	{ .parse_prop = parse_gpio, },
+ 	{ .parse_prop = parse_gpios, },
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
 
