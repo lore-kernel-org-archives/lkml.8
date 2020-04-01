@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393DCC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCD5C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F3820658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4042120658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759055;
-	bh=/sxCgI7m/KNwNNLDpk1oZ+muSRGWzY76oNLMuJCpNmA=;
+	s=default; t=1585759058;
+	bh=wgwlB/3is5ib4vqbjhkV0kf88NONHyduGvwHtkIm3Uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h98EikIxmTPsVlX6TzcaDizYeUoOQBArVMr3lswBM6UAkuyIvTUeTxQOzcmVdZL/q
-	 nd8Nql2+1wxmebbHahBZRKgOe7YfAZ9REAIrhqt7q8zlf5QtVJuRWa2Immw1o4gCHI
-	 s6QyPT4xvF69oUxn0OIyqZRYKrYUsf7heRPctPZs=
+	b=elkxrj7H/o6nSWxXUFDX6raSPsgS5X40Ij5Hib5rtPuRaiArf9zyu+mnvMmsCaAkJ
+	 Sg5Y/DtayPf+UW4Gwa2GTLKxqGsgqxhgk0MFqORJYLbZ0e3/CwXUmnvjU8baw0HeCu
+	 HY4IXg11vF7FSwdL9TTiMEeaQkjf604MxJQd/UhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388832AbgDAQhe (ORCPT
+        id S2388950AbgDAQh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:37:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36704 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:37:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388975AbgDAQhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:37:32 -0400
+        id S2388964AbgDAQhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:37:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD1B820658;
-        Wed,  1 Apr 2020 16:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15DAC20658;
+        Wed,  1 Apr 2020 16:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759051;
-        bh=/sxCgI7m/KNwNNLDpk1oZ+muSRGWzY76oNLMuJCpNmA=;
+        s=default; t=1585759042;
+        bh=wgwlB/3is5ib4vqbjhkV0kf88NONHyduGvwHtkIm3Uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YkdqPB2xLgRkRbia/Ghum1Qlt5hbqpM3w01IgePt1lbhbCJsH81HkXkgxSREqUUNQ
-         cJkXT1y1t9NDK5cit1s2fFsDrxXdHt6Xsxmgf7WmqLmhE0QyRGe7Ea91H0KPgzqvz3
-         9nxhaV4NFhBGtrvXa5/4lcN+/jn6MNtUoByUaZ24=
+        b=l7OKP8BCis4HW2NQI7HQqAyGrso2Os57tvAGF1dcXaHpqRF5imMgPvMcImIuIZ866
+         28Qeg7c99bfKwyoujx7BjBPrpC5Z2ed9U5eQKRu3irDy7Dmw3Raqb38QapPlAkiZUl
+         3jGp1ntFFhX9DMuY3TxZcPMRXKneEc3WLvSAk2MM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dirk Mueller <dmueller@suse.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.9 061/102] scripts/dtc: Remove redundant YYLOC global declaration
-Date:   Wed,  1 Apr 2020 18:18:04 +0200
-Message-Id: <20200401161543.380204082@linuxfoundation.org>
+        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        stable@kernel.org, Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 4.9 058/102] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+Date:   Wed,  1 Apr 2020 18:18:01 +0200
+Message-Id: <20200401161543.179991154@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -60,52 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dirk Mueller <dmueller@suse.com>
+From: Roger Quadros <rogerq@ti.com>
 
-commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
+commit cfb5d65f25959f724081bae8445a0241db606af6 upstream.
 
-gcc 10 will default to -fno-common, which causes this error at link
-time:
+The L3 interconnect's memory map is from 0x0 to
+0xffffffff. Out of this, System memory (SDRAM) can be
+accessed from 0x80000000 to 0xffffffff (2GB)
 
-  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
+DRA7 does support 4GB of SDRAM but upper 2GB can only be
+accessed by the MPU subsystem.
 
-This is because both dtc-lexer as well as dtc-parser define the same
-global symbol yyloc. Before with -fcommon those were merged into one
-defintion. The proper solution would be to to mark this as "extern",
-however that leads to:
+Add the dma-ranges property to reflect the physical address limit
+of the L3 bus.
 
-  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
-   26 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-In file included from dtc-lexer.l:24:
-dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
-  127 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-cc1: all warnings being treated as errors
+Issues ere observed only with SATA on DRA7-EVM with 4GB RAM
+and CONFIG_ARM_LPAE enabled. This is because the controller
+supports 64-bit DMA and its driver sets the dma_mask to 64-bit
+thus resulting in DMA accesses beyond L3 limit of 2G.
 
-which means the declaration is completely redundant and can just be
-dropped.
+Setting the correct bus_dma_limit fixes the issue.
 
-Signed-off-by: Dirk Mueller <dmueller@suse.com>
-Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-[robh: cherry-pick from upstream]
-Cc: stable@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Cc: stable@kernel.org
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/dtc/dtc-lexer.l |    1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/dra7.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/scripts/dtc/dtc-lexer.l
-+++ b/scripts/dtc/dtc-lexer.l
-@@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
- 
--YYLTYPE yylloc;
- extern bool treesource_error;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -123,6 +123,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0x0 0x0 0x0 0xc0000000>;
++		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
+ 		ti,hwmods = "l3_main_1", "l3_main_2";
+ 		reg = <0x0 0x44000000 0x0 0x1000000>,
+ 		      <0x0 0x45000000 0x0 0x1000>;
 
 
