@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3009C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADECC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8AD22078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ECC220784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:23:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Df4c9yTb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UX/9Uu0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbgDASXn (ORCPT
+        id S1732926AbgDASXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:23:43 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40286 "EHLO
+        Wed, 1 Apr 2020 14:23:49 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47263 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732498AbgDASXm (ORCPT
+        by vger.kernel.org with ESMTP id S1732910AbgDASXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:23:42 -0400
+        Wed, 1 Apr 2020 14:23:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585765421;
+        s=mimecast20190719; t=1585765427;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4VtK5O6CtT6IFSJujN8Ou5Ycvv+Ua1bFKIedLGVkrzE=;
-        b=Df4c9yTb7oaxLFzSp9YMXUIBx2hQkp0N2KH4Bs36ahNa2fU0paigvZbTltu0jbZ/sq3ju3
-        Q9P0Kwx/vh42bEWJjdKCcwX7F+AzM1gfnwGe9p2L+4zJXyMXFt3wuisDZ/B6h8ZcWz5xNW
-        rOUWzyeWHSZHExW0zjaG2SXFDd4KHG8=
+        bh=8szS2/P4Z3/SR98iwz6z1Q9e8O85YRT99ZqA66Wzkvg=;
+        b=UX/9Uu0B1Wb3seIp4nFDjdqxpkOaOkGb5Kbo33ipDceJP/Bsn3j3uYQupswS+5ggahC9Mj
+        9QcXFyWEwk+WeUxriOCokQ/k3dv+awVXr40FN96UijteFmBaBmlLI8Ad4y1ZewBoo3TSLM
+        GPjyad6pW4el6KJJCYowd4Pg5piccuI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-1yNWy08vPQqTSplQx0tZAg-1; Wed, 01 Apr 2020 14:23:39 -0400
-X-MC-Unique: 1yNWy08vPQqTSplQx0tZAg-1
+ us-mta-485-SR-3u1lnPYadle6HyGLizQ-1; Wed, 01 Apr 2020 14:23:43 -0400
+X-MC-Unique: SR-3u1lnPYadle6HyGLizQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A20D5DB21;
-        Wed,  1 Apr 2020 18:23:38 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 691CD18A8C82;
+        Wed,  1 Apr 2020 18:23:41 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-118-135.phx2.redhat.com [10.3.118.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1AD4060BEC;
-        Wed,  1 Apr 2020 18:23:38 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BADDE60BEC;
+        Wed,  1 Apr 2020 18:23:40 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Miroslav Benes <mbenes@suse.cz>,
-        Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH 2/5] objtool: Support Clang non-section symbols in ORC dump
-Date:   Wed,  1 Apr 2020 13:23:26 -0500
-Message-Id: <b811b5eb1a42602c3b523576dc5efab9ad1c174d.1585761021.git.jpoimboe@redhat.com>
+        Julien Thierry <jthierry@redhat.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>
+Subject: [PATCH 5/5] objtool: Make BP scratch register warning more robust
+Date:   Wed,  1 Apr 2020 13:23:29 -0500
+Message-Id: <afc628693a37acd287e843bcc5c0430263d93c74.1585761021.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1585761021.git.jpoimboe@redhat.com>
 References: <cover.1585761021.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
@@ -64,100 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Historically, the relocation symbols for ORC entries have only been
-section symbols:
+If func is NULL, a seg fault can result.
 
-  .text+0: sp:sp+8 bp:(und) type:call end:0
+This is a theoretical issue which was found by Coverity.
 
-However, the Clang assembler is aggressive about stripping section
-symbols.  In that case we will need to use function symbols:
-
-  freezing_slow_path+0: sp:sp+8 bp:(und) type:call end:0
-
-In preparation for the generation of such entries in "objtool orc
-generate", add support for reading them in "objtool orc dump".
-
+Fixes: c705cecc8431 ("objtool: Track original function across branches")
+Addresses-Coverity-ID: 1492002 ("Dereference after null check")
+Reported-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- tools/objtool/orc_dump.c | 44 ++++++++++++++++++++++++----------------
- 1 file changed, 27 insertions(+), 17 deletions(-)
+ tools/objtool/check.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
-index 13ccf775a83a..ba4cbb1cdd63 100644
---- a/tools/objtool/orc_dump.c
-+++ b/tools/objtool/orc_dump.c
-@@ -66,7 +66,7 @@ int orc_dump(const char *_objname)
- 	char *name;
- 	size_t nr_sections;
- 	Elf64_Addr orc_ip_addr =3D 0;
--	size_t shstrtab_idx;
-+	size_t shstrtab_idx, strtab_idx =3D 0;
- 	Elf *elf;
- 	Elf_Scn *scn;
- 	GElf_Shdr sh;
-@@ -127,6 +127,8 @@ int orc_dump(const char *_objname)
-=20
- 		if (!strcmp(name, ".symtab")) {
- 			symtab =3D data;
-+		} else if (!strcmp(name, ".strtab")) {
-+			strtab_idx =3D i;
- 		} else if (!strcmp(name, ".orc_unwind")) {
- 			orc =3D data->d_buf;
- 			orc_size =3D sh.sh_size;
-@@ -138,7 +140,7 @@ int orc_dump(const char *_objname)
- 		}
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index c681a26c25ac..93fa7be67e9f 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2023,8 +2023,8 @@ static int validate_return(struct symbol *func, str=
+uct instruction *insn, struct
  	}
 =20
--	if (!symtab || !orc || !orc_ip)
-+	if (!symtab || !strtab_idx || !orc || !orc_ip)
- 		return 0;
+ 	if (state->bp_scratch) {
+-		WARN("%s uses BP as a scratch register",
+-		     func->name);
++		WARN_FUNC("BP used as a scratch register",
++			  insn->sec, insn->offset);
+ 		return 1;
+ 	}
 =20
- 	if (orc_size % sizeof(*orc) !=3D 0) {
-@@ -159,21 +161,29 @@ int orc_dump(const char *_objname)
- 				return -1;
- 			}
-=20
--			scn =3D elf_getscn(elf, sym.st_shndx);
--			if (!scn) {
--				WARN_ELF("elf_getscn");
--				return -1;
--			}
--
--			if (!gelf_getshdr(scn, &sh)) {
--				WARN_ELF("gelf_getshdr");
--				return -1;
--			}
--
--			name =3D elf_strptr(elf, shstrtab_idx, sh.sh_name);
--			if (!name || !*name) {
--				WARN_ELF("elf_strptr");
--				return -1;
-+			if (GELF_ST_TYPE(sym.st_info) =3D=3D STT_SECTION) {
-+				scn =3D elf_getscn(elf, sym.st_shndx);
-+				if (!scn) {
-+					WARN_ELF("elf_getscn");
-+					return -1;
-+				}
-+
-+				if (!gelf_getshdr(scn, &sh)) {
-+					WARN_ELF("gelf_getshdr");
-+					return -1;
-+				}
-+
-+				name =3D elf_strptr(elf, shstrtab_idx, sh.sh_name);
-+				if (!name) {
-+					WARN_ELF("elf_strptr");
-+					return -1;
-+				}
-+			} else {
-+				name =3D elf_strptr(elf, strtab_idx, sym.st_name);
-+				if (!name) {
-+					WARN_ELF("elf_strptr");
-+					return -1;
-+				}
- 			}
-=20
- 			printf("%s+%llx:", name, (unsigned long long)rela.r_addend);
 --=20
 2.21.1
 
