@@ -2,127 +2,156 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19E9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647B0C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46022054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDA52054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V3CmirXd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bpaHX75z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbgDASlG (ORCPT
+        id S1732550AbgDASl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:41:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44254 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732256AbgDASlG (ORCPT
+        Wed, 1 Apr 2020 14:41:27 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46622 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbgDASl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:41:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585766465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pzTGLslFpdHXx/n6KMH3BGb7tsrM58pPmhp9HcVvhO8=;
-        b=V3CmirXdWYh+cAhn1BJCb24bHJW1IUH6iMbwQBbw+gXQ94Zkzh3FluQU+8o3g3+GzaasHQ
-        3P7V126pd+nr2uDLNjaL9yhz10nkzCw7JaEGKPbPtOYmW6iuS0m2HQMAX9q6QVs3P7PZd9
-        qfkLHrlkuOqh33HPH3mg/ZEdo2Qm04Y=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-491-u7xh2wSMP9Gf1PUHjwFK1g-1; Wed, 01 Apr 2020 14:41:03 -0400
-X-MC-Unique: u7xh2wSMP9Gf1PUHjwFK1g-1
-Received: by mail-qv1-f72.google.com with SMTP id dh19so353678qvb.23
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 11:41:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pzTGLslFpdHXx/n6KMH3BGb7tsrM58pPmhp9HcVvhO8=;
-        b=KOdrB1OYOhGH3cNBvoeSw6XjV2eBe2b67h9Q+Al2fNLVExtD/JOWZ59RuArt/kwp8n
-         AMiBZaf7q1ZXRJpIE7Wh6jViqeFhnwIxJ4PA6cyyzRgbNHgisGQUnL+1i77s/Mzar9jA
-         CyweQnuVGhR+tTVsxPtgD/ISqcdbo1jn6VDnrt3vZ48bJEuJNzhCgcCf4ueKYN9iDf9J
-         py5RAbhfaBF9wmnWgFvO5sOcucTHj8Sfq56vbMsp/FlBljw7d0s0lnA5jVaETFS60+V5
-         eNoDIM/RcfnUHzK4/dcZ03lfTVVNgtFGwHsZxhfL9FyZY66LSucJdAKuR+AeWaxWdd+r
-         HgxA==
-X-Gm-Message-State: AGi0PuY/NRQMSSoNv5FI2CTcLdw1leFBF5TZhIbuDUARktY0DuOjqOdi
-        r86ncLSpsI8eUE2bfGUBCHUdBJqwrK3m4OZkGgu/GGDCfCahBHFwdcTY5+e599/6IpMYI7u7aEb
-        6NJZPnQ52fhSieU8G5R8jKULe3UjSsJTGGl/5ZPJD
-X-Received: by 2002:a37:648:: with SMTP id 69mr3518438qkg.353.1585766461857;
-        Wed, 01 Apr 2020 11:41:01 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIMc9bCIQd9ksmq77FTW3moC9s27DVolZ+N3n7aLO1hGL4TxDrRq+ThIzKWs+QVbAwQifLBL0Ju6m1/bPHQJ3o=
-X-Received: by 2002:a37:648:: with SMTP id 69mr3518405qkg.353.1585766461586;
- Wed, 01 Apr 2020 11:41:01 -0700 (PDT)
+        Wed, 1 Apr 2020 14:41:26 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031IdZbN048822;
+        Wed, 1 Apr 2020 18:40:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=4EuKkI1FgDUHa7f3yhLdd4Qr6gCWZ73+BoGG9fGqtWQ=;
+ b=bpaHX75zugPD8IcwwEfSwAZbX185+ocOT3IiOb2MByRjSddFi1VkEHG5DHv2i/lw8ub1
+ qL/CsXFLjShsUv3XIAVdC3XGYVkqi5triEUjloAr5MhE6nUvx2mF0mr9Q7QKkwbAwdvG
+ MjlsdMz3TWMp02m7GRhcDcB+kBIQqSUySU145aU8eS50Ruka9n0juY1Wx6Iq3z9eFSGh
+ MBAseM+pRUmcAB+jJzf2pYQu1BeWxgfmCZmMpHP7Dmr9WaC0X7+OpSMLN5fvOu5xJ0iG
+ S9/pW8B89OAxwBZebuunnT8UJvC1XouGuocqs60tWdy65mV3b0a5wlfCV8RKGQUO1mPj Tw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 303yun9sh2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 18:40:38 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031IcWdc176892;
+        Wed, 1 Apr 2020 18:38:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 302ga0ym75-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 18:38:37 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 031IcSj8006092;
+        Wed, 1 Apr 2020 18:38:28 GMT
+Received: from monkey.oracle.com (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 01 Apr 2020 11:38:28 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mina Almasry <almasrymina@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH v2 0/4] Clean up hugetlb boot command line processing
+Date:   Wed,  1 Apr 2020 11:38:15 -0700
+Message-Id: <20200401183819.20647-1-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200331192804.6019-1-eperezma@redhat.com> <c4d2b0b4-0b6d-cd74-0eb5-e7fdfe063d42@de.ibm.com>
-In-Reply-To: <c4d2b0b4-0b6d-cd74-0eb5-e7fdfe063d42@de.ibm.com>
-From:   Eugenio Perez Martin <eperezma@redhat.com>
-Date:   Wed, 1 Apr 2020 20:40:25 +0200
-Message-ID: <CAJaqyWc+fNzHE_p-pApZtj2ypNQfFLawCWf8GJmP8e=k=C+EgA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] vhost: Reset batched descriptors on SET_VRING_BASE call
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 9:19 AM Christian Borntraeger
-<borntraeger@de.ibm.com> wrote:
->
-> On 31.03.20 21:27, Eugenio P=C3=A9rez wrote:
-> > Vhost did not reset properly the batched descriptors on SET_VRING_BASE
-> > event. Because of that, is possible to return an invalid descriptor to
-> > the guest.
-> >
-> > This series ammend this, resetting them every time backend changes, and
-> > creates a test to assert correct behavior. To do that, they need to
-> > expose a new function in virtio_ring, virtqueue_reset_free_head, only
-> > on test code.
-> >
-> > Another useful thing would be to check if mutex is properly get in
-> > vq private_data accessors. Not sure if mutex debug code allow that,
-> > similar to C++ unique lock::owns_lock. Not acquiring in the function
-> > because caller code holds the mutex in order to perform more actions.
->
->
->
-> >
-> > v3:
-> > * Rename accesors functions.
-> > * Make scsi and test use the accesors too.
-> >
-> > v2:
-> > * Squashed commits.
-> > * Create vq private_data accesors (mst).
-> >
-> > This is meant to be applied on top of
-> > c4f1c41a6094582903c75c0dcfacb453c959d457 in
-> > git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git.
->
->
-> A quick test on s390 looks good.
->
+v2 -
+   Fix build errors with patch 1 (Will)
+   Change arch_hugetlb_valid_size arg to unsigned long and remove
+     irrelevant 'extern' keyword (Christophe)
+   Documentation and other misc changes (Randy, Christophe, Mina)
+   Do not process command line options if !hugepages_supported()
+     (Dave, but it sounds like we may want to additional changes to
+      hugepages_supported() for x86?  If that is needed I would prefer
+      a separate patch.)
 
-Really good to know :).
+Longpeng(Mike) reported a weird message from hugetlb command line processing
+and proposed a solution [1].  While the proposed patch does address the
+specific issue, there are other related issues in command line processing.
+As hugetlbfs evolved, updates to command line processing have been made to
+meet immediate needs and not necessarily in a coordinated manner.  The result
+is that some processing is done in arch specific code, some is done in arch
+independent code and coordination is problematic.  Semantics can vary between
+architectures.
 
-Would it be possible to investigate when qemu launches the offending ioctls=
-?
+The patch series does the following:
+- Define arch specific arch_hugetlb_valid_size routine used to validate
+  passed huge page sizes.
+- Move hugepagesz= command line parsing out of arch specific code and into
+  an arch independent routine.
+- Clean up command line processing to follow desired semantics and
+  document those semantics.
 
-Thanks!
+[1] https://lore.kernel.org/linux-mm/20200305033014.1152-1-longpeng2@huawei.com
+
+Mike Kravetz (4):
+  hugetlbfs: add arch_hugetlb_valid_size
+  hugetlbfs: move hugepagesz= parsing to arch independent code
+  hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
+  hugetlbfs: clean up command line processing
+
+ .../admin-guide/kernel-parameters.txt         |  35 +++--
+ Documentation/admin-guide/mm/hugetlbpage.rst  |  44 ++++++
+ arch/arm64/include/asm/hugetlb.h              |   2 +
+ arch/arm64/mm/hugetlbpage.c                   |  30 +---
+ arch/powerpc/include/asm/hugetlb.h            |   3 +
+ arch/powerpc/mm/hugetlbpage.c                 |  30 ++--
+ arch/riscv/include/asm/hugetlb.h              |   3 +
+ arch/riscv/mm/hugetlbpage.c                   |  24 +--
+ arch/s390/include/asm/hugetlb.h               |   3 +
+ arch/s390/mm/hugetlbpage.c                    |  24 +--
+ arch/sparc/include/asm/hugetlb.h              |   3 +
+ arch/sparc/mm/init_64.c                       |  43 ++----
+ arch/x86/include/asm/hugetlb.h                |   5 +
+ arch/x86/mm/hugetlbpage.c                     |  23 +--
+ include/linux/hugetlb.h                       |   8 +-
+ mm/hugetlb.c                                  | 141 ++++++++++++++----
+ 16 files changed, 252 insertions(+), 169 deletions(-)
+
+-- 
+2.25.1
 
