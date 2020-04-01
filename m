@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC069C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFDCC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F73820784
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C988220705
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759598;
-	bh=BDRnxjkLLGl0cAzOYdMWTic/foUoSslUvI3pJfjCOQI=;
+	s=default; t=1585759600;
+	bh=9SiWRo32QjcVcO92+jDFuQcYrCcSWv4U40YAVttABYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13/V+04EjO2BO0fHpoNbEpKvHv/bknggtuNYioUlHXhVeBEpFrbkzFG7rDUK5EgTH
-	 qRKnaLhwUqddpC8lvq2qMXQu1Y+ji1ctuSHuqTSuPCH7d5Si5TpLj9qUHvY4299oms
-	 ATF5bsP6A1xeOAQV6Jom2ijfJJ75JUUPtN3tG5gU=
+	b=rRn/6BSc/eUccQfZWvzN9sBxdZKlx4d5ATouslJ14qTNQo/lS2/EnTBlrJFPJG+dR
+	 ZxNRFfZb1KL8zPy9kcaZAGwJN25UjKNEXoQf24u1sUePMhF8UP84vZmKabQCVIriNB
+	 vd/0J/xB8St6BSlHNenefczOpqsrq4jK52FN6fik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389959AbgDAQqg (ORCPT
+        id S2389968AbgDAQqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:46:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389775AbgDAQqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:46:33 -0400
+        id S2388548AbgDAQqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:46:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58C4520705;
-        Wed,  1 Apr 2020 16:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E268520784;
+        Wed,  1 Apr 2020 16:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759592;
-        bh=BDRnxjkLLGl0cAzOYdMWTic/foUoSslUvI3pJfjCOQI=;
+        s=default; t=1585759595;
+        bh=9SiWRo32QjcVcO92+jDFuQcYrCcSWv4U40YAVttABYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i2C5vV+szXHv1ykryvGSCfDtiYcWSM7zLEhzR8y0ZY3ITx38W+k5AsztFvvlpl8R2
-         U4JCmmb3pB3bvFJxhMSwJ2aTbyKm1/EK+0cSriqhsqVngxsadp3q+SCNk/Rz9KbV9b
-         MNbx0De3MqssIBT9IpBaCf6joJdlLoaYEHUQXgK4=
+        b=SkwviGGQlorC+6Kz8066AyreRN7gJyp+F0DvRgH6l89GGjuBZ6YOtLhgFgweg2rlo
+         LSRGOTreRjglpLViV2HUVYU3D32CIhbfG+L87m1A6hLF3F2veJ98OcVqXFUehDQLVA
+         p7HHZv1wpLHnUsduBKbikbhojcZ1AmvOivaKp3Tk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.14 129/148] media: xirlink_cit: add missing descriptor sanity checks
-Date:   Wed,  1 Apr 2020 18:18:41 +0200
-Message-Id: <20200401161604.758832162@linuxfoundation.org>
+        stable@vger.kernel.org, Jouni Malinen <jouni@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.14 130/148] mac80211: Check port authorization in the ieee80211_tx_dequeue() case
+Date:   Wed,  1 Apr 2020 18:18:42 +0200
+Message-Id: <20200401161604.859161426@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -61,82 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jouni Malinen <jouni@codeaurora.org>
 
-commit a246b4d547708f33ff4d4b9a7a5dbac741dc89d8 upstream.
+commit ce2e1ca703071723ca2dd94d492a5ab6d15050da upstream.
 
-Make sure to check that we have two alternate settings and at least one
-endpoint before accessing the second altsetting structure and
-dereferencing the endpoint arrays.
+mac80211 used to check port authorization in the Data frame enqueue case
+when going through start_xmit(). However, that authorization status may
+change while the frame is waiting in a queue. Add a similar check in the
+dequeue case to avoid sending previously accepted frames after
+authorization change. This provides additional protection against
+potential leaking of frames after a station has been disconnected and
+the keys for it are being removed.
 
-This specifically avoids dereferencing NULL-pointers or corrupting
-memory when a device does not have the expected descriptors.
-
-Note that the sanity check in cit_get_packet_size() is not redundant as
-the driver is mixing looking up altsettings by index and by number,
-which may not coincide.
-
-Fixes: 659fefa0eb17 ("V4L/DVB: gspca_xirlink_cit: Add support for camera with a bcd version of 0.01")
-Fixes: 59f8b0bf3c12 ("V4L/DVB: gspca_xirlink_cit: support bandwidth changing for devices with 1 alt setting")
-Cc: stable <stable@vger.kernel.org>     # 2.6.37
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jouni Malinen <jouni@codeaurora.org>
+Link: https://lore.kernel.org/r/20200326155133.ced84317ea29.I34d4c47cd8cc8a4042b38a76f16a601fbcbfd9b3@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/xirlink_cit.c |   18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ net/mac80211/tx.c |   19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
---- a/drivers/media/usb/gspca/xirlink_cit.c
-+++ b/drivers/media/usb/gspca/xirlink_cit.c
-@@ -1451,6 +1451,9 @@ static int cit_get_packet_size(struct gs
- 		return -EIO;
- 	}
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -3451,8 +3451,25 @@ begin:
+ 	tx.skb = skb;
+ 	tx.sdata = vif_to_sdata(info->control.vif);
  
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	return le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- }
+-	if (txq->sta)
++	if (txq->sta) {
+ 		tx.sta = container_of(txq->sta, struct sta_info, sta);
++		/*
++		 * Drop unicast frames to unauthorised stations unless they are
++		 * EAPOL frames from the local station.
++		 */
++		if (unlikely(!ieee80211_vif_is_mesh(&tx.sdata->vif) &&
++			     tx.sdata->vif.type != NL80211_IFTYPE_OCB &&
++			     !is_multicast_ether_addr(hdr->addr1) &&
++			     !test_sta_flag(tx.sta, WLAN_STA_AUTHORIZED) &&
++			     (!(info->control.flags &
++				IEEE80211_TX_CTRL_PORT_CTRL_PROTO) ||
++			      !ether_addr_equal(tx.sdata->vif.addr,
++						hdr->addr2)))) {
++			I802_DEBUG_INC(local->tx_handlers_drop_unauth_port);
++			ieee80211_free_txskb(&local->hw, skb);
++			goto begin;
++		}
++	}
  
-@@ -2634,6 +2637,7 @@ static int sd_start(struct gspca_dev *gs
- 
- static int sd_isoc_init(struct gspca_dev *gspca_dev)
- {
-+	struct usb_interface_cache *intfc;
- 	struct usb_host_interface *alt;
- 	int max_packet_size;
- 
-@@ -2649,8 +2653,17 @@ static int sd_isoc_init(struct gspca_dev
- 		break;
- 	}
- 
-+	intfc = gspca_dev->dev->actconfig->intf_cache[0];
-+
-+	if (intfc->num_altsetting < 2)
-+		return -ENODEV;
-+
-+	alt = &intfc->altsetting[1];
-+
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	/* Start isoc bandwidth "negotiation" at max isoc bandwidth */
--	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	alt->endpoint[0].desc.wMaxPacketSize = cpu_to_le16(max_packet_size);
- 
- 	return 0;
-@@ -2673,6 +2686,9 @@ static int sd_isoc_nego(struct gspca_dev
- 		break;
- 	}
- 
-+	/*
-+	 * Existence of altsetting and endpoint was verified in sd_isoc_init()
-+	 */
- 	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	if (packet_size <= min_packet_size)
+ 	/*
+ 	 * The key can be removed while the packet was queued, so need to call
 
 
