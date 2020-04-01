@@ -2,50 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CCEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAF6C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D25820719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F6620714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759799;
-	bh=uM6mqHc8mG+R0J9fyU/JNku9LulLjyCCQrKjjm1JkP0=;
+	s=default; t=1585759802;
+	bh=AL7hoBSzUmkmWDlkQMwp9cp9Ui5kceVTauOdV7/oyJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dGxP40yEsgWLNZpw/wkkWREqdc/eFNmtMbANcKHMK9fHKjomawM/P13a5REZBEF70
-	 krWFnpRExmIiDS7teyMJ/Kw9CYwgC3EjfLL1tRTPKxRZwMIRTNfrIcix4XgKNkzeWb
-	 RLXuRawk9QZL/E4piD1ErzpelUzpEntP8mjdr9Ew=
+	b=tNQWCFtFsaZpvEdZ3U0Hlgw1ROXt/tLQlLkryt26QMV4KH2x6wdK4ErZym3fj/wIY
+	 HYDus0iDfldWH6FOInLKHkdqDQ92SJ3SznljJz6/0RHQE1V+28r3CaM9O9qdrPhVep
+	 KgltkUgvcCboByXmYwZClZ92P3ILFvmKc5WUknrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389629AbgDAQt6 (ORCPT
+        id S2389389AbgDAQlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:49:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41542 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:41:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389394AbgDAQlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:41:15 -0400
+        id S2389226AbgDAQlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:41:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 725092063A;
-        Wed,  1 Apr 2020 16:41:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2FB520658;
+        Wed,  1 Apr 2020 16:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759274;
-        bh=uM6mqHc8mG+R0J9fyU/JNku9LulLjyCCQrKjjm1JkP0=;
+        s=default; t=1585759260;
+        bh=AL7hoBSzUmkmWDlkQMwp9cp9Ui5kceVTauOdV7/oyJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YXPdvCt0/YOxoPuNKVi/g18q7k2yIgHxgblNomxCkQ/8qDbnz9hpBN+50Ho5jonrT
-         Z4o+d0B+Z+zRxXPVsGTWLiQEcCOBiFczrXgigavgD7h0b7AqWOgcznlTEx+G4Cgl3r
-         Qd4MJHExKNc32xR4vN/nWActRk/RgexC4qgF1fIQ=
+        b=EwvTnn+s/Yf6yy5ghkQh8biqqhWJ8c7tTp4DNV+Bo8thNTZ5dE54/jaYu3sXWumeR
+         2FqggyVZ2bkzvezEGadKTkzrb8QlbwcaSSiO+Oj3UzYPW1ZJ7YtDKd8m4dspha1ABZ
+         I5lIc7DGL7mGa7hdk9bY8D6TCn3EVqGm70EpTXvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 4.14 029/148] staging: rtl8188eu: Add device id for MERCUSYS MW150US v2
-Date:   Wed,  1 Apr 2020 18:17:01 +0200
-Message-Id: <20200401161555.334163641@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 024/148] ALSA: pcm: oss: Avoid plugin buffer overflow
+Date:   Wed,  1 Apr 2020 18:16:56 +0200
+Message-Id: <20200401161554.813184313@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -58,32 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Straube <straube.linux@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit bb5786b9286c253557a0115bc8d21879e61b7b94 upstream.
+commit f2ecf903ef06eb1bbbfa969db9889643d487e73a upstream.
 
-This device was added to the stand-alone driver on github.
-Add it to the staging driver as well.
+Each OSS PCM plugins allocate its internal buffer per pre-calculation
+of the max buffer size through the chain of plugins (calling
+src_frames and dst_frames callbacks).  This works for most plugins,
+but the rate plugin might behave incorrectly.  The calculation in the
+rate plugin involves with the fractional position, i.e. it may vary
+depending on the input position.  Since the buffer size
+pre-calculation is always done with the offset zero, it may return a
+shorter size than it might be; this may result in the out-of-bound
+access as spotted by fuzzer.
 
-Link: https://github.com/lwfinger/rtl8188eu/commit/2141f244c3e7
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200312093652.13918-1-straube.linux@gmail.com
+This patch addresses those possible buffer overflow accesses by simply
+setting the upper limit per the given buffer size for each plugin
+before src_frames() and after dst_frames() calls.
+
+Reported-by: syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/000000000000b25ea005a02bcf21@google.com
+Link: https://lore.kernel.org/r/20200309082148.19855-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/core/oss/pcm_plugin.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -46,6 +46,7 @@ static const struct usb_device_id rtw_us
- 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
- 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
- 	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
-+	{USB_DEVICE(0x2C4E, 0x0102)}, /* MERCUSYS MW150US v2 */
- 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
- 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
- 	{}	/* Terminating entry */
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -209,6 +209,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
+ 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin && drv_frames > 0) {
++			if (drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames)
+ 				drv_frames = plugin->src_frames(plugin, drv_frames);
+@@ -220,6 +222,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
+ 			plugin_next = plugin->next;
+ 			if (plugin->dst_frames)
+ 				drv_frames = plugin->dst_frames(plugin, drv_frames);
++			if (drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else
+@@ -248,11 +252,15 @@ snd_pcm_sframes_t snd_pcm_plug_slave_siz
+ 				if (frames < 0)
+ 					return frames;
+ 			}
++			if (frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin) {
++			if (frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames) {
+ 				frames = plugin->src_frames(plugin, frames);
 
 
