@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF57CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28692C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8478C215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9927212CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758603;
-	bh=gjhoOloQBD59gFMnNazCDCwzPSf+vl9lMqmIUM7SoHY=;
+	s=default; t=1585758607;
+	bh=RtkAOZXuRvJwL8YLTO8SpGSdqHr4pqf4Wyne0iQzA6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oKqcSho/JFcQvF1G/JPfHVgqTqRpmFCwmNH7bh4zmLpt4u0Ne/DtXGyw+hPMMQfp1
-	 NE5zTsnwWwY9JA4K/VCm+ERW8NXgZ6GvMxs2VUIfsxofMJLhi514QUtOcOMcB2STZE
-	 jhrZJ14kOPnVQ88wqZsEy+ktQ0Hsb1V5hcvYf1fk=
+	b=D1ox2l3z3547imhWNkTzYYuGK2yxHb/Z5ZfLRZqhzicfsJjNTwAfUDEU/R3PDqgGd
+	 FEd+76GJBR8tlO8l2BghEvYWCkuu19RbA/u9N1qIG0m0HDggO0A4CxjJNhplSAyh45
+	 o/np5oBNlpxFSD4rshOhjnQjN0abSeczUDivBnak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388240AbgDAQaB (ORCPT
+        id S2387668AbgDAQaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:30:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388221AbgDAQ3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:29:54 -0400
+        id S2387989AbgDAQaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:30:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E33A1212CC;
-        Wed,  1 Apr 2020 16:29:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A8D720658;
+        Wed,  1 Apr 2020 16:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758594;
-        bh=gjhoOloQBD59gFMnNazCDCwzPSf+vl9lMqmIUM7SoHY=;
+        s=default; t=1585758600;
+        bh=RtkAOZXuRvJwL8YLTO8SpGSdqHr4pqf4Wyne0iQzA6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CILycLgj7Pnq2cXOwiiP1eWi3M/wElQ1Ov751aq2styMQmhvpwQm2GWxfqpUlTm1t
-         9K4IcTIrYKHtBeCDvvkRpOhG40eSxiA6fgAwxFOjM9YuOMywqDKZRDXfRdpBWCARiq
-         +hHKHqHA7hFbdvbwnX7xMOcTUtF9S0Dc8DwLn3q8=
+        b=F0y7rJaRfdkSOCVTlH65Y7FCIXxjmhQjQin+fQY8q+oIhTafjSzPFhT7NCB6MX694
+         1FffCuqR1xNytYW1eNG8H/hihUmoz7hGY9E8hpL0YNGCuAw+ZWEAC10k8h622aCIOS
+         1QjWWnRY9EVpP2yhnGuJoZRHFAItyAojDJW6Ydf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 03/91] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
-Date:   Wed,  1 Apr 2020 18:16:59 +0200
-Message-Id: <20200401161513.966878867@linuxfoundation.org>
+Subject: [PATCH 4.4 05/91] drm/exynos: dsi: propagate error value and silence meaningless warning
+Date:   Wed,  1 Apr 2020 18:17:01 +0200
+Message-Id: <20200401161514.591113242@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -60,44 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 27f13774654ea6bd0b6fc9b97cce8d19e5735661 ]
+[ Upstream commit 0a9d1e3f3f038785ebc72d53f1c409d07f6b4ff5 ]
 
-'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
-devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
-has RAM above 32-bit boundary (accessible with LPAE config) though the
-PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
-property in PCIe RC DT nodes to indicate the host bridge can access
-only 32 bits.
+Properly propagate error value from devm_regulator_bulk_get() and don't
+confuse user with meaningless warning about failure in getting regulators
+in case of deferred probe.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Inki Dae <inki.dae@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra7.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index e6a3a94bac693..2cdaa38c114e8 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -227,6 +227,7 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
-+				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
-@@ -263,6 +264,7 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
-+				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index 12b03b3647034..1ee0b70472fd8 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -1899,8 +1899,9 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dsi->supplies),
+ 				      dsi->supplies);
+ 	if (ret) {
+-		dev_info(dev, "failed to get regulators: %d\n", ret);
+-		return -EPROBE_DEFER;
++		if (ret != -EPROBE_DEFER)
++			dev_info(dev, "failed to get regulators: %d\n", ret);
++		return ret;
+ 	}
+ 
+ 	dsi->clks = devm_kzalloc(dev,
 -- 
 2.20.1
 
