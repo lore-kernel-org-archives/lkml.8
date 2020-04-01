@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C04C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB10C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395D12137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82DE214DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:32:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758743;
-	bh=EqfmkvcYZIMbDwHY7Y9clByYbz047wdHWOhkUFeTWUM=;
+	s=default; t=1585758747;
+	bh=If+2ef+MMU2/Y/HWgpdpuL8hH5GfqGQEDo6IN9aP8sA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d2PZjQf9KiWW+xvVH//kQzzVis9m8e96Kkim+xcYxmYGKYcEzQWFayEH5P8i/2l6Y
-	 HVfUUCHYDx+fA9SfiM1TSrS0levyIqrlLbXDsqcbWJqaJOz2mr0zUrSAbEbdYciwSn
-	 /uMbuitog+NVRQE7qMy+pbOGeRLYX1XyBk9UpJzk=
+	b=PnTHT7dQQpqapN1d2kb8C6VM8vtyGaAnJQ/72HlFdVR7oy5q7ZSh9hWQ6Azk0EKEI
+	 vrdvvkOZQht0M9MGuM6Ro9PFymgLUZ1uGhm9g3hbDGav7JKgLip+L1zRQmyPD0smDk
+	 kpUj6qexFldky993a7fMEskpwmElzno84qY419BI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388414AbgDAQcW (ORCPT
+        id S2388071AbgDAQc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58708 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:32:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388378AbgDAQcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:32:19 -0400
+        id S1733300AbgDAQcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:32:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 427582063A;
-        Wed,  1 Apr 2020 16:32:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA358212CC;
+        Wed,  1 Apr 2020 16:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758738;
-        bh=EqfmkvcYZIMbDwHY7Y9clByYbz047wdHWOhkUFeTWUM=;
+        s=default; t=1585758743;
+        bh=If+2ef+MMU2/Y/HWgpdpuL8hH5GfqGQEDo6IN9aP8sA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z4bFnFrLgBZj9J+Z6wyyC32Soyc48aaEbq1TZw8cxz+DNd9hw7zTkLxB2thrqhbC5
-         ku0kFG3xOLPDOgMXncEO5zGLMYBCRblQlb8zGpdLS/kCeVyq+95POZSLrdf0lmqmRS
-         8HKlAC3x3sRAPW8GO0uZUbFmlbnJ8X2B9ILEGqOA=
+        b=kDhOkNg4qRZDTEyUgHbcRrtmtOcjp8u1OUs8FItfaE1PQn9rdmAhgxMxDoDP07MYP
+         +8TVyTMWfHh9NQA4o/l8JljOmqNE6bjnOoUJ/gQtwyY2Tx+3UFk0bbMMKE4yyK/D43
+         6zOl8j1lzj+qZkr8SWeeuyxdqSUpLVKKhVsaATSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunguang Xu <brookxu@tencent.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 22/91] memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister_event
-Date:   Wed,  1 Apr 2020 18:17:18 +0200
-Message-Id: <20200401161520.919936172@linuxfoundation.org>
+Subject: [PATCH 4.4 23/91] mm: slub: be more careful about the double cmpxchg of freelist
+Date:   Wed,  1 Apr 2020 18:17:19 +0200
+Message-Id: <20200401161521.226572987@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -64,120 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunguang Xu <brookxu@tencent.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 7d36665a5886c27ca4c4d0afd3ecc50b400f3587 upstream.
+commit 5076190daded2197f62fe92cf69674488be44175 upstream.
 
-An eventfd monitors multiple memory thresholds of the cgroup, closes them,
-the kernel deletes all events related to this eventfd.  Before all events
-are deleted, another eventfd monitors the memory threshold of this cgroup,
-leading to a crash:
+This is just a cleanup addition to Jann's fix to properly update the
+transaction ID for the slub slowpath in commit fd4d9c7d0c71 ("mm: slub:
+add missing TID bump..").
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000004
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0002) - not-present page
-  PGD 800000033058e067 P4D 800000033058e067 PUD 3355ce067 PMD 0
-  Oops: 0002 [#1] SMP PTI
-  CPU: 2 PID: 14012 Comm: kworker/2:6 Kdump: loaded Not tainted 5.6.0-rc4 #3
-  Hardware name: LENOVO 20AWS01K00/20AWS01K00, BIOS GLET70WW (2.24 ) 05/21/2014
-  Workqueue: events memcg_event_remove
-  RIP: 0010:__mem_cgroup_usage_unregister_event+0xb3/0x190
-  RSP: 0018:ffffb47e01c4fe18 EFLAGS: 00010202
-  RAX: 0000000000000001 RBX: ffff8bb223a8a000 RCX: 0000000000000001
-  RDX: 0000000000000001 RSI: ffff8bb22fb83540 RDI: 0000000000000001
-  RBP: ffffb47e01c4fe48 R08: 0000000000000000 R09: 0000000000000010
-  R10: 000000000000000c R11: 071c71c71c71c71c R12: ffff8bb226aba880
-  R13: ffff8bb223a8a480 R14: 0000000000000000 R15: 0000000000000000
-  FS:  0000000000000000(0000) GS:ffff8bb242680000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000004 CR3: 000000032c29c003 CR4: 00000000001606e0
-  Call Trace:
-    memcg_event_remove+0x32/0x90
-    process_one_work+0x172/0x380
-    worker_thread+0x49/0x3f0
-    kthread+0xf8/0x130
-    ret_from_fork+0x35/0x40
-  CR2: 0000000000000004
+The transaction ID is what protects us against any concurrent accesses,
+but we should really also make sure to make the 'freelist' comparison
+itself always use the same freelist value that we then used as the new
+next free pointer.
 
-We can reproduce this problem in the following ways:
+Jann points out that if we do all of this carefully, we could skip the
+transaction ID update for all the paths that only remove entries from
+the lists, and only update the TID when adding entries (to avoid the ABA
+issue with cmpxchg and list handling re-adding a previously seen value).
 
-1. We create a new cgroup subdirectory and a new eventfd, and then we
-   monitor multiple memory thresholds of the cgroup through this eventfd.
+But this patch just does the "make sure to cmpxchg the same value we
+used" rather than then try to be clever.
 
-2.  closing this eventfd, and __mem_cgroup_usage_unregister_event ()
-   will be called multiple times to delete all events related to this
-   eventfd.
-
-The first time __mem_cgroup_usage_unregister_event() is called, the
-kernel will clear all items related to this eventfd in thresholds->
-primary.
-
-Since there is currently only one eventfd, thresholds-> primary becomes
-empty, so the kernel will set thresholds-> primary and hresholds-> spare
-to NULL.  If at this time, the user creates a new eventfd and monitor
-the memory threshold of this cgroup, kernel will re-initialize
-thresholds-> primary.
-
-Then when __mem_cgroup_usage_unregister_event () is called for the
-second time, because thresholds-> primary is not empty, the system will
-access thresholds-> spare, but thresholds-> spare is NULL, which will
-trigger a crash.
-
-In general, the longer it takes to delete all events related to this
-eventfd, the easier it is to trigger this problem.
-
-The solution is to check whether the thresholds associated with the
-eventfd has been cleared when deleting the event.  If so, we do nothing.
-
-[akpm@linux-foundation.org: fix comment, per Kirill]
-Fixes: 907860ed381a ("cgroups: make cftype.unregister_event() void-returning")
-Signed-off-by: Chunguang Xu <brookxu@tencent.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com
+Acked-by: Jann Horn <jannh@google.com>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ mm/slub.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3480,7 +3480,7 @@ static void __mem_cgroup_usage_unregiste
- 	struct mem_cgroup_thresholds *thresholds;
- 	struct mem_cgroup_threshold_ary *new;
- 	unsigned long usage;
--	int i, j, size;
-+	int i, j, size, entries;
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2788,11 +2788,13 @@ redo:
+ 	barrier();
  
- 	mutex_lock(&memcg->thresholds_lock);
- 
-@@ -3500,14 +3500,20 @@ static void __mem_cgroup_usage_unregiste
- 	__mem_cgroup_threshold(memcg, type == _MEMSWAP);
- 
- 	/* Calculate new number of threshold */
--	size = 0;
-+	size = entries = 0;
- 	for (i = 0; i < thresholds->primary->size; i++) {
- 		if (thresholds->primary->entries[i].eventfd != eventfd)
- 			size++;
-+		else
-+			entries++;
- 	}
- 
- 	new = thresholds->spare;
- 
-+	/* If no items related to eventfd have been cleared, nothing to do */
-+	if (!entries)
-+		goto unlock;
+ 	if (likely(page == c->page)) {
+-		set_freepointer(s, tail_obj, c->freelist);
++		void **freelist = READ_ONCE(c->freelist);
 +
- 	/* Set thresholds array to NULL if we don't have thresholds */
- 	if (!size) {
- 		kfree(new);
++		set_freepointer(s, tail_obj, freelist);
+ 
+ 		if (unlikely(!this_cpu_cmpxchg_double(
+ 				s->cpu_slab->freelist, s->cpu_slab->tid,
+-				c->freelist, tid,
++				freelist, tid,
+ 				head, next_tid(tid)))) {
+ 
+ 			note_cmpxchg_failure("slab_free", s, tid);
 
 
