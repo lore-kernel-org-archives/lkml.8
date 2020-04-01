@@ -2,275 +2,149 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC227C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36F9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A0421BE5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD3120719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732028AbgDAGO4 (ORCPT
+        id S1731797AbgDAGUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:14:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37500 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731589AbgDAGOx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:14:53 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03163Kda033193
-        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 02:14:52 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3020700qhn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 02:14:52 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 1 Apr 2020 07:14:37 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 1 Apr 2020 07:14:32 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0316EioK56164436
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Apr 2020 06:14:44 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8FB55A4040;
-        Wed,  1 Apr 2020 06:14:44 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0703CA4059;
-        Wed,  1 Apr 2020 06:14:41 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.48.114])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Apr 2020 06:14:40 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
-        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
-        fweisbec@gmail.com, mingo@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        ravi.bangoria@linux.ibm.com
-Subject: [PATCH v2 16/16] powerpc/watchpoint/xmon: Support 2nd dawr
-Date:   Wed,  1 Apr 2020 11:43:09 +0530
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
-References: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
+        Wed, 1 Apr 2020 02:20:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:16166 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731725AbgDAGUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 02:20:45 -0400
+IronPort-SDR: 2BlpfwQSx3MjfEkkPGwzHYPntSAcyArNCDLo1pKQeznLc2BZNg8qbNQnohzDzCRbvvDf9xycUg
+ xpCcd4S3gYzw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 23:20:44 -0700
+IronPort-SDR: Qg2g9PH0dmwx2fAkJyMDkbjEDOQUrozu68kmwFTM79fb6iVItTcTqBgFQ+KtX9h7besy5FXr8K
+ InbBKpmawzbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
+   d="scan'208";a="395840762"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga004.jf.intel.com with ESMTP; 31 Mar 2020 23:20:41 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zi Yan <ziy@nvidia.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        =?utf-8?B?SsOp?= =?utf-8?B?csO0bWU=?= Glisse 
+        <jglisse@redhat.com>, Yang Shi <yang.shi@linux.alibaba.com>
+Subject: Re: [PATCH] /proc/PID/smaps: Add PMD migration entry parsing
+References: <20200331085604.1260162-1-ying.huang@intel.com>
+        <49386753-5984-f708-4153-e9c6de632439@yandex-team.ru>
+        <87mu7whr88.fsf@yhuang-dev.intel.com>
+        <a2ee2441-8ac7-84d2-8c7d-e28d80a6c413@yandex-team.ru>
+Date:   Wed, 01 Apr 2020 14:20:40 +0800
+In-Reply-To: <a2ee2441-8ac7-84d2-8c7d-e28d80a6c413@yandex-team.ru> (Konstantin
+        Khlebnikov's message of "Wed, 1 Apr 2020 09:03:45 +0300")
+Message-ID: <87a73viv5z.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040106-4275-0000-0000-000003B769D2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040106-4276-0000-0000-000038CCBB80
-Message-Id: <20200401061309.92442-17-ravi.bangoria@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999 suspectscore=2
- bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004010049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for 2nd DAWR in xmon. With this, we can have two
-simultaneous breakpoints from xmon.
+Konstantin Khlebnikov <khlebnikov@yandex-team.ru> writes:
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- arch/powerpc/xmon/xmon.c | 101 ++++++++++++++++++++++++++-------------
- 1 file changed, 69 insertions(+), 32 deletions(-)
+> On 01/04/2020 05.31, Huang, Ying wrote:
+>> Konstantin Khlebnikov <khlebnikov@yandex-team.ru> writes:
+>>
+>>> On 31/03/2020 11.56, Huang, Ying wrote:
+>>>> From: Huang Ying <ying.huang@intel.com>
+>>>>
+>>>> Now, when read /proc/PID/smaps, the PMD migration entry in page table is simply
+>>>> ignored.  To improve the accuracy of /proc/PID/smaps, its parsing and processing
+>>>> is added.
+>>>>
+>>>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>>>> Cc: Andrea Arcangeli <aarcange@redhat.com>
+>>>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>>> Cc: Zi Yan <ziy@nvidia.com>
+>>>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>>>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+>>>> Cc: Michal Hocko <mhocko@suse.com>
+>>>> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>>>> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+>>>> Cc: Yang Shi <yang.shi@linux.alibaba.com>
+>>>> ---
+>>>>    fs/proc/task_mmu.c | 16 ++++++++++++----
+>>>>    1 file changed, 12 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>>>> index 8d382d4ec067..b5b3aef8cb3b 100644
+>>>> --- a/fs/proc/task_mmu.c
+>>>> +++ b/fs/proc/task_mmu.c
+>>>> @@ -548,8 +548,17 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
+>>>>    	bool locked = !!(vma->vm_flags & VM_LOCKED);
+>>>>    	struct page *page;
+>>>
+>>>          struct page *page = NULL;
+>>
+>> Looks good.  Will do this in the next version.
+>>
+>>>>    -	/* FOLL_DUMP will return -EFAULT on huge zero page */
+>>>> -	page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
+>>>> +	if (pmd_present(*pmd)) {
+>>>> +		/* FOLL_DUMP will return -EFAULT on huge zero page */
+>>>> +		page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
+>>>> +	} else if (unlikely(is_swap_pmd(*pmd))) {
+>>>> +		swp_entry_t entry = pmd_to_swp_entry(*pmd);
+>>>> +
+>>>> +		VM_BUG_ON(!is_migration_entry(entry));
+>>>> +		page = migration_entry_to_page(entry);
+>>>
+>>>                  if (is_migration_entry(entry))
+>>>                          page = migration_entry_to_page(entry);
+>>>
+>>> Seems safer and doesn't add much code.
+>>
+>> With this, we lose an opportunity to capture some bugs during debugging.
+>> Right?
+>
+> You can keep VM_BUG_ON or VM_WARN_ON_ONCE
+>
+> Off-by-page in statistics isn't a big deal and not a good reason to crash (even debug) kernel.
+> But for normal build should use safe behaviour if this isn't hard.
 
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index a1e36501af25..4f2c8d4cbc38 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -111,7 +111,7 @@ struct bpt {
- 
- #define NBPTS	256
- static struct bpt bpts[NBPTS];
--static struct bpt dabr;
-+static struct bpt dabr[HBP_NUM_MAX];
- static struct bpt *iabr;
- static unsigned bpinstr = 0x7fe00008;	/* trap */
- 
-@@ -787,10 +787,17 @@ static int xmon_sstep(struct pt_regs *regs)
- 
- static int xmon_break_match(struct pt_regs *regs)
- {
-+	int i;
-+
- 	if ((regs->msr & (MSR_IR|MSR_PR|MSR_64BIT)) != (MSR_IR|MSR_64BIT))
- 		return 0;
--	if (dabr.enabled == 0)
--		return 0;
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (dabr[i].enabled)
-+			goto found;
-+	}
-+	return 0;
-+
-+found:
- 	xmon_core(regs, 0);
- 	return 1;
- }
-@@ -929,13 +936,16 @@ static void insert_bpts(void)
- 
- static void insert_cpu_bpts(void)
- {
-+	int i;
- 	struct arch_hw_breakpoint brk;
- 
--	if (dabr.enabled) {
--		brk.address = dabr.address;
--		brk.type = (dabr.enabled & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
--		brk.len = DABR_MAX_LEN;
--		__set_breakpoint(&brk, 0);
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (dabr[i].enabled) {
-+			brk.address = dabr[i].address;
-+			brk.type = (dabr[i].enabled & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
-+			brk.len = 8;
-+			__set_breakpoint(&brk, i);
-+		}
- 	}
- 
- 	if (iabr)
-@@ -1349,6 +1359,35 @@ static long check_bp_loc(unsigned long addr)
- 	return 1;
- }
- 
-+static int find_free_data_bpt(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (!dabr[i].enabled)
-+			return i;
-+	}
-+	printf("Couldn't find free breakpoint register\n");
-+	return -1;
-+}
-+
-+static void print_data_bpts(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (!dabr[i].enabled)
-+			continue;
-+
-+		printf("   data   "REG"  [", dabr[i].address);
-+		if (dabr[i].enabled & 1)
-+			printf("r");
-+		if (dabr[i].enabled & 2)
-+			printf("w");
-+		printf("]\n");
-+	}
-+}
-+
- static char *breakpoint_help_string =
-     "Breakpoint command usage:\n"
-     "b                show breakpoints\n"
-@@ -1382,10 +1421,9 @@ bpt_cmds(void)
- 			printf("Hardware data breakpoint not supported on this cpu\n");
- 			break;
- 		}
--		if (dabr.enabled) {
--			printf("Couldn't find free breakpoint register\n");
-+		i = find_free_data_bpt();
-+		if (i < 0)
- 			break;
--		}
- 		mode = 7;
- 		cmd = inchar();
- 		if (cmd == 'r')
-@@ -1394,15 +1432,15 @@ bpt_cmds(void)
- 			mode = 6;
- 		else
- 			termch = cmd;
--		dabr.address = 0;
--		dabr.enabled = 0;
--		if (scanhex(&dabr.address)) {
--			if (!is_kernel_addr(dabr.address)) {
-+		dabr[i].address = 0;
-+		dabr[i].enabled = 0;
-+		if (scanhex(&dabr[i].address)) {
-+			if (!is_kernel_addr(dabr[i].address)) {
- 				printf(badaddr);
- 				break;
- 			}
--			dabr.address &= ~HW_BRK_TYPE_DABR;
--			dabr.enabled = mode | BP_DABR;
-+			dabr[i].address &= ~HW_BRK_TYPE_DABR;
-+			dabr[i].enabled = mode | BP_DABR;
- 		}
- 
- 		force_enable_xmon();
-@@ -1441,7 +1479,9 @@ bpt_cmds(void)
- 			for (i = 0; i < NBPTS; ++i)
- 				bpts[i].enabled = 0;
- 			iabr = NULL;
--			dabr.enabled = 0;
-+			for (i = 0; i < nr_wp_slots(); i++)
-+				dabr[i].enabled = 0;
-+
- 			printf("All breakpoints cleared\n");
- 			break;
- 		}
-@@ -1475,14 +1515,7 @@ bpt_cmds(void)
- 		if (xmon_is_ro || !scanhex(&a)) {
- 			/* print all breakpoints */
- 			printf("   type            address\n");
--			if (dabr.enabled) {
--				printf("   data   "REG"  [", dabr.address);
--				if (dabr.enabled & 1)
--					printf("r");
--				if (dabr.enabled & 2)
--					printf("w");
--				printf("]\n");
--			}
-+			print_data_bpts();
- 			for (bp = bpts; bp < &bpts[NBPTS]; ++bp) {
- 				if (!bp->enabled)
- 					continue;
-@@ -1942,8 +1975,13 @@ static void dump_207_sprs(void)
- 
- 	printf("hfscr  = %.16lx  dhdes = %.16lx rpr    = %.16lx\n",
- 		mfspr(SPRN_HFSCR), mfspr(SPRN_DHDES), mfspr(SPRN_RPR));
--	printf("dawr   = %.16lx  dawrx = %.16lx ciabr  = %.16lx\n",
--		mfspr(SPRN_DAWR0), mfspr(SPRN_DAWRX0), mfspr(SPRN_CIABR));
-+	printf("dawr0  = %.16lx dawrx0 = %.16lx\n",
-+	       mfspr(SPRN_DAWR0), mfspr(SPRN_DAWRX0));
-+	if (nr_wp_slots() > 1) {
-+		printf("dawr1  = %.16lx dawrx1 = %.16lx\n",
-+		       mfspr(SPRN_DAWR1), mfspr(SPRN_DAWRX1));
-+	}
-+	printf("ciabr  = %.16lx\n", mfspr(SPRN_CIABR));
- #endif
- }
- 
-@@ -3868,10 +3906,9 @@ static void clear_all_bpt(void)
- 		bpts[i].enabled = 0;
- 
- 	/* Clear any data or iabr breakpoints */
--	if (iabr || dabr.enabled) {
--		iabr = NULL;
--		dabr.enabled = 0;
--	}
-+	iabr = NULL;
-+	for (i = 0; i < nr_wp_slots(); i++)
-+		dabr[i].enabled = 0;
- }
- 
- #ifdef CONFIG_DEBUG_FS
--- 
-2.21.1
+Sounds reasonable!  Will revise the code.  Thanks!
 
+Best Regards,
+Huang, Ying
+
+>>
+>> Best Regards,
+>> Huang, Ying
+>>
+>>>> +	} else {
+>>>> +		return;
+>>>> +	}
+>>>>    	if (IS_ERR_OR_NULL(page))
+>>>>    		return;
+>>>>    	if (PageAnon(page))
+>>>> @@ -578,8 +587,7 @@ static int smaps_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>>>>      	ptl = pmd_trans_huge_lock(pmd, vma);
+>>>>    	if (ptl) {
+>>>> -		if (pmd_present(*pmd))
+>>>> -			smaps_pmd_entry(pmd, addr, walk);
+>>>> +		smaps_pmd_entry(pmd, addr, walk);
+>>>>    		spin_unlock(ptl);
+>>>>    		goto out;
+>>>>    	}
+>>>>
