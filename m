@@ -2,155 +2,237 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDC8C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D45CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88F22078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:37:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLIfnCa9"
+	by mail.kernel.org (Postfix) with ESMTP id 4B25120772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731977AbgDAHhj (ORCPT
+        id S1732016AbgDAHiH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:37:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52752 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731849AbgDAHhi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:37:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t8so2046107wmi.2;
-        Wed, 01 Apr 2020 00:37:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0Y6Wj9TjOPkwLscHBPA5Cfe2j0fMXJtpZJ9SAqxrysY=;
-        b=gLIfnCa9RtFY4bg+BQkrVUO4Rvy87KxQjWbI4NQsRQAzQL0j7izLckcgIVc92kpaIC
-         xqfFVmbpVbso5u+xZy9+UrR6XKHdhiFyWltAqmDbM2rzuZLhLJVuH2NiPb5Z1MWAH88r
-         i9ocprWSufx8F2X7UhYwELcDpu5DwChiP80XwBruxSesGs8H9BwuFhDO4uTL/2sRJAsO
-         2OgSzLfNkoKmgtbn5Np6X7TqKUDOmWuTNl6Ej4D9PfKmZE2wX0V3cmWoxAN4vsz0EmaK
-         y8LoUpmUhQ4VOgyL7wxa0ALaHJABHW/scbpQl9TEhsNSVYHhxdd5qD9OTVmND9jgR1U7
-         QAEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=0Y6Wj9TjOPkwLscHBPA5Cfe2j0fMXJtpZJ9SAqxrysY=;
-        b=RcG9ys32HAjz4x5aqwzzOjoWuvynlHBnWn91d733D/I6aYEnS29r5dprwmSyAC+yEZ
-         sQheb8wRK6j3abnUIvsJfamnVbqZGZ3Z69Y979ejlym/Tt/PHZPyW2gzQ4cAnpnvED1Y
-         finjJmYehV4djg2e1whNkWSqVZK9PAX9VT+D5y4FoBHoNtR/sDgq4OLxAVww/SY9fzRR
-         uod0IsvpDZTx3vXaT3a1GHfVkwKKdFQyNIsDUYE/EjW+gkMT7WyF67t8sdrexHbigP9d
-         H9niZvD/2DPkbMSy4tazlwWSQPQS6I0jhcokOTGVJ/sTpMxqVScBpXYQGShmcQscinml
-         2LUg==
-X-Gm-Message-State: AGi0PuZ4Rmna/TAhpHHhKwGkW9+uo9MwWLxF5kmgeh6HCzK0YCBZc5AM
-        TDVgLBFmUXSCag0HX4Ao7pRY7h1J
-X-Google-Smtp-Source: APiQypIo6BlXDVUAujJm5bjFl9PFx10seyVOAuO+YssZ1j2o9iXGGnPhJ3AFEfXIPfLYVm9Tx24sew==
-X-Received: by 2002:a1c:dd8b:: with SMTP id u133mr2754794wmg.109.1585726655777;
-        Wed, 01 Apr 2020 00:37:35 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g3sm1793431wrm.66.2020.04.01.00.37.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Apr 2020 00:37:35 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] arm64: dts: rockchip: add #phy-cells to all usb2-phy nodes
-Date:   Wed,  1 Apr 2020 09:37:25 +0200
-Message-Id: <20200401073725.6063-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200401073725.6063-1-jbx6244@gmail.com>
-References: <20200401073725.6063-1-jbx6244@gmail.com>
+        Wed, 1 Apr 2020 03:38:07 -0400
+Received: from mga06.intel.com ([134.134.136.31]:65228 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731968AbgDAHiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 03:38:07 -0400
+IronPort-SDR: cwuIyNo63sIQoFzP4wlB/Lt8KOWp04LJQpr+5xPgoWdyEGn/BhD2VA6Aq6BCRiXV8+MtR9Fu0f
+ woeRpyWJ41cg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 00:38:05 -0700
+IronPort-SDR: qJldliYUR2XcyDxWgtedJMpFY/Vo1ZbIs/csueRUNAwXjyk9nBj6TAhYU5VWKZpzXWkQN+A/yk
+ grBX2A7Mp/Og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
+   d="scan'208";a="450443701"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga006.fm.intel.com with ESMTP; 01 Apr 2020 00:38:04 -0700
+Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 1 Apr 2020 00:38:04 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 1 Apr 2020 00:38:04 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
+ Wed, 1 Apr 2020 15:38:00 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Index: AQHWAEUcqZEEdiOKbEGofjWp2Yic+6hgi66AgANAF4A=
+Date:   Wed, 1 Apr 2020 07:38:00 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A21D5C2@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF8BC@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF8BC@SHSMSX104.ccr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files for Rockchip with 'usb2-phy' subnodes
-are manually verified. In order to automate this process
-phy-rockchip-inno-usb2.txt has been converted to yaml.
-'usb2-phy' nodes are now checked by:
-'phy-rockchip-inno-usb2.yaml' and 'phy-provider.yaml'.
-'#phy-cells' is now required for all usb2-phy nodes,
-so add them.
+ > From: Tian, Kevin <kevin.tian@intel.com>
+> Sent: Monday, March 30, 2020 7:49 PM
+> To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+> userspace
+> 
+> > From: Liu, Yi L <yi.l.liu@intel.com>
+> > Sent: Sunday, March 22, 2020 8:32 PM
+> >
+> > From: Liu Yi L <yi.l.liu@intel.com>
+> >
+> > VFIO exposes IOMMU nesting translation (a.k.a dual stage translation)
+> > capability to userspace. Thus applications like QEMU could support
+> > vIOMMU with hardware's nesting translation capability for pass-through
+> > devices. Before setting up nesting translation for pass-through
+> > devices, QEMU and other applications need to learn the supported
+> > 1st-lvl/stage-1 translation structure format like page table format.
+> >
+> > Take vSVA (virtual Shared Virtual Addressing) as an example, to
+> > support vSVA for pass-through devices, QEMU setup nesting translation
+> > for pass- through devices. The guest page table are configured to host
+> > as 1st-lvl/
+> > stage-1 page table. Therefore, guest format should be compatible with
+> > host side.
+> >
+> > This patch reports the supported 1st-lvl/stage-1 page table format on
+> > the current platform to userspace. QEMU and other alike applications
+> > should use this format info when trying to setup IOMMU nesting
+> > translation on host IOMMU.
+> >
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Eric Auger <eric.auger@redhat.com>
+> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > ---
+> >  drivers/vfio/vfio_iommu_type1.c | 56
+> > +++++++++++++++++++++++++++++++++++++++++
+> >  include/uapi/linux/vfio.h       |  1 +
+> >  2 files changed, 57 insertions(+)
+> >
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> > b/drivers/vfio/vfio_iommu_type1.c index 9aa2a67..82a9e0b 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -2234,11 +2234,66 @@ static int vfio_iommu_type1_pasid_free(struct
+> > vfio_iommu *iommu,
+> >  	return ret;
+> >  }
+> >
+> > +static int vfio_iommu_get_stage1_format(struct vfio_iommu *iommu,
+> > +					 u32 *stage1_format)
+> > +{
+> > +	struct vfio_domain *domain;
+> > +	u32 format = 0, tmp_format = 0;
+> > +	int ret;
+> > +
+> > +	mutex_lock(&iommu->lock);
+> > +	if (list_empty(&iommu->domain_list)) {
+> > +		mutex_unlock(&iommu->lock);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	list_for_each_entry(domain, &iommu->domain_list, next) {
+> > +		if (iommu_domain_get_attr(domain->domain,
+> > +			DOMAIN_ATTR_PASID_FORMAT, &format)) {
+> > +			ret = -EINVAL;
+> > +			format = 0;
+> > +			goto out_unlock;
+> > +		}
+> > +		/*
+> > +		 * format is always non-zero (the first format is
+> > +		 * IOMMU_PASID_FORMAT_INTEL_VTD which is 1). For
+> > +		 * the reason of potential different backed IOMMU
+> > +		 * formats, here we expect to have identical formats
+> > +		 * in the domain list, no mixed formats support.
+> > +		 * return -EINVAL to fail the attempt of setup
+> > +		 * VFIO_TYPE1_NESTING_IOMMU if non-identical formats
+> > +		 * are detected.
+> > +		 */
+> > +		if (tmp_format && tmp_format != format) {
+> > +			ret = -EINVAL;
+> > +			format = 0;
+> > +			goto out_unlock;
+> > +		}
+> > +
+> > +		tmp_format = format;
+> > +	}
+> 
+> this path is invoked only in VFIO_IOMMU_GET_INFO path. If we don't want to
+> assume the status quo that one container holds only one device w/ vIOMMU
+> (the prerequisite for vSVA), looks we also need check the format
+> compatibility when attaching a new group to this container?
 
-make -k ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/
-phy/phy-rockchip-inno-usb2.yaml
+right. if attaching to a nesting type container (vfio_iommu.nesting bit
+indicates it), it should check if it is compabile with prior domains in
+the domain list. But if it is the first one attached to this container,
+it's fine. is it good?
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi   | 5 +++--
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 3 ++-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++--
- 3 files changed, 9 insertions(+), 5 deletions(-)
+> > +	ret = 0;
+> > +
+> > +out_unlock:
+> > +	if (format)
+> > +		*stage1_format = format;
+> > +	mutex_unlock(&iommu->lock);
+> > +	return ret;
+> > +}
+> > +
+> >  static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+> >  					 struct vfio_info_cap *caps)
+> >  {
+> >  	struct vfio_info_cap_header *header;
+> >  	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
+> > +	u32 formats = 0;
+> > +	int ret;
+> > +
+> > +	ret = vfio_iommu_get_stage1_format(iommu, &formats);
+> > +	if (ret) {
+> > +		pr_warn("Failed to get stage-1 format\n");
+> > +		return ret;
+> > +	}
+> >
+> >  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+> >  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING,
+> > 1);
+> > @@ -2254,6 +2309,7 @@ static int
+> > vfio_iommu_info_add_nesting_cap(struct
+> > vfio_iommu *iommu,
+> >  		/* nesting iommu type supports PASID requests (alloc/free) */
+> >  		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
+> >  	}
+> > +	nesting_cap->stage1_formats = formats;
+> >
+> >  	return 0;
+> >  }
+> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > index ed9881d..ebeaf3e 100644
+> > --- a/include/uapi/linux/vfio.h
+> > +++ b/include/uapi/linux/vfio.h
+> > @@ -763,6 +763,7 @@ struct vfio_iommu_type1_info_cap_nesting {
+> >  	struct	vfio_info_cap_header header;
+> >  #define VFIO_IOMMU_PASID_REQS	(1 << 0)
+> >  	__u32	nesting_capabilities;
+> > +	__u32	stage1_formats;
+> 
+> do you plan to support multiple formats? If not, use singular name.
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index bd5f51d23..6f7171290 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -822,10 +822,11 @@
- 			reg = <0x100 0x20>;
- 			clocks = <&pmucru SCLK_USBPHY_REF>;
- 			clock-names = "phyclk";
--			#clock-cells = <0>;
-+			clock-output-names = "usb480m_phy";
- 			assigned-clocks = <&cru USB480M>;
- 			assigned-clock-parents = <&u2phy>;
--			clock-output-names = "usb480m_phy";
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 			status = "disabled";
- 
- 			u2phy_host: host-port {
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 8976c869f..470783a48 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -830,9 +830,10 @@
- 			clocks = <&xin24m>;
- 			clock-names = "phyclk";
- 			clock-output-names = "usb480m_phy";
--			#clock-cells = <0>;
- 			assigned-clocks = <&cru USB480M>;
- 			assigned-clock-parents = <&u2phy>;
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 			status = "disabled";
- 
- 			u2phy_otg: otg-port {
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 3dc8fe620..a7ee5aa65 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1391,8 +1391,9 @@
- 			reg = <0xe450 0x10>;
- 			clocks = <&cru SCLK_USB2PHY0_REF>;
- 			clock-names = "phyclk";
--			#clock-cells = <0>;
- 			clock-output-names = "clk_usbphy0_480m";
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 			status = "disabled";
- 
- 			u2phy0_host: host-port {
-@@ -1418,8 +1419,9 @@
- 			reg = <0xe460 0x10>;
- 			clocks = <&cru SCLK_USB2PHY1_REF>;
- 			clock-names = "phyclk";
--			#clock-cells = <0>;
- 			clock-output-names = "clk_usbphy1_480m";
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 			status = "disabled";
- 
- 			u2phy1_host: host-port {
--- 
-2.11.0
+I do have such plan. e.g. it may be helpful when one day a platform can
+support multiple formats.
 
+Regards,
+Yi Liu
