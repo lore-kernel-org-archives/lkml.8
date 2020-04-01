@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B054C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9659C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF19D212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842F620658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758050;
-	bh=QqJtODqh4iafCBejlvKjMTU8UnuGWAdCjG5NA7YuM10=;
+	s=default; t=1585758052;
+	bh=ETc9gsiahZ4Pty8Vw11tG9m3QQorzMwTAanEJJvVprM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qA+SZcILcoJQ036A4ANI8pngVixJsCHGVJVKCnNj2ahEyQ9gJ7ZfZVvJtc/qG4REW
-	 2m3GXH01p99f2PTZALSjpdPNNRhlyVQ6nukRURua6iakRXkLegfzQst1gwRHu0nbg4
-	 WQHV4+j6yxqJ2XjrS59zyqAZu9e0zMFHcNCwC4Yc=
+	b=H+8XxHQQLOAq55IrWslS2xYB+PbkgMVyFSuilA6C7WgT/IwixLrsksGUxOE3whEdR
+	 Pbd9KqMSqS0JDuQ5fgrWACAasiqw/Pa2h+SW0q8nofroiG1Vz7LxukavzN3Too30fu
+	 xoq+8iAp6vb/GyRMLuD3AweH31quemNteSzyVi9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbgDAQUt (ORCPT
+        id S1733176AbgDAQUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:20:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733168AbgDAQUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Apr 2020 12:20:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732279AbgDAQUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:20:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A8A0212CC;
-        Wed,  1 Apr 2020 16:20:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D1F214DB;
+        Wed,  1 Apr 2020 16:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758047;
-        bh=QqJtODqh4iafCBejlvKjMTU8UnuGWAdCjG5NA7YuM10=;
+        s=default; t=1585758043;
+        bh=ETc9gsiahZ4Pty8Vw11tG9m3QQorzMwTAanEJJvVprM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TX+vrL2tAI2VtzcxkwxWM3y7m5ir3ZnQw1RZoeRx5M299hbbQ3KNYx0F/RNRTtOTd
-         2tmF5mYMa4YdOFioz1Q/gIsXvNx4tG/s0zLdxFxXL+CSGf/7YgwASVx9mBlOIyJGe/
-         h/rUMwAK5ZBe8/z7JrjrpShZ94xFFkDGEfks4LPE=
+        b=QvOsHKBmfHZNnpRxMxA9UF1tFXU50YFb1n6B5kQQyB19a9/mieLKZLDeBDQCcy9Hf
+         HvP9xJJ9upbY0D4ACBvIAlaNqcv/M5kVEZ5x1sjJ51NMlR04yLUkEd451u3oHC56+x
+         biwnyahK57kKvyeCYvrzmon8Bfp7xwJPr3fEPZWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Lanqing Liu <liuhhome@gmail.com>
-Subject: [PATCH 5.5 04/30] serial: sprd: Fix a dereference warning
-Date:   Wed,  1 Apr 2020 18:17:08 +0200
-Message-Id: <20200401161417.605801573@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Woody Suwalski <terraluna977@gmail.com>
+Subject: [PATCH 5.5 03/30] mac80211: fix authentication with iwlwifi/mvm
+Date:   Wed,  1 Apr 2020 18:17:07 +0200
+Message-Id: <20200401161417.037219061@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.345528747@linuxfoundation.org>
 References: <20200401161414.345528747@linuxfoundation.org>
@@ -59,44 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lanqing Liu <liuhhome@gmail.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit efc176929a3505a30c3993ddd393b40893649bd2 upstream.
+commit be8c827f50a0bcd56361b31ada11dc0a3c2fd240 upstream.
 
-We should validate if the 'sup' is NULL or not before freeing DMA
-memory, to fix below warning.
+The original patch didn't copy the ieee80211_is_data() condition
+because on most drivers the management frames don't go through
+this path. However, they do on iwlwifi/mvm, so we do need to keep
+the condition here.
 
-"drivers/tty/serial/sprd_serial.c:1141 sprd_remove()
- error: we previously assumed 'sup' could be null (see line 1132)"
-
-Fixes: f4487db58eb7 ("serial: sprd: Add DMA mode support")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/e2bd92691538e95b04a2c2a728f3292e1617018f.1584325957.git.liuhhome@gmail.com
+Cc: stable@vger.kernel.org
+Fixes: ce2e1ca70307 ("mac80211: Check port authorization in the ieee80211_tx_dequeue() case")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Woody Suwalski <terraluna977@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sprd_serial.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/mac80211/tx.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -1136,14 +1136,13 @@ static int sprd_remove(struct platform_d
- 	if (sup) {
- 		uart_remove_one_port(&sprd_uart_driver, &sup->port);
- 		sprd_port[sup->port.line] = NULL;
-+		sprd_rx_free_buf(sup);
- 		sprd_ports_num--;
- 	}
- 
- 	if (!sprd_ports_num)
- 		uart_unregister_driver(&sprd_uart_driver);
- 
--	sprd_rx_free_buf(sup);
--
- 	return 0;
- }
- 
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -3610,7 +3610,8 @@ begin:
+ 		 * Drop unicast frames to unauthorised stations unless they are
+ 		 * EAPOL frames from the local station.
+ 		 */
+-		if (unlikely(!ieee80211_vif_is_mesh(&tx.sdata->vif) &&
++		if (unlikely(ieee80211_is_data(hdr->frame_control) &&
++			     !ieee80211_vif_is_mesh(&tx.sdata->vif) &&
+ 			     tx.sdata->vif.type != NL80211_IFTYPE_OCB &&
+ 			     !is_multicast_ether_addr(hdr->addr1) &&
+ 			     !test_sta_flag(tx.sta, WLAN_STA_AUTHORIZED) &&
 
 
