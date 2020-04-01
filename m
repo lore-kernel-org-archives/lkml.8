@@ -4,55 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B562FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354CBC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4AF215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CDC20BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758326;
-	bh=+Bubee5EQU1n36vkgo2xupBzeF9rBpZYrdoxdCB6/lw=;
+	s=default; t=1585758327;
+	bh=njbwwtwH2gQSrWyiV6cvvDdtJ368sq8JCDsnpEetON0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ou5393WYhasSZ2cfj0Vii2dsKe20sSfHTZP6ZEQuvs0iXzEzrZY7l1IctRBtX6Pqk
-	 EqchKTMQ1gwzm2Qw5Ridj6zE9v9NYcBLizFiLnRwUP7KbrD6Q0V7qunoIq3oFNNW4w
-	 a6QyfSANg/LFuKO75rgSW2drIB83tNOFRglLpTHQ=
+	b=xu8TZv2jHlQHX4WMacGYzMUawrVb8xXXx4HBFz9dd6POfWjpchFHHMh0SRisDRVsx
+	 eO6AMu3n6IzqvanCXNMLB9juJHiPsXQKE9EajTNldxxzkRUaLHMWOzvTZZDPie/cty
+	 FjetoWEdDOkby1r4qX9wi5J+QYNgpSP+wKyS6inA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387559AbgDAQZZ (ORCPT
+        id S2387825AbgDAQZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:25:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49368 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387484AbgDAQZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:25:22 -0400
+        id S2387801AbgDAQZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:25:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E2B320BED;
-        Wed,  1 Apr 2020 16:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C1E320857;
+        Wed,  1 Apr 2020 16:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758321;
-        bh=+Bubee5EQU1n36vkgo2xupBzeF9rBpZYrdoxdCB6/lw=;
+        s=default; t=1585758324;
+        bh=njbwwtwH2gQSrWyiV6cvvDdtJ368sq8JCDsnpEetON0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wDDNi7gBDx2rbxhqR1J6CAkRkf6C6MDh5746Vsxv6g/l7vAhAncW3L3w5Kaf/rYMJ
-         jb0Px7Sh4FAheYAXdgmNHz9K3b3bAyLPffWlgRQlEwF+KXi1LQRRsJ5VIaqUvXuybP
-         udmELYtThzI4ZFy4FDhNavSKp0c+a9wnUWu2eHNQ=
+        b=P20xopqw5OL7Z2zXXO2CRpdb+0+GP7x55VKCWuTYxfHwRBWrkdMgloTPd9tK4L28o
+         J9QcgD0DYZoqJNkBmfFADmZ3FI5aUqmHvMsfcso35KI0XfQzLyuiuC9A7gkmW+OLJN
+         sT3N6/aYCvZJOqI7dzWV9juucr5kcdQd0WH7yJeE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
         Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 054/116] perf probe: Do not depend on dwfl_module_addrsym()
-Date:   Wed,  1 Apr 2020 18:17:10 +0200
-Message-Id: <20200401161549.560440252@linuxfoundation.org>
+Subject: [PATCH 4.19 055/116] tools: Let O= makes handle a relative path with -C option
+Date:   Wed,  1 Apr 2020 18:17:11 +0200
+Message-Id: <20200401161549.700262829@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -67,61 +71,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 1efde2754275dbd9d11c6e0132a4f09facf297ab upstream.
+commit be40920fbf1003c38ccdc02b571e01a75d890c82 upstream.
 
-Do not depend on dwfl_module_addrsym() because it can fail on user-space
-shared libraries.
+When I tried to compile tools/perf from the top directory with the -C
+option, the O= option didn't work correctly if I passed a relative path:
 
-Actually, same bug was fixed by commit 664fee3dc379 ("perf probe: Do not
-use dwfl_module_addrsym if dwarf_diename finds symbol name"), but commit
-07d369857808 ("perf probe: Fix wrong address verification) reverted to
-get actual symbol address from symtab.
+  $ make O=BUILD -C tools/perf/
+  make: Entering directory '/home/mhiramat/ksrc/linux/tools/perf'
+    BUILD:   Doing 'make -j8' parallel build
+  ../scripts/Makefile.include:4: *** O=/home/mhiramat/ksrc/linux/tools/perf/BUILD does not exist.  Stop.
+  make: *** [Makefile:70: all] Error 2
+  make: Leaving directory '/home/mhiramat/ksrc/linux/tools/perf'
 
-This fixes it again by getting symbol address from DIE, and only if the
-DIE has only address range, it uses dwfl_module_addrsym().
+The O= directory existence check failed because the check script ran in
+the build target directory instead of the directory where I ran the make
+command.
 
-Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
-Reported-by: Alexandre Ghiti <alex@ghiti.fr>
+To fix that, once change directory to $(PWD) and check O= directory,
+since the PWD is set to where the make command runs.
+
+Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Michal Marek <michal.lkml@markovi.net>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Sasha Levin <sashal@kernel.org>
-Link: http://lore.kernel.org/lkml/158281812176.476.14164573830975116234.stgit@devnote2
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/158351957799.3363.15269768530697526765.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/probe-finder.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ tools/perf/Makefile            |    2 +-
+ tools/scripts/Makefile.include |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -623,14 +623,19 @@ static int convert_to_trace_point(Dwarf_
- 		return -EINVAL;
- 	}
+--- a/tools/perf/Makefile
++++ b/tools/perf/Makefile
+@@ -35,7 +35,7 @@ endif
+ # Only pass canonical directory names as the output directory:
+ #
+ ifneq ($(O),)
+-  FULL_O := $(shell readlink -f $(O) || echo $(O))
++  FULL_O := $(shell cd $(PWD); readlink -f $(O) || echo $(O))
+ endif
  
--	/* Try to get actual symbol name from symtab */
--	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-+	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
-+		/* If the DIE has entrypc, use it. */
-+		symbol = dwarf_diename(sp_die);
-+	} else {
-+		/* Try to get actual symbol name and address from symtab */
-+		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-+		eaddr = sym.st_value;
-+	}
- 	if (!symbol) {
- 		pr_warning("Failed to find symbol at 0x%lx\n",
- 			   (unsigned long)paddr);
- 		return -ENOENT;
- 	}
--	eaddr = sym.st_value;
- 
- 	tp->offset = (unsigned long)(paddr - eaddr);
- 	tp->address = (unsigned long)paddr;
+ #
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ ifneq ($(O),)
+ ifeq ($(origin O), command line)
+-	dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
+-	ABSOLUTE_O := $(shell cd $(O) ; pwd)
++	dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
++	ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
+ 	OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
+ 	COMMAND_O := O=$(ABSOLUTE_O)
+ ifeq ($(objtree),)
 
 
