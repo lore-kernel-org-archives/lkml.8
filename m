@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6DDC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B91C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F051B20857
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621E921655
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758414;
-	bh=OVm+jbi7TFRfCADhUrWLyr18JMH1hHF+qU86kaYm5/E=;
+	s=default; t=1585758416;
+	bh=VG0NiHdi3TlnW4vQx2Fos3Trvv1k3/p0YMmSv0f118o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LrZzf8p07PZGNDI85krmK/PeaRyVrlN4jSnq9CWkw+3ptTaMk1/GLAvHVl91+uVx/
-	 24kJwNJ2oJ/ZI+snk+J35H4n8mesHm7234JMmFhfXnny6x4/Doo/xz/sQI/wguR95c
-	 TgYgEL8JDzD7U6Fj3KVa3+D889IN1neV56SkgzxQ=
+	b=KkO5LETXEeMBE/WTXnCLF6j3X54elbUWEMj1Ry9K8KQMIQETJZx7pRuP9HmOEgWYH
+	 RoLqUWIZhjIOOD0lkWxYd1oItCg6LnPy1pQGZ74BmVdAnejQecrl33m5YXpDSdvz+Y
+	 VmLSi6hFTZkEprdDlTiWoUgUMQCixPhFzG9YaAu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387940AbgDAQ0w (ORCPT
+        id S2387950AbgDAQ0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51270 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387675AbgDAQ0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:26:45 -0400
+        id S2387893AbgDAQ0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:26:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF14220BED;
-        Wed,  1 Apr 2020 16:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED23F20857;
+        Wed,  1 Apr 2020 16:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758404;
-        bh=OVm+jbi7TFRfCADhUrWLyr18JMH1hHF+qU86kaYm5/E=;
+        s=default; t=1585758395;
+        bh=VG0NiHdi3TlnW4vQx2Fos3Trvv1k3/p0YMmSv0f118o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jiFwkUOZrvTAGkQK53VcPTKsN78gwkOiA/aCILYobfC/Kav9txgHcqpWGPF/IdHGY
-         PRVKGP/Rjs1yP0et8fCUGl/9PH9A2EdU+nh/uXr5mJGB/JAGUTvsFcDOZzzWrOQA2O
-         eMOEKGHdTnJXtq5PKNblPcPNsUzNd7BLUCm80YbY=
+        b=mBY4ImPNiVrNRSKuGwt0WAf3jKpfplI6fuDrdMlLReJf8RGXD0G80j0QtUehQv6yh
+         f2ZnJY/RnGhlQ3p7zcHbAUiVN4yvvN/3o7zPcn6V+S/lK5sWHkur8BpFWeR/g7vQdR
+         WXDEJfFWg4wR82J3koRhW6BVZdqWgvazRlygmp/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/116] mac80211: set IEEE80211_TX_CTRL_PORT_CTRL_PROTO for nl80211 TX
-Date:   Wed,  1 Apr 2020 18:17:34 +0200
-Message-Id: <20200401161552.658638343@linuxfoundation.org>
+Subject: [PATCH 4.19 076/116] Revert "r8169: check that Realtek PHY driver module is loaded"
+Date:   Wed,  1 Apr 2020 18:17:32 +0200
+Message-Id: <20200401161552.481298942@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -59,61 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit b95d2ccd2ccb834394d50347d0e40dc38a954e4a ]
+This reverts commit 85a19b0e31e256e77fd4124804b9cec10619de5e which is
+commit f325937735498afb054a0195291bbf68d0b60be5 upstream.
 
-When a frame is transmitted via the nl80211 TX rather than as a
-normal frame, IEEE80211_TX_CTRL_PORT_CTRL_PROTO wasn't set and
-this will lead to wrong decisions (rate control etc.) being made
-about the frame; fix this.
+Heiner writes:
+	commit 85a19b0e31e2 ("r8169: check that Realtek PHY driver
+	module is loaded") made it accidentally to 4.19 and causes an
+	issue with Android/x86.  Could you please revert it?
 
-Fixes: 911806491425 ("mac80211: Add support for tx_control_port")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Link: https://lore.kernel.org/r/20200326155333.f183f52b02f0.I4054e2a8c11c2ddcb795a0103c87be3538690243@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mac80211/tx.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/realtek/r8169.c |    9 ---------
+ 1 file changed, 9 deletions(-)
 
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -4,7 +4,7 @@
-  * Copyright 2006-2007	Jiri Benc <jbenc@suse.cz>
-  * Copyright 2007	Johannes Berg <johannes@sipsolutions.net>
-  * Copyright 2013-2014  Intel Mobile Communications GmbH
-- * Copyright (C) 2018 Intel Corporation
-+ * Copyright (C) 2018, 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -4840,6 +4840,7 @@ int ieee80211_tx_control_port(struct wip
- 	struct ieee80211_local *local = sdata->local;
- 	struct sk_buff *skb;
- 	struct ethhdr *ehdr;
-+	u32 ctrl_flags = 0;
- 	u32 flags;
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -7433,15 +7433,6 @@ static int rtl_init_one(struct pci_dev *
+ 	int chipset, region, i;
+ 	int jumbo_max, rc;
  
- 	/* Only accept CONTROL_PORT_PROTOCOL configured in CONNECT/ASSOCIATE
-@@ -4849,6 +4850,9 @@ int ieee80211_tx_control_port(struct wip
- 	    proto != cpu_to_be16(ETH_P_PREAUTH))
- 		return -EINVAL;
- 
-+	if (proto == sdata->control_port_protocol)
-+		ctrl_flags |= IEEE80211_TX_CTRL_PORT_CTRL_PROTO;
-+
- 	if (unencrypted)
- 		flags = IEEE80211_TX_INTFL_DONT_ENCRYPT;
- 	else
-@@ -4874,7 +4878,7 @@ int ieee80211_tx_control_port(struct wip
- 	skb_reset_mac_header(skb);
- 
- 	local_bh_disable();
--	__ieee80211_subif_start_xmit(skb, skb->dev, flags, 0);
-+	__ieee80211_subif_start_xmit(skb, skb->dev, flags, ctrl_flags);
- 	local_bh_enable();
- 
- 	return 0;
+-	/* Some tools for creating an initramfs don't consider softdeps, then
+-	 * r8169.ko may be in initramfs, but realtek.ko not. Then the generic
+-	 * PHY driver is used that doesn't work with most chip versions.
+-	 */
+-	if (!driver_find("RTL8201CP Ethernet", &mdio_bus_type)) {
+-		dev_err(&pdev->dev, "realtek.ko not loaded, maybe it needs to be added to initramfs?\n");
+-		return -ENOENT;
+-	}
+-
+ 	dev = devm_alloc_etherdev(&pdev->dev, sizeof (*tp));
+ 	if (!dev)
+ 		return -ENOMEM;
 
 
