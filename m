@@ -2,171 +2,189 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5F4C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 03:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183FCC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164B520747
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 03:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9116206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:02:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Pc/GApux"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dWDtlgF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387465AbgDBD6U (ORCPT
+        id S1726648AbgDBECH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 23:58:20 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39030 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732667AbgDBD6S (ORCPT
+        Thu, 2 Apr 2020 00:02:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39650 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725788AbgDBECG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 23:58:18 -0400
-Received: by mail-qt1-f194.google.com with SMTP id f20so2220071qtq.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 20:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FIyZcbBeG4NXJvMIHPgjJKueNZcgIVXv/zRU7nobAb0=;
-        b=Pc/GApuxKxKJ4bznwNkN+CkN4TiVYXmSvMHqy3rRcc2gAFWoLbpnys6Er6Ql+hrGx5
-         uWA5/opZRWMsm0gpqLB6ENnw2y+J3UKL1HFFWzEO3kqeNAUHHgdpqPP23VSHgYl4JylN
-         Vh7w3QiNKuKjVsCz12A9nX5Tl3VEfmxtkYzg8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FIyZcbBeG4NXJvMIHPgjJKueNZcgIVXv/zRU7nobAb0=;
-        b=iBEWXKzSeed/+NLxKxIadzEqDTeTg068TB7ASPAmuV604v0mgjAOmRCDvLAfqwj0+h
-         I9GwkN5LwRIO/nkCzKeYGsbfxhFuudDJeJLzRv3Nat5+MeaOmiEoHJ3QIEZWih741NrS
-         +RcKJyn5E9Zk3IYVt3qjbahkb5aaLlc5y0rmd5qalpLO0oJQHwNeUbMFby4v1e4xSsSd
-         j8+Yb+F3ZkJLhICHWV+zRQooSrnk1eIT26ciKDzGGiKuPz1tItk5tIRoqAQR2uluRHBQ
-         abfihy54c+t1EMIr2QygmQg3S47y/wbWYabFTwVABZqMquSvWMpk9nR5tqhWE+NbL/kr
-         WBBA==
-X-Gm-Message-State: AGi0Puay7c7u/qT+Ioc0J/kVvWVqzyGAIe78/lMWuQrloA4PJKhaJ0rc
-        0FNS6rwGpbHcCK4ZERfMYZ6osw==
-X-Google-Smtp-Source: APiQypLI/ljsVswFPJHBN8JmhzhORetkqVNWwTsAxc6mCYlKhNGyM+vomCJUSXIada/n7ObMO2EvJw==
-X-Received: by 2002:ac8:33cd:: with SMTP id d13mr990302qtb.265.1585799897328;
-        Wed, 01 Apr 2020 20:58:17 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x74sm2833685qkb.40.2020.04.01.20.58.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 20:58:16 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 23:58:16 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] Documentation/litmus-tests: Add litmus tests for
- atomic APIs
-Message-ID: <20200402035816.GA46686@google.com>
-References: <20200326024022.7566-1-boqun.feng@gmail.com>
- <20200327221843.GA226939@google.com>
- <20200331014037.GB59159@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        Thu, 2 Apr 2020 00:02:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585800126;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+zSv1WA+rPbGSzOupPYuZO2qP78Tb9ejg8WqBI3qnMo=;
+        b=dWDtlgF0kcnAnyS1iJCNBPdxY4xp3s2xySVF3bnsmjYb/BZAi+X3I+At7hiqoJnsdHbQZH
+        ipbM3vXD3Syc0zNKiBJp4ixpVSpwpXLXoI8f8/Sd+uacGCW0MyIfWSl8nQhwdtQwzhPS20
+        3TcSOxU//yqEsykHom11NZ/trblCoVE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-472-LUxoOoOCPzGXTIuUcfvDzQ-1; Thu, 02 Apr 2020 00:02:04 -0400
+X-MC-Unique: LUxoOoOCPzGXTIuUcfvDzQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2816E107ACC4;
+        Thu,  2 Apr 2020 04:02:03 +0000 (UTC)
+Received: from [10.72.13.209] (ovpn-13-209.pek2.redhat.com [10.72.13.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F012719C69;
+        Thu,  2 Apr 2020 04:01:57 +0000 (UTC)
+Subject: Re: [PATCH] virtio/test: fix up after IOTLB changes
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+References: <20200401165100.276039-1-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <921fe999-e183-058d-722a-1a6a6ab066e0@redhat.com>
+Date:   Thu, 2 Apr 2020 12:01:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331014037.GB59159@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+In-Reply-To: <20200401165100.276039-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:40:37AM +0800, Boqun Feng wrote:
-> On Fri, Mar 27, 2020 at 06:18:43PM -0400, Joel Fernandes wrote:
-> > On Thu, Mar 26, 2020 at 10:40:18AM +0800, Boqun Feng wrote:
-> > > A recent discussion raises up the requirement for having test cases for
-> > > atomic APIs:
-> > > 
-> > > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
-> > > 
-> > > , and since we already have a way to generate a test module from a
-> > > litmus test with klitmus[1]. It makes sense that we add more litmus
-> > > tests for atomic APIs. And based on the previous discussion, I create a
-> > > new directory Documentation/atomic-tests and put these litmus tests
-> > > here.
-> > > 
-> > > This patchset starts the work by adding the litmus tests which are
-> > > already used in atomic_t.txt, and also improve the atomic_t.txt to make
-> > > it consistent with the litmus tests.
-> > > 
-> > > Previous version:
-> > > v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
-> > > v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
-> > > v3: https://lore.kernel.org/linux-doc/20200227004049.6853-1-boqun.feng@gmail.com/
-> > 
-> > For full series:
-> > 
-> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > One question I had was in the existing atomic_set() documentation, it talks
-> > about atomic_add_unless() implementation based on locking could have issues.
-> > It says the way to fix such cases is:
-> > 
-> > Quote:
-> >     the typical solution is to then implement atomic_set{}() with
-> >     atomic_xchg().
-> > 
-> > I didn't get how using atomic_xchg() fixes it. Is the assumption there that
-> > atomic_xchg() would be implemented using locking to avoid atomic_set() having
-> 
-> Right, I think that's the intent of the sentence.
-> 
-> > issues? If so, we could clarify that in the document.
-> > 
-> 
-> Patches are welcome ;-)
+
+On 2020/4/2 =E4=B8=8A=E5=8D=8812:51, Michael S. Tsirkin wrote:
+> Allow building vringh without IOTLB (that's the case for userspace
+> builds, will be useful for CAIF/VOD down the road too).
+> Update for API tweaks.
+> Don't include vringh with kernel builds.
 
 
----8<-----------------------
+I'm not quite sure we need this.
 
-Like this? I'll add it to my tree and send it to Paul during my next
-series, unless you disagree ;-)
+E.g the userspace accessor is not used by CAIF/VOP.
 
-Subject: [PATCH] doc: atomic_t: Document better about the locking within
- atomic_xchg()
 
-It is not fully clear how the atomic_set() would not cause an issue with
-preservation of the atomicity of RMW in this example. Make it clear that
-locking within atomic_xchg() would save the day.
+>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: Eugenio P=C3=A9rez <eperezma@redhat.com>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>   drivers/vhost/test.c   | 4 ++--
+>   drivers/vhost/vringh.c | 5 +++++
+>   include/linux/vringh.h | 2 ++
+>   tools/virtio/Makefile  | 3 ++-
+>   4 files changed, 11 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+> index 394e2e5c772d..9a3a09005e03 100644
+> --- a/drivers/vhost/test.c
+> +++ b/drivers/vhost/test.c
+> @@ -120,7 +120,7 @@ static int vhost_test_open(struct inode *inode, str=
+uct file *f)
+>   	vqs[VHOST_TEST_VQ] =3D &n->vqs[VHOST_TEST_VQ];
+>   	n->vqs[VHOST_TEST_VQ].handle_kick =3D handle_vq_kick;
+>   	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
+> -		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
+> +		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
+>  =20
+>   	f->private_data =3D n;
+>  =20
+> @@ -225,7 +225,7 @@ static long vhost_test_reset_owner(struct vhost_tes=
+t *n)
+>   {
+>   	void *priv =3D NULL;
+>   	long err;
+> -	struct vhost_umem *umem;
+> +	struct vhost_iotlb *umem;
+>  =20
+>   	mutex_lock(&n->dev.mutex);
+>   	err =3D vhost_dev_check_owner(&n->dev);
+> diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+> index ee0491f579ac..878e565dfffe 100644
+> --- a/drivers/vhost/vringh.c
+> +++ b/drivers/vhost/vringh.c
+> @@ -13,9 +13,11 @@
+>   #include <linux/uaccess.h>
+>   #include <linux/slab.h>
+>   #include <linux/export.h>
+> +#ifdef VHOST_IOTLB
 
-Suggested-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- Documentation/atomic_t.txt | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-index 0f1fdedf36bbb..1d9c307c73a7c 100644
---- a/Documentation/atomic_t.txt
-+++ b/Documentation/atomic_t.txt
-@@ -129,6 +129,8 @@ with a lock:
-     unlock();
- 
- the typical solution is to then implement atomic_set{}() with atomic_xchg().
-+The locking within the atomic_xchg() in CPU1 would ensure that the value read
-+in CPU0 would not be overwritten.
- 
- 
- RMW ops:
--- 
-2.26.0.292.g33ef6b2f38-goog
+Kbuild bot reports build issues with this.
+
+It looks to me we should use #if IS_ENABLED(CONFIG_VHOST_IOTLB) here and=20
+following checks.
+
+Thanks
+
+
+>   #include <linux/bvec.h>
+>   #include <linux/highmem.h>
+>   #include <linux/vhost_iotlb.h>
+> +#endif
+>   #include <uapi/linux/virtio_config.h>
+>  =20
+>   static __printf(1,2) __cold void vringh_bad(const char *fmt, ...)
+> @@ -1059,6 +1061,8 @@ int vringh_need_notify_kern(struct vringh *vrh)
+>   }
+>   EXPORT_SYMBOL(vringh_need_notify_kern);
+>  =20
+> +#ifdef VHOST_IOTLB
+> +
+>   static int iotlb_translate(const struct vringh *vrh,
+>   			   u64 addr, u64 len, struct bio_vec iov[],
+>   			   int iov_size, u32 perm)
+> @@ -1416,5 +1420,6 @@ int vringh_need_notify_iotlb(struct vringh *vrh)
+>   }
+>   EXPORT_SYMBOL(vringh_need_notify_iotlb);
+>  =20
+> +#endif
+>  =20
+>   MODULE_LICENSE("GPL");
+> diff --git a/include/linux/vringh.h b/include/linux/vringh.h
+> index bd0503ca6f8f..ebff121c0b02 100644
+> --- a/include/linux/vringh.h
+> +++ b/include/linux/vringh.h
+> @@ -14,8 +14,10 @@
+>   #include <linux/virtio_byteorder.h>
+>   #include <linux/uio.h>
+>   #include <linux/slab.h>
+> +#ifdef VHOST_IOTLB
+>   #include <linux/dma-direction.h>
+>   #include <linux/vhost_iotlb.h>
+> +#endif
+>   #include <asm/barrier.h>
+>  =20
+>   /* virtio_ring with information needed for host access. */
+> diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
+> index f33f32f1d208..d3f152f4660b 100644
+> --- a/tools/virtio/Makefile
+> +++ b/tools/virtio/Makefile
+> @@ -22,7 +22,8 @@ OOT_CONFIGS=3D\
+>   	CONFIG_VHOST=3Dm \
+>   	CONFIG_VHOST_NET=3Dn \
+>   	CONFIG_VHOST_SCSI=3Dn \
+> -	CONFIG_VHOST_VSOCK=3Dn
+> +	CONFIG_VHOST_VSOCK=3Dn \
+> +	CONFIG_VHOST_RING=3Dn
+>   OOT_BUILD=3DKCFLAGS=3D"-I "${OOT_VHOST} ${MAKE} -C ${OOT_KSRC} V=3D${=
+V}
+>   oot-build:
+>   	echo "UNSUPPORTED! Don't use the resulting modules in production!"
 
