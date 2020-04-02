@@ -2,151 +2,75 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D46C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85ACC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8211E20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A46620675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:27:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="paSCP1/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389311AbgDBP02 (ORCPT
+        id S2389151AbgDBP1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:26:28 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33194 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389241AbgDBP02 (ORCPT
+        Thu, 2 Apr 2020 11:27:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55286 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgDBP1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:26:28 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 22so3862813otf.0;
-        Thu, 02 Apr 2020 08:26:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=Cqw6dnlRH1Z235Qgu5cq2jTZRWby77FH7SYPVq5JKBY=;
-        b=pwUX+YMoU1SdKQvJkwExabEB30w3gxI/iQZ/NNnENiz0of7OIFzcfnkc/UTmSa9RrN
-         BvjzeZl0eQhR8QUk1L+P8+SrsUgKXeP8vL//p7kXsioBu7WHZiw19UXqT18XHU1Lw9IW
-         ztONV1j2c1aY2OOYLnlEyAowDa3qVs54eMMhQwcZHxu1V2RqS7TIzebIcXQpKmhBXMoX
-         MOiodwSBmZzENnWfS6S2QMG3x39rFD03HW3XgPqTbIIKl3CxUb+Mj6vLL9H64xW6qBDt
-         kmMNPYtTgymvKud01cvMocDtnXbq8lxw02AMEiiZJJJIZwiNC23AMgUV/52/d376bEOf
-         wpyw==
-X-Gm-Message-State: AGi0PuZLdGP0Dkmz+/2ch6ZeSR2LCMDfENpI5Gu6z9P32KD8r34xXpg4
-        jN74/ekUdRu3WCMnl274PMZKed/I9M9eg1yT5gjFNA==
-X-Google-Smtp-Source: APiQypKpY9WpXH7nOqTR0dBL+FBpHDPCUuTtOLsWZcfUeGr3r0SvTBjAnlsfhR6ZMs2a4cWyEgqEHDrB1c5wAgPfOWA=
-X-Received: by 2002:a4a:e495:: with SMTP id s21mr3164931oov.79.1585841187762;
- Thu, 02 Apr 2020 08:26:27 -0700 (PDT)
+        Thu, 2 Apr 2020 11:27:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=SZ61JY4/qMzGRRy2q/yJ6msRavUpvnK9aapJOKTpzqU=; b=paSCP1/eVNRse/xGNQY5Ty4LAv
+        UReZvtQdW5qGp98i+k17hrCYfWxaCpH/moDsumrF7ZLvCjkaqLAuX7+hcSzqaaBo0SbqITSWy9Ank
+        Qk/9Gz+JRY+g39AgBXF67vm6MM0fAfziPaKX5rRTJKVJ7MkAQz6zYDqviOqdzYVwKD82feB3ndOSq
+        IVBwOeLNokLziSvhvc1PxYRSlvHFeUrEfFd6d5/sXagT9oemcTq2OlLMA7P82JXMVMRG3Lb1z/v6s
+        kzXEJjO9bup9HbotVSt/OO2q3PxGd9pIvkr79hfGGkvWzvFUeSHRtnUKudwy4CjVU5QHP3iUmTpr4
+        diPrxg4A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jK1kV-0002tW-CS; Thu, 02 Apr 2020 15:27:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D17ED3056DE;
+        Thu,  2 Apr 2020 17:27:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B9FF52B0DE831; Thu,  2 Apr 2020 17:27:17 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 17:27:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, tglx@linutronix.de
+Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
+Message-ID: <20200402152717.GE20730@hirez.programming.kicks-ass.net>
+References: <20200402082220.808-1-alexandre.chartre@oracle.com>
+ <20200402082220.808-5-alexandre.chartre@oracle.com>
 MIME-Version: 1.0
-References: <cover.1585218857.git.alexander.riesen@cetitec.com>
- <ad15f80df51c95a7c24498bb0bd3a46f55fbb62e.1585218857.git.alexander.riesen@cetitec.com>
- <CAMuHMdV+joeNWJotKySVPHNW9OoT8+iODBwhK5fACspq2SX_eg@mail.gmail.com> <20200402141654.GB4291@pflmari>
-In-Reply-To: <20200402141654.GB4291@pflmari>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 2 Apr 2020 17:26:15 +0200
-Message-ID: <CAMuHMdV6a=adKVmmRm_3qOSA37kDRfc63G+qQpN4UR-hj3R65g@mail.gmail.com>
-Subject: Re: [PATCH v4 9/9] arm64: dts: renesas: salvator: add a connection
- from adv748x codec (HDMI input) to the R-Car SoC
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402082220.808-5-alexandre.chartre@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Thu, Apr 02, 2020 at 10:22:17AM +0200, Alexandre Chartre wrote:
+> With retpoline, the return instruction is used to branch to an address
+> stored on the stack. So, unlike a regular return instruction, when a
+> retpoline return instruction is reached the stack has been modified
+> compared to what we have when the function was entered.
+> 
+> Provide the mechanism to explicitly call-out such return instruction
+> so that objtool can correctly handle them.
 
-On Thu, Apr 2, 2020 at 5:03 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> Geert Uytterhoeven, Mon, Mar 30, 2020 10:32:47 +0200:
-> > On Thu, Mar 26, 2020 at 11:55 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > @@ -510,6 +511,15 @@ adv7482_txb: endpoint {
-> > >                                 remote-endpoint = <&csi20_in>;
-> > >                         };
-> > >                 };
-> > > +
-> > > +               port@c {
-> > > +                       reg = <12>;
-> > > +
-> > > +                       adv7482_i2s: endpoint {
-> > > +                               remote-endpoint = <&rsnd_endpoint3>;
-> > > +                               system-clock-direction-out;
-> > > +                       };
-> > > +               };
-> >
-> > As the adv748x driver just ignores "invalid" endpoints...
-> >
-> > > @@ -758,8 +769,19 @@ &rcar_sound {
-> > >                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
-> > >                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
-> > >                  <&audio_clk_a>, <&cs2000>,
-> > > -                <&audio_clk_c>,
-> > > +                <&adv7482_hdmi_in>,
-> > >                  <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
-> >
-> > ... and the rsnd driver ignores nonexistent-clocks, the DT change has no
-> > hard dependency on the driver change, and won't introduce regressions
-> > when included, right?
->
-> Well, it maybe won't, but isn't it a little ... implicit?
-> And I'm no haste to include the changes, if you mean I can (or should) submit
-> the device tree patch separately.
+https://lkml.kernel.org/r/20200331222703.GH2452@worktop.programming.kicks-ass.net
 
-OK, fine for me to postpone (that'll be for v5.9, I guess?).
+And also, the split out version:
 
-> > > @@ -777,6 +799,21 @@ rsnd_endpoint0: endpoint {
-> > >                                 capture  = <&ssi1 &src1 &dvc1>;
-> > >                         };
-> > >                 };
-> > > +               rsnd_port3: port@3 {
-> > > +                       reg = <3>;
-> > > +                       rsnd_endpoint3: endpoint {
-> > > +                               remote-endpoint = <&adv7482_i2s>;
-> > > +
-> > > +                               dai-tdm-slot-num = <8>;
-> > > +                               dai-tdm-slot-width = <32>;
-> > > +                               dai-format = "left_j";
-> > > +                               mclk-fs = <256>;
-> > > +                               bitclock-master = <&adv7482_i2s>;
-> > > +                               frame-master = <&adv7482_i2s>;
-> > > +
-> > > +                               capture = <&ssi4>;
-> > > +                       };
-> > > +               };
-> > >         };
-> > >  };
-> >
-> > However, as salvator-common.dtsi is shared by all Salvator-X(S) variants,
-> > you'll have to add a dummy ssi4 node to r8a77961.dtsi first.
->
-> I see. There are even two dummy SSI nodes already. I would prefer to submit
-> the change together with other Salvator device tree changes. Is that alright?
-
-Fine for me.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+  https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/commit/?h=core/objtool&id=ec9d9549901dfd2ff411676dfc624e50219e4d5a
