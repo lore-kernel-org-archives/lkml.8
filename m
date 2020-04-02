@@ -2,81 +2,244 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6733BC2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F684C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C74206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2624C206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ZpA3sU1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388084AbgDBL0e (ORCPT
+        id S2388102AbgDBL2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:26:34 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:5389 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbgDBL0d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:26:33 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e85cbd7fa3-5e0c4; Thu, 02 Apr 2020 19:26:16 +0800 (CST)
-X-RM-TRANSID: 2eea5e85cbd7fa3-5e0c4
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35e85cbd6d65-4831c;
-        Thu, 02 Apr 2020 19:26:16 +0800 (CST)
-X-RM-TRANSID: 2ee35e85cbd6d65-4831c
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     thor.thayer@linux.intel.com, bp@alien8.de
-Cc:     mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
-        rrichter@marvell.com, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH] EDAC/altera:Use platform_get_irq_optional()
-Date:   Thu,  2 Apr 2020 19:27:40 +0800
-Message-Id: <20200402112740.15580-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Thu, 2 Apr 2020 07:28:04 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36061 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388029AbgDBL2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:28:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48tLQm15kFz9sQt;
+        Thu,  2 Apr 2020 22:28:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1585826880;
+        bh=2maxqirMAdfGWnzmoaa6OOtiptHYwQlsC8pMIxyqg2Q=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ZpA3sU1KMKWa93mUZns4lsgqvOgN9l/hyNwKu+DqRaotT5XPACFP0KYbfalrdMbUo
+         nhqzWA4CNLLrkoc7ARYaFjZXMshRW1JT3iqhZN/xA366OgtBg3/fReEaqUqUxuTxaF
+         GUiZP2KXkbElZXBiNMLQkGio1Xl7J9BxMpex7tqrixKV1ZI1iETVFxz65i/1Xzd04g
+         AY3XFMeWV8Vp2yrdY/xsXnLfs5NoCnPy556kH5ib2gXw9JjBYnpYeUbLCewB/x1qQ1
+         svN6Qg43JA+fvdM1WOoCXUgSuf+fFPSRmFCj9ipjR9YwsgmN0FmdxctgAhbPuNbED1
+         AIK33NIOHRMcQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Enrico Weigelt <info@metux.net>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        peterz@infradead.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] ppc/crash: Reset spinlocks during crash
+In-Reply-To: <20200401000020.590447-1-leonardo@linux.ibm.com>
+References: <20200401000020.590447-1-leonardo@linux.ibm.com>
+Date:   Thu, 02 Apr 2020 22:28:09 +1100
+Message-ID: <871rp6t9di.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to simply code,because platform_get_irq() already has
-dev_err() message.
+Leonardo Bras <leonardo@linux.ibm.com> writes:
+> During a crash, there is chance that the cpus that handle the NMI IPI
+> are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
+> will cause a deadlock. (rtas.lock and printk logbuf_lock as of today)
+>
+> This is a problem if the system has kdump set up, given if it crashes
+> for any reason kdump may not be saved for crash analysis.
+>
+> After NMI IPI is sent to all other cpus, force unlock all spinlocks
+> needed for finishing crash routine.
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- drivers/edac/altera_edac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm not convinced this is the right approach.
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index e91cf1147..e12bad148 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -2099,7 +2099,7 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
+Busting locks is risky, it could easily cause a crash if data structures
+are left in some inconsistent state.
+
+I think we need to make this code more careful about what it's doing.
+There's a clue at the top of default_machine_crash_shutdown(), which
+calls crash_kexec_prepare_cpus():
+
+	 * This function is only called after the system
+	 * has panicked or is otherwise in a critical state.
+	 * The minimum amount of code to allow a kexec'd kernel
+	 * to run successfully needs to happen here.
+
+
+You said the "IPI complete" message was the cause of one lockup:
+
+  #0  arch_spin_lock 
+  #1  do_raw_spin_lock 
+  #2  __raw_spin_lock 
+  #3  _raw_spin_lock 
+  #4  vprintk_emit 
+  #5  vprintk_func
+  #7  crash_kexec_prepare_cpus 
+  #8  default_machine_crash_shutdown
+  #9  machine_crash_shutdown 
+  #10 __crash_kexec
+  #11 crash_kexec
+  #12 oops_end
+
+TBH I think we could just drop that printk() entirely.
+
+Or we could tell printk() that we're in NMI context so that it uses the
+percpu buffers.
+
+We should probably do the latter anyway, in case there's any other code
+we call that inadvertently calls printk().
+
+
+The RTAS trace you sent was:
+
+  #0 arch_spin_lock
+  #1  lock_rtas () 
+  #2  rtas_call (token=8204, nargs=1, nret=1, outputs=0x0)
+  #3  ics_rtas_mask_real_irq (hw_irq=4100) 
+  #4  machine_kexec_mask_interrupts
+  #5  default_machine_crash_shutdown
+  #6  machine_crash_shutdown 
+  #7  __crash_kexec
+  #8  crash_kexec
+  #9  oops_end
+
+
+Which doesn't make it clear who holds the RTAS lock. We really shouldn't
+be crashing while holding the RTAS lock, but I guess it could happen.
+Can you get a full backtrace?
+
+
+PAPR says we are not allowed to have multiple CPUs calling RTAS at once,
+except for a very small list of RTAS calls. So if we bust the RTAS lock
+there's a risk we violate that part of PAPR and crash even harder.
+
+Also it's not specific to kdump, we can't even get through a normal
+reboot if we crash with the RTAS lock held.
+
+Anyway here's a patch with some ideas. That allows me to get from a
+crash with the RTAS lock held through kdump into the 2nd kernel. But it
+only works if it's the crashing CPU that holds the RTAS lock.
+
+cheers
+
+diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
+index c5fa251b8950..44ce74966d60 100644
+--- a/arch/powerpc/kernel/rtas.c
++++ b/arch/powerpc/kernel/rtas.c
+@@ -25,6 +25,7 @@
+ #include <linux/reboot.h>
+ #include <linux/syscalls.h>
  
--	edac->sb_irq = platform_get_irq(pdev, 0);
-+	edac->sb_irq = platform_get_irq_optional(pdev, 0);
- 	if (edac->sb_irq < 0) {
- 		dev_err(&pdev->dev, "No SBERR IRQ resource\n");
- 		return edac->sb_irq;
-@@ -2134,7 +2134,7 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
- 		}
- 	}
- #else
--	edac->db_irq = platform_get_irq(pdev, 1);
-+	edac->db_irq = platform_get_irq_optional(pdev, 1);
- 	if (edac->db_irq < 0) {
- 		dev_err(&pdev->dev, "No DBERR IRQ resource\n");
- 		return edac->db_irq;
--- 
-2.20.1.windows.1
-
++#include <asm/debugfs.h>
+ #include <asm/prom.h>
+ #include <asm/rtas.h>
+ #include <asm/hvcall.h>
+@@ -65,6 +66,8 @@ unsigned long rtas_rmo_buf;
+ void (*rtas_flash_term_hook)(int);
+ EXPORT_SYMBOL(rtas_flash_term_hook);
+ 
++static int rtas_lock_holder = -1;
++
+ /* RTAS use home made raw locking instead of spin_lock_irqsave
+  * because those can be called from within really nasty contexts
+  * such as having the timebase stopped which would lockup with
+@@ -76,7 +79,20 @@ static unsigned long lock_rtas(void)
+ 
+ 	local_irq_save(flags);
+ 	preempt_disable();
+-	arch_spin_lock(&rtas.lock);
++
++	if (!arch_spin_trylock(&rtas.lock)) {
++		// Couldn't get the lock, do we already hold it?
++		if (rtas_lock_holder == smp_processor_id())
++			// Yes, so we would have deadlocked on ourself. Assume
++			// we're crashing and continue on hopefully ...
++			return flags;
++
++		// No, wait on the lock
++		arch_spin_lock(&rtas.lock);
++	}
++
++	rtas_lock_holder = smp_processor_id();
++
+ 	return flags;
+ }
+ 
+@@ -85,6 +101,8 @@ static void unlock_rtas(unsigned long flags)
+ 	arch_spin_unlock(&rtas.lock);
+ 	local_irq_restore(flags);
+ 	preempt_enable();
++
++	rtas_lock_holder = -1;
+ }
+ 
+ /*
+@@ -1263,3 +1281,24 @@ void rtas_take_timebase(void)
+ 	timebase = 0;
+ 	arch_spin_unlock(&timebase_lock);
+ }
++
++static int rtas_crash_set(void *data, u64 val)
++{
++	printk("%s: Taking RTAS lock and then crashing ...\n", __func__);
++	lock_rtas();
++
++	*((volatile int *) 0) = 0;
++
++	return 0;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(fops_rtas_crash, NULL, rtas_crash_set, "%llu\n");
++
++static __init int rtas_crash_debugfs_init(void)
++{
++	debugfs_create_file_unsafe("crash_in_rtas", 0200,
++				   powerpc_debugfs_root, NULL,
++				   &fops_rtas_crash);
++	return 0;
++}
++device_initcall(rtas_crash_debugfs_init);
+diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+index d488311efab1..4c52cb58e889 100644
+--- a/arch/powerpc/kexec/crash.c
++++ b/arch/powerpc/kexec/crash.c
+@@ -15,6 +15,7 @@
+ #include <linux/crash_dump.h>
+ #include <linux/delay.h>
+ #include <linux/irq.h>
++#include <linux/printk.h>
+ #include <linux/types.h>
+ 
+ #include <asm/processor.h>
+@@ -311,6 +312,8 @@ void default_machine_crash_shutdown(struct pt_regs *regs)
+ 	unsigned int i;
+ 	int (*old_handler)(struct pt_regs *regs);
+ 
++	printk_nmi_enter();
++
+ 	/*
+ 	 * This function is only called after the system
+ 	 * has panicked or is otherwise in a critical state.
 
 
