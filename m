@@ -2,131 +2,124 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FE2C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64ABC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881D42074D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:35:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fy3zDbAx"
+	by mail.kernel.org (Postfix) with ESMTP id 9CF7D2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585838182;
+	bh=hgqNTt2kKMNGHqP+Km3jz9TvPzM2T4GaVOuSBURhUvs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=y/QZ8SHbwBXNGIVdJlD7DOjmjAUzHtfzspgVgpZVufxcbxYW8kT5xAk5U47+D9qCm
+	 A7Zw3M9iCLaosigfRcAdSUYBDAIg7Myx3xGETCCz8u4X8GxCwuFRgweGKSojhCBxRt
+	 gy2FqNRaEuOkemKfmDfrdVOeGJqqum2EDb3O0SAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388377AbgDBOfD (ORCPT
+        id S2388120AbgDBOgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:35:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49647 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732263AbgDBOfD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:35:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585838102;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=U5TW3tLNBoW1wE1/0X4wPl+Z8kZSp5XcsvgUrccM52w=;
-        b=fy3zDbAxjEQ6HG+5JsOeo5n02Y+UgQkV9+TrZUCTsHpNLFUZt3WHKhd5dSGYsMApePBfhI
-        mPDDCpl8nn6kFG9nYJRkiF/uA8dMgxjm/oiS5j6GN+Und1vydYKbshMHk6dcgGEKhBsTbW
-        cuPNQSiC/1V91N/NVnxSfV0qnnk6Oho=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-44-Yse6U43KOUuc0iAIiMyAhA-1; Thu, 02 Apr 2020 10:34:59 -0400
-X-MC-Unique: Yse6U43KOUuc0iAIiMyAhA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 2 Apr 2020 10:36:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbgDBOgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:36:21 -0400
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3008801E5C;
-        Thu,  2 Apr 2020 14:34:58 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-36.pek2.redhat.com [10.72.12.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FEAB5C1B0;
-        Thu,  2 Apr 2020 14:34:56 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, bhe@redhat.com
-Subject: [PATVH v1 RESEND] mm: remove unused free_bootmem_with_active_regions
-Date:   Thu,  2 Apr 2020 22:34:55 +0800
-Message-Id: <20200402143455.5145-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        by mail.kernel.org (Postfix) with ESMTPSA id CA3652074D;
+        Thu,  2 Apr 2020 14:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585838179;
+        bh=hgqNTt2kKMNGHqP+Km3jz9TvPzM2T4GaVOuSBURhUvs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Xea48Y7rVx7bKJXai1/rCZV02PKwdZb4NtyEvbGgM3eK43U6ZAC4N4R5Dzhu/tpgZ
+         Ix/acFtoFs6RiiUvxog1xUiHsMKNCC4kJfqpbdKlGwGBb87JV6h20pa2q195oUMJoZ
+         hsriSvjosxbqeD+R/0eO72SAMOgSI4V4mocJgaho=
+Received: by mail-il1-f181.google.com with SMTP id n13so3803217ilm.5;
+        Thu, 02 Apr 2020 07:36:19 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYVkkH4P4W2Q6zs9x0Up8lvfPxYccKUSFz5txRfncp/smthyakU
+        G3So/1RCSCnr4vSlQKX8gBMgRXt3mF3mR1uEY9Q=
+X-Google-Smtp-Source: APiQypK/ccv9NRSETRVTWozAv5jSrWGxRlqM/ygFo4EjfN+UAGVGv17+NG3gieCqXQN2oci7WqN0P+0T4tCB/gk2P3w=
+X-Received: by 2002:a92:dcd1:: with SMTP id b17mr3620113ilr.80.1585838179188;
+ Thu, 02 Apr 2020 07:36:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <5a6807f19fd69f2de6622c794639cc5d70b9563a.1585513949.git.stefan@agner.ch>
+ <CAKwvOdkyOW6RXTOCt1xMp2H+uH28ofByQOjyx776t8RDxTED2w@mail.gmail.com>
+ <CAMj1kXGYiMobkue642iDRdOjEHQK=KXpp=Urrgik9UU-eWWibQ@mail.gmail.com>
+ <DBBPR08MB4823129E272220712B470716F8C60@DBBPR08MB4823.eurprd08.prod.outlook.com>
+ <CAMj1kXEQ4v9e6386ogPdy+s+++9H02DMPnDpTq0WSY2e78ts+Q@mail.gmail.com> <e0c125ea492670c7069c407b6b0c5958@agner.ch>
+In-Reply-To: <e0c125ea492670c7069c407b6b0c5958@agner.ch>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 2 Apr 2020 16:36:08 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEe835GbXU5qgX-QQ5n4SmwQO1nAoAZw5pUVCbR=J8XmQ@mail.gmail.com>
+Message-ID: <CAMj1kXEe835GbXU5qgX-QQ5n4SmwQO1nAoAZw5pUVCbR=J8XmQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: OMAP2+: drop unnecessary adrl
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Smith <Peter.Smith@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Russell King <linux@armlinux.org.uk>, nd <nd@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 397dc00e249ec64e10 ("mips: sgi-ip27: switch from DISCONTIGMEM
-to SPARSEMEM"), the last caller of free_bootmem_with_active_regions() was
-gone. Now no user calls it any more.
+On Thu, 2 Apr 2020 at 16:34, Stefan Agner <stefan@agner.ch> wrote:
+>
+> On 2020-04-02 14:05, Ard Biesheuvel wrote:
+> > On Thu, 2 Apr 2020 at 13:50, Peter Smith <Peter.Smith@arm.com> wrote:
+> >>
+> >> > I take it this implies that the LLVM linker does not support the
+> >> > R_ARM_ALU_PC_Gn relocations? Since otherwise, adrl could simply be
+> >> > expanded to a pair of adds with the appropriate relocations, letting
+> >> > the linker fix up the immediates (and the ADD vs SUB bits)
+> >>
+> >> Not at the moment. I have a patch in review to add the G0 variants for=
+ these in Arm state at reviews.llvm.org/D75349 . As far as I know LLVM MC d=
+oes not have support for generating the relocations either. This could be a=
+dded though. I agree that using the G* relocations with a pair of add/sub i=
+nstructions would be the ideal solution. The adrl psuedo is essentially tha=
+t but implemented at assembly time. I think it would be possible to impleme=
+nt in LLVM but at the time (4+ years ago) I wasn't confident in finding som=
+eone that would think that adrl support was worth the disruption, for examp=
+le the current Arm assembly backend can only produce 1 instruction as outpu=
+t and adrl requires two.
+> >>
+> >> I'd be happy to look at group relocation support in LLD, I haven't got=
+ a lot of spare time so progress is likely to be slow though.
+> >>
+> >
+> > For Linux, I have proposed another approach in the past, which is to
+> > define a (Linux-local) adr_l macro with unlimited range [0], which
+> > basically comes down to place relative movw/movt pairs for v7+, and
+> > something along the lines of
+> >
+> >         ldr <reg>, 222f
+> > 111:    add <reg>, <reg>, pc
+> >         .subsection 1
+> > 222:    .long <sym> - (111b + 8)
+> >         .previous
+>
+> Just to confirm: The instance at hand today seems to be working fine
+> without adrl, so I guess we are fine here, do you agree?
+>
 
-Let's remove it.
+I agree. Apologies for hijacking the thread :-)
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
-RESEND:
-  To add linux-mm to CC list.
+> There are a couple more instances of adrl in arch/arm/crypto/, maybe
+> that is where the adr_l macro could come in.
+>
 
- include/linux/mm.h |  4 ----
- mm/page_alloc.c    | 25 -------------------------
- 2 files changed, 29 deletions(-)
+There are various places in the arch code that could be cleaned up
+along these lines.
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 1cd8b8f8534d..9c093f7c751d 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2363,8 +2363,6 @@ static inline unsigned long get_num_physpages(void)
-  * 	memblock_add_node(base, size, nid)
-  * free_area_init_nodes(max_zone_pfns);
-  *
-- * free_bootmem_with_active_regions() calls free_bootmem_node() for each
-- * registered physical page range.  Similarly
-  * sparse_memory_present_with_active_regions() calls memory_present() for
-  * each range when SPARSEMEM is enabled.
-  *
-@@ -2380,8 +2378,6 @@ extern unsigned long absent_pages_in_range(unsigned long start_pfn,
- extern void get_pfn_range_for_nid(unsigned int nid,
- 			unsigned long *start_pfn, unsigned long *end_pfn);
- extern unsigned long find_min_pfn_with_active_regions(void);
--extern void free_bootmem_with_active_regions(int nid,
--						unsigned long max_low_pfn);
- extern void sparse_memory_present_with_active_regions(int nid);
- 
- #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 138a56c0f48f..2892ebeaa6c9 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6356,31 +6356,6 @@ int __meminit __early_pfn_to_nid(unsigned long pfn,
- }
- #endif /* CONFIG_HAVE_ARCH_EARLY_PFN_TO_NID */
- 
--/**
-- * free_bootmem_with_active_regions - Call memblock_free_early_nid for each active range
-- * @nid: The node to free memory on. If MAX_NUMNODES, all nodes are freed.
-- * @max_low_pfn: The highest PFN that will be passed to memblock_free_early_nid
-- *
-- * If an architecture guarantees that all ranges registered contain no holes
-- * and may be freed, this this function may be used instead of calling
-- * memblock_free_early_nid() manually.
-- */
--void __init free_bootmem_with_active_regions(int nid, unsigned long max_low_pfn)
--{
--	unsigned long start_pfn, end_pfn;
--	int i, this_nid;
--
--	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, &this_nid) {
--		start_pfn = min(start_pfn, max_low_pfn);
--		end_pfn = min(end_pfn, max_low_pfn);
--
--		if (start_pfn < end_pfn)
--			memblock_free_early_nid(PFN_PHYS(start_pfn),
--					(end_pfn - start_pfn) << PAGE_SHIFT,
--					this_nid);
--	}
--}
--
- /**
-  * sparse_memory_present_with_active_regions - Call memory_present for each active range
-  * @nid: The node to call memory_present for. If MAX_NUMNODES, all nodes will be used.
--- 
-2.17.2
-
+But you're right - this is a separate discussion that deserves a
+thread of its own. I was just satisfying my own curiosity.
