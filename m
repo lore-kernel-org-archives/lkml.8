@@ -2,167 +2,171 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B825BC10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D81C10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B5520678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA5CB20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:36:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Rl2JedC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387651AbgDBHev convert rfc822-to-8bit (ORCPT
+        id S2387502AbgDBHgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:34:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19288 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729033AbgDBHev (ORCPT
+        Thu, 2 Apr 2020 03:36:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:37858 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729033AbgDBHf7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:34:51 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0327Ydhv122468
-        for <linux-kernel@vger.kernel.org>; Thu, 2 Apr 2020 03:34:49 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 304g87556j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 03:34:44 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Thu, 2 Apr 2020 08:34:22 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 Apr 2020 08:34:20 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0327XYfx50856230
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Apr 2020 07:33:34 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B990642041;
-        Thu,  2 Apr 2020 07:34:37 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 559CF4203F;
-        Thu,  2 Apr 2020 07:34:37 +0000 (GMT)
-Received: from localhost (unknown [9.85.74.67])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Apr 2020 07:34:37 +0000 (GMT)
-Date:   Thu, 02 Apr 2020 13:04:34 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 6/6] pseries/sysfs: Minimise IPI noise while reading
- [idle_][s]purr
-To:     ego@linux.vnet.ibm.com, Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
-        <1585308760-28792-7-git-send-email-ego@linux.vnet.ibm.com>
-        <1585734367.oqwn7dzljo.naveen@linux.ibm.com>
-        <20200401120127.GC17237@in.ibm.com>
-In-Reply-To: <20200401120127.GC17237@in.ibm.com>
+        Thu, 2 Apr 2020 03:35:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585812958; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=naqNAxywddNgWhPDH5Wtz+lOJzNYkTWgjlzNiVKiv48=; b=Rl2JedC66GIoBkWoMo7JBQiMhudnqkZ8hRzx1ggWlKKPJW4xyO2BJMOB8l94OWQ8gWb7r/oy
+ TsjLssZnuxUrgMfCRQDdclsTH4+I3khg85HsS/zu30GM0Rv41hq0K5OBCABV0BwKzUjInGGw
+ qa27dxP2GomrfVbvB37nFydPRR0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8595cd.7f5dad9b0ab0-smtp-out-n01;
+ Thu, 02 Apr 2020 07:35:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DF789C43637; Thu,  2 Apr 2020 07:35:40 +0000 (UTC)
+Received: from [10.111.194.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mgautam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B28D7C433F2;
+        Thu,  2 Apr 2020 07:35:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B28D7C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
+Subject: Re: [PATCH v4 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for
+ sm8150 USB
+To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
+ <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
+From:   Manu Gautam <mgautam@codeaurora.org>
+Message-ID: <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
+Date:   Thu, 2 Apr 2020 13:05:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20040207-0020-0000-0000-000003C00DC9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040207-0021-0000-0000-00002218B769
-Message-Id: <1585811157.uig8s95yst.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- impostorscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 mlxscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004020063
+In-Reply-To: <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gautham R Shenoy wrote:
-> Hello Naveen,
-> 
-> 
-> On Wed, Apr 01, 2020 at 03:28:48PM +0530, Naveen N. Rao wrote:
->> Gautham R. Shenoy wrote:
->> >From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
->> >
->  [..snip..]
-> 
->> >+
->> >+static ssize_t show_purr(struct device *dev,
->> >+			 struct device_attribute *attr, char *buf)
->> > {
->> >-	u64 *ret = val;
->> >+	struct cpu *cpu = container_of(dev, struct cpu, dev);
->> >+	struct util_acct_stats *stats;
->> >
->> >-	*ret = read_this_idle_purr();
->> >+	stats = get_util_stats_ptr(cpu->dev.id);
->> >+	return sprintf(buf, "%llx\n", stats->latest_purr);
->> 
->> This alters the behavior of the current sysfs purr file. I am not sure if it
->> is reasonable to return the same PURR value across a 10ms window.
-> 
-> 
-> It does reduce it to 10ms window. I am not sure if anyone samples PURR
-> etc faster than that rate.
-> 
-> I measured how much time it takes to read the purr, spurr, idle_purr,
-> idle_spurr files back-to-back. It takes not more than 150us.  From
-> lparstat will these values be read back-to-back ? If so, we can reduce
-> the staleness_tolerance to something like 500us and still avoid extra
-> IPIs. If not, what is the maximum delay between the first sysfs file
-> read and the last sysfs file read ?
 
-Oh, for lparstat usage, this is perfectly fine.
+On 3/31/2020 1:06 AM, Wesley Cheng wrote:
+> The register map for SM8150 QMP USB SSPHY has moved
+> QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
+> an offset in the register table to override default value
+> if it is a DP capable PHY.
+>
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index cc04471..4c0517e 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -164,6 +164,7 @@ enum qphy_reg_layout {
+>  	[QPHY_SW_RESET]			= 0x00,
+>  	[QPHY_START_CTRL]		= 0x44,
+>  	[QPHY_PCS_STATUS]		= 0x14,
+> +	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
+Since this is in PCS block please rename it to -
 
-I meant that there could be other users of [s]purr who might care. I 
-don't know of one, but since this is an existing sysfs interface, I 
-wanted to point out that the behavior might change.
+QPHY_PCS_POWER_DOWN_CONTROL
 
-> 
->>
->> I wonder if we should introduce a sysctl interface to control thresholding.
->> It can default to 0, which disables thresholding so that the existing
->> behavior continues. Applications (lparstat) can optionally set it to suit
->> their use.
-> 
-> We would be introducing 3 new sysfs interfaces that way instead of
-> two.
-> 
-> /sys/devices/system/cpu/purr_spurr_staleness
-> /sys/devices/system/cpu/cpuX/idle_purr
-> /sys/devices/system/cpu/cpuX/idle_spurr
-> 
-> I don't have a problem with this. Nathan, Michael, thoughts on this?
-> 
-> 
-> The alternative is to have a procfs interface, something like
-> /proc/powerpc/resource_util_stats
-> 
-> which gives a listing similar to /proc/stat, i.e
-> 
->       CPUX  <purr>  <idle_purr>  <spurr>  <idle_spurr>
-> 
-> Even in this case, the values can be obtained in one-shot with a
-> single IPI and be printed in the row corresponding to the CPU.
+>  };
+>  
+>  static const unsigned int sdm845_ufsphy_regs_layout[] = {
+> @@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>  	if (cfg->has_phy_com_ctrl)
+>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>  			     SW_PWRDN);
+> +	else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
+> +		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+> +			     cfg->pwrdn_ctrl);
+>  	else
+>  		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+Since, this register is in PCS block why check for dp_com_ctrl here?
+Something like:
 
-Right -- and that would be optimal requiring a single system call, at 
-the cost of using a legacy interface.
+ 	if (cfg->has_phy_com_ctrl) {
+ 		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+ 			     SW_PWRDN);
+	} else {
+		if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) 
+			qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+			     cfg->pwrdn_ctrl);
+ 		else
+ 			qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+	}
 
-The other option would be to drop this patch and to just go with patches 
-1-5 introducing the new sysfs interfaces for idle_[s]purr. It isn't 
-entirely clear how often this would be used, or its actual impact. We 
-can perhaps consider this optimization if and when this causes 
-problems...
+>  
+> @@ -1671,10 +1675,12 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>  	return ret;
+>  }
+>  
+> -static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
+> +static int qcom_qmp_phy_com_exit(struct qmp_phy *qphy)
+>  {
+> +	struct qcom_qmp *qmp = qphy->qmp;
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>  	void __iomem *serdes = qmp->serdes;
+> +	void __iomem *pcs = qphy->pcs;
+>  	int i = cfg->num_resets;
+>  
+>  	mutex_lock(&qmp->phy_mutex);
+> @@ -1691,6 +1697,9 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
+>  			     SW_RESET);
+>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>  			     SW_PWRDN);
+> +	} else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL]) {
+
+Can we add change similar to init() here ?
 
 
-Thanks,
-Naveen
+> +			     cfg->pwrdn_ctrl);
+>  	}
+>  
+>  	while (--i >= 0)
+> @@ -1829,7 +1838,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+>  	if (cfg->has_lane_rst)
+>  		reset_control_assert(qphy->lane_rst);
+>  err_lane_rst:
+> -	qcom_qmp_phy_com_exit(qmp);
+> +	qcom_qmp_phy_com_exit(qphy);
+>  
+>  	return ret;
+>  }
+> @@ -1855,7 +1864,7 @@ static int qcom_qmp_phy_disable(struct phy *phy)
+>  	if (cfg->has_lane_rst)
+>  		reset_control_assert(qphy->lane_rst);
+>  
+> -	qcom_qmp_phy_com_exit(qmp);
+> +	qcom_qmp_phy_com_exit(qphy);
+>  
+>  	qmp->phy_initialized = false;
+>  
 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
