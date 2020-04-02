@@ -2,124 +2,113 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA972C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD54C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9AD2064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0B02064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:03:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EVjQoM5M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="daDolYs7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389753AbgDBVB2 (ORCPT
+        id S2389735AbgDBVDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 17:01:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47908 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730837AbgDBVB2 (ORCPT
+        Thu, 2 Apr 2020 17:03:10 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33782 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbgDBVDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 17:01:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585861286;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=acHm6n7jFULVWslWW8a+LQ1s2fp8Pdj9KK30dT5DLGE=;
-        b=EVjQoM5M/sRF6HSCR/OUBP11iSqx98paiAZSfAlQCXMBsaesU0xBNPWRDubnFJFlwx9ztf
-        fpNX0zqzHmu2OI8zYlLLQ+K5NMH0ph1R2FL9XabrORHNH/xOdKnL6J9iUKc7IuCfAnkn+/
-        /71iahOMZwc1vRcTvhtpGifAohoQYUA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-UUn-k57dPK65zGuJ8LZvQw-1; Thu, 02 Apr 2020 17:01:25 -0400
-X-MC-Unique: UUn-k57dPK65zGuJ8LZvQw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5E0E4107ACC4;
-        Thu,  2 Apr 2020 21:01:20 +0000 (UTC)
-Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8374560BF3;
-        Thu,  2 Apr 2020 21:01:17 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 16:01:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Paul McKenney <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [RESEND][patch V3 06/23] bug: Annotate WARN/BUG/stackfail as
- noinstr safe
-Message-ID: <20200402210115.zpk52dyc6ofg2bve@treble>
-References: <20200320175956.033706968@linutronix.de>
- <20200320180032.994128577@linutronix.de>
+        Thu, 2 Apr 2020 17:03:09 -0400
+Received: by mail-qk1-f195.google.com with SMTP id v7so5827899qkc.0;
+        Thu, 02 Apr 2020 14:03:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sVjs2DH9m9fKgjs6n5kVRWIE0vGLsA/x3K/6uNiKORs=;
+        b=daDolYs7NP3AZpiXGh8vMaDcVivAzxdICdi7a5NF4eji04bA84T747X4wiXOZfMH1J
+         PNU/6IAUp2gnrVx3HcfMPiEYj3DWHUs4qsHQMDo/8VyrnqhbyL/TsfFtFZWlJkCad0tt
+         364Ci6j98+J/faVYlvmIY+4UIDBWba5IvRCj9/RzlsszImRrZkEPx5xpJoA96RtuDcPb
+         YpDWiyEPusaB0pnVTjDtQuAJhB74DWBcXrYhxOttkXswGEBqQ1KJ4gAnQEbiUNvm757G
+         u2ylGGb36YA0ZpNX0UESKPW8vKTbUxfLeK/O0MdLC+bZkDXzMOVECnHORTppQ3y3WU1j
+         T9dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sVjs2DH9m9fKgjs6n5kVRWIE0vGLsA/x3K/6uNiKORs=;
+        b=b9hEV0Qex9KqLzRUnf1LNc0xNlSLKpWC+rL3LWtTFRMfhl9Pe32gs0qJn2WjmzKdeg
+         v0V7qTngOfrL3cS2qFRCFZLcZ5Zg/1Yc8MrG3Qvu1q6F9o7GRzImPUC1t/0+HoywNkCF
+         emrJK/E3/6FBJhd3RRSY79rPSSvtY/JrFz1qEtrkxstK0FyAHMc9sKnB/89gDCH70BWW
+         Lx5SQ2rFOmunXDiEuRVdBhGVTRwfGWoaDkbKnZ23wUguw+dQ8selOgHFrC4QOirgYjNe
+         yVifMZ1zbP5iEgsz8J5z1Q6PZgyhkBHycb/xOmVqLTXFLgplmyq2wVEZA+PG4NKq0rTa
+         bNFA==
+X-Gm-Message-State: AGi0PuZfNwufWZuCUGi1eG1XdgGOiFek+j3DNZi7ZK6lOLYa7GztvrQU
+        yjq5ebXJEeq+qvD4zpflhb8/vCH1N49gUnwJVzU=
+X-Google-Smtp-Source: APiQypI9U0BrOKkyTjQVQejiiAYGIbOCtFil/m6mRrtSQalLPzDZZy1MMaWsZIdOvgwQjFiGvhPG+t9P95gmvP0Beew=
+X-Received: by 2002:a37:6411:: with SMTP id y17mr5760875qkb.437.1585861388455;
+ Thu, 02 Apr 2020 14:03:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200320180032.994128577@linutronix.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <202004021328.E6161480@keescook> <20200402204138.408021-1-slava@bacher09.org>
+In-Reply-To: <20200402204138.408021-1-slava@bacher09.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 2 Apr 2020 14:02:57 -0700
+Message-ID: <CAEf4BzZxWTDCtcov5_TvGLR0Qp4p-JANh29WoZKEQ6FvmWrr9A@mail.gmail.com>
+Subject: Re: [PATCH v5 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
+To:     Slava Bacherikov <slava@bacher09.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Kees Cook <keescook@chromium.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Liu Yiding <liuyd.fnst@cn.fujitsu.com>,
+        KP Singh <kpsingh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 07:00:02PM +0100, Thomas Gleixner wrote:
-> Warnings, bugs and stack protection fails from noinstr sections, e.g. low
-> level and early entry code, are likely to be fatal.
-> 
-> Mark them as "safe" to be invoked from noinstr protected code to avoid
-> annotating all usage sites. Getting the information out is important.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Thu, Apr 2, 2020 at 1:44 PM Slava Bacherikov <slava@bacher09.org> wrote:
+>
+> Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
+> enabled will produce invalid btf file, since gen_btf function in
+> link-vmlinux.sh script doesn't handle *.dwo files.
+>
+> Enabling DEBUG_INFO_REDUCED will also produce invalid btf file, and
+> using GCC_PLUGIN_RANDSTRUCT with BTF makes no sense.
+>
+> Signed-off-by: Slava Bacherikov <slava@bacher09.org>
+> Reported-by: Jann Horn <jannh@google.com>
+> Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
+> Acked-by: KP Singh <kpsingh@google.com>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info for vmlinux")
 > ---
->  arch/x86/include/asm/bug.h |    3 +++
->  include/asm-generic/bug.h  |    9 +++++++--
->  kernel/panic.c             |    4 +++-
->  3 files changed, 13 insertions(+), 3 deletions(-)
-> 
-> --- a/arch/x86/include/asm/bug.h
-> +++ b/arch/x86/include/asm/bug.h
-> @@ -70,13 +70,16 @@ do {									\
->  #define HAVE_ARCH_BUG
->  #define BUG()							\
->  do {								\
-> +	instr_begin();						\
->  	_BUG_FLAGS(ASM_UD2, 0);					\
->  	unreachable();						\
->  } while (0)
+>  lib/Kconfig.debug | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index f61d834e02fe..6118d99117da 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -223,6 +223,8 @@ config DEBUG_INFO_DWARF4
+>  config DEBUG_INFO_BTF
+>         bool "Generate BTF typeinfo"
+>         depends on DEBUG_INFO
+> +       depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
+> +       depends on !GCC_PLUGIN_RANDSTRUCT || COMPILE_TEST
 
-For visual symmetry at least, it seems like this wants an instr_end()
-before the unreachable().  Does objtool not like that?
+Given what Kees explained, I think this looks good. Thanks!
 
-> --- a/include/asm-generic/bug.h
-> +++ b/include/asm-generic/bug.h
-> @@ -83,14 +83,19 @@ extern __printf(4, 5)
->  void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
->  		       const char *fmt, ...);
->  #define __WARN()		__WARN_printf(TAINT_WARN, NULL)
-> -#define __WARN_printf(taint, arg...)					\
-> -	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
-> +#define __WARN_printf(taint, arg...) do {				\
-> +	instr_begin();							\
-> +	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg);		\
-> +	instr_end();							\
-> +	while (0)
-
-Missing a '}' before the 'while'?
-
--- 
-Josh
-
+>         help
+>           Generate deduplicated BTF type information from DWARF debug info.
+>           Turning this on expects presence of pahole tool, which will convert
