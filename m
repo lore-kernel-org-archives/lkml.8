@@ -2,153 +2,149 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF91C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64719C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC812077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C403206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585846897;
+	bh=iTuAlJ8plAcIQmVuSn6zUya6pSCV3O6k52BV+0g7jYQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SyO6AHRSm9csLAnC1RpXRD9yAD13+Q94et3zSnejJrUCaBOYfm/6REZD0qk/Xv1Ju
+	 a0/ZOQI+gSRmE+8FZqd7ZoOiXyv4PtdZ/P0g+uhskH1/4GneDcvLUz2Hbut+Zi5yFm
+	 YLGS/otWgdKxo2GtD96e/DaBxX6PVm2yRS66J69E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389976AbgDBRBQ (ORCPT
+        id S2389985AbgDBRBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:01:16 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:52874 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389711AbgDBRBQ (ORCPT
+        Thu, 2 Apr 2020 13:01:36 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:58726 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732625AbgDBRBg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:01:16 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK3DO-0008Jh-Ms; Thu, 02 Apr 2020 11:01:14 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK3DN-0008NS-8i; Thu, 02 Apr 2020 11:01:14 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>
-References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
-        <20200327172331.418878-8-gladkov.alexey@gmail.com>
-Date:   Thu, 02 Apr 2020 11:58:28 -0500
-In-Reply-To: <20200327172331.418878-8-gladkov.alexey@gmail.com> (Alexey
-        Gladkov's message of "Fri, 27 Mar 2020 18:23:29 +0100")
-Message-ID: <875zehkeob.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 2 Apr 2020 13:01:36 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 032H1TeJ031701;
+        Fri, 3 Apr 2020 02:01:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 032H1TeJ031701
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585846890;
+        bh=1mH4cw2yYcVZRUVlvx7GMUbn2oki49fXdwmWN7fbBsc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rrl7k6aVw3iI8Z3PirOB6ZMA0fHnC57gsk0b2BLP+Lo8ry3278PY9LFojc2cEijdL
+         favhYLtVbKdt3pgy/ChzgY6/ofWR40HQnneX85xefvGjWsCLYAxgq+39OQpEHFaC/l
+         osspRAMc38pFIYbjtbXkvqzP2lr+6hu0Tc4yvc6kiO7KYNKCUzPTmAooT9911O1p1R
+         xxS/OHhG/OfVkPg6DcHufavsku3e/YJqEiT6VvWW7DB2MtCxpdhWeQknl4vbIrgZaZ
+         qVQxeKG7phAMWvOZOKmoJdcX3ytam+G2EEg/QFo5BZbMa2TimyVgqfI0nqQlsZPRbE
+         BEqO3N1Jlqnug==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id u9so2851516vsp.6;
+        Thu, 02 Apr 2020 10:01:30 -0700 (PDT)
+X-Gm-Message-State: AGi0PubkUT6/Rcj4r7NU48cdqp0DT3rdsIwb51hFRHnG+jZ2+jDYFrU1
+        9SntwlBlmdZ+CznIOAX2ZUzEsVETYrexcnN4D08=
+X-Google-Smtp-Source: APiQypL4Rvy03M3ygmfpwsDxMy3+2fu8bl+1s8iqt4E7kRsuRDEYA0XDULMd7iH+08rmBTvCd8fPGu6VcrUOLgyYtAw=
+X-Received: by 2002:a67:33cb:: with SMTP id z194mr3175293vsz.155.1585846888868;
+ Thu, 02 Apr 2020 10:01:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jK3DN-0008NS-8i;;;mid=<875zehkeob.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+Ru1GXxpvu1H/HwnkkVQs5oho2OLsbxwc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v10 7/9] proc: move hidepid values to uapi as they are user interface to mount
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <202004020117.6E434C035@keescook>
+In-Reply-To: <202004020117.6E434C035@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 3 Apr 2020 02:00:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQGTAgtADfY4H-k8X1J9nTMeOWvo8ZFfrUSHQUbhgcLKw@mail.gmail.com>
+Message-ID: <CAK7LNAQGTAgtADfY4H-k8X1J9nTMeOWvo8ZFfrUSHQUbhgcLKw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: mkcompile_h: Include $LD version in /proc/version
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Kees,
 
-I will just say that I do not understand exporting this to the uapi
-headers.  Why do we want to export the enumeration names?
-
-I understand that the values are uapi.  This looks like it will make it
-difficult to make changes that rename enumeration values to make
-the code more readable.
-
-Given that this patchset goes immediately to using string enumerated
-values, I also don't understand the point of exporting
-HIDEPID_NOT_PTRACEABLE.  I don't think we need to ever let
-people use the numeric value.
-
-My sense is that if we are switching to string values we should
-just leave the existing numeric values as backwards compatiblity
-and not do anything to make them easier to use.
-
-Eric
-
-
-Alexey Gladkov <gladkov.alexey@gmail.com> writes:
-
-> Suggested-by: Alexey Dobriyan <adobriyan@gmail.com>
-> Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
-> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
-> ---
->  include/linux/proc_fs.h      |  9 +--------
->  include/uapi/linux/proc_fs.h | 13 +++++++++++++
->  2 files changed, 14 insertions(+), 8 deletions(-)
->  create mode 100644 include/uapi/linux/proc_fs.h
+On Thu, Apr 2, 2020 at 5:18 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-> index afd38cae2339..d259817ec913 100644
-> --- a/include/linux/proc_fs.h
-> +++ b/include/linux/proc_fs.h
-> @@ -7,6 +7,7 @@
->  
->  #include <linux/types.h>
->  #include <linux/fs.h>
-> +#include <uapi/linux/proc_fs.h>
->  
->  struct proc_dir_entry;
->  struct seq_file;
-> @@ -27,14 +28,6 @@ struct proc_ops {
->  	unsigned long (*proc_get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
->  };
->  
-> -/* definitions for hide_pid field */
-> -enum {
-> -	HIDEPID_OFF	  = 0,
-> -	HIDEPID_NO_ACCESS = 1,
-> -	HIDEPID_INVISIBLE = 2,
-> -	HIDEPID_NOT_PTRACEABLE = 4, /* Limit pids to only ptraceable pids */
-> -};
-> -
->  /* definitions for proc mount option pidonly */
->  enum {
->  	PROC_PIDONLY_OFF = 0,
-> diff --git a/include/uapi/linux/proc_fs.h b/include/uapi/linux/proc_fs.h
-> new file mode 100644
-> index 000000000000..dc6d717aa6ec
-> --- /dev/null
-> +++ b/include/uapi/linux/proc_fs.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI_PROC_FS_H
-> +#define _UAPI_PROC_FS_H
-> +
-> +/* definitions for hide_pid field */
-> +enum {
-> +	HIDEPID_OFF            = 0,
-> +	HIDEPID_NO_ACCESS      = 1,
-> +	HIDEPID_INVISIBLE      = 2,
-> +	HIDEPID_NOT_PTRACEABLE = 4,
-> +};
-> +
-> +#endif
+> When doing Clang builds of the kernel, it is possible to link with
+> either ld.bfd (binutils) or ld.lld (LLVM), but it is not possible to
+> discover this from a running kernel. Add the "$LD -v" output to
+> /proc/version.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  init/Makefile       | 2 +-
+>  scripts/mkcompile_h | 8 ++++++--
+>  2 files changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/init/Makefile b/init/Makefile
+> index 6246a06364d0..82c15bdb42d7 100644
+> --- a/init/Makefile
+> +++ b/init/Makefile
+> @@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
+>         @$($(quiet)chk_compile.h)
+>         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@   \
+>         "$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"    \
+> -       "$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)"
+> +       "$(CONFIG_PREEMPT_RT)" "$(LD)" "$(CC) $(KBUILD_CFLAGS)"
+> diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+> index 3a5a4b210c86..f98c07709370 100755
+> --- a/scripts/mkcompile_h
+> +++ b/scripts/mkcompile_h
+> @@ -6,7 +6,8 @@ ARCH=$2
+>  SMP=$3
+>  PREEMPT=$4
+>  PREEMPT_RT=$5
+> -CC=$6
+> +LD=$6
+> +CC=$7
+
+
+Just a nit.
+
+If you just append 'LD',
+you do not need to touch the 'CC=$6' line.
+
+
+If you do not mind, I will fold the following
+on top of your patch.
+
+
+
+
+--- a/init/Makefile
++++ b/init/Makefile
+@@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
+        @$($(quiet)chk_compile.h)
+        $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@   \
+        "$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"    \
+-       "$(CONFIG_PREEMPT_RT)" "$(LD)" "$(CC) $(KBUILD_CFLAGS)"
++       "$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)" "$(LD)"
+diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+index 8b38a96163e2..5b80a4699740 100755
+--- a/scripts/mkcompile_h
++++ b/scripts/mkcompile_h
+@@ -6,8 +6,8 @@ ARCH=$2
+ SMP=$3
+ PREEMPT=$4
+ PREEMPT_RT=$5
+-LD=$6
+-CC=$7
++CC=$6
++LD=$7
+
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
