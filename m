@@ -2,131 +2,160 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F244C2BA16
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD2AC2BA16
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C9820719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:48:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FrX91c2d"
+	by mail.kernel.org (Postfix) with ESMTP id 0F5FD20719
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388350AbgDBTsI (ORCPT
+        id S2388007AbgDBTuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:48:08 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38284 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgDBTsI (ORCPT
+        Thu, 2 Apr 2020 15:50:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26404 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726963AbgDBTuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:48:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f6so5045195wmj.3;
-        Thu, 02 Apr 2020 12:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7vqQZx3OFDl9v1JNKAG7obOLJpITQf/WYHmvkQex5ko=;
-        b=FrX91c2d3qLq7JRgHaP+bH7mT69/MVfcSRGj5D6byzNquYJat1soSS0icjxXetVVfE
-         DbSZDkPn3naB8JV/qu4KvBScLiPTcpjRA7ZmtSmeOEjxxyjdsHxj8sOJImzFYBHHjCtD
-         Fmx0QJgcQKtHNvHFxwT9U/JqW6ZpS/QnJQSNzB8AC9efbB8PPdesIZDD8t8cMugcp7cp
-         FMIfYqUnVy/Ti9VjRG7pGxN9qLR8/QbefO66CxOZuq+DYy4tS8esksvKamG+A/mrVNTY
-         JzP6HcPTJKaaC76KL2WH4nSARi+vD60MOTUPmgZ8QrHQzSP5bI9lKNp29GNLIwvQALLm
-         tPLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7vqQZx3OFDl9v1JNKAG7obOLJpITQf/WYHmvkQex5ko=;
-        b=eYwyOpLPhF0Kiy8wlJ80LntzUjQL3f3IeE0Nu5gdXzgB5MtsErL7HQBglS63QV7/Bu
-         7o5+qx/evWQtnpULN2RCSD9COJJ1MCfMxv/Woxxje7OFqqJyC4eNcX/sypy27mfSHSja
-         DLj5tWM2reVulA2DWVjKmKHmlkb5ov4ZsEA64Eo7xiBLzUNniBGVAk2ZngB6fW4OOebA
-         4/s83lDE7B0cwVK0OwjH0+yzxkUlNk2prgQCSnLtgqG8oXmHyk4TKNhLFWvPUOrPBaMX
-         PS8tfev6DA8OgnZlld3s+uwvZxtJEt2RN2bhJZNiYv75iOybww6nwwh1/By/d3rJkzKx
-         LZAg==
-X-Gm-Message-State: AGi0PuZgk16YOEU7/gpYa2RK8vVvje7w/oFFO+VkDMT7QyLvc/h6i8Wb
-        hTqSh30unXCS+utWHBeorBA7KZ4J
-X-Google-Smtp-Source: APiQypK9lezQR0B1p3BvE0aXGmcJT1b3BYafop75EFrepb28NEqNafonBVvf4JtP4QTWJSIPROqHGw==
-X-Received: by 2002:a1c:e341:: with SMTP id a62mr5211708wmh.121.1585856885813;
-        Thu, 02 Apr 2020 12:48:05 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id o16sm8909021wrw.75.2020.04.02.12.48.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 12:48:05 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man <linux-man@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, arul.jeniston@gmail.com,
-        "devi R.K" <devi.feb27@gmail.com>,
-        Marc Lehmann <debian-reportbug@plan9.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>
-Subject: Re: timer_settime() and ECANCELED
-To:     Thomas Gleixner <tglx@linutronix.de>
-References: <87pncrf6gd.fsf@nanos.tec.linutronix.de>
- <4c557b44-4e4e-a689-a17b-f95e6c5ee4b0@gmail.com>
- <87mu7unugh.fsf@nanos.tec.linutronix.de>
- <8ae32d2f-e4a8-240f-c7bd-580c26bba2d0@gmail.com>
- <87bloanh89.fsf@nanos.tec.linutronix.de>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <5052f8a7-c6b9-be30-878e-053a3d035f7a@gmail.com>
-Date:   Thu, 2 Apr 2020 21:48:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 15:50:08 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 032JYaRh036481;
+        Thu, 2 Apr 2020 15:50:00 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 301yfj7pq0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 15:50:00 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 032JnX0a011582;
+        Thu, 2 Apr 2020 19:49:58 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 301x76kc1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 19:49:58 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 032Jnww642991934
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Apr 2020 19:49:58 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E0B8AE060;
+        Thu,  2 Apr 2020 19:49:58 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C845AE05C;
+        Thu,  2 Apr 2020 19:49:57 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.31.233])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  2 Apr 2020 19:49:57 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        eajames@linux.ibm.com
+Subject: [PATCH v7 1/5] dt-bindings: soc: Add Aspeed XDMA engine
+Date:   Thu,  2 Apr 2020 14:49:51 -0500
+Message-Id: <20200402194955.16643-2-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200402194955.16643-1-eajames@linux.ibm.com>
+References: <20200402194955.16643-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <87bloanh89.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-02_09:2020-04-02,2020-04-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=1 impostorscore=0 mlxscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=921 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/20 3:35 PM, Thomas Gleixner wrote:
-> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
->> NOTES
->>        Suppose  the  following scenario for CLOCK_REALTIME or CLOCK_REAL‐
->>        TIME_ALARM timer that was created with timerfd_create():
->>
->>        (a) The  timer  has  been  started  (timerfd_settime())  with  the
->>            TFD_TIMER_ABSTIME and TFD_TIMER_CANCEL_ON_SET flags;
->>
->>        (b) A discontinuous change (e.g.  settimeofday(2)) is subsequently
->>            made to the CLOCK_REALTIME clock; and
->>
->>        (c) the caller once more  calls  timerfd_settime()  to  rearm  the
->>            timer (without first doing a read(2) on the file descriptor).
->>
->>        In this case the following occurs:
->>
->>        · The  timerfd_settime()  returns  -1 with errno set to ECANCELED.
->>          (This enables the caller to know that  the  previous  timer  was
->>          affected by a discontinuous change to the clock.)
->>
->>        · The  timer is successfully rearmed with the settings provided in
->>          the second timerfd_settime() call.  (This was probably an imple‐
->>          mentation  accident,  but  won't be fixed now, in case there are
->>          applications that depend on this behaviour.)
-> 
-> Clear enough.
-> 
-> Thanks Michael!
+Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
 
-Thanks. Committed. (But, next time you change the API. maybe a 
-man-pages patch to go with that? :-).)
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Andrew Jeffrey <andrew@aj.id.au>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes since v6:
+ - Add PCI-E root complex reset documentation
+ - Add reset-names documentation
+ - Switch to memory-region phandle instead of memory regs
 
-Cheers,
+ .../devicetree/bindings/soc/aspeed/xdma.txt   | 44 +++++++++++++++++++
+ MAINTAINERS                                   |  6 +++
+ 2 files changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
 
-Michael
-
+diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+new file mode 100644
+index 000000000000..c3d7cdeb1db6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+@@ -0,0 +1,44 @@
++Aspeed AST25XX and AST26XX XDMA Engine
++
++The XDMA Engine embedded in the AST2500 and AST2600 SOCs can perform automatic
++DMA operations over PCI between the SOC (acting as a BMC) and a host processor.
++
++Required properties:
++ - compatible		: must be "aspeed,ast2500-xdma" or
++			  "aspeed,ast2600-xdma"
++ - reg			: contains the address and size of the memory region
++			  associated with the XDMA engine registers
++ - clocks		: clock specifier for the clock associated with the
++			  XDMA engine
++ - resets		: reset specifier for the syscon reset associated with
++			  the XDMA engine, and, for the AST2600, a second reset
++			  associated with the PCI-E root complex
++ - reset-names		: required only for the AST2600; must be "dev, "rc"
++ - interrupts-extended	: two interrupt cells; the first specifies the global
++			  interrupt for the XDMA engine and the second
++			  specifies the PCI-E reset or PERST interrupt.
++ - aspeed,scu		: a phandle to the syscon node for the system control
++			  unit of the SOC
++ - memory-region	: a phandle to the reserved memory region to be used by
++			  the XDMA engine for DMA operations
++
++Optional properties:
++ - pcie-device		: should be either "bmc" or "vga", corresponding to
++			  which device should be used by the XDMA engine for
++			  DMA operations. If this property is not set, the XDMA
++			  engine will use the BMC PCI-E device.
++
++Example:
++
++    xdma@1e6e7000 {
++        compatible = "aspeed,ast2600-xdma";
++        reg = <0x1e6e7000 0x100>;
++        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
++        resets = <&syscon ASPEED_RESET_DEV_XDMA>, <&syscon ASPEED_RESET_RC_XDMA>;
++        reset-names = "dev", "rc";
++        interrupts-extended = <&gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++                              <&scu_ic0 ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI>;
++        aspeed,scu = <&syscon>;
++        pcie-device = "bmc";
++        memory-region = <&vga_memory>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2fd88eeffed5..619a2d559ce2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2771,6 +2771,12 @@ S:	Maintained
+ F:	drivers/media/platform/aspeed-video.c
+ F:	Documentation/devicetree/bindings/media/aspeed-video.txt
  
-
-
++ASPEED XDMA ENGINE DRIVER
++M:	Eddie James <eajames@linux.ibm.com>
++L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/soc/aspeed/xdma.txt
++
+ ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+ M:	Corentin Chary <corentin.chary@gmail.com>
+ L:	acpi4asus-user@lists.sourceforge.net
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.24.0
+
