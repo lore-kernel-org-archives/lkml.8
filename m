@@ -2,145 +2,94 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF74CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A719C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BDD206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4533B2074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:18:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dFoewix3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8n6vkBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733098AbgDBOSC (ORCPT
+        id S2388004AbgDBOSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:18:02 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38260 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729213AbgDBOSC (ORCPT
+        Thu, 2 Apr 2020 10:18:06 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40490 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733195AbgDBOSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:18:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585837080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BGk/XdTx2AmaoUi8dVZJyPw/8pIQ5+8d5IHVPpIgBvk=;
-        b=dFoewix3GVlhLi/47Sj8tyeUuiIYj7tg5x8LXA6f/g0rV1AJPVy+S42QcInjzXlOoq/sBH
-        a5CtbjhVIbvZlnrNff02jhd6KAa1wcOcpp+9sGIq9delQxSO4Oel+vvZIo+YPqT7m9TZ6x
-        /6SL0IpQpxdu2Okylu5YitU10G8+i4o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-EuI1sNs8MkOs_7zZZeWt6Q-1; Thu, 02 Apr 2020 10:17:58 -0400
-X-MC-Unique: EuI1sNs8MkOs_7zZZeWt6Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 71861801A22;
-        Thu,  2 Apr 2020 14:17:44 +0000 (UTC)
-Received: from krava (unknown [10.40.194.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A18B999E08;
-        Thu,  2 Apr 2020 14:17:42 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 16:17:40 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 4/8] perf stat: implement resume and pause control
- commands handling
-Message-ID: <20200402141740.GO2518490@krava>
-References: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
- <20afb83b-efc4-6cba-6512-eebbb4e0707a@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20afb83b-efc4-6cba-6512-eebbb4e0707a@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Thu, 2 Apr 2020 10:18:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c20so1813126pfi.7;
+        Thu, 02 Apr 2020 07:18:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sV9tqvN+vUsyclDdwQsodCiDkYsbUmI0zD+TvEKC7qc=;
+        b=q8n6vkBIA8dUONiHy5uZswo71uL9A604LdVul9lHMn41yd5Xl1Jzvj/PQf6kq8Fdi3
+         deRNP+evO0vErW2JdOHESfh4oCrIzS7X+Or/Ryl6ada27/8kV+00c62o36YVmNm3bXAh
+         niUJKP78LuRxoXbZyJKvSiv8+O+J7rN0ZlcV58yUSf5J0Ri54PXHO8aglrSGbfTwJGNH
+         mCB6C7CTQpA1WHsbiT7wK/drP5IxUUyEU+cWICUE00vvv8HwdZjNosrg47VEPp8idvRK
+         tYBNGKqpvz+D+IQCU4wX++r+x4iKBXyp0t0izDX1ETCzZ2NMtdusDzQBbXw103jza8Vo
+         RuHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sV9tqvN+vUsyclDdwQsodCiDkYsbUmI0zD+TvEKC7qc=;
+        b=CY7tkgf3JQFT6vn2QfYkS0ySgGuCom7TGHBSAOgKGii2Yld2Ut0g/9yijMchQ4RX/P
+         xstm8LGRJofFF1uz88TccSlOYlqxmOmYHQ1P/b5ieWHGl6J/YHDTYo4yKyhamyiXnjmt
+         2DBmSiZz2BWFHI3NvHJxVNtDBC4cOAaRjtG2sUSMGrUTZ/y+aIzB5VhJDzlOiE0IWFpi
+         lcJAgD+CyITmLIyYsxwF+tNlG4oZaxB7VRDs1iUnI7gpwYWhBn7W2nCH3V80r2s4PsYM
+         5NehSSDh8cRzm0TvF5r9yenHMW2KgydHgD63+f2IlyqNxsXP9nKgj1wkh6i/+g1ExDWE
+         91Bw==
+X-Gm-Message-State: AGi0PubqGn3S08VASMm8y/AuFKQUL0i3beEjDz7YsIMLK4X0kyMUrJsG
+        h4BraBmSp564RB5/lIWoBjJl4/7X
+X-Google-Smtp-Source: APiQypKzNpovHvEBeYUUJnNJcVcgCL02kvy3XkA8JBR55L1Xtym3V6pWuaeOTyojCvb39rlyVeyYow==
+X-Received: by 2002:a63:29c1:: with SMTP id p184mr3613563pgp.37.1585837084468;
+        Thu, 02 Apr 2020 07:18:04 -0700 (PDT)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id r63sm3887237pfr.42.2020.04.02.07.18.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 Apr 2020 07:18:03 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     amitkarwar@gmail.com, siva8118@gmail.com, kvalo@codeaurora.org
+Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] rsi: fix a typo "throld" -> "threshold"
+Date:   Thu,  2 Apr 2020 22:17:58 +0800
+Message-Id: <1585837078-6149-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 11:48:31AM +0300, Alexey Budankov wrote:
+There is a typo in debug message. Fix it.
+s/throld/threshold
 
-SNIP
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ drivers/net/wireless/rsi/rsi_91x_mac80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  
-> -	if (interval) {
-> -		ts.tv_sec  = interval / USEC_PER_MSEC;
-> -		ts.tv_nsec = (interval % USEC_PER_MSEC) * NSEC_PER_MSEC;
-> -	} else if (timeout) {
-> -		ts.tv_sec  = timeout / USEC_PER_MSEC;
-> -		ts.tv_nsec = (timeout % USEC_PER_MSEC) * NSEC_PER_MSEC;
-> -	} else {
-> -		ts.tv_sec  = 1;
-> -		ts.tv_nsec = 0;
-> -	}
-> -
->  	if (forks) {
->  		if (perf_evlist__prepare_workload(evsel_list, &target, argv, is_pipe,
->  						  workload_exec_failed_signal) < 0) {
-> @@ -688,18 +745,10 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
->  		perf_evlist__start_workload(evsel_list);
->  		enable_counters();
->  
-> -		if (interval || timeout) {
-> -			while (!waitpid(child_pid, &status, WNOHANG)) {
-> -				nanosleep(&ts, NULL);
-> -				if (timeout)
-> -					break;
-> -				process_interval();
-> -				if (interval_count && !(--times))
-> -					break;
-> -			}
-> -		}
-> -		if (child_pid != -1)
-> +		if (stat_config.ctl_fd == -1 && !interval && !timeout)
->  			wait4(child_pid, &status, 0, &stat_config.ru_data);
-> +		else
-> +			status = handle_events(child_pid, &stat_config);
->  
->  		if (workload_exec_errno) {
->  			const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
-> @@ -711,18 +760,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
->  			psignal(WTERMSIG(status), argv[0]);
->  	} else {
->  		enable_counters();
-> -		while (!done) {
-> -			nanosleep(&ts, NULL);
-> -			if (!is_target_alive(&target, evsel_list->core.threads))
-> -				break;
-> -			if (timeout)
-> -				break;
-> -			if (interval) {
-> -				process_interval();
-> -				if (interval_count && !(--times))
-> -					break;
-> -			}
-> -		}
-
-could you please separate the change to have:
-  - factor out the above too loops to the new function
-  - adding control fds handling to that function
-
-so it's more obvious we don't break anything
-
-thanks,
-jirka
-
-> +		handle_events(-1, &stat_config);
->  	}
->  
->  	disable_counters();
-> -- 
-> 2.24.1
-> 
-> 
+diff --git a/drivers/net/wireless/rsi/rsi_91x_mac80211.c b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
+index 4400882..5c0adb0 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
++++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
+@@ -832,7 +832,7 @@ static void rsi_mac80211_bss_info_changed(struct ieee80211_hw *hw,
+ 		common->cqm_info.last_cqm_event_rssi = 0;
+ 		common->cqm_info.rssi_thold = bss_conf->cqm_rssi_thold;
+ 		common->cqm_info.rssi_hyst = bss_conf->cqm_rssi_hyst;
+-		rsi_dbg(INFO_ZONE, "RSSI throld & hysteresis are: %d %d\n",
++		rsi_dbg(INFO_ZONE, "RSSI threshold & hysteresis are: %d %d\n",
+ 			common->cqm_info.rssi_thold,
+ 			common->cqm_info.rssi_hyst);
+ 	}
+-- 
+1.8.3.1
 
