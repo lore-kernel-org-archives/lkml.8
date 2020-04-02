@@ -2,99 +2,113 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B109C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60352C2BA17
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2847C20737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585843678;
-	bh=pZjm/1Qvu4RLX44Z2RQzPe+xLwWY2hDAJm1DbeLQaTI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=zp1vdfQ5iyYcjOb/1cK1ySta9ugJ3IwGXWRAmkzOCFQQhzAOGFHrWGzPjaV2NWOil
-	 hswE0WnoVrIbgvxu/kBQ1sJr18i6ynZI2TiNRaZSmNOmHaM5FJi15l1eyZWszgjcDY
-	 vjsMsbfZlLmUDkrK9dtpDaObh80l85RZLhQSHck4=
+	by mail.kernel.org (Postfix) with ESMTP id 40CC52063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389763AbgDBQH5 (ORCPT
+        id S2389775AbgDBQIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:07:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388972AbgDBQH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:07:57 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 709A02063A;
-        Thu,  2 Apr 2020 16:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585843676;
-        bh=pZjm/1Qvu4RLX44Z2RQzPe+xLwWY2hDAJm1DbeLQaTI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=2ZvDib7Xqc8MpjEQFSnN/noANaOgBb3M5FQHcUGhc1oVm9XJo1+9sL684Yx2GmGyn
-         L9vhztP8mQZqVcdqm0+okJMU6RH6ohm1pVvS8quS62uglIu7NtV6V0tEEsnM4vFQQi
-         W4zklR5YMZ3GMyl9AL+WyeFqgdPsxrHGRa5+8NK4=
-Date:   Thu, 2 Apr 2020 09:07:56 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
-Subject: [GIT PULL] iomap: new code for 5.7
-Message-ID: <20200402160756.GA56932@magnolia>
+        Thu, 2 Apr 2020 12:08:23 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:35208 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389392AbgDBQIW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 12:08:22 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jK2OD-0007Me-0v; Thu, 02 Apr 2020 10:08:21 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jK2Nx-00044C-IX; Thu, 02 Apr 2020 10:08:20 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>
+References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
+        <20200327172331.418878-9-gladkov.alexey@gmail.com>
+Date:   Thu, 02 Apr 2020 11:05:21 -0500
+In-Reply-To: <20200327172331.418878-9-gladkov.alexey@gmail.com> (Alexey
+        Gladkov's message of "Fri, 27 Mar 2020 18:23:30 +0100")
+Message-ID: <87d08pkh4u.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-XM-SPF: eid=1jK2Nx-00044C-IX;;;mid=<87d08pkh4u.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19Wu6fmQHfDofF39L0DBA9uLm55GXDDZi0=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v10 8/9] proc: use human-readable values for hidehid
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Alexey Gladkov <gladkov.alexey@gmail.com> writes:
 
-Please pull this set of new code for 5.7.  We're fixing tracepoints and
-comments in this cycle, so there shouldn't be any surprises here.  I
-performed a test merge just now and everything went smoothly.
+> The hidepid parameter values are becoming more and more and it becomes
+> difficult to remember what each new magic number means.
 
-I anticipate sending a second pull request next week with a single bug
-fix for readahead, but it's still undergoing QA.
+In principle I like this change.  In practice I think you have just
+broken ABI compatiblity with the new mount ABI.
 
---D
+In particular the following line seems broken.
 
-The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
+> diff --git a/fs/proc/root.c b/fs/proc/root.c
+> index dbcd96f07c7a..ba782d6e6197 100644
+> --- a/fs/proc/root.c
+> +++ b/fs/proc/root.c
+> @@ -45,7 +45,7 @@ enum proc_param {
+>  
+>  static const struct fs_parameter_spec proc_fs_parameters[] = {
+>  	fsparam_u32("gid",	Opt_gid),
+> -	fsparam_u32("hidepid",	Opt_hidepid),
+> +	fsparam_string("hidepid",	Opt_hidepid),
+>  	fsparam_string("subset",	Opt_subset),
+>  	{}
+>  };
 
-  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+As I read fs_parser.c fs_param_is_u32 handles string inputs and turns them
+into numbers, and it handles binary numbers.  However fs_param_is_string
+appears to only handle strings.  It appears to have not capacity to turn
+raw binary numbers into strings.
 
-are available in the Git repository at:
+So I think we probably need to fix fs_param_is_string to raw binary
+numbers before we can safely make this change to fs/proc/root.c
 
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.7-merge-2
+David am I reading the fs_parser.c code correctly?  If I am are you ok
+with a change like the above?
 
-for you to fetch changes up to d9973ce2fe5bcdc5e01bb3f49833d152b8e166ca:
-
-  iomap: fix comments in iomap_dio_rw (2020-03-18 08:04:36 -0700)
-
-----------------------------------------------------------------
-New iomap code for 5.7:
-- Fix a broken tracepoint
-- Fix a broken comment
-
-----------------------------------------------------------------
-Matthew Wilcox (Oracle) (1):
-      iomap: Remove pgoff from tracepoints
-
-yangerkun (1):
-      iomap: fix comments in iomap_dio_rw
-
- fs/iomap/buffered-io.c |  7 ++++---
- fs/iomap/direct-io.c   |  4 ++--
- fs/iomap/trace.h       | 27 +++++++++++----------------
- 3 files changed, 17 insertions(+), 21 deletions(-)
+Eric
