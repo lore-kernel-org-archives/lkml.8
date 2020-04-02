@@ -2,188 +2,135 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95619C2BA17
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333EFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD702073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC1520787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lU6BN+dV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXRapGOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390124AbgDBXTt (ORCPT
+        id S2390073AbgDBXWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:19:49 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:41358 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731783AbgDBXTs (ORCPT
+        Thu, 2 Apr 2020 19:22:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42233 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388709AbgDBXWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 19:19:48 -0400
-Received: by mail-vs1-f66.google.com with SMTP id a63so3761030vsa.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:19:48 -0700 (PDT)
+        Thu, 2 Apr 2020 19:22:47 -0400
+Received: by mail-pl1-f196.google.com with SMTP id e1so1945085plt.9;
+        Thu, 02 Apr 2020 16:22:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ncIkL/N+C/5xfW8f4UpsaGlmkYruRQuItf8xwxhNScQ=;
-        b=lU6BN+dVzTeqQyyPfiQaqqCrnWa3Ec+Pvx4uo5Ygw9tUQCILw+U9toAhRszqX5nWLC
-         ThhAtXEIbmIwuHIBVCYdWvKh/XM2J0/ed62PZqgbK/12Fn6n8QqlVLHZsJavPGYEMTpy
-         Tn/ERwSLfz0RJNfSGF57RnPXKhMvbU/3YmO/s=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=u8HvPpe3qGqlNdDY9g14WKC8TpBv8LKW4vXztMEUQuU=;
+        b=BXRapGOpGVCp/gSWUISRPklkqWTrVMLlkReKe3UM16a5/8GQC8W9dnDkWy69uvKKFH
+         QOBaW4lSsR7ql/CmDNA20yb04WtGe2mqf2nFyBzeLFAweKbuzQ1coOTt1yi/6Ij3CgRR
+         hCzRyQv7o4JsclzfBfWAbjYwAjTl+Y2ITa2N9aC/UVJo/z4Wu4Peram4uEw0E5aOTzkn
+         8QnI1qO/rbsYPIO//CELXM7kdSPZy9vrngkBKqZmrf5sAArm009WnmxJr9M2VjOIVQOa
+         bHdabNf3PO3D6G+C+iHQ4/Z1y0ML3hZ/hEQOzOAw5Q5mg3TgTt8HFo78J2C4E+z5QUy7
+         eTRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ncIkL/N+C/5xfW8f4UpsaGlmkYruRQuItf8xwxhNScQ=;
-        b=JCLHId/rj76yPr9dX+Q2BgCFvq6/8bRf4mLvZPiSM59qASYgeVUbxBYHQhf2B/Tzr1
-         83L4j1Df80+1HPiKZc7oXSiv5lqHZ3MudL417u1YWsiUKx+efjCh5BQmygiT2cBWeS0J
-         iiXKR9Ai/Q7/MNrCGc+/Ifv3Cogu9u3N+v0yQ2UlLMuecP5NYj/fchZqJHEdNWQjfYkd
-         BnQCX6D96t4NLaqmsWV+fgSIwC7dtpbQuDSnmEybPCAUfAe2UCrosAvCEw6VOGNRPhvk
-         lSbMQxmA4dmQRyqm9o7rjW26U2CTWWtjXkcJM26MR6r+Ag8W7lWbSZ4SJ4AwzvDvX5W3
-         WVgA==
-X-Gm-Message-State: AGi0PuYznJodJBBAXPvev9yoM9h/od6APnP9c83JRcl9sRGLvsb68XW7
-        HkR91iJtg99sZMmQB9p0IizKRWt2M7w=
-X-Google-Smtp-Source: APiQypKWfnzpnwJJcloJdOr30JMPvBytelcNOh9utS6yFNga/peBqVP1s/OHkRmEBwAghbH79PkrzA==
-X-Received: by 2002:a67:2d52:: with SMTP id t79mr4549784vst.173.1585869587539;
-        Thu, 02 Apr 2020 16:19:47 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id 129sm1729540vst.16.2020.04.02.16.19.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 16:19:46 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id x206so3790469vsx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:19:46 -0700 (PDT)
-X-Received: by 2002:a67:2b07:: with SMTP id r7mr4746980vsr.169.1585869585633;
- Thu, 02 Apr 2020 16:19:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
- <20200402223723.7150-1-john.stultz@linaro.org> <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
- <CALAqxLXfd+7Wc79_XWRv8cKLFu+MpM1w9e3byx9z5bXSdTemLg@mail.gmail.com>
-In-Reply-To: <CALAqxLXfd+7Wc79_XWRv8cKLFu+MpM1w9e3byx9z5bXSdTemLg@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 2 Apr 2020 16:19:34 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
-Message-ID: <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
-Subject: Re: [PATCH] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=u8HvPpe3qGqlNdDY9g14WKC8TpBv8LKW4vXztMEUQuU=;
+        b=I1jM0ohF+xszm49CBlyWjfeoRNP5B98pNGsM4YpjD4v5UO2czF32wOoQJxqBXJVY0I
+         KfMek7p66qfWgzPtO3SbqwNlLRjbsREIGztPe0RWUGlJfcMOgEPoADYU5+elO5j87IPB
+         OpqdPp5GBdnDFsqaOotuYJdRYRXIh41piVUb81TnhZHKaPvzmEewp1ih04V4oInycjYP
+         AUJHdd8R+WuYOFtiyepc5cfDKJKRH49c6HXvf2BS1qgeKvIAn3e15kFg0GwD3065BhNZ
+         h9vGmqHBBRdJPTCRQMt0mHe4M2Idbl+1h6Vd1JZrLBaDmFbAVv+gr7wgME7UTnCtP9bK
+         BLCA==
+X-Gm-Message-State: AGi0PuaRbfGCR359KgzItLdMljjkG7xhtFqajsbnV9lqoRpxfSOwdi5D
+        hSe+zCgtmFPZ89OUCjZGdvpAzp4=
+X-Google-Smtp-Source: APiQypLezL7kO8y7vcqeff1s22qaWpImDhaVh2fQJ557YifCfpcJVqu3Fte88pNlWkSXH6yqZXJ8Yw==
+X-Received: by 2002:a17:90a:8e84:: with SMTP id f4mr6542572pjo.72.1585869766247;
+        Thu, 02 Apr 2020 16:22:46 -0700 (PDT)
+Received: from localhost.localdomain ([2402:3a80:13be:9909:917a:5556:7ebf:36b9])
+        by smtp.gmail.com with ESMTPSA id 67sm4440445pfe.168.2020.04.02.16.22.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 16:22:45 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     gregkh@linuxfoundation.org, hariprasad.kelam@gmail.com,
+        colin.king@canonical.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ldv-project@linuxtesting.org, andrianov@ispras.ru,
+        stern@rowland.harvard.edu,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] usb: host: u132-hcd: Remove u132_static_list
+Date:   Fri,  3 Apr 2020 04:52:28 +0530
+Message-Id: <20200402232228.22395-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-On Thu, Apr 2, 2020 at 4:08 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Thu, Apr 2, 2020 at 3:56 PM Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Apr 2, 2020 at 3:37 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
-> > > PHY support"), the change was made to add "qcom,qusb2-v2-phy"
-> > > as a generic compat string. However the change also removed
-> > > the "qcom,sdm845-qusb2-phy" compat string, which is documented
-> > > in the binding and already in use.
-> > >
-> > > This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
-> > > which allows the driver to continue to work with existing dts
-> > > entries such as found on the db845c.
-> > >
-> > > Cc: Andy Gross <agross@kernel.org>
-> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Doug Anderson <dianders@chromium.org>
-> > > Cc: Manu Gautam <mgautam@codeaurora.org>
-> > > Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-> > > Cc: Matthias Kaehlcke <mka@chromium.org>
-> > > Cc: Stephen Boyd <swboyd@chromium.org>
-> > > Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> > > Cc: linux-arm-msm@vger.kernel.org
-> > > Cc: devicetree@vger.kernel.org
-> > > Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
-> > > Reported-by: YongQin Liu <yongqin.liu@linaro.org>
-> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > ---
-> > >  drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> >
-> > Do you have an out-of-tree dts file?  If not, I'd prefer that the fix
-> > was for this patch to land instead:
-> >
-> > https://lore.kernel.org/r/1583747589-17267-9-git-send-email-sanm@codeaurora.org
->
-> No, no out of tree dts.  The usage is already in tree:
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845.dtsi#n2389
->
->
-> > While we can land your patch if someone needs it for supporting an
-> > out-of-tree dts, it gives people supporting future SoCs the idea that
-> > they need to add themselves to this table too.  That's now discouraged
-> > unless there's a specific quirk that needs to be handled just for this
-> > SoC.
->
-> My understanding with dts bindings is that they are effectively an
-> ABI. While maybe it makes sense to deprecate the
-> "qcom,sdm845-qusb2-phy" string in the Documentation to avoid new
-> users, I'd think we'd want to keep the support in the driver as we
-> aren't supposed to have tight coupling between the DTB and kernel (at
-> least for official bindings).
+u132_static_list is a global list protected by u132_module_lock.
+It is read in the u132_hcd_exit() function without holding the lock
+thus may lead to data race.
+However, it turns out that this list isn't used for anything useful
+and thus it is okay to get rid of it.
+Thus, remove the u132_static_list from u132-hcd module.
 
-If nothing else if we're going to land your patch, can you at least
-put a comment in there that says "only needed to support legacy device
-trees that didn't include "qcom,qusb2-v2-phy" in the compatible
-string.  Then the person who adds the next Qualcomm SoC will know not
-to add themselves to the table too.
+Found by Linux Driver Verification project (linuxtesting.org).
 
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ drivers/usb/host/u132-hcd.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-> Granted, I've not gotten much experience with boards that were fully
-> upstream and thus didn't have an eternally evolving dts file that had
-> to be kept in sync with the kernel, so in practice either solution
-> does work for me, but in theory it seems like we should at least
-> pretend these things are stable. :)
+diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
+index e9209e3e6248..52f70cf063ea 100644
+--- a/drivers/usb/host/u132-hcd.c
++++ b/drivers/usb/host/u132-hcd.c
+@@ -81,7 +81,6 @@ static DECLARE_WAIT_QUEUE_HEAD(u132_hcd_wait);
+ static struct mutex u132_module_lock;
+ static int u132_exiting;
+ static int u132_instances;
+-static struct list_head u132_static_list;
+ /*
+ * end of the global variables protected by u132_module_lock
+ */
+@@ -3089,7 +3088,6 @@ static int u132_probe(struct platform_device *pdev)
+ 		retval = 0;
+ 		hcd->rsrc_start = 0;
+ 		mutex_lock(&u132_module_lock);
+-		list_add_tail(&u132->u132_list, &u132_static_list);
+ 		u132->sequence_num = ++u132_instances;
+ 		mutex_unlock(&u132_module_lock);
+ 		u132_u132_init_kref(u132);
+@@ -3192,7 +3190,6 @@ static struct platform_driver u132_platform_driver = {
+ static int __init u132_hcd_init(void)
+ {
+ 	int retval;
+-	INIT_LIST_HEAD(&u132_static_list);
+ 	u132_instances = 0;
+ 	u132_exiting = 0;
+ 	mutex_init(&u132_module_lock);
+@@ -3213,14 +3210,9 @@ static int __init u132_hcd_init(void)
+ module_init(u132_hcd_init);
+ static void __exit u132_hcd_exit(void)
+ {
+-	struct u132 *u132;
+-	struct u132 *temp;
+ 	mutex_lock(&u132_module_lock);
+ 	u132_exiting += 1;
+ 	mutex_unlock(&u132_module_lock);
+-	list_for_each_entry_safe(u132, temp, &u132_static_list, u132_list) {
+-		platform_device_unregister(u132->platform_dev);
+-	}
+ 	platform_driver_unregister(&u132_platform_driver);
+ 	printk(KERN_INFO "u132-hcd driver deregistered\n");
+ 	wait_event(u132_hcd_wait, u132_instances == 0);
+-- 
+2.17.1
 
-Yeah, I don't want to get into the whole stable ABI argument, but what
-you say is the official word.  The bindings are supposed to be a
-stable ABI and it's a good goal to strive for.
-
-...but in reality most people are OK with it not being quite so stable
-as long as it's not hurting anyone.  What should have happened here is
-that the bindings and dts should have landed in one Linux version and
-the driver change landed in the next Linux version.  Now we're stuck
-with the breakage, though.  :(  In general for "new" architectures
-it's considered more OK to break compatibility, though I guess you can
-argue whether sdm845 is really new enough.  I guess to get at the meat
-of the issue though: if you need a patch to fix your problem anyway,
-why not land the patch that doesn't end up chewing extra up extra code
-space and providing a bad example for someone to copy?
-
-Now certainly if changing your DTS was an undue burden (like you've
-already baked device trees into firmware) there's no question we
-should land your patch.  I'm just not sure the lofty goal of "it's
-supposed to be a stable ABI so let's add an entry to the table that
-nobody will ever care about after the dts change lands" is enough of a
-reason to land it now.
-
-OK, I'll duck from the tomatoes now.
-
--Doug
