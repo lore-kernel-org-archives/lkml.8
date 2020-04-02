@@ -2,131 +2,98 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E3BC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E512C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67BB3206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043CC20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:00:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cKiCEtpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733281AbgDBB5q (ORCPT
+        id S1733265AbgDBCAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 21:57:46 -0400
-Received: from sandeen.net ([63.231.237.45]:50490 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733073AbgDBB5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 21:57:45 -0400
-Received: from Liberator.local (liberator [10.0.0.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id B842E116F4;
-        Wed,  1 Apr 2020 20:57:35 -0500 (CDT)
-Subject: Re: [RFC 2/3] blktrace: fix debugfs use after free
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de
-Cc:     mhocko@suse.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bart Van Assche <bvanassche@acm.org>,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-References: <20200402000002.7442-1-mcgrof@kernel.org>
- <20200402000002.7442-3-mcgrof@kernel.org>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- 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 pA==
-Message-ID: <9a6576cf-b89d-d1af-2d74-652878cb78c8@sandeen.net>
-Date:   Wed, 1 Apr 2020 20:57:42 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200402000002.7442-3-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 1 Apr 2020 22:00:36 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:43032 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732498AbgDBCAf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 22:00:35 -0400
+Received: by mail-qv1-f66.google.com with SMTP id c28so901389qvb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 19:00:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=qfoLXrnqNbdNMc/qg2fQn2VjZnT5IOOCPmT892IlYdk=;
+        b=cKiCEtpAG53uMWAllPIubuUVMZlkf3zGEeenWXGZmNb+BHlxsZBGyKew+FTU9oQ0DK
+         McD3eNpxPXKTXQPqLWrgQdam04yznD9HI+ZfpUVD4+6oU/EnkDneahxLSct/AcGOF4gG
+         uheCdgHsaoKysYe8jmBDL5RQYET+jwYiCS8TGbjMxhAArzztsmCasWUrhDVQx5cbzEiC
+         46MaPsstwXUfybIOU50IHy4Ix+1AtX+LmS7afvx+O+PlAXsZ+jUibdRobmcBTI6f7Jxi
+         MgjCUnelx9ep+I9n1ADEJjzAxCwlrKMWRT47dVTrQnjx7fRr/mKa6yMLmmnXJqb/GFsW
+         Zg4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=qfoLXrnqNbdNMc/qg2fQn2VjZnT5IOOCPmT892IlYdk=;
+        b=Pd9NDu8SQ8w8gYe9t1Bo3/y9JvICQO6FxJitdFX2YDDxI/zVA0eAmnHpreeDjzS4/V
+         0Os0045dZYChR3p1+GATEO9uAmsgc0mPEeUDkhghhYQhmo734/rC8HFslmWNqBR4s/a/
+         +HDJi3DAJuH5pXs4rBAhYj1JLeytpPk4jcSDQH5Ed9n4lJsu0VfrXvKbmWJcWUOZGbWe
+         XdyC8oycr8lJIBvRkv9JdUJW64Kqimn6irrAuhrHM7+p+I7g3oe/lDt9Bq8YBUB29bxR
+         2PsE1LZAqjkBFXkJBMD59nCS3VY4xPjeg1e12tCrw4HchduSemjJnTTqzx2eFDoexSsE
+         SSKQ==
+X-Gm-Message-State: AGi0PuZgIDY0nfNZDZUafalPyjxEe7on7pEOr/kFvcDdvL3mipgPE0Vv
+        QTj2UYJZQCN9hzHLEyouoXMJRg==
+X-Google-Smtp-Source: APiQypKt76w7m6e5xoRV81SkiAPCm2e1rthecIHWTZSulTpArjqfbhWp7Y/79CYWcsS260luE96bsg==
+X-Received: by 2002:a0c:90aa:: with SMTP id p39mr1075930qvp.38.1585792834408;
+        Wed, 01 Apr 2020 19:00:34 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id s56sm2889238qtk.9.2020.04.01.19.00.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Apr 2020 19:00:33 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: Deadlock due to "cpuset: Make cpuset hotplug synchronous"
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200325191922.GM162390@mtj.duckdns.org>
+Date:   Wed, 1 Apr 2020 22:00:31 -0400
+Cc:     Prateek Sood <prsood@codeaurora.org>,
+        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6AD62381-394F-4742-816B-12DE67DE9788@lca.pw>
+References: <F0388D99-84D7-453B-9B6B-EEFF0E7BE4CC@lca.pw>
+ <20200325191922.GM162390@mtj.duckdns.org>
+To:     Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 7:00 PM, Luis Chamberlain wrote:
-> On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
-> Omar fixed the original blktrace code for multiqueue use. This however
-> left in place a possible crash, if you happen to abuse blktrace in a way
-> it was not intended.
-> 
-> Namely, if you loop adding a device, setup the blktrace with BLKTRACESETUP,
-> forget to BLKTRACETEARDOWN, and then just remove the device you end up
-> with a panic:
 
-Weird, I swear I tested that and didn't hit it, but ...
- 
 
-> This issue can be reproduced with break-blktrace [2] using:
-> 
->   break-blktrace -c 10 -d
+> On Mar 25, 2020, at 3:19 PM, Tejun Heo <tj@kernel.org> wrote:
+>=20
+> On Wed, Mar 25, 2020 at 03:16:56PM -0400, Qian Cai wrote:
+>> The linux-next commit a49e4629b5ed (=E2=80=9Ccpuset: Make cpuset =
+hotplug synchronous=E2=80=9D)
+>> introduced real deadlocks with CPU hotplug as showed in the lockdep =
+splat, since it is
+>> now making a relation from cpu_hotplug_lock =E2=80=94> cgroup_mutex.
+>=20
+> Prateek, can you please take a look? Given that the merge window is =
+just around
+> the corner, we might have to revert and retry later if it can't be =
+resolved
+> quickly.
 
-+ -s, right?
- 
-> This patch fixes this issue. Note that there is also another
-> respective UAF but from the ioctl path [3], this should also fix
-> that issue.
-> 
-> This patch then also contends the severity of CVE-2019-19770 as
-> this issue is only possible using root to shoot yourself in the
-> foot by also misuing blktrace.
-> 
-> [0] https://bugzilla.kernel.org/show_bug.cgi?id=205713
-> [1] https://nvd.nist.gov/vuln/detail/CVE-2019-19770
-> [2] https://github.com/mcgrof/break-blktrace
+Tejun, can you back off this commit now given it seems nobody is trying =
+to rescue it?
 
-I verified that this does reproduce the exact same KASAN splat on
-kernel 4.19.83 as reported in the original bug, thanks!
-
--Eric
