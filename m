@@ -2,220 +2,91 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FD9C2BA17
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9E1C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F69206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X073aoju"
+	by mail.kernel.org (Postfix) with ESMTP id E1EE520719
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388624AbgDBN1s (ORCPT
+        id S2388631AbgDBN2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:27:48 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52762 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388274AbgDBN1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:27:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585834065;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/1eX8MBJ9dVspbC5Z01wrbH0AdjiWCbWXslfX6OZ6hs=;
-        b=X073aojub94Upl6/d54MHh8luUumvIlR/kYvIKhaMCFefMv4Ej7X3AE+d5G4N8qLiaafyC
-        ObLJF31EBKDIt6JewWNXz4BPsdtIBqpT4osFwJMNIU0pcsqTn2uA43aL7lg8i0nPfYApvG
-        5tZRraKkQpJ0l5gA9dBlLf+YFsSa61Y=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-u5p39jVzNbiUkMR3J-pKGA-1; Thu, 02 Apr 2020 09:27:44 -0400
-X-MC-Unique: u5p39jVzNbiUkMR3J-pKGA-1
-Received: by mail-qt1-f197.google.com with SMTP id f7so3152015qtq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 06:27:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/1eX8MBJ9dVspbC5Z01wrbH0AdjiWCbWXslfX6OZ6hs=;
-        b=AibEGPQ1JR2Ehw+atyggrxNyrzMtjk9oQNBGZJ1x2PCfcWZwtu0DQsqkGOTW8nW3mQ
-         fSIYWF8Y1gMrw9/7sNGSVQ6hQhEVCvkSnElPQuObRtd6yt4B+WHMBOYnbNjskYiYi7u0
-         WlSPf3xzq/3zCRjaUd9uZOScelmB97gAjSon7gwHorgXtU5XN49XM83Yjqr7KxqRWMKM
-         XD7gXTRIAWWCM2Y/IdOh3KyR6HwZviMpo3Se8HfF0dS0PUEIOO2WrGV0q1ZYbH/+a5jE
-         2P/wrUQd85PJV8TH+nO394Rww3dJ5X2VRJqawR1lZFM1+GPBncOe4wnZloL4sFQC8ztV
-         O/YQ==
-X-Gm-Message-State: AGi0PuZGsZ38izOVb7k6NvpZiuRlURDaJrfy+cx/PQ0HEd1qXRm/75a2
-        8XA7LM9QMXE9dFo5TMZP5a2Q+u2cpLlSnfqGc6/SREgvGc2OlIre8Ya9l7EaH8gB0ifvPudG6qB
-        K6B/pYVT9xZvGl3cHzBtK9P4S
-X-Received: by 2002:a37:7a84:: with SMTP id v126mr3349826qkc.423.1585834063875;
-        Thu, 02 Apr 2020 06:27:43 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLxHjkaUsVorVDqnHwIHws97AjgXm5AAgFlj0iL+yJ0ouEjkj3oZQka7/SWWzBEH9hp1R5KqA==
-X-Received: by 2002:a37:7a84:: with SMTP id v126mr3349804qkc.423.1585834063566;
-        Thu, 02 Apr 2020 06:27:43 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id 31sm3619643qta.56.2020.04.02.06.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 06:27:42 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 09:27:37 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH v4 7/7] tools/virtio: Make --reset reset ring idx
-Message-ID: <20200402092529-mutt-send-email-mst@kernel.org>
-References: <20200401183118.8334-1-eperezma@redhat.com>
- <20200401183118.8334-8-eperezma@redhat.com>
+        Thu, 2 Apr 2020 09:28:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40290 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388274AbgDBN2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:28:02 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1FE8C294CC790EBC8BF1;
+        Thu,  2 Apr 2020 21:28:00 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Apr 2020
+ 21:27:56 +0800
+Subject: Re: [PATCH -next] virtio-balloon: Make virtballoon_free_page_report
+ static
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+References: <20200402024302.35192-1-yuehaibing@huawei.com>
+ <20200402090550-mutt-send-email-mst@kernel.org>
+CC:     <jasowang@redhat.com>, <virtualization@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <d1f5d775-17b6-7953-f54a-3adfcea79cfa@huawei.com>
+Date:   Thu, 2 Apr 2020 21:27:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200401183118.8334-8-eperezma@redhat.com>
+In-Reply-To: <20200402090550-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 08:31:18PM +0200, Eugenio Pérez wrote:
-> Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
-
-I'm still a bit puzzled by this one - could you
-explain what the rationale here is?
-
-> ---
->  drivers/virtio/virtio_ring.c | 29 +++++++++++++++++++++++++++++
->  tools/virtio/linux/virtio.h  |  2 ++
->  tools/virtio/virtio_test.c   | 28 +++++++++++++++++++++++++++-
->  3 files changed, 58 insertions(+), 1 deletion(-)
+On 2020/4/2 21:06, Michael S. Tsirkin wrote:
+> On Thu, Apr 02, 2020 at 10:43:02AM +0800, YueHaibing wrote:
+>> Fix sparse warning:
+>>
+>> drivers/virtio/virtio_balloon.c:168:5: warning:
+>>  symbol 'virtballoon_free_page_report' was not declared. Should it be static?
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > 
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index 58b96baa8d48..f9153a381f72 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -1810,6 +1810,35 @@ int virtqueue_add_inbuf_ctx(struct virtqueue *vq,
->  }
->  EXPORT_SYMBOL_GPL(virtqueue_add_inbuf_ctx);
->  
-> +#ifndef __KERNEL__
-> +
-> +/**
-> + * virtqueue_reset_free_head - Reset to 0 the members of split ring.
-> + * @vq: Virtqueue to reset.
-> + *
-> + * At this moment, is only meant for debug the ring index change, do not use
-> + * in production.
-> + */
-> +void virtqueue_reset_free_head(struct virtqueue *_vq)
-> +{
-> +	struct vring_virtqueue *vq = to_vvq(_vq);
-> +
-> +	// vq->last_used_idx = 0;
-> +	vq->num_added = 0;
-> +
-> +	vq->split.queue_size_in_bytes = 0;
-> +	vq->split.avail_flags_shadow = 0;
-> +	vq->split.avail_idx_shadow = 0;
-> +
-> +	memset(vq->split.desc_state, 0, vq->split.vring.num *
-> +			sizeof(struct vring_desc_state_split));
-> +
-> +	vq->free_head = 0;
-> +}
-> +EXPORT_SYMBOL_GPL(virtqueue_reset_free_head);
-> +
-> +#endif
-> +
->  /**
->   * virtqueue_kick_prepare - first half of split virtqueue_kick call.
->   * @_vq: the struct virtqueue
-> diff --git a/tools/virtio/linux/virtio.h b/tools/virtio/linux/virtio.h
-> index b751350d4ce8..5d33eab6b814 100644
-> --- a/tools/virtio/linux/virtio.h
-> +++ b/tools/virtio/linux/virtio.h
-> @@ -65,4 +65,6 @@ struct virtqueue *vring_new_virtqueue(unsigned int index,
->  				      const char *name);
->  void vring_del_virtqueue(struct virtqueue *vq);
->  
-> +void virtqueue_reset_free_head(struct virtqueue *vq);
-> +
->  #endif
-> diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
-> index 93d81cd64ba0..bf21ece30594 100644
-> --- a/tools/virtio/virtio_test.c
-> +++ b/tools/virtio/virtio_test.c
-> @@ -49,6 +49,7 @@ struct vdev_info {
->  
->  static const struct vhost_vring_file no_backend = { .fd = -1 },
->  				     backend = { .fd = 1 };
-> +static const struct vhost_vring_state null_state = {};
->  
->  bool vq_notify(struct virtqueue *vq)
->  {
-> @@ -218,10 +219,33 @@ static void run_test(struct vdev_info *dev, struct vq_info *vq,
->  			}
->  
->  			if (reset) {
-> +				struct vhost_vring_state s = { .index = 0 };
-> +				int i;
-> +				vq->vring.avail->idx = 0;
-> +				vq->vq->num_free = vq->vring.num;
-> +
-> +				// Put everything in free lists.
-> +				for (i = 0; i < vq->vring.num-1; i++)
-> +					vq->vring.desc[i].next =
-> +						cpu_to_virtio16(&dev->vdev,
-> +								i + 1);
-> +				vq->vring.desc[vq->vring.num-1].next = 0;
+> This is for the mm tree right? You need to tag the subject
+> appropriately and copy the relevant lists.
 
+Oh, I should have noticed this, sorry for noise.
 
-Poking at vq descriptors like this seems fragile.
-I think this calls for a better API that handles everything
-internally.
-
-
-> +				virtqueue_reset_free_head(vq->vq);
-> +
-> +				r = ioctl(dev->control, VHOST_GET_VRING_BASE,
-> +					  &s);
-> +				assert(!r);
-> +
-> +				s.num = 0;
-> +				r = ioctl(dev->control, VHOST_SET_VRING_BASE,
-> +					  &null_state);
-> +				assert(!r);
-> +
->  				r = ioctl(dev->control, VHOST_TEST_SET_BACKEND,
->  					  &backend);
->  				assert(!r);
->  
-> +				started = completed;
->                                  while (completed > next_reset)
->  					next_reset += completed;
->  			}
-> @@ -243,7 +267,9 @@ static void run_test(struct vdev_info *dev, struct vq_info *vq,
->  	test = 0;
->  	r = ioctl(dev->control, VHOST_TEST_RUN, &test);
->  	assert(r >= 0);
-> -	fprintf(stderr, "spurious wakeups: 0x%llx\n", spurious);
-> +	fprintf(stderr,
-> +		"spurious wakeups: 0x%llx started=0x%lx completed=0x%lx\n",
-> +		spurious, started, completed);
->  }
->  
->  const char optstring[] = "h";
-> -- 
-> 2.18.1
+> 
+>> ---
+>>  drivers/virtio/virtio_balloon.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+>> index 0ef16566c3f3..bc10f94718e3 100644
+>> --- a/drivers/virtio/virtio_balloon.c
+>> +++ b/drivers/virtio/virtio_balloon.c
+>> @@ -165,8 +165,9 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
+>>  
+>>  }
+>>  
+>> +static
+>>  int virtballoon_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+>> -				   struct scatterlist *sg, unsigned int nents)
+>> +				 struct scatterlist *sg, unsigned int nents)
+>>  {
+>>  	struct virtio_balloon *vb =
+>>  		container_of(pr_dev_info, struct virtio_balloon, pr_dev_info);
+>> -- 
+>> 2.17.1
+>>
+> 
+> 
+> 
 
