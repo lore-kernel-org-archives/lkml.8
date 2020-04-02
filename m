@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EE2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70355C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6272074D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8082074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="IQefsOsZ"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="jJB8aqYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388847AbgDBO6i (ORCPT
+        id S2389113AbgDBO6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:58:38 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:55245 "EHLO rere.qmqm.pl"
+        Thu, 2 Apr 2020 10:58:54 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:40831 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388836AbgDBO6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:58:33 -0400
+        id S2389055AbgDBO6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:58:37 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR5f6wnCzqB;
-        Thu,  2 Apr 2020 16:58:30 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR5m1387z9j;
+        Thu,  2 Apr 2020 16:58:36 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585839511; bh=aHxtsC8N7E1pudNhXZCf8OSOZbxQCCFh3AVsjrqFoGw=;
+        t=1585839516; bh=Z5m6v9PbZvsaRy/wVOFR85m5686ZzFRztIiMSmfJt0Y=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=IQefsOsZdmpl1GYa4eHhaiWo6dqrxNummNHFhVfbtryIyvpgb3iPHfO0xEPoQhcRw
-         QQIUp1TamaUdbVZ/sYm+zIb+1VHrW4Ffxtvhx9MvYhjPlOf3nvPAqOIjnI1n6W4qE5
-         xJDe0DhCAMea3wwxFPvxyxZD4AQjkW99JZBXWk6vyXzWRN93XCo08rSwFmjJaPSTWy
-         slJazljJIheIKQ/+UMdVdcx1PbqrpiMPKXHJ4Z84PMfh7Sp17cnt+X8bbh8jrQcZ8s
-         ZSEBxvCs51KHR+veFn2csFumoshZ+urcZixmhmYvX2lGAQoxcmj4KeiuEysKrnKvL7
-         Pu2MBPueRRRcA==
+        b=jJB8aqYOYrf5iDaTcb/lF5MHMkUwjVaUeqF4a/YRAGx2sY+fdFn4VVR3HWuXHi36v
+         jubybgYGUlcnuFMD723dnaqwVYrL8dRKEuhZTWuoWpE0Zz8HgDOlQ1dH5WGCR1kW6b
+         VXxjnzWmGHnSTqHtliwzDwHAaTSi0PveGaX20uSMkB+2M5HD+mj4wCZO0efxz8hmnO
+         tIiUUXNkNFRpCBe9d1sxkO4O/ep0qWYU5QWxur6zMA2602Ej1+hmbw77sXWVBhwtWc
+         z6Yb4oJd34Te4l52DWJpCIaxb2GVpoGX7sVJ2J6t+YhQBpot5hs0jR0js9mcuftaDJ
+         yML3BCxzEDF3Q==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 16:58:30 +0200
-Message-Id: <3d647e5c2f69c0cef461ef19004ec40b14e799ca.1585838678.git.mirq-linux@rere.qmqm.pl>
+Date:   Thu, 02 Apr 2020 16:58:35 +0200
+Message-Id: <fdd9ec41a66113264c3b233658a72e00159f65d5.1585838679.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1585838678.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1585838678.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 03/14] power: supply: bq25890: make property table const
+Subject: [PATCH 12/14] power: supply: bq25890: show VSYS as output voltage
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -52,26 +52,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Property list should not change, so mark it const.
+VSYS is the voltage that is provided to the rest of the system. Show
+measurement OUTPUT_VOLTAGE and supplement it with VSYSMIN setting.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/power/supply/bq25890_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/power/supply/bq25890_charger.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index f9f29edadddc..c4a69fd69f34 100644
+index d23274d13263..6c277f2dbae2 100644
 --- a/drivers/power/supply/bq25890_charger.c
 +++ b/drivers/power/supply/bq25890_charger.c
-@@ -668,7 +668,7 @@ static int bq25890_hw_init(struct bq25890_device *bq)
- 	return 0;
- }
+@@ -524,7 +524,7 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
+ 		val->intval = 2600000 + ret * 100000;
+ 		break;
  
--static enum power_supply_property bq25890_power_supply_props[] = {
-+static const enum power_supply_property bq25890_power_supply_props[] = {
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- 	POWER_SUPPLY_PROP_MODEL_NAME,
- 	POWER_SUPPLY_PROP_STATUS,
+-	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
++	case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW:
+ 		ret = bq25890_field_read(bq, F_SYSV); /* read measured value */
+ 		if (ret < 0)
+ 			return ret;
+@@ -533,6 +533,10 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
+ 		val->intval = 2304000 + ret * 20000;
+ 		break;
+ 
++	case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MIN:
++		val->intval = bq25890_find_val(bq->init_data.sysvmin, TBL_SYSVMIN);
++		break;
++
+ 	case POWER_SUPPLY_PROP_CURRENT_NOW:
+ 		ret = bq25890_field_read(bq, F_ICHGR); /* read measured value */
+ 		if (ret < 0)
+@@ -724,7 +728,8 @@ static const enum power_supply_property bq25890_power_supply_props[] = {
+ 	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
+ 	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+ 	POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW,
+-	POWER_SUPPLY_PROP_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MIN,
+ 	POWER_SUPPLY_PROP_CURRENT_NOW,
+ };
+ 
 -- 
 2.20.1
 
