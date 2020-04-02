@@ -2,223 +2,271 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7509AC2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378BBC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAAA20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:23:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="WBA8Q4J9"
+	by mail.kernel.org (Postfix) with ESMTP id 0F441207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388095AbgDBLX6 (ORCPT
+        id S2388107AbgDBLYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:23:58 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36361 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388039AbgDBLX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:23:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48tLKz3MYhz9sQt;
-        Thu,  2 Apr 2020 22:23:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1585826634;
-        bh=pbSAXegT+8Z7l+avNPLwehmYnEsWWDO1v7MhVYfnlXQ=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=WBA8Q4J9sICs9xdSJobj+NAfU8iWBq+SIuyZsPoatm6SJyynjd/gDpSp8Q2IRLDAj
-         qZ+iNATA+K/H1WTtmn68sbjnFno/g4Beb5PLSEi6h3QlGXkW4iCmQUeCd06yzlsh9N
-         rY3ckrUC4nYLEOlJn0d4JZnmg7grBQmkzFyOPX+Rk0xFHFogaa/vsPtpcTkLYVpMag
-         CYvbnUYFJF0159LbLkXs5vfYv1NvrRX3oW9uSbWq0R2Goc3QCmQnGgowk5kgCnPb85
-         /WRTeLt/QnmTptocrCOg0qQKSatI6wCxQ5+7e7dI2hu95e/8NQ0I8dCz/tAwQOX063
-         +CCfaQAvD9tjg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Qian Cai <cai@lca.pw>, peterz@infradead.org, mingo@redhat.com
-Cc:     juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        bsegall@google.com, mgorman@suse.de, paulmck@kernel.org,
-        tglx@linutronix.de, James.Bottomley@HansenPartnership.com,
-        deller@gmx.de, linuxppc-dev@lists.ozlabs.org,
-        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2] sched/core: fix illegal RCU from offline CPUs
-In-Reply-To: <20200401214033.8448-1-cai@lca.pw>
-References: <20200401214033.8448-1-cai@lca.pw>
-Date:   Thu, 02 Apr 2020 22:24:00 +1100
-Message-ID: <87369mt9kf.fsf@mpe.ellerman.id.au>
+        Thu, 2 Apr 2020 07:24:21 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12606 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388012AbgDBLYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:24:20 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 30743A876D0C1A482D0C;
+        Thu,  2 Apr 2020 19:24:13 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Apr 2020
+ 19:24:06 +0800
+Subject: Re: [RFC PATCH v5 4/8] mm: tlb: Pass struct mmu_gather to
+ flush_pmd_tlb_range
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <mark.rutland@arm.com>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
+        <rostedt@goodmis.org>, <maz@kernel.org>, <suzuki.poulose@arm.com>,
+        <tglx@linutronix.de>, <yuzhao@google.com>, <Dave.Martin@arm.com>,
+        <steven.price@arm.com>, <broonie@kernel.org>,
+        <guohanjun@huawei.com>, <corbet@lwn.net>, <vgupta@synopsys.com>,
+        <tony.luck@intel.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+References: <20200331142927.1237-1-yezhenyu2@huawei.com>
+ <20200331142927.1237-5-yezhenyu2@huawei.com>
+ <20200331151331.GS20730@hirez.programming.kicks-ass.net>
+ <fe12101e-8efe-22ad-0258-e6aeafc798cc@huawei.com>
+ <20200401122004.GE20713@hirez.programming.kicks-ass.net>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <53675fb9-21c7-5309-07b8-1bbc1e775f9b@huawei.com>
+Date:   Thu, 2 Apr 2020 19:24:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200401122004.GE20713@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian Cai <cai@lca.pw> writes:
-> From: Peter Zijlstra <peterz@infradead.org>
->
-> In the CPU-offline process, it calls mmdrop() after idle entry and the
-> subsequent call to cpuhp_report_idle_dead(). Once execution passes the
-> call to rcu_report_dead(), RCU is ignoring the CPU, which results in
-> lockdep complaining when mmdrop() uses RCU from either memcg or
-> debugobjects below.
->
-> Fix it by cleaning up the active_mm state from BP instead. Every arch
-> which has CONFIG_HOTPLUG_CPU should have already called idle_task_exit()
-> from AP. The only exception is parisc because it switches them to
-> &init_mm unconditionally (see smp_boot_one_cpu() and smp_cpu_init()),
-> but the patch will still work there because it calls mmgrab(&init_mm) in
-> smp_cpu_init() and then should call mmdrop(&init_mm) in finish_cpu().
+Hi Peter,
 
-Thanks for debugging this. How did you hit it in the first place?
+On 2020/4/1 20:20, Peter Zijlstra wrote:
+> On Wed, Apr 01, 2020 at 04:51:15PM +0800, Zhenyu Ye wrote:
+>> On 2020/3/31 23:13, Peter Zijlstra wrote:
+> 
+>>> Instead of trying to retro-fit flush_*tlb_range() to take an mmu_gather
+>>> parameter, please replace them out-right.
+>>>
+>>
+>> I'm sorry that I'm not sure what "replace them out-right" means.  Do you
+>> mean that I should define flush_*_tlb_range like this?
+>>
+>> #define flush_pmd_tlb_range(vma, addr, end)				\
+>> 	do {								\
+>> 		struct mmu_gather tlb;					\
+>> 		tlb_gather_mmu(&tlb, (vma)->vm_mm, addr, end);		\
+>> 		tlba.cleared_pmds = 1;					\
+>> 		flush_tlb_range(&tlb, vma, addr, end);			\
+>> 		tlb_finish_mmu(&tlb, addr, end);			\
+>> 	} while (0)
+>>
+> 
+> I was thinking to remove flush_*tlb_range() entirely (from generic
+> code).
+> 
+> And specifically to not use them like the above; instead extend the
+> mmu_gather API.
+> 
+> Specifically, if you wanted to express flush_pmd_tlb_range() in mmu
+> gather, you'd write it like:
+> 
+> static inline void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long addr, unsigned long end)
+> {
+> 	struct mmu_gather tlb;
+> 
+> 	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+> 	tlb_start_vma(&tlb, vma);
+> 	tlb.cleared_pmds = 1;
+> 	__tlb_adjust_range(addr, end - addr);
+> 	tlb_end_vma(&tlb, vma);
+> 	tlb_finish_mmu(&tlb, addr, end);
+> }
+> 
+> Except of course, that the code between start_vma and end_vma is not a
+> proper mmu_gather API.
+> 
+> So maybe add:
+> 
+>   tlb_flush_{pte,pmd,pud,p4d}_range()
+> 
+> Then we can write:
+> 
+> static inline void flush_XXX_tlb_range(struct vm_area_struct *vma, unsigned long addr, unsigned long end)
+> {
+> 	struct mmu_gather tlb;
+> 
+> 	tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);
+> 	tlb_start_vma(&tlb, vma);
+> 	tlb_flush_XXX_range(&tlb, addr, end - addr);
+> 	tlb_end_vma(&tlb, vma);
+> 	tlb_finish_mmu(&tlb, addr, end);
+> }
+> 
+> But when I look at the output of:
+> 
+>   git grep flush_.*tlb_range -- :^arch/
+> 
+> I doubt it makes sense to provide wrappers like the above.
+> 
 
-A link to the original thread would have helped me:
+Thanks for your detailed explanation.  I notice that you used
+`tlb_end_vma` replace `flush_tlb_range`, which will call `tlb_flush`,
+then finally call `flush_tlb_range` in generic code.  However, some
+architectures define tlb_end_vma|tlb_flush|flush_tlb_range themselves,
+so this may cause problems.
 
-  https://lore.kernel.org/lkml/20200113190331.12788-1-cai@lca.pw/
+For example, in s390, it defines:
 
-> WARNING: suspicious RCU usage
-> -----------------------------
-> kernel/workqueue.c:710 RCU or wq_pool_mutex should be held!
->
-> other info that might help us debug this:
->
-> RCU used illegally from offline CPU!
-> Call Trace:
->  dump_stack+0xf4/0x164 (unreliable)
->  lockdep_rcu_suspicious+0x140/0x164
->  get_work_pool+0x110/0x150
->  __queue_work+0x1bc/0xca0
->  queue_work_on+0x114/0x120
->  css_release+0x9c/0xc0
->  percpu_ref_put_many+0x204/0x230
->  free_pcp_prepare+0x264/0x570
->  free_unref_page+0x38/0xf0
->  __mmdrop+0x21c/0x2c0
->  idle_task_exit+0x170/0x1b0
->  pnv_smp_cpu_kill_self+0x38/0x2e0
->  cpu_die+0x48/0x64
->  arch_cpu_idle_dead+0x30/0x50
->  do_idle+0x2f4/0x470
->  cpu_startup_entry+0x38/0x40
->  start_secondary+0x7a8/0xa80
->  start_secondary_resume+0x10/0x14
+#define tlb_end_vma(tlb, vma)			do { } while (0)
 
-Do we know when this started happening? ie. can we determine a Fixes
-tag?
+And it doesn't define it's own flush_pmd_tlb_range().  So there will be
+a mistake if we changed flush_pmd_tlb_range() using tlb_end_vma().
 
-> <Peter to sign off here>
-> Signed-off-by: Qian Cai <cai@lca.pw>
+Is this really a problem or something I understand wrong ?
+
+
+
+If true, I think there are three ways to solve this problem:
+
+1. use `flush_tlb_range` rather than `tlb_end_vma` in flush_XXX_tlb_range;
+   In this way, we still need retro-fit `flush_tlb_range` to take an mmu_gather
+parameter.
+
+2. use `tlb_flush` rather than `tlb_end_vma`.
+   There is a constraint such like:
+
+	#ifndef tlb_flush
+	#if defined(tlb_start_vma) || defined(tlb_end_vma)
+	#error Default tlb_flush() relies on default tlb_start_vma() and tlb_end_vma()
+	#endif
+
+   So all architectures that define tlb_{start|end}_vma have defined tlb_flush.
+Also, we can add a constraint to flush_XXX_tlb_range such like:
+
+	#ifndef flush_XXX_tlb_range
+	#if defined(tlb_start_vma) || defined(tlb_end_vma)
+	#error Default flush_XXX_tlb_range() relies on default tlb_start/end_vma()
+	#endif
+
+3. Define flush_XXX_tlb_range() architecture-self, and keep original define in
+generic code, such as:
+
+In arm64:
+	#define flush_XXX_tlb_range flush_XXX_tlb_range
+
+In generic:
+	#ifndef flush_XXX_tlb_range
+	#define flush_XXX_tlb_range flush_tlb_range
+
+
+Which do you think is more appropriate?
+
+
+> ( Also, we should probably remove the (addr, end) arguments from
+> tlb_finish_mmu(), Will? )
+> 
+
+This can be changed quickly. If you want I can do this with a
+separate patch.
+
 > ---
->  arch/powerpc/platforms/powernv/smp.c |  1 -
->  include/linux/sched/mm.h             |  2 ++
->  kernel/cpu.c                         | 18 +++++++++++++++++-
->  kernel/sched/core.c                  |  5 +++--
->  4 files changed, 22 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
-> index 13e251699346..b2ba3e95bda7 100644
-> --- a/arch/powerpc/platforms/powernv/smp.c
-> +++ b/arch/powerpc/platforms/powernv/smp.c
-> @@ -167,7 +167,6 @@ static void pnv_smp_cpu_kill_self(void)
->  	/* Standard hot unplug procedure */
->  
->  	idle_task_exit();
-> -	current->active_mm = NULL; /* for sanity */
-
-If I'm reading it right, we'll now be running with active_mm == init_mm
-in the offline loop.
-
-I guess that's fine, I can't think of any reason it would matter, and it
-seems like we were NULL'ing it out just for paranoia's sake not because
-of any actual problem.
-
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-
-
-cheers
-
-> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> index c49257a3b510..a132d875d351 100644
-> --- a/include/linux/sched/mm.h
-> +++ b/include/linux/sched/mm.h
-> @@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
->  		__mmdrop(mm);
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index f391f6b500b4..be5452a8efaa 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -511,6 +511,34 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
 >  }
+>  #endif
 >  
-> +void mmdrop(struct mm_struct *mm);
-> +
->  /*
->   * This has to be called after a get_task_mm()/mmget_not_zero()
->   * followed by taking the mmap_sem for writing before modifying the
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 2371292f30b0..244d30544377 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -3,6 +3,7 @@
->   *
->   * This code is licenced under the GPL.
->   */
-> +#include <linux/sched/mm.h>
->  #include <linux/proc_fs.h>
->  #include <linux/smp.h>
->  #include <linux/init.h>
-> @@ -564,6 +565,21 @@ static int bringup_cpu(unsigned int cpu)
->  	return bringup_wait_for_ap(cpu);
->  }
->  
-> +static int finish_cpu(unsigned int cpu)
+> +static inline void tlb_flush_pte_range(struct mmu_gather *tlb,
+> +				       unsigned long address, unsigned long size)
 > +{
-> +	struct task_struct *idle = idle_thread_get(cpu);
-> +	struct mm_struct *mm = idle->active_mm;
-> +
-> +	/*
-> +	 * idle_task_exit() will have switched to &init_mm, now
-> +	 * clean up any remaining active_mm state.
-> +	 */
-> +	if (mm != &init_mm)
-> +		idle->active_mm = &init_mm;
-> +	mmdrop(mm);
-> +	return 0;
+> +	__tlb_adjust_range(tlb, address, size);
+> +	tlb->cleared_ptes = 1;
 > +}
 > +
->  /*
->   * Hotplug state machine related functions
->   */
-> @@ -1549,7 +1565,7 @@ static struct cpuhp_step cpuhp_hp_states[] = {
->  	[CPUHP_BRINGUP_CPU] = {
->  		.name			= "cpu:bringup",
->  		.startup.single		= bringup_cpu,
-> -		.teardown.single	= NULL,
-> +		.teardown.single	= finish_cpu,
->  		.cant_stop		= true,
->  	},
->  	/* Final state before CPU kills itself */
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index a2694ba82874..8787958339d5 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -6200,13 +6200,14 @@ void idle_task_exit(void)
->  	struct mm_struct *mm = current->active_mm;
->  
->  	BUG_ON(cpu_online(smp_processor_id()));
-> +	BUG_ON(current != this_rq()->idle);
->  
->  	if (mm != &init_mm) {
->  		switch_mm(mm, &init_mm, current);
-> -		current->active_mm = &init_mm;
->  		finish_arch_post_lock_switch();
->  	}
-> -	mmdrop(mm);
+> +static inline void tlb_flush_pmd_range(struct mmu_gather *tlb,
+> +				       unsigned long address, unsigned long size)
+> +{
+> +	__tlb_adjust_range(tlb, address, size);
+> +	tlb->cleared_pmds = 1;
+> +}
 > +
-> +	/* finish_cpu(), as ran on the BP, will clean up the active_mm state */
->  }
+> +static inline void tlb_flush_pud_range(struct mmu_gather *tlb,
+> +				       unsigned long address, unsigned long size)
+> +{
+> +	__tlb_adjust_range(tlb, address, size);
+> +	tlb->cleared_puds = 1;
+> +}
+> +
+> +static inline void tlb_flush_p4d_range(struct mmu_gather *tlb,
+> +				       unsigned long address, unsigned long size)
+> +{
+> +	__tlb_adjust_range(tlb, address, size);
+> +	tlb->cleared_p4ds = 1;
+> +}
+> +
+
+By the way, I think the name of tlb_set_XXX_range() is more suitable, because
+we don't do actual flush there.
+
+>  #ifndef __tlb_remove_tlb_entry
+>  #define __tlb_remove_tlb_entry(tlb, ptep, address) do { } while (0)
+>  #endif
+> @@ -524,8 +552,7 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
+>   */
+>  #define tlb_remove_tlb_entry(tlb, ptep, address)		\
+>  	do {							\
+> -		__tlb_adjust_range(tlb, address, PAGE_SIZE);	\
+> -		tlb->cleared_ptes = 1;				\
+> +		tlb_flush_pte_range(tlb, address, PAGE_SIZE);	\
+>  		__tlb_remove_tlb_entry(tlb, ptep, address);	\
+>  	} while (0)
 >  
->  /*
-> -- 
-> 2.21.0 (Apple Git-122.2)
+> @@ -550,8 +577,7 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
+>  
+>  #define tlb_remove_pmd_tlb_entry(tlb, pmdp, address)			\
+>  	do {								\
+> -		__tlb_adjust_range(tlb, address, HPAGE_PMD_SIZE);	\
+> -		tlb->cleared_pmds = 1;					\
+> +		tlb_flush_pmd_range(tlb, address, HPAGE_PMD_SIZE);	\
+>  		__tlb_remove_pmd_tlb_entry(tlb, pmdp, address);		\
+>  	} while (0)
+>  
+> @@ -565,8 +591,7 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
+>  
+>  #define tlb_remove_pud_tlb_entry(tlb, pudp, address)			\
+>  	do {								\
+> -		__tlb_adjust_range(tlb, address, HPAGE_PUD_SIZE);	\
+> -		tlb->cleared_puds = 1;					\
+> +		tlb_flush_pud_range(tlb, address, HPAGE_PUD_SIZE);	\
+>  		__tlb_remove_pud_tlb_entry(tlb, pudp, address);		\
+>  	} while (0)
+>  
+> 
+> .
+> 
+
