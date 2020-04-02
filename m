@@ -2,135 +2,156 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA32C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D72C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8A420737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D89A20737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389410AbgDBVQu (ORCPT
+        id S2389346AbgDBVTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 17:16:50 -0400
-Received: from mga12.intel.com ([192.55.52.136]:62658 "EHLO mga12.intel.com"
+        Thu, 2 Apr 2020 17:19:11 -0400
+Received: from mga01.intel.com ([192.55.52.88]:49032 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgDBVQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 17:16:50 -0400
-IronPort-SDR: 8JhihgL0nwZweKa0iE+aAnKtfYC0eOgbQDhNp4/U+LIektiY3UwZrd5Kis1xCoKEAdSYIh/55E
- 6m+E7PgpBXjg==
+        id S1732970AbgDBVTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 17:19:11 -0400
+IronPort-SDR: iGyh8JElyw2af+Xe3jBy2BLkISCB3p9knontwnd6oCgqYZ8QWmh+8lSAjk05XRf2wQxs0UOpOn
+ eFKhfHXjz6bQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 14:16:49 -0700
-IronPort-SDR: 4oGjkw+e1C/BxtLl7UO1+lAjcnIVLe5TjIZotoXcPJLEMEGgfv3cEBvADdLI28yPLyqovB3Hns
- YSRdw6ziWYPA==
-X-ExtLoop1: 1
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 14:19:10 -0700
+IronPort-SDR: ElJsfs2xsoC8GvmhzJDVLvxw+RK8t6eHJy2WYVJoZ3H8QS+d0UpDaVMMYn4f+dt4T7K65KWjMx
+ UX3888N5RLow==
 X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="423292223"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 02 Apr 2020 14:16:49 -0700
-Date:   Thu, 2 Apr 2020 14:16:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [patch v2 1/2] x86,module: Detect VMX modules and disable
- Split-Lock-Detect
-Message-ID: <20200402211649.GA31023@linux.intel.com>
-References: <20200402124205.242674296@linutronix.de>
- <20200402152340.GL20713@hirez.programming.kicks-ass.net>
- <725ca48f-8194-658e-0296-65d4368803b5@intel.com>
- <20200402162548.GH20730@hirez.programming.kicks-ass.net>
- <2d2140c4-712a-2f8d-cde7-b3e64c28b204@intel.com>
- <87pncpn650.fsf@nanos.tec.linutronix.de>
- <20200402175127.GJ13879@linux.intel.com>
- <20200402185148.GL20730@hirez.programming.kicks-ass.net>
- <20200402202321.GL13879@linux.intel.com>
- <87blo9mwfu.fsf@nanos.tec.linutronix.de>
+   d="scan'208";a="396509021"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.27.29]) ([10.251.27.29])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 14:19:09 -0700
+Subject: Re: [PATCH 2/2] x86/resctrl: Use appropriate API for strings
+ terminated by newline
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com, kuo-lang.tseng@intel.com, mingo@redhat.com,
+        babu.moger@amd.com, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1585765499.git.reinette.chatre@intel.com>
+ <2a51c327497738ad7012e4f185046c530dba4594.1585765499.git.reinette.chatre@intel.com>
+ <20200402130625.GA1922688@smile.fi.intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <720ab442-3e2e-bd6d-d35c-5cc5de1d9824@intel.com>
+Date:   Thu, 2 Apr 2020 14:19:07 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87blo9mwfu.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200402130625.GA1922688@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 11:04:05PM +0200, Thomas Gleixner wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> > On Thu, Apr 02, 2020 at 08:51:48PM +0200, Peter Zijlstra wrote:
-> >> On Thu, Apr 02, 2020 at 10:51:28AM -0700, Sean Christopherson wrote:
-> >> > On Thu, Apr 02, 2020 at 07:34:35PM +0200, Thomas Gleixner wrote:
-> >> > > Aside of that I'm still against the attempt of proliferating crap,
-> >> > > i.e. disabling it because the host is triggering it and then exposing it
-> >> > > to guests. The above does not change my mind in any way. This proposal
-> >> > > is still wrong.
-> >> > 
-> >> > Eh, I still think the "off in host, on in guest" is a legit scenario for
-> >> > debug/development/testing, but I agree that the added complexity doesn't
-> >> > justify the minimal benefits versus sld_warn.
-> >> 
-> >> Off in host on in guest seems utterly insane to me. Why do you care
-> >> about that?
-> >
-> > For development/debug/testing.  Ignoring the core-scope stupidity of split
-> > lock, the _functional_ behavior of the host kernel and guest kernel are
-> > completely separate.  The host can generate split locks all it wants, but
-> > other than performance, its bad behavior has no impact on the guest.
-> >
-> > For example, all of the debug that was done to eliminate split locks in the
-> > kernel could have been done in a KVM guest, even though the host kernel
-> > would not have yet been split-lock free.
-> >
-> > It's somewhat of a moot point now that the kernel is split-lock free.  But,
-> > if I encountered a split lock panic on my system, the first thing I would
-> > do (after rebooting) would be to fire up a VM to try and reproduce and
-> > debug the issue.
-> >
-> > Oftentimes it's significantly easier to "enable" a feature in KVM, i.e.
-> > expose a feature to the guest, than it is to actually enable it in the
-> > kernel.  Enabling KVM first doesn't work if there are hard dependencies on
-> > kernel enabling, e.g. most things that have an XSAVE component, but for a
-> > lot of features it's a viable strategy to enable KVM first, and then do all
-> > testing and debug inside a KVM guest.
-> 
-> I can see that aspect, but there were pretty clear messages in one of
-> the other threads:
-> 
->  "It's not about whether or not host is clean. It's for the cases that
->   users just don't want it enabled on host, to not break the
->   applications or drivers that do have split lock issue."
-> 
->  "My thought is for CSPs that they might not turn on SLD on their
->   product environment. Any split lock in kernel or drivers may break
->   their service for tenants."
-> 
-> which I back then called out as proliferating crap and ensuring that
-> this stuff never gets fixed.
+Hi Andy,
 
-Or more likely, gets fixed, just not in upstream :-)
+(Your two responses have been merged)
 
-> I still call it out as exactly that and you know as well as I do that
-> this is the reality.
+On 4/2/2020 6:06 AM, Andy Shevchenko wrote:
+> On Wed, Apr 01, 2020 at 11:30:48AM -0700, Reinette Chatre wrote:
+>> The user input to files in the resctrl filesystem are expected to be
+>> terminated with a newline. Testing the user input includes a test for
+>> the presence of a newline and then replacing the newline with NUL
+>> byte followed by comparison using strcmp().
+>>
+>> sysfs_streq() exists to test if strings are equal, treating both NUL and
+>> newline-then-NUL as equivalent string terminations. Even more,
+>> sysfs_match_string() exists to match a given string in an array using
+>> sysfs_streq().
+>>
+>> Replace existing strcmp() comparisons of strings that are terminated
+>> with a newline with more appropriate sysfs_streq() via the
+>> sysfs_match_string() API that can perform the match across the different
+>> mode strings that are already maintained in an array.
+>>
+>> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+>> ---
+>>  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 25 +++++++++++++------------
+>>  1 file changed, 13 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index fbee891a7d6e..623e33c0a290 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> @@ -1412,11 +1412,11 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+>>  	struct rdtgroup *rdtgrp;
+>>  	enum rdtgrp_mode mode;
+>>  	int ret = 0;
+>> +	int user_m;
+>>  
+
 >
-> For people like you who actually want to debug stuff in a guest, the
-> extra 10 lines of hack on top of the other 1000 lines of hacks you
-> already have are not really something which justifies to give hardware
-> and OS/application vendors the easy way out to avoid fixing their broken
-> crap.
+> ...and forgot to mention this...
+>
+> 	int user_m;
+> 	int ret;
+>
 
-Ya, I see where you're coming from.  As above, I agree that having a "KVM
-only" mode does more harm than good.
+> 
+>>  	/* Valid input requires a trailing newline */
+>>  	if (nbytes == 0 || buf[nbytes - 1] != '\n')
+>>  		return -EINVAL;
+>> -	buf[nbytes - 1] = '\0';
+> 
+> The above test is not needed and comment now is misleading.
+> WRT nbytes I believe that kernel fs code checks for that.
+
+If nbytes is 0 it is still passed to this function. You are correct that
+those tests are not needed though (if nbytes is 0 then
+sysfs_match_string() will not find a match and return EINVAL via that path).
+
+Thank you for catching this. I'll remove those unnecessary checks.
+
+> 
+>>  	rdtgrp = rdtgroup_kn_lock_live(of->kn);
+>>  	if (!rdtgrp) {
+>> @@ -1428,11 +1428,15 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+>>  
+>>  	mode = rdtgrp->mode;
+>>  
+>> -	if ((!strcmp(buf, "shareable") && mode == RDT_MODE_SHAREABLE) ||
+>> -	    (!strcmp(buf, "exclusive") && mode == RDT_MODE_EXCLUSIVE) ||
+>> -	    (!strcmp(buf, "pseudo-locksetup") &&
+>> -	     mode == RDT_MODE_PSEUDO_LOCKSETUP) ||
+>> -	    (!strcmp(buf, "pseudo-locked") && mode == RDT_MODE_PSEUDO_LOCKED))
+>> +	user_m = sysfs_match_string(rdt_mode_str, buf);
+>> +	if (user_m < 0) {
+>> +		rdt_last_cmd_puts("Unknown or unsupported mode\n");
+>> +		ret = user_m;
+>> +		goto out;
+>> +	}
+> 
+> You can do it the way
+> 
+> 	ret = sysfs_match_string(...);
+> 	if (ret < 0) {
+> 		...
+> 	}
+> 	user_m = ret;
+>
+> ...and this changes
+>
+> 	ret = 0;
+>
+> 
+
+ok, I'll do it this way in the next version.
+
+Thank you
+
+Reinette
+
