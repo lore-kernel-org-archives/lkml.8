@@ -2,113 +2,116 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10152C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16CDC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E6E20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585835611;
-	bh=e2mD8+QaUawKZUIdArDDRCxzyP8fJnIv/2Fv/9jRSbc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LpBQ1TIZW65Tlzc885r2UXVP/F+Vvm5M/yAWDuLpcHt2+dEWRge3uR/jKuPep/a45
-	 b3FHPAxSGTmsvhoCw4lHc4Z8WOHu6ux5eJj4PInkZploiwypbKWazkIOY5gYzEj11m
-	 frDtcmyfQSJ1ymKQ5YCVAR4jxro6CC8/WJql25K8=
+	by mail.kernel.org (Postfix) with ESMTP id D1D2E208E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732402AbgDBNxa (ORCPT
+        id S1732456AbgDBNy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:53:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbgDBNxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:53:30 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2767E2073B;
-        Thu,  2 Apr 2020 13:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585835610;
-        bh=e2mD8+QaUawKZUIdArDDRCxzyP8fJnIv/2Fv/9jRSbc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aFK8PuE53AAEurbQ6VeYnOyh1G1pTUhbgyXsdRg2MbipOPO+gI+JyCrvqROJ7R9rS
-         zV8JP+Cg4wd7in8MVjarXIHfQ+KYx9XwXc/A/QoFB+R6f4ATHc5wTAdHiWi5Uz7zjx
-         Vb0Bim6QH05Wpi4bYe/MGDPagBZszEj1kfYIgaQ4=
-Date:   Thu, 2 Apr 2020 15:53:23 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        hverkuil@xs4all.nl,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        laurent.pinchart@ideasonboard.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH 1/1] lib/vsprintf: Add support for printing V4L2 and DRM
- fourccs
-Message-ID: <20200402155323.6866b5c9@coco.lan>
-In-Reply-To: <87eet6mgk7.fsf@intel.com>
-References: <20200401140522.966-1-sakari.ailus@linux.intel.com>
-        <87eet6mgk7.fsf@intel.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 2 Apr 2020 09:54:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41788 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbgDBNy3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:54:29 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jK0GI-0003LD-1Y; Thu, 02 Apr 2020 13:52:02 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linux-rtc@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][V2][next] rtc: ds1307: check for failed memory allocation on wdt
+Date:   Thu,  2 Apr 2020 14:52:01 +0100
+Message-Id: <20200402135201.548313-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 02 Apr 2020 11:34:48 +0300
-Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+From: Colin Ian King <colin.king@canonical.com>
 
-> On Wed, 01 Apr 2020, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
-> > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > the same implementation can be used.  
-> 
-> I'm not going to take a strong stand in one way or the other regarding
-> the patch at hand, but I do think at some point we have to draw a line
-> what should be included in printk formats. Arguably they should be
-> reserved to things that are generally useful across large parts of the
-> kernel, right?
-> 
-> I think the more specialized you get, the more you should think about
-> just using the plain old %s, and your own helpers.
+Currently a failed memory allocation will lead to a null pointer
+dereference on point wdt.  Fix this by checking for a failed allocation
+and adding error return handling to function ds1307_wdt_register.
+Also move the error exit label "exit" to allow a return statement to
+be removed.
 
-As I suggested it, from my side, I'd like to have it inside printk :-)
+Addresses-Coverity: ("Dereference null return")
+Fixes: fd90d48db037 ("rtc: ds1307: add support for watchdog timer on ds1388")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+V2: move error exit label and remove a return statement, thanks to 
+    Walter Harms for spotting this clean up.
+---
+ drivers/rtc/rtc-ds1307.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-There is a subset of formats that are subsystem-specific anyway at
-printk, like the network ones. We use extensively fourcc along the
-media subsystem (and you probably also use fourcc at DRM). Even some input
-devices nowadays may be using V4L2 core (some multi-sensor touching
-devices), with depends on it.
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index fad042118862..c058b02efb4d 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -1665,14 +1665,16 @@ static const struct watchdog_ops ds1388_wdt_ops = {
+ 
+ };
+ 
+-static void ds1307_wdt_register(struct ds1307 *ds1307)
++static int ds1307_wdt_register(struct ds1307 *ds1307)
+ {
+ 	struct watchdog_device	*wdt;
+ 
+ 	if (ds1307->type != ds_1388)
+-		return;
++		return 0;
+ 
+ 	wdt = devm_kzalloc(ds1307->dev, sizeof(*wdt), GFP_KERNEL);
++	if (!wdt)
++		return -ENOMEM;
+ 
+ 	wdt->info = &ds1388_wdt_info;
+ 	wdt->ops = &ds1388_wdt_ops;
+@@ -1683,10 +1685,13 @@ static void ds1307_wdt_register(struct ds1307 *ds1307)
+ 	watchdog_init_timeout(wdt, 0, ds1307->dev);
+ 	watchdog_set_drvdata(wdt, ds1307);
+ 	devm_watchdog_register_device(ds1307->dev, wdt);
++
++	return 0;
+ }
+ #else
+-static void ds1307_wdt_register(struct ds1307 *ds1307)
++static int ds1307_wdt_register(struct ds1307 *ds1307)
+ {
++	return 0;
+ }
+ #endif /* CONFIG_WATCHDOG_CORE */
+ 
+@@ -1979,10 +1984,7 @@ static int ds1307_probe(struct i2c_client *client,
+ 
+ 	ds1307_hwmon_register(ds1307);
+ 	ds1307_clks_register(ds1307);
+-	ds1307_wdt_register(ds1307);
+-
+-	return 0;
+-
++	err = ds1307_wdt_register(ds1307);
+ exit:
+ 	return err;
+ }
+-- 
+2.25.1
 
-So, those fourcc codes are pretty common. Having it at the printk
-infra makes a lot easier for people to use them.
-
-> Because frankly, the
-> kernel printk specifiers also start getting more than a little obscure.
-
-I liked one of the suggestions of using "%p4cc" (or maybe something
-similar, if having a number there is a problem, like "%pAcc" or "%pfcc")
-for this printk. This would be very easy for people to identify and 
-remember about its meaning.
-
-> Or could we conceive of a way to make this locally extensible yet safe,
-> letting callers use something like %{foo}, as well as providing a
-> locally relevant function to do the conversion?
-
-That's something that it makes sense to be implemented in the future,
-for things that would be self-contained inside an specific subsystem.
-
-Thanks,
-Mauro
