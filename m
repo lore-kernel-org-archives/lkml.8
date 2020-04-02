@@ -2,105 +2,144 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1259C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B09C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F05207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F4120787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:18:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dwo1sQwW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OVTTLbqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389894AbgDBXSP (ORCPT
+        id S2390040AbgDBXSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:18:15 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36076 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388709AbgDBXSP (ORCPT
+        Thu, 2 Apr 2020 19:18:45 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37789 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387919AbgDBXSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 19:18:15 -0400
-Received: by mail-il1-f194.google.com with SMTP id p13so5432768ilp.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:18:13 -0700 (PDT)
+        Thu, 2 Apr 2020 19:18:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r4so1109906pgg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:18:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=39dgXP5mbIg8YapOVVddrrbM7IoqVqxM5hwBU1j8EUs=;
-        b=dwo1sQwWh9cHbBQrmkixhDQuRMc3S2WNAcFZSWZFwhrPENB7yJ8Aq4pl4Vp+quJApm
-         tGXKNwBWAP4ca9T0JhdQkFsnO1j30wqpkZYa917k1wo4pKEhpsSkMBdwYbmdEJsfO+x7
-         vOsCnA5Wpv4sgcy/5xdAvsA7ATWmYV1jGglfh1J9vX7LZjrsBB1/XU87OunvRWysb9ut
-         oozz4ur7HMDbGeGlFPGOVADtBfQCen7XgIv3BnV7nSijerinrdf8PXH2yYruik9EomGS
-         aeMauAp3DXKGlHJt80YjBCKXrlX2hEn4/0WcoBaT/l3Vt3x6j+P6rKAqypraG1OBBmTs
-         NJpQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hRNopbGVH3Ptzrk/4MigR6ROi/adYHKfTDbekJj0Qcw=;
+        b=OVTTLbqfhamXMqXPgwu6x5Mo38O93HBEbTvyjst4xdirc50oDR9GO3KFQQV+0NQVvN
+         +nghNBkNzsB3y4VN5jq2ZOluhiZCr7VZUabHsiEeBGUofT7BrZPUsXupRGWCsa2D6P+d
+         6xsC5oXEnkeA7ZUhceQ914ZtS3D4p9TatXJnbWhd+7A7VNOCMvfkH0qv0Tq5aoBXLk1h
+         4a+lfPYyBy9IiXf9KiE6MQkpIFUrl1Sg3hkFxrnJOuyRh7/TUzJezaYAIMgG+MX6uk1I
+         z39i6CS69q7Kpj9bGwYw2vCnnw4ZHKx1Tz21/NC+K6wmYN9Vnn8LQ7ayBTqAZm1rf+u/
+         glkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=39dgXP5mbIg8YapOVVddrrbM7IoqVqxM5hwBU1j8EUs=;
-        b=YwEH2n+aCzZNnRv7G8pLEERlmvk4DEibGpnda7UWZTmv77eGdCNQpjmgTi4DqGeLUM
-         zd+1M3XeiDnfNzmI9A35X7Br+XHlXkM9pTW8EYBAK4aLNCEIzff0u/IZZB4pE0LgnfHD
-         P/qUYLt/sk+BELpSuAJE7pXZ+SUeINh5oBoO3497qKk5jJtZIz3RMhwrx+g4TO1v4IYb
-         z97T3iJWJ3kLTqbc/NDu+FvAcwycAMzpU9ng5UFALeG2BB85wJPG4tI+ramcJDOnraKK
-         IpXJtGqWpEh8defIThUH6q9xmS9eBPCZgozt6onlj+vODK3gdf3Z3uZOIBlVgY6E7tWK
-         v4LA==
-X-Gm-Message-State: AGi0PuakKnVbdZjGSnVaeQOlT1bomHfApCoOeG1o0ukygFMg2SAmT3hc
-        BqQPp/9ayTFiSMM4lOEFbGnkaDD2Fl0pm9GSHabvKA==
-X-Google-Smtp-Source: APiQypL/lGLPx7YT86ux57tULDVK457ntFa+LYEm+kpoKEXkiy1gvSvDDTtl7qb2LZN4VOY/qxG+D1B9NtX31AOZhFA=
-X-Received: by 2002:a92:5fdb:: with SMTP id i88mr5930879ill.118.1585869492403;
- Thu, 02 Apr 2020 16:18:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hRNopbGVH3Ptzrk/4MigR6ROi/adYHKfTDbekJj0Qcw=;
+        b=QcLrtrfqKOXS7dnmHrPuiQJ5TyzP6Blof+P01nhxfBJd5tn4TY49PlKTDOS0JHzGz0
+         q8SzVg/114IklnBqgBgaISDcaPF3dISEGd19HWrC+Wu4hd9ZvSEZq3mfjxR24EjaNSKp
+         6E1b1iEvVhQ/Ree1Eh76sC+hk7Hka9ttgmF3YE7HP33Kb0e6hKaSEB0XBtxw+HvIeL4B
+         ylnahdX1vD+tT/HnqJQ/DOLu2g4Sst6+20LSqvDXer0WmTJDer2lTiOSeKAJx4hzviDQ
+         YdsoFo0ceBCRJApUXn746JAj75guZg9gJ6iQT/jIPSFfG9SHIe0uQQP8sfabsG4DkvBr
+         Bqvg==
+X-Gm-Message-State: AGi0PuYa8U44uXYhlFH9rtfD/W//C/0mAwa/PQsBLusKP657kN73QvAQ
+        gKmSR9tf4CXl5pTqppYqckPyfg==
+X-Google-Smtp-Source: APiQypI7H+r1Eg5xc73T+t+fbfyInBtijzZTZim9htzlxz42ZqZLdPFt4zBC8Pp5SoJ45JlVVHugEg==
+X-Received: by 2002:a63:e56:: with SMTP id 22mr5520736pgo.173.1585869523780;
+        Thu, 02 Apr 2020 16:18:43 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m9sm4436895pff.93.2020.04.02.16.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 16:18:43 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 16:18:40 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat
+ string
+Message-ID: <20200402231840.GA327102@minitux>
+References: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
+ <20200402223723.7150-1-john.stultz@linaro.org>
+ <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200402124205.334622628@linutronix.de> <20200402155554.27705-1-sean.j.christopherson@intel.com>
- <20200402155554.27705-4-sean.j.christopherson@intel.com> <87sghln6tr.fsf@nanos.tec.linutronix.de>
- <20200402174023.GI13879@linux.intel.com> <87h7y1mz2s.fsf@nanos.tec.linutronix.de>
- <20200402205109.GM13879@linux.intel.com> <87zhbtle15.fsf@nanos.tec.linutronix.de>
- <08D90BEB-89F6-4D94-8C2E-A21E43646938@vmware.com> <20200402190839.00315012@gandalf.local.home>
- <alpine.DEB.2.21.2004021613110.10453@xps-7390>
-In-Reply-To: <alpine.DEB.2.21.2004021613110.10453@xps-7390>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 2 Apr 2020 16:18:01 -0700
-Message-ID: <CALMp9eSgKQW=rVnBq26cjNfcDXv2BWeA47oHM5pyQke7RpGykw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] KVM: VMX: Extend VMX's #AC interceptor to handle
- split lock #AC in guest
-To:     "Kenneth R. Crudup" <kenny@panix.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86 <x86@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Doug Covelli <dcovelli@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 4:16 PM Kenneth R. Crudup <kenny@panix.com> wrote:
->
->
-> On Thu, 2 Apr 2020, Steven Rostedt wrote:
->
-> > If we go the approach of not letting VM modules load if it doesn't have the
-> > sld_safe flag set, how is this different than a VM module not loading due
-> > to kabi breakage?
->
-> Why not a compromise: if such a module is attempted to be loaded, print up
-> a message saying something akin to "turn the parameter 'split_lock_detect'
-> off" as we reject loading it- and if we see that we've booted with it off
-> just splat a WARN_ON() if someone tries to load such modules?
+On Thu 02 Apr 15:56 PDT 2020, Doug Anderson wrote:
 
-What modules are we talking about? I thought we were discussing L1
-hypervisors, which are just binary blobs. The only modules at the L0
-level are kvm and kvm_intel.
+> Hi,
+> 
+> On Thu, Apr 2, 2020 at 3:37 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+> > PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+> > as a generic compat string. However the change also removed
+> > the "qcom,sdm845-qusb2-phy" compat string, which is documented
+> > in the binding and already in use.
+> >
+> > This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+> > which allows the driver to continue to work with existing dts
+> > entries such as found on the db845c.
+> >
+> > Cc: Andy Gross <agross@kernel.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Doug Anderson <dianders@chromium.org>
+> > Cc: Manu Gautam <mgautam@codeaurora.org>
+> > Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+> > Cc: Matthias Kaehlcke <mka@chromium.org>
+> > Cc: Stephen Boyd <swboyd@chromium.org>
+> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > Cc: linux-arm-msm@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
+> > Reported-by: YongQin Liu <yongqin.liu@linaro.org>
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> >  drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> 
+> Do you have an out-of-tree dts file?  If not, I'd prefer that the fix
+> was for this patch to land instead:
+> 
+> https://lore.kernel.org/r/1583747589-17267-9-git-send-email-sanm@codeaurora.org
+> 
+> While we can land your patch if someone needs it for supporting an
+> out-of-tree dts, it gives people supporting future SoCs the idea that
+> they need to add themselves to this table too.  That's now discouraged
+> unless there's a specific quirk that needs to be handled just for this
+> SoC.
+> 
+
+Afaict the compatible has been in use in the upstream sdm845.dtsi since
+v4.20 and we do have an outspoken rule that we don't break backwards
+compatibility with existing DTBs.
+
+There are cases where it makes sense to break this rule, e.g. to fix
+something that's clearly broken, but I don't see that this is such a
+case.
+
+Regards,
+Bjorn
