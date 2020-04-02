@@ -2,62 +2,199 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927E1C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C319C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7305220737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D27220737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388494AbgDBQsY (ORCPT
+        id S2389487AbgDBQtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:48:24 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:39007 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgDBQsY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:48:24 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id BB914200011;
-        Thu,  2 Apr 2020 16:48:21 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 18:48:21 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] rtc: class: remove redundant assignment to
- variable err
-Message-ID: <20200402164821.GQ3683@piout.net>
-References: <20200402110411.508534-1-colin.king@canonical.com>
+        Thu, 2 Apr 2020 12:49:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28778 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbgDBQtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 12:49:22 -0400
+IronPort-SDR: eIVr02pNlmMzNSQ6in7g0BMWEXHV61UMjus8zwZxzAYnrnuj+YadakHeMqzpnWxv3+V0onMW0l
+ fv/ZVAeNNYRg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 09:49:21 -0700
+IronPort-SDR: PObNNV+joiE4Hjh+BJV7W7tWW6WiyLxup8D33nqlwf8vo1IUHkxPMzfc9Kv21jRJQBh+ptXRWa
+ s6GXdk098uOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="284841870"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.134.85.228]) ([10.134.85.228])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Apr 2020 09:49:19 -0700
+Subject: Re: [PATCH v2 1/2] dmaengine: ioat: fixing chunk sizing macros
+ dependency
+To:     "Ravich, Leonid" <Leonid.Ravich@dell.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Cc:     "lravich@gmail.com" <lravich@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Zavras, Alexios" <alexios.zavras@intel.com>,
+        "Barabash, Alexander" <Alexander.Barabash@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200402092725.15121-2-leonid.ravich@dell.com>
+ <20200402163356.9029-1-leonid.ravich@dell.com>
+ <accfd50c-cf70-1145-6776-e4030e7c37fc@intel.com>
+ <DM6PR19MB26827AA2885E8240370A4B1098C60@DM6PR19MB2682.namprd19.prod.outlook.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <dd2ab4e9-2451-06fc-39c2-acd2daf52d1a@intel.com>
+Date:   Thu, 2 Apr 2020 09:49:19 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402110411.508534-1-colin.king@canonical.com>
+In-Reply-To: <DM6PR19MB26827AA2885E8240370A4B1098C60@DM6PR19MB2682.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/2020 12:04:11+0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable err is being initialized with a value that is never read
-> and it is being updated later with a new value. The initialization
-> is redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/rtc/class.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-Applied, thanks.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+
+On 4/2/2020 9:46 AM, Ravich, Leonid wrote:
+> Sorry Dave ,
+> sure was tested on Intel Sky Lake-E CBDMA
+
+Thanks Leonid. Acked.
+
+> 
+> -----Original Message-----
+> From: Dave Jiang <dave.jiang@intel.com>
+> Sent: Thursday, April 2, 2020 7:43 PM
+> To: Ravich, Leonid; dmaengine@vger.kernel.org
+> Cc: lravich@gmail.com; Vinod Koul; Williams, Dan J; Greg Kroah-Hartman; Zavras, Alexios; Barabash, Alexander; Thomas Gleixner; Kate Stewart; Jilayne Lovejoy; Logan Gunthorpe; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v2 1/2] dmaengine: ioat: fixing chunk sizing macros dependency
+> 
+> 
+> [EXTERNAL EMAIL]
+> 
+> 
+> 
+> On 4/2/2020 9:33 AM, leonid.ravich@dell.com wrote:
+>> From: Leonid Ravich <Leonid.Ravich@emc.com>
+>>
+>> prepare for changing alloc size.
+>>
+>> Acked-by: Dave Jiang <dave.jiang@intel.com>
+>> Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+> 
+> Hi Leonid, I haven't actually acked this patch yet, pending your answer on if this has been tested on hardware. Thanks.
+> 
+>> ---
+>>    drivers/dma/ioat/dma.c  | 14 ++++++++------
+>>    drivers/dma/ioat/dma.h  | 10 ++++++----
+>>    drivers/dma/ioat/init.c |  2 +-
+>>    3 files changed, 15 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c index
+>> 18c011e..1e0e6c1 100644
+>> --- a/drivers/dma/ioat/dma.c
+>> +++ b/drivers/dma/ioat/dma.c
+>> @@ -332,8 +332,8 @@ static dma_cookie_t ioat_tx_submit_unlock(struct dma_async_tx_descriptor *tx)
+>>    	u8 *pos;
+>>    	off_t offs;
+>>    
+>> -	chunk = idx / IOAT_DESCS_PER_2M;
+>> -	idx &= (IOAT_DESCS_PER_2M - 1);
+>> +	chunk = idx / IOAT_DESCS_PER_CHUNK;
+>> +	idx &= (IOAT_DESCS_PER_CHUNK - 1);
+>>    	offs = idx * IOAT_DESC_SZ;
+>>    	pos = (u8 *)ioat_chan->descs[chunk].virt + offs;
+>>    	phys = ioat_chan->descs[chunk].hw + offs; @@ -370,7 +370,8 @@
+>> struct ioat_ring_ent **
+>>    	if (!ring)
+>>    		return NULL;
+>>    
+>> -	ioat_chan->desc_chunks = chunks = (total_descs * IOAT_DESC_SZ) / SZ_2M;
+>> +	chunks = (total_descs * IOAT_DESC_SZ) / IOAT_CHUNK_SIZE;
+>> +	ioat_chan->desc_chunks = chunks;
+>>    
+>>    	for (i = 0; i < chunks; i++) {
+>>    		struct ioat_descs *descs = &ioat_chan->descs[i]; @@ -382,8 +383,9
+>> @@ struct ioat_ring_ent **
+>>    
+>>    			for (idx = 0; idx < i; idx++) {
+>>    				descs = &ioat_chan->descs[idx];
+>> -				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+>> -						  descs->virt, descs->hw);
+>> +				dma_free_coherent(to_dev(ioat_chan),
+>> +						IOAT_CHUNK_SIZE,
+>> +						descs->virt, descs->hw);
+>>    				descs->virt = NULL;
+>>    				descs->hw = 0;
+>>    			}
+>> @@ -404,7 +406,7 @@ struct ioat_ring_ent **
+>>    
+>>    			for (idx = 0; idx < ioat_chan->desc_chunks; idx++) {
+>>    				dma_free_coherent(to_dev(ioat_chan),
+>> -						  SZ_2M,
+>> +						  IOAT_CHUNK_SIZE,
+>>    						  ioat_chan->descs[idx].virt,
+>>    						  ioat_chan->descs[idx].hw);
+>>    				ioat_chan->descs[idx].virt = NULL; diff --git
+>> a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h index
+>> b8e8e0b..5216c6b 100644
+>> --- a/drivers/dma/ioat/dma.h
+>> +++ b/drivers/dma/ioat/dma.h
+>> @@ -81,6 +81,11 @@ struct ioatdma_device {
+>>    	u32 msixpba;
+>>    };
+>>    
+>> +#define IOAT_MAX_ORDER 16
+>> +#define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER) #define IOAT_CHUNK_SIZE
+>> +(SZ_2M) #define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE / IOAT_DESC_SZ)
+>> +
+>>    struct ioat_descs {
+>>    	void *virt;
+>>    	dma_addr_t hw;
+>> @@ -128,7 +133,7 @@ struct ioatdma_chan {
+>>    	u16 produce;
+>>    	struct ioat_ring_ent **ring;
+>>    	spinlock_t prep_lock;
+>> -	struct ioat_descs descs[2];
+>> +	struct ioat_descs descs[IOAT_MAX_DESCS / IOAT_DESCS_PER_CHUNK];
+>>    	int desc_chunks;
+>>    	int intr_coalesce;
+>>    	int prev_intr_coalesce;
+>> @@ -301,9 +306,6 @@ static inline bool is_ioat_bug(unsigned long err)
+>>    	return !!err;
+>>    }
+>>    
+>> -#define IOAT_MAX_ORDER 16
+>> -#define IOAT_MAX_DESCS 65536
+>> -#define IOAT_DESCS_PER_2M 32768
+>>    
+>>    static inline u32 ioat_ring_size(struct ioatdma_chan *ioat_chan)
+>>    {
+>> diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c index
+>> 60e9afb..58d1356 100644
+>> --- a/drivers/dma/ioat/init.c
+>> +++ b/drivers/dma/ioat/init.c
+>> @@ -651,7 +651,7 @@ static void ioat_free_chan_resources(struct dma_chan *c)
+>>    	}
+>>    
+>>    	for (i = 0; i < ioat_chan->desc_chunks; i++) {
+>> -		dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+>> +		dma_free_coherent(to_dev(ioat_chan), IOAT_CHUNK_SIZE,
+>>    				  ioat_chan->descs[i].virt,
+>>    				  ioat_chan->descs[i].hw);
+>>    		ioat_chan->descs[i].virt = NULL;
+>>
