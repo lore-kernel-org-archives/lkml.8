@@ -2,71 +2,99 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49172C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C44C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29DDD20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B8620757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585832946;
+	bh=HRwxHQBC9kQTrRQvz+Yh0uMWoXqH51d6avWK4AF0BRY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lnV9hJ/1q9xDIgx3sGmMw1m2is5AFcUBNqtud0HS/TwuTNaZchx2OBq9lAPjuogG9
+	 PpScxLVMKW/7kSQXCwliOpDyUKEKnR9Y2r3b9DFNrNqwzPXGPoPlBFGwczN1MkBJMw
+	 azle3CSa6N1EXw3fQCx9rDG6UJakxyFTTJC4Zaa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388439AbgDBNJA (ORCPT
+        id S2388080AbgDBNJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:09:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:42614 "EHLO foss.arm.com"
+        Thu, 2 Apr 2020 09:09:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387580AbgDBNJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:09:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B39430E;
-        Thu,  2 Apr 2020 06:08:59 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.66])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7AAE3F68F;
-        Thu,  2 Apr 2020 06:08:57 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 14:08:50 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jeremy.linton@arm.com,
-        linuxarm@huawei.com, wanghuiqiang@huawei.com,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] ACPI: PPTT: Inform user that table offset used for
- Physical processor node ID
-Message-ID: <20200402123501.GA26588@bogus>
-References: <1585830145-208714-1-git-send-email-john.garry@huawei.com>
+        id S1733234AbgDBNJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:09:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1BF420678;
+        Thu,  2 Apr 2020 13:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585832944;
+        bh=HRwxHQBC9kQTrRQvz+Yh0uMWoXqH51d6avWK4AF0BRY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tO5CP1TDTdurRKmXFFZa0qT+4oJmnBN72UgjAdwp6ItX9gqSkfixrA46lUPl6laSm
+         JeyeMroW+P9huBT9Gj3dwkAJs1FVDqFrNs9Xbqmw62Ahdq/eUUCQf/8BIepQANAfF4
+         6znlPPWmpuWa+nuAlwHCvwpAiT/9HgIAN7d4OPR8=
+Date:   Thu, 2 Apr 2020 15:09:02 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.6 00/10] 5.6.2-rc1 review
+Message-ID: <20200402130902.GA2774407@kroah.com>
+References: <20200401161413.974936041@linuxfoundation.org>
+ <a78aab3d-2d00-dd1b-24e0-67db41898349@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585830145-208714-1-git-send-email-john.garry@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a78aab3d-2d00-dd1b-24e0-67db41898349@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(I see 2 copies of this patch, replying on the latest)
+On Thu, Apr 02, 2020 at 08:11:07AM +0100, Jon Hunter wrote:
+> 
+> On 01/04/2020 17:17, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.2 release.
+> > There are 10 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.2-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.6:
+>     13 builds:	13 pass, 0 fail
+>     24 boots:	24 pass, 0 fail
+>     40 tests:	40 pass, 0 fail
+> 
+> Linux version:	5.6.2-rc1-g6c8d51f98078
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
+> 
 
-On Thu, Apr 02, 2020 at 08:22:25PM +0800, John Garry wrote:
-> If the the Processor ID valid is not set for a Physical Processor Package
-> node, then the node table offset is used as a substitute. As such, we
-> may get info like this from sysfs:
->
-> root@(none)$ pwd
-> /sys/devices/system/cpu/cpu0/topology
-> root@(none)$ more physical_package_id
-> 56
->
-> Inform the user of this in the bootlog, as it is much less than ideal, and
-> they can remedy this in their FW.
->
-> This topic was originally discussed in:
-> https://lore.kernel.org/linux-acpi/c325cfe2-7dbf-e341-7f0f-081b6545e890@huawei.com/T/#m0ec18637d8586f832084a8a6af22580e6174669a
->
+Great, thanks for testing all of these and letting me know.
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-
---
-Regards,
-Sudeep
+greg k-h
