@@ -2,79 +2,90 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D698AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F12C18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B120521655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4936206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:00:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EDAhEOXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387915AbgDBI6v (ORCPT
+        id S2387884AbgDBJAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:58:51 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12604 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387780AbgDBI6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:58:51 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B46B36AA3EDD6D1F55C8;
-        Thu,  2 Apr 2020 16:58:48 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Apr 2020
- 16:58:39 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <john.garry@huawei.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <chenxiang66@hisilicon.com>,
-        <b.zolnierkie@samsung.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] scsi: hisi_sas: Fix build error without SATA_HOST
-Date:   Thu, 2 Apr 2020 16:58:12 +0800
-Message-ID: <20200402085812.32948-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20200402063021.34672-1-yuehaibing@huawei.com>
-References: <20200402063021.34672-1-yuehaibing@huawei.com>
+        Thu, 2 Apr 2020 05:00:46 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48910 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728612AbgDBJAp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 05:00:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585818044;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WLbI8tl/lGeAZC2ZqPQOvymWN2MF7fjTbT3WDjZTIW4=;
+        b=EDAhEOXC31VIGGCEsGR8Rkv0qgGHpcQO9Y5KVC0WddQCZ/oO/gNB2Vct23a7xoy9J/BYke
+        QdBpqPhachHvpnhqzB8aIIRgvaYjLi+g49Xn7QGfkasbOMPyklsrCcR7pE3jLWhobgZkkb
+        CNoZ32lUxBQeV/tfb85CsJUYJYwYdbU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-22-ViIzXaFRMCuH1SC4nYcA3g-1; Thu, 02 Apr 2020 05:00:42 -0400
+X-MC-Unique: ViIzXaFRMCuH1SC4nYcA3g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EA7518A551F;
+        Thu,  2 Apr 2020 09:00:41 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.192.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D79BE5E037;
+        Thu,  2 Apr 2020 09:00:32 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 11:00:29 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>
+Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        david@redhat.com
+Subject: Re: [PATCH 2/2] selftests: kvm: Add mem_slot_test test
+Message-ID: <20200402090029.pc6w6iqikgthflhq@kamzik.brq.redhat.com>
+References: <20200330204310.21736-1-wainersm@redhat.com>
+ <20200330204310.21736-3-wainersm@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330204310.21736-3-wainersm@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If SATA_HOST is n, build fails:
+On Mon, Mar 30, 2020 at 05:43:10PM -0300, Wainer dos Santos Moschetta wrote:
+> This patch introduces the mem_slot_test test which checks
+> an VM can have added memory slots up to the limit defined in
+> KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
+> verify it fails as expected.
+> 
+> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/.gitignore      |  1 +
+>  tools/testing/selftests/kvm/Makefile        |  3 +
+>  tools/testing/selftests/kvm/mem_slot_test.c | 92 +++++++++++++++++++++
+>  3 files changed, 96 insertions(+)
+>  create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
+>
 
-drivers/scsi/hisi_sas/hisi_sas_main.o: In function `hisi_sas_fill_ata_reset_cmd':
-hisi_sas_main.c:(.text+0x2500): undefined reference to `ata_tf_to_fis'
+BTW, in kvm/queue we also now have
 
-Select SATA_HOST to fix this.
+x86_64/set_memory_region_test.c
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: bd322af15ce9 ("ata: make SATA_PMP option selectable only if any SATA host driver is enabled")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: use correct Fixes tag
----
- drivers/scsi/hisi_sas/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+I wonder if we shouldn't try to make x86_64/set_memory_region_test.c
+arch-neutral and then integrate this new test with it.
 
-diff --git a/drivers/scsi/hisi_sas/Kconfig b/drivers/scsi/hisi_sas/Kconfig
-index 90a17452a50d..13ed9073fc72 100644
---- a/drivers/scsi/hisi_sas/Kconfig
-+++ b/drivers/scsi/hisi_sas/Kconfig
-@@ -6,6 +6,7 @@ config SCSI_HISI_SAS
- 	select SCSI_SAS_LIBSAS
- 	select BLK_DEV_INTEGRITY
- 	depends on ATA
-+	select SATA_HOST
- 	help
- 		This driver supports HiSilicon's SAS HBA, including support based
- 		on platform device
--- 
-2.17.1
-
+Thanks,
+drew
 
