@@ -2,83 +2,148 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A0FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F7DC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F23920737
+	by mail.kernel.org (Postfix) with ESMTP id ED4B8206F6
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:35:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389341AbgDBPfZ (ORCPT
+        id S2389358AbgDBPf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:35:25 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:55419 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2389328AbgDBPfZ (ORCPT
+        Thu, 2 Apr 2020 11:35:26 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:59437 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732970AbgDBPfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Apr 2020 11:35:25 -0400
-Received: (qmail 21183 invoked by uid 500); 2 Apr 2020 11:35:24 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 2 Apr 2020 11:35:24 -0400
-Date:   Thu, 2 Apr 2020 11:35:23 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <ingrassia@epigenesys.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
-In-Reply-To: <0000000000001873a005a240d114@google.com>
-Message-ID: <Pine.LNX.4.44L0.2004021133440.13377-100000@netrider.rowland.org>
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MEFCF-1jS2DG2pUb-00AHcI; Thu, 02 Apr 2020 17:35:07 +0200
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 7B9436506C3;
+        Thu,  2 Apr 2020 15:35:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id QCfSTkeeb5TN; Thu,  2 Apr 2020 17:35:06 +0200 (CEST)
+Received: from pflmari.corp.cetitec.com (unknown [10.8.5.56])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 1E4F064C974;
+        Thu,  2 Apr 2020 17:35:06 +0200 (CEST)
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id D55D4804FB; Thu,  2 Apr 2020 17:35:05 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 17:35:05 +0200
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v4 9/9] arm64: dts: renesas: salvator: add a connection
+ from adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <20200402153505.GC4291@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <cover.1585218857.git.alexander.riesen@cetitec.com>
+ <ad15f80df51c95a7c24498bb0bd3a46f55fbb62e.1585218857.git.alexander.riesen@cetitec.com>
+ <CAMuHMdV+joeNWJotKySVPHNW9OoT8+iODBwhK5fACspq2SX_eg@mail.gmail.com>
+ <20200402141654.GB4291@pflmari>
+ <CAMuHMdV6a=adKVmmRm_3qOSA37kDRfc63G+qQpN4UR-hj3R65g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV6a=adKVmmRm_3qOSA37kDRfc63G+qQpN4UR-hj3R65g@mail.gmail.com>
+X-Provags-ID: V03:K1:8YcpPR4OX9VjeYg9XwNdrfmOZD058GNbrfPvpaIBOHzJfJ+xmAM
+ fh2HDdf8RvrwuYJnOFdqhE71JK4Zi3noK4t+M2p8JEcBOVMjhMj+om4Ye2RMw9W/hTY6/U5
+ cfXwpWIfghgX7MtDjnZSW2kGQ/pkyY8Za31J4qXGZR57YFinNmOztQjeJ4gCzE9imwCOGSR
+ 4fxm+XEG/l22liyDi8Gbg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lWqBRcmjNbU=:JWGxbOm6nPXQMvdnEhikmQ
+ nhJNzMtLTk7NcX7kT2Sc7y+M580IwwNDLerkGErta19bwOOQdDE2rGVJj5tuFxOi1ShWBlXXV
+ mCdWxLMRh7o5sh6UPzAWR5LWjCAIn8vPYqnFUGOVXmaCFoJ5tWNCal6IDGSLCMHSQLKq9iiii
+ Poz00LV9WMOZpo/WjL2ve+tVgiMViLSbVv7qmp1qPwtx3/rcxLAhyPZkT63nZvA9KpvwSIKEj
+ +Lo4DX1ZK/uCw4vnmgT1jLperGGTot4UTKrz2p9+dpfFHQ+7LXP8dZxrcbJC3ZEtZ9IMc5RCF
+ aqHbpvQJuTqZv7/A+hr9GGEwKKjygau7+kxS4v/FIY/a/NZJsJZOh2J12y82+AobMLyzqu/mX
+ K9SGVZwDJ9FeNhaEeTqqB3DQOajOX44aOo8mV6ph4B5mTi/FYasNHQFot7wgwZjSBX4GsFKvr
+ r47U7lebdUMbTIEskSB7qxsumiIwZq0xOovICU3gBeskC9rnN9S1uCLqo6DHtOD+kKQvSgSXl
+ FJ4jGfGYlniXDsNH8oZjfEWpQJJafvuTHv67YsY3dIILXW+QL8rwAX//D3REYKykvUfBi2LDL
+ PUYzMdKTC9xZG/HOmDL/dV6excVkYW2DqsHf/uyWo/+E9QxpR10pQb1hFKnWX0gyDoa3Ra5Ba
+ ufNQSn6FW314LIrzZw8K9M1ZhJ3sBMzUQ4dgTgLhKtKCE1TD0j8ZyR6beHzPqtLhASMCUPWa6
+ jRvB/dYz5AZ/dl121bPUR/oykSnjIrWAMK5ELmyNe9rpAjFPkaBPb9sJzrc7/qT4rIF7771kj
+ N7nJwhIslg6j9bv+2FhGCRh2gR8YvyJ5WaTKBfeBWfnWqoh6+r3lyimj2bYonnjaJxxM+rG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020, syzbot wrote:
-
-> syzbot has found a reproducer for the following crash on:
+Geert Uytterhoeven, Thu, Apr 02, 2020 17:26:15 +0200:
+> On Thu, Apr 2, 2020 at 5:03 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > Geert Uytterhoeven, Mon, Mar 30, 2020 10:32:47 +0200:
+> > > On Thu, Mar 26, 2020 at 11:55 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > > > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > > > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > > > @@ -510,6 +511,15 @@ adv7482_txb: endpoint {
+> > > >                                 remote-endpoint = <&csi20_in>;
+> > > >                         };
+> > > >                 };
+> > > > +
+> > > > +               port@c {
+> > > > +                       reg = <12>;
+> > > > +
+> > > > +                       adv7482_i2s: endpoint {
+> > > > +                               remote-endpoint = <&rsnd_endpoint3>;
+> > > > +                               system-clock-direction-out;
+> > > > +                       };
+> > > > +               };
+> > >
+> > > As the adv748x driver just ignores "invalid" endpoints...
+> > >
+> > > > @@ -758,8 +769,19 @@ &rcar_sound {
+> > > >                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+> > > >                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
+> > > >                  <&audio_clk_a>, <&cs2000>,
+> > > > -                <&audio_clk_c>,
+> > > > +                <&adv7482_hdmi_in>,
+> > > >                  <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
+> > >
+> > > ... and the rsnd driver ignores nonexistent-clocks, the DT change has no
+> > > hard dependency on the driver change, and won't introduce regressions
+> > > when included, right?
+> >
+> > Well, it maybe won't, but isn't it a little ... implicit?
+> > And I'm no haste to include the changes, if you mean I can (or should) submit
+> > the device tree patch separately.
 > 
-> HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12aa8567e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
-> dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1342740be00000
+> OK, fine for me to postpone (that'll be for v5.9, I guess?).
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> usb 2-1: BOGUS urb xfer, pipe 2 != type 2
-> WARNING: CPU: 0 PID: 9241 at drivers/usb/core/urb.c:478 usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
 
-At last!  Let's get some more information about this...
+Looks scary :)
+But yes, fine with me too.
 
-Alan Stern
+v5 with ssi4 dummy in a moment.
 
-#syz test: https://github.com/google/kasan.git 0fa84af8
-
-Index: usb-devel/drivers/usb/core/urb.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/urb.c
-+++ usb-devel/drivers/usb/core/urb.c
-@@ -475,8 +475,9 @@ int usb_submit_urb(struct urb *urb, gfp_
- 
- 	/* Check that the pipe's type matches the endpoint's type */
- 	if (usb_urb_ep_type_check(urb))
--		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
--			usb_pipetype(urb->pipe), pipetypes[xfertype]);
-+		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x, ep addr 0x%02x, pipe 0x%x, xfertype %d\n",
-+			usb_pipetype(urb->pipe), pipetypes[xfertype],
-+			ep->desc.bEndpointAddress, urb->pipe, xfertype);
- 
- 	/* Check against a simple/standard policy */
- 	allowed = (URB_NO_TRANSFER_DMA_MAP | URB_NO_INTERRUPT | URB_DIR_MASK |
-
+Regards,
+Alex
