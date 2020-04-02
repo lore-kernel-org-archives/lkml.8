@@ -2,162 +2,171 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B623C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85D5C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAF1206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E789206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:10:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BYi7UK0t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLUnozkZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389013AbgDBUH5 (ORCPT
+        id S2389054AbgDBUK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:07:57 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53380 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388871AbgDBUH5 (ORCPT
+        Thu, 2 Apr 2020 16:10:26 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54596 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgDBUK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:07:57 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d77so4793224wmd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:07:56 -0700 (PDT)
+        Thu, 2 Apr 2020 16:10:26 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c81so4783038wmd.4;
+        Thu, 02 Apr 2020 13:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Iu/q3zMTB/NGBoImfknpSwtGLLWxG6GnJEB0Nk4jwMU=;
-        b=BYi7UK0tgravCN/xlIXTjI2k/wLwNPVZjOA+zXhVyXKBwtlL6koSK/yxy51fQ8NttV
-         5mkWj6mrHJ01ZUnrBytPbgXPIzv483auc9jen9PrDxSQg/cDjIAnBcfYG2KVhaptMaJ9
-         Q+fOy4/jVwS7BD13/EEfuF9cImBH9CK6bY6Ws=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5UitrtcQcLyUuypDd55yvaCM6NIpqOgNi0sTpbymWqI=;
+        b=jLUnozkZzk4wHj1zfjABKiOeRlA+KmFZy7xnaV7k84+hygjsJgnWCGl9rdGgKYZBLD
+         EcCtl/2F/L+6SK6Nkmj7cSBZpmfEVcfaE/qebmIW6CTRo2jxjsafOZlyF0jYEup9bFUi
+         KGbP6hKKwQjR8wryIky2THe219oIq9qoE2XBaUV/36TfgDLK5yNsRDQgzifAv3x+0ide
+         +dXZS9T6AvOWhnXvKDqTZUIA3tBWJH6ohCIqHEGb5gqscpHUgOoqqI2D1xRjMnZ8VFkn
+         kwdj5LogxrcQpwPdW6Q4ABa1wP7PSaceNqWWFLzdpN2R7BSMNvMX0ui6JP1NzEy59lPA
+         WSgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Iu/q3zMTB/NGBoImfknpSwtGLLWxG6GnJEB0Nk4jwMU=;
-        b=PW7xQcRha3h2mciIQp9FYivJywxcns5OxinEOEzKoPy6ffs7mFjeJjH/iKQrdHnkrT
-         cp4xAKDk8FWF1JGEkC3btnz1ElZh2NBTCdG4AcqhQfSw1+GE2LxGFy7yfGpF+XK9pP/g
-         uDyBgA7dlCbh6V33ht0P88a42KRybSPWURmMVCHydxNUHrvzlLchH5LfR8wjR4wNVjkk
-         INT7dBp6W+4tjGvA3gIWKYjnmAeTckqQoAFsu6r4zWfWtBpb+7DJIJW3pNzPwOlgIogY
-         gMJdsBHC2wCHDxexF+A+yKW2CkQJgfbIElB5n8oFPD+7DRdfG1YuIuHyx2oUGu1qlSwZ
-         cvwQ==
-X-Gm-Message-State: AGi0PuaI7lVXou/AFYCnPn49AP0qKLpz4eH8kweDKKmB0h8XuTUWO/wO
-        KGs6MuZHLdrWnxskbJM84WgxPuT1vQ/l5A==
-X-Google-Smtp-Source: APiQypLwXf59H0ELqYQHrCLRAaB3IZpY+8LNTDxn5b36clU3b2wvqLoK0knFNxZUXmAQ/NJ9Q8CxHQ==
-X-Received: by 2002:a7b:c083:: with SMTP id r3mr5214243wmh.92.1585858075446;
-        Thu, 02 Apr 2020 13:07:55 -0700 (PDT)
-Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id q4sm12562641wmj.1.2020.04.02.13.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 13:07:54 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH bpf] bpf, lsm: Fix the file_mprotect LSM test.
-Date:   Thu,  2 Apr 2020 22:07:51 +0200
-Message-Id: <20200402200751.26372-1-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        bh=5UitrtcQcLyUuypDd55yvaCM6NIpqOgNi0sTpbymWqI=;
+        b=aN9cyN/grFgV2lcrWJ/vRsGUcSrBVCtyqEG7A1wr/l1EqYxbYIQuB3hAxL+H9Ep5on
+         HqMXfvm1FuT30sB+pn03uAAF0H1yiDa/5Nf/+2CSUVtQeHx2zAVJznc2sxp6eCoBnVwP
+         XZUM4SBVq64XLeATbXPr7AgL1ibyCC2JsWVMWN3wly5XmlYTDyQmdKYeKWSmXTv0qlT6
+         LI6W4kwleSXoOdOdi3r5IT1dVMaeM7OPFBD8VX+MQIry4rAqTS2R+6yFNXkww+ud1tK1
+         LhPHE7AuUGp1QdOovHztdFTQSoo+TfkYPq1wHQL/rC4WRuqsHvQvkX3oTO6U/a9Wpm0X
+         xTHg==
+X-Gm-Message-State: AGi0PuYGcDXmctgu89ft0H4CsV9uRdJXrWxb/nYfZgOMNN7k7R+WHMnO
+        lsqnwXioIZ2XKL4P4Pp0p4k=
+X-Google-Smtp-Source: APiQypIbEEkJukJIMkBcjNC0Z/IpCLXYe/ZM6jvYBjXgKEX9jEuufWBxIiPSsGTTRPDqcUTlIC+mKg==
+X-Received: by 2002:a1c:c257:: with SMTP id s84mr5274398wmf.9.1585858224173;
+        Thu, 02 Apr 2020 13:10:24 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id r5sm8462481wmr.15.2020.04.02.13.10.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 13:10:23 -0700 (PDT)
+Subject: Re: [PATCH 4/4] arm64: dts: rockchip: add isp0 node for rk3399
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     dafna.hirschfeld@collabora.com, devel@driverdev.osuosl.org,
+        devicetree@vger.kernel.org, ezequiel@collabora.com,
+        heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        karthik.poduval@gmail.com, kernel@collabora.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+References: <20200402000234.226466-5-helen.koike@collabora.com>
+ <1187d28a-6fb9-fd12-a422-8a4220a11e79@gmail.com>
+ <d8b05dd4-1ece-9513-b2ec-0cb58f665c5e@collabora.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <20ae21a6-74b0-ff99-80d9-1a0ce2cc1aa5@gmail.com>
+Date:   Thu, 2 Apr 2020 22:10:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d8b05dd4-1ece-9513-b2ec-0cb58f665c5e@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On 4/2/20 9:46 PM, Helen Koike wrote:
+> 
+> 
+> On 4/2/20 2:20 PM, Johan Jonker wrote:
+>> Hi Helen,
+>>
+>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>>> index fc0295d2a65a1..815099a0cd0dd 100644
+>>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>>> @@ -1718,6 +1718,33 @@ vopb_mmu: iommu@ff903f00 {
+>>>  		status = "disabled";
+>>>  	};
+>>>  
+>>> +	isp0: isp0@ff910000 {
+>>> +		compatible = "rockchip,rk3399-cif-isp";
+>>> +		reg = <0x0 0xff910000 0x0 0x4000>;
+>>> +		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+>>> +		clocks = <&cru SCLK_ISP0>,
+>>> +			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+>>> +			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+>>> +		clock-names = "clk_isp",
+>>> +			      "aclk_isp", "aclk_isp_wrap",
+>>> +			      "hclk_isp", "hclk_isp_wrap";
+>>
+>>> +		power-domains = <&power RK3399_PD_ISP0>;
+>>> +		iommus = <&isp0_mmu>;
+>>> +		phys = <&mipi_dphy_rx0>;
+>>> +		phy-names = "dphy";
+>>
+>> Maybe a little sort? But keep rest as it is. Also in example.
+>>
+>> 		iommus = <&isp0_mmu>;
+>> 		phys = <&mipi_dphy_rx0>;
+>> 		phy-names = "dphy";
+>> 		power-domains = <&power RK3399_PD_ISP0>;
+> 
+> Are you proposing only to move power-domains after phy? And keep the rest?
+> What is the main logic?
 
-The test was previously using an mprotect on the heap memory allocated
-using malloc and was expecting the allocation to be always using
-sbrk(2). This is, however, not always true and in certain conditions
-malloc may end up using anonymous mmaps for heap alloctions. This means
-that the following condition that is used in the "lsm/file_mprotect"
-program is not sufficent to detect all mprotect calls done on heap
-memory:
+There is no hard rule... It mostly depend on Heiko...
 
-	is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
-		   vma->vm_end <= vma->vm_mm->brk);
+For nodes:
+Sort things without reg alphabetical first,
+then sort the rest by reg address.
 
-The test is updated to use an mprotect on memory allocated on the stack.
-While this would result in the splitting of the vma, this happens only
-after the security_file_mprotect hook. So, the condition used in the BPF
-program holds true.
+Inside nodes:
+If exists on top: compatible, reg and interrupts.
+In alphabetical order the required properties.
+Then in alphabetical order the other properties.
+And as last things that start with '#' in alphabetical order.
 
-Signed-off-by: KP Singh <kpsingh@google.com>
-Reported-by: Alexei Starovoitov <ast@kernel.org>
-Fixes: 03e54f100d57 ("bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM")
----
- .../selftests/bpf/prog_tests/test_lsm.c        | 18 +++++++++---------
- tools/testing/selftests/bpf/progs/lsm.c        |  8 ++++----
- 2 files changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/test_lsm.c b/tools/testing/selftests/bpf/prog_tests/test_lsm.c
-index 1e4c258de09d..b17eb2045c1d 100644
---- a/tools/testing/selftests/bpf/prog_tests/test_lsm.c
-+++ b/tools/testing/selftests/bpf/prog_tests/test_lsm.c
-@@ -15,7 +15,10 @@
- 
- char *CMD_ARGS[] = {"true", NULL};
- 
--int heap_mprotect(void)
-+#define GET_PAGE_ADDR(ADDR, PAGE_SIZE)					\
-+	(char *)(((unsigned long) (ADDR + PAGE_SIZE)) & ~(PAGE_SIZE-1))
-+
-+int stack_mprotect(void)
- {
- 	void *buf;
- 	long sz;
-@@ -25,12 +28,9 @@ int heap_mprotect(void)
- 	if (sz < 0)
- 		return sz;
- 
--	buf = memalign(sz, 2 * sz);
--	if (buf == NULL)
--		return -ENOMEM;
--
--	ret = mprotect(buf, sz, PROT_READ | PROT_WRITE | PROT_EXEC);
--	free(buf);
-+	buf = alloca(sz * 3);
-+	ret = mprotect(GET_PAGE_ADDR(buf, sz), sz,
-+		       PROT_READ | PROT_WRITE | PROT_EXEC);
- 	return ret;
- }
- 
-@@ -73,8 +73,8 @@ void test_test_lsm(void)
- 
- 	skel->bss->monitored_pid = getpid();
- 
--	err = heap_mprotect();
--	if (CHECK(errno != EPERM, "heap_mprotect", "want errno=EPERM, got %d\n",
-+	err = stack_mprotect();
-+	if (CHECK(errno != EPERM, "stack_mprotect", "want err=EPERM, got %d\n",
- 		  errno))
- 		goto close_prog;
- 
-diff --git a/tools/testing/selftests/bpf/progs/lsm.c b/tools/testing/selftests/bpf/progs/lsm.c
-index a4e3c223028d..b4598d4bc4f7 100644
---- a/tools/testing/selftests/bpf/progs/lsm.c
-+++ b/tools/testing/selftests/bpf/progs/lsm.c
-@@ -23,12 +23,12 @@ int BPF_PROG(test_int_hook, struct vm_area_struct *vma,
- 		return ret;
- 
- 	__u32 pid = bpf_get_current_pid_tgid() >> 32;
--	int is_heap = 0;
-+	int is_stack = 0;
- 
--	is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
--		   vma->vm_end <= vma->vm_mm->brk);
-+	is_stack = (vma->vm_start <= vma->vm_mm->start_stack &&
-+		    vma->vm_end >= vma->vm_mm->start_stack);
- 
--	if (is_heap && monitored_pid == pid) {
-+	if (is_stack && monitored_pid == pid) {
- 		mprotect_count++;
- 		ret = -EPERM;
- 	}
--- 
-2.20.1
+> 
+> Thanks
+> Helen
+> 
+>>
+>>> +
+>>> +		ports {
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <0>;
+>>> +
+>>> +			port@0 {
+>>
+>>> +				#address-cells = <1>;
+>>> +				#size-cells = <0>;
+>>> +				reg = <0>;
+>>
+>> Move reg above #address-cells. Change that in example as well.
+>>
+>> 				reg = <0>;
+>> 				#address-cells = <1>;
+>> 				#size-cells = <0>;
+>>
+>>> +			};
+>>> +		};
+>>> +	};
+>>> +
+>>>  	isp0_mmu: iommu@ff914000 {
+>>>  		compatible = "rockchip,iommu";
+>>>  		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
+>>> -- 
+>>> 2.26.0
+>>
 
