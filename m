@@ -2,53 +2,52 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820A0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9168C2BA17
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5854C20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0ED2078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="PWyfGkYN"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="C+WkvBCK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388201AbgDBLzC (ORCPT
+        id S2388224AbgDBLzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:55:02 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:59778 "EHLO rere.qmqm.pl"
+        Thu, 2 Apr 2020 07:55:04 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:48099 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388154AbgDBLy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:54:59 -0400
+        id S2388165AbgDBLzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:55:00 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tM1r4wP3zwy;
-        Thu,  2 Apr 2020 13:54:56 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tM1t2z6bz1vW;
+        Thu,  2 Apr 2020 13:54:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585828496; bh=w9lqLlJJ6XJvsSd0hc1eF6HC5pdJ5YRJaBkIo26sigY=;
+        t=1585828498; bh=khf7zih+kXw+JC1hB17Cn0g0Tar7KZrUWoe09zQ0hQw=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=PWyfGkYNRr4N0Y5lOGgGjsFgSBRyoc+aLbRXWxRSwy0sPpZ8G9UoUnN3OqT5n3jNc
-         8txyg0ATQrXD3htPqOnwp1mdqFtu7prKp10nPdR+7D6GEq+GrLm4S6KAs2PoqPR9jp
-         QQC51qH8vj0pg0Rf4eYiNjsR1xpf9d4BYFNsl4X7F1+9YutJWBKJ1zvcs+VWhpadfQ
-         S/N4A38fzQHNZpcedANbD/FFr6Rk5kSVDUoadXOFCRSNBNkZ0GJ/OmGfvN0n5aQfOO
-         5Dq7wk7J7871Rktm1iFF9KTuNT7v6SzHhvHfGxRyWPGLI9+Od06zOTnhzy5y6EdVoJ
-         HV+cajuQpA/0Q==
+        b=C+WkvBCKaqWfzIaomFriw/wvD9tPTswt4XO10Lg+uREhGNmhIGLRBoC2u10s8HNZx
+         7ZYE+NpVTsROje2/vjSuflaCd1HFnK2LBoBM+DSFYO+o5pYbGLRWIStxfxSBlTdufS
+         PuFKnRTYkJB9md9+GIfHPALQHhf86WlNud0wrO9iGMIPWQ8ClYQvcS8AdOvB58kp+U
+         qz2nJTCnkqySWQDJ1UjOnSuo6E03ukm5mLQtLvuUAK6wALSZGYKMPT0A2FTO5XiTfZ
+         c8uw+TDenDm7P+NcnK/QsYjRLn9CzblXbfOjchxgrsXGagtK2Qeh/jB44SWLDLPZXs
+         MAer15BmyFWPw==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 13:54:56 +0200
-Message-Id: <637b9bea4c28a0eeacf754d2930596b8e6673808.1585827904.git.mirq-linux@rere.qmqm.pl>
+Date:   Thu, 02 Apr 2020 13:54:57 +0200
+Message-Id: <ea92e0e23c8cc79b960d9129aa64d0371e630b7f.1585827904.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 4/7] mmc: sdhci: move SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
- frequency limit
+Subject: [PATCH 6/7] mmc: sdhci: squash v2/v3+ clock calculation differences
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Michal Simek <michal.simek@xilinx.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+To:     Adrian Hunter <adrian.hunter@intel.com>,
         Kevin Liu <kliu5@marvell.com>,
+        Michal Simek <michal.simek@xilinx.com>,
         Suneel Garapati <suneel.garapati@xilinx.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
@@ -57,61 +56,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move clock frequency limit for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN where
-it belongs.
+SDHCI V2 differs from base-clock-V3+ only in allowed divisor values.
+Remove the duplicate version of code. We can see now, that 'real_div'
+can't be zero.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/mmc/host/sdhci-of-arasan.c | 7 ++++---
- drivers/mmc/host/sdhci.c           | 3 +--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/mmc/host/sdhci.c | 106 ++++++++++++++++++---------------------
+ 1 file changed, 49 insertions(+), 57 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index d4905c106c06..5e3b9131a631 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -339,7 +339,6 @@ static const struct sdhci_pltfm_data sdhci_arasan_pdata = {
- 	.ops = &sdhci_arasan_ops,
- 	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
- 	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
--			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
- 			SDHCI_QUIRK2_STOP_WITH_TC,
- };
- 
-@@ -410,8 +409,7 @@ static const struct sdhci_ops sdhci_arasan_cqe_ops = {
- static const struct sdhci_pltfm_data sdhci_arasan_cqe_pdata = {
- 	.ops = &sdhci_arasan_cqe_ops,
- 	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
--	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
--			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
-+	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
- };
- 
- static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
-@@ -1155,6 +1153,9 @@ static int sdhci_arasan_add_host(struct sdhci_arasan_data *sdhci_arasan)
- 	bool dma64;
- 	int ret;
- 
-+	if (sdhci_pltfm_clk_get_max_clock(host) <= 25000000)
-+		host->quirks2 |= SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN;
-+
- 	if (!sdhci_arasan->has_cqe)
- 		return sdhci_add_host(host);
- 
 diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index a043bf5e3565..ed88ac4e4cf3 100644
+index d750c0997c3f..01fd897f8f3c 100644
 --- a/drivers/mmc/host/sdhci.c
 +++ b/drivers/mmc/host/sdhci.c
-@@ -1809,8 +1809,7 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
- 			/* Version 3.00 divisors must be a multiple of 2. */
- 			if (host->max_clk <= clock) {
- 				div = 1;
--				if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
--					&& host->max_clk <= 25000000)
-+				if (host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
- 					div = 2;
- 			} else {
- 				for (div = 2; div < SDHCI_MAX_DIV_SPEC_300;
+@@ -1756,82 +1756,74 @@ static u16 sdhci_get_preset_value(struct sdhci_host *host)
+ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+ 		   unsigned int *actual_clock)
+ {
+-	unsigned int div = 0; /* Initialized for compiler warning */
+-	int real_div = div, clk_mul = 1;
++	unsigned int div, real_div, clk_mul = 1;
+ 	u16 clk = 0;
+-	bool use_base_clk;
+ 
+ 	if (clock == 0)
+ 		unreachable();
+ 
+-	if (host->version >= SDHCI_SPEC_300) {
+-		if (host->preset_enabled) {
+-			u16 pre_val;
+-
+-			pre_val = sdhci_get_preset_value(host);
+-			div = FIELD_GET(SDHCI_PRESET_SDCLK_FREQ_MASK, pre_val);
+-			if (pre_val & SDHCI_PRESET_CLKGEN_SEL) {
+-				clk = SDHCI_PROG_CLOCK_MODE;
+-				real_div = div + 1;
+-				clk_mul = host->clk_mul ?: 1;
+-			} else {
+-				real_div = max_t(int, 1, div << 1);
+-			}
++	if (host->preset_enabled) {
++		/* Only version 3.00+ can have preset_enabled */
++		u16 pre_val;
++
++		pre_val = sdhci_get_preset_value(host);
++		div = FIELD_GET(SDHCI_PRESET_SDCLK_FREQ_MASK, pre_val);
++		if (pre_val & SDHCI_PRESET_CLKGEN_SEL) {
++			clk = SDHCI_PROG_CLOCK_MODE;
++			real_div = div + 1;
++			clk_mul = host->clk_mul ?: 1;
++		} else {
++			real_div = max_t(int, 1, div << 1);
++		}
++
++		goto clock_set;
++	}
++
++	/*
++	 * Check if the Host Controller supports Programmable Clock
++	 * Mode.
++	 */
++	if (host->version >= SDHCI_SPEC_300 && host->clk_mul) {
++		div = DIV_ROUND_UP(host->max_clk * host->clk_mul, clock);
++
++		if (div <= SDHCI_MAX_DIV_SPEC_300 / 2 + 1) {
++			/*
++			 * Set Programmable Clock Mode in the Clock
++			 * Control register.
++			 */
++			clk = SDHCI_PROG_CLOCK_MODE;
++			real_div = div;
++			clk_mul = host->clk_mul;
++			div--;
++
+ 			goto clock_set;
+ 		}
+ 
+ 		/*
+-		 * Check if the Host Controller supports Programmable Clock
+-		 * Mode.
++		 * Divisor is too big for requested clock rate.
++		 * Fall back to the base clock, then.
+ 		 */
+-		use_base_clk = !host->clk_mul;
++	}
+ 
+-		if (!use_base_clk) {
+-			div = DIV_ROUND_UP(host->max_clk * host->clk_mul, clock);
++	div = DIV_ROUND_UP(host->max_clk, clock);
+ 
+-			if (div <= SDHCI_MAX_DIV_SPEC_300 / 2 + 1) {
+-				/*
+-				 * Set Programmable Clock Mode in the Clock
+-				 * Control register.
+-				 */
+-				clk = SDHCI_PROG_CLOCK_MODE;
+-				real_div = div;
+-				clk_mul = host->clk_mul;
+-				div--;
+-			} else {
+-				/*
+-				 * Divisor is too big for requested clock rate.
+-				 * Use the base clock, then.
+-				 */
+-				use_base_clk = true;
+-			}
+-		}
++	if (div == 1 && (host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN))
++		div = 2;
+ 
+-		if (use_base_clk) {
+-			/* Version 3.00 divisors must be 1 or a multiple of 2. */
+-			div = DIV_ROUND_UP(host->max_clk, clock);
+-			if (div > 1) {
+-				div = min(div, SDHCI_MAX_DIV_SPEC_300);
+-				div = round_up(div, 2);
+-			}
+-			div >>= 1;
+-			if (host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
+-				div += !div;
+-
+-			real_div = div * 2 + !div;
+-		}
++	if (host->version >= SDHCI_SPEC_300) {
++		/* Version 3.00 divisors must be a multiple of 2. */
++		div = min(div, SDHCI_MAX_DIV_SPEC_300);
++		div = DIV_ROUND_UP(div, 2);
+ 	} else {
+ 		/* Version 2.00 divisors must be a power of 2. */
+-		div = DIV_ROUND_UP(host->max_clk, clock);
+ 		div = min(div, SDHCI_MAX_DIV_SPEC_200);
+-		div = roundup_pow_of_two(div);
+-		real_div = div;
+-		div >>= 1;
++		div = roundup_pow_of_two(div) / 2;
+ 	}
+ 
++	real_div = div * 2 + !div;
++
+ clock_set:
+-	if (real_div)
+-		*actual_clock = (host->max_clk * clk_mul) / real_div;
++	*actual_clock = (host->max_clk * clk_mul) / real_div;
+ 	clk |= (div & SDHCI_DIV_MASK) << SDHCI_DIVIDER_SHIFT;
+ 	clk |= ((div & SDHCI_DIV_HI_MASK) >> SDHCI_DIV_MASK_LEN)
+ 		<< SDHCI_DIVIDER_HI_SHIFT;
 -- 
 2.20.1
 
