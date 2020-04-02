@@ -2,93 +2,136 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6481FC2BA14
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF92C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA272077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB5E20787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D5sbUCQP"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="GXYMGfFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387974AbgDBKTh (ORCPT
+        id S2387949AbgDBKVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:19:37 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55002 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgDBKTg (ORCPT
+        Thu, 2 Apr 2020 06:21:40 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:43307 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387722AbgDBKVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:19:36 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032AHeUg076924;
-        Thu, 2 Apr 2020 10:19:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=WagfC93/RvzrHfjL3JZzy15HAm+jQ3RaSf+gam9lNdc=;
- b=D5sbUCQP1nH4X5j+lgLqVGYild/G4O+89qDm8eKl13f/5vEpb4Nd0Ua1Q/eRef7Xe6nq
- rn87ZxoH+IPDOxLbzxI01m5ADqI77BJ0BoITXY9uNyjDNWicriUeittFwEUji8FnY0zV
- EJvLysshc+OJZaVqix0mvq/uS4xI4scRmewjK8/b0zH0iXrhCgfGYMOyw/o7C+ZJNaqy
- 1V9UXgh84mgxbocBnSRpbnAm9jp172KsVLtzwXCrKeRp3i/1oXrSp09n8KRQBgUyTpUW
- YBVVzHSfVzty7SfxcI8/22zdpiVRMjOTnLK9Jlqbdw3TRACFh3s+kRCYQ5LcXXUyVce2 EA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 303yund2xn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 10:19:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032AGvZm195705;
-        Thu, 2 Apr 2020 10:17:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 302g2j9ruy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 10:17:29 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032AHSwb028832;
-        Thu, 2 Apr 2020 10:17:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 03:17:28 -0700
-Date:   Thu, 2 Apr 2020 13:17:20 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Michael Straube <straube.linux@gmail.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net
-Subject: Re: [PATCH] staging: rtl8188eu: refactor Efuse_GetCurrentSize()
-Message-ID: <20200402101720.GJ2001@kadam>
-References: <20200329100450.10126-1-straube.linux@gmail.com>
+        Thu, 2 Apr 2020 06:21:40 -0400
+Received: by mail-vs1-f65.google.com with SMTP id w185so1914360vsw.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 03:21:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=7GXKf40EHZAe1m8hEorb1dTJ1AK4agayreMbhqqIH8g=;
+        b=GXYMGfFQRDRkHm7OY0ZOeBp+nuTSLe0YEIp3Le2bpAmdRALcSx0s/eWsGURcsYMyJZ
+         D0pgag6c2FW0E9waIQgW5AsrVDWWHmzgeF6xtbQGQN/XLaNmotiqj5kuCs2DooyHwqhc
+         xJzcXjY/o025wtuT0sbPVu7bhVmJAKmXmGK/rt3fX8aO4+Jaaup7czWoBC692ZVuMJz/
+         UYpqoR0zM2+N1z+3vl20C6XHqFG2v5H6oWJDl8zTnm3K/W9AGuW4AGABALyPQ8Y2iHAI
+         kaHTVvH5sFWSHw1GVfvRLiKz71I/6j78CdVpVd5NYt6F4crKLdKoG6oM5J7onLX+4M5d
+         dUaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=7GXKf40EHZAe1m8hEorb1dTJ1AK4agayreMbhqqIH8g=;
+        b=pd1ObQdySl/rkJn9etks6zJDVFYNbqNA3PxR0X1RMvpYE1sCyJv0PzFxnlb6jp6Anj
+         ajRhc/F5O9zOG31j1aax0Xur7dJY5Ce6nBx+qNMTtFojOA11JTA0BcTfDZBlEc2XDDz0
+         kRlOOqavDFLPlpK4GrWIT4pyZa5j3NE3XwSLwJ6OnaN7Cvr2cQNvoSU128zdRpZuntJI
+         W2qdf+OQXf7yXadoKpTuYT13oIqIHoMyxhfvA/UZvJudXae0215jC2rO9Fg5Hd4VM7ta
+         ijqP9ArFWZruUfUxUrD+rh7wmDq7R2mz3K3hdKSv0O3AlEeDiMPw2CTGYlc7iOzTAdAv
+         drTg==
+X-Gm-Message-State: AGi0PuYwFWD9rim0TgMDm9+rnTIOrZY8/ZJEMIdx7+c51P4QnXPV7Xd/
+        CVd8zryBYGOGqKyNcsNtNTZ5YTXdS86jFcnDI0LVEJFHPSzIpQ==
+X-Google-Smtp-Source: APiQypKUV6+eeaGGs5jkHkbqjM9cFZprBr9pA7MC3HcBjfjY4MykhwbLuSYTF8XCDi9aLBRWqZOCdrmWe24+WL5vaJ0=
+X-Received: by 2002:a05:6102:2414:: with SMTP id j20mr1731776vsi.206.1585822898806;
+ Thu, 02 Apr 2020 03:21:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200329100450.10126-1-straube.linux@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020093
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020093
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Thu, 2 Apr 2020 18:22:14 +0800
+Message-ID: <CAPpJ_edj++oy7_EDN95tM+BPdYFOztpCrRh-cfzFrY6unJb1Rw@mail.gmail.com>
+Subject: [BUG] i2c_nvidia_gpu takes long time and makes system suspend &
+ resume failed with NVIDIA cards
+To:     Ajay Gupta <ajayg@nvidia.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-i2c@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 12:04:50PM +0200, Michael Straube wrote:
-> Refactor while loop in Efuse_GetCurrentSize() to reduce indentation
-> level and clear line over 80 characters checkpatch warnings.
-> 
-> Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Hi,
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+We got some machines like Acer desktop equipped with NVIDIA GTX 1660
+card, Acer Predator PH315-52 equipped with NVIDIA GeForce RTX 2060
+Mobile and ASUS UX581LV equipped with NNVIDIA GeForce RTX 2060.
+We found them take long time (more than 50 seconds) to resume after
+suspend.  During the resuming time, the screen is blank.  And check
+the dmesg, found the error during resume:
 
-regards,
-dan carpenter
+[   28.060831] PM: suspend entry (deep)
+[   28.144260] Filesystems sync: 0.083 seconds
+[   28.150219] Freezing user space processes ...
+[   48.153282] Freezing of tasks failed after 20.003 seconds (1 tasks
+refusing to freeze, wq_busy=0):
+[   48.153447] systemd-udevd   D13440   382    330 0x80004124
+[   48.153457] Call Trace:
+[   48.153504]  ? __schedule+0x272/0x5a0
+[   48.153558]  ? hrtimer_start_range_ns+0x18c/0x2c0
+[   48.153622]  schedule+0x45/0xb0
+[   48.153668]  schedule_hrtimeout_range_clock+0x8f/0x100
+[   48.153738]  ? hrtimer_init_sleeper+0x80/0x80
+[   48.153798]  usleep_range+0x5a/0x80
+[   48.153850]  gpu_i2c_check_status.isra.0+0x3a/0xa0 [i2c_nvidia_gpu]
+[   48.153933]  gpu_i2c_master_xfer+0x155/0x20e [i2c_nvidia_gpu]
+[   48.154012]  __i2c_transfer+0x163/0x4c0
+[   48.154067]  i2c_transfer+0x6e/0xc0
+[   48.154120]  ccg_read+0x11f/0x170 [ucsi_ccg]
+[   48.154182]  get_fw_info+0x17/0x50 [ucsi_ccg]
+[   48.154242]  ucsi_ccg_probe+0xf4/0x200 [ucsi_ccg]
+[   48.154312]  ? ucsi_ccg_init+0xe0/0xe0 [ucsi_ccg]
+[   48.154377]  i2c_device_probe+0x113/0x210
+[   48.154435]  really_probe+0xdf/0x280
+[   48.154487]  driver_probe_device+0x4b/0xc0
+[   48.154545]  device_driver_attach+0x4e/0x60
+[   48.154604]  __driver_attach+0x44/0xb0
+[   48.154657]  ? device_driver_attach+0x60/0x60
+[   48.154717]  bus_for_each_dev+0x6c/0xb0
+[   48.154772]  bus_add_driver+0x172/0x1c0
+[   48.154824]  driver_register+0x67/0xb0
+[   48.154877]  i2c_register_driver+0x39/0x70
+[   48.154932]  ? 0xffffffffc00ac000
+[   48.154978]  do_one_initcall+0x3e/0x1d0
+[   48.155032]  ? free_vmap_area_noflush+0x8d/0xe0
+[   48.155093]  ? _cond_resched+0x10/0x20
+[   48.155145]  ? kmem_cache_alloc_trace+0x3a/0x1b0
+[   48.155208]  do_init_module+0x56/0x200
+[   48.155260]  load_module+0x21fe/0x24e0
+[   48.155322]  ? __do_sys_finit_module+0xbf/0xe0
+[   48.155381]  __do_sys_finit_module+0xbf/0xe0
+[   48.155441]  do_syscall_64+0x3d/0x130
+[   48.156841]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   48.158074] RIP: 0033:0x7fba3b4bc2a9
+[   48.158707] Code: Bad RIP value.
+[   48.158990] RSP: 002b:00007ffe1da3a6d8 EFLAGS: 00000246 ORIG_RAX:
+0000000000000139
+[   48.159259] RAX: ffffffffffffffda RBX: 000055ca6922c470 RCX: 00007fba3b4bc2a9
+[   48.159566] RDX: 0000000000000000 RSI: 00007fba3b3c0cad RDI: 0000000000000010
+[   48.159842] RBP: 00007fba3b3c0cad R08: 0000000000000000 R09: 0000000000000000
+[   48.160117] R10: 0000000000000010 R11: 0000000000000246 R12: 0000000000000000
+[   48.160412] R13: 000055ca6922f940 R14: 0000000000020000 R15: 000055ca6922c470
 
+I have filed this to bugzilla and more detail:
+https://bugzilla.kernel.org/show_bug.cgi?id=206653
+
+Any comment will be appreciated.
+
+Thanks,
+Jian-Hong Pan
