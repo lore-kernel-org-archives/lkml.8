@@ -2,139 +2,109 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27735C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193BFC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0C4206CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE546206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XZ4ktAZH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="pbiRv7Sw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389202AbgDBPAB (ORCPT
+        id S2389005AbgDBPAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:00:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26352 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388827AbgDBPAA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:00:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585839599;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1cCmqKOlQ5uNMhi/s9okkTSfSwLDfmuDXSmQS/oyntI=;
-        b=XZ4ktAZHjBMh4pDgQuhnvJNurx/bYkh5smAd4v8GqFAiEVOx2BIU30ig3OuvsNMU0K9Caw
-        3lEJugkGAuIqZuM5BadIjiKQwdRdNTPFgNyqATMGS3BMRzd27VSHrpJJO3JQVhq7GQ9Xo5
-        2rMX4e6T16UESpVcO1eF1vSuBKOz7MU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-sp5wDE-tO5aRyuQXauUcsg-1; Thu, 02 Apr 2020 10:59:56 -0400
-X-MC-Unique: sp5wDE-tO5aRyuQXauUcsg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BEEB18A6EC8;
-        Thu,  2 Apr 2020 14:59:55 +0000 (UTC)
-Received: from [10.72.12.172] (ovpn-12-172.pek2.redhat.com [10.72.12.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C4F8F1001925;
-        Thu,  2 Apr 2020 14:59:50 +0000 (UTC)
-Subject: Re: [PATCH] vhost: drop vring dependency on iotlb
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20200402141207.32628-1-mst@redhat.com>
- <afe230b9-708f-02a1-c3af-51e9d4fdd212@redhat.com>
- <20200402103551-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <4ba378d7-ce02-a085-dbd7-0c1cbe2d5bab@redhat.com>
-Date:   Thu, 2 Apr 2020 22:59:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 2 Apr 2020 11:00:34 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:30283 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732754AbgDBPAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 11:00:33 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR7y6q9TzHd;
+        Thu,  2 Apr 2020 17:00:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1585839631; bh=vn1sCW7UyenPqAw3zOWtIZx5V5o8WEC1MQiYnuQrEoI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pbiRv7SwA2Kv3UsmypWZi8c7Gh+CWfNX0+QMKrfYxbvn4rD3+ApKCimEywwss8UpX
+         66cix9tCiiukzmwODFaSny9BpmUcEXRrf+5thqgzFHC+rt4gYVdJExQV9MgfUOYHAs
+         Qlm/VS7uZg1aFLyMKjDCqUdIkgm1P6AZEL/0nsk8+AASZEGQhN/N+AdTYA06Rjqfh/
+         tV7Gd6BFyVG9k+n+A5tgg6dS+QxH0uYbJ4YGykWGct9Jw4vxrIKGlWwigjkHDJ+T3q
+         kIWDm8gnGXlDpBl+XdLaVO2u9T1aN/2tI2FglLX9b5Lvk9NdPWhYTJ1UDEEohus/UQ
+         jL6EA5ANPnCkQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Thu, 2 Apr 2020 17:00:29 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     "Sebastian Reichel (maintainer:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS 
+        ,blamed_fixes:1/1=100%)" <sebastian.reichel@collabora.com>,
+        "Andrey Smirnov (blamed_fixes:1/1=100%)" <andrew.smirnov@gmail.com>,
+        "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" 
+        <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/7] power: supply: core: fix HWMON temperature labels
+Message-ID: <20200402150029.GA8325@qmqm.qmqm.pl>
+References: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
+ <4a8ac6700e1503a69146f3eefd7cb515d11bfc9f.1585837575.git.mirq-linux@rere.qmqm.pl>
+ <29d67963-c110-553a-fec4-b972953987b1@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20200402103551-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <29d67963-c110-553a-fec4-b972953987b1@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 02, 2020 at 07:52:19AM -0700, Guenter Roeck wrote:
+> On 4/2/20 7:46 AM, Micha³ Miros³aw wrote:
+> > tempX_label files are swapped compared to what
+> > power_supply_hwmon_temp_to_property() uses. Make them match.
+> > While at it, make room for labeling other channels.
+> > 
+> > Fixes: e67d4dfc9ff1 ("power: supply: Add HWMON compatibility layer")
+> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> > ---
+> >  drivers/power/supply/power_supply_hwmon.c | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
+> > index 75cf861ba492..83318a21fb52 100644
+> > --- a/drivers/power/supply/power_supply_hwmon.c
+> > +++ b/drivers/power/supply/power_supply_hwmon.c
+> > @@ -43,6 +43,11 @@ static int power_supply_hwmon_curr_to_property(u32 attr)
+> >  	}
+> >  }
+> >  
+> > +static const char *const ps_temp_label[] = {
+> > +	"temp",
+> > +	"ambient temp",
+> > +};
+> > +
+> >  static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
+> >  {
+> >  	if (channel) {
+> > @@ -144,7 +149,14 @@ static int power_supply_hwmon_read_string(struct device *dev,
+> >  					  u32 attr, int channel,
+> >  					  const char **str)
+> >  {
+> > -	*str = channel ? "temp" : "temp ambient";
+> > +	switch (type) {
+> > +	case hwmon_temp:
+> > +		*str = ps_temp_label[channel];
+> > +		break;
+> > +	default:
+> > +		break;
+> 
+> That returns "no error" without setting *str, which is really asking for trouble.
 
-On 2020/4/2 =E4=B8=8B=E5=8D=8810:36, Michael S. Tsirkin wrote:
-> On Thu, Apr 02, 2020 at 10:28:28PM +0800, Jason Wang wrote:
->> On 2020/4/2 =E4=B8=8B=E5=8D=8810:12, Michael S. Tsirkin wrote:
->>> vringh can now be built without IOTLB.
->>> Select IOTLB directly where it's used.
->>>
->>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->>> ---
->>>
->>> This is on top of my previous patch (in vhost tree now).
->>>
->>>    drivers/vdpa/Kconfig  | 1 +
->>>    drivers/vhost/Kconfig | 1 -
->>>    2 files changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
->>> index 7db1460104b7..08b615f2da39 100644
->>> --- a/drivers/vdpa/Kconfig
->>> +++ b/drivers/vdpa/Kconfig
->>> @@ -17,6 +17,7 @@ config VDPA_SIM
->>>    	depends on RUNTIME_TESTING_MENU
->>>    	select VDPA
->>>    	select VHOST_RING
->>> +	select VHOST_IOTLB
->>>    	default n
->>>    	help
->>>    	  vDPA networking device simulator which loop TX traffic back
->>> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
->>> index 21feea0d69c9..bdd270fede26 100644
->>> --- a/drivers/vhost/Kconfig
->>> +++ b/drivers/vhost/Kconfig
->>> @@ -6,7 +6,6 @@ config VHOST_IOTLB
->>>    config VHOST_RING
->>>    	tristate
->>> -	select VHOST_IOTLB
->>>    	help
->>>    	  This option is selected by any driver which needs to access
->>>    	  the host side of a virtio ring.
->>
->> Do we need to mention driver need to select VHOST_IOTLB by itself here=
-?
->>
->> Thanks
->>
-> OK but I guess it's best to do it near where VHOST_IOTLB is defined.
-> Like this?
->
->
-> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> index bdd270fede26..ce51126f51e7 100644
-> --- a/drivers/vhost/Kconfig
-> +++ b/drivers/vhost/Kconfig
-> @@ -3,6 +3,8 @@ config VHOST_IOTLB
->   	tristate
->   	help
->   	  Generic IOTLB implementation for vhost and vringh.
-> +	  This option is selected by any driver which needs to support
-> +	  an IOMMU in software.
->  =20
->   config VHOST_RING
->   	tristate
->
+This is carried over from earlier version. No bug though, but I'll add a
+patch while I'm at it.
 
-Yes, probably.
-
-Thanks
-
-
+Best Regards
+Micha³ Miros³aw
