@@ -2,248 +2,84 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0A7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E992072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A020D2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ukSZ+zSl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KG+2icdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389246AbgDBPXv (ORCPT
+        id S2389256AbgDBPYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:23:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52738 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388905AbgDBPXv (ORCPT
+        Thu, 2 Apr 2020 11:24:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49496 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388905AbgDBPYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:23:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kHPGR9QHa0xihot+ogrMlEQQacvoXzBCBZ4xkPJqWCY=; b=ukSZ+zSlmr2sIBdcOEl+p2llgj
-        Soxgis+1n/RdWr00hNFjpZyesyPwBZBMdFQIA4JPwMQB/7uNlObIySLZ1hKpOicSv0k2LSX8KX7Su
-        HizwT4WTUuj7o7NEpjKP4ylgvZeHnXfbM1VaDdqL0J1tS2a5CNLsR4Ocen6r0buOn1unSKEekCToY
-        rgAjOzQhuo9dXgFkiHcMorK6rHaugNugnw1fGEok0+MtTeT13iGF6EGLaNM/MRLs3PPivZm5PEaAW
-        vjkElviwFbjxfi+L3mi742zegyHPGG0htQMwINH73axo98pjGpnrJUYxn0lGgvKzUNBJokw7OutXV
-        uxMYirIQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK1h1-0008GD-0l; Thu, 02 Apr 2020 15:23:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BC5EE3010BC;
-        Thu,  2 Apr 2020 17:23:40 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AD5662B0DECDE; Thu,  2 Apr 2020 17:23:40 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 17:23:40 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [patch v2 1/2] x86,module: Detect VMX modules and disable
- Split-Lock-Detect
-Message-ID: <20200402152340.GL20713@hirez.programming.kicks-ass.net>
-References: <20200402123258.895628824@linutronix.de>
- <20200402124205.242674296@linutronix.de>
+        Thu, 2 Apr 2020 11:24:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585841050;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Gsu7Y1M95mXEBh13JhGtdspG9myhzcu+bx9ATjgS7Pk=;
+        b=KG+2icdWr4H08NOa9OP2/kVsBmD4qprLNZTzMHwuiXBacpjiEMEj9FJQmCGWoruRd0iOwo
+        0tO73d3zqJ8DGrEAYkK7LilaAOr0YLBT1uX4psFSdaJgMZQg/lOkBOJES/CA2Khb8+uppE
+        u0Bj5JYkE41Cslq7dY9+9AbN8GD2vu4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318-I-hRn52OOy6_ExoNmAS1vw-1; Thu, 02 Apr 2020 11:24:08 -0400
+X-MC-Unique: I-hRn52OOy6_ExoNmAS1vw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA628800D5F;
+        Thu,  2 Apr 2020 15:24:06 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5D8A9B924;
+        Thu,  2 Apr 2020 15:24:03 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <3070724.1585840971@warthog.procyon.org.uk>
+References: <3070724.1585840971@warthog.procyon.org.uk> <CAJfpeguxDiq3BW94AVFhgY75P+jy_+jk3pdyNZ5z-aJPXNvvGA@mail.gmail.com> <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com> <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk> <2418286.1585691572@warthog.procyon.org.uk> <20200401090445.6t73dt7gz36bv4rh@ws.net.home> <2488530.1585749351@warthog.procyon.org.uk> <2488734.1585749502@warthog.procyon.org.uk> <CAJfpeguLJcAEgx2JWRNcKMkyFTWB0r4wS6F4fJHK3VHtY=EjXQ@mail.gmail.com> <2590276.1585756914@warthog.procyon.org.uk>
+Cc:     dhowells@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Karel Zak <kzak@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
+        andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402124205.242674296@linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3070846.1585841042.1@warthog.procyon.org.uk>
+Date:   Thu, 02 Apr 2020 16:24:02 +0100
+Message-ID: <3070847.1585841042@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+David Howells <dhowells@redhat.com> wrote:
 
-I picked VMXOFF (which also appears in vmmon.ko) instead of VMXON
-because that latter takes an argument is therefore more difficult to
-decode.
+> ext4_show_mount()
 
----
-Subject: x86,module: Detect VMX modules and disable Split-Lock-Detect
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu, 02 Apr 2020 14:32:59 +0200
+ext4_show_options(), sorry.
 
-It turns out that with Split-Lock-Detect enabled (default) any VMX
-hypervisor needs at least a little modification in order to not blindly
-inject the #AC into the guest without the guest being ready for it.
+David
 
-Since there is no telling which module implements a hypervisor, scan the
-module text and look for the VMLAUNCH/VMXOFF instructions. If found, the
-module is assumed to be a hypervisor of some sort and SLD is disabled.
-
-Hypervisors, which have been modified and are known to work correctly,
-can add:
-
-  MODULE_INFO(sld_safe, "Y");
-
-to explicitly tell the module loader they're good.
-
-NOTE: it is unfortunate that struct load_info is not available to the
-      arch module code, this means CONFIG_CPU_SUP_INTEL gunk is needed
-      in generic code.
-
-NOTE: while we can 'trivially' fix KVM, we're still stuck with stuff
-      like VMware and VirtualBox doing their own thing.
-
-Reported-by: "Kenneth R. Crudup" <kenny@panix.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/include/asm/cpu.h  |    2 ++
- arch/x86/kernel/cpu/intel.c |   41 ++++++++++++++++++++++++++++++++++++++++-
- arch/x86/kernel/module.c    |    6 ++++++
- include/linux/module.h      |    4 ++++
- kernel/module.c             |    5 +++++
- 5 files changed, 57 insertions(+), 1 deletion(-)
-
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -44,6 +44,7 @@ unsigned int x86_stepping(unsigned int s
- extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
- extern void switch_to_sld(unsigned long tifn);
- extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-+extern void split_lock_validate_module_text(struct module *me, void *text, void *text_end);
- #else
- static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
- static inline void switch_to_sld(unsigned long tifn) {}
-@@ -51,5 +52,6 @@ static inline bool handle_user_split_loc
- {
- 	return false;
- }
-+static inline void split_lock_validate_module_text(struct module *me, void *text, void *text_end) {}
- #endif
- #endif /* _ASM_X86_CPU_H */
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -9,6 +9,7 @@
- #include <linux/thread_info.h>
- #include <linux/init.h>
- #include <linux/uaccess.h>
-+#include <linux/module.h>
- 
- #include <asm/cpufeature.h>
- #include <asm/pgtable.h>
-@@ -21,6 +22,7 @@
- #include <asm/elf.h>
- #include <asm/cpu_device_id.h>
- #include <asm/cmdline.h>
-+#include <asm/insn.h>
- 
- #ifdef CONFIG_X86_64
- #include <linux/topology.h>
-@@ -1055,12 +1057,49 @@ static void sld_update_msr(bool on)
- {
- 	u64 test_ctrl_val = msr_test_ctrl_cache;
- 
--	if (on)
-+	if (on && (sld_state != sld_off))
- 		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
- 
- 	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
- }
- 
-+static void sld_remote_kill(void *arg)
-+{
-+	sld_update_msr(false);
-+}
-+
-+void split_lock_validate_module_text(struct module *me, void *text, void *text_end)
-+{
-+	u8 vmxoff[] = { 0x0f, 0x01, 0xc4 };
-+	u8 vmlaunch[] = { 0x0f, 0x01, 0xc2 };
-+	struct insn insn;
-+
-+	if (sld_state == sld_off)
-+		return;
-+
-+	while (text < text_end) {
-+		kernel_insn_init(&insn, text, text_end - text);
-+		insn_get_length(&insn);
-+
-+		if (WARN_ON_ONCE(!insn_complete(&insn)))
-+			break;
-+
-+		if (insn.length == 3 &&
-+		    (!memcmp(text, vmlaunch, sizeof(vmlaunch)) ||
-+		     !memcmp(text, vmxoff, sizeof(vmxoff))))
-+				goto bad_module;
-+
-+		text += insn.length;
-+	}
-+
-+	return;
-+
-+bad_module:
-+	pr_warn("disabled due to VMX in module: %s\n", me->name);
-+	sld_state = sld_off;
-+	on_each_cpu(sld_remote_kill, NULL, 1);
-+}
-+
- static void split_lock_init(void)
- {
- 	split_lock_verify_msr(sld_state != sld_off);
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -24,6 +24,7 @@
- #include <asm/pgtable.h>
- #include <asm/setup.h>
- #include <asm/unwind.h>
-+#include <asm/cpu.h>
- 
- #if 0
- #define DEBUGP(fmt, ...)				\
-@@ -253,6 +254,11 @@ int module_finalize(const Elf_Ehdr *hdr,
- 					    tseg, tseg + text->sh_size);
- 	}
- 
-+	if (text && !me->sld_safe) {
-+		void *tseg = (void *)text->sh_addr;
-+		split_lock_validate_module_text(me, tseg, tseg + text->sh_size);
-+	}
-+
- 	if (para) {
- 		void *pseg = (void *)para->sh_addr;
- 		apply_paravirt(pseg, pseg + para->sh_size);
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -407,6 +407,10 @@ struct module {
- 	bool sig_ok;
- #endif
- 
-+#ifdef CONFIG_CPU_SUP_INTEL
-+	bool sld_safe;
-+#endif
-+
- 	bool async_probe_requested;
- 
- 	/* symbols that will be GPL-only in the near future. */
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3096,6 +3096,11 @@ static int check_modinfo(struct module *
- 			"is unknown, you have been warned.\n", mod->name);
- 	}
- 
-+#ifdef CONFIG_CPU_SUP_INTEL
-+	if (get_modinfo(info, "sld_safe"))
-+		mod->sld_safe = true;
-+#endif
-+
- 	err = check_modinfo_livepatch(mod, info);
- 	if (err)
- 		return err;
