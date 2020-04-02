@@ -7,132 +7,132 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79993C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBB4C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50E3920737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B40206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OpsyYHBm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ag2z6ud+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389695AbgDBQ07 (ORCPT
+        id S2389812AbgDBQ1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:26:59 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48056 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732214AbgDBQ07 (ORCPT
+        Thu, 2 Apr 2020 12:27:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43220 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731842AbgDBQ1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:26:59 -0400
+        Thu, 2 Apr 2020 12:27:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585844817;
+        s=mimecast20190719; t=1585844838;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=i1hPxQZ7Mm/qEFVQDP8poIUxCGgiGUs8Gv2myvdE6Zk=;
-        b=OpsyYHBm8Low6hS3O3HJvj2DABwmuUHX07gWnbMbv+KKFOqj91isWhhCzKlC+qc3LdzmJk
-        vSDMooPp7kZBukvwqrj9mR6IzvoBD2QfSjejEz5id3aeAXEMhvnBxoTeRCUiCuFoHYiQeo
-        ap0mS4hAy+jN+wzQUqVDhfXS+S95AWI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-514-MsQVSHyKMsKrlQtGhkhVUw-1; Thu, 02 Apr 2020 12:26:55 -0400
-X-MC-Unique: MsQVSHyKMsKrlQtGhkhVUw-1
-Received: by mail-wr1-f71.google.com with SMTP id v14so1702844wrq.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 09:26:55 -0700 (PDT)
+        bh=YiGejvc/Z1PscIO5Y2Td9wzrTW6YFSsKAEAcda9xkVg=;
+        b=Ag2z6ud+W6EitAuuH3ul2VNbpjqPg73QNlCogAIaqelZG9W9C03Afpy1VGs1RpxX5YI7fh
+        bkA8MXwJSHjerB3n8Fa0cblzmbsSf0rVbMEDu/5COM+1fqeT9TbWo40atenRjGJjZhqea5
+        c5uqRtSmTPDHeF4XATvmXIU5t9F1DDA=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-5YxRsdsgOaOO0JNA-DjyZA-1; Thu, 02 Apr 2020 12:27:15 -0400
+X-MC-Unique: 5YxRsdsgOaOO0JNA-DjyZA-1
+Received: by mail-qt1-f197.google.com with SMTP id i36so3673194qtd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 09:27:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=i1hPxQZ7Mm/qEFVQDP8poIUxCGgiGUs8Gv2myvdE6Zk=;
-        b=pnj5L1BIttPaKpG0eAudMZXq5ObvTQz6+S30cUstcoPAt10WZ9K38jg2/+mgm6+z0x
-         2F+zPMqfOYYghtYUUg6+VW+QWM+7SQEugmmwyLONyH6vHoAERDTmfM/hGErg2GrN199i
-         bIe6TmpxfwWDiG2fU11i0Alq2VLSo9bUg7opT1KvWmD6gDJOviSvjWfGaCwPVKAotlkb
-         XC6Uv4aLqi+yAh6nb4E9L4A7xM8c5ozNPgFvHt1k6deYTKAx+nW7bXl056Uk2OGeRwBv
-         KR+AsxjuSVl+4Kym6goEM2w41rnBrUa4Mk1RjFlFDPRDxuLSLF2oNBw1K1YUXyGVXxnk
-         Iucw==
-X-Gm-Message-State: AGi0PubDb1z9IjR41x2N+G1FMXdd6BDUBk81C7RMlAZ8ufZqY0j2r4An
-        hCK4+LvhsGYAexqpS/t5ZKiIvtC71Rz5rPSujCZuzdGwF+ST3eQ8R/BgGHkWDWkPUIFcuG6cJKV
-        On+sAlLs+/9cLv3gqH4u4hekc
-X-Received: by 2002:a1c:b7c2:: with SMTP id h185mr4308588wmf.67.1585844814130;
-        Thu, 02 Apr 2020 09:26:54 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJj8MtdbkTrtF/6xim1pBMiG2j2Ba38Z0fdoGdU9XGR5GAwyAOga8h+SKPWJjJ8EakD3pf1ZA==
-X-Received: by 2002:a1c:b7c2:: with SMTP id h185mr4308564wmf.67.1585844813859;
-        Thu, 02 Apr 2020 09:26:53 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id o67sm7971904wmo.5.2020.04.02.09.26.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YiGejvc/Z1PscIO5Y2Td9wzrTW6YFSsKAEAcda9xkVg=;
+        b=famgeHy5uU0/GuQJUVaPlq+bm92Xhysm6+gpZiQl0U+E1hQLYWyAZetAVTyjNLvg7N
+         svwi19U8JQWHIHW+ax94eIPbDdtz9RVEpzaByRHZAwKAk6uqzRVyMHFGvGrsus78Z7yw
+         4Anwc/VXTiOZ4a80PoOlCHhZ4fyWFfNSoVeIMkSYWJrRNp35G4jML/siQII1TnhC8Tti
+         2ABunAMgWLoh1ukZsdb4AU4tthB3sKB80PZqlap4r3069tqERlORDNg8rzfTI75EOAXm
+         QLqNjAIWa01AHH0ZRR9bGXIAUmNfAp0B84VdL15g1rZDqF0igqigbwgZM6oBBnSB++mu
+         FqPQ==
+X-Gm-Message-State: AGi0PuZ+APjH2S5aPjsvQ0IJNMM2gJZpWS7U+vM1IiUyjddkMVho6mTw
+        7FOtwhIFK9RqoA6uGy4tEu4jG/eplnJW+0PBPnpO9hVgASGwioJ9lwMP0RRkDNNIv0qmu35oJ2A
+        VEco2y3QzO06tb5rUYEssRarD
+X-Received: by 2002:ac8:4641:: with SMTP id f1mr3595344qto.216.1585844834572;
+        Thu, 02 Apr 2020 09:27:14 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI9uiNgZebAWGTM/6pTKMcpl2+Pbh6hcnrsxur+SijZm8gBzgmehd7nG3POHrAdyCwNw6XVFw==
+X-Received: by 2002:ac8:4641:: with SMTP id f1mr3595317qto.216.1585844834186;
+        Thu, 02 Apr 2020 09:27:14 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id v17sm3764796qkf.83.2020.04.02.09.27.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 09:26:53 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     163 <freedomsky1986@163.com>, linux-hyperv@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "Andrea Parri \(Microsoft\)" <parri.andrea@gmail.com>
-Subject: Re: [EXTERNAL] [PATCH 1/5] Drivers: hv: copy from message page only what's needed
-In-Reply-To: <3ed15a02-0b86-0ec1-6daf-df94f8fc6ba5@163.com>
-References: <20200401103638.1406431-1-vkuznets@redhat.com> <20200401103638.1406431-2-vkuznets@redhat.com> <3ed15a02-0b86-0ec1-6daf-df94f8fc6ba5@163.com>
-Date:   Thu, 02 Apr 2020 18:26:52 +0200
-Message-ID: <87a73tzwdv.fsf@vitty.brq.redhat.com>
+        Thu, 02 Apr 2020 09:27:13 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 12:27:09 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2] vhost: drop vring dependency on iotlb
+Message-ID: <20200402122544-mutt-send-email-mst@kernel.org>
+References: <20200402144519.34194-1-mst@redhat.com>
+ <44f9b9d3-3da2-fafe-aa45-edd574dc6484@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <44f9b9d3-3da2-fafe-aa45-edd574dc6484@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-163 <freedomsky1986@163.com> writes:
+On Thu, Apr 02, 2020 at 11:01:13PM +0800, Jason Wang wrote:
+> 
+> On 2020/4/2 下午10:46, Michael S. Tsirkin wrote:
+> > vringh can now be built without IOTLB.
+> > Select IOTLB directly where it's used.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> > 
+> > Applies on top of my vhost tree.
+> > Changes from v1:
+> > 	VDPA_SIM needs VHOST_IOTLB
+> 
+> 
+> It looks to me the patch is identical to v1.
+> 
+> Thanks
 
-> On 4/1/2020 6:36 PM, Vitaly Kuznetsov wrote:
->> Hyper-V Interrupt Message Page (SIMP) has 16 256-byte slots for
->> messages. Each message comes with a header (16 bytes) which specifies the
->> payload length (up to 240 bytes). vmbus_on_msg_dpc(), however, doesn't
->> look at the real message length and copies the whole slot to a temporary
->> buffer before passing it to message handlers. This is potentially dangerous
->> as hypervisor doesn't have to clean the whole slot when putting a new
->> message there and a message handler can get access to some data which
->> belongs to a previous message.
->> 
->> Note, this is not currently a problem because all message handlers are
->> in-kernel but eventually we may e.g. get this exported to userspace.
->> 
->> Note also, that this is not a performance critical path: messages (unlike
->> events) represent rare events so it doesn't really matter (from performance
->> point of view) if we copy too much.
->> 
->> Fix the issue by taking into account the real message length. The temporary
->> buffer allocated by vmbus_on_msg_dpc() remains fixed size for now.
->> 
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>   drivers/hv/vmbus_drv.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
->> index 029378c27421..2b5572146358 100644
->> --- a/drivers/hv/vmbus_drv.c
->> +++ b/drivers/hv/vmbus_drv.c
->> @@ -1043,7 +1043,8 @@ void vmbus_on_msg_dpc(unsigned long data)
->>   			return;
->>   
->>   		INIT_WORK(&ctx->work, vmbus_onmessage_work);
->> -		memcpy(&ctx->msg, msg, sizeof(*msg));
->> +		memcpy(&ctx->msg, msg, sizeof(msg->header) +
->> +		       msg->header.payload_size);
->>   
->
-> Hi Vitaly:
->       I think we still need to check whether the payload_size passed from
-> Hyper-V is valid or not here to avoid cross-border issue before doing
-> copying.
 
-Sure,
+you are right. I squashed the description into
+    virtio/test: fix up after IOTLB changes
+take a look at it in the vhost tree.
 
-the header.payload_size must be 0 <= header.payload_size <= 240
-
-I'll add the check.
-
--- 
-Vitaly
+> 
+> > 
+> >   drivers/vdpa/Kconfig  | 1 +
+> >   drivers/vhost/Kconfig | 1 -
+> >   2 files changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
+> > index 7db1460104b7..08b615f2da39 100644
+> > --- a/drivers/vdpa/Kconfig
+> > +++ b/drivers/vdpa/Kconfig
+> > @@ -17,6 +17,7 @@ config VDPA_SIM
+> >   	depends on RUNTIME_TESTING_MENU
+> >   	select VDPA
+> >   	select VHOST_RING
+> > +	select VHOST_IOTLB
+> >   	default n
+> >   	help
+> >   	  vDPA networking device simulator which loop TX traffic back
+> > diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+> > index f0404ce255d1..cb6b17323eb2 100644
+> > --- a/drivers/vhost/Kconfig
+> > +++ b/drivers/vhost/Kconfig
+> > @@ -8,7 +8,6 @@ config VHOST_IOTLB
+> >   config VHOST_RING
+> >   	tristate
+> > -	select VHOST_IOTLB
+> >   	help
+> >   	  This option is selected by any driver which needs to access
+> >   	  the host side of a virtio ring.
 
