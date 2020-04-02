@@ -2,212 +2,160 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15040C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E27C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDEC320757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DA320784
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="enmUMHiO"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="dvDvrXI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389009AbgDBO5P (ORCPT
+        id S2388974AbgDBO5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:57:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50221 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388994AbgDBO5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:57:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585839432;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cX0Ayw3Xz460+4fTWlRmLhPI5M2rPACv0FEFSZR57aI=;
-        b=enmUMHiOL0eHNGvk4GxUEgRZIhlvqamZvDif2k0X9bGVjBvNOwXqkDPA2enbgezwHEe2LT
-        f89LlT3/D5DZWO1USg4axbvSeC0gfwps/ar5uhASKo3uYSbndX47f2a1/KRgvJVujAvon3
-        Q92fVIMVTNNvHR3igtG9WWZfbHTNdvg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-R8hW2wg4N8W25ULrh6t8nQ-1; Thu, 02 Apr 2020 10:57:11 -0400
-X-MC-Unique: R8hW2wg4N8W25ULrh6t8nQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D92C1084431;
-        Thu,  2 Apr 2020 14:57:08 +0000 (UTC)
-Received: from [10.72.12.172] (ovpn-12-172.pek2.redhat.com [10.72.12.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 058341147CD;
-        Thu,  2 Apr 2020 14:56:46 +0000 (UTC)
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <20200401092004-mutt-send-email-mst@kernel.org>
- <6b4d169a-9962-6014-5423-1507059343e9@redhat.com>
- <20200401100954-mutt-send-email-mst@kernel.org>
- <3dd3b7e7-e3d9-dba4-00fc-868081f95ab7@redhat.com>
- <20200401120643-mutt-send-email-mst@kernel.org>
- <c11c2195-88eb-2096-af47-40f2da5b389f@redhat.com>
- <20200402100257-mutt-send-email-mst@kernel.org>
- <279ed96c-5331-9da6-f9c1-b49e87d49c31@redhat.com>
- <20200402103813-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a050b02a-cb4f-2821-393e-35e3f5920192@redhat.com>
-Date:   Thu, 2 Apr 2020 22:56:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 2 Apr 2020 10:57:09 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:2547 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388951AbgDBO5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:57:06 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR4050byz1vW;
+        Thu,  2 Apr 2020 16:57:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1585839424; bh=cuviXcU/1giaeeygC13NSbn/gwYWhk9vup3Y9oNdwrA=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=dvDvrXI8aqhl0TkjRI3H71O2FhdtOgem06C+RZGnAz0CTkxaI0gcBMj/uI6LU8+b0
+         jlLlHtntCtZuM4rDlhPM8eQMvDnQFB/6KclRd79SGq1JpJvWQ+aooFknVhyzBBKFDx
+         0m5tQyIkobWWojDlm0skG03gmjlpoz71jbOFpodhe8o2mKPmtZ9b2ssOUehPXEQ8eB
+         BSUvOFclX8wH03xuwC5Sr1/Ilf/5ZY0A8zzGZ6WRyc9cuFScJJENWdGaMxs4strl5Y
+         t1zcmDt2+FgYUy94YH13qUmG7MMWKEkLgsFVJuBmRiEloS9YOiXSmyX9qt05XlHrQu
+         gk7uAtCat3ZpQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Thu, 02 Apr 2020 16:57:04 +0200
+Message-Id: <2e8bff71e2cedeca044d8265c8fb34b3e627eff8.1585837575.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 6/7] power: supply: core: add output voltage measurements
 MIME-Version: 1.0
-In-Reply-To: <20200402103813-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add support for supply output voltage to be measured and configured.
+This might be different from the voltage on the storage element (battery).
 
-On 2020/4/2 =E4=B8=8B=E5=8D=8810:38, Michael S. Tsirkin wrote:
-> On Thu, Apr 02, 2020 at 10:23:59PM +0800, Jason Wang wrote:
->> On 2020/4/2 =E4=B8=8B=E5=8D=8810:03, Michael S. Tsirkin wrote:
->>> On Thu, Apr 02, 2020 at 11:22:57AM +0800, Jason Wang wrote:
->>>> On 2020/4/2 =E4=B8=8A=E5=8D=8812:08, Michael S. Tsirkin wrote:
->>>>> On Wed, Apr 01, 2020 at 10:29:32PM +0800, Jason Wang wrote:
->>>>>> >From 9b3a5d23b8bf6b0a11e65e688335d782f8e6aa5c Mon Sep 17 00:00:00=
- 2001
->>>>>> From: Jason Wang <jasowang@redhat.com>
->>>>>> Date: Wed, 1 Apr 2020 22:17:27 +0800
->>>>>> Subject: [PATCH] vhost: let CONFIG_VHOST to be selected by drivers
->>>>>>
->>>>>> The defconfig on some archs enable vhost_net or vhost_vsock by
->>>>>> default. So instead of adding CONFIG_VHOST=3Dm to all of those fil=
-es,
->>>>>> simply letting CONFIG_VHOST to be selected by all of the vhost
->>>>>> drivers. This fixes the build on the archs with CONFIG_VHOST_NET=3D=
-m in
->>>>>> their defconfig.
->>>>>>
->>>>>> Signed-off-by: Jason Wang <jasowang@redhat.com>
->>>>>> ---
->>>>>>     drivers/vhost/Kconfig | 15 +++++++++++----
->>>>>>     1 file changed, 11 insertions(+), 4 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
->>>>>> index 2523a1d4290a..362b832f5338 100644
->>>>>> --- a/drivers/vhost/Kconfig
->>>>>> +++ b/drivers/vhost/Kconfig
->>>>>> @@ -11,19 +11,23 @@ config VHOST_RING
->>>>>>     	  This option is selected by any driver which needs to access
->>>>>>     	  the host side of a virtio ring.
->>>>>> -menuconfig VHOST
->>>>>> -	tristate "Host kernel accelerator for virtio (VHOST)"
->>>>>> -	depends on EVENTFD
->>>>>> +config VHOST
->>>>>> +	tristate
->>>>>>     	select VHOST_IOTLB
->>>>>>     	help
->>>>>>     	  This option is selected by any driver which needs to access
->>>>>>     	  the core of vhost.
->>>>>> -if VHOST
->>>>>> +menuconfig VHOST_MENU
->>>>>> +	bool "VHOST drivers"
->>>>>> +	default y
->>>>>> +
->>>>>> +if VHOST_MENU
->>>>>>     config VHOST_NET
->>>>>>     	tristate "Host kernel accelerator for virtio net"
->>>>>>     	depends on NET && EVENTFD && (TUN || !TUN) && (TAP || !TAP)
->>>>>> +	select VHOST
->>>>>>     	---help---
->>>>>>     	  This kernel module can be loaded in host kernel to accelera=
-te
->>>>>>     	  guest networking with virtio_net. Not to be confused with v=
-irtio_net
->>>>>> @@ -35,6 +39,7 @@ config VHOST_NET
->>>>>>     config VHOST_SCSI
->>>>>>     	tristate "VHOST_SCSI TCM fabric driver"
->>>>>>     	depends on TARGET_CORE && EVENTFD
->>>>>> +	select VHOST
->>>>>>     	default n
->>>>>>     	---help---
->>>>>>     	Say M here to enable the vhost_scsi TCM fabric module
->>>>>> @@ -43,6 +48,7 @@ config VHOST_SCSI
->>>>>>     config VHOST_VSOCK
->>>>>>     	tristate "vhost virtio-vsock driver"
->>>>>>     	depends on VSOCKETS && EVENTFD
->>>>>> +	select VHOST
->>>>>>     	select VIRTIO_VSOCKETS_COMMON
->>>>>>     	default n
->>>>>>     	---help---
->>>>>> @@ -56,6 +62,7 @@ config VHOST_VSOCK
->>>>>>     config VHOST_VDPA
->>>>>>     	tristate "Vhost driver for vDPA-based backend"
->>>>>>     	depends on EVENTFD
->>>>>> +	select VHOST
->>>> This part is not squashed.
->>>>
->>>>
->>>>>>     	select VDPA
->>>>>>     	help
->>>>>>     	  This kernel module can be loaded in host kernel to accelera=
-te
->>>>> OK so I squashed this into the original buggy patch.
->>>>> Could you please play with vhost branch of my tree on various
->>>>> arches? If it looks ok to you let me know I'll push
->>>>> this to next.
->>>> With the above part squashed. I've tested all the archs whose defcon=
-fig have
->>>> VHOST_NET or VHOST_VSOCK enabled.
->>>>
->>>> All looks fine.
->>>>
->>>> Thanks
->>> I'm a bit confused. So is the next tag in my tree ok now?
->>
->> Still need to select CONFIG_VHOST for=C2=A0 CONFIG_VHOST_VDPA. Others =
-are ok.
->>
->> Thanks
->
-> Oh like this then?
->
-> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> index bdd270fede26..cb6b17323eb2 100644
-> --- a/drivers/vhost/Kconfig
-> +++ b/drivers/vhost/Kconfig
-> @@ -61,6 +63,7 @@ config VHOST_VSOCK
->   config VHOST_VDPA
->   	tristate "Vhost driver for vDPA-based backend"
->   	depends on EVENTFD
-> +	select VHOST
->   	select VDPA
->   	help
->   	  This kernel module can be loaded in host kernel to accelerate
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/power/supply/power_supply_hwmon.c | 25 +++++++++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c |  3 +++
+ include/linux/power_supply.h              |  3 +++
+ 3 files changed, 31 insertions(+)
 
-
-Yes.
-
-Thanks
-
-
->
+diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
+index c638750e0a18..781a265bd061 100644
+--- a/drivers/power/supply/power_supply_hwmon.c
++++ b/drivers/power/supply/power_supply_hwmon.c
+@@ -41,6 +41,20 @@ static int power_supply_hwmon_in1_to_property(u32 attr)
+ 	}
+ }
+ 
++static int power_supply_hwmon_in2_to_property(u32 attr)
++{
++	switch (attr) {
++	case hwmon_in_min:
++		return POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MIN;
++	case hwmon_in_max:
++		return POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MAX;
++	case hwmon_in_input:
++		return POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW;
++	default:
++		return -EINVAL;
++	}
++}
++
+ static int power_supply_hwmon_in_to_property(u32 attr, int channel)
+ {
+ 	switch (channel) {
+@@ -48,6 +62,8 @@ static int power_supply_hwmon_in_to_property(u32 attr, int channel)
+ 		return power_supply_hwmon_in0_to_property(attr);
+ 	case 1:
+ 		return power_supply_hwmon_in1_to_property(attr);
++	case 2:
++		return power_supply_hwmon_in2_to_property(attr);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -94,6 +110,7 @@ static int power_supply_hwmon_curr_to_property(u32 attr, int channel)
+ static const char *const ps_input_label[] = {
+ 	"battery",
+ 	"external source",
++	"load",
+ };
+ 
+ static const char *const ps_temp_label[] = {
+@@ -404,6 +421,11 @@ static const struct hwmon_channel_info *power_supply_hwmon_info[] = {
+ 
+ 			   HWMON_I_LABEL   |
+ 			   HWMON_I_MAX     |
++			   HWMON_I_INPUT,
++
++			   HWMON_I_LABEL   |
++			   HWMON_I_MIN     |
++			   HWMON_I_MAX     |
+ 			   HWMON_I_INPUT),
+ 
+ 	NULL
+@@ -474,6 +496,9 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
+ 		case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
+ 		case POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW:
+ 		case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
++		case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MIN:
++		case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MAX:
++		case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW:
+ 			set_bit(prop, psyhw->props);
+ 			break;
+ 		default:
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index 1d1fb69516a8..fb6f113b52bb 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -278,6 +278,9 @@ static struct device_attribute power_supply_attrs[] = {
+ 	POWER_SUPPLY_ATTR(input_voltage_now),
+ 	POWER_SUPPLY_ATTR(input_voltage_limit),
+ 	POWER_SUPPLY_ATTR(input_power_limit),
++	POWER_SUPPLY_ATTR(output_voltage_now),
++	POWER_SUPPLY_ATTR(output_voltage_min),
++	POWER_SUPPLY_ATTR(output_voltage_max),
+ 	POWER_SUPPLY_ATTR(energy_full_design),
+ 	POWER_SUPPLY_ATTR(energy_empty_design),
+ 	POWER_SUPPLY_ATTR(energy_full),
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 5313d1284aad..f1ff8d230488 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -132,6 +132,9 @@ enum power_supply_property {
+ 	POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW,
+ 	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
+ 	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
++	POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MIN,
++	POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MAX,
+ 	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
+ 	POWER_SUPPLY_PROP_ENERGY_EMPTY_DESIGN,
+ 	POWER_SUPPLY_PROP_ENERGY_FULL,
+-- 
+2.20.1
 
