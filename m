@@ -2,258 +2,132 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7D7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BF1C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A18120747
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9356206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:12:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="R1w6opya";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="JWUXaob9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgDBEC7 convert rfc822-to-8bit (ORCPT
+        id S1729023AbgDBEMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 00:02:59 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:40552 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726136AbgDBEC7 (ORCPT
+        Thu, 2 Apr 2020 00:12:12 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:52100 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbgDBEMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 00:02:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TuNonMf_1585800168;
-Received: from 127.0.0.1(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TuNonMf_1585800168)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 02 Apr 2020 12:02:53 +0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [RFC for Linux] virtio_balloon: Add VIRTIO_BALLOON_F_THP_ORDER to
- handle THP spilt issue
-From:   teawater <teawaterz@linux.alibaba.com>
-In-Reply-To: <5e0e0659-5f70-2162-96be-5fcd0d3f46ad@redhat.com>
-Date:   Thu, 2 Apr 2020 12:02:47 +0800
-Cc:     Nadav Amit <namit@vmware.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "pagupta@redhat.com" <pagupta@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "mojha@codeaurora.org" <mojha@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        Hui Zhu <teawater@gmail.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <07AF0005-2711-4137-A96D-DA264A05C302@linux.alibaba.com>
-References: <20200326031817-mutt-send-email-mst@kernel.org>
- <C4C6BAF7-C040-403D-997C-48C7AB5A7D6B@redhat.com>
- <20200326054554-mutt-send-email-mst@kernel.org>
- <f26dc94a-7296-90c9-56cd-4586b78bc03d@redhat.com>
- <20200331091718-mutt-send-email-mst@kernel.org>
- <02a393ce-c4b4-ede9-7671-76fa4c19097a@redhat.com>
- <20200331093300-mutt-send-email-mst@kernel.org>
- <b69796e0-fa41-a219-c3e5-a11e9f5f18bf@redhat.com>
- <20200331100359-mutt-send-email-mst@kernel.org>
- <85f699d4-459a-a319-0a8f-96c87d345c49@redhat.com>
- <BABD09DC-217E-4F00-9C05-74ABB4B1E13D@vmware.com>
- <5e0e0659-5f70-2162-96be-5fcd0d3f46ad@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Thu, 2 Apr 2020 00:12:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1585800732; x=1617336732;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=emDVFJso3jKtMkekXhKuaTYAI1IeqKn1hjxX+lft1VA=;
+  b=R1w6opyaLsAYRYFsAcmOCgTAdFYQbVfoNzoj+BoqMUPDBGTfy5shpHX5
+   8xKzB/yPdtPIwm9DSCYXD1b5aY8Ik1MejJ4cErXUSyzrCeQqMrY4/pgwf
+   0GJNjo6Ih9+lvDT+O3nq/ZjFTpoIGHXEfprnC48fW2V/1bIc2e6nhGVA5
+   grGOSpgRYptUAmjHnkwyztvNafs6rANRyZ42JeMWC3SxuCPCBgw1Ngc3+
+   A32ILiz0u9cDtYc2YJz22kHu2WLX7AbDhe1sg0+J1dXStF78AdKd0laAU
+   jsEmiIGZcGECuAkFSZt+yXrJwArLWsmFfENjSOdPkqvOWyvJV4orG/5y1
+   Q==;
+IronPort-SDR: dPlBT7PgeexH4TM/sWJTPJqa/qCpggCKFAHL+mHULDrhvNJUWL2PJuZWqfpoLUo/HLzMoXVwMW
+ qy0I9ddaxAFX75qfOwLiPo3PBYhyxDJt7cf9azJoI1cZzrUFhOk0Xk4L3FT96EzsRCxDiCsdn+
+ cqAgEButON9lM0R/84bPUzTmw7ccYuGVoNWm50mjHelkOH5C/TF/csJzp5eepesHzXnN8pc3Or
+ Wj/lMhN2qcGpoVhmpWjPXv200oRO/kdrXEVNEKO7naqoedI1gAwDp7fPrQ0auLlTjIdTYh+Haf
+ uFk=
+X-IronPort-AV: E=Sophos;i="5.72,334,1580745600"; 
+   d="scan'208";a="134696696"
+Received: from mail-mw2nam10lp2100.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.100])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Apr 2020 12:12:10 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YvJ3iX0lBM6ggWmREHk6J6i8F/BBQmnNhYy/onGOzv4Fj0Tx0glCSQDcHYkDBYwdEjqF4YXJ++JF3Pd2EkyRDBNVa20+7i//y1XyHzf4vx1QuUccwyLZfffY4ztTofyUOxEhv5ga7meI16ejoPJn5fLnp/ohI0Tf7bTHzEtT0ZMil1NsdfSDlukiaHpVLO+nX7T6Ur93Yy1Y+z8VbBGc2CoAZhaks2XUTis+gJ/bnPAsk8iHr/fdvSXpvYV2EpnYdChUEgdw4RYezGMrlt/8JWJy/4qfLQ9kYmLVE2O/C6KMcchOqqZTH2X9miWzef5WlCkhYfInw+SWjhTP1E9vaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=emDVFJso3jKtMkekXhKuaTYAI1IeqKn1hjxX+lft1VA=;
+ b=CuAYxdYQiAQvnrwtUXSU22cH2nbT8d5VcpGpGdgIhab1c11riz8KqHrof0VydrAXTWn6ciUdktExwF9AeqineghGbQsAb0FSOhVyt2mWJijSLCZ4xAQrN8DIux55SxSzCKrLgavNp5a4/woqIc6nBkazZ126pTRlTJfYsv/0tQT2suQaa4V7MzwgGIvjzPtOd+RaOpJbQ8nQX0wHPRg3CfOPL2xAmWnkCpWSEx816225limlX/TeQalooo2wZZ5t4idxt6+zsCRRnJsHJQP5XtcGFjlHrucfnURnqpuyznxyaqSg6YFx+aH1J2f41XNzsHOQe70VC23zer59Z62pIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=emDVFJso3jKtMkekXhKuaTYAI1IeqKn1hjxX+lft1VA=;
+ b=JWUXaob901YqpCl9LGPGFSLhxVAGNJkQ8YdQpe/tdmIrUBLlTW+h5e0+6l2IJ1kwru3I+4Jvh0QT3mbgDMj7OoSD+c3JD3y670gUssNCnLp2fOkiwEcoNSVecn+Vo95ssy758YIKUEdcU/r/K0iZZoUVFzhXVZdo3dPWa/MGBhc=
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
+ by BYAPR04MB4230.namprd04.prod.outlook.com (2603:10b6:a02:ef::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Thu, 2 Apr
+ 2020 04:12:06 +0000
+Received: from BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::d826:82b2:764f:9733]) by BYAPR04MB4965.namprd04.prod.outlook.com
+ ([fe80::d826:82b2:764f:9733%7]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 04:12:06 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Chucheng Luo <luochucheng@vivo.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "opensource.kernel@vivo.com" <opensource.kernel@vivo.com>
+Subject: Re: [PATCH v2] fs: Fix missing 'bit' in comment
+Thread-Topic: [PATCH v2] fs: Fix missing 'bit' in comment
+Thread-Index: AQHWCKL1dFE7Boy2C0eAyyMMCZ6Wow==
+Date:   Thu, 2 Apr 2020 04:12:06 +0000
+Message-ID: <BYAPR04MB4965E726FCB157878F11139786C60@BYAPR04MB4965.namprd04.prod.outlook.com>
+References: <20200402035807.10611-1-luochucheng@vivo.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 296e5e08-74f7-4464-e473-08d7d6bc01cf
+x-ms-traffictypediagnostic: BYAPR04MB4230:
+x-microsoft-antispam-prvs: <BYAPR04MB4230B55163A77599A5F705A886C60@BYAPR04MB4230.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 0361212EA8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(39860400002)(396003)(376002)(366004)(346002)(66556008)(7696005)(66446008)(64756008)(66476007)(66946007)(76116006)(9686003)(55016002)(186003)(26005)(558084003)(478600001)(81156014)(8676002)(8936002)(81166006)(2906002)(53546011)(52536014)(6506007)(5660300002)(71200400001)(110136005)(4326008)(316002)(33656002)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: p//2SAUi7spf/SJYFV/k+Qg9IHTGomGi4LvQUirWlgJWU7WAqgltDRJoSTU1WcmkdnOMXyHEDEYa7e32WpkzUOHBPwyG4glkFW2PzufV16lxHBOicN3GVfTZE6YHR51jj6eIto/rpyLSwgY9ziLU/VWOPdFjgGPjrO/lxoKaoP3JLKCd4Jw/V8A1mSRWPZBvVtpz3gNtLqHc/pHzmQk2wU3UN0mFrQFOoNrQgCucj571IpY2YRGv3T/6wzmAbKan5D633Z1+9QpXLwtpWdgNGplrLFgc+LXbyfstmfPb+/8XgwVH7ZoNG5awFqV7pItXjEspoq7ObnnODCZrliT0YvjD3XekqViE5Mol3XdFXcY+1dGLzus6LDKUns/aMsZ1JXLmnNmWBgIqGSd03S2P/J0KKU/raKY31OB72akHJFZFiTWFzEOSDqw31ku1yLcg
+x-ms-exchange-antispam-messagedata: gPnmug7EYxdDFYir76lfj1g2j+okNg1UHsrMNlyPxkeZ7XGmTqr4liGnf4BlvVUaKyvwO2n7Q+yigTT54aDSr2xiFN+2JTASrkp0d5PQnCKSkT7xnRLFyMb90c7w4YPRSJ3tXjE0p1Jf8/i+0QLAIA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 296e5e08-74f7-4464-e473-08d7d6bc01cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 04:12:06.7062
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t7OJJYx6NQtn6YZJQd3kaVmCKnB3KU+KJUxysJym48AN3GS9TC2xoECgfZTKnwas3BnMXpMu0uyIPqGGE6qcY+KjymQJIIcULd+zFgsXKdc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4230
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> 2020年4月1日 17:48，David Hildenbrand <david@redhat.com> 写道：
-> 
-> On 31.03.20 18:37, Nadav Amit wrote:
->>> On Mar 31, 2020, at 7:09 AM, David Hildenbrand <david@redhat.com> wrote:
->>> 
->>> On 31.03.20 16:07, Michael S. Tsirkin wrote:
->>>> On Tue, Mar 31, 2020 at 04:03:18PM +0200, David Hildenbrand wrote:
->>>>> On 31.03.20 15:37, Michael S. Tsirkin wrote:
->>>>>> On Tue, Mar 31, 2020 at 03:32:05PM +0200, David Hildenbrand wrote:
->>>>>>> On 31.03.20 15:24, Michael S. Tsirkin wrote:
->>>>>>>> On Tue, Mar 31, 2020 at 12:35:24PM +0200, David Hildenbrand wrote:
->>>>>>>>> On 26.03.20 10:49, Michael S. Tsirkin wrote:
->>>>>>>>>> On Thu, Mar 26, 2020 at 08:54:04AM +0100, David Hildenbrand wrote:
->>>>>>>>>>>> Am 26.03.2020 um 08:21 schrieb Michael S. Tsirkin <mst@redhat.com>:
->>>>>>>>>>>> 
->>>>>>>>>>>> ﻿On Thu, Mar 12, 2020 at 09:51:25AM +0100, David Hildenbrand wrote:
->>>>>>>>>>>>>> On 12.03.20 09:47, Michael S. Tsirkin wrote:
->>>>>>>>>>>>>> On Thu, Mar 12, 2020 at 09:37:32AM +0100, David Hildenbrand wrote:
->>>>>>>>>>>>>>> 2. You are essentially stealing THPs in the guest. So the fastest
->>>>>>>>>>>>>>> mapping (THP in guest and host) is gone. The guest won't be able to make
->>>>>>>>>>>>>>> use of THP where it previously was able to. I can imagine this implies a
->>>>>>>>>>>>>>> performance degradation for some workloads. This needs a proper
->>>>>>>>>>>>>>> performance evaluation.
->>>>>>>>>>>>>> 
->>>>>>>>>>>>>> I think the problem is more with the alloc_pages API.
->>>>>>>>>>>>>> That gives you exactly the given order, and if there's
->>>>>>>>>>>>>> a larger chunk available, it will split it up.
->>>>>>>>>>>>>> 
->>>>>>>>>>>>>> But for balloon - I suspect lots of other users,
->>>>>>>>>>>>>> we do not want to stress the system but if a large
->>>>>>>>>>>>>> chunk is available anyway, then we could handle
->>>>>>>>>>>>>> that more optimally by getting it all in one go.
->>>>>>>>>>>>>> 
->>>>>>>>>>>>>> 
->>>>>>>>>>>>>> So if we want to address this, IMHO this calls for a new API.
->>>>>>>>>>>>>> Along the lines of
->>>>>>>>>>>>>> 
->>>>>>>>>>>>>>  struct page *alloc_page_range(gfp_t gfp, unsigned int min_order,
->>>>>>>>>>>>>>                  unsigned int max_order, unsigned int *order)
->>>>>>>>>>>>>> 
->>>>>>>>>>>>>> the idea would then be to return at a number of pages in the given
->>>>>>>>>>>>>> range.
->>>>>>>>>>>>>> 
->>>>>>>>>>>>>> What do you think? Want to try implementing that?
->>>>>>>>>>>>> 
->>>>>>>>>>>>> You can just start with the highest order and decrement the order until
->>>>>>>>>>>>> your allocation succeeds using alloc_pages(), which would be enough for
->>>>>>>>>>>>> a first version. At least I don't see the immediate need for a new
->>>>>>>>>>>>> kernel API.
->>>>>>>>>>>> 
->>>>>>>>>>>> OK I remember now.  The problem is with reclaim. Unless reclaim is
->>>>>>>>>>>> completely disabled, any of these calls can sleep. After it wakes up,
->>>>>>>>>>>> we would like to get the larger order that has become available
->>>>>>>>>>>> meanwhile.
->>>>>>>>>>> 
->>>>>>>>>>> Yes, but that‘s a pure optimization IMHO.
->>>>>>>>>>> So I think we should do a trivial implementation first and then see what we gain from a new allocator API. Then we might also be able to justify it using real numbers.
->>>>>>>>>> 
->>>>>>>>>> Well how do you propose implement the necessary semantics?
->>>>>>>>>> I think we are both agreed that alloc_page_range is more or
->>>>>>>>>> less what's necessary anyway - so how would you approximate it
->>>>>>>>>> on top of existing APIs?
->>>>>>>>> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
->>>>>> 
->>>>>> .....
->>>>>> 
->>>>>> 
->>>>>>>>> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
->>>>>>>>> index 26de020aae7b..067810b32813 100644
->>>>>>>>> --- a/mm/balloon_compaction.c
->>>>>>>>> +++ b/mm/balloon_compaction.c
->>>>>>>>> @@ -112,23 +112,35 @@ size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
->>>>>>>>> EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
->>>>>>>>> 
->>>>>>>>> /*
->>>>>>>>> - * balloon_page_alloc - allocates a new page for insertion into the balloon
->>>>>>>>> - *			page list.
->>>>>>>>> + * balloon_pages_alloc - allocates a new page (of at most the given order)
->>>>>>>>> + * 			 for insertion into the balloon page list.
->>>>>>>>> *
->>>>>>>>> * Driver must call this function to properly allocate a new balloon page.
->>>>>>>>> * Driver must call balloon_page_enqueue before definitively removing the page
->>>>>>>>> * from the guest system.
->>>>>>>>> *
->>>>>>>>> + * Will fall back to smaller orders if allocation fails. The order of the
->>>>>>>>> + * allocated page is stored in page->private.
->>>>>>>>> + *
->>>>>>>>> * Return: struct page for the allocated page or NULL on allocation failure.
->>>>>>>>> */
->>>>>>>>> -struct page *balloon_page_alloc(void)
->>>>>>>>> +struct page *balloon_pages_alloc(int order)
->>>>>>>>> {
->>>>>>>>> -	struct page *page = alloc_page(balloon_mapping_gfp_mask() |
->>>>>>>>> -				       __GFP_NOMEMALLOC | __GFP_NORETRY |
->>>>>>>>> -				       __GFP_NOWARN);
->>>>>>>>> -	return page;
->>>>>>>>> +	struct page *page;
->>>>>>>>> +
->>>>>>>>> +	while (order >= 0) {
->>>>>>>>> +		page = alloc_pages(balloon_mapping_gfp_mask() |
->>>>>>>>> +				   __GFP_NOMEMALLOC | __GFP_NORETRY |
->>>>>>>>> +				   __GFP_NOWARN, order);
->>>>>>>>> +		if (page) {
->>>>>>>>> +			set_page_private(page, order);
->>>>>>>>> +			return page;
->>>>>>>>> +		}
->>>>>>>>> +		order--;
->>>>>>>>> +	}
->>>>>>>>> +	return NULL;
->>>>>>>>> }
->>>>>>>>> -EXPORT_SYMBOL_GPL(balloon_page_alloc);
->>>>>>>>> +EXPORT_SYMBOL_GPL(balloon_pages_alloc);
->>>>>>>>> 
->>>>>>>>> /*
->>>>>>>>> * balloon_page_enqueue - inserts a new page into the balloon page list.
->>>>>>>> 
->>>>>>>> 
->>>>>>>> I think this will try to invoke direct reclaim from the first iteration
->>>>>>>> to free up the max order.
->>>>>>> 
->>>>>>> %__GFP_NORETRY: The VM implementation will try only very lightweight
->>>>>>> memory direct reclaim to get some memory under memory pressure (thus it
->>>>>>> can sleep). It will avoid disruptive actions like OOM killer.
->>>>>>> 
->>>>>>> Certainly good enough for a first version I would say, no?
->>>>>> 
->>>>>> Frankly how well that behaves would depend a lot on the workload.
->>>>>> Can regress just as well.
->>>>>> 
->>>>>> For the 1st version I'd prefer something that is the least disruptive,
->>>>>> and that IMHO means we only trigger reclaim at all in the same configuration
->>>>>> as now - when we can't satisfy the lowest order allocation.
->>>>> 
->>>>> Agreed.
->>>>> 
->>>>>> Anything else would be a huge amount of testing with all kind of
->>>>>> workloads.
->>>>> 
->>>>> So doing a "& ~__GFP_RECLAIM" in case order > 0? (as done in
->>>>> GFP_TRANSHUGE_LIGHT)
->>>> 
->>>> That will improve the situation when reclaim is not needed, but leave
->>>> the problem in place for when it's needed: if reclaim does trigger, we
->>>> can get a huge free page and immediately break it up.
->>>> 
->>>> So it's ok as a first step but it will make the second step harder as
->>>> we'll need to test with reclaim :).
->>> 
->>> I expect the whole "steal huge pages from your guest" to be problematic,
->>> as I already mentioned to Alex. This needs a performance evaluation.
->>> 
->>> This all smells like a lot of workload dependent fine-tuning. :)
->> 
->> AFAIK the hardware overheads of keeping huge-pages in the guest and backing
->> them with 4KB pages are non-negligible. Did you take those into account?
-> 
-> Of course, the fastest mapping will be huge pages in host and guest.
-> Having huge pages in your guest but not in your host cannot really be
-> solved using ballooning AFAIKs. Hopefully THP in the host will be doing
-> its job properly :)
-> 
-> ... however, so far, we haven't done any performance comparisons at all.
-> The only numbers from Hui Zhu that I can spot are number of THP in the
-> host, which is not really expressing actual guest performance IMHO. That
-> definitely has to be done to evaluate the different optimizations we
-> might want to try out.
-> 
-
-I did some tests with vm-scalability on Monday comparing their performance in VM:
-//4 processes random r/w
-usemem -R -a -Z  -n 4 1g
-
-write:
-hugepage: 146367 KB/s
-thp:	  133550 KB/s
-normal:   124248 KB/s
-
-read:
-hugepage: 103969 KB/s
-thp:	  100622 KB/s
-normal:   88755 KB/s
-
-Best,
-Hui
-
-
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-
+On 4/1/20 8:58 PM, Chucheng Luo wrote:=0A=
+> The missing word may make it hard for other developers to=0A=
+> understand it.=0A=
+>=0A=
+> Signed-off-by: Chucheng Luo <luochucheng@vivo.com>=0A=
+> Acked-by: Hans de Goede <hdegoede@redhat.com>=0A=
+> Acked-by: Andreas Dilger <adilger@dilger.ca>=0A=
+=0A=
+Looks good.=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+=0A=
