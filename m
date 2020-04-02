@@ -2,118 +2,97 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A8EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197D1C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9F1206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:12:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QuydfkPk"
+	by mail.kernel.org (Postfix) with ESMTP id EFB1E206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388225AbgDBOM6 (ORCPT
+        id S2388433AbgDBONK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:12:58 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29906 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728225AbgDBOM6 (ORCPT
+        Thu, 2 Apr 2020 10:13:10 -0400
+Received: from imap3.hz.codethink.co.uk ([176.9.8.87]:47132 "EHLO
+        imap3.hz.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729213AbgDBONJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:12:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585836777;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=Lsas7jxJ1WMu8rRlGVbgJ8eIsxujsCQQeq8BgBAYBkI=;
-        b=QuydfkPkaT5EqKrihALsPA4Hgbm80XmOiuqS+91eEkAr/IFCGIUPoHf1kaHsreszkfn4fd
-        HdhRRiQxkLmfdeQ7jALZccT+C3eOmt/YCBYRcLaw5R0J9VOUuYu72U7wn3zVNnFWhBq+vg
-        4p5mdQJirngAEwKEI9/463QxlpN0kWo=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-vHvmF1P2N4GaPZdFpXvrtA-1; Thu, 02 Apr 2020 10:12:55 -0400
-X-MC-Unique: vHvmF1P2N4GaPZdFpXvrtA-1
-Received: by mail-qv1-f71.google.com with SMTP id j7so2746896qvy.22
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:12:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=Lsas7jxJ1WMu8rRlGVbgJ8eIsxujsCQQeq8BgBAYBkI=;
-        b=r0klPNic55RhaKg3bbNpXvK7RsTLsvRXcHbm7aCLk12ndezsoiCBHdKwjxvFqoz5QW
-         /4x1nuO5xRSevIyhKzp5BgZdsCKztkjn6tuflcELjJApmt6sI3K+bhBmH/FaQagEdlOT
-         cvHZgXYApMZ+lc/bQ0t5ywV1mOqrxMssmbKLlFWpJm6dWoaNrqj4kZIJ3Aj8cJplOeW/
-         fAagrnu1na1CNlM+TNEM2SNVlA8ls5hoqLfDE/hXX+w9BCx8JH6t5UGlhBq7/5cKNZxD
-         aekY8rXZcEri+glUp9Y5DCeiy4RJlQUUjItImNMM2BAcK+SphI1SB+2wjXUfFHE7guB4
-         5AUw==
-X-Gm-Message-State: AGi0PubYz412IDgNEv+Uc+vLF+3p7YDyZdGYNcwIVlmUOLpoI8Up9X8Z
-        XhjOADP7vZgVOgQFPR/SFQoFgGeNEOzWSq0oEDnTqwFQI+wmNeNIayUOlmG+eOeRxIuUxfPuhiL
-        nolCC2q3DGACL6zbqHibjuUaD
-X-Received: by 2002:a37:7c81:: with SMTP id x123mr3569407qkc.287.1585836775149;
-        Thu, 02 Apr 2020 07:12:55 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLfJWfDXTGKKPJbCvXgetpUrdL/5Wc33Wc2j+KEgqsWojCWykGbIs6gJg6z/V4LYFVIdSjzNQ==
-X-Received: by 2002:a37:7c81:: with SMTP id x123mr3569380qkc.287.1585836774834;
-        Thu, 02 Apr 2020 07:12:54 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id b7sm3553494qkc.61.2020.04.02.07.12.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 07:12:53 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 10:12:50 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH] vhost: drop vring dependency on iotlb
-Message-ID: <20200402141207.32628-1-mst@redhat.com>
+        Thu, 2 Apr 2020 10:13:09 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126] helo=xylophone)
+        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1jK0ae-0003b2-Dv; Thu, 02 Apr 2020 15:13:04 +0100
+Message-ID: <b7a947dbf4222028149b12c9d63cfa2334664645.camel@codethink.co.uk>
+Subject: Re: [PATCH 4.4 59/91] mac80211: mark station unauthorized before
+ key removal
+From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
+To:     Johannes Berg <johannes.berg@intel.com>
+Cc:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 02 Apr 2020 15:13:02 +0100
+In-Reply-To: <20200401161533.422920304@linuxfoundation.org>
+References: <20200401161512.917494101@linuxfoundation.org>
+         <20200401161533.422920304@linuxfoundation.org>
+Organization: Codethink Ltd.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vringh can now be built without IOTLB.
-Select IOTLB directly where it's used.
+On Wed, 2020-04-01 at 18:17 +0200, Greg Kroah-Hartman wrote:
+> From: Johannes Berg <johannes.berg@intel.com>
+> 
+> commit b16798f5b907733966fd1a558fca823b3c67e4a1 upstream.
+> 
+> If a station is still marked as authorized, mark it as no longer
+> so before removing its keys. This allows frames transmitted to it
+> to be rejected, providing additional protection against leaking
+> plain text data during the disconnection flow.
+> 
+> Cc: stable@vger.kernel.org
+> Link: https://lore.kernel.org/r/20200326155133.ccb4fb0bb356.If48f0f0504efdcf16b8921f48c6d3bb2cb763c99@changeid
+> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  net/mac80211/sta_info.c |    6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> --- a/net/mac80211/sta_info.c
+> +++ b/net/mac80211/sta_info.c
+> @@ -2,6 +2,7 @@
+>   * Copyright 2002-2005, Instant802 Networks, Inc.
+>   * Copyright 2006-2007	Jiri Benc <jbenc@suse.cz>
+>   * Copyright 2013-2014  Intel Mobile Communications GmbH
+> + * Copyright (C) 2018-2020 Intel Corporation
+>   *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License version 2 as
+> @@ -904,6 +905,11 @@ static void __sta_info_destroy_part2(str
+>  	might_sleep();
+>  	lockdep_assert_held(&local->sta_mtx);
+>  
+> +	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
+So this should be retried forever?  Surely not.
 
-This is on top of my previous patch (in vhost tree now).
+Ben.
 
- drivers/vdpa/Kconfig  | 1 +
- drivers/vhost/Kconfig | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
-index 7db1460104b7..08b615f2da39 100644
---- a/drivers/vdpa/Kconfig
-+++ b/drivers/vdpa/Kconfig
-@@ -17,6 +17,7 @@ config VDPA_SIM
- 	depends on RUNTIME_TESTING_MENU
- 	select VDPA
- 	select VHOST_RING
-+	select VHOST_IOTLB
- 	default n
- 	help
- 	  vDPA networking device simulator which loop TX traffic back
-diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-index 21feea0d69c9..bdd270fede26 100644
---- a/drivers/vhost/Kconfig
-+++ b/drivers/vhost/Kconfig
-@@ -6,7 +6,6 @@ config VHOST_IOTLB
- 
- config VHOST_RING
- 	tristate
--	select VHOST_IOTLB
- 	help
- 	  This option is selected by any driver which needs to access
- 	  the host side of a virtio ring.
+> +		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
+> +		WARN_ON_ONCE(ret);
+> +	}
+> +
+>  	/* now keys can no longer be reached */
+>  	ieee80211_free_sta_keys(local, sta);
+>  
 -- 
-MST
+Ben Hutchings, Software Developer                         Codethink Ltd
+https://www.codethink.co.uk/                 Dale House, 35 Dale Street
+                                     Manchester, M1 2HF, United Kingdom
 
