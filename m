@@ -2,154 +2,128 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83838C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26899C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4862073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECD92073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:52:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="mHf1i89r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dd7a5SKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387721AbgDBNwb (ORCPT
+        id S2387764AbgDBNwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:52:31 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42938 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387656AbgDBNwa (ORCPT
+        Thu, 2 Apr 2020 09:52:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51191 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727727AbgDBNwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:52:30 -0400
-Received: by mail-ed1-f66.google.com with SMTP id cw6so4163294edb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 06:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=38tDIv0KNYRGjWQpLV5pSNvP7JpdlyIKdGeo6UD55p0=;
-        b=mHf1i89rxwD/U2z1mjMQcSxAomeWc1se7NI0BXPkvalHMI/UmRHR8zxEzBwhHrRpie
-         lfZPvoKsJex5e+99/6K6TY/U0Oi1q15Kr12GW6oIbLommTSuH7t+hSeQWFea4nTjlB3V
-         95kmrieGk5HvIN6/0NbisdyXcDbd6kLMkqZLw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=38tDIv0KNYRGjWQpLV5pSNvP7JpdlyIKdGeo6UD55p0=;
-        b=B6cfQVkYjpXnFMiA7N5WV5xcb5lWPvNCz4qfEQt2WmoAqCVkacb8GBlQdPcevPYhiI
-         wwSq2TEG7w4SPNLHJcERMRSZcJC/I1FOuRKegLuG9mLUcDjAUnRzFd6ku61Ax/LEW8Md
-         3rNOGQy9/9SmC2Y2a91J7X6qqI5U5B06UtIEre6Ql+gBOniYIqD0YeunAJ7oZq7uDkD/
-         L6RSXXXZqHz5ptPp4fP0U1lBs8ZlhYhSggiwxdcd1zdO0A1tmUaIillsTLP5vFExwPtD
-         mp3pnawgBAN0Jb5jCz+qbng2qimaT92WRyFjoZEoOBxU4fOcDTqhuyqZby7flh4RrDWz
-         iYFw==
-X-Gm-Message-State: AGi0PuaTRyR9DzCD6JNuh2h/Kas8FcI1Cg/pyCekeEewXdaimQiSd+2Y
-        k4kGqCcpbLAkyRHnV7eXyxmPsmlVgFr1ZwRwe2Hbpw==
-X-Google-Smtp-Source: APiQypKo8OvyZ+/BkGsIAPV2v3O2scZTxPKXxe0JzG0Tp6kSAFDmG+B5Al7t8aLcLk3Z9HYXKLOkQwoo6oYOkZibBjQ=
-X-Received: by 2002:a17:906:b351:: with SMTP id cd17mr3373636ejb.351.1585835548323;
- Thu, 02 Apr 2020 06:52:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk>
- <2418286.1585691572@warthog.procyon.org.uk> <20200401144109.GA29945@gardel-login>
- <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
- <2590640.1585757211@warthog.procyon.org.uk> <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
- <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
-In-Reply-To: <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 2 Apr 2020 15:52:16 +0200
-Message-ID: <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-To:     Ian Kent <raven@themaw.net>
-Cc:     David Howells <dhowells@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 2 Apr 2020 09:52:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585835558;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=X2Z0AiuQKUhsiwVdNpTacvjfg+0mbVZ0yAsuOLyRP6I=;
+        b=dd7a5SKwz3rOuP3NcxYmMzWIZDyv3aBCCuwdhwxEULIr6VGrBCJkLnBQfzt5NEu/lLpq9s
+        GFKFFZ9v9jnMhX+XCZVikdkSdp5WPXQemsJB5qb6UbANGW0scPAEgy7X6dFKdx1WskOh8l
+        ZZzLOa56oH5PjcgzkFalvDWX2VreDvo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-csz3Vb1kNUecUIFWt2St6w-1; Thu, 02 Apr 2020 09:52:36 -0400
+X-MC-Unique: csz3Vb1kNUecUIFWt2St6w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D934618C35A1;
+        Thu,  2 Apr 2020 13:52:35 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-36.pek2.redhat.com [10.72.12.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 77C991001938;
+        Thu,  2 Apr 2020 13:52:34 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org, bhe@redhat.com
+Subject: [PATCH] mm: remove unused free_bootmem_with_active_regions
+Date:   Thu,  2 Apr 2020 21:52:33 +0800
+Message-Id: <20200402135233.3253-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 4:52 AM Ian Kent <raven@themaw.net> wrote:
->
-> On Wed, 2020-04-01 at 18:40 +0200, Miklos Szeredi wrote:
-> > On Wed, Apr 1, 2020 at 6:07 PM David Howells <dhowells@redhat.com>
-> > wrote:
-> > > Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > >
-> > > > I've still not heard a convincing argument in favor of a syscall.
-> > >
-> > > From your own results, scanning 10000 mounts through mountfs and
-> > > reading just
-> > > two values from each is an order of magnitude slower without the
-> > > effect of the
-> > > dentry/inode caches.  It gets faster on the second run because the
-> > > mountfs
-> > > dentries and inodes are cached - but at a cost of >205MiB of
-> > > RAM.  And it's
-> > > *still* slower than fsinfo().
-> >
-> > Already told you that we can just delete the dentry on dput_final, so
-> > the memory argument is immaterial.
-> >
-> > And the speed argument also, because there's no use case where that
-> > would make a difference.  You keep bringing up the notification queue
-> > overrun when watching a subtree, but that's going to be painful with
-> > fsinfo(2) as well.   If that's a relevant use case (not saying it's
-> > true), might as well add a /mnt/MNT_ID/subtree_info (trivial again)
-> > that contains all information for the subtree.  Have fun implementing
-> > that with fsinfo(2).
->
-> Forgive me for not trawling through your patch to work this out
-> but how does a poll on a path get what's needed to get mount info.
->
-> Or, more specifically, how does one get what's needed to go directly
-> to the place to get mount info. when something in the tree under the
-> polled path changes (mount/umount). IIUC poll alone won't do subtree
-> change monitoring?
+In commit 397dc00e249ec64e10 ("mips: sgi-ip27: switch from DISCONTIGMEM
+to SPARSEMEM"), the last caller was gone. Now no user calls
+function free_bootmem_with_active_regions() any more.
 
-The mechanisms are basically the same as with fsinfo(2).   You can get
-to the mountfs entry through the mount ID or through a proc/fd/ type
-symlink.  So if you have a path, there are two options:
+Let's remove it.
 
- - find out the mount ID belonging to that path and go to /mountfs/$mntid/
- - open the path with fd = open(path, O_PATH) and the go to
-/proc/self/fdmount/$fd/
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ include/linux/mm.h |  4 ----
+ mm/page_alloc.c    | 25 -------------------------
+ 2 files changed, 29 deletions(-)
 
-Currently the only way to find the mount id from a path is by parsing
-/proc/self/fdinfo/$fd.  It is trivial, however, to extend statx(2) to
-return it directly from a path.   Also the mount notification queue
-that David implemented contains the mount ID of the changed mount.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 1cd8b8f8534d..9c093f7c751d 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2363,8 +2363,6 @@ static inline unsigned long get_num_physpages(void)
+  * 	memblock_add_node(base, size, nid)
+  * free_area_init_nodes(max_zone_pfns);
+  *
+- * free_bootmem_with_active_regions() calls free_bootmem_node() for each
+- * registered physical page range.  Similarly
+  * sparse_memory_present_with_active_regions() calls memory_present() for
+  * each range when SPARSEMEM is enabled.
+  *
+@@ -2380,8 +2378,6 @@ extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+ extern void get_pfn_range_for_nid(unsigned int nid,
+ 			unsigned long *start_pfn, unsigned long *end_pfn);
+ extern unsigned long find_min_pfn_with_active_regions(void);
+-extern void free_bootmem_with_active_regions(int nid,
+-						unsigned long max_low_pfn);
+ extern void sparse_memory_present_with_active_regions(int nid);
+ 
+ #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 138a56c0f48f..2892ebeaa6c9 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6356,31 +6356,6 @@ int __meminit __early_pfn_to_nid(unsigned long pfn,
+ }
+ #endif /* CONFIG_HAVE_ARCH_EARLY_PFN_TO_NID */
+ 
+-/**
+- * free_bootmem_with_active_regions - Call memblock_free_early_nid for each active range
+- * @nid: The node to free memory on. If MAX_NUMNODES, all nodes are freed.
+- * @max_low_pfn: The highest PFN that will be passed to memblock_free_early_nid
+- *
+- * If an architecture guarantees that all ranges registered contain no holes
+- * and may be freed, this this function may be used instead of calling
+- * memblock_free_early_nid() manually.
+- */
+-void __init free_bootmem_with_active_regions(int nid, unsigned long max_low_pfn)
+-{
+-	unsigned long start_pfn, end_pfn;
+-	int i, this_nid;
+-
+-	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, &this_nid) {
+-		start_pfn = min(start_pfn, max_low_pfn);
+-		end_pfn = min(end_pfn, max_low_pfn);
+-
+-		if (start_pfn < end_pfn)
+-			memblock_free_early_nid(PFN_PHYS(start_pfn),
+-					(end_pfn - start_pfn) << PAGE_SHIFT,
+-					this_nid);
+-	}
+-}
+-
+ /**
+  * sparse_memory_present_with_active_regions - Call memory_present for each active range
+  * @nid: The node to call memory_present for. If MAX_NUMNODES, all nodes will be used.
+-- 
+2.17.2
 
-> Don't get me wrong, neither the proc nor the fsinfo implementations
-> deal with the notification storms that cause much of the problem we
-> see now.
->
-> IMHO that's a separate and very difficult problem in itself that
-> can't even be considered until getting the information efficiently
-> is resolved.
-
-This mount notification storm issue got me thinking.   If I understand
-correctly, systemd wants mount notifications so that it can do the
-desktop pop-up thing.   Is that correct?
-
-But that doesn't apply to automounts at all.  A new mount performed by
-automount is uninteresting to to desktops, since it's triggered by
-crossing the automount point (i.e. a normal path lookup), not an
-external event like inserting a usb stick, etc...
-
-Am I missing something?
-
-Maybe the solution is to just allow filtering out such notifications
-at the source, so automount triggers don't generate events for
-systemd.
-
-Thanks,
-Miklos
