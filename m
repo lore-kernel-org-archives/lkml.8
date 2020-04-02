@@ -7,55 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A39C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DB9C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8AC2074D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA062072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585819699;
-	bh=uW5gIy6Vwri4JjBZCqV2GhL39w/KMjWmxypGxq5SSDw=;
+	s=default; t=1585819702;
+	bh=Or/c+7Yz7rNaW586sekoMkfB7wAeHBOv0HFxS+7zG40=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=m3ShcgikcSoBdTqLFh7v3u75ehnS/GRAiJ3bj49kbuTG2aUYnitek2kTD3C/1xImD
-	 5e087vY1yLGYWA1kfzIiHn/IKrsqegExYmJA81GdAgeQvY1ysIFk8ztoZQBEDegX3v
-	 ISYF/7xSJtCv9MyhqRfXq8xx410pDrph5KVoRMHg=
+	b=Y3cYvUxtJozjVQh1qjI4LwKH3C7l4pwq/PXM+QifbiNdXEGHeGusta48afLrgJlFg
+	 bcmvlx6+0u+nJW6kWfY24fDuwkmU85PBROu1kzinUkG19pl77zt+RFEC/BP8oycN0A
+	 O6BP0Lp836NBaF4CO1RoKy7tDb0+ftCswhxa0mVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387801AbgDBJ2I (ORCPT
+        id S2387934AbgDBJ2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49206 "EHLO mail.kernel.org"
+        Thu, 2 Apr 2020 05:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbgDBJ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387736AbgDBJ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Apr 2020 05:28:08 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD52D2073B;
+        by mail.kernel.org (Postfix) with ESMTPSA id DDE3C2082F;
         Thu,  2 Apr 2020 09:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585819687;
-        bh=uW5gIy6Vwri4JjBZCqV2GhL39w/KMjWmxypGxq5SSDw=;
+        s=default; t=1585819688;
+        bh=Or/c+7Yz7rNaW586sekoMkfB7wAeHBOv0HFxS+7zG40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H580aSQR61YugH6s4MZW4GdgtvX8Nq0d54fqTDql8QtZ4i4D1B4T81ygOL76yEJyI
-         fed4KFk+QNQ/4Flf5odrDQoOM57gUbLORUwELeFPRiggWb3+CvgvB8FoAMFlY+nqrf
-         F1Zxx6ZyqlR5M4hi9q5eRq2u3fm1kzZXreumy7nc=
+        b=N0WI4+vcBSk8+E2ARSSPEU1XwovcM+dB83Jptmv+EGVvU62aA2N/XmomFXsdHwe0B
+         wuEPUL7eIBqFi6RQHsbntYvK893NkrzfrpMtvD252I3I0qiHR7zXxmaUCoOLjpYszM
+         fsuRgbeCMi16wbSXk11P59p409GHAZNuL9rnL+iw=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jJw8s-000Aa6-1a; Thu, 02 Apr 2020 11:28:06 +0200
+        id 1jJw8s-000AaP-5U; Thu, 02 Apr 2020 11:28:06 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kbuild@vger.kernel.org
-Subject: [PATCH 1/6] kconfig: qconf: clean deprecated warnings
-Date:   Thu,  2 Apr 2020 11:27:58 +0200
-Message-Id: <9e939a9af7adbfc1e567ca13955788608aecddd3.1585819250.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 5/6] kconfig: qconf: remove some old bogus TODOs
+Date:   Thu,  2 Apr 2020 11:28:02 +0200
+Message-Id: <d12dc3231f3f9b1148c002ca3d44d6d9cd6585e5.1585819250.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1585819250.git.mchehab+huawei@kernel.org>
 References: <cover.1585819250.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,53 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recommended way to initialize a null string is with
-QString(). This is there at least since Qt5.5, with is
-when qconf was ported to Qt5.
-
-Fix those warnings:
-
-	scripts/kconfig/qconf.cc: In member function ‘void ConfigItem::updateMenu()’:
-	scripts/kconfig/qconf.cc:158:31: warning: ‘QString::null’ is deprecated: use QString() [-Wdeprecated-declarations]
-	  158 |    setText(noColIdx, QString::null);
-	      |                               ^~~~
-	In file included from /usr/include/qt5/QtCore/qobject.h:47,
-	                 from /usr/include/qt5/QtWidgets/qwidget.h:45,
-	                 from /usr/include/qt5/QtWidgets/qmainwindow.h:44,
-	                 from /usr/include/qt5/QtWidgets/QMainWindow:1,
-	                 from scripts/kconfig/qconf.cc:9:
+The items described on those TODOs are already solved. So,
+remove the comments.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ scripts/kconfig/qconf.cc | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 82773cc35d35..daa3325c0a49 100644
+index 5a560c647321..f3eaeb2b70da 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -154,9 +154,9 @@ void ConfigItem::updateMenu(void)
+@@ -839,7 +839,7 @@ void ConfigList::mouseMoveEvent(QMouseEvent* e)
  
- 		if (!sym_is_changeable(sym) && list->optMode == normalOpt) {
- 			setPixmap(promptColIdx, QIcon());
--			setText(noColIdx, QString::null);
--			setText(modColIdx, QString::null);
--			setText(yesColIdx, QString::null);
-+			setText(noColIdx, QString());
-+			setText(modColIdx, QString());
-+			setText(yesColIdx, QString());
- 			break;
- 		}
- 		expr = sym_get_tristate_value(sym);
-@@ -276,7 +276,7 @@ void ConfigLineEdit::show(ConfigItem* i)
- 	if (sym_get_string_value(item->menu->sym))
- 		setText(QString::fromLocal8Bit(sym_get_string_value(item->menu->sym)));
- 	else
--		setText(QString::null);
-+		setText(QString());
- 	Parent::show();
- 	setFocus();
- }
+ void ConfigList::mouseDoubleClickEvent(QMouseEvent* e)
+ {
+-	QPoint p = e->pos(); // TODO: Check if this works(was contentsToViewport).
++	QPoint p = e->pos();
+ 	ConfigItem* item = (ConfigItem*)itemAt(p);
+ 	struct menu *menu;
+ 	enum prop_type ptype;
+@@ -1773,7 +1773,6 @@ void ConfigMainWindow::showFullView(void)
+ 
+ /*
+  * ask for saving configuration before quitting
+- * TODO ask only when something changed
+  */
+ void ConfigMainWindow::closeEvent(QCloseEvent* e)
+ {
 -- 
 2.25.1
 
