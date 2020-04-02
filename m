@@ -2,78 +2,78 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F84DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162D3C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8852063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC134206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388075AbgDBN7i (ORCPT
+        id S2388199AbgDBN7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:59:38 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43502 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgDBN7h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:59:37 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id BE597280125
-Subject: Re: [PATCH 3/3] rkisp1: Fix wrong PHY config dependency
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>
-References: <20200401213721.24173-1-ezequiel@collabora.com>
- <20200401213721.24173-4-ezequiel@collabora.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <b0c9e734-7302-08e6-7bbf-79699d1d305e@collabora.com>
-Date:   Thu, 2 Apr 2020 10:59:29 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 2 Apr 2020 09:59:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40164 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727412AbgDBN7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:59:52 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9923666935139C50D3D6;
+        Thu,  2 Apr 2020 21:59:43 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Apr 2020
+ 21:59:37 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <gregkh@linuxfoundation.org>,
+        <christophe.leroy@c-s.fr>, <allison@lohutok.net>,
+        <armijn@tjaldur.nl>, <tglx@linutronix.de>,
+        <aneesh.kumar@linux.ibm.com>, <yuehaibing@huawei.com>
+CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] powerpc/mm: ptdump: Add missing include <asm/vio.h>
+Date:   Thu, 2 Apr 2020 21:58:28 +0800
+Message-ID: <20200402135828.37308-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20200401213721.24173-4-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+gcc build fails:
+
+arch/powerpc/mm/ptdump/hashpagetable.c: In function ‘pseries_find’:
+arch/powerpc/mm/ptdump/hashpagetable.c:262:18: error: ‘H_SUCCESS’ undeclared (first use in this function); did you mean ‘FL_ACCESS’?
+   if (lpar_rc != H_SUCCESS)
+                  ^~~~~~~~~
+                  FL_ACCESS
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 65e701b2d2a8 ("powerpc/ptdump: drop non vital #ifdefs")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ arch/powerpc/mm/ptdump/hashpagetable.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/powerpc/mm/ptdump/hashpagetable.c b/arch/powerpc/mm/ptdump/hashpagetable.c
+index b6ed9578382f..8ea5f9a3b658 100644
+--- a/arch/powerpc/mm/ptdump/hashpagetable.c
++++ b/arch/powerpc/mm/ptdump/hashpagetable.c
+@@ -20,6 +20,7 @@
+ #include <asm/page.h>
+ #include <asm/pgalloc.h>
+ #include <asm/plpar_wrappers.h>
++#include <asm/vio.h>
+ #include <linux/memblock.h>
+ #include <asm/firmware.h>
+ 
+-- 
+2.17.1
 
 
-On 4/1/20 6:37 PM, Ezequiel Garcia wrote:
-> Instead of depending on the Rockchip PHY driver the ISP driver
-> should really depend on CONFIG_GENERIC_PHY_MIPI_DPHY,
-> given all it needs is the phy_mipi_dphy_get_default_config() symbol.
-> 
-> Fix it.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-
-Acked-by: Helen Koike <helen.koike@collabora.com>
-
-> ---
->  drivers/staging/media/rkisp1/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/rkisp1/Kconfig b/drivers/staging/media/rkisp1/Kconfig
-> index b859a493caba..e3ba6826fbb0 100644
-> --- a/drivers/staging/media/rkisp1/Kconfig
-> +++ b/drivers/staging/media/rkisp1/Kconfig
-> @@ -7,7 +7,7 @@ config VIDEO_ROCKCHIP_ISP1
->  	select VIDEOBUF2_DMA_CONTIG
->  	select VIDEOBUF2_VMALLOC
->  	select V4L2_FWNODE
-> -	select PHY_ROCKCHIP_DPHY_RX0
-> +	select GENERIC_PHY_MIPI_DPHY
->  	default n
->  	help
->  	  Enable this to support the Image Signal Processing (ISP) module
-> 
