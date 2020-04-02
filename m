@@ -2,79 +2,66 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6ECC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A897C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81DD2206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jJQJD5FA"
+	by mail.kernel.org (Postfix) with ESMTP id 15DD12074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388421AbgDBOBh (ORCPT
+        id S2388493AbgDBOBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:01:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36402 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726425AbgDBOBg (ORCPT
+        Thu, 2 Apr 2020 10:01:47 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:47072 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgDBOBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:01:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585836092;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=P47tpISp/BvzRS6PYC8l3ShMVYjQpript2B4/RcjUII=;
-        b=jJQJD5FAawG1XO4EQjIWGGQVesvD4tZcvdxbQ0mzaXoNOR5PpCUPAV7rMlCX7rSqRKjirK
-        bBANjGnPKkiJa5lkJ6ZjJIX0eVkkFuDe/CoOsJ3elMDZL2sKC/OsFlAIqqgA15XHbpKhyr
-        bdvXtWB4lruyNCIqagQ/FRx1B5dCook=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-242-p88hI8ERNW2AeZOKGVT1nw-1; Thu, 02 Apr 2020 10:01:21 -0400
-X-MC-Unique: p88hI8ERNW2AeZOKGVT1nw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59433DB6B;
-        Thu,  2 Apr 2020 14:01:19 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-36.pek2.redhat.com [10.72.12.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E516260BF1;
-        Thu,  2 Apr 2020 14:01:14 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        iamjoonsoo.kim@lge.com, mhocko@kernel.org, bhe@redhat.com,
-        mgorman@techsingularity.net, rientjes@google.com
-Subject: [PATCH v2 0/3] improvements about lowmem_reserve and /proc/zoneinfo
-Date:   Thu,  2 Apr 2020 22:01:10 +0800
-Message-Id: <20200402140113.3696-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Thu, 2 Apr 2020 10:01:46 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B9A63128A133D;
+        Thu,  2 Apr 2020 07:01:45 -0700 (PDT)
+Date:   Thu, 02 Apr 2020 07:01:45 -0700 (PDT)
+Message-Id: <20200402.070145.1146009613887902250.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     nishadkamdar@gmail.com, nico@fluxnic.net, masahiroy@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gakula@marvell.com
+Subject: Re: [PATCH net] net: cavium: Fix build errors due to 'imply
+ CAVIUM_PTP'
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200402132344.37864-1-yuehaibing@huawei.com>
+References: <20200402132344.37864-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 02 Apr 2020 07:01:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In this post, I just drop the patch 4 and patch 5 in old v1 since David
-and Michal worried moving per-node stats to the front of /proc/zoneinfo
-has potential to break the existing user space scripts. For patch 1~3,
-there's no change, seems no risk is found out so far, so just keep them
-and repost.
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Thu, 2 Apr 2020 21:23:44 +0800
 
-The v1 thread can be found here:
-https://lore.kernel.org/linux-mm/20200324142229.12028-1-bhe@redhat.com/
+> If CAVIUM_PTP is m and THUNDER_NIC_VF is y, build fails:
+> 
+> drivers/net/ethernet/cavium/thunder/nicvf_main.o: In function 'nicvf_remove':
+> nicvf_main.c:(.text+0x1f0): undefined reference to 'cavium_ptp_put'
+> drivers/net/ethernet/cavium/thunder/nicvf_main.o: In function `nicvf_probe':
+> nicvf_main.c:(.text+0x557c): undefined reference to 'cavium_ptp_get'
+> 
+> THUNDER_NIC_VF imply CAVIUM_PTP, which allow the config now,
+> Use IS_REACHABLE() to avoid the vmlinux link error for this case.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: def2fbffe62c ("kconfig: allow symbols implied by y to become m")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Baoquan He (3):
-  mm/page_alloc.c: only tune sysctl_lowmem_reserve_ratio value once when
-    changing it
-  mm/page_alloc.c: clear out zone->lowmem_reserve[] if the zone is empty
-  mm/vmstat.c: do not show lowmem reserve protection information of
-    empty zone
-
- mm/page_alloc.c | 13 +++++++++++--
- mm/vmstat.c     | 12 ++++++------
- 2 files changed, 17 insertions(+), 8 deletions(-)
-
--- 
-2.17.2
-
+Applied, thanks.
