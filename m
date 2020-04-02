@@ -2,180 +2,143 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDC7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B460BC2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC37720678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FD820678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:19:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i2Wuv/FP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MVes92Vn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389283AbgDBUTj (ORCPT
+        id S2389396AbgDBUTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:19:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42810 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389148AbgDBUTj (ORCPT
+        Thu, 2 Apr 2020 16:19:52 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:41644 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388791AbgDBUTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:19:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032KHsU3159428;
-        Thu, 2 Apr 2020 20:19:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=QOwWliHXk0Yfbc465zLbvaHlzTcnUqcU35+6sm4mZCQ=;
- b=i2Wuv/FPtlrxQ+HwLZCmmbN+6iZXyXrpsH0H3uLL+6sMJNW/TzdRQSzAgUY6nI/EjVDC
- j7KBuQjdKIWHEez6OCl2usPeSiqJsiV6saR9LRhgm24WihJ/6odPu5YtshNi4KeXtBo2
- D1vOjYYSosq4gRr6WFNUNBoq3Y7oa+WKg0hW8sH+rup1EXZ5YnJRNpCYAttOTyDNrc7C
- lHPFyvOAT2SJadkUVPDpEKlkiJa1bpweHC31fAvio2u1Vg01DBKUnDp0Ye1IUi8HcTi2
- byRRyNxrQtHQvai66kNYz4SJ5/RQcHh+5CccM88l6RAwhazdFVbaIajwX3fTD79EDqkN 0w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 303yung9na-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 20:19:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032KIZoQ171963;
-        Thu, 2 Apr 2020 20:19:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 302g4w3nr0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 20:19:17 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 032KJEdm015764;
-        Thu, 2 Apr 2020 20:19:15 GMT
-Received: from vbusired-dt (/10.154.166.66)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 13:19:13 -0700
-Date:   Thu, 2 Apr 2020 15:19:09 -0500
-From:   Venu Busireddy <venu.busireddy@oracle.com>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com,
-        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rientjes@google.com, srutherford@google.com, luto@kernel.org
-Subject: Re: [PATCH v6 01/14] KVM: SVM: Add KVM_SEV SEND_START command
-Message-ID: <20200402201909.GA657573@vbusired-dt>
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <3f90333959fd49bed184d45a761cc338424bf614.1585548051.git.ashish.kalra@amd.com>
- <20200402062726.GA647295@vbusired-dt>
- <89a586e4-8074-0d32-f384-a4597975d129@amd.com>
- <20200402163717.GA653926@vbusired-dt>
- <8b1b4874-11a8-1422-5ea1-ed665f41ab5c@amd.com>
- <20200402185706.GA655878@vbusired-dt>
- <6ced22f7-cbe5-a698-e650-7716566d4d8a@amd.com>
- <20200402194313.GA656773@vbusired-dt>
- <f715bf99-0158-4d5f-77f3-b27743db3c59@amd.com>
+        Thu, 2 Apr 2020 16:19:52 -0400
+Received: by mail-vs1-f66.google.com with SMTP id a63so3412450vsa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:19:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YWnBxNBu0tvIKCGTwWpIq7wFm6hg3vnqf4EkEdpDgPA=;
+        b=MVes92VnDQd6LBjIaPZLnyNoP61o6SSwgxqnbyqCf5k/hP8S+V5GmO4tsLi4u9rJ3T
+         YLQhEOa86bUYjdRNZN96cKOcM2yfS1caMIBh4aZ1bWk2jZ1N8/vkoQnXx/26WqQKlARu
+         7TbxcRPh2Ez/VfAugMD5GpPWWsuC15CczRefE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YWnBxNBu0tvIKCGTwWpIq7wFm6hg3vnqf4EkEdpDgPA=;
+        b=BwAsy2wWfQuzuRT4BYEZECAXbCEySGSDyvD7fJrls7u572aanY75SuGYYtmNak06h9
+         grSYBiDYcNqd152dBWAuiFozDbRzz1LI4tcOG7uySq9V6ZCzA4q4uXJa3DNsuloUmbKK
+         DjEl4b3kD5WR1KPqjwnTZRUXAQXilJur9pQTyBeI9pSu8SE92SJ5nxQGwUkivaT0ruyI
+         bKnCe+Qwpxjj5vU4YIB1bezvABCn+m2VSzLvLFnnZkiYWzG3nUFHGMaw0PaYVNbYp6ut
+         Zl0xcsmjzx9ZsXOZvL/WDGkamwGqoRQPUFNFRNSZg2ITHd2FrRDh+X1sWdYSevkkiXw4
+         a60w==
+X-Gm-Message-State: AGi0PuYLDBnOpHHckxQCxqE6dGG/tAfiNhzVT7ZTc+QZ/kLX5o40dAiF
+        mZPDtA6pdDh2wvgnTm2AJaA8VEpnn28=
+X-Google-Smtp-Source: APiQypLk1JREHjmfa/GSWjo9dfLd63hReho5YPB8bmUs9wWWNzR06TZsskjcVVEdMtcQlZ02jRueRQ==
+X-Received: by 2002:a67:c509:: with SMTP id e9mr3898106vsk.68.1585858791066;
+        Thu, 02 Apr 2020 13:19:51 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id d83sm1678614vka.34.2020.04.02.13.19.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 13:19:50 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id v24so1859255uak.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:19:49 -0700 (PDT)
+X-Received: by 2002:ab0:2389:: with SMTP id b9mr2719796uan.120.1585858789341;
+ Thu, 02 Apr 2020 13:19:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f715bf99-0158-4d5f-77f3-b27743db3c59@amd.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=5
- mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020148
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- suspectscore=5 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020148
+References: <20200311231348.129254-1-dianders@chromium.org>
+ <20200311161104.RFT.v2.7.I8e187cdfb7a31f5bb7724f1f937f2862ee464a35@changeid> <339a7a7b-af4e-d6a9-4b48-2a603ea10172@codeaurora.org>
+In-Reply-To: <339a7a7b-af4e-d6a9-4b48-2a603ea10172@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 2 Apr 2020 13:19:38 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VMt+jQPX8hXBJkNGafEr_+r2p1hbFkG3LHeX9JjPCvrg@mail.gmail.com>
+Message-ID: <CAD=FV=VMt+jQPX8hXBJkNGafEr_+r2p1hbFkG3LHeX9JjPCvrg@mail.gmail.com>
+Subject: Re: [RFT PATCH v2 07/10] drivers: qcom: rpmh-rsc: Warning if
+ tcs_write() used for non-active
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-02 15:04:54 -0500, Brijesh Singh wrote:
-> 
-> On 4/2/20 2:43 PM, Venu Busireddy wrote:
-> > On 2020-04-02 14:17:26 -0500, Brijesh Singh wrote:
-> >> On 4/2/20 1:57 PM, Venu Busireddy wrote:
-> >> [snip]...
-> >>
-> >>>> The question is, how does a userspace know the session length ? One
-> >>>> method is you can precalculate a value based on your firmware version
-> >>>> and have userspace pass that, or another approach is set
-> >>>> params.session_len = 0 and query it from the FW. The FW spec allow to
-> >>>> query the length, please see the spec. In the qemu patches I choose
-> >>>> second approach. This is because session blob can change from one FW
-> >>>> version to another and I tried to avoid calculating or hardcoding the
-> >>>> length for a one version of the FW. You can certainly choose the first
-> >>>> method. We want to ensure that kernel interface works on the both cases.
-> >>> I like the fact that you have already implemented the functionality to
-> >>> facilitate the user space to obtain the session length from the firmware
-> >>> (by setting params.session_len to 0). However, I am trying to address
-> >>> the case where the user space sets the params.session_len to a size
-> >>> smaller than the size needed.
-> >>>
-> >>> Let me put it differently. Let us say that the session blob needs 128
-> >>> bytes, but the user space sets params.session_len to 16. That results
-> >>> in us allocating a buffer of 16 bytes, and set data->session_len to 16.
-> >>>
-> >>> What does the firmware do now?
-> >>>
-> >>> Does it copy 128 bytes into data->session_address, or, does it copy
-> >>> 16 bytes?
-> >>>
-> >>> If it copies 128 bytes, we most certainly will end up with a kernel crash.
-> >>>
-> >>> If it copies 16 bytes, then what does it set in data->session_len? 16,
-> >>> or 128? If 16, everything is good. If 128, we end up causing memory
-> >>> access violation for the user space.
-> >> My interpretation of the spec is, if user provided length is smaller
-> >> than the FW expected length then FW will reports an error with
-> >> data->session_len set to the expected length. In other words, it should
-> >> *not* copy anything into the session buffer in the event of failure.
-> > That is good, and expected behavior.
-> >
-> >> If FW is touching memory beyond what is specified in the session_len then
-> >> its FW bug and we can't do much from kernel.
-> > Agreed. But let us assume that the firmware is not touching memory that
-> > it is not supposed to.
-> >
-> >> Am I missing something ?
-> > I believe you are agreeing that if the session blob needs 128 bytes and
-> > user space sets params.session_len to 16, the firmware does not copy
-> > any data to data->session_address, and sets data->session_len to 128.
-> >
-> > Now, when we return, won't the user space try to access 128 bytes
-> > (params.session_len) of data in params.session_uaddr, and crash? Because,
-> > instead of returning an error that buffer is not large enough, we return
-> > the call successfully!
-> 
-> 
-> Ah, so the main issue is we should not be going to e_free on error. If
-> session_len is less than the expected len then FW will return an error.
-> In the case of an error we can skip copying the session_data into
-> userspace buffer but we still need to pass the session_len and policy
-> back to the userspace.
+Hi,
 
-Sure, that is one way to fix the problem.
+On Wed, Apr 1, 2020 at 5:40 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> Hi,
+>
+> On 3/12/2020 4:43 AM, Douglas Anderson wrote:
+> > tcs_write() is documented to only be useful for writing
+> > RPMH_ACTIVE_ONLY_STATE.  Let's be loud if someone messes up.
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> > Changes in v2: None
+> >
+> >   drivers/soc/qcom/rpmh-rsc.c | 6 ++++++
+> >   1 file changed, 6 insertions(+)
+> >
+> > diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> > index 93f5d1fb71ca..ba489d18c20e 100644
+> > --- a/drivers/soc/qcom/rpmh-rsc.c
+> > +++ b/drivers/soc/qcom/rpmh-rsc.c
+> > @@ -573,6 +573,12 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
+> >       unsigned long flags;
+> >       int ret;
+> >
+> > +     /*
+> > +      * It only makes sense to grab a whole TCS for ourselves if we're
+> > +      * triggering right away, which we only do for ACTIVE_ONLY.
+> > +      */
+> > +     WARN_ON(msg->state != RPMH_ACTIVE_ONLY_STATE);
+> > +
+>
+> Unnecessary check, we will never hit this warning. Lets not add such check.
 
-> 
-> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_START, data, &argp->error);
-> +
-> +	if (ret)
-> +		goto e_free;
-> +
-> 
-> If user space gets an error then it can decode it further to get
-> additional information (e.g buffer too small).
-> 
-> >
-> > That is why I was suggesting the following, which you seem to have
-> > missed.
-> >
-> >>> Perhaps, this can be dealt a little differently? Why not always call
-> >>> sev_issue_cmd(kvm, SEV_CMD_SEND_START, ...) with zeroed out data? Then,
-> >>> if the user space has set params.session_len to 0, we return with the
-> >>> needed params.session_len. Otherwise, we check if params.session_len is
-> >>> large enough, and if not, we return -EINVAL?
-> > Doesn't the above approach address all scenarios?
-> >
+That's fine.  I can drop it, especially now that comments explain that
+this is only for ACTIVE_ONLY.  Personally I like having extra
+assertion failures like this that indicate a serious internal logic
+error in the code, but I won't push strongly for it.
+
+
+> Saying that you can modify this change to drop below check  from
+> rpmh_rsc_write_ctrl_data() as that never hit.
+>
+>          /* Data sent to this API will not be sent immediately */
+>          if (msg->state == RPMH_ACTIVE_ONLY_STATE)
+>                  return -EINVAL;
+>
+> we always call rpmh_rsc_write_ctrl_data() for RPMH_SLEEP_STATE and
+> RPMH_WAKE_ONLY_STATE.
+
+Sure.  My preference would have been to change it to a WARN_ON() too
+(because it signifies an internal error within the RPMH driver, not an
+external error that a client of RPMH could trigger), but I can just
+drop it entirely.
+
+
+-Doug
