@@ -2,157 +2,175 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E9CC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11935C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2887E2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585811968;
-	bh=u1AoeBtkiI8pGLI1x4tXxgrHRP3Rin/Lv6nGCZDiQIs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Po0aPBKdanS++tVl2EZ9XCXUI5QDnJP0J5fTRe+JqFz0UeHmi6dQT8hPlNyczyOIC
-	 Ha/OtXk/pB5bHi81oZXV45d1rpPQh5b/3tbSgrsA8ymHAn32b9/e2iuvDqfweNox4V
-	 VK865usH2uaTNHyZpPlWER718BPgiQN2EG6m6b9g=
+	by mail.kernel.org (Postfix) with ESMTP id D3C562078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mkdjc5J1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387521AbgDBHT1 (ORCPT
+        id S2387560AbgDBHTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:19:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgDBHT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:19:27 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4138020678;
-        Thu,  2 Apr 2020 07:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585811966;
-        bh=u1AoeBtkiI8pGLI1x4tXxgrHRP3Rin/Lv6nGCZDiQIs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vlOoIzUOdlCRg7heX0rIUtCnCly75JpAGWEGtamgSu9kRaJKwTlqwy6Kdhmd9cXlY
-         wTD44Ag9Snkw9b8N0XxyNWFJxwrDb9v3ETbeXjVBFPk0lI+mQ38pUGh0q6sQFRzwsc
-         c42hdxdH9P1VtJygzFCAN8Ar3Q06xRqFgNEQcr7g=
-Date:   Thu, 2 Apr 2020 16:19:20 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thu, 2 Apr 2020 03:19:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36068 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgDBHTj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:19:39 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g2so1016551plo.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MNcbIL1+RcHP9n1/a7uW2cYhRUPkvEWLMMecHAgQsXw=;
+        b=Mkdjc5J1SEZfYsVao6D+3svMUTOlPWR0GUglETGCp1BLe0DlCeO6EhQvWvFeICMv36
+         FhEx79mg9w4G5l0oE52LrM6gGTrotrudHbeodjWMutpEZgdksa6OfQMqYRb+P06vpBHA
+         5ziM8BNeNC/piG1MVXXvFtq9O6gGtn/zz65nI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MNcbIL1+RcHP9n1/a7uW2cYhRUPkvEWLMMecHAgQsXw=;
+        b=jbCOFLyURjbNC9Pyvlw5HPFxvVlZy5TlvdrGaZpE9xKrFuklbpRHthpbVw63WqEPD2
+         0dQp0Svqja3ymaDi7mXDteLkDGLPqrnEjkNFvsi5ICrVDJrzo8cio5JBZu4jL1ne9s7b
+         1GuzJrhDnlSWvFGUdbyv6qp54ks1LBeVE8dTsM3Vf5S/qWLSnIObAn/N0W2Xzk8Q6CNA
+         c5K+V7eu+CBBLgzE/fe+Zr3KaWFLJW4vr5VsBdHT4lgleRbyJVVi+tudGBcIqxfHMVWc
+         UtOKiGNLj+gw5FDBZr2VaG6NWd4N4KOLIJhrRl/VZGtB6T4jLfysciJlHUDECjotvntL
+         5Rzg==
+X-Gm-Message-State: AGi0PubWp/V6o2aQ7GwBkh+KVw4s/LZUSu88mbrwIjlPkDDmq8bmukur
+        QIVEe0AxN5I72KnWm8fI6/iAkw==
+X-Google-Smtp-Source: APiQypIgY9efFSF0nGqyq4XrnljhNDsb8eVxK3UTxH/mnTcO3+iTBEtSUKooI7eOyQJMhEFKWznCZA==
+X-Received: by 2002:a17:902:b617:: with SMTP id b23mr1717580pls.285.1585811976162;
+        Thu, 02 Apr 2020 00:19:36 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x70sm2957375pfc.21.2020.04.02.00.19.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 00:19:35 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 00:19:34 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Adam Zabrocki <pi3@pi3.com.pl>, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, Jann Horn <jannh@google.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>,
-        lkp@lists.01.org
-Subject: Re: [tracing] cd8f62b481:
- BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
-Message-Id: <20200402161920.3b3649cac4cc47a52679d69b@kernel.org>
-In-Reply-To: <20200401110401.23cda3b3@gandalf.local.home>
-References: <20200319232731.799117803@goodmis.org>
-        <20200326091256.GR11705@shao2-debian>
-        <20200401230700.d9ddb42b3459dca98144b55c@kernel.org>
-        <20200401102112.35036490@gandalf.local.home>
-        <20200401110401.23cda3b3@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        stable@vger.kernel.org
+Subject: Re: [PATCH] signal: Extend exec_id to 64bits
+Message-ID: <202004020019.1F1EEC3669@keescook>
+References: <20200324215049.GA3710@pi3.com.pl>
+ <202003291528.730A329@keescook>
+ <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020 11:04:01 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Wed, 1 Apr 2020 10:21:12 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, Apr 01, 2020 at 03:47:44PM -0500, Eric W. Biederman wrote:
 > 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 6519b7afc499..7f1466253ca8 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -3487,6 +3487,14 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
-> >  	 */
-> >  	if (iter->ent && iter->ent != iter->temp) {
-> >  		if (!iter->temp || iter->temp_size < iter->ent_size) {
-> > +			/*
-> > +			 * This function is only used to add markers between
-> > +			 * events that are far apart (see trace_print_lat_context()),
-> > +			 * but if this is called in an atomic context (like NMIs)
-> > +			 * we can't call kmalloc(), thus just return NULL.
-> > +			 */
-> > +			if (in_atomic() || irqs_disabled())
-> > +				return NULL;
-> >  			kfree(iter->temp);
-> >  			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
-> >  			if (!iter->temp)
+> Replace the 32bit exec_id with a 64bit exec_id to make it impossible
+> to wrap the exec_id counter.  With care an attacker can cause exec_id
+> wrap and send arbitrary signals to a newly exec'd parent.  This
+> bypasses the signal sending checks if the parent changes their
+> credentials during exec.
 > 
-> Peter informed me on IRC not to use in_atomic() as it doesn't catch
-> spin_locks when CONFIG_PREEMPT is not defined.
+> The severity of this problem can been seen that in my limited testing
+> of a 32bit exec_id it can take as little as 19s to exec 65536 times.
+> Which means that it can take as little as 14 days to wrap a 32bit
+> exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
+> days.  Even my slower timing is in the uptime of a typical server.
+> Which means self_exec_id is simply a speed bump today, and if exec
+> gets noticably faster self_exec_id won't even be a speed bump.
 > 
-> As the issue is just with ftrace_dump(), I'll have it use a static buffer
-> instead of 128 bytes. Which should be big enough for most events, and if
-> not, then it will just miss the markers.
-
-
-That sounds good, but the below patch seems to do different thing.
-Does it just makes trace_find_next_entry() always fail if it is
-called from ftrace_dump()?
-
-Thank you,
-
+> Extending self_exec_id to 64bits introduces a problem on 32bit
+> architectures where reading self_exec_id is no longer atomic and can
+> take two read instructions.  Which means that is is possible to hit
+> a window where the read value of exec_id does not match the written
+> value.  So with very lucky timing after this change this still
+> remains expoiltable.
 > 
-> -- Steve
+> I have updated the update of exec_id on exec to use WRITE_ONCE
+> and the read of exec_id in do_notify_parent to use READ_ONCE
+> to make it clear that there is no locking between these two
+> locations.
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 6519b7afc499..8c9d6a75abbf 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3472,6 +3472,8 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
->  	return next;
+> Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
+> Fixes: 2.3.23pre2
+> Cc: stable@vger.kernel.org
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+Thanks for chasing this down. :)
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+> 
+> Linus would you prefer to take this patch directly or I could put it in
+> a brach and send you a pull request.
+>  
+>  fs/exec.c             | 2 +-
+>  include/linux/sched.h | 4 ++--
+>  kernel/signal.c       | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 0e46ec57fe0a..d55710a36056 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1413,7 +1413,7 @@ void setup_new_exec(struct linux_binprm * bprm)
+>  
+>  	/* An exec changes our domain. We are no longer part of the thread
+>  	   group */
+> -	current->self_exec_id++;
+> +	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
+>  	flush_signal_handlers(current, 0);
 >  }
+>  EXPORT_SYMBOL(setup_new_exec);
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 04278493bf15..0323e4f0982a 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -939,8 +939,8 @@ struct task_struct {
+>  	struct seccomp			seccomp;
 >  
-> +#define IGNORE_TEMP		((struct trace_iterator *)-1L)
-> +
->  /* Find the next real entry, without updating the iterator itself */
->  struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
->  					  int *ent_cpu, u64 *ent_ts)
-> @@ -3480,6 +3482,17 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
->  	int ent_size = iter->ent_size;
->  	struct trace_entry *entry;
+>  	/* Thread group tracking: */
+> -	u32				parent_exec_id;
+> -	u32				self_exec_id;
+> +	u64				parent_exec_id;
+> +	u64				self_exec_id;
 >  
-> +	/*
-> +	 * This function is only used to add markers between
-> +	 * events that are far apart (see trace_print_lat_context()),
-> +	 * but if this is called in an atomic context (like NMIs)
-> +	 * kmalloc() can't be called.
-> +	 * That happens via ftrace_dump() which will initialize
-> +	 * iter->temp to IGNORE_TEMP. In such a case, just return NULL.
-> +	 */
-> +	if (iter->temp == IGNORE_TEMP)
-> +		return NULL;
-> +
->  	/*
->  	 * The __find_next_entry() may call peek_next_entry(), which may
->  	 * call ring_buffer_peek() that may make the contents of iter->ent
-> @@ -9203,6 +9216,8 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
+>  	/* Protection against (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed, mempolicy: */
+>  	spinlock_t			alloc_lock;
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 9ad8dea93dbb..5383b562df85 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1926,7 +1926,7 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+>  		 * This is only possible if parent == real_parent.
+>  		 * Check if it has changed security domain.
+>  		 */
+> -		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
+> +		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
+>  			sig = SIGCHLD;
+>  	}
 >  
->  	/* Simulate the iterator */
->  	trace_init_global_iter(&iter);
-> +	/* Force not using the temp buffer */
-> +	iter.temp = IGNORE_TEMP;
->  
->  	for_each_tracing_cpu(cpu) {
->  		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
-
+> -- 
+> 2.20.1
+> 
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Kees Cook
