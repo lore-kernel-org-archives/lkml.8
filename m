@@ -2,175 +2,184 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961E0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14323C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678F3206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:16:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o0eS/w1c"
+	by mail.kernel.org (Postfix) with ESMTP id DD7C7206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389290AbgDBUQc (ORCPT
+        id S2389329AbgDBUQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:16:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55978 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388635AbgDBUQc (ORCPT
+        Thu, 2 Apr 2020 16:16:56 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:57134 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729123AbgDBUQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:16:32 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032KE6Ga183441;
-        Thu, 2 Apr 2020 20:15:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=FWYt1UE/Y2lVHUEiElPMUybW1qrGCZQ+MguSEWj3fMA=;
- b=o0eS/w1clb6oJyImtDX2EhX5uScMSqRT/rqBn6DU1x6zm/dXwqvtmK+bcO7hOUxVvRnZ
- l1y7a9rP5ZEjm9VcNZWW+bK/Wu7WRundUsYdNbeY0o2hQNcx7phE0A83rZVs3B8oH8p4
- E0fO9/Cxc6VfvPbf5mH3RrlJakds+ixPlQRjtcNEDGtfu1Wktcmm/XYvAjY+Iry73s1y
- 7W5Oa1zpFtXT69HxqgcK6I7S1PVpeCE/izLQ6YOnFseE4xrgVkgdtLd6Ih0jCPVIvyGM
- 5hLMjUFSBWkY/Gk7CDWNHeBO0UMp2W9ML7TuRwAnAjOOEnpWXwW/fk/hHG1pQ2q0Lb7T 5Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 303cevdp3a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 20:15:55 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032KD05B044918;
-        Thu, 2 Apr 2020 20:15:55 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 302g2k7dqs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 20:15:55 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032KFrhG013396;
-        Thu, 2 Apr 2020 20:15:54 GMT
-Received: from localhost.localdomain (/10.159.142.52)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 13:15:53 -0700
-Subject: Re: [PATCH v6 03/14] KVM: SVM: Add KVM_SEV_SEND_FINISH command
-To:     Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rientjes@google.com, srutherford@google.com, luto@kernel.org,
-        brijesh.singh@amd.com
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <798316bc964cef34d2760a87de0fb6dc4e5d9af3.1585548051.git.ashish.kalra@amd.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <4e9870fc-1cab-2058-b045-822ae5170e51@oracle.com>
-Date:   Thu, 2 Apr 2020 13:15:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 2 Apr 2020 16:16:55 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 02 Apr 2020 13:16:55 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 02 Apr 2020 13:16:54 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 67DD14BDB; Thu,  2 Apr 2020 13:16:54 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 13:16:54 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and
+ function
+Message-ID: <20200402201654.GA9191@codeaurora.org>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
+ <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
+ <20200330204359.GB5107@codeaurora.org>
+ <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
+ <20200331202058.GB25781@codeaurora.org>
+ <20200331204929.GC2954599@ulmo>
 MIME-Version: 1.0
-In-Reply-To: <798316bc964cef34d2760a87de0fb6dc4e5d9af3.1585548051.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020147
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331204929.GC2954599@ulmo>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 31, 2020 at 10:49:29PM +0200, Thierry Reding wrote:
+> On Tue, Mar 31, 2020 at 01:20:58PM -0700, Guru Das Srinagesh wrote:
+> > On Tue, Mar 31, 2020 at 05:24:52PM +0200, Arnd Bergmann wrote:
+> > > On Mon, Mar 30, 2020 at 10:44 PM Guru Das Srinagesh
+> > > <gurus@codeaurora.org> wrote:
+> > > >
+> > > > On Fri, Mar 20, 2020 at 06:09:39PM +0100, Arnd Bergmann wrote:
+> > > > > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+> > > > >
+> > > > > > @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > > >
+> > > > > >         period_cycles /= prescale;
+> > > > > >         c = (unsigned long long)period_cycles * state->duty_cycle;
+> > > > > > -       do_div(c, state->period);
+> > > > > > -       duty_cycles = c;
+> > > > > > +       duty_cycles = div64_u64(c, state->period);
+> > > > > >
+> > > > >
+> > > > > This change looks fine, but I wonder if the code directly above it
+> > > > >
+> > > > >         c = clk_get_rate(imx->clk_per);
+> > > > >         c *= state->period;
+> > > > >         do_div(c, 1000000000);
+> > > > >         period_cycles = c;
+> > > > >
+> > > > > might run into an overflow when both the clock rate and the period
+> > > > > are large numbers.
+> > > >
+> > > > Hmm. Seems to me like addressing this would be outside the scope of this
+> > > > patch series.
+> > > 
+> > > I think it should be part of the same series, addressing bugs that
+> > > were introduced
+> > > by the change to 64-bit period. If it's not getting fixed along with
+> > > the other regressions,
+> > > I fear nobody is going to go back and fix it later.
+> > 
+> > Makes sense, I agree. Would this be an acceptable fix?
+> > 
+> > Instead of multiplying c and state->period first and then dividing by
+> > 10^9, first divide state->period by 10^9 and then multiply the quotient
+> > of that division with c and assign it to period_cycles. Like so:
+> > 
+> > 	c = clk_get_rate(imx->clk_per);
+> > 	c *= div_u64(state->period, 1000000000);
+> > 	period_cycles = c;
+> > 
+> > This should take care of overflow not happening because state->period is
+> > converted from nanoseconds to seconds early on and so becomes a small
+> > number.
+> 
+> Doesn't that mean that anything below a 1 second period will be clamped
+> to just 0?
 
-On 3/29/20 11:20 PM, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
->
-> The command is used to finailize the encryption context created with
-> KVM_SEV_SEND_START command.
->
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Steve Rutherford <srutherford@google.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->   .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
->   arch/x86/kvm/svm.c                            | 23 +++++++++++++++++++
->   2 files changed, 31 insertions(+)
->
-> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-> index f46817ef7019..a45dcb5f8687 100644
-> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
-> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-> @@ -314,6 +314,14 @@ Returns: 0 on success, -negative on error
->                   __u32 trans_len;
->           };
->   
-> +12. KVM_SEV_SEND_FINISH
-> +------------------------
-> +
-> +After completion of the migration flow, the KVM_SEV_SEND_FINISH command can be
-> +issued by the hypervisor to delete the encryption context.
-> +
-> +Returns: 0 on success, -negative on error
-> +
->   References
->   ==========
->   
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 8561c47cc4f9..71a4cb3b817d 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -7399,6 +7399,26 @@ static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
->   	return ret;
->   }
->   
-> +static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	struct sev_data_send_finish *data;
-> +	int ret;
-> +
-> +	if (!sev_guest(kvm))
-> +		return -ENOTTY;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->handle = sev->handle;
-> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_FINISH, data, &argp->error);
-> +
-> +	kfree(data);
-> +	return ret;
-> +}
-> +
->   static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->   {
->   	struct kvm_sev_cmd sev_cmd;
-> @@ -7449,6 +7469,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->   	case KVM_SEV_SEND_UPDATE_DATA:
->   		r = sev_send_update_data(kvm, &sev_cmd);
->   		break;
-> +	case KVM_SEV_SEND_FINISH:
-> +		r = sev_send_finish(kvm, &sev_cmd);
-> +		break;
->   	default:
->   		r = -EINVAL;
->   		goto out;
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+True. How about this then?
+
+int pwm_imx27_calc_period_cycles(struct pwm_state state,
+				 unsigned long clk_rate,
+				 unsigned long *period_cycles)
+{
+	u64 c1, c2;
+
+	c1 = clk_rate;
+	c2 = state->period;
+	if (c2 > c1) {
+		c2 = c1;
+		c1 = state->period;
+	}
+
+	if (!c1 || !c2) {
+		pr_err("clk rate and period should be nonzero\n");
+		return -EINVAL;
+	}
+
+	if (c2 <= div64_u64(U64_MAX, c1)) {
+		c = c1 * c2;
+		do_div(c, 1000000000);
+	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000))) {
+		do_div(c1, 1000);
+		c = c1 * c2;
+		do_div(c, 1000000);
+	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000))) {
+		do_div(c1, 1000000);
+		c = c1 * c2;
+		do_div(c, 1000);
+	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000000))) {
+		do_div(c1, 1000000000);
+		c = c1 * c2;
+	}
+
+	*period_cycles = c;
+
+	return 0;
+}
+
+...
+
+ret = pwm_imx27_calc_period_cycles(state, clk_get_rate(imx->clk_per),
+				   &period_cycles);
+if (ret)
+	return ret;
+
+I unit tested this logic out by calculating period_cycles using both the
+existing logic and the proposed one, and the results are as below.
+
+--------------------------------------------------------------------------------
+ clk_rate		period		  existing 	      proposed
+--------------------------------------------------------------------------------
+1000000000	18446744073709551615	 18446744072 	18446744073000000000
+                      (U64_MAX)
+--------------------------------------------------------------------------------
+1000000000	     4294967291		 4294967291	    4294967291
+--------------------------------------------------------------------------------
+
+Overflow occurs in the first case with the existing logic, whereas the
+proposed logic handles it correctly. As for the second case where there are
+more typical values of period, the proposed logic handles that correctly
+too.
+
+Thank you.
+
+Guru Das.
