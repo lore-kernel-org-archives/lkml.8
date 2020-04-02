@@ -2,171 +2,143 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE85C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F88C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E22D20784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AAAF2064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgDBE6I (ORCPT
+        id S1727109AbgDBFYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 00:58:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47634 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgDBE6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 00:58:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D2602AD46;
-        Thu,  2 Apr 2020 04:58:05 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Hillf Danton <hdanton@sina.com>
-Date:   Thu, 02 Apr 2020 15:57:56 +1100
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
-In-Reply-To: <20200402042644.17028-1-hdanton@sina.com>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <20200402042644.17028-1-hdanton@sina.com>
-Message-ID: <87mu7uxz57.fsf@notabene.neil.brown.name>
+        Thu, 2 Apr 2020 01:24:16 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:39762 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgDBFYQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 01:24:16 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJsKs-008Qfb-6k; Thu, 02 Apr 2020 05:24:14 +0000
+Date:   Thu, 2 Apr 2020 06:24:14 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [git pull] vfs.git pathwalk sanitizing
+Message-ID: <20200402052414.GE23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+	Massive pathwalk rewrite and cleanups.  Several iterations had
+been posted; hopefully the damn thing is getting readable and understandable
+now.  Pretty much all parts of pathname resolutions are affected...
 
-On Thu, Apr 02 2020, Hillf Danton wrote:
+The branch is identical to what has sat in -next, except for commit message in
+"lift all calls of step_into() out of follow_dotdot/follow_dotdot_rcu",
+crediting Qian Cai for reporting the bug; only commit message changed there.
+ I'd folded the fix back in Mar 25, and it had been present in -next since then
+(see #work.dotdot).  I asked Qian Cai whether he wanted his tested-by on that
+thing, got no reply...
+	Anyway, all diffs in that branch are identical to the ones in
+#work.dotdot, which is what has sat in linux-next for the last week.
 
-> On Thu, 02 Apr 2020 10:53:20 +1100 NeilBrown wrote:
->>=20
->> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
->> loop block driver, where a daemon needs to write to one bdi in
->> order to free up writes queued to another bdi.
->>=20
->> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
->> pages, so that it can still dirty pages after other processses have been
->> throttled.
->>=20
->> This approach was designed when all threads were blocked equally,
->> independently on which device they were writing to, or how fast it was.
->> Since that time the writeback algorithm has changed substantially with
->> different threads getting different allowances based on non-trivial
->> heuristics.  This means the simple "add 25%" heuristic is no longer
->> reliable.
->>=20
->> This patch changes the heuristic to ignore the global limits and
->> consider only the limit relevant to the bdi being written to.  This
->> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
->> should not introduce surprises.  This has the desired result of
->> protecting the task from the consequences of large amounts of dirty data
->> queued for other devices.
->>=20
->> This approach of "only consider the target bdi" is consistent with the
->> other use of PF_LESS_THROTTLE in current_may_throttle(), were it causes
->> attention to be focussed only on the target bdi.
->>=20
->> So this patch
->>  - renames PF_LESS_THROTTLE to PF_LOCAL_THROTTLE,
->>  - remove the 25% bonus that that flag gives, and
->>  - imposes 'strictlimit' handling for any process with PF_LOCAL_THROTTLE
->>    set.
->
-> 	/*
-> 	 * The strictlimit feature is a tool preventing mistrusted filesystems
-> 	 * from growing a large number of dirty pages before throttling. For
->
-> Based on the comment snippet, I suspect it is applicable to IO flushers
-> unless they are likely generating tons of dirty pages. If they are,
-> however, cutting their bonuses seem questionable.
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-The purpose of the strictlimit feature was to isolate one filesystem
-(bdi) from all others, so that the one cannot create dirty pages which
-unfairly disadvantage the others - this is what that comment says.
-But the implementation appears to focus on the isolation, not the
-specific purpose, and isolation works both ways.  It protects the others
-from the one, and the one from the others.
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
-fuse needs to be isolated so it doesn't harm others.
-nfsd and loop need to be isolate so they aren't harmed by others.
-I'm less familiar with IO flushers but I suspect that have exactly the
-same need as nfsd and loop - they need to be isolated from dirty pages
-other than on the device they are writing to.
-The 25% bonus was never about giving them a bonus because they need it.
-It was about protecting them from excess usage elsewhere.  I strongly
-suspect that my change will provide a conceptually better service for IO
-flushers. (whether it is better in a practical measurable sense I cannot
-say, but I'd be surprised if it was worse).
+are available in the git repository at:
 
-One possible problem with strictlimit isolation is suggested by the
-comment
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.dotdot1
 
-	 *
-	 * In strictlimit case make decision based on the wb counters
-	 * and limits. Small writeouts when the wb limits are ramping
-	 * up are the price we consciously pay for strictlimit-ing.
-	 *
+for you to fetch changes up to 99a4a90c8e9337e364136393286544e3753673c3:
 
-This suggests that starting transients may be worse in some cases.
-I haven't noticed any problems in my (limited) testing so while I
-suspect there is a genuine difference here, I don't expect it to be problem=
-atic.
+  lookup_open(): don't bother with fallbacks to lookup+create (2020-04-02 01:09:31 -0400)
 
->
->>=20
->> Note that previously realtime threads were treated the same as
->> PF_LESS_THROTTLE threads.  This patch does *not* change the behvaiour for
->> real-time threads, so it is now different from the behaviour of nfsd and
->> loop tasks.  I don't know what is wanted for realtime.
->>=20
->> Signed-off-by: NeilBrown <neilb@suse.de>
->> =3D2D--
->
-> Hrm corrupted delivery?
+----------------------------------------------------------------
+Al Viro (69):
+      do_add_mount(): lift lock_mount/unlock_mount into callers
+      fix automount/automount race properly
+      follow_automount(): get rid of dead^Wstillborn code
+      follow_automount() doesn't need the entire nameidata
+      make build_open_flags() treat O_CREAT | O_EXCL as implying O_NOFOLLOW
+      handle_mounts(): start building a sane wrapper for follow_managed()
+      atomic_open(): saner calling conventions (return dentry on success)
+      lookup_open(): saner calling conventions (return dentry on success)
+      do_last(): collapse the call of path_to_nameidata()
+      handle_mounts(): pass dentry in, turn path into a pure out argument
+      lookup_fast(): consolidate the RCU success case
+      teach handle_mounts() to handle RCU mode
+      lookup_fast(): take mount traversal into callers
+      step_into() callers: dismiss the symlink earlier
+      new step_into() flag: WALK_NOFOLLOW
+      fold handle_mounts() into step_into()
+      LOOKUP_MOUNTPOINT: fold path_mountpointat() into path_lookupat()
+      expand the only remaining call of path_lookup_conditional()
+      merging pick_link() with get_link(), part 1
+      merging pick_link() with get_link(), part 2
+      merging pick_link() with get_link(), part 3
+      merging pick_link() with get_link(), part 4
+      merging pick_link() with get_link(), part 5
+      merging pick_link() with get_link(), part 6
+      finally fold get_link() into pick_link()
+      sanitize handling of nd->last_type, kill LAST_BIND
+      namei: invert the meaning of WALK_FOLLOW
+      pick_link(): check for WALK_TRAILING, not LOOKUP_PARENT
+      link_path_walk(): simplify stack handling
+      namei: have link_path_walk() maintain LOOKUP_PARENT
+      massage __follow_mount_rcu() a bit
+      new helper: traverse_mounts()
+      atomic_open(): return the right dentry in FMODE_OPENED case
+      atomic_open(): lift the call of may_open() into do_last()
+      do_last(): merge the may_open() calls
+      do_last(): don't bother with keeping got_write in FMODE_OPENED case
+      do_last(): rejoing the common path earlier in FMODE_{OPENED,CREATED} case
+      do_last(): simplify the liveness analysis past finish_open_created
+      do_last(): rejoin the common path even earlier in FMODE_{OPENED,CREATED} case
+      split the lookup-related parts of do_last() into a separate helper
+      path_connected(): pass mount and dentry separately
+      path_parent_directory(): leave changing path->dentry to callers
+      expand path_parent_directory() in its callers
+      follow_dotdot{,_rcu}(): lift switching nd->path to parent out of loop
+      follow_dotdot{,_rcu}(): lift LOOKUP_BENEATH checks out of loop
+      move handle_dots(), follow_dotdot() and follow_dotdot_rcu() past step_into()
+      handle_dots(), follow_dotdot{,_rcu}(): preparation to switch to step_into()
+      follow_dotdot{,_rcu}(): switch to use of step_into()
+      lift all calls of step_into() out of follow_dotdot/follow_dotdot_rcu
+      follow_dotdot{,_rcu}(): massage loops
+      follow_dotdot_rcu(): be lazy about changing nd->path
+      follow_dotdot(): be lazy about changing nd->path
+      helper for mount rootwards traversal
+      non-RCU analogue of the previous commit
+      fs/namei.c: kill follow_mount()
+      pick_link(): pass it struct path already with normal refcounting rules
+      fold path_to_nameidata() into its only remaining caller
+      pick_link(): more straightforward handling of allocation failures
+      pick_link(): take reserving space on stack into a new helper
+      reserve_stack(): switch to __nd_alloc_stack()
+      __nd_alloc_stack(): make it return bool
+      link_path_walk(): sample parent's i_uid and i_mode for the last component
+      take post-lookup part of do_last() out of loop
+      open_last_lookups(): consolidate fsnotify_create() calls
+      open_last_lookups(): don't abuse complete_walk() when all we want is unlazy
+      open_last_lookups(): lift O_EXCL|O_CREAT handling into do_open()
+      open_last_lookups(): move complete_walk() into do_open()
+      atomic_open(): no need to pass struct open_flags anymore
+      lookup_open(): don't bother with fallbacks to lookup+create
 
-No, that's just normal email quotation for a multi-part message (needed
-for crypto-signing which I do by default)
-'git am', for example, is quite capable of coping with it.
-
-Thanks,
-NeilBrown
-
->
->>  drivers/block/loop.c  |  2 +-
->>  fs/nfsd/vfs.c         |  9 +++++----
->>  include/linux/sched.h |  2 +-
->>  kernel/sys.c          |  2 +-
->>  mm/page-writeback.c   | 10 ++++++----
->>  mm/vmscan.c           |  4 ++--
->>  6 files changed, 16 insertions(+), 13 deletions(-)
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6FcNQACgkQOeye3VZi
-gblDmw/+NLPz80exgMWUF374oK1wARIqZr+wHTPVkaibovw8bomzXDLuPfLjOvMZ
-8H/U228VytpbSzhPCT82Ief8GaHb7uARwHEvxIJSCcNyPt+oyKbLJgRbp3Zu5z5h
-GD9in0nS4+TG5cEImhK8318jKBdCsEpX48Xe8YyW4bvIDWRyJHIuV8W6VYVSW/kF
-WWTgtJ7OLPhNGk1Ob/Gcx7gHnTGZv8tCo9EmDzBw87ZJDIP5hCG7fHeETNCf22jj
-GzZirbPR96Gvnur45qGfth2xbIMTiBmUwho0j1lRFE2R8Cz92c7m33UChQ72Z0v2
-1O8gLh6xlFhgD9GqbBLgVsNV3i3JOL6TLPQF2k6V6GC3POjNx3ohVV8S0p21F9Y+
-WUw5F+1XCkuoXUbOyPp4cD/chxzNZ/rE50T4YCD7GYE98qkLUXN9+4tmWkAcQUx2
-zINCbge4dsrUIJKzHberVtWeRpqIp1f2eoUWWZTmw/cHSGr4GkmKeTSKFCa8CWja
-lqjCsbz6FvB2TVHeDOBCI1F9A6CceD0AlbQ3jHU1If63QPVjrtmC1XkhQlcve+bK
-6eivYhInXZWR8JMe3VEogT2v0XHRzLlOEcK26UVFKb4WEDVrhnjC6HS3YTuVGC22
-gk27jBoVuQjCavat0iPBWrMaj4sNe5t37Z/4l6kfC1XXDU1o/60=
-=oqvq
------END PGP SIGNATURE-----
---=-=-=--
+ Documentation/filesystems/path-lookup.rst |    7 +-
+ fs/autofs/dev-ioctl.c                     |    6 +-
+ fs/internal.h                             |    1 -
+ fs/namei.c                                | 1488 ++++++++++++-----------------
+ fs/namespace.c                            |   96 +-
+ fs/open.c                                 |    4 +-
+ include/linux/namei.h                     |    4 +-
+ 7 files changed, 687 insertions(+), 919 deletions(-)
