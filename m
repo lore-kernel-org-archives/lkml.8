@@ -2,140 +2,102 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222B8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0938C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED12A20784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF31F2078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IWuw7r+9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XH0hSXeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgDBFei (ORCPT
+        id S1728396AbgDBFgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 01:34:38 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42897 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgDBFeh (ORCPT
+        Thu, 2 Apr 2020 01:36:22 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44744 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbgDBFgW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 01:34:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h15so2626943wrx.9;
-        Wed, 01 Apr 2020 22:34:37 -0700 (PDT)
+        Thu, 2 Apr 2020 01:36:22 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h11so908196plr.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 22:36:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WuhAaaws8KpzCDEuFiXmgMHdWSdeDew4B7D1DUiqies=;
-        b=IWuw7r+9WLAQYNPH6vtCw0hGgdbmhueMDOaTwXDQJedCrRbxaDwBSQ9aGVP0xUC2F7
-         uwrun0FjsoBrYAUEgW9J2vB0yaXTvFHjv7qiiP36KJ5AVvUDaCbzgI0uC9KXXmcI4mY/
-         iI9Osl2B8VDIqtXIMfXtHSO356T2pkg/CbL5N6J6cBNrLTBk+jVTMbRfPvZcXhZ9VA2L
-         DiUfVKqQbnDleF4FnA6uu7XFZG6nR8LrngXDiglqeFX/su2SapAh7iVMb8omarbBK9eQ
-         +a0IrVN3mweTBZY1KsYvSeOhqsuNkBt4RdBb0vF0RyTl9wgg96Q+CiOL+Lxa6DqNN3HM
-         7FAg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=HyrxYPPKtExm1NfMHVW1Pd1VfNh6VOJr0yFtpDNvGk8=;
+        b=XH0hSXeUWPJPrlWZMRtC5FNOQI/7YR4vE24emThPzV5vJI3GTtnIExpmt1kg2no4IT
+         WByEes1UHudWitsY7ZlyIKkEPvop9YQN0mPx2/ms88yRpqTLgyFH2JpUAHEf+SKudQRB
+         mS7NDcoiLFcQg7A7npN/3joYgRU2qNvvp7uvekK2w+87wRFSgyd3jDrk+fIjvZL96Occ
+         bBZy0pkZjNEhGMsltrrlVMNgV/6FwLdb47OTA4ga9Low/cZQqcoPVH1QLHJmysEGsyDv
+         PuUratjr4a5AwSvhP8EL3hG67K0F4KdbiyLDHShkmSmcOVJ/7+JMaC3SZZxQtkPvUV49
+         snvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WuhAaaws8KpzCDEuFiXmgMHdWSdeDew4B7D1DUiqies=;
-        b=THVeUfPoyQVuH5ziFPM08YAzaGhGnUhHId+h81gRnhZTbOSdTGUppuIRRxEw+lMYlE
-         jH2hHoMORLkLUChQNIqXgCbULnFbYu6X4tiSLF045lSliPU9Kz8r+LZaFtl1pR1MXGnE
-         UGK/7BFWGhRxUDWI9nEncl17ZzVrZILrvZLMw8SpKqEmvPiSJX3sMpwGk6FWsdDwia5I
-         UX6lCaVOFsAyKqVicyHqF/1z3K1JogoJbu3ehUTfCQ858pGsPE7s01zrT6aLTyxA3s/T
-         vkVFhHc4YdUNVwLPG3LQA/INj3rVIbc5Z1hGAA57kmkK7K0mPghWo4Lik4dEmHi10bQQ
-         3kbQ==
-X-Gm-Message-State: AGi0PuZzG77umVvloE/yeAsb4aNe0EYqMy5uKUxABGsx4H7Chu+hATKB
-        RamayvdRHt1zUHaDVDtEl44Qldt5
-X-Google-Smtp-Source: APiQypLJ3//aNZzLwASU9G1b8eTs/5otCVL2d5BjckLi81QkwqztH+VXJCCHRN8Gbu9O0FO7xXRVFg==
-X-Received: by 2002:a05:6000:108f:: with SMTP id y15mr1624814wrw.423.1585805676337;
-        Wed, 01 Apr 2020 22:34:36 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id u16sm5915920wro.23.2020.04.01.22.34.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 22:34:35 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man <linux-man@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, arul.jeniston@gmail.com,
-        "devi R.K" <devi.feb27@gmail.com>,
-        Marc Lehmann <debian-reportbug@plan9.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>
-Subject: Re: timer_settime() and ECANCELED
-To:     Thomas Gleixner <tglx@linutronix.de>
-References: <87pncrf6gd.fsf@nanos.tec.linutronix.de>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <4c557b44-4e4e-a689-a17b-f95e6c5ee4b0@gmail.com>
-Date:   Thu, 2 Apr 2020 07:34:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <87pncrf6gd.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HyrxYPPKtExm1NfMHVW1Pd1VfNh6VOJr0yFtpDNvGk8=;
+        b=jhx5MzuSuNpSHgy/vdunM83LYO476OtaHHwW3ev67/B10CWDdwTYL0scyptek9QzJ4
+         CS052IovErs0Z/qq2sUrl7a9IAlQzawHgcxPERfi/ktzD0IXYMGtHcRi6Fy2GLj7DIam
+         7TmVI9EdivKn6eiM8xrOZ5XzKZ/jAZ0lfCX1mgdWMJ0mHn/fF3+fcKi/CHvV5mdnqvQb
+         ESMFmucLsOC2FErHSTY5LCgDAVBXjHrvTUpdb0axEFPPxxgJaYii7ffgz5ARA3QjEYJ/
+         LXfYEJS4swE5qjqQYp7kCfEtrzsrdUc3Mcp+rR85tQwMKcs2EwKpbJoTFjYNwWRz1p73
+         6iwA==
+X-Gm-Message-State: AGi0Puag75jKHRxgw7X9EfffXpElrjUKWMysjqMJWbbd30NMqYcqgsfa
+        ltjSR7F03nY4M0vqFDVpEXuR
+X-Google-Smtp-Source: APiQypJrVmmFTASNA3/Kl8d+BLrNiNdYmcxa75r+p43PyWSfwbnSKIvKCBbOpdgiRqeEZJSq8invcw==
+X-Received: by 2002:a17:90a:db54:: with SMTP id u20mr1878643pjx.140.1585805781347;
+        Wed, 01 Apr 2020 22:36:21 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:29a:a216:d9f7:e98f:311a:69f6])
+        by smtp.gmail.com with ESMTPSA id s14sm2684824pgl.4.2020.04.01.22.36.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 22:36:20 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org, davem@davemloft.net
+Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clew@codeaurora.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/3] MHI bus improvements - Part 2
+Date:   Thu,  2 Apr 2020 11:06:07 +0530
+Message-Id: <20200402053610.9345-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Hi Greg,
 
-On 4/1/20 7:42 PM, Thomas Gleixner wrote:
-> Michael,
-> 
-> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
->> Following on from our discussion of read() on a timerfd [1], I
->> happened to remember a Debian bug report [2] that points out that
->> timer_settime() can fail with the error ECANCELED, which is both
->> surprising and odd (because despite the error, the timer does get
->> updated).
-> ...
->> (1) If the wall-clock is changed before the first timerfd_settime()
->> call, the call succeeds. This is of course expected.
->> (2) If the wall-clock is changed after a timerfd_settime() call, then
->> the next timerfd_settime() call fails with ECANCELED.
->> (3) Even if the timerfd_settime() call fails, the timer is still updated(!).
->>
->> Some questions:
->> (a) What is the rationale for timerfd_settime() failing with ECANCELED
->> in this case? (Currently, the manual page says nothing about this.)
->> (b) It seems at the least surprising, but more likely a bug, that
->> timerfd_settime() fails with ECANCELED while at the same time
->> successfully updating the timer value.
-> 
-> Really good question and TBH I can't remember why this is implemented in
-> the way it is, but I have a faint memory that at least (a) is
-> intentional.
-> 
-> After staring at the code for a while I came up with the following
-> answers:
-> 
-> (a): If the clock was set event ("date -s ...") which triggered the
->      cancel was not yet consumed by user space via read(), then that
->      information would get lost because arming the timer to the new
->      value has to reset the state.
-> 
-> (b): Arming the timer in that case is indeed very questionable, but it
->      could be argued that because the clock was set event happened with
->      the old expiry value that the new expiry value is not affected.
->      
->      I'd be happy to change that and not arm the timer in the case of a
->      pending cancel, but I fear that some user space already depends on
->      that behaviour.
+Here are the remaining patches left from the pervious series. The QRTR MHI
+client driver has gone a bit of refactoring after incorporating comments from
+Bjorn and Chris while the MHI suspend/resume patch is unmodified.
 
-Yes, that's the risk, of course. So, shall we just document all 
-this in the manual page?
+Dave, can you please look into the QRTR MHI driver and provide some review?
 
 Thanks,
+Mani
 
-Michael
+Changes in v2:
 
+* Moved sock_put() before consume_skb() in QRTR MHI client driver
+
+Manivannan Sadhasivam (3):
+  bus: mhi: core: Add support for MHI suspend and resume
+  net: qrtr: Add MHI transport layer
+  net: qrtr: Do not depend on ARCH_QCOM
+
+ drivers/bus/mhi/core/main.c |   3 +-
+ drivers/bus/mhi/core/pm.c   | 143 ++++++++++++++++++++++++++++++++++++
+ include/linux/mhi.h         |  19 +++++
+ net/qrtr/Kconfig            |   8 +-
+ net/qrtr/Makefile           |   2 +
+ net/qrtr/mhi.c              | 126 +++++++++++++++++++++++++++++++
+ 6 files changed, 299 insertions(+), 2 deletions(-)
+ create mode 100644 net/qrtr/mhi.c
 
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.17.1
+
