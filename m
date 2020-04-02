@@ -2,118 +2,204 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1362C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C7FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B6D2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3AF2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:49:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQ5U5WQw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PcGSehvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733173AbgDBArM (ORCPT
+        id S1733186AbgDBAtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 20:47:12 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38269 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732527AbgDBArM (ORCPT
+        Wed, 1 Apr 2020 20:49:50 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51841 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732527AbgDBAtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 20:47:12 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c21so910143pfo.5;
-        Wed, 01 Apr 2020 17:47:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gKLfRHXqeC/oi2xP24lA0VxkwaXTW253NCEpbDodjM8=;
-        b=TQ5U5WQwnl6uazN/fdbqBwcYVhvaEdWSkMdvsbnu3CIQe9EtEnej6O1oUa2hLwpMyI
-         WjaCa5H/8AG8MYT1bUp2cQryZgIU73eqS953Nng2zR/9xGGxnpO7rTw4X0jXLB6hwkiJ
-         uwa3Yhd1bztdbxwwUFFoIzC+r1z2uc5Fdgk4ZkX81lZitAZdNeYKrzRKtdmkLwCHzuVQ
-         aNQml7SPwtnlHWSbbNUf+NOtcRxM0N36tKc5l10vgoCTU8Sf+FTwQ1KCoRxS6JcNAnlR
-         V85JKyQFo9nqRfVL4kMjlaOTWGCXr5qMc4w9jKsZr69iKvFYeXknjB0B3+rLE3G6BAI8
-         G4GA==
+        Wed, 1 Apr 2020 20:49:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585788587;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oaYN663S39LRal92aerl+pCQNdZHmrsAe/MOf7r11ag=;
+        b=PcGSehvHqhWM7Q+jvX2D16Is6r79pO52SCnBK1nSkJXeeyAOUM9FG9yIxLL1lGvcOO57kG
+        cLYIrpOLwDHQaNnc3i9kbIbRYTbIqoHAvke8hIAbtvbFMDI1aRqEksVqWdB+3PDMPZdEQ6
+        vaI3DtF7pTqfIGz8wDeD2dtdvLJFAHY=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-sWOJUljpNcSz58UXO1F7nA-1; Wed, 01 Apr 2020 20:49:46 -0400
+X-MC-Unique: sWOJUljpNcSz58UXO1F7nA-1
+Received: by mail-qv1-f70.google.com with SMTP id m11so1259266qvf.20
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 17:49:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gKLfRHXqeC/oi2xP24lA0VxkwaXTW253NCEpbDodjM8=;
-        b=UMMgse8FaQ7XjiyquOtZ8+rPcjFsBer4PmBMo9rcbYtokvMRaccc9W930X5CpdOCNW
-         KBXREQAtvCj+TeFuaPlTQOIHwj8N2rid+XDPaRx2QF2V8y6nr6E0Ux0C8izCGOpw66qj
-         rz+sb7Kw0lOmLFmzy3bfr+uE5DFv38iJRmkpL3G6itmGMwUdvJ5qdeE93sXiBXlE5KZJ
-         RQCKTny4PpGvAoSoSQzBDedLU7OIA/IPzyppo0nwelS/pxP0EreawInUupbI/PBGO3EI
-         cuAs1qkTllfUBfNkWm1KDoOQ5NHTQM7mlBVf/vtWArYA10ClsaEJXNGGwE+J9KXCL2kx
-         UWgA==
-X-Gm-Message-State: AGi0Pua7NJ2lI2OOyd2RjXEH+eNqo8FHEM6QNekZZQZtBXGsnrXqEOnl
-        OeASkG6SJgz+qd+Ziq+zDZz3VyAo
-X-Google-Smtp-Source: APiQypJUo1ChJEV935jbuqqDGBmqOSPXf7PQPaGev8X1QugSrNwjI99o4UN3g6xKqwJEPMoQZ5fpxA==
-X-Received: by 2002:a63:5fd8:: with SMTP id t207mr873597pgb.186.1585788429294;
-        Wed, 01 Apr 2020 17:47:09 -0700 (PDT)
-Received: from [192.168.1.18] (i223-218-245-204.s42.a013.ap.plala.or.jp. [223.218.245.204])
-        by smtp.googlemail.com with ESMTPSA id 63sm2451755pfx.132.2020.04.01.17.47.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 17:47:08 -0700 (PDT)
-Subject: Re: [PATCH net v2] veth: xdp: use head instead of hard_start
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net,
-        ast@kernel.org, daniel@iogearbox.net, kuba@kernel.org,
-        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        jwi@linux.ibm.com, jianglidong3@jd.com, edumazet@google.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <fb5ab568-9bc8-3145-a8db-3e975ccdf846@gmail.com>
- <20200331060641.79999-1-maowenan@huawei.com>
- <7a1d55ad-1427-67fe-f204-4d4a0ab2c4b1@gmail.com>
- <20200401181419.7acd2aa6@carbon>
-From:   Toshiaki Makita <toshiaki.makita1@gmail.com>
-Message-ID: <ede2f407-839e-d29e-0ebe-aa39dd461bfd@gmail.com>
-Date:   Thu, 2 Apr 2020 09:47:03 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oaYN663S39LRal92aerl+pCQNdZHmrsAe/MOf7r11ag=;
+        b=YAMu2wnIY+PPb8XKw3IliOgc+HJOdN/PowwOL5uOpr3DyIdgv5O4z0PftkLsNaFuZE
+         qJEn1k4//RHlbxhKllFoq1PqeWsO34ylR/aRGPSpiYfdIy209TRkaQ9R659v0wW8NatP
+         b6SYsGWKh9cTPD75xz4xU74m8r5+YeSuhxPWYtOcCeS+m03RX/JO3gCLu+djh64zCVYp
+         Zi96KFs53xzgssV63LXJyp93QcSf7PwBpTI21OUgxD0KzRtO/Jf7QMZe9aohwRbzB2YY
+         wV6JqymSgTkFLA4KsYLtYjFAqoiqTB+X6o4sjo6gMUpq4sOJabUZzdVOUkI2eitx/6Ed
+         9RDQ==
+X-Gm-Message-State: AGi0PuYy/fx7+xF9ISjmxK/gQLaANlsERybP3m8JGatUxVa4apNkbad7
+        LN23Obl2HCaPqdbruG6XHBG33Ez/MEEkhONPw1HCupPHPQfVeLNBB/s5duFu0mbXl8oJu4pPthl
+        HyCbB3weHxRYv8DS+EjLtzn6F
+X-Received: by 2002:a05:620a:109c:: with SMTP id g28mr1010775qkk.409.1585788585940;
+        Wed, 01 Apr 2020 17:49:45 -0700 (PDT)
+X-Google-Smtp-Source: APiQypImnyYICyTeoY3h+JHEiKGNzZo+uWVbJsS4EdM8IEne9sUZlptwesCcpv4AihvANY3HWVyzOg==
+X-Received: by 2002:a05:620a:109c:: with SMTP id g28mr1010757qkk.409.1585788585646;
+        Wed, 01 Apr 2020 17:49:45 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id d128sm117307qkg.12.2020.04.01.17.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 17:49:44 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 20:50:03 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>
+Subject: Re: [PATCH] sched/isolation: Allow "isolcpus=" to skip unknown
+ sub-parameters
+Message-ID: <20200402005003.GF7174@xz-x1>
+References: <20200204161639.267026-1-peterx@redhat.com>
+ <87d08rosof.fsf@nanos.tec.linutronix.de>
+ <20200401230105.GF648829@xz-x1>
+ <87wo6yokdx.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200401181419.7acd2aa6@carbon>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87wo6yokdx.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/04/02 1:15, Jesper Dangaard Brouer wrote:
-...
-> [PATCH RFC net-next] veth: adjust hard_start offset on redirect XDP frames
+On Thu, Apr 02, 2020 at 01:29:14AM +0200, Thomas Gleixner wrote:
+> Peter Xu <peterx@redhat.com> writes:
 > 
-> When native XDP redirect into a veth device, the frame arrives in the
-> xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
-> which can run a new XDP bpf_prog on the packet. Doing so requires
-> converting xdp_frame to xdp_buff, but the tricky part is that
-> xdp_frame memory area is located in the top (data_hard_start) memory
-> area that xdp_buff will point into.
+> > On Wed, Apr 01, 2020 at 10:30:08PM +0200, Thomas Gleixner wrote:
+> >> Peter Xu <peterx@redhat.com> writes:
+> >> > @@ -169,8 +169,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
+> >> >  			continue;
+> >> >  		}
+> >> >  
+> >> > -		pr_warn("isolcpus: Error, unknown flag\n");
+> >> > -		return 0;
+> >> > +		str = strchr(str, ',');
+> >> > +		if (str)
+> >> > +			/* Skip unknown sub-parameter */
+> >> > +			str++;
+> >> > +		else
+> >> > +			return 0;
+> >> 
+> >> Just looked at it again because I wanted to apply this and contrary to
+> >> last time I figured out that this is broken:
+> >> 
+> >>      isolcpus=nohz,domain1,3,5
+> >> 
+> >> is a malformatted option, but the above will make it "valid" and result
+> >> in:
+> >> 
+> >>      HK_FLAG_TICK and a cpumask of 3,5.
+> >
+> > I would think this is no worse than applying nothing - I read the
+> > first "isalpha()" check as something like "the subparameter's first
+> > character must not be a digit", so to differenciate with the cpu list.
+> > If we keep this, we can still have subparams like "double-word".
 > 
-> The current code tried to protect the xdp_frame area, by assigning
-> xdp_buff.data_hard_start past this memory. This results in 32 bytes
-> less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
+> It _is_ worse. If the intention is to write 'nohz,domain,1,3,5' and
+> that missing comma morphs it silently into 'nohz,3,5' then this is
+> really a step backwards. The upstream version would tell you that you
+> screwed up.
 > 
-> This protect step is actually not needed, because BPF-helper
-> bpf_xdp_adjust_head() already reserve this area, and don't allow
-> BPF-prog to expand into it. Thus, it is safe to point data_hard_start
-> directly at xdp_frame memory area.
+> >>  static int __init housekeeping_isolcpus_setup(char *str)
+> >>  {
+> >>  	unsigned int flags = 0;
+> >> +	char *par;
+> >> +	int len;
+> >>  
+> >>  	while (isalpha(*str)) {
+> >>  		if (!strncmp(str, "nohz,", 5)) {
+> >> @@ -169,8 +171,17 @@ static int __init housekeeping_isolcpus_
+> >>  			continue;
+> >>  		}
+> >>  
+> >> -		pr_warn("isolcpus: Error, unknown flag\n");
+> >> -		return 0;
+> >> +		/*
+> >> +		 * Skip unknown sub-parameter and validate that it is not
+> >> +		 * containing an invalid character.
+> >> +		 */
+> >> +		for (par = str, len = 0; isalpha(*str); str++, len++);
+> >> +		if (*str != ',') {
+> >> +			pr_warn("isolcpus: Invalid flag %*s\n", len, par);
+> >
+> > ... this will dump "isolcpus: Invalid flag domain1,3,5", is this what
+> > we wanted?  Maybe only dumps "domain1"?
 > 
-> Cc: Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>
+> No, it will dump: "domain1" at least if my understanding of is_alpha()
+> and the '%*s' format option is halfways correct
 
-FYI: This mail address is deprecated.
+It will dump "isolcpus: Invalid flag domain1,3,5". Do you mean "%.*s"
+instead?
 
-> Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
-> Reported-by: Mao Wenan <maowenan@huawei.com>
-> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Another issue is even if to use "%.*s" it'll only dump "domain".  How
+about something like (declare "illegal" as bool):
 
-FWIW,
+		/*
+		 * Skip unknown sub-parameter and validate that it is not
+		 * containing an invalid character.
+		 */
+		for (par = str, len = 0; *str && *str != ','; str++, len++)
+			if (!isalpha(*str))
+				illegal = true;
 
-Acked-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+		if (illegal) {
+			pr_warn("isolcpus: Invalid flag %.*s\n", len, par);
+			return 0;
+		}
+
+		pr_info("isolcpus: Skipped unknown flag %.*s\n", len, par);
+		str++;
+
+> 
+> > For me so far I would still prefer the original one, giving more
+> > freedom to the future params and the patch is also a bit easier (but I
+> 
+> Again. It does not matter whether the patch is easier or not. What
+> matters is correctness and usability. Silently converting a typo into
+> something else is horrible at best.
+
+Frankly speaking I really see it as simple as "we define a rule to
+write these parameters, and people follow"...  But I won't argue more.
+
+If you see above clip looks good, I can repost with a formal patch.
+
+Thanks,
+
+> 
+> > definitely like the pr_warn when there's unknown subparams).  But just
+> > let me know your preference and I'll follow yours when repost.
+> 
+> Enforcing a pure 'is_alpha()' subparam space is not really a substantial
+> restriction. Feel free to extend it by adding '|| *str == '_' if you
+> really think that provides a value. 
+> 
+> Thanks,
+> 
+>         tglx
+> 
+
+-- 
+Peter Xu
+
