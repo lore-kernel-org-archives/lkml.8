@@ -2,138 +2,84 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDF0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A051FC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3716A20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75313206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:42:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="F3CHGz/r"
+	dkim=pass (1024-bit key) header.d=bacher09.org header.i=@bacher09.org header.b="vpyvacP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388584AbgDBUmM (ORCPT
+        id S2388782AbgDBUmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:42:12 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:34192 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgDBUmL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:42:11 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 04F1620B46F0; Thu,  2 Apr 2020 13:42:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 04F1620B46F0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1585860130;
-        bh=T7M811vVoO8LHYy+OccoE+fza63+weNdKO1rucXW+T4=;
-        h=From:To:Cc:Subject:Date:Reply-To:From;
-        b=F3CHGz/rYb1cNT869Csn98lvD2yLrx7hJ8tKWAjWcZtzOy8+NhsYkI52KR413hW/Q
-         MLYPu5KzCG6P/hwB+UFpdVxVXYTLtsvrqb8zKZNYuW2Jl1PAL7TyKWGSvB03RcKpsv
-         peb8i9FKM1vutcerJsv4Y6rJzGKVNJvFpcOPqGoc=
-From:   longli@linuxonhyperv.com
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [Patch v2] cifs: smbd: Update receive credits before sending and deal with credits roll back on failure before sending
-Date:   Thu,  2 Apr 2020 13:42:06 -0700
-Message-Id: <1585860126-72170-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: longli@microsoft.com
+        Thu, 2 Apr 2020 16:42:42 -0400
+Received: from pub.regulars.win ([89.163.144.234]:50514 "EHLO pub.regulars.win"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbgDBUmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:42:42 -0400
+From:   Slava Bacherikov <slava@bacher09.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bacher09.org;
+        s=reg; t=1585860159;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FjEUUecMFmSmjNvMMdOE00B64A4ZBeK571WEZ1itbTo=;
+        b=vpyvacP4IlEQAZZTqSLxAxWKl1ADfLPJ4lur44nnd4UAiN6TqY5XLfICXUQhElx58DN4/F
+        VZ9EmZ9StR/86gGMuuu8ucf+W+sM3/hT+blRRXxoNsndkZhqNTdVksavxWpmqEIaBN3a9P
+        NrZtSC8erogUojOk08ONx4mHH+pr3FE=
+To:     andriin@fb.com
+Cc:     keescook@chromium.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jannh@google.com,
+        alexei.starovoitov@gmail.com, daniel@iogearbox.net,
+        kernel-hardening@lists.openwall.com, liuyd.fnst@cn.fujitsu.com,
+        kpsingh@google.com, Slava Bacherikov <slava@bacher09.org>
+Subject: [PATCH v5 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
+Date:   Thu,  2 Apr 2020 23:41:39 +0300
+Message-Id: <20200402204138.408021-1-slava@bacher09.org>
+In-Reply-To: <202004021328.E6161480@keescook>
+References: <202004021328.E6161480@keescook>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
+enabled will produce invalid btf file, since gen_btf function in
+link-vmlinux.sh script doesn't handle *.dwo files.
 
-Recevie credits should be updated before sending the packet, not
-before a work is scheduled. Also, the value needs roll back if
-something fails and cannot send.
+Enabling DEBUG_INFO_REDUCED will also produce invalid btf file, and
+using GCC_PLUGIN_RANDSTRUCT with BTF makes no sense.
 
-Signed-off-by: Long Li <longli@microsoft.com>
-Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Slava Bacherikov <slava@bacher09.org>
+Reported-by: Jann Horn <jannh@google.com>
+Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
+Acked-by: KP Singh <kpsingh@google.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info for vmlinux")
 ---
+ lib/Kconfig.debug | 2 ++
+ 1 file changed, 2 insertions(+)
 
-change in v2: fixed sparse errors reported by kbuild test robot
-
- fs/cifs/smbdirect.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
-
-diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-index c7ef2d7ce0ef..fa52bf3e0236 100644
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -450,8 +450,6 @@ static void smbd_post_send_credits(struct work_struct *work)
- 	info->new_credits_offered += ret;
- 	spin_unlock(&info->lock_new_credits_offered);
- 
--	atomic_add(ret, &info->receive_credits);
--
- 	/* Check if we can post new receive and grant credits to peer */
- 	check_and_send_immediate(info);
- }
-@@ -822,6 +820,7 @@ static int smbd_create_header(struct smbd_connection *info,
- 	struct smbd_request *request;
- 	struct smbd_data_transfer *packet;
- 	int header_length;
-+	int new_credits;
- 	int rc;
- 
- 	/* Wait for send credits. A SMBD packet needs one credit */
-@@ -840,7 +839,7 @@ static int smbd_create_header(struct smbd_connection *info,
- 	request = mempool_alloc(info->request_mempool, GFP_KERNEL);
- 	if (!request) {
- 		rc = -ENOMEM;
--		goto err;
-+		goto err_alloc;
- 	}
- 
- 	request->info = info;
-@@ -848,8 +847,11 @@ static int smbd_create_header(struct smbd_connection *info,
- 	/* Fill in the packet header */
- 	packet = smbd_request_payload(request);
- 	packet->credits_requested = cpu_to_le16(info->send_credit_target);
--	packet->credits_granted =
--		cpu_to_le16(manage_credits_prior_sending(info));
-+
-+	new_credits = manage_credits_prior_sending(info);
-+	atomic_add(new_credits, &info->receive_credits);
-+	packet->credits_granted = cpu_to_le16(new_credits);
-+
- 	info->send_immediate = false;
- 
- 	packet->flags = 0;
-@@ -887,7 +889,7 @@ static int smbd_create_header(struct smbd_connection *info,
- 	if (ib_dma_mapping_error(info->id->device, request->sge[0].addr)) {
- 		mempool_free(request, info->request_mempool);
- 		rc = -EIO;
--		goto err;
-+		goto err_dma;
- 	}
- 
- 	request->sge[0].length = header_length;
-@@ -896,8 +898,17 @@ static int smbd_create_header(struct smbd_connection *info,
- 	*request_out = request;
- 	return 0;
- 
--err:
-+err_dma:
-+	/* roll back receive credits */
-+	spin_lock(&info->lock_new_credits_offered);
-+	info->new_credits_offered += new_credits;
-+	spin_unlock(&info->lock_new_credits_offered);
-+	atomic_sub(new_credits, &info->receive_credits);
-+
-+err_alloc:
-+	/* roll back send credits */
- 	atomic_inc(&info->send_credits);
-+
- 	return rc;
- }
- 
--- 
-2.17.1
-
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index f61d834e02fe..6118d99117da 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -223,6 +223,8 @@ config DEBUG_INFO_DWARF4
+ config DEBUG_INFO_BTF
+ 	bool "Generate BTF typeinfo"
+ 	depends on DEBUG_INFO
++	depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
++	depends on !GCC_PLUGIN_RANDSTRUCT || COMPILE_TEST
+ 	help
+ 	  Generate deduplicated BTF type information from DWARF debug info.
+ 	  Turning this on expects presence of pahole tool, which will convert
