@@ -2,89 +2,102 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88727C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1591BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602F62078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE9C2064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXpM5y7G"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="sDk1SEu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389683AbgDBSd7 (ORCPT
+        id S2389697AbgDBSfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:33:59 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33618 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729033AbgDBSd7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 14:33:59 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ay1so1674857plb.0;
-        Thu, 02 Apr 2020 11:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oyphBXh8PTHTDQxehHVJCwGunWLiChskEfIoqWTwvaQ=;
-        b=ZXpM5y7GAP9A42RTYplBVCjCe33qIGw2JT0x/NKRNTBtE+7b4Zlc023CFcBP3pjKNa
-         5ATyJcpTADz2kMNWYlFbVAtc31nQAsn+WWG0wgfD/Uj7flG85i6+ymRQekR+7w1dd6fi
-         537SiNd9M08XnpAyffnAJRqlOOqFllOg1FJ3jVtlPDPk5GWAFw4WWwUPjshtzDAzb77I
-         UmxhRCvEvD77fpsXDyxewGth0S/yQRxM99HLjyHYdFJjeY3p6yjYTvoYcRFIYo5+R+/E
-         Vy999SfA/2YFblHW++SjU9ov1U6BiFcqBm2okAdZYbFBcudcWu1POyaVWI5RYiDa52F5
-         w8Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oyphBXh8PTHTDQxehHVJCwGunWLiChskEfIoqWTwvaQ=;
-        b=IXx8+BCZXIWD/n+89m+mV5O6wH+FOUKyyMGXNo65rdA8soVubdqD+cDWJNR1a9q/bo
-         6Ei3XlHzlbwv3iwgsUqA2PpKgyDG2KF6NXnyCuS13n9DpFyqV7Luh21rS6JyboavcVgC
-         kjMLsyxTx2aOzHMQZIf6Fk6N/YXgEDmn04GiTx1mvvh8iJ+QvkktDdv8g+mS3vx7KCNm
-         2AydiWEyrmnxknxyMSdZVMAGPxStEM3EcbZ6CBRU1DRK3bU4WVAu8jJNzx/Iak8fp/wr
-         pXsyxZX4MiSOPyBPKs5IftMrZtYC7Rr8ZRFqG/ww1PK0nfaiiuJjci6h6OrWjCqOOk6A
-         hdXg==
-X-Gm-Message-State: AGi0PuYlqlsEP1qm005oKlOf3s9OXx+QXQbxygUnqaaBLiZUGZ36a+6H
-        /g2eA+8Fsi/5w+i/FiAoYkNnKhBrSW2cB+4rrGY=
-X-Google-Smtp-Source: APiQypIQUVU5fnxrgi96uTIAhx/kCF3JFOUaqIyWwDoKfIBqblI9dhgdXZIrLJOc0SXKh3FzBsKxXnzzpq8ug3Cxzlw=
-X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr5361787pjn.8.1585852437627;
- Thu, 02 Apr 2020 11:33:57 -0700 (PDT)
+        Thu, 2 Apr 2020 14:35:13 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:12271 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729033AbgDBSfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 14:35:12 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48tWvg1mkHz9v0Dy;
+        Thu,  2 Apr 2020 20:35:11 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=sDk1SEu9; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id vGOZxJA0GbEI; Thu,  2 Apr 2020 20:35:11 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48tWvg0JMhz9v0Dw;
+        Thu,  2 Apr 2020 20:35:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585852511; bh=xsC8tyWdt4REunwIPC9Ykpfqa7PmWmLgFHcC/3QwWiI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sDk1SEu9KbD6+CPdF0zQdsnvsipGxinh4BheDbsyX0gJNOiz0wAI5K5LR+I3/MHti
+         35Ooqvvfdd3pLQjLA0XRgV6pk+vqfu0AWlt+UcxdPIGsv/3guu0uVJqZMMdK3Fj+Mc
+         IwU+7wszU6q2Km78BzOoHqXbJI3ksTWTIYia0lfk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E3E978B940;
+        Thu,  2 Apr 2020 20:35:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id yvBrCbyn7qgh; Thu,  2 Apr 2020 20:35:10 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CE3238B925;
+        Thu,  2 Apr 2020 20:35:09 +0200 (CEST)
+Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
+ user_write_access_begin/end
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
+        daniel@ffwll.ch, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, keescook@chromium.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+ <20200402162942.GG23230@ZenIV.linux.org.uk>
+ <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
+ <20200402175032.GH23230@ZenIV.linux.org.uk>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <24095989-57be-332c-f08c-acb1672c7e6f@c-s.fr>
+Date:   Thu, 2 Apr 2020 20:35:09 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200402155057.30667-1-vaibhavgupta40@gmail.com>
-In-Reply-To: <20200402155057.30667-1-vaibhavgupta40@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 2 Apr 2020 21:33:46 +0300
-Message-ID: <CAHp75VcYSaAYx5qy7S0ppb77afgz=Ma=7=opfgSMCBnnjmoWfw@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to dev_pm_ops
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
-        andy@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200402175032.GH23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 6:52 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
->
-> Convert the legacy callback .suspend() and .resume()
-> to the generic ones.
->
 
-Thank you for the patch.
 
-Rather then doing this I think  the best approach is to unify gpio-pch
-and gpio-ml-ioh together.
-Under umbrella of the task, the clean ups like above are highly appreciated.
+Le 02/04/2020 à 19:50, Al Viro a écrit :
+> On Thu, Apr 02, 2020 at 07:03:28PM +0200, Christophe Leroy wrote:
+> 
+>> user_access_begin() grants both read and write.
+>>
+>> This patch adds user_read_access_begin() and user_write_access_begin() but
+>> it doesn't remove user_access_begin()
+> 
+> Ouch...  So the most generic name is for the rarest case?
+>   
 
--- 
-With Best Regards,
-Andy Shevchenko
+I can add another patch at the end of the series to rename 
+user_access_begin() to user_full_access_begin().
+
+Would it suit you ?
+
+Christophe
