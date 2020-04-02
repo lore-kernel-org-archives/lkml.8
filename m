@@ -2,121 +2,103 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40222C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9518FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA6A12077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585849257;
-	bh=Zb29Kacv+GCHhMWMWS5OYVqzQGAI+0Pu3bS3HvKnJhM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bl3wx8s9kqCvI7t0l0cvXs8L0a0aETKXWRrPkCLsMtaLPrwivTwVWoHrsSD79jR2j
-	 p0cvhRl0QFJzxZa4IJZ4YdZsQTxxbqjOK3lOGV7lxAmMPiti+tRd2Ph1Vh/RDTLcLs
-	 0gKkmlWLeEEhWi3rRTH/x8iKzxORvpPiQ8xQnwWo=
+	by mail.kernel.org (Postfix) with ESMTP id 4D59820737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:41:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qkBBy5U3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390132AbgDBRk4 (ORCPT
+        id S2390135AbgDBRlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:40:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390003AbgDBRkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:40:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D14F20737;
-        Thu,  2 Apr 2020 17:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585849254;
-        bh=Zb29Kacv+GCHhMWMWS5OYVqzQGAI+0Pu3bS3HvKnJhM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HBElG/QpssIB7IpFqtCyWOh+gP2Pu0HhUDApjkiThGtYRsh560+bPFDhMZ1rvu/Ed
-         EmLCKRofUpaCtttRy+4V1tg/P6PmCsRogRsjcHZCj7f3WEKsA9cUv8tw6+QzVponGn
-         RQgT51rniWJYLf744RMRzm9elGs2LHB0RmsClhX4=
-Date:   Thu, 2 Apr 2020 19:40:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Dirk =?iso-8859-1?Q?M=FCller?= <dmueller@suse.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5.5 102/170] scripts/dtc: Remove redundant YYLOC global
- declaration
-Message-ID: <20200402174052.GB3221004@kroah.com>
-References: <20200331085423.990189598@linuxfoundation.org>
- <20200331085435.053942582@linuxfoundation.org>
- <20200331095323.GA32667@ubuntu-m2-xlarge-x86>
- <20200331100238.GA1204199@kroah.com>
- <5B6493BE-F9FE-41A4-A88A-5E4DF5BCE098@suse.com>
- <20200331120917.GA1617997@kroah.com>
- <20200331192515.GA39354@ubuntu-m2-xlarge-x86>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200331192515.GA39354@ubuntu-m2-xlarge-x86>
+        Thu, 2 Apr 2020 13:41:35 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:33457 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389093AbgDBRle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 13:41:34 -0400
+Received: by mail-pf1-f202.google.com with SMTP id o5so3573444pfp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 10:41:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=371o/vNhJY1GWeYnWWYQwId4nlaG8dGoisjj7qeE9aM=;
+        b=qkBBy5U3CMM7MZifcMDDdewLDPNKJAomOP8csqTCRViOau1jlVdJ7cylogBTm4NSZB
+         jcI0H99RSpOCgYqr7Rv9sepwzun5PqKILYEXEQKLc/H5TqUQchwp6oObnjkK2bawZVfm
+         cBYGJwwx8EehsKB8RiJQXp3lHHeMaz4v0GE3B/k2mAmsMtZY8ZzTdnxbocVxYw+VlWEw
+         91x7AAlfhnAL0JZxMVlqmLt7zfQRVIOYqZW4VJnMqbD5NB7MmyCabpiIkiXFcExcYCbi
+         KcbbE8yiXIxrCcc1cU/4OHea0UQE7wvIMtaauz4ttnblB8kfWVp5B5HkzcOufUroOcyG
+         NzIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=371o/vNhJY1GWeYnWWYQwId4nlaG8dGoisjj7qeE9aM=;
+        b=Z5CQQ3rgxXNlKHUSbLVJJTin1O3zwxfKtn3PljPf+VqEOR9jfkIYf/AJDxrvngLqrJ
+         KCNv8suBNTK+0+4C+RQdixn/WXdfU1eaKDm43WSZyb7D7AH0JRPVW410l9kEoE96zPBQ
+         knw0/g4fs9rEEfOlKQ8+dYDoSNHCH1HAsjm/QFQm1ALiMp8WcGA6iII39LsDb7jVO87I
+         sabld0eow1W2sXj1cb8BtzVqjv/1nKkkD9ElB0/aIZILh2+liBQNIxYDWW5eR6Wad8wf
+         +u3U2aYiPSqmURSyFXxP9XeLvlGRGSAZvDCCCLISn6syjoutdcryC3mY3ubeoAwt+mct
+         M/Jg==
+X-Gm-Message-State: AGi0PubQgfE9imYRc//lDDTVSo5lIQyCrAZ7FwHNDG8wnpSxiZDunaNS
+        LafoZeTeYwLqnAhg5nwgkNbyRS7r8tWX
+X-Google-Smtp-Source: APiQypJepdKj0PDf1373XbxO5BqkbKcEEtSv8GdcD9TG2LRknOWN3R4OthW3IhKm1jLGeqaITsZPTG0bTNVz
+X-Received: by 2002:a17:90a:32c5:: with SMTP id l63mr5185816pjb.47.1585849293626;
+ Thu, 02 Apr 2020 10:41:33 -0700 (PDT)
+Date:   Thu,  2 Apr 2020 10:41:30 -0700
+Message-Id: <20200402174130.140319-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH] perf script: add -S/--symbols documentation
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 12:25:15PM -0700, Nathan Chancellor wrote:
-> On Tue, Mar 31, 2020 at 02:09:17PM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Mar 31, 2020 at 01:45:09PM +0200, Dirk Müller wrote:
-> > > Hi Greg,
-> > > 
-> > > >> $ sed -i 's;scripts/dtc/dtc-lexer.l;scripts/dtc/dtc-lexer.lex.c_shipped;g' \
-> > > >> queue-{4.4,4.9,4.14}/scripts-dtc-remove-redundant-yyloc-global-declaration.patch
-> > > >> If you would prefer a set of patches, let me know.
-> > > > Should I just drop the patch from 4.4, 4.9, and 4.14 instead?
-> > > 
-> > > as the original author of the patch, I am not sure why it was backported to the LTS releases (unless enablement for gcc 10.x or
-> > > other new toolchains is a requirement, which I'm not aware of). 
-> 
-> The reason I am commenting on this is that Clang 11 is matching GCC's
-> -fno-common change. Google will run into this when they do their
-> toolchain uprev on Android (sooner rather than later) so it'd be good
-> to deal with this now:
-> 
-> https://android.googlesource.com/kernel/build/+/refs/heads/master/build.sh#226
-> 
-> Their devices back to 4.4 see builds with newer and newer toolchains so
-> we need this back to 4.4. I am sure Chrome OS will also run into this
-> shortly as well.
-> 
-> > > However I think the sed above on the *patch* means that the patch will *only* modify the generated sources, not the input sources. I think
-> > > it would be better to patch both *input* and *generated* sources, or backport the generate-at-runtime patch as well (which might be
-> > > even further outside the stable policy). 
-> > 
-> > What do you mean by "input sources" here?
-> 
-> dtc-lexer.l is the input source for dtc-lexer.lex.c, which was then
-> copied to dtc-lexer.lex.c_shipped prior to e039139be8c2 ("scripts/dtc:
-> generate lexer and parser during build instead of shipping"). In other
-> words, prior to 4.17, dtc-lexer.l is not used at all in the build
-> system.
-> 
-> However, I agree with Dirk that it would be most proper to apply the fix
-> to both dtc-lexer.l and dtc-lexer.lex.c_shipped so I have attached a
-> backport for 4.4, 4.9, and 4.14 that has does just that.
-> 
-> > > Not knowing why it was backported, I would suggest to just dequeue the patch from the older trees. 
-> > 
-> > If I drop it for now, I'll have to add it back when gcc10 is pushed out
-> > to my build systems and laptops :(
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Hope this makes sense/isn't confusing.
+Capture both that this option exists and that symbols can be hexadecimal
+addresses.
 
-Makes sense, thanks for the patches, I've now updated the tree with the
-versions you provided.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/perf-script.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-greg k-h
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 99a9853a11ba..963487e82edc 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -412,6 +412,14 @@ include::itrace.txt[]
+ --xed::
+ 	Run xed disassembler on output. Requires installing the xed disassembler.
+ 
++-S::
++--symbols=symbol[,symbol...]::
++	Only consider the listed symbols. Symbols are typically a name
++	but they may also be hexadecimal address.
++
++	For example, to select the symbol noploop or the address 0x4007a0:
++	perf script --symbols=noploop,0x4007a0
++
+ --call-trace::
+ 	Show call stream for intel_pt traces. The CPUs are interleaved, but
+ 	can be filtered with -C.
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
+
