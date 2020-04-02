@@ -2,283 +2,99 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D9FC2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5D7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2A02077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:12:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Nc65dlGG"
+	by mail.kernel.org (Postfix) with ESMTP id 9615C206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389567AbgDBWMF (ORCPT
+        id S2389630AbgDBWOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 18:12:05 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41286 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgDBWMF (ORCPT
+        Thu, 2 Apr 2020 18:14:31 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34952 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389402AbgDBWOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 18:12:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032M8sJA164409;
-        Thu, 2 Apr 2020 22:11:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=WnocW8mWItP6QF6XoA61ycAu6zStMx9i0N4yYd3pAtY=;
- b=Nc65dlGGPV6InMcuql7/xXyQMMKqGuL5apD7TikEyP6eAx3nsQsvNwXq3T7uPZMfK5C1
- V0PSKPgtO3O9oYkxrAE75/Ye6XdqVRu1+vG3XUDEhovY8FWNZiNL9urHCPJg+zjlidn6
- CD6NVPATGBUzWdZWYzg6ziiwKCLBd/SmnQgweTKnssyWv/VrWRZyhNFYiyF8+uB3jAEg
- MgfV4NUoNJ400O/bod7NQNYtuJMs7wMG+wxbCWB9grdzwGQ6ycQmlkz0WJpUVW6kisvv
- jlG2lddcTxBUX9x4NGuxRF7Pklssk4svSr66XGeyeIBoVyMGholP0j2O9L+E7u/CHVVw Sw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 303aqhxk2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 22:11:38 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032M8Hfa048419;
-        Thu, 2 Apr 2020 22:09:37 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 302ga37nk8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 22:09:37 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032M9Zum028546;
-        Thu, 2 Apr 2020 22:09:35 GMT
-Received: from localhost.localdomain (/10.159.142.52)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 15:09:35 -0700
-Subject: Re: [PATCH v6 04/14] KVM: SVM: Add support for KVM_SEV_RECEIVE_START
- command
-To:     Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rientjes@google.com, srutherford@google.com, luto@kernel.org,
-        brijesh.singh@amd.com
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <7753c183e9e571220fffe3663b1139c1f9030fbf.1585548051.git.ashish.kalra@amd.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <b6644f3c-defe-3ac3-12e5-502faf22d5e2@oracle.com>
-Date:   Thu, 2 Apr 2020 15:09:33 -0700
+        Thu, 2 Apr 2020 18:14:31 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i19so5517340wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 15:14:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fPUE5Ux6t1ZmXWbn6Wue8riIBLccyrWYZrJD4d05O54=;
+        b=YHfxXZ/YE9EU4X7s6JYTgyhLrfTyBHfxbtnZSWUPHNdkdHqXkwtdghjziXnJmBB9rs
+         JIDTR+hNOzCieeL3RyQLhLsFePR04J4rMpOcQSMkDIEZmqvpqTDxevq4YYWsZSBO0l4l
+         0c2S39JqfLaQu9rV8NXZHMM1En04RL+0Jx5qcuWBsJfkgxHLYYcyMLZieKb1MFKvQvqu
+         neGsqQe8XALRgu50eXjyhQlF2A2PUrdaV8CpjfdenLEy9KFpL2Bw4FuLp0XHrWLgrphr
+         a0nruGn4/40FlcuOq1JQEWOg2XSgtQtnisNiCfZWmxyE9NzkCuQCs47sURiBu+bzXMJg
+         Z4Ww==
+X-Gm-Message-State: AGi0PuakBFXy1OPtbnaenb1+ESo0aJHJBWgMpCDqQxvI5Shm/Y4O2pJO
+        Mnha4prgZMuK9qFJdmu2tN0yMxDN
+X-Google-Smtp-Source: APiQypI/XnKREPGfpJgJh9NMJG3NsY/n4DXqC18f+gjOyWgDV3yrb3YLGJymAcfZxGyGKJi3hKWQ8A==
+X-Received: by 2002:a1c:f213:: with SMTP id s19mr5375822wmc.116.1585865669036;
+        Thu, 02 Apr 2020 15:14:29 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:9069:e334:a021:3782? ([2601:647:4802:9070:9069:e334:a021:3782])
+        by smtp.gmail.com with ESMTPSA id n2sm9516018wro.25.2020.04.02.15.14.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 Apr 2020 15:14:28 -0700 (PDT)
+Subject: Re: [PATCH] nvmet: add revalidation support to bdev and file backed
+ namespaces
+To:     Anthony Iliopoulos <ailiop@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200402193052.19935-1-ailiop@suse.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <d6a3bf25-70c1-2501-2e8f-222135ebe9b8@grimberg.me>
+Date:   Thu, 2 Apr 2020 15:14:25 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Firefox/60.0 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <7753c183e9e571220fffe3663b1139c1f9030fbf.1585548051.git.ashish.kalra@amd.com>
+In-Reply-To: <20200402193052.19935-1-ailiop@suse.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004020164
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020164
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 3/29/20 11:21 PM, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
->
-> The command is used to create the encryption context for an incoming
-> SEV guest. The encryption context can be later used by the hypervisor
-> to import the incoming data into the SEV guest memory space.
->
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Steve Rutherford <srutherford@google.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->   .../virt/kvm/amd-memory-encryption.rst        | 29 +++++++
->   arch/x86/kvm/svm.c                            | 81 +++++++++++++++++++
->   include/uapi/linux/kvm.h                      |  9 +++
->   3 files changed, 119 insertions(+)
->
-> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-> index a45dcb5f8687..ef1f1f3a5b40 100644
-> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
-> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-> @@ -322,6 +322,35 @@ issued by the hypervisor to delete the encryption context.
->   
->   Returns: 0 on success, -negative on error
->   
-> +13. KVM_SEV_RECEIVE_START
-> +------------------------
+> +void nvmet_bdev_ns_revalidate(struct nvmet_ns *ns)
+> +{
+> +	loff_t size;
 > +
-> +The KVM_SEV_RECEIVE_START command is used for creating the memory encryption
-> +context for an incoming SEV guest. To create the encryption context, the user must
-> +provide a guest policy, the platform public Diffie-Hellman (PDH) key and session
-> +information.
+> +	size = i_size_read(ns->bdev->bd_inode);
 > +
-> +Parameters: struct  kvm_sev_receive_start (in/out)
+> +	if (ns->size != size)
+> +		ns->size = size;
+
+Why is the if useful?
+
+> +}
 > +
-> +Returns: 0 on success, -negative on error
-> +
-> +::
-> +
-> +        struct kvm_sev_receive_start {
-> +                __u32 handle;           /* if zero then firmware creates a new handle */
-> +                __u32 policy;           /* guest's policy */
-> +
-> +                __u64 pdh_uaddr;         /* userspace address pointing to the PDH key */
-> +                __u32 dh_len;
-> +
-> +                __u64 session_addr;     /* userspace address which points to the guest session information */
-> +                __u32 session_len;
-> +        };
-> +
-> +On success, the 'handle' field contains a new handle and on error, a negative value.
-> +
-> +For more details, see SEV spec Section 6.12.
-> +
->   References
->   ==========
->   
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 71a4cb3b817d..038b47685733 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -7419,6 +7419,84 @@ static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>   static u16 blk_to_nvme_status(struct nvmet_req *req, blk_status_t blk_sts)
+>   {
+>   	u16 status = NVME_SC_SUCCESS;
+> diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
+> index cd5670b83118..c102437db72a 100644
+> --- a/drivers/nvme/target/io-cmd-file.c
+> +++ b/drivers/nvme/target/io-cmd-file.c
+> @@ -80,6 +80,20 @@ int nvmet_file_ns_enable(struct nvmet_ns *ns)
 >   	return ret;
 >   }
 >   
-> +static int sev_receive_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> +void nvmet_file_ns_revalidate(struct nvmet_ns *ns)
 > +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	struct sev_data_receive_start *start;
-> +	struct kvm_sev_receive_start params;
-> +	int *error = &argp->error;
-> +	void *session_data;
-> +	void *pdh_data;
-> +	int ret;
+> +	struct kstat stat;
 > +
-> +	if (!sev_guest(kvm))
-> +		return -ENOTTY;
-> +
-> +	/* Get parameter from the userspace */
-> +	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
-> +			sizeof(struct kvm_sev_receive_start)))
-> +		return -EFAULT;
-> +
-> +	/* some sanity checks */
-> +	if (!params.pdh_uaddr || !params.pdh_len ||
-> +	    !params.session_uaddr || !params.session_len)
-> +		return -EINVAL;
-> +
-> +	pdh_data = psp_copy_user_blob(params.pdh_uaddr, params.pdh_len);
-> +	if (IS_ERR(pdh_data))
-> +		return PTR_ERR(pdh_data);
-> +
-> +	session_data = psp_copy_user_blob(params.session_uaddr,
-> +			params.session_len);
-> +	if (IS_ERR(session_data)) {
-> +		ret = PTR_ERR(session_data);
-> +		goto e_free_pdh;
-> +	}
-> +
-> +	ret = -ENOMEM;
-> +	start = kzalloc(sizeof(*start), GFP_KERNEL);
-> +	if (!start)
-> +		goto e_free_session;
-> +
-> +	start->handle = params.handle;
-> +	start->policy = params.policy;
-> +	start->pdh_cert_address = __psp_pa(pdh_data);
-> +	start->pdh_cert_len = params.pdh_len;
-> +	start->session_address = __psp_pa(session_data);
-> +	start->session_len = params.session_len;
-> +
-> +	/* create memory encryption context */
-> +	ret = __sev_issue_cmd(argp->sev_fd, SEV_CMD_RECEIVE_START, start,
-> +				error);
-> +	if (ret)
-> +		goto e_free;
-> +
-> +	/* Bind ASID to this guest */
-> +	ret = sev_bind_asid(kvm, start->handle, error);
-> +	if (ret)
-> +		goto e_free;
-> +
-> +	params.handle = start->handle;
-> +	if (copy_to_user((void __user *)(uintptr_t)argp->data,
-> +			 &params, sizeof(struct kvm_sev_receive_start))) {
-> +		ret = -EFAULT;
-> +		sev_unbind_asid(kvm, start->handle);
-> +		goto e_free;
-> +	}
-> +
-> +	sev->handle = start->handle;
-> +	sev->fd = argp->sev_fd;
-> +
-> +e_free:
-> +	kfree(start);
-> +e_free_session:
-> +	kfree(session_data);
-> +e_free_pdh:
-> +	kfree(pdh_data);
-> +
-> +	return ret;
-> +}
-> +
->   static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->   {
->   	struct kvm_sev_cmd sev_cmd;
-> @@ -7472,6 +7550,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->   	case KVM_SEV_SEND_FINISH:
->   		r = sev_send_finish(kvm, &sev_cmd);
->   		break;
-> +	case KVM_SEV_RECEIVE_START:
-> +		r = sev_receive_start(kvm, &sev_cmd);
-> +		break;
->   	default:
->   		r = -EINVAL;
->   		goto out;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index d9dc81bb9c55..74764b9db5fa 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1579,6 +1579,15 @@ struct kvm_sev_send_update_data {
->   	__u32 trans_len;
->   };
->   
-> +struct kvm_sev_receive_start {
-> +	__u32 handle;
-> +	__u32 policy;
-> +	__u64 pdh_uaddr;
-> +	__u32 pdh_len;
+> +	if (!ns->file)
+> +		return;
 
-Why not 'pdh_cert_uaddr' and 'pdh_cert_len' ? That's the naming 
-convention you have followed in previous patches.
-> +	__u64 session_uaddr;
-> +	__u32 session_len;
-> +};
-> +
->   #define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
->   #define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
->   #define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
-
-
-Reviewed-by: Krish Sadhukhan <krish.sadhukan@oracle.com>
-
+When is !ns->file expected?
