@@ -2,189 +2,118 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B20C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03084C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CEA206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ACiTytRZ"
+	by mail.kernel.org (Postfix) with ESMTP id A33A7206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585847217;
+	bh=iS5v/pXUSEsqPmMD1AoaV/2O+l4ksu4rP4gsKRFVJj0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SEmCRCDMDzEbDhwvWuYuyEGoj8wfsnQe4bArTNyaAtFuupEepk5DQsGr2eOC6+Nun
+	 05we0NTVVgTXM/WMeZQL6RD/JhgEfNhYOSXxh6Hc32vjWpUiT3mf2mbDYH5WsYn6RM
+	 dB6gOkyxBvejLRBEvpLOnGK2vwU8LrsjWoNR1df8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390043AbgDBRDd (ORCPT
+        id S2387985AbgDBRG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:03:33 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:58988 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732218AbgDBRDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:03:32 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48tTsr5rRRz9vBmV;
-        Thu,  2 Apr 2020 19:03:28 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ACiTytRZ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id AvlDP2sR7zTb; Thu,  2 Apr 2020 19:03:28 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48tTsr4JmWz9vBmS;
-        Thu,  2 Apr 2020 19:03:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585847008; bh=JzGfy64woJ08evugoWBAVtqz/vtq+HHi55dh1/1+x5A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ACiTytRZC+Xj1EuNnjHaWbbYCnJ8CD46NNiCXRQXdSw8VyzeFkJ2iXIguFAur/WXP
-         cGiaTz0jzh4b++Xtfz3FYdDzGi39XWjPpP47djmAbDbgW6+Qcumeu76BQzwby7Kadg
-         qsGptG6uO/KhtseD57NVkod6GcuUBabHLVYA7YLY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDF298B93A;
-        Thu,  2 Apr 2020 19:03:29 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id IdlgMSKFOZLT; Thu,  2 Apr 2020 19:03:29 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C52AF8B925;
-        Thu,  2 Apr 2020 19:03:28 +0200 (CEST)
-Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
- user_write_access_begin/end
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
-        daniel@ffwll.ch, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, keescook@chromium.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
- <20200402162942.GG23230@ZenIV.linux.org.uk>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
-Date:   Thu, 2 Apr 2020 19:03:28 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 13:06:56 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:21197 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731608AbgDBRG4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 13:06:56 -0400
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 032H6RMZ030643;
+        Fri, 3 Apr 2020 02:06:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 032H6RMZ030643
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585847188;
+        bh=0Hu/kDIGL0VuCr3HG+sv9MGZq47PrIgCMrWOfepWzGY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o04n6qWEfkKrsbp5AwD5sTZg2P6LXAtsr/Kya4LataMVEHa+ZcYLYYhiSVBeQ0d/D
+         qfyEwFwgYpQ2ifjXBbFjkrBWRlHKZEGZLXz5Wd6T/HeTILHpdPXGdrI+JCoF5PEVAY
+         eGM4hrej0NV1j/jq6I71Vc7g3C7SR1VMFRe1X9sRtCGbQUS1SPyk+KacU4DLZqXKsf
+         MCn38xLXv7MXLINHCvPqoLdH/mQr/r7Dmq4splusj0xzzKQRmtYOhTw9yfUTWCQnGw
+         s5caF72usT58d0A/0TUuJ87np9Kma8PYzo3FYNOmJbfxQWpRdg6tebup2mf8u9t3LC
+         ektICVF8GqfaA==
+X-Nifty-SrcIP: [209.85.221.175]
+Received: by mail-vk1-f175.google.com with SMTP id f63so1134399vkh.0;
+        Thu, 02 Apr 2020 10:06:27 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYkkqFAaUnw5U5pFBrQ7bxWkGTTLDzb7hugTneruWX7hkbyoB+b
+        GyYeo4HLnDJ3Tm6O4ynpWyuV/y9cPToaORxLFLU=
+X-Google-Smtp-Source: APiQypJF3Ke0+SW6brBoT+I7M6euOWu205ToQ0Ev9frjeBnq3BfsIK3p1EjjGNj9Z/i4VjbTQ/yD/qDjvZEYLYbqub4=
+X-Received: by 2002:a1f:32cf:: with SMTP id y198mr3063123vky.96.1585847186520;
+ Thu, 02 Apr 2020 10:06:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200402162942.GG23230@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20200326194155.29107-1-natechancellor@gmail.com>
+ <CAK7LNAQ8uHtuhd7DiGGOLbkEX524rPjfUuWAHjU-_92Ow3_1Pg@mail.gmail.com>
+ <20200331101122.GA6292@ubuntu-m2-xlarge-x86> <CAKwvOdkkpnkLwtNctSnebXTwumfprEQtLiuM5_4e-UBFTYBUxg@mail.gmail.com>
+ <20200331192637.GA54270@ubuntu-m2-xlarge-x86>
+In-Reply-To: <20200331192637.GA54270@ubuntu-m2-xlarge-x86>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 3 Apr 2020 02:05:50 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASPt4c-Vt9UzdKjSvPSYqXd4AFLNqKXfxnmqmfzk3Zi_A@mail.gmail.com>
+Message-ID: <CAK7LNASPt4c-Vt9UzdKjSvPSYqXd4AFLNqKXfxnmqmfzk3Zi_A@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: Enable -Wtautological-compare
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 1, 2020 at 4:26 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Tue, Mar 31, 2020 at 09:02:19AM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> > On Tue, Mar 31, 2020 at 3:11 AM Nathan Chancellor
+> > <natechancellor@gmail.com> wrote:
+> > > Just a follow up, those two patches have been picked up and should be in
+> > > this coming release:
+> > >
+> > > https://git.kernel.org/balbi/usb/c/58582220d2d34228e5a1e1585e41b735713988bb
+> > > https://git.kernel.org/rostedt/linux-trace/c/bf2cbe044da275021b2de5917240411a19e5c50d
+> > >
+> > > As of next-20200331, with the former applied (because it is not there
+> > > yet) along with this patch, I see no warnings on arm, arm64, x86_64
+> > > all{mod,yes}config.
+> >
+> > kbuild test robot is testing more arch's than that with Clang so it
+> > may report if it finds more instances of that warning in those.
+> >
+> > --
+> > Thanks,
+> > ~Nick Desaulniers
+> >
+>
+> I'll keep an eye out. Hopefully not too many more are lurking but we
+> have definitely caught some bad behavior with this warning already so
+> getting it turned on so that all CI systems can benefit from it is
+> important.
+>
+> Cheers,
+> Nathan
 
 
-Le 02/04/2020 à 18:29, Al Viro a écrit :
-> On Thu, Apr 02, 2020 at 07:34:16AM +0000, Christophe Leroy wrote:
->> Some architectures like powerpc64 have the capability to separate
->> read access and write access protection.
->> For get_user() and copy_from_user(), powerpc64 only open read access.
->> For put_user() and copy_to_user(), powerpc64 only open write access.
->> But when using unsafe_get_user() or unsafe_put_user(),
->> user_access_begin open both read and write.
->>
->> Other architectures like powerpc book3s 32 bits only allow write
->> access protection. And on this architecture protection is an heavy
->> operation as it requires locking/unlocking per segment of 256Mbytes.
->> On those architecture it is therefore desirable to do the unlocking
->> only for write access. (Note that book3s/32 ranges from very old
->> powermac from the 90's with powerpc 601 processor, till modern
->> ADSL boxes with PowerQuicc II modern processors for instance so it
->> is still worth considering)
->>
->> In order to avoid any risk based of hacking some variable parameters
->> passed to user_access_begin/end that would allow hacking and
->> leaving user access open or opening too much, it is preferable to
->> use dedicated static functions that can't be overridden.
->>
->> Add a user_read_access_begin and user_read_access_end to only open
->> read access.
->>
->> Add a user_write_access_begin and user_write_access_end to only open
->> write access.
->>
->> By default, when undefined, those new access helpers default on the
->> existing user_access_begin and user_access_end.
-> 
-> The only problem I have is that we'd better choose the calling
-> conventions that work for other architectures as well.
-> 
-> AFAICS, aside of ppc and x86 we have (at least) this:
-> arm:
-> 	unsigned int __ua_flags = uaccess_save_and_enable();
-> 	...
-> 	uaccess_restore(__ua_flags);
-> arm64:
-> 	uaccess_enable_not_uao();
-> 	...
-> 	uaccess_disable_not_uao();
-> riscv:
-> 	__enable_user_access();
-> 	...
-> 	__disable_user_access();
-> s390/mvc:
-> 	old_fs = enable_sacf_uaccess();
-> 	...
->          disable_sacf_uaccess(old_fs);
-> 
-> arm64 and riscv are easy - they map well on what we have now.
-> The interesting ones are ppc, arm and s390.
-> 
-> You wants to specify the kind of access; OK, but...  it's not just read
-> vs. write - there's read-write as well.  AFAICS, there are 3 users of
-> that:
-> 	* copy_in_user()
-> 	* arch_futex_atomic_op_inuser()
-> 	* futex_atomic_cmpxchg_inatomic()
-> The former is of dubious utility (all users outside of arch are in
-> the badly done compat code), but the other two are not going to go
-> away.
 
-user_access_begin() grants both read and write.
+Applied to linux-kbuild.
 
-This patch adds user_read_access_begin() and user_write_access_begin() 
-but it doesn't remove user_access_begin()
+I will rebase my branch during this MW,
+so the commit ID will be unstable.
+Please do not record it until it lands in Linus' tree.
 
-> 
-> What should we do about that?  Do we prohibit such blocks outside
-> of arch?
-> 
-> What should we do about arm and s390?  There we want a cookie passed
-> from beginning of block to its end; should that be a return value?
-
-That was the way I implemented it in January, see 
-https://patchwork.ozlabs.org/patch/1227926/
-
-There was some discussion around that and most noticeable was:
-
-H. Peter (hpa) said about it: "I have *deep* concern with carrying state 
-in a "key" variable: it's a direct attack vector for a crowbar attack, 
-especially since it is by definition live inside a user access region."
-
-> 
-> And at least on arm that thing nests (see e.g. __clear_user_memset()
-> there), so "stash that cookie in current->something" is not a solution...
-> 
-> Folks, let's sort that out while we still have few users of that
-> interface; changing the calling conventions later will be much harder.
-> Comments?
-> 
-
-This patch minimises the change by just adding user_read_access_begin() 
-and user_write_access_begin() keeping the same parameters as the 
-existing user_access_begin().
-
-So I can come back to a mix of this patch and the January version if it 
-corresponds to everyone's view, it will also be a bit easier for powerpc 
-(especially book3s/32). But that didn't seem to be the expected 
-direction back when we discussed it in January.
-
-Christophe
+-- 
+Best Regards
+Masahiro Yamada
