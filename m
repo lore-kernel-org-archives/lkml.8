@@ -2,106 +2,299 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41E9C2D0E9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE88FC10F26
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEA72078E
+	by mail.kernel.org (Postfix) with ESMTP id C64AA20784
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YX4kK4/l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bDATjtlv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgDBFga (ORCPT
+        id S1729058AbgDBFgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 01:36:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36711 "EHLO
+        Thu, 2 Apr 2020 01:36:32 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44763 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgDBFg3 (ORCPT
+        with ESMTP id S1728661AbgDBFg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Apr 2020 01:36:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c23so1341746pgj.3
+Received: by mail-pg1-f195.google.com with SMTP id 142so1318537pgf.11
         for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 22:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qRIzo5o5vpllI++B3nY//4/moCStw1oArBNgpNNZWE0=;
-        b=YX4kK4/l4v2Dc+sIlNifTF+eu7cc0Xwqmrkw6+903BF5W9hYTPcWEQ1O8+LgEOjeXJ
-         QXFfirICEm2ToMk+K+f0BAw2q3aM4+7i/mtghVUotn2aFVQr/rkHHVy4LVTDEhrRC3q5
-         bG9OMYPBR3q3H/nLiX2GyaPOIqz5tskvc9Oyg/MuabGNsxkYzFRjlQCzUafRlE5XYHAq
-         lXfnvpaasLeK+GEb7tU+b2Xxu9ZrwbqDiVUXeweP+wX9flK1mvhJRUyrWxmL/Prxknt4
-         lE9I+3V7sQZxFcL0CdBjr6rIg+ML2jv5LdLcdtU2QhmAsVwdSUHcvQAgE6VYtTngmeYK
-         qj2A==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=/86LCZpkdCCI2aQCkzyWwEuy6AbVAj1IJKzL58DHDfQ=;
+        b=bDATjtlvewO2aXhdqOfQBC/pBYB6DM9c45KnTOPWOnLnbRT8YsiPe2hUhh8blsNALJ
+         9N4HxMbzLwW4I++3l4TEU08PJEIREZtk9FWwCx/9ellw5Pwth9zHEDaDs8NQcp8dFzC2
+         kDPb3P2dKkGfo+B/MLG5lfkTILZoUq+8ll1hAXptkw/ELPV9MlJZulKD3JE8jxlTDQh9
+         uGtfyejTWoPTDMrluVIIBTgple1TdNOJaYY0iC0hx+QQnhFlwF0kRspbc9dlKrz3G9P6
+         Sch+QJyOKAf/5y3g5NJ5nz7qDbI7huL5nt2OF0XO47jjqIVEN6pVy4yhChG/009HdKr3
+         bIxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qRIzo5o5vpllI++B3nY//4/moCStw1oArBNgpNNZWE0=;
-        b=cWpD+xmwcXSKOF2DLJDFhoQtBM+ooFvqd96uyQqB7SsO3cIaqELu8w6YWzv1+cq+/R
-         L3U6yzSeeHgw58omcQisZc97PU/pixVou9kRT90uMCdV6zchZHlYiEHAwkw6fJuidWMZ
-         Ig0IZEOYvWTmXjVGlCklF7RPHFBxI2fDUmyoG2i1NlC4bF7gkvw/mHnA14q3NAxdeQhF
-         VVsJkoRxrsBiq6xfwvvK/29KnUD+7gCKaytQeYxoBoCDlpIRyCYt7MSeSeOaNi1xRsV3
-         zznSouhknqO4gQ/MnVPbzeCxsS1AZchBJ+Xnq9YnseHDjuFAO94POKUb5TTpdiP0i33s
-         ZzlA==
-X-Gm-Message-State: AGi0PuZ1QkxnLb7ojadwHRr+xF+8w5hbw0fuQYJKyAE3/sHuPL/+bJbc
-        oQVnwQnJwysjwRHWtv32xpY=
-X-Google-Smtp-Source: APiQypIAgreB/HoC94SMNNTLUG92Y3nyUkudT6yq5FXpvuXoHAEl+87D1f6IfaXfXj/J4INNUM45eg==
-X-Received: by 2002:a62:7950:: with SMTP id u77mr1573409pfc.34.1585805788026;
-        Wed, 01 Apr 2020 22:36:28 -0700 (PDT)
-Received: from OptiPlexFedora.fios-router.home ([47.144.161.84])
-        by smtp.gmail.com with ESMTPSA id y28sm2863136pfp.128.2020.04.01.22.36.27
+         :references;
+        bh=/86LCZpkdCCI2aQCkzyWwEuy6AbVAj1IJKzL58DHDfQ=;
+        b=MHAhF5kZlMAKz2Op7dJRv5jPFCqXEevigYMOQtSHHa0kUUJ/bCvV66N/zS6AbuFm69
+         mglZyz6V7QtwGBF2EIBd8/K2BTcvGSJW0E+4X2w5MZDPRhMdK3m+OWZslr4MAsF5KXbX
+         WS+3OqarNYV/sUvtY9wZlTVbsuPCufYNPqAzRNKcPkjeJRrhazWVWCnvspRyKXigVEk3
+         dWxo+wMUE98AV2WiKD3PEDKQVLYGWJ2oyhzQvIzaLMxnUZeQMjblQvG8Ri1+r2l/KNgm
+         5RV8twkPorgzAMjZ7/xH7U8LIy+uOsEWj1X27WVjwLRRhhTyEmqZYvmVRakvKmX9jzV6
+         kslw==
+X-Gm-Message-State: AGi0PuZH7G6/zgOp5A+170sm5QmvHR8axej/YzlzjQIeHLBUrPii3JmA
+        22y6kKBDRQ1XtmE3V8frxF4i
+X-Google-Smtp-Source: APiQypInsyCDoGwDVuzQwTgMzLsgrdkKGHtAU0VxyCHuoH02ryokIn4GnqzmG4qUxKyVyu2QdtqOwQ==
+X-Received: by 2002:aa7:9f4a:: with SMTP id h10mr1504155pfr.234.1585805787832;
+        Wed, 01 Apr 2020 22:36:27 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:29a:a216:d9f7:e98f:311a:69f6])
+        by smtp.gmail.com with ESMTPSA id s14sm2684824pgl.4.2020.04.01.22.36.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 01 Apr 2020 22:36:27 -0700 (PDT)
-From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
-To:     outreachy-kernel@googlegroups.com,
-        Rob Springer <rspringer@google.com>,
-        Todd Poynor <toddpoynor@google.com>,
-        Ben Chan <benchan@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
-Subject: [PATCH 2/2] staging: gasket: Fix comment 75 character limit warning
-Date:   Wed,  1 Apr 2020 22:36:17 -0700
-Message-Id: <20200402053617.826678-3-jbwyatt4@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200402053617.826678-1-jbwyatt4@gmail.com>
-References: <20200402053617.826678-1-jbwyatt4@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org, davem@davemloft.net
+Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clew@codeaurora.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 1/3] bus: mhi: core: Add support for MHI suspend and resume
+Date:   Thu,  2 Apr 2020 11:06:08 +0530
+Message-Id: <20200402053610.9345-2-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200402053610.9345-1-manivannan.sadhasivam@linaro.org>
+References: <20200402053610.9345-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix 75 character limit warning in comment reported by checkpatch.
+Add support for MHI suspend and resume states. While at it, the
+mhi_notify() function needs to be exported as well.
 
-Reported by checkpatch.
-
-Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/staging/gasket/apex_driver.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bus/mhi/core/main.c |   3 +-
+ drivers/bus/mhi/core/pm.c   | 143 ++++++++++++++++++++++++++++++++++++
+ include/linux/mhi.h         |  19 +++++
+ 3 files changed, 164 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/gasket/apex_driver.c b/drivers/staging/gasket/apex_driver.c
-index f48209ec7d24..5ad15f398893 100644
---- a/drivers/staging/gasket/apex_driver.c
-+++ b/drivers/staging/gasket/apex_driver.c
-@@ -50,8 +50,8 @@
- #define NUM_NODES 1
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index eb4256b81406..3e9aa3b2da77 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -267,7 +267,7 @@ int mhi_destroy_device(struct device *dev, void *data)
+ 	return 0;
+ }
  
- /*
-- * The total number of entries in the page table. Should match the value read
-- * from the register APEX_BAR2_REG_KERNEL_HIB_PAGE_TABLE_SIZE.
-+ * The total number of entries in the page table. Should match the
-+ * value read from the register APEX_BAR2_REG_KERNEL_HIB_PAGE_TABLE_SIZE.
+-static void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
++void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
+ {
+ 	struct mhi_driver *mhi_drv;
+ 
+@@ -279,6 +279,7 @@ static void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason)
+ 	if (mhi_drv->status_cb)
+ 		mhi_drv->status_cb(mhi_dev, cb_reason);
+ }
++EXPORT_SYMBOL_GPL(mhi_notify);
+ 
+ /* Bind MHI channels to MHI devices */
+ void mhi_create_devices(struct mhi_controller *mhi_cntrl)
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index 52690cb5c89c..3529419d076b 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -669,6 +669,149 @@ void mhi_pm_st_worker(struct work_struct *work)
+ 	}
+ }
+ 
++int mhi_pm_suspend(struct mhi_controller *mhi_cntrl)
++{
++	struct mhi_chan *itr, *tmp;
++	struct device *dev = &mhi_cntrl->mhi_dev->dev;
++	enum mhi_pm_state new_state;
++	int ret;
++
++	if (mhi_cntrl->pm_state == MHI_PM_DISABLE)
++		return -EINVAL;
++
++	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))
++		return -EIO;
++
++	/* Return busy if there are any pending resources */
++	if (atomic_read(&mhi_cntrl->dev_wake))
++		return -EBUSY;
++
++	/* Take MHI out of M2 state */
++	read_lock_bh(&mhi_cntrl->pm_lock);
++	mhi_cntrl->wake_get(mhi_cntrl, false);
++	read_unlock_bh(&mhi_cntrl->pm_lock);
++
++	ret = wait_event_timeout(mhi_cntrl->state_event,
++				 mhi_cntrl->dev_state == MHI_STATE_M0 ||
++				 mhi_cntrl->dev_state == MHI_STATE_M1 ||
++				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
++				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
++
++	read_lock_bh(&mhi_cntrl->pm_lock);
++	mhi_cntrl->wake_put(mhi_cntrl, false);
++	read_unlock_bh(&mhi_cntrl->pm_lock);
++
++	if (!ret || MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
++		dev_err(dev,
++			"Could not enter M0/M1 state");
++		return -EIO;
++	}
++
++	write_lock_irq(&mhi_cntrl->pm_lock);
++
++	if (atomic_read(&mhi_cntrl->dev_wake)) {
++		write_unlock_irq(&mhi_cntrl->pm_lock);
++		return -EBUSY;
++	}
++
++	dev_info(dev, "Allowing M3 transition\n");
++	new_state = mhi_tryset_pm_state(mhi_cntrl, MHI_PM_M3_ENTER);
++	if (new_state != MHI_PM_M3_ENTER) {
++		write_unlock_irq(&mhi_cntrl->pm_lock);
++		dev_err(dev,
++			"Error setting to PM state: %s from: %s\n",
++			to_mhi_pm_state_str(MHI_PM_M3_ENTER),
++			to_mhi_pm_state_str(mhi_cntrl->pm_state));
++		return -EIO;
++	}
++
++	/* Set MHI to M3 and wait for completion */
++	mhi_set_mhi_state(mhi_cntrl, MHI_STATE_M3);
++	write_unlock_irq(&mhi_cntrl->pm_lock);
++	dev_info(dev, "Wait for M3 completion\n");
++
++	ret = wait_event_timeout(mhi_cntrl->state_event,
++				 mhi_cntrl->dev_state == MHI_STATE_M3 ||
++				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
++				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
++
++	if (!ret || MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
++		dev_err(dev,
++			"Did not enter M3 state, MHI state: %s, PM state: %s\n",
++			TO_MHI_STATE_STR(mhi_cntrl->dev_state),
++			to_mhi_pm_state_str(mhi_cntrl->pm_state));
++		return -EIO;
++	}
++
++	/* Notify clients about entering LPM */
++	list_for_each_entry_safe(itr, tmp, &mhi_cntrl->lpm_chans, node) {
++		mutex_lock(&itr->mutex);
++		if (itr->mhi_dev)
++			mhi_notify(itr->mhi_dev, MHI_CB_LPM_ENTER);
++		mutex_unlock(&itr->mutex);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(mhi_pm_suspend);
++
++int mhi_pm_resume(struct mhi_controller *mhi_cntrl)
++{
++	struct mhi_chan *itr, *tmp;
++	struct device *dev = &mhi_cntrl->mhi_dev->dev;
++	enum mhi_pm_state cur_state;
++	int ret;
++
++	dev_info(dev, "Entered with PM state: %s, MHI state: %s\n",
++		 to_mhi_pm_state_str(mhi_cntrl->pm_state),
++		 TO_MHI_STATE_STR(mhi_cntrl->dev_state));
++
++	if (mhi_cntrl->pm_state == MHI_PM_DISABLE)
++		return 0;
++
++	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))
++		return -EIO;
++
++	/* Notify clients about exiting LPM */
++	list_for_each_entry_safe(itr, tmp, &mhi_cntrl->lpm_chans, node) {
++		mutex_lock(&itr->mutex);
++		if (itr->mhi_dev)
++			mhi_notify(itr->mhi_dev, MHI_CB_LPM_EXIT);
++		mutex_unlock(&itr->mutex);
++	}
++
++	write_lock_irq(&mhi_cntrl->pm_lock);
++	cur_state = mhi_tryset_pm_state(mhi_cntrl, MHI_PM_M3_EXIT);
++	if (cur_state != MHI_PM_M3_EXIT) {
++		write_unlock_irq(&mhi_cntrl->pm_lock);
++		dev_info(dev,
++			 "Error setting to PM state: %s from: %s\n",
++			 to_mhi_pm_state_str(MHI_PM_M3_EXIT),
++			 to_mhi_pm_state_str(mhi_cntrl->pm_state));
++		return -EIO;
++	}
++
++	/* Set MHI to M0 and wait for completion */
++	mhi_set_mhi_state(mhi_cntrl, MHI_STATE_M0);
++	write_unlock_irq(&mhi_cntrl->pm_lock);
++
++	ret = wait_event_timeout(mhi_cntrl->state_event,
++				 mhi_cntrl->dev_state == MHI_STATE_M0 ||
++				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
++				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
++
++	if (!ret || MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
++		dev_err(dev,
++			"Did not enter M0 state, MHI state: %s, PM state: %s\n",
++			TO_MHI_STATE_STR(mhi_cntrl->dev_state),
++			to_mhi_pm_state_str(mhi_cntrl->pm_state));
++		return -EIO;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(mhi_pm_resume);
++
+ int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl)
+ {
+ 	int ret;
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index ad1996001965..a4288f4d656f 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -568,6 +568,13 @@ void mhi_driver_unregister(struct mhi_driver *mhi_drv);
+ void mhi_set_mhi_state(struct mhi_controller *mhi_cntrl,
+ 		       enum mhi_state state);
+ 
++/**
++ * mhi_notify - Notify the MHI client driver about client device status
++ * @mhi_dev: MHI device instance
++ * @cb_reason: MHI callback reason
++ */
++void mhi_notify(struct mhi_device *mhi_dev, enum mhi_callback cb_reason);
++
+ /**
+  * mhi_prepare_for_power_up - Do pre-initialization before power up.
+  *                            This is optional, call this before power up if
+@@ -604,6 +611,18 @@ void mhi_power_down(struct mhi_controller *mhi_cntrl, bool graceful);
   */
- #define APEX_PAGE_TABLE_TOTAL_ENTRIES 8192
+ void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl);
  
++/**
++ * mhi_pm_suspend - Move MHI into a suspended state
++ * @mhi_cntrl: MHI controller
++ */
++int mhi_pm_suspend(struct mhi_controller *mhi_cntrl);
++
++/**
++ * mhi_pm_resume - Resume MHI from suspended state
++ * @mhi_cntrl: MHI controller
++ */
++int mhi_pm_resume(struct mhi_controller *mhi_cntrl);
++
+ /**
+  * mhi_download_rddm_img - Download ramdump image from device for
+  *                         debugging purpose.
 -- 
-2.25.1
+2.17.1
 
