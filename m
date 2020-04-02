@@ -2,110 +2,125 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6A0C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72300C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77242073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386B82074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYmJPkWR"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="SExtHH2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732956AbgDBN4a (ORCPT
+        id S1733020AbgDBN5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:56:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57833 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727412AbgDBN4a (ORCPT
+        Thu, 2 Apr 2020 09:57:15 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:54808 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727439AbgDBN5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:56:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585835789;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LynRBm0QdjHVu82HMM2DCC2CaC+mcsg4vB8dlsKoP9A=;
-        b=EYmJPkWRoCqVN3SdAcVr5xawEpQyvYCxy+w9U4NjpWK6jTE+sf6TlzX0mXCH4HloIOjnXe
-        3ahyB2wovLj7YwtA1SKGIRThmBA0uxO8pAm5hhaCQHjOeJgiCOSDelILuxDvoVM+3apNCu
-        JcKXGioxIhD+WuQ+qCnOn4w3Swhr4wU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-RDG4fjfhMsyhNBw_9UBvww-1; Thu, 02 Apr 2020 09:56:27 -0400
-X-MC-Unique: RDG4fjfhMsyhNBw_9UBvww-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 2 Apr 2020 09:57:14 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DA9E18A6EC1;
-        Thu,  2 Apr 2020 13:56:26 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D5A151001938;
-        Thu,  2 Apr 2020 13:56:20 +0000 (UTC)
-Subject: Re: [PATCH 2/2] selftests: kvm: Add mem_slot_test test
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        david@redhat.com
-References: <20200330204310.21736-1-wainersm@redhat.com>
- <20200330204310.21736-3-wainersm@redhat.com>
- <20200402090029.pc6w6iqikgthflhq@kamzik.brq.redhat.com>
-From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
-Message-ID: <e6676068-3214-f9bf-832b-889facc8b091@redhat.com>
-Date:   Thu, 2 Apr 2020 10:56:18 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20200402090029.pc6w6iqikgthflhq@kamzik.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D0ABB43BB0;
+        Thu,  2 Apr 2020 13:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1585835834; bh=WxB9gfK7GgZCSSdeiOrOcAWKApS/sOPCGGGM63tiPEQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SExtHH2/3uXBmmuJPIQIqhFRsoYdNajCJQ1pS2JGL7z5jnl3R/dZNe6/0He/izxdO
+         v+zCqA/rU8SvFWnQcfbsO/vyzcNwleriVnxioC+RGwbza21xF1XC3U721RWJXkBWRm
+         IL6AEBis1v/gyRaBVsEEDbXpLrSIz+thlhyyiAOGUpOsJVjK8/jKfIyn9op/WO66xq
+         5lMNl0X/lQnw5BPXsRqTmMZ1m1pnlCITIQj4LxdU1hqqzXG58qRPKE++lvBQFIt46o
+         C1GY4XqJ8Ku7z04idUbEWry9734w2OeXZlGEE8EZm6cQT3wpdQu4eb2XqR8HYfYjel
+         mmSmWFe6x0Wjw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 93E62A005B;
+        Thu,  2 Apr 2020 13:57:11 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: stmmac: xgmac: Fix VLAN register handling
+Date:   Thu,  2 Apr 2020 15:57:07 +0200
+Message-Id: <daf6d10d679c24e9b33b758b249b9b70e5eb1f01.1585835790.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 907a076881f1, forgot that we need to clear old values of
+XGMAC_VLAN_TAG register when we switch from VLAN perfect matching to
+HASH matching.
 
-On 4/2/20 6:00 AM, Andrew Jones wrote:
-> On Mon, Mar 30, 2020 at 05:43:10PM -0300, Wainer dos Santos Moschetta wrote:
->> This patch introduces the mem_slot_test test which checks
->> an VM can have added memory slots up to the limit defined in
->> KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
->> verify it fails as expected.
->>
->> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
->> ---
->>   tools/testing/selftests/kvm/.gitignore      |  1 +
->>   tools/testing/selftests/kvm/Makefile        |  3 +
->>   tools/testing/selftests/kvm/mem_slot_test.c | 92 +++++++++++++++++++++
->>   3 files changed, 96 insertions(+)
->>   create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
->>
-> BTW, in kvm/queue we also now have
->
-> x86_64/set_memory_region_test.c
->
-> I wonder if we shouldn't try to make x86_64/set_memory_region_test.c
-> arch-neutral and then integrate this new test with it.
+Fix it.
 
-When I started work on this test I called it "add_max_mem_slots" but 
-then I realized it could be rather a suite for other tests, so it was 
-renamed. So yes, I think we can try to merge those memory region tests 
-altogether.
+Fixes: 907a076881f1 ("net: stmmac: xgmac: fix incorrect XGMAC_VLAN_TAG register writting")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-I'm about to send a v2 where I address all your comments and hopefully 
-we can use as the base for such as integration. Makes sense?
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Thanks!
-
-- Wainer
-
-
->
-> Thanks,
-> drew
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 0e4575f7bedb..ad4df9bddcf3 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -577,8 +577,13 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
+ 			value |= XGMAC_VLAN_EDVLP;
+ 			value |= XGMAC_VLAN_ESVL;
+ 			value |= XGMAC_VLAN_DOVLTC;
++		} else {
++			value &= ~XGMAC_VLAN_EDVLP;
++			value &= ~XGMAC_VLAN_ESVL;
++			value &= ~XGMAC_VLAN_DOVLTC;
+ 		}
+ 
++		value &= ~XGMAC_VLAN_VID;
+ 		writel(value, ioaddr + XGMAC_VLAN_TAG);
+ 	} else if (perfect_match) {
+ 		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
+@@ -589,13 +594,19 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
+ 
+ 		value = readl(ioaddr + XGMAC_VLAN_TAG);
+ 
++		value &= ~XGMAC_VLAN_VTHM;
+ 		value |= XGMAC_VLAN_ETV;
+ 		if (is_double) {
+ 			value |= XGMAC_VLAN_EDVLP;
+ 			value |= XGMAC_VLAN_ESVL;
+ 			value |= XGMAC_VLAN_DOVLTC;
++		} else {
++			value &= ~XGMAC_VLAN_EDVLP;
++			value &= ~XGMAC_VLAN_ESVL;
++			value &= ~XGMAC_VLAN_DOVLTC;
+ 		}
+ 
++		value &= ~XGMAC_VLAN_VID;
+ 		writel(value | perfect_match, ioaddr + XGMAC_VLAN_TAG);
+ 	} else {
+ 		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
+-- 
+2.7.4
 
