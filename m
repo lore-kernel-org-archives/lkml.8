@@ -2,108 +2,163 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5493C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6029EC10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA36720784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:09:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KZd7N0Qu"
+	by mail.kernel.org (Postfix) with ESMTP id 40DA220784
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387535AbgDBHJr (ORCPT
+        id S2387558AbgDBHKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:09:47 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2874 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgDBHJq (ORCPT
+        Thu, 2 Apr 2020 03:10:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32158 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725789AbgDBHKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:09:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e858f570000>; Thu, 02 Apr 2020 00:08:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 02 Apr 2020 00:09:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 02 Apr 2020 00:09:45 -0700
-Received: from [10.26.72.253] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Apr
- 2020 07:09:42 +0000
-Subject: Re: [PATCH 4.14 000/148] 4.14.175-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200401161552.245876366@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b5c594c9-1034-ad22-2413-11347df4eab6@nvidia.com>
-Date:   Thu, 2 Apr 2020 08:09:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585811287; bh=swGqfiu+A6EyiPVCXLy37LLyhCi240hOx5RzYU9T2oE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=KZd7N0Qu11BbrA6lgeoH2DYJ7xEG4OrEjGyunOfp4c/w01q2xoLI5vnBczgK3sr1r
-         xb+FCafXeQxQnSkpHKrpPU5vpybHWVtnZuZlONXMhFuhilDGr9VeJfyevvn4knbIC0
-         0kWNejuaxoA/RUK4QorxDMvrJgp56s/91TdlRZFgWA9+u4UDx8WMthko85CcZ79OW8
-         M3nhiaAIXYK7HNQl91IfkvEKD1qUrwHh8cUxoc/HVH/Bk6LK0vtomPHYenw46p1Lvr
-         fhVu0uMYWTcWv9j4nYxz93EfbJLCYPMxk4ax4SqBRYoLh6OhjgDlqtObk96V2bdo0V
-         kEVUhbFL43Hqg==
+        Thu, 2 Apr 2020 03:10:02 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03273VIX148114;
+        Thu, 2 Apr 2020 03:09:14 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3020715x7e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 03:09:14 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03274uHX152740;
+        Thu, 2 Apr 2020 03:09:13 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3020715x75-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 03:09:13 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03276dUl032506;
+        Thu, 2 Apr 2020 07:09:13 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 301x780s2h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 07:09:13 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03279BvJ58130808
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Apr 2020 07:09:11 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9707ABE04F;
+        Thu,  2 Apr 2020 07:09:11 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A119DBE053;
+        Thu,  2 Apr 2020 07:09:10 +0000 (GMT)
+Received: from [9.70.82.143] (unknown [9.70.82.143])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  2 Apr 2020 07:09:10 +0000 (GMT)
+Subject: [PATCH v10 01/14] powerpc/xive: Define
+ xive_native_alloc_irq_on_chip()
+From:   Haren Myneni <haren@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
+        frederic.barrat@fr.ibm.com, ajd@linux.ibm.com,
+        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
+        oohall@gmail.com, clg@kaod.org, sukadev@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, herbert@gondor.apana.org.au
+In-Reply-To: <1585810846.2275.23.camel@hbabu-laptop>
+References: <1585810846.2275.23.camel@hbabu-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Date:   Thu, 02 Apr 2020 00:09:09 -0700
+Message-ID: <1585811349.2275.33.camel@hbabu-laptop>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.28.3 
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999 suspectscore=3
+ bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 01/04/2020 17:16, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.175 release.
-> There are 148 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.175-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+This function allocates IRQ on a specific chip. VAS needs per chip
+IRQ allocation and will have IRQ handler per VAS instance.
 
-All tests are passing for Tegra ...
+Signed-off-by: Haren Myneni <haren@linux.ibm.com>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+---
+ arch/powerpc/include/asm/xive.h   | 9 ++++++++-
+ arch/powerpc/sysdev/xive/native.c | 6 +++---
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    24 tests:	24 pass, 0 fail
-
-Linux version:	4.14.175-rc1-gbc03924ca6ea
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
+diff --git a/arch/powerpc/include/asm/xive.h b/arch/powerpc/include/asm/xive.h
+index 93f982db..d08ea11 100644
+--- a/arch/powerpc/include/asm/xive.h
++++ b/arch/powerpc/include/asm/xive.h
+@@ -5,6 +5,8 @@
+ #ifndef _ASM_POWERPC_XIVE_H
+ #define _ASM_POWERPC_XIVE_H
+ 
++#include <asm/opal-api.h>
++
+ #define XIVE_INVALID_VP	0xffffffff
+ 
+ #ifdef CONFIG_PPC_XIVE
+@@ -108,7 +110,6 @@ struct xive_q {
+ int xive_native_populate_irq_data(u32 hw_irq,
+ 				  struct xive_irq_data *data);
+ void xive_cleanup_irq_data(struct xive_irq_data *xd);
+-u32 xive_native_alloc_irq(void);
+ void xive_native_free_irq(u32 irq);
+ int xive_native_configure_irq(u32 hw_irq, u32 target, u8 prio, u32 sw_irq);
+ 
+@@ -137,6 +138,12 @@ int xive_native_set_queue_state(u32 vp_id, uint32_t prio, u32 qtoggle,
+ 				u32 qindex);
+ int xive_native_get_vp_state(u32 vp_id, u64 *out_state);
+ bool xive_native_has_queue_state_support(void);
++extern u32 xive_native_alloc_irq_on_chip(u32 chip_id);
++
++static inline u32 xive_native_alloc_irq(void)
++{
++	return xive_native_alloc_irq_on_chip(OPAL_XIVE_ANY_CHIP);
++}
+ 
+ #else
+ 
+diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
+index 0ff6b73..14d4406 100644
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -279,12 +279,12 @@ static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
+ }
+ #endif /* CONFIG_SMP */
+ 
+-u32 xive_native_alloc_irq(void)
++u32 xive_native_alloc_irq_on_chip(u32 chip_id)
+ {
+ 	s64 rc;
+ 
+ 	for (;;) {
+-		rc = opal_xive_allocate_irq(OPAL_XIVE_ANY_CHIP);
++		rc = opal_xive_allocate_irq(chip_id);
+ 		if (rc != OPAL_BUSY)
+ 			break;
+ 		msleep(OPAL_BUSY_DELAY_MS);
+@@ -293,7 +293,7 @@ u32 xive_native_alloc_irq(void)
+ 		return 0;
+ 	return rc;
+ }
+-EXPORT_SYMBOL_GPL(xive_native_alloc_irq);
++EXPORT_SYMBOL_GPL(xive_native_alloc_irq_on_chip);
+ 
+ void xive_native_free_irq(u32 irq)
+ {
 -- 
-nvpublic
+1.8.3.1
+
+
+
