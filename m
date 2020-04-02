@@ -2,102 +2,78 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E849C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126C3C2BA16
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2A620719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0652077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXQlDSas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388484AbgDBTv5 (ORCPT
+        id S2388723AbgDBTwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:51:57 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46466 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgDBTv5 (ORCPT
+        Thu, 2 Apr 2020 15:52:15 -0400
+Received: from mail-io1-f44.google.com ([209.85.166.44]:43190 "EHLO
+        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgDBTwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:51:57 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 7AD4C297C74
-Subject: Re: [PATCH v2 1/3] rkisp1: Get rid of unused variable warning
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20200402194504.5331-1-ezequiel@collabora.com>
- <20200402194504.5331-2-ezequiel@collabora.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <3f751060-8af4-3d7a-785a-c06c56736a08@collabora.com>
-Date:   Thu, 2 Apr 2020 16:51:48 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 2 Apr 2020 15:52:14 -0400
+Received: by mail-io1-f44.google.com with SMTP id x9so4926185iom.10;
+        Thu, 02 Apr 2020 12:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=d6P9gFkqLTLqHnulKR4Er/P8B/YixzvfSWTBTjCDeiw=;
+        b=fXQlDSas1xDUJ+bPpq612JqpZfX3G0xsjph5r9MtJEKXEgURlvgvBn0ntJLui2efmm
+         K+d/G2sb8tX3S7uGa9b+5sMNTulv0JhR7GE0GOj2FN6uSwXUL2izuocUT3k7W3aYdtzx
+         n1DinVFpRFQ0X/bwSV2zTZLvp9wESxb5LWT2vZBY9c953YIxXukl1St9Gs3JhtGGcVho
+         rSd9EaQJjMy2nfCA4Js8zI1asj864KP0CwDBI4Gm57DmRo/WiFudLnLM2QNfLj1RDOoQ
+         96mflqYD+MIl+df3ksNGYgxaAyppTxoIWjF7A7M9NpbFWugDVNAszgWhyNo9mFKjPFB4
+         zUEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=d6P9gFkqLTLqHnulKR4Er/P8B/YixzvfSWTBTjCDeiw=;
+        b=m4glYydF7S3BJzpHTjMElfwFMoycgUrAkvcWx7GcDsXTWq4Kjxkqh9zPlvTPzbWk90
+         hycTZpPtDo6J4TrLMkalaIv3Ll8ECFOo0RUy0llJN2J8srSGE0JdbXNQq6OXbdC9zlts
+         +kXiMkdMljh7kkvtb0lhStvFFvSDtSUFGOu2PpgHrdfb372TotljIi23iSz60N1E2QG5
+         9McRnoHyccWCIQveH+8neKhDOHiL589qTJqw0he7DYZxORXo9FyBYgThXfsgfrMfvJnW
+         eUUN2SnQdYOlyiihR9d+HKmgpAtpQ3PsDj/OMhj04XzYQPsrkIdEngzwUbLPTZdpLc1B
+         hOZQ==
+X-Gm-Message-State: AGi0PubsHGW6zjGihuPPLhplBhuQXasRGfJmFExj0uclh7Ndudz1XgXX
+        nfoSy+2T3Bk0zfvy5Fq/vv+Pm+RcFYXRZnRk/gSNLI5PA3c=
+X-Google-Smtp-Source: APiQypLBrSq8oA5qVK3DhEzgyasVFKJsSSZnsv0ZbgMP7/ZyTPoaOeCsXXGTU8ecf/PMc3HmSQ5SeaSDqi8MeqQPbos=
+X-Received: by 2002:a02:aa8a:: with SMTP id u10mr4856332jai.88.1585857130206;
+ Thu, 02 Apr 2020 12:52:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200402194504.5331-2-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200402155057.30667-1-vaibhavgupta40@gmail.com>
+ <CAHp75VcYSaAYx5qy7S0ppb77afgz=Ma=7=opfgSMCBnnjmoWfw@mail.gmail.com> <CAPBsFfAW6z=sP__SHj5Ln-3SHiYcLa4Me=CudAh3iw_Ypmr9mg@mail.gmail.com>
+In-Reply-To: <CAPBsFfAW6z=sP__SHj5Ln-3SHiYcLa4Me=CudAh3iw_Ypmr9mg@mail.gmail.com>
+From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
+Date:   Fri, 3 Apr 2020 01:21:20 +0530
+Message-ID: <CAPBsFfB9uUhZ24UV6heYuOf5_ss8Wx8bywGiq-1gq+h+S-JfWA@mail.gmail.com>
+Subject: Fwd: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to dev_pm_ops
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Thank you for the patch.
+>
+> Rather then doing this I think  the best approach is to unify gpio-pch
+> and gpio-ml-ioh together.
+> Under umbrella of the task, the clean ups like above are highly appreciated.
 
+Sure! So, will the patch be accepted or we should scrap it and work on
+unifying the gpio-pch and gpio-ml-ioh and other similar driver(s) (if any)?
 
-On 4/2/20 4:45 PM, Ezequiel Garcia wrote:
-> If CONFIG_OF is not selected, the compiler will complain:
-> 
-> drivers/staging/media/rkisp1/rkisp1-dev.c: In function ‘rkisp1_probe’:
-> drivers/staging/media/rkisp1/rkisp1-dev.c:457:22: warning: unused variable ‘node’ [-Wunused-variable]
->   457 |  struct device_node *node = pdev->dev.of_node;
-> 
-> Rework the code slightly and make the compiler happy.
-> 
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-
-Acked-by: Helen Koike <helen.koike@collabora.com>
-
-> ---
->  drivers/staging/media/rkisp1/rkisp1-dev.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
-> index b1b3c058e957..3f6285709352 100644
-> --- a/drivers/staging/media/rkisp1/rkisp1-dev.c
-> +++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
-> @@ -454,16 +454,17 @@ static void rkisp1_debug_init(struct rkisp1_device *rkisp1)
->  
->  static int rkisp1_probe(struct platform_device *pdev)
->  {
-> -	struct device_node *node = pdev->dev.of_node;
->  	const struct rkisp1_match_data *clk_data;
-> -	const struct of_device_id *match;
->  	struct device *dev = &pdev->dev;
->  	struct rkisp1_device *rkisp1;
->  	struct v4l2_device *v4l2_dev;
->  	unsigned int i;
->  	int ret, irq;
->  
-> -	match = of_match_node(rkisp1_of_match, node);
-> +	clk_data = of_device_get_match_data(&pdev->dev);
-> +	if (!clk_data)
-> +		return -ENODEV;
-> +
->  	rkisp1 = devm_kzalloc(dev, sizeof(*rkisp1), GFP_KERNEL);
->  	if (!rkisp1)
->  		return -ENOMEM;
-> @@ -487,7 +488,6 @@ static int rkisp1_probe(struct platform_device *pdev)
->  	}
->  
->  	rkisp1->irq = irq;
-> -	clk_data = match->data;
->  
->  	for (i = 0; i < clk_data->size; i++)
->  		rkisp1->clks[i].id = clk_data->clks[i];
-> 
+-- Vaibhav Gupta
