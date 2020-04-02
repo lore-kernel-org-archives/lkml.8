@@ -2,126 +2,112 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEA5C2BA13
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CE0C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CD32078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A1E20784
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="GK4g2Jx6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KNE5T8qn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733283AbgDBGpu (ORCPT
+        id S2387463AbgDBGp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 02:45:50 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37502 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgDBGpu (ORCPT
+        Thu, 2 Apr 2020 02:45:57 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42930 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728425AbgDBGp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 02:45:50 -0400
-Received: by mail-lf1-f68.google.com with SMTP id t11so1777148lfe.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 23:45:48 -0700 (PDT)
+        Thu, 2 Apr 2020 02:45:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 22so1296746pfa.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 23:45:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=4CjSgmyUEPIt3O31cWrwOEE7XeZE7E2oORRQ5C+3/30=;
-        b=GK4g2Jx6P0z2UfAlYKUMIhkcPKwVcDa1+LyodBYg/FUU/Z9GFl43m4OYilsvjf9zIZ
-         aGm2M2r6ncLMOxIG75gn0WFaqYmHJ3oT2wtGKyT4o5lByGL1JmX5yHFj3FDGCCcbZWyj
-         mLkICF2cQs+syzMN5cqyhvuK7++sUghoSeQZM=
+        bh=QnW1FRwTH4xbg6LjM8uAuRTxGm5LQR9zZzf7WroNXlk=;
+        b=KNE5T8qnOrg8DU2Uf0oSMAWQslv7RAp37B4JyeQ3UXi+xSSIhp/xde1qIF/pvqxL9J
+         uxZGuNG4rugzfgwvQE8KO6Q9zN4Gn2dem01V61dEZ4+yTTmhAUzhQuxb4qetrbd2QzQ9
+         VZ/5M5Ai8cumWOzOutq4YrufW5MGwo0BkntamiaU4X7bIamT+y67fMt8yADlN9TylaUH
+         K8F9HomtVYyoxklKUgsWeuDhjNcxaJbb5dhX4UFj73+0sZW+WkOrdQTHhP3RSnke6AVV
+         0GUCdQa0Egz+xressXuZyWEB+f5tjVbuymp2GuRRrw4Q0lliCdINuQjSevox+BOjLR+G
+         QQCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=4CjSgmyUEPIt3O31cWrwOEE7XeZE7E2oORRQ5C+3/30=;
-        b=qiImHo7gf1D1XIqhQFaN5rF5dHEJsWVoX7udnDp6sQVes6ADBVjdrI45OgOasnY5dl
-         a59penabsTG6EsUJr8zq4jj16fAuYOqQkKGIQXBpxf/4yV1VY8copEQUOFyHCdfWBSdg
-         Oa+aINQ5rM5TOEVBkw3cC3q7wBcKEc/ncQjHdtmmUpQTIEMrUODwmZReF+wroRDMfBEl
-         Y2GrDnUfQ1wZe5KnVW+73ihUkIpjqCUZh4JO+eJEDczPobdvuBl0plFOAdpAHOAnLD7V
-         0htf9Fs5DakiiX7+wV9ae/El1xYq9LswpmaAztdwR4XoBQALnIxGzYhLfd0nN0ZXoXBD
-         NZwQ==
-X-Gm-Message-State: AGi0PuYGTTgMN/K8/HTwOblB72+/d5h7quo9hKyWYT5HeHjA9QIg3E0N
-        hytq65X7GG4rpqySOzSKEMjNBQ==
-X-Google-Smtp-Source: APiQypJr/or0hyCKdH0VgqGfjDy+LBvKnoG6wgwqQHJg/Iq1jjpKEpSlGa99wojWGLqAYgTqWceEZg==
-X-Received: by 2002:ac2:42d8:: with SMTP id n24mr1161497lfl.12.1585809948068;
-        Wed, 01 Apr 2020 23:45:48 -0700 (PDT)
-Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
-        by smtp.gmail.com with ESMTPSA id c23sm3182825lfc.69.2020.04.01.23.45.46
+        bh=QnW1FRwTH4xbg6LjM8uAuRTxGm5LQR9zZzf7WroNXlk=;
+        b=sIquo30pAHoPLXnTo2mkaA8Sg5K+FZawcyOuKkkPzcLNuS5Qzn+Zqu8A9fw1axTG31
+         e/b5Dz5DpXHestHdqJQBkCkdoWn8agDF+YHt06oaGq1iYc9BHuSwdw6I+fwslvrzhO+9
+         P//gR1XVk+0JVE1tE1p+eTJXGSrPDaf9NjaJ5dAEPwjXqlA9ZY+gpVqWj7EkdPhyxsYn
+         3gaL/K5e/vKoeNMsot3VwyfHt9BB7thF58RB8n8SEZvtU8Iv1QpTV3RZ8QM3OTE6+iT2
+         i8K5o2OYau5iPRgRSZjM1BkvcDens4U9YlPwhx0drgM7fx+E1Y3XeoZczFiVN7waq8yz
+         AHlQ==
+X-Gm-Message-State: AGi0PuaZWt5Hcsfj0qqoTfWjU1Vhp8vGulRa+ZfI3Lx2Om/x/QMDyej3
+        Gq6btzZeS/IbONsC+dUPLQ2SnhB08eE=
+X-Google-Smtp-Source: APiQypLGCELqQ+CVBf3q8b/1bk+rBZgF5Fqa4XWZ5iwiVgkfN8O0vF2RVSrCHg3HEEPGfX83+uu63Q==
+X-Received: by 2002:a62:cdcc:: with SMTP id o195mr1696130pfg.323.1585809955390;
+        Wed, 01 Apr 2020 23:45:55 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id ck3sm3006406pjb.44.2020.04.01.23.45.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 23:45:47 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 08:45:42 +0200
-From:   Mateusz Holenko <mholenko@antmicro.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Cc:     Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Wed, 01 Apr 2020 23:45:54 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 23:45:52 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     agross@kernel.org, robdclark@gmail.com, joro@8bytes.org,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/5] dt-bindings: vendor: add vendor prefix for LiteX
-Message-ID: <20200402084513.4173306-1-mholenko@antmicro.com>
-References: <20200402084513.4173306-0-mholenko@antmicro.com>
+Subject: Re: [PATCH] iommu/qcom:fix local_base status check
+Message-ID: <20200402064552.GG663905@yoga>
+References: <20200402063302.20640-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402084513.4173306-0-mholenko@antmicro.com>
+In-Reply-To: <20200402063302.20640-1-tangbin@cmss.chinamobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filip Kokosinski <fkokosinski@antmicro.com>
+On Wed 01 Apr 23:33 PDT 2020, Tang Bin wrote:
 
-Add vendor prefix for LiteX SoC builder.
+> Release resources when exiting on error.
+> 
 
-Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
-Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Notes:
-    No changes in v4.
+Regards,
+Bjorn
 
-    Changes in v3:
-    - added Acked-by tag
-
-    No changes in v2.
-
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9e67944bec9c..d9107f0fed2e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -549,6 +549,8 @@ patternProperties:
-     description: Linux-specific binding
-   "^linx,.*":
-     description: Linx Technologies
-+  "^litex,.*":
-+    description: LiteX SoC builder
-   "^lltc,.*":
-     description: Linear Technology Corporation
-   "^logicpd,.*":
--- 
-2.25.1
-
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>  drivers/iommu/qcom_iommu.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+> index 4328da0b0..c08aa9651 100644
+> --- a/drivers/iommu/qcom_iommu.c
+> +++ b/drivers/iommu/qcom_iommu.c
+> @@ -813,8 +813,11 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
+>  	qcom_iommu->dev = dev;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (res)
+> +	if (res) {
+>  		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(qcom_iommu->local_base))
+> +			return PTR_ERR(qcom_iommu->local_base);
+> +	}
+>  
+>  	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
+>  	if (IS_ERR(qcom_iommu->iface_clk)) {
+> -- 
+> 2.20.1.windows.1
+> 
+> 
+> 
