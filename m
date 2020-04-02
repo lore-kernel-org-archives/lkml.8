@@ -2,109 +2,102 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40C9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48835C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C64208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:56:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToyxyR6+"
+	by mail.kernel.org (Postfix) with ESMTP id 24A8A2080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387863AbgDBI4K (ORCPT
+        id S2387892AbgDBI6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:56:10 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39713 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728612AbgDBI4K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:56:10 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p10so3184468wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 01:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=h09wq+dScd3G1lPfYna5Eel+LXgpSjdYtjatbyrFm9Y=;
-        b=ToyxyR6+tOkJxOTHMZv3d5Qb5+mQdfAOof0Vp8dfanGw8N76L7Huem7/hA7fdphMPS
-         HGqdvYzXRv86MFBimMv05fkMfaEKTugmYcDLdWlUw/ny+vDi+SqxVhym19IXMfGC+wcB
-         TcmKMFniB0pqLJU6VUzLedGpy2W60Yxs+WtTK+Nqgp06K+D4N+K4nBh0dpeJopANlCc+
-         cqa7qv4GNoIBODZxs5gDqwapCqnkxHbibY+wj+1BpnkzK815iAJJLbXh+ESDxSmnYhor
-         sTfW8+l07QY2T5l0WzSg6sMhyJU2SSyITsE46M+fpv2JdLH6YxhJ2VJZjKQT2tBQNDPN
-         BJPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=h09wq+dScd3G1lPfYna5Eel+LXgpSjdYtjatbyrFm9Y=;
-        b=KJtD3cYSTMTBkgt9Lv5Z5+MLX2g/TZBkE0nkYXyAJ6zIdh4bVkb3CR5ZemkGw2UduP
-         3m7kwOwGhlb8tK4AROp0MZ3W9IznGeMryBEA9qWIk7OisRyWU3xcKEX+9XXjqdJOiUla
-         FeFtPRRh8NJ31/SUrzpnrvV9zaAXpBhbDrdpusgLP7sdY6la4XSnC8sN40l1lPmUo88M
-         0OER5s6VeMs6u1DTLEjPp7/LNoGxxp/XTQ8yo9AJcOn0EQwYs5lMRHyKDa6gRHXrJJRO
-         NLwJ+rOtg1u+7DO8FMkfZ9JlbxwB8UbyHcWeGvJH2rR2AOKaccDmXRFPWxxoKznfEPCg
-         vI2A==
-X-Gm-Message-State: AGi0PubJrmTa6plBBd49M/Xix6DkU9HqbjuxD//YweuB65iWz5D5pQLW
-        VIJM1L7CLFamF/EaW3OjjlQ=
-X-Google-Smtp-Source: APiQypKl86CrZn5pUtD9lMTnWvTthMdnWBaQefQSi+3SzDQqpRPQowm6dU88P08O/2Oe9p1b5nQkTQ==
-X-Received: by 2002:a5d:6b8b:: with SMTP id n11mr2259268wrx.379.1585817768538;
-        Thu, 02 Apr 2020 01:56:08 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a58:8532:8700:29b9:31c4:8247:2806])
-        by smtp.gmail.com with ESMTPSA id a13sm6584160wrh.80.2020.04.02.01.56.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 01:56:07 -0700 (PDT)
-From:   Ilie Halip <ilie.halip@gmail.com>
-To:     linux-riscv@lists.infradead.org
-Cc:     Ilie Halip <ilie.halip@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mao Han <han_mao@c-sky.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] riscv: fix vdso build with lld
-Date:   Thu,  2 Apr 2020 11:55:58 +0300
-Message-Id: <20200402085559.24865-1-ilie.halip@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 2 Apr 2020 04:58:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59382 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387780AbgDBI6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:58:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1CA9AAA55;
+        Thu,  2 Apr 2020 08:58:07 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 10:58:07 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Julien Thierry <jthierry@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
+In-Reply-To: <0a750745-b069-9ef2-61d3-a15b8fecb649@redhat.com>
+Message-ID: <alpine.LSU.2.21.2004021053160.19977@pobox.suse.cz>
+References: <20200331111652.GH20760@hirez.programming.kicks-ass.net> <20200331202315.zialorhlxmml6ec7@treble> <20200331204047.GF2452@worktop.programming.kicks-ass.net> <20200331211755.pb7f3wa6oxzjnswc@treble> <20200331212040.7lrzmj7tbbx2jgrj@treble>
+ <20200331222703.GH2452@worktop.programming.kicks-ass.net> <d2cad75e-1708-f0bf-7f88-194bcb29e61d@redhat.com> <20200401170910.GX20730@hirez.programming.kicks-ass.net> <684d6e29-4a01-b4a5-f906-7bdee5ad108f@redhat.com> <20200402075036.GA20730@hirez.programming.kicks-ass.net>
+ <20200402081710.GJ20760@hirez.programming.kicks-ass.net> <0a750745-b069-9ef2-61d3-a15b8fecb649@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with the LLVM linker this error occurrs:
-    LD      arch/riscv/kernel/vdso/vdso-syms.o
-  ld.lld: error: no input files
+On Thu, 2 Apr 2020, Julien Thierry wrote:
 
-This happens because the lld treats -R as an alias to -rpath, as opposed
-to ld where -R means --just-symbols.
+> 
+> 
+> On 4/2/20 9:17 AM, Peter Zijlstra wrote:
+> > On Thu, Apr 02, 2020 at 09:50:36AM +0200, Peter Zijlstra wrote:
+> >> On Thu, Apr 02, 2020 at 07:41:46AM +0100, Julien Thierry wrote:
+> > 
+> >>> Also, instead of adding a special "arch_exception_frame_size", I could
+> >>> suggest:
+> >>> - Picking this patch [1] from a completely arbitrary source
+> >>> - Getting rid of INSN_STACK type, any instruction could then include stack
+> >>> ops on top of their existing semantics, they can just have an empty list
+> >>> if
+> >>> they don't touch SP/BP
+> >>> - x86 decoder adds a stack_op to the iret to modify the stack pointer by
+> >>> the
+> >>> right amount
+> >>
+> >> That's not the worst idea, lemme try that.
+> > 
+> > Something like so then?
+> > 
+> 
+> Yes, you could even remove INSN_STACK from insn_type and just always call
+> handle_insn_ops() before the switch statement on insn->type. If the list is
+> empty it does nothing.
+> This way you wouldn't need to call it for the INSN_EXCEPTION_RETURN case, and
+> any type of instructions could use stack_ops.
+> 
+> 
+> And the other suggestion is my other email was that you don't even need to add
+> INSN_EXCEPTION_RETURN. You can keep IRET as INSN_CONTEXT_SWITCH by default and
+> x86 decoder lookups the symbol conaining an iret. If it's a function symbol,
+> it can just set the type to INSN_OTHER so that it caries on to the next
+> instruction after having handled the stack_op.
+> 
+> And everything fits under tools/objtool/arch/x86 :) .
+> 
+> Or is it too far-fetch'd?
 
-Use the long option name for compatibility between the two.
+Imho no. Well, it depends. I can see benefits of both approach. PeterZ's 
+patch is quite minimal and it demonstrates itself as a one-off hack quite 
+well. On the other hand, it is in a generic code, which is not nice 
+especially when other archs do not have such thing. So your proposal would 
+indeed make sense to hide it in arch-specific code. Especially for the 
+future. And INSN_STACK is not used much in the code, so it can be removed 
+easily as you proposed.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/805
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
----
- arch/riscv/kernel/vdso/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+And going more in direction of supporting more archs in the future, I'd 
+say it would make sense to allow more generic things such as "forget about 
+INSN_STACK. If an instruction has non-empty stack_ops list, just process 
+it". It is definitely more flexible.
 
-diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
-index 33b16f4212f7..19f7b9ea10ab 100644
---- a/arch/riscv/kernel/vdso/Makefile
-+++ b/arch/riscv/kernel/vdso/Makefile
-@@ -41,7 +41,8 @@ SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
- $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
- 	$(call if_changed,vdsold)
- 
--LDFLAGS_vdso-syms.o := -r -R
-+# lld aliases -R to -rpath; use the longer option name
-+LDFLAGS_vdso-syms.o := -r --just-symbols
- $(obj)/vdso-syms.o: $(obj)/vdso-dummy.o FORCE
- 	$(call if_changed,ld)
- 
--- 
-2.17.1
+So yes, I think it make sense unless I am missing something.
 
+Miroslav
