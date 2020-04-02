@@ -2,67 +2,67 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22155C2BA17
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E26AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4D02078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FEC2080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tgny2VVk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hm+Tmi0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388274AbgDBO2S (ORCPT
+        id S2388309AbgDBO2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:28:18 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35684 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388126AbgDBO2M (ORCPT
+        Thu, 2 Apr 2020 10:28:22 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39299 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387997AbgDBO2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:28:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g3so2159934wrx.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:28:12 -0700 (PDT)
+        Thu, 2 Apr 2020 10:28:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p10so4453486wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:28:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0yL1w5+JWaXNihGaTzT6saNdFzgGKd/d3GiibbTk4FI=;
-        b=Tgny2VVk+APSF6iZvl9xqCiKBh+PaEW7ArlCg1cSjsRXQSTQ5Yd8ToRlbKatb4fc+O
-         DgnfDXJ6PZTB4djmgmI+pQ4aRtJHr2MG7Ep0lQUyNohXdOu5cDLB+HRvoZZ6EZh4+C6j
-         zHx+MRDpy7Yslqc+HNi5TKkLi9djfrdg386zxVtm1ZHkrrAP8RC8c2X9FsZlVPG9OIjF
-         l7CKHzmpeIyARD8mLMyDR598kq6m5+lTwMkg0g0BDNKAQ0VU7rxaH+kWuMEG7Ex57Lfn
-         N2ReeB2iWjtX9QsfXz1S0iRjexW/DUMI72AxmH/xeVAb8K+NggZwgJVhnHhs3CqIrGvg
-         giXA==
+        bh=TUk4BQq7C9D9BTCs4+bHpz+dkPgArjMTN2O/LGAf+9E=;
+        b=Hm+Tmi0tmk9FkdP/xSgzU53oqODfsMV6xJkTvo0iL75gG9thnJgVXcTUkIza3foeOU
+         x/Co/kmapMn77EM4sUDxwraJvYK8P7u88OvB6SiQJCBmNsS1OubF3zyjDwjghhGzWnh9
+         Y2xW7K+pVBhy45HEbiwI4qPKrvrSrDiyQ47FkqERh6NepyCuio1nO5EAb3j2GTiQOZp+
+         mClWjYkIglg8p8GSIYruiwATJpjlTvEKvgSvelvZe+R1y+cbNij0PXgzSdoiKJKTHAhG
+         p6oxY0XbWqZtcrQ+czI+0GZ3TWdiIb77a8cX0tlW3baXV2NlMFSTib6F3Mtrqoqz15V0
+         1SBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0yL1w5+JWaXNihGaTzT6saNdFzgGKd/d3GiibbTk4FI=;
-        b=fSdXn5bSsbA/qn1XAajGYTbX0T30qw4CEZTJtrt2ltd9XYwragwkjLoaxfVcein1dF
-         QHuYgVWgN1YVTRcZN73Bxi72t75UKYlmvYvMrWXs+ihzKVI2JcDg9o9f3s2oTyNMwNyF
-         clbyiTL4iMO+BAO2FqQe1HU9njR+bVeZNezs/uy4qMAWFfQbS2gf27gc/6M00QCQ6Jyt
-         7l1Z53yUz34ylKd69iVedYeC9bXbtt+llWGSws1t97PCDy+WXt16P/Es2mLnExvOdV+8
-         OvK11L0n5B40iQ8fgHkAR59KWgy4RZdniG4CIWkdh5nEwoOhHE4TlS6nTnD8emKMdXOR
-         eAHw==
-X-Gm-Message-State: AGi0PuawyzrBcUnY1Rf5w+C6OYCVFqOTlej9qaKq+g5qbH1dWyY+eupM
-        SIPrqJIrAuSxCMY7zp6mp4RqOw==
-X-Google-Smtp-Source: APiQypLhb4JxPDxJ1toEh0FNeaz9TM9nX/Zm+7qSIKRBmPBmdRaKUsoz+enVMUHIfk/h1R1UPepDkA==
-X-Received: by 2002:adf:ea8f:: with SMTP id s15mr3738685wrm.393.1585837691388;
-        Thu, 02 Apr 2020 07:28:11 -0700 (PDT)
+        bh=TUk4BQq7C9D9BTCs4+bHpz+dkPgArjMTN2O/LGAf+9E=;
+        b=ZpZRHeB9LDVKwDjlnUmTVhwHhFULQ8x/yLBcotANXYQdiEMuvORV20EEq692FpfC/s
+         guLANIZmR5OCF7C7BgVV2DAvvcxtr5E5HOHKZk5LzPTWR6uIrNMBdQadaorG+LT+Fl1u
+         5AX7Ix8e+vJrErofEWEL3oGpyi4lIeP0os2JpsfnETuyRNk/K51nchnPsOrYc4T/JXGH
+         neqC5QpOhZXRO4U7OHXpFIFOLL/OKlbZhuvSttBbuuzEX4Hu6MIaQl4FpTfXRIDZEviJ
+         B6ADMmpGME8uENZrXOE7Kp5w43TZrPTYR190XH9nEah75X/YnnnI7aF4w4sGDlIeSp5p
+         npUw==
+X-Gm-Message-State: AGi0PuZVG/0uXz3MoCwqlm7IWiLF7JYV+IwA7+L2kXwAwFb0LMFEBd8R
+        jrWB/e2aosC3c7mWXNfOJJm6RnauuHw=
+X-Google-Smtp-Source: APiQypJliHbT0J/IZy5q+5JZe7zqwUmR8pqKIG1bOf49bCksoVzvmqE93UscXuf30ZX2WMatg03nqQ==
+X-Received: by 2002:a5d:5586:: with SMTP id i6mr1368496wrv.23.1585837689096;
+        Thu, 02 Apr 2020 07:28:09 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:4b2:e366:e86f:261a])
-        by smtp.gmail.com with ESMTPSA id a7sm7045186wmm.34.2020.04.02.07.28.10
+        by smtp.gmail.com with ESMTPSA id a7sm7045186wmm.34.2020.04.02.07.28.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 07:28:10 -0700 (PDT)
+        Thu, 02 Apr 2020 07:28:08 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
 Cc:     amit.kucheria@verdurent.com,
         linux-pm@vger.kernel.org (open list:THERMAL),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH V2 9/9] thermal: Remove thermal_zone_device_update() stub
-Date:   Thu,  2 Apr 2020 16:27:47 +0200
-Message-Id: <20200402142747.8307-9-daniel.lezcano@linaro.org>
+Subject: [PATCH V2 7/9] thermal: Change IS_ENABLED to IFDEF in the header file
+Date:   Thu,  2 Apr 2020 16:27:45 +0200
+Message-Id: <20200402142747.8307-7-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200402142747.8307-1-daniel.lezcano@linaro.org>
 References: <20200402142747.8307-1-daniel.lezcano@linaro.org>
@@ -71,28 +71,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All users of the function depends on THERMAL, no stub is
-needed. Remove it.
+The thermal framework can not be compiled as a module. The IS_ENABLED
+macro is useless here and can be replaced by an ifdef.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- include/linux/thermal.h | 3 ---
- 1 file changed, 3 deletions(-)
+ include/linux/thermal.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 7b3dbfe15b59..216185bb3014 100644
+index 47e745c5dfca..12df9ff0182d 100644
 --- a/include/linux/thermal.h
 +++ b/include/linux/thermal.h
-@@ -426,9 +426,6 @@ static inline struct thermal_zone_device *thermal_zone_device_register(
- static inline void thermal_zone_device_unregister(
- 	struct thermal_zone_device *tz)
- { }
--static inline void thermal_zone_device_update(struct thermal_zone_device *tz,
--					      enum thermal_notify_event event)
--{ }
- static inline struct thermal_cooling_device *
- thermal_cooling_device_register(char *type, void *devdata,
- 	const struct thermal_cooling_device_ops *ops)
+@@ -383,7 +383,7 @@ void devm_thermal_zone_of_sensor_unregister(struct device *dev,
+ 
+ #endif
+ 
+-#if IS_ENABLED(CONFIG_THERMAL)
++#ifdef CONFIG_THERMAL
+ struct thermal_zone_device *thermal_zone_device_register(const char *, int, int,
+ 		void *, struct thermal_zone_device_ops *,
+ 		struct thermal_zone_params *, int, int);
 -- 
 2.17.1
 
