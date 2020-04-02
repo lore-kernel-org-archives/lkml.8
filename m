@@ -2,113 +2,85 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD9EC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECB8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E67208E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:33:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="HOUmEwr1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3Du/3zZH"
+	by mail.kernel.org (Postfix) with ESMTP id 38F5520675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388150AbgDBLdG (ORCPT
+        id S2388118AbgDBLe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:33:06 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:52279 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388001AbgDBLdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:33:06 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5E0D95C0197;
-        Thu,  2 Apr 2020 07:33:02 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 02 Apr 2020 07:33:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=kA1QfLW3eMIxQfptPPeBMuZlNRg
-        ZIGrXylNEE/sNhVc=; b=HOUmEwr1sk1oEZD4aOIfaOtl7vLi7xDDxRPN/4TxLMp
-        hMf5IO4aZQnozWpA/Kpj+M2rzKrkcYxwoAsBgNNxJ786jvOQTe9wRY7hCUBQl4Qu
-        urALDKUiHsLMtSxgG8coH2YVwI6X4MJ75+Gy9IreSR81/pj78NPHodZNrInXum5F
-        t/hY9sjppmwcDU9hRFKP9R2o0qL1fZY1xvNAdU5ubh5TOjrUXOF03LhjAQfaEc6s
-        NvAqYyGCruaZ3dzfosuvCjPmOgWW0btO4hi7xFwCeaBFWiUr29nCE1gMQ1pCSZ8e
-        MzQRmKp5I0Jo5RdLnJHJtvVyBydiKbMT0m2JGTZlXqw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=kA1QfL
-        W3eMIxQfptPPeBMuZlNRgZIGrXylNEE/sNhVc=; b=3Du/3zZHqdsS0GGADq1tbb
-        UIq2LFztd7cF1pDIgJqY87xx5MWFqDIPrEjxMPh3BhKhQTXlcyOQDR9Ud2inbtY5
-        oqzPW1CNF9m/KNbRZ8uWv3nWXCMboEH9/cdBi8+e89GGNuO2q4yDwou6yCMyLomE
-        KmgxLCy83ynzA4AsYDPFRWHYkrdQcxHbTKjfwzvTZJw/oa3h4dgSwZ0oCaGjQ75k
-        W2PaDjs3dd36j0aWnt1xAF5aHFe5ORj3pLZuklXcOFbNYrsPCnXKC2JprZiprMEo
-        v4z96cFB0GHfn37vHh/TTeizJCq66GQipfTkc7ItQEUsmwZuWQpvir4IdQFnhXUQ
-        ==
-X-ME-Sender: <xms:bc2FXhuBLKzXVF2Vrdl04MrVTHvU1OwslYBmSfrdJRodbBIjNL1aFw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdeggdefiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:bc2FXjloDRyooU-ygixI0rB9CSbSu6saMZ3BresCuveeJOEUHDKnrg>
-    <xmx:bc2FXtoICRRfnfWvhvXf5GqocHseUQkLlZJbfsbBBSOMlFCbMKAfPA>
-    <xmx:bc2FXq2U32p1FQJp2CZB2rm3VG6s4HwKQ3m9dW4YEeoM-ekIsRa-kg>
-    <xmx:bs2FXurbv5p-sUVIc5P5YquHbTsJyXM0B9n_A9FKFXw9fG2aXDll0w>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 668683280066;
-        Thu,  2 Apr 2020 07:33:01 -0400 (EDT)
-Date:   Thu, 2 Apr 2020 13:32:59 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     linus.walleij@linaro.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] pinctrl: sunxi: handle probe defferal
-Message-ID: <20200402113259.jalwc7hwxtymtms4@gilmour.lan>
-References: <1585818532-23051-1-git-send-email-clabbe@baylibre.com>
+        Thu, 2 Apr 2020 07:34:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53938 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388001AbgDBLe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:34:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2EE3DAAB8;
+        Thu,  2 Apr 2020 11:34:25 +0000 (UTC)
+Subject: Re: [PATCH] bcache: remove redundant variables i and n
+To:     Colin King <colin.king@canonical.com>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200402111903.514146-1-colin.king@canonical.com>
+From:   Coly Li <colyli@suse.de>
+Organization: SUSE Labs
+Message-ID: <de88ae08-1200-285b-cd1b-cfd723d2da56@suse.de>
+Date:   Thu, 2 Apr 2020 19:34:09 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tjv7bzkjk4m5tndt"
-Content-Disposition: inline
-In-Reply-To: <1585818532-23051-1-git-send-email-clabbe@baylibre.com>
+In-Reply-To: <20200402111903.514146-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/4/2 7:19 下午, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Variables i and n are being assigned but are never used. They are
+> redundant and can be removed.
+> 
 
---tjv7bzkjk4m5tndt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Colin,
 
-On Thu, Apr 02, 2020 at 09:08:52AM +0000, Corentin Labbe wrote:
-> When checking the logs on my sun8i-a33-olinuxino I saw:
-> sun8i-a23-r-pinctrl 1f02c00.pinctrl: Reset controller missing
-> but this driver was working after.
-> This message is just here because the reset controller was still not probed.
-> So don't say anything if the return code say to wait.
->
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Thanks, I will submit this patch in Linux 5.7-rc series.
 
-Maxime
+> ---
+>  drivers/md/bcache/btree.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+> index 72856e5f23a3..114d0d73d909 100644
+> --- a/drivers/md/bcache/btree.c
+> +++ b/drivers/md/bcache/btree.c
+> @@ -1907,10 +1907,8 @@ static int bch_btree_check_thread(void *arg)
+>  	struct btree_iter iter;
+>  	struct bkey *k, *p;
+>  	int cur_idx, prev_idx, skip_nr;
+> -	int i, n;
+>  
+>  	k = p = NULL;
+> -	i = n = 0;
+>  	cur_idx = prev_idx = 0;
+>  	ret = 0;
+>  
+> 
 
---tjv7bzkjk4m5tndt
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+-- 
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoXNawAKCRDj7w1vZxhR
-xfzAAP9ylLtzCnrw2H6mzX/G1HyeNRlmKneYZuDx6o5HAAm0BwEAmpRgI1Hh4Jln
-/kdUr3TBTGjQqWJO+H4/JvS/93oyhQs=
-=iteN
------END PGP SIGNATURE-----
-
---tjv7bzkjk4m5tndt--
+Coly Li
