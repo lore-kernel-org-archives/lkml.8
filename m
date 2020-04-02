@@ -2,194 +2,190 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396CFC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392EAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6262078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2EFA2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:23:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gqb9dOBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387519AbgDBHWd (ORCPT
+        id S2387511AbgDBHX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:22:33 -0400
-Received: from mail-oln040092074010.outbound.protection.outlook.com ([40.92.74.10]:6084
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728425AbgDBHWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:22:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SiNOZHMxpkKMBa6yuvQ8xTPdsWHI2ALPl1ggDv5AsaulH/k71k3Kpxb3zJ3c8CroLACqB9jYW3cJE+hwac2mGBNvKkjIZ1gRRcg1Az1QVmKTsPScMkw6kgpicNrHPYcPwPdXJef+LZiLlOCtI87cAJlZ0YnCoj6WmYJcaAx2rKPptk3pesLIMGkaKwDEB1RMCfX2ZE9dfP0nIQ7LSFq/lNtPYKBqdkRlnAAOo2idO0/texpwA6eLlUJwbLxrhp2cMdH0Fj+ISxgFhesFXM6cf+Lqa+g0F/UgzyfCwNjgxWHhyDCkpJPrPufjISDWESW0c/7v5mCW02W2l4VGCOMorg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qBVJqtgMdQtnFcQSqwHmVcy5aH977kgvW7Xg+tZeWPc=;
- b=bB9fE1/UyozaAie9fjYcBYQzCDBL0DnzTS1/OAXCcLgPn/iZeQuRlpjcY8Nrrw6uIuY3WACqnVBTzf+QvT9Bmfwtl142ErjsSmPfKqOEElxuGrbq+t418XpS0pMAsGRgasJfI3nPlH0FH9IDaCV/JKrB9IFNO3nTcngWJTtSUikaosIjnha5yjh7hLTkbDg7l7fMCiJn0njPhOoX79RImT8zNi2ajOMiwRxsPjDad3faW9zpPVH8KoNwV7aLWr8cYeX9+HQf3pPm4tmvJOLTiybPxWO5WGITbHqJNqXfFm65IJ0nnj836yUUITnJWzHHcRRrarUb5HqvN+craU4taA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from HE1EUR04FT004.eop-eur04.prod.protection.outlook.com
- (2a01:111:e400:7e0d::4a) by
- HE1EUR04HT014.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::309)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Thu, 2 Apr
- 2020 07:22:29 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- (2a01:111:e400:7e0d::50) by HE1EUR04FT004.mail.protection.outlook.com
- (2a01:111:e400:7e0d::274) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend
- Transport; Thu, 2 Apr 2020 07:22:29 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:E7B5E17202D6A90C04C325695E3FAE5128698D345945BB92FCDBA0F020470AD7;UpperCasedChecksum:6A14A83A027B343DDFAFF9CF8B12B8576AD0143054F668726F7F8F3A51721EAF;SizeAsReceived:8374;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d%7]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
- 07:22:29 +0000
-Subject: Re: [PATCH] signal: Extend exec_id to 64bits
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Adam Zabrocki <pi3@pi3.com.pl>, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, Jann Horn <jannh@google.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org
-References: <20200324215049.GA3710@pi3.com.pl> <202003291528.730A329@keescook>
- <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Message-ID: <AM6PR03MB51701153BF3E55EB4285EADFE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Thu, 2 Apr 2020 09:22:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=windows-1252
+        Thu, 2 Apr 2020 03:23:58 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58094 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728480AbgDBHX6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:23:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585812236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=EiiXfbUQnqB5S8WRhEVjxeCspDHZ6aw1DndF/nesLlU=;
+        b=Gqb9dOBiXiYtW9vMqkceQvXYA0IPsXE97Z7KZRGzwgG7kh193Tc604fxSfDfzIyzy6CRqV
+        9eXOVdMN5R8+ur7vksI94U8rjFmIsqPMzspN9k59Inxm70UFOv+i/G4HqFg78ppFY+p9hu
+        gyIyg8lRZF5RYfttC9XSBvzuDQVMQpE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-122-DoRwztz5NZC65xm9Fc1Gtw-1; Thu, 02 Apr 2020 03:23:55 -0400
+X-MC-Unique: DoRwztz5NZC65xm9Fc1Gtw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1AC2B18A550B;
+        Thu,  2 Apr 2020 07:23:53 +0000 (UTC)
+Received: from [10.36.114.29] (ovpn-114-29.ams2.redhat.com [10.36.114.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 76BAFA63BF;
+        Thu,  2 Apr 2020 07:23:50 +0000 (UTC)
+Subject: Re: [PATCH v2 1/2] mm: call touch_nmi_watchdog() on max order
+ boundaries in deferred init
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        mhocko@suse.com, linux-mm@kvack.org, dan.j.williams@intel.com,
+        shile.zhang@linux.alibaba.com, daniel.m.jordan@oracle.com,
+        ktkhai@virtuozzo.com, jmorris@namei.org, sashal@kernel.org,
+        vbabka@suse.cz
+References: <20200401225723.14164-1-pasha.tatashin@soleen.com>
+ <20200401225723.14164-2-pasha.tatashin@soleen.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <e05149c1-008b-313f-1281-b5f0b4f01ddc@redhat.com>
+Date:   Thu, 2 Apr 2020 09:23:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200401225723.14164-2-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR10CA0001.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:17c::11) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <46ac0369-ff40-733f-bb2a-2a6919a48eee@hotmail.de>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by AM0PR10CA0001.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Thu, 2 Apr 2020 07:22:28 +0000
-X-Microsoft-Original-Message-ID: <46ac0369-ff40-733f-bb2a-2a6919a48eee@hotmail.de>
-X-TMN:  [tiG2wbnlWRVxx08YkgRHuaN5VFK7C3H0]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 88af6c2b-72f4-43b2-87b2-08d7d6d69a06
-X-MS-TrafficTypeDiagnostic: HE1EUR04HT014:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Vm9mxdpuYK8ONT77erL+LkK2OyGrTGQYbgZJWSY+/T8i1UnES7/hfotlBAs3ATJGfbvapvj9SXlb4I0mT2Npabpn5jZ9TRSMRE7Y7dtjLC8wnyRuUUhJ5DWkjAkQX808ADEz8o8gOS16cw9saekcZ6BU6CCEIJAPGfMiQix8wGvTcPp4EQWpl5kwes3Np9d/w4KLKRzfletMS5sO0uU4oIXTtCV1eWnHiZTvEHZIleg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR03MB5170.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: W+KtyJgIKA9trqB39M/vA4OFmZqevmrFIVXWsvioHdXVYlUUcj1XCSvwrdSnpKwQhEsn64QWA/t5dd7j/k8HimAd71Q1Vuuhltw9TyP4Y10A8A9K1TlaBxCW4ZPgKHEf60NPwB06qfcxRc1jkOuluA==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88af6c2b-72f4-43b2-87b2-08d7d6d69a06
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 07:22:29.4907
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR04HT014
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/1/20 10:47 PM, Eric W. Biederman wrote:
+On 02.04.20 00:57, Pavel Tatashin wrote:
+> From: Daniel Jordan <daniel.m.jordan@oracle.com>
 > 
-> Replace the 32bit exec_id with a 64bit exec_id to make it impossible
-> to wrap the exec_id counter.  With care an attacker can cause exec_id
-> wrap and send arbitrary signals to a newly exec'd parent.  This
-> bypasses the signal sending checks if the parent changes their
-> credentials during exec.
+> deferred_init_memmap() disables interrupts the entire time, so it calls
+> touch_nmi_watchdog() periodically to avoid soft lockup splats.  Soon it
+> will run with interrupts enabled, at which point cond_resched() should
+> be used instead.
 > 
-> The severity of this problem can been seen that in my limited testing
-> of a 32bit exec_id it can take as little as 19s to exec 65536 times.
-> Which means that it can take as little as 14 days to wrap a 32bit
-> exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
-> days.  Even my slower timing is in the uptime of a typical server.
-> Which means self_exec_id is simply a speed bump today, and if exec
-> gets noticably faster self_exec_id won't even be a speed bump.
+> deferred_grow_zone() makes the same watchdog calls through code shared
+> with deferred init but will continue to run with interrupts disabled, so
+> it can't call cond_resched().
 > 
-> Extending self_exec_id to 64bits introduces a problem on 32bit
-> architectures where reading self_exec_id is no longer atomic and can
-> take two read instructions.  Which means that is is possible to hit
-> a window where the read value of exec_id does not match the written
-> value.  So with very lucky timing after this change this still
-> remains expoiltable.
+> Pull the watchdog calls up to these two places to allow the first to be
+> changed later, independently of the second.  The frequency reduces from
+> twice per pageblock (init and free) to once per max order block.
 > 
-> I have updated the update of exec_id on exec to use WRITE_ONCE
-> and the read of exec_id in do_notify_parent to use READ_ONCE
-> to make it clear that there is no locking between these two
-> locations.
+> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
+> Cc: stable@vger.kernel.org # 4.17+
 > 
-> Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
-> Fixes: 2.3.23pre2
-> Cc: stable@vger.kernel.org
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
-
-
-Thanks
-Bernd.
+> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 > ---
+>  mm/page_alloc.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> Linus would you prefer to take this patch directly or I could put it in
-> a brach and send you a pull request.
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..e8ff6a176164 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1639,7 +1639,6 @@ static void __init deferred_free_pages(unsigned long pfn,
+>  		} else if (!(pfn & nr_pgmask)) {
+>  			deferred_free_range(pfn - nr_free, nr_free);
+>  			nr_free = 1;
+> -			touch_nmi_watchdog();
+>  		} else {
+>  			nr_free++;
+>  		}
+> @@ -1669,7 +1668,6 @@ static unsigned long  __init deferred_init_pages(struct zone *zone,
+>  			continue;
+>  		} else if (!page || !(pfn & nr_pgmask)) {
+>  			page = pfn_to_page(pfn);
+> -			touch_nmi_watchdog();
+>  		} else {
+>  			page++;
+>  		}
+> @@ -1809,8 +1807,10 @@ static int __init deferred_init_memmap(void *data)
+>  	 * that we can avoid introducing any issues with the buddy
+>  	 * allocator.
+>  	 */
+> -	while (spfn < epfn)
+> +	while (spfn < epfn) {
+>  		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +		touch_nmi_watchdog();
+> +	}
+>  zone_empty:
+>  	pgdat_resize_unlock(pgdat, &flags);
 >  
->  fs/exec.c             | 2 +-
->  include/linux/sched.h | 4 ++--
->  kernel/signal.c       | 2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
+> @@ -1894,6 +1894,7 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
+>  		first_deferred_pfn = spfn;
+>  
+>  		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +		touch_nmi_watchdog();
+>  
+>  		/* We should only stop along section boundaries */
+>  		if ((first_deferred_pfn ^ spfn) < PAGES_PER_SECTION)
 > 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 0e46ec57fe0a..d55710a36056 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1413,7 +1413,7 @@ void setup_new_exec(struct linux_binprm * bprm)
->  
->  	/* An exec changes our domain. We are no longer part of the thread
->  	   group */
-> -	current->self_exec_id++;
-> +	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
->  	flush_signal_handlers(current, 0);
->  }
->  EXPORT_SYMBOL(setup_new_exec);
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 04278493bf15..0323e4f0982a 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -939,8 +939,8 @@ struct task_struct {
->  	struct seccomp			seccomp;
->  
->  	/* Thread group tracking: */
-> -	u32				parent_exec_id;
-> -	u32				self_exec_id;
-> +	u64				parent_exec_id;
-> +	u64				self_exec_id;
->  
->  	/* Protection against (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed, mempolicy: */
->  	spinlock_t			alloc_lock;
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 9ad8dea93dbb..5383b562df85 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -1926,7 +1926,7 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
->  		 * This is only possible if parent == real_parent.
->  		 * Check if it has changed security domain.
->  		 */
-> -		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
-> +		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
->  			sig = SIGCHLD;
->  	}
->  
-> 
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Thanks,
+
+David / dhildenb
+
