@@ -2,187 +2,244 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BD7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8CBC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA29420719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585854301;
-	bh=K9uruu5QLXAUSdGxtEgdQE3UiBbpvJwYii53IUL/fbQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o54h7mtrv6vA6vKR8VIlX9CG6Z1YLPbctaOIyL4uT/Re0I4iJiwFj5JhdJ3PAuS1r
-	 GBmzhY+POYLuy41KisDWNHokx3HRNZqQ1wmyvtBJkbiGAWrWPP6rv8PzaQmAeq8r3Q
-	 Z9env81x7lcQ171edbVxIQk2seTkb1RO1BaNPb9E=
+	by mail.kernel.org (Postfix) with ESMTP id 11E1D20719
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389916AbgDBTFA (ORCPT
+        id S2388788AbgDBTGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:05:00 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42641 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731715AbgDBTFA (ORCPT
+        Thu, 2 Apr 2020 15:06:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38864 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732598AbgDBTGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:05:00 -0400
-Received: by mail-lf1-f68.google.com with SMTP id s13so3663859lfb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 12:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NAVPeSq9DvyCnnULUdYg1UKNlLeynSptkjCtMfU+YO4=;
-        b=PDOYB19tl0R/qSHJMsVSKCPIn+QbVP2dcFk7SuiZ5HDheZU7jxtchi028JYyuoufiT
-         wDCyhOEjYd/BWubosz/o8ESqCvA/7Wy+YgBhiWqwe/rCw0PoB3whed+cGtUozSBoz1bz
-         wdDyV6eJ2YIlByIyvRqqh7IuTKmEvT/pWJjRc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NAVPeSq9DvyCnnULUdYg1UKNlLeynSptkjCtMfU+YO4=;
-        b=TUdMIJZ9Dr1vY+UNPTWTHme7wN9E8a83vtJlRdf7fAwdyFna8lidUu6pK6pr02l8Xs
-         Go/L15QUClT3fUoDfPfO7wgQ+A+HaQfHYx1gGMQ2X8i3goTV8D6/7RlJKZaZ62M3u01n
-         pR9FaqGPY2QJJz9iQ8kcRyiEKLYWoerOmpBDGRu8mLJ0xhFtyI4MYiYqBzfd3V7NooAH
-         csF8o2gF8UI8FULd48i4+TJGhDXfcvzRV4BkrJhT5X/l9i7Vzw7vvnB46nIEFof/NTKA
-         o66QMs8N8Ih3MppGmuM2t9CvlYtlCPy6WMQTQOuBfuXU0qfhGgd+FLgg2rkleqssg7PO
-         JjOw==
-X-Gm-Message-State: AGi0PuZejKlTZARWUEPl1lGPaPWj9FSsBmO4Uj2s3TFczh+D+ws/r3uH
-        tqUs1VU9dX1/KHjGYNv0czVH2e+wGbA=
-X-Google-Smtp-Source: APiQypKrr+5OqexNAu1Ez7Ir5biBOdynSTu2tAe1UAYS/FfjJzWUpupeiWoUYE9Iq5lTkj8fv1z83Q==
-X-Received: by 2002:a05:6512:3127:: with SMTP id p7mr3040761lfd.108.1585854296505;
-        Thu, 02 Apr 2020 12:04:56 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id c4sm548019ljd.30.2020.04.02.12.04.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 12:04:55 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id r7so4371558ljg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 12:04:54 -0700 (PDT)
-X-Received: by 2002:a2e:8911:: with SMTP id d17mr2888851lji.16.1585854294457;
- Thu, 02 Apr 2020 12:04:54 -0700 (PDT)
+        Thu, 2 Apr 2020 15:06:52 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jK5AO-0001Yn-7q; Thu, 02 Apr 2020 21:06:16 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 2444D100D52; Thu,  2 Apr 2020 21:06:15 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     x86@kernel.org, "Kenneth R . Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] x86/split_lock: Refactor and export handle_user_split_lock() for KVM
+In-Reply-To: <20200402171946.GH13879@linux.intel.com>
+References: <20200402124205.334622628@linutronix.de> <20200402155554.27705-1-sean.j.christopherson@intel.com> <20200402155554.27705-3-sean.j.christopherson@intel.com> <87v9mhn7nf.fsf@nanos.tec.linutronix.de> <20200402171946.GH13879@linux.intel.com>
+Date:   Thu, 02 Apr 2020 21:06:15 +0200
+Message-ID: <87mu7tn1w8.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87blobnq02.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 Apr 2020 12:04:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
-Message-ID: <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 9:16 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> On Thu, Apr 02, 2020 at 07:01:56PM +0200, Thomas Gleixner wrote:
+>> >  static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
+>> >  static inline void switch_to_sld(unsigned long tifn) {}
+>> > -static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+>> > +static inline bool handle_user_split_lock(unsigned long ip)
+>> 
+>> This is necessary because VMX can be compiled without CPU_SUP_INTEL?
 >
-> The work on exec starts solving a long standing issue with exec that
-> it takes mutexes of blocking userspace applications, which makes exec
-> extremely deadlock prone.  For the moment this adds a second mutex
-> with a narrower scope that handles all of the easy cases.  Which
-> makes the tricky cases easy to spot.  With a little luck the code to
-> solve those deadlocks will be ready by next merge window.
+> Ya, it came about when cleaning up the IA32_FEATURE_CONTROL MSR handling
+> to consolidate duplicate code.
+>
+> config KVM_INTEL
+>         tristate "KVM for Intel (and compatible) processors support"
+>         depends on KVM && IA32_FEAT_CTL
+>
+> config IA32_FEAT_CTL
+>         def_bool y
+>         depends on CPU_SUP_INTEL || CPU_SUP_CENTAUR || CPU_SUP_ZHAOXIN
 
-So this worries me.
+Ah, indeed. So something like the below would make sense. Hmm?
 
-I've pulled it, but I'm not entirely happy about some of it.
+Of course that can be mangled into Xiaoyao's patches, I'm not worried
+about my patch count :)
 
-For example, the "rationale" for some of the changes is
+Aside of that I really wish Intel HW folks had indicated the source of
+the #AC via the error code. It can only be 0 or 1 for the regular #AC so
+there would have been 31 bits to chose from.
 
-    This should be safe, as the credentials are only used for reading.
+Thanks,
 
-which is just nonsensical. "Only used for reading" is immaterial, and
-there's no explanation for why that would matter at all. Most of the
-credentials are ever used for reading, and the worry about execve() is
-that the credentials can change, and people race with them and use the
-new 'suid' credentials and allow things that shouldn't be allowed. So
-the rationale makes no sense at all.
+        tglx
 
-Btw, if "this only takes it for reading" is such a big deal, why is
-that mutex not an rw-semaphore?
+8<----------------
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -43,14 +43,14 @@ unsigned int x86_stepping(unsigned int s
+ #ifdef CONFIG_CPU_SUP_INTEL
+ extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
+ extern void switch_to_sld(unsigned long tifn);
+-extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
++extern int handle_ac_split_lock(unsigned long ip);
+ extern void split_lock_validate_module_text(struct module *me, void *text, void *text_end);
+ #else
+ static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
+ static inline void switch_to_sld(unsigned long tifn) {}
+-static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
++static int handle_ac_split_lock(unsigned long ip)
+ {
+-	return false;
++	return -ENOSYS;
+ }
+ static inline void split_lock_validate_module_text(struct module *me, void *text, void *text_end) {}
+ #endif
 
-The pidfd change at least has a rationale that makes sense:
-
-    This should be safe, as the credentials do not change
-    before exec_update_mutex is locked.  Therefore whatever
-    file access is possible with holding the cred_guard_mutex
-    here is also possbile with the exec_update_mutex.
-
-so now you at least have an explanation of why that particular lock
-makes sense and works and is equivalent.
-
-It's still not a *great* explanation for why it would be equivalent,
-because cred_guard_mutex ends up not just guarding the write of the
-credentials, but makes it atomic wrt *other* data. That's the same
-problem as "I'm only reading".
-
-Locking is not about *one* value being consistent - if that was the
-case, then you could just do a "get refcount on the credentials, now I
-have a stable set of creds I can read forever". No lock needed.
-
-So locking is about *multiple* values being consistent, which is why
-that "I'm only reading" is not an explanation for why you can change
-the lock.
-
-It's also why that second one is questionable: it's a _better_ attempt
-at explaining things, but the point is really that cred_guard_mutex
-protects *other* things too.
-
-A real explanation would have absolutely *nothing* to do with
-"reading" or "same value of credentials". Both of those are entirely
-immaterial, since - as mentioned - you could just get a snapshot of
-the creds instead.
-
-A real explanation would be about how there is no other state that
-cred_guard_mutex protects that matters.
-
-See what I'm saying?
-
-This code is subtle as h*ll, and we've had bugs in it, and it has a
-series of tens of patches to fix them. But that also means that the
-explanations for the patches should take the subtleties into account,
-and not gloss over them with things like this.
-
-Ok, enough about the explanations. The actual _code_ is kind of odd
-too. For example, you have that "bprm->called_exec_mmap" flag to say
-"I've taken the exec_update_mutex, and need to drop it".
-
-But that flag is not set anywhere _near_ actually taking the lock.
-Sure, it is taken after exec_mmap() returns successfully, and that
-makes sense from a naming standpoint, but wouldn't it have been a
-_lot_ more obvious if you just set the flag when you took that lock,
-and instead of naming it by some magical code sequence, you named it
-for what it does?
-
-Again, this looks all technically correct, but it's written in a way
-that doesn't seem to make a lot of sense. Why is the code literally
-written with a magical assumption of "calling exec_mmap takes this
-lock, so if the flag named called_exec_mmap is set, I have to free
-that lock that is not named that at all".
-
-I hate conditional locking in the first place, but if it has to exist,
-then the conditional should be named after the lock, and the lock
-getting should be very very explicitly tied to it.
-
-Wouldn't it have been much clearer if you called that flag
-"exec_update_mutex_taken", and set it WHEN YOU TAKE IT?
-
-In fact, then you could drop the
-
-                        mutex_unlock(&tsk->signal->exec_update_mutex);
-
-in the error case of exec_mmap(), because now the error handling in
-free_bprm() would do the cleanup automatically.
-
-See what I'm saying? You've made the locking more complex and subtle
-than it needed to be. And since the whole point of the *new* lock is
-that it should replace an old lock that was really complex and subtle,
-that's a problem.
-
-                   Linus
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1102,13 +1102,20 @@ static void split_lock_init(void)
+ 	split_lock_verify_msr(sld_state != sld_off);
+ }
+ 
+-bool handle_user_split_lock(struct pt_regs *regs, long error_code)
++int handle_ac_split_lock(unsigned long ip)
+ {
+-	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+-		return false;
++	switch (sld_state) {
++	case sld_warn:
++		break;
++	case sld_off:
++		pr_warn_once("#AC: Spurious trap at address: 0x%lx\n", ip);
++		return -ENOSYS;
++	case sld_fatal:
++		return -EFAULT;
++	}
+ 
+ 	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+-			    current->comm, current->pid, regs->ip);
++			    current->comm, current->pid, ip);
+ 
+ 	/*
+ 	 * Disable the split lock detection for this task so it can make
+@@ -1117,8 +1124,9 @@ bool handle_user_split_lock(struct pt_re
+ 	 */
+ 	sld_update_msr(false);
+ 	set_tsk_thread_flag(current, TIF_SLD);
+-	return true;
++	return 0;
+ }
++EXPORT_SYMBOL_GPL(handle_ac_split_lock);
+ 
+ /*
+  * This function is called only when switching between tasks with
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -304,7 +304,7 @@ dotraplinkage void do_alignment_check(st
+ 
+ 	local_irq_enable();
+ 
+-	if (handle_user_split_lock(regs, error_code))
++	if (!(regs->flags & X86_EFLAGS_AC) && !handle_ac_split_lock(regs->ip))
+ 		return;
+ 
+ 	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -65,6 +65,7 @@
+ 
+ MODULE_AUTHOR("Qumranet");
+ MODULE_LICENSE("GPL");
++MODULE_INFO(sld_safe, "Y");
+ 
+ #ifdef MODULE
+ static const struct x86_cpu_id vmx_cpu_id[] = {
+@@ -4623,6 +4624,22 @@ static int handle_machine_check(struct k
+ 	return 1;
+ }
+ 
++static bool guest_handles_ac(struct kvm_vcpu *vcpu)
++{
++	/*
++	 * If guest has alignment checking enabled in CR0 and activated in
++	 * eflags, then the #AC originated from CPL3 and the guest is able
++	 * to handle it. It does not matter whether this is a regular or
++	 * a split lock operation induced #AC.
++	 */
++	if (vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
++	    kvm_get_rflags(vcpu) & X86_EFLAGS_AC)
++		return true;
++
++	/* Add guest SLD handling checks here once it's supported */
++	return false;
++}
++
+ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -4630,6 +4647,7 @@ static int handle_exception_nmi(struct k
+ 	u32 intr_info, ex_no, error_code;
+ 	unsigned long cr2, rip, dr6;
+ 	u32 vect_info;
++	int err;
+ 
+ 	vect_info = vmx->idt_vectoring_info;
+ 	intr_info = vmx->exit_intr_info;
+@@ -4688,9 +4706,6 @@ static int handle_exception_nmi(struct k
+ 		return handle_rmode_exception(vcpu, ex_no, error_code);
+ 
+ 	switch (ex_no) {
+-	case AC_VECTOR:
+-		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
+-		return 1;
+ 	case DB_VECTOR:
+ 		dr6 = vmcs_readl(EXIT_QUALIFICATION);
+ 		if (!(vcpu->guest_debug &
+@@ -4719,6 +4734,29 @@ static int handle_exception_nmi(struct k
+ 		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
+ 		kvm_run->debug.arch.exception = ex_no;
+ 		break;
++	case AC_VECTOR:
++		if (guest_handles_ac(vcpu)) {
++			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
++			return 1;
++		}
++		/*
++		 * Handle #AC caused by split lock detection. If the host
++		 * mode is sld_warn, then it warns, marks current with
++		 * TIF_SLD and disables split lock detection. So the guest
++		 * can just continue.
++		 *
++		 * If the host mode is fatal, the handling code warned. Let
++		 * qemu kill itself.
++		 *
++		 * If the host mode is off, then this #AC is bonkers and
++		 * something is badly wrong. Let it fail as well.
++		 */
++		err = handle_ac_split_lock(kvm_rip_read(vcpu));
++		if (!err)
++			return 1;
++		/* Propagate the error type to user space */
++		error_code = err == -EFAULT ? 0x100 : 0x200;
++		fallthrough;
+ 	default:
+ 		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
+ 		kvm_run->ex.exception = ex_no;
