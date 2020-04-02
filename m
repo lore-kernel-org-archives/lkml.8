@@ -2,106 +2,105 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967BCC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7032C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55EF3206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:02:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kz5/1BLa"
+	by mail.kernel.org (Postfix) with ESMTP id B83C4206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389997AbgDBRC0 (ORCPT
+        id S2390007AbgDBRCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:02:26 -0400
-Received: from mout.gmx.net ([212.227.17.21]:58937 "EHLO mout.gmx.net"
+        Thu, 2 Apr 2020 13:02:30 -0400
+Received: from mga03.intel.com ([134.134.136.65]:10495 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732625AbgDBRC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:02:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1585846936;
-        bh=8UWypK5pgVcYcqIwFlJJIKU66AJRcAaCGYCCv5rqHSc=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=kz5/1BLakRSoXGwoWbzj0G2RsRakRC3O083MpECK0lcusQNnUBrcvbBKK3RDqcJin
-         K7dUMj5WTR471Ftf/q0RbDgXdzM0CFakZoCYpRUPJ+Yx++hOCSIMrQ5sXXG7ZKsoe9
-         DWftEnWe1HekBoC3HXKCAMV7RonuRGQ756ByiSzE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MqJqN-1ixvlT1b4l-00nPcN; Thu, 02 Apr 2020 19:02:16 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Oscar Carter <oscar.carter@gmx.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-Subject: [PATCH v2] staging: vt6656: Define EnCFG_BBType_MASK as OR between previous defines
-Date:   Thu,  2 Apr 2020 19:01:03 +0200
-Message-Id: <20200402170103.22520-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        id S1732625AbgDBRCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 13:02:30 -0400
+IronPort-SDR: OfTb5TEjX/VCZZjsLjNt+rTvF1FHpNRc6quQu1Hva3Uam8HpWb5QfilUbdY8Zv/CLEZCFF8Ok/
+ 7l5gB9eDYTjA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 10:02:29 -0700
+IronPort-SDR: UIsK71r9ZjEL/GLc5Y6jYtvrLITv6k0vA4LDXq7ycdUzLYfysA8XeWCRe9wzfhHl+cc2YuGvNX
+ /LhXBKg9oTOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="423201751"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 02 Apr 2020 10:02:29 -0700
+Received: from [10.251.7.210] (kliang2-mobl.ccr.corp.intel.com [10.251.7.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 20C3758077B;
+        Thu,  2 Apr 2020 10:02:28 -0700 (PDT)
+Subject: Re: [PATCH V4 00/17] Stitch LBR call stack (Perf Tools)
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        namhyung@kernel.org, adrian.hunter@intel.com,
+        mathieu.poirier@linaro.org, ravi.bangoria@linux.ibm.com,
+        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
+        pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
+        ak@linux.intel.com
+References: <20200319202517.23423-1-kan.liang@linux.intel.com>
+ <20200323111311.GH1534489@krava>
+ <e2887d1f-e963-66b4-f0cb-fa23986565a2@linux.intel.com>
+ <20200402160049.GE8736@kernel.org>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <b95adf95-2b59-5917-1dc8-f2734ea8f7e3@linux.intel.com>
+Date:   Thu, 2 Apr 2020 13:02:27 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:92r1pGjCMbrGkXpHcqtHjCNU/M4fbFzS1R86MSFEIhWrF4H/JMF
- QemgjEJ4zbeOHAsxeXaaeTRQRiLIvKb60mA/Yd/ylGNPEBNj8muDZHsC79ZuoneZVb5DXY9
- b+HJBhz6t9R95in47coyaiolMD+vEBbQ3rnujgtm30qDo5Qtye+8KhtNNtsliMkdAt8HOjB
- wIU71B12rn5896tXfXZNg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lHToelEcjb4=:B1oScJRzOkmBzLG0RFEIvy
- /I6B8VNsZHjt6h+W5K1Y7eAaYKfTbRobNsysN2MepWDF1HtRSl9bN1zXj0EFWbUzJG2i1efTy
- ZMhzJHncqJFwydMF2XoibrOE++9YuFiyx0s77jVyXW2SI1u7V3MaQUz8OZWDAT7M6pWb9ZrL4
- dlwxh9PrfDXb+mK+0QT+lx1QswBSVEG/EPqfMxAraa/+lMDrtob0N4gsrL9JeR4kTamH3OzxE
- e4I5DjUrDlxkJJjiR9Ux2E0pRb8OD1hE3GlWbFrLd3cNvUHMKY4X5PNXGjbC4BKfsSvNtmZTs
- j16IDXQixAbLHBJiWbYZrqXlZJ+Bs5by1dg+bkhm9I7CgeKigJadNnwzAkfP27mjDG0juNnh6
- IfpPAVEPOZ7lwPIQ4EA/rjM9KD5B5aIrcjXRSuy9IKpRt3gNcRD15esP8yfb8mOMLtvnVzAaM
- Ck87DhuL4+mD1khLNL5yjzUvHOf2nECIvCFaKOcutsEROXx/clkQC633MFOzlVdlD9N/DMl22
- ip1EfV9iBJ5jYr4mNxeJe/qIzmjwseMuxhZ2uxZEmTeiItQprwdyZnOHHQlqiWuvvXSO23woT
- cC3YkGD3dPBN9/jm7yAsFgGTkr110YifGBoxnlMqOJOu/EGm5g/DT/DUtaGEpKjJyoO0Dkug9
- kcCmpn11uJkd7L2Uxn6kKBi7F2bsinGED+aOLtlr4bJP2W6zKLhlwJErlxHNE0uW4kZmnD+5A
- O50qfHsaaDgVmnmtiHWaSpcGqqiFQWHDvwVwmswWDTsRTTD/QardBDoXPUk8n9wl1Ay1vYE7S
- lkOFSlS2oLGOmAN+aSHLrDRfF3xosSslMeYqR8FRZln7di9nEmubiyysVhnrBaBAlEWV8YyXd
- pTLhCWH2XdiGNjAfhgA0qxV73pjGRe5rvA75pZ+IvsRTkF1AvOqfsgOFW7Beg7gknqFDUq/sS
- j++7Hirrx3Shep/1NW8TXGYlLo5AMsTsJwK/QquFUjUIM9Xh4iYBd+1PEMq2+pSXWNh+F9QGN
- O5v861QMyTaCIBfDBjQfOFy3wg6pgUlrSz7/szWi7ZYT6JGPLhIHe9zfUHq2PmFvh8+pr9tj1
- wCFyViMe+eWIvR6gfl8otWogem457GbD2jzFdgQYWb4Aq1C4bgnaHQeULV6t84Yk1/saOigl8
- p70HSeyhUdqTaPyg9ugGu7+hfDccSlPXaHFyVBZ3KtpwSztWcaW/316EQcWGrF8nqDzkvL2cW
- hUk4t4xb906JZax70
+In-Reply-To: <20200402160049.GE8736@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the EnCFG_BBType_MASK bit as an OR operation between two previous
-defines instead of using the OR between two new BIT macros. Thus, the
-code is more clear.
 
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-=2D--
-Changelog v1 -> v2
-- Remove the "Fixes:" tag line.
-- Add "Reviewed-by: Quentin Deslandes"
 
- drivers/staging/vt6656/mac.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 4/2/2020 12:00 PM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Apr 02, 2020 at 11:34:18AM -0400, Liang, Kan escreveu:
+>>
+>>
+>> On 3/23/2020 7:13 AM, Jiri Olsa wrote:
+>>> On Thu, Mar 19, 2020 at 01:25:00PM -0700, kan.liang@linux.intel.com wrote:
+>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>
+>>>> Changes since V3:
+>>>> - There is no dependency among the 'capabilities'. If perf fails to read
+>>>>     one, it should not impact others. Continue to parse the rest of caps.
+>>>>     (Patch 1)
+>>>> - Use list_for_each_entry() to replace perf_pmu__scan_caps() (Patch 1 &
+>>>>     2)
+>>>> - Combine the declaration plus assignment when possible (Patch 1 & 2)
+>>>> - Add check for script/report/c2c.. (Patch 13, 14 & 16)
+>>>
+>>> it's all black magic to me, but looks ok ;-)
+>>>
+>>> Acked-by: Jiri Olsa <jolsa@redhat.com>
+>>>
+>>
+>> Thanks Jirka.
+>>
+>> Hi Arnaldo,
+>>
+>> Any comments for the series?
+> 
+> I need to test it, 
 
-diff --git a/drivers/staging/vt6656/mac.h b/drivers/staging/vt6656/mac.h
-index c532b27de37f..b01d9ee8677e 100644
-=2D-- a/drivers/staging/vt6656/mac.h
-+++ b/drivers/staging/vt6656/mac.h
-@@ -177,7 +177,7 @@
- #define EnCFG_BBType_a		0x00
- #define EnCFG_BBType_b		BIT(0)
- #define EnCFG_BBType_g		BIT(1)
--#define EnCFG_BBType_MASK	(BIT(0) | BIT(1))
-+#define EnCFG_BBType_MASK	(EnCFG_BBType_b | EnCFG_BBType_g)
- #define EnCFG_ProtectMd		BIT(5)
+Sure. Thanks for the update.
 
- /* Bits in the EnhanceCFG_1 register */
-=2D-
-2.20.1
+Kan
 
+> hope to do it soon, but I'm a bit backlogged, sorry.
+> > - Arnaldo
+> 
