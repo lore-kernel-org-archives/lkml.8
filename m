@@ -2,128 +2,113 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F757C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D6FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A2D2080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB272080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GxstHCjI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="az2hfEOT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733068AbgDBO2H (ORCPT
+        id S2388429AbgDBO2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:28:07 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43882 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732371AbgDBO2F (ORCPT
+        Thu, 2 Apr 2020 10:28:46 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31752 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732263AbgDBO2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:28:05 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 91so2515667wri.10
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NLgc/Vk2F+SuJNrnjX/emMROOJG4WMJyyJx9N+UIrh4=;
-        b=GxstHCjIcfORLMIREXB1QHdgE3pGnEEDm4SN6Zi8TGTVrQ5CYV/5BkwWKgiYvoAU8w
-         oPkzh+OZt30LJizbeh1vI6cCf1I5mvjwyVIDr2N1BVpnOFOzpHUynqTrHNvge3trdt8s
-         z+DrEt8f9zRs1wAUruYW91YM0tPhnlvrjuboMvmacQlYLa/a3dLsW8vFykPkmsm3UwfI
-         SGb4Xjviydgq9PxNH54skVVxPL+mRS/d/V8JvkHcg80c/IvXF5RasnfNeO+aQtxbP48n
-         RKDLMAc+IYNII0UuAtkrPLH0Eh7linMx0P+ErJViaEaTzwdgeHH9yDe+1Mm3xRvwzRyg
-         uWUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NLgc/Vk2F+SuJNrnjX/emMROOJG4WMJyyJx9N+UIrh4=;
-        b=Wd020Iix69z64Wt7jSMPaPJHWeKtGCqgPDpQ5iLJ7SU682Z1YWSALGeZ03joC+CFPx
-         VPe7qo5eDNTpmRXPj3yjT+9jxNIrmNtnNTNJuGzz8SQ0CKFtVcZ9HS8JQNmWSDlrVMso
-         iqep+xYb607F6+TgTUVz5rnzRqo3SqnLmGA5aOd4dbCUJa/7k9635n9qva5S6d3eW1YO
-         33vOePeEzejrCYLXCNs1b/gPpcj0M/7+rNM3Ftj3R72Ah9lQ0UgPxeIJ0RC+XFY8Rz1h
-         fQuRtb/QPXE0u8skXmyp2/NgNG2VHR8NU6cpX6fmoGGFN7IWRXfKjucvUog+C7UQx1+w
-         cymQ==
-X-Gm-Message-State: AGi0PuaD9ic5amxrLACfadETf6398VwtET4RgXg5Eunkm/gKKj4GirHV
-        6GU5ADFFoV3n4FnhWBqIPLai1A==
-X-Google-Smtp-Source: APiQypIcclPEKfDgcgG4EZu6WTNMliilqfI+B3Z3wV1gY2jZDEbMOaBz3Lm35cEFBrnGJ5M003Pyeg==
-X-Received: by 2002:adf:a21a:: with SMTP id p26mr3843764wra.102.1585837682934;
-        Thu, 02 Apr 2020 07:28:02 -0700 (PDT)
-Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:4b2:e366:e86f:261a])
-        by smtp.gmail.com with ESMTPSA id a7sm7045186wmm.34.2020.04.02.07.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 07:28:02 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
-Cc:     amit.kucheria@verdurent.com,
-        linux-pm@vger.kernel.org (open list:THERMAL),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH V2 2/9] thermal: Move struct thermal_attr to the private header
-Date:   Thu,  2 Apr 2020 16:27:40 +0200
-Message-Id: <20200402142747.8307-2-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200402142747.8307-1-daniel.lezcano@linaro.org>
-References: <20200402142747.8307-1-daniel.lezcano@linaro.org>
+        Thu, 2 Apr 2020 10:28:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585837724;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q6/Zdn4PdxHJ91S/7dMf7deMcEC4jxiYXpkPo4ursOU=;
+        b=az2hfEOT1gaR7Cyb+qVzmLfq3r47CaxZo/Xigd9H8D7ra7q+ScDz8F2VUNfKRob+MatdER
+        CEGSrRzkGPOSEEkPuJ7VlfLWqqYoqZ+FijqNAVRNgSW0MYtOHFIOfWpB7a1i+t6+h6Ig/u
+        76y9LYtUOj0v3WUH/PK6MLj48XgOPIY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-enE41F3_PCCPc9ZZekUOcg-1; Thu, 02 Apr 2020 10:28:42 -0400
+X-MC-Unique: enE41F3_PCCPc9ZZekUOcg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FF0118C43F9;
+        Thu,  2 Apr 2020 14:28:32 +0000 (UTC)
+Received: from [10.72.12.172] (ovpn-12-172.pek2.redhat.com [10.72.12.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 668BD26172;
+        Thu,  2 Apr 2020 14:28:30 +0000 (UTC)
+Subject: Re: [PATCH] vhost: drop vring dependency on iotlb
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20200402141207.32628-1-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <afe230b9-708f-02a1-c3af-51e9d4fdd212@redhat.com>
+Date:   Thu, 2 Apr 2020 22:28:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200402141207.32628-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The structure belongs to the thermal core internals but it is exported
-in the include/linux/thermal.h
 
-For better self-encapsulation and less impact for the compilation if a
-change is made on it. Move the structure in the thermal core internal
-header file.
+On 2020/4/2 =E4=B8=8B=E5=8D=8810:12, Michael S. Tsirkin wrote:
+> vringh can now be built without IOTLB.
+> Select IOTLB directly where it's used.
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>
+> This is on top of my previous patch (in vhost tree now).
+>
+>   drivers/vdpa/Kconfig  | 1 +
+>   drivers/vhost/Kconfig | 1 -
+>   2 files changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
+> index 7db1460104b7..08b615f2da39 100644
+> --- a/drivers/vdpa/Kconfig
+> +++ b/drivers/vdpa/Kconfig
+> @@ -17,6 +17,7 @@ config VDPA_SIM
+>   	depends on RUNTIME_TESTING_MENU
+>   	select VDPA
+>   	select VHOST_RING
+> +	select VHOST_IOTLB
+>   	default n
+>   	help
+>   	  vDPA networking device simulator which loop TX traffic back
+> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+> index 21feea0d69c9..bdd270fede26 100644
+> --- a/drivers/vhost/Kconfig
+> +++ b/drivers/vhost/Kconfig
+> @@ -6,7 +6,6 @@ config VHOST_IOTLB
+>  =20
+>   config VHOST_RING
+>   	tristate
+> -	select VHOST_IOTLB
+>   	help
+>   	  This option is selected by any driver which needs to access
+>   	  the host side of a virtio ring.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/thermal/thermal_core.h | 5 +++++
- include/linux/thermal.h        | 6 +-----
- 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index 828305508556..5d08ad60d9df 100644
---- a/drivers/thermal/thermal_core.h
-+++ b/drivers/thermal/thermal_core.h
-@@ -41,6 +41,11 @@ extern struct thermal_governor *__governor_thermal_table_end[];
- 	     __governor < __governor_thermal_table_end;	\
- 	     __governor++)
- 
-+struct thermal_attr {
-+	struct device_attribute attr;
-+	char name[THERMAL_NAME_LENGTH];
-+};
-+
- /*
-  * This structure is used to describe the behavior of
-  * a certain cooling device on a certain trip point
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 71cff87dcb46..5aa80fb2fb61 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -35,6 +35,7 @@
- struct thermal_zone_device;
- struct thermal_cooling_device;
- struct thermal_instance;
-+struct thermal_attr;
- 
- enum thermal_device_mode {
- 	THERMAL_DEVICE_DISABLED = 0,
-@@ -119,11 +120,6 @@ struct thermal_cooling_device {
- 	struct list_head node;
- };
- 
--struct thermal_attr {
--	struct device_attribute attr;
--	char name[THERMAL_NAME_LENGTH];
--};
--
- /**
-  * struct thermal_zone_device - structure for a thermal zone
-  * @id:		unique id number for each thermal zone
--- 
-2.17.1
+Do we need to mention driver need to select VHOST_IOTLB by itself here?
+
+Thanks
+
+
 
