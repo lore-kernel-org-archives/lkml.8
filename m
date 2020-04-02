@@ -2,196 +2,89 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DFDC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88727C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA572078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 602F62078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="E3RSkhyX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXpM5y7G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389666AbgDBScD (ORCPT
+        id S2389683AbgDBSd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:32:03 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:16200 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389283AbgDBScD (ORCPT
+        Thu, 2 Apr 2020 14:33:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33618 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729033AbgDBSd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 14:32:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585852322; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=bwdgE6SDnCj91cAVMlb3J56Z9tUcAowCrODV+AuEXSo=; b=E3RSkhyXiCkV+6Za08wpLD6FttoCBmdnrgyUqJCJQ5AAis6CMc69Pyhpn7xmlrK1dJf5LtlT
- wjmT0MqcyKJw8naipx9hoWui56lySQ0mWaNwSSd1Zv1Ho/i8QRst1nmV8NgS5exe5+dkXyt6
- BmkyhPA685Uz5oRKsvUqtNlkLo4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e862f8f.7f132e278928-smtp-out-n01;
- Thu, 02 Apr 2020 18:31:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 720DBC43636; Thu,  2 Apr 2020 18:31:42 +0000 (UTC)
-Received: from [10.110.122.98] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 17244C433D2;
-        Thu,  2 Apr 2020 18:31:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 17244C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v4 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for
- sm8150 USB
-To:     Manu Gautam <mgautam@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
- <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
- <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <b70f88cd-bbc7-96ab-3890-e15cbe94b258@codeaurora.org>
-Date:   Thu, 2 Apr 2020 11:31:40 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 14:33:59 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ay1so1674857plb.0;
+        Thu, 02 Apr 2020 11:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oyphBXh8PTHTDQxehHVJCwGunWLiChskEfIoqWTwvaQ=;
+        b=ZXpM5y7GAP9A42RTYplBVCjCe33qIGw2JT0x/NKRNTBtE+7b4Zlc023CFcBP3pjKNa
+         5ATyJcpTADz2kMNWYlFbVAtc31nQAsn+WWG0wgfD/Uj7flG85i6+ymRQekR+7w1dd6fi
+         537SiNd9M08XnpAyffnAJRqlOOqFllOg1FJ3jVtlPDPk5GWAFw4WWwUPjshtzDAzb77I
+         UmxhRCvEvD77fpsXDyxewGth0S/yQRxM99HLjyHYdFJjeY3p6yjYTvoYcRFIYo5+R+/E
+         Vy999SfA/2YFblHW++SjU9ov1U6BiFcqBm2okAdZYbFBcudcWu1POyaVWI5RYiDa52F5
+         w8Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oyphBXh8PTHTDQxehHVJCwGunWLiChskEfIoqWTwvaQ=;
+        b=IXx8+BCZXIWD/n+89m+mV5O6wH+FOUKyyMGXNo65rdA8soVubdqD+cDWJNR1a9q/bo
+         6Ei3XlHzlbwv3iwgsUqA2PpKgyDG2KF6NXnyCuS13n9DpFyqV7Luh21rS6JyboavcVgC
+         kjMLsyxTx2aOzHMQZIf6Fk6N/YXgEDmn04GiTx1mvvh8iJ+QvkktDdv8g+mS3vx7KCNm
+         2AydiWEyrmnxknxyMSdZVMAGPxStEM3EcbZ6CBRU1DRK3bU4WVAu8jJNzx/Iak8fp/wr
+         pXsyxZX4MiSOPyBPKs5IftMrZtYC7Rr8ZRFqG/ww1PK0nfaiiuJjci6h6OrWjCqOOk6A
+         hdXg==
+X-Gm-Message-State: AGi0PuYlqlsEP1qm005oKlOf3s9OXx+QXQbxygUnqaaBLiZUGZ36a+6H
+        /g2eA+8Fsi/5w+i/FiAoYkNnKhBrSW2cB+4rrGY=
+X-Google-Smtp-Source: APiQypIQUVU5fnxrgi96uTIAhx/kCF3JFOUaqIyWwDoKfIBqblI9dhgdXZIrLJOc0SXKh3FzBsKxXnzzpq8ug3Cxzlw=
+X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr5361787pjn.8.1585852437627;
+ Thu, 02 Apr 2020 11:33:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200402155057.30667-1-vaibhavgupta40@gmail.com>
+In-Reply-To: <20200402155057.30667-1-vaibhavgupta40@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 2 Apr 2020 21:33:46 +0300
+Message-ID: <CAHp75VcYSaAYx5qy7S0ppb77afgz=Ma=7=opfgSMCBnnjmoWfw@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to dev_pm_ops
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
+        andy@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manu,
+On Thu, Apr 2, 2020 at 6:52 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
+>
+> Convert the legacy callback .suspend() and .resume()
+> to the generic ones.
+>
 
-Thanks for the feedback and review.
+Thank you for the patch.
 
-On 4/2/2020 12:35 AM, Manu Gautam wrote:
-> 
-> On 3/31/2020 1:06 AM, Wesley Cheng wrote:
->> The register map for SM8150 QMP USB SSPHY has moved
->> QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
->> an offset in the register table to override default value
->> if it is a DP capable PHY.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> ---
->>  drivers/phy/qualcomm/phy-qcom-qmp.c | 15 ++++++++++++---
->>  1 file changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> index cc04471..4c0517e 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> @@ -164,6 +164,7 @@ enum qphy_reg_layout {
->>  	[QPHY_SW_RESET]			= 0x00,
->>  	[QPHY_START_CTRL]		= 0x44,
->>  	[QPHY_PCS_STATUS]		= 0x14,
->> +	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
-> Since this is in PCS block please rename it to -
-> 
-> QPHY_PCS_POWER_DOWN_CONTROL
-> 
-
-Sure, will add another enum value to the register layout, and rename it
-where needed.
-
->>  };
->>  
->>  static const unsigned int sdm845_ufsphy_regs_layout[] = {
->> @@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->>  	if (cfg->has_phy_com_ctrl)
->>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->>  			     SW_PWRDN);
->> +	else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
->> +		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->> +			     cfg->pwrdn_ctrl);
->>  	else
->>  		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-> Since, this register is in PCS block why check for dp_com_ctrl here?
-> Something like:
-> 
->  	if (cfg->has_phy_com_ctrl) {
->  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->  			     SW_PWRDN);
-> 	} else {
-> 		if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) 
-> 			qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
-> 			     cfg->pwrdn_ctrl);
->  		else
->  			qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-> 	}
-> 
-
-Agree with this.
-
->>  
->> @@ -1671,10 +1675,12 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->>  	return ret;
->>  }
->>  
->> -static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
->> +static int qcom_qmp_phy_com_exit(struct qmp_phy *qphy)
->>  {
->> +	struct qcom_qmp *qmp = qphy->qmp;
->>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
->>  	void __iomem *serdes = qmp->serdes;
->> +	void __iomem *pcs = qphy->pcs;
->>  	int i = cfg->num_resets;
->>  
->>  	mutex_lock(&qmp->phy_mutex);
->> @@ -1691,6 +1697,9 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
->>  			     SW_RESET);
->>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->>  			     SW_PWRDN);
->> +	} else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL]) {
-> 
-> Can we add change similar to init() here ?
-> 
-> 
-
-Sure.  I will move this check to where the current code writes to the
-PWR DOWN CONTROL in
-
-static int qcom_qmp_phy_disable(struct phy *phy)
-{
-	...
-	qphy_clrbits(qphy->pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-
-We wouldn't want the SW to write to an incorrect register.
-
->> +			     cfg->pwrdn_ctrl);
->>  	}
->>  
->>  	while (--i >= 0)
->> @@ -1829,7 +1838,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->>  	if (cfg->has_lane_rst)
->>  		reset_control_assert(qphy->lane_rst);
->>  err_lane_rst:
->> -	qcom_qmp_phy_com_exit(qmp);
->> +	qcom_qmp_phy_com_exit(qphy);
->>  
->>  	return ret;
->>  }
->> @@ -1855,7 +1864,7 @@ static int qcom_qmp_phy_disable(struct phy *phy)
->>  	if (cfg->has_lane_rst)
->>  		reset_control_assert(qphy->lane_rst);
->>  
->> -	qcom_qmp_phy_com_exit(qmp);
->> +	qcom_qmp_phy_com_exit(qphy);
->>  
->>  	qmp->phy_initialized = false;
->>  
-> 
+Rather then doing this I think  the best approach is to unify gpio-pch
+and gpio-ml-ioh together.
+Under umbrella of the task, the clean ups like above are highly appreciated.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+With Best Regards,
+Andy Shevchenko
