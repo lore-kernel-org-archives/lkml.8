@@ -2,98 +2,156 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BB4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CFCC18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94536208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48E6208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ACHfzrKp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZgYWh0h+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387613AbgDBHkT (ORCPT
+        id S2387629AbgDBHkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:40:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41998 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgDBHkS (ORCPT
+        Thu, 2 Apr 2020 03:40:53 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:34942 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgDBHkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:40:18 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q19so2127226ljp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:40:17 -0700 (PDT)
+        Thu, 2 Apr 2020 03:40:53 -0400
+Received: by mail-pj1-f67.google.com with SMTP id g9so1196940pjp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:40:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wxvF/+u7KELI/jIBwkyObWmgPCHKCclGo+byqnItBfc=;
-        b=ACHfzrKps1Y4qZ9YwaFZz454GAI42WKp0MnKRH+8uzjnzI0AVl1GPC/yTcGOrmSQT7
-         WwN6Lov4ZzMLjFKKNJHUAFzcJd0+Jonx/0LeOu4FWrjASmB9WAZzy9dKY9ldaKMWqXZC
-         ZGAbfVQlR+9zU1P2eWd6rzDyyv9o1jkBqBs4xI8Ifbk6tT8lIXjGA+EL06SSRftkz9fF
-         prWVWRQncTwRVneP0UDZZkl/58ymlrYkh5+MCxr6f8td2KYmIhhEzD8eBEjqUQuw3rjk
-         2iHeZMh5rcmxyNZL9T8vMI1Q4JAMfFlYyYNtTJe6U0cN/uUYSOHDPCWNwWU0OjaqKSXX
-         eWPA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rRniYv7RPwWHFWrPJUZ8iMNVA0tUTHJrCguWpqpN+6k=;
+        b=ZgYWh0h+a5Hg2gYuDaf7bAJw/KFnrjKUiEuvbptyyu8Ds6OObwEJ9RIl0P+Ognz7ON
+         aVcJvZkmoY5pTE9Oigwg6Rz73WgiRqYNakHvrmSrDodIpjaHrTg1KZr/8/65eN0WM5/I
+         HNXT2GWnBGZf3TIUSbj5+3eAx6Fzc29HW0q/8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wxvF/+u7KELI/jIBwkyObWmgPCHKCclGo+byqnItBfc=;
-        b=brpbfR23FD6gf/0hkHC0PBNr15YKeoS82NV4QRnu4/RO2OjFPWrQnKoPoHT+vSZdeN
-         LvUWrNu9AGDzsh9DsBoxEgnlLuHHE/ECxem1T+6oHh/vTGanFr00R6jiTmsdMXDP00fT
-         W+9Gq2SOZ84hSGUYXDOPeN9AQA535RcVuo2duBtzVIuLly7yMp1LhkVrPPi/+lvihdlg
-         e2L+n9avBFDlYMlWYNQrpDRUHwJqLsmDHb3yWCFc0HtOsO1mSW0n6W/7X1Xp8FWIGl2d
-         q25hyDpRYMRnE0zUpWabynXyp65XX7a8nCyeZ655mnaYVKuyf55/PChlznfDRR8gSCy3
-         2Cpg==
-X-Gm-Message-State: AGi0PuakmuOhm9+nki6703NWzgk/KekwGjCDTxStzmKUL4wUSXNuqNUn
-        N/SlrNFfaQJoroXVt/PTo6cT72veq17LIOlIPT2llg==
-X-Google-Smtp-Source: APiQypJQrw2kGNxUc8CNT6NNf1617H7vjAW0LBY33E65eACRmhGlNj1w5ZKMZP3jhOmVn3FO45GGUDWdSL461+AF6lg=
-X-Received: by 2002:a2e:5048:: with SMTP id v8mr1117658ljd.99.1585813216416;
- Thu, 02 Apr 2020 00:40:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rRniYv7RPwWHFWrPJUZ8iMNVA0tUTHJrCguWpqpN+6k=;
+        b=S37pUxMnPkCl0yG0BeBPFHXzEimh7qo9wT+QYsF7wa2MKKneL+4vyq/CykXkALlB6T
+         Ri7aDgHF0+SnZbOSdZxFZA3881BCXj5wqz2HpipbBj4F3C/5p585WofY5TxecPTiXUi3
+         Pnku6EeKkHVI4B8z4l5SMQS118TBbyJsKI1x7NUIiCBzhaJKZnH8U0MKbm+Z8Q7R4zfG
+         DB/ttZtMB6mcry6764ctEKDKQAOMgUqSyjBe4I9uSEK1r25N7GAgdGqqr8F4SkVlIHe+
+         3zikYXgztRH2y1Y01kZE7B9k7xaUH2yg8hZx6w3lbzJF//7gdoKPpLmrVdFftB0HE9+w
+         3/HA==
+X-Gm-Message-State: AGi0Puar32GydKmfNTwS3SkaqBhk7JXQ1P+Oep1VwUugHiQPHjOSyD98
+        mxlws1wXC06M73i8dOyXAKqLew==
+X-Google-Smtp-Source: APiQypI2cYt4enOL7sTbasi+WDYQtLGOhHbbnJYUSxIit5amZbHaBwsNKTd/VramUXhMpxHV80lNww==
+X-Received: by 2002:a17:902:a706:: with SMTP id w6mr1769890plq.79.1585813251785;
+        Thu, 02 Apr 2020 00:40:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 8sm3137514pfy.130.2020.04.02.00.40.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 00:40:50 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 00:40:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v6 00/16] Infrastructure to allow fixing exec deadlocks
+Message-ID: <202004020037.67ED66C8B6@keescook>
+References: <AM6PR03MB5170B2F5BE24A28980D05780E4F50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <871rpg8o7v.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170938306F22C3CF61CC573E4CD0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003282041.A2639091@keescook>
+ <AM6PR03MB5170E0E722ED0B05B149C135E4CB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <20200330201459.GF22483@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <8d3579f4b49bb675dc805035960f24852898be28.1585734060.git.baolin.wang7@gmail.com>
-In-Reply-To: <8d3579f4b49bb675dc805035960f24852898be28.1585734060.git.baolin.wang7@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 2 Apr 2020 09:40:05 +0200
-Message-ID: <CACRpkdYYsPKFBKPVXHa-k5jmQ_8BPfpqmWAUNfSNzar+CedXmA@mail.gmail.com>
-Subject: Re: [PATCH] Revert "gpio: eic-sprd: Use devm_platform_ioremap_resource()"
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330201459.GF22483@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 11:59 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+On Mon, Mar 30, 2020 at 01:14:59PM -0700, Matthew Wilcox wrote:
+> On Mon, Mar 30, 2020 at 10:12:02PM +0200, Bernd Edlinger wrote:
+> > On 3/29/20 5:44 AM, Kees Cook wrote:
+> > > On Sat, Mar 28, 2020 at 11:32:35PM +0100, Bernd Edlinger wrote:
+> > >> Oh, do I understand you right, that I can add a From: in the
+> > >> *body* of the mail, and then the From: in the MIME header part
+> > >> which I cannot change is ignored, so I can make you the author?
+> > > 
+> > > Correct. (If you use "git send-email" it'll do this automatically.)
+> > > 
+> > > e.g., trimmed from my workflow:
+> > > 
+> > > git format-patch -n --to "$to" --cover-letter -o outgoing/ \
+> > > 	--subject-prefix "PATCH v$version" "$SHA"
+> > > edit outgoing/0000-*
+> > > git send-email --transfer-encoding=8bit --8bit-encoding=UTF-8 \
+> > > 	--from="$ME" --to="$to" --cc="$ME" --cc="...more..." outgoing/*
+> > > 
+> > > 
+> > 
+> > Okay, thanks, I see that is very helpful information for me, and in
+> > this case I had also fixed a small bug in one of Eric's patches, which
+> > was initially overlooked (aquiring mutexes in wrong order,
+> > releasing an unlocked mutex in some error paths).
+> > I am completely unexperienced, and something that complex was not
+> > expected to happen :-) so this is just to make sure I can handle it
+> > correctly if something like this happens again.
+> > 
+> > In the case of PATCH v6 05/16 I removed the Reviewd-by: Bernd Edlinger
+> > since it is now somehow two authors and reviewing own code is obviously
+> > not ok, instead I added a Signed-off-by: Bernd Edlinger (and posted the
+> > whole series on Eric's behalf (after asking Eric's permissing per off-list
+> > e-mail, which probably ended in his spam folder)
+> > 
+> > Is this having two Signed-off-by: for mutliple authors the
+> > correct way to handle a shared authorship?
+> 
+> If the patch comes through you, then Reviewed-by: is inappropriate.
+> Instead, you should use Signed-off-by: in the second sense of
+> Documentation/process/submitting-patches.rst
+> 
+> This also documents how to handle "minor changes" that you make.
 
-> This reverts commit 0f5cb8cc27a266c81e6523b436479802e9aafc9e.
->
-> This commit will cause below warnings, since our EIC controller can support
-> differnt banks on different Spreadtrum SoCs, and each bank has its own base
-> address, we will get invalid resource warning if the bank number is less than
-> SPRD_EIC_MAX_BANK on some Spreadtrum SoCs.
->
-> So we should not use devm_platform_ioremap_resource() here to remove the
-> warnings.
->
-> [    1.118508] sprd-eic 40210000.gpio: invalid resource
-> [    1.118535] sprd-eic 40210000.gpio: invalid resource
-> [    1.119034] sprd-eic 40210080.gpio: invalid resource
-> [    1.119055] sprd-eic 40210080.gpio: invalid resource
-> [    1.119462] sprd-eic 402100a0.gpio: invalid resource
-> [    1.119482] sprd-eic 402100a0.gpio: invalid resource
-> [    1.119893] sprd-eic 402100c0.gpio: invalid resource
-> [    1.119913] sprd-eic 402100c0.gpio: invalid resource
->
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+And in the true case of multiple authors, have both SoBs, but also add a
+Co-developed-by: for the non-"git author" author. Specific details:
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
 
-Patch applied.
-
-Yours,
-Linus Walleij
+-- 
+Kees Cook
