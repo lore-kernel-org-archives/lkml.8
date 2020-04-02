@@ -2,222 +2,157 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71927C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548E5C2BA17
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DE1206CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEEA2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Ov6S14+1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RRn91FPf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389173AbgDBO7R (ORCPT
+        id S2389180AbgDBO7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:59:17 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:54329 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388782AbgDBO6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:58:33 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR5g3T37zwy;
-        Thu,  2 Apr 2020 16:58:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585839511; bh=Ol/Fy27tVQcocJtHbCOujmzZ2avDxeNSc4gh5D0opQs=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=Ov6S14+1qIUTfiLKzfv9pmaec6kaL1/TzSMpOudtm+W8wRakdS0mmEaIeNrHQlD+S
-         jiGEI4YO1P3yKat7Z3grQ5QWfliU1cp0TDMDqhpv5gO4EVu2KKBOUDwyK8KT5Y7hXp
-         T3DQjnxVA6VnmbWBZbR1UpLPrDiD96OvyVWmU5t2DTVandgCTOeA3rlyNqJPFUK4lE
-         r6AruVThZvDl+YnXZ+jrpD88Sv4PhTjz7WwcPZYkWD5/0r+rwzKdhI66MCoGhRZoGG
-         45I9Q8WDOoMkEX9e4ajY+Eek+ViCpLRF4GqJX20RYFoA3zu7FS/G+zy3KRD5UvnLVO
-         wY4z4Gh8mjHWA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 16:58:31 +0200
-Message-Id: <58a369bc6c2cb1f5ee28dd6dda634999f78fa8b4.1585838678.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1585838678.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1585838678.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 04/14] power: supply: bq25890: protect view of the chip's
- state
+        Thu, 2 Apr 2020 10:59:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35170 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388782AbgDBO7k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:59:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585839579;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Yqap4whYtfmJejxzuBxb/FdAQnMsGBhBjZtdGx1iIUk=;
+        b=RRn91FPfKVirv7wPkWNQxQXmgbFuAnYqnP5sHAFIDVRhmvh1usHNBA+cfjF0d40x4Tfa+X
+        tc47JNu9Bh53pZxULSoNs58hk/jiuQo3H51s9EC0okJiwBmWrS8reNGiPQrLaRyV4hDXp/
+        2zvTGsQ0hPeq695Quk3xykctwyTP68M=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-321-RAU6iGq9NS-vzIWr7BGaNw-1; Thu, 02 Apr 2020 10:59:38 -0400
+X-MC-Unique: RAU6iGq9NS-vzIWr7BGaNw-1
+Received: by mail-wr1-f70.google.com with SMTP id v17so1580072wro.21
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:59:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yqap4whYtfmJejxzuBxb/FdAQnMsGBhBjZtdGx1iIUk=;
+        b=GyF9058hMj/owJBzkEBQldfmbChGfLdhrKqNgRp2NGt1ZTJvDPyKAOMT26s1dnPBzm
+         cc7Mte/H98KLIfHLkGNwyAdjLtw7HMR/4xuosHNS/FwEsfxGRKsHwib8Lm/t9b4H5cHl
+         ++O1gx4Rzy+A4tFVpEvPGdtB/bFtQonjfienKOdnojhOHyLxGiluF7MtN8qMUJZYkSAI
+         96pstt6QIkO+2Xur5bMNr9Qz4uyKLDATVuMbkESCEqbt/3lz58BAAAHwKDw2UFsyhBac
+         QMcBmIO7OBgGoiFu3Gyt9+B72H+0hM2bYiJL0esS+BUqZxa7J/dGnk+QSjw8aC8SPBEy
+         etoA==
+X-Gm-Message-State: AGi0PuZBPf/ML+PHmubhbZUqWrtQjaTZZighE19CpIhCCrbyGPVy3feg
+        LltueTG+KCdxDHWsod1NzwylCjiLn6+X2r4TPLauDBWGlNmjpo0b+64HZ8wViLplFvu7CuCkW/P
+        0N2dSvbPBehbC/IVatDxQ0ISA
+X-Received: by 2002:adf:e744:: with SMTP id c4mr3767379wrn.133.1585839573538;
+        Thu, 02 Apr 2020 07:59:33 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK3Oo6MLesIzVPde3UkEXepI21m0scERK4nlg2Qpodmma+whmcrF38HqppY2MVQPBGZT11SRw==
+X-Received: by 2002:adf:e744:: with SMTP id c4mr3767358wrn.133.1585839573260;
+        Thu, 02 Apr 2020 07:59:33 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id r17sm588857wrg.71.2020.04.02.07.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 07:59:32 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterx@redhat.com, Ming Lei <ming.lei@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2] sched/isolation: Allow "isolcpus=" to skip unknown sub-parameters
+Date:   Thu,  2 Apr 2020 10:59:29 -0400
+Message-Id: <20200402145929.102587-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend bq->lock over whole updating of the chip's state. Might get
-useful later for switching ADC modes correctly.
+The "isolcpus=" parameter allows sub-parameters to exist before the
+cpulist is specified, and if it sees unknown sub-parameters the whole
+parameter will be ignored.  This design is incompatible with itself
+when we add more sub-parameters to "isolcpus=", because the old
+kernels will not recognize the new "isolcpus=" sub-parameters, then it
+will invalidate the whole parameter so the CPU isolation will not
+really take effect if we start to use the new sub-parameters while
+later we reboot into an old kernel. Instead we will see this when
+booting the old kernel:
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+    isolcpus: Error, unknown flag
+
+The better and compatible way is to allow "isolcpus=" to skip unknown
+sub-parameters, so that even if we add new sub-parameters to it the
+old kernel will still be able to behave as usual even if with the new
+sub-parameter is specified.
+
+Ideally this patch should be there when we introduce the first
+sub-parameter for "isolcpus=", so it's already a bit late.  However
+late is better than nothing.
+
+CC: Ming Lei <ming.lei@redhat.com>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Juri Lelli <juri.lelli@redhat.com>
+CC: Luiz Capitulino <lcapitulino@redhat.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- drivers/power/supply/bq25890_charger.c | 82 ++++++++------------------
- 1 file changed, 26 insertions(+), 56 deletions(-)
+v2:
+- only allow isalpha() for sub-parameters [tglx]
+---
+ kernel/sched/isolation.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index c4a69fd69f34..9339e216651f 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -510,74 +510,50 @@ static int bq25890_get_chip_state(struct bq25890_device *bq,
- 	return 0;
- }
- 
--static bool bq25890_state_changed(struct bq25890_device *bq,
--				  struct bq25890_state *new_state)
--{
--	struct bq25890_state old_state;
--
--	mutex_lock(&bq->lock);
--	old_state = bq->state;
--	mutex_unlock(&bq->lock);
--
--	return (old_state.chrg_status != new_state->chrg_status ||
--		old_state.chrg_fault != new_state->chrg_fault	||
--		old_state.online != new_state->online		||
--		old_state.bat_fault != new_state->bat_fault	||
--		old_state.boost_fault != new_state->boost_fault ||
--		old_state.vsys_status != new_state->vsys_status);
--}
--
--static void bq25890_handle_state_change(struct bq25890_device *bq,
--					struct bq25890_state *new_state)
-+static irqreturn_t __bq25890_handle_irq(struct bq25890_device *bq)
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 008d6ac2342b..c2e8b4a778d6 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -149,6 +149,9 @@ __setup("nohz_full=", housekeeping_nohz_full_setup);
+ static int __init housekeeping_isolcpus_setup(char *str)
  {
-+	struct bq25890_state new_state;
- 	int ret;
--	struct bq25890_state old_state;
+ 	unsigned int flags = 0;
++	char *par;
++	int len;
++	bool illegal = false;
  
--	mutex_lock(&bq->lock);
--	old_state = bq->state;
--	mutex_unlock(&bq->lock);
-+	ret = bq25890_get_chip_state(bq, &new_state);
-+	if (ret < 0)
-+		return IRQ_NONE;
+ 	while (isalpha(*str)) {
+ 		if (!strncmp(str, "nohz,", 5)) {
+@@ -169,8 +172,21 @@ static int __init housekeeping_isolcpus_setup(char *str)
+ 			continue;
+ 		}
  
--	if (!new_state->online) {			     /* power removed */
-+	if (!memcmp(&bq->state, &new_state, sizeof(new_state)))
-+		return IRQ_NONE;
+-		pr_warn("isolcpus: Error, unknown flag\n");
+-		return 0;
++		/*
++		 * Skip unknown sub-parameter and validate that it is not
++		 * containing an invalid character.
++		 */
++		for (par = str, len = 0; *str && *str != ','; str++, len++)
++			if (!isalpha(*str))
++				illegal = true;
 +
-+	if (!new_state.online && bq->state.online) {	    /* power removed */
- 		/* disable ADC */
- 		ret = bq25890_field_write(bq, F_CONV_START, 0);
- 		if (ret < 0)
- 			goto error;
--	} else if (!old_state.online) {			    /* power inserted */
-+	} else if (new_state.online && !bq->state.online) { /* power inserted */
- 		/* enable ADC, to have control of charge current/voltage */
- 		ret = bq25890_field_write(bq, F_CONV_START, 1);
- 		if (ret < 0)
- 			goto error;
++		if (illegal) {
++			pr_warn("isolcpus: Invalid flag %.*s\n", len, par);
++			return 0;
++		}
++
++		pr_info("isolcpus: Skipped unknown flag %.*s\n", len, par);
++		str++;
  	}
  
--	return;
-+	bq->state = new_state;
-+	power_supply_changed(bq->charger);
- 
-+	return IRQ_HANDLED;
- error:
--	dev_err(bq->dev, "Error communicating with the chip.\n");
-+	dev_err(bq->dev, "Error communicating with the chip: %pe\n",
-+		ERR_PTR(ret));
-+	return IRQ_HANDLED;
- }
- 
- static irqreturn_t bq25890_irq_handler_thread(int irq, void *private)
- {
- 	struct bq25890_device *bq = private;
--	int ret;
--	struct bq25890_state state;
--
--	ret = bq25890_get_chip_state(bq, &state);
--	if (ret < 0)
--		goto handled;
--
--	if (!bq25890_state_changed(bq, &state))
--		goto handled;
--
--	bq25890_handle_state_change(bq, &state);
-+	irqreturn_t ret;
- 
- 	mutex_lock(&bq->lock);
--	bq->state = state;
-+	ret = __bq25890_handle_irq(bq);
- 	mutex_unlock(&bq->lock);
- 
--	power_supply_changed(bq->charger);
--
--handled:
--	return IRQ_HANDLED;
-+	return ret;
- }
- 
- static int bq25890_chip_reset(struct bq25890_device *bq)
-@@ -607,7 +583,6 @@ static int bq25890_hw_init(struct bq25890_device *bq)
- {
- 	int ret;
- 	int i;
--	struct bq25890_state state;
- 
- 	const struct {
- 		enum bq25890_fields id;
-@@ -655,16 +630,12 @@ static int bq25890_hw_init(struct bq25890_device *bq)
- 		return ret;
- 	}
- 
--	ret = bq25890_get_chip_state(bq, &state);
-+	ret = bq25890_get_chip_state(bq, &bq->state);
- 	if (ret < 0) {
- 		dev_dbg(bq->dev, "Get state failed %d\n", ret);
- 		return ret;
- 	}
- 
--	mutex_lock(&bq->lock);
--	bq->state = state;
--	mutex_unlock(&bq->lock);
--
- 	return 0;
- }
- 
-@@ -1001,19 +972,16 @@ static int bq25890_suspend(struct device *dev)
- static int bq25890_resume(struct device *dev)
- {
- 	int ret;
--	struct bq25890_state state;
- 	struct bq25890_device *bq = dev_get_drvdata(dev);
- 
--	ret = bq25890_get_chip_state(bq, &state);
-+	mutex_lock(&bq->lock);
-+
-+	ret = bq25890_get_chip_state(bq, &bq->state);
- 	if (ret < 0)
- 		return ret;
- 
--	mutex_lock(&bq->lock);
--	bq->state = state;
--	mutex_unlock(&bq->lock);
--
- 	/* Re-enable ADC only if charger is plugged in. */
--	if (state.online) {
-+	if (bq->state.online) {
- 		ret = bq25890_field_write(bq, F_CONV_START, 1);
- 		if (ret < 0)
- 			return ret;
-@@ -1022,6 +990,8 @@ static int bq25890_resume(struct device *dev)
- 	/* signal userspace, maybe state changed while suspended */
- 	power_supply_changed(bq->charger);
- 
-+	mutex_unlock(&bq->lock);
-+
- 	return 0;
- }
- #endif
+ 	/* Default behaviour for isolcpus without flags */
 -- 
-2.20.1
+2.24.1
 
