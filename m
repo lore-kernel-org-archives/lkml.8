@@ -2,132 +2,284 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BF1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D319C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9356206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E1B206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:12:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="R1w6opya";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="JWUXaob9"
+	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="qrjpLexf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgDBEMM (ORCPT
+        id S1729091AbgDBEMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 00:12:12 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:52100 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbgDBEMM (ORCPT
+        Thu, 2 Apr 2020 00:12:15 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:39065 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbgDBEMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 00:12:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1585800732; x=1617336732;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=emDVFJso3jKtMkekXhKuaTYAI1IeqKn1hjxX+lft1VA=;
-  b=R1w6opyaLsAYRYFsAcmOCgTAdFYQbVfoNzoj+BoqMUPDBGTfy5shpHX5
-   8xKzB/yPdtPIwm9DSCYXD1b5aY8Ik1MejJ4cErXUSyzrCeQqMrY4/pgwf
-   0GJNjo6Ih9+lvDT+O3nq/ZjFTpoIGHXEfprnC48fW2V/1bIc2e6nhGVA5
-   grGOSpgRYptUAmjHnkwyztvNafs6rANRyZ42JeMWC3SxuCPCBgw1Ngc3+
-   A32ILiz0u9cDtYc2YJz22kHu2WLX7AbDhe1sg0+J1dXStF78AdKd0laAU
-   jsEmiIGZcGECuAkFSZt+yXrJwArLWsmFfENjSOdPkqvOWyvJV4orG/5y1
-   Q==;
-IronPort-SDR: dPlBT7PgeexH4TM/sWJTPJqa/qCpggCKFAHL+mHULDrhvNJUWL2PJuZWqfpoLUo/HLzMoXVwMW
- qy0I9ddaxAFX75qfOwLiPo3PBYhyxDJt7cf9azJoI1cZzrUFhOk0Xk4L3FT96EzsRCxDiCsdn+
- cqAgEButON9lM0R/84bPUzTmw7ccYuGVoNWm50mjHelkOH5C/TF/csJzp5eepesHzXnN8pc3Or
- Wj/lMhN2qcGpoVhmpWjPXv200oRO/kdrXEVNEKO7naqoedI1gAwDp7fPrQ0auLlTjIdTYh+Haf
- uFk=
-X-IronPort-AV: E=Sophos;i="5.72,334,1580745600"; 
-   d="scan'208";a="134696696"
-Received: from mail-mw2nam10lp2100.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.100])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Apr 2020 12:12:10 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YvJ3iX0lBM6ggWmREHk6J6i8F/BBQmnNhYy/onGOzv4Fj0Tx0glCSQDcHYkDBYwdEjqF4YXJ++JF3Pd2EkyRDBNVa20+7i//y1XyHzf4vx1QuUccwyLZfffY4ztTofyUOxEhv5ga7meI16ejoPJn5fLnp/ohI0Tf7bTHzEtT0ZMil1NsdfSDlukiaHpVLO+nX7T6Ur93Yy1Y+z8VbBGc2CoAZhaks2XUTis+gJ/bnPAsk8iHr/fdvSXpvYV2EpnYdChUEgdw4RYezGMrlt/8JWJy/4qfLQ9kYmLVE2O/C6KMcchOqqZTH2X9miWzef5WlCkhYfInw+SWjhTP1E9vaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=emDVFJso3jKtMkekXhKuaTYAI1IeqKn1hjxX+lft1VA=;
- b=CuAYxdYQiAQvnrwtUXSU22cH2nbT8d5VcpGpGdgIhab1c11riz8KqHrof0VydrAXTWn6ciUdktExwF9AeqineghGbQsAb0FSOhVyt2mWJijSLCZ4xAQrN8DIux55SxSzCKrLgavNp5a4/woqIc6nBkazZ126pTRlTJfYsv/0tQT2suQaa4V7MzwgGIvjzPtOd+RaOpJbQ8nQX0wHPRg3CfOPL2xAmWnkCpWSEx816225limlX/TeQalooo2wZZ5t4idxt6+zsCRRnJsHJQP5XtcGFjlHrucfnURnqpuyznxyaqSg6YFx+aH1J2f41XNzsHOQe70VC23zer59Z62pIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Thu, 2 Apr 2020 00:12:14 -0400
+Received: by mail-pj1-f68.google.com with SMTP id z3so999757pjr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 21:12:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=emDVFJso3jKtMkekXhKuaTYAI1IeqKn1hjxX+lft1VA=;
- b=JWUXaob901YqpCl9LGPGFSLhxVAGNJkQ8YdQpe/tdmIrUBLlTW+h5e0+6l2IJ1kwru3I+4Jvh0QT3mbgDMj7OoSD+c3JD3y670gUssNCnLp2fOkiwEcoNSVecn+Vo95ssy758YIKUEdcU/r/K0iZZoUVFzhXVZdo3dPWa/MGBhc=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BYAPR04MB4230.namprd04.prod.outlook.com (2603:10b6:a02:ef::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Thu, 2 Apr
- 2020 04:12:06 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::d826:82b2:764f:9733]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::d826:82b2:764f:9733%7]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
- 04:12:06 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Chucheng Luo <luochucheng@vivo.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "opensource.kernel@vivo.com" <opensource.kernel@vivo.com>
-Subject: Re: [PATCH v2] fs: Fix missing 'bit' in comment
-Thread-Topic: [PATCH v2] fs: Fix missing 'bit' in comment
-Thread-Index: AQHWCKL1dFE7Boy2C0eAyyMMCZ6Wow==
-Date:   Thu, 2 Apr 2020 04:12:06 +0000
-Message-ID: <BYAPR04MB4965E726FCB157878F11139786C60@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <20200402035807.10611-1-luochucheng@vivo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.4]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 296e5e08-74f7-4464-e473-08d7d6bc01cf
-x-ms-traffictypediagnostic: BYAPR04MB4230:
-x-microsoft-antispam-prvs: <BYAPR04MB4230B55163A77599A5F705A886C60@BYAPR04MB4230.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 0361212EA8
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(39860400002)(396003)(376002)(366004)(346002)(66556008)(7696005)(66446008)(64756008)(66476007)(66946007)(76116006)(9686003)(55016002)(186003)(26005)(558084003)(478600001)(81156014)(8676002)(8936002)(81166006)(2906002)(53546011)(52536014)(6506007)(5660300002)(71200400001)(110136005)(4326008)(316002)(33656002)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: p//2SAUi7spf/SJYFV/k+Qg9IHTGomGi4LvQUirWlgJWU7WAqgltDRJoSTU1WcmkdnOMXyHEDEYa7e32WpkzUOHBPwyG4glkFW2PzufV16lxHBOicN3GVfTZE6YHR51jj6eIto/rpyLSwgY9ziLU/VWOPdFjgGPjrO/lxoKaoP3JLKCd4Jw/V8A1mSRWPZBvVtpz3gNtLqHc/pHzmQk2wU3UN0mFrQFOoNrQgCucj571IpY2YRGv3T/6wzmAbKan5D633Z1+9QpXLwtpWdgNGplrLFgc+LXbyfstmfPb+/8XgwVH7ZoNG5awFqV7pItXjEspoq7ObnnODCZrliT0YvjD3XekqViE5Mol3XdFXcY+1dGLzus6LDKUns/aMsZ1JXLmnNmWBgIqGSd03S2P/J0KKU/raKY31OB72akHJFZFiTWFzEOSDqw31ku1yLcg
-x-ms-exchange-antispam-messagedata: gPnmug7EYxdDFYir76lfj1g2j+okNg1UHsrMNlyPxkeZ7XGmTqr4liGnf4BlvVUaKyvwO2n7Q+yigTT54aDSr2xiFN+2JTASrkp0d5PQnCKSkT7xnRLFyMb90c7w4YPRSJ3tXjE0p1Jf8/i+0QLAIA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u11SA1v5lDHbwzwkFSCh6NiqhqGABE/1UnVjTe1jwnc=;
+        b=qrjpLexf3pkfUEIq4xKX44iq9xgKCxV8CV/E+vQuLEgHXzQklceVUvwLDaPeXiJYr5
+         AZ4wB23rxcAcy/JTV7WkHnv01kW8PiWMyISOkQl/Vx0qiGps0OrrMOmTxKprGqOb5gqd
+         UM+uOwV41+2YX3d52XKvnaF8a/uPGu8ag4XEbTZ3xD1um5MSnqsRkR4uA8roMF5HcfWm
+         fWPSxqS0fZxK/bf78WhJbuWlt1oq9YF660CS2CdYEff7+AQv4p9W+TkLMR01i/jgtyzE
+         +h+qZ7FSwJgqT5Nh7bTzKtXb4ArIgIwyBxJj7AcEi2FL+CuBLZ/59bN2ClUDbULn86zy
+         NT7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u11SA1v5lDHbwzwkFSCh6NiqhqGABE/1UnVjTe1jwnc=;
+        b=BKF6vJrL25Kbrj50NQDkC0kxnSLNwC2OOH+Li3o8ONWcOWfx4iEogs0+tVMft2rsCC
+         gwi/oN0krQW/MNgw6fzNa57Oe8RiZqvut1Ix4cDm7CJZCs/WvvyekiVqqfsTRDo/nme1
+         aOcI4D4AI0/Lni5lA3Y6yk9Bdqz6glPfJZb8Xvvf37kz8qu1boNibjqK6N2dk40fpEc2
+         yOQOUtgOauvuUNPUIzdA00tCPDS7UR83Psqf1P9MI6MVQeg11cuJOZL+RQSmtqHHgsnS
+         vhKQNTy2cCBJbt1Vyj1EK5q5/x5dsOff1IqXivuqhtB3xNS8L2I7qWvoRzWPhi6SxWEg
+         /0ig==
+X-Gm-Message-State: AGi0PuYg9vCIhbEl8MFfayFmPcw0IH85kO/Uk2cljFY7+/UdfkCrtWPC
+        GsorR0z2SD4+9Xuh4yELHv7ekg==
+X-Google-Smtp-Source: APiQypKXLU201No2vEQ1RTPqbyVKExlpd1AX4SDLxnX5JUncA3ab8mryjs22/JjGJ6Cbtwx/tZsDqA==
+X-Received: by 2002:a17:90b:230d:: with SMTP id mt13mr1585074pjb.164.1585800733481;
+        Wed, 01 Apr 2020 21:12:13 -0700 (PDT)
+Received: from tom-ThinkPad-X1-Carbon-5th.teksavvy.com ([69.172.145.184])
+        by smtp.googlemail.com with ESMTPSA id v25sm2571818pgl.55.2020.04.01.21.12.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 21:12:12 -0700 (PDT)
+From:   Tom Murphy <murphyt7@tcd.ie>
+To:     iommu@lists.linux-foundation.org
+Cc:     Tom Murphy <murphyt7@tcd.ie>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] intel-iommu: Remove all IOVA handling code from the non-dma_ops path in the intel
+Date:   Thu,  2 Apr 2020 05:12:00 +0100
+Message-Id: <20200402041200.12458-1-murphyt7@tcd.ie>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 296e5e08-74f7-4464-e473-08d7d6bc01cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 04:12:06.7062
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t7OJJYx6NQtn6YZJQd3kaVmCKnB3KU+KJUxysJym48AN3GS9TC2xoECgfZTKnwas3BnMXpMu0uyIPqGGE6qcY+KjymQJIIcULd+zFgsXKdc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4230
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 8:58 PM, Chucheng Luo wrote:=0A=
-> The missing word may make it hard for other developers to=0A=
-> understand it.=0A=
->=0A=
-> Signed-off-by: Chucheng Luo <luochucheng@vivo.com>=0A=
-> Acked-by: Hans de Goede <hdegoede@redhat.com>=0A=
-> Acked-by: Andreas Dilger <adilger@dilger.ca>=0A=
-=0A=
-Looks good.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
-=0A=
+There's no need for the non-dma_ops path to keep track of IOVAs. The
+whole point of the non-dma_ops path is that it allows the IOVAs to be
+handled separately. The IOVA handling code removed in this patch is
+pointless.
+
+Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
+---
+ drivers/iommu/intel-iommu.c | 97 +++++++++++++------------------------
+ 1 file changed, 33 insertions(+), 64 deletions(-)
+
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 4be549478691..b92606979914 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -1911,11 +1911,6 @@ static int dmar_init_reserved_ranges(void)
+ 	return 0;
+ }
+ 
+-static void domain_reserve_special_ranges(struct dmar_domain *domain)
+-{
+-	copy_reserved_iova(&reserved_iova_list, &domain->iovad);
+-}
+-
+ static inline int guestwidth_to_adjustwidth(int gaw)
+ {
+ 	int agaw;
+@@ -1946,7 +1941,7 @@ static int domain_init(struct dmar_domain *domain, struct intel_iommu *iommu,
+ 			pr_info("iova flush queue initialization failed\n");
+ 	}
+ 
+-	domain_reserve_special_ranges(domain);
++	copy_reserved_iova(&reserved_iova_list, &domain->iovad);
+ 
+ 	/* calculate AGAW */
+ 	if (guest_width > cap_mgaw(iommu->cap))
+@@ -1996,7 +1991,8 @@ static void domain_exit(struct dmar_domain *domain)
+ 	domain_remove_dev_info(domain);
+ 
+ 	/* destroy iovas */
+-	put_iova_domain(&domain->iovad);
++	if (domain->domain.type == IOMMU_DOMAIN_DMA)
++		put_iova_domain(&domain->iovad);
+ 
+ 	if (domain->pgd) {
+ 		struct page *freelist;
+@@ -2793,19 +2789,9 @@ static struct dmar_domain *set_domain_for_dev(struct device *dev,
+ }
+ 
+ static int iommu_domain_identity_map(struct dmar_domain *domain,
+-				     unsigned long long start,
+-				     unsigned long long end)
++				     unsigned long first_vpfn,
++				     unsigned long last_vpfn)
+ {
+-	unsigned long first_vpfn = start >> VTD_PAGE_SHIFT;
+-	unsigned long last_vpfn = end >> VTD_PAGE_SHIFT;
+-
+-	if (!reserve_iova(&domain->iovad, dma_to_mm_pfn(first_vpfn),
+-			  dma_to_mm_pfn(last_vpfn))) {
+-		pr_err("Reserving iova failed\n");
+-		return -ENOMEM;
+-	}
+-
+-	pr_debug("Mapping reserved region %llx-%llx\n", start, end);
+ 	/*
+ 	 * RMRR range might have overlap with physical memory range,
+ 	 * clear it first
+@@ -2882,7 +2868,8 @@ static int __init si_domain_init(int hw)
+ 
+ 		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+ 			ret = iommu_domain_identity_map(si_domain,
+-					PFN_PHYS(start_pfn), PFN_PHYS(end_pfn));
++					mm_to_dma_pfn(start_pfn),
++					mm_to_dma_pfn(end_pfn));
+ 			if (ret)
+ 				return ret;
+ 		}
+@@ -4812,58 +4799,37 @@ static int intel_iommu_memory_notifier(struct notifier_block *nb,
+ 				       unsigned long val, void *v)
+ {
+ 	struct memory_notify *mhp = v;
+-	unsigned long long start, end;
+-	unsigned long start_vpfn, last_vpfn;
++	unsigned long start_vpfn = mm_to_dma_pfn(mhp->start_pfn);
++	unsigned long last_vpfn = mm_to_dma_pfn(mhp->start_pfn +
++			mhp->nr_pages - 1);
+ 
+ 	switch (val) {
+ 	case MEM_GOING_ONLINE:
+-		start = mhp->start_pfn << PAGE_SHIFT;
+-		end = ((mhp->start_pfn + mhp->nr_pages) << PAGE_SHIFT) - 1;
+-		if (iommu_domain_identity_map(si_domain, start, end)) {
+-			pr_warn("Failed to build identity map for [%llx-%llx]\n",
+-				start, end);
++		if (iommu_domain_identity_map(si_domain, start_vpfn,
++					last_vpfn)) {
++			pr_warn("Failed to build identity map for [%lx-%lx]\n",
++				start_vpfn, last_vpfn);
+ 			return NOTIFY_BAD;
+ 		}
+ 		break;
+ 
+ 	case MEM_OFFLINE:
+ 	case MEM_CANCEL_ONLINE:
+-		start_vpfn = mm_to_dma_pfn(mhp->start_pfn);
+-		last_vpfn = mm_to_dma_pfn(mhp->start_pfn + mhp->nr_pages - 1);
+-		while (start_vpfn <= last_vpfn) {
+-			struct iova *iova;
++		{
+ 			struct dmar_drhd_unit *drhd;
+ 			struct intel_iommu *iommu;
+ 			struct page *freelist;
+ 
+-			iova = find_iova(&si_domain->iovad, start_vpfn);
+-			if (iova == NULL) {
+-				pr_debug("Failed get IOVA for PFN %lx\n",
+-					 start_vpfn);
+-				break;
+-			}
+-
+-			iova = split_and_remove_iova(&si_domain->iovad, iova,
+-						     start_vpfn, last_vpfn);
+-			if (iova == NULL) {
+-				pr_warn("Failed to split IOVA PFN [%lx-%lx]\n",
+-					start_vpfn, last_vpfn);
+-				return NOTIFY_BAD;
+-			}
+-
+-			freelist = domain_unmap(si_domain, iova->pfn_lo,
+-					       iova->pfn_hi);
++			freelist = domain_unmap(si_domain, start_vpfn,
++					last_vpfn);
+ 
+ 			rcu_read_lock();
+ 			for_each_active_iommu(iommu, drhd)
+ 				iommu_flush_iotlb_psi(iommu, si_domain,
+-					iova->pfn_lo, iova_size(iova),
++					start_vpfn, mhp->nr_pages,
+ 					!freelist, 0);
+ 			rcu_read_unlock();
+ 			dma_free_pagelist(freelist);
+-
+-			start_vpfn = iova->pfn_hi + 1;
+-			free_iova_mem(iova);
+ 		}
+ 		break;
+ 	}
+@@ -4891,8 +4857,9 @@ static void free_all_cpu_cached_iovas(unsigned int cpu)
+ 		for (did = 0; did < cap_ndoms(iommu->cap); did++) {
+ 			domain = get_iommu_domain(iommu, (u16)did);
+ 
+-			if (!domain)
++			if (!domain || domain->domain.type != IOMMU_DOMAIN_DMA)
+ 				continue;
++
+ 			free_cpu_cached_iovas(cpu, &domain->iovad);
+ 		}
+ 	}
+@@ -5321,9 +5288,6 @@ static int md_domain_init(struct dmar_domain *domain, int guest_width)
+ {
+ 	int adjust_width;
+ 
+-	init_iova_domain(&domain->iovad, VTD_PAGE_SIZE, IOVA_START_PFN);
+-	domain_reserve_special_ranges(domain);
+-
+ 	/* calculate AGAW */
+ 	domain->gaw = guest_width;
+ 	adjust_width = guestwidth_to_adjustwidth(guest_width);
+@@ -5342,11 +5306,21 @@ static int md_domain_init(struct dmar_domain *domain, int guest_width)
+ 	return 0;
+ }
+ 
++static void intel_init_iova_domain(struct dmar_domain *dmar_domain)
++{
++	init_iova_domain(&dmar_domain->iovad, VTD_PAGE_SIZE, IOVA_START_PFN);
++	copy_reserved_iova(&reserved_iova_list, &dmar_domain->iovad);
++
++	if (!intel_iommu_strict && init_iova_flush_queue(&dmar_domain->iovad,
++				iommu_flush_iova, iova_entry_free)) {
++		pr_info("iova flush queue initialization failed\n");
++	}
++}
++
+ static struct iommu_domain *intel_iommu_domain_alloc(unsigned type)
+ {
+ 	struct dmar_domain *dmar_domain;
+ 	struct iommu_domain *domain;
+-	int ret;
+ 
+ 	switch (type) {
+ 	case IOMMU_DOMAIN_DMA:
+@@ -5363,13 +5337,8 @@ static struct iommu_domain *intel_iommu_domain_alloc(unsigned type)
+ 			return NULL;
+ 		}
+ 
+-		if (!intel_iommu_strict && type == IOMMU_DOMAIN_DMA) {
+-			ret = init_iova_flush_queue(&dmar_domain->iovad,
+-						    iommu_flush_iova,
+-						    iova_entry_free);
+-			if (ret)
+-				pr_info("iova flush queue initialization failed\n");
+-		}
++		if (type == IOMMU_DOMAIN_DMA)
++			intel_init_iova_domain(dmar_domain);
+ 
+ 		domain_update_iommu_cap(dmar_domain);
+ 
+-- 
+2.20.1
+
