@@ -2,84 +2,323 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCB4C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38796C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F23212CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DBC20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:19:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bnZIjFZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389367AbgDBURM (ORCPT
+        id S2388650AbgDBUTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:17:12 -0400
-Received: from mga07.intel.com ([134.134.136.100]:49357 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgDBURL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:17:11 -0400
-IronPort-SDR: WoYS+8qKLMwoo753TKle50uWzAFDjZqrP49PNx7bb+UZ3U567sOcmRJbVDfz1Ebig3/9I1Z8Sr
- LEm+lb5SLvWA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 13:17:11 -0700
-IronPort-SDR: qibqd9S+az7ejxncAI8raSBbcCfwBpEuhv/Nu2BRMba++Z5SMzGaVWLlfTyJ5hOgqWZKvZdGfQ
- llSq6jQtbMQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="238650846"
-Received: from hbriegel-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.39.101])
-  by orsmga007.jf.intel.com with ESMTP; 02 Apr 2020 13:17:01 -0700
-Date:   Thu, 2 Apr 2020 23:17:00 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Amir Mizinski <amirmizi6@gmail.com>
-Cc:     Eyal.Cohen@nuvoton.com, Oshri Alkobi <oshrialkoby85@gmail.com>,
-        Alexander Steffen <alexander.steffen@infineon.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de,
-        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
-        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
-        kgoldman@us.ibm.com, IS30 Dan Morav <Dan.Morav@nuvoton.com>,
-        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
-        amir.mizinski@nuvoton.com,
-        Christophe Richard <hristophe-h.ricard@st.com>
-Subject: Re: [PATCH v4 2/7] tpm: tpm_tis: Add check_data handle to
- tpm_tis_phy_ops in order to check data integrity
-Message-ID: <20200402201700.GG10314@linux.intel.com>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
- <20200331113207.107080-3-amirmizi6@gmail.com>
- <20200401082019.GB17325@linux.intel.com>
- <CAMHTsUUvStPHNL-W7vtjGrtehQx22jUZbN8kLib4h+JWH3p7_w@mail.gmail.com>
+        Thu, 2 Apr 2020 16:19:03 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:43651 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgDBUTC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:19:02 -0400
+Received: by mail-ua1-f67.google.com with SMTP id g24so1832268uan.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:19:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3SoqWvBnm21PtEqXse9X15gYjgWddDXc0ygB71MVtXM=;
+        b=bnZIjFZM51oSPn7+uw5jdRuRE4R/MAyhfT6EqbycCkOAIg8VGr8OmTdJ/ykaquEQNK
+         VFTS+zOu98W21tzqM1d0cN96ybX0iuWPi66mu/6CWZsKdmwTOHqgTWdt4nZH5mse/+Nq
+         DAMmcZ8LVW5Q1oOPqKorn63IepVroElq4k1HQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3SoqWvBnm21PtEqXse9X15gYjgWddDXc0ygB71MVtXM=;
+        b=XuES5SI9xvgQOFlKVVAB6/darSrO644Arq2TVuxbNJMRv/EkFbZEJYhCAzOJnHofAC
+         /MsYr6VBcnnbIe0BOXMOK6e1VOHOxZ5rGUto5xkWeTFvGJyCh+qPWdrUOE4j/xlXUZMC
+         K3VWv9P0kC+4MorSto8/aPHzvbkBgSLbo3Q3UADxUFwGmKjlOmbzEHVauXp0Yfyka5jY
+         Q01VnYvksTuQlMvdArsye0y4FSt1cm0wS93Bs5memHTInuSjvMtph3Vd19Rl5ObOjXkt
+         Mabs5DK1kJn0lMYrbEXoZL0q2iqjiWhZfzE+DykfUnDgJ9nHRN3SosEGv3HmeGYQwBtB
+         pPXA==
+X-Gm-Message-State: AGi0Puayji6eolaAHnUjHxKOfmbOOMNjpHFv2NJwcP5LAgosk8LoLWK2
+        7QiWGSk+wse4JWsGyIIZVflnadO5SzU=
+X-Google-Smtp-Source: APiQypLLr2b5JUT0k61mPY4d8eRQSoj5PbRbXWGhOcgagmCPaI0mRjKJ4gVdnVDuIPF4Zf/QXdrRLQ==
+X-Received: by 2002:ab0:20d6:: with SMTP id z22mr4268546ual.121.1585858740478;
+        Thu, 02 Apr 2020 13:19:00 -0700 (PDT)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id w1sm1753960vkm.45.2020.04.02.13.18.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 13:18:59 -0700 (PDT)
+Received: by mail-vs1-f46.google.com with SMTP id s10so3400550vsi.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:18:59 -0700 (PDT)
+X-Received: by 2002:a67:1e46:: with SMTP id e67mr3989900vse.106.1585858738761;
+ Thu, 02 Apr 2020 13:18:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMHTsUUvStPHNL-W7vtjGrtehQx22jUZbN8kLib4h+JWH3p7_w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200311231348.129254-1-dianders@chromium.org>
+ <20200311161104.RFT.v2.5.I52653eb85d7dc8981ee0dafcd0b6cc0f273e9425@changeid> <30f2b142-6ac2-2917-1ad6-1474c51f3da7@codeaurora.org>
+In-Reply-To: <30f2b142-6ac2-2917-1ad6-1474c51f3da7@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 2 Apr 2020 13:18:47 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Un78pD+88n-RTq5N3_XS1+cB8Noje6RZzPPDC1PckK8w@mail.gmail.com>
+Message-ID: <CAD=FV=Un78pD+88n-RTq5N3_XS1+cB8Noje6RZzPPDC1PckK8w@mail.gmail.com>
+Subject: Re: [RFT PATCH v2 05/10] drivers: qcom: rpmh-rsc: A lot of comments
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 12:19:39PM +0300, Amir Mizinski wrote:
->    this commit is based on Christophe work and was submitted in 2016:
->    https://patchwork.kernel.org/patch/8628661/
->    I followed you comments from the previous version on commit 1/7:
->    https://lore.kernel.org/patchwork/patch/1192101/
->    and fixed it in this one too. should i write it differently?
->    thank you,
->    Amir Mizinski
+Hi,
 
-No then it's correct thanks. Just wanted to verify.
+On Wed, Apr 1, 2020 at 4:30 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> > + * Return: 0 if no problem, or -EAGAIN if the caller should try again in a bit.
+> > + *         Caller should make sure to enable interrupts between tries.
+> > + *         Only ever returns -EAGAIN for ACTIVE_ONLY transfers.
+> with [2] it will not return -EAGAIN, can you please remove this part.
 
-Please configure your email client:
+Sounds good.  Overall I'll probably wait to spin until your series
+lands because trying to keep spinning this one in conjunction with
+that one is going to be a nightmare.  Hopefully that means:
 
-https://www.kernel.org/doc/html/v4.10/process/email-clients.html
+a) Your series can land soon.  I think it's in pretty good shape now.
+I just sent a bunch of reviews.  Might need one more spin for nits and
+then we'll see if Bjorn thinks it's good to go.
 
-/Jarkko
+b) Once I spin this it can get a quicker review so other things don't
+pop up and change things.
+
+...or, if you want, you can hijack my series and send the next version
+out yourself.  I won't object to that but please give me a heads up if
+you're planning to do that so we don't duplicate work.
+
+
+> > @@ -246,12 +288,35 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+> >                       ret = rpmh_rsc_invalidate(drv);
+> >                       if (ret)
+> >                               return ERR_PTR(ret);
+> > +
+> > +                     /*
+> > +                      * TODO:
+> > +                      * - Temporarily enable IRQs on the wake tcs.
+> > +                      * - Make sure nobody else race with us and re-write
+> > +                      *   to this TCS; document how this works.
+> You can remove above comment, i already included change to enable IRQs
+> on wake TCS in my series.
+
+Right.  The race comment still is somewhat interesting because the
+only way we're race free is that we know that the sleep/wake values
+are only programmed at a time when no more active transactions can be
+started.  I'll document that assumption.  If we ever change that
+assumption we'll have to think about this more since (at the moment)
+programming sleep/wake doesn't set the "tcs_in_use" bit.
+
+
+> > +/**
+> > + * check_for_req_inflight() - Look to see if conflicting cmds are in flight.
+> > + * @drv: The controller.
+> > + * @tcs: A pointer to the tcs_group used for ACTIVE_ONLY transfers.
+> > + * @msg: The message we want to send, which will contain several addr/data
+> > + *       pairs to program (but few enough that they all fit in one TCS).
+> > + *
+> > + * Only for use for ACTIVE_ONLY tcs_group, since those are the only ones
+> > + * that might be actively sending.
+>
+> This comment will need to modify/removed after we use this in place of
+> find_match().
+>
+> see below for more details.
+
+As per below I'm trying to understand the motivation for using
+check_for_req_inflight() when writing sleep/wake sets, so changing
+this is pending on that discussion.
+
+
+> > @@ -411,6 +533,20 @@ static int find_free_tcs(struct tcs_group *tcs)
+> >       return -EBUSY;
+> >   }
+> >
+> > +/**
+> > + * tcs_write() - Store messages into a TCS right now, or return -EBUSY.
+> > + * @drv: The controller.
+> > + * @msg: The data to be sent.
+> > + *
+> > + * Grabs a TCS for ACTIVE_ONLY transfers and writes the messages to it.
+> > + *
+> > + * If there are no free ACTIVE_ONLY TCSs or if a command for the same address
+> > + * is already transferring returns -EBUSY which means the client should retry
+> > + * shortly.
+> > + *
+> > + * Return: 0 on success, -EBUSY if client should retry, or an error.
+> > + *         Client should have interrupts enabled for a bit before retrying.
+> > + */
+> >   static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
+> >   {
+> >       struct tcs_group *tcs;
+> > @@ -418,16 +554,14 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
+> >       unsigned long flags;
+> >       int ret;
+> >
+> > +     /* TODO: get_tcs_for_msg() can return -EAGAIN and nobody handles */
+> with [2] it will not return -EAGAIN, can you please remove this comment.
+
+OK.
+
+
+> >       tcs = get_tcs_for_msg(drv, msg);
+> >       if (IS_ERR(tcs))
+> >               return PTR_ERR(tcs);
+> >
+> >       spin_lock_irqsave(&tcs->lock, flags);
+> > +
+> >       spin_lock(&drv->lock);
+> > -     /*
+> > -      * The h/w does not like if we send a request to the same address,
+> > -      * when one is already in-flight or being processed.
+> > -      */
+> please keep above comment as it is.
+
+OK.  I guess I felt like now that check_for_req_inflight() was
+documented it was just getting in the way, but I'll keep it if you
+want.
+
+
+> > @@ -485,6 +635,63 @@ int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg)
+> >       return ret;
+> >   }
+> >
+> > +/**
+> > + * find_match() - Find if the cmd sequence is in the tcs_group
+> > + * @tcs: The tcs_group to search.  Either sleep or wake.
+> > + * @cmd: The command sequence to search for; only addr is looked at.
+> > + * @len: The number of commands in the sequence.
+> > + *
+> > + * Searches through the given tcs_group to see if a given command sequence
+> > + * is in there.
+> > + *
+> > + * Two sequences are matches if they modify the same set of addresses in
+> > + * the same order.  The value of the data is not considered when deciding if
+> > + * two things are matches.
+> > + *
+> > + * How this function works is best understood by example.  For our example,
+> > + * we'll imagine our tcs group contains these (cmd, data) tuples:
+> > + *   [(a, A), (b, B), (c, C), (d, D), (e, E), (f, F), (g, G), (h, H)]
+> > + * ...in other words it has an element where (addr=a, data=A), etc.
+> > + * ...we'll assume that there is one TCS in the group that can store 8 commands.
+> > + *
+> > + * - find_match([(a, X)]) => 0
+> > + * - find_match([(c, X), (d, X)]) => 2
+> > + * - find_match([(c, X), (d, X), (e, X)]) => 2
+> > + * - find_match([(z, X)]) => -ENODATA
+> > + * - find_match([(a, X), (y, X)]) => -EINVAL (and warning printed)
+> > + * - find_match([(g, X), (h, X), (i, X)]) => -EINVAL (and warning printed)
+> > + * - find_match([(y, X), (a, X)]) => -ENODATA
+> > + *
+> > + * NOTE: This function overall seems like it has questionable value.
+> > + * - It can be used to update a message in the TCS with new data, but I
+> > + *   don't believe we actually do that--we always fully invalidate and
+> > + *   re-write everything.
+> we are doing this from [1] onwards.
+
+OK.
+
+
+> > Specifically it would be too limiting to force
+> > + *   someone not to change the set of addresses written to each time.
+> > + * - This function could be attempting to avoid writing different data to
+> > + *   the same address twice in a tcs_group.  If that's the goal, it doesn't
+> > + *   do a great job since find_match([(y, X), (a, X)]) return -ENODATA in my
+> > + *   above example.
+> > + * - If you originally wrote [(a, A), (b, B), (c, C)] and later tried to
+> > + *   write [(a, A), (b, B)] it'd look like a match and we wouldn't consider
+> > + *   it an error that the size got shorter.
+> > + * - If two clients wrote sequences that happened to be placed in slots next
+> > + *   to each other then a later check could match a sequence that was the
+> > + *   size of both together.
+> > + *
+> > + * TODO: in light of the above, prehaps we can just remove this function?
+>
+> We still need to check there is no duplicate request in a TCS for SLEEP
+> and WAKE as well.
+>
+> find_match() checks if the request already exist for a resource then
+> update with new value, in a way preventing new request to go in
+>
+> when one already exists. I am ok to remove this function since after [1]
+> we always fully invalidate and then re-write and little point in
+>
+> finding a match now. However we need to use check_for_req_inflight()
+> from tcs_ctrl_write() with little modification to ignore tcs_is_free()
+>
+> check if is called from tcs_ctrlr_write().
+
+Sure, we could use find_match() to add this check.  It definitely
+feels a lot better than the current solution which seems to miss a
+whole lot of corner cases.
+
+Before I do that, maybe you can help me understand the motivation,
+though?  Where are you expecting to find the conflict?  Certainly
+there can't be any conflict in the normal (non-batch) sleep/wake sets,
+right?  We only have one entry in the RPMH cache per address so the
+non-batch entries can't conflict with themselves.  There also can't be
+any previous async command still pending because we cache
+async/non-async alike.
+
+For batch requests I believe that there's exactly one caller using the
+batch API (otherwise rpmh_invalidate() would be a nightmare).  That
+one caller is the interconnect code, right?  It feels like we could
+assume that the one caller of the batch API won't write to the same
+address more than one time?
+
+So I guess you're expecting that an rpmh_write() would write to the
+same address that someone wrote to with rpmh_write_batch() and it
+should override it?  Does that actually happen?  Isn't the batch API
+used just for interconnect stuff and nobody should be using
+rpmh_write() to mess with the interconnect stuff?
+
+
+> After this change on 9th change in your series,  please move it before
+> current patch in series.
+>
+> please also keep dependency on [1] for 9th change.
+
+Sure.  I was trying to do all the documentation in the earlier patches
+to provide motivation for and help understand the later patches, but I
+can change the order if need be.  It didn't seem a big deal to add the
+comments and delete them, but I can understand it being weird.
+
+
+> >   /**
+> > - * rpmh_rsc_write_ctrl_data: Write request to the controller
+> > - *
+> > - * @drv: the controller
+> > - * @msg: the data to be written to the controller
+> > + * rpmh_rsc_write_ctrl_data() - Write request to controller but don't trigger.
+> > + * @drv: The controller.
+> > + * @msg: The data to be written to the controller.
+> >    *
+> >    * There is no response returned for writing the request to the controller.
+>
+> you can remove above line since responce is returned from this function.
+
+Right.  I think this was trying to say that the request wasn't
+triggered and thus there was no response.  I think it's clearer with
+my addition of "but don't trigger." to the comment.
+
+
+
+-Doug
