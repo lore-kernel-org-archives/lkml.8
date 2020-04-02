@@ -3,127 +3,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC83C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688BFC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C54002077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FF1206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388416AbgDBRHf convert rfc822-to-8bit (ORCPT
+        id S2388583AbgDBRIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:07:35 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:54828 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731608AbgDBRHe (ORCPT
+        Thu, 2 Apr 2020 13:08:25 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45112 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731608AbgDBRIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:07:34 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK3JR-0000YP-GP; Thu, 02 Apr 2020 11:07:29 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK3JQ-0007EN-Ov; Thu, 02 Apr 2020 11:07:29 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>
-References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
-        <20200327172331.418878-9-gladkov.alexey@gmail.com>
-        <87d08pkh4u.fsf@x220.int.ebiederm.org>
-        <20200402165156.4mzenof4upvtd3lv@comp-core-i7-2640m-0182e6>
-Date:   Thu, 02 Apr 2020 12:04:44 -0500
-In-Reply-To: <20200402165156.4mzenof4upvtd3lv@comp-core-i7-2640m-0182e6>
-        (Alexey Gladkov's message of "Thu, 2 Apr 2020 18:51:56 +0200")
-Message-ID: <87r1x5iztf.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 2 Apr 2020 13:08:24 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: bbeckett)
+        with ESMTPSA id 5C6E3297E43
+From:   Robert Beckett <bob.beckett@collabora.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v4.19.y, v4.14.y, v4.9.y] drm/etnaviv: Backport fix for mmu flushing
+Date:   Thu,  2 Apr 2020 18:07:55 +0100
+Message-Id: <20200402170758.8315-1-bob.beckett@collabora.com>
+X-Mailer: git-send-email 2.20.1
+Reply-To: <bob.beckett@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1jK3JQ-0007EN-Ov;;;mid=<87r1x5iztf.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19JB6md/ag4gch1HCHlHqnPcaDKiSdq078=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v10 8/9] proc: use human-readable values for hidehid
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+commit 4900dda90af2cb13bc1d4c12ce94b98acc8fe64e upstream
 
-> On Thu, Apr 02, 2020 at 11:05:21AM -0500, Eric W. Biederman wrote:
->> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
->> 
->> > The hidepid parameter values are becoming more and more and it becomes
->> > difficult to remember what each new magic number means.
->> 
->> In principle I like this change.  In practice I think you have just
->> broken ABI compatiblity with the new mount ABI.
->> 
->> In particular the following line seems broken.
->> 
->> > diff --git a/fs/proc/root.c b/fs/proc/root.c
->> > index dbcd96f07c7a..ba782d6e6197 100644
->> > --- a/fs/proc/root.c
->> > +++ b/fs/proc/root.c
->> > @@ -45,7 +45,7 @@ enum proc_param {
->> >  
->> >  static const struct fs_parameter_spec proc_fs_parameters[] = {
->> >  	fsparam_u32("gid",	Opt_gid),
->> > -	fsparam_u32("hidepid",	Opt_hidepid),
->> > +	fsparam_string("hidepid",	Opt_hidepid),
->> >  	fsparam_string("subset",	Opt_subset),
->> >  	{}
->> >  };
->> 
->> As I read fs_parser.c fs_param_is_u32 handles string inputs and turns them
->> into numbers, and it handles binary numbers.  However fs_param_is_string
->> appears to only handle strings.  It appears to have not capacity to turn
->> raw binary numbers into strings.
->
-> I use result only with hidepid_u32_spec and nobody modifies param->string.
-> I do not use internal functions here.
->
-> I don’t follow how a raw number can get here ?
+Due to async need_flush updating via other buffer mapping, checking
+gpu->need_flush in 3 places within etnaviv_buffer_queue can cause GPU
+hangs.
 
-I may be wrong but last I looked you can input raw numbers using the new
-mount api.   I have most of the details paged out at the moment,
-but I believe that is why when you set a parameter in the new mount api
-it takes a type.
+This occurs due to need_flush being false for the first 2 checks in that
+function, so that the extra dword does not get accounted for, but by the
+time we come to check for the third time, gpu->mmu->need_flish is true,
+which outputs the flush instruction. This causes the prefetch during the
+final link to be off by 1. This causes GPU hangs.
 
->> So I think we probably need to fix fs_param_is_string to raw binary
->> numbers before we can safely make this change to fs/proc/root.c
->> 
->> David am I reading the fs_parser.c code correctly?  If I am are you ok
->> with a change like the above?
+It causes the ring to contain patterns like this:
 
-Eric
+0x40000005, /* LINK (8) PREFETCH=0x5,OP=LINK */                                                      
+0x70040010, /*   ADDRESS *0x70040010 */                                                              
+0x40000002, /* LINK (8) PREFETCH=0x2,OP=LINK */                                                      
+0x70040000, /*   ADDRESS *0x70040000 */                                                              
+0x08010e04, /* LOAD_STATE (1) Base: 0x03810 Size: 1 Fixp: 0 */                                       
+0x0000001f, /*   GL.FLUSH_MMU := FLUSH_FEMMU=1,FLUSH_UNK1=1,FLUSH_UNK2=1,FLUSH_PEMMU=1,FLUSH_UNK4=1 */
+0x08010e03, /* LOAD_STATE (1) Base: 0x0380C Size: 1 Fixp: 0 */                                       
+0x00000000, /*   GL.FLUSH_CACHE := DEPTH=0,COLOR=0,TEXTURE=0,PE2D=0,TEXTUREVS=0,SHADER_L1=0,SHADER_L2=0,UNK10=0,UNK11=0,DESCRIPTOR_UNK12=0,DESCRIPTOR_UNK13=0 */
+0x08010e02, /* LOAD_STATE (1) Base: 0x03808 Size: 1 Fixp: 0 */                                       
+0x00000701, /*   GL.SEMAPHORE_TOKEN := FROM=FE,TO=PE,UNK28=0x0 */                                    
+0x48000000, /* STALL (9) OP=STALL */                                                                 
+0x00000701, /*   TOKEN FROM=FE,TO=PE,UNK28=0x0 */                                                    
+0x08010e00, /* LOAD_STATE (1) Base: 0x03800 Size: 1 Fixp: 0 */                                       
+0x00000000, /*   GL.PIPE_SELECT := PIPE=PIPE_3D */                                                   
+0x40000035, /* LINK (8) PREFETCH=0x35,OP=LINK */                                                     
+0x70041000, /*   ADDRESS *0x70041000 */
+
+Here we see a link with prefetch of 5 dwords starting with the 3rd
+instruction. It only loads the 5 dwords up and including the final
+LOAD_STATE. It needs to include the final LINK instruction.
+
+This was seen on imx6q, and the fix is confirmed to stop the GPU hangs.
+
+The commit referenced inadvertently fixed this issue by checking
+gpu->mmu->need_flush once at the start of the function.
+Given that this commit is independant, and useful for all version, it
+seems sensible to backport it to the stable branches.
+
+
