@@ -2,147 +2,160 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045BEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD06BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB04A20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF802073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D2fQ6Fhy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pomu1tnI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388479AbgDBOgv (ORCPT
+        id S2388523AbgDBOh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:36:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52331 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727412AbgDBOgv (ORCPT
+        Thu, 2 Apr 2020 10:37:26 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38880 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730837AbgDBOh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:36:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585838209;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WlR2TRXNoUHH0cejtWwgFkeiMST3WWqkeQGN0pr6VCA=;
-        b=D2fQ6Fhy0i1JucsjPDgWcGUGtdVr+qNrpFu6SQtavBiFpqnJzxs1V5VETv5KVAaT6LKLLF
-        e1NgMEJUQHT2ggzc4kJbRq54bjn1w40e19kLqr8ICty32I+9gcGPVIbd4wjAbu8dGsEsE6
-        DRbAD22UM6/UZXcIQkbcSMWteIjT7Ks=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-IHDIECvPNby4HvmEOQnyfA-1; Thu, 02 Apr 2020 10:36:48 -0400
-X-MC-Unique: IHDIECvPNby4HvmEOQnyfA-1
-Received: by mail-qk1-f198.google.com with SMTP id d189so903840qkc.15
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:36:48 -0700 (PDT)
+        Thu, 2 Apr 2020 10:37:26 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f6so3929366wmj.3;
+        Thu, 02 Apr 2020 07:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=0iB8S4+A1Wv3UyZCOfLA6/siwWHb+58rpgdbitpl/xg=;
+        b=Pomu1tnIX9V8Pi1N95ejBU6xBFg+c8NYMuPmlEQ3OJ1k1gUQWjrhUiAV484RymQnKr
+         fSCoAhqb2ZNF8YbszvPIFtUzDb0m/gY8yr7VtDCHBn8sjUo89+MudYDCsJ7DB0M10pIc
+         I/ZvQ3+Oi7i+LwAqzxLaLg13Ko+YhGjRqCv6vTKcShV6ttwR7SNv0aGMOUwj7U0DqInz
+         zWLLOQk83Jw7HYLPgAcNHafrDs4U8iF5jDtCxnC3oGlLPI0VU1i+XPZugINgYLIH3PxY
+         4vVkmdpr78MgZfQmxLlgV+SXZa44o3ew9erSkmrPoqKIb3B6MlA8gSi0Bm9ptjnWICw2
+         4Zsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=WlR2TRXNoUHH0cejtWwgFkeiMST3WWqkeQGN0pr6VCA=;
-        b=gW5HPgrBAb8Bmek7BTyARvAwXtI8ctW58/oN2qhP3DsLqgJoT63vHsJfwumLoZjKhD
-         X9RVIerOmo7inKpBvb8UYSZFVwWKeqv6EygKLLqe3lBKVcnYxfoaHCYf8MS5xMmAhEjU
-         g4LNFOR3kD5J3G94V4weTXPqrbdk7rlA6rJiehhKQLxkmybU6KSNCJavwhS9CdN/OVay
-         6xNB4DXQh5IBQgTrscFl73u9hk7h2jFX5sAc+hmvlJzq+4vzsU3y/wyCLTCYgwxMuD+e
-         ygqYVoao88nxpeCGYjPzr/6uQu8cd+xPMLOejRb6jyI6rZtKkxgOAPg+Px9FLLTO2NyX
-         4p4g==
-X-Gm-Message-State: AGi0PubXUBuQb4XipnnfckKMRk3wywRVku9djap4elA02/QF7OSRqFye
-        Q/9xU2Mld0qC6masKtkvsXjEKP5vUwJNm2NPUZaICHjf41xtqUark/GTtlTuJWMM9C0FUKtlEnm
-        mzQoDNx43r/Ebzy8PIiz0R5tY
-X-Received: by 2002:ac8:1bf5:: with SMTP id m50mr3204223qtk.200.1585838208360;
-        Thu, 02 Apr 2020 07:36:48 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJIJxmszAzRx8icml77RBvawgNMOKh/hgQNez6YoUnUaICm+K3+fAJ0a9bgYwRVNdObKb/nbw==
-X-Received: by 2002:ac8:1bf5:: with SMTP id m50mr3204184qtk.200.1585838207990;
-        Thu, 02 Apr 2020 07:36:47 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id u40sm3854770qtc.62.2020.04.02.07.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 07:36:47 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 10:36:42 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] vhost: drop vring dependency on iotlb
-Message-ID: <20200402103551-mutt-send-email-mst@kernel.org>
-References: <20200402141207.32628-1-mst@redhat.com>
- <afe230b9-708f-02a1-c3af-51e9d4fdd212@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=0iB8S4+A1Wv3UyZCOfLA6/siwWHb+58rpgdbitpl/xg=;
+        b=nzLJkORorHsPKoRWuFsi3hWTIYNjKbXG66/5806cNpECdOOObOGwstdlDKIYok5BJO
+         KmZInZk3xXGYvSEFxMIVY25Xiu3VIwTYDGPgKtLdrGmBlPC61Zr0QzV6ZCsn/+wfqavH
+         cHTRHpxm/dCfCzG5C1kYOSk1Yw3Ox7r4yc5Z2M+l9hWlnYo609hE1d9u4ZDrOHIGiKTz
+         Il0/rJVVU7lrrqcET4Nue4TkJfMmG9nLtOUL7G2E0pR+8G9OK342zYe/GdwX+/7Lw9rE
+         IiSdAHz0XLvajy8A9ykZfP3wDSiAxMUoy/jVozeC1PRmycJLftgZT3TFRCccVyvnJhGz
+         14DQ==
+X-Gm-Message-State: AGi0PuZX/ilE8If7h2utHDkUp7MCLI2uo66xBorDbCtY5WrAzyScqYk8
+        2iRpmqVFQDGbLH9XmvnmM86ONjPE31WMW9dc0Hk=
+X-Google-Smtp-Source: APiQypJ3hL35aoOgM5xZtZbUy9vUfd6E+nDPtB2n+TW71W/ucaZFOnu9cdo4UxAVzCwZH3Tn8asu0cj0w0Dm+h54/CE=
+X-Received: by 2002:a05:600c:2202:: with SMTP id z2mr3580762wml.64.1585838242936;
+ Thu, 02 Apr 2020 07:37:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <afe230b9-708f-02a1-c3af-51e9d4fdd212@redhat.com>
+References: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
+ <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com> <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
+ <5F9D2C8D-B1DE-4F95-992E-524E02851CF4@fb.com> <CA+icZUXxwkPcfKgaaEaV4XhQseK--N3a=ffh=kU-C84BcFuhrw@mail.gmail.com>
+ <CC22D163-BB96-42F5-88DE-BD203860E7C2@fb.com>
+In-Reply-To: <CC22D163-BB96-42F5-88DE-BD203860E7C2@fb.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 2 Apr 2020 16:37:30 +0200
+Message-ID: <CA+icZUVBQEzoFDcd=uS14qXAdACUK5tRGbFsKBRhHTjYH1CWiQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and initramfs
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     Nick Terrell <nickrterrell@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>,
+        Michael van der Westhuizen <rmikey@fb.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 10:28:28PM +0800, Jason Wang wrote:
-> 
-> On 2020/4/2 下午10:12, Michael S. Tsirkin wrote:
-> > vringh can now be built without IOTLB.
-> > Select IOTLB directly where it's used.
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> > 
-> > This is on top of my previous patch (in vhost tree now).
-> > 
-> >   drivers/vdpa/Kconfig  | 1 +
-> >   drivers/vhost/Kconfig | 1 -
-> >   2 files changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
-> > index 7db1460104b7..08b615f2da39 100644
-> > --- a/drivers/vdpa/Kconfig
-> > +++ b/drivers/vdpa/Kconfig
-> > @@ -17,6 +17,7 @@ config VDPA_SIM
-> >   	depends on RUNTIME_TESTING_MENU
-> >   	select VDPA
-> >   	select VHOST_RING
-> > +	select VHOST_IOTLB
-> >   	default n
-> >   	help
-> >   	  vDPA networking device simulator which loop TX traffic back
-> > diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> > index 21feea0d69c9..bdd270fede26 100644
-> > --- a/drivers/vhost/Kconfig
-> > +++ b/drivers/vhost/Kconfig
-> > @@ -6,7 +6,6 @@ config VHOST_IOTLB
-> >   config VHOST_RING
-> >   	tristate
-> > -	select VHOST_IOTLB
-> >   	help
-> >   	  This option is selected by any driver which needs to access
-> >   	  the host side of a virtio ring.
-> 
-> 
-> Do we need to mention driver need to select VHOST_IOTLB by itself here?
-> 
-> Thanks
-> 
+On Wed, Apr 1, 2020 at 9:00 PM Nick Terrell <terrelln@fb.com> wrote:
+>
+> > On Apr 1, 2020, at 2:50 AM, Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > On Wed, Apr 1, 2020 at 4:52 AM Nick Terrell <terrelln@fb.com> wrote:
+> >>
+> >>
+> >>
+> >>> On Mar 31, 2020, at 8:11 AM, Sedat Dilek <sedat.dilek@gmail.com> wrot=
+e:
+> >>>
+> >>> On Tue, Mar 31, 2020 at 6:15 AM Nick Terrell <terrelln@fb.com> wrote:
+> >>>
+> >>> [...]
+> >>>
+> >>>>> Do you plan to push this for Linux v5.7?
+> >>>>
+> >>>> I hope that it will be accepted. From my point of view this patch se=
+t is
+> >>>> ready for merge, except for the maximum window size increase
+> >>>> requested by Petr.
+> >>>>
+> >>>
+> >>> Hi Nick,
+> >>>
+> >>> thanks for your answer.
+> >>>
+> >>> Did you send out a pull-request already?
+> >>
+> >> I haven=E2=80=99t sent out a pull request. If that is something that I=
+ need to
+> >> do, or if it makes the process easier for a maintainer to merge then
+> >> I can do that.
+> >>
+> >
+> > [ CC  Stephen Rothwell (maintainer of Linux-next) ]
+> >
+> > Hi Nick,
+> >
+> > as Adam pointed out it might be good to ask "Stephen Rothwell"
+> > <sfr@canb.auug.org.au>
+> > to include your Git tree into linux-next. Stephen will give you some
+> > informations about that.
+>
+> Thanks for the pointers Sedat and Adam! I will reach out and ask
+> about the best way forward. I don=E2=80=99t particularly care if it makes=
+ it in
+> 5.7 or 5.8, I just want to ensure that it does get merged this time.
+>
 
-OK but I guess it's best to do it near where VHOST_IOTLB is defined.
-Like this?
+Hi Nick,
 
+just in case you did not know:
+The Documentation directory in linux-Git has a subfolder called
+"process" (RST format) which gives a lot of hints.
 
-diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-index bdd270fede26..ce51126f51e7 100644
---- a/drivers/vhost/Kconfig
-+++ b/drivers/vhost/Kconfig
-@@ -3,6 +3,8 @@ config VHOST_IOTLB
- 	tristate
- 	help
- 	  Generic IOTLB implementation for vhost and vringh.
-+	  This option is selected by any driver which needs to support
-+	  an IOMMU in software.
- 
- config VHOST_RING
- 	tristate
+All stuff is also available as HTML if you prefer this format.
+See [0] "A guide to the Kernel Development Process".
 
+Hope that helps you.
+
+Regards,
+- Sedat -
+
+[0] https://www.kernel.org/doc/html/latest/process/index.html
+[1] https://www.kernel.org/doc/html/latest/process/2.Process.html#next-tree=
+s
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/2.Process.rst
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/submitting-patches.rst
