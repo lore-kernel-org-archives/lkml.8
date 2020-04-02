@@ -2,117 +2,178 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12498C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA11CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65E9206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D9A214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ec3n5Lsm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uWogSPw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389772AbgDBWZS (ORCPT
+        id S2389868AbgDBWZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 18:25:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43047 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgDBWZR (ORCPT
+        Thu, 2 Apr 2020 18:25:28 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49122 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgDBWZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 18:25:17 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g27so4936586ljn.10;
-        Thu, 02 Apr 2020 15:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+2mkX6A1G0+Xunn7PHZuiJIRUkyKCyujbbSwAgY3fow=;
-        b=ec3n5LsmhX/SkYSDvUqFz2mqyPUykh1na58jXLUYuGXFEG8bRsoTDTZBV13aEU6PeT
-         yNSIW7mCAu21B8zCC33+jdKq4ysCjUxIkOcjh1wtmUQm8HOGNR3qzP6NJ7rxnuOqGewM
-         YNXva8VfwcxLHO+VPD250rbWLsQ7UNRI8tsdqJzcJqPhgYXbCPVt2S1CMI8GUL0k54k6
-         xR8TTJqBk+FLCRvWztq23pK2sU6FrCygjEHPSW/zHBATd020+VGZT6/1FNh/mS/07E/V
-         DdcT4ego7E57+JBT0Zn6LbuUOMwkHrUNU+/2klymqriu3rerFml5JFDBGfEUTZzS6TlY
-         4nmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+2mkX6A1G0+Xunn7PHZuiJIRUkyKCyujbbSwAgY3fow=;
-        b=H4hfI60PH5RlhVeIl86hMYKJP/EGNp3ZxoTQi9D7Gw9gsxIb3kHTMutB4mkT+ZqnOB
-         DCZ1tWIeV27CyqJbk54wSjWoGtTfeXwtLMavHXGmLFE9dg55ec0NbKCy9Izz18ecOzTf
-         99f8AUiZGfZ9dOsQO2huLRe4h+6PJAyeNoZLr30Ygt7St6nwHoGoNnmowGowqLPzclDl
-         21d0SspfULSUj9/GZXkFs+hrVDo1caf6Id1loGZ9Jxy00H7iiuQQr1eQQZTgIC4/Il/j
-         WbZSIj7mJN0bieQtXQG7YQYvHgYge+YkuAc80Rb/MPajoMs2Fme1o6NB8kOuPJhrl2AZ
-         Ne+A==
-X-Gm-Message-State: AGi0PuY5vG4vrP3BXBvwoFySDAYPvSbFPfW9FBJ359+n52efTLMNtgHk
-        0ck5s6BIMrWTkFu3fTaXM/o=
-X-Google-Smtp-Source: APiQypJaPAIFHdbwM+D0QNz2MEwt3chQSs6xKziRxQLOyy1njFAJEDdYnh/QPGAKUZ6eSiC0Q//FSA==
-X-Received: by 2002:a2e:b6c2:: with SMTP id m2mr3201743ljo.59.1585866315290;
-        Thu, 02 Apr 2020 15:25:15 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id f6sm4815139lfm.40.2020.04.02.15.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 15:25:14 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PM / devfreq: tegra30: Make CPUFreq notifier to take into account boosting
-Date:   Fri,  3 Apr 2020 01:24:48 +0300
-Message-Id: <20200402222448.8320-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 2 Apr 2020 18:25:28 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032M9wGp140607;
+        Thu, 2 Apr 2020 22:25:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=vG7MC2PNgxon4CeEkpAfEDnqjImA+hC2tBGaFp2oSTA=;
+ b=uWogSPw74NKyE5+4Al78711YJ5745W2SKqzk/T2WMuszmZoSSu+XkSHWZJmxFsPwXHSW
+ 6JQlNMcsaph5FmmhogFrzPk49IzRV499vExfSjEo5g+G86Zd/JjaMS4KwBh8JL6OCM8L
+ EeeaYItz00GPQ+Oznwghdfn+cCdRzH/aimedrGPrV9ohsE1jy/opGzbAdQvJLCXSKMR4
+ qOi/r9pZ/7R+7hSyomioaSR9+FZ9fYSXoSRX2H2ALbyV1PLkbcxFPB24e/82BFNXx8YX
+ c9AQCKwWZpNCaj6Phf5r+kiz3/ULb0jPdY5Cog/OZVYWBj/YfpLXQJDfFkfcB9vXe2fl /Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 303yungrht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 22:25:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032M8HxX048377;
+        Thu, 2 Apr 2020 22:25:04 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 302ga3864b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 22:25:04 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 032MP2cJ009676;
+        Thu, 2 Apr 2020 22:25:02 GMT
+Received: from vbusired-dt (/10.154.166.66)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 15:25:01 -0700
+Date:   Thu, 2 Apr 2020 17:24:57 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rientjes@google.com,
+        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
+Subject: Re: [PATCH v6 06/14] KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+Message-ID: <20200402222457.GA659325@vbusired-dt>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <0f8a2125c7acb7b38fc51a044a8088e8baa45e3d.1585548051.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0f8a2125c7acb7b38fc51a044a8088e8baa45e3d.1585548051.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020164
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=1 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We're taking into account both HW memory-accesses + CPU activity based on
-current CPU's frequency. For memory-accesses there is a kind of hysteresis
-in a form of "boosting" which is managed by the tegra30-devfreq driver.
-If current HW memory activity is higher than activity judged based of the
-CPU's frequency, then there is no need to schedule cpufreq_update_work
-because the result of the work will be a NO-OP. And thus,
-tegra_actmon_cpufreq_contribution() should return 0, meaning that at the
-moment CPU frequency doesn't contribute anything to the final decision
-about required memory clock rate.
+On 2020-03-30 06:21:36 +0000, Ashish Kalra wrote:
+> From: Brijesh Singh <Brijesh.Singh@amd.com>
+> 
+> The command finalize the guest receiving process and make the SEV guest
+> ready for the execution.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
+>  arch/x86/kvm/svm.c                            | 23 +++++++++++++++++++
+>  2 files changed, 31 insertions(+)
+> 
+> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+> index 554aa33a99cc..93cd95d9a6c0 100644
+> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> @@ -375,6 +375,14 @@ Returns: 0 on success, -negative on error
+>                  __u32 trans_len;
+>          };
+>  
+> +15. KVM_SEV_RECEIVE_FINISH
+> +------------------------
+> +
+> +After completion of the migration flow, the KVM_SEV_RECEIVE_FINISH command can be
+> +issued by the hypervisor to make the guest ready for execution.
+> +
+> +Returns: 0 on success, -negative on error
+> +
+>  References
+>  ==========
+>  
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 5fc5355536d7..7c2721e18b06 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7573,6 +7573,26 @@ static int sev_receive_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>  	return ret;
+>  }
+>  
+> +static int sev_receive_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +	struct sev_data_receive_finish *data;
+> +	int ret;
+> +
+> +	if (!sev_guest(kvm))
+> +		return -ENOTTY;
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
+Noticed this in earlier patches too. Is -ENOTTY the best return value?
+Aren't one of -ENXIO, or -ENODEV, or -EINVAL a better choice? What is
+the rationale for using -ENOTTY?
 
-Changelog:
-
-v2: - Made commit's message more detailed, which was requested by Chanwoo Choi
-      in the review comment to v1.
-
-    - This patch is now made to be standalone because there are no dependencies
-      in regards to this change.
-
- drivers/devfreq/tegra30-devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 28b2c7ca416e..dfc3ac93c584 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -420,7 +420,7 @@ tegra_actmon_cpufreq_contribution(struct tegra_devfreq *tegra,
- 
- 	static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
- 
--	if (dev_freq >= static_cpu_emc_freq)
-+	if (dev_freq + actmon_dev->boost_freq >= static_cpu_emc_freq)
- 		return 0;
- 
- 	return static_cpu_emc_freq;
--- 
-2.25.1
-
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->handle = sev->handle;
+> +	ret = sev_issue_cmd(kvm, SEV_CMD_RECEIVE_FINISH, data, &argp->error);
+> +
+> +	kfree(data);
+> +	return ret;
+> +}
+> +
+>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>  	struct kvm_sev_cmd sev_cmd;
+> @@ -7632,6 +7652,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  	case KVM_SEV_RECEIVE_UPDATE_DATA:
+>  		r = sev_receive_update_data(kvm, &sev_cmd);
+>  		break;
+> +	case KVM_SEV_RECEIVE_FINISH:
+> +		r = sev_receive_finish(kvm, &sev_cmd);
+> +		break;
+>  	default:
+>  		r = -EINVAL;
+>  		goto out;
+> -- 
+> 2.17.1
+> 
