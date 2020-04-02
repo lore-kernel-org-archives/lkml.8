@@ -2,64 +2,111 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDFCC10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB611C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21AC02063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF31A2063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:50:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jRgJ+VKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387646AbgDBHtJ (ORCPT
+        id S2387541AbgDBHur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:49:09 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:58055 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgDBHtI (ORCPT
+        Thu, 2 Apr 2020 03:50:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41922 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgDBHur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:49:08 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A2FC5200014;
-        Thu,  2 Apr 2020 07:49:05 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 09:49:05 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     nicolas.ferre@microchip.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tudor.Ambarus@microchip.com,
-        Cristian.Birsan@microchip.com, Codrin.Ciubotariu@microchip.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/5] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node
- description
-Message-ID: <20200402074905.GA3683@piout.net>
-References: <20200401221504.41196-1-ludovic.desroches@microchip.com>
+        Thu, 2 Apr 2020 03:50:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sOBTBRUpbh8YXdcpFE2qq+gU+izZL8xxVOZMV+Zvzmg=; b=jRgJ+VKQkwpxjCzParG0RExRyk
+        3dB7GbgwhTZBfOMrvf0RTn5Cr+MtzIKMXwD3CyeuePxJgr4/G3ef0LxGpCNBmGKdZ2YF+u2iBj345
+        K5NN+3laVqb0mYDBIobqhwivZAfy9asN7KXoT3ECj7+xST63TbVW5ViYy/Zqirdk+6gAS8Io0ALwu
+        5ZboTgEZ6G39/0aFJYQZV8dvUiJ8FWKZufmy4ylLsToFmIVZ0tkCiuHNoWjh2+HTFab4ZMG/KwM0E
+        HrNkGkjj6VyaIr1e0ou/BVkNKOnTmhapwqbUGoXQvH0VDuSKui0cvyCK853h7YAIZT50KKNaGvkyY
+        4472yqOQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJucY-0007Fp-Pm; Thu, 02 Apr 2020 07:50:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C53BA3010BC;
+        Thu,  2 Apr 2020 09:50:36 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 77383202451B4; Thu,  2 Apr 2020 09:50:36 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 09:50:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        mbenes@suse.cz, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
+Message-ID: <20200402075036.GA20730@hirez.programming.kicks-ass.net>
+References: <20200330200254.GV20713@hirez.programming.kicks-ass.net>
+ <20200331111652.GH20760@hirez.programming.kicks-ass.net>
+ <20200331202315.zialorhlxmml6ec7@treble>
+ <20200331204047.GF2452@worktop.programming.kicks-ass.net>
+ <20200331211755.pb7f3wa6oxzjnswc@treble>
+ <20200331212040.7lrzmj7tbbx2jgrj@treble>
+ <20200331222703.GH2452@worktop.programming.kicks-ass.net>
+ <d2cad75e-1708-f0bf-7f88-194bcb29e61d@redhat.com>
+ <20200401170910.GX20730@hirez.programming.kicks-ass.net>
+ <684d6e29-4a01-b4a5-f906-7bdee5ad108f@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401221504.41196-1-ludovic.desroches@microchip.com>
+In-Reply-To: <684d6e29-4a01-b4a5-f906-7bdee5ad108f@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/2020 00:15:00+0200, Ludovic Desroches wrote:
-> Remove non-removable and mmc-ddr-1_8v properties from the sdmmc0
-> node which come probably from an unchecked copy/paste.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Fixes:42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
-> Cc: stable@vger.kernel.org # 4.19 and later
-> ---
->  arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts | 2 --
->  1 file changed, 2 deletions(-)
-> 
+On Thu, Apr 02, 2020 at 07:41:46AM +0100, Julien Thierry wrote:
+> On 4/1/20 6:09 PM, Peter Zijlstra wrote:
 
-All applied, thanks.
+> > The code in question (x86's sync_core()), is an exception return to
+> > self. It pushes an exception frame that points to right after the
+> > exception return instruction.
+> > 
+> > This is the only usage of IRET in STT_FUNC symbols.
+> > 
+> > So rather than teaching objtool how to interpret the whole
+> > push;push;push;push;push;iret sequence, teach it how big the frame is
+> > (arch_exception_frame_size) and let it continue.
+> > 
+> > All the other (real) IRETs are in STT_NOTYPE in the entry assembly.
+> > 
+> 
+> Right, I see.. However I'm not completely convinced by this. I must admit I
+> haven't followed the whole conversation, but what was the issue with the
+> HINT_IRET_SELF? It seemed more elegant, but I might be missing some context.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+https://lkml.kernel.org/r/20200331211755.pb7f3wa6oxzjnswc@treble
+
+Josh didn't think it was worth it, I think.
+
+> Otherwise, it might be worth having a comment in the code to point that this
+> only handles the sync_core() case.
+
+I can certainly do that. Does ARM have any ERETs sprinkled around in
+places it should not have? That is, is this going to be a problem for
+you?
+
+> Also, instead of adding a special "arch_exception_frame_size", I could
+> suggest:
+> - Picking this patch [1] from a completely arbitrary source
+> - Getting rid of INSN_STACK type, any instruction could then include stack
+> ops on top of their existing semantics, they can just have an empty list if
+> they don't touch SP/BP
+> - x86 decoder adds a stack_op to the iret to modify the stack pointer by the
+> right amount
+
+That's not the worst idea, lemme try that.
