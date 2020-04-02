@@ -2,112 +2,188 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D55C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95619C2BA17
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC616206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD702073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xEvxI3GU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lU6BN+dV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390052AbgDBXTf (ORCPT
+        id S2390124AbgDBXTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:19:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33440 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731783AbgDBXTf (ORCPT
+        Thu, 2 Apr 2020 19:19:49 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:41358 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731783AbgDBXTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 19:19:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032NIh1i011995;
-        Thu, 2 Apr 2020 23:19:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
- message-id : date : from : to : cc : subject : references : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=2LYxeCRZSl/BBRTDhWUm9FlwdmmvWsoKVfJi+5EqCCc=;
- b=xEvxI3GUT+YK/KboRvEkZghpMcmKS47T6CVV13RcOP0hcFNPiWZbhKQ4m4PoHdajQhDj
- C/qI5/Nun/Awee1Pbz/y3qd8M9hqT3UPqvDTeJaVqvWVLA6wHdu20g1LXwy+Qf0PMIUG
- naNEb9bwEY8HoHOOapUAYYhY4dB+uyJacH7E3qxh+XrcqN0Tv9bhUnvvP8r1oqo3JvOn
- BETJzAqTRLs1wChjtMkm7KwcIixQ3m5i9q0ozsDbwzSEiwpsTBhTCeXLE2c/rN0jdKlN
- pLq//Lq1Ee8R9JQkRcmRIIdlHvkKwSgDFewNco9gVL25VSI2Ah+1gBwgj7wZ+HkgfnV4 fA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 303aqhxrr1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 23:19:24 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032NH943117422;
-        Thu, 2 Apr 2020 23:17:23 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 304sjqv6gs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 23:17:23 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032NHMdU025065;
-        Thu, 2 Apr 2020 23:17:22 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48) by default (Oracle
- Beehive Gateway v4.0) with ESMTP ; Thu, 02 Apr 2020 16:17:13 -0700
-USER-AGENT: NeoMutt/20180716
+        Thu, 2 Apr 2020 19:19:48 -0400
+Received: by mail-vs1-f66.google.com with SMTP id a63so3761030vsa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ncIkL/N+C/5xfW8f4UpsaGlmkYruRQuItf8xwxhNScQ=;
+        b=lU6BN+dVzTeqQyyPfiQaqqCrnWa3Ec+Pvx4uo5Ygw9tUQCILw+U9toAhRszqX5nWLC
+         ThhAtXEIbmIwuHIBVCYdWvKh/XM2J0/ed62PZqgbK/12Fn6n8QqlVLHZsJavPGYEMTpy
+         Tn/ERwSLfz0RJNfSGF57RnPXKhMvbU/3YmO/s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ncIkL/N+C/5xfW8f4UpsaGlmkYruRQuItf8xwxhNScQ=;
+        b=JCLHId/rj76yPr9dX+Q2BgCFvq6/8bRf4mLvZPiSM59qASYgeVUbxBYHQhf2B/Tzr1
+         83L4j1Df80+1HPiKZc7oXSiv5lqHZ3MudL417u1YWsiUKx+efjCh5BQmygiT2cBWeS0J
+         iiXKR9Ai/Q7/MNrCGc+/Ifv3Cogu9u3N+v0yQ2UlLMuecP5NYj/fchZqJHEdNWQjfYkd
+         BnQCX6D96t4NLaqmsWV+fgSIwC7dtpbQuDSnmEybPCAUfAe2UCrosAvCEw6VOGNRPhvk
+         lSbMQxmA4dmQRyqm9o7rjW26U2CTWWtjXkcJM26MR6r+Ag8W7lWbSZ4SJ4AwzvDvX5W3
+         WVgA==
+X-Gm-Message-State: AGi0PuYznJodJBBAXPvev9yoM9h/od6APnP9c83JRcl9sRGLvsb68XW7
+        HkR91iJtg99sZMmQB9p0IizKRWt2M7w=
+X-Google-Smtp-Source: APiQypKWfnzpnwJJcloJdOr30JMPvBytelcNOh9utS6yFNga/peBqVP1s/OHkRmEBwAghbH79PkrzA==
+X-Received: by 2002:a67:2d52:: with SMTP id t79mr4549784vst.173.1585869587539;
+        Thu, 02 Apr 2020 16:19:47 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id 129sm1729540vst.16.2020.04.02.16.19.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 16:19:46 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id x206so3790469vsx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:19:46 -0700 (PDT)
+X-Received: by 2002:a67:2b07:: with SMTP id r7mr4746980vsr.169.1585869585633;
+ Thu, 02 Apr 2020 16:19:45 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <20200402231731.32imzorzucpj4s6w@ca-dmjordan1.us.oracle.com>
-Date:   Thu, 2 Apr 2020 16:17:31 -0700 (PDT)
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: thp: don't need drain lru cache when splitting and
- mlocking THP
-References: <1585337380-97368-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200402230411.7ckwkmd6wwtqfkm2@ca-dmjordan1.us.oracle.com>
-In-Reply-To: <20200402230411.7ckwkmd6wwtqfkm2@ca-dmjordan1.us.oracle.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
- malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=757 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020171
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 mlxlogscore=808 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020171
+References: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
+ <20200402223723.7150-1-john.stultz@linaro.org> <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
+ <CALAqxLXfd+7Wc79_XWRv8cKLFu+MpM1w9e3byx9z5bXSdTemLg@mail.gmail.com>
+In-Reply-To: <CALAqxLXfd+7Wc79_XWRv8cKLFu+MpM1w9e3byx9z5bXSdTemLg@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 2 Apr 2020 16:19:34 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
+Message-ID: <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
+Subject: Re: [PATCH] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 07:04:11PM -0400, Daniel Jordan wrote:
-> On Sat, Mar 28, 2020 at 03:29:40AM +0800, Yang Shi wrote:
-> > Since the commit 8f182270dfec ("mm/swap.c: flush lru pvecs on compound
-> > page arrival") THP would not stay in pagevec anymore.  So the
-> > optimization made by commit d965432234db ("thp: increase
-> > split_huge_page() success rate") doesn't make sense anymore, which tries
-> > to unpin munlocked THPs from pagevec by draining pagevec.
-> > 
-> > And draining lru cache before isolating THP in mlock path is unnecessary
-> > either.
-> 
-> Can we get some of that nice history in this part too?
-> 
-> Draining lru cache before isolating THP in mlock path is also unnecessary.
-> b676b293fb48 ("mm, thp: fix mapped pages avoiding unevictable list on mlock")
-> added it and 9a73f61bdb8a ("thp, mlock: do not mlock PTE-mapped file huge
-> pages") accidentally carried it over after the above optimization went in.
-> 
-> > Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Cc: Hugh Dickins <hughd@google.com>
-> > Cc: Andrea Arcangeli <aarcange@redhat.com>
-> > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> 
-> Since we don't mlock pte-mapped THP, it seems these huge pages wouldn't ever be
-> in the pagevecs if I'm understanding it all.
+Hi,
 
-Actually pte-mapped THP doesn't matter for this, both paths always drain when
-they're working with pmd-mapped THP.
+On Thu, Apr 2, 2020 at 4:08 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Thu, Apr 2, 2020 at 3:56 PM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Apr 2, 2020 at 3:37 PM John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+> > > PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+> > > as a generic compat string. However the change also removed
+> > > the "qcom,sdm845-qusb2-phy" compat string, which is documented
+> > > in the binding and already in use.
+> > >
+> > > This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+> > > which allows the driver to continue to work with existing dts
+> > > entries such as found on the db845c.
+> > >
+> > > Cc: Andy Gross <agross@kernel.org>
+> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Doug Anderson <dianders@chromium.org>
+> > > Cc: Manu Gautam <mgautam@codeaurora.org>
+> > > Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+> > > Cc: Matthias Kaehlcke <mka@chromium.org>
+> > > Cc: Stephen Boyd <swboyd@chromium.org>
+> > > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > > Cc: linux-arm-msm@vger.kernel.org
+> > > Cc: devicetree@vger.kernel.org
+> > > Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
+> > > Reported-by: YongQin Liu <yongqin.liu@linaro.org>
+> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > ---
+> > >  drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> >
+> > Do you have an out-of-tree dts file?  If not, I'd prefer that the fix
+> > was for this patch to land instead:
+> >
+> > https://lore.kernel.org/r/1583747589-17267-9-git-send-email-sanm@codeaurora.org
+>
+> No, no out of tree dts.  The usage is already in tree:
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845.dtsi#n2389
+>
+>
+> > While we can land your patch if someone needs it for supporting an
+> > out-of-tree dts, it gives people supporting future SoCs the idea that
+> > they need to add themselves to this table too.  That's now discouraged
+> > unless there's a specific quirk that needs to be handled just for this
+> > SoC.
+>
+> My understanding with dts bindings is that they are effectively an
+> ABI. While maybe it makes sense to deprecate the
+> "qcom,sdm845-qusb2-phy" string in the Documentation to avoid new
+> users, I'd think we'd want to keep the support in the driver as we
+> aren't supposed to have tight coupling between the DTB and kernel (at
+> least for official bindings).
+
+If nothing else if we're going to land your patch, can you at least
+put a comment in there that says "only needed to support legacy device
+trees that didn't include "qcom,qusb2-v2-phy" in the compatible
+string.  Then the person who adds the next Qualcomm SoC will know not
+to add themselves to the table too.
+
+
+> Granted, I've not gotten much experience with boards that were fully
+> upstream and thus didn't have an eternally evolving dts file that had
+> to be kept in sync with the kernel, so in practice either solution
+> does work for me, but in theory it seems like we should at least
+> pretend these things are stable. :)
+
+Yeah, I don't want to get into the whole stable ABI argument, but what
+you say is the official word.  The bindings are supposed to be a
+stable ABI and it's a good goal to strive for.
+
+...but in reality most people are OK with it not being quite so stable
+as long as it's not hurting anyone.  What should have happened here is
+that the bindings and dts should have landed in one Linux version and
+the driver change landed in the next Linux version.  Now we're stuck
+with the breakage, though.  :(  In general for "new" architectures
+it's considered more OK to break compatibility, though I guess you can
+argue whether sdm845 is really new enough.  I guess to get at the meat
+of the issue though: if you need a patch to fix your problem anyway,
+why not land the patch that doesn't end up chewing extra up extra code
+space and providing a bad example for someone to copy?
+
+Now certainly if changing your DTS was an undue burden (like you've
+already baked device trees into firmware) there's no question we
+should land your patch.  I'm just not sure the lofty goal of "it's
+supposed to be a stable ABI so let's add an entry to the table that
+nobody will ever care about after the dts change lands" is enough of a
+reason to land it now.
+
+OK, I'll duck from the tomatoes now.
+
+-Doug
