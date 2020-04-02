@@ -2,91 +2,114 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79BEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F43C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB922078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:31:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qtiL8TpB"
+	by mail.kernel.org (Postfix) with ESMTP id BB38F2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585855993;
+	bh=mYqoGLfUyvbdSbBXG282XzhrTLZ31L+XrX9dy+hzoEU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tt0WK8accdWAdk93UKoXa9krCAOpgMfjMaEQHMr4sO/bTmKi23WSEbFMHUP3IT0eR
+	 kq2OiAJPcaYK9HarxXP/GMEWOpRbBUvSWnlOPUcgITvLga3zhnlhUkh98T84rbqTGE
+	 O0kaytE2eGjJovrKR2luDXspvSorrSUQZco3Xdi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390057AbgDBTbu (ORCPT
+        id S2389325AbgDBTdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:31:50 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40194 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389108AbgDBTbt (ORCPT
+        Thu, 2 Apr 2020 15:33:12 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46148 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729033AbgDBTdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:31:49 -0400
-Received: by mail-qk1-f193.google.com with SMTP id l25so5406980qki.7;
-        Thu, 02 Apr 2020 12:31:47 -0700 (PDT)
+        Thu, 2 Apr 2020 15:33:12 -0400
+Received: by mail-ed1-f68.google.com with SMTP id cf14so5827617edb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 12:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7I6mCCWO0NI2W9Hv1j2ODnDFaCT13IrYKH20fIeShyM=;
-        b=qtiL8TpB80vLSxlF06cwi699QC+hLcU4dTsjnFf39v34jsBq6n0YTbCvrIiysheT5e
-         0iDCSMRVYq48fkYuwf7bD68+pxz7nQ74cvtLS3nYaJvZ/0obYVA+yCpyTHkq7mg+SMkQ
-         8f1FSy+tnNukU5h6Ew2OMmoz4LRVMG1Hy91BKk6TaIta7EWlN7Im+cdyphWu6CHElvxQ
-         DI6YuEBFoXYi0/2CuK1IpIDQrK2TiGauWUnjjcXO3tbCTNXIgzwz0uY+weQQYLLwH4qV
-         HMR0Up/BJT+QPMlycRANAHWJQePSQ3f0ZrLLcHFbcQdmKZVoe2t3s0mBEG/syw612Eko
-         iu4g==
+        bh=VNVfYQcU5r7QqnygVgwbeTwWR3NWKnCIk7XJifmEK+g=;
+        b=WFRj2oMOOBQ9Ye/JZJICZujrvRy2hkbOR9uXKlMdFDvf9Q5Lq80wgWioeP0e0rs0oj
+         n0Wk/vH8ieHoUcWgLtyDYX5P7nJxjuAYNdlNyNknULgO81UVaZJ0LqdKLLefqzuqrqZf
+         RMdkwJXPuZPoAbZGgiU6xp+RQahaYFh5oXLKg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7I6mCCWO0NI2W9Hv1j2ODnDFaCT13IrYKH20fIeShyM=;
-        b=iO1TQrhKCdF/9JFs2YDL9/No7/v6XhhhpIyEAYXS8pGNyk/CAzbzxZNA6zhW5b53+m
-         j9MVAs49Glfx3KDHds3uGBCqrl9lc5QRk9LQUzDchlcd8E2qyf5qPlgJoZlGKX+omwY7
-         jLigLxRBYyfVWdIt4Vv5e/2qeqr1RlslH6p0bfPKFoyvHigfC9wKkJKjKjMLyS6ol22F
-         5TuwkZ0G/v9sAqG5eT5cXeufqpxav238zinQOK4uckvb0zRjOvzG7dpg+tke8dUzW2a0
-         5yk4sKCyc2qF/FPUDzKXCvFidatSFjuF/081XOOlXXN+/njRtCqk4xWeMvWX5ccbHtM3
-         PgIQ==
-X-Gm-Message-State: AGi0PuZ/8R61U06U7cm9WlGbf1ENSomLLiyjCQl6fi0u1Y2icIkbeLXH
-        Cf0mdOWrL1zDBuFmxiClm/qsjEXx0NyOnGHW7e4=
-X-Google-Smtp-Source: APiQypK/ZbpMk9Dj0Hosok9jPEo30Su45nhINvZzVFcgTSuckkMrLuD8FT88jQlIP1pGI5Y6rlhHf2KJzp2UlipKQtA=
-X-Received: by 2002:a37:6411:: with SMTP id y17mr5397810qkb.437.1585855906945;
- Thu, 02 Apr 2020 12:31:46 -0700 (PDT)
+        bh=VNVfYQcU5r7QqnygVgwbeTwWR3NWKnCIk7XJifmEK+g=;
+        b=hJUbA6WWPUpTFFAEP2Kd7TpSl6r3vL5oV0fTTRf7jkKLHnA+lsxHTr05lzfjaBzDqD
+         midmDoGUVwyFK+15epjG0rmHLjRf5eg0ON7QVXvFTiElW1SCT1V7FuWBOL1wflod36J8
+         bTNXUUjaTMzbdh4jxdbvVaxgJyTAHdfx6gkeJY92d151z600Ljn8njLx8UPJHRIq+EZ2
+         QgZXrnn2sbtrODH04by/zfJwnj5j08W8qlMKdc8I5daXw455W0VsWFq9MCp8wXUNox+w
+         eZGCWwFMiJPWMywk9nfCIojoGMinLFAvygqkh+BoimqQixf0C6NxamotWlX5vOOUZMGG
+         0xpw==
+X-Gm-Message-State: AGi0Pub0fya7nc2XwaMBXW5GPwiXa8MqT5ah6MWL39BmMmE2eK0Fghd2
+        g0XFKZPF8DhJv45XbSdEGpL4XfnVhc0=
+X-Google-Smtp-Source: APiQypLxS5pFtPUKQVZk4pYmw/PxBOSX42WwV0hlHJ+biivDhGUbq1JxJ76sSchl4xOOlBuJmQgPTQ==
+X-Received: by 2002:a05:6402:17a7:: with SMTP id j7mr4646605edy.334.1585855988524;
+        Thu, 02 Apr 2020 12:33:08 -0700 (PDT)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
+        by smtp.gmail.com with ESMTPSA id d23sm1246832ejk.26.2020.04.02.12.33.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 12:33:08 -0700 (PDT)
+Received: by mail-wr1-f47.google.com with SMTP id c7so5639304wrx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 12:33:08 -0700 (PDT)
+X-Received: by 2002:a2e:8911:: with SMTP id d17mr2938169lji.16.1585855628859;
+ Thu, 02 Apr 2020 12:27:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <202004010849.CC7E9412@keescook> <20200402153335.38447-1-slava@bacher09.org>
- <f43f4e17-f496-9ee1-7d89-c8f742720a5f@bacher09.org>
-In-Reply-To: <f43f4e17-f496-9ee1-7d89-c8f742720a5f@bacher09.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 2 Apr 2020 12:31:36 -0700
-Message-ID: <CAEf4Bzb2mgDPcdNGWnBgoqsuWYqDiv39U2irn4iCp=7B3kx1nA@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
-To:     Slava Bacherikov <slava@bacher09.org>
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Kees Cook <keescook@chromium.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Liu Yiding <liuyd.fnst@cn.fujitsu.com>, kpsingh@google.com
+References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+ <20200402162942.GG23230@ZenIV.linux.org.uk> <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
+ <20200402175032.GH23230@ZenIV.linux.org.uk> <202004021132.813F8E88@keescook>
+In-Reply-To: <202004021132.813F8E88@keescook>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 2 Apr 2020 12:26:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg9cSm=AjPmkasNHBDwuW4D10jszjv6EeCKp8V9Qbx2hg@mail.gmail.com>
+Message-ID: <CAHk-=wg9cSm=AjPmkasNHBDwuW4D10jszjv6EeCKp8V9Qbx2hg@mail.gmail.com>
+Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and user_write_access_begin/end
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Anvin <hpa@zytor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 8:40 AM Slava Bacherikov <slava@bacher09.org> wrote:
+On Thu, Apr 2, 2020 at 11:36 AM Kees Cook <keescook@chromium.org> wrote:
 >
->
->
-> 02.04.2020 18:33, Slava Bacherikov wrote:
-> > +     depends on DEBUG_INFO || COMPILE_TEST
->
-> Andrii are you fine by this ?
+> Yup, I think it's a weakness of the ARM implementation and I'd like to
+> not extend it further. AFAIK we should never nest, but I would not be
+> surprised at all if we did.
 
-I think it needs a good comment explaining this weirdness, at least.
-As I said, if there is no DEBUG_INFO, there is not point in doing
-DWARF-to-BTF conversion, even more -- it actually might fail, I
-haven't checked what pahole does in that case. So I'd rather drop
-GCC_PLUGIN_RANDSTRUCT is that's the issue here. DEBUG_INFO_SPLIT and
-DEBUG_INFO_REDUCED look good.
+Wel, at least the user_access_begin/end() sections can't nest. objtool
+verifies and warns about that on x86.
+
+> If we were looking at a design goal for all architectures, I'd like
+> to be doing what the public PaX patchset
+
+We already do better than PaX ever did. Seriously. Mainline has long
+since passed their hacky garbage.
+
+Plus PaX  and grsecurity should be actively shunned. Don't look at it,
+don't use it, and tell everybody you know to not use that shit.
+
+                Linus
