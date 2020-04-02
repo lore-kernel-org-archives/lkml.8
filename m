@@ -2,200 +2,140 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFE4C2BA17
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706F7C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B54420787
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7E020787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:31:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmhoYbnD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A2OPctM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388116AbgDBL2V (ORCPT
+        id S2388129AbgDBLa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:28:21 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46783 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388001AbgDBL2V (ORCPT
+        Thu, 2 Apr 2020 07:30:59 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36888 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388086AbgDBLa7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:28:21 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 111so2957796oth.13;
-        Thu, 02 Apr 2020 04:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2bgnm/uDYdJ1detYPhI27bQkF7tTu5YY9ijywxHgELg=;
-        b=cmhoYbnDjQ0noiUH4NKgmI2exZ8QJ8k7PnsPhRMB2PpduNDdMZw3wu8S7lPprn6R7X
-         aP4Y2Vxfd4F0srhHHtK0y9FFfm2ER6mdbi5RkxXTkabUrmYeoQ/5PF+Bn2OC1oxqxdgG
-         Px3qvJy+mCpEqEVSj2wSI2Bm3SU9Yahc1Yu7VhjvCaBFYqglefOVCmVgPRhm82DkZZ9y
-         iH1JxXBv1ucwsoNCEMljyhJZzIP0ro/2/rBxX1ZvBMYK493WvlU2Jz5VwZSA3GikeA+X
-         2qmH5pv4fCTbkFiL/dcQRkTvQhllbdfCcVH69IXr+Xn5SKq0YDq6lf3tClccnK0xPXKl
-         Lkpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2bgnm/uDYdJ1detYPhI27bQkF7tTu5YY9ijywxHgELg=;
-        b=aT5ei7YqdmdpHjXbkLdFJk/263KaFr3jTzZy2dD+/eemsYoYW+2XJSADyopejND4yw
-         Wxt9asLSHbjveX89+l28zGeTNdnyVM0h5VbcwtSbOUBc46D49/09dq95HoV6X4Sr8U+3
-         vOAQqUob0BUk7BO205+BhsNQ2zTO6AxauHtyuWNsvpEB/1W7RkEiuy5e5qRLeabWKIDg
-         aDHmVwd2SQK6tjw+YdANtK7TGiLYu7ZlMIyDwlCSAH0rYR9ZQKG4XF57suDvKtFGx+Nh
-         DexZdp8ZkRjqSkdMv3REN/88Jes61oVBRfDJhzIBLQt+m6m3p2aYOYVzemuLi8vtWCfJ
-         a+tA==
-X-Gm-Message-State: AGi0PuYZLPYaS8Yk9lhVa/5CupdTOOyK0y1NmsXLusBmYXePYuGuMGWc
-        hse2JaJMxhjHl+b8WYI0thjwuAQtbE+dBzmRA8Y=
-X-Google-Smtp-Source: APiQypLJSpXhoA6Ak+/dJnAb0ch+tzn79KYUCPw/2juatq28FHNuYiFUIkHu9IYlnlBPisvI0Iro/kiGCGeQnVYTijs=
-X-Received: by 2002:a9d:895:: with SMTP id 21mr1850329otf.365.1585826899753;
- Thu, 02 Apr 2020 04:28:19 -0700 (PDT)
+        Thu, 2 Apr 2020 07:30:59 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032BSIpE015369;
+        Thu, 2 Apr 2020 11:30:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=7o0FVYwJwkPoxE1Cw1mXQzPgG4H99LYFk/EWX3dnUwI=;
+ b=A2OPctM+5Z1X/yUJSCs71WpzoQHomIEDXP8QxdOvr7R9DuTiAsgMq7/zyiilSl/iKSFC
+ 5T6LIrZRb68xqMI5bAHGBa592kG5L3hNAAHNTNlV7geGahDiJXtp8GNmX9iygrh2IXwV
+ xJoR5K3kRMYDo+F+duejELE4bgbaGEN0DZroe49TuYOcfQCRaDgG6YYjYUDNo6Jsu9o7
+ PNRb9npVQ5l+CTI9+urhh4HkgvWoGnbQ/tkk7lYYdCDpfUCwYIHSkuBdV+LvavyRcKqo
+ 8me7wmjoDXM/I33zVyHtEN1sUjbLJjqcjuTcD5u0I7QH3Me4t/k8zEsDX/128qartOur Eg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 303yundc29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 11:30:53 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032BQvwn147884;
+        Thu, 2 Apr 2020 11:28:52 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 302g2jd5wu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 11:28:52 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 032BSmYq009917;
+        Thu, 2 Apr 2020 11:28:48 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 04:28:48 -0700
+Date:   Thu, 2 Apr 2020 14:28:41 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org, Jan Engelhardt <jengelh@inai.de>
+Cc:     kbuild-all@lists.01.org, rafael.j.wysocki@intel.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] acpica: clear global_lock bits at FACS initialization
+Message-ID: <20200402112712.GN2001@kadam>
 MIME-Version: 1.0
-References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
- <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com>
- <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <CAMuHMdXmfQ0x7mCZ-E7OPQFv2z-=mFDT20hJ2_JKax=OePB8eA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXmfQ0x7mCZ-E7OPQFv2z-=mFDT20hJ2_JKax=OePB8eA@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 2 Apr 2020 12:27:53 +0100
-Message-ID: <CA+V-a8vPn_z_j1Vwr_1F=dCw8H=g5UMWvWxgRqBeVR7dzHPz8Q@mail.gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
- in correct sequence
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hao Bui <hao.bui.yg@renesas.com>,
-        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Chris Brandt <Chris.Brandt@renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330085852.31328-1-jengelh@inai.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Hi Jan,
 
-On Wed, Apr 1, 2020 at 1:43 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, Mar 31, 2020 at 5:58 PM Prabhakar Mahadev Lad
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > -----Original Message-----
-> > > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > On Fri, Mar 27, 2020 at 7:17 PM Kazuhiro Fujita
-> > > <kazuhiro.fujita.jg@renesas.com> wrote:
-> > > > For SCIF and HSCIF interfaces the SCxSR register holds the status of
-> > > > data that is to be read next from SCxRDR register, But where as for
-> > > > SCIFA and SCIFB interfaces SCxSR register holds status of data that is
-> > > > previously read from SCxRDR register.
-> > > >
-> > > > This patch makes sure the status register is read depending on the port
-> > > > types so that errors are caught accordingly.
-> > > >
-> > > > Cc: <stable@vger.kernel.org>
-> > > > Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
-> > > > Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
-> > > > Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> > > Nevertheless, this patch will need some testing on various hardware.
-> > > Do you have a test case to verify the broken/fixed behavior?
-> > >
-> > Agreed, its been tested on RZ/G2x & RZ/G1x  by doing a loopback test, configure one interface as CS8 mode(8-bits data, No parity) and other as CS7 mode (7-bits data, 1-bit Parity) and parity errors should be detected.
->
-> This can easily be tested on the console.  Basic testing can even be
-> done with an unmodified kernel, as there is already a "parity error"
-> notice message in the driver.
->
-> Enable even parity on the console:
->
-> $ stty evenp
->
-> (use "oddp" for odd parity, and invert all below)
->
-> Typing e.g. a single "p" should trigger a parity error.
-> Typing "o" shouldn't.
-> Without this patch, no parity error is detected on SCIF.
->
-> Likewise, pasting a sequence of "p" characters should trigger a lot of
-> parity errors, "o" shouldn't.
-> Without this patch, parity errors are detected on SCIF, except for the
-> first character.
->
-> For more advanced testing, make the following change to the driver:
->
-> - dev_notice(port->dev, "parity error\n");
-> + dev_notice(port->dev, "parity error for char 0x%02x hweight %u\n",
-> c, hweight8(c));
->
-> Pasting an alternating sequence of "p" and "o" characters should trigger
-> parity errors for the "p" characters.
-> Without this patch, they are triggered for the "o" characters instead.
->
-Thank you that makes life easier.
+url:    https://github.com/0day-ci/linux/commits/Jan-Engelhardt/acpica-clear-global_lock-bits-at-FACS-initialization/20200330-183705
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
 
-> With this patch, the issues above are fixed on SCIF.
-> This has been verified on:
->   1. SCIF on R-Car Gen 2,
->   2. SCIF on R-Car Gen3
->   3. SCIF on RZ/A1H,
->   4. SCIF on RZ/A2M.
->
-Thank you for the testing.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-> However, I also tried this on HSCIF on R-Car Gen3, where I cannot
-> trigger parity errors at all.
-> Parabhakar: have you tried HSCIF on RZ/G1 and RZ/G2? Can you trigger
-> parity errors on HSCIF?
->
-I couldnt test this in RZ/Gx as the hscif interface is connected to
-wifi, but I did manage to trigger this
-on M3N following are the steps:
-1: Set console as ttySC1 in booatargs
-2: The login console will come up on both SC0&1
-3: Login through SC0
-4: Append securetty file: echo ttySC1 >> /etc/securetty
-5: Login through SC1 (CN26 on M3N)
-6:  And finally I repeated your steps using stty on SC1 (CN26) to
-introduce parity error.
+smatch warnings:
+drivers/acpi/acpica/tbutils.c:60 acpi_tb_initialize_facs() error: uninitialized symbol 'facs'.
 
-> This has been regression-tested on:
->   1. SCIFA on SH-Mobile AG5, R-Mobile A1, and R-Mobile APE6.
->
-> I haven't tested it yet on:
->   1. SCIFB on SH/R-Mobile (needs wiring up),
->   2. SCIFA, SCIFB, and HSCIF on R-Car Gen2 (needs wiring up),
->   3. (H)SCIF on R-Car Gen1 (remote boards unaccessible at the moment),
->   4. SuperH (only remote Migo-R available, but unaccessible).
->
-> I can test 1 and 2 (and perhaps 3 and 4) later, if needed.
-probably testing this on SuperH is gonna be a pain due to lack of
-hardware availability,
-(it needs to be tested on 19 platforms)
-how about #ifdef CONFIG_ARCH_RENESAS || CONFIG_H8300 and the fix ?
+# https://github.com/0day-ci/linux/commit/cc0fd9e263391ff230ac700aa76dbcf7195c8c42
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout cc0fd9e263391ff230ac700aa76dbcf7195c8c42
+vim +/facs +60 drivers/acpi/acpica/tbutils.c
 
-Cheers,
---Prabhakar
+009c4cbe99bea2 drivers/acpi/tables/tbutils.c Bob Moore      2008-11-12  35  acpi_status acpi_tb_initialize_facs(void)
+009c4cbe99bea2 drivers/acpi/tables/tbutils.c Bob Moore      2008-11-12  36  {
+7484619bff495c drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  37  	struct acpi_table_facs *facs;
+009c4cbe99bea2 drivers/acpi/tables/tbutils.c Bob Moore      2008-11-12  38  
+22e5b40ab21fca drivers/acpi/acpica/tbutils.c Bob Moore      2011-11-16  39  	/* If Hardware Reduced flag is set, there is no FACS */
+22e5b40ab21fca drivers/acpi/acpica/tbutils.c Bob Moore      2011-11-16  40  
+22e5b40ab21fca drivers/acpi/acpica/tbutils.c Bob Moore      2011-11-16  41  	if (acpi_gbl_reduced_hardware) {
+22e5b40ab21fca drivers/acpi/acpica/tbutils.c Bob Moore      2011-11-16  42  		acpi_gbl_FACS = NULL;
+22e5b40ab21fca drivers/acpi/acpica/tbutils.c Bob Moore      2011-11-16  43  		return (AE_OK);
+8ec3f459073e67 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  44  	} else if (acpi_gbl_FADT.Xfacs &&
+8ec3f459073e67 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  45  		   (!acpi_gbl_FADT.facs
+8ec3f459073e67 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  46  		    || !acpi_gbl_use32_bit_facs_addresses)) {
+8ec3f459073e67 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  47  		(void)acpi_get_table_by_index(acpi_gbl_xfacs_index,
+c04e1fb4396d27 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-07-01  48  					      ACPI_CAST_INDIRECT_PTR(struct
+c04e1fb4396d27 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-07-01  49  								     acpi_table_header,
+7484619bff495c drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  50  								     &facs));
+7484619bff495c drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  51  		acpi_gbl_FACS = facs;
+8ec3f459073e67 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  52  	} else if (acpi_gbl_FADT.facs) {
+                                                                                  ^^^^^^^
 
-> Thanks!
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+8ec3f459073e67 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  53  		(void)acpi_get_table_by_index(acpi_gbl_facs_index,
+009c4cbe99bea2 drivers/acpi/tables/tbutils.c Bob Moore      2008-11-12  54  					      ACPI_CAST_INDIRECT_PTR(struct
+009c4cbe99bea2 drivers/acpi/tables/tbutils.c Bob Moore      2008-11-12  55  								     acpi_table_header,
+7484619bff495c drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  56  								     &facs));
+7484619bff495c drivers/acpi/acpica/tbutils.c Lv Zheng       2015-08-25  57  		acpi_gbl_FACS = facs;
+c04e1fb4396d27 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-07-01  58  	}
+
+There is no else path, only else if paths.
+
+cc0fd9e263391f drivers/acpi/acpica/tbutils.c Jan Engelhardt 2020-03-30  59  	/* Clear potential garbage from the initial FACS table. */
+cc0fd9e263391f drivers/acpi/acpica/tbutils.c Jan Engelhardt 2020-03-30 @60  	if (facs != NULL)
+cc0fd9e263391f drivers/acpi/acpica/tbutils.c Jan Engelhardt 2020-03-30  61  		facs->global_lock &= ~0x3;
+c04e1fb4396d27 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-07-01  62  
+f06147f9fbf134 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-07-01  63  	/* If there is no FACS, just continue. There was already an error msg */
+f06147f9fbf134 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-07-01  64  
+c04e1fb4396d27 drivers/acpi/acpica/tbutils.c Lv Zheng       2015-07-01  65  	return (AE_OK);
+009c4cbe99bea2 drivers/acpi/tables/tbutils.c Bob Moore      2008-11-12  66  }
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
