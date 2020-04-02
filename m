@@ -4,118 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA833C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4299DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91A820719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585860469;
-	bh=SMarRhfPgQQNcyG3S4vD9addZu6uQjtxO4q9QOyMPUQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k6urtKTexhK4DLqG9OR96SVD+jmu8o0F4Q0f2GwvFK8gm137r7ECzy0HuevlxvGre
-	 pRfbygoHVmhEgamKIuEWQWAZMWS2urb8u7poVe3WVEOiCdujy3BhP9Vo0RJ4JXi/qD
-	 l1X/PsCanYYs40wf5s1aVb6mpy3Z+86XpbhmoX/k=
+	by mail.kernel.org (Postfix) with ESMTP id 138A92078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:48:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="axglwSAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389000AbgDBUrs (ORCPT
+        id S2389069AbgDBUsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:47:48 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45323 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730837AbgDBUrs (ORCPT
+        Thu, 2 Apr 2020 16:48:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20172 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726617AbgDBUsA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:47:48 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t17so4704565ljc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:47:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YR/nUD2Z88aJr6Pg6Jbj/uRmXq5/iJdtBPPDjhYxa08=;
-        b=dq1Xt42zOdAJ9Qswqhw3DC5ZWJPx708kVOLPio6Z4i5kSkx4SK5PaEo/6koIh9QTi0
-         yfOTVpLmbl4n8jtyb/2WcDEO7fuXO+AAVPX7mMUJ0v/+lRQnPhNsNuau5SsaccYONsWw
-         LhoxKSxXEV20XpXwx2ctLh7uQXRBDSE3iznhk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YR/nUD2Z88aJr6Pg6Jbj/uRmXq5/iJdtBPPDjhYxa08=;
-        b=f1WURXUim2emqzM4ALnN/k6AYOrRtXQT3TFoBpEnBo3JFPGF1JbNPPc+uWB8juTOCz
-         O2Au01BblxbukRGw3EKG6T+7zD+PoScjG0OwEF6gt2YSBP/gTFkmL/tjvUr72Zf3VbuH
-         60+946O7MiRQ5UkxT3fhXoT023oMgTnxPAIulJRZuUTzy58e5iXuuql3DDF+9IdG1FuG
-         PkHZMuNKyh88wxSV+TAFkjQb/IfqUOsvmbIp4PJlMJ3GR6PhQBOueerWZa6NGaRYTYLt
-         q1TPZ8VulnqDoH8awOXQEPLh4th5WUh/O7l/b0025qWzm+nruB3wU0BbZk2mCdKeY4Qv
-         FCUg==
-X-Gm-Message-State: AGi0PuZo0mGlWldjT85byvEh4nW6S78Ika3yIcHgrehvm/yLZnKKK9i1
-        Gd/qnE8kH1mkbTw9P+V15bMl9Do/nM4=
-X-Google-Smtp-Source: APiQypLwYcqQYjQ1bEK1BjQnxOmtORnSkOuzHgEpY5eRPzMx/QlN+Ys7814DXCf6CdUNnB4ZdA5hjw==
-X-Received: by 2002:a05:651c:552:: with SMTP id q18mr3182064ljp.1.1585860463687;
-        Thu, 02 Apr 2020 13:47:43 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id l7sm4919204lfg.79.2020.04.02.13.47.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 13:47:41 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id t11so3936891lfe.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:47:40 -0700 (PDT)
-X-Received: by 2002:ac2:5e70:: with SMTP id a16mr3290368lfr.152.1585860460299;
- Thu, 02 Apr 2020 13:47:40 -0700 (PDT)
+        Thu, 2 Apr 2020 16:48:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585860479;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1Rc2v05BJ2MWLUOtCg/UMGos43tuREKXY5mt9KFY3Y0=;
+        b=axglwSAW9W4yPsD+puN+v+m7E9aCI+etj6REpWQO6LjKeUmhuc0gjq6R2NOv/rSMgdpObN
+        grGvvHivgYPOy0fxv5B7LWkaDdiJfc9rsfUWE2CsgTBac5sqlNX/WueUtBXGL6Nw2gFyM9
+        44+2FJliWApNvJ9Qf9brZR7eLDdQDqw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-266-ptPNqkgLPCGcXekziwlFuw-1; Thu, 02 Apr 2020 16:47:56 -0400
+X-MC-Unique: ptPNqkgLPCGcXekziwlFuw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F5F5107ACC9;
+        Thu,  2 Apr 2020 20:47:54 +0000 (UTC)
+Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 515FF92FAD;
+        Thu,  2 Apr 2020 20:47:52 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 15:47:49 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     "Singh, Balbir" <sblbir@amazon.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>
+Subject: Re: [PATCH 0/3] arch/x86: Optionally flush L1D on context switch
+Message-ID: <20200402204749.33ulub5jx66dktxg@treble>
+References: <20200402062401.29856-1-sblbir@amazon.com>
+ <20200402201328.zqnxwaetpk4ubg56@treble>
+ <31c9720eff18ce167378e9a0017dcd73e0552164.camel@amazon.com>
 MIME-Version: 1.0
-References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
- <20200402162942.GG23230@ZenIV.linux.org.uk> <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
- <20200402175032.GH23230@ZenIV.linux.org.uk> <202004021132.813F8E88@keescook>
- <CAHk-=wg9cSm=AjPmkasNHBDwuW4D10jszjv6EeCKp8V9Qbx2hg@mail.gmail.com> <202004021322.5F80467@keescook>
-In-Reply-To: <202004021322.5F80467@keescook>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 Apr 2020 13:47:24 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjUfAsepavvy2vsnyOv06yeYBMumSeb+dzDSnJXkX7qPQ@mail.gmail.com>
-Message-ID: <CAHk-=wjUfAsepavvy2vsnyOv06yeYBMumSeb+dzDSnJXkX7qPQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and user_write_access_begin/end
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Anvin <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <31c9720eff18ce167378e9a0017dcd73e0552164.camel@amazon.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 1:27 PM Kees Cook <keescook@chromium.org> wrote:
->
-> I was just speaking to design principles in this area: if the "enable"
-> is called when already enabled, Something Is Wrong. :)
+On Thu, Apr 02, 2020 at 08:35:46PM +0000, Singh, Balbir wrote:
+> On Thu, 2020-04-02 at 15:13 -0500, Josh Poimboeuf wrote:
+> > CAUTION: This email originated from outside of the organization. Do not
+> > click links or open attachments unless you can confirm the sender and know
+> > the content is safe.
+> > 
+> > 
+> > 
+> > On Thu, Apr 02, 2020 at 05:23:58PM +1100, Balbir Singh wrote:
+> > > Provide a mechanisn to flush the L1D cache on context switch.  The goal
+> > > is to allow tasks that are paranoid due to the recent snoop assisted data
+> > > sampling vulnerabilites, to flush their L1D on being switched out.
+> > 
+> > Hi Balbir,
+> > 
+> > Just curious, is it really vulnerabilities, plural?  I thought there was
+> > only one: CVE-2020-0550 (Snoop-assisted L1 Data Sampling).
+> > 
+> > (There was a similar one without the "snoop": L1D Eviction Sampling, but
+> > it's supposed to get fixed in microcode).
+> > 
+> 
+> Hi, Josh
+> 
+> Yes, that CVE the motivation, the mitigation for CVE-2020-0550 does suggest
+> flushing the cache on context switch. But in general, as we begin to find more
+> ways of evicting data or snopping data, a generic mechanism is more useful and
+> that is why I am making it an opt-in.
 
-Well, the "something is wrong" could easily be "the hardware does not
-support this".
+Ok.  I think it would be a good idea to expand on that justification
+more precisely in the commit message.  That would help both reviewers of
+the code and users of the new option understand what level of paranoia
+they're opting in to :-)
 
-I'm not at all interested in the crazy code to do this in software.
-Nobody sane should ever do that.
+-- 
+Josh
 
-Yes, I realize that PaX did software emulation of things like that,
-and it was one of the reasons why it was never useful to any normal
-use.
-
-Security is not an end goal in itself, it's always secondary to "can I
-use this".
-
-Security that means "normal people can't use this, it's only for the
-special l33t users" is not security, it's garbage. That "do page
-tables in software" was a prime example of garbage.
-
-               Linus
