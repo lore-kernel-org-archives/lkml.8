@@ -2,134 +2,357 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76245C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 03:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9D5C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 03:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD1F20784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 03:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E617020747
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 03:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1BLyfPi"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="UHnzN7pX";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="UwZ1Il1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387443AbgDBDuQ (ORCPT
+        id S1733251AbgDBDx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 23:50:16 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34641 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732498AbgDBDuP (ORCPT
+        Wed, 1 Apr 2020 23:53:58 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:43960 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726205AbgDBDx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 23:50:15 -0400
-Received: by mail-il1-f194.google.com with SMTP id t11so2283818ils.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 20:50:15 -0700 (PDT)
+        Wed, 1 Apr 2020 23:53:58 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0323kD2C017447;
+        Wed, 1 Apr 2020 20:53:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=TdMZ5L/4KWv0WdPepcDu1s5mbml6nJ+GWgyYvlSNUfE=;
+ b=UHnzN7pXFByz+plTXKYje3E5hctmY2V35e4FlgLV0qj69FFzbhEm5BqOfYHNbKVtODmG
+ 470xehp8X087/zQsDlcKFoWMuTszloubFxHnmJycBINRwT6HKjk3OomkhoIZ0m4pOVWT
+ hdnMF/yrfi0uE4jhFZfl+7XEakpeypVdIczleg66fdci8ZOhnf0sqdJPD7eeIhf5DQCW
+ Lbs5jaP0120dhEBtJ1GZbHKVEFETQA0dleyH64XaNnDf0eYwkmkzFFm2mUUAl9Lxtns5
+ 3arFs/m+WfoqtUYaJjD5VtZqK4daqaviIDpKfE+IaApvG+0KGVsiKy5BBQ6g/Flsmfg0 /w== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 304855r5jx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 20:53:44 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 1 Apr
+ 2020 20:53:42 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
+ by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 1 Apr 2020 20:53:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gXJiF3zG+G39h+AaBfeK8nru3wR8IHljX3vvS8jT3LrbYg8fR15IPXj7KplS4L4CfJkMtpF3lA2lz36wxKPyiIihOCsq3Uy+eTdbmb1c+KxEG9rLh6LYIH80ezRjfRCvSBdPJSlkgFMbwtxolcs/uYJLCEf537JF5+Fl9GMQlsv/LBBFXGueyM2HDpTybckUK5NGbmgj2kZ7ixjeDPYYNfMsjv/Ny+40UDdso56PZwYBmLE6QdLZ1T3QZT+1H5b386KEZNgpMMDioFrArbBNfUTNmunKJIPebJQgHx8N76vXob6Gz04h0DkxThlgYTkkTabOsSgVE06PC9JrB5euIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TdMZ5L/4KWv0WdPepcDu1s5mbml6nJ+GWgyYvlSNUfE=;
+ b=FuIYcAD8jobRyhAQGMjdcxFiHSxBV1E+mBeLQlMqMgWs25dyNsmK5vzIBncsBkPyYb+vsOLbbJwXXrgSZcUQbMUx9I/AYnT2DnfLb0mZSaaFx4ZN5MxdfNLBWarvUPBoGav2rQML+lPptK/OjwFHDNTxJZdnQTJZTNIBJtZlvu6dUSxFcrVVfnAgXBtsMLvSnDUYcYZZqKMEzoQjZgPHMOu5iQ4NxNI3aPgF/m4Y1jBoeOO4F/FUhAxgSWY1UWM+KMtSpHl5uprch+RZwz4Y1lJ9epSIAfWcg78VxF0xNQb3YRh7uqrjzLeHl2hOuIyfZCU+yE+54l27OgT/iceN3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=un3fCtdFL30YthKT96CUaub/mKOgXUtAMj2aFT/0PG4=;
-        b=j1BLyfPilq3TJB3KimcIBBGzUr9NSBHL9CZX0ZLvnEhr10RUE+BzgwAVbkboZvzJbw
-         p3BYhlMqx54KQgTKkG5lwMplSjQXdoNkXd6tEJKK3Ow86YPUz9oF50vYJT+DfEqEOxYC
-         9orFV88QTGN5X23IO494ia9LQ6tqUZLtLTwAChrveledyaZs21kUVGzJaxM2U41am4FJ
-         Yzm4Yffn1e/pPB99dk1RtDx+wheEOC6UxXljP5f2wz0KZBjj7tsaeqI0Zzkl2tGQPABp
-         D6g9lryQGxQKow4hC6WDUEqU58ef+Z9XAu/Dw2FHqwgyQtnWJzmpiAtoYyW7fB3tXiP9
-         JaJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=un3fCtdFL30YthKT96CUaub/mKOgXUtAMj2aFT/0PG4=;
-        b=IxEeqz/ob6CtiffJMn1CYX79bmL491+cMVthUHcYYQo3VeSluriowBg6fWaosJbiRW
-         I7aRe1TVd5UUTBY568ZKcMVgLe7rZcA+S2XDXl+INb38gg1tZ+WIKNDETE3gHyKO62A5
-         LRsGFZ97tTm9rwTwftgA4nFA5NSFAQEeGNplJ/rUvtI7N7RsHs005BVY1YdtrCbd3/Hz
-         eM7xkt6+btAS/TjEW3X2eo/36VKssLgorwYcKLssqLYWYN99r54Lj6IpfGFc35CqT9mE
-         DX58MGqWf/vuFSJ7crAnZjT5t6OJwJrW1VSK6g14Lai4kHF4m+RRpA2n1ZaIx8eejxaH
-         0R+Q==
-X-Gm-Message-State: AGi0PubGAxsDmHpvPMmxDJf37CnFqpEpPvayT10OuRhdSu2+qmWpe79i
-        3309ygUKWuTXdmvNRLAGZ54wZN22uilv+cI+L+Y=
-X-Google-Smtp-Source: APiQypJyEN+5v6EGwS7GGD77C8TR5iHpI3+yZLJ2qJhUBFcMxf+gIEB07Pj3Y1zyNjFY+2mASs/kfz/PFBneqBUdOvU=
-X-Received: by 2002:a92:39cc:: with SMTP id h73mr1225341ilf.298.1585799414632;
- Wed, 01 Apr 2020 20:50:14 -0700 (PDT)
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TdMZ5L/4KWv0WdPepcDu1s5mbml6nJ+GWgyYvlSNUfE=;
+ b=UwZ1Il1o0+PIdrjVSah+nEy0VAJhrh+7Fn0JW2Nk6fxas1aeb54wn1XmhcGMtBe9b12mWoKGlbABxfAQLC4vnlcoUfZC1+5iHc+EJDBLY2UNqSJiwSjoNIujkKAS+Ks9cQz/LrwluRYGZRWP/aSO2wpPaNMOyMJRrQ0ZJyV2wA8=
+Received: from MWHPR1801MB1966.namprd18.prod.outlook.com
+ (2603:10b6:301:66::20) by MWHPR1801MB2061.namprd18.prod.outlook.com
+ (2603:10b6:301:69::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Thu, 2 Apr
+ 2020 03:53:40 +0000
+Received: from MWHPR1801MB1966.namprd18.prod.outlook.com
+ ([fe80::b417:ff60:caba:11a1]) by MWHPR1801MB1966.namprd18.prod.outlook.com
+ ([fe80::b417:ff60:caba:11a1%7]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 03:53:40 +0000
+From:   Bharat Bhushan <bbhushan2@marvell.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+Subject: RE: [EXT] Re: [RFC PATCH v2] iommu/virtio: Use page size bitmap
+ supported by endpoint
+Thread-Topic: [EXT] Re: [RFC PATCH v2] iommu/virtio: Use page size bitmap
+ supported by endpoint
+Thread-Index: AQHWCBodnv/LuIC4jE+z/7uFFnxSTKhkOsKAgAAvTgCAAMkOkA==
+Date:   Thu, 2 Apr 2020 03:53:40 +0000
+Message-ID: <MWHPR1801MB19667BA1D59590BC3DFD87C7E3C60@MWHPR1801MB1966.namprd18.prod.outlook.com>
+References: <20200401113804.21616-1-bbhushan2@marvell.com>
+ <b75beb74-89ce-fd6a-6207-3c0d7f479215@arm.com>
+ <20200401154932.GA1124215@myrica>
+In-Reply-To: <20200401154932.GA1124215@myrica>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [122.179.45.151]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: af362715-39aa-46af-d0f6-08d7d6b96e7a
+x-ms-traffictypediagnostic: MWHPR1801MB2061:
+x-microsoft-antispam-prvs: <MWHPR1801MB2061D631028D77A163C19F73E3C60@MWHPR1801MB2061.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0361212EA8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1801MB1966.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(7416002)(54906003)(66556008)(64756008)(66946007)(966005)(478600001)(316002)(8676002)(81156014)(52536014)(66476007)(110136005)(66446008)(81166006)(53546011)(76116006)(8936002)(86362001)(26005)(9686003)(4326008)(33656002)(186003)(5660300002)(71200400001)(2906002)(55016002)(6506007)(7696005);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Hzxe7N9mskSjD7pFK51oWx6ZJTmbHe/ycK8NEf03EwTKw4Yv9eJKUwGFj5T8N/qaT3Dgd99j5Lu8N7giGFGz7simv+iQHcEJPtdd+3uKU0M93razh1iKkwRts9kzlThTO30zmqPfyiBVinSxhxfOWoKfwM3X3NmJT27R4XF53h/j5DQVE1bMsrcVBDvrdwx22BDt/mgwFAReYD17PgK87vqyPPN9b/sZiED6JP9jU6WZbMTcQG83WV1H0p8IsQiCjhJSc5Z2ipLW5wYccaXa5rH+XgnWBvM83sspNcNpuT26yllITBytphfyibyVUrzZIOhiKsOe9b8aBvh9pkixCHXaavltZ55wik2T4x2MenxH7DPOWnGx2koesDxNKWsTLoT3SniTP+ScQsef4aP5BfmOYS0nuEtg3+PodY+Maps6bjVFnDy7YIfOrMcgsjRwTqLYNzTP4L/R/mNUyC267E+yPU2Z1LTzC9+yw3Qie0m91DKX5fU+pnaQsumjSiW+CmHf3QBvpGXiV97cLFzl0Q==
+x-ms-exchange-antispam-messagedata: mpr/UUiiEEVXU/blXduJTH0IgqyJykfb+wLU90iyB/KvGH1jyweqeaBsayzVorlDwdJLnchL7pVXGxxCohE/sYU0cB0KUKrxgLVZVySdc5g+yytDhc0myvmy/t1LS67GdqVpN8MnTxqpyUi+5umnKQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200327071202.2159885-1-alastair@d-silva.org>
- <CAPcyv4iJYZBVhV1NW7EB6-EwETiUAy6r1iiE+F+HvFXfGZt9Aw@mail.gmail.com>
- <2d6901d60877$16aa7a90$43ff6fb0$@d-silva.org> <87imiituxm.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87imiituxm.fsf@mpe.ellerman.id.au>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Thu, 2 Apr 2020 14:50:03 +1100
-Message-ID: <CAOSf1CHdpFyT_6zetKM6eHDK3AT8-UNTzjdd2y+QqYT2AO9VDw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/25] Add support for OpenCAPI Persistent Memory devices
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: af362715-39aa-46af-d0f6-08d7d6b96e7a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 03:53:40.5252
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QMK3G8vwPCknc5E75sTY3YTKWGZxF9ToGemMfmWM8NYNqlosYxwJZzwj+4ptGAUaxwqsGLALz1uBUW7zFc2Ubw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1801MB2061
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 2:42 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> "Alastair D'Silva" <alastair@d-silva.org> writes:
-> >> -----Original Message-----
-> >> From: Dan Williams <dan.j.williams@intel.com>
-> >>
-> >> On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva <alastair@d-silva.org>
-> >> wrote:
-> >> >
-> >> > *snip*
-> >> Are OPAL calls similar to ACPI DSMs? I.e. methods for the OS to invoke
-> >> platform firmware services? What's Skiboot?
-> >>
+
+
+> -----Original Message-----
+> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Sent: Wednesday, April 1, 2020 9:20 PM
+> To: Robin Murphy <robin.murphy@arm.com>
+> Cc: Bharat Bhushan <bbhushan2@marvell.com>; joro@8bytes.org;
+> mst@redhat.com; jasowang@redhat.com; virtualization@lists.linux-
+> foundation.org; iommu@lists.linux-foundation.org; linux-kernel@vger.kerne=
+l.org;
+> eric.auger.pro@gmail.com; eric.auger@redhat.com
+> Subject: [EXT] Re: [RFC PATCH v2] iommu/virtio: Use page size bitmap supp=
+orted by
+> endpoint
+>=20
+> External Email
+>=20
+> ----------------------------------------------------------------------
+> On Wed, Apr 01, 2020 at 02:00:13PM +0100, Robin Murphy wrote:
+> > On 2020-04-01 12:38 pm, Bharat Bhushan wrote:
+> > > Different endpoint can support different page size, probe endpoint
+> > > if it supports specific page size otherwise use global page sizes.
+> > >
+> > > Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
+> > > ---
+> > >   drivers/iommu/virtio-iommu.c      | 33 +++++++++++++++++++++++++++-=
+---
+> > >   include/uapi/linux/virtio_iommu.h |  7 +++++++
+> > >   2 files changed, 36 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/iommu/virtio-iommu.c
+> > > b/drivers/iommu/virtio-iommu.c index cce329d71fba..c794cb5b7b3e
+> > > 100644
+> > > --- a/drivers/iommu/virtio-iommu.c
+> > > +++ b/drivers/iommu/virtio-iommu.c
+> > > @@ -78,6 +78,7 @@ struct viommu_endpoint {
+> > >   	struct viommu_dev		*viommu;
+> > >   	struct viommu_domain		*vdomain;
+> > >   	struct list_head		resv_regions;
+> > > +	u64				pgsize_bitmap;
+> > >   };
+> > >   struct viommu_request {
+> > > @@ -415,6 +416,20 @@ static int viommu_replay_mappings(struct
+> viommu_domain *vdomain)
+> > >   	return ret;
+> > >   }
+> > > +static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
+> > > +				    struct virtio_iommu_probe_pgsize_mask *mask,
+> > > +				    size_t len)
+> > > +
+> > > +{
+> > > +	u64 pgsize_bitmap =3D le64_to_cpu(mask->pgsize_bitmap);
+> > > +
+> > > +	if (len < sizeof(*mask))
+> > > +		return -EINVAL;
+> > > +
+> > > +	vdev->pgsize_bitmap =3D pgsize_bitmap;
+> > > +	return 0;
+> > > +}
+> > > +
+> > >   static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
+> > >   			       struct virtio_iommu_probe_resv_mem *mem,
+> > >   			       size_t len)
+> > > @@ -494,11 +509,13 @@ static int viommu_probe_endpoint(struct
+> viommu_dev *viommu, struct device *dev)
+> > >   	while (type !=3D VIRTIO_IOMMU_PROBE_T_NONE &&
+> > >   	       cur < viommu->probe_size) {
+> > >   		len =3D le16_to_cpu(prop->length) + sizeof(*prop);
+> > > -
+>=20
+> Whitespace change
+>=20
+> > >   		switch (type) {
+> > >   		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
+> > >   			ret =3D viommu_add_resv_mem(vdev, (void *)prop, len);
+> > >   			break;
+> > > +		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
+> > > +			ret =3D viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
+> > > +			break;
+> > >   		default:
+> > >   			dev_err(dev, "unknown viommu prop 0x%x\n", type);
+> > >   		}
+> > > @@ -607,16 +624,23 @@ static struct iommu_domain
+> *viommu_domain_alloc(unsigned type)
+> > >   	return &vdomain->domain;
+> > >   }
+> > > -static int viommu_domain_finalise(struct viommu_dev *viommu,
+> > > +static int viommu_domain_finalise(struct viommu_endpoint *vdev,
+> > >   				  struct iommu_domain *domain)
+> > >   {
+> > >   	int ret;
+> > >   	struct viommu_domain *vdomain =3D to_viommu_domain(domain);
+> > > +	struct viommu_dev *viommu =3D vdev->viommu;
+> > >   	vdomain->viommu		=3D viommu;
+> > >   	vdomain->map_flags	=3D viommu->map_flags;
+> > > -	domain->pgsize_bitmap	=3D viommu->pgsize_bitmap;
+> > > +	/* Devices in same domain must support same size pages */
 > >
-> > Yes, OPAL is the interface to firmware for POWER. Skiboot is the open-source (and only) implementation of OPAL.
->
->   https://github.com/open-power/skiboot
->
-> In particular the tokens for calls are defined here:
->
->   https://github.com/open-power/skiboot/blob/master/include/opal-api.h#L220
->
-> And you can grep for the token to find the implementation:
->
->   https://github.com/open-power/skiboot/blob/master/hw/npu2-opencapi.c#L2328
+> > AFAICS what the code appears to do is enforce that the first endpoint
+> > attached to any domain has the same pgsize_bitmap as the most recently
+> > probed viommu_dev instance, then ignore any subsequent endpoints
+> > attached to the same domain. Thus I'm not sure that comment is accurate=
+.
+> >
+>=20
+> Yes viommu_domain_finalise() is only called once. What I had in mind is
+> something like:
 
-I'm not sure I'd encourage anyone to read npu2-opencapi.c. I find it
-hard enough to follow even with access to the workbooks.
+Ohh, I did not realized that viommu_domain_finalise().
+I have included below suggested changes
 
-There's an OPAL call API reference here:
-http://open-power.github.io/skiboot/doc/opal-api/index.html
+>=20
+> ---- 8< ----
+> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c =
+index
+> 750f69c49b95..8303b7b513ff 100644
+> --- a/drivers/iommu/virtio-iommu.c
+> +++ b/drivers/iommu/virtio-iommu.c
+> @@ -639,6 +639,29 @@ static int viommu_domain_finalise(struct
+> viommu_endpoint *vdev,
+>  	return 0;
+>  }
+>=20
+> +/*
+> + * Check whether the endpoint's capabilities are compatible with other
+> +endpoints
+> + * in the domain. Report any inconsistency.
+> + */
+> +static bool viommu_endpoint_is_compatible(struct viommu_endpoint *vdev,
+> +					  struct viommu_domain *vdomain)
+> +{
+> +	struct device *dev =3D vdev->dev;
+> +
+> +	if (vdomain->viommu !=3D vdev->viommu) {
+> +		dev_err(dev, "cannot attach to foreign vIOMMU\n");
+> +		return false;
+> +	}
+> +
+> +	if (vdomain->domain.pgsize_bitmap !=3D vdev->pgsize_bitmap) {
+> +		dev_err(dev, "incompatible domain bitmap 0x%lx !=3D 0x%lx\n",
+> +			vdomain->domain.pgsize_bitmap, vdev->pgsize_bitmap);
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>  static void viommu_domain_free(struct iommu_domain *domain)  {
+>  	struct viommu_domain *vdomain =3D to_viommu_domain(domain); @@ -
+> 670,9 +693,8 @@ static int viommu_attach_dev(struct iommu_domain *domain,
+> struct device *dev)
+>  		 * owns it.
+>  		 */
+>  		ret =3D viommu_domain_finalise(vdev, domain);
+> -	} else if (vdomain->viommu !=3D vdev->viommu) {
+> -		dev_err(dev, "cannot attach to foreign vIOMMU\n");
+> -		ret =3D -EXDEV;
+> +	} else if (!viommu_endpoint_is_compatible(vdev, vdomain)) {
+> +		ret =3D -EINVAL;
+>  	}
+>  	mutex_unlock(&vdomain->mutex);
+> ---- >8 ----
+>=20
+> >
+> > > +	if ((domain->pgsize_bitmap !=3D viommu->pgsize_bitmap) &&
+> > > +	    (domain->pgsize_bitmap !=3D vdev->pgsize_bitmap))
+> > > +		return -EINVAL;
+> > > +
+> > > +	domain->pgsize_bitmap =3D vdev->pgsize_bitmap;
+> > > +
+> > >   	domain->geometry	=3D viommu->geometry;
+> > >   	ret =3D ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
+> > > @@ -657,7 +681,7 @@ static int viommu_attach_dev(struct iommu_domain
+> *domain, struct device *dev)
+> > >   		 * Properly initialize the domain now that we know which viommu
+> > >   		 * owns it.
+> > >   		 */
+> > > -		ret =3D viommu_domain_finalise(vdev->viommu, domain);
+> > > +		ret =3D viommu_domain_finalise(vdev, domain);
+> > >   	} else if (vdomain->viommu !=3D vdev->viommu) {
+> > >   		dev_err(dev, "cannot attach to foreign vIOMMU\n");
+> > >   		ret =3D -EXDEV;
+> > > @@ -875,6 +899,7 @@ static int viommu_add_device(struct device *dev)
+> > >   	vdev->dev =3D dev;
+> > >   	vdev->viommu =3D viommu;
+> > > +	vdev->pgsize_bitmap =3D viommu->pgsize_bitmap;
+> > >   	INIT_LIST_HEAD(&vdev->resv_regions);
+> > >   	fwspec->iommu_priv =3D vdev;
+> > > diff --git a/include/uapi/linux/virtio_iommu.h
+> > > b/include/uapi/linux/virtio_iommu.h
+> > > index 237e36a280cb..dc9d3f40bcd8 100644
+> > > --- a/include/uapi/linux/virtio_iommu.h
+> > > +++ b/include/uapi/linux/virtio_iommu.h
+> > > @@ -111,6 +111,7 @@ struct virtio_iommu_req_unmap {
+> > >   #define VIRTIO_IOMMU_PROBE_T_NONE		0
+> > >   #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
+> > > +#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
+> > >   #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
+> > > @@ -119,6 +120,12 @@ struct virtio_iommu_probe_property {
+> > >   	__le16					length;
+> > >   };
+> > > +struct virtio_iommu_probe_pgsize_mask {
+> > > +	struct virtio_iommu_probe_property	head;
+> > > +	__u8					reserved[4];
+> > > +	__u64					pgsize_bitmap;
+>=20
+> Should be __le64
 
-Oliver
+Based on" iommu/virtio: Fix sparse warning" patch https://www.spinics.net/l=
+ists/linux-virtualization/msg41944.html changed to __u64 (not __le64)
+
+Will keep __le64.
+
+Thanks
+-Bharat
+
+>=20
+> Thanks,
+> Jean
+>=20
+> > > +};
+> > > +
+> > >   #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
+> > >   #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
+> > >
