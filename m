@@ -2,68 +2,105 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4EAC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D899C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326A620757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585867521;
-	bh=U14+pK0ZahfEXG7mVWOawz+6ch3oyKENn31jd1A19Qc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=YfXAWvOlgt/3VKg1Ep9wnQBE2t0uTHFdK5zewVZOlyp0QQMONlw3pxAPXKG0gjh8y
-	 XsNxil9i0YYBHMjgJ2isv5vWyXBq7iKYHxi2dWHYNefuTPl2UIu5uUDIdJDhvKJxuf
-	 FZpbyDqTfS5l2Wi2eT8cv11gnTEJil4tVmFbHXTU=
+	by mail.kernel.org (Postfix) with ESMTP id 1765F2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qYPyZxkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390387AbgDBWpU (ORCPT
+        id S2389941AbgDBWq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 18:45:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390377AbgDBWpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 18:45:19 -0400
-Subject: Re: [GIT PULL] percpu changes for v5.7-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585867518;
-        bh=U14+pK0ZahfEXG7mVWOawz+6ch3oyKENn31jd1A19Qc=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Ikoyj9qZGJBJDtlxaTOndzwrj8U+wYIeoQ5Y/qUot8UtBpIjpM8rVFKLtiMJUibSn
-         JXoGsphx4CnT5479emtlXA50GatipKWKhnOvZs4GITajiz+jhrXkxwQv//1Jv14pE9
-         AO/4MaNtXZCRfAnufa2DJQereH9xUY6Yh2CHnV8w=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200402193403.GA8781@dennisz-mbp.dhcp.thefacebook.com>
-References: <20200402193403.GA8781@dennisz-mbp.dhcp.thefacebook.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200402193403.GA8781@dennisz-mbp.dhcp.thefacebook.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-5.7
-X-PR-Tracked-Commit-Id: bfacd38f8d5b1f12b80aaacae2c15e1ffe11f06e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ac438771ccb4479528594c7e19f2c39cf1814a86
-Message-Id: <158586751871.2810.10621679902949395531.pr-tracker-bot@kernel.org>
-Date:   Thu, 02 Apr 2020 22:45:18 +0000
-To:     Dennis Zhou <dennis@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+        Thu, 2 Apr 2020 18:46:57 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34989 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387919AbgDBWq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 18:46:56 -0400
+Received: by mail-io1-f68.google.com with SMTP id o3so5532157ioh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 15:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OQnxweQnqXfPXtvAjWkG4LAwMm7QgxQOU06/1lbhuSY=;
+        b=qYPyZxkk8z01LGWskSrm9aG/7nt3J+cgEH/SymGNN597NCfm6MCdZIy6TzISZy66q4
+         pj6rRU04jWHnuCETpqmyHTLKqZiwVuEyeFh5Rr0b3hSMwg5eGng2Ha2xdSdKsvmQxAOB
+         QPSasGKfa8n/l/zHMpnSI/pAoBE+Rpko2nlur98dOVL1Ua5pOL9Ld4KHgbshpQDQcTna
+         ZN9LC+pER0Nd3/NjtUkjv0UtAskAfOkP49pxmJi+E9xuTviSHaZd0wPMgN1pFs3Uk30N
+         wghTmqvUOM9XnmeCBS/2N/NZZe5q7C6DI1LgBPQnuYA89x4cjlENgCSO+fUrkfhakK+1
+         XFEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OQnxweQnqXfPXtvAjWkG4LAwMm7QgxQOU06/1lbhuSY=;
+        b=uIDwbEdLwtKQX2Qin9347d/5MkIlPeLiCPgNcR1jghNZTWLPI4c/Ru2oz39fXhrEzS
+         5ICsEGhp/BHf7BUmIxtSu87xUESWuxNv3qSNmnb0eC2c2Bx6yYIgIbRur3j+bnpVko2t
+         LBTVJtMxq0uhFVRdR97bccq5Ft3D7eYo93hxHD3I5H8rXxO7//Mp69JmvJ7gsMgM58Bz
+         4cyz8P8GKvPjWgoQKiJJbZzFbGA4AATKCYPlYcBzm5LP0vfRAq320plu6ojUimLP8aou
+         R3BniDuLJGeZTXtrA2JQt4YYVpyTXSgkpv1mO++NSXQpCFo95Vr6csVNeMynmUDUYAdE
+         dWOQ==
+X-Gm-Message-State: AGi0Pub3JE7StPeanodflAOMAY463q3kP2R74A19NGryL+AOPN3GElZD
+        CqrAtZI1SNxgvaEkCX9q5VozVnNM0dg2+7iGxpleqlNTnzo=
+X-Google-Smtp-Source: APiQypJ96SzZqukS6zpyCpAiLjdlBVXL/4HDhO4ilUK7VCKGO7VXzhUxFl62HyckGydrE57jcQ6v+hhAdMKSuRB5sZg=
+X-Received: by 2002:a05:6638:d6:: with SMTP id w22mr494171jao.72.1585867615842;
+ Thu, 02 Apr 2020 15:46:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200402195156.626430-1-leonardo@linux.ibm.com>
+In-Reply-To: <20200402195156.626430-1-leonardo@linux.ibm.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Fri, 3 Apr 2020 09:46:44 +1100
+Message-ID: <CAOSf1CEihBDDRny5S_7TA5Cqbdgsh6zN=kdq83OSgaLbRphtrg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] powerpc/kernel: Enables memory hot-remove after
+ reboot on pseries guests
+To:     Leonardo Bras <leonardo@linux.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 2 Apr 2020 14:34:03 -0500:
+On Fri, Apr 3, 2020 at 6:55 AM Leonardo Bras <leonardo@linux.ibm.com> wrote:
+>
+> While providing guests, it's desirable to resize it's memory on demand.
+>
+> By now, it's possible to do so by creating a guest with a small base
+> memory, hot-plugging all the rest, and using 'movable_node' kernel
+> command-line parameter, which puts all hot-plugged memory in
+> ZONE_MOVABLE, allowing it to be removed whenever needed.
+>
+> But there is an issue regarding guest reboot:
+> If memory is hot-plugged, and then the guest is rebooted, all hot-plugged
+> memory goes to ZONE_NORMAL, which offers no guaranteed hot-removal.
+> It usually prevents this memory to be hot-removed from the guest.
+>
+> It's possible to use device-tree information to fix that behavior, as
+> it stores flags for LMB ranges on ibm,dynamic-memory-vN.
+> It involves marking each memblock with the correct flags as hotpluggable
+> memory, which mm/memblock.c puts in ZONE_MOVABLE during boot if
+> 'movable_node' is passed.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-5.7
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ac438771ccb4479528594c7e19f2c39cf1814a86
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+I don't really understand why the flag is needed at all. According to
+PAPR any memory provided by dynamic reconfiguration can be hot-removed
+so why aren't we treating all DR memory as hot removable? The only
+memory guaranteed to be there 100% of the time is what's in the
+/memory@0 node since that's supposed to cover the real mode area.
