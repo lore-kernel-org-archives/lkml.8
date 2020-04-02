@@ -8,59 +8,59 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39FDC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2026C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADD92078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8568A2078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uVKjtr9Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vGv46Fzw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388385AbgDBMMY (ORCPT
+        id S2388314AbgDBMMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:12:24 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46489 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388344AbgDBMMW (ORCPT
+        Thu, 2 Apr 2020 08:12:12 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33325 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387937AbgDBMMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:12:22 -0400
-Received: by mail-ed1-f65.google.com with SMTP id cf14so3744598edb.13;
-        Thu, 02 Apr 2020 05:12:20 -0700 (PDT)
+        Thu, 2 Apr 2020 08:12:09 -0400
+Received: by mail-ed1-f66.google.com with SMTP id z65so3841800ede.0;
+        Thu, 02 Apr 2020 05:12:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jpfK5CYxI8iAPFcZqyQcL5PaZpDr+KrVab+ErVI0E9A=;
-        b=uVKjtr9Z2nepMqEDTiTNNduDfcQJhvvNnmcyS8yfwHjpDvWzEIMZz0lRCYqqz8EoQh
-         MSmE0pl+mSAZNhfA9/7nz32tzqB3NOdIlvpeqtbwPGqFbk4pX1MyiMo2zFL2v/H6dEFB
-         cPJyWiU3Wqu6OFboT+zFQj3b/26oTBr5026kW601iqMQh1wuc+LdDb4xenB5wHhgXOBx
-         cTPErLGCyz6VGn/uTIOlXVvAV/0JR2N7jNnl0wr8rWJsIBGMEJ+JNhFNVLNOOwvjx5jb
-         0Pp2KFAlPvZs1D+EWdph5/O5Jx661nzq3sKTvehAq6nOvmqh2Ua936zmS58Ku64XQvn8
-         Hf/g==
+        bh=jDYxV67s8P5RgobB2MSQS+2SI1Pzl0kBmeEF5B8gAR8=;
+        b=vGv46FzwXEGLJw8mRO55Ylg5m9OIyZAnDw1z2dVQ8iKg/h31tQKamcQhTbMH5hhCU2
+         e78cgHcWuqWUwuWJS3VuOckj37vERlfSxdqn/AOL/lTFF+upUy641boO2llgVNrXCZ5O
+         ApAoo2uXz+HKIME05jcICx4GbUPI8kanLPteAU3sG0l0lIgY6lbWzV9Xk4XWTIfkMIt4
+         kG0O5qet6Wgq4yKSwvaIUmg0L29BhrQGfekYVKk2rnkpX3Le1FWa50L7Vk9sDyielU16
+         EcT31ajnaiHq05plJIVRMFTANdIzFwmbZTAHFAKSUxMWhVtLDR/E7DnkBW+98w9eTZu2
+         KVWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jpfK5CYxI8iAPFcZqyQcL5PaZpDr+KrVab+ErVI0E9A=;
-        b=W2pew44VtueUFF6FzjeByfHzvx70hu2Ciz56ckwzgwZfzLQhUItyhAN9dTO5ZunpBK
-         yKYg0Oki1iqF7fYhibbcYbluCKqlsDPeSgULrY40UGr02NkTxbKwsdvlcvlYcVeyfcs4
-         95dIEZXe/xka65jwVCuTTII1b0ziFfolEXH2wbVANSA3t0RlZN1JTZAA/KRnzGAWgpy2
-         WPf8i/4j6RksMYaC0Dupvyjvx1oym4+6rdVIOBOtvqxvAVSeegSN8ue4IdieQiUfxV1P
-         NJU24yPhr/tutWA/bOI065dSBXAIdv/CkQCiSSEofLqIFF+KRZ2RPts3KyroTF+YwV0N
-         77iA==
-X-Gm-Message-State: AGi0PuZUS4A+cXrQ/oMtV/zRPZgaAfcQsFall4oberEZCgOygEXU+bHZ
-        Gb4nHaoCsQDb4SwBqVWoUaU=
-X-Google-Smtp-Source: APiQypIPnU/+DrVqHsBOAMuaMwGL5dXkm117kJM04jvdu64bzzV0k35KALXEyjji5Vk3p5vPMd/48A==
-X-Received: by 2002:a17:907:aab:: with SMTP id bz11mr2764943ejc.311.1585829540059;
-        Thu, 02 Apr 2020 05:12:20 -0700 (PDT)
+        bh=jDYxV67s8P5RgobB2MSQS+2SI1Pzl0kBmeEF5B8gAR8=;
+        b=PE37ke8ZVURBoxSDxMAo6zXrKAImeUaYXHRlioX03GLX7jBEKufy+6cjS3ExY1asIp
+         qMpEHKXSIK+v5knjf9NC35SV3BgvM1qF1eQ+lA2rp9eXFL3typDCPfhhBh3OvCLoMsme
+         MZT+PzA/uE8smE8g5DN47gkgzMANPl0f8xypalSXq3FSbeInFvKaiFcBWx1Gs5kAdU8B
+         aOE6XSAqj50UGj3czUzYrB3sJzk1AmcLrqdL9/ZMcPxzl+pwMF2yunl0EA/WVziDr/be
+         i0SNVKmUUa07C/iE6butE/2b5nh87ynrzcadgpNGSLYKkzTT1XLNGe7yJ8n9qcq4Lntf
+         9VQQ==
+X-Gm-Message-State: AGi0PuahOHLxe67Qafcu0fQ6Xz5ntHsKSYHkTrHFFXSn67mNSqbQ9Qat
+        gs24Jzl6xPFrL8jxdwa1KlA=
+X-Google-Smtp-Source: APiQypJWUSMKw1fpV8OosLT3iblRQBPuFwagUnBBdYDxqBWaoTGAjxGCq5AJ2rX4sedeCqmrLf0Faw==
+X-Received: by 2002:a50:d987:: with SMTP id w7mr2501574edj.276.1585829527306;
+        Thu, 02 Apr 2020 05:12:07 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host250-251-dynamic.250-95-r.retail.telecomitalia.it. [95.250.251.250])
-        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.12.17
+        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.12.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 05:12:18 -0700 (PDT)
+        Thu, 02 Apr 2020 05:12:06 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Andy Gross <agross@kernel.org>
-Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -71,9 +71,9 @@ Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 10/10] PCIe: qcom: add Force GEN1 support
-Date:   Thu,  2 Apr 2020 14:11:47 +0200
-Message-Id: <20200402121148.1767-11-ansuelsmth@gmail.com>
+Subject: [PATCH v2 05/10] PCIe: qcom: add missing reset for ipq806x
+Date:   Thu,  2 Apr 2020 14:11:42 +0200
+Message-Id: <20200402121148.1767-6-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200402121148.1767-1-ansuelsmth@gmail.com>
 References: <20200402121148.1767-1-ansuelsmth@gmail.com>
@@ -84,73 +84,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sham Muthayyan <smuthayy@codeaurora.org>
+Add missing ext reset used by ipq806x SoC in PCIe qcom driver.
 
-Add Force GEN1 support needed in some ipq806x board
-that needs to limit some pcie line to gen1 for some
-hardware limitation.
-This is set by the max-link-speed dts entry and needed
-by some soc based on ipq806x. (for example Netgear R7800
-router)
-
+Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
 Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 8047ac7dc8c7..2212e9498b91 100644
+index 596731b54728..211a1aa7d0f1 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -27,6 +27,7 @@
- #include <linux/slab.h>
- #include <linux/types.h>
- 
-+#include "../../pci.h"
- #include "pcie-designware.h"
- 
- #define PCIE20_PARF_SYS_CTRL			0x00
-@@ -99,6 +100,8 @@
- #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
- #define SLV_ADDR_SPACE_SZ			0x10000000
- 
-+#define PCIE20_LNK_CONTROL2_LINK_STATUS2        0xA0
-+
- #define DEVICE_TYPE_RC				0x4
- 
- #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
-@@ -199,6 +202,7 @@ struct qcom_pcie {
- 	struct phy *phy;
- 	struct gpio_desc *reset;
- 	const struct qcom_pcie_ops *ops;
-+	bool force_gen1;
+@@ -95,6 +95,7 @@ struct qcom_pcie_resources_2_1_0 {
+ 	struct reset_control *ahb_reset;
+ 	struct reset_control *por_reset;
+ 	struct reset_control *phy_reset;
++	struct reset_control *ext_reset;
+ 	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
  };
  
- #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-@@ -441,6 +445,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+@@ -272,6 +273,10 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+ 	if (IS_ERR(res->por_reset))
+ 		return PTR_ERR(res->por_reset);
  
- 	/* wait for clock acquisition */
- 	usleep_range(1000, 1500);
-+	if (pcie->force_gen1) {
-+		writel_relaxed((readl_relaxed(
-+		  pcie->pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2) | 1),
-+		  pcie->pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
-+	}
- 
- 
- 	/* Set the Max TLP size to 2K, instead of using default of 4K */
-@@ -1440,6 +1449,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_pm_runtime_put;
++	res->ext_reset = devm_reset_control_get_exclusive(dev, "ext");
++	if (IS_ERR(res->ext_reset))
++		return PTR_ERR(res->ext_reset);
++
+ 	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+ 	return PTR_ERR_OR_ZERO(res->phy_reset);
+ }
+@@ -285,6 +290,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ 	reset_control_assert(res->axi_reset);
+ 	reset_control_assert(res->ahb_reset);
+ 	reset_control_assert(res->por_reset);
++	reset_control_assert(res->ext_reset);
+ 	reset_control_assert(res->phy_reset);
+ 	clk_disable_unprepare(res->iface_clk);
+ 	clk_disable_unprepare(res->core_clk);
+@@ -343,6 +349,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		goto err_deassert_ahb;
  	}
  
-+	ret = of_pci_get_max_link_speed(pdev->dev.of_node);
-+	if (ret == 1)
-+		pcie->force_gen1 = true;
++	ret = reset_control_deassert(res->ext_reset);
++	if (ret) {
++		dev_err(dev, "cannot assert ext reset\n");
++		goto err_deassert_ahb;
++	}
 +
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
- 	pcie->parf = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(pcie->parf)) {
+ 	/* enable PCIe clocks and resets */
+ 	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+ 	val &= ~BIT(0);
 -- 
 2.25.1
 
