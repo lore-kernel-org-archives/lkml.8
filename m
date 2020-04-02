@@ -2,193 +2,110 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D1DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C27C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA242078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA94F2078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:11:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ODoixDK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387649AbgDBHLK (ORCPT
+        id S2387660AbgDBHLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:11:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35598 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726743AbgDBHLK (ORCPT
+        Thu, 2 Apr 2020 03:11:14 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11465 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbgDBHLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:11:10 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 032746Pw066864;
-        Thu, 2 Apr 2020 03:10:37 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 304hjb23qw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 03:10:37 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03274gPF070006;
-        Thu, 2 Apr 2020 03:10:37 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 304hjb23q3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 03:10:37 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03276am0025431;
-        Thu, 2 Apr 2020 07:10:35 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma04wdc.us.ibm.com with ESMTP id 301x76y1v7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 07:10:35 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0327AY6n60621110
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Apr 2020 07:10:34 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2BC4C136059;
-        Thu,  2 Apr 2020 07:10:34 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60556136051;
-        Thu,  2 Apr 2020 07:10:33 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Apr 2020 07:10:33 +0000 (GMT)
-Subject: [PATCH v10 03/14] powerpc/vas: Alloc and setup IRQ and trigger
- port address
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, ajd@linux.ibm.com,
-        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
-        oohall@gmail.com, clg@kaod.org, sukadev@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, herbert@gondor.apana.org.au
-In-Reply-To: <1585810846.2275.23.camel@hbabu-laptop>
-References: <1585810846.2275.23.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Thu, 02 Apr 2020 00:10:31 -0700
-Message-ID: <1585811431.2275.39.camel@hbabu-laptop>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
+        Thu, 2 Apr 2020 03:11:12 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8590020000>; Thu, 02 Apr 2020 00:10:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 02 Apr 2020 00:11:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 02 Apr 2020 00:11:12 -0700
+Received: from [10.26.72.253] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Apr
+ 2020 07:11:09 +0000
+Subject: Re: [PATCH 5.6 00/10] 5.6.2-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200401161413.974936041@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a78aab3d-2d00-dd1b-24e0-67db41898349@nvidia.com>
+Date:   Thu, 2 Apr 2020 08:11:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200401161413.974936041@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- suspectscore=1 adultscore=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
- malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004020060
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585811458; bh=eIOryZ4ro9rfx5cmOieshXiTSixFL6vtStiz6x4AoWk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ODoixDK23SEa/YEAe4n/ZgRH16Ye4VcK0KXZOd6uGb/yP4yBsUtClG6WR/yT72dbd
+         pfSM5D+EzI6NNTsgrKKzK8DVhnL/zMwCURIQR3j5dtbRyhLk56daCDIdrle/i3wr6Q
+         zaSMHCDFGZevGSHHFoQqpegs+dVdKpnVvaLRxN19+aURTM685Izze+8tGjVnJlZxIR
+         8iLwSdKikaS4wBDJmIC89I+z/gQaWp9GnKAKYQwQN5rO4uhpt13TB98pGNDovVR+6r
+         Kue4BV0nxnzE/p3hU0pyJi6iPItFWaULgLIgvrUX0FMoTlxQABouOIkzWR0X0dMq4H
+         wCtpxd4a9uy2w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Allocate a xive irq on each chip with a vas instance. The NX coprocessor
-raises a host CPU interrupt via vas if it encounters page fault on user
-space request buffer. Subsequent patches register the trigger port with
-the NX coprocessor, and create a vas fault handler for this interrupt
-mapping.
+On 01/04/2020 17:17, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.2 release.
+> There are 10 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.2-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: Haren Myneni <haren@linux.ibm.com>
----
- arch/powerpc/platforms/powernv/vas.c | 44 +++++++++++++++++++++++++++++++-----
- arch/powerpc/platforms/powernv/vas.h |  2 ++
- 2 files changed, 40 insertions(+), 6 deletions(-)
+All tests are passing for Tegra ...
 
-diff --git a/arch/powerpc/platforms/powernv/vas.c b/arch/powerpc/platforms/powernv/vas.c
-index ed9cc6d..3303cfe 100644
---- a/arch/powerpc/platforms/powernv/vas.c
-+++ b/arch/powerpc/platforms/powernv/vas.c
-@@ -15,6 +15,7 @@
- #include <linux/of_address.h>
- #include <linux/of.h>
- #include <asm/prom.h>
-+#include <asm/xive.h>
- 
- #include "vas.h"
- 
-@@ -25,10 +26,12 @@
- 
- static int init_vas_instance(struct platform_device *pdev)
- {
--	int rc, cpu, vasid;
--	struct resource *res;
--	struct vas_instance *vinst;
- 	struct device_node *dn = pdev->dev.of_node;
-+	struct vas_instance *vinst;
-+	struct xive_irq_data *xd;
-+	uint32_t chipid, hwirq;
-+	struct resource *res;
-+	int rc, cpu, vasid;
- 
- 	rc = of_property_read_u32(dn, "ibm,vas-id", &vasid);
- 	if (rc) {
-@@ -36,6 +39,12 @@ static int init_vas_instance(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	rc = of_property_read_u32(dn, "ibm,chip-id", &chipid);
-+	if (rc) {
-+		pr_err("No ibm,chip-id property for %s?\n", pdev->name);
-+		return -ENODEV;
-+	}
-+
- 	if (pdev->num_resources != 4) {
- 		pr_err("Unexpected DT configuration for [%s, %d]\n",
- 				pdev->name, vasid);
-@@ -69,9 +78,32 @@ static int init_vas_instance(struct platform_device *pdev)
- 
- 	vinst->paste_win_id_shift = 63 - res->end;
- 
--	pr_devel("Initialized instance [%s, %d], paste_base 0x%llx, "
--			"paste_win_id_shift 0x%llx\n", pdev->name, vasid,
--			vinst->paste_base_addr, vinst->paste_win_id_shift);
-+	hwirq = xive_native_alloc_irq_on_chip(chipid);
-+	if (!hwirq) {
-+		pr_err("Inst%d: Unable to allocate global irq for chip %d\n",
-+				vinst->vas_id, chipid);
-+		return -ENOENT;
-+	}
-+
-+	vinst->virq = irq_create_mapping(NULL, hwirq);
-+	if (!vinst->virq) {
-+		pr_err("Inst%d: Unable to map global irq %d\n",
-+				vinst->vas_id, hwirq);
-+		return -EINVAL;
-+	}
-+
-+	xd = irq_get_handler_data(vinst->virq);
-+	if (!xd) {
-+		pr_err("Inst%d: Invalid virq %d\n",
-+				vinst->vas_id, vinst->virq);
-+		return -EINVAL;
-+	}
-+
-+	vinst->irq_port = xd->trig_page;
-+	pr_devel("Initialized instance [%s, %d] paste_base 0x%llx paste_win_id_shift 0x%llx IRQ %d Port 0x%llx\n",
-+			pdev->name, vasid, vinst->paste_base_addr,
-+			vinst->paste_win_id_shift, vinst->virq,
-+			vinst->irq_port);
- 
- 	for_each_possible_cpu(cpu) {
- 		if (cpu_to_chip_id(cpu) == of_get_ibm_chip_id(dn))
-diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
-index 5574aec..598608b 100644
---- a/arch/powerpc/platforms/powernv/vas.h
-+++ b/arch/powerpc/platforms/powernv/vas.h
-@@ -313,6 +313,8 @@ struct vas_instance {
- 	u64 paste_base_addr;
- 	u64 paste_win_id_shift;
- 
-+	u64 irq_port;
-+	int virq;
- 	struct mutex mutex;
- 	struct vas_window *rxwin[VAS_COP_TYPE_MAX];
- 	struct vas_window *windows[VAS_WINDOWS_PER_CHIP];
+Test results for stable-v5.6:
+    13 builds:	13 pass, 0 fail
+    24 boots:	24 pass, 0 fail
+    40 tests:	40 pass, 0 fail
+
+Linux version:	5.6.2-rc1-g6c8d51f98078
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-1.8.3.1
-
-
-
+nvpublic
