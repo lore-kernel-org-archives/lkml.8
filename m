@@ -6,100 +6,189 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8C8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0560DC2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4772078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91B1206D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388023AbgDBLmQ (ORCPT
+        id S2388125AbgDBLpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:42:16 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51757 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbgDBLmP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:42:15 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jJyEY-0001jv-7O; Thu, 02 Apr 2020 13:42:06 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jJyES-0005T9-L6; Thu, 02 Apr 2020 13:42:00 +0200
-Date:   Thu, 2 Apr 2020 13:42:00 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Christian Herber <christian.herber@nxp.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Marek Vasut <marex@denx.de>, netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP
- TJA11xx
-Message-ID: <20200402114200.GA15570@pengutronix.de>
-References: <AM0PR04MB70413A974A2152D27CAADFAC86F00@AM0PR04MB7041.eurprd04.prod.outlook.com>
- <20200323151423.GA32387@lunn.ch>
+        Thu, 2 Apr 2020 07:45:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:41878 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388086AbgDBLpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:45:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D98C1045;
+        Thu,  2 Apr 2020 04:45:38 -0700 (PDT)
+Received: from [10.57.59.199] (unknown [10.57.59.199])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 209B43F68F;
+        Thu,  2 Apr 2020 04:45:36 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] soc: rockchip: Register a soc_device to retrieve
+ revision
+To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@collabora.com>
+Cc:     sboyd@kernel.org, mturquette@baylibre.com,
+        linux-kernel@vger.kernel.org, kever.yang@rock-chips.com,
+        linux-rockchip@lists.infradead.org, geert@linux-m68k.org,
+        kernel@collabora.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200401153513.423683-1-mylene.josserand@collabora.com>
+ <20200401153513.423683-2-mylene.josserand@collabora.com>
+ <5143930.cPWVAAQKI9@diego>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <4844d3ba-87fa-51f4-0a56-3131e390589a@arm.com>
+Date:   Thu, 2 Apr 2020 12:45:34 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200323151423.GA32387@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 13:37:53 up 204 days, 25 min, 468 users,  load average: 3.36, 6.87,
- 10.61
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <5143930.cPWVAAQKI9@diego>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 04:14:23PM +0100, Andrew Lunn wrote:
-> > Yes, it is one device with two address. This is if you call the entire IC a device. If you look at it from a PHY perspective, it is two devices with 1 address.
-> > If you just look at it as a single device, it gets difficult to add PHY specific properties in the future, e.g. master/slave selection.
+On 2020-04-01 5:34 pm, Heiko Stübner wrote:
+[...]
+> The possible problem I see here is clocking and power-domain of the hdmi
+> controller in corner-cases. In the past we already had a lot of fun with
+> kexec, which also indicates that people actually use kexec productively.
 > 
-> > In my opinion its important to have some kind of container for the
-> > entire IC, but likewise for the individual PHYs.
-> 
-> Yes, we need some sort of representation of two devices.
-> 
-> Logically, the two PHYs are on the same MDIO bus, so you could have
-> two nodes on the main bus.
-> 
-> Or you consider the secondary PHY as being on an internal MDIO bus
-> which is transparently bridged to the main bus. This is what was
-> proposed in the last patchset.
-> 
-> Because this bridge is transparent, the rest of the PHY/MDIO framework
-> has no idea about it. So i prefer that we keep with two PHY nodes on
-> the main bus. But i still think we need the master PHY to register the
-> secondary PHY, due to the missing PHY ID, and the other constrains
-> like resets which the master PHY has to handle.
+> So while all clocks are ungated and all power-domains are powered on first
+> boot, on a system without graphics the pclk+power-domain could be off when
+> doing a kexec into a second kernel, which then would probably hang here.
 
-Yes, this is the way how current patches are implemented.
+Just to be that guy, how about kdump, where entry to the second kernel 
+is predicated on there *not* being a nice clean shutdown? ;)
 
-Should dt-binding documentation and PHY changes go via David's tree
-upstream?  If nobody has strong opinion against it, @David can you
-please take them.
+IMO relying on any particular bootloader behaviour in the kernel is 
+fairly fragile - U-Boot has a lot more latitude in assuming it's running 
+straight out of reset than Linux does. If we're not going to trust the 
+DT to correctly describe the SoC variant in the first place, then it's 
+somewhat questionable whether we should trust it for indirectly 
+identifying the SoC variant either - it would seem a lot more robust to 
+just map the known physical addresses to run a canned sequence of 
+register writes that puts things in a known-good state (on the basis 
+that this has to run before the 'real' drivers for those things are up, 
+and thus can't interfere with them).
 
-Regards,
-Oleksij & Marc
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Robin.
+
+> Of course with the hdmi-pclk being sourced from hclk_vio we run into a
+> chicken-egg-problem, as we need pclk_hdmi_ctrl to register hclk_vio at all.
+> 
+> So I guess one way out of this could be to
+> - amend rk3288_clk_shutdown() to also ungate the hdmi-pclk on shutdown
+> - add a shutdown mechanism to the power-domain driver so that it can
+>    enable PD_VIO on shutdown
+> 
+>> +
+>> +	if (readl_relaxed(hdmi_base + RK3288_HDMI_REV_REG)
+>> +	    == RK3288W_HDMI_REV)
+> 
+> nit: a nicer look would be something like
+> 	val = readl_relaxed(hdmi_base + RK3288_HDMI_REV_REG);
+> 	if (val == RK3288W_HDMI_REV)
+> 
+>> +		revision = RK3288_SOC_REV_RK3288W;
+>> +	else
+>> +		revision = RK3288_SOC_REV_RK3288;
+>> +
+>> +	iounmap(hdmi_base);
+>> +
+>> +	return revision;
+>> +}
+>> +
+>> +static const char *rk3288_socinfo_revision(u32 rev)
+>> +{
+>> +	const char *soc_rev;
+>> +
+>> +	switch (rev) {
+>> +	case RK3288_SOC_REV_RK3288:
+>> +		soc_rev = "RK3288";
+>> +		break;
+>> +
+>> +	case RK3288_SOC_REV_RK3288W:
+>> +		soc_rev = "RK3288w";
+> 
+> can we maybe use lower-case letters for all here?
+> 
+>> +		break;
+>> +
+>> +	case RK3288_SOC_REV_NOT_DETECT:
+>> +		soc_rev = "";
+>> +		break;
+>> +
+>> +	default:
+>> +		soc_rev = "unknown";
+>> +		break;
+>> +	}
+>> +
+>> +	return kstrdup_const(soc_rev, GFP_KERNEL);
+>> +}
+>> +
+>> +static const struct of_device_id rk3288_soc_match[] = {
+>> +	{ .compatible = "rockchip,rk3288", },
+>> +	{ }
+>> +};
+>> +
+>> +static int __init rk3288_soc_init(void)
+> 
+> as noted at the top, I'd really like to see this more generalized so that
+> other socs can just hook in there with a revision callback in a
+> rockchip_soc_data struct.
+> 
+> 
+>> +{
+>> +	struct soc_device_attribute *soc_dev_attr;
+>> +	struct soc_device *soc_dev;
+>> +	struct device_node *np;
+>> +
+>> +	np = of_find_matching_node(NULL, rk3288_soc_match);
+>> +	if (!np)
+>> +		return -ENODEV;
+>> +
+>> +	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+>> +	if (!soc_dev_attr)
+>> +		return -ENOMEM;
+>> +
+>> +	soc_dev_attr->family = "Rockchip";
+>> +	soc_dev_attr->soc_id = "RK32xx";
+> 
+> nit: rk3288 instead of "32xx" please
+> 
+>> +
+>> +	np = of_find_node_by_path("/");
+>> +	of_property_read_string(np, "model", &soc_dev_attr->machine);
+>> +	of_node_put(np);
+>> +
+>> +	soc_dev_attr->revision = rk3288_socinfo_revision(rk3288_revision());
+>> +
+>> +	soc_dev = soc_device_register(soc_dev_attr);
+>> +	if (IS_ERR(soc_dev)) {
+>> +		kfree_const(soc_dev_attr->revision);
+>> +		kfree_const(soc_dev_attr->soc_id);
+>> +		kfree(soc_dev_attr);
+>> +		return PTR_ERR(soc_dev);
+>> +	}
+>> +
+>> +	dev_info(soc_device_to_device(soc_dev), "Rockchip %s %s detected\n",
+>> +		 soc_dev_attr->soc_id, soc_dev_attr->revision);
+> 
+> nit: dev_dbg should be enough, that information doesn't really matter for
+> most people, as it's only relevant to clock internals.
+> 
+> 
+> Heiko
+> 
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
