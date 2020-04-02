@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA74EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67742C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B012920757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459C520787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:59:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389647AbgDBP7u (ORCPT
+        id S2389537AbgDBP7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 2 Apr 2020 11:59:50 -0400
-Received: from [103.51.140.103] ([103.51.140.103]:38114 "EHLO
+Received: from [103.51.140.103] ([103.51.140.103]:38112 "EHLO
         E6440.gar.corp.intel.com" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389321AbgDBP7u (ORCPT
+        by vger.kernel.org with ESMTP id S2389264AbgDBP7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Apr 2020 11:59:50 -0400
-Received: from E6440.gar.corp.intel.com (localhost [127.0.0.1])
-        by E6440.gar.corp.intel.com (Postfix) with ESMTP id 53F40C0195;
-        Thu,  2 Apr 2020 21:42:44 +0800 (CST)
+Received: from E6440.amr.corp.intel.com (localhost [127.0.0.1])
+        by E6440.gar.corp.intel.com (Postfix) with ESMTP id C091BC0369;
+        Thu,  2 Apr 2020 19:07:10 +0800 (CST)
 From:   Harry Pan <harry.pan@intel.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
@@ -36,8 +36,8 @@ Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
 Subject: [PATCH] perf/x86/cstate: Add Jasper Lake CPU support
-Date:   Thu,  2 Apr 2020 21:42:42 +0800
-Message-Id: <20200402214239.1.Ic02e891daac41303aed1f2fc6c64f6110edd27bd@changeid>
+Date:   Thu,  2 Apr 2020 19:07:09 +0800
+Message-Id: <20200402190658.1.Ic02e891daac41303aed1f2fc6c64f6110edd27bd@changeid>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
