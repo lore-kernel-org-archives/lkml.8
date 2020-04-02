@@ -2,199 +2,87 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C319C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 612BEC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D27220737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D58F20787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585846277;
+	bh=OWoWofA5/lIsAhLWpLfJf9L99GPd7+sOKnFrWNGUgf4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Yn4uH8/8yZWUjLeIBRHDALaI7bUyheWQOBHQm8M5KO2S3dVwrpdAg1M9U9m1cKj8i
+	 0kaqGzE5/RaT7ao9ItIbgWdpLsGap5KlQrzQzVmiUgNMiVKTP8opg4PNdWiYlyfW2A
+	 3cqQAIAwvNilSxNSrYDj6zBpL49hkI97b/t3bkWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389487AbgDBQtW (ORCPT
+        id S2389555AbgDBQvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:49:22 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28778 "EHLO mga01.intel.com"
+        Thu, 2 Apr 2020 12:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgDBQtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:49:22 -0400
-IronPort-SDR: eIVr02pNlmMzNSQ6in7g0BMWEXHV61UMjus8zwZxzAYnrnuj+YadakHeMqzpnWxv3+V0onMW0l
- fv/ZVAeNNYRg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 09:49:21 -0700
-IronPort-SDR: PObNNV+joiE4Hjh+BJV7W7tWW6WiyLxup8D33nqlwf8vo1IUHkxPMzfc9Kv21jRJQBh+ptXRWa
- s6GXdk098uOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="284841870"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.134.85.228]) ([10.134.85.228])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Apr 2020 09:49:19 -0700
-Subject: Re: [PATCH v2 1/2] dmaengine: ioat: fixing chunk sizing macros
- dependency
-To:     "Ravich, Leonid" <Leonid.Ravich@dell.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Cc:     "lravich@gmail.com" <lravich@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Zavras, Alexios" <alexios.zavras@intel.com>,
-        "Barabash, Alexander" <Alexander.Barabash@dell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200402092725.15121-2-leonid.ravich@dell.com>
- <20200402163356.9029-1-leonid.ravich@dell.com>
- <accfd50c-cf70-1145-6776-e4030e7c37fc@intel.com>
- <DM6PR19MB26827AA2885E8240370A4B1098C60@DM6PR19MB2682.namprd19.prod.outlook.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <dd2ab4e9-2451-06fc-39c2-acd2daf52d1a@intel.com>
-Date:   Thu, 2 Apr 2020 09:49:19 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727412AbgDBQvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 12:51:15 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D553F20737;
+        Thu,  2 Apr 2020 16:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585846275;
+        bh=OWoWofA5/lIsAhLWpLfJf9L99GPd7+sOKnFrWNGUgf4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=aGV2qaGXe0XQ7hFCmEpdhRMZgc9etUQM5MLi6Cjv6BoFazdvHnt6gqt6H0idTEBzr
+         j04OUfR59Qml010D8WdYOTwYJ1GwhbukmDoIskcWGmTlaP39QpnZdSoK99RgACNRlA
+         DT9wWTJHC90gn2gGWvjbS0iyINuej+70gxzY24HA=
+Subject: Re: [PATCH 5.4 00/27] 5.4.30-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200401161414.352722470@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <9c52baad-0be9-aa74-8f30-25201d15db2b@kernel.org>
+Date:   Thu, 2 Apr 2020 10:51:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <DM6PR19MB26827AA2885E8240370A4B1098C60@DM6PR19MB2682.namprd19.prod.outlook.com>
+In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/1/20 10:17 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.30 release.
+> There are 27 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.30-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
+Compiled and booted on my test system. No dmesg regressions.
 
-On 4/2/2020 9:46 AM, Ravich, Leonid wrote:
-> Sorry Dave ,
-> sure was tested on Intel Sky Lake-E CBDMA
-
-Thanks Leonid. Acked.
-
-> 
-> -----Original Message-----
-> From: Dave Jiang <dave.jiang@intel.com>
-> Sent: Thursday, April 2, 2020 7:43 PM
-> To: Ravich, Leonid; dmaengine@vger.kernel.org
-> Cc: lravich@gmail.com; Vinod Koul; Williams, Dan J; Greg Kroah-Hartman; Zavras, Alexios; Barabash, Alexander; Thomas Gleixner; Kate Stewart; Jilayne Lovejoy; Logan Gunthorpe; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 1/2] dmaengine: ioat: fixing chunk sizing macros dependency
-> 
-> 
-> [EXTERNAL EMAIL]
-> 
-> 
-> 
-> On 4/2/2020 9:33 AM, leonid.ravich@dell.com wrote:
->> From: Leonid Ravich <Leonid.Ravich@emc.com>
->>
->> prepare for changing alloc size.
->>
->> Acked-by: Dave Jiang <dave.jiang@intel.com>
->> Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
-> 
-> Hi Leonid, I haven't actually acked this patch yet, pending your answer on if this has been tested on hardware. Thanks.
-> 
->> ---
->>    drivers/dma/ioat/dma.c  | 14 ++++++++------
->>    drivers/dma/ioat/dma.h  | 10 ++++++----
->>    drivers/dma/ioat/init.c |  2 +-
->>    3 files changed, 15 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c index
->> 18c011e..1e0e6c1 100644
->> --- a/drivers/dma/ioat/dma.c
->> +++ b/drivers/dma/ioat/dma.c
->> @@ -332,8 +332,8 @@ static dma_cookie_t ioat_tx_submit_unlock(struct dma_async_tx_descriptor *tx)
->>    	u8 *pos;
->>    	off_t offs;
->>    
->> -	chunk = idx / IOAT_DESCS_PER_2M;
->> -	idx &= (IOAT_DESCS_PER_2M - 1);
->> +	chunk = idx / IOAT_DESCS_PER_CHUNK;
->> +	idx &= (IOAT_DESCS_PER_CHUNK - 1);
->>    	offs = idx * IOAT_DESC_SZ;
->>    	pos = (u8 *)ioat_chan->descs[chunk].virt + offs;
->>    	phys = ioat_chan->descs[chunk].hw + offs; @@ -370,7 +370,8 @@
->> struct ioat_ring_ent **
->>    	if (!ring)
->>    		return NULL;
->>    
->> -	ioat_chan->desc_chunks = chunks = (total_descs * IOAT_DESC_SZ) / SZ_2M;
->> +	chunks = (total_descs * IOAT_DESC_SZ) / IOAT_CHUNK_SIZE;
->> +	ioat_chan->desc_chunks = chunks;
->>    
->>    	for (i = 0; i < chunks; i++) {
->>    		struct ioat_descs *descs = &ioat_chan->descs[i]; @@ -382,8 +383,9
->> @@ struct ioat_ring_ent **
->>    
->>    			for (idx = 0; idx < i; idx++) {
->>    				descs = &ioat_chan->descs[idx];
->> -				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
->> -						  descs->virt, descs->hw);
->> +				dma_free_coherent(to_dev(ioat_chan),
->> +						IOAT_CHUNK_SIZE,
->> +						descs->virt, descs->hw);
->>    				descs->virt = NULL;
->>    				descs->hw = 0;
->>    			}
->> @@ -404,7 +406,7 @@ struct ioat_ring_ent **
->>    
->>    			for (idx = 0; idx < ioat_chan->desc_chunks; idx++) {
->>    				dma_free_coherent(to_dev(ioat_chan),
->> -						  SZ_2M,
->> +						  IOAT_CHUNK_SIZE,
->>    						  ioat_chan->descs[idx].virt,
->>    						  ioat_chan->descs[idx].hw);
->>    				ioat_chan->descs[idx].virt = NULL; diff --git
->> a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h index
->> b8e8e0b..5216c6b 100644
->> --- a/drivers/dma/ioat/dma.h
->> +++ b/drivers/dma/ioat/dma.h
->> @@ -81,6 +81,11 @@ struct ioatdma_device {
->>    	u32 msixpba;
->>    };
->>    
->> +#define IOAT_MAX_ORDER 16
->> +#define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER) #define IOAT_CHUNK_SIZE
->> +(SZ_2M) #define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE / IOAT_DESC_SZ)
->> +
->>    struct ioat_descs {
->>    	void *virt;
->>    	dma_addr_t hw;
->> @@ -128,7 +133,7 @@ struct ioatdma_chan {
->>    	u16 produce;
->>    	struct ioat_ring_ent **ring;
->>    	spinlock_t prep_lock;
->> -	struct ioat_descs descs[2];
->> +	struct ioat_descs descs[IOAT_MAX_DESCS / IOAT_DESCS_PER_CHUNK];
->>    	int desc_chunks;
->>    	int intr_coalesce;
->>    	int prev_intr_coalesce;
->> @@ -301,9 +306,6 @@ static inline bool is_ioat_bug(unsigned long err)
->>    	return !!err;
->>    }
->>    
->> -#define IOAT_MAX_ORDER 16
->> -#define IOAT_MAX_DESCS 65536
->> -#define IOAT_DESCS_PER_2M 32768
->>    
->>    static inline u32 ioat_ring_size(struct ioatdma_chan *ioat_chan)
->>    {
->> diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c index
->> 60e9afb..58d1356 100644
->> --- a/drivers/dma/ioat/init.c
->> +++ b/drivers/dma/ioat/init.c
->> @@ -651,7 +651,7 @@ static void ioat_free_chan_resources(struct dma_chan *c)
->>    	}
->>    
->>    	for (i = 0; i < ioat_chan->desc_chunks; i++) {
->> -		dma_free_coherent(to_dev(ioat_chan), SZ_2M,
->> +		dma_free_coherent(to_dev(ioat_chan), IOAT_CHUNK_SIZE,
->>    				  ioat_chan->descs[i].virt,
->>    				  ioat_chan->descs[i].hw);
->>    		ioat_chan->descs[i].virt = NULL;
->>
+thanks,
+-- Shuah
