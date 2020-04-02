@@ -2,98 +2,73 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7086EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8420EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE7120757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="oZTOjt/q"
+	by mail.kernel.org (Postfix) with ESMTP id 596C7206D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388243AbgDBLzS (ORCPT
+        id S2388147AbgDBL6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:55:18 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:2730 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387722AbgDBLy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:54:58 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tM1r1CxvzqB;
-        Thu,  2 Apr 2020 13:54:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585828496; bh=+s4mWBHcT/yU7fnAxvETRm8Us7IU85To0TkAkXM8nKo=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=oZTOjt/qsWu+92DRj2VN61RxUCSurDrb27f7n19fTpulzeiwKEQQUZwANbvN8m0Hq
-         WKZ3s2NpA6asVVTQT3uU61K/T5xZRrSCE0w3Q30O+1wDMTkFl9yHT/PLhYPeXuv25E
-         mqcrITJ/EUOpMWwphdW0iJQlei8G/EpBH0+ZF/rh7pcRXI+STS+TZA+x7jTAIoU9Q/
-         q9CMu4bg+juzXqv6Ol0dR0PakA6Jyd3IRRlahx6saQfvVlMqduo2JtzY+UfezcuIbv
-         Dij8fIa9BYAkroQkj3bkyoIcwYGn+8uLo40tAIjbU608NxsUftCP794mkwERgnLbIe
-         fnFz5QXJu5f2Q==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 13:54:55 +0200
-Message-Id: <eb105eedaa387ced14bb687e38d3aa33d4fcf70a.1585827904.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 3/7] mmc: sdhci: fix SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
+        Thu, 2 Apr 2020 07:58:54 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:4025 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387985AbgDBL6y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:58:54 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee95e85d353400-5e391; Thu, 02 Apr 2020 19:58:13 +0800 (CST)
+X-RM-TRANSID: 2ee95e85d353400-5e391
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35e85d352867-4b2fc;
+        Thu, 02 Apr 2020 19:58:12 +0800 (CST)
+X-RM-TRANSID: 2ee35e85d352867-4b2fc
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     will@kernel.org, mark.rutland@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] perf:Avoid duplicate printouts
+Date:   Thu,  2 Apr 2020 19:59:40 +0800
+Message-Id: <20200402115940.4928-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Suneel Garapati <suneel.garapati@xilinx.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kevin Liu <kliu5@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix returned clock rate for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN case.
+Because platform_get_irq() has dev_err(),so this place
+should be removed.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Cc: stable@kernel.vger.org
-Fixes: d1955c3a9a1d ("mmc: sdhci: add quirk SDHCI_QUIRK_CLOCK_DIV_ZERO_BROKEN")
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 ---
- drivers/mmc/host/sdhci.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/perf/arm_dsu_pmu.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index b2dc4f1cfa5c..a043bf5e3565 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1807,9 +1807,12 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
+index 70968c8c0..518d0603e 100644
+--- a/drivers/perf/arm_dsu_pmu.c
++++ b/drivers/perf/arm_dsu_pmu.c
+@@ -690,10 +690,8 @@ static int dsu_pmu_device_probe(struct platform_device *pdev)
+ 	}
  
- 		if (!host->clk_mul || switch_base_clk) {
- 			/* Version 3.00 divisors must be a multiple of 2. */
--			if (host->max_clk <= clock)
-+			if (host->max_clk <= clock) {
- 				div = 1;
--			else {
-+				if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
-+					&& host->max_clk <= 25000000)
-+					div = 2;
-+			} else {
- 				for (div = 2; div < SDHCI_MAX_DIV_SPEC_300;
- 				     div += 2) {
- 					if ((host->max_clk / div) <= clock)
-@@ -1818,9 +1821,6 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
- 			}
- 			real_div = div;
- 			div >>= 1;
--			if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
--				&& !div && host->max_clk <= 25000000)
--				div = 1;
- 		}
- 	} else {
- 		/* Version 2.00 divisors must be a power of 2. */
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_warn(&pdev->dev, "Failed to find IRQ\n");
++	if (irq < 0)
+ 		return -EINVAL;
+-	}
+ 
+ 	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s_%d",
+ 				PMUNAME, atomic_inc_return(&pmu_idx));
 -- 
-2.20.1
+2.20.1.windows.1
+
+
 
