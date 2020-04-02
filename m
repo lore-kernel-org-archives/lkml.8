@@ -6,73 +6,95 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1505BC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1226C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF262072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10A42063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jqLjXF3t"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FBu4Z94X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389136AbgDBPKQ (ORCPT
+        id S2389068AbgDBPLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:10:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50006 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388960AbgDBPKP (ORCPT
+        Thu, 2 Apr 2020 11:11:34 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56816 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388910AbgDBPLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:10:15 -0400
+        Thu, 2 Apr 2020 11:11:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+Mc5VxCSGR+ubhm7i2F7LBlTvaw0U2gf84ze2KV8ksk=; b=jqLjXF3tryBZRU1qNEFnLPACgH
-        JJUS86PBhx7pCgipML92RZPuTpPYE1wBAQItbKLYVQ0nwO/Qc9By0XjkVONtwu1tOK801b/87Zs6b
-        kHsD3IooG1pb8lKmjpPnYrmtokCzK5dVMKIT5FShuZTQwSqSNqz4Tl4bkR7X9PyHvrZa5Rz3upoCx
-        V2zWVU3DpZ3KX2wOzoazENtezwpU4rtUoP8Sjb/crJe2+JihHbb1cxFN+h9XFd7uuTPbJXJXa/Bbq
-        jsiNdY/f51g0+/KSQ7ibDrmznxRk6dPDPXGs0tJ/fXqkSX+LSgU3O0fpJHoDNH+exeH3uv2w5hI3D
-        v7QnHmuA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK1Tt-0000xm-N8; Thu, 02 Apr 2020 15:10:09 +0000
-Date:   Thu, 2 Apr 2020 08:10:09 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] Deprecate NR_UNSTABLE_NFS, use NR_WRITEBACK
-Message-ID: <20200402151009.GA14130@infradead.org>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name>
- <87v9miydai.fsf@notabene.neil.brown.name>
- <87sghmyd8v.fsf@notabene.neil.brown.name>
- <87pncqyd7k.fsf@notabene.neil.brown.name>
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=4boUc8yqYKOgnT+886f3JGYhVM1rD+O9Z6mA5uBaoLY=; b=FBu4Z94X6s9X9Rr40z43GFuwAJ
+        SPD1rDakWUVAGDUNIgFUZi3CNVAD4SjEKXNphXyMuVdAhY2P4A7/Ep2/8ZTjEryzUONivzyslc6eP
+        LpIeEuT5jtW9GEZTNtjzz+zfjNbNeCJLX/wO6ihBWIWYzJVWBpLBV8Fv8Mt9XRjiq9Rq3lTkiuHyG
+        Scd07cl0YreITJdNh100Iym9bDRhHYvepIfxoY6qAkqZNbPDVZUL0wnJiyTegcax3JJBrOU8IiZ8e
+        tO/fZ6mlUou9nWk3JAwEDOWH5BKePwqkRFs0TAVV1tNcg9nTgYhZRpbiRpt4x9pgmGPtTh3V508ll
+        tEhEz5mQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jK1V2-0004Zo-UC; Thu, 02 Apr 2020 15:11:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4273E3010BC;
+        Thu,  2 Apr 2020 17:11:19 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E7C682B0DEBCD; Thu,  2 Apr 2020 17:11:18 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 17:11:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [patch 0/2] x86: Prevent Split-Lock-Detection wreckage on VMX
+ hypervisors
+Message-ID: <20200402151118.GK20713@hirez.programming.kicks-ass.net>
+References: <20200402123258.895628824@linutronix.de>
+ <alpine.DEB.2.21.2004020641470.7052@xps-7390>
+ <875zeinecr.fsf@nanos.tec.linutronix.de>
+ <D07135B9-576F-4232-8A1B-BEC5D26F35B8@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87pncqyd7k.fsf@notabene.neil.brown.name>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D07135B9-576F-4232-8A1B-BEC5D26F35B8@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 10:54:07AM +1100, NeilBrown wrote:
+On Thu, Apr 02, 2020 at 02:47:33PM +0000, Nadav Amit wrote:
+> > On Apr 2, 2020, at 7:37 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > 
+> > "Kenneth R. Crudup" <kenny@panix.com> writes:
+> > 
+> >> On Thu, 2 Apr 2020, Thomas Gleixner wrote:
+> >> 
+> >>> As Peter and myself don't have access to a SLD enabled machine, the
+> >>> KVM/VMX part is untested. The module scan part works.
+> >> 
+> >> I just applied both of these patches to my (Linus' tip) tree, and unfortunately
+> >> VMWare still hangs if split_lock_detect= is set to anything but "off".
+> >> 
+> >> Was there anything else I'd needed to do?
+> > 
+> > Hmm. Not really. Does dmesg show the warning when the VMWare module loads?
+> > Something like:
+> > 
+> >  x86/split lock detection: disabled due to VMLAUNCH in module: ….
 > 
-> After an NFS page has been written it is considered "unstable" until a
-> COMMIT request succeeds.  If the COMMIT fails, the page will be
-> re-written.
-> 
-> These "unstable" pages are currently accounted as "reclaimable",
-> either in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
-> 'reclaimable' count.  This might have made sense when sending the COMMIT
-> required a separate action by the VFS/MM (e.g. releasepage() used to
-> send a COMMIT).  However now that all writes generated by ->writepages()
-> will automatically be followed by a COMMIT, it makes more sense to
-> treat them as writeback pages.
-> 
-> So this page deprecates NR_UNSTABLE_NFS and accounts unstable pages in
-> NR_WRITEBACK and WB_WRITEBACK.
+> I ran an objdump on VMware workstation and indeed I do not see a
+> VMLAUNCH/VMRESUME. I do see however VMXON which should also be good for
+> detecting hypervisors. I will try to understand why VMLAUNCH is not there.
 
-Please remove it entirely if it isn't used any more.
+Let me send a version with VMXON detection added in as well.
