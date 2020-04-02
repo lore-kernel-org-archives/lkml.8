@@ -2,138 +2,147 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4FEC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34578C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C99E206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17AD2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wSRw9XzR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uUlpho8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390323AbgDBXyP (ORCPT
+        id S2390325AbgDBX5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:54:15 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37832 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390267AbgDBXyP (ORCPT
+        Thu, 2 Apr 2020 19:57:10 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43900 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390235AbgDBX5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 19:54:15 -0400
-Received: by mail-oi1-f195.google.com with SMTP id u20so4555315oic.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MkVjVANpcM96YTP/artLgGpoBzA7LQYeml3uEpxUsEQ=;
-        b=wSRw9XzRiBybQLd7br9k7afPC7Rj5x3o8UDf1DIiDxl26R2ISpzh28VA/aCw6AgQ3r
-         xuvnlxkR+knRDPbx3sXs2gVcudJLcu2lc1Tz4ewwZrR65itu6LgqK1YV+JQyJpR3WUXg
-         A/Mcg+H/AvqA+PHrZpQwWa1DkfSVVxvyQ/DN98Gv55vtWRBVia8xI7uYHHTD8QI2FpvG
-         zkB/KLVn6ElyebU/hCoWiC0P6lHPaxF5iRs4uOAjVk/lpGD1uuj3RRRSejuE9zrwoHtc
-         9DGavumf8OKF7RWI9+k656CDmhalsGx8Q64HSmbnNgL7fGfrFFrxaXm1FwUE8NiUz/DW
-         QKBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MkVjVANpcM96YTP/artLgGpoBzA7LQYeml3uEpxUsEQ=;
-        b=UeuUYm20TWCmePnf2lvqtDPOR591QfC4gAeDESziQkKjOZQeRJDSxLZvfvqT8uHYJk
-         HiM0dEcMCraZ5ui52uQPFCjw2I+O/YsfX1QdsaujqupwWcIokmzMMKNnZibXpeeO75uV
-         4RY6CnD2AVH523CxuRRLBgRpKWr9txEuyLju6n/5FOPVY08BqbPSXpqCWRXMRzrtd0d1
-         zzVUuMcRNWIAPYjnua8Rt+H85IobzlKxX3uIUWhIHnEvc43q7iGGKotBYaHdh8qlvoOk
-         mCbBfDujQRWO6N1e4kE954vDVMLqnYc1plFVNgfQpO1tH5qsjbnojtPmt+xP42j1XHqH
-         Z7Dg==
-X-Gm-Message-State: AGi0PuZMtz7IWEnHsF1eJLW8b8BMXI0V6OcwGMQR2eKihhsM9/layIRt
-        LdIX1xTI7+U9GZcfvk+hhvAH5KKWTmy8RCpm6CUakQ==
-X-Google-Smtp-Source: APiQypJ1ZSdBUd3//b0o+rdxCAtF34zyk2+np7OTHfHudJN4riuwjNAt1eydJ7G7VnJwzPwsibZMWSQvVjikVhy04CY=
-X-Received: by 2002:aca:5208:: with SMTP id g8mr1073389oib.169.1585871654146;
- Thu, 02 Apr 2020 16:54:14 -0700 (PDT)
+        Thu, 2 Apr 2020 19:57:09 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032NrkxL177890;
+        Thu, 2 Apr 2020 23:56:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Lkjj8e4/gu85bLAPJaAJv8bq0O6ffAUvmzCSEpub7TI=;
+ b=uUlpho8Cfd/ew+XXDJslFYIcoK5eAGAq8UMvpGl7Yk7T3Gf6Q9poazK7dvDBmpMZfljg
+ qLsZTd99vUD5pgSzsyNzzEQ3dnsY48NKksVRc6WRqjkmQdSQK1Cxp8mWKTl5hwqkpFh4
+ /zEZ5R5J31I9fK2AfAU7GbLerNSQReZkVVoTiKuwiPeD3fKnX91eWpKJN5urENyTlWSD
+ +F/D3qb/Q1sfrba3L/jLKtMOMy4UP9S59FT/yXK2TyxhMBcGJ0uw0/Z69cp5nHcLuBYV
+ pnpi1Zrd3hx4IuVfFzK0lr/BGP88ycN5z8wwpx0y7+KS3e4IRYifz90CLTdRnPCo3Lka CA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 303yungyje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 23:56:42 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032NqMrW079109;
+        Thu, 2 Apr 2020 23:54:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 302g4wcye0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 23:54:41 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032NscTl008584;
+        Thu, 2 Apr 2020 23:54:39 GMT
+Received: from localhost.localdomain (/10.159.142.52)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 16:54:38 -0700
+Subject: Re: [PATCH v6 07/14] KVM: x86: Add AMD SEV specific Hypercall3
+To:     Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rientjes@google.com, srutherford@google.com, luto@kernel.org,
+        brijesh.singh@amd.com
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <6dda7016ab64490ac3d8e74f461f9f3d0ee3fc88.1585548051.git.ashish.kalra@amd.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <9d1f29da-2d63-dfed-228f-b82b3cc2b777@oracle.com>
+Date:   Thu, 2 Apr 2020 16:54:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
- <20200402223723.7150-1-john.stultz@linaro.org> <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
- <CALAqxLXfd+7Wc79_XWRv8cKLFu+MpM1w9e3byx9z5bXSdTemLg@mail.gmail.com> <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
-In-Reply-To: <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 2 Apr 2020 16:54:02 -0700
-Message-ID: <CALAqxLVt9nZDWVTi=yHRnbT26PGCKANsqfhr9=3qnkOCOCFDhQ@mail.gmail.com>
-Subject: Re: [PATCH] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6dda7016ab64490ac3d8e74f461f9f3d0ee3fc88.1585548051.git.ashish.kalra@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020176
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 4:19 PM Doug Anderson <dianders@chromium.org> wrote:
-> On Thu, Apr 2, 2020 at 4:08 PM John Stultz <john.stultz@linaro.org> wrote:
-> > My understanding with dts bindings is that they are effectively an
-> > ABI. While maybe it makes sense to deprecate the
-> > "qcom,sdm845-qusb2-phy" string in the Documentation to avoid new
-> > users, I'd think we'd want to keep the support in the driver as we
-> > aren't supposed to have tight coupling between the DTB and kernel (at
-> > least for official bindings).
+
+On 3/29/20 11:21 PM, Ashish Kalra wrote:
+> From: Brijesh Singh <Brijesh.Singh@amd.com>
 >
-> If nothing else if we're going to land your patch, can you at least
-> put a comment in there that says "only needed to support legacy device
-> trees that didn't include "qcom,qusb2-v2-phy" in the compatible
-> string.  Then the person who adds the next Qualcomm SoC will know not
-> to add themselves to the table too.
+> KVM hypercall framework relies on alternative framework to patch the
+> VMCALL -> VMMCALL on AMD platform. If a hypercall is made before
+> apply_alternative()
 
-Done.
-
-
-> > Granted, I've not gotten much experience with boards that were fully
-> > upstream and thus didn't have an eternally evolving dts file that had
-> > to be kept in sync with the kernel, so in practice either solution
-> > does work for me, but in theory it seems like we should at least
-> > pretend these things are stable. :)
+s/apply_alternative/apply_alternatives/
+> is called then it defaults to VMCALL. The approach
+> works fine on non SEV guest. A VMCALL would causes #UD, and hypervisor
+> will be able to decode the instruction and do the right things. But
+> when SEV is active, guest memory is encrypted with guest key and
+> hypervisor will not be able to decode the instruction bytes.
 >
-> Yeah, I don't want to get into the whole stable ABI argument, but what
-> you say is the official word.  The bindings are supposed to be a
-> stable ABI and it's a good goal to strive for.
+> Add SEV specific hypercall3, it unconditionally uses VMMCALL. The hypercall
+> will be used by the SEV guest to notify encrypted pages to the hypervisor.
 >
-> ...but in reality most people are OK with it not being quite so stable
-> as long as it's not hurting anyone.  What should have happened here is
-> that the bindings and dts should have landed in one Linux version and
-> the driver change landed in the next Linux version.  Now we're stuck
-> with the breakage, though.  :(  In general for "new" architectures
-> it's considered more OK to break compatibility, though I guess you can
-> argue whether sdm845 is really new enough.  I guess to get at the meat
-> of the issue though: if you need a patch to fix your problem anyway,
-> why not land the patch that doesn't end up chewing extra up extra code
-> space and providing a bad example for someone to copy?
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>   arch/x86/include/asm/kvm_para.h | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
 >
-> Now certainly if changing your DTS was an undue burden (like you've
-> already baked device trees into firmware) there's no question we
-> should land your patch.  I'm just not sure the lofty goal of "it's
-> supposed to be a stable ABI so let's add an entry to the table that
-> nobody will ever care about after the dts change lands" is enough of a
-> reason to land it now.
-
-Personally, I'm fine with either solution (as there's still dts
-changes for db845c pending that we're carrying), but I also want to
-make sure we're setting a good standard for future changes (as these
-sorts of things seem to bite me far too frequently on the db845c,
-sometimes even resulting in forced userland changes that we've so far
-been able to adapt to, but are not ideal).
-
-So I've resubmitted my version to let the maintainers decide.  :)
-
-thanks
--john
+> diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+> index 9b4df6eaa11a..6c09255633a4 100644
+> --- a/arch/x86/include/asm/kvm_para.h
+> +++ b/arch/x86/include/asm/kvm_para.h
+> @@ -84,6 +84,18 @@ static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
+>   	return ret;
+>   }
+>   
+> +static inline long kvm_sev_hypercall3(unsigned int nr, unsigned long p1,
+> +				      unsigned long p2, unsigned long p3)
+> +{
+> +	long ret;
+> +
+> +	asm volatile("vmmcall"
+> +		     : "=a"(ret)
+> +		     : "a"(nr), "b"(p1), "c"(p2), "d"(p3)
+> +		     : "memory");
+> +	return ret;
+> +}
+> +
+>   #ifdef CONFIG_KVM_GUEST
+>   bool kvm_para_available(void);
+>   unsigned int kvm_arch_para_features(void);
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
