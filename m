@@ -2,131 +2,205 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03661C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE196C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D071C206D3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36B22078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DokBBq+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388109AbgDBLsp (ORCPT
+        id S2388142AbgDBLtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:48:45 -0400
-Received: from 20.mo1.mail-out.ovh.net ([188.165.45.168]:60602 "EHLO
-        20.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387477AbgDBLsp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:48:45 -0400
-X-Greylist: delayed 2268 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Apr 2020 07:48:44 EDT
-Received: from player697.ha.ovh.net (unknown [10.110.208.99])
-        by mo1.mail-out.ovh.net (Postfix) with ESMTP id 256871B9F36
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Apr 2020 13:10:55 +0200 (CEST)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player697.ha.ovh.net (Postfix) with ESMTPSA id AEBE3110DE660;
-        Thu,  2 Apr 2020 11:10:14 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 13:10:12 +0200
-From:   Greg Kurz <groug@kaod.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Alastair D'Silva <alastair@d-silva.org>,
+        Thu, 2 Apr 2020 07:49:47 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:59750 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387722AbgDBLtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:49:47 -0400
+Received: from zn.tnic (p200300EC2F0A0E00AD683D730A68685D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:e00:ad68:3d73:a68:685d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C35FB1EC0C84;
+        Thu,  2 Apr 2020 13:49:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585828186;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=EBWepjr3mk654atQU7k38smGXPUg/5pwXX78nzJmpX0=;
+        b=DokBBq+VRrV0fFmq1KmeCXHDEHQVRm5kV7++LpllNWjMhx2/KgCZ4oe1NhNHMrUD6NF9JY
+        GlKuYNDL3k9duREm6BQ77ETmp+Gswh7SJXlMhtjRJi0nWZnGKDGIRzQAzC8DrbUmiKPioe
+        6zy+Qm9xMQN61MMLLZGD5orCRFZaF5U=
+Date:   Thu, 2 Apr 2020 13:49:41 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: [PATCH v4 00/25] Add support for OpenCAPI Persistent Memory
- devices
-Message-ID: <20200402131012.579c7bf7@bahia.lan>
-In-Reply-To: <87bloatd6e.fsf@mpe.ellerman.id.au>
-References: <20200327071202.2159885-1-alastair@d-silva.org>
-        <CAPcyv4iJYZBVhV1NW7EB6-EwETiUAy6r1iiE+F+HvFXfGZt9Aw@mail.gmail.com>
-        <2d6901d60877$16aa7a90$43ff6fb0$@d-silva.org>
-        <87imiituxm.fsf@mpe.ellerman.id.au>
-        <CAOSf1CHdpFyT_6zetKM6eHDK3AT8-UNTzjdd2y+QqYT2AO9VDw@mail.gmail.com>
-        <87bloatd6e.fsf@mpe.ellerman.id.au>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 14/70] x86/boot/compressed/64: Add page-fault handler
+Message-ID: <20200402114941.GA9352@zn.tnic>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-15-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 14428970257110833585
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -51
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrtdeggdefvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenucfjughrpeffhffvuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpefirhgvghcumfhurhiiuceoghhrohhugheskhgrohgurdhorhhgqeenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhgihhthhhusgdrihhonecukfhppedtrddtrddtrddtpdekvddrvdehfedrvddtkedrvdegkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheileejrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepghhrohhugheskhgrohgurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200319091407.1481-15-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 02 Apr 2020 21:06:01 +1100
-Michael Ellerman <mpe@ellerman.id.au> wrote:
-
-> "Oliver O'Halloran" <oohall@gmail.com> writes:
-> > On Thu, Apr 2, 2020 at 2:42 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
-> >> "Alastair D'Silva" <alastair@d-silva.org> writes:
-> >> >> -----Original Message-----
-> >> >> From: Dan Williams <dan.j.williams@intel.com>
-> >> >>
-> >> >> On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva <alastair@d-silva.org>
-> >> >> wrote:
-> >> >> >
-> >> >> > *snip*
-> >> >> Are OPAL calls similar to ACPI DSMs? I.e. methods for the OS to invoke
-> >> >> platform firmware services? What's Skiboot?
-> >> >
-> >> > Yes, OPAL is the interface to firmware for POWER. Skiboot is the open-source (and only) implementation of OPAL.
-> >>
-> >>   https://github.com/open-power/skiboot
-> >>
-> >> In particular the tokens for calls are defined here:
-> >>
-> >>   https://github.com/open-power/skiboot/blob/master/include/opal-api.h#L220
-> >>
-> >> And you can grep for the token to find the implementation:
-> >>
-> >>   https://github.com/open-power/skiboot/blob/master/hw/npu2-opencapi.c#L2328
-> >
-> > I'm not sure I'd encourage anyone to read npu2-opencapi.c. I find it
-> > hard enough to follow even with access to the workbooks.
+On Thu, Mar 19, 2020 at 10:13:11AM +0100, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> Compared to certain firmwares that run on certain other platforms it's
-> actually pretty readable code ;)
+> Install a page-fault handler to add an identity mapping to addresses
+> not yet mapped. Also do some checking whether the error code is sane.
+> 
+> This makes non SEV-ES machines use the exception handling
+> infrastructure in the pre-decompressions boot code too, making it less
+> likely to break in the future.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/boot/compressed/ident_map_64.c    | 38 ++++++++++++++++++++++
+>  arch/x86/boot/compressed/idt_64.c          |  2 ++
+>  arch/x86/boot/compressed/idt_handlers_64.S |  2 ++
+>  arch/x86/boot/compressed/misc.h            |  6 ++++
+>  4 files changed, 48 insertions(+)
+> 
+> diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+> index 3a2115582920..0865d181b85d 100644
+> --- a/arch/x86/boot/compressed/ident_map_64.c
+> +++ b/arch/x86/boot/compressed/ident_map_64.c
+> @@ -19,11 +19,13 @@
+>  /* No PAGE_TABLE_ISOLATION support needed either: */
+>  #undef CONFIG_PAGE_TABLE_ISOLATION
+>  
+> +#include "error.h"
+>  #include "misc.h"
+>  
+>  /* These actually do the work of building the kernel identity maps. */
+>  #include <asm/init.h>
+>  #include <asm/pgtable.h>
+> +#include <asm/trap_defs.h>
+>  /* Use the static base for this part of the boot process */
+>  #undef __PAGE_OFFSET
+>  #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+> @@ -163,3 +165,39 @@ void finalize_identity_maps(void)
+>  {
+>  	write_cr3(top_level_pgt);
+>  }
+> +
+> +static void pf_error(unsigned long error_code, unsigned long address,
+> +		     struct pt_regs *regs)
+
+AFAICT, that function is called below only so just merge its body into
+the call site instead...
+
+> +{
+> +	error_putstr("Unexpected page-fault:");
+> +	error_putstr("\nError Code: ");
+> +	error_puthex(error_code);
+> +	error_putstr("\nCR2: 0x");
+> +	error_puthex(address);
+> +	error_putstr("\nRIP relative to _head: 0x");
+> +	error_puthex(regs->ip - (unsigned long)_head);
+> +	error_putstr("\n");
+> +
+> +	error("Stopping.\n");
+> +}
+> +
+> +void do_boot_page_fault(struct pt_regs *regs)
+> +{
+> +	unsigned long address = native_read_cr2();
+> +	unsigned long error_code = regs->orig_ax;
+> +
+> +	/*
+> +	 * Check for unexpected error codes. Unexpected are:
+> +	 *	- Faults on present pages
+> +	 *	- User faults
+> +	 *	- Reserved bits set
+> +	 */
+> +	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
+> +		pf_error(error_code, address, regs);
+> +
+> +	/*
+> +	 * Error code is sane - now identity map the 2M region around
+> +	 * the faulting address.
+> +	 */
+> +	add_identity_map(address & PMD_MASK, PMD_SIZE);
+> +}
+> diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
+> index 46ecea671b90..84ba57d9d436 100644
+> --- a/arch/x86/boot/compressed/idt_64.c
+> +++ b/arch/x86/boot/compressed/idt_64.c
+> @@ -39,5 +39,7 @@ void load_stage2_idt(void)
+>  {
+>  	boot_idt_desc.address = (unsigned long)boot_idt;
+>  
+> +	set_idt_entry(X86_TRAP_PF, boot_pf_handler);
+> +
+>  	load_boot_idt(&boot_idt_desc);
+>  }
+> diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
+> index 3d86ab35ef52..bfb3fc5aa144 100644
+> --- a/arch/x86/boot/compressed/idt_handlers_64.S
+> +++ b/arch/x86/boot/compressed/idt_handlers_64.S
+> @@ -73,3 +73,5 @@ SYM_FUNC_END(\name)
+>  
+>  	.text
+>  	.code64
+> +
+> +EXCEPTION_HANDLER	boot_pf_handler do_boot_page_fault error_code=1
+
+			boot_page_fault do_boot_page_fault
+
+equivalent to the PF handler proper naming pls. Grepping "page_fault"
+would give you all then.
+
+> diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+> index 3a030a878d53..eff4ed0b1cea 100644
+> --- a/arch/x86/boot/compressed/misc.h
+> +++ b/arch/x86/boot/compressed/misc.h
+> @@ -37,6 +37,9 @@
+>  #define memptr unsigned
+>  #endif
+>  
+> +/* boot/compressed/vmlinux start and end markers */
+> +extern char _head[], _end[];
+> +
+>  /* misc.c */
+>  extern memptr free_mem_ptr;
+>  extern memptr free_mem_end_ptr;
+> @@ -146,4 +149,7 @@ extern pteval_t __default_kernel_pte_mask;
+>  extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
+>  extern struct desc_ptr boot_idt_desc;
+>  
+> +/* IDT Entry Points */
+> +void boot_pf_handler(void);
+> +
+>  #endif /* BOOT_COMPRESSED_MISC_H */
+> -- 
+> 2.17.1
 > 
 
-Forth rocks ! ;-)
+-- 
+Regards/Gruss,
+    Boris.
 
-> > There's an OPAL call API reference here:
-> > http://open-power.github.io/skiboot/doc/opal-api/index.html
-> 
-> Even better.
-> 
-> cheers
-
+https://people.kernel.org/tglx/notes-about-netiquette
