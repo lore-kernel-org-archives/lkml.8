@@ -2,171 +2,150 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D81C10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D38C10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA5CB20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:36:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Rl2JedC6"
+	by mail.kernel.org (Postfix) with ESMTP id 796472078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585812977;
+	bh=s2TSyU91+ETAfvJPdXYxcQRBKju3g4NGztFiI19hsHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LArbcptJaSEjbmjiJKWJqp37aVDGmZlve0Sz6VEmqcCb1C00fjmfwUVMFjHtGpfQY
+	 Sy5yWOHX7mNNpcD1jmCrvMmEyF6/ccbQdixwo3om+IAA7XpLNkNb2fRmKXd6b5a6ob
+	 +9Rp1guYxH7SyePkwJoz7sr1cW3xI1JZFqFutNjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387502AbgDBHgA (ORCPT
+        id S2387554AbgDBHgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:36:00 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37858 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729033AbgDBHf7 (ORCPT
+        Thu, 2 Apr 2020 03:36:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42428 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbgDBHgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:35:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585812958; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=naqNAxywddNgWhPDH5Wtz+lOJzNYkTWgjlzNiVKiv48=; b=Rl2JedC66GIoBkWoMo7JBQiMhudnqkZ8hRzx1ggWlKKPJW4xyO2BJMOB8l94OWQ8gWb7r/oy
- TsjLssZnuxUrgMfCRQDdclsTH4+I3khg85HsS/zu30GM0Rv41hq0K5OBCABV0BwKzUjInGGw
- qa27dxP2GomrfVbvB37nFydPRR0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8595cd.7f5dad9b0ab0-smtp-out-n01;
- Thu, 02 Apr 2020 07:35:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DF789C43637; Thu,  2 Apr 2020 07:35:40 +0000 (UTC)
-Received: from [10.111.194.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mgautam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B28D7C433F2;
-        Thu,  2 Apr 2020 07:35:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B28D7C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
-Subject: Re: [PATCH v4 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for
- sm8150 USB
-To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
- <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
-From:   Manu Gautam <mgautam@codeaurora.org>
-Message-ID: <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
-Date:   Thu, 2 Apr 2020 13:05:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 03:36:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h15so2907505wrx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:36:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xkG5ET7XWQR6Bs9madxK9IME3VWiyyi7TqIYnv+0quw=;
+        b=p2SNCHbDtVcTEQuuXAcga3XoK26jkRndeDsVI9+Iug9L6BToppmJcbdweuMcC6FlMG
+         z6Mub/eJSej8khK1pQ1i1N9ZhuclUJ/DasYSG8hC47P9alXtShV9bwhVjgB/+AuxGXfd
+         c3/Z5DYl98Y06SY64IjsGuuLdUJnQN/yMxOaP8TdD24/TL2QYNtxnJs2lbHE4HDdzaJ9
+         KkNgd4upw4tfIH/iAgVKz10S/PvUu89bNj8RJg6UjMpd+ygT/sgw6vkqdWkLw3TMcIp9
+         Gb9wTepY02F81e39jMkvb9Bg+TZI4lWLtZg12PKqMnOoqCz80qEPgc4M+4KR3Dn7Knvb
+         k1tg==
+X-Gm-Message-State: AGi0PuZz13l8hAdydncgt8ixOd1iPbGZ1T+JYb7sA2AyG7K2+KOb3FdN
+        Clyj+ubs9fX3XqgCHuvMp5A=
+X-Google-Smtp-Source: APiQypItNRsRHgeptfl803NPYB7zyFU3diPIxZHlh6/l5VgogD6aIbyqMj93jMjBr9VnVLoo9ti4Hw==
+X-Received: by 2002:a5d:6045:: with SMTP id j5mr2017736wrt.401.1585812973674;
+        Thu, 02 Apr 2020 00:36:13 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id a13sm6415179wrt.64.2020.04.02.00.36.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 00:36:12 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 09:36:12 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, dan.j.williams@intel.com,
+        shile.zhang@linux.alibaba.com, ktkhai@virtuozzo.com,
+        david@redhat.com, jmorris@namei.org, sashal@kernel.org
+Subject: Re: [PATCH] mm: initialize deferred pages with interrupts enabled
+Message-ID: <20200402073612.GG22681@dhcp22.suse.cz>
+References: <20200401193238.22544-1-pasha.tatashin@soleen.com>
+ <20200401200027.vsm5roobllewniea@ca-dmjordan1.us.oracle.com>
+ <20200401200855.d23xcwznr5cm67p2@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401200855.d23xcwznr5cm67p2@ca-dmjordan1.us.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 01-04-20 16:08:55, Daniel Jordan wrote:
+[...]
+> From: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Date: Fri, 27 Mar 2020 17:29:05 -0400
+> Subject: [PATCH] mm: call touch_nmi_watchdog() on max order boundaries in
+>  deferred init
+> 
+> deferred_init_memmap() disables interrupts the entire time, so it calls
+> touch_nmi_watchdog() periodically to avoid soft lockup splats.  Soon it
+> will run with interrupts enabled, at which point cond_resched() should
+> be used instead.
+> 
+> deferred_grow_zone() makes the same watchdog calls through code shared
+> with deferred init but will continue to run with interrupts disabled, so
+> it can't call cond_resched().
+> 
+> Pull the watchdog calls up to these two places to allow the first to be
+> changed later, independently of the second.  The frequency reduces from
+> twice per pageblock (init and free) to once per max order block.
 
-On 3/31/2020 1:06 AM, Wesley Cheng wrote:
-> The register map for SM8150 QMP USB SSPHY has moved
-> QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
-> an offset in the register table to override default value
-> if it is a DP capable PHY.
->
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+This makes sense but I am not really sure this is necessary for the
+stable backport.
+
+> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
 > ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index cc04471..4c0517e 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -164,6 +164,7 @@ enum qphy_reg_layout {
->  	[QPHY_SW_RESET]			= 0x00,
->  	[QPHY_START_CTRL]		= 0x44,
->  	[QPHY_PCS_STATUS]		= 0x14,
-> +	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
-Since this is in PCS block please rename it to -
-
-QPHY_PCS_POWER_DOWN_CONTROL
-
->  };
+>  mm/page_alloc.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 212734c4f8b0..4cf18c534233 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1639,7 +1639,6 @@ static void __init deferred_free_pages(unsigned long pfn,
+>  		} else if (!(pfn & nr_pgmask)) {
+>  			deferred_free_range(pfn - nr_free, nr_free);
+>  			nr_free = 1;
+> -			touch_nmi_watchdog();
+>  		} else {
+>  			nr_free++;
+>  		}
+> @@ -1669,7 +1668,6 @@ static unsigned long  __init deferred_init_pages(struct zone *zone,
+>  			continue;
+>  		} else if (!page || !(pfn & nr_pgmask)) {
+>  			page = pfn_to_page(pfn);
+> -			touch_nmi_watchdog();
+>  		} else {
+>  			page++;
+>  		}
+> @@ -1813,8 +1811,10 @@ static int __init deferred_init_memmap(void *data)
+>  	 * that we can avoid introducing any issues with the buddy
+>  	 * allocator.
+>  	 */
+> -	while (spfn < epfn)
+> +	while (spfn < epfn) {
+>  		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +		touch_nmi_watchdog();
+> +	}
+>  zone_empty:
+>  	pgdat_resize_unlock(pgdat, &flags);
 >  
->  static const unsigned int sdm845_ufsphy_regs_layout[] = {
-> @@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->  	if (cfg->has_phy_com_ctrl)
->  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->  			     SW_PWRDN);
-> +	else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
-> +		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
-> +			     cfg->pwrdn_ctrl);
->  	else
->  		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-Since, this register is in PCS block why check for dp_com_ctrl here?
-Something like:
-
- 	if (cfg->has_phy_com_ctrl) {
- 		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
- 			     SW_PWRDN);
-	} else {
-		if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) 
-			qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
-			     cfg->pwrdn_ctrl);
- 		else
- 			qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-	}
-
+> @@ -1908,6 +1908,7 @@ deferred_grow_zone_locked(pg_data_t *pgdat, struct zone *zone,
+>  		first_deferred_pfn = spfn;
 >  
-> @@ -1671,10 +1675,12 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->  	return ret;
->  }
+>  		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +		touch_nmi_watchdog();
 >  
-> -static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
-> +static int qcom_qmp_phy_com_exit(struct qmp_phy *qphy)
->  {
-> +	struct qcom_qmp *qmp = qphy->qmp;
->  	const struct qmp_phy_cfg *cfg = qmp->cfg;
->  	void __iomem *serdes = qmp->serdes;
-> +	void __iomem *pcs = qphy->pcs;
->  	int i = cfg->num_resets;
->  
->  	mutex_lock(&qmp->phy_mutex);
-> @@ -1691,6 +1697,9 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
->  			     SW_RESET);
->  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->  			     SW_PWRDN);
-> +	} else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL]) {
-
-Can we add change similar to init() here ?
-
-
-> +			     cfg->pwrdn_ctrl);
->  	}
->  
->  	while (--i >= 0)
-> @@ -1829,7 +1838,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->  	if (cfg->has_lane_rst)
->  		reset_control_assert(qphy->lane_rst);
->  err_lane_rst:
-> -	qcom_qmp_phy_com_exit(qmp);
-> +	qcom_qmp_phy_com_exit(qphy);
->  
->  	return ret;
->  }
-> @@ -1855,7 +1864,7 @@ static int qcom_qmp_phy_disable(struct phy *phy)
->  	if (cfg->has_lane_rst)
->  		reset_control_assert(qphy->lane_rst);
->  
-> -	qcom_qmp_phy_com_exit(qmp);
-> +	qcom_qmp_phy_com_exit(qphy);
->  
->  	qmp->phy_initialized = false;
->  
+>  		/* We should only stop along section boundaries */
+>  		if ((first_deferred_pfn ^ spfn) < PAGES_PER_SECTION)
+> -- 
+> 2.25.0
+> 
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Michal Hocko
+SUSE Labs
