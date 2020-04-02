@@ -2,214 +2,467 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69537C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43A8C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32222206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C000206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J024Ym4K"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="H75OHKsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387671AbgDBCH0 (ORCPT
+        id S2387455AbgDBCIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 22:07:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41416 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387445AbgDBCH0 (ORCPT
+        Wed, 1 Apr 2020 22:08:22 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38332 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733213AbgDBCIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 22:07:26 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d24so745310pll.8;
-        Wed, 01 Apr 2020 19:07:24 -0700 (PDT)
+        Wed, 1 Apr 2020 22:08:22 -0400
+Received: by mail-ed1-f68.google.com with SMTP id e5so2289693edq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 19:08:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C04Pozr5X0zQ8hwZJCbHw/2mlGec8iDEEJLF9AKa5RE=;
-        b=J024Ym4KY/zQG+zxvuJ42YOHgDewx7cn4v4arvXhsryo3iiopJpxtcowV80i0fcjS9
-         P8cdmgSt/z7VX7TrCggJDXeSqfWiqi6hLRvzMv+CFSSjxxQWxpC1cvpv0YiamcIctTgp
-         ia6a4VVrSHpVDDQvcluAjJ8rwIQkBKm7tcTT3ACJq22HlLEI4tgPHYNVqiNYS6aGoQ/B
-         3xFB5qHgiITquWu+JmJxdBMW8eC3VN92k3daFcisQgPBI3TcoynJcir7wo4P6K7eGMaI
-         iD/2CKzyBRrPvHlCrkpf/JYCCDXkRbxToG0q+jH0rRSML2p0a5r9DOBGlFm8YWxswfBz
-         JNRw==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0AvdOMxSzudezFDGyo9moOxPb38tn3j7e1IB79LqmiE=;
+        b=H75OHKszjQii/JJueg9Otm9JKwkcDmohBHalnBaO+1I9/1u8Cbc5S5my3y64OuzR7H
+         eyXkUJ8elmHM3MUgcTl6xMVLx6SYsHqO1tL2LrX7kCAj9ck0mnxhgsL+yAK5bpK1cOyC
+         INNXgnKcgHB2uwr3YhuOQofMcrOJDCnfievy8Ttbqiry2VZ9zVPYJkRPzmA3vDJBvgjy
+         Q7t6Yd0FJLv+vSoAHhykJX1UeteI37+caO+3+Y0uttzZ4bR+7M4ny47I/9XgOpoYgHhd
+         fsFiKYQM0lDh5oZVw9VDLA3WFERxOVGS8KMlA4znSozPjaphuTvkvgrZhccnDWkwWNU2
+         JgdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C04Pozr5X0zQ8hwZJCbHw/2mlGec8iDEEJLF9AKa5RE=;
-        b=B3KR8/nNx87VG1y8OKQYln/Ga/7IsdzO8GxD154NBbhZJ3aDVRJlOdCXZjacIYqIhg
-         2wiBTd2w0mM8f4ga8JpdpVoXzyGFF0IkLVXKzwmQNXYvzs4DGp7VTDBRc/IUJFQi04+5
-         XdCa+2+Jk+i/FgHLrKM0P+BYZMzWCgmhZk8xfKA7D3fD+aRadvm0fR6UE0c5Yej1Y5qd
-         LVe/1+RzLxEPXdSIDMtHusqg4l9bSn+WyaFalOjYuUwijxntEaeAk/aucjFUaSIM+B6T
-         UZoCER7Xkemw0Z5DEnJCUU0IjkcXUFHWJEUOFgvLSfbPNjcfTR6BITI4OB/CGpwOivAA
-         Atfg==
-X-Gm-Message-State: AGi0PuZoJ96TO1u1zd23ET6w9A3rJk2LshfWatBOPT0bEpHdJWQ3XimI
-        neWEXZDdd2oi/ZT5r8HtFAg=
-X-Google-Smtp-Source: APiQypJc4HvDhspoLaeohepb0q/mGtKi/sn8HmIaEqFDZRzRDPvnBcWwuP2HerQ7mCqqKO9C01BewA==
-X-Received: by 2002:a17:90a:3ad0:: with SMTP id b74mr1206771pjc.58.1585793244192;
-        Wed, 01 Apr 2020 19:07:24 -0700 (PDT)
-Received: from localhost.localdomain (c-24-130-6-48.hsd1.ca.comcast.net. [24.130.6.48])
-        by smtp.googlemail.com with ESMTPSA id w29sm2370388pge.25.2020.04.01.19.07.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 19:07:23 -0700 (PDT)
-From:   Julian Meyer <julianmeyer2000@gmail.com>
-Cc:     Julian Meyer <julianmeyer2000@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: uvcvideo: read bulk URBs after maxPayloadSize
-Date:   Wed,  1 Apr 2020 19:06:48 -0700
-Message-Id: <20200402020649.4583-1-julianmeyer2000@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0AvdOMxSzudezFDGyo9moOxPb38tn3j7e1IB79LqmiE=;
+        b=nxP1i2v0V6cJLYe+7mYkM0PrAJw8I4TfO+afm1iLE1AkYpaTBERVDW7KOLWlF+l7DY
+         DmUhoMLenQ7r4+8etlFh5F2yk7/a69Hcepsv6Rq5p5Z3uLtczcAU3ABPngqNSFXQ3WrU
+         4BDrklnUHw+iWQc5TmApL5msVPrQU+nkRioqHKm0s5flcy8v3Xzd80xnQm66sxdTgicO
+         fRlqLKbIYgmoYoS7CfIR2hpT0/MP6kvQh0+9hrYUwOC5amv812Pt9B+YcoLw8vlJMBx9
+         /xXimjTIdP4vYzzV/8hw8yIPyFgLC1Izns/AX+/vQcctGpfCiYzyFDKpihiMmqwnGSBX
+         mWhg==
+X-Gm-Message-State: AGi0PuaMdg6gtcM0DtS21sZH0q1Bp9CEupvvJCS4vwvfGiv84wiqOA6m
+        tlyFD+BiLabzB7rmJtN1JUzxsr2PVbRzcm7hLMWsVQ==
+X-Google-Smtp-Source: APiQypK7i6/1gogQZZrKam/dSs5kf8xMYMKt4z1dOA2oInJZ3pB7EdQnaxIYNyyulznwBLR5zfrg8vwqBR07EcHzgjc=
+X-Received: by 2002:a17:906:1697:: with SMTP id s23mr1019998ejd.211.1585793299540;
+ Wed, 01 Apr 2020 19:08:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-20-alastair@d-silva.org>
+In-Reply-To: <20200327071202.2159885-20-alastair@d-silva.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 1 Apr 2020 19:08:08 -0700
+Message-ID: <CAPcyv4gfDAbABq9wxKd05AWTduDy2udBXS4Y6qcWyUzOBv-xTg@mail.gmail.com>
+Subject: Re: [PATCH v4 19/25] nvdimm/ocxl: Forward events to userspace
+To:     "Alastair D'Silva" <alastair@d-silva.org>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes a bug that caused certain Realtek cameras to crash.
+On Tue, Mar 31, 2020 at 1:59 AM Alastair D'Silva <alastair@d-silva.org> wrote:
+>
+> Some of the interrupts that the card generates are better handled
+> by the userspace daemon, in particular:
+> Controller Hardware/Firmware Fatal
+> Controller Dump Available
+> Error Log available
+>
+> This patch allows a userspace application to register an eventfd with
+> the driver via SCM_IOCTL_EVENTFD to receive notifications of these
+> interrupts.
+>
+> Userspace can then identify what events have occurred by calling
+> SCM_IOCTL_EVENT_CHECK and checking against the SCM_IOCTL_EVENT_FOO
+> masks.
 
-The camera would send additional UVC payloads after the maxPayloadSize
-was reached. This patch modifies uvc_video_decode_bulk such that it
-continues reading payloads when it reaches the maxPayloadSize if there
-is more data left.
+The amount new ioctl's in this driver is too high, it seems much of
+this data can be exported via sysfs attributes which are more
+maintainable that ioctls. Then sysfs also has the ability to signal
+events on sysfs attributes, see sys_notify_dirent.
 
-Signed-off-by: Julian Meyer <julianmeyer2000@gmail.com>
----
- drivers/media/usb/uvc/uvc_video.c | 76 +++++++++++++++++++++----------
- 1 file changed, 52 insertions(+), 24 deletions(-)
+Can you step back and review the ABI exposure of the driver and what
+can be moved to sysfs? If you need to have bus specific attributes
+ordered underneath the libnvdimm generic attributes you can create a
+sysfs attribute subdirectory.
 
-diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-index 8fa77a81dd7f..32cc8b21705a 100644
---- a/drivers/media/usb/uvc/uvc_video.c
-+++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -1374,31 +1374,22 @@ static void uvc_video_decode_isoc(struct uvc_urb *uvc_urb,
- 	}
- }
- 
--static void uvc_video_decode_bulk(struct uvc_urb *uvc_urb,
--			struct uvc_buffer *buf, struct uvc_buffer *meta_buf)
-+static void uvc_video_decode_bulk_single(struct uvc_streaming *stream,
-+	struct uvc_buffer *buf, struct uvc_buffer *meta_buf,
-+	struct uvc_urb *uvc_urb, u8 **mem, int *len)
- {
--	struct urb *urb = uvc_urb->urb;
--	struct uvc_streaming *stream = uvc_urb->stream;
--	u8 *mem;
--	int len, ret;
--
--	/*
--	 * Ignore ZLPs if they're not part of a frame, otherwise process them
--	 * to trigger the end of payload detection.
--	 */
--	if (urb->actual_length == 0 && stream->bulk.header_size == 0)
--		return;
-+	unsigned int bytes_left;
-+	int ret;
- 
--	mem = urb->transfer_buffer;
--	len = urb->actual_length;
--	stream->bulk.payload_size += len;
-+	struct urb *urb = uvc_urb->urb;
-+	unsigned int max_size = stream->bulk.max_payload_size;
- 
- 	/* If the URB is the first of its payload, decode and save the
- 	 * header.
- 	 */
- 	if (stream->bulk.header_size == 0 && !stream->bulk.skip_payload) {
- 		do {
--			ret = uvc_video_decode_start(stream, buf, mem, len);
-+			ret = uvc_video_decode_start(stream, buf, *mem, *len);
- 			if (ret == -EAGAIN)
- 				uvc_video_next_buffers(stream, &buf, &meta_buf);
- 		} while (ret == -EAGAIN);
-@@ -1407,13 +1398,14 @@ static void uvc_video_decode_bulk(struct uvc_urb *uvc_urb,
- 		if (ret < 0 || buf == NULL) {
- 			stream->bulk.skip_payload = 1;
- 		} else {
--			memcpy(stream->bulk.header, mem, ret);
-+			memcpy(stream->bulk.header, *mem, ret);
- 			stream->bulk.header_size = ret;
- 
--			uvc_video_decode_meta(stream, meta_buf, mem, ret);
-+			uvc_video_decode_meta(stream, meta_buf, *mem, ret);
- 
--			mem += ret;
--			len -= ret;
-+			*mem += ret;
-+			*len -= ret;
-+			stream->bulk.payload_size += ret;
- 		}
- 	}
- 
-@@ -1423,14 +1415,26 @@ static void uvc_video_decode_bulk(struct uvc_urb *uvc_urb,
- 	 */
- 
- 	/* Prepare video data for processing. */
--	if (!stream->bulk.skip_payload && buf != NULL)
--		uvc_video_decode_data(uvc_urb, buf, mem, len);
-+	if (!stream->bulk.skip_payload && buf != NULL) {
-+		bytes_left = min((unsigned int) *len,
-+			max_size - stream->bulk.payload_size);
-+
-+		stream->bulk.payload_size += bytes_left;
-+
-+		uvc_video_decode_data(uvc_urb, buf, *mem, bytes_left);
-+
-+		*len -= bytes_left;
-+		*mem += bytes_left;
-+	} else {
-+		stream->bulk.payload_size += *len;
-+		*len = 0;
-+	}
- 
- 	/* Detect the payload end by a URB smaller than the maximum size (or
- 	 * a payload size equal to the maximum) and process the header again.
- 	 */
- 	if (urb->actual_length < urb->transfer_buffer_length ||
--	    stream->bulk.payload_size >= stream->bulk.max_payload_size) {
-+		stream->bulk.payload_size >= stream->bulk.max_payload_size) {
- 		if (!stream->bulk.skip_payload && buf != NULL) {
- 			uvc_video_decode_end(stream, buf, stream->bulk.header,
- 				stream->bulk.payload_size);
-@@ -1444,6 +1448,30 @@ static void uvc_video_decode_bulk(struct uvc_urb *uvc_urb,
- 	}
- }
- 
-+static void uvc_video_decode_bulk(struct uvc_urb *uvc_urb,
-+			struct uvc_buffer *buf, struct uvc_buffer *meta_buf)
-+{
-+	struct urb *urb = uvc_urb->urb;
-+	struct uvc_streaming *stream = uvc_urb->stream;
-+	u8 *mem;
-+	int len;
-+
-+	/*
-+	 * Ignore ZLPs if they're not part of a frame, otherwise process them
-+	 * to trigger the end of payload detection.
-+	 */
-+	if (urb->actual_length == 0 && stream->bulk.header_size == 0)
-+		return;
-+
-+	mem = urb->transfer_buffer;
-+	len = urb->actual_length;
-+
-+	while (len > 0) {
-+		uvc_video_decode_bulk_single(stream, buf, meta_buf, uvc_urb,
-+			&mem, &len);
-+	}
-+}
-+
- static void uvc_video_encode_bulk(struct uvc_urb *uvc_urb,
- 	struct uvc_buffer *buf, struct uvc_buffer *meta_buf)
- {
--- 
-2.25.0
+In general a roadmap document of all the proposed ABI is needed to
+make sure it is both sufficient and necessary. See the libnvdimm
+document that introduced the initial libnvdimm ABI:
 
+https://www.kernel.org/doc/Documentation/nvdimm/nvdimm.txt
+
+>
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  drivers/nvdimm/ocxl/main.c     | 220 +++++++++++++++++++++++++++++++++
+>  drivers/nvdimm/ocxl/ocxlpmem.h |   4 +
+>  include/uapi/nvdimm/ocxlpmem.h |  12 ++
+>  3 files changed, 236 insertions(+)
+>
+> diff --git a/drivers/nvdimm/ocxl/main.c b/drivers/nvdimm/ocxl/main.c
+> index 0040fc09cceb..cb6cdc9eb899 100644
+> --- a/drivers/nvdimm/ocxl/main.c
+> +++ b/drivers/nvdimm/ocxl/main.c
+> @@ -10,6 +10,7 @@
+>  #include <misc/ocxl.h>
+>  #include <linux/delay.h>
+>  #include <linux/ndctl.h>
+> +#include <linux/eventfd.h>
+>  #include <linux/fs.h>
+>  #include <linux/mm_types.h>
+>  #include <linux/memory_hotplug.h>
+> @@ -301,8 +302,19 @@ static void free_ocxlpmem(struct ocxlpmem *ocxlpmem)
+>  {
+>         int rc;
+>
+> +       // Disable doorbells
+> +       (void)ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIEC,
+> +                                    OCXL_LITTLE_ENDIAN,
+> +                                    GLOBAL_MMIO_CHI_ALL);
+> +
+>         free_minor(ocxlpmem);
+>
+> +       if (ocxlpmem->irq_addr[1])
+> +               iounmap(ocxlpmem->irq_addr[1]);
+> +
+> +       if (ocxlpmem->irq_addr[0])
+> +               iounmap(ocxlpmem->irq_addr[0]);
+> +
+>         if (ocxlpmem->ocxl_context) {
+>                 rc = ocxl_context_detach(ocxlpmem->ocxl_context);
+>                 if (rc == -EBUSY)
+> @@ -398,6 +410,11 @@ static int file_release(struct inode *inode, struct file *file)
+>  {
+>         struct ocxlpmem *ocxlpmem = file->private_data;
+>
+> +       if (ocxlpmem->ev_ctx) {
+> +               eventfd_ctx_put(ocxlpmem->ev_ctx);
+> +               ocxlpmem->ev_ctx = NULL;
+> +       }
+> +
+>         ocxlpmem_put(ocxlpmem);
+>         return 0;
+>  }
+> @@ -928,6 +945,52 @@ static int ioctl_controller_stats(struct ocxlpmem *ocxlpmem,
+>         return rc;
+>  }
+>
+> +static int ioctl_eventfd(struct ocxlpmem *ocxlpmem,
+> +                        struct ioctl_ocxlpmem_eventfd __user *uarg)
+> +{
+> +       struct ioctl_ocxlpmem_eventfd args;
+> +
+> +       if (copy_from_user(&args, uarg, sizeof(args)))
+> +               return -EFAULT;
+> +
+> +       if (ocxlpmem->ev_ctx)
+> +               return -EBUSY;
+> +
+> +       ocxlpmem->ev_ctx = eventfd_ctx_fdget(args.eventfd);
+> +       if (IS_ERR(ocxlpmem->ev_ctx))
+> +               return PTR_ERR(ocxlpmem->ev_ctx);
+> +
+> +       return 0;
+> +}
+> +
+> +static int ioctl_event_check(struct ocxlpmem *ocxlpmem, u64 __user *uarg)
+> +{
+> +       u64 val = 0;
+> +       int rc;
+> +       u64 chi = 0;
+> +
+> +       rc = ocxlpmem_chi(ocxlpmem, &chi);
+> +       if (rc < 0)
+> +               return rc;
+> +
+> +       if (chi & GLOBAL_MMIO_CHI_ELA)
+> +               val |= IOCTL_OCXLPMEM_EVENT_ERROR_LOG_AVAILABLE;
+> +
+> +       if (chi & GLOBAL_MMIO_CHI_CDA)
+> +               val |= IOCTL_OCXLPMEM_EVENT_CONTROLLER_DUMP_AVAILABLE;
+> +
+> +       if (chi & GLOBAL_MMIO_CHI_CFFS)
+> +               val |= IOCTL_OCXLPMEM_EVENT_FIRMWARE_FATAL;
+> +
+> +       if (chi & GLOBAL_MMIO_CHI_CHFS)
+> +               val |= IOCTL_OCXLPMEM_EVENT_HARDWARE_FATAL;
+> +
+> +       if (copy_to_user((u64 __user *)uarg, &val, sizeof(val)))
+> +               return -EFAULT;
+> +
+> +       return rc;
+> +}
+> +
+>  static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+>  {
+>         struct ocxlpmem *ocxlpmem = file->private_data;
+> @@ -956,6 +1019,15 @@ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+>                 rc = ioctl_controller_stats(ocxlpmem,
+>                                             (struct ioctl_ocxlpmem_controller_stats __user *)args);
+>                 break;
+> +
+> +       case IOCTL_OCXLPMEM_EVENTFD:
+> +               rc = ioctl_eventfd(ocxlpmem,
+> +                                  (struct ioctl_ocxlpmem_eventfd __user *)args);
+> +               break;
+> +
+> +       case IOCTL_OCXLPMEM_EVENT_CHECK:
+> +               rc = ioctl_event_check(ocxlpmem, (u64 __user *)args);
+> +               break;
+>         }
+>
+>         return rc;
+> @@ -1109,6 +1181,148 @@ static void dump_error_log(struct ocxlpmem *ocxlpmem)
+>         kfree(buf);
+>  }
+>
+> +static irqreturn_t imn0_handler(void *private)
+> +{
+> +       struct ocxlpmem *ocxlpmem = private;
+> +       u64 chi = 0;
+> +
+> +       (void)ocxlpmem_chi(ocxlpmem, &chi);
+> +
+> +       if (chi & GLOBAL_MMIO_CHI_ELA) {
+> +               dev_warn(&ocxlpmem->dev, "Error log is available\n");
+> +
+> +               if (ocxlpmem->ev_ctx)
+> +                       eventfd_signal(ocxlpmem->ev_ctx, 1);
+> +       }
+> +
+> +       if (chi & GLOBAL_MMIO_CHI_CDA) {
+> +               dev_warn(&ocxlpmem->dev, "Controller dump is available\n");
+> +
+> +               if (ocxlpmem->ev_ctx)
+> +                       eventfd_signal(ocxlpmem->ev_ctx, 1);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t imn1_handler(void *private)
+> +{
+> +       struct ocxlpmem *ocxlpmem = private;
+> +       u64 chi = 0;
+> +
+> +       (void)ocxlpmem_chi(ocxlpmem, &chi);
+> +
+> +       if (chi & (GLOBAL_MMIO_CHI_CFFS | GLOBAL_MMIO_CHI_CHFS)) {
+> +               dev_err(&ocxlpmem->dev,
+> +                       "Controller status is fatal, chi=0x%llx, going offline\n",
+> +                       chi);
+> +
+> +               if (ocxlpmem->nvdimm_bus) {
+> +                       nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
+> +                       ocxlpmem->nvdimm_bus = NULL;
+> +               }
+> +
+> +               if (ocxlpmem->ev_ctx)
+> +                       eventfd_signal(ocxlpmem->ev_ctx, 1);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * ocxlpmem_setup_irq() - Set up the IRQs for the OpenCAPI Persistent Memory device
+> + * @ocxlpmem: the device metadata
+> + * Return: 0 on success, negative on failure
+> + */
+> +static int setup_irqs(struct ocxlpmem *ocxlpmem)
+> +{
+> +       int rc;
+> +       u64 irq_addr;
+> +
+> +       rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context,
+> +                               &ocxlpmem->irq_id[0]);
+> +       if (rc)
+> +               return rc;
+> +
+> +       rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem->irq_id[0],
+> +                                 imn0_handler, NULL, ocxlpmem);
+> +
+> +       irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context,
+> +                                        ocxlpmem->irq_id[0]);
+> +       if (!irq_addr)
+> +               return -EFAULT;
+> +
+> +       ocxlpmem->irq_addr[0] = ioremap(irq_addr, PAGE_SIZE);
+> +       if (!ocxlpmem->irq_addr[0])
+> +               return -ENODEV;
+> +
+> +       rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA0_OHP,
+> +                                     OCXL_LITTLE_ENDIAN,
+> +                                     (u64)ocxlpmem->irq_addr[0]);
+> +       if (rc)
+> +               goto out_irq0;
+> +
+> +       rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA0_CFP,
+> +                                     OCXL_LITTLE_ENDIAN, 0);
+> +       if (rc)
+> +               goto out_irq0;
+> +
+> +       rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context, &ocxlpmem->irq_id[1]);
+> +       if (rc)
+> +               goto out_irq0;
+> +
+> +       rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem->irq_id[1],
+> +                                 imn1_handler, NULL, ocxlpmem);
+> +       if (rc)
+> +               goto out_irq0;
+> +
+> +       irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context,
+> +                                        ocxlpmem->irq_id[1]);
+> +       if (!irq_addr) {
+> +               rc = -EFAULT;
+> +               goto out_irq0;
+> +       }
+> +
+> +       ocxlpmem->irq_addr[1] = ioremap(irq_addr, PAGE_SIZE);
+> +       if (!ocxlpmem->irq_addr[1]) {
+> +               rc = -ENODEV;
+> +               goto out_irq0;
+> +       }
+> +
+> +       rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA1_OHP,
+> +                                     OCXL_LITTLE_ENDIAN,
+> +                                     (u64)ocxlpmem->irq_addr[1]);
+> +       if (rc)
+> +               goto out_irq1;
+> +
+> +       rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA1_CFP,
+> +                                     OCXL_LITTLE_ENDIAN, 0);
+> +       if (rc)
+> +               goto out_irq1;
+> +
+> +       // Enable doorbells
+> +       rc = ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIE,
+> +                                   OCXL_LITTLE_ENDIAN,
+> +                                   GLOBAL_MMIO_CHI_ELA |
+> +                                   GLOBAL_MMIO_CHI_CDA |
+> +                                   GLOBAL_MMIO_CHI_CFFS |
+> +                                   GLOBAL_MMIO_CHI_CHFS);
+> +       if (rc)
+> +               goto out_irq1;
+> +
+> +       return 0;
+> +
+> +out_irq1:
+> +       iounmap(ocxlpmem->irq_addr[1]);
+> +       ocxlpmem->irq_addr[1] = NULL;
+> +
+> +out_irq0:
+> +       iounmap(ocxlpmem->irq_addr[0]);
+> +       ocxlpmem->irq_addr[0] = NULL;
+> +
+> +       return rc;
+> +}
+> +
+>  /**
+>   * probe_function0() - Set up function 0 for an OpenCAPI persistent memory device
+>   * This is important as it enables templates higher than 0 across all other
+> @@ -1212,6 +1426,12 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>                 goto err;
+>         }
+>
+> +       rc = setup_irqs(ocxlpmem);
+> +       if (rc) {
+> +               dev_err(&pdev->dev, "Could not set up OCXL IRQs\n");
+> +               goto err;
+> +       }
+> +
+>         rc = setup_command_metadata(ocxlpmem);
+>         if (rc) {
+>                 dev_err(&pdev->dev, "Could not read command metadata\n");
+> diff --git a/drivers/nvdimm/ocxl/ocxlpmem.h b/drivers/nvdimm/ocxl/ocxlpmem.h
+> index ee3bd651f254..01721596f982 100644
+> --- a/drivers/nvdimm/ocxl/ocxlpmem.h
+> +++ b/drivers/nvdimm/ocxl/ocxlpmem.h
+> @@ -106,6 +106,9 @@ struct ocxlpmem {
+>         struct pci_dev *pdev;
+>         struct cdev cdev;
+>         struct ocxl_fn *ocxl_fn;
+> +#define SCM_IRQ_COUNT 2
+> +       int irq_id[SCM_IRQ_COUNT];
+> +       void __iomem *irq_addr[SCM_IRQ_COUNT];
+>         struct nd_interleave_set nd_set;
+>         struct nvdimm_bus_descriptor bus_desc;
+>         struct nvdimm_bus *nvdimm_bus;
+> @@ -117,6 +120,7 @@ struct ocxlpmem {
+>         struct nd_region *nd_region;
+>         char fw_version[8 + 1];
+>         u32 timeouts[ADMIN_COMMAND_MAX + 1];
+> +       struct eventfd_ctx *ev_ctx;
+>         u32 max_controller_dump_size;
+>         u16 scm_revision; // major/minor
+>         u8 readiness_timeout;  /* The worst case time (in seconds) that the host
+> diff --git a/include/uapi/nvdimm/ocxlpmem.h b/include/uapi/nvdimm/ocxlpmem.h
+> index ca3a7098fa9d..d573bd307e35 100644
+> --- a/include/uapi/nvdimm/ocxlpmem.h
+> +++ b/include/uapi/nvdimm/ocxlpmem.h
+> @@ -71,6 +71,16 @@ struct ioctl_ocxlpmem_controller_stats {
+>         __u64 fast_write_count;
+>  };
+>
+> +struct ioctl_ocxlpmem_eventfd {
+> +       __s32 eventfd;
+> +       __u32 reserved;
+> +};
+> +
+> +#define IOCTL_OCXLPMEM_EVENT_CONTROLLER_DUMP_AVAILABLE (1ULL << (0))
+> +#define IOCTL_OCXLPMEM_EVENT_ERROR_LOG_AVAILABLE       (1ULL << (1))
+> +#define IOCTL_OCXLPMEM_EVENT_HARDWARE_FATAL            (1ULL << (2))
+> +#define IOCTL_OCXLPMEM_EVENT_FIRMWARE_FATAL            (1ULL << (3))
+> +
+>  /* ioctl numbers */
+>  #define OCXLPMEM_MAGIC 0xCA
+>  /* OpenCAPI Persistent memory devices */
+> @@ -79,5 +89,7 @@ struct ioctl_ocxlpmem_controller_stats {
+>  #define IOCTL_OCXLPMEM_CONTROLLER_DUMP_DATA            _IOWR(OCXLPMEM_MAGIC, 0x32, struct ioctl_ocxlpmem_controller_dump_data)
+>  #define IOCTL_OCXLPMEM_CONTROLLER_DUMP_COMPLETE                _IO(OCXLPMEM_MAGIC, 0x33)
+>  #define IOCTL_OCXLPMEM_CONTROLLER_STATS                        _IO(OCXLPMEM_MAGIC, 0x34)
+> +#define IOCTL_OCXLPMEM_EVENTFD                         _IOW(OCXLPMEM_MAGIC, 0x35, struct ioctl_ocxlpmem_eventfd)
+> +#define IOCTL_OCXLPMEM_EVENT_CHECK                     _IOR(OCXLPMEM_MAGIC, 0x36, __u64)
+>
+>  #endif /* _UAPI_OCXL_SCM_H */
+> --
+> 2.24.1
+>
