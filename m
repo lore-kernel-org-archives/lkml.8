@@ -2,111 +2,199 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	TVD_RCVD_SPACE_BRACKET,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4306C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A96C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A09321582
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585819692;
-	bh=arJuEu1VaCuRLLMtEVLbOj/nXcpJ/nIL0njuJu/AVCc=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=Vi7LfKbXmVnBWZspSzVDMPg422QPQk0uJlT2jniFZGUsp20Rxq0E217sFIXooDGYT
-	 bTQCxbVYpf6jOB+RIU74jKoGY4mZoc1OolIqvOZrns5iZk91/iPmIsG34R8zHM+wqJ
-	 NIu3S5n8gb2j6Z90ox0ySj39sXOQjoxce/7XWrqI=
+	by mail.kernel.org (Postfix) with ESMTP id 7DF3F2078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="vHAX+dRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387545AbgDBJ2L (ORCPT
+        id S2387920AbgDBJ2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 2 Apr 2020 05:28:13 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:10904 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387722AbgDBJ2L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Apr 2020 05:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387734AbgDBJ2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 05:28:09 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC66B2080C;
-        Thu,  2 Apr 2020 09:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585819688;
-        bh=arJuEu1VaCuRLLMtEVLbOj/nXcpJ/nIL0njuJu/AVCc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Js3TaHpbnk17qr53i8vzInaYB0+ldzlG0BFyxz8OL8ROt+5tUx3meQW6VGgLOFN3m
-         Rj2ILK0L7r/1gZ9c5ewaQtH3bYB15D85m3rLnbyT5rdFoNNT1yo162mMvwz41DHlWl
-         mPh35GJcX/v8DK/wwuL6mNkKrObpzNFleWfuAKKM=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jJw8s-000AaU-6S; Thu, 02 Apr 2020 11:28:06 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH 6/6] kconfig: qconf: Fix a few alignment issues
-Date:   Thu,  2 Apr 2020 11:28:03 +0200
-Message-Id: <e1d57b9e1dca8680b32744920642ab27aec14ad7.1585819250.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1585819250.git.mchehab+huawei@kernel.org>
-References: <cover.1585819250.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329O0Vv007786;
+        Thu, 2 Apr 2020 05:27:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id; s=smtpout1;
+ bh=TIs0GHVhckV/YQTZc4Me6SXKOvBgDYy/ULASj+HFtA0=;
+ b=vHAX+dRuUWdFG9a7hVtCeGPUPorhOV4k4ut4SkxeECIFTKzj5+40CK3WVLTQMQU7SqXl
+ rw+3oVLnrda1Wo9NL1hB8MEhYMw1ApTMjQnko2gsCd2daY+lt6KP6JfGWalybSZZiv7a
+ lc08gfY9HOfB/ctQPJMiUqyFfu9AV0JjIsg3yUs6iHtFejRSsmxc5K6GekkRK9bNVfh+
+ 0FKUBafnyzD487XpjqIUw8dbOR+/rNtduR9q9kaNvHbnPgAnFeAGfCWFIbZHq067NfdB
+ v91lTECEtSXw5MeIWO2QHwIaD+eZCfC2NRqp+GdI8mygg+MiEEgGqy+S9dO5YqB+XAXA cA== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 3021tau6cs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 05:27:50 -0400
+Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329Mfsg055527;
+        Thu, 2 Apr 2020 05:27:50 -0400
+Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
+        by mx0a-00154901.pphosted.com with ESMTP id 3020eug06y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 02 Apr 2020 05:27:49 -0400
+Received: from emc.com (localhost [127.0.0.1])
+        by mailuogwprd53.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329RmcS027368;
+        Thu, 2 Apr 2020 05:27:48 -0400
+Received: from mailsyshubprd05.lss.emc.com ([mailsyshubprd05.lss.emc.com [10.253.24.23]]) by mailuogwprd53.lss.emc.com with ESMTP id 0329RiQE027334 ;
+          Thu, 2 Apr 2020 05:27:46 -0400
+Received: from arwen2.xiolab.lab.emc.com. (arwen2.xiolab.lab.emc.com [10.76.211.113])
+        by mailsyshubprd05.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329Re2l010727;
+        Thu, 2 Apr 2020 05:27:41 -0400
+From:   leonid.ravich@dell.com
+To:     dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dmaengine: ioat: fixing chunk sizing macros dependency
+Date:   Thu,  2 Apr 2020 12:27:17 +0300
+Message-Id: <20200402092725.15121-1-leonid.ravich@dell.com>
+X-Mailer: git-send-email 2.16.2
+X-Sentrion-Hostname: mailuogwprd53.lss.emc.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-02_01:2020-03-31,2020-04-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ clxscore=1011 priorityscore=1501 mlxscore=0 suspectscore=38
+ lowpriorityscore=0 mlxlogscore=775 malwarescore=0 adultscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020085
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 suspectscore=38 phishscore=0
+ bulkscore=0 malwarescore=0 mlxscore=0 clxscore=1015 mlxlogscore=850
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a few items with wrong alignments. Solve them.
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+prepare for changing alloc size.
+
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
 ---
- scripts/kconfig/qconf.cc | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/dma/ioat/dma.c  | 14 ++++++++------
+ drivers/dma/ioat/dma.h  | 10 ++++++----
+ drivers/dma/ioat/init.c |  2 +-
+ 3 files changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index f3eaeb2b70da..84976b9d2174 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -635,7 +635,7 @@ void ConfigList::updateMenuList(ConfigItem *parent, struct menu* menu)
- 			last = item;
- 			continue;
- 		}
--	hide:
-+hide:
- 		if (item && item->menu == child) {
- 			last = parent->firstChild();
- 			if (last == item)
-@@ -700,7 +700,7 @@ void ConfigList::updateMenuList(ConfigList *parent, struct menu* menu)
- 			last = item;
- 			continue;
- 		}
--	hide:
-+hide:
- 		if (item && item->menu == child) {
- 			last = (ConfigItem*)parent->topLevelItem(0);
- 			if (last == item)
-@@ -1239,10 +1239,11 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
- {
- 	QMenu* popup = Parent::createStandardContextMenu(pos);
- 	QAction* action = new QAction("Show Debug Info", popup);
--	  action->setCheckable(true);
--	  connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
--	  connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
--	  action->setChecked(showDebug());
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index 18c011e..1e0e6c1 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -332,8 +332,8 @@ static dma_cookie_t ioat_tx_submit_unlock(struct dma_async_tx_descriptor *tx)
+ 	u8 *pos;
+ 	off_t offs;
+ 
+-	chunk = idx / IOAT_DESCS_PER_2M;
+-	idx &= (IOAT_DESCS_PER_2M - 1);
++	chunk = idx / IOAT_DESCS_PER_CHUNK;
++	idx &= (IOAT_DESCS_PER_CHUNK - 1);
+ 	offs = idx * IOAT_DESC_SZ;
+ 	pos = (u8 *)ioat_chan->descs[chunk].virt + offs;
+ 	phys = ioat_chan->descs[chunk].hw + offs;
+@@ -370,7 +370,8 @@ struct ioat_ring_ent **
+ 	if (!ring)
+ 		return NULL;
+ 
+-	ioat_chan->desc_chunks = chunks = (total_descs * IOAT_DESC_SZ) / SZ_2M;
++	chunks = (total_descs * IOAT_DESC_SZ) / IOAT_CHUNK_SIZE;
++	ioat_chan->desc_chunks = chunks;
+ 
+ 	for (i = 0; i < chunks; i++) {
+ 		struct ioat_descs *descs = &ioat_chan->descs[i];
+@@ -382,8 +383,9 @@ struct ioat_ring_ent **
+ 
+ 			for (idx = 0; idx < i; idx++) {
+ 				descs = &ioat_chan->descs[idx];
+-				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+-						  descs->virt, descs->hw);
++				dma_free_coherent(to_dev(ioat_chan),
++						IOAT_CHUNK_SIZE,
++						descs->virt, descs->hw);
+ 				descs->virt = NULL;
+ 				descs->hw = 0;
+ 			}
+@@ -404,7 +406,7 @@ struct ioat_ring_ent **
+ 
+ 			for (idx = 0; idx < ioat_chan->desc_chunks; idx++) {
+ 				dma_free_coherent(to_dev(ioat_chan),
+-						  SZ_2M,
++						  IOAT_CHUNK_SIZE,
+ 						  ioat_chan->descs[idx].virt,
+ 						  ioat_chan->descs[idx].hw);
+ 				ioat_chan->descs[idx].virt = NULL;
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index b8e8e0b..535aba9 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -81,6 +81,11 @@ struct ioatdma_device {
+ 	u32 msixpba;
+ };
+ 
++#define IOAT_MAX_ORDER 16
++#define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
++#define IOAT_CHUNK_SIZE (SZ_2M)
++#define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE/IOAT_DESC_SZ)
 +
-+	action->setCheckable(true);
-+	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
-+	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
-+	action->setChecked(showDebug());
- 	popup->addSeparator();
- 	popup->addAction(action);
- 	return popup;
+ struct ioat_descs {
+ 	void *virt;
+ 	dma_addr_t hw;
+@@ -128,7 +133,7 @@ struct ioatdma_chan {
+ 	u16 produce;
+ 	struct ioat_ring_ent **ring;
+ 	spinlock_t prep_lock;
+-	struct ioat_descs descs[2];
++	struct ioat_descs descs[IOAT_MAX_DESCS/IOAT_DESCS_PER_CHUNK];
+ 	int desc_chunks;
+ 	int intr_coalesce;
+ 	int prev_intr_coalesce;
+@@ -301,9 +306,6 @@ static inline bool is_ioat_bug(unsigned long err)
+ 	return !!err;
+ }
+ 
+-#define IOAT_MAX_ORDER 16
+-#define IOAT_MAX_DESCS 65536
+-#define IOAT_DESCS_PER_2M 32768
+ 
+ static inline u32 ioat_ring_size(struct ioatdma_chan *ioat_chan)
+ {
+diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+index 60e9afb..58d1356 100644
+--- a/drivers/dma/ioat/init.c
++++ b/drivers/dma/ioat/init.c
+@@ -651,7 +651,7 @@ static void ioat_free_chan_resources(struct dma_chan *c)
+ 	}
+ 
+ 	for (i = 0; i < ioat_chan->desc_chunks; i++) {
+-		dma_free_coherent(to_dev(ioat_chan), SZ_2M,
++		dma_free_coherent(to_dev(ioat_chan), IOAT_CHUNK_SIZE,
+ 				  ioat_chan->descs[i].virt,
+ 				  ioat_chan->descs[i].hw);
+ 		ioat_chan->descs[i].virt = NULL;
 -- 
-2.25.1
+1.9.3
 
