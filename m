@@ -2,251 +2,123 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4491BC2BA80
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE42EC2BA18
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AEDB20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E9F20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="DEo9GkYt"
+	dkim=pass (1024-bit key) header.d=bacher09.org header.i=@bacher09.org header.b="ZCMoDjDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389974AbgDBUiL (ORCPT
+        id S2390155AbgDBUi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:38:11 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:38109 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389514AbgDBUhR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:37:17 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D68BB23D22;
-        Thu,  2 Apr 2020 22:37:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585859834;
+        Thu, 2 Apr 2020 16:38:28 -0400
+Received: from pub.regulars.win ([89.163.144.234]:50238 "EHLO pub.regulars.win"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbgDBUi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:38:26 -0400
+Subject: Re: [PATCH v4 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bacher09.org;
+        s=reg; t=1585859903;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kaWwf4uffcPQf7EE7ZV+X/pMrqzfzrhbi/7KT6avBwM=;
-        b=DEo9GkYtkohYmY81gx80Vs3YUYRyjlNOuqMvKhlTN7/cE2u81Pz69GXeCWpxf//xwojjta
-        GqOuObzxMCwDMiEK7YIo8nrBksweynrmUTENmWwL6Oeh7pBNP+vaXeZkboIv986Az2GpTn
-        qB8yEqADJpCHkVny+AJnxX6ETwOHZZk=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 07/16] irqchip: add sl28cpld interrupt controller support
-Date:   Thu,  2 Apr 2020 22:36:47 +0200
-Message-Id: <20200402203656.27047-8-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200402203656.27047-1-michael@walle.cc>
-References: <20200402203656.27047-1-michael@walle.cc>
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=yU9hKHsWF04/aHMSAoqtWXojqC2smH8PJdSe85WG+s0=;
+        b=ZCMoDjDEQ+JMvQThTix0Oq40GUHZekLHqu/CMFOVQHlLzDzemAnV0G9FfYylWzY445heWK
+        jghG+YF5yjomUG0DryIiXNHyQHEZJ+HFnYokjYUD4Y2pMRmRehNbw5dQfgTI5J3rprAQt0
+        SA3TqCtBHlEzjZosZtNEXBknwyCTt6c=
+To:     Kees Cook <keescook@chromium.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Liu Yiding <liuyd.fnst@cn.fujitsu.com>, kpsingh@google.com
+References: <202004010849.CC7E9412@keescook>
+ <20200402153335.38447-1-slava@bacher09.org>
+ <f43f4e17-f496-9ee1-7d89-c8f742720a5f@bacher09.org>
+ <CAEf4Bzb2mgDPcdNGWnBgoqsuWYqDiv39U2irn4iCp=7B3kx1nA@mail.gmail.com>
+ <202004021328.E6161480@keescook>
+From:   Slava Bacherikov <slava@bacher09.org>
+Autocrypt: addr=slava@bacher09.org; prefer-encrypt=mutual; keydata=
+ mQINBFFdcIUBEAC9HZz+DbqCs+jyJjpvRyped8U4bz716OZKvZCTH4fNxrrV0fYWRn7LJ/dU
+ r5tBnwhmlTWD4v6hk88qpD9flagkSP4UuIAo+3aopxvrkyWXXYiEAjSL2uTFolcEO40HuYPk
+ 7nprTEzHcHgcYq2wzJfE046gimzFYcUXkrv1gC89RdkwOgLTFb80QUpKyVeoKJWKWHPfRqGF
+ FxpFwMnW3IrgZhOnl8X859WwKUc/agPz05LjaksGpAP8ayfruxtG/3Hl7OulYPWIkTuxHAtK
+ xW9QL7Vt24P8rVLC7sgNZYcjaOcY70PCkGLnquETuIeeCwhKr/e2n+ymH+CxlAiUY+blNpO5
+ S5P+rwb0qPvGDzjF+Drdp0ye/S3kMa+FNrELW06Fp74p7BgsPgNsuBVg300JWMFXiS7YeMZV
+ cyedAzGbcO8yxrY6ZnuNF8rLiZOYde79yN82wTNw/fWZtHhz8QJELZzMNjZd3/w61ztSs9ng
+ mduiqv9EyNKlEEuxy6N4jGTQ2YYLE/YcIx654rCfpJWJhj2kDd4k2uNRrhJI7t4duHC86K4M
+ HiOwC7PIKlIbtrpYnTZPXXcQHp69LDzxCAA6dgGkhjZsUTVci0rTEfRQjkXYvK/f3P1SHF1M
+ EHoeEaclqvpkuvPcbHQ/TBwBJs+ekdFCTmBzv0UwqZKfaPW5yQARAQABtDJTbGF2YSBCYWNo
+ ZXJpa292IChNeSBOZXcgS2V5KSA8c2xhdmFAYmFjaGVyMDkub3JnPokCWQQTAQIAQwIbIwUJ
+ DShogAcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAFiEEZkmc+DLOftzkG8AWUSYbvb34nfMF
+ AlkF95wCGQEACgkQUSYbvb34nfO7FQ//drNtAxFi294vVZnN+wyVimXGiyBHpBPnEK5/hSQ5
+ oBVvjFl8Ws7q13WWklhdPgM3atAukADMG5wr3IM3ctS1L2+502TYGv8W5jvUlso/TxjNdVQz
+ SDicmPCMMs91BWHiJHkYKErUXxNtCaBQqVV2rAKiDoK1gtFrWfH/3OgP6RS+mLMt5eJ/PHsc
+ kAuvaXOIzWxjclGMB2yAQzmK7SImOHp7YUBqXrOt523sz29p+1q0+y6ZRlPNctys/okUdnoK
+ bi0rMBqbHngaoi/al9Clh9jrhqjZHJLPSM091u3ubuQkvtg3BOhqs0I/b7Xz83VxN0pj8XHI
+ z4MRFwfhVSKW4pRLf92DKAa9PEYxA9QtboKafZG2EJfrUauba29/JoIh8Evi5MIuWNeZK7pK
+ t3+NadAwXwcLP4RlLuOkVrF+DAuhEktvdJBvTfUkipeQo3YGcffm1daJWoUKiP2a3tqJ9fz8
+ Zd5cy8hvKFCv5VsoqF2voc6uaadH1/Pwylnw2fzTfGzFP0bsz/HI8F7g3WFv0PrrtkXnPUCD
+ 2IbmIGe8fi7NBTIqtc+mDMsqOIa4hlLBGkP8jHnCPv6oaGYlWemzcVhehU3XQOKyT2lroZan
+ nnARpEW9lSSeWPba99+PJu0q2rEaQj/Vhy/m2db89kYeLcEuItd4DYKk7rHZSrHBKwM=
+Message-ID: <ddd2ac2e-fc7e-3216-69cd-4e9a01df1958@bacher09.org>
+Date:   Thu, 2 Apr 2020 23:38:21 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: D68BB23D22
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[24];
-         MID_CONTAINS_FROM(1.00)[];
-         NEURAL_HAM(-0.00)[-0.166];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         FREEMAIL_CC(0.00)[linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,walle.cc];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+In-Reply-To: <202004021328.E6161480@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for the interrupt controller inside the sl28
-CPLD management controller.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/irqchip/Kconfig        |  3 ++
- drivers/irqchip/Makefile       |  1 +
- drivers/irqchip/irq-sl28cpld.c | 97 ++++++++++++++++++++++++++++++++++
- drivers/mfd/Kconfig            |  2 +
- 4 files changed, 103 insertions(+)
- create mode 100644 drivers/irqchip/irq-sl28cpld.c
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index a85aada04a64..234db932e7cf 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -246,6 +246,9 @@ config RENESAS_RZA1_IRQC
- 	  Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
- 	  to 8 external interrupts with configurable sense select.
- 
-+config SL28CPLD_INTC
-+	bool
-+
- config ST_IRQCHIP
- 	bool
- 	select REGMAP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 37bbe39bf909..e3c6b94f7b0a 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -107,3 +107,4 @@ obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-+obj-$(CONFIG_SL28CPLD_INTC)		+= irq-sl28cpld.o
-diff --git a/drivers/irqchip/irq-sl28cpld.c b/drivers/irqchip/irq-sl28cpld.c
-new file mode 100644
-index 000000000000..88de71d32b09
---- /dev/null
-+++ b/drivers/irqchip/irq-sl28cpld.c
-@@ -0,0 +1,97 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * sl28cpld interrupt controller driver.
-+ *
-+ * Copyright 2019 Kontron Europe GmbH
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define INTC_IE 0x00
-+#define INTC_IP 0x01
-+
-+static const struct regmap_irq sl28cpld_irqs[] = {
-+	REGMAP_IRQ_REG_LINE(0, 8),
-+	REGMAP_IRQ_REG_LINE(1, 8),
-+	REGMAP_IRQ_REG_LINE(2, 8),
-+	REGMAP_IRQ_REG_LINE(3, 8),
-+	REGMAP_IRQ_REG_LINE(4, 8),
-+	REGMAP_IRQ_REG_LINE(5, 8),
-+	REGMAP_IRQ_REG_LINE(6, 8),
-+	REGMAP_IRQ_REG_LINE(7, 8),
-+};
-+
-+struct sl28cpld_intc {
-+	struct regmap *regmap;
-+	struct regmap_irq_chip chip;
-+	struct regmap_irq_chip_data *irq_data;
-+};
-+
-+static int sl28cpld_intc_probe(struct platform_device *pdev)
-+{
-+	struct sl28cpld_intc *irqchip;
-+	struct resource *res;
-+	unsigned int irq;
-+	int ret;
-+
-+	if (!pdev->dev.parent)
-+		return -ENODEV;
-+
-+	irqchip = devm_kzalloc(&pdev->dev, sizeof(*irqchip), GFP_KERNEL);
-+	if (!irqchip)
-+		return -ENOMEM;
-+
-+	irqchip->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!irqchip->regmap)
-+		return -ENODEV;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-+	if (!res)
-+		return -EINVAL;
-+
-+	irqchip->chip.name = "sl28cpld-intc";
-+	irqchip->chip.irqs = sl28cpld_irqs;
-+	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
-+	irqchip->chip.num_regs = 1;
-+	irqchip->chip.status_base = res->start + INTC_IP;
-+	irqchip->chip.mask_base = res->start + INTC_IE;
-+	irqchip->chip.mask_invert = true,
-+	irqchip->chip.ack_base = res->start + INTC_IP;
-+
-+	ret = devm_regmap_add_irq_chip(&pdev->dev, irqchip->regmap, irq,
-+				       IRQF_SHARED | IRQF_ONESHOT, 0,
-+				       &irqchip->chip, &irqchip->irq_data);
-+	if (ret)
-+		return ret;
-+	dev_info(&pdev->dev, "registered IRQ %d\n", irq);
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id sl28cpld_intc_id_table[] = {
-+	{ "sl28cpld-intc" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(platform, sl28cpld_intc_id_table);
-+
-+static struct platform_driver sl28cpld_intc_driver = {
-+	.probe	= sl28cpld_intc_probe,
-+	.id_table = sl28cpld_intc_id_table,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+	}
-+};
-+module_platform_driver(sl28cpld_intc_driver);
-+
-+MODULE_DESCRIPTION("sl28cpld Interrupt Controller Driver");
-+MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 7c6761161f7a..4f741d640705 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -2064,6 +2064,8 @@ config MFD_SL28CPLD
- 	depends on I2C=y
- 	depends on OF
- 	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	select SL28CPLD_INTC
- 	select MFD_CORE
- 	help
- 	  This option enables support for the board management controller
--- 
-2.20.1
+02.04.2020 23:34, Kees Cook wrote:
+> On Thu, Apr 02, 2020 at 12:31:36PM -0700, Andrii Nakryiko wrote:
+>> On Thu, Apr 2, 2020 at 8:40 AM Slava Bacherikov <slava@bacher09.org> wrote:
+>>>
+>>>
+>>>
+>>> 02.04.2020 18:33, Slava Bacherikov wrote:
+>>>> +     depends on DEBUG_INFO || COMPILE_TEST
+>>>
+>>> Andrii are you fine by this ?
+>>
+>> I think it needs a good comment explaining this weirdness, at least.
+>> As I said, if there is no DEBUG_INFO, there is not point in doing
+>> DWARF-to-BTF conversion, even more -- it actually might fail, I
+>> haven't checked what pahole does in that case. So I'd rather drop
+>> GCC_PLUGIN_RANDSTRUCT is that's the issue here. DEBUG_INFO_SPLIT and
+>> DEBUG_INFO_REDUCED look good.
 
+Yesterday before sending it I tested it against latest bpf git with
+allyesconfig and it compiled fine, even worked in vm ;)
+> 
+> The DEBUG_INFO is separate, AIUI -- it sounds like BTF may entirely
+> break on a compile with weird DWARF configs.
+> 
+> The GCC_PLUGIN_RANDSTRUCT issue is separate: it doesn't make sense to
+> run a kernel built with BTF and GCC_PLUGIN_RANDSTRUCT. But they should
+> have nothing to do with each other with regard to compilation. So, to
+> keep GCC_PLUGIN_RANDSTRUCT disable for "real" builds but leave it on for
+> all*config, randconfig, etc, I'd like to keep the || COMPILE_TEST,
+> otherwise GCC_PLUGIN_RANDSTRUCT won't be part of the many CIs doing
+> compilation testing.
+> 
+> And FWIW, I'm fine to let GCC_PLUGIN_RANDSTRUCT and BTF build together.
+> But if they want to be depends-conflicted, I wanted to keep the test
+> compile trap door.
+> 
+
+Oh, seems I misunderstood you, if everyone agree I'll drop it.
