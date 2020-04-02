@@ -2,86 +2,62 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F958C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C1CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC1F206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:34:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=bacher09.org header.i=@bacher09.org header.b="HNrpNMyR"
+	by mail.kernel.org (Postfix) with ESMTP id 63C3520737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389310AbgDBPel (ORCPT
+        id S2389326AbgDBPfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:34:41 -0400
-Received: from pub.regulars.win ([89.163.144.234]:35722 "EHLO pub.regulars.win"
+        Thu, 2 Apr 2020 11:35:10 -0400
+Received: from verein.lst.de ([213.95.11.211]:48940 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732754AbgDBPek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:34:40 -0400
-From:   Slava Bacherikov <slava@bacher09.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bacher09.org;
-        s=reg; t=1585841677;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bKUf/bnAONFPXaf6zoV9Cn+HIIIIoYflCpB+vjMGW18=;
-        b=HNrpNMyRlD90A3TMwMZHALy+ta+0ynQ+1oVhRvwwGsCPTvsRtsjf4Ds9ztmBRuq3sAOWKK
-        RG/VAG3HXogrMUbFpmqA/WQufGMoqj4Bg663lFurWifyDKMZQ7p3Vc/RXS0Jch/uOh7pJ3
-        0zhAfPmaMV+DII6Y5Ggr0RlbXON+Y9A=
-To:     keescook@chromium.org
-Cc:     andriin@fb.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jannh@google.com, alexei.starovoitov@gmail.com,
-        daniel@iogearbox.net, kernel-hardening@lists.openwall.com,
-        liuyd.fnst@cn.fujitsu.com, kpsingh@google.com,
-        Slava Bacherikov <slava@bacher09.org>
-Subject: [PATCH v4 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
-Date:   Thu,  2 Apr 2020 18:33:36 +0300
-Message-Id: <20200402153335.38447-1-slava@bacher09.org>
-In-Reply-To: <202004010849.CC7E9412@keescook>
-References: <202004010849.CC7E9412@keescook>
+        id S1732754AbgDBPfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 11:35:10 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F09D668B05; Thu,  2 Apr 2020 17:35:06 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 17:35:06 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Philippe Liard <pliard@google.com>
+Cc:     Christoph Hellwig <hch@lst.de>, phillip@squashfs.org.uk,
+        linux-kernel@vger.kernel.org, groeck@chromium.org
+Subject: Re: [PATCH v3] squashfs: Migrate from ll_rw_block usage to BIO
+Message-ID: <20200402153506.GA13332@lst.de>
+References: <20191106074238.186023-1-pliard@google.com> <20191106083423.GA10679@lst.de> <20191106083711.GB10679@lst.de> <CAEThQxe2sNuCHoQfa30FVmtYkQ_zJsecdW2wmVmwafvne1RXSg@mail.gmail.com> <CAEThQxeC2qyUr+3EO7o+2p5tziXQ621SqaaxmF3jzheCKjpEkA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEThQxeC2qyUr+3EO7o+2p5tziXQ621SqaaxmF3jzheCKjpEkA@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
-enabled will produce invalid btf file, since gen_btf function in
-link-vmlinux.sh script doesn't handle *.dwo files.
+On Fri, Nov 15, 2019 at 10:20:33AM +0900, Philippe Liard wrote:
+> On Wed, Nov 6, 2019 at 6:28 PM Philippe Liard <pliard@google.com> wrote:
+> >
+> > On Wed, Nov 6, 2019 at 5:37 PM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > Sorry for the empty reply.
+> > >
+> > > This was meant to say that the patch looks good to me:
+> > >
+> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> >
+> > Thanks!
+> 
+> FYI I'm unfortunately no longer observing the 40% impact announced in the
+> commit description after many optimizations landed in the Chrome OS VM
+> infrastructure.
+> 
+> Hopefully moving to BIO is still desirable though. Thank you in any case for
+> your help/guidance and all the time you spent reviewing this.
 
-Enabling DEBUG_INFO_REDUCED will also produce invalid btf file, and
-using GCC_PLUGIN_RANDSTRUCT with BTF makes no sense.
-
-Signed-off-by: Slava Bacherikov <slava@bacher09.org>
-Reported-by: Jann Horn <jannh@google.com>
-Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
-Acked-by: KP Singh <kpsingh@google.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info for vmlinux")
----
- lib/Kconfig.debug | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index f61d834e02fe..b94227be2d62 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -222,7 +222,9 @@ config DEBUG_INFO_DWARF4
- 
- config DEBUG_INFO_BTF
- 	bool "Generate BTF typeinfo"
--	depends on DEBUG_INFO
-+	depends on DEBUG_INFO || COMPILE_TEST
-+	depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
-+	depends on !GCC_PLUGIN_RANDSTRUCT || COMPILE_TEST
- 	help
- 	  Generate deduplicated BTF type information from DWARF debug info.
- 	  Turning this on expects presence of pahole tool, which will convert
+Do you still plan to submit the patch?  I think it is a major cleanup
+of the codebase, so I'd like to see it land.
