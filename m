@@ -2,164 +2,157 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E9FC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E9CC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B6D2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2887E2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585811968;
+	bh=u1AoeBtkiI8pGLI1x4tXxgrHRP3Rin/Lv6nGCZDiQIs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Po0aPBKdanS++tVl2EZ9XCXUI5QDnJP0J5fTRe+JqFz0UeHmi6dQT8hPlNyczyOIC
+	 Ha/OtXk/pB5bHi81oZXV45d1rpPQh5b/3tbSgrsA8ymHAn32b9/e2iuvDqfweNox4V
+	 VK865usH2uaTNHyZpPlWER718BPgiQN2EG6m6b9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387467AbgDBHTL (ORCPT
+        id S2387521AbgDBHT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:19:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36000 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725845AbgDBHTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:19:10 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 032746DO135229;
-        Thu, 2 Apr 2020 03:18:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 304r50dx3g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 03:18:46 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03274I3P136203;
-        Thu, 2 Apr 2020 03:18:45 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 304r50dx36-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 03:18:45 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0327HYj6030992;
-        Thu, 2 Apr 2020 07:18:44 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02wdc.us.ibm.com with ESMTP id 301x77728p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 07:18:44 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0327IhYT56099218
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Apr 2020 07:18:43 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 584F178060;
-        Thu,  2 Apr 2020 07:18:43 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91F2F7805C;
-        Thu,  2 Apr 2020 07:18:42 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Apr 2020 07:18:42 +0000 (GMT)
-Subject: [PATCH v10 12/14] powerpc/vas: Display process stuck message
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, ajd@linux.ibm.com,
-        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
-        oohall@gmail.com, clg@kaod.org, sukadev@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, herbert@gondor.apana.org.au
-In-Reply-To: <1585810846.2275.23.camel@hbabu-laptop>
-References: <1585810846.2275.23.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Thu, 02 Apr 2020 00:18:41 -0700
-Message-ID: <1585811921.2275.64.camel@hbabu-laptop>
+        Thu, 2 Apr 2020 03:19:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbgDBHT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:19:27 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4138020678;
+        Thu,  2 Apr 2020 07:19:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585811966;
+        bh=u1AoeBtkiI8pGLI1x4tXxgrHRP3Rin/Lv6nGCZDiQIs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vlOoIzUOdlCRg7heX0rIUtCnCly75JpAGWEGtamgSu9kRaJKwTlqwy6Kdhmd9cXlY
+         wTD44Ag9Snkw9b8N0XxyNWFJxwrDb9v3ETbeXjVBFPk0lI+mQ38pUGh0q6sQFRzwsc
+         c42hdxdH9P1VtJygzFCAN8Ar3Q06xRqFgNEQcr7g=
+Date:   Thu, 2 Apr 2020 16:19:20 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>,
+        lkp@lists.01.org
+Subject: Re: [tracing] cd8f62b481:
+ BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
+Message-Id: <20200402161920.3b3649cac4cc47a52679d69b@kernel.org>
+In-Reply-To: <20200401110401.23cda3b3@gandalf.local.home>
+References: <20200319232731.799117803@goodmis.org>
+        <20200326091256.GR11705@shao2-debian>
+        <20200401230700.d9ddb42b3459dca98144b55c@kernel.org>
+        <20200401102112.35036490@gandalf.local.home>
+        <20200401110401.23cda3b3@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- phishscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
- spamscore=0 suspectscore=1 mlxscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004020063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 1 Apr 2020 11:04:01 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Process can not close send window until all requests are processed.
-Means wait until window state is not busy and send credits are
-returned. Display debug messages in case taking longer to close the
-window.
+> On Wed, 1 Apr 2020 10:21:12 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 6519b7afc499..7f1466253ca8 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -3487,6 +3487,14 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+> >  	 */
+> >  	if (iter->ent && iter->ent != iter->temp) {
+> >  		if (!iter->temp || iter->temp_size < iter->ent_size) {
+> > +			/*
+> > +			 * This function is only used to add markers between
+> > +			 * events that are far apart (see trace_print_lat_context()),
+> > +			 * but if this is called in an atomic context (like NMIs)
+> > +			 * we can't call kmalloc(), thus just return NULL.
+> > +			 */
+> > +			if (in_atomic() || irqs_disabled())
+> > +				return NULL;
+> >  			kfree(iter->temp);
+> >  			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
+> >  			if (!iter->temp)
+> 
+> Peter informed me on IRC not to use in_atomic() as it doesn't catch
+> spin_locks when CONFIG_PREEMPT is not defined.
+> 
+> As the issue is just with ftrace_dump(), I'll have it use a static buffer
+> instead of 128 bytes. Which should be big enough for most events, and if
+> not, then it will just miss the markers.
 
-Signed-off-by: Haren Myneni <haren@linux.ibm.com>
----
- arch/powerpc/platforms/powernv/vas-window.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-index 4b5adf5..3d80f37 100644
---- a/arch/powerpc/platforms/powernv/vas-window.c
-+++ b/arch/powerpc/platforms/powernv/vas-window.c
-@@ -1181,6 +1181,7 @@ static void poll_window_credits(struct vas_window *window)
- {
- 	u64 val;
- 	int creds, mode;
-+	int count = 0;
- 
- 	val = read_hvwc_reg(window, VREG(WINCTL));
- 	if (window->tx_win)
-@@ -1199,10 +1200,27 @@ static void poll_window_credits(struct vas_window *window)
- 		creds = GET_FIELD(VAS_LRX_WCRED, val);
- 	}
- 
-+	/*
-+	 * Takes around few milliseconds to complete all pending requests
-+	 * and return credits.
-+	 * TODO: Scan fault FIFO and invalidate CRBs points to this window
-+	 *       and issue CRB Kill to stop all pending requests. Need only
-+	 *       if there is a bug in NX or fault handling in kernel.
-+	 */
- 	if (creds < window->wcreds_max) {
- 		val = 0;
- 		set_current_state(TASK_UNINTERRUPTIBLE);
- 		schedule_timeout(msecs_to_jiffies(10));
-+		count++;
-+		/*
-+		 * Process can not close send window until all credits are
-+		 * returned.
-+		 */
-+		if (!(count % 10000))
-+			pr_debug("VAS: pid %d stuck. Waiting for credits returned for Window(%d). creds %d, Retries %d\n",
-+				vas_window_pid(window), window->winid,
-+				creds, count);
-+
- 		goto retry;
- 	}
- }
-@@ -1216,6 +1234,7 @@ static void poll_window_busy_state(struct vas_window *window)
- {
- 	int busy;
- 	u64 val;
-+	int count = 0;
- 
- retry:
- 	val = read_hvwc_reg(window, VREG(WIN_STATUS));
-@@ -1224,6 +1243,15 @@ static void poll_window_busy_state(struct vas_window *window)
- 		val = 0;
- 		set_current_state(TASK_UNINTERRUPTIBLE);
- 		schedule_timeout(msecs_to_jiffies(5));
-+		count++;
-+		/*
-+		 * Takes around few milliseconds to process all pending
-+		 * requests.
-+		 */
-+		if (!(count % 10000))
-+			pr_debug("VAS: pid %d stuck. Window (ID=%d) is in busy state. Retries %d\n",
-+				vas_window_pid(window), window->winid, count);
-+
- 		goto retry;
- 	}
- }
+That sounds good, but the below patch seems to do different thing.
+Does it just makes trace_find_next_entry() always fail if it is
+called from ftrace_dump()?
+
+Thank you,
+
+> 
+> -- Steve
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 6519b7afc499..8c9d6a75abbf 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -3472,6 +3472,8 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
+>  	return next;
+>  }
+>  
+> +#define IGNORE_TEMP		((struct trace_iterator *)-1L)
+> +
+>  /* Find the next real entry, without updating the iterator itself */
+>  struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+>  					  int *ent_cpu, u64 *ent_ts)
+> @@ -3480,6 +3482,17 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+>  	int ent_size = iter->ent_size;
+>  	struct trace_entry *entry;
+>  
+> +	/*
+> +	 * This function is only used to add markers between
+> +	 * events that are far apart (see trace_print_lat_context()),
+> +	 * but if this is called in an atomic context (like NMIs)
+> +	 * kmalloc() can't be called.
+> +	 * That happens via ftrace_dump() which will initialize
+> +	 * iter->temp to IGNORE_TEMP. In such a case, just return NULL.
+> +	 */
+> +	if (iter->temp == IGNORE_TEMP)
+> +		return NULL;
+> +
+>  	/*
+>  	 * The __find_next_entry() may call peek_next_entry(), which may
+>  	 * call ring_buffer_peek() that may make the contents of iter->ent
+> @@ -9203,6 +9216,8 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
+>  
+>  	/* Simulate the iterator */
+>  	trace_init_global_iter(&iter);
+> +	/* Force not using the temp buffer */
+> +	iter.temp = IGNORE_TEMP;
+>  
+>  	for_each_tracing_cpu(cpu) {
+>  		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
+
+
 -- 
-1.8.3.1
-
-
-
+Masami Hiramatsu <mhiramat@kernel.org>
