@@ -2,78 +2,148 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5790BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02E7C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3890F2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77882078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:37:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mV6zDSYq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388548AbgDBOha (ORCPT
+        id S2388568AbgDBOh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:37:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38064 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730837AbgDBOh2 (ORCPT
+        Thu, 2 Apr 2020 10:37:58 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42485 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730837AbgDBOh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:37:28 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jK0xx-0005q5-Nd; Thu, 02 Apr 2020 16:37:09 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D175F100D52; Thu,  2 Apr 2020 16:37:08 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Kenneth R. Crudup" <kenny@panix.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [patch 0/2] x86: Prevent Split-Lock-Detection wreckage on VMX hypervisors
-In-Reply-To: <alpine.DEB.2.21.2004020641470.7052@xps-7390>
-References: <20200402123258.895628824@linutronix.de> <alpine.DEB.2.21.2004020641470.7052@xps-7390>
-Date:   Thu, 02 Apr 2020 16:37:08 +0200
-Message-ID: <875zeinecr.fsf@nanos.tec.linutronix.de>
+        Thu, 2 Apr 2020 10:37:57 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so4481451wrx.9;
+        Thu, 02 Apr 2020 07:37:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=38AkG1J/VasVYvyO8FLPKGFVB9/daSIsdACwJ1jmT6w=;
+        b=mV6zDSYqDp5UdxncOWm+lXHPzCxZTPcsxD7Y4qZG6GxtIOI7n2Tt1tjtqODXe1XonP
+         OAXcNYyYlMJac/TvM+KVXpF303u1R9YTzAxas6XSeg4X8oEOkNwAVSdGtUffdrDiJtFp
+         flyV4X09h+4tTRXQOf0Myw+NBmc3NsNXpSdZAbDjVkQ9BKab39lNcHZswSQYu1Fpp7qj
+         CwD3rw5ZWHrB8RwDUhhLS+QuwfTVRKShQNQbrrhdOk14h5wFDHxeHqplJt0dE3v/jO2k
+         LMujXX5d5kt24SkX9dQ7Su173WskYyvHna90o4QbwOv3b0cwBqchVgNL2pDMZPI5zpHr
+         cHZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=38AkG1J/VasVYvyO8FLPKGFVB9/daSIsdACwJ1jmT6w=;
+        b=djPyvefGQryXVpMUUn40drG9vcRMWlWSA2E/dGW/m09eWwzL1NL7a2PH0z2VXzcnBL
+         zLurvCwP2z+5XZNV+A68CK8nJ0BIZDG2S5X7+6Amzv01nstxwdktrxsSp9kD92UfL+rr
+         ejH9yIwWU/YiyAS12fFe4gevHX8m3fxD3NS0Itzb87KVrPd03heEDcCxuimpdLCGCjpq
+         BHOXT190egi2yS/ZGdGEJy74QW4nYPo4/lU5g87QXB3gACGL9hwPbNcIl+rUFdvbxinr
+         Ydxa3fCUY6Cgz0fduTmfGYyi0tnHjf28kOn19cmz/bFySzdxkO/uv9SQtmB4vXYkG7Pa
+         5/gA==
+X-Gm-Message-State: AGi0PubpzI8EW7LXJPI2T3y6ACKnqXyqjrsh6U71ez5HpAqOf2Y7fi1N
+        MxjudoSqAgis18H/K1//cd4=
+X-Google-Smtp-Source: APiQypKP/NzZE8Bp6zRGZQB5jMxxV5ROKksg/0lNUpk/3V8+Un9IDmxt1EQ5jKflYscGyO2USHOJHQ==
+X-Received: by 2002:adf:97d0:: with SMTP id t16mr3865783wrb.343.1585838275269;
+        Thu, 02 Apr 2020 07:37:55 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id e5sm7848520wru.92.2020.04.02.07.37.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 07:37:54 -0700 (PDT)
+Subject: Re: [PATCH 3/4] arm64: dts: rockchip: add rx0 mipi-phy for rk3399
+To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     helen.koike@collabora.com, dafna.hirschfeld@collabora.com,
+        devel@driverdev.osuosl.org, devicetree@vger.kernel.org,
+        ezequiel@collabora.com, hverkuil-cisco@xs4all.nl,
+        karthik.poduval@gmail.com, kernel@collabora.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+References: <20200402000234.226466-4-helen.koike@collabora.com>
+ <970b9e48-e38f-7e7a-3472-7dc5a4737e58@gmail.com> <105956984.FXDh2DO4ZE@diego>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <76211530-73ff-5f36-8915-8bdc036d4369@gmail.com>
+Date:   Thu, 2 Apr 2020 16:37:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <105956984.FXDh2DO4ZE@diego>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Kenneth R. Crudup" <kenny@panix.com> writes:
+On 4/2/20 4:31 PM, Heiko Stübner wrote:
+> Am Donnerstag, 2. April 2020, 15:48:02 CEST schrieb Johan Jonker:
+>> Hi Helen,
+>>
+>>> From: Helen Koike <helen.koike@collabora.com>
+>>
+>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>>> index 33cc21fcf4c10..fc0295d2a65a1 100644
+>>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>>> @@ -1394,6 +1394,17 @@ io_domains: io-domains {
+>>>  			status = "disabled";
+>>>  		};
+>>>  
+>>
+>>> +		mipi_dphy_rx0: mipi-dphy-rx0 {
+>>
+>> For Heiko sort syscon@ff770000 subnodes alphabetical or reg value first?
+> 
+> Similar to main nodes ... so things without reg alphabetical,
+> the rest by reg address
+> 
+alphabetical first:
 
-> On Thu, 2 Apr 2020, Thomas Gleixner wrote:
->
->> As Peter and myself don't have access to a SLD enabled machine, the
->> KVM/VMX part is untested. The module scan part works.
->
-> I just applied both of these patches to my (Linus' tip) tree, and unfortunately
-> VMWare still hangs if split_lock_detect= is set to anything but "off".
->
-> Was there anything else I'd needed to do?
+io-domains
+mipi-dphy-rx0
+usb2-phy@e450
+.@..
 
-Hmm. Not really. Does dmesg show the warning when the VMWare module loads?
-Something like:
+or
 
-  x86/split lock detection: disabled due to VMLAUNCH in module: ....
+with reg values first:
 
-Thanks,
+.@..
+emmc_phy: phy@f780
+mipi-dphy-rx0
+pcie-phy
 
-        tglx
-
+> 
+>>
+>>> +			compatible = "rockchip,rk3399-mipi-dphy-rx0";
+>>> +			clocks = <&cru SCLK_MIPIDPHY_REF>,
+>>
+>>> +				<&cru SCLK_DPHY_RX0_CFG>,
+>>> +				<&cru PCLK_VIO_GRF>;
+>>
+>> Align                            ^
+>>
+>>> +			clock-names = "dphy-ref", "dphy-cfg", "grf";
+>>> +			power-domains = <&power RK3399_PD_VIO>;
+>>> +			#phy-cells = <0>;
+>>> +			status = "disabled";
+>>> +		};
+>>> +
+>>>  		u2phy0: usb2-phy@e450 {
+>>>  			compatible = "rockchip,rk3399-usb2phy";
+>>>  			reg = <0xe450 0x10>;
+>>
+>>
+> 
+> 
+> 
+> 
 
