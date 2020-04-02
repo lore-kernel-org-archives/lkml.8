@@ -2,162 +2,123 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413A6C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290B7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D03C206CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF4012074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:08:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VOSnjOU3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/HeoAn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389126AbgDBPIZ (ORCPT
+        id S2389219AbgDBPI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:08:25 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:38357 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388808AbgDBPIZ (ORCPT
+        Thu, 2 Apr 2020 11:08:28 -0400
+Received: from mail-qk1-f173.google.com ([209.85.222.173]:41558 "EHLO
+        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388761AbgDBPI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:08:25 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200402150821epoutp02cafc5d41bcd6aee6e33b51aaf0d8253b~CCSuZJVek0299802998epoutp02c
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Apr 2020 15:08:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200402150821epoutp02cafc5d41bcd6aee6e33b51aaf0d8253b~CCSuZJVek0299802998epoutp02c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585840101;
-        bh=6n/U4UXr1sadm5NpMP9GqwT5rx5fOlWjC/IaV5L6yFI=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=VOSnjOU3F90aQgXc10Zr3lnSf7D5vupy1FNDL5CHZ9DimK21wm1JldHQrPtSZZo05
-         ILBvL3TWhlFsabG3rJydz27e4qqmZNp5PIidZ2ZBA+MkcgysDec8AWLn8azUPFw/lv
-         UD6SrBHMU3HG22/MYJzVDgFHYrabT4pTypeswQ5s=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200402150820epcas5p3de6c9f31537388707edabd8a4a12df73~CCStqQfdI3224332243epcas5p3p;
-        Thu,  2 Apr 2020 15:08:20 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        54.91.04782.4EFF58E5; Fri,  3 Apr 2020 00:08:20 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200402150820epcas5p1d7438cd324271c43d54bd446e239f108~CCStIGjxQ2767827678epcas5p1g;
-        Thu,  2 Apr 2020 15:08:20 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200402150820epsmtrp26e18ee8b63dda67bfd570c016d798f08~CCStHTQBJ2842128421epsmtrp2Z;
-        Thu,  2 Apr 2020 15:08:20 +0000 (GMT)
-X-AuditID: b6c32a49-89bff700000012ae-a1-5e85ffe49d7c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E8.1F.04024.4EFF58E5; Fri,  3 Apr 2020 00:08:20 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200402150817epsmtip2bc01951f013328dcb2a8973e30a4a8cd~CCSqSFhsN0906209062epsmtip2I;
-        Thu,  2 Apr 2020 15:08:17 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Avri Altman'" <Avri.Altman@wdc.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-Cc:     <krzk@kernel.org>, <martin.petersen@oracle.com>,
-        <kwmad.kim@samsung.com>, <stanley.chu@mediatek.com>,
-        <cang@codeaurora.org>, <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <SN6PR04MB4640B92BC9EA5CFEB74BE5EAFCCD0@SN6PR04MB4640.namprd04.prod.outlook.com>
-Subject: RE: [PATCH v4 4/5] scsi: ufs-exynos: add UFS host support for
- Exynos SoCs
-Date:   Thu, 2 Apr 2020 20:38:15 +0530
-Message-ID: <000001d60900$8b6f5e70$a24e1b50$@samsung.com>
+        Thu, 2 Apr 2020 11:08:26 -0400
+Received: by mail-qk1-f173.google.com with SMTP id q188so4229842qke.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:08:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=p6v1NGSLA0PcDPkN85wWf1jk4tHTXKyx5rqTOGZFiLE=;
+        b=R/HeoAn5NaaCH/VEpAXudoI+Z02atXUxMO8mJUsScxr9gNLPpS8r8gmzaU5hhQZw7f
+         14X5sYr6UJoNG98KsD+1aGTtZIPJ+bpWrpdYec4n/3mnwd5NNjglF3tR/fILUBN0c54v
+         /i2Q2uCTnSX7279mjkwVSfMu5LBXN6tG7huRIFVASipBXzarSitjUH4BjASQGBgFLEzW
+         2c7TXW36/jMAS7dhfXHqSihUPykxrnFOuARyqAVAJ7mMjGPeG1YDYC2kLL6wI6e4EfX0
+         v7X8vtocNsfx/g/kvFyYcZUjjyZRYZpW8+oMztW0pHozwZwoWHUxQr0Twer+8EmvAFM5
+         m9HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=p6v1NGSLA0PcDPkN85wWf1jk4tHTXKyx5rqTOGZFiLE=;
+        b=aAYK/VryePlej63DWmRMYjJtLgJJhy+YLKPhEcukBdBQZhCN1c/klwBc7sgeaquEQ+
+         EByPvB9CnmlygaXzoWQbI5RuWRUJlpjOGCCDQvUa1b873bvBazjvQEwu7l3UvqRzOiwM
+         BzVrY0FYsfzbXSpA4ajp78hTKmYGv/phHvU3ihf3hohxK0VkyRdfIr+Tquaw3MxY0tYl
+         rdQ9HzCABeHoRWBwYuMnNGRP1Eqyq3OA8j/SK57ckasjjV2UXzkysSKj1dN9i0m4Ju0Y
+         msc4hawvwRjvIv+GnJMfhCX7z2q8dJFu4PjesioVOVUni9tdTndUPc4P1HGkSdnmC/Nb
+         OqOg==
+X-Gm-Message-State: AGi0Pua/gx9ngNzNgpEw92Yjw7Abw7LZ+wc/xuAHPWSeAUahWX8p7hT0
+        xi8KyotJNYrQ9jRhQGxVEp1BCwYE
+X-Google-Smtp-Source: APiQypJ5N5toAyvKxJ9H4hieCcCkKc8RVnLhOCcUssEz3+xlPcr2pKlcNOspC1t9lY0+9Jz1I8Ez4w==
+X-Received: by 2002:a37:2794:: with SMTP id n142mr3879101qkn.336.1585840105075;
+        Thu, 02 Apr 2020 08:08:25 -0700 (PDT)
+Received: from smtp.gmail.com ([2804:d43:421:8154:3432:d8a4:5c65:6674])
+        by smtp.gmail.com with ESMTPSA id c19sm3711463qkk.81.2020.04.02.08.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 08:08:24 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 12:08:20 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, lars@metafoo.de
+Subject: [RFC] genirq: prevent allocated_irqs from being smaller than NR_IRQS
+Message-ID: <20200402150820.GB5886@smtp.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKI+vJzlUBp7WIi19k8pRZBKIHK2gGl+w7dArc8+ogCfXKHn6bJNFzg
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEKsWRmVeSWpSXmKPExsWy7bCmlu6T/61xBh/nGFq8/HmVzeLT+mWs
-        FvOPnGO1OH9+A7vFzS1HWSw2Pb7GanF51xw2ixnn9zFZdF/fwWax/Pg/JovWvUfYLZZuvcno
-        wONxua+XyWPTqk42j81L6j1aTu5n8fj49BaLR9+WVYwenzfJebQf6GYK4IjisklJzcksSy3S
-        t0vgyliw2LngOU/F1Jf3mBsYV3F1MXJySAiYSOxZ9YKpi5GLQ0hgN6PE6h332SGcT4wS5589
-        ZwGpEhL4xigxfakqTEfn/l6oor2MEu+/voFy3jBKLJqzjxWkik1AV2LH4jY2EFtEoFZi8eQO
-        VpAiZpCx3/ZOBhvLKRAr8fPJNEYQW1ggROLG6+VgzSwCKhKrHt9iBrF5BSwl9i+7wAphC0qc
-        nPkErJdZQFti2cLXzBAnKUj8fLqMFWKZm8T7exOYIGrEJY7+7GEGWSwhsIxd4tO1dawQDS4S
-        lzadY4SwhSVeHd/CDmFLSXx+txfoag4gO1uiZ5cxRLhGYum8YywQtr3EgStzWEBKmAU0Jdbv
-        0odYxSfR+/sJE0Qnr0RHmxBEtapE87urUJ3SEhO7u6EO8JD423uIaQKj4iwkj81C8tgsJA/M
-        Qli2gJFlFaNkakFxbnpqsWmBYV5quV5xYm5xaV66XnJ+7iZGcErT8tzBOOuczyFGAQ5GJR5e
-        hoOtcUKsiWXFlbmHGCU4mJVEeB1nAIV4UxIrq1KL8uOLSnNSiw8xSnOwKInzTmK9GiMkkJ5Y
-        kpqdmlqQWgSTZeLglGpgDOdqszdfoWPp0h3DErrd+tVh3pR3G/m6YrX91nXt7MvcpeFblaNZ
-        s9jcaMN574ipu8S44meWpm0te7XQ/+qFuWfrvnsd/3f+74Nj4r/2/97Iozo5+k/RqSMZonuq
-        +7u5eCJPz2/pnvxm/5/7HMnXOvpaKib9rPoQabrr5JTnR4o+TvFzcd70QYmlOCPRUIu5qDgR
-        AF51hTZlAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsWy7bCSvO6T/61xBi3nuS1e/rzKZvFp/TJW
-        i/lHzrFanD+/gd3i5pajLBabHl9jtbi8aw6bxYzz+5gsuq/vYLNYfvwfk0Xr3iPsFku33mR0
-        4PG43NfL5LFpVSebx+Yl9R4tJ/ezeHx8eovFo2/LKkaPz5vkPNoPdDMFcERx2aSk5mSWpRbp
-        2yVwZTSe7GcrOMpT8enmN/YGxg6uLkZODgkBE4nO/b3sXYxcHEICuxklpq94ywKRkJa4vnEC
-        O4QtLLHy33OooleMEms6TjOBJNgEdCV2LG5jA0mICDQySiz+t4QRxGEW+MUo8WTtQyaIlglM
-        En8vLmUEaeEUiJX4+WQamC0sECTx/8RGNhCbRUBFYtXjW8wgNq+ApcT+ZRdYIWxBiZMzn4Dd
-        xCygLfH05lM4e9nC18wQ9ylI/Hy6DKxeRMBN4v29CUwQNeISR3/2ME9gFJ6FZNQsJKNmIRk1
-        C0nLAkaWVYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwTGqpbmD8fKS+EOMAhyMSjy8
-        DAdb44RYE8uKK3MPMUpwMCuJ8DrOAArxpiRWVqUW5ccXleakFh9ilOZgURLnfZp3LFJIID2x
-        JDU7NbUgtQgmy8TBKdXAmMgiJcbzOX79dEt9Z8O3K5LP/Y+z3OGR8khQxdOunufQouN7LiZ3
-        OrQcm14nurfNs/xx4owcp52dnacO9uRXehVP+N/n1hC4OXq/auNPtuZJk8QOHtHWf/dr25Rn
-        8gzzr004/uqL0r1wj3RzsU79HQENrm7rzy2OerWQ042573KEtN/WaoYYJZbijERDLeai4kQA
-        sutWFs0CAAA=
-X-CMS-MailID: 20200402150820epcas5p1d7438cd324271c43d54bd446e239f108
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200327171420epcas5p490e1e6d090a540eaf050e0728a39ba25
-References: <20200327170638.17670-1-alim.akhtar@samsung.com>
-        <CGME20200327171420epcas5p490e1e6d090a540eaf050e0728a39ba25@epcas5p4.samsung.com>
-        <20200327170638.17670-5-alim.akhtar@samsung.com>
-        <SN6PR04MB4640B92BC9EA5CFEB74BE5EAFCCD0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Avri
+Hi,
 
-> -----Original Message-----
-> From: Avri Altman <Avri.Altman=40wdc.com>
-> Sent: 28 March 2020 16:58
-> To: Alim Akhtar <alim.akhtar=40samsung.com>; robh+dt=40kernel.org;
-> devicetree=40vger.kernel.org; linux-scsi=40vger.kernel.org
-> Cc: krzk=40kernel.org; martin.petersen=40oracle.com; kwmad.kim=40samsung.=
-com;
-> stanley.chu=40mediatek.com; cang=40codeaurora.org; linux-samsung-
-> soc=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; linux-
-> kernel=40vger.kernel.org
-> Subject: RE: =5BPATCH v4 4/5=5D scsi: ufs-exynos: add UFS host support fo=
-r Exynos
-> SoCs
->=20
-> Hi,
->=20
-> > +
-> > +long exynos_ufs_calc_time_cntr(struct exynos_ufs *ufs, long period) =
-=7B
-> > +       const int precise =3D 10;
-> > +       long pclk_rate =3D ufs->pclk_rate;
-> > +       long clk_period, fraction;
-> > +
-> > +       clk_period =3D UNIPRO_PCLK_PERIOD(ufs);
-> > +       fraction =3D ((NSEC_PER_SEC % pclk_rate) * precise) / pclk_rate=
-;
-> > +
-> > +       return (period * precise) / ((clk_period * precise) +
-> > +fraction); =7D
-> This helper essentially calculates a factor f, and returns period x f.
-> Why not do that regardless of period?
->=20
-The period can be different for different timing attributes, so this helper=
- function takes the period and returns the timer counter value based on the=
- pclk_rate.=20
+I was trying to understand IRQ initialization when suddenly got
+intrigued about the declaration of the "allocated_irqs" bitmap at
+kernel/irq/irqdesc.c. The size of allocated_irqs is defined by
+IRQ_BITMAP_BITS, which in turn is passed to BITS_TO_LONGS to calculate
+the actual number of IRQs the system may have. If I got it right, there
+should be one entry at allocated_irqs for each possible IRQ line. At
+kernel/irq/internals.h, IRQ_BITMAP_BITS is defined to be NR_IRQS (or
+NR_IRQS plus a high constant in the case of sparse IRQs), which most
+architectures seem to define as being the actual number of IRQs a board
+has.
 
-> > +extern long exynos_ufs_calc_time_cntr(struct exynos_ufs *, long);
-> Why this factor needed to be exported?
-Yes, not needed, will correct this in next version, which I am planning to =
-post soon.
-Thanks for your time and review, let me know if you have more inputs.
+#ifdef CONFIG_SPARSE_IRQ
+# define IRQ_BITMAP_BITS (NR_IRQS + 8196)
+#else
+# define IRQ_BITMAP_BITS NR_IRQS
+#endif
 
+The thing I'm troubled about is that BITS_TO_LONGS divides
+IRQ_BITMAP_BITS by sizeof(long) * 8, which makes it possible for the
+size of allocated_irqs to be smaller than NR_IRQS.
+
+For instance, if !CONFIG_SPARSE_IRQ, sizeof(long) == 8, and NR_IRQS is
+defined as 16, then IRQ_BITMAP_BITS would be equal to 
+(16 + 64 - 1)/64 = 1. Even if CONFIG_SPARSE_IRQ is defined, a device
+with a large number of IRQ lines would end up with a small bitmap for
+allocated_irqs.
+
+I thought NR_IRQS would be multiplied by the number of bits it uses.
+Something like:
+
+#ifdef CONFIG_SPARSE_IRQ
+# define IRQ_BITMAP_BITS (NR_IRQS * BITS_PER_TYPE(long) + 8196)
+#else
+# define IRQ_BITMAP_BITS (NR_IRQS * BITS_PER_TYPE(long))
+#endif
+
+Anyhow, IRQ_BITMAP_BITS is also used to limit the maximum number of IRQs
+at irqdesc.c. If my understanding of nr_irqs is correct, it would make
+sense to change some sanity checks at early_irq_init() too.
+
+Does anyone mind giving me some advice on how allocated_irqs is
+initialized with a suitable size to support the number of interrupt
+lines a board may have?
+
+By the way, is there any mailing list for IRQ related discussions?
+I couldn't find one at vger.kernel.org.
+
+
+Thanks,
+
+Marcelo
