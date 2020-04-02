@@ -2,183 +2,113 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URI_WP_DIRINDEX
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658E1C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E999C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3909620678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B48620678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:34:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QlGUyp1g"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KM2DmTOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389276AbgDBUeX (ORCPT
+        id S2389598AbgDBUef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:34:23 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55183 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732784AbgDBUeX (ORCPT
+        Thu, 2 Apr 2020 16:34:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36468 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389521AbgDBUee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:34:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585859661;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ietQ1ekQOzxzT5ovszXdfNoG3WOzxptqDEC/u1Ud83U=;
-        b=QlGUyp1gjDEO1DfoeUcevd+5vjKCAcbIhpN1jHUdrVdus8Sh4CeU+fdpM/R63GtWm8vq+B
-        FXHK3VLXOr+1Gi130XF1M8VDvh8XQTyxsV/ntDD1kEExGDbvRmhGSI3YeAEKRfaN7hP5jS
-        9j66ew2RZ0NSGTrL31KsLq+I7W/ruDw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-51-DFSBZ6cTNdOUh55AKs7n4w-1; Thu, 02 Apr 2020 16:33:53 -0400
-X-MC-Unique: DFSBZ6cTNdOUh55AKs7n4w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D1381083EAA;
-        Thu,  2 Apr 2020 20:33:51 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BCF191147C6;
-        Thu,  2 Apr 2020 20:33:42 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 14:33:42 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     eric.auger@redhat.com, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, joro@8bytes.org,
-        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
-        jean-philippe@linaro.org, peterx@redhat.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hao.wu@intel.com
-Subject: Re: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
- mdevs
-Message-ID: <20200402143342.1e10c498@w520.home>
-In-Reply-To: <1584880325-10561-9-git-send-email-yi.l.liu@intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-9-git-send-email-yi.l.liu@intel.com>
+        Thu, 2 Apr 2020 16:34:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id c23so2392512pgj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yY13RK0cKLrRjyvVBZully+r67kfxos978vIN0ruhpk=;
+        b=KM2DmTOwPos0F7tLttvMAVY1LIa4ppIAmoFp2MqTGkdJDILQMA+dZFGoZUczJkP06n
+         tIY11T4DiaYxZ3XpYIcaUADijDTLfmnhM6w5KLWiXD/U/5E644jQ7tBWEtkWTvI15PEr
+         VVKHw3OqKjW7vcSabDsfT8G6FUxq86I+tgWHI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yY13RK0cKLrRjyvVBZully+r67kfxos978vIN0ruhpk=;
+        b=QKw+RACQb+QLrcj+TYEq085a+3sgVhxkJra5rthr+wBCJP29OUmz1Bl2xdWF9gIZnH
+         qmBTeFv0vOR2YPNS3MYKSO9JL9djtMsLPqGUlZ9b0wrkXrGLub70XFY6vLdBosQuzXlN
+         Sw+ggo6mRVFEHnSFUlVeAN6Eg/StHHk2d2GVbmSXld6ROr7DuQAtAY9nakXUS2Wy1zvS
+         hD9rC1WdFXWJc8CXCc+9HCziNT3uXXVrKdAOQxD3/txWNWVbYAxLZKyifaDWed3FEIsA
+         C6oi7sn76yFz9Kc1eX4o/e3xgTTGCApiIlXik3lN9E4WYWQTv1xXtzyv4fdKlyTM/J70
+         DybA==
+X-Gm-Message-State: AGi0PuYhL+rmnFw4TNbZCk12WzY0W0f7NEwnSBPYYqFUDhINKfIqe2X4
+        4doWmaK1o4e7RDWYOxfyYvTN4Q==
+X-Google-Smtp-Source: APiQypIs5T+kRG38bpYFVlAfcbXCyZRjGu+qpBmjvk/e/tatzFR3rVbYNciSAuDjjUc5Jz4/iCXxsA==
+X-Received: by 2002:a63:8f17:: with SMTP id n23mr5078110pgd.417.1585859673922;
+        Thu, 02 Apr 2020 13:34:33 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e126sm4276397pfa.122.2020.04.02.13.34.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 13:34:33 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 13:34:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Slava Bacherikov <slava@bacher09.org>,
+        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Liu Yiding <liuyd.fnst@cn.fujitsu.com>, kpsingh@google.com
+Subject: Re: [PATCH v4 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
+Message-ID: <202004021328.E6161480@keescook>
+References: <202004010849.CC7E9412@keescook>
+ <20200402153335.38447-1-slava@bacher09.org>
+ <f43f4e17-f496-9ee1-7d89-c8f742720a5f@bacher09.org>
+ <CAEf4Bzb2mgDPcdNGWnBgoqsuWYqDiv39U2irn4iCp=7B3kx1nA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4Bzb2mgDPcdNGWnBgoqsuWYqDiv39U2irn4iCp=7B3kx1nA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 05:32:05 -0700
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
-
-> From: Liu Yi L <yi.l.liu@intel.com>
+On Thu, Apr 02, 2020 at 12:31:36PM -0700, Andrii Nakryiko wrote:
+> On Thu, Apr 2, 2020 at 8:40 AM Slava Bacherikov <slava@bacher09.org> wrote:
+> >
+> >
+> >
+> > 02.04.2020 18:33, Slava Bacherikov wrote:
+> > > +     depends on DEBUG_INFO || COMPILE_TEST
+> >
+> > Andrii are you fine by this ?
 > 
-> Recent years, mediated device pass-through framework (e.g. vfio-mdev)
-> are used to achieve flexible device sharing across domains (e.g. VMs).
-> Also there are hardware assisted mediated pass-through solutions from
-> platform vendors. e.g. Intel VT-d scalable mode which supports Intel
-> Scalable I/O Virtualization technology. Such mdevs are called IOMMU-
-> backed mdevs as there are IOMMU enforced DMA isolation for such mdevs.
-> In kernel, IOMMU-backed mdevs are exposed to IOMMU layer by aux-domain
-> concept, which means mdevs are protected by an iommu domain which is
-> aux-domain of its physical device. Details can be found in the KVM
-> presentation from Kevin Tian. IOMMU-backed equals to IOMMU-capable.
-> 
-> https://events19.linuxfoundation.org/wp-content/uploads/2017/12/\
-> Hardware-Assisted-Mediated-Pass-Through-with-VFIO-Kevin-Tian-Intel.pdf
-> 
-> This patch supports NESTING IOMMU for IOMMU-backed mdevs by figuring
-> out the physical device of an IOMMU-backed mdev and then invoking IOMMU
-> requests to IOMMU layer with the physical device and the mdev's aux
-> domain info.
-> 
-> With this patch, vSVA (Virtual Shared Virtual Addressing) can be used
-> on IOMMU-backed mdevs.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> CC: Jun Tian <jun.j.tian@intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 937ec3f..d473665 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -132,6 +132,7 @@ struct vfio_regions {
->  
->  struct domain_capsule {
->  	struct iommu_domain *domain;
-> +	struct vfio_group *group;
->  	void *data;
->  };
->  
-> @@ -148,6 +149,7 @@ static int vfio_iommu_for_each_dev(struct vfio_iommu *iommu,
->  	list_for_each_entry(d, &iommu->domain_list, next) {
->  		dc.domain = d->domain;
->  		list_for_each_entry(g, &d->group_list, next) {
-> +			dc.group = g;
->  			ret = iommu_group_for_each_dev(g->iommu_group,
->  						       &dc, fn);
->  			if (ret)
-> @@ -2347,7 +2349,12 @@ static int vfio_bind_gpasid_fn(struct device *dev, void *data)
->  	struct iommu_gpasid_bind_data *gbind_data =
->  		(struct iommu_gpasid_bind_data *) dc->data;
->  
-> -	return iommu_sva_bind_gpasid(dc->domain, dev, gbind_data);
-> +	if (dc->group->mdev_group)
-> +		return iommu_sva_bind_gpasid(dc->domain,
-> +			vfio_mdev_get_iommu_device(dev), gbind_data);
+> I think it needs a good comment explaining this weirdness, at least.
+> As I said, if there is no DEBUG_INFO, there is not point in doing
+> DWARF-to-BTF conversion, even more -- it actually might fail, I
+> haven't checked what pahole does in that case. So I'd rather drop
+> GCC_PLUGIN_RANDSTRUCT is that's the issue here. DEBUG_INFO_SPLIT and
+> DEBUG_INFO_REDUCED look good.
 
-But we can't assume an mdev device is iommu backed, so this can call
-with NULL dev, which appears will pretty quickly segfault
-intel_svm_bind_gpasid.
+The DEBUG_INFO is separate, AIUI -- it sounds like BTF may entirely
+break on a compile with weird DWARF configs.
 
-> +	else
-> +		return iommu_sva_bind_gpasid(dc->domain,
-> +						dev, gbind_data);
->  }
->  
->  static int vfio_unbind_gpasid_fn(struct device *dev, void *data)
-> @@ -2356,8 +2363,13 @@ static int vfio_unbind_gpasid_fn(struct device *dev, void *data)
->  	struct iommu_gpasid_bind_data *gbind_data =
->  		(struct iommu_gpasid_bind_data *) dc->data;
->  
-> -	return iommu_sva_unbind_gpasid(dc->domain, dev,
-> +	if (dc->group->mdev_group)
-> +		return iommu_sva_unbind_gpasid(dc->domain,
-> +					vfio_mdev_get_iommu_device(dev),
->  					gbind_data->hpasid);
+The GCC_PLUGIN_RANDSTRUCT issue is separate: it doesn't make sense to
+run a kernel built with BTF and GCC_PLUGIN_RANDSTRUCT. But they should
+have nothing to do with each other with regard to compilation. So, to
+keep GCC_PLUGIN_RANDSTRUCT disable for "real" builds but leave it on for
+all*config, randconfig, etc, I'd like to keep the || COMPILE_TEST,
+otherwise GCC_PLUGIN_RANDSTRUCT won't be part of the many CIs doing
+compilation testing.
 
-Same
+And FWIW, I'm fine to let GCC_PLUGIN_RANDSTRUCT and BTF build together.
+But if they want to be depends-conflicted, I wanted to keep the test
+compile trap door.
 
-> +	else
-> +		return iommu_sva_unbind_gpasid(dc->domain, dev,
-> +						gbind_data->hpasid);
->  }
->  
->  /**
-> @@ -2429,7 +2441,12 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
->  	struct iommu_cache_invalidate_info *cache_inv_info =
->  		(struct iommu_cache_invalidate_info *) dc->data;
->  
-> -	return iommu_cache_invalidate(dc->domain, dev, cache_inv_info);
-> +	if (dc->group->mdev_group)
-> +		return iommu_cache_invalidate(dc->domain,
-> +			vfio_mdev_get_iommu_device(dev), cache_inv_info);
-
-And again
-
-> +	else
-> +		return iommu_cache_invalidate(dc->domain,
-> +						dev, cache_inv_info);
->  }
->  
->  static long vfio_iommu_type1_ioctl(void *iommu_data,
-
+-- 
+Kees Cook
