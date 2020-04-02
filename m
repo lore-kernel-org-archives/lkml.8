@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C65EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EE2C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13857207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6272074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="h9N6AWMC"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="IQefsOsZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389090AbgDBO6n (ORCPT
+        id S2388847AbgDBO6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:58:43 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:58435 "EHLO rere.qmqm.pl"
+        Thu, 2 Apr 2020 10:58:38 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:55245 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389052AbgDBO6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:58:37 -0400
+        id S2388836AbgDBO6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:58:33 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR5l4kdYzqB;
-        Thu,  2 Apr 2020 16:58:35 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR5f6wnCzqB;
+        Thu,  2 Apr 2020 16:58:30 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585839515; bh=5DdryG9hn452PH5otkZQyLTHjkaK1jF+yu4xhWcJIes=;
+        t=1585839511; bh=aHxtsC8N7E1pudNhXZCf8OSOZbxQCCFh3AVsjrqFoGw=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=h9N6AWMCD+bl1pulxoTnpTmk+uql18JADPHUv+phnMgiiMlnp/lW0hqb1Xy3XJ8ju
-         3hKe8DL45eAS0Vzn30DiDyWgKgB0QuAxiirZauvgjdPAAa7ZeEsFknfHcjCoTyF921
-         9bN7X+nzY/1FCo8eCbEVLtqwU+S32L193dKa+ZwNDdRKW47K3D++g+/7vmYV5E+lGD
-         VkO/5Szv2X7AsJgr/OECkSJ/5gruXoIbA6QA4LuQYILi6JNOLDi74OKQS3o2nerHZ7
-         WlfuLM3oxTbJGcnikJySZX6nh8vVWfYzIQfVxDqUTOAWGv4Ug2mK1EAnoTERJMjf3w
-         WC4mGYplJ/3MQ==
+        b=IQefsOsZdmpl1GYa4eHhaiWo6dqrxNummNHFhVfbtryIyvpgb3iPHfO0xEPoQhcRw
+         QQIUp1TamaUdbVZ/sYm+zIb+1VHrW4Ffxtvhx9MvYhjPlOf3nvPAqOIjnI1n6W4qE5
+         xJDe0DhCAMea3wwxFPvxyxZD4AQjkW99JZBXWk6vyXzWRN93XCo08rSwFmjJaPSTWy
+         slJazljJIheIKQ/+UMdVdcx1PbqrpiMPKXHJ4Z84PMfh7Sp17cnt+X8bbh8jrQcZ8s
+         ZSEBxvCs51KHR+veFn2csFumoshZ+urcZixmhmYvX2lGAQoxcmj4KeiuEysKrnKvL7
+         Pu2MBPueRRRcA==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 16:58:34 +0200
-Message-Id: <32ec8cef47cb49e02542916ae15972ba2e619e5a.1585838679.git.mirq-linux@rere.qmqm.pl>
+Date:   Thu, 02 Apr 2020 16:58:30 +0200
+Message-Id: <3d647e5c2f69c0cef461ef19004ec40b14e799ca.1585838678.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1585838678.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1585838678.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 11/14] power: supply: bq25890: show measured VBUS
+Subject: [PATCH 03/14] power: supply: bq25890: make property table const
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -52,50 +52,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export VBUS measurement via INPUT_VOLTAGE_NOW property.
+Property list should not change, so mark it const.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/power/supply/bq25890_charger.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/power/supply/bq25890_charger.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index 250468f3ff18..d23274d13263 100644
+index f9f29edadddc..c4a69fd69f34 100644
 --- a/drivers/power/supply/bq25890_charger.c
 +++ b/drivers/power/supply/bq25890_charger.c
-@@ -506,6 +506,24 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
- 		val->intval = bq25890_find_val(ret, TBL_IILIM);
- 		break;
+@@ -668,7 +668,7 @@ static int bq25890_hw_init(struct bq25890_device *bq)
+ 	return 0;
+ }
  
-+	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW:
-+		ret = bq25890_field_read(bq, F_VBUS_GD); /* is VBUS connected? */
-+		if (ret < 0)
-+			return ret;
-+
-+		if (!ret) {
-+			val->intval = 0;
-+			break;
-+		}
-+
-+		ret = bq25890_field_read(bq, F_VBUSV); /* read measured value */
-+		if (ret < 0)
-+			return ret;
-+
-+		/* converted_val = 2.6V + ADC_val * 100mV */
-+		val->intval = 2600000 + ret * 100000;
-+		break;
-+
- 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
- 		ret = bq25890_field_read(bq, F_SYSV); /* read measured value */
- 		if (ret < 0)
-@@ -705,6 +723,7 @@ static const enum power_supply_property bq25890_power_supply_props[] = {
- 	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
- 	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
- 	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-+	POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW,
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
- 	POWER_SUPPLY_PROP_CURRENT_NOW,
- };
+-static enum power_supply_property bq25890_power_supply_props[] = {
++static const enum power_supply_property bq25890_power_supply_props[] = {
+ 	POWER_SUPPLY_PROP_MANUFACTURER,
+ 	POWER_SUPPLY_PROP_MODEL_NAME,
+ 	POWER_SUPPLY_PROP_STATUS,
 -- 
 2.20.1
 
