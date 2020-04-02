@@ -2,92 +2,181 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1112C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE4AC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC980206CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XvIAz7Jx"
+	by mail.kernel.org (Postfix) with ESMTP id AF234206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389147AbgDBPEL (ORCPT
+        id S2389170AbgDBPET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:04:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47534 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388810AbgDBPEL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:04:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=wUAIUHKPNY6CBj+ztvqtf2rjatWpCwWsKeO3Gq2tLe4=; b=XvIAz7Jx6tt/kXRu1RDERocUbP
-        EnRazd+MeU/BGXmtllSpnJ/1gEwb8rcQqbwxWfC8uqPwNOXBG9NeY48SOUiHt0uZuHwfuQbpZe/8J
-        rUq0P4tGcAgSxZlkzBRpGpx288B0IJx1yLYWUOMSDmmKrteSLWHzXkQu37Ec6E+SkxzFITI/aWGoq
-        haqRieAyCUnZLtuF20qKZEwiQVmL8YAd5u+G6dG4jARxLRZCP1jdrBDmOXDNzYWpiWA5ILgKa10Yx
-        seBuN6svqAb6LTXP2OeAJzr8OP7HxTBB8SJi1lSmQlzUFB8o9fPwhYW9LhgvexxYU/CkJr+kqbz3O
-        ZpDcZkmw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK1O4-0003x0-SW; Thu, 02 Apr 2020 15:04:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 315F3305E45;
-        Thu,  2 Apr 2020 17:04:07 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1AB102B0DECD0; Thu,  2 Apr 2020 17:04:07 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 17:04:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     Julien Thierry <jthierry@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH 3/7] objtool: Add support for intra-function calls
-Message-ID: <20200402150407.GD20730@hirez.programming.kicks-ass.net>
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-4-alexandre.chartre@oracle.com>
- <db508586-258a-0616-d649-e76e95df9611@redhat.com>
- <4e779423-395d-5e2e-b641-5604902bf096@oracle.com>
+        Thu, 2 Apr 2020 11:04:19 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29393 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389021AbgDBPET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 11:04:19 -0400
+IronPort-SDR: k7gMs2+9dx7Y55vayDZbRrf01y42JaHOJxmcrNur1mwMZ4hFZclTeztM77vgYYtB5A1ec5SF+m
+ An12Jtk3/ItQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 08:04:18 -0700
+IronPort-SDR: p2OD5L73VwSZPR+Yi+4vPdY3DiobioS8qNDc+iHxR/o47Vmlu7chaa3pkDO5jdbrNtIn8Hwo7L
+ FuQfjZkBt6lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="284806507"
+Received: from ccui-mobl1.amr.corp.intel.com (HELO [10.134.85.228]) ([10.134.85.228])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Apr 2020 08:04:16 -0700
+Subject: Re: [PATCH 1/2] dmaengine: ioat: fixing chunk sizing macros
+ dependency
+To:     leonid.ravich@dell.com, dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+References: <20200402092725.15121-1-leonid.ravich@dell.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <3d4f393d-95ef-385c-6486-d1d0f8bfbd24@intel.com>
+Date:   Thu, 2 Apr 2020 08:04:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4e779423-395d-5e2e-b641-5604902bf096@oracle.com>
+In-Reply-To: <20200402092725.15121-1-leonid.ravich@dell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 03:24:45PM +0200, Alexandre Chartre wrote:
-> On 4/2/20 2:53 PM, Julien Thierry wrote:
-> > On 4/2/20 9:22 AM, Alexandre Chartre wrote:
 
-> > > +    sec = find_section_by_name(file->elf,
-> > > +                   ".rela.discard.intra_function_call");
-> > 
-> > I'm wondering, do we really need to annotate the intra_function_call
-> > and group the in a section?
-> > 
-> > Would it be a problem to consider all (static) call instructions with
-> > a destination that is not the start offset of a symbol to be an
-> > intra-function call (and set insn->intra_function_call and
-> > insn->jump_dest accordingly)?
+
+On 4/2/2020 2:27 AM, leonid.ravich@dell.com wrote:
+> From: Leonid Ravich <Leonid.Ravich@emc.com>
 > 
-> Correct, we could automatically detect intra-function calls instead of
-> having to annotate them. However, I choose to annotate them because I don't
-> think that's not an expected construct in a "normal" code flow (at least
-> on x86). So objtool would still issue a warning on intra-function calls
-> by default, and you can annotate them to indicate if they are expected.
+> prepare for changing alloc size.
+> 
+> Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
 
-I wondered the same thing when reading the patch. I'm confliected on
-this. On the one hand auto-detecting this seems like an excellent idea.
+I'm ok with the changes in the series. Were you able to test this on 
+hardware? A few formating nits below
 
-If/when the compiler generates them, they had better be okay too.
+> ---
+>   drivers/dma/ioat/dma.c  | 14 ++++++++------
+>   drivers/dma/ioat/dma.h  | 10 ++++++----
+>   drivers/dma/ioat/init.c |  2 +-
+>   3 files changed, 15 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+> index 18c011e..1e0e6c1 100644
+> --- a/drivers/dma/ioat/dma.c
+> +++ b/drivers/dma/ioat/dma.c
+> @@ -332,8 +332,8 @@ static dma_cookie_t ioat_tx_submit_unlock(struct dma_async_tx_descriptor *tx)
+>   	u8 *pos;
+>   	off_t offs;
+>   
+> -	chunk = idx / IOAT_DESCS_PER_2M;
+> -	idx &= (IOAT_DESCS_PER_2M - 1);
+> +	chunk = idx / IOAT_DESCS_PER_CHUNK;
+> +	idx &= (IOAT_DESCS_PER_CHUNK - 1);
+>   	offs = idx * IOAT_DESC_SZ;
+>   	pos = (u8 *)ioat_chan->descs[chunk].virt + offs;
+>   	phys = ioat_chan->descs[chunk].hw + offs;
+> @@ -370,7 +370,8 @@ struct ioat_ring_ent **
+>   	if (!ring)
+>   		return NULL;
+>   
+> -	ioat_chan->desc_chunks = chunks = (total_descs * IOAT_DESC_SZ) / SZ_2M;
+> +	chunks = (total_descs * IOAT_DESC_SZ) / IOAT_CHUNK_SIZE;
+> +	ioat_chan->desc_chunks = chunks;
+>   
+>   	for (i = 0; i < chunks; i++) {
+>   		struct ioat_descs *descs = &ioat_chan->descs[i];
+> @@ -382,8 +383,9 @@ struct ioat_ring_ent **
+>   
+>   			for (idx = 0; idx < i; idx++) {
+>   				descs = &ioat_chan->descs[idx];
+> -				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+> -						  descs->virt, descs->hw);
+> +				dma_free_coherent(to_dev(ioat_chan),
+> +						IOAT_CHUNK_SIZE,
+> +						descs->virt, descs->hw);
+>   				descs->virt = NULL;
+>   				descs->hw = 0;
+>   			}
+> @@ -404,7 +406,7 @@ struct ioat_ring_ent **
+>   
+>   			for (idx = 0; idx < ioat_chan->desc_chunks; idx++) {
+>   				dma_free_coherent(to_dev(ioat_chan),
+> -						  SZ_2M,
+> +						  IOAT_CHUNK_SIZE,
+>   						  ioat_chan->descs[idx].virt,
+>   						  ioat_chan->descs[idx].hw);
+>   				ioat_chan->descs[idx].virt = NULL;
+> diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+> index b8e8e0b..535aba9 100644
+> --- a/drivers/dma/ioat/dma.h
+> +++ b/drivers/dma/ioat/dma.h
+> @@ -81,6 +81,11 @@ struct ioatdma_device {
+>   	u32 msixpba;
+>   };
+>   
+> +#define IOAT_MAX_ORDER 16
+> +#define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
+> +#define IOAT_CHUNK_SIZE (SZ_2M)
+> +#define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE/IOAT_DESC_SZ)
 
-Josh?
+(IOAT_CHUNK_SIZE / IOAT_DESC_SZ)
+
+> +
+>   struct ioat_descs {
+>   	void *virt;
+>   	dma_addr_t hw;
+> @@ -128,7 +133,7 @@ struct ioatdma_chan {
+>   	u16 produce;
+>   	struct ioat_ring_ent **ring;
+>   	spinlock_t prep_lock;
+> -	struct ioat_descs descs[2];
+> +	struct ioat_descs descs[IOAT_MAX_DESCS/IOAT_DESCS_PER_CHUNK];
+
+IOAT_MAX_DESCS / IOAT_DESCS_PER_CHUNK
+
+>   	int desc_chunks;
+>   	int intr_coalesce;
+>   	int prev_intr_coalesce;
+> @@ -301,9 +306,6 @@ static inline bool is_ioat_bug(unsigned long err)
+>   	return !!err;
+>   }
+>   
+> -#define IOAT_MAX_ORDER 16
+> -#define IOAT_MAX_DESCS 65536
+> -#define IOAT_DESCS_PER_2M 32768
+>   
+>   static inline u32 ioat_ring_size(struct ioatdma_chan *ioat_chan)
+>   {
+> diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+> index 60e9afb..58d1356 100644
+> --- a/drivers/dma/ioat/init.c
+> +++ b/drivers/dma/ioat/init.c
+> @@ -651,7 +651,7 @@ static void ioat_free_chan_resources(struct dma_chan *c)
+>   	}
+>   
+>   	for (i = 0; i < ioat_chan->desc_chunks; i++) {
+> -		dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+> +		dma_free_coherent(to_dev(ioat_chan), IOAT_CHUNK_SIZE,
+>   				  ioat_chan->descs[i].virt,
+>   				  ioat_chan->descs[i].hw);
+>   		ioat_chan->descs[i].virt = NULL;
+> 
