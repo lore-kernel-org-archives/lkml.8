@@ -2,134 +2,178 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04871C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EAAC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFD920721
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E99E20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iy/+QP+K"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="EhjE5WUl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZVR+2Un1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733094AbgDBBgO (ORCPT
+        id S1733257AbgDBBie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 21:36:14 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36269 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbgDBBgN (ORCPT
+        Wed, 1 Apr 2020 21:38:34 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:46223 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726319AbgDBBid (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 21:36:13 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w145so1385174lff.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 18:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p4NjOGhfdlS01zHiaiGfeK4n/oNGr20mOQ6J0VtQZkU=;
-        b=Iy/+QP+K5SVCnjZXEYKbe6gJZoALpPVWnCdKolTHVAcRIpAX95p8NjKGPKSonJCPQl
-         f++BgT7PPp9l1iSRQ0/AkB8k2GJ9laThTMzZvs8e1TP/X1f6WX5Cn8xFtFCbwwx3rX8n
-         RnnPYSdakwGWTapISLCz8yL9IB8meP8yGhRhNjjZEBk8dsZU1QIY+BK0XB9LSfeKWt0W
-         o/ZyWF5EEO830dCD5ifrmYe5HtawBOZlRnV6pZmMlt43dZFsqqFubXhVRsFGQQ1NPDqe
-         N9jUDMHkwlob6QtCmqRhRNG5E0keVN4DvKm0VvPZiQO901MdnKX/cFt9MAbYIYKiTjz2
-         h+Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p4NjOGhfdlS01zHiaiGfeK4n/oNGr20mOQ6J0VtQZkU=;
-        b=OlbyFIXT8Hjr0XGhBzYiaP/zAUh0IBQJZEUAG/YIh13Oi/MDYh9XFW8+vMcmJxOUAS
-         qKgw7ihD5xWamudroldgO785bpBdUMLH9NuZbKILcsS4x1n1OqzGDvTfkMQELDMAEFHm
-         pxKswVZg4ATdMF44Hc/CW5Sn+QNttHTPDgLP3sD7kXTvMQws8ljr5czT9NPH/t31PMol
-         UkdUNAMAUf6BWU0/NTjHP5FixFu/hE9blSe5JNQE5yqxPEuFrIWp6/afmJ8pNkBQv/AH
-         9z8rSF0NKvvhnnuMH+iQ+/7VTxPzbBf4dVN+99DNPN69tptgl8M9ULKdLQtH+VC9qHf1
-         XT8w==
-X-Gm-Message-State: AGi0PubVE2XhDHP608fuP+6BAiRxOJUxV25CVvQiEK7+DC0yHpJZC3fw
-        j68OUDE8KQk1qGhaRFKYF6QTxSq2FBnpTzTayoNwGg==
-X-Google-Smtp-Source: APiQypJ85uH6hjieFIQ+DVaZ/3dHevVDests4L8XYzQdjxgBwQoqkLkbfa12keCBxd4QZw2RSaoFcAay8z6J77nuKhw=
-X-Received: by 2002:a05:6512:3127:: with SMTP id p7mr583281lfd.108.1585791371001;
- Wed, 01 Apr 2020 18:36:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200324215049.GA3710@pi3.com.pl> <202003291528.730A329@keescook>
- <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org> <CAG48ez3nYr7dj340Rk5-QbzhsFq0JTKPf2MvVJ1-oi1Zug1ftQ@mail.gmail.com>
- <CAHk-=wjz0LEi68oGJSQzZ--3JTFF+dX2yDaXDRKUpYxtBB=Zfw@mail.gmail.com> <CAHk-=wgM3qZeChs_1yFt8p8ye1pOaM_cX57BZ_0+qdEPcAiaCQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgM3qZeChs_1yFt8p8ye1pOaM_cX57BZ_0+qdEPcAiaCQ@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 2 Apr 2020 03:35:44 +0200
-Message-ID: <CAG48ez1f82re_V=DzQuRHpy7wOWs1iixrah4GYYxngF1v-moZw@mail.gmail.com>
-Subject: Re: [PATCH] signal: Extend exec_id to 64bits
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Adam Zabrocki <pi3@pi3.com.pl>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable <stable@vger.kernel.org>, Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>
+        Wed, 1 Apr 2020 21:38:33 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3ABD45801C4;
+        Wed,  1 Apr 2020 21:38:32 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Wed, 01 Apr 2020 21:38:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        65E0cCQjZaasR2Q4SReMT3up4B2vZTD5YrrV+eEQPzU=; b=EhjE5WUllq7utAsj
+        QGotnYbb9Kw8jZCsD7odmyKl1n5mYNo16UGKeB+MA/N8pXr1cwCWa1jb2Qz6NnFR
+        OmkHYTPm3ClH8nYV38aHOd8+YkGAGNacEUH924J1y6HJ80OvGw1vOk420eaVRmr1
+        Wqv16Qg6Prbwz52FOwUoa9pw7JtngLbVwCiM9SbAOY4/IxfKTbu2Bj+zofmYQPAZ
+        3DbFdozqMh3qo9qJ646FaGfljfvPwyXGuJkQfmzNQxDFzQLOA6lcR1LS1OAtdFYu
+        R1qMp7IVbQ+56/KqtUyLLkVzOUUUIIJ+umm4GYxaZV/Wirk+sjBmfMOp/5UCTFtr
+        +kr2LQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=65E0cCQjZaasR2Q4SReMT3up4B2vZTD5YrrV+eEQP
+        zU=; b=ZVR+2Un1ogFAbTykJdID1KGQHIQCJlxQdHSQLt4iyc695rALIxGzJ/tZx
+        8ttNUhd77g0OaBXN5/v5Q61v4ileqM3MNUllXQT/wmZHyyTxCGxukO3drlUximUQ
+        Yn0lLHQQ4deECa6MIpgb5BJCB4VMr8RT3NfjFcB+xwsNz55sEXdbwq6kd1MQnzlK
+        Mta2qB0IOK7uVSe1r+MH6dKM/Ym1LVOlW+qAmnUOMTA0qqlWFDEPpyRtftHWjREV
+        czKId4Nepql7rXMwphjcl51Mlljv3xaYYmB6qAyPcxod1+UpKfKizo5hobnmT3m2
+        byqO5tanFiUouyIa6j4md5wueG0Pg==
+X-ME-Sender: <xms:F0KFXnxfg-I39THCyxl8TBBO4WHZ_l_tGpGYiNs6KqDi_2mdnroUvg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdefgdehtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
+    duieeirddvfedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
+X-ME-Proxy: <xmx:F0KFXjgFLqkZZSXP7k-wS0dX0TesDJcOZg4BLckP6jqvx7AMc3i6yw>
+    <xmx:F0KFXsV1k4K3Nk4yTG1Kpiu9GOkeb9fya0zvYG0XJ_h-ikBRchiVTg>
+    <xmx:F0KFXl0sM4s2FZ5lq6RtbJIVXDAH4v1HQranqyejd-iKBEZ1hzssSA>
+    <xmx:GEKFXpBmaOPBnPhHnGLHAp7bVvRp7u-xAXONrNwu4w2Gmy4Elbu9bg>
+Received: from mickey.themaw.net (unknown [118.209.166.232])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 69846306CD83;
+        Wed,  1 Apr 2020 21:38:24 -0400 (EDT)
+Message-ID: <459876eceda4bc68212faf4ed3d4bcb8570aa105.camel@themaw.net>
+Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 02 Apr 2020 09:38:20 +0800
+In-Reply-To: <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
+References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
+         <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com>
+         <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net>
+         <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com>
+         <2465266.1585729649@warthog.procyon.org.uk>
+         <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 1:55 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Wed, Apr 1, 2020 at 4:51 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > It's literally testing a sequence counter for equality. If you get
-> > tearing in the high bits on the write (or the read), you'd still need
-> > to have the low bits turn around 4G times to get a matching value.
->
-> Put another way: first you'd have to work however many weeks to do 4
-> billion execve() calls, and then you need to hit basically a
-> single-instruction race to take advantage of it.
->
-> Good luck with that. If you have that kind of God-like capability,
-> whoever you're attacking stands no chance in the first place.
+On Wed, 2020-04-01 at 10:37 +0200, Miklos Szeredi wrote:
+> On Wed, Apr 1, 2020 at 10:27 AM David Howells <dhowells@redhat.com>
+> wrote:
+> > Miklos Szeredi <miklos@szeredi.hu> wrote:
+> > 
+> > > According to dhowell's measurements processing 100k mounts would
+> > > take
+> > > about a few seconds of system time (that's the time spent by the
+> > > kernel to retrieve the data,
+> > 
+> > But the inefficiency of mountfs - at least as currently implemented
+> > - scales
+> > up with the number of individual values you want to retrieve, both
+> > in terms of
+> > memory usage and time taken.
+> 
+> I've taken that into account when guesstimating a "few seconds per
+> 100k entries".  My guess is that there's probably an order of
+> magnitude difference between the performance of a fs based interface
+> and a binary syscall based interface.  That could be reduced somewhat
+> with a readfile(2) type API.
+> 
+> But the point is: this does not matter.  Whether it's .5s or 5s is
+> completely irrelevant, as neither is going to take down the system,
+> and userspace processing is probably going to take as much, if not
+> more time.  And remember, we are talking about stopping and starting
+> the automount daemon, which is something that happens, but it should
+> not happen often by any measure.
 
-I'm not really worried about someone being able to hit this in
-practice, especially given that the only thing it lets you do is send
-signals; I just think that the code is wrong in principle, and that we
-should avoid having "technically wrong, but works in practice" code in
-the kernel.
+Yes, but don't forget, I'm reporting what I saw when testing during
+development.
 
-This kind of intentional race might also trip up testing tools like
-the upcoming KCSAN instrumentation, unless it is specifically
-annotated as an intentionally racing instruction. (For now, KCSAN is
-64-bit only, so it won't actually be able to detect this though; and
-the current KCSAN development branch actually incorrectly considers
-WRITE_ONCE() to always be atomic; but still, in principle it's the
-kind of issue KCSAN is supposed to detect, I think.)
+From previous discussion we know systemd (and probably the other apps
+like udisks2, et. al.) gets notified on mount and umount activity so
+its not going to be just starting and stopping autofs that's a problem
+with very large mount tables.
 
-But even without KCSAN, if we have tearing stores racing with loads, I
-think that we ought to *at least* have a comment noting that we're
-intentionally doing that so that people don't copy this kind of code
-to a place where the high bits change more frequently and correctness
-matters more.
+To get a feel for the real difference we'd need to make the libmount
+changes for both and then check between the two and check behaviour.
+The mount and umount lookup case that Karel (and I) talked about
+should be sufficient.
 
-Since the read is already protected by the tasklist_lock, an
-alternative might be to let the execve path also take that lock to
-protect the sequence number update, given that execve is not a
-particularly hot path. Or we could hand-code the equality check and
-increment operations to be properly race-free.
+The biggest problem I had with fsinfo() when I was working with
+earlier series was getting fs specific options, in particular the
+need to use sb op ->fsinfo(). With this latest series David has made
+that part of the generic code and your patch also cover it.
+
+So the thing that was holding me up is done so we should be getting
+on with libmount improvements, we need to settle this.
+
+I prefer the system call interface and I'm not offering justification
+for that other than a general dislike (and on occasion outright
+frustration) of pretty much every proc implementation I have had to
+look at.
+
+> 
+> > With fsinfo(), I've tried to batch values together where it makes
+> > sense - and
+> > there's no lingering memory overhead - no extra inodes, dentries
+> > and files
+> > required.
+> 
+> The dentries, inodes and files in your test are single use (except
+> the
+> root dentry) and can be made ephemeral if that turns out to be
+> better.
+> My guess is that dentries belonging to individual attributes should
+> be
+> deleted on final put, while the dentries belonging to the mount
+> directory can be reclaimed normally.
+> 
+> Thanks,
+> Miklos
+
