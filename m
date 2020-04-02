@@ -2,168 +2,145 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7585C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B173C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B587220784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:56:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="X0A+Fzuc"
+	by mail.kernel.org (Postfix) with ESMTP id 78E8820757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388427AbgDBM4u (ORCPT
+        id S2388424AbgDBM71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:56:50 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36983 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387580AbgDBM4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:56:50 -0400
-Received: by mail-ed1-f66.google.com with SMTP id de14so3970719edb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 05:56:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kqap/nho/VO53wl1Vvcx8z2BRfU3VDatECjPDe+uq9o=;
-        b=X0A+Fzucb/KO5++vaKA82oslAdSJ02Ad2PGxG52ciH4zqaN2Ob8RUBW8nA0UWosKPZ
-         PPtJYVvaYCzZ5n035ZACtzQCPpIAM9qZeZqSIl8mp35Gj5eCth7/M8I0LiPpNGrdtrIj
-         WT+FKp3KqN4oIGomZ3sb5UiP4Nyaq3Ns7Qx+M5YfSJppFUzriaiMkqNr4qfxo/Bf/FXJ
-         gLEwmfs8P6WzW5RbkM7GrzaPiESoKE5R54dzEzPQWQiC9knvJf2ICkuiTbLfmA8/S9hf
-         dzKErLHxzxke8Crk1wmgJlTmvnkkz6Uu/ifKaB+UOJb9GU95F096QP35C8CzQ2Wda/Oi
-         1oVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kqap/nho/VO53wl1Vvcx8z2BRfU3VDatECjPDe+uq9o=;
-        b=WruaZZm7Eur4u3hpOFXcrd2VB8otMPrDo0yaOfibfly7QS/9TJn3zQftSlU8aCKpmC
-         YBVBEwTk5g1RGU1L48OoQLw+0DeETbG9UnVQbeO7eCY+WP5c0wY+qfDJqCSrjc1yNaF5
-         6UFEuaPs445Uv7zxqs2FnEjQoAwvtWsGcwfM6H9BtEjm8mKfaVLb4uV4lsh4T+tNm+qJ
-         FQrB+nx6V8I/85gePj4+qXUNjntu3YwoAeF8YuEGGMuwFADVsn3lm0ZUc/QMW50GEjXu
-         eVUPZctSnA1ADQD10wEJ4Mvwm0tahyway2P014LR9m0HJyQ4nBv2zkhN7Q05RnmUc1q8
-         iUGQ==
-X-Gm-Message-State: AGi0PuaLdIhw/Py2ddasOmOsua8ylOpHHwfbsLBZL0t8jOkCkiluC1Qa
-        ftT9WaXY2yKfwKEXaX987i0py+J2qhB8b+BYRtkZ
-X-Google-Smtp-Source: APiQypLVYVm4b4T8DRqBziIjHudBd14857uA+siaIatX8UbnCBqo/2HtxpahLb9nbo8P4Et/bV6FLvts7uscuxu9uyA=
-X-Received: by 2002:a17:906:583:: with SMTP id 3mr3007633ejn.308.1585832207648;
- Thu, 02 Apr 2020 05:56:47 -0700 (PDT)
+        Thu, 2 Apr 2020 08:59:27 -0400
+Received: from mga01.intel.com ([192.55.52.88]:9645 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387580AbgDBM71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 08:59:27 -0400
+IronPort-SDR: U8fFDHVSjeVlXlD4EKP8TE/9ssuhQ9pDBGLyB9k1hkg+7bGtP4xsY5FC41d1p5Ego9SV4CCq8i
+ 1Lvz3kh8iKNQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 05:59:26 -0700
+IronPort-SDR: bEGpgJZprRIDmoHMkkS5N9YLtEFTpFrm+mDKLzY8ZgOyfEu+YD7Lu7xw2Az+DyHXYBec3Qaeql
+ vetwQFsUKYFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
+   d="scan'208";a="273550937"
+Received: from xni5-mobl5.ccr.corp.intel.com (HELO [10.255.31.184]) ([10.255.31.184])
+  by fmsmga004.fm.intel.com with ESMTP; 02 Apr 2020 05:59:25 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH v9 00/10] Guest Last Branch Recording Enabling
+From:   "Xu, Like" <like.xu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20200313021616.112322-1-like.xu@linux.intel.com>
+ <446eef98-4d9f-4a9b-bdae-d29e36f6e07e@intel.com>
+Organization: Intel OTC
+Message-ID: <22fdfc2d-51f9-9a53-e8b9-6c5c1bdf2536@intel.com>
+Date:   Thu, 2 Apr 2020 20:59:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200402055640.6677-1-frextrite@gmail.com> <20200402055640.6677-3-frextrite@gmail.com>
-In-Reply-To: <20200402055640.6677-3-frextrite@gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 2 Apr 2020 08:56:36 -0400
-Message-ID: <CAHC9VhTUKepKiGZgAaWDADyTPnnM5unbM65T7jXZ3p8MFTNUuQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3 RESEND] auditsc: Do not use RCU primitive to read from
- cred pointer
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Eric Paris <eparis@redhat.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-audit@redhat.com,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <446eef98-4d9f-4a9b-bdae-d29e36f6e07e@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 1:57 AM Amol Grover <frextrite@gmail.com> wrote:
-> task_struct::cred is only used task-synchronously and does
-> not require any RCU locks, hence, rcu_dereference_check is
-> not required to read from it.
->
-> Suggested-by: Jann Horn <jannh@google.com>
-> Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> ---
->  kernel/auditsc.c | 15 +++++----------
->  1 file changed, 5 insertions(+), 10 deletions(-)
+Hi Peter,
 
-This is the exact same patch I ACK'd back in February, yes?
+I'm not sure if you recently had a time to review the proposed change
+on the host perf subsystem, which was introduced to support guest LBR 
+enablement.
 
-https://lore.kernel.org/linux-audit/CAHC9VhQCbg1V290bYEZM+izDPRpr=XYXakohnDaMphkBBFgUaA@mail.gmail.com
+The number of potential LBR users on the guest is growing and
+I have been looking forward to your comments on the patch 0001-0004 in this 
+version,
+even if it is completely negative.
 
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index 4effe01ebbe2..d3510513cdd1 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -430,24 +430,19 @@ static int audit_field_compare(struct task_struct *tsk,
->  /* Determine if any context name data matches a rule's watch data */
->  /* Compare a task_struct with an audit_rule.  Return 1 on match, 0
->   * otherwise.
-> - *
-> - * If task_creation is true, this is an explicit indication that we are
-> - * filtering a task rule at task creation time.  This and tsk == current are
-> - * the only situations where tsk->cred may be accessed without an rcu read lock.
->   */
->  static int audit_filter_rules(struct task_struct *tsk,
->                               struct audit_krule *rule,
->                               struct audit_context *ctx,
->                               struct audit_names *name,
-> -                             enum audit_state *state,
-> -                             bool task_creation)
-> +                             enum audit_state *state)
->  {
->         const struct cred *cred;
->         int i, need_sid = 1;
->         u32 sid;
->         unsigned int sessionid;
->
-> -       cred = rcu_dereference_check(tsk->cred, tsk == current || task_creation);
-> +       cred = tsk->cred;
->
->         for (i = 0; i < rule->field_count; i++) {
->                 struct audit_field *f = &rule->fields[i];
-> @@ -745,7 +740,7 @@ static enum audit_state audit_filter_task(struct task_struct *tsk, char **key)
->         rcu_read_lock();
->         list_for_each_entry_rcu(e, &audit_filter_list[AUDIT_FILTER_TASK], list) {
->                 if (audit_filter_rules(tsk, &e->rule, NULL, NULL,
-> -                                      &state, true)) {
-> +                                      &state)) {
->                         if (state == AUDIT_RECORD_CONTEXT)
->                                 *key = kstrdup(e->rule.filterkey, GFP_ATOMIC);
->                         rcu_read_unlock();
-> @@ -791,7 +786,7 @@ static enum audit_state audit_filter_syscall(struct task_struct *tsk,
->         list_for_each_entry_rcu(e, list, list) {
->                 if (audit_in_mask(&e->rule, ctx->major) &&
->                     audit_filter_rules(tsk, &e->rule, ctx, NULL,
-> -                                      &state, false)) {
-> +                                      &state)) {
->                         rcu_read_unlock();
->                         ctx->current_state = state;
->                         return state;
-> @@ -815,7 +810,7 @@ static int audit_filter_inode_name(struct task_struct *tsk,
->
->         list_for_each_entry_rcu(e, list, list) {
->                 if (audit_in_mask(&e->rule, ctx->major) &&
-> -                   audit_filter_rules(tsk, &e->rule, ctx, n, &state, false)) {
-> +                   audit_filter_rules(tsk, &e->rule, ctx, n, &state)) {
->                         ctx->current_state = state;
->                         return 1;
->                 }
-> --
-> 2.24.1
+Thanks,
+Like Xu
 
--- 
-paul moore
-www.paul-moore.com
+On 2020/3/20 16:45, Xu, Like wrote:
+> Hi Peter,
+> any comments on the host perf changes?
+>
+> Hi Paolo,
+> any comments on the kvm changes? Isn't this feature interesting to you?
+>
+> Just kindly ping.
+>
+> Thanks,
+> Like Xu
+>
+> On 2020/3/13 10:16, Like Xu wrote:
+>> Hi all,
+>>
+>> Please help review your interesting parts in this stable version,
+>> e.g. the first four patches involve the perf event subsystem
+>> and the fifth patch concerns the KVM userspace interface.
+>
+>> v8->v9 Changelog:
+>> - using guest_lbr_constraint to create guest LBR event without hw counter;
+>>    (please check perf changes in patch 0003)
+>> - rename 'cpuc->vcpu_lbr' to 'cpuc->guest_lbr_enabled';
+>>    (please check host LBR changes in patch 0004)
+>> - replace 'pmu->lbr_used' mechanism with lazy release 
+>> kvm_pmu_lbr_cleanup();
+>> - refactor IA32_PERF_CAPABILITIES trap via get_perf_capabilities();
+>> - refactor kvm_pmu_lbr_enable() with kvm_pmu_lbr_setup();
+>> - simplify model-specific LBR functionality check;
+>> - rename x86_perf_get_lbr_stack to x86_perf_get_lbr;
+>> - rename intel_pmu_lbr_confirm() to kvm_pmu_availability_check();
+>>
+>> Previous:
+>> https://lore.kernel.org/lkml/1565075774-26671-1-git-send-email-wei.w.wang@intel.com/ 
+>>
+>>
+>> Like Xu (7):
+>>    perf/x86/lbr: Add interface to get basic information about LBR stack
+>>    perf/x86: Add constraint to create guest LBR event without hw counter
+>>    perf/x86: Keep LBR stack unchanged on the host for guest LBR event
+>>    KVM: x86: Add KVM_CAP_X86_GUEST_LBR interface to dis/enable LBR
+>>      feature
+>>    KVM: x86/pmu: Add LBR feature emulation via guest LBR event
+>>    KVM: x86/pmu: Release guest LBR event via vPMU lazy release mechanism
+>>    KVM: x86: Expose MSR_IA32_PERF_CAPABILITIES to guest for LBR record
+>>      format
+>>
+>> Wei Wang (3):
+>>    perf/x86: Fix msr variable type for the LBR msrs
+>>    KVM: x86/pmu: Tweak kvm_pmu_get_msr to pass 'struct msr_data' in
+>>    KVM: x86: Remove the common trap handler of the MSR_IA32_DEBUGCTLMSR
+>>
+>>   Documentation/virt/kvm/api.rst    |  28 +++
+>>   arch/x86/events/core.c            |   9 +-
+>>   arch/x86/events/intel/core.c      |  29 +++
+>>   arch/x86/events/intel/lbr.c       |  55 +++++-
+>>   arch/x86/events/perf_event.h      |  21 ++-
+>>   arch/x86/include/asm/kvm_host.h   |   7 +
+>>   arch/x86/include/asm/perf_event.h |  24 ++-
+>>   arch/x86/kvm/cpuid.c              |   3 +-
+>>   arch/x86/kvm/pmu.c                |  28 ++-
+>>   arch/x86/kvm/pmu.h                |  26 ++-
+>>   arch/x86/kvm/pmu_amd.c            |   7 +-
+>>   arch/x86/kvm/vmx/pmu_intel.c      | 291 ++++++++++++++++++++++++++++--
+>>   arch/x86/kvm/vmx/vmx.c            |   4 +-
+>>   arch/x86/kvm/vmx/vmx.h            |   2 +
+>>   arch/x86/kvm/x86.c                |  42 +++--
+>>   include/linux/perf_event.h        |   7 +
+>>   include/uapi/linux/kvm.h          |   1 +
+>>   kernel/events/core.c              |   7 -
+>>   tools/include/uapi/linux/kvm.h    |   1 +
+>>   19 files changed, 540 insertions(+), 52 deletions(-)
+>>
+>
+
