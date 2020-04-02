@@ -2,190 +2,125 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	TVD_RCVD_SPACE_BRACKET,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E7FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C40C18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE732072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630DC2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:38:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="WR44TD0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387768AbgDBJgg convert rfc822-to-8bit (ORCPT
+        id S2387827AbgDBJir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:36:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36764 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgDBJgg (ORCPT
+        Thu, 2 Apr 2020 05:38:47 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:25740 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725965AbgDBJiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 05:36:36 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jJwGv-0000jL-VM; Thu, 02 Apr 2020 11:36:26 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E6FF1100D52; Thu,  2 Apr 2020 11:36:24 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jann Horn <jannh@google.com>,
-        Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David \(ChunMing\) Zhou" <David1.Zhou@amd.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: AMD DC graphics display code enables -mhard-float, -msse, -msse2 without any visible FPU state protection
-In-Reply-To: <CAG48ez1nHt2BRApHPp2S6rd4kr3P2kFsgHvStUsW7rqHSJprgg@mail.gmail.com>
-References: <CAG48ez2Sx4ELkM94aD_h_J7K7KBOeuGmvZLKRkg3n_f2WoZ_cg@mail.gmail.com> <4c5fe55d-9db9-2f61-59b2-1fb2e1b45ed0@amd.com> <CAG48ez1nHt2BRApHPp2S6rd4kr3P2kFsgHvStUsW7rqHSJprgg@mail.gmail.com>
-Date:   Thu, 02 Apr 2020 11:36:24 +0200
-Message-ID: <87k12yns9z.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 2 Apr 2020 05:38:46 -0400
+X-Greylist: delayed 608 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Apr 2020 05:38:45 EDT
+Received: from pps.filterd (m0170392.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329Ot01026600;
+        Thu, 2 Apr 2020 05:28:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=smtpout1;
+ bh=7Ocow47AB1qZAY92zenrcfT0CCgfnPw2mvZ8Wspme3k=;
+ b=WR44TD0oVT2tgVQRLV1iEGn6ZPCHXm5ftpt2b71HrPki5gFcOVsy9FDdyqM9ChlEtQaV
+ UjNQ8b1rymLV0iDOJj1GdpR8n7P+YORh9QiuDi9w4V02s7kR/swm+D5DQv5XT6KnT3PO
+ gDHNBCmcVHTtFSimvWYPCLT5Q7RtY0815R4U0tS9ISwFMl4SUOWaTAmVSatRGFJgbNr6
+ UMcGXVt79//6J2O8azJctbl2Ro8/H6Tz24ioopgB7j+ZxX8TOFa5xYddwvUQvusxyI/f
+ Vovy/VjTKTBujgh9w4Kwru77F5xZwX4OoFju3zyjvfCtJEat7smKtyrLLm1ZMN7ODFSC LA== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 3021reb5ym-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 05:28:20 -0400
+Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329Oc4c093473;
+        Thu, 2 Apr 2020 05:28:19 -0400
+Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
+        by mx0b-00154901.pphosted.com with ESMTP id 3023cjp9wb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 02 Apr 2020 05:28:19 -0400
+Received: from emc.com (localhost [127.0.0.1])
+        by mailuogwprd53.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329RmcU027368;
+        Thu, 2 Apr 2020 05:28:18 -0400
+Received: from mailsyshubprd05.lss.emc.com ([mailsyshubprd05.lss.emc.com [10.253.24.23]]) by mailuogwprd53.lss.emc.com with ESMTP id 0329Rr16027395 ;
+          Thu, 2 Apr 2020 05:27:54 -0400
+Received: from arwen2.xiolab.lab.emc.com. (arwen2.xiolab.lab.emc.com [10.76.211.113])
+        by mailsyshubprd05.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329Re2m010727;
+        Thu, 2 Apr 2020 05:27:50 -0400
+From:   leonid.ravich@dell.com
+To:     dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] dmaengine: ioat: Decreasing  allocation chunk size 2M -> 512K
+Date:   Thu,  2 Apr 2020 12:27:18 +0300
+Message-Id: <20200402092725.15121-2-leonid.ravich@dell.com>
+X-Mailer: git-send-email 2.16.2
+In-Reply-To: <20200402092725.15121-1-leonid.ravich@dell.com>
+References: <20200402092725.15121-1-leonid.ravich@dell.com>
+X-Sentrion-Hostname: mailuogwprd53.lss.emc.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-02_01:2020-03-31,2020-04-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ suspectscore=13 mlxlogscore=338 impostorscore=0 phishscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020085
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0
+ suspectscore=13 spamscore=0 mlxscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=411
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> writes:
-> On Thu, Apr 2, 2020 at 9:34 AM Christian König <christian.koenig@amd.com> wrote:
->> Am 02.04.20 um 04:34 schrieb Jann Horn:
->> > [x86 folks in CC so that they can chime in on the precise rules for
->> > this stuff]
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-They are pretty simple.
+current IOAT driver using big (2MB) allocations chunk for its descriptors
+therefore each ioat dma engine need 2 such chunks
+(64k entres in ring  each entry 64B = 4MB)
+requiring 2 * 2M * dmaengine contiguies memory chunk
+might fail due to memory fragmention.
 
-Any code using FPU needs to be completely isolated from regular code
-either by using inline asm or by moving it to a different compilation
-unit. The invocations need fpu_begin/end() of course.
+so we decresging chunk size and using more chunks.
 
->> > I noticed that several makefiles under drivers/gpu/drm/amd/display/dc/
->> > turn on floating-point instructions in the compiler flags
->> > (-mhard-float, -msse and -msse2) in order to make the "float" and
->> > "double" types usable from C code without requiring helper functions.
->> >
->> > However, as far as I know, code running in normal kernel context isn't
->> > allowed to use floating-point registers without special protection
->> > using helpers like kernel_fpu_begin() and kernel_fpu_end() (which also
->> > require that the protected code never blocks). If you violate that
->> > rule, that can lead to various issues - among other things, I think
->> > the kernel will clobber userspace FPU register state, and I think the
->> > kernel code can blow up if a context switch happens at the wrong time,
->> > since in-kernel task switches don't preserve FPU state.
->> >
->> > Is there some hidden trick I'm missing that makes it okay to use FPU
->> > registers here?
->> >
->> > I would try testing this, but unfortunately none of the AMD devices I
->> > have here have the appropriate graphics hardware...
->>
->> yes, using the floating point calculations in the display code has been
->> a source of numerous problems and confusion in the past.
->>
->> The calls to kernel_fpu_begin() and kernel_fpu_end() are hidden behind
->> the DC_FP_START() and DC_FP_END() macros which are supposed to hide the
->> architecture depend handling for x86 and PPC64.
->
-> Hmm... but as far as I can tell, you're using those macros from inside
-> functions that are already compiled with the FPU on:
->
->  - drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c uses the macros,
-> but is already compiled with calcs_ccflags
->  - drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c uses the
-> macros, but is already compiled with "-mhard-float -msse -msse2"
->  - drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c uses the
-> macros, but is already compiled with "-mhard-float -msse -msse2"
->
-> AFAIK as soon as you enter any function in any file compiled with FPU
-> instructions, you may encounter SSE instructions, e.g. via things like
-> compiler-generated memory-zeroing code - not just when you're actually
-> using doubles or floats.
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+---
+ drivers/dma/ioat/dma.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That's correct and this will silently cause FPU state corruption ...
-
-We really need objtool support to validate that.
-
-Peter, now that we know how to do it (noinstr, clac/stac) we can emit
-annotations (see patch below) and validate that any FPU instruction is
-inside a safe region. Hmm?
-
-Thanks,
-
-        tglx
-
-8<---------------
---- a/arch/x86/include/asm/fpu/api.h
-+++ b/arch/x86/include/asm/fpu/api.h
-@@ -19,8 +19,27 @@
-  * If you intend to use the FPU in softirq you need to check first with
-  * irq_fpu_usable() if it is possible.
-  */
--extern void kernel_fpu_begin(void);
--extern void kernel_fpu_end(void);
-+extern void __kernel_fpu_begin(void);
-+extern void __kernel_fpu_end(void);
-+
-+static inline void kernel_fpu_begin(void)
-+{
-+	asm volatile("%c0:\n\t"
-+		     ".pushsection .discard.fpu_begin\n\t"
-+		     ".long %c0b - .\n\t"
-+		     ".popsection\n\t" : : "i" (__COUNTER__));
-+	__kernel_fpu_begin();
-+}
-+
-+static inline void kernel_fpu_end(void)
-+{
-+	__kernel_fpu_end();
-+	asm volatile("%c0:\n\t"
-+		     ".pushsection .discard.fpu_end\n\t"
-+		     ".long %c0b - .\n\t"
-+		     ".popsection\n\t" : : "i" (__COUNTER__));
-+}
-+
- extern bool irq_fpu_usable(void);
- extern void fpregs_mark_activate(void);
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index 535aba9..e9757bc 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -83,7 +83,7 @@ struct ioatdma_device {
  
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -82,7 +82,7 @@ bool irq_fpu_usable(void)
- }
- EXPORT_SYMBOL(irq_fpu_usable);
+ #define IOAT_MAX_ORDER 16
+ #define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
+-#define IOAT_CHUNK_SIZE (SZ_2M)
++#define IOAT_CHUNK_SIZE (SZ_512K)
+ #define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE/IOAT_DESC_SZ)
  
--void kernel_fpu_begin(void)
-+void __kernel_fpu_begin(void)
- {
- 	preempt_disable();
- 
-@@ -102,16 +102,16 @@ void kernel_fpu_begin(void)
- 	}
- 	__cpu_invalidate_fpregs_state();
- }
--EXPORT_SYMBOL_GPL(kernel_fpu_begin);
-+EXPORT_SYMBOL_GPL(__kernel_fpu_begin);
- 
--void kernel_fpu_end(void)
-+void __kernel_fpu_end(void)
- {
- 	WARN_ON_FPU(!this_cpu_read(in_kernel_fpu));
- 
- 	this_cpu_write(in_kernel_fpu, false);
- 	preempt_enable();
- }
--EXPORT_SYMBOL_GPL(kernel_fpu_end);
-+EXPORT_SYMBOL_GPL(__kernel_fpu_end);
- 
- /*
-  * Save the FPU state (mark it for reload if necessary):
-
-
+ struct ioat_descs {
+-- 
+1.9.3
 
