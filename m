@@ -2,231 +2,158 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F191FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94075C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D89920675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6829A20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389033AbgDBSmt (ORCPT
+        id S2388764AbgDBSnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:42:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:34119 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388540AbgDBSmt (ORCPT
+        Thu, 2 Apr 2020 14:43:13 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:50088 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389103AbgDBSnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 14:42:49 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MgARS-1ipxaC2yRq-00hbbd for <linux-kernel@vger.kernel.org>; Thu, 02 Apr
- 2020 20:42:46 +0200
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 74C67650A8B
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Apr 2020 18:42:46 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9ErPIgxDbAKN for <linux-kernel@vger.kernel.org>;
-        Thu,  2 Apr 2020 20:42:46 +0200 (CEST)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 130A864BA2B
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Apr 2020 20:42:46 +0200 (CEST)
-Received: from pflmari.corp.cetitec.com (10.8.5.12) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 2 Apr 2020 20:42:45 +0200
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 768EB804FE; Thu,  2 Apr 2020 20:34:03 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 20:34:03 +0200
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v5 2/9] media: adv748x: include everything adv748x.h needs
- into the file
-Message-ID: <046f909122e03286faf0a8916f30d56259656e14.1585852001.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1585852001.git.alexander.riesen@cetitec.com>
+        Thu, 2 Apr 2020 14:43:13 -0400
+Received: by mail-io1-f72.google.com with SMTP id v19so3686159ioq.16
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 11:43:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=yoqnUjRtu8mgbvv/13mBn4nrRvAQngPro3mOt8IGEyc=;
+        b=Nz0UpExxCOenotJ32bZLjV1fsxF/o9AhgXD/kmUbdwIh7UIJxCYhe9EcsqKt6kaaR3
+         lSZd7kpFrMRg6LsAk8glm0SwbrqJQxhqGVtANfuG5bLgxxvIEYK5nZwvQI85Btm0MnSl
+         jCjhQRUbAFy/9VSe4JGgu0dyWOG3Xmfa3s6T6DckVR465wCfS0odNA9Hm1mx+SGmSqKc
+         tJ1u7Krsg5KbXt2JcJMuOLXoR6UIzJIPU/+anEwspQPCDgdH1CH7/rJCEhqyoxb5S6hI
+         7RcwFao1UofCDkPez6Rfp1+84V9gRapYdCHxX+GFiinX1iA7+dlbNr2u+B0j/r3HpRol
+         HrFA==
+X-Gm-Message-State: AGi0PuabUOQ/EjyxHIbf6UIm9oPbL9/STNgsFmbgbkr+NrN3M0ieJTzE
+        MYpOd6MKkwytkqHoOlbczMu7r8CzUX1AstD/V90nloH0Mn+S
+X-Google-Smtp-Source: APiQypJTLL+G338lLsPPlftz5FYyt7Zj4Yb5dOSEJfqQHqIdaImyApgkIj3rO3pVWniQSbfg9V8Od7ErArR2SgzZISGoixPw66T9
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1585852001.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.12]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6C7266
-X-Provags-ID: V03:K1:ZvlDTIEfh9I5HjtsOVOqqh+TXNs4jkK3Hw0EStGTUNMOD2VJ0U+
- WX4Ad4tmRLtTzAqyWIz25UqY2Vg5Xtfx5m4kp9XPFnM13NVDMmEjAPSsFGvxeM8/X292PB7
- ZLP6xlztXmDMLHKUwyQibisG/l7f6CGOPnB/V6ejhN0pAqd/lrLuUR+VV8qXqqlYbM1dGbw
- /fsGPhSyJDwABc3pDV0lw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:snojTtjHGmg=:xC47a6qD5nfYo/OwnISWuS
- on/b4ULLC7O3X/AMGMq+Hh5/deF7TdBP4B6a+CHkOWk9CgmTAlD5rMwplL/PX2fzkoSo4Y4pG
- gmZcjxB2IzO9lpdvyeZlox4LqOAmnJPRiP7GJRzRXK2WCk45PT4i1KZpa8su53LEV4aFHwKTo
- Dw4yVNOUG7KPFBrWjcPLchlN+dKMXn5Ees/sVsd+N7J5b9kvGzEG+xO2Ob9CY4UHqnsWCLOfK
- 8r6k54QtGEtrlQZDNZYDEYiYOz+KvetyGuU0txpTmKqBCNgYVnHk6cOIoj0kflqzUbbE2wzto
- Xd43LA+srz3+bV6chdn8JxQEn9Lq1MjrUZetQrAOaoColS5/xkET9BoKzhfndZdnNyctKCzMp
- yEqMjykzniOGWIOQwHiX6rPXGNxYfbqVVZXDxFJ/UqQKr/3JlZnumGI56LuSVTZNOPs+evAxI
- kqOK3mzRvzCb6EGl3bZPSHRBQZL3MF4UYYoMZQsVqmBE/ckiY+9moTKOtwcJnzpdxuXUeI6a/
- gV8S9JeUD/PCTmIWdM7eYEWp3apwvsXRhGO3HW5vCBHtES/WBmt8kxTx9OkNHKUvxGQ54BOFT
- ktdgFyovsehI2zyUOCEgjjJ74dRFDDH5wg5ilbsa9OvYFdVV51mEJZ5aTWXVBn+O+xIQJx7Xe
- g1ugxyNQwc6NYZO3CWyhl0uGIOw2zz6BMs2zjkPLiJvlTQ46yVnNak0GiD6a8uTuLrB5SmfNE
- Ujsgux7kqCcVCP0bfzLatdcDVjEz/0+OQlwsOxcezi3FgAdVCECKLLFJC8MjWiJDj/q2RULAr
- SUZrNGoUKrmRCtCNpbSFKfFaLDhcAeu6MH+B2VFWCmPpaSrSNx6+7vfxtr+8hBaM5K+Qdo5
+X-Received: by 2002:a02:55c5:: with SMTP id e188mr4602763jab.57.1585852992156;
+ Thu, 02 Apr 2020 11:43:12 -0700 (PDT)
+Date:   Thu, 02 Apr 2020 11:43:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000043794505a2532c6b@google.com>
+Subject: general protection fault in macsec_upd_offload
+From:   syzbot <syzbot+7022ab7c383875c17eff@syzkaller.appspotmail.com>
+To:     antoine.tenart@bootlin.com, davem@davemloft.net,
+        dbogdanov@marvell.com, irusskikh@marvell.com,
+        linux-kernel@vger.kernel.org, mathew.j.martineau@linux.intel.com,
+        matthieu.baerts@tessares.net, mayflowerera@gmail.com,
+        mstarovoitov@marvell.com, netdev@vger.kernel.org,
+        pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To follow the established practice of not depending on others to
-pull everything in. While at it, make sure it stays like this.
+Hello,
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+syzbot found the following crash on:
+
+HEAD commit:    304e0242 net_sched: add a temporary refcnt for struct tcin..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=17a6940be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
+dashboard link: https://syzkaller.appspot.com/bug?extid=7022ab7c383875c17eff
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1099dadbe00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a63197e00000
+
+The bug was bisected to:
+
+commit 01cacb00b35cb62b139f07d5f84bcf0eeda8eff6
+Author: Paolo Abeni <pabeni@redhat.com>
+Date:   Fri Mar 27 21:48:51 2020 +0000
+
+    mptcp: add netlink-based PM
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16133ebde00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=15133ebde00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11133ebde00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7022ab7c383875c17eff@syzkaller.appspotmail.com
+Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
+
+batman_adv: batadv0: Interface activated: batadv_slave_1
+netlink: 'syz-executor343': attribute type 1 has an invalid length.
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 PID: 7006 Comm: syz-executor343 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:nla_get_u8 include/net/netlink.h:1543 [inline]
+RIP: 0010:macsec_upd_offload+0x1c9/0x5a0 drivers/net/macsec.c:2597
+Code: fd 00 f0 ff ff 0f 87 23 03 00 00 e8 01 c5 d0 fc 48 8b 5c 24 38 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 1b 03 00 00
+RSP: 0018:ffffc90001797558 EFLAGS: 00010247
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff84a2244d
+RDX: 0000000000000000 RSI: ffffffff84a2245f RDI: 0000000000000004
+RBP: ffff8880a8372000 R08: ffff888095cae5c0 R09: ffffc90001797588
+R10: fffff520002f2eb3 R11: ffffc9000179759f R12: 0000000000000000
+R13: ffff88809ffaff80 R14: 1ffff920002f2eab R15: 0000000000000000
+FS:  0000000000a6a880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdd4d1316c0 CR3: 0000000093074000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
+ genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x4438a9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 6b 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffdc14392d8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004438a9
+RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 00007ffdc14392f0 R08: 00000000bb1414ac R09: 00000000bb1414ac
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffdc1439320
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 98b6a7926fe123d8 ]---
+RIP: 0010:nla_get_u8 include/net/netlink.h:1543 [inline]
+RIP: 0010:macsec_upd_offload+0x1c9/0x5a0 drivers/net/macsec.c:2597
+Code: fd 00 f0 ff ff 0f 87 23 03 00 00 e8 01 c5 d0 fc 48 8b 5c 24 38 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 1b 03 00 00
+RSP: 0018:ffffc90001797558 EFLAGS: 00010247
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff84a2244d
+RDX: 0000000000000000 RSI: ffffffff84a2245f RDI: 0000000000000004
+RBP: ffff8880a8372000 R08: ffff888095cae5c0 R09: ffffc90001797588
+R10: fffff520002f2eb3 R11: ffffc9000179759f R12: 0000000000000000
+R13: ffff88809ffaff80 R14: 1ffff920002f2eab R15: 0000000000000000
+FS:  0000000000a6a880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdd4d1316c0 CR3: 0000000093074000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- drivers/media/i2c/adv748x/adv748x-afe.c  | 6 ++----
- drivers/media/i2c/adv748x/adv748x-core.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x-csi2.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x-hdmi.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x.h      | 2 ++
- 5 files changed, 10 insertions(+), 16 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-afe.c b/drivers/media/i2c/adv748x/adv748x-afe.c
-index dbbb1e4d6363..5a25d1fbe25f 100644
---- a/drivers/media/i2c/adv748x/adv748x-afe.c
-+++ b/drivers/media/i2c/adv748x/adv748x-afe.c
-@@ -6,18 +6,16 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/v4l2-dv-timings.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * SDP
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index c3fb113cef62..5c59aad319d1 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -10,6 +10,8 @@
-  *	Kieran Bingham <kieran.bingham@ideasonboard.com>
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/i2c.h>
-@@ -20,14 +22,10 @@
- #include <linux/slab.h>
- #include <linux/v4l2-dv-timings.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * Register manipulation
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
-index c43ce5d78723..c00d4f347d95 100644
---- a/drivers/media/i2c/adv748x/adv748x-csi2.c
-+++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
-@@ -5,15 +5,13 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/module.h>
- #include <linux/mutex.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- static int adv748x_csi2_set_virtual_channel(struct adv748x_csi2 *tx,
- 					    unsigned int vc)
- {
-diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-index c557f8fdf11a..f598acec3b5c 100644
---- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
-+++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-@@ -5,18 +5,16 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/module.h>
- #include <linux/mutex.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-ioctl.h>
- 
- #include <uapi/linux/v4l2-dv-timings.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * HDMI and CP
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-index fccb388ce179..09aab4138c3f 100644
---- a/drivers/media/i2c/adv748x/adv748x.h
-+++ b/drivers/media/i2c/adv748x/adv748x.h
-@@ -19,6 +19,8 @@
-  */
- 
- #include <linux/i2c.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
- 
- #ifndef _ADV748X_H_
- #define _ADV748X_H_
--- 
-2.25.1.25.g9ecbe7eb18
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
