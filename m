@@ -2,142 +2,258 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E76EC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7D7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530A6206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgO2uaxF"
+	by mail.kernel.org (Postfix) with ESMTP id 8A18120747
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:03:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgDBECc (ORCPT
+        id S1728408AbgDBEC7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 00:02:32 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39313 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbgDBECb (ORCPT
+        Thu, 2 Apr 2020 00:02:59 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:40552 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726136AbgDBEC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 00:02:31 -0400
-Received: by mail-qt1-f196.google.com with SMTP id f20so2225472qtq.6;
-        Wed, 01 Apr 2020 21:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/jw2WZ6aHnORJ8qH5PbT0GtwmWt6wJffdnj2epPitNs=;
-        b=RgO2uaxFVrmvxGIheHJFmd2euaYJzPmwzonN/sulS7pSoSDC32XNN4/VzwiXOPczrg
-         N4DBS4HIMwKOHo/iwfYgdScX7uy+2fhomXdO4l30X/PsztnSa6JxV21zWMZuQ0e+Sl9N
-         o8LjJYYb5Zu79X+0e35dqfIX0mFFZFY6rlkQ4yqbISrpXN+4z39PyJCQXPiePV8ZjJXS
-         fYfP1daGeG1hYtA6RSetq3ud5i4FYK5evGbY3VNU+Crfi/c4nbiiDCjqLA9lnvv59d5k
-         6saQEsT9ChKQZVs6RzDu7lAgSBQSH22bdWP3Yp46jQ9Pyui9u10+sX5fAFaz0a6S8D3e
-         uBEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/jw2WZ6aHnORJ8qH5PbT0GtwmWt6wJffdnj2epPitNs=;
-        b=PwUYZtartRNbSwa0unlWa6NCYhlj1jGUr2DzIM5laVknInqvYAHzpqMttMs7PfAYr5
-         Eqt+La1iE7NPSPjkhba9Uy4UasOMIJkg1BJdCDiVyTK1GwNibyzS7jFbHZLCvyMjeQZy
-         d2GHfXt7TU+dRaMoSqz4VGtjWCVk/L4M1BguNZSKyPbOAEgXHYeOtVTmCa/aMccGqcME
-         tNvi78cMJsA1PPwYvld3ATCweHnJ9GQD35WKVTCB5dU8p4sPCfXzQZv00S74iEFvdPp7
-         hOyb2n5jZ/4wg09vpdqkoHMsgwMsiAmMmKUS20hjyAz5K/bm5Iua6aOMN8Jp8TID2EST
-         DxuA==
-X-Gm-Message-State: AGi0PuatVxtp+LGZy2LXpas+3nfve2zp8zzBI4KjoZTvxk3D0BWsRJw+
-        QYNnPK4iR4UfO6KOtmKkXx3fiP6B5JabVA==
-X-Google-Smtp-Source: APiQypLHBdJLcacAP39uZyzAC5X3t9Jb0FA3mUxgEx6ZlY/YRiBYA3sNmCO3+ecWdvQsu0NGw7gpTw==
-X-Received: by 2002:ac8:358f:: with SMTP id k15mr1019998qtb.113.1585800148357;
-        Wed, 01 Apr 2020 21:02:28 -0700 (PDT)
-Received: from stingray.lan (pool-173-76-255-234.bstnma.fios.verizon.net. [173.76.255.234])
-        by smtp.gmail.com with ESMTPSA id c6sm627749qkg.88.2020.04.01.21.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 21:02:27 -0700 (PDT)
-From:   Thomas Hebb <tommyhebb@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Hebb <tommyhebb@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        linux-hwmon@vger.kernel.org
-Subject: [PATCH] hwmon: (dell-smm) Use one DMI match for all XPS models
-Date:   Thu,  2 Apr 2020 00:02:21 -0400
-Message-Id: <be17c0a111983e886d871db8dc2fc8fbfe8e2da0.1585800134.git.tommyhebb@gmail.com>
-X-Mailer: git-send-email 2.25.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 2 Apr 2020 00:02:59 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TuNonMf_1585800168;
+Received: from 127.0.0.1(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TuNonMf_1585800168)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 02 Apr 2020 12:02:53 +0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [RFC for Linux] virtio_balloon: Add VIRTIO_BALLOON_F_THP_ORDER to
+ handle THP spilt issue
+From:   teawater <teawaterz@linux.alibaba.com>
+In-Reply-To: <5e0e0659-5f70-2162-96be-5fcd0d3f46ad@redhat.com>
+Date:   Thu, 2 Apr 2020 12:02:47 +0800
+Cc:     Nadav Amit <namit@vmware.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "pagupta@redhat.com" <pagupta@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "mojha@codeaurora.org" <mojha@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        Hui Zhu <teawater@gmail.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <07AF0005-2711-4137-A96D-DA264A05C302@linux.alibaba.com>
+References: <20200326031817-mutt-send-email-mst@kernel.org>
+ <C4C6BAF7-C040-403D-997C-48C7AB5A7D6B@redhat.com>
+ <20200326054554-mutt-send-email-mst@kernel.org>
+ <f26dc94a-7296-90c9-56cd-4586b78bc03d@redhat.com>
+ <20200331091718-mutt-send-email-mst@kernel.org>
+ <02a393ce-c4b4-ede9-7671-76fa4c19097a@redhat.com>
+ <20200331093300-mutt-send-email-mst@kernel.org>
+ <b69796e0-fa41-a219-c3e5-a11e9f5f18bf@redhat.com>
+ <20200331100359-mutt-send-email-mst@kernel.org>
+ <85f699d4-459a-a319-0a8f-96c87d345c49@redhat.com>
+ <BABD09DC-217E-4F00-9C05-74ABB4B1E13D@vmware.com>
+ <5e0e0659-5f70-2162-96be-5fcd0d3f46ad@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, each new XPS has to be added manually for module autoloading
-to work. Since fan multiplier autodetection should work fine on all XPS
-models, just match them all with one block like is done for Precision
-and Studio.
 
-The only match we replace that doesn't already use autodetection is
-"XPS13" which, according to Google, only matches the XPS 13 9333. (All
-other XPS 13 models have "XPS" as its own word, surrounded by spaces.)
-According to the thread at [1], autodetection works for the XPS 13 9333,
-meaning this shouldn't regress it. I do not own one to confirm with,
-though.
 
-Tested on an XPS 13 9350 and confirmed the module now autoloads and
-reports reasonable-looking data. I am using BIOS 1.12.2 and do not see
-any freezes when querying fan speed.
+> 2020年4月1日 17:48，David Hildenbrand <david@redhat.com> 写道：
+> 
+> On 31.03.20 18:37, Nadav Amit wrote:
+>>> On Mar 31, 2020, at 7:09 AM, David Hildenbrand <david@redhat.com> wrote:
+>>> 
+>>> On 31.03.20 16:07, Michael S. Tsirkin wrote:
+>>>> On Tue, Mar 31, 2020 at 04:03:18PM +0200, David Hildenbrand wrote:
+>>>>> On 31.03.20 15:37, Michael S. Tsirkin wrote:
+>>>>>> On Tue, Mar 31, 2020 at 03:32:05PM +0200, David Hildenbrand wrote:
+>>>>>>> On 31.03.20 15:24, Michael S. Tsirkin wrote:
+>>>>>>>> On Tue, Mar 31, 2020 at 12:35:24PM +0200, David Hildenbrand wrote:
+>>>>>>>>> On 26.03.20 10:49, Michael S. Tsirkin wrote:
+>>>>>>>>>> On Thu, Mar 26, 2020 at 08:54:04AM +0100, David Hildenbrand wrote:
+>>>>>>>>>>>> Am 26.03.2020 um 08:21 schrieb Michael S. Tsirkin <mst@redhat.com>:
+>>>>>>>>>>>> 
+>>>>>>>>>>>> ﻿On Thu, Mar 12, 2020 at 09:51:25AM +0100, David Hildenbrand wrote:
+>>>>>>>>>>>>>> On 12.03.20 09:47, Michael S. Tsirkin wrote:
+>>>>>>>>>>>>>> On Thu, Mar 12, 2020 at 09:37:32AM +0100, David Hildenbrand wrote:
+>>>>>>>>>>>>>>> 2. You are essentially stealing THPs in the guest. So the fastest
+>>>>>>>>>>>>>>> mapping (THP in guest and host) is gone. The guest won't be able to make
+>>>>>>>>>>>>>>> use of THP where it previously was able to. I can imagine this implies a
+>>>>>>>>>>>>>>> performance degradation for some workloads. This needs a proper
+>>>>>>>>>>>>>>> performance evaluation.
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>> I think the problem is more with the alloc_pages API.
+>>>>>>>>>>>>>> That gives you exactly the given order, and if there's
+>>>>>>>>>>>>>> a larger chunk available, it will split it up.
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>> But for balloon - I suspect lots of other users,
+>>>>>>>>>>>>>> we do not want to stress the system but if a large
+>>>>>>>>>>>>>> chunk is available anyway, then we could handle
+>>>>>>>>>>>>>> that more optimally by getting it all in one go.
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>> So if we want to address this, IMHO this calls for a new API.
+>>>>>>>>>>>>>> Along the lines of
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>>  struct page *alloc_page_range(gfp_t gfp, unsigned int min_order,
+>>>>>>>>>>>>>>                  unsigned int max_order, unsigned int *order)
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>> the idea would then be to return at a number of pages in the given
+>>>>>>>>>>>>>> range.
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>> What do you think? Want to try implementing that?
+>>>>>>>>>>>>> 
+>>>>>>>>>>>>> You can just start with the highest order and decrement the order until
+>>>>>>>>>>>>> your allocation succeeds using alloc_pages(), which would be enough for
+>>>>>>>>>>>>> a first version. At least I don't see the immediate need for a new
+>>>>>>>>>>>>> kernel API.
+>>>>>>>>>>>> 
+>>>>>>>>>>>> OK I remember now.  The problem is with reclaim. Unless reclaim is
+>>>>>>>>>>>> completely disabled, any of these calls can sleep. After it wakes up,
+>>>>>>>>>>>> we would like to get the larger order that has become available
+>>>>>>>>>>>> meanwhile.
+>>>>>>>>>>> 
+>>>>>>>>>>> Yes, but that‘s a pure optimization IMHO.
+>>>>>>>>>>> So I think we should do a trivial implementation first and then see what we gain from a new allocator API. Then we might also be able to justify it using real numbers.
+>>>>>>>>>> 
+>>>>>>>>>> Well how do you propose implement the necessary semantics?
+>>>>>>>>>> I think we are both agreed that alloc_page_range is more or
+>>>>>>>>>> less what's necessary anyway - so how would you approximate it
+>>>>>>>>>> on top of existing APIs?
+>>>>>>>>> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
+>>>>>> 
+>>>>>> .....
+>>>>>> 
+>>>>>> 
+>>>>>>>>> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+>>>>>>>>> index 26de020aae7b..067810b32813 100644
+>>>>>>>>> --- a/mm/balloon_compaction.c
+>>>>>>>>> +++ b/mm/balloon_compaction.c
+>>>>>>>>> @@ -112,23 +112,35 @@ size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
+>>>>>>>>> EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
+>>>>>>>>> 
+>>>>>>>>> /*
+>>>>>>>>> - * balloon_page_alloc - allocates a new page for insertion into the balloon
+>>>>>>>>> - *			page list.
+>>>>>>>>> + * balloon_pages_alloc - allocates a new page (of at most the given order)
+>>>>>>>>> + * 			 for insertion into the balloon page list.
+>>>>>>>>> *
+>>>>>>>>> * Driver must call this function to properly allocate a new balloon page.
+>>>>>>>>> * Driver must call balloon_page_enqueue before definitively removing the page
+>>>>>>>>> * from the guest system.
+>>>>>>>>> *
+>>>>>>>>> + * Will fall back to smaller orders if allocation fails. The order of the
+>>>>>>>>> + * allocated page is stored in page->private.
+>>>>>>>>> + *
+>>>>>>>>> * Return: struct page for the allocated page or NULL on allocation failure.
+>>>>>>>>> */
+>>>>>>>>> -struct page *balloon_page_alloc(void)
+>>>>>>>>> +struct page *balloon_pages_alloc(int order)
+>>>>>>>>> {
+>>>>>>>>> -	struct page *page = alloc_page(balloon_mapping_gfp_mask() |
+>>>>>>>>> -				       __GFP_NOMEMALLOC | __GFP_NORETRY |
+>>>>>>>>> -				       __GFP_NOWARN);
+>>>>>>>>> -	return page;
+>>>>>>>>> +	struct page *page;
+>>>>>>>>> +
+>>>>>>>>> +	while (order >= 0) {
+>>>>>>>>> +		page = alloc_pages(balloon_mapping_gfp_mask() |
+>>>>>>>>> +				   __GFP_NOMEMALLOC | __GFP_NORETRY |
+>>>>>>>>> +				   __GFP_NOWARN, order);
+>>>>>>>>> +		if (page) {
+>>>>>>>>> +			set_page_private(page, order);
+>>>>>>>>> +			return page;
+>>>>>>>>> +		}
+>>>>>>>>> +		order--;
+>>>>>>>>> +	}
+>>>>>>>>> +	return NULL;
+>>>>>>>>> }
+>>>>>>>>> -EXPORT_SYMBOL_GPL(balloon_page_alloc);
+>>>>>>>>> +EXPORT_SYMBOL_GPL(balloon_pages_alloc);
+>>>>>>>>> 
+>>>>>>>>> /*
+>>>>>>>>> * balloon_page_enqueue - inserts a new page into the balloon page list.
+>>>>>>>> 
+>>>>>>>> 
+>>>>>>>> I think this will try to invoke direct reclaim from the first iteration
+>>>>>>>> to free up the max order.
+>>>>>>> 
+>>>>>>> %__GFP_NORETRY: The VM implementation will try only very lightweight
+>>>>>>> memory direct reclaim to get some memory under memory pressure (thus it
+>>>>>>> can sleep). It will avoid disruptive actions like OOM killer.
+>>>>>>> 
+>>>>>>> Certainly good enough for a first version I would say, no?
+>>>>>> 
+>>>>>> Frankly how well that behaves would depend a lot on the workload.
+>>>>>> Can regress just as well.
+>>>>>> 
+>>>>>> For the 1st version I'd prefer something that is the least disruptive,
+>>>>>> and that IMHO means we only trigger reclaim at all in the same configuration
+>>>>>> as now - when we can't satisfy the lowest order allocation.
+>>>>> 
+>>>>> Agreed.
+>>>>> 
+>>>>>> Anything else would be a huge amount of testing with all kind of
+>>>>>> workloads.
+>>>>> 
+>>>>> So doing a "& ~__GFP_RECLAIM" in case order > 0? (as done in
+>>>>> GFP_TRANSHUGE_LIGHT)
+>>>> 
+>>>> That will improve the situation when reclaim is not needed, but leave
+>>>> the problem in place for when it's needed: if reclaim does trigger, we
+>>>> can get a huge free page and immediately break it up.
+>>>> 
+>>>> So it's ok as a first step but it will make the second step harder as
+>>>> we'll need to test with reclaim :).
+>>> 
+>>> I expect the whole "steal huge pages from your guest" to be problematic,
+>>> as I already mentioned to Alex. This needs a performance evaluation.
+>>> 
+>>> This all smells like a lot of workload dependent fine-tuning. :)
+>> 
+>> AFAIK the hardware overheads of keeping huge-pages in the guest and backing
+>> them with 4KB pages are non-negligible. Did you take those into account?
+> 
+> Of course, the fastest mapping will be huge pages in host and guest.
+> Having huge pages in your guest but not in your host cannot really be
+> solved using ballooning AFAIKs. Hopefully THP in the host will be doing
+> its job properly :)
+> 
+> ... however, so far, we haven't done any performance comparisons at all.
+> The only numbers from Hui Zhu that I can spot are number of THP in the
+> host, which is not really expressing actual guest performance IMHO. That
+> definitely has to be done to evaluate the different optimizations we
+> might want to try out.
+> 
 
-[1] https://lore.kernel.org/patchwork/patch/525367/
+I did some tests with vm-scalability on Monday comparing their performance in VM:
+//4 processes random r/w
+usemem -R -a -Z  -n 4 1g
 
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
----
+write:
+hugepage: 146367 KB/s
+thp:	  133550 KB/s
+normal:   124248 KB/s
 
- drivers/hwmon/dell-smm-hwmon.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+read:
+hugepage: 103969 KB/s
+thp:	  100622 KB/s
+normal:   88755 KB/s
 
-diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
-index d4c83009d625..c1af4c801dd8 100644
---- a/drivers/hwmon/dell-smm-hwmon.c
-+++ b/drivers/hwmon/dell-smm-hwmon.c
-@@ -1087,14 +1087,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
- 		},
- 		.driver_data = (void *)&i8k_config_data[DELL_STUDIO],
- 	},
--	{
--		.ident = "Dell XPS 13",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "XPS13"),
--		},
--		.driver_data = (void *)&i8k_config_data[DELL_XPS],
--	},
- 	{
- 		.ident = "Dell XPS M140",
- 		.matches = {
-@@ -1104,17 +1096,10 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
- 		.driver_data = (void *)&i8k_config_data[DELL_XPS],
- 	},
- 	{
--		.ident = "Dell XPS 15 9560",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9560"),
--		},
--	},
--	{
--		.ident = "Dell XPS 15 9570",
-+		.ident = "Dell XPS",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9570"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "XPS"),
- 		},
- 	},
- 	{ }
--- 
-2.25.2
+Best,
+Hui
+
+
+> -- 
+> Thanks,
+> 
+> David / dhildenb
 
