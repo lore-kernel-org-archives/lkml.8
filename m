@@ -2,99 +2,114 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F07BC10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE75C10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60552208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7C0208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387881AbgDBIw0 (ORCPT
+        id S2387882AbgDBIxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:52:26 -0400
-Received: from mga17.intel.com ([192.55.52.151]:5611 "EHLO mga17.intel.com"
+        Thu, 2 Apr 2020 04:53:16 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59751 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387749AbgDBIw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:52:26 -0400
-IronPort-SDR: Rl8ESYf2lQ8qr7XvpzESBeZZahccIWieKjsW4IDiZPdePh3xZ14iAzHBWqrmyUFN6BroJYcPhD
- rrU86zxcG/iA==
+        id S2387526AbgDBIxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:53:16 -0400
+IronPort-SDR: rnwHdNA+Fr5C7bHgERAITFGXL0VKvn2Ucr8GT4eCffLFZJQj7Kv8yKIV+DyD1i/F5G2t9ybpXa
+ 78kxA+g6yWBw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:52:26 -0700
-IronPort-SDR: lSTxC31/lHPveE8rO2r7/yKYE2gQkKeyi8aH5qvCKS22HS/1Hd4IKGn+ruHLVGhkTUBclS8gPv
- 35cNGLbs1wsA==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:53:15 -0700
+IronPort-SDR: 0d09LmQxjwdOTwQhwodxomnqmvwvXp3uLhsrsNBHN8aidh3hD0dbxAdS3Rx/o5gXv7RdtTYUV/
+ 78nLAMk/cjvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
-   d="scan'208";a="240768676"
-Received: from tronach-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.38.191])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Apr 2020 01:52:22 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id 0668121F19; Thu,  2 Apr 2020 11:52:16 +0300 (EEST)
-Date:   Thu, 2 Apr 2020 11:52:16 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, mchehab@kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        hverkuil@xs4all.nl,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        laurent.pinchart@ideasonboard.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH 1/1] lib/vsprintf: Add support for printing V4L2 and DRM
- fourccs
-Message-ID: <20200402085216.GC1522@kekkonen.localdomain>
-References: <20200401140522.966-1-sakari.ailus@linux.intel.com>
- <87eet6mgk7.fsf@intel.com>
+   d="scan'208";a="243005477"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 02 Apr 2020 01:53:15 -0700
+Received: from [10.249.226.252] (abudanko-mobl.ccr.corp.intel.com [10.249.226.252])
+        by linux.intel.com (Postfix) with ESMTP id 6FA66580544;
+        Thu,  2 Apr 2020 01:53:08 -0700 (PDT)
+Subject: [PATCH v8 10/12] drivers/oprofile: open access for CAP_PERFMON
+ privileged process
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <691f1096-b15f-9b12-50a0-c2b93918149e@linux.intel.com>
+Date:   Thu, 2 Apr 2020 11:53:07 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87eet6mgk7.fsf@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Moi,
 
-On Thu, Apr 02, 2020 at 11:34:48AM +0300, Jani Nikula wrote:
-> On Wed, 01 Apr 2020, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
-> > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > the same implementation can be used.
-> 
-> I'm not going to take a strong stand in one way or the other regarding
-> the patch at hand, but I do think at some point we have to draw a line
-> what should be included in printk formats. Arguably they should be
-> reserved to things that are generally useful across large parts of the
-> kernel, right?
-> 
-> I think the more specialized you get, the more you should think about
-> just using the plain old %s, and your own helpers. Because frankly, the
-> kernel printk specifiers also start getting more than a little obscure.
+Open access to monitoring for CAP_PERFMON privileged process.
+Providing the access under CAP_PERFMON capability singly, without
+the rest of CAP_SYS_ADMIN credentials, excludes chances to misuse
+the credentials and makes operation more secure.
 
-I don't really disagree... While this is functionality very commonly needed
-in drivers, there are alternatives such as posted here:
+CAP_PERFMON implements the principal of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
+principle of least privilege: A security design principle that states
+that a process or program be granted only those privileges (e.g.,
+capabilities) necessary to accomplish its legitimate function, and only
+for the time that such privileges are actually required)
 
-<URL:https://lore.kernel.org/linux-media/20190916100433.24367-1-hverkuil-cisco@xs4all.nl/>
+For backward compatibility reasons access to the monitoring remains
+open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage
+for secure monitoring is discouraged with respect to CAP_PERFMON
+capability.
 
-The 4cc codes added by this set is still relatively generic (while still
-Linux subsystem specific and not related to e.g. hardware standards), but I
-wonder how many other, possibly similar cases there could be in the kernel,
-and how many new specifiers we might get with those all added.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Acked-by: James Morris <jamorris@linux.microsoft.com>
+---
+ drivers/oprofile/event_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-For what it's worth, even C99 defines macros for printing some formats
-such as PRIu64 for uint64_t.
-
+diff --git a/drivers/oprofile/event_buffer.c b/drivers/oprofile/event_buffer.c
+index 12ea4a4ad607..6c9edc8bbc95 100644
+--- a/drivers/oprofile/event_buffer.c
++++ b/drivers/oprofile/event_buffer.c
+@@ -113,7 +113,7 @@ static int event_buffer_open(struct inode *inode, struct file *file)
+ {
+ 	int err = -EPERM;
+ 
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!perfmon_capable())
+ 		return -EPERM;
+ 
+ 	if (test_and_set_bit_lock(0, &buffer_opened))
 -- 
-Terveisin,
+2.24.1
 
-Sakari Ailus
