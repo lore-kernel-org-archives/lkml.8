@@ -2,121 +2,96 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6777CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC4BC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3502073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950592078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:18:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="PUkyZjKG"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="L/SnQjBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389201AbgDBPQu (ORCPT
+        id S2389049AbgDBPSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:16:50 -0400
-Received: from www381.your-server.de ([78.46.137.84]:47294 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389159AbgDBPQt (ORCPT
+        Thu, 2 Apr 2020 11:18:55 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:46042 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388234AbgDBPSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:16:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WYf1ogi8qwXr1Ma6iwc6C03qL42/5kPc3Gq7upiuE2U=; b=PUkyZjKGKz4NcqJc2AO2B5Z1X3
-        9LVSoOBE2WqcOR4z7C6dXTv4KEw3pXn1UDPxxfjMlWOHRKSsBB//QTTrQ4dSFfuRYd7td4r+PC9On
-        zg9Zzn5admshXSbcTiXNWUsQHnGqcCuxAdEnRePY94QUMwGY3kB4clNhHIJpo/kzHAgZqB5wlETmd
-        zdiwv/OpcnR3Cy3JL80DfHAqTPIrT+TagwhjH2NOGm/QViU7OqVYasazs9BGESlvmtsNHI3MBXWf1
-        n4m9JuMGgZW2U29h2v5BSFy/TA90ptes1aBHvQ/htu5SkJri4/C1YsgF0M0IA6Y2Nhj50tg275BYI
-        eNbPpsWw==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jK1aI-0002eQ-Rr; Thu, 02 Apr 2020 17:16:47 +0200
-Received: from [82.135.64.109] (helo=[192.168.178.20])
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jK1aI-0004uI-Kz; Thu, 02 Apr 2020 17:16:46 +0200
-Subject: Re: [RFC] genirq: prevent allocated_irqs from being smaller than
- NR_IRQS
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de
-References: <20200402150820.GB5886@smtp.gmail.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <66fabdd6-7815-1ede-9a45-45fdb2b6d5b2@metafoo.de>
-Date:   Thu, 2 Apr 2020 17:16:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 11:18:55 -0400
+Received: by mail-qv1-f66.google.com with SMTP id g4so1803854qvo.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=X4md8GfFb/AZLlmWivRcEwSCP4uBimc7oKbXY4Cuzbs=;
+        b=L/SnQjBfnp5fEn4nBLMR6OIrZCUsqaFG32VM3D8P0P8Lj/uoYnjkRyEnuYvXsJsAKt
+         c4igzrWSnvwBSj3E7mr0QbuhFJhboCmmv66EkfRKM8dykWur9UCs7QjwYmhFzRp4O+A4
+         SnrLBfG8ir/Oio7mvh4OgFCEi2cahY9VIyMpFSkHRdm41lB0/v0GSq1mKWVd2TiCyBlN
+         hI6cIgvd6bBViEDgjTfBgb3PQnim/I28LCR10Uk8FN4kj7u9VdBwqKzsszZNJndU/ap/
+         B/jD43fEcMR1E7yUPLdB4B9rCGNhvxza6rn5dvPkZt/C61cv9D6z0rzi3GwPV+Lp5T9D
+         VM4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=X4md8GfFb/AZLlmWivRcEwSCP4uBimc7oKbXY4Cuzbs=;
+        b=aQvs/YWdpojqaN/2HmDaTUBUN1zIfocdGbamqWGV9rxsTKU6zWgjDj9Xew86EJRjVg
+         GZjvXUACIEUmetTCVuBDfii01aGJZAjDM40c2LVlvJK2dtyN0s3bY5nwSbmbitOSZ48g
+         KjbyhGRMt+8ITeRXZFFKGDeSPsTb3aS4VdB6p3qr08AD2uZFREYx2CZurNqrbQvf8ywf
+         h5fFwzwirsgr36GR1jYCgTx1X4zyFQoYQ4uACGk5unLwwGSR5YcYceaPFur8SFOqiAoa
+         XbZK7UorAgONNjQ1gLdHHbCN5oZBbZLlF0o1m55Ce5GrgX5eMdmVJ7pCqp4qcDjFgU+p
+         yoAQ==
+X-Gm-Message-State: AGi0PuaDgA2wlB9+FSewYTq2oqDPYsIJBk/u/J9RHrGH/AyiAGdbR1gN
+        z1IEwF3znNT0WhiYXnrfqEcKXL4jrF0=
+X-Google-Smtp-Source: APiQypL5Dn4DcQmenazeGPmJARieWyi3C0ntxFpd4l0Ao5mKkYmQaN0AZVEOfdy/PupIGM0JUmOwRg==
+X-Received: by 2002:ad4:55cd:: with SMTP id bt13mr3597389qvb.111.1585840733984;
+        Thu, 02 Apr 2020 08:18:53 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::11c9])
+        by smtp.gmail.com with ESMTPSA id z66sm3721863qkb.94.2020.04.02.08.18.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 08:18:53 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 11:18:52 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: Bypass high reclaim iteration for cgroup
+ hierarchy root
+Message-ID: <20200402151852.GD2089@cmpxchg.org>
+References: <20200312164137.GA1753625@chrisdown.name>
 MIME-Version: 1.0
-In-Reply-To: <20200402150820.GB5886@smtp.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25770/Thu Apr  2 14:58:54 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312164137.GA1753625@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/20 5:08 PM, Marcelo Schmitt wrote:
-> Hi,
->
-> I was trying to understand IRQ initialization when suddenly got
-> intrigued about the declaration of the "allocated_irqs" bitmap at
-> kernel/irq/irqdesc.c. The size of allocated_irqs is defined by
-> IRQ_BITMAP_BITS, which in turn is passed to BITS_TO_LONGS to calculate
-> the actual number of IRQs the system may have. If I got it right, there
-> should be one entry at allocated_irqs for each possible IRQ line. At
-> kernel/irq/internals.h, IRQ_BITMAP_BITS is defined to be NR_IRQS (or
-> NR_IRQS plus a high constant in the case of sparse IRQs), which most
-> architectures seem to define as being the actual number of IRQs a board
-> has.
->
-> #ifdef CONFIG_SPARSE_IRQ
-> # define IRQ_BITMAP_BITS (NR_IRQS + 8196)
-> #else
-> # define IRQ_BITMAP_BITS NR_IRQS
-> #endif
->
-> The thing I'm troubled about is that BITS_TO_LONGS divides
-> IRQ_BITMAP_BITS by sizeof(long) * 8, which makes it possible for the
-> size of allocated_irqs to be smaller than NR_IRQS.
->
-> For instance, if !CONFIG_SPARSE_IRQ, sizeof(long) == 8, and NR_IRQS is
-> defined as 16, then IRQ_BITMAP_BITS would be equal to
-> (16 + 64 - 1)/64 = 1. Even if CONFIG_SPARSE_IRQ is defined, a device
-> with a large number of IRQ lines would end up with a small bitmap for
-> allocated_irqs.
->
-> I thought NR_IRQS would be multiplied by the number of bits it uses.
-> Something like:
->
-> #ifdef CONFIG_SPARSE_IRQ
-> # define IRQ_BITMAP_BITS (NR_IRQS * BITS_PER_TYPE(long) + 8196)
-> #else
-> # define IRQ_BITMAP_BITS (NR_IRQS * BITS_PER_TYPE(long))
-> #endif
->
-> Anyhow, IRQ_BITMAP_BITS is also used to limit the maximum number of IRQs
-> at irqdesc.c. If my understanding of nr_irqs is correct, it would make
-> sense to change some sanity checks at early_irq_init() too.
->
-> Does anyone mind giving me some advice on how allocated_irqs is
-> initialized with a suitable size to support the number of interrupt
-> lines a board may have?
+On Thu, Mar 12, 2020 at 04:41:37PM +0000, Chris Down wrote:
+> The root of the hierarchy cannot have high set, so we will never reclaim
+> based on it. This makes that clearer and avoids another entry.
+> 
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-mm@kvack.org
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@fb.com
 
-Maybe I'm missing something, but allocated_irqs is a bitmap. This means 
-each bit corresponds to one IRQ. if sizeof(long) is 8 and allocated_irqs 
-is sized to be one long that means it is large enough for 64 IRQs.
+This makes sense, memory.high doesn't exist on the root.
 
-- Lars
+And the mem_cgroup_is_root() check, a simple pointer comparison, is
+cheaper than reading the page_counter atomic and memcg->high (which we
+already know to be PAGE_COUNTER_MAX).
 
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
