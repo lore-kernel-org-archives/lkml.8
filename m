@@ -2,140 +2,111 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E4AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3916C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7799C2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D412077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFNmcAnw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZ/onoFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733259AbgDBAOY (ORCPT
+        id S1733285AbgDBAOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 20:14:24 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35175 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732527AbgDBAOY (ORCPT
+        Wed, 1 Apr 2020 20:14:47 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42637 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732527AbgDBAOr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 20:14:24 -0400
-Received: by mail-pj1-f68.google.com with SMTP id g9so797658pjp.0;
-        Wed, 01 Apr 2020 17:14:22 -0700 (PDT)
+        Wed, 1 Apr 2020 20:14:47 -0400
+Received: by mail-oi1-f196.google.com with SMTP id e4so1244373oig.9;
+        Wed, 01 Apr 2020 17:14:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9TOpVwGljBZauRP9X3qEZ40GdaFoye/rHmThBY/m8OA=;
-        b=AFNmcAnw1vlPJs4xbJb+CvioRBmCYZUiN0OlsN0BuD7xktSSk0fwbW218gCbZsiVGZ
-         pV6A66Fp/Pajh4iJ+UWZW4eNEYdbOjMDWlHcM/4iplSq51/+BFeQmtX+wXoPaWXtQf2c
-         guIvXtfa3MQAtJ+EPL/OjLYy3Du/jhZ5B6wdNVXc+sbld5jKLict6/EqS5pawXHkJVt7
-         8OEsBO/KCwCohhC30u+0cdHwskk1asAGqd8UB7a+m24ZG1fbHoIx/RdFEWs1S/v6yaad
-         Qtw4H51cAX7XMo5pLTkXDwrheqY/eF1xqt3jAXV2n/95tjso4xTmTAXFRmGt9kSASxMp
-         JDgA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=klVPjyyJRn9Ce0U12Zt30pNh36uPBeOjBoM8Z9HJi78=;
+        b=SZ/onoFgFTgDMxXXOATDMWC5BsRg2I/S0kVdr0CKA0EKjlkrexnFLj4njG0QBw8qj1
+         sOdSwop/KvZ1hPcKDvrTppUF0AmRZzdEDPXsc8RkLpytRb7NYTaHuvu2UeHdE4iXCbfX
+         qzwpdA7L8KAAI3tWtQzuUzdOk0tDCePEtUwC1aLMed4X4zRnI5G0f3QU7z0O9WGOySPi
+         JHsqrE1bAh2x1rHC9ZuTGEufWwYK1yI1DyZeQnLEXDBVN+2/zeOJwq/KXuAkW39M3iAE
+         S7jVKXLdS7DaKjfmNhNfejQGLnUz/rmefa94Vf9H7pq9VHEdk2MJnEW8h0npqs9g/UQh
+         dXBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=9TOpVwGljBZauRP9X3qEZ40GdaFoye/rHmThBY/m8OA=;
-        b=Yjch3BEQt8AM4WxNghXnGtfDR+vj96I/xsXxigK8N1Zq4Gm5A8jj1TeNI3FsM8Lyy+
-         mchR1Lxo+z/uZv5nuEGSomoM53rBSC4nS/rAvCJ9+3iSADqrD5Btm7tyhPAWBHj9HiDP
-         Z4N6VtY0Z0Xj03Y8dOnV10+zZbLBnSsw/463Lps7kKcDbWNws+7JCTwJlKyuqBMNv3lS
-         AFcXBCFBGxNlByAIN2bWI6USGlFBxMf+La1K8a9rK3s1SwS+3pfPtPDdSWAZBxJMm3Ow
-         vLFDIFdZKV3ajJodhAkxNrfOUnhqCdC/FgrOahQAx91nnwydsp+orDA2KL+4cTPhLq0v
-         1z6A==
-X-Gm-Message-State: AGi0PuYbC0rl/BPUxknpTKXSo9ONMFe0YieDTD6DkRITXgF9BawwVIG7
-        l4F8IDWSemCe8XR58e6dlHxeyqFL
-X-Google-Smtp-Source: APiQypIQa/1NfZFA5l/15e1FnAJuSeet86Rz5f35VNnE5HMKePhs5x27XEU1S4vqPI0wwFvk30aI7Q==
-X-Received: by 2002:a17:90a:a0c:: with SMTP id o12mr691646pjo.80.1585786462220;
-        Wed, 01 Apr 2020 17:14:22 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u41sm2322365pgn.8.2020.04.01.17.14.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 17:14:21 -0700 (PDT)
-Subject: Re: [PATCH 5.6 00/10] 5.6.2-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200401161413.974936041@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <f51f52b7-3afb-6d90-8172-70eaab016e93@roeck-us.net>
-Date:   Wed, 1 Apr 2020 17:14:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=klVPjyyJRn9Ce0U12Zt30pNh36uPBeOjBoM8Z9HJi78=;
+        b=RSTpP3U/93ALPoX0jfIxPCu3YRX0YZDxe2ztMCT1q9Ediwp9HXUmCxEBp2CRkGEmJO
+         HDa4oWJVPg+m0mnifX/Wq2NZMZBzjXHoBEeFZdk8tl8cztJqMvNbOVvz6vxkPP1uReEQ
+         u8hWOZ64gBBsiUmhxnQmvDdDzOKahSqttEAcW1JVhOx+rWGFfRjNnt2p60H0Qgwf9QeA
+         Q/CEu0lL+yttUPMXYN3/m1gbbs9TKQJxNfw1XFi3cFMlf/l6wQ5gNaX4nCiVlSlKbbNv
+         eySh0Rlhttbjl/VBzPIhuAdOwL42apwvFktss1udexSkIkGwFOdD9Hvd0dcwWatwSbvj
+         0CCQ==
+X-Gm-Message-State: AGi0PubjA+UaKjWvdjorzhn1LH2+dqBs8gfGAxmSfYLJBF3wiWe7kfrg
+        3TVgC2MHLSZzJXOMn6pcU4471olHxHaQRIGcv04=
+X-Google-Smtp-Source: APiQypL5QD6tgop+X7paSmL/U7vNB5syj3q1dP23DoAJBr/8ol3cKXoaywSJ9/R8VJJE4Zi5sLvZcqZ8sDnAEVHfK2E=
+X-Received: by 2002:a54:4094:: with SMTP id i20mr391678oii.141.1585786486773;
+ Wed, 01 Apr 2020 17:14:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200401161413.974936041@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1585700362-11892-1-git-send-email-wanpengli@tencent.com>
+ <1585700362-11892-2-git-send-email-wanpengli@tencent.com> <6de1a454-60fc-2bda-841d-f9ceb606d4c6@redhat.com>
+ <CANRm+CzB3dWatF7qOO_WajXM_ZBn1U6Z8+uq4NxCuLG3TgwY1Q@mail.gmail.com>
+ <CE34AD16-64A7-4AA0-9928-507C6F3FF6CD@vmware.com> <20200401230100.GE9603@linux.intel.com>
+In-Reply-To: <20200401230100.GE9603@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 2 Apr 2020 08:14:34 +0800
+Message-ID: <CANRm+CzX4UcYLKC16=kONa5HGQeWejCvwbW_hFL_9o=p0-ktsA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] KVM: LAPIC: Don't need to clear IPI delivery
+ status in x2apic mode
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Nadav Amit <namit@vmware.com>, Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 9:17 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.2 release.
-> There are 10 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
-> Anything received after that time might be too late.
-> 
+On Thu, 2 Apr 2020 at 07:01, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Wed, Apr 01, 2020 at 05:40:03PM +0000, Nadav Amit wrote:
+> > > On Mar 31, 2020, at 11:46 PM, Wanpeng Li <kernellwp@gmail.com> wrote:
+> > >
+> > > Cc more people,
+> > > On Wed, 1 Apr 2020 at 08:35, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> > >> On 01/04/20 02:19, Wanpeng Li wrote:
+> > >>> -             /* No delay here, so we always clear the pending bit */
+> > >>> -             val &= ~(1 << 12);
+> > >>> +             /* Immediately clear Delivery Status in xAPIC mode */
+> > >>> +             if (!apic_x2apic_mode(apic))
+> > >>> +                     val &= ~(1 << 12);
+> > >>
+> > >> This adds a conditional, and the old behavior was valid according to the
+> > >> SDM: "software should not assume the value returned by reading the ICR
+> > >> is the last written value".
+> > >
+> > > Nadav, Sean, what do you think?
+> >
+> > I do not know. But if you write a KVM unit-test, I can run it on bare-metal
+> > and give you feedback about how it behaves.
+>
+> I agree with Paolo, clearing the bit doesn't violate the SDM.  The
+> conditional is just as costly as the AND, if not more so, even for x2APIC.
+>
+> I would play it safe and clear the bit even in the x2APIC only path to
+> avoid tripping up guest kernels that loop on the delivery status even when
+> using x2APIC.
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 428 pass: 428 fail: 0
+Fair enough.
 
-Guenter
+    Wanpeng
