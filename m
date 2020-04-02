@@ -2,89 +2,141 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C57C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223ABC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6077C20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AFE2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EN+phhAx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RyNEmmOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388372AbgDBOcX (ORCPT
+        id S2388384AbgDBOdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:32:23 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:52072 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388260AbgDBOcX (ORCPT
+        Thu, 2 Apr 2020 10:33:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47285 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727734AbgDBOdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:32:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=rNA/ZKP+zwR7ZAV/3D8mTRew1XZVl++cypDGaRhgstA=; b=EN+phhAxCqTXo0CSpOlH2mbR6L
-        dHXMISMAeJD0ens5KmWa+N7WqGJNlLEbo5Gd9GTYirFiRd5n+OAir61cH8G/L2KdbOCX9cyR+d+DW
-        rxGf0A7cPVQcrVda+d58a/xBrIGELNy6AQ1u51AUhFZDuOfNsB41tT0VrpmKW118GNPL5ii8JVeCP
-        6bdIh/+q3KZDltu6b/0HiegpiR8vu5cEYIlM2L1lwd5RkV1pzveeoSFZA5lu5CcXKwSTJNZ2Igezk
-        YgF9rjFav4f6bRTxmQU58bwe9YW4QfRnoQm/NOpMlOnEdHiZgBZEryvkAYKW1ROq4R9H3CRP3yd5x
-        gT+baGYA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK0t3-0003LJ-6S; Thu, 02 Apr 2020 14:32:05 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B8E363056DE;
-        Thu,  2 Apr 2020 16:32:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 690C92B0D920E; Thu,  2 Apr 2020 16:32:03 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 16:32:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kenneth R. Crudup" <kenny@panix.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [patch 0/2] x86: Prevent Split-Lock-Detection wreckage on VMX
- hypervisors
-Message-ID: <20200402143203.GJ20713@hirez.programming.kicks-ass.net>
-References: <20200402123258.895628824@linutronix.de>
- <alpine.DEB.2.21.2004020641470.7052@xps-7390>
+        Thu, 2 Apr 2020 10:33:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585837995;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/LvbIGm2nK3Oz4PrdUm4J6nJKeVTzICwhcAsWWGOIWI=;
+        b=RyNEmmOI5KiPk2QncvHGNrxHWt4F0Lea3Uzdzil23mhF+sej3GrMtXxZyB/5t3o8u0f4Et
+        9gN8zz0g3SPoKL3mnQR930wchovrKMk1/AYLJyzqfiy3v+qad1CxDIEg6BLxl0CaYCwyWM
+        FkEWxSB2YlPxctE817sEcteVaEmfTgs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-376-Oyp6LrLqOquSwYXMHaeb9g-1; Thu, 02 Apr 2020 10:33:13 -0400
+X-MC-Unique: Oyp6LrLqOquSwYXMHaeb9g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8FF608017F4;
+        Thu,  2 Apr 2020 14:33:12 +0000 (UTC)
+Received: from localhost (ovpn-12-36.pek2.redhat.com [10.72.12.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9D5899E09;
+        Thu,  2 Apr 2020 14:33:11 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 22:33:09 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org
+Subject: Re: [PATCH] mm: remove unused free_bootmem_with_active_regions
+Message-ID: <20200402143309.GN2402@MiWiFi-R3L-srv>
+References: <20200402135233.3253-1-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2004020641470.7052@xps-7390>
+In-Reply-To: <20200402135233.3253-1-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 06:43:19AM -0700, Kenneth R. Crudup wrote:
+On 04/02/20 at 09:52pm, Baoquan He wrote:
+> In commit 397dc00e249ec64e10 ("mips: sgi-ip27: switch from DISCONTIGMEM
+> to SPARSEMEM"), the last caller was gone. Now no user calls
+> function free_bootmem_with_active_regions() any more.
 > 
-> On Thu, 2 Apr 2020, Thomas Gleixner wrote:
-> 
-> > As Peter and myself don't have access to a SLD enabled machine, the
-> > KVM/VMX part is untested. The module scan part works.
-> 
-> I just applied both of these patches to my (Linus' tip) tree, and unfortunately
-> VMWare still hangs if split_lock_detect= is set to anything but "off".
-> 
-> Was there anything else I'd needed to do?
+> Let's remove it.
 
-Hmm, you're not seeing this:
+Self NACK this.
 
-  +       pr_warn("disabled due to VMLAUNCH in module: %s\n", me->name);
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  include/linux/mm.h |  4 ----
+>  mm/page_alloc.c    | 25 -------------------------
+>  2 files changed, 29 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 1cd8b8f8534d..9c093f7c751d 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2363,8 +2363,6 @@ static inline unsigned long get_num_physpages(void)
+>   * 	memblock_add_node(base, size, nid)
+>   * free_area_init_nodes(max_zone_pfns);
+>   *
+> - * free_bootmem_with_active_regions() calls free_bootmem_node() for each
+> - * registered physical page range.  Similarly
+>   * sparse_memory_present_with_active_regions() calls memory_present() for
+>   * each range when SPARSEMEM is enabled.
+>   *
+> @@ -2380,8 +2378,6 @@ extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+>  extern void get_pfn_range_for_nid(unsigned int nid,
+>  			unsigned long *start_pfn, unsigned long *end_pfn);
+>  extern unsigned long find_min_pfn_with_active_regions(void);
+> -extern void free_bootmem_with_active_regions(int nid,
+> -						unsigned long max_low_pfn);
+>  extern void sparse_memory_present_with_active_regions(int nid);
+>  
+>  #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 138a56c0f48f..2892ebeaa6c9 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -6356,31 +6356,6 @@ int __meminit __early_pfn_to_nid(unsigned long pfn,
+>  }
+>  #endif /* CONFIG_HAVE_ARCH_EARLY_PFN_TO_NID */
+>  
+> -/**
+> - * free_bootmem_with_active_regions - Call memblock_free_early_nid for each active range
+> - * @nid: The node to free memory on. If MAX_NUMNODES, all nodes are freed.
+> - * @max_low_pfn: The highest PFN that will be passed to memblock_free_early_nid
+> - *
+> - * If an architecture guarantees that all ranges registered contain no holes
+> - * and may be freed, this this function may be used instead of calling
+> - * memblock_free_early_nid() manually.
+> - */
+> -void __init free_bootmem_with_active_regions(int nid, unsigned long max_low_pfn)
+> -{
+> -	unsigned long start_pfn, end_pfn;
+> -	int i, this_nid;
+> -
+> -	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, &this_nid) {
+> -		start_pfn = min(start_pfn, max_low_pfn);
+> -		end_pfn = min(end_pfn, max_low_pfn);
+> -
+> -		if (start_pfn < end_pfn)
+> -			memblock_free_early_nid(PFN_PHYS(start_pfn),
+> -					(end_pfn - start_pfn) << PAGE_SHIFT,
+> -					this_nid);
+> -	}
+> -}
+> -
+>  /**
+>   * sparse_memory_present_with_active_regions - Call memory_present for each active range
+>   * @nid: The node to call memory_present for. If MAX_NUMNODES, all nodes will be used.
+> -- 
+> 2.17.2
+> 
 
-fire when you load the vmware kernel module? Could you slip me a copy of
-that thing by private mail?
