@@ -2,305 +2,70 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C85C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 599EDC10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE5E20787
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:24:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="snORBZBy"
+	by mail.kernel.org (Postfix) with ESMTP id 3A26E21473
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387941AbgDBKYK (ORCPT
+        id S2387942AbgDBKZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:24:10 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38815 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387477AbgDBKYJ (ORCPT
+        Thu, 2 Apr 2020 06:25:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36937 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728803AbgDBKZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:24:09 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z12so2759368qtq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 03:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h0nNqe1kbgvwHQ8vMqd1sXLiQtqiwKluQ6SNG74jh9k=;
-        b=snORBZByN/1PzKOcGHeB+Qq6yfL80xMnQisrSefBZKauNDRSths38a6N2ksXbfjN+g
-         4AyFEjiDnKsJRJgHD64uXQc8hI3rKisaAvpQpFxEQvCurP+9HmUe8JSOKBjoUb32kbp+
-         azR+8Gk2gnN4tp+t/uf9ENZq8rCby5rhRH3wX/a2t0DvOeH6rfbmE5Fxgu3J10JHvHq3
-         ZoSqmAw6iiv3T8HsyR1WTWDIAeIH5+v8UPiR610dYUD9zYPdPVk/qrpWV3wmQDSmIxT5
-         0HYcrMOXSlsU6UUFR9gPUvAVKWm6Md5UcX0nYqQBq/7oUALAtv9ohrkL0oqES3xCG4iz
-         ujRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h0nNqe1kbgvwHQ8vMqd1sXLiQtqiwKluQ6SNG74jh9k=;
-        b=siNI9PTsKyQNCFJym4/FQ/EqCtRssjqebPdM7BIbm2VwuV20iU2ylCvkAkmS2z8haJ
-         WK/OtRYD2awKdR/3WGPiZKuq7MlVs+KOQ1xqknipFrhnOs5Tp/SxPQtQYu5oKZ8JvLsA
-         PSq9YnONGlE1bYCOVXRFW8IEa7MPAQrYUr+d3r3eM/HBifqGBj+KFcdf6F3Jnd8ogWad
-         QNRcbihbirQKcMBMT17VEB04wN0L8CImV9MbOjsm2OqHbyp/8aVvWMP8LGJkR8jJhtBP
-         wT6mS1SRmFKOVm0bxZx6VZl/l4/i8s8HjBK0IYjtXgEhx2ZvquXzyVfe/s+J4YlOO94I
-         wtag==
-X-Gm-Message-State: AGi0PuZx90JFVlCLLvBBlVgYbJg+AljSFnAbYeQLVPaj77K3QQcPC+Pj
-        xjD4CYBMNAC2qTSoaVRnj2biC7gTwiqSMfx97hAeoQ==
-X-Google-Smtp-Source: APiQypL5RKri1TZ6h0Rr2PMnT1EO+XojT22MU9TFWrkRGKvaSZ+YLzb8fGekAKMlXld9bXTIlDwpV5DObWOCdK947/I=
-X-Received: by 2002:aed:25f4:: with SMTP id y49mr2126724qtc.50.1585823047508;
- Thu, 02 Apr 2020 03:24:07 -0700 (PDT)
+        Thu, 2 Apr 2020 06:25:39 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jJx2X-0001du-Gt; Thu, 02 Apr 2020 10:25:37 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        linux-efi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] efi/libstub/x86: remove redundant assignment to pointer hdr
+Date:   Thu,  2 Apr 2020 11:25:37 +0100
+Message-Id: <20200402102537.503103-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200401180907.202604-1-trishalfonso@google.com> <20200401180907.202604-2-trishalfonso@google.com>
-In-Reply-To: <20200401180907.202604-2-trishalfonso@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 2 Apr 2020 12:23:56 +0200
-Message-ID: <CACT4Y+ZWQtAZb_D3MsAvO6fFJiH+eYid+ZuFYMRpWDr07Fxgkw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] KUnit: KASAN Integration
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 8:09 PM Patricia Alfonso <trishalfonso@google.com> wrote:
->
-> Integrate KASAN into KUnit testing framework.
->         - Fail tests when KASAN reports an error that is not expected
->         - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
->         - Expected KASAN reports pass tests and are still printed when run
->         without kunit_tool (kunit_tool still bypasses the report due to the
->         test passing)
->         - KUnit struct in current task used to keep track of the current test
->         from KASAN code
->
-> Make use of "[PATCH v3 kunit-next 1/2] kunit: generalize
-> kunit_resource API beyond allocated resources" and "[PATCH v3
-> kunit-next 2/2] kunit: add support for named resources" from Alan
-> Maguire [1]
->         - A named resource is added to a test when a KASAN report is
->          expected
->         - This resource contains a struct for kasan_data containing
->         booleans representing if a KASAN report is expected and if a
->         KASAN report is found
->
-> [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-alan.maguire@oracle.com/T/#t)
->
-> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+The pointer hdr is being assigned a value that is never read and
+it is being updated later with a new value. The assignment is
+redundant and can be removed.
 
-> ---
->  include/kunit/test.h  |  5 +++++
->  include/linux/kasan.h |  6 ++++++
->  lib/kunit/test.c      | 13 ++++++++-----
->  lib/test_kasan.c      | 37 +++++++++++++++++++++++++++++++++++++
->  mm/kasan/report.c     | 33 +++++++++++++++++++++++++++++++++
->  5 files changed, 89 insertions(+), 5 deletions(-)
->
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index ac59d18e6bab..1dc3d118f64b 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -225,6 +225,11 @@ struct kunit {
->         struct list_head resources; /* Protected by lock. */
->  };
->
-> +static inline void kunit_set_failure(struct kunit *test)
-> +{
-> +       WRITE_ONCE(test->success, false);
-> +}
-> +
->  void kunit_init_test(struct kunit *test, const char *name, char *log);
->
->  int kunit_run_tests(struct kunit_suite *suite);
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index 5cde9e7c2664..148eaef3e003 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -14,6 +14,12 @@ struct task_struct;
->  #include <asm/kasan.h>
->  #include <asm/pgtable.h>
->
-> +/* kasan_data struct is used in KUnit tests for KASAN expected failures */
-> +struct kunit_kasan_expectation {
-> +       bool report_expected;
-> +       bool report_found;
-> +};
-> +
->  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
->  extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
->  extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index 2cb7c6220a00..030a3281591e 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -10,16 +10,12 @@
->  #include <linux/kernel.h>
->  #include <linux/kref.h>
->  #include <linux/sched/debug.h>
-> +#include <linux/sched.h>
->
->  #include "debugfs.h"
->  #include "string-stream.h"
->  #include "try-catch-impl.h"
->
-> -static void kunit_set_failure(struct kunit *test)
-> -{
-> -       WRITE_ONCE(test->success, false);
-> -}
-> -
->  static void kunit_print_tap_version(void)
->  {
->         static bool kunit_has_printed_tap_version;
-> @@ -288,6 +284,10 @@ static void kunit_try_run_case(void *data)
->         struct kunit_suite *suite = ctx->suite;
->         struct kunit_case *test_case = ctx->test_case;
->
-> +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> +       current->kunit_test = test;
-> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
-> +
->         /*
->          * kunit_run_case_internal may encounter a fatal error; if it does,
->          * abort will be called, this thread will exit, and finally the parent
-> @@ -603,6 +603,9 @@ void kunit_cleanup(struct kunit *test)
->                 spin_unlock(&test->lock);
->                 kunit_remove_resource(test, res);
->         }
-> +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> +       current->kunit_test = NULL;
-> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
->  }
->  EXPORT_SYMBOL_GPL(kunit_cleanup);
->
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 3872d250ed2c..cf73c6bee81b 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -23,6 +23,43 @@
->
->  #include <asm/page.h>
->
-> +#include <kunit/test.h>
-> +
-> +struct kunit_resource resource;
-> +struct kunit_kasan_expectation fail_data;
-> +
-> +#define KUNIT_SET_KASAN_DATA(test) do { \
-> +       fail_data.report_expected = true; \
-> +       fail_data.report_found = false; \
-> +       kunit_add_named_resource(test, \
-> +                               NULL, \
-> +                               NULL, \
-> +                               &resource, \
-> +                               "kasan_data", &fail_data); \
-> +} while (0)
-> +
-> +#define KUNIT_DO_EXPECT_KASAN_FAIL(test, condition) do { \
-> +       struct kunit_resource *resource; \
-> +       struct kunit_kasan_expectation *kasan_data; \
-> +       condition; \
-> +       resource = kunit_find_named_resource(test, "kasan_data"); \
-> +       kasan_data = resource->data; \
-> +       KUNIT_EXPECT_EQ(test, \
-> +                       kasan_data->report_expected, \
-> +                       kasan_data->report_found); \
-> +       kunit_put_resource(resource); \
-> +} while (0)
-> +
-> +/**
-> + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
-> + * not cause a KASAN error.
-> + *
-> + */
-> +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
-> +       KUNIT_SET_KASAN_DATA(test); \
-> +       KUNIT_DO_EXPECT_KASAN_FAIL(test, condition); \
-> +} while (0)
-> +
->  /*
->   * Note: test functions are marked noinline so that their names appear in
->   * reports.
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 5ef9f24f566b..87330ef3a99a 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -32,6 +32,8 @@
->
->  #include <asm/sections.h>
->
-> +#include <kunit/test.h>
-> +
->  #include "kasan.h"
->  #include "../slab.h"
->
-> @@ -455,12 +457,38 @@ static bool report_enabled(void)
->         return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
->  }
->
-> +#if IS_ENABLED(CONFIG_KUNIT)
-> +void kasan_update_kunit_status(struct kunit *cur_test)
-> +{
-> +       struct kunit_resource *resource;
-> +       struct kunit_kasan_expectation *kasan_data;
-> +
-> +       if (kunit_find_named_resource(cur_test, "kasan_data")) {
-> +               resource = kunit_find_named_resource(cur_test, "kasan_data");
-> +               kasan_data = resource->data;
-> +               kasan_data->report_found = true;
-> +
-> +               if (!kasan_data->report_expected)
-> +                       kunit_set_failure(current->kunit_test);
-> +               else
-> +                       return;
-> +       } else
-> +               kunit_set_failure(current->kunit_test);
-> +}
-> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> +
->  void kasan_report_invalid_free(void *object, unsigned long ip)
->  {
->         unsigned long flags;
->         u8 tag = get_tag(object);
->
->         object = reset_tag(object);
-> +
-> +#if IS_ENABLED(CONFIG_KUNIT)
-> +       if (current->kunit_test)
-> +               kasan_update_kunit_status(current->kunit_test);
-> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> +
->         start_report(&flags);
->         pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (void *)ip);
->         print_tags(tag, object);
-> @@ -481,6 +509,11 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
->         if (likely(!report_enabled()))
->                 return;
->
-> +#if IS_ENABLED(CONFIG_KUNIT)
-> +       if (current->kunit_test)
-> +               kasan_update_kunit_status(current->kunit_test);
-> +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> +
->         disable_trace_on_warning();
->
->         tagged_addr = (void *)addr;
-> --
-> 2.26.0.rc2.310.g2932bb562d-goog
->
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/firmware/efi/libstub/x86-stub.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index 8d3a707789de..e02ea51273ff 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -392,8 +392,6 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 	image_base = efi_table_attr(image, image_base);
+ 	image_offset = (void *)startup_32 - image_base;
+ 
+-	hdr = &((struct boot_params *)image_base)->hdr;
+-
+ 	status = efi_allocate_pages(0x4000, (unsigned long *)&boot_params, ULONG_MAX);
+ 	if (status != EFI_SUCCESS) {
+ 		efi_printk("Failed to allocate lowmem for boot params\n");
+-- 
+2.25.1
+
