@@ -2,126 +2,162 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12304C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B623C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03E9206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAF1206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BYi7UK0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388810AbgDBUHm (ORCPT
+        id S2389013AbgDBUH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:07:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38949 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgDBUHl (ORCPT
+        Thu, 2 Apr 2020 16:07:57 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53380 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388871AbgDBUH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:07:41 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jK67H-0002M1-Rh; Thu, 02 Apr 2020 22:07:08 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 48894100D52; Thu,  2 Apr 2020 22:07:07 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, "Kenneth R . Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] KVM: VMX: Extend VMX's #AC interceptor to handle split lock #AC in guest
-In-Reply-To: <20200402174023.GI13879@linux.intel.com>
-References: <20200402124205.334622628@linutronix.de> <20200402155554.27705-1-sean.j.christopherson@intel.com> <20200402155554.27705-4-sean.j.christopherson@intel.com> <87sghln6tr.fsf@nanos.tec.linutronix.de> <20200402174023.GI13879@linux.intel.com>
-Date:   Thu, 02 Apr 2020 22:07:07 +0200
-Message-ID: <87h7y1mz2s.fsf@nanos.tec.linutronix.de>
+        Thu, 2 Apr 2020 16:07:57 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d77so4793224wmd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Iu/q3zMTB/NGBoImfknpSwtGLLWxG6GnJEB0Nk4jwMU=;
+        b=BYi7UK0tgravCN/xlIXTjI2k/wLwNPVZjOA+zXhVyXKBwtlL6koSK/yxy51fQ8NttV
+         5mkWj6mrHJ01ZUnrBytPbgXPIzv483auc9jen9PrDxSQg/cDjIAnBcfYG2KVhaptMaJ9
+         Q+fOy4/jVwS7BD13/EEfuF9cImBH9CK6bY6Ws=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Iu/q3zMTB/NGBoImfknpSwtGLLWxG6GnJEB0Nk4jwMU=;
+        b=PW7xQcRha3h2mciIQp9FYivJywxcns5OxinEOEzKoPy6ffs7mFjeJjH/iKQrdHnkrT
+         cp4xAKDk8FWF1JGEkC3btnz1ElZh2NBTCdG4AcqhQfSw1+GE2LxGFy7yfGpF+XK9pP/g
+         uDyBgA7dlCbh6V33ht0P88a42KRybSPWURmMVCHydxNUHrvzlLchH5LfR8wjR4wNVjkk
+         INT7dBp6W+4tjGvA3gIWKYjnmAeTckqQoAFsu6r4zWfWtBpb+7DJIJW3pNzPwOlgIogY
+         gMJdsBHC2wCHDxexF+A+yKW2CkQJgfbIElB5n8oFPD+7DRdfG1YuIuHyx2oUGu1qlSwZ
+         cvwQ==
+X-Gm-Message-State: AGi0PuaI7lVXou/AFYCnPn49AP0qKLpz4eH8kweDKKmB0h8XuTUWO/wO
+        KGs6MuZHLdrWnxskbJM84WgxPuT1vQ/l5A==
+X-Google-Smtp-Source: APiQypLwXf59H0ELqYQHrCLRAaB3IZpY+8LNTDxn5b36clU3b2wvqLoK0knFNxZUXmAQ/NJ9Q8CxHQ==
+X-Received: by 2002:a7b:c083:: with SMTP id r3mr5214243wmh.92.1585858075446;
+        Thu, 02 Apr 2020 13:07:55 -0700 (PDT)
+Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id q4sm12562641wmj.1.2020.04.02.13.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 13:07:54 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH bpf] bpf, lsm: Fix the file_mprotect LSM test.
+Date:   Thu,  2 Apr 2020 22:07:51 +0200
+Message-Id: <20200402200751.26372-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean,
+From: KP Singh <kpsingh@google.com>
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> On Thu, Apr 02, 2020 at 07:19:44PM +0200, Thomas Gleixner wrote:
->> Sean Christopherson <sean.j.christopherson@intel.com> writes:
->> > +	case AC_VECTOR:
->> > +		/*
->> > +		 * Reflect #AC to the guest if it's expecting the #AC, i.e. has
->> > +		 * legacy alignment check enabled.  Pre-check host split lock
->> > +		 * turned on to avoid the VMREADs needed to check legacy #AC,
->> > +		 * i.e. reflect the #AC if the only possible source is legacy
->> > +		 * alignment checks.
->> > +		 */
->> > +		if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) ||
->> 
->> I think the right thing to do here is to make this really independent of
->> that feature, i.e. inject the exception if
->> 
->>  (CPL==3 && CR0.AM && EFLAGS.AC) || (FUTURE && (GUEST_TEST_CTRL & SLD))
->> 
->> iow. when its really clear that the guest asked for it. If there is an
->> actual #AC with SLD disabled and !(CPL==3 && CR0.AM && EFLAGS.AC) then
->> something is badly wrong and the thing should just die. That's why I
->> separated handle_guest_split_lock() and tell about that case.
->
-> That puts KVM in a weird spot if/when intercepting #AC is no longer
-> necessary, e.g. "if" future CPUs happen to gain a feature that traps into
-> the hypervisor (KVM) if a potential near-infinite ucode loop is detected.
->
-> The only reason KVM intercepts #AC (before split-lock) is to prevent a
-> malicious guest from executing a DoS attack on the host by putting the #AC
-> handler in ring 3.  Current CPUs will get stuck in ucode vectoring #AC
-> faults more or less indefinitely, e.g. long enough to trigger watchdogs in
-> the host.
+The test was previously using an mprotect on the heap memory allocated
+using malloc and was expecting the allocation to be always using
+sbrk(2). This is, however, not always true and in certain conditions
+malloc may end up using anonymous mmaps for heap alloctions. This means
+that the following condition that is used in the "lsm/file_mprotect"
+program is not sufficent to detect all mprotect calls done on heap
+memory:
 
-Which is thankfully well documented in the VMX code and the
-corresponding chapter in the SDM. 
+	is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
+		   vma->vm_end <= vma->vm_mm->brk);
 
-> Injecting #AC if and only if KVM is 100% certain the guest wants the #AC
-> would lead to divergent behavior if KVM chose to not intercept #AC, e.g.
+The test is updated to use an mprotect on memory allocated on the stack.
+While this would result in the splitting of the vma, this happens only
+after the security_file_mprotect hook. So, the condition used in the BPF
+program holds true.
 
-AFAICT, #AC is not really something which is performance relevant, but I
-might obviously be uninformed on that.
+Signed-off-by: KP Singh <kpsingh@google.com>
+Reported-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 03e54f100d57 ("bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM")
+---
+ .../selftests/bpf/prog_tests/test_lsm.c        | 18 +++++++++---------
+ tools/testing/selftests/bpf/progs/lsm.c        |  8 ++++----
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-Assumed it is not, then there is neither a hard requirement nor a real
-incentive to give up on intercepting #AC even when future CPUs have a
-fix for the above wreckage.
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_lsm.c b/tools/testing/selftests/bpf/prog_tests/test_lsm.c
+index 1e4c258de09d..b17eb2045c1d 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_lsm.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_lsm.c
+@@ -15,7 +15,10 @@
+ 
+ char *CMD_ARGS[] = {"true", NULL};
+ 
+-int heap_mprotect(void)
++#define GET_PAGE_ADDR(ADDR, PAGE_SIZE)					\
++	(char *)(((unsigned long) (ADDR + PAGE_SIZE)) & ~(PAGE_SIZE-1))
++
++int stack_mprotect(void)
+ {
+ 	void *buf;
+ 	long sz;
+@@ -25,12 +28,9 @@ int heap_mprotect(void)
+ 	if (sz < 0)
+ 		return sz;
+ 
+-	buf = memalign(sz, 2 * sz);
+-	if (buf == NULL)
+-		return -ENOMEM;
+-
+-	ret = mprotect(buf, sz, PROT_READ | PROT_WRITE | PROT_EXEC);
+-	free(buf);
++	buf = alloca(sz * 3);
++	ret = mprotect(GET_PAGE_ADDR(buf, sz), sz,
++		       PROT_READ | PROT_WRITE | PROT_EXEC);
+ 	return ret;
+ }
+ 
+@@ -73,8 +73,8 @@ void test_test_lsm(void)
+ 
+ 	skel->bss->monitored_pid = getpid();
+ 
+-	err = heap_mprotect();
+-	if (CHECK(errno != EPERM, "heap_mprotect", "want errno=EPERM, got %d\n",
++	err = stack_mprotect();
++	if (CHECK(errno != EPERM, "stack_mprotect", "want err=EPERM, got %d\n",
+ 		  errno))
+ 		goto close_prog;
+ 
+diff --git a/tools/testing/selftests/bpf/progs/lsm.c b/tools/testing/selftests/bpf/progs/lsm.c
+index a4e3c223028d..b4598d4bc4f7 100644
+--- a/tools/testing/selftests/bpf/progs/lsm.c
++++ b/tools/testing/selftests/bpf/progs/lsm.c
+@@ -23,12 +23,12 @@ int BPF_PROG(test_int_hook, struct vm_area_struct *vma,
+ 		return ret;
+ 
+ 	__u32 pid = bpf_get_current_pid_tgid() >> 32;
+-	int is_heap = 0;
++	int is_stack = 0;
+ 
+-	is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
+-		   vma->vm_end <= vma->vm_mm->brk);
++	is_stack = (vma->vm_start <= vma->vm_mm->start_stack &&
++		    vma->vm_end >= vma->vm_mm->start_stack);
+ 
+-	if (is_heap && monitored_pid == pid) {
++	if (is_stack && monitored_pid == pid) {
+ 		mprotect_count++;
+ 		ret = -EPERM;
+ 	}
+-- 
+2.20.1
 
-> some theoretical unknown #AC source would conditionally result in exits to
-> userspace depending on whether or not KVM wanted to intercept #AC for
-> other reasons.
-
-I'd rather like to know when there is an unknown #AC source instead of
-letting the guest silently swallow it.
-
-TBH, the more I learn about this, the more I tend to just give up on
-this whole split lock stuff in its current form and wait until HW folks
-provide something which is actually usable:
-
-   - Per thread
-   - Properly distinguishable from a regular #AC via error code
-
-OTOH, that means I won't be able to use it before retirement. Oh well.
-
-Thanks,
-
-        tglx
