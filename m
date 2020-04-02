@@ -2,78 +2,111 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B7FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C580C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957BE2078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A3320678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="Z8sTzIds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387999AbgDBKoI (ORCPT
+        id S2388021AbgDBKoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:44:08 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:37732 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728612AbgDBKoH (ORCPT
+        Thu, 2 Apr 2020 06:44:18 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:46804 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388006AbgDBKoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:44:07 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 032Ah8n8028563
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 2 Apr 2020 05:43:12 -0500
-Message-ID: <1947a3705a220ce14a2fda482c833b38a4d9fe9a.camel@kernel.crashing.org>
-Subject: Re: [PATCH] net/faraday: fix grammar in function
- ftgmac100_setup_clk() in ftgmac100.c
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Hu Haowen <xianfengting221@163.com>, davem@davemloft.net,
-        andrew@lunn.ch, mchehab+samsung@kernel.org, andrew@aj.id.au,
-        corbet@lwn.net
-Cc:     stfrench@microsoft.com, chris@chris-wilson.co.uk,
-        xiubli@redhat.com, airlied@redhat.com, tglx@linutronix.de,
-        hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 02 Apr 2020 21:43:06 +1100
-In-Reply-To: <20200401105624.17423-1-xianfengting221@163.com>
-References: <20200401105624.17423-1-xianfengting221@163.com>
+        Thu, 2 Apr 2020 06:44:17 -0400
+Received: by mail-vs1-f67.google.com with SMTP id z125so1922710vsb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 03:44:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gL8fHfqHi6qcFCDBXj+QaMk/V5SGiyp+PEgt7ceo9WU=;
+        b=Z8sTzIds8P65a8Efr/HpR7f/sFnL78fv7JdRdCYFOMTUD3xEgpbcAeWrl/PsfvaOhf
+         KWJQgfBnJchQZT0JuK+Pt4w31Wwk94i9Yy3p9BV6eyd4ALSNMq7kH0crycw1vaWHJVKE
+         JA/UbrOVw9lLXjW1BQSufi1WHrRsy5CeLaHUZ364nmIaUcD2NYY9BhIWxSwrHbaVg5JY
+         6lokynAKlh1fFhkF2EquMQ+uKxt0bB9JuALqSN+InrOtgffiqSSm+/VgLt7nboHRbVLn
+         JzXPRrpqfV0t4jTvQY6T/Gc07hbvcKmteIgtW1ZykMjpBg1rJmRijAxhxZjy6dv52jjw
+         Bp/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gL8fHfqHi6qcFCDBXj+QaMk/V5SGiyp+PEgt7ceo9WU=;
+        b=dK+NZD5ZPO+aBcVDBS8Cf7/egIk7vfxm96XbJuH9LcHsNGY/Zy+hCYYoycVoiwLRzJ
+         GynVBt3gPHTk/Nv1CyW7KFhs48FIN9i3t//rwhJuuSfoy7aJ2SkI143HjNSlct25/4u+
+         QJK5BY7ZfnZ7QYS3vwlBG3nkhE7zPR/pkgrAXMaldP6eII4oFg+qmv8u2SoUw0AcwcpC
+         t0M6tIwLSF5A+/x3A6Pwg6nWwtxf5IuQRpwsADfNrHFPT/5nf0bu9H94SLRwuwU1i+KM
+         Nw1gqvBMeq1Q15zUw+6eeK0yIKwOdujFJ1iqtOZzxo1yCZpHY7DcMqTdtNDUR/GFQ8Qc
+         Hvdw==
+X-Gm-Message-State: AGi0PuYmzUuWOpbflT2p7ogJ890rAednF3vdjw4xjEsL9I0u4MhLD2Kd
+        s/xfoQ7qVprO4PFYm+o5ENkHfwQxvqAWy+/pCfc4cQ==
+X-Google-Smtp-Source: APiQypKz4BReUDIMGlqUgHLZ6zPYqg56f8V7z9tHS+iJNEZZVkZB/6k3hDtCI0DWnf55+ITwD1Gdb2k5UQXU0UMW3qw=
+X-Received: by 2002:a05:6102:104b:: with SMTP id h11mr1714887vsq.182.1585824256368;
+ Thu, 02 Apr 2020 03:44:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585192411-25593-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1585192411-25593-1-git-send-email-Anson.Huang@nxp.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 2 Apr 2020 16:14:05 +0530
+Message-ID: <CAHLCerOZvYT71gcZd7_NpWKon6LSH9kcA1UK1objTc9aK4nOvA@mail.gmail.com>
+Subject: Re: [PATCH] thermal: imx_sc_thermal: Add hwmon support
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, Linux-imx@nxp.com
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-01 at 18:56 +0800, Hu Haowen wrote:
-> "its not" is wrong. The words should be "it's not".
-> 
-> Signed-off-by: Hu Haowen <xianfengting221@163.com>
+On Thu, Mar 26, 2020 at 8:50 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> Expose i.MX SC thermal sensors as HWMON devices.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Typo more than grammer :-)
-
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-
- (the offender) 
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
 > ---
->  drivers/net/ethernet/faraday/ftgmac100.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-> index 835b7816e372..87236206366f 100644
-> --- a/drivers/net/ethernet/faraday/ftgmac100.c
-> +++ b/drivers/net/ethernet/faraday/ftgmac100.c
-> @@ -1731,7 +1731,7 @@ static int ftgmac100_setup_clk(struct ftgmac100 *priv)
->  	if (rc)
->  		goto cleanup_clk;
->  
-> -	/* RCLK is for RMII, typically used for NCSI. Optional because its not
-> +	/* RCLK is for RMII, typically used for NCSI. Optional because it's not
->  	 * necessary if it's the AST2400 MAC, or the MAC is configured for
->  	 * RGMII, or the controller is not an ASPEED-based controller.
->  	 */
-
+>  drivers/thermal/imx_sc_thermal.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
+> index a8723b1..b2b68c9 100644
+> --- a/drivers/thermal/imx_sc_thermal.c
+> +++ b/drivers/thermal/imx_sc_thermal.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/thermal.h>
+>
+>  #include "thermal_core.h"
+> +#include "thermal_hwmon.h"
+>
+>  #define IMX_SC_MISC_FUNC_GET_TEMP      13
+>
+> @@ -115,6 +116,9 @@ static int imx_sc_thermal_probe(struct platform_device *pdev)
+>                         ret = PTR_ERR(sensor->tzd);
+>                         break;
+>                 }
+> +
+> +               if (devm_thermal_add_hwmon_sysfs(sensor->tzd))
+> +                       dev_warn(&pdev->dev, "failed to add hwmon sysfs attributes\n");
+>         }
+>
+>         of_node_put(sensor_np);
+> --
+> 2.7.4
+>
