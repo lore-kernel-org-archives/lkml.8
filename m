@@ -2,171 +2,93 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50578C10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6481FC2BA14
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0F42077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA272077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IUpg5kiP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D5sbUCQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387965AbgDBKTX (ORCPT
+        id S2387974AbgDBKTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:19:23 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:32103 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbgDBKTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:19:22 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48tJvW28wWz9txXF;
-        Thu,  2 Apr 2020 12:19:19 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=IUpg5kiP; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Yjz7IgmAzaAj; Thu,  2 Apr 2020 12:19:19 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48tJvW0xcFz9txX0;
-        Thu,  2 Apr 2020 12:19:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585822759; bh=PlmUTdpMIrJzpaiSJTBQgMj7cnXxamyWLnCDK47mlYI=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=IUpg5kiPE+r/VtM0RhTVmrfOVaC/i8EsaaiY08m7L4iZ5O9iF7WdPqRhGOGwczMvu
-         SwhamkcG6i9QuE00Q4GspqSefvoNd0Q+/yHPJOiHwAc+J8IEZH6Mp6fgBPfWFhxoZM
-         bYcAWbk25ic6SJ7YiZIjHbIIl7ppHxlaq53ZksCk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 37E1F8B8C6;
-        Thu,  2 Apr 2020 12:19:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id pM3YlHv-9AW2; Thu,  2 Apr 2020 12:19:20 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9462A8B75E;
-        Thu,  2 Apr 2020 12:19:19 +0200 (CEST)
-Subject: Re: [PATCH v1 06/46] powerpc/kasan: Refactor update of early shadow
- mappings
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <cover.1584360343.git.christophe.leroy@c-s.fr>
- <5eb93a773184aa0d36faa93c096b21cbe0a069c9.1584360344.git.christophe.leroy@c-s.fr>
-Message-ID: <18fb9f4b-d110-ee41-af44-09a1f5072ecf@c-s.fr>
-Date:   Thu, 2 Apr 2020 12:19:13 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 06:19:37 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55002 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgDBKTg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 06:19:36 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032AHeUg076924;
+        Thu, 2 Apr 2020 10:19:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=WagfC93/RvzrHfjL3JZzy15HAm+jQ3RaSf+gam9lNdc=;
+ b=D5sbUCQP1nH4X5j+lgLqVGYild/G4O+89qDm8eKl13f/5vEpb4Nd0Ua1Q/eRef7Xe6nq
+ rn87ZxoH+IPDOxLbzxI01m5ADqI77BJ0BoITXY9uNyjDNWicriUeittFwEUji8FnY0zV
+ EJvLysshc+OJZaVqix0mvq/uS4xI4scRmewjK8/b0zH0iXrhCgfGYMOyw/o7C+ZJNaqy
+ 1V9UXgh84mgxbocBnSRpbnAm9jp172KsVLtzwXCrKeRp3i/1oXrSp09n8KRQBgUyTpUW
+ YBVVzHSfVzty7SfxcI8/22zdpiVRMjOTnLK9Jlqbdw3TRACFh3s+kRCYQ5LcXXUyVce2 EA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 303yund2xn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 10:19:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032AGvZm195705;
+        Thu, 2 Apr 2020 10:17:29 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 302g2j9ruy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 10:17:29 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032AHSwb028832;
+        Thu, 2 Apr 2020 10:17:28 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 03:17:28 -0700
+Date:   Thu, 2 Apr 2020 13:17:20 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Michael Straube <straube.linux@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net
+Subject: Re: [PATCH] staging: rtl8188eu: refactor Efuse_GetCurrentSize()
+Message-ID: <20200402101720.GJ2001@kadam>
+References: <20200329100450.10126-1-straube.linux@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5eb93a773184aa0d36faa93c096b21cbe0a069c9.1584360344.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200329100450.10126-1-straube.linux@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020093
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael,
-
-Le 16/03/2020 à 13:35, Christophe Leroy a écrit :
-> kasan_remap_early_shadow_ro() and kasan_unmap_early_shadow_vmalloc()
-> are both updating the early shadow mapping: the first one sets
-> the mapping read-only while the other clears the mapping.
+On Sun, Mar 29, 2020 at 12:04:50PM +0200, Michael Straube wrote:
+> Refactor while loop in Efuse_GetCurrentSize() to reduce indentation
+> level and clear line over 80 characters checkpatch warnings.
 > 
-> Refactor and create kasan_update_early_region()
+> Signed-off-by: Michael Straube <straube.linux@gmail.com>
 
-There is a trivial conflict with this patch on powerpc/next.
-Do you plan to take this series for 5.7 ? I so, I can repost the series 
-now with the fix, or just this patch ?
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Otherwise, what are your plans ? This series (Patches 18 and 19) will 
-conflict with the 40x removal series as both do things about that 
-PTE_ATOMIC_UPDATE stuff. Which series would go first ?
+regards,
+dan carpenter
 
-Thanks
-Christophe
-
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->   arch/powerpc/mm/kasan/kasan_init_32.c | 39 +++++++++++++--------------
->   1 file changed, 18 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-> index c9d053078c37..65fd8b891f8e 100644
-> --- a/arch/powerpc/mm/kasan/kasan_init_32.c
-> +++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-> @@ -79,45 +79,42 @@ static int __init kasan_init_region(void *start, size_t size)
->   	return 0;
->   }
->   
-> -static void __init kasan_remap_early_shadow_ro(void)
-> +static void __init
-> +kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte)
->   {
-> -	pgprot_t prot = kasan_prot_ro();
-> -	unsigned long k_start = KASAN_SHADOW_START;
-> -	unsigned long k_end = KASAN_SHADOW_END;
->   	unsigned long k_cur;
->   	phys_addr_t pa = __pa(kasan_early_shadow_page);
->   
-> -	kasan_populate_pte(kasan_early_shadow_pte, prot);
-> -
-> -	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
-> +	for (k_cur = k_start; k_cur < k_end; k_cur += PAGE_SIZE) {
->   		pmd_t *pmd = pmd_ptr_k(k_cur);
->   		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
->   
->   		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
->   			continue;
->   
-> -		__set_pte_at(&init_mm, k_cur, ptep, pfn_pte(PHYS_PFN(pa), prot), 0);
-> +		__set_pte_at(&init_mm, k_cur, ptep, pte, 0);
->   	}
-> -	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
-> +
-> +	flush_tlb_kernel_range(k_start, k_end);
->   }
->   
-> -static void __init kasan_unmap_early_shadow_vmalloc(void)
-> +static void __init kasan_remap_early_shadow_ro(void)
->   {
-> -	unsigned long k_start = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_START);
-> -	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
-> -	unsigned long k_cur;
-> +	pgprot_t prot = kasan_prot_ro();
->   	phys_addr_t pa = __pa(kasan_early_shadow_page);
->   
-> -	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
-> -		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
-> -		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
-> +	kasan_populate_pte(kasan_early_shadow_pte, prot);
->   
-> -		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
-> -			continue;
-> +	kasan_update_early_region(KASAN_SHADOW_START, KASAN_SHADOW_END,
-> +				  pfn_pte(PHYS_PFN(pa), prot));
-> +}
->   
-> -		__set_pte_at(&init_mm, k_cur, ptep, __pte(0), 0);
-> -	}
-> -	flush_tlb_kernel_range(k_start, k_end);
-> +static void __init kasan_unmap_early_shadow_vmalloc(void)
-> +{
-> +	unsigned long k_start = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_START);
-> +	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
-> +
-> +	kasan_update_early_region(k_start, k_end, __pte(0));
->   }
->   
->   static void __init kasan_mmu_init(void)
-> 
