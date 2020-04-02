@@ -2,105 +2,197 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2090C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D87C2BA17
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6B82072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843E22072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjHIpmnr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWLC1DlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgDBNoz (ORCPT
+        id S1730679AbgDBNpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:44:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44721 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbgDBNoz (ORCPT
+        Thu, 2 Apr 2020 09:45:02 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38443 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgDBNpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:44:55 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m17so4225719wrw.11;
-        Thu, 02 Apr 2020 06:44:54 -0700 (PDT)
+        Thu, 2 Apr 2020 09:45:02 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c5so2774274lfp.5;
+        Thu, 02 Apr 2020 06:44:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Wp4L7uJK5SurqL9J1O4zZL/b4dks4+Z+A5rqEGo9+BU=;
-        b=HjHIpmnrao09l+sfHu46xNdLDNeGracVhuSu3Bxb2smX2xFpT68A2qYf+WYwCZZqIr
-         6AaTP3S4uTaqxaRrjP5kFgUISkWBXx7TIOX9Y3U8QYk2bReuI+pDMjyz6gMj17o61TQp
-         AGJOel4TRgYeZnfsGUMEYFlhuWJ2H63sE48ENdbJS8pBOA3hdXkLmB6NuYOQSKICxCFp
-         /WiVmEykh3+imqDewXa2uWG+kAON7bUjCdYvEs4YjbWEov+cWJChs/GenaMb0i6SQn4X
-         D/2s7JAfYc7jCJv1HEFaxnu4uoUSqEgaZwgob0gjLpro6J3+Rxh+dlJENgdq/OzAhQq9
-         RHvw==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9cGC5mQvHMqoehJiKLkoHPLp5uGKyoKYNEExUqJ4aqQ=;
+        b=LWLC1DlNtFSk4Ta3m/l+LNcExM+8Wwvu/aVszUr1Hfa3cckku5xGjXesROqZcA/qkj
+         BNyFQ9rZSsg9WQKEF/XOM3AEazD1CpkjriKuy/GEts8T63aJrkOnsUIfQonqZTcFn+dn
+         iv3er0uURmatHGm/i0/Luv43RYp7XKc8QTeG3Tv6N1bNNQehfqWaYFGejJiDMFeyxBUU
+         3hs8Sd4ZGYv2fdrBo3TvRAtaMNcHKQy5sCOKTYf5cc/rJglqt72xvov29ZXfnJ0cimXw
+         tNqobFlLZMg/6breqVtsymevsKdJOuM4Px0EUKzZN0c35kX6fuoj27EMi2eF5/i4hf0j
+         sjHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Wp4L7uJK5SurqL9J1O4zZL/b4dks4+Z+A5rqEGo9+BU=;
-        b=OQT2LGxK/RNBCcempZKhpAMRBFQK3dZn+8H0JgvTK8aOtBL0SGK9HG6QPaVnwbebzk
-         41HIqtud0ytCLuVyRcscYVPWY8wBkoCQSvdPdw9WTWJ5shNeqXIOmKDXlKYOTho8ZrKr
-         CGFWgjg0sLDN8nbYnmu1YQQVONRClZmQOL5uyjv2qC+zMhubig0jxqtynZmTuxMEK2+f
-         GV78rP7QUIiWTUVuSX9ofPoBqAHNJ7780P0YUOomBg5DMtuTQVestipFFqCz5T+CtHln
-         0ywxQR9Pp76krUP/opwMnlAVi4g46qDIodFsYIpmNwOvuAswmAkp47VFnjFC8opwGXir
-         n4WQ==
-X-Gm-Message-State: AGi0PubeDImueOc994xT6Z81d8awPT4AQ/QIGNzxkr/+0uf99OzaJRgx
-        N8KZhsy13b74XMD2zt2ca6lQmsU/
-X-Google-Smtp-Source: APiQypJAkXoXv8XH9rRAeegKGeeGARwZr8RvuFQd+0dRo6g6SDHMo65n53RH/d6DZXqkxEwurO4jiw==
-X-Received: by 2002:a05:6000:10c8:: with SMTP id b8mr3446059wrx.138.1585835093520;
-        Thu, 02 Apr 2020 06:44:53 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2db9:4c00:958a:939d:c15f:43cb])
-        by smtp.gmail.com with ESMTPSA id j11sm7568469wrt.14.2020.04.02.06.44.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 06:44:53 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: remove entry after hp100 driver removal
-Date:   Thu,  2 Apr 2020 15:44:42 +0200
-Message-Id: <20200402134442.4709-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9cGC5mQvHMqoehJiKLkoHPLp5uGKyoKYNEExUqJ4aqQ=;
+        b=a1oAEfgkEM14Q7n+q0yXcfKlBLpP7M6RDrzp2zla67C8Vhm5MPYHQSK+M9FfTPj+EJ
+         wlK+2oFa7jb//q7FKK/i5IQpyP9dvCBg7VH/hpbZz3US5XoeeztIbiaDa4JqqDSzvwD0
+         rWQfigsiV4uxUxL4bdyJOyltcLgG5ycV2yidBIkKS6Agkbq7avr0ZsuA7jGbk0VqAFt5
+         znE/cCq6kO5N+jI0NfqOlOjjrXQvzWD40sJAcbPfhqbJe3EGLmP64phSl6baB3FCE4Vo
+         xOOYZgmFKKUmaqE/tfBRTkLg81fdqUFnTXSO9/VyrMWDG6qjzaSLaW6FH9QKV7rwk5j0
+         zWPA==
+X-Gm-Message-State: AGi0PuZkMXlaCZclPzkLLgQmqV4fkzOw43qltNM6VgHZOFfYbJr2KWuo
+        4eEl/uggGHlNTXNdl2XlEgc=
+X-Google-Smtp-Source: APiQypInf5Zb3UCjWVp3YVFWIFNExObXF6q9hhxLkx3/xBLGR8lJtDGdFOUzF24A/1lzttNokcNcIA==
+X-Received: by 2002:a05:6512:3189:: with SMTP id i9mr2194428lfe.178.1585835097501;
+        Thu, 02 Apr 2020 06:44:57 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id l20sm3328449lji.74.2020.04.02.06.44.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 06:44:56 -0700 (PDT)
+Subject: Re: [PATCH v10 54/55] Input: atmel_mxt_ts: Implement synchronization
+ during various operation
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-55-jiada_wang@mentor.com>
+ <c53637ef-8e5d-3243-7236-5da360021f21@gmail.com>
+ <b06c7915-562f-ec68-766a-2118cfe57a0f@mentor.com>
+ <b9a8865c-7754-16f7-8f66-9cd70dc42d3c@gmail.com>
+Message-ID: <12b913cd-cc0e-73b3-7ae5-8589ad5e968b@gmail.com>
+Date:   Thu, 2 Apr 2020 16:44:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <b9a8865c-7754-16f7-8f66-9cd70dc42d3c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit a10079c66290 ("staging: remove hp100 driver") removed all files
-from ./drivers/staging/hp/, but missed to adjust MAINTAINERS.
+02.04.2020 16:24, Dmitry Osipenko пишет:
+> 02.04.2020 14:50, Wang, Jiada пишет:
+>> Hi Dmitry
+>>
+>> On 2020/04/02 1:04, Dmitry Osipenko wrote:
+>>> 31.03.2020 13:50, Jiada Wang пишет:
+>>>> From: Sanjeev Chugh <sanjeev_chugh@mentor.com>
+>>>>
+>>>> There could be scope of race conditions when sysfs is being handled
+>>>> and at the same time, device removal is occurring. For example,
+>>>> we don't want the device removal to begin if the Atmel device
+>>>> cfg update is going on or firmware update is going on. In such
+>>>> cases, wait for device update to be completed before the removal
+>>>> continues.
+>>>>
+>>>>      Thread                                          Thread 2:
+>>>> =========================                      
+>>>> =========================
+>>>> mxt_update_fw_store()                           mxt_remove()
+>>>> mutex_lock(&data->lock)                         ...
+>>>> mxt_initialize()                                //Tries to acquire lock
+>>>>    request_firmware_nowait()                     mutex_lock(&data->lock)
+>>>> ...                                             ==>waits for lock()
+>>>> ...                                             .
+>>>> ...                                             .
+>>>> mutex_unlock(&data->lock)                       .
+>>>>                                                  //Gets lock and
+>>>> proceeds
+>>>>                                                 
+>>>> mxt_free_input_device();
+>>>>                                                  ...
+>>>>                                                 
+>>>> mutex_unlock(&data->lock)
+>>>>                                                  //Frees atmel driver
+>>>> data
+>>>>                                                  kfree(data)
+>>>>
+>>>> If the request_firmware_nowait() completes after the driver removal,
+>>>> and callback is triggered. But kernel crashes since the module is
+>>>> already removed.
+>>>>
+>>>> This commit adds state machine to serialize such scenarios.
+>>>
+>>> Won't it be easier to bump driver's module use-count by __module_get()
+>>> while firmware is updating? Or remove sysfs during of mxt_remove()? >
+>>
+>> thanks for your inspiration, I will replace state machine with module
+>> use-count.
+> 
+> I'm actually now thinking that the suggestion about the module-count
+> wasn't very correct because this won't really help in regards to
+> mxt_update_fw_store() / mxt_remove() racing.
+> 
+> I see that mxt_remove() already invokes the mxt_sysfs_remove(), which
+> should block until mxt_update_fw_store() is completed, shouldn't it?
+> 
+> I guess the kfree(data) isn't the real cause of the problem and
+> something like this should help:
+> 
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c
+> b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index b2edf51e1595..4e66106feeb9 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -4254,6 +4254,7 @@ static void mxt_sysfs_remove(struct mxt_data *data)
+>  	struct i2c_client *client = data->client;
+> 
+>  	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
+> +	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
+>  }
+> 
+>  static void mxt_reset_slots(struct mxt_data *data)
+> @@ -4649,31 +4650,19 @@ static int mxt_remove(struct i2c_client *client)
+>  {
+>  	struct mxt_data *data = i2c_get_clientdata(client);
+> 
+> -	mutex_lock(&data->lock);
+> -	if (data->e_state == MXT_STATE_UPDATING_CONFIG_ASYNC ||
+> -	    data->e_state == MXT_STATE_UPDATING_CONFIG) {
+> -		data->e_state = MXT_STATE_GOING_AWAY;
+> -		mutex_unlock(&data->lock);
+> -		mxt_wait_for_completion(data, &data->update_cfg_completion,
+> -					MXT_CONFIG_TIMEOUT);
+> -	} else {
+> -		data->e_state = MXT_STATE_GOING_AWAY;
+> -		mutex_unlock(&data->lock);
+> -	}
+> +	mxt_sysfs_remove(data);
+> 
+> -	disable_irq(data->irq);
+> -	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
+>  	if (data->reset_gpio) {
+>  		sysfs_remove_link(&client->dev.kobj, "reset");
+>  		gpiod_unexport(data->reset_gpio);
+>  	}
+> +
+>  	mxt_debug_msg_remove(data);
+> -	mxt_sysfs_remove(data);
+>  	mxt_free_input_device(data);
+>  	mxt_free_object_table(data);
+> 
+> 	if (debug_state)
+> 		cancel_delayed_work_sync(&data->watchdog_work);
+> +	disable_irq(data->irq);
+> 
+>  	return 0;
+>  }
+> 
 
-Since then, ./scripts/get_maintainer.pl --self-test=patterns complains:
-
-  warning: no file matches F: drivers/staging/hp/hp100.*
-
-So, drop HP100 Driver entry in MAINTAINERS now.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Greg, here is a minor non-urgent patch for staging.
-
- MAINTAINERS | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index be43f1e37902..1c1abe8229af 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7721,11 +7721,6 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Orphan
- F:	drivers/platform/x86/tc1100-wmi.c
- 
--HP100:	Driver for HP 10/100 Mbit/s Voice Grade Network Adapter Series
--M:	Jaroslav Kysela <perex@perex.cz>
--S:	Obsolete
--F:	drivers/staging/hp/hp100.*
--
- HPET:	High Precision Event Timers driver
- M:	Clemens Ladisch <clemens@ladisch.de>
- S:	Maintained
--- 
-2.17.1
-
+I'm also wondering why dev_attr_update_fw needs a separate
+attribute_group, couldn't it be moved into mxt_attrs[]?
