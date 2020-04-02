@@ -2,145 +2,131 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D59C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3C7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5A4206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C082078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GfXyZcO3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FhPAq+EO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388518AbgDBNLr (ORCPT
+        id S2388404AbgDBNN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:11:47 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:45202 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732262AbgDBNLr (ORCPT
+        Thu, 2 Apr 2020 09:13:57 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54976 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgDBNN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:11:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=neWmpBaTCRzgvC5RnHDeEfc0nV2vBJLslYFOXDTjpJk=; b=GfXyZcO31CeVTBTHHUjISz2Ra
-        1/sk9nlEYINhahrMXRnJtAmOi+G9s+/5oL4lZEq28ZOhN/plLQpoklP53VIs73rSrcgMzvjESrQeD
-        rgieyxpA50KCE7oIbhMZpFKY3hevMHDxSgQvM1AtsHaaX0VzJVpMCNXi+Xh8NVjlAPIED4rWJ2Ypx
-        PU8XVxxQFN69FxfXJLUc/1KcTIt/bPPH+Fmt10GdUv/CQuutOKv8nKvyNYn04CrMhDEfasjdZ+WU0
-        1bpaIluTJrrCicy+RXmjeUWbNRXvOIwOfIiXDOOBYTLwA7+tI0Fi0CN0MWdqI6CnaMPahTWwLEuE1
-        lbVJtjkpg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:40558)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jJzdH-0003Nj-RU; Thu, 02 Apr 2020 14:11:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jJzdH-0001ij-A8; Thu, 02 Apr 2020 14:11:43 +0100
-Date:   Thu, 2 Apr 2020 14:11:43 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, kernel@collabora.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: exynos: update l2c_aux_mask to fix alert message
-Message-ID: <20200402131143.GZ25745@shell.armlinux.org.uk>
-References: <b29f34870380093e6268c11d3033033d6def61b7.1585756648.git.guillaume.tucker@collabora.com>
- <20200401163101.GV25745@shell.armlinux.org.uk>
- <35c7cf4b-e6b8-43aa-d934-4a1c2e738372@collabora.com>
- <20200402130352.GY25745@shell.armlinux.org.uk>
+        Thu, 2 Apr 2020 09:13:57 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032DDVA1190996;
+        Thu, 2 Apr 2020 13:13:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=cPgjp8plBz+5xeGlKxEPhHfH4nRghiekg4XCPlfD6EQ=;
+ b=FhPAq+EOO/vL/rHO1GfPFZiynh9g+fQVGhuV2wqZO04SHZV2N/EVKPeMTyUYJEaLEh9a
+ QSjGn4u9K+vj1+b5zwKYE9sqY2nVEyk0y08yDRpcQRBpE+VNM8PMXv5AvezV1fx/oGJu
+ TabgzxiBE+DTurCUMZR86x7hceQaW174hFEtHvZSvRsM2ij+11eDYcwAsifjqceFUZRI
+ 9L/+iFPhb0caeB8e4IVUj5WYG/iPXPlHb0SjHovmFvMTO2dlAkNbUd3cZJS+ILNhE1F0
+ YEnUgXsNJXkB70mtflOYtZgVCb/as2HE6bHs5eQUkU7vtyDGZ5+rVZnIkV+L+o1LYIBp DQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 303yundwks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 13:13:49 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032DD08x086520;
+        Thu, 2 Apr 2020 13:13:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 302g2jjsvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 13:13:48 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032DDkQ7022406;
+        Thu, 2 Apr 2020 13:13:47 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 06:13:46 -0700
+Date:   Thu, 2 Apr 2020 16:13:39 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 08/32] staging: wfx: simplify hif_handle_tx_data()
+Message-ID: <20200402131338.GS2001@kadam>
+References: <20200401110405.80282-1-Jerome.Pouiller@silabs.com>
+ <20200401110405.80282-9-Jerome.Pouiller@silabs.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200402130352.GY25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200401110405.80282-9-Jerome.Pouiller@silabs.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 02:03:52PM +0100, Russell King - ARM Linux admin wrote:
-> On Thu, Apr 02, 2020 at 01:13:24PM +0100, Guillaume Tucker wrote:
-> > On 01/04/2020 17:31, Russell King - ARM Linux admin wrote:
-> > > On Wed, Apr 01, 2020 at 05:08:03PM +0100, Guillaume Tucker wrote:
-> > >> Allow setting the number of cycles for RAM reads in the pl310 cache
-> > >> controller L2 auxiliary control register mask (bits 0-2) since it
-> > >> needs to be changed in software.  This only affects exynos4210 and
-> > >> exynos4412 as they use the pl310 cache controller.
-> > >>
-> > >> With the mask used until now, the following warnings were generated,
-> > >> the 2nd one being a pr_alert():
-> > >>
-> > >>   L2C: platform modifies aux control register: 0x02070000 -> 0x3e470001
-> > >>   L2C: platform provided aux values permit register corruption.
-> > >>
-> > >> This latency cycles value has always been set in software in spite of
-> > >> the warnings.  Keep it this way but clear the alert message about
-> > >> register corruption to acknowledge it is a valid thing to do.
-> > > 
-> > > This is telling you that you are doing something you should not be
-> > > doing.  The L2C controller should be configured by board firmware
-> > > first and foremost, because if, for example, u-boot makes use of the
-> > > L2 cache, or any other pre-main kernel code (in other words,
-> > > decompressor) the setup of the L2 controller will be wrong.
-> > > 
-> > > So, NAK.
-> > 
-> > OK thanks, I guess I misinterpreted the meaning of the error
-> > message.  It's really saying that the register value was not the
-> > right one before the kernel tried to change it.  Next step for me
-> > is to look into U-Boot.
+On Wed, Apr 01, 2020 at 01:03:41PM +0200, Jerome Pouiller wrote:
+> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 > 
-> The message "L2C: platform provided aux values permit register
-> corruption." means that bits are set in both the mask and the value
-> fields.  Since the new value is calculated as:
+> The last argument of hif_handle_tx_data() was now unused. In add,
+> hif_handle_tx_data() has nothing to do with HIF layer and should be
+> renamed. Finally, it not convenient to pass a wfx_vif as parameter. It
+> is easier to let hif_handle_tx_data() find the interface itself.
 > 
-> 	old = register value;
-> 	new = old & mask;
-> 	new |= val;
+> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> ---
+>  drivers/staging/wfx/queue.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 > 
-> If bits are set in both "mask" and "val" for a multi-bit field, the
-> value ending up in the field may not be what is intended.  Consider
-> a 5-bit field set initially to 10101, and the requested value is
-> 01000 with a mask of 11111.  What you end up with is not 01000, but
-> 11101.  Hence, register corruption.  It is not possible to easily
-> tell whether the mask and values refer to a multi-bit field or not,
-> so the mere fact that bits are set in both issues the alert.
-> 
-> The message "L2C: platform modifies aux control register ..." means
-> that you're trying to modify the value of the auxiliary control
-> register, which brings with it the problems I stated in my previous
-> email; platform configuration of the L2C must be done by firmware and
-> not the kernel for the reasons I've set out.
+> diff --git a/drivers/staging/wfx/queue.c b/drivers/staging/wfx/queue.c
+> index 2553f77522d9..8647731e02c0 100644
+> --- a/drivers/staging/wfx/queue.c
+> +++ b/drivers/staging/wfx/queue.c
+> @@ -319,13 +319,17 @@ bool wfx_tx_queues_is_empty(struct wfx_dev *wdev)
+>  	return ret;
+>  }
+>  
+> -static bool hif_handle_tx_data(struct wfx_vif *wvif, struct sk_buff *skb,
+> -			       struct wfx_queue *queue)
+> +static bool wfx_handle_tx_data(struct wfx_dev *wdev, struct sk_buff *skb)
+>  {
+>  	struct hif_req_tx *req = wfx_skb_txreq(skb);
+>  	struct ieee80211_key_conf *hw_key = wfx_skb_tx_priv(skb)->hw_key;
+>  	struct ieee80211_hdr *frame =
+>  		(struct ieee80211_hdr *)(req->frame + req->data_flags.fc_offset);
+> +	struct wfx_vif *wvif =
+> +		wdev_to_wvif(wdev, ((struct hif_msg *)skb->data)->interface);
+                                                      ^^^^^^^^^
+This is on the TX side so it's probably okay, but one problem I have
+noticed is that we do this on the RX side as well with checking that
 
-Actually, looking at the values there:
+	if (skb->len < sizeof(struct hif_msg))
+		return -EINVAL;
 
-        .l2c_aux_val    = 0x3c400001,
--       .l2c_aux_mask   = 0xc20fffff,
-+       .l2c_aux_mask   = 0xc20ffff8,
+So we could be reading beyond the end of the skb.  If we got really
+unlucky it could lead to an Oops.
 
-Bit 0 is L310_AUX_CTRL_FULL_LINE_ZERO feature bit, which platforms have
-no business fiddling with - it is a Cortex-A9/L2C310 specific feature
-that needs both ends to be configured correctly to work.  The L2C code
-knows this and will deal with it.  So, .l2c_aux_val should drop setting
-bit 0.
+regards,
+dan carpenter
 
-It's also setting L310_AUX_CTRL_NS_LOCKDOWN, which the kernel already
-deals with - this bit should be dropped as well.
-
-It's clearing L310_AUX_CTRL_CACHE_REPLACE_RR - this should be setup by
-firmware.
-
-For the prefetching, I thought there were DT properties for that.
-Please look at that, and see whether you can eliminate most of the
-.l2c_aux_val field set bits, and the .l2c_aux_mask clear bits.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
