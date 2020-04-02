@@ -2,165 +2,117 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD0FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554EFC10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C7120719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DD6JgrL8"
+	by mail.kernel.org (Postfix) with ESMTP id 29A6E206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387650AbgDBH6P (ORCPT
+        id S2387674AbgDBH6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:58:15 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36944 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387476AbgDBH6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:58:14 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r24so2222077ljd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:58:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lbDh9sGXngdhn9Jh8C6oZaKlG1DNYVAa7PojnE5vWdk=;
-        b=DD6JgrL8yF39MxS5PpkI2Rw/KTHYk4nI/6xo+IRW/zuqhtA9Hc4qIfIbx2LJCS+Cjs
-         d6ZsqhG6yKe/C4XJX2JrdkNx7Y6urH55e8bLz4IyTF4IJ6AkpsdsHJPGhnk5Iqsp8FTk
-         v6OoSBh0D8ccNE7HgfJ8gqyRvJdoBGnhocKFjtWJiwLRh8BQLsbjBWZcxiMHmDID7k3r
-         yqN6qSkixvLWjszVqQuEqyfyXHSyGH1ObGLCfbyDF/Ma2NZt7QVLd3RvbQZwnrqrTIPR
-         GYLJ9YM5loJ67+IuZ90XJxy3b+wVTHIJnpHxO5M+8asrx0W293watQBNLBwOayh9in75
-         n02Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lbDh9sGXngdhn9Jh8C6oZaKlG1DNYVAa7PojnE5vWdk=;
-        b=bQ744yG6KSLKkHul2/KOBXzyXWXmJmxI9ejntCVjp1+ERWL+VxE3NmEjAJP2VshGDG
-         h/n2D5z41j2adlAACs03ROAU7EPircXrtf+aNHTjxpZ1+S/AC3IAE7OADyC9Qalf5599
-         YvktukgqC5uy+ZrzviEf3nHdY3DXdxGHvNU6BhxWAruH6KD/54l4nsYGPQY0gZCC/iZ5
-         oNBKTc92fjntxUQo4LBS6CiVM1/lNcnCd3Q6RHPvb4ZINuEwwNZ5qUJJTfsi2084WArI
-         qXB/IEp7et5lhyVe6oYSD6kuZezf3gd2C1PTBCcW3MkO41jq1YrN8wl8I786hvmz5L1J
-         L5vw==
-X-Gm-Message-State: AGi0PuYs5EE0I3I/7AqlV/pYHvPrY/g3ylzz6AgJX7SSqylqET3LQpBK
-        l14CX9NU6KlMg5/o3Z6EI5r3
-X-Google-Smtp-Source: APiQypKsVxbu7x6sHS9dSwQFgJAP48asDP5+nyFjAe07VJP0WG9v8qLpP+uZQj4BJmxFoTtZwEysXA==
-X-Received: by 2002:a2e:9611:: with SMTP id v17mr1232229ljh.115.1585814291641;
-        Thu, 02 Apr 2020 00:58:11 -0700 (PDT)
-Received: from ?IPv6:2a00:1370:8117:aa18:ddbf:b317:48a7:bf0f? ([2a00:1370:8117:aa18:ddbf:b317:48a7:bf0f])
-        by smtp.gmail.com with ESMTPSA id n17sm2721968ljc.76.2020.04.02.00.58.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Apr 2020 00:58:10 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
-From:   Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>
-In-Reply-To: <CAKwvOdnO2=yjEerw50b_C2vrgdCh2es6ZRfQpBRVR9RCrvwi6Q@mail.gmail.com>
-Date:   Thu, 2 Apr 2020 10:58:09 +0300
-Cc:     Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5F165F1C-C1E8-43D0-AC8A-5572B36D3370@linaro.org>
-References: <20200311024240.26834-1-elder@linaro.org>
- <20200401173515.142249-1-ndesaulniers@google.com>
- <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org>
- <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
- <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org>
- <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
- <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org>
- <CAKwvOdnZ9KL1Esmdjvk-BTP2a+C24bOWguNVaU3RSXKi1Ouh+w@mail.gmail.com>
- <5635b511-64f8-b612-eb25-20b43ced4ed3@linaro.org>
- <CAKwvOdnO2=yjEerw50b_C2vrgdCh2es6ZRfQpBRVR9RCrvwi6Q@mail.gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Thu, 2 Apr 2020 03:58:24 -0400
+Received: from mga02.intel.com ([134.134.136.20]:21192 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbgDBH6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:58:23 -0400
+IronPort-SDR: RMdMDC4xPTADYH2XmaMBFhhVvLroWAd6LDBKiIc4zhT05neeiG931pHXiOjIZ8ZZQCRvoFlqbp
+ TK7xieU2L2GQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 00:58:22 -0700
+IronPort-SDR: aWH9WU2pFjjgDUCmJAflWgcnacYwmqpUottW9hVSjKilfTfLSLozUVxCbsFcpHCXLgRBwcJ1GL
+ zHXsu4/5/knQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
+   d="scan'208";a="273469236"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by fmsmga004.fm.intel.com with ESMTP; 02 Apr 2020 00:58:19 -0700
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH][v3] PM / sleep: Add pm_debug_messages boot command control
+Date:   Thu,  2 Apr 2020 15:56:52 +0800
+Message-Id: <20200402075652.13289-1-yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Debug messages from the system suspend/hibernation infrastructure
+is disabled by default, and can only be enabled after the system
+has boot up via /sys/power/pm_debug_messages. This makes the hibernation
+resume hard to track as it involves system boot up across hibernation.
+There's no chance for software_resume() to track the resume process,
+eg.
 
-> On 2 Apr 2020, at 03:26, Nick Desaulniers <ndesaulniers@google.com> =
-wrote:
->=20
-> On Wed, Apr 1, 2020 at 4:18 PM Alex Elder <elder@linaro.org> wrote:
->>=20
->> On 4/1/20 5:26 PM, Nick Desaulniers wrote:
->>>=20
->>> mainline is hosed for aarch64 due to some dtc failures.  I'm not =
-sure
->>> how TCWG's CI chooses the bisection starting point, but if mainline
->>> was broken, and it jumped back say 300 commits, then the automated
->>> bisection may have converged on your first patch, but not the =
-second.
->>=20
->> This is similar to the situation I discussed with Maxim this
->> morning.  A different failure (yes, DTC related) led to an
->> automated bisect process, which landed on my commit. And my
->> commit unfortunately has the the known issue that was later
->> corrected.
->>=20
->> Maxim said this was what started the automated bisect:
->> =3D=3D=3D
->> +# 00:01:41 make[2]: *** =
-[arch/arm64/boot/dts/ti/k3-am654-base-board.dtb] Error 2
->> +# 00:01:41 make[2]: *** =
-[arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dtb] Error 2
->> +# 00:01:41 make[1]: *** [arch/arm64/boot/dts/ti] Error 2
->> +# 00:01:41 make: *** [dtbs] Error 2
->=20
-> DTC thread:
-> =
-https://lore.kernel.org/linux-arm-kernel/20200401223500.224253-1-ndesaulni=
-ers@google.com/
->=20
-> Maxim, can you describe how the last known good sha is chosen?  If you
-> persist anything between builds, like ccache dir, maybe you could
-> propagate a sha of the last successful build, updating it if no
-> regression occurred?  Then that can always be a precise last known
-> good sha.  Though I don't know if the merge commits complicate this.
+Turning on the pm_debug_messages during boot up by appending
+'pm_debug_messages'.
 
-Well, since you asked, the simplified version is =E2=80=A6
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+---
+v2: According to Randy's suggestion, add the command line
+    option to Documentation/admin-guide/kernel-parameters.txt
 
-Bisection is done between =E2=80=9Cbaseline" commit and =E2=80=9Cregressed=
-=E2=80=9D commit, not between "last known-good=E2=80=9D commit and =
-=E2=80=9Cbad=E2=80=9D commit.  Each build has a metric, and regression =
-happens when metric for new build is worse than metric for baseline =
-build.  For tcwg_kernel jobs the metric is the number of .o files =
-produced in the kernel build (i.e., build with 18555 .o files is worse =
-than build with 18560 .o files).
+v3: According to Rafael's suggestion, rename the boot command
+    to pm_debug_messages
+---
+ Documentation/admin-guide/kernel-parameters.txt | 3 +++
+ kernel/power/main.c                             | 7 +++++++
+ 2 files changed, 10 insertions(+)
 
-If a new build hasn=E2=80=99t regressed compared to the baseline build, =
-then baseline metric is set to that of the new build, and baseline =
-commit is set to sha1 of the new build.
-
-If the new build has regressed, then bisection between baseline sha1 and =
-new sha1 is triggered.  Once bisection identifies the first bad commit, =
-CI notification is emailed, and baseline is reset to the first bad =
-commit =E2=80=94 so that we detect even worse regressions when they =
-occur.
-
-The baseline state is recorded in git repos (with one branch per CI =
-configuration):
-- metric / artifacts: =
-https://git.linaro.org/toolchain/ci/base-artifacts.git/refs/heads
-- linux kernel: https://git.linaro.org/toolchain/ci/linux.git/refs/heads
-- llvm: https://git.linaro.org/toolchain/ci/llvm-project.git/refs/heads
-
---
-Maxim Kuvyrkov
-https://www.linaro.org
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index ed73df5f1369..3fb9cbee8d28 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3720,6 +3720,9 @@
+ 			Override pmtimer IOPort with a hex value.
+ 			e.g. pmtmr=0x508
+ 
++	pm_debug_messages	[SUSPEND,KNL]
++			Enable suspend/resume debug messages during boot up.
++
+ 	pnp.debug=1	[PNP]
+ 			Enable PNP debug messages (depends on the
+ 			CONFIG_PNP_DEBUG_MESSAGES option).  Change at run-time
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index 69b7a8aeca3b..40f86ec4ab30 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -535,6 +535,13 @@ static ssize_t pm_debug_messages_store(struct kobject *kobj,
+ 
+ power_attr(pm_debug_messages);
+ 
++static int __init pm_debug_messages_setup(char *str)
++{
++	pm_debug_messages_on = true;
++	return 1;
++}
++__setup("pm_debug_messages", pm_debug_messages_setup);
++
+ /**
+  * __pm_pr_dbg - Print a suspend debug message to the kernel log.
+  * @defer: Whether or not to use printk_deferred() to print the message.
+-- 
+2.17.1
 
