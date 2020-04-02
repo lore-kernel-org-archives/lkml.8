@@ -2,132 +2,117 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C87C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83869C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB840206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FDEE206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eLhW1G3f"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GqzuSD2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388324AbgDBMop (ORCPT
+        id S2388340AbgDBMpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:44:45 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52160 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgDBMoo (ORCPT
+        Thu, 2 Apr 2020 08:45:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53574 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726252AbgDBMpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:44:44 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032Chd3N166886;
-        Thu, 2 Apr 2020 12:44:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=x0huE/mMZHIQWX72jbyNEykJLzeJMXHbcFXfDWa7dW8=;
- b=eLhW1G3fnRko1c0gC+a4HrxWT3w6rocUTn1ahYM4d/m6x2caVtqU3KnWEbttWtFq1mJE
- ulnN2MY701BLGRw93KKn6R8yduUz8/q5IHaZdM7W2NeDCnbelZ5CA8DmldsT7G06l8vO
- UcwUPkbAkT5VN53GD2z+gCBTkO4xNn8mQDEH7pblzF/Jl6LcYV8xKA9sckhbbWPP60wh
- sHGj8zh5KeACpkL9JJT2FqA0FUtaTC9KQqk2cw/je/mFA6v7LkGbDbg25lVVY4/KAsh9
- cRblsnS/UzvlghlxdqqQOpgitxx1gV2ebAN3dXjS9GdWxpHcvzef8yECuyGPsVJ8q4BD Ng== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 303yundr5r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 12:44:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032Cg8Ad064328;
-        Thu, 2 Apr 2020 12:42:33 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 302ga2bw5k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 12:42:33 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032CgVxX006017;
-        Thu, 2 Apr 2020 12:42:31 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 05:42:31 -0700
-Date:   Thu, 2 Apr 2020 15:42:23 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 01/32] staging: wfx: add sanity checks to hif_join()
-Message-ID: <20200402124223.GQ2001@kadam>
-References: <20200401110405.80282-1-Jerome.Pouiller@silabs.com>
- <20200401110405.80282-2-Jerome.Pouiller@silabs.com>
+        Thu, 2 Apr 2020 08:45:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585831501;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OInt6TYyVUeXDP+gHo+3FOpp7iB6V9mt8Oc+n4QQb2g=;
+        b=GqzuSD2YGn9xJe4K05RiICQoEvEXYjszK03rb+PPrJsxQPZ96v/B4DnSbh22NAi1kPXPdc
+        9J3oYsMSv2M+TDLuapnXuKBzQlunhA+gTOut0X2tnjVgT1+SjoG6W8nbu6/ut0r4Q//Fgy
+        TvyteOYL1TvuTrgohTcXZ0KoFetK7Po=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-453-vzawzjhbNH-JDy1zvz7j1w-1; Thu, 02 Apr 2020 08:44:59 -0400
+X-MC-Unique: vzawzjhbNH-JDy1zvz7j1w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F171800D53;
+        Thu,  2 Apr 2020 12:44:58 +0000 (UTC)
+Received: from agerstmayr-thinkpad.redhat.com (unknown [10.40.192.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 188915C1B0;
+        Thu,  2 Apr 2020 12:44:52 +0000 (UTC)
+From:   Andreas Gerstmayr <agerstmayr@redhat.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf script: fix invalid read
+Date:   Thu,  2 Apr 2020 14:43:38 +0200
+Message-Id: <20200402124337.419456-1-agerstmayr@redhat.com>
+In-Reply-To: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200401110405.80282-2-Jerome.Pouiller@silabs.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004020116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020116
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 01:03:34PM +0200, Jerome Pouiller wrote:
-> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
-> 
-> Add a few check on start of hif_join().
-> 
-> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-> ---
->  drivers/staging/wfx/hif_tx.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
-> index 77bca43aca42..445906035e9d 100644
-> --- a/drivers/staging/wfx/hif_tx.c
-> +++ b/drivers/staging/wfx/hif_tx.c
-> @@ -297,6 +297,8 @@ int hif_join(struct wfx_vif *wvif, const struct ieee80211_bss_conf *conf,
->  	struct hif_req_join *body = wfx_alloc_hif(sizeof(*body), &hif);
-                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-We've got an allocation here.  It's a mistake to put the allocation in
-the declaration block because you're going to forget to check for
-failure.
+closedir(lang_dir) frees the memory of script_dirent->d_name, which
+gets accessed in the next line in a call to scnprintf().
 
->  
->  	WARN_ON(!conf->basic_rates);
-> +	WARN_ON(sizeof(body->ssid) < ssidlen);
+Valgrind report:
 
-Put the variable on the left.  WARN_ON(ssidlen > sizeof(body->ssid)).
-I'm not a big fan of adding this sort of debug code, just audit the
-callers to see if it's possible or not.
+Invalid read of size 1
+=3D=3D413557=3D=3D    at 0x483CBE6: strlen (vg_replace_strmem.c:461)
+=3D=3D413557=3D=3D    by 0x4DD45FD: __vfprintf_internal (vfprintf-interna=
+l.c:1688)
+=3D=3D413557=3D=3D    by 0x4DE6679: __vsnprintf_internal (vsnprintf.c:114=
+)
+=3D=3D413557=3D=3D    by 0x53A037: vsnprintf (stdio2.h:80)
+=3D=3D413557=3D=3D    by 0x53A037: scnprintf (vsprintf.c:21)
+=3D=3D413557=3D=3D    by 0x435202: get_script_path (builtin-script.c:3223=
+)
+=3D=3D413557=3D=3D  Address 0x52e7313 is 1,139 bytes inside a block of si=
+ze 32,816 free'd
+=3D=3D413557=3D=3D    at 0x483AA0C: free (vg_replace_malloc.c:540)
+=3D=3D413557=3D=3D    by 0x4E303C0: closedir (closedir.c:50)
+=3D=3D413557=3D=3D    by 0x4351DC: get_script_path (builtin-script.c:3222=
+)
 
-I have audited the caller for you, and I believe that this condition
-*is possible* so we need to return -EINVAL in this situation to prevent
-memory corruption.
+Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+---
+ tools/perf/builtin-script.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	if (ssidlen > sizeof(body->ssid))
-		return -EINVAL;
-
-> +	WARN(!conf->ibss_joined && !ssidlen, "joining an unknown BSS");
->  	body->infrastructure_bss_mode = !conf->ibss_joined;
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Potential NULL dererefence because of the unchecked allocation.
-
-regards,
-dan carpenter
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 656b347f6dd8..170af13b4d53 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3218,10 +3218,10 @@ static char *get_script_path(const char *script_r=
+oot, const char *suffix)
+ 			__script_root =3D get_script_root(script_dirent, suffix);
+ 			if (__script_root && !strcmp(script_root, __script_root)) {
+ 				free(__script_root);
+-				closedir(lang_dir);
+ 				closedir(scripts_dir);
+ 				scnprintf(script_path, MAXPATHLEN, "%s/%s",
+ 					  lang_path, script_dirent->d_name);
++				closedir(lang_dir);
+ 				return strdup(script_path);
+ 			}
+ 			free(__script_root);
+--=20
+2.25.1
 
