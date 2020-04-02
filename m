@@ -2,198 +2,117 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D28C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926B0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BB620737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rH5FCmzf"
+	by mail.kernel.org (Postfix) with ESMTP id 70F5620737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:52:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389606AbgDBPwX (ORCPT
+        id S2389617AbgDBPwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:52:23 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43626 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389458AbgDBPwX (ORCPT
+        Thu, 2 Apr 2020 11:52:35 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:1098 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389458AbgDBPwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:52:23 -0400
-Received: by mail-pl1-f194.google.com with SMTP id v23so1476624ply.10;
-        Thu, 02 Apr 2020 08:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YDQwK1TXt5sWyVygN27BJPsqEZEizoEJ06ZdjMc3obs=;
-        b=rH5FCmzfe6B+QtmKjBaCdfYPRFdbe2UG3anSu/9XKBOcO78EwTu5Q3KoAkp1A4N21N
-         zxRFMchWx+9jfDcNq+3FRmv9JkK2AVl64iiYq1QisrweuDrI+3qF9sX7MKYUOlDhNKTm
-         1k/dr2SM0CoP/E8sj2fKAEsly1E4gXzWfp4ydzYZzFJlvvf9NjMt4nDeNULejlUFEnsh
-         JZjEt/GEyI1PmaO9vMd66pSZUWyoPz6ntuobG45NcSuB0eaxs70Y4It4p9gJuUsWfWDF
-         q4mbRa6IgOVHBKQBpX9xtaFZSz7ZB6EnJNToidczW3QE1FKrG+Xy088zZSdoidh4BWhJ
-         Wa8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YDQwK1TXt5sWyVygN27BJPsqEZEizoEJ06ZdjMc3obs=;
-        b=bxX+ViKEGobN2z9Xm5aIl8xSZT0Fp+LJj/ReWU+9N2G/qj/8uiiwUFjSdhcYrBcjhX
-         0i5JAVy0R9f7ZRb/GwhqBj6t1e9bTSLc9Ic4W3J3G7EEwUbzycEaWkgvbMM3MvpJB2Nr
-         fgEASoYkrcmF0YC3xfyF4bYNl+EbbnwzCtRZ2ASei0XbmrjGogrt8KN9LpW59YbseC6c
-         jzjQxBtqMMFIYEms/2sN65JwcBtMcX0hlStMiOwn/ZUun5l+SdDflo4KjKlqLtxhlxIk
-         9Px1KPg6lpzAoTQnbawXqaPW+sraW5owmoinILQJiXZZn/+eYnXhkzV0FNmIf/mwy9M1
-         5UTg==
-X-Gm-Message-State: AGi0PuZCnX82/P8m3Lng5G61Li7cqHqp0EN9dZaan6h6yE/BWKToNbfi
-        IPOt65KgSv/ZyX1gnoQrQ2WQwfpLZ1iNvQ==
-X-Google-Smtp-Source: APiQypI3uFZr08x4KA3MmKiD9YqKQdV7UWSih4YpgxRNM2nRujlRgRxuIASbzfGrUs8KztbEX7s1Fw==
-X-Received: by 2002:a17:90a:218b:: with SMTP id q11mr4431693pjc.163.1585842741171;
-        Thu, 02 Apr 2020 08:52:21 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.63])
-        by smtp.gmail.com with ESMTPSA id y4sm4051489pfo.39.2020.04.02.08.52.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 08:52:20 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, bjorn@helgaas.com, andy@kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        rjw@rjwysocki.net
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Subject: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to dev_pm_ops
-Date:   Thu,  2 Apr 2020 21:20:58 +0530
-Message-Id: <20200402155057.30667-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        Thu, 2 Apr 2020 11:52:35 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TuR6onf_1585842736;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TuR6onf_1585842736)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 02 Apr 2020 23:52:19 +0800
+Subject: Re: [PATCH -V2] /proc/PID/smaps: Add PMD migration entry parsing
+To:     Michal Hocko <mhocko@kernel.org>,
+        "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        =?UTF-8?B?Su+/vXLvv71tZSBHbGlzc2U=?= <jglisse@redhat.com>
+References: <20200402020031.1611223-1-ying.huang@intel.com>
+ <20200402064437.GC22681@dhcp22.suse.cz> <87zhbufjyc.fsf@yhuang-dev.intel.com>
+ <20200402074411.GH22681@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <30321c02-6dc4-889f-142c-532b47a67f66@linux.alibaba.com>
+Date:   Thu, 2 Apr 2020 08:52:12 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200402074411.GH22681@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the legacy callback .suspend() and .resume()
-to the generic ones.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/gpio/gpio-ml-ioh.c | 47 +++++++++-----------------------------
- 1 file changed, 11 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
-index 92b6e958cfed..bb71dccac315 100644
---- a/drivers/gpio/gpio-ml-ioh.c
-+++ b/drivers/gpio/gpio-ml-ioh.c
-@@ -155,11 +155,10 @@ static int ioh_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
- /*
-  * Save register configuration and disable interrupts.
-  */
--static void ioh_gpio_save_reg_conf(struct ioh_gpio *chip)
-+static void __maybe_unused ioh_gpio_save_reg_conf(struct ioh_gpio *chip)
- {
- 	int i;
- 
-@@ -185,7 +184,7 @@ static void ioh_gpio_save_reg_conf(struct ioh_gpio *chip)
- /*
-  * This function restores the register configuration of the GPIO device.
-  */
--static void ioh_gpio_restore_reg_conf(struct ioh_gpio *chip)
-+static void __maybe_unused ioh_gpio_restore_reg_conf(struct ioh_gpio *chip)
- {
- 	int i;
- 
-@@ -207,7 +206,6 @@ static void ioh_gpio_restore_reg_conf(struct ioh_gpio *chip)
- 				  &chip->reg->ioh_sel_reg[i]);
- 	}
- }
--#endif
- 
- static int ioh_gpio_to_irq(struct gpio_chip *gpio, unsigned offset)
- {
-@@ -522,10 +520,9 @@ static void ioh_gpio_remove(struct pci_dev *pdev)
- 	kfree(chip);
- }
- 
--#ifdef CONFIG_PM
--static int ioh_gpio_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused ioh_gpio_suspend(struct device *dev)
- {
--	s32 ret;
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct ioh_gpio *chip = pci_get_drvdata(pdev);
- 	unsigned long flags;
- 
-@@ -533,36 +530,15 @@ static int ioh_gpio_suspend(struct pci_dev *pdev, pm_message_t state)
- 	ioh_gpio_save_reg_conf(chip);
- 	spin_unlock_irqrestore(&chip->spinlock, flags);
- 
--	ret = pci_save_state(pdev);
--	if (ret) {
--		dev_err(&pdev->dev, "pci_save_state Failed-%d\n", ret);
--		return ret;
--	}
--	pci_disable_device(pdev);
--	pci_set_power_state(pdev, PCI_D0);
--	ret = pci_enable_wake(pdev, PCI_D0, 1);
--	if (ret)
--		dev_err(&pdev->dev, "pci_enable_wake Failed -%d\n", ret);
--
- 	return 0;
- }
- 
--static int ioh_gpio_resume(struct pci_dev *pdev)
-+static int __maybe_unused ioh_gpio_resume(struct device *dev)
- {
--	s32 ret;
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct ioh_gpio *chip = pci_get_drvdata(pdev);
- 	unsigned long flags;
- 
--	ret = pci_enable_wake(pdev, PCI_D0, 0);
--
--	pci_set_power_state(pdev, PCI_D0);
--	ret = pci_enable_device(pdev);
--	if (ret) {
--		dev_err(&pdev->dev, "pci_enable_device Failed-%d ", ret);
--		return ret;
--	}
--	pci_restore_state(pdev);
--
- 	spin_lock_irqsave(&chip->spinlock, flags);
- 	iowrite32(0x01, &chip->reg->srst);
- 	iowrite32(0x00, &chip->reg->srst);
-@@ -571,10 +547,8 @@ static int ioh_gpio_resume(struct pci_dev *pdev)
- 
- 	return 0;
- }
--#else
--#define ioh_gpio_suspend NULL
--#define ioh_gpio_resume NULL
--#endif
-+
-+static SIMPLE_DEV_PM_OPS(ioh_gpio_pm_ops, ioh_gpio_suspend, ioh_gpio_resume);
- 
- static const struct pci_device_id ioh_gpio_pcidev_id[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_ROHM, 0x802E) },
-@@ -587,8 +561,9 @@ static struct pci_driver ioh_gpio_driver = {
- 	.id_table = ioh_gpio_pcidev_id,
- 	.probe = ioh_gpio_probe,
- 	.remove = ioh_gpio_remove,
--	.suspend = ioh_gpio_suspend,
--	.resume = ioh_gpio_resume
-+	.driver = {
-+		.pm = &ioh_gpio_pm_ops,
-+	},
- };
- 
- module_pci_driver(ioh_gpio_driver);
--- 
-2.26.0
+On 4/2/20 12:44 AM, Michal Hocko wrote:
+> On Thu 02-04-20 15:03:23, Huang, Ying wrote:
+>> Michal Hocko <mhocko@kernel.org> writes:
+>>
+>>> On Thu 02-04-20 10:00:31, Huang, Ying wrote:
+>>>> From: Huang Ying <ying.huang@intel.com>
+>>>>
+>>>> Now, when read /proc/PID/smaps, the PMD migration entry in page table is simply
+>>>> ignored.  To improve the accuracy of /proc/PID/smaps, its parsing and processing
+>>>> is added.
+>>>>
+>>>> Before the patch, for a fully populated 400 MB anonymous VMA, sometimes some THP
+>>>> pages under migration may be lost as follows.
+>>> Interesting. How did you reproduce this?
+>>> [...]
+>> I run the pmbench in background to eat memory, then run
+>> `/usr/bin/migratepages` and `cat /proc/PID/smaps` every second.  The
+>> issue can be reproduced within 60 seconds.
+> Please add that information to the changelog. I was probably too
+> optimistic about the migration duration because I found it highly
+> unlikely to be visible. I was clearly wrong here.
+
+I believe that depends on the page is shared by how many processes. If 
+it is not shared then it should just take dozens micro seconds in my 
+test FYI.
+
+>
+>>>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>>>> index 8d382d4ec067..9c72f9ce2dd8 100644
+>>>> --- a/fs/proc/task_mmu.c
+>>>> +++ b/fs/proc/task_mmu.c
+>>>> @@ -546,10 +546,19 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
+>>>>   	struct mem_size_stats *mss = walk->private;
+>>>>   	struct vm_area_struct *vma = walk->vma;
+>>>>   	bool locked = !!(vma->vm_flags & VM_LOCKED);
+>>>> -	struct page *page;
+>>>> +	struct page *page = NULL;
+>>>>   
+>>>> -	/* FOLL_DUMP will return -EFAULT on huge zero page */
+>>>> -	page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
+>>>> +	if (pmd_present(*pmd)) {
+>>>> +		/* FOLL_DUMP will return -EFAULT on huge zero page */
+>>>> +		page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
+>>>> +	} else if (unlikely(thp_migration_supported() && is_swap_pmd(*pmd))) {
+>>>> +		swp_entry_t entry = pmd_to_swp_entry(*pmd);
+>>>> +
+>>>> +		if (is_migration_entry(entry))
+>>>> +			page = migration_entry_to_page(entry);
+>>>> +		else
+>>>> +			VM_WARN_ON_ONCE(1);
+>>> Could you explain why do we need this WARN_ON? I haven't really checked
+>>> the swap support for THP but cannot we have normal swap pmd entries?
+>> I have some patches to add the swap pmd entry support, but they haven't
+>> been merged yet.
+>>
+>> Similar checks are for all THP migration code paths, so I follow the
+>> same style.
+> I haven't checked other migration code paths but what is the reason to
+> add the warning here? Even if this shouldn't happen, smaps is perfectly
+> fine to ignore that situation, no?
 
