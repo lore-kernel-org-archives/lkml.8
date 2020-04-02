@@ -4,149 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED725C10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70EBC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3372206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772762078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e9qCS2CN"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ApHM7iN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387711AbgDBIPK (ORCPT
+        id S2387713AbgDBIQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:15:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52955 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387691AbgDBIPJ (ORCPT
+        Thu, 2 Apr 2020 04:16:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50548 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387574AbgDBIQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:15:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585815308;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sya16GgscQWBGe8FVvcdkczCb3z+w5XFXS8649TwHeM=;
-        b=e9qCS2CNSOv33cYiURSC9VBZcCn8aFAPuxT/+3mgRaZ+w2BImroPRVHr1AY2TuPjVpGyop
-        aHwVnvkQf9akCw0ediTOijqOWP3GXnh3Vz9Dat+B6Gr6Aml7pexkiOIiduEQIwjt//UMaY
-        0jrgWQdoFyoiv6eys/ZacTtOCSY912U=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-Y4rwelsWPoe6TjILq_v51g-1; Thu, 02 Apr 2020 04:15:05 -0400
-X-MC-Unique: Y4rwelsWPoe6TjILq_v51g-1
-Received: by mail-wm1-f70.google.com with SMTP id f9so715284wme.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 01:15:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=sya16GgscQWBGe8FVvcdkczCb3z+w5XFXS8649TwHeM=;
-        b=IU5hC+gIeB2NbxKfbWgcis8ivNga3R/n8h8YI2/vxA6wQhNhDxhELSWUBH95X7MTcv
-         urF7TVsGUOSvgUA81yq8KjoWXW+1nJdJIHVfLA3puyGvfMiDRCZaaum3Md1nuiYtWR9x
-         A2UmoAVwna7DcPnM/bI6D1ci3qy7nmlOJHLvwfhs7oyNO9fdX973S+QrUPNyRQxM4ovj
-         lHnwLrmgWtsx+fJKwj9ST+bYvUFVnNvg1CViCl1y3Is/58elh/0onOfptRX2zBgpi/mM
-         xNZlZxFr8C14+SMRWc5OQOcJslSTGwhcotDMBvgCTwMyYdfA+Z4O7u4BDkDuz1wUTa0a
-         haXw==
-X-Gm-Message-State: AGi0PuY1UxWaLUjAVtdLtGnnNlXVFQFA0f+i5Tt1VNGWv9Qh2rxot0nW
-        lwQSqvnF8cM9UanATZN7EMUrZTcMOtmThCDao1fQNFFtrrgzKmjDXDVdMYgVUelPlDncbm1/o7F
-        D8SrTjTVvAscUZMfM+35loDST
-X-Received: by 2002:a1c:9d8f:: with SMTP id g137mr1448321wme.178.1585815304264;
-        Thu, 02 Apr 2020 01:15:04 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKrVCvCu2TCJw9Lc9tHS5eH8r8weVzmyktk9rGmdg9mOVC7Tj0K5fqv9S8zIbPLu4KJEGJ0bw==
-X-Received: by 2002:a1c:9d8f:: with SMTP id g137mr1448286wme.178.1585815303858;
-        Thu, 02 Apr 2020 01:15:03 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:1868:42dd:216c:2c09? ([2001:b07:6468:f312:1868:42dd:216c:2c09])
-        by smtp.gmail.com with ESMTPSA id g2sm6289801wrs.42.2020.04.02.01.15.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 01:15:03 -0700 (PDT)
-Subject: Re: linux-next: manual merge of the kvm tree with Linus' tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>, KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Haiwei Li <lihaiwei.kernel@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Joerg Roedel <jroedel@suse.de>
-References: <20200402133637.296e70a9@canb.auug.org.au>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <2cdc7a3e-d516-70d5-9bfb-d077d40b07ed@redhat.com>
-Date:   Thu, 2 Apr 2020 10:15:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 2 Apr 2020 04:16:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0328DQwQ143813;
+        Thu, 2 Apr 2020 08:16:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
+ message-id : date : from : to : cc : subject : references : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=O6BIiuKyZpO6P/IQ7LqOJjcZsm3+4lrzYTFGZULwaZg=;
+ b=ApHM7iN40FK5+SS6+xuNNpsMZf22crsmUKtWfIySGUSce5912uZPuHlBsEpr+M/GG+OM
+ gcOUdCfYMbvJK0FAv7KsPq5+ntPeyPWHkRnEl5FqbexJBz+VmgI+0/8/xO8oTaOC/4dw
+ KlhEBg9abY1TolO3X1sYzBNT4OgP+hAHonRAK6YR7SWqZmL2Mu1uxn1oUR9Ifm+i8J3U
+ 2xDuwyBmtvxi65vb8zqB1bIFofoiLQUoCTTwdGlXm4elqVi71pIZq06YQsIQ3wG6RN6e
+ gqT8KYg+xuCBy/m2Ju7EMeWtBiBd0GtnZfoLiAtLlQaLTZwLYpqK6KKK/DdmgLUDjpJf AA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 303aqhta04-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 08:16:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0328CQ1r076164;
+        Thu, 2 Apr 2020 08:14:08 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 302g4v4hyu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 08:14:08 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0328E6Dw020581;
+        Thu, 2 Apr 2020 08:14:06 GMT
+Received: from kadam (/41.57.98.10) by default (Oracle Beehive Gateway v4.0)
+ with ESMTP ; Thu, 02 Apr 2020 01:12:19 -0700
+USER-AGENT: Mutt/1.9.4 (2018-02-28)
 MIME-Version: 1.0
-In-Reply-To: <20200402133637.296e70a9@canb.auug.org.au>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="BxqdilmDw8NfJrdybYlCOjBMxClEdTdaG"
+Message-ID: <20200402081211.GC2001@kadam>
+Date:   Thu, 2 Apr 2020 01:12:12 -0700 (PDT)
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Aiman Najjar <aiman.najjar@hurranet.com>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8712: fix checkpatch warnings
+References: <20200326055616.GA3718@kernel-dev>
+In-Reply-To: <20200326055616.GA3718@kernel-dev>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=851 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020074
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1011
+ malwarescore=0 impostorscore=0 mlxlogscore=905 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---BxqdilmDw8NfJrdybYlCOjBMxClEdTdaG
-Content-Type: multipart/mixed; boundary="qoP0eidW5UXD2MMeQYcjy7cD7ZVgpOqFc"
+On Thu, Mar 26, 2020 at 01:56:16AM -0400, Aiman Najjar wrote:
+> @@ -350,7 +351,7 @@ static int xmitframe_addmic(struct _adapter *padapter,
+>  	struct	sta_info *stainfo;
+>  	struct	qos_priv *pqospriv = &(padapter->mlmepriv.qospriv);
+>  	struct	pkt_attrib  *pattrib = &pxmitframe->attrib;
+> -	struct	security_priv *psecuritypriv = &padapter->securitypriv;
+> +	struct	security_priv *psecpriv = &padapter->securitypriv;
 
---qoP0eidW5UXD2MMeQYcjy7cD7ZVgpOqFc
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+This patch is doing too many things of course, but the other problem is
+that when you're renaming variables we don't what them to start with "p"
+to mean that they are a pointer.  "psecpriv" should just be "secpriv".
+That name is still kind of rubbish, but it's not against the rules like
+starting with a p for pointer.
 
-On 02/04/20 04:36, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Today's linux-next merge of the kvm tree got a conflict in:
->=20
->   arch/x86/kvm/svm/svm.c
->=20
-> between commits:
->=20
->   aaca21007ba1 ("KVM: SVM: Fix the svm vmexit code for WRMSR")
->   2da1ed62d55c ("KVM: SVM: document KVM_MEM_ENCRYPT_OP, let userspace d=
-etect if SEV is available")
->   2e2409afe5f0 ("KVM: SVM: Issue WBINVD after deactivating an SEV guest=
-")
->=20
-> from Linus' tree and commits:
->=20
->   83a2c705f002 ("kVM SVM: Move SVM related files to own sub-directory")=
-
->   41f08f0506c0 ("KVM: SVM: Move SEV code to separate file")
->=20
-> (at least)
->=20
-> from the kvm tree.
->=20
-> Its a bit of a pain this code movement appearing during the merge
-> window.  Is it really intended for v5.7?
-
-Yes, it's just due to code movement (a file was split, which I left last
-to avoid pain for contributors and minimal room for regressions).
-Unfortunately, git ends up being confused, but "git merge -X histogram"
-actually does the right thing.
-
-Paolo
-
-
---qoP0eidW5UXD2MMeQYcjy7cD7ZVgpOqFc--
-
---BxqdilmDw8NfJrdybYlCOjBMxClEdTdaG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEE8TM4V0tmI4mGbHaCv/vSX3jHroMFAl6FnwUACgkQv/vSX3jH
-roNcuQf+Pnwk8LWzhHjlkw+o2KkL4PGRDA/BdTHLccdoHWWnmGUQzwhlp31eIQP5
-4bccMDyxPhL/0y1a/zfto428r6kWHv6n/WevUKCkA44yHxVEPOY7r5mfB0oM0Q7D
-g56VanOOkTkT/iZ3IsAFvsR6YxsoWTok6i8Kq6DlPEtepGaYyvzJkiJojj3Wj5Co
-KSNoGFk9+1B4UvtButNuBxITfKbYIDiu78SYTzx5/EMQ4mvfVuYJHdF/tZGGq4vx
-2WJs5bB8cbd0BGomA6ITNJ/ar+WvzK+GQ5UNRQ7FTdelHqTQ0pUSGwhXc9PoST9A
-FSXeI+dBrwbXmwO8hTCBmqZUFpCHPQ==
-=sLmu
------END PGP SIGNATURE-----
-
---BxqdilmDw8NfJrdybYlCOjBMxClEdTdaG--
+regards,
+dan carpenter
 
