@@ -2,165 +2,131 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D91AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31211C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA7120675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:22:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cTvopqsv"
+	by mail.kernel.org (Postfix) with ESMTP id 0A7F820675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388381AbgDBSWQ (ORCPT
+        id S2388823AbgDBSXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:22:16 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:43490 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727734AbgDBSWQ (ORCPT
+        Thu, 2 Apr 2020 14:23:13 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:35209 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727734AbgDBSXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 14:22:16 -0400
-Received: by mail-vk1-f196.google.com with SMTP id v129so1212675vkf.10
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 11:22:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2UQRYNvKvusZq1CNM2OiULfI/O5UBgDCnpol3ajdzr4=;
-        b=cTvopqsvlFzBQ+scHoLdph1rkaUo8FxIt1QUrO45XhpTdABgMZBP9BnDAt2/ZQFayT
-         jm6Oe5z6AID5mB/EeVEZ4yNW7CwVhy7FX9Hl1K3JFriYoVkMkfwgy7+i3gKH1zuwAmSz
-         Xbhav/9izB9kkbrnLANJWRLYP+u7+K55TThUwF7y2nYturX1C0ks9sEbNRmq3+hQTUee
-         b5Hd4ySETzw6SKuBZqOGQScQbBfIHCXz4pyvtIR7H2wnyXhlSXRpIh0OLsNzIu4UazZd
-         FL3E98+kKMQG6SmQ3QNUUTTwiW64oMewOZvKYnz6sfeQits6P4Yhp4fdFej/1tdDK/7u
-         Gnlw==
+        Thu, 2 Apr 2020 14:23:12 -0400
+Received: by mail-io1-f69.google.com with SMTP id c10so3669560ioc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 11:23:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2UQRYNvKvusZq1CNM2OiULfI/O5UBgDCnpol3ajdzr4=;
-        b=ixKXouwjYX6T4GrOO3SVy2s/NlOja7dVLOUlVjj3GGTcmY3jX5VHFT2k7NW62HppdD
-         nRV/xJe8nDbapR57meXIZkHAbLl2SmcSKvge+WWrn0wgZ2Tp3vdlnOO4OYzLM7dcBxw/
-         r8al+p4eIqLlMWj1cV8fVc9HD+vpPGoRq319e1L5X7YoqvJraMAt5PZZr3AoV5Sh3hL5
-         nF1ARpo64EDgnF71AD1+2IX0uzM73Vg7q7lO5w/hPAPuRmQfh4s5RKaaRuI3PH2u0FPW
-         Nzy7XGY2zK0J3nEkoSKNM9w55hjzP+GpZ92oV9+5RuyK8WICHw9TXuYn/OBsZjjJhiLq
-         SBuA==
-X-Gm-Message-State: AGi0PuaD0keic3N+HxCvZnxjSaqOgHk4mUhSUTW1sY43uHuwnGhqwZ2J
-        aSE097Utw0VYAy8fQwjEdaUCwwUhRwKoxZ+H4PSPpg==
-X-Google-Smtp-Source: APiQypJ/M3oQw7JsPNDJ+qCIC9xOjZVgvdI/Qjt+HJ5LAoB4q2sCQGSJdbewJQPfQOrwv8MFMy5guoxMEYu78gHFtSY=
-X-Received: by 2002:a1f:5003:: with SMTP id e3mr3198682vkb.59.1585851733351;
- Thu, 02 Apr 2020 11:22:13 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=NNlrRJrUXWvHWzrnTaBtXk0/+RiU5njBUqCM+N6MKjo=;
+        b=GtbNjJW0uc0Gd8zHQ+Cf43Yah/979vYk2ghVrVvsKrRj3OcmKMrkKakkmE39KonkHO
+         F3vCr1CLU1WsyGNc9opSZ1BQhchBGps7fQWUSznX2eZ3bfWYQsO9z8JniAiy5v/Jc/Xh
+         YjCcMTF28Tut+L/E7XRdePulsK2zS5OSS1Fmpt5gfBPi39Wrz4gcmQepIEn2UP/y35cC
+         uA0JBWREBnFFb75e1ETLc7amnIjZyfPe+KHp0dnpx8l/EBLz6EhUZKSAmWPNJV6f3umT
+         TT3bkDTt2+gg+2ailSrElDjHxI0mcouFL8Som3fSToW3vfKI9T+cTv7NRa9ANjNT8fl4
+         R6Ww==
+X-Gm-Message-State: AGi0Puaq3cMIcYndIhNyLnDL2fwe6tYnibRkAQP2MRF6sEjLlC5rd1Yy
+        Dq3U7+NOqtSC7/IwjucQdHZwycKBep3NFFJAZZAME38WTObE
+X-Google-Smtp-Source: APiQypL0C54pWwDAKqya6F/1DWLBx0dcmDEjT3rj11kXPMmqwIwibJF2HBXzKlfzzdkmw2F3ZvQdo2TQ1TqfUT0EjCSdpFGAA5AY
 MIME-Version: 1.0
-References: <202004020117.6E434C035@keescook> <CAK7LNAQGTAgtADfY4H-k8X1J9nTMeOWvo8ZFfrUSHQUbhgcLKw@mail.gmail.com>
-In-Reply-To: <CAK7LNAQGTAgtADfY4H-k8X1J9nTMeOWvo8ZFfrUSHQUbhgcLKw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 2 Apr 2020 11:22:02 -0700
-Message-ID: <CAKwvOdnO_-jiQzCmy7pQNMGmZsgD9J=PYXVzOQ1NF1+u44MsOA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: mkcompile_h: Include $LD version in /proc/version
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sandeep Patil <sspatil@google.com>
+X-Received: by 2002:a5d:9c15:: with SMTP id 21mr3992216ioe.47.1585851791831;
+ Thu, 02 Apr 2020 11:23:11 -0700 (PDT)
+Date:   Thu, 02 Apr 2020 11:23:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b7fabf05a252e486@google.com>
+Subject: WARNING: refcount bug in tcindex_data_put
+From:   syzbot <syzbot+8325e509a1bf83ec741d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, paulmck@kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 10:02 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Kees,
->
-> On Thu, Apr 2, 2020 at 5:18 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > When doing Clang builds of the kernel, it is possible to link with
-> > either ld.bfd (binutils) or ld.lld (LLVM), but it is not possible to
-> > discover this from a running kernel. Add the "$LD -v" output to
-> > /proc/version.
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  init/Makefile       | 2 +-
-> >  scripts/mkcompile_h | 8 ++++++--
-> >  2 files changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/init/Makefile b/init/Makefile
-> > index 6246a06364d0..82c15bdb42d7 100644
-> > --- a/init/Makefile
-> > +++ b/init/Makefile
-> > @@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
-> >         @$($(quiet)chk_compile.h)
-> >         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@   \
-> >         "$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"    \
-> > -       "$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)"
-> > +       "$(CONFIG_PREEMPT_RT)" "$(LD)" "$(CC) $(KBUILD_CFLAGS)"
-> > diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
-> > index 3a5a4b210c86..f98c07709370 100755
-> > --- a/scripts/mkcompile_h
-> > +++ b/scripts/mkcompile_h
-> > @@ -6,7 +6,8 @@ ARCH=$2
-> >  SMP=$3
-> >  PREEMPT=$4
-> >  PREEMPT_RT=$5
-> > -CC=$6
-> > +LD=$6
-> > +CC=$7
->
->
-> Just a nit.
->
-> If you just append 'LD',
-> you do not need to touch the 'CC=$6' line.
->
->
-> If you do not mind, I will fold the following
-> on top of your patch.
+Hello,
 
-With Kees patch + Masahiro's diff applied:
-$ cat /proc/version
-Linux version 5.6.0-rc7-next-20200330+ (ndesaulniers@<hostname
-scrubbed>) (clang version 11.0.0 (git@github.com:llvm/llvm-project.git
-6d71daed03ced011cd25f4e4f4122a368fdc757d), LLD 11.0.0
-(git@github.com:llvm/llvm-project.git
-6d71daed03ced011cd25f4e4f4122a368fdc757d)) #167 SMP Thu Apr 2 11:17:36
-PDT 2020
+syzbot found the following crash on:
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+HEAD commit:    304e0242 net_sched: add a temporary refcnt for struct tcin..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=13471edbe00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
+dashboard link: https://syzkaller.appspot.com/bug?extid=8325e509a1bf83ec741d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11c6940be00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c74ba3e00000
 
-We could actually use this in Android for a VTS test I've, uh, been
-meaning to write.  Also, LOL at scrubbing the "compatible with" part,
-reminds me of user agent strings in the browser, which are god awful.
+The bug was bisected to:
 
+commit 304e024216a802a7dc8ba75d36de82fa136bbf3e
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sat Mar 28 19:12:59 2020 +0000
 
-> --- a/init/Makefile
-> +++ b/init/Makefile
-> @@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
->         @$($(quiet)chk_compile.h)
->         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@   \
->         "$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"    \
-> -       "$(CONFIG_PREEMPT_RT)" "$(LD)" "$(CC) $(KBUILD_CFLAGS)"
-> +       "$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)" "$(LD)"
-> diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
-> index 8b38a96163e2..5b80a4699740 100755
-> --- a/scripts/mkcompile_h
-> +++ b/scripts/mkcompile_h
-> @@ -6,8 +6,8 @@ ARCH=$2
->  SMP=$3
->  PREEMPT=$4
->  PREEMPT_RT=$5
-> -LD=$6
-> -CC=$7
-> +CC=$6
-> +LD=$7
+    net_sched: add a temporary refcnt for struct tcindex_data
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=141434b7e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=161434b7e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=121434b7e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8325e509a1bf83ec741d@syzkaller.appspotmail.com
+Fixes: 304e024216a8 ("net_sched: add a temporary refcnt for struct tcindex_data")
+
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 0 PID: 7 at lib/refcount.c:28 refcount_warn_saturate+0x1d1/0x1e0 lib/refcount.c:28
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7 Comm: kworker/u4:0 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: tc_filter_workqueue tcindex_destroy_work
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:refcount_warn_saturate+0x1d1/0x1e0 lib/refcount.c:28
+Code: e9 db fe ff ff 48 89 df e8 2c 95 1e fe e9 8a fe ff ff e8 c2 81 e1 fd 48 c7 c7 40 c6 71 88 c6 05 42 be f1 06 01 e8 17 f6 b2 fd <0f> 0b e9 af fe ff ff 0f 1f 84 00 00 00 00 00 41 56 41 55 41 54 55
+RSP: 0018:ffffc90000cdfcf0 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ca861 RDI: fffff5200019bf90
+RBP: 0000000000000003 R08: ffff8880a95a41c0 R09: ffffed1015cc66a1
+R10: ffffed1015cc66a0 R11: ffff8880ae633507 R12: ffff8880a81c8c2c
+R13: ffff8880a81c8c40 R14: ffff8880a9580e00 R15: ffff8880aa034800
+ refcount_sub_and_test include/linux/refcount.h:261 [inline]
+ refcount_dec_and_test include/linux/refcount.h:281 [inline]
+ tcindex_data_put+0xd1/0xf0 net/sched/cls_tcindex.c:72
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
--- 
-Thanks,
-~Nick Desaulniers
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
