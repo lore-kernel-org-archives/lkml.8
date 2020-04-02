@@ -2,104 +2,112 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF63C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C1FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5E520678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1320206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:36:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DfcbS0Ec"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="h/TL51fw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388164AbgDBUfy (ORCPT
+        id S2388658AbgDBUgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:35:54 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:24686 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729549AbgDBUfy (ORCPT
+        Thu, 2 Apr 2020 16:36:12 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38158 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729549AbgDBUgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:35:54 -0400
+        Thu, 2 Apr 2020 16:36:12 -0400
+Received: by mail-pj1-f68.google.com with SMTP id m15so1968585pje.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:36:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1585859753; x=1617395753;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=/AMe5jtWvL4jnCf4DQWrkvz+agPOIGzaDNZ89UTBJo0=;
-  b=DfcbS0Ec3Z/c1TxDJ49bfczSgFsABQzp6es9c3Yp8cWhmjmtVn5lrawx
-   ahgB6vqe7Y4OvQ6yirOVkoP2U52lUQTXaQt/stfHjfHHDByPHL/cVdeHY
-   GeNUdrraGoJc3IP1o3sf70VoUBhbnCR+NXdvvaadGBGYiswlvmdvpqqfF
-   Y=;
-IronPort-SDR: kpS8uj1f1Ls8HuyFfoJ0Bw2Di3PD7hbv2msHR46lCFkUsSmlEqmo7Dtnz7RPkorXNxRasyuiWL
- Xx0HmnUjbe0A==
-X-IronPort-AV: E=Sophos;i="5.72,336,1580774400"; 
-   d="scan'208";a="36371078"
-Subject: Re: [PATCH 0/3] arch/x86: Optionally flush L1D on context switch
-Thread-Topic: [PATCH 0/3] arch/x86: Optionally flush L1D on context switch
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 02 Apr 2020 20:35:50 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 6A282A30EB;
-        Thu,  2 Apr 2020 20:35:47 +0000 (UTC)
-Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 2 Apr 2020 20:35:46 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 2 Apr 2020 20:35:46 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Thu, 2 Apr 2020 20:35:46 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "jpoimboe@redhat.com" <jpoimboe@redhat.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-Thread-Index: AQHWCLef4bwaosvK0kiEVSQik6PTPKhmROgAgAAGOQA=
-Date:   Thu, 2 Apr 2020 20:35:46 +0000
-Message-ID: <31c9720eff18ce167378e9a0017dcd73e0552164.camel@amazon.com>
-References: <20200402062401.29856-1-sblbir@amazon.com>
-         <20200402201328.zqnxwaetpk4ubg56@treble>
-In-Reply-To: <20200402201328.zqnxwaetpk4ubg56@treble>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.65]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <686FB9B2CCB0D6428F002ABED8171883@amazon.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=5Tvvg+jX0GG9uHDoaYNmJitk6pKLfYUjlwPpA4nOY8c=;
+        b=h/TL51fwxBfbFddA9eXzFEK5DtH/YBEal9qplDsoh3mxwYkcQE2z1eJ5U3z+3lh5Bq
+         VLfCqQDeRi83OHvScQvnNm7luL6VtmLoEkbjTcpwqjPPvq2hCfNPT3SXFzOQT/piwXXH
+         T0NqBW+H0T9F8TTmOtrdr+SlwvZhvEszkuTUe2yiKGFFXO3yivBeiZCFKCgor6wO9RHF
+         BaH2hIyZwICXGZKQOoh8NmHFTGePT7fHHhXVVQ5bOJ6qwCmH6aTzXeNZ3H6x8+EJRYnS
+         3z0ND3iDD0zJ+0pM/YqgDE+4XT4jqtoOIkpj+AynzrjLvT07RRlb9YCnYhDNabv2GKNi
+         Sg3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=5Tvvg+jX0GG9uHDoaYNmJitk6pKLfYUjlwPpA4nOY8c=;
+        b=doIplalR409w3lGNYg1NEg0/xVcfGDgRfLMwZ6/ifKSKf/yevDXLzmf4KrvzF+kRKg
+         Uis+0BfViwyiFIPDkK0V+gy8NYNo+ILfOK0tnjI7VYl3S51nebfig+I4CyH5iB8pBXEA
+         D33o64VyMk5U2OHfirOwxuSGN7s5Ty39c17KrI3RYNgDm9obaYddhFYNvNbcPvVIEzJQ
+         PHPuIRjocbk4t+DtTbZGrzDA3eKLjkLPPt0jHDhAKDIAmzss4GUTtSVnS3d3tJDoK9/T
+         emwnzrS0tqd5fcDERFPhi6UQj7wk/WLkoSsQzaEdfd0NZXFJ1xDytzcJfZ3x8ehMmPb2
+         KEyg==
+X-Gm-Message-State: AGi0Pua0mJgfUEhteZWWXryp8zf7KVnCIAX92XEu6GPNcG7dRfmflohl
+        R6hRy8kiygR4wOP+meu1uGtEXg==
+X-Google-Smtp-Source: APiQypJwwiuCucj4ZpH3FL5V1GUvNK9TzMm3eb1wW/iOjUU0tRn1Sb/G6pQHUNrpI8dDCEvBaDVd/A==
+X-Received: by 2002:a17:90a:e64e:: with SMTP id ep14mr5954301pjb.149.1585859770830;
+        Thu, 02 Apr 2020 13:36:10 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:20df:efa9:6ad3:9221? ([2601:646:c200:1ef2:20df:efa9:6ad3:9221])
+        by smtp.gmail.com with ESMTPSA id y207sm4428233pfb.189.2020.04.02.13.36.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 13:36:10 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 3/3] KVM: VMX: Extend VMX's #AC interceptor to handle split lock #AC in guest
+Date:   Thu, 2 Apr 2020 13:36:08 -0700
+Message-Id: <D6B8E21D-6DB2-4DF8-8B73-12DD36476F55@amacapital.net>
+References: <87h7y1mz2s.fsf@nanos.tec.linutronix.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        x86@kernel.org, "Kenneth R . Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <87h7y1mz2s.fsf@nanos.tec.linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA0LTAyIGF0IDE1OjEzIC0wNTAwLCBKb3NoIFBvaW1ib2V1ZiB3cm90ZToN
-Cj4gQ0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3Jn
-YW5pemF0aW9uLiBEbyBub3QNCj4gY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxl
-c3MgeW91IGNhbiBjb25maXJtIHRoZSBzZW5kZXIgYW5kIGtub3cNCj4gdGhlIGNvbnRlbnQgaXMg
-c2FmZS4NCj4gDQo+IA0KPiANCj4gT24gVGh1LCBBcHIgMDIsIDIwMjAgYXQgMDU6MjM6NThQTSAr
-MTEwMCwgQmFsYmlyIFNpbmdoIHdyb3RlOg0KPiA+IFByb3ZpZGUgYSBtZWNoYW5pc24gdG8gZmx1
-c2ggdGhlIEwxRCBjYWNoZSBvbiBjb250ZXh0IHN3aXRjaC4gIFRoZSBnb2FsDQo+ID4gaXMgdG8g
-YWxsb3cgdGFza3MgdGhhdCBhcmUgcGFyYW5vaWQgZHVlIHRvIHRoZSByZWNlbnQgc25vb3AgYXNz
-aXN0ZWQgZGF0YQ0KPiA+IHNhbXBsaW5nIHZ1bG5lcmFiaWxpdGVzLCB0byBmbHVzaCB0aGVpciBM
-MUQgb24gYmVpbmcgc3dpdGNoZWQgb3V0Lg0KPiANCj4gSGkgQmFsYmlyLA0KPiANCj4gSnVzdCBj
-dXJpb3VzLCBpcyBpdCByZWFsbHkgdnVsbmVyYWJpbGl0aWVzLCBwbHVyYWw/ICBJIHRob3VnaHQg
-dGhlcmUgd2FzDQo+IG9ubHkgb25lOiBDVkUtMjAyMC0wNTUwIChTbm9vcC1hc3Npc3RlZCBMMSBE
-YXRhIFNhbXBsaW5nKS4NCj4gDQo+IChUaGVyZSB3YXMgYSBzaW1pbGFyIG9uZSB3aXRob3V0IHRo
-ZSAic25vb3AiOiBMMUQgRXZpY3Rpb24gU2FtcGxpbmcsIGJ1dA0KPiBpdCdzIHN1cHBvc2VkIHRv
-IGdldCBmaXhlZCBpbiBtaWNyb2NvZGUpLg0KPiANCg0KSGksIEpvc2gNCg0KWWVzLCB0aGF0IENW
-RSB0aGUgbW90aXZhdGlvbiwgdGhlIG1pdGlnYXRpb24gZm9yIENWRS0yMDIwLTA1NTAgZG9lcyBz
-dWdnZXN0DQpmbHVzaGluZyB0aGUgY2FjaGUgb24gY29udGV4dCBzd2l0Y2guIEJ1dCBpbiBnZW5l
-cmFsLCBhcyB3ZSBiZWdpbiB0byBmaW5kIG1vcmUNCndheXMgb2YgZXZpY3RpbmcgZGF0YSBvciBz
-bm9wcGluZyBkYXRhLCBhIGdlbmVyaWMgbWVjaGFuaXNtIGlzIG1vcmUgdXNlZnVsIGFuZA0KdGhh
-dCBpcyB3aHkgSSBhbSBtYWtpbmcgaXQgYW4gb3B0LWluLg0KDQpCYWxiaXIgU2luZ2guDQo=
+
+
+> On Apr 2, 2020, at 1:07 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+>=20
+
+>=20
+>=20
+> TBH, the more I learn about this, the more I tend to just give up on
+> this whole split lock stuff in its current form and wait until HW folks
+> provide something which is actually usable:
+>=20
+>   - Per thread
+>   - Properly distinguishable from a regular #AC via error code
+
+Why the latter?  I would argue that #AC from CPL3 with EFLAGS.AC set is almo=
+st by construction not a split lock. In particular, if you meet these condit=
+ions, how exactly can you do a split lock without simultaneously triggering a=
+n alignment check?  (Maybe CMPXCHG16B?
+
+>=20
+> OTOH, that means I won't be able to use it before retirement. Oh well.
+>=20
+> Thanks,
+>=20
+>        tglx
