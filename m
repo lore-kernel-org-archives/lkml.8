@@ -2,159 +2,83 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_HDRS_LCASE,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6874CC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA3FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB0620675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:27:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qx+gFGYu"
+	by mail.kernel.org (Postfix) with ESMTP id 3A32020675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389273AbgDBP1u (ORCPT
+        id S2389284AbgDBP2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:27:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47426 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbgDBP1t (ORCPT
+        Thu, 2 Apr 2020 11:28:34 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:51106 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgDBP2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:27:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032F9e4V135610;
-        Thu, 2 Apr 2020 15:27:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=tKbW8WiccK8T9qHRo3CiDK1BXJGOvdvbe+/YRvvy+dM=;
- b=qx+gFGYu6+2AXwUgzfrSkhERelzTGHaMfE0CeJfjXOH1b77jO4UlYsyABPi1FvuXveXB
- a3eASmkKe5Kwu0mmpVa4c1RQnEpRuzPFAmJm1+U6lnhFlp1OQIdYZbtpKo2OmmZHQUrg
- ys0Lv2LfCeDePiiKsPKTpNv3c8jst+gg0UfkJaX/QyUDOO4nhkKTZGsoYGwfS/jYWUS6
- b6qQlt5CdCt4rKp1g1BEFuvOINWbfyQZPghwnCzEMjShbtYhBKHiMqOn/Q3Td6BFFPjx
- wgdr/ZWpkl+uh4g6O2O/HA9/MyvPSkDdIXEmGLNx+4Kdjlyu9w1B8Gs2Syjefu4NmL0F Qg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 303cevc5n7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 15:27:42 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032F8UCl188474;
-        Thu, 2 Apr 2020 15:27:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 302g4vqbbr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 15:27:41 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032FRe3U027186;
-        Thu, 2 Apr 2020 15:27:40 GMT
-Received: from localhost.localdomain (/95.45.14.174)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 08:27:39 -0700
-Date:   Thu, 2 Apr 2020 16:27:35 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     shuah <shuah@kernel.org>
-cc:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        linux-kselftest@vger.kernel.org, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v8 kunit-next 1/4] kunit: add debugfs
- /sys/kernel/debug/kunit/<suite>/results display
-In-Reply-To: <0d310181-a172-dec9-19aa-337ece9d7380@kernel.org>
-Message-ID: <alpine.LRH.2.21.2004021624400.21551@localhost>
-References: <1585232710-322-1-git-send-email-alan.maguire@oracle.com> <1585232710-322-2-git-send-email-alan.maguire@oracle.com> <0d310181-a172-dec9-19aa-337ece9d7380@kernel.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Thu, 2 Apr 2020 11:28:33 -0400
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+        by gardel.0pointer.net (Postfix) with ESMTP id 7A8EDE80A73;
+        Thu,  2 Apr 2020 17:28:31 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 1F7B3160337; Thu,  2 Apr 2020 17:28:31 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 17:28:31 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+Message-ID: <20200402152831.GA31612@gardel-login>
+References: <1445647.1585576702@warthog.procyon.org.uk>
+ <2418286.1585691572@warthog.procyon.org.uk>
+ <20200401144109.GA29945@gardel-login>
+ <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
+ <2590640.1585757211@warthog.procyon.org.uk>
+ <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
+ <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
+ <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
+ <20200402143623.GB31529@gardel-login>
+ <CAJfpegtRi9epdxAeoVbm+7UxkZfzC6XmD4K_5dg=RKADxy_TVA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020131
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020131
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegtRi9epdxAeoVbm+7UxkZfzC6XmD4K_5dg=RKADxy_TVA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020, shuah wrote:
+On Do, 02.04.20 17:22, Miklos Szeredi (miklos@szeredi.hu) wrote:
 
-> Hi Alan,
-> 
-> On 3/26/20 8:25 AM, Alan Maguire wrote:
-> > add debugfs support for displaying kunit test suite results; this is
-> > especially useful for module-loaded tests to allow disentangling of
-> > test result display from other dmesg events.  debugfs support is
-> > provided if CONFIG_KUNIT_DEBUGFS=y.
-> > 
-> > As well as printk()ing messages, we append them to a per-test log.
-> > 
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> > Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-> > ---
-> >   include/kunit/test.h   |  54 +++++++++++++++---
-> >   lib/kunit/Kconfig      |   8 +++
-> 
-> Missing defaults for config options?
-> 
-> >   lib/kunit/Makefile     |   4 ++
-> >   lib/kunit/debugfs.c    | 116 ++++++++++++++++++++++++++++++++++++++
-> >   lib/kunit/debugfs.h    |  30 ++++++++++
-> >   lib/kunit/kunit-test.c |   4 +-
-> >   lib/kunit/test.c       | 147
-> >   ++++++++++++++++++++++++++++++++++++++-----------
-> >   7 files changed, 322 insertions(+), 41 deletions(-)
-> >   create mode 100644 lib/kunit/debugfs.c
-> >   create mode 100644 lib/kunit/debugfs.h
-> > 
-> 
-> snip
-> 
-> > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
-> > index 065aa16..95d12e3 100644
-> > --- a/lib/kunit/Kconfig
-> > +++ b/lib/kunit/Kconfig
-> > @@ -14,6 +14,14 @@ menuconfig KUNIT
-> >   
-> >   if KUNIT
-> >   
-> > +config KUNIT_DEBUGFS
-> > +	bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation"
-> > +	help
-> > +	  Enable debugfs representation for kunit.  Currently this consists
-> > +	  of /sys/kernel/debug/kunit/<test_suite>/results files for each
-> > +	  test suite, which allow users to see results of the last test suite
-> > +	  run that occurred.
-> > +
-> 
-> Any reason why there is default for this option?
-> 
-> Same for all other options. I am sending pull request for now without
-> defaults. Would like to see this fixed for rc2.
+> On Thu, Apr 2, 2020 at 4:36 PM Lennart Poettering <mzxreary@0pointer.de> wrote:
 >
+> > You appear to be thinking about the "udisks" project or so?
+>
+> Probably.
+>
+> The real question is: is there a sane way to filter mount
+> notifications so that systemd receives only those which it is
+> interested in, rather than the tens of thousands that for example
+> autofs is managing and has nothing to do with systemd?
 
-Sure, I'll send a patch shortly. Just wanted to get opinions
-on what those defaults should be; my working assumption is
+systemd cares about all mount points in PID1's mount namespace.
 
-- CONFIG_KUNIT should be default n; 
-- CONFIG_KUNIT_DEBUGFS should be default y (enabled by default
-  if CONFIG_KUNIT is set);
-- CONFIG_KUNIT_TEST, CONFIG_KUNIT_EXAMPLE_TEST should be default n
+The fact that mount tables can grow large is why we want something
+better than constantly reparsing the whole /proc/self/mountinfo. But
+filtering subsets of that is something we don't really care about.
 
-Does this sound right? Thanks!
+Lennart
 
-Alan
-
-> thanks,
-> -- Shuah
-> 
+--
+Lennart Poettering, Berlin
