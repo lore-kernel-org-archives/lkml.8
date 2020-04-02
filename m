@@ -2,175 +2,120 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11935C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE40C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C562078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mkdjc5J1"
+	by mail.kernel.org (Postfix) with ESMTP id 6BC29208E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387560AbgDBHTj (ORCPT
+        id S2387600AbgDBHTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:19:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36068 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgDBHTj (ORCPT
+        Thu, 2 Apr 2020 03:19:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50152 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728234AbgDBHTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:19:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g2so1016551plo.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MNcbIL1+RcHP9n1/a7uW2cYhRUPkvEWLMMecHAgQsXw=;
-        b=Mkdjc5J1SEZfYsVao6D+3svMUTOlPWR0GUglETGCp1BLe0DlCeO6EhQvWvFeICMv36
-         FhEx79mg9w4G5l0oE52LrM6gGTrotrudHbeodjWMutpEZgdksa6OfQMqYRb+P06vpBHA
-         5ziM8BNeNC/piG1MVXXvFtq9O6gGtn/zz65nI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MNcbIL1+RcHP9n1/a7uW2cYhRUPkvEWLMMecHAgQsXw=;
-        b=jbCOFLyURjbNC9Pyvlw5HPFxvVlZy5TlvdrGaZpE9xKrFuklbpRHthpbVw63WqEPD2
-         0dQp0Svqja3ymaDi7mXDteLkDGLPqrnEjkNFvsi5ICrVDJrzo8cio5JBZu4jL1ne9s7b
-         1GuzJrhDnlSWvFGUdbyv6qp54ks1LBeVE8dTsM3Vf5S/qWLSnIObAn/N0W2Xzk8Q6CNA
-         c5K+V7eu+CBBLgzE/fe+Zr3KaWFLJW4vr5VsBdHT4lgleRbyJVVi+tudGBcIqxfHMVWc
-         UtOKiGNLj+gw5FDBZr2VaG6NWd4N4KOLIJhrRl/VZGtB6T4jLfysciJlHUDECjotvntL
-         5Rzg==
-X-Gm-Message-State: AGi0PubWp/V6o2aQ7GwBkh+KVw4s/LZUSu88mbrwIjlPkDDmq8bmukur
-        QIVEe0AxN5I72KnWm8fI6/iAkw==
-X-Google-Smtp-Source: APiQypIgY9efFSF0nGqyq4XrnljhNDsb8eVxK3UTxH/mnTcO3+iTBEtSUKooI7eOyQJMhEFKWznCZA==
-X-Received: by 2002:a17:902:b617:: with SMTP id b23mr1717580pls.285.1585811976162;
-        Thu, 02 Apr 2020 00:19:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x70sm2957375pfc.21.2020.04.02.00.19.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 00:19:35 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 00:19:34 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Adam Zabrocki <pi3@pi3.com.pl>, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, Jann Horn <jannh@google.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] signal: Extend exec_id to 64bits
-Message-ID: <202004020019.1F1EEC3669@keescook>
-References: <20200324215049.GA3710@pi3.com.pl>
- <202003291528.730A329@keescook>
- <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
+        Thu, 2 Apr 2020 03:19:49 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03273QfJ134696;
+        Thu, 2 Apr 2020 03:19:24 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3058y8bc12-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 03:19:24 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0327FUmA190058;
+        Thu, 2 Apr 2020 03:19:24 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3058y8bc0t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 03:19:23 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0327J9PH025989;
+        Thu, 2 Apr 2020 07:19:23 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04dal.us.ibm.com with ESMTP id 301x770vdt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 07:19:23 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0327JLZY44302842
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Apr 2020 07:19:21 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A71D07805C;
+        Thu,  2 Apr 2020 07:19:21 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE92278066;
+        Thu,  2 Apr 2020 07:19:20 +0000 (GMT)
+Received: from [9.70.82.143] (unknown [9.70.82.143])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  2 Apr 2020 07:19:20 +0000 (GMT)
+Subject: [PATCH v10 13/14] powerpc/vas: Free send window in VAS instance
+ after credits returned
+From:   Haren Myneni <haren@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
+        frederic.barrat@fr.ibm.com, ajd@linux.ibm.com,
+        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
+        oohall@gmail.com, clg@kaod.org, sukadev@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, herbert@gondor.apana.org.au
+In-Reply-To: <1585810846.2275.23.camel@hbabu-laptop>
+References: <1585810846.2275.23.camel@hbabu-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Date:   Thu, 02 Apr 2020 00:19:19 -0700
+Message-ID: <1585811959.2275.65.camel@hbabu-laptop>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.28.3 
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ phishscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 spamscore=0 suspectscore=3
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 03:47:44PM -0500, Eric W. Biederman wrote:
-> 
-> Replace the 32bit exec_id with a 64bit exec_id to make it impossible
-> to wrap the exec_id counter.  With care an attacker can cause exec_id
-> wrap and send arbitrary signals to a newly exec'd parent.  This
-> bypasses the signal sending checks if the parent changes their
-> credentials during exec.
-> 
-> The severity of this problem can been seen that in my limited testing
-> of a 32bit exec_id it can take as little as 19s to exec 65536 times.
-> Which means that it can take as little as 14 days to wrap a 32bit
-> exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
-> days.  Even my slower timing is in the uptime of a typical server.
-> Which means self_exec_id is simply a speed bump today, and if exec
-> gets noticably faster self_exec_id won't even be a speed bump.
-> 
-> Extending self_exec_id to 64bits introduces a problem on 32bit
-> architectures where reading self_exec_id is no longer atomic and can
-> take two read instructions.  Which means that is is possible to hit
-> a window where the read value of exec_id does not match the written
-> value.  So with very lucky timing after this change this still
-> remains expoiltable.
-> 
-> I have updated the update of exec_id on exec to use WRITE_ONCE
-> and the read of exec_id in do_notify_parent to use READ_ONCE
-> to make it clear that there is no locking between these two
-> locations.
-> 
-> Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
-> Fixes: 2.3.23pre2
-> Cc: stable@vger.kernel.org
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Thanks for chasing this down. :)
+NX may be processing requests while trying to close window. Wait until
+all credits are returned and then free send window from VAS instance.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Haren Myneni <haren@linux.ibm.com>
+---
+ arch/powerpc/platforms/powernv/vas-window.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
--Kees
-
-> ---
-> 
-> Linus would you prefer to take this patch directly or I could put it in
-> a brach and send you a pull request.
->  
->  fs/exec.c             | 2 +-
->  include/linux/sched.h | 4 ++--
->  kernel/signal.c       | 2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 0e46ec57fe0a..d55710a36056 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1413,7 +1413,7 @@ void setup_new_exec(struct linux_binprm * bprm)
->  
->  	/* An exec changes our domain. We are no longer part of the thread
->  	   group */
-> -	current->self_exec_id++;
-> +	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
->  	flush_signal_handlers(current, 0);
->  }
->  EXPORT_SYMBOL(setup_new_exec);
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 04278493bf15..0323e4f0982a 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -939,8 +939,8 @@ struct task_struct {
->  	struct seccomp			seccomp;
->  
->  	/* Thread group tracking: */
-> -	u32				parent_exec_id;
-> -	u32				self_exec_id;
-> +	u64				parent_exec_id;
-> +	u64				self_exec_id;
->  
->  	/* Protection against (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed, mempolicy: */
->  	spinlock_t			alloc_lock;
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 9ad8dea93dbb..5383b562df85 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -1926,7 +1926,7 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
->  		 * This is only possible if parent == real_parent.
->  		 * Check if it has changed security domain.
->  		 */
-> -		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
-> +		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
->  			sig = SIGCHLD;
->  	}
->  
-> -- 
-> 2.20.1
-> 
-
+diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
+index 3d80f37..3ffad5a 100644
+--- a/arch/powerpc/platforms/powernv/vas-window.c
++++ b/arch/powerpc/platforms/powernv/vas-window.c
+@@ -1316,14 +1316,14 @@ int vas_win_close(struct vas_window *window)
+ 
+ 	unmap_paste_region(window);
+ 
+-	clear_vinst_win(window);
+-
+ 	poll_window_busy_state(window);
+ 
+ 	unpin_close_window(window);
+ 
+ 	poll_window_credits(window);
+ 
++	clear_vinst_win(window);
++
+ 	poll_window_castout(window);
+ 
+ 	/* if send window, drop reference to matching receive window */
 -- 
-Kees Cook
+1.8.3.1
+
+
+
