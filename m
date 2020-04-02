@@ -2,124 +2,103 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64ABC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34896C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF7D2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585838182;
-	bh=hgqNTt2kKMNGHqP+Km3jz9TvPzM2T4GaVOuSBURhUvs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=y/QZ8SHbwBXNGIVdJlD7DOjmjAUzHtfzspgVgpZVufxcbxYW8kT5xAk5U47+D9qCm
-	 A7Zw3M9iCLaosigfRcAdSUYBDAIg7Myx3xGETCCz8u4X8GxCwuFRgweGKSojhCBxRt
-	 gy2FqNRaEuOkemKfmDfrdVOeGJqqum2EDb3O0SAw=
+	by mail.kernel.org (Postfix) with ESMTP id 113D52073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388120AbgDBOgV (ORCPT
+        id S2388422AbgDBOg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:36:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgDBOgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:36:21 -0400
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA3652074D;
-        Thu,  2 Apr 2020 14:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585838179;
-        bh=hgqNTt2kKMNGHqP+Km3jz9TvPzM2T4GaVOuSBURhUvs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Xea48Y7rVx7bKJXai1/rCZV02PKwdZb4NtyEvbGgM3eK43U6ZAC4N4R5Dzhu/tpgZ
-         Ix/acFtoFs6RiiUvxog1xUiHsMKNCC4kJfqpbdKlGwGBb87JV6h20pa2q195oUMJoZ
-         hsriSvjosxbqeD+R/0eO72SAMOgSI4V4mocJgaho=
-Received: by mail-il1-f181.google.com with SMTP id n13so3803217ilm.5;
-        Thu, 02 Apr 2020 07:36:19 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYVkkH4P4W2Q6zs9x0Up8lvfPxYccKUSFz5txRfncp/smthyakU
-        G3So/1RCSCnr4vSlQKX8gBMgRXt3mF3mR1uEY9Q=
-X-Google-Smtp-Source: APiQypK/ccv9NRSETRVTWozAv5jSrWGxRlqM/ygFo4EjfN+UAGVGv17+NG3gieCqXQN2oci7WqN0P+0T4tCB/gk2P3w=
-X-Received: by 2002:a92:dcd1:: with SMTP id b17mr3620113ilr.80.1585838179188;
- Thu, 02 Apr 2020 07:36:19 -0700 (PDT)
+        Thu, 2 Apr 2020 10:36:27 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:51066 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbgDBOg0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:36:26 -0400
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
+        by gardel.0pointer.net (Postfix) with ESMTP id 7AF41E80A73;
+        Thu,  2 Apr 2020 16:36:24 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 13E16160337; Thu,  2 Apr 2020 16:36:24 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 16:36:23 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+Message-ID: <20200402143623.GB31529@gardel-login>
+References: <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
+ <1445647.1585576702@warthog.procyon.org.uk>
+ <2418286.1585691572@warthog.procyon.org.uk>
+ <20200401144109.GA29945@gardel-login>
+ <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
+ <2590640.1585757211@warthog.procyon.org.uk>
+ <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
+ <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
+ <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
 MIME-Version: 1.0
-References: <5a6807f19fd69f2de6622c794639cc5d70b9563a.1585513949.git.stefan@agner.ch>
- <CAKwvOdkyOW6RXTOCt1xMp2H+uH28ofByQOjyx776t8RDxTED2w@mail.gmail.com>
- <CAMj1kXGYiMobkue642iDRdOjEHQK=KXpp=Urrgik9UU-eWWibQ@mail.gmail.com>
- <DBBPR08MB4823129E272220712B470716F8C60@DBBPR08MB4823.eurprd08.prod.outlook.com>
- <CAMj1kXEQ4v9e6386ogPdy+s+++9H02DMPnDpTq0WSY2e78ts+Q@mail.gmail.com> <e0c125ea492670c7069c407b6b0c5958@agner.ch>
-In-Reply-To: <e0c125ea492670c7069c407b6b0c5958@agner.ch>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 2 Apr 2020 16:36:08 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEe835GbXU5qgX-QQ5n4SmwQO1nAoAZw5pUVCbR=J8XmQ@mail.gmail.com>
-Message-ID: <CAMj1kXEe835GbXU5qgX-QQ5n4SmwQO1nAoAZw5pUVCbR=J8XmQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: OMAP2+: drop unnecessary adrl
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Smith <Peter.Smith@arm.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Russell King <linux@armlinux.org.uk>, nd <nd@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 at 16:34, Stefan Agner <stefan@agner.ch> wrote:
->
-> On 2020-04-02 14:05, Ard Biesheuvel wrote:
-> > On Thu, 2 Apr 2020 at 13:50, Peter Smith <Peter.Smith@arm.com> wrote:
-> >>
-> >> > I take it this implies that the LLVM linker does not support the
-> >> > R_ARM_ALU_PC_Gn relocations? Since otherwise, adrl could simply be
-> >> > expanded to a pair of adds with the appropriate relocations, letting
-> >> > the linker fix up the immediates (and the ADD vs SUB bits)
-> >>
-> >> Not at the moment. I have a patch in review to add the G0 variants for=
- these in Arm state at reviews.llvm.org/D75349 . As far as I know LLVM MC d=
-oes not have support for generating the relocations either. This could be a=
-dded though. I agree that using the G* relocations with a pair of add/sub i=
-nstructions would be the ideal solution. The adrl psuedo is essentially tha=
-t but implemented at assembly time. I think it would be possible to impleme=
-nt in LLVM but at the time (4+ years ago) I wasn't confident in finding som=
-eone that would think that adrl support was worth the disruption, for examp=
-le the current Arm assembly backend can only produce 1 instruction as outpu=
-t and adrl requires two.
-> >>
-> >> I'd be happy to look at group relocation support in LLD, I haven't got=
- a lot of spare time so progress is likely to be slow though.
-> >>
+On Do, 02.04.20 15:52, Miklos Szeredi (miklos@szeredi.hu) wrote:
+
+> > Don't get me wrong, neither the proc nor the fsinfo implementations
+> > deal with the notification storms that cause much of the problem we
+> > see now.
 > >
-> > For Linux, I have proposed another approach in the past, which is to
-> > define a (Linux-local) adr_l macro with unlimited range [0], which
-> > basically comes down to place relative movw/movt pairs for v7+, and
-> > something along the lines of
-> >
-> >         ldr <reg>, 222f
-> > 111:    add <reg>, <reg>, pc
-> >         .subsection 1
-> > 222:    .long <sym> - (111b + 8)
-> >         .previous
+> > IMHO that's a separate and very difficult problem in itself that
+> > can't even be considered until getting the information efficiently
+> > is resolved.
 >
-> Just to confirm: The instance at hand today seems to be working fine
-> without adrl, so I guess we are fine here, do you agree?
->
+> This mount notification storm issue got me thinking.   If I understand
+> correctly, systemd wants mount notifications so that it can do the
+> desktop pop-up thing.   Is that correct?
 
-I agree. Apologies for hijacking the thread :-)
+This has little to do with the desktop. Startup scheduling is
+mostly about figuring out when we can do the next step of startup, and
+to a big amount this means issuing a mount command of some form, then
+waiting until it is established, then invoking the next and so on, and
+when the right mounts are established start the right services that
+require them and so on. And with today's system complexity with
+storage daemons and so on this all becomes a complex network of
+concurrent dependencies.
 
-> There are a couple more instances of adrl in arch/arm/crypto/, maybe
-> that is where the adr_l macro could come in.
->
+Most mounts are established on behalf of pid 1 itself, for those we
+could just wait until the mount syscall/command completes (and we
+do). But there's plenty cases where that's not the case, hence we need
+to make sure we follow system mount table state as a whole, regardless
+if its systemd itself that triggers some mount or something else (for
+example some shell script, udisks, …).
 
-There are various places in the arch code that could be cleaned up
-along these lines.
+> But that doesn't apply to automounts at all.  A new mount performed by
+> automount is uninteresting to to desktops, since it's triggered by
+> crossing the automount point (i.e. a normal path lookup), not an
+> external event like inserting a usb stick, etc...
 
-But you're right - this is a separate discussion that deserves a
-thread of its own. I was just satisfying my own curiosity.
+systemd does not propagate mount events to desktops.
+
+You appear to be thinking about the "udisks" project or so?
+
+Lennart
+
+--
+Lennart Poettering, Berlin
