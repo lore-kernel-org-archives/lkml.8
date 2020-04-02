@@ -2,184 +2,84 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14323C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCB4C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD7C7206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F23212CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389329AbgDBUQ4 (ORCPT
+        id S2389367AbgDBURM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:16:56 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:57134 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729123AbgDBUQz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:16:55 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 02 Apr 2020 13:16:55 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 02 Apr 2020 13:16:54 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 67DD14BDB; Thu,  2 Apr 2020 13:16:54 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 13:16:54 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and
- function
-Message-ID: <20200402201654.GA9191@codeaurora.org>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
- <20200330204359.GB5107@codeaurora.org>
- <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
- <20200331202058.GB25781@codeaurora.org>
- <20200331204929.GC2954599@ulmo>
+        Thu, 2 Apr 2020 16:17:12 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49357 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbgDBURL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:17:11 -0400
+IronPort-SDR: WoYS+8qKLMwoo753TKle50uWzAFDjZqrP49PNx7bb+UZ3U567sOcmRJbVDfz1Ebig3/9I1Z8Sr
+ LEm+lb5SLvWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 13:17:11 -0700
+IronPort-SDR: qibqd9S+az7ejxncAI8raSBbcCfwBpEuhv/Nu2BRMba++Z5SMzGaVWLlfTyJ5hOgqWZKvZdGfQ
+ llSq6jQtbMQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="238650846"
+Received: from hbriegel-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.39.101])
+  by orsmga007.jf.intel.com with ESMTP; 02 Apr 2020 13:17:01 -0700
+Date:   Thu, 2 Apr 2020 23:17:00 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Amir Mizinski <amirmizi6@gmail.com>
+Cc:     Eyal.Cohen@nuvoton.com, Oshri Alkobi <oshrialkoby85@gmail.com>,
+        Alexander Steffen <alexander.steffen@infineon.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de,
+        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
+        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, IS30 Dan Morav <Dan.Morav@nuvoton.com>,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com,
+        Christophe Richard <hristophe-h.ricard@st.com>
+Subject: Re: [PATCH v4 2/7] tpm: tpm_tis: Add check_data handle to
+ tpm_tis_phy_ops in order to check data integrity
+Message-ID: <20200402201700.GG10314@linux.intel.com>
+References: <20200331113207.107080-1-amirmizi6@gmail.com>
+ <20200331113207.107080-3-amirmizi6@gmail.com>
+ <20200401082019.GB17325@linux.intel.com>
+ <CAMHTsUUvStPHNL-W7vtjGrtehQx22jUZbN8kLib4h+JWH3p7_w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331204929.GC2954599@ulmo>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAMHTsUUvStPHNL-W7vtjGrtehQx22jUZbN8kLib4h+JWH3p7_w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:49:29PM +0200, Thierry Reding wrote:
-> On Tue, Mar 31, 2020 at 01:20:58PM -0700, Guru Das Srinagesh wrote:
-> > On Tue, Mar 31, 2020 at 05:24:52PM +0200, Arnd Bergmann wrote:
-> > > On Mon, Mar 30, 2020 at 10:44 PM Guru Das Srinagesh
-> > > <gurus@codeaurora.org> wrote:
-> > > >
-> > > > On Fri, Mar 20, 2020 at 06:09:39PM +0100, Arnd Bergmann wrote:
-> > > > > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> > > > >
-> > > > > > @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > > > >
-> > > > > >         period_cycles /= prescale;
-> > > > > >         c = (unsigned long long)period_cycles * state->duty_cycle;
-> > > > > > -       do_div(c, state->period);
-> > > > > > -       duty_cycles = c;
-> > > > > > +       duty_cycles = div64_u64(c, state->period);
-> > > > > >
-> > > > >
-> > > > > This change looks fine, but I wonder if the code directly above it
-> > > > >
-> > > > >         c = clk_get_rate(imx->clk_per);
-> > > > >         c *= state->period;
-> > > > >         do_div(c, 1000000000);
-> > > > >         period_cycles = c;
-> > > > >
-> > > > > might run into an overflow when both the clock rate and the period
-> > > > > are large numbers.
-> > > >
-> > > > Hmm. Seems to me like addressing this would be outside the scope of this
-> > > > patch series.
-> > > 
-> > > I think it should be part of the same series, addressing bugs that
-> > > were introduced
-> > > by the change to 64-bit period. If it's not getting fixed along with
-> > > the other regressions,
-> > > I fear nobody is going to go back and fix it later.
-> > 
-> > Makes sense, I agree. Would this be an acceptable fix?
-> > 
-> > Instead of multiplying c and state->period first and then dividing by
-> > 10^9, first divide state->period by 10^9 and then multiply the quotient
-> > of that division with c and assign it to period_cycles. Like so:
-> > 
-> > 	c = clk_get_rate(imx->clk_per);
-> > 	c *= div_u64(state->period, 1000000000);
-> > 	period_cycles = c;
-> > 
-> > This should take care of overflow not happening because state->period is
-> > converted from nanoseconds to seconds early on and so becomes a small
-> > number.
-> 
-> Doesn't that mean that anything below a 1 second period will be clamped
-> to just 0?
+On Wed, Apr 01, 2020 at 12:19:39PM +0300, Amir Mizinski wrote:
+>    this commit is based on Christophe work and was submitted in 2016:
+>    https://patchwork.kernel.org/patch/8628661/
+>    I followed you comments from the previous version on commit 1/7:
+>    https://lore.kernel.org/patchwork/patch/1192101/
+>    and fixed it in this one too. should i write it differently?
+>    thank you,
+>    Amir Mizinski
 
-True. How about this then?
+No then it's correct thanks. Just wanted to verify.
 
-int pwm_imx27_calc_period_cycles(struct pwm_state state,
-				 unsigned long clk_rate,
-				 unsigned long *period_cycles)
-{
-	u64 c1, c2;
+Please configure your email client:
 
-	c1 = clk_rate;
-	c2 = state->period;
-	if (c2 > c1) {
-		c2 = c1;
-		c1 = state->period;
-	}
+https://www.kernel.org/doc/html/v4.10/process/email-clients.html
 
-	if (!c1 || !c2) {
-		pr_err("clk rate and period should be nonzero\n");
-		return -EINVAL;
-	}
-
-	if (c2 <= div64_u64(U64_MAX, c1)) {
-		c = c1 * c2;
-		do_div(c, 1000000000);
-	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000))) {
-		do_div(c1, 1000);
-		c = c1 * c2;
-		do_div(c, 1000000);
-	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000))) {
-		do_div(c1, 1000000);
-		c = c1 * c2;
-		do_div(c, 1000);
-	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000000))) {
-		do_div(c1, 1000000000);
-		c = c1 * c2;
-	}
-
-	*period_cycles = c;
-
-	return 0;
-}
-
-...
-
-ret = pwm_imx27_calc_period_cycles(state, clk_get_rate(imx->clk_per),
-				   &period_cycles);
-if (ret)
-	return ret;
-
-I unit tested this logic out by calculating period_cycles using both the
-existing logic and the proposed one, and the results are as below.
-
---------------------------------------------------------------------------------
- clk_rate		period		  existing 	      proposed
---------------------------------------------------------------------------------
-1000000000	18446744073709551615	 18446744072 	18446744073000000000
-                      (U64_MAX)
---------------------------------------------------------------------------------
-1000000000	     4294967291		 4294967291	    4294967291
---------------------------------------------------------------------------------
-
-Overflow occurs in the first case with the existing logic, whereas the
-proposed logic handles it correctly. As for the second case where there are
-more typical values of period, the proposed logic handles that correctly
-too.
-
-Thank you.
-
-Guru Das.
+/Jarkko
