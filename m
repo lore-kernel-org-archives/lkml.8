@@ -2,133 +2,113 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D831EC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B813FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6DD20857
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7D82074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="ImB+/xKj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZDDJU7hB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389132AbgDBQjW (ORCPT
+        id S2389863AbgDBQj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:39:22 -0400
-Received: from mail-eopbgr770089.outbound.protection.outlook.com ([40.107.77.89]:24213
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388555AbgDBQjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:39:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lcDi/zrkpBD4UFidjdwVSs8o4giqMZRJTY1jaFeEtAWbL3umXHxwwmtMXxYO+GybojGlm5FAeL4Dy+Lr+CpcmA4Tm7l50+2L/xaoOmJ1xRD9AimS5WRq5kc2zGBPqSmIsu5WrQOsbJPHu9RSY2D7EJXLqnUWfxdlQStxaLKiccmGLj0z6xtSUFkcYwfrUu7nX7sOrExXf2wJFcpRa5q/F8+Q6jimOZG4nFibkuZlwGRPSBSKk5SsgjAAtDFkFsZcqhIVRext+N0KgWfGxQ2xwVvjV5SpG9b71J9Jp9ceKQpRpKQX/twuvVxxoqtE6t6vzuGOLGlyHc0o/jfaUT4fyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SVSRk8upYMu7m8OeTU0MBq/QMOy+80EagZDbCxosWU8=;
- b=PcDmXfdTwLIIERzuNFGa3vTDwmZ5BGezKEoOXyZfGSpW28GlxN5wHv17AF9nILP4BOaTXBxbFG87ZK4QVksYNZjlD/r/cvVPWAvehI+pQ+ppofFZgy0fPMKHSf0QdEpprhLxwlKvFdUwtPNMLHiMhW3S/JkarafOD13V0RBSmvCOUTZpZE2oZI20yPggQgoeOMFhPbigwB6CFBDj2q8EKiLGdIlRTTap7VrKqybYxhdnPOXkE/IZOFWYhZux2e3tTt6V9pGaGn3+J4sR0SCFzDfJYSLf2smlqYkwlXk0R2iIdwb67wyrc2GefYbz7QRwTpiPAp5WKcS6z5Ru76dSUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SVSRk8upYMu7m8OeTU0MBq/QMOy+80EagZDbCxosWU8=;
- b=ImB+/xKju2voLT4VtAxzAuHCmMD/xmxn4/kI9kzsNHstZaACVrU2HXtR6CDcDh1znHX9uDKx2VlSCenOWxEJgLbRmrr6+XIsqnfBwlclUCQBiM+DySOxwjdgSZ6UiWkl9F5LdtoZniFea07IWbIQINWEkxFaRHap3wriLMoZ+Fw=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (2603:10b6:a03:4a::18)
- by BYAPR05MB4181.namprd05.prod.outlook.com (2603:10b6:a02:87::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Thu, 2 Apr
- 2020 16:39:12 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::7c65:25af:faf7:5331]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::7c65:25af:faf7:5331%2]) with mapi id 15.20.2878.014; Thu, 2 Apr 2020
- 16:39:11 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [patch v2 1/2] x86,module: Detect VMX modules and disable
- Split-Lock-Detect
-Thread-Topic: [patch v2 1/2] x86,module: Detect VMX modules and disable
- Split-Lock-Detect
-Thread-Index: AQHWCQK4rBR9ssiUhkC+D5sFyAvl1ahmAyEAgAABlQCAAAO9gA==
-Date:   Thu, 2 Apr 2020 16:39:11 +0000
-Message-ID: <A86B173C-857C-4B7B-A543-BE967F9A1868@vmware.com>
-References: <20200402123258.895628824@linutronix.de>
- <20200402124205.242674296@linutronix.de>
- <20200402152340.GL20713@hirez.programming.kicks-ass.net>
- <725ca48f-8194-658e-0296-65d4368803b5@intel.com>
- <20200402162548.GH20730@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200402162548.GH20730@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [2601:647:4700:9b2:1153:aafd:5246:5949]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 65e2cfd2-6d6d-44f6-6f73-08d7d7245fa7
-x-ms-traffictypediagnostic: BYAPR05MB4181:|BYAPR05MB4181:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR05MB4181F333C8D378FB1A5DED55D0C60@BYAPR05MB4181.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0361212EA8
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB4776.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(396003)(366004)(136003)(316002)(36756003)(81166006)(6916009)(54906003)(2906002)(8676002)(6486002)(81156014)(8936002)(186003)(86362001)(2616005)(4744005)(33656002)(5660300002)(6506007)(53546011)(66446008)(66556008)(71200400001)(478600001)(66476007)(76116006)(66946007)(6512007)(64756008)(4326008)(7416002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jBOLEzFxKwxJnKbGJpCY52BBU0DOzuiP50go/xS1a0JOs/fGlnDtER6Qvc+rcdvSPvi/SWwSlXZqywO3swmKT3c0cHg4wqGC3evo04OKDRV0eqGBo3NENBsWBLkQ5IVttZPl/4usfv8pFdWnV8BPQrNnscsyLckUMLQxyjEITa0uOUkpCZqMQBhg/o5qnmZrnepK02bmc/wCyHTLDiw8i3amvWX6xhBp6cMym/6Bv1p+PTBWSOzDHEBoYAY5d2du4c7ar6B1rxSBUChDUH0tTusCjU2zdvr8TV9TQeXnLKUUwT7u4kqYZSBjHonVx97oJcpQwV91uOqDqwzkz9huFKAC1rdiflQor8cWmZLjZLfudpgQ2uaAjrpkCgMZkR+IYhCQvbfY7BFQaQ2MNsfIzpqcpLB3daDS9TJU8wR5BAQp1iRxV7QrmgYnG7DYFFB8
-x-ms-exchange-antispam-messagedata: 6v/W1Y/JoCsx0SJRnnGXs3MnP1nFWYdC32B2jZacq2CWxtpOmb+6UmRqTtiP0iatZaZx6nu7AimspNRlMMk+XVM6+QKTEFfg0S4Fwq/H5H4I75DwEz8ja/XEuh6sC11Z6EZXD3ZmOMBxL7fO1WsXIUmrDZ7ngjc8dYb9AhsrbelpNR/TGi8YOycU/ouz0FpSS8aHFhPAPvN8PsWfXzR2KQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <79B9730BAD75E64E89D6907626A0E497@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 Apr 2020 12:39:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60362 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388555AbgDBQjZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 12:39:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nqbyCH5YSO8hIQBl5BFO0PKfAkJhFfHblJDOEjQg06c=; b=ZDDJU7hB9Y4BeEoEvq0ZWkjyes
+        tWNN5+Q8Aps1yopdwx/p7ZC6pREcjUvJJLCTUIAKT04nXEe3PzZrjvSNYzCVCqQFZRWEazN+c3QTZ
+        xl2RxTS8yF5XbLZkoMHpcMAHS113mDStUTeONM4nTwPGsvJVpNteBsVGMAIFmkxS8mzQfD6te1RaO
+        mDcD9NE4oQrHAR8vMkY2jvhU+ry6apicMyChVMa2J1ugjNeOq7kjtD/iQ/I1U1sph25pL9wiqjf94
+        XlzEBxuOYYnCJgC3Sq0ClRadrVU0iOj53lr8qxteStNrPPWiLH0W8tPfLtPf+9Bn+a2qafP8SLIcm
+        9PmisVRQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jK2rk-0007bD-EF; Thu, 02 Apr 2020 16:38:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7F0B03056DE;
+        Thu,  2 Apr 2020 18:38:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 423372B0DE293; Thu,  2 Apr 2020 18:38:49 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 18:38:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
+        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
+        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
+        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
+        broonie@kernel.org, guohanjun@huawei.com, corbet@lwn.net,
+        vgupta@synopsys.com, tony.luck@intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [RFC PATCH v5 4/8] mm: tlb: Pass struct mmu_gather to
+ flush_pmd_tlb_range
+Message-ID: <20200402163849.GM20713@hirez.programming.kicks-ass.net>
+References: <20200331142927.1237-1-yezhenyu2@huawei.com>
+ <20200331142927.1237-5-yezhenyu2@huawei.com>
+ <20200331151331.GS20730@hirez.programming.kicks-ass.net>
+ <fe12101e-8efe-22ad-0258-e6aeafc798cc@huawei.com>
+ <20200401122004.GE20713@hirez.programming.kicks-ass.net>
+ <53675fb9-21c7-5309-07b8-1bbc1e775f9b@huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65e2cfd2-6d6d-44f6-6f73-08d7d7245fa7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 16:39:11.8718
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NDelQuJsGLzTxzJP8no+Jk9Stww6Podm/sfzm8O9EFSNH3VcWrhzNVTnHcZ6Ni3iJw5FdRK01WOJ7L0TOpdw7g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4181
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <53675fb9-21c7-5309-07b8-1bbc1e775f9b@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Apr 2, 2020, at 9:25 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
->=20
-> Learn to trim your replies already!
->=20
-> On Fri, Apr 03, 2020 at 12:20:08AM +0800, Xiaoyao Li wrote:
->> On 4/2/2020 11:23 PM, Peter Zijlstra wrote:
->=20
->>> +bad_module:
->>> +	pr_warn("disabled due to VMX in module: %s\n", me->name);
->>> +	sld_state =3D sld_off;
->>=20
->> shouldn't we remove the __ro_after_init of sld_state?
->=20
-> Oh, that's probably a good idea. I can't actually test this due to no
-> hardware.
+On Thu, Apr 02, 2020 at 07:24:04PM +0800, Zhenyu Ye wrote:
+> Thanks for your detailed explanation.  I notice that you used
+> `tlb_end_vma` replace `flush_tlb_range`, which will call `tlb_flush`,
+> then finally call `flush_tlb_range` in generic code.  However, some
+> architectures define tlb_end_vma|tlb_flush|flush_tlb_range themselves,
+> so this may cause problems.
+> 
+> For example, in s390, it defines:
+> 
+> #define tlb_end_vma(tlb, vma)			do { } while (0)
+> 
+> And it doesn't define it's own flush_pmd_tlb_range().  So there will be
+> a mistake if we changed flush_pmd_tlb_range() using tlb_end_vma().
+> 
+> Is this really a problem or something I understand wrong ?
 
-Just wondering, since I lack hardware as well: can the performance counter
-LOCK_CYCLES.SPLIT_LOCK_UC_LOCK_DURATION be used to detect split-locks
-similarly to SLD (although it would be after the split-lock event)?
+If tlb_end_vma() is a no-op, then tlb_finish_mmu() will do:
+tlb_flush_mmu() -> tlb_flush_mmu_tlbonly() -> tlb_flush()
 
+And s390 has tlb_flush().
+
+If tlb_end_vma() is not a no-op and it calls tlb_flush_mmu_tlbonly(),
+then tlb_finish_mmu()'s invocation of tlb_flush_mmu_tlbonly() will
+terniate early due o no flags set.
+
+IOW, it should all just work.
+
+
+FYI the whole tlb_{start,end}_vma() thing is a only needed when the
+architecture doesn't implement tlb_flush() and instead default to using
+flush_tlb_range(), at which point we need to provide a 'fake' vma.
+
+At the time I audited all architectures and they only look at VM_EXEC
+(to do $I invalidation) and VM_HUGETLB (for pmd level invalidations),
+but I forgot which architectures that were.
+
+But that is all legacy code; eventually we'll get all archs a native
+tlb_flush() and this can go away.
