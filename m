@@ -2,123 +2,85 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDA7C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97834C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF4520757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EED6206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:52:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+yPQpUy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXLJyF7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388826AbgDBOwX (ORCPT
+        id S2388851AbgDBOw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:52:23 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36084 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732598AbgDBOwX (ORCPT
+        Thu, 2 Apr 2020 10:52:58 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:47011 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388828AbgDBOw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:52:23 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g2so1429042plo.3;
-        Thu, 02 Apr 2020 07:52:22 -0700 (PDT)
+        Thu, 2 Apr 2020 10:52:58 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r7so3487138ljg.13;
+        Thu, 02 Apr 2020 07:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aip0nljuhe6yA8Q/dEuQ/IMeO1a7TzAT7si7q1EwA7A=;
-        b=n+yPQpUyCWVilw7y826JuS8dPxI41iAOVt4Se4wP66UnslxUOQZjCarGJmnkU1XaIN
-         5gUkVWVH2Dy4K616A/D4GynM4qm6t8hzGfZ3I7QWgl4JC0nBaMA0xZ5fvZ7yf+TWbaFt
-         KQssAkxv1zfqTb6I4xSLJAwXU6fpUPy7gkIMB1OqFdMUqC7g2PSyuHP6MFhbRnNz+HAO
-         IM9yJTwhn7zNo10GyDaPEJzerYvaPImnGTewXLgccrAKiPzSkse0nUgTChrVbh/2k+o5
-         4VsNzYx8WJRF86Ixq8UPaSvyZ5KW3iVo+A1xmMFXZpSLdInwXUJWzey59l+6aI4Aipt6
-         yAXA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OL/tVc1Ch0fuHCWGLDW0Ztss4EfxD7apFgMsfQsUr7k=;
+        b=XXLJyF7xqJnLsf3hdgwiZ4/6fLutg8R+bEQTaJJqAeYpNor8HeBOvDfKkexPjnzahg
+         +frziBQdgK3hB1ePSeped/hKH0YLg2DoJjK+3kGLOUiymHQfuQELDwVhuCh1wN/AEsj3
+         zIfCwHuQfaSXAhgByi1w+ZRufw9ziTNKPlAT3+62tzm6ll/lgGnwVwyhIT+LjSrt55eG
+         k13OhX+VLhwvD+/C2RBX8+uvBlD8U5j3KjStGieqDeISRqPeeo2HHKtiCTSHgQjcsGYY
+         QYGBhtRdTaLNRCAAB13kjntO7MF6gYxJw9nw+cDxhtSkEN7UckHq+wKdtdzmvNDaHSQs
+         6nPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=aip0nljuhe6yA8Q/dEuQ/IMeO1a7TzAT7si7q1EwA7A=;
-        b=NJ89vIhxVz7RZ9AFZxD61BVBlb506T390DSEZVtkPDVBjtArZbtfMtmzDkAhAsMTgf
-         B6D6e8I6KAaTJmUwbW3QHY1+HLQTIYlPNoo5+C6yBb41hoQBE3z6Qhc31DnVJvRLgrAT
-         thdXHD30ni481G4R0/VxuJ9Q/CXZrc5Rxdf3Sx0qpVYQMwZNraHcpSyOc8wpz+pdoUef
-         8LFnPuhJMy/uH+hhzP+HTaS++++AXG4pewtFg4MmES2xkNBmxxznwUrF/on1U6nstDLk
-         6xormoNZCjxgKp4h6v+6I6HeMfUw4sbb3urB7PXwHnfQzagVhnEP41xUqKfiueKzsnk7
-         Otvg==
-X-Gm-Message-State: AGi0PuYJP1fxjBFBGZ8XiUGfZ+tWEZWe6fN9zL6WjM0a8H5rgoSitX9m
-        fkBmJTHnT/sKBELUkh83ctkJak9j
-X-Google-Smtp-Source: APiQypKI4RPVQmpL1ipTFl/IU0vLvJPUhF9z5ZMXSItx2StEtRovwQJ0mK+WOsQRG10oyK/3Z4NRUA==
-X-Received: by 2002:a17:90a:324b:: with SMTP id k69mr4216506pjb.50.1585839141483;
-        Thu, 02 Apr 2020 07:52:21 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d206sm3876342pfd.160.2020.04.02.07.52.20
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OL/tVc1Ch0fuHCWGLDW0Ztss4EfxD7apFgMsfQsUr7k=;
+        b=Gx9YYgIWYon/MuuxV0rs4Kt6CmCDzn4v46Xq5DNgsr9zmITu/1RrJBSxi8vWoQ7Aqw
+         jeYPBc9QFWQSLClQtHiO1gLYNJ0VHTynuwKxFKMUi38OjLNrxWGSgiXJJlMreGujEzim
+         0gNoV9h/uv0sKSmzJM3ARGqW0h1I9KaeuwtHEpTwMXVqlnzZnqhI84s7vD4SKYL3r2Pd
+         IDqTT5KzCOpXumzzudTabm0bt4g1Iiv68Zp4Lmgpqx4ovGq85dTpAfZ4JB2vwBydVoZZ
+         VXfqvIv1mr8iwWqvN+UcbiQlx7YuaP5WioCFfTnlxYKm/MwN6qHBPzzIeD4gimceXz3z
+         vaFA==
+X-Gm-Message-State: AGi0PuYsjzWzWwjUdZaOl60OhSvj+n4gYzBTuy3lutBFOXrAAizcRn15
+        tEAcgwr4bRDxRjWtdAIMqF0LIznv
+X-Google-Smtp-Source: APiQypLjaRISzAROt9vUoQ7mTnsDUyvNC/1ydvIVFNPjf8gKXPfxEOQBVVn2YEr/ZcVFzDNztZhQng==
+X-Received: by 2002:a2e:904b:: with SMTP id n11mr2225309ljg.171.1585839173690;
+        Thu, 02 Apr 2020 07:52:53 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id c22sm3976478lfi.41.2020.04.02.07.52.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 07:52:20 -0700 (PDT)
-Subject: Re: [PATCH 3/7] power: supply: core: fix HWMON temperature labels
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Sebastian Reichel "(maintainer:POWER" SUPPLY CLASS/SUBSYSTEM
-         and "DRIVERS,blamed_fixes:1/1=100%)" 
-        <sebastian.reichel@collabora.com>,
-        "Andrey Smirnov (blamed_fixes:1/1=100%)" <andrew.smirnov@gmail.com>
-Cc:     "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" 
-        <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
- <4a8ac6700e1503a69146f3eefd7cb515d11bfc9f.1585837575.git.mirq-linux@rere.qmqm.pl>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <29d67963-c110-553a-fec4-b972953987b1@roeck-us.net>
-Date:   Thu, 2 Apr 2020 07:52:19 -0700
+        Thu, 02 Apr 2020 07:52:52 -0700 (PDT)
+Subject: Re: [PATCH v1 5/6] dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        =?UTF-8?Q?Pedro_=c3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200331214327.6496-1-digetx@gmail.com>
+ <20200331214327.6496-6-digetx@gmail.com>
+ <20200402045008.GB11124@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4c059f4a-111a-086b-c165-eb8ae798d606@gmail.com>
+Date:   Thu, 2 Apr 2020 17:52:51 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <4a8ac6700e1503a69146f3eefd7cb515d11bfc9f.1585837575.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <20200402045008.GB11124@qmqm.qmqm.pl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -127,53 +89,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/20 7:46 AM, Michał Mirosław wrote:
-> tempX_label files are swapped compared to what
-> power_supply_hwmon_temp_to_property() uses. Make them match.
-> While at it, make room for labeling other channels.
+02.04.2020 07:50, Michał Mirosław пишет:
+> On Wed, Apr 01, 2020 at 12:43:26AM +0300, Dmitry Osipenko wrote:
+>> Add a binding for the Tegra30-based ASUS Google Nexus 7 tablet device.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/arm/tegra.yaml | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
+>> index 7fd0b66c69b2..fb3bbf7a5fb4 100644
+>> --- a/Documentation/devicetree/bindings/arm/tegra.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/tegra.yaml
+>> @@ -62,6 +62,13 @@ properties:
+>>                - toradex,colibri_t30-eval-v3
+>>            - const: toradex,colibri_t30
+>>            - const: nvidia,tegra30
+>> +      - items:
+>> +          - const: asus,grouper
+>> +          - const: nvidia,tegra30
+>> +      - items:
+>> +          - const: asus,tilapia
+>> +          - const: asus,grouper
+>> +          - const: nvidia,tegra30
+>>        - items:
+>>            - enum:
+>>                - nvidia,dalmore
 > 
-> Fixes: e67d4dfc9ff1 ("power: supply: Add HWMON compatibility layer")
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/power/supply/power_supply_hwmon.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-> index 75cf861ba492..83318a21fb52 100644
-> --- a/drivers/power/supply/power_supply_hwmon.c
-> +++ b/drivers/power/supply/power_supply_hwmon.c
-> @@ -43,6 +43,11 @@ static int power_supply_hwmon_curr_to_property(u32 attr)
->  	}
->  }
->  
-> +static const char *const ps_temp_label[] = {
-> +	"temp",
-> +	"ambient temp",
-> +};
-> +
->  static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
->  {
->  	if (channel) {
-> @@ -144,7 +149,14 @@ static int power_supply_hwmon_read_string(struct device *dev,
->  					  u32 attr, int channel,
->  					  const char **str)
->  {
-> -	*str = channel ? "temp" : "temp ambient";
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		*str = ps_temp_label[channel];
-> +		break;
-> +	default:
-> +		break;
+> Is it really necessary to list every possible device using a SoC chip?
 
-That returns "no error" without setting *str, which is really asking for trouble.
+Yes, otherwise make dtbs_check will give you a warning about the unknown
+compatible.
 
-Guenter
+> Wouldn't it be enough to just list SoC value nvidia,tegraXYZ and allow
+> any other supplemental "compatibles"?
 
-> +	}
-> +
->  	return 0;
->  }
->  
-> 
-
+I don't know what was the initial intention of having boards defined in
+a way it's currently done, maybe Rob;Thierry;Stephen;Jon could clarify?
