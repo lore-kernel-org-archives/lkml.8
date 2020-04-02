@@ -2,114 +2,161 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5FBC2BA16
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08B1C2BA16
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C162206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:37:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWt0UHi3"
+	by mail.kernel.org (Postfix) with ESMTP id A4E4F2078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:38:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585856306;
+	bh=pwPtTd+4KW+g8YHAiKRR3T9hCq/0VHHvJwxJjB4MjIE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Xyt6YP2CYNOkRhVG6aKnOHjoyzaiSUmcfrZHXWb4BArdcPMR2nzF6il1SxBF7p2L+
+	 7wq77P+uHQLCtLuvsqOogJ7lNNp3y3942poQ/US04GrIhBNamIqCHxjVtcjwm4XXh/
+	 GtTMVi3uc+5OYvv8Epv5Po6NXJzG3stCIZ84WXkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388572AbgDBThK (ORCPT
+        id S2388668AbgDBTiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:37:10 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38360 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729033AbgDBThK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:37:10 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w3so1730205plz.5;
-        Thu, 02 Apr 2020 12:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FPiP8vUXNxoiyRoUj40b+YKqluMTxbumtt4fEM2yA18=;
-        b=BWt0UHi3bvXJnxNzCG7kvOknquUWEgjXJowEbfKD3nxSIwd2tqBQsM0SA6evKO8R6L
-         LhJbJP+pu1D8jyADZxR5OTS5o0pbkIZThwRS8ErNFY7dglpoPwdUOIPalrMYfWMy0z8C
-         +4oCnNNjOewqq6V2u8UqIlOHLtzZTeaQgbVillRKx4iH6shH1lf+v2A2YXlheQeESXD3
-         NgGP0p3OXkWpV/tXIul+B8Yb6NHr40ghe596KKqdKieSz3xFMqy/Gm7Z2Lbh7q0jrLpw
-         m+QuNFgip3MmEvgVuMtjX+Ufdk73N3ziXn95hrjL1ZPX8P0Xvr814+jENCK/Jc0TY+as
-         +VMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FPiP8vUXNxoiyRoUj40b+YKqluMTxbumtt4fEM2yA18=;
-        b=OGJxmDNLI4kVkT7QAD0gTRWFWFhjxQZ2kTVI66oSDg3QY4tROW4jrr9U9V2j0Q5tE3
-         kySNn2PGZA7+9vliJEgpBWayOrBnLe00OuLuxItcluPtYL4otD+KHYytF3gLP6qzWTj/
-         WfNsHxfo5CTueyFfTnnfHdzErl8Fs/2Ubc/SHDawb1ZjSQwaIc6qvyJSb0wmnqnDaHjE
-         wqheQaKlkanQ97DOUu7hC6s6bg98i8qKUM0dD7GK/B52wrh3ts5UHcsqIpjtZflvQKDk
-         /kHQUkMz0dzwerY9icPsq/uS1ZdCA2/oF+HOZqqWl7bWjO/n2GHnjOTLMyPY+G2GWpaM
-         qcAQ==
-X-Gm-Message-State: AGi0PuZgF8pHm07OKACUk0dlJisqR+IQvcyZ/0OyJX/rsOT9J8Deb4mL
-        VRUZan59rGUVapaelyJQh20=
-X-Google-Smtp-Source: APiQypLSXeGBO7ws3EFv1RYRs4rW2w1BdaNrafCUO61aDthOMuACaK84phNAhgrL87B54gUHSGjLqQ==
-X-Received: by 2002:a17:90a:e02:: with SMTP id v2mr5664818pje.131.1585856228509;
-        Thu, 02 Apr 2020 12:37:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id 6sm4251824pfx.69.2020.04.02.12.37.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 12:37:07 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 12:37:05 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajatxjain@gmail.com
-Subject: Re: [PATCH v2] Input: input-event-codes.h: Update the license
-Message-ID: <20200402193705.GN75430@dtor-ws>
-References: <20200329172513.133548-1-rajatja@google.com>
+        Thu, 2 Apr 2020 15:38:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728452AbgDBTiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:38:25 -0400
+Received: from localhost (mobile-166-170-223-166.mycingular.net [166.170.223.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95D6C206F8;
+        Thu,  2 Apr 2020 19:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585856304;
+        bh=pwPtTd+4KW+g8YHAiKRR3T9hCq/0VHHvJwxJjB4MjIE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mT0VCqJ6EcoVw211LaBPy1qvgmqjcZAnwvjzKdB0RRFAWx8dGPeHA7yHsFuOIgZQr
+         ctKevWwLWABji7HsKVUgdUEjz333xjlZUyCoO1I+KGYnF61tlS6M2gIGm4W2ncraLr
+         kaNX6JrIKH64KAeQ2hOH96KrZhsvKG7EhgNJiylA=
+Date:   Thu, 2 Apr 2020 14:38:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
+ when present
+Message-ID: <20200402193820.GA32107@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200329172513.133548-1-rajatja@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <47c543e2144d5247743548b00d1931e9fc217f43.camel@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 10:25:13AM -0700, Rajat Jain wrote:
-> Replace the
-> /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> with
-> /* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-> 
-> to help coreboot community consume this file without relaxing their
-> licensing requirements.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+[+cc Rob for DT platform device dependency question]
 
-Applied, thank you.
+On Thu, Apr 02, 2020 at 04:27:23PM +0200, Nicolas Saenz Julienne wrote:
+> On Wed, 2020-04-01 at 15:41 -0500, Bjorn Helgaas wrote:
+> > On Tue, Mar 24, 2020 at 07:28:11PM +0100, Nicolas Saenz Julienne wrote:
+> > > xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
+> > > RPi4's VideoCore firmware interface to be up and running. It's possible
+> > > for both initializations to race, so make sure it's available prior to
+> > > starting.
+> > > 
+> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-brcmstb.c | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/pcie-brcmstb.c
+> > > b/drivers/pci/controller/pcie-brcmstb.c
+> > > index 3a10e678c7f4..a3d3070a5832 100644
+> > > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > > @@ -28,6 +28,8 @@
+> > >  #include <linux/string.h>
+> > >  #include <linux/types.h>
+> > >  
+> > > +#include <soc/bcm2835/raspberrypi-firmware.h>
+> > > +
+> > >  #include "../pci.h"
+> > >  
+> > >  /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
+> > > @@ -917,11 +919,24 @@ static int brcm_pcie_probe(struct platform_device
+> > > *pdev)
+> > >  {
+> > >  	struct device_node *np = pdev->dev.of_node, *msi_np;
+> > >  	struct pci_host_bridge *bridge;
+> > > +	struct device_node *fw_np;
+> > >  	struct brcm_pcie *pcie;
+> > >  	struct pci_bus *child;
+> > >  	struct resource *res;
+> > >  	int ret;
+> > >  
+> > > +	/*
+> > > +	 * We have to wait for the Raspberry Pi's firmware interface to be up
+> > > +	 * as some PCI fixups depend on it.
+> > 
+> > It'd be nice to know the nature of this dependency between the
+> > firmware interface and the fixups.  This may be useful for future
+> > maintenance.  E.g., if PCI config access doesn't work until the
+> > firmware interface is up, that would affect almost everything.  But
+> > you say "some PCI fixups", so I suppose the actual dependency is
+> > probably something else.
+> 
+> Sorry it wasn't clear enough, I'll redo this comment. Also note that
+> the PCIe bus and the XHCI chip are hardwired, so that's the only
+> device that'll ever be available on the bus.
+> 
+> VIA805's XHCI firmware has to be loaded trough RPi's firmware
+> mailbox in between the PCIe bus probe and the subsequent USB probe.
+> Note that a PCI reset clears the firmware. The only mechanism
+> available in between the two operations are PCI Fixups. These are
+> limited in their own way, as I can't return -EPROBE_DEFER if the
+> firmware interface isn't available yet. Hence the need for an
+> explicit dependency between pcie-brcmstb and raspberrypi's firmware
+> mailbox device.
+>
+> Your concern here showcases this series' limitations. From a high
+> level perspective it's not clear to me who should be responsible for
+> downloading the firmware. 
 
-> ---
-> V2: Update the commit log
-> 
->  include/uapi/linux/input-event-codes.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-> index 6923dc7e02982..b6a835d378263 100644
-> --- a/include/uapi/linux/input-event-codes.h
-> +++ b/include/uapi/linux/input-event-codes.h
-> @@ -1,4 +1,4 @@
-> -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
->  /*
->   * Input event codes
->   *
-> -- 
-> 2.26.0.rc2.310.g2932bb562d-goog
-> 
+I think it's fairly common for drivers to download firmware to their
+devices.  I guess there's not really any need to download the firmware
+until a driver wants to use the device, right?
 
--- 
-Dmitry
+> And I get the feeling I'm abusing PCI fixups. I haven't found any
+> smart way to deal with this three way dependency of
+> platform/non-platform devices.
+
+So IIUC, the three-way dependency involves:
+
+  1) brcm_pcie_probe(), which initialize the PCI host controller
+  platform device, enumerates PCI devices, and makes them available
+  for driver binding,
+
+  2) the firmware mailbox initialization (maybe
+  rpi_firmware_probe()?),
+
+  3) quirk_usb_early_handoff(), which downloads firmware to the VL805
+  PCI USB adapter via rpi_firmware_init_vl805(), which uses the
+  firmware mailbox?
+
+Is there some way to express a dependency between
+"raspberrypi,bcm2835-firmware" (the platform device claimed by
+rpi_firmware_probe() and "brcm,bcm2711-pcie"?  If we could ensure that
+rpi_firmware_probe() runs before brcm_pcie_probe(), would that solve
+part of this?
+
+Bjorn
