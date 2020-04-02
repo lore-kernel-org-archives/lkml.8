@@ -2,133 +2,151 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E3DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D369C2BA13
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE23208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC5F208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbgDBIsM (ORCPT
+        id S2387850AbgDBIsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:48:12 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:39989 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbgDBIsL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:48:11 -0400
-Received: from methusalix.internal.home.lespocky.de ([92.117.37.184]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1M1qfu-1jM8Ra0HRw-002CQL; Thu, 02 Apr 2020 10:48:06 +0200
-Received: from falbala.internal.home.lespocky.de ([192.168.243.94])
-        by methusalix.internal.home.lespocky.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <post@lespocky.de>)
-        id 1jJvW7-0002JG-6M; Thu, 02 Apr 2020 10:48:04 +0200
-Date:   Thu, 2 Apr 2020 10:48:02 +0200
-From:   Alexander Dahl <post@lespocky.de>
-To:     linux-doc@vger.kernel.org
-Cc:     Florian Wolters <florian@florian-wolters.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Karsten Keil <isdn@linux-pingi.de>
-Subject: doc: Leftovers from CAPI remove?
-Message-ID: <20200402084801.soysci5abrazctog@falbala.internal.home.lespocky.de>
-Mail-Followup-To: linux-doc@vger.kernel.org,
-        Florian Wolters <florian@florian-wolters.de>,
-        Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Karsten Keil <isdn@linux-pingi.de>
+        Thu, 2 Apr 2020 04:48:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15471 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728612AbgDBIsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:48:21 -0400
+IronPort-SDR: KzDFqW+hMD+ELCv5v+i5GvzUkoc0zVstQkFOwQc0x5N86Cvdlyru8RALJ06Cfg0wGbhERz0c8u
+ lnJu4CsS1rag==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:48:20 -0700
+IronPort-SDR: QdNdv/m5J/5/NNBNzfYsqKSJpGhQAFNvz/epet381SWYKUvEgGgeAl2NGaD+reIx0jxPYjB5mZ
+ jyg2Idudr6hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
+   d="scan'208";a="249760048"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 02 Apr 2020 01:48:20 -0700
+Received: from [10.249.226.252] (abudanko-mobl.ccr.corp.intel.com [10.249.226.252])
+        by linux.intel.com (Postfix) with ESMTP id 39460580544;
+        Thu,  2 Apr 2020 01:48:16 -0700 (PDT)
+Subject: [PATCH v8 05/12] drm/i915/perf: open access for CAP_PERFMON
+ privileged process
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <e3e3292f-f765-ea98-e59c-fbe2db93fd34@linux.intel.com>
+Date:   Thu, 2 Apr 2020 11:48:15 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tvymzrgbesooq62h"
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Scan-Signature: 2e89b8130284c79aa2484230574bb425
-X-Provags-ID: V03:K1:WoG4PWMIhmmyPPgJD5uwY33yQ9PtnaOtaZPSlEfdVcmnpmqeluR
- PPGb9KGTHZfe0w0zIGMMRFNqe6NImR7eez2JoPhmPO55ZPinAGXqOkT2ZHrgn1aoKD4U4wl
- nvnTSeIrSUbjhFJ2UuGBccjwYbUPhikzs52b6+aNeGRkCifqyzRY+804Z2VfVqKiSUIpKeK
- 6I2jiH/25i4yy2qSPOnjA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V7YSUOLdg88=:cv5XUDbbL9T9LS2nNpo6b9
- 4tXadBGkI96fYpa/E8KBVL6S2OuIEF9OG7TTZF5WUlaTznlOJsxOxxZJGSABzTS5alXq+LTdE
- Y5YeJnQhrJ8dXjrvk9FPrUsd/+c3bPxDDdv21ibbyELleqtPfKhfBzf2eoFfuAyIQBe+FQL0Q
- klxl1CY/49nYe4yrmjkG/FRkDrdQSWKMnevd1yh0jIW8tDj3pZPxOyMOL3XmYZzy44qc3lBZV
- RwDb8wEBuZt6/KHg3Gixbci0fNcMzGanl26YKd6QnEUJTwcpytqSwDJ8Mt9p6u7vLE4zhYXhz
- QlrrA2OEqLB1LVCVvhvZuZUUCnNftDsC9Yg//M6gchvFM7FEirAbrnyK1/WsanThvchm0Xztg
- i54+KiK0b7U4plIJj2NemEYx2XAPChAjhMIFEDcOWgLJStlF3xyltakcvzdhA/EKaWZF4N0Lx
- FTnphaorlRzpqbwd5UPxEXJuryWvNJU7chBMD1bSz9wGJGqpMy+Xx5WYNTCUff8swlqLJSOfX
- UHGSUGNMWtH1DvRCKebczkscOrk6HrpCSmK1t1Vtc87q6stBb7ALeOEF8/WDrTTddYLLZqdmQ
- UGWso3tmtwcTIPd/2y3caYbHAe872rkdt9gpK/cXvDykxT0yseiZbuDPadsq1Zv5jzkMzeENA
- DkJp7ZGt3yWufUqQWafVRQaq0QYtclqoBFaaxySTcC1gJN4L6quaN+c7ovrx9igJMXW2E74DU
- Zc50L2E3sqtwvGJ3qSYeKpj+3iND7ym3qM5W0ZuovDfvg16gKs9+nAVUfut7I5g7MEQpJCDwZ
- aKdmQkzP0RBwbaTO2h4Q1HgUtVTLdlMUD5i/Ooe5+FfxbOI0VRP12VZa18bXQ6kegLw3X4x
+In-Reply-To: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---tvymzrgbesooq62h
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Open access to i915_perf monitoring for CAP_PERFMON privileged process.
+Providing the access under CAP_PERFMON capability singly, without the
+rest of CAP_SYS_ADMIN credentials, excludes chances to misuse the
+credentials and makes operation more secure.
 
-Hei hei,
+CAP_PERFMON implements the principal of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
+principle of least privilege: A security design principle that states that
+a process or program be granted only those privileges (e.g., capabilities)
+necessary to accomplish its legitimate function, and only for the time
+that such privileges are actually required)
 
-when accidentally building an old Fritz PCI driver=C2=B9 against v5.6.1 we
-hit this build error (which this mail is not about):
+For backward compatibility reasons access to i915_events subsystem remains
+open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
+secure i915_events monitoring is discouraged with respect to CAP_PERFMON
+capability.
 
-/home/florian/.fbr/fbr-4.0-trunk-x86_64/buildroot/output/build/fcpci-2.6-43=
-=2Ex86_64-5.6.1/fritz/src/main.c:371:3:
-Fehler: Implizite Deklaration der Funktion =C2=BBregister_capi_driver=C2=AB=
-; meinten Sie =C2=BBregister_chrdev=C2=AB?  [-Werror=3Dimplicit-function-de=
-claration]
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Acked-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+---
+ drivers/gpu/drm/i915/i915_perf.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-A quick grep in master revealed there are still hints to the function
-'register_capi_driver()' in file Documentation/isdn/interface_capi.rst
+diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+index 3b6b913bd27a..f59265cebe1e 100644
+--- a/drivers/gpu/drm/i915/i915_perf.c
++++ b/drivers/gpu/drm/i915/i915_perf.c
+@@ -3402,10 +3402,10 @@ i915_perf_open_ioctl_locked(struct i915_perf *perf,
+ 	/* Similar to perf's kernel.perf_paranoid_cpu sysctl option
+ 	 * we check a dev.i915.perf_stream_paranoid sysctl option
+ 	 * to determine if it's ok to access system wide OA counters
+-	 * without CAP_SYS_ADMIN privileges.
++	 * without CAP_PERFMON or CAP_SYS_ADMIN privileges.
+ 	 */
+ 	if (privileged_op &&
+-	    i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
++	    i915_perf_stream_paranoid && !perfmon_capable()) {
+ 		DRM_DEBUG("Insufficient privileges to open i915 perf stream\n");
+ 		ret = -EACCES;
+ 		goto err_ctx;
+@@ -3598,9 +3598,8 @@ static int read_properties_unlocked(struct i915_perf *perf,
+ 			} else
+ 				oa_freq_hz = 0;
+ 
+-			if (oa_freq_hz > i915_oa_max_sample_rate &&
+-			    !capable(CAP_SYS_ADMIN)) {
+-				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without root privileges\n",
++			if (oa_freq_hz > i915_oa_max_sample_rate && !perfmon_capable()) {
++				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without CAP_PERFMON or CAP_SYS_ADMIN privileges\n",
+ 					  i915_oa_max_sample_rate);
+ 				return -EACCES;
+ 			}
+@@ -4021,7 +4020,7 @@ int i915_perf_add_config_ioctl(struct drm_device *dev, void *data,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
++	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+ 		DRM_DEBUG("Insufficient privileges to add i915 OA config\n");
+ 		return -EACCES;
+ 	}
+@@ -4168,7 +4167,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
+ 		return -ENOTSUPP;
+ 	}
+ 
+-	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
++	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+ 		DRM_DEBUG("Insufficient privileges to remove i915 OA config\n");
+ 		return -EACCES;
+ 	}
+-- 
+2.24.1
 
-I suppose after removing capi parts with f59aba2f7579 ("isdn: capi:
-dead code removal") and merging with 7ba31c3f2f1e ("Merge tag
-'staging-5.6-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging") these
-are leftovers in the documentation, which should be removed, right?
 
-Greets
-Alex
-
-=C2=B9we still have basic ISDN support in fli4l [1], although no one is
-motivated to maintain it, there are still users, mainly with local
-PBX installations =E2=80=A6
-
-[1] http://www.fli4l.de/
-
---=20
-/"\ ASCII RIBBON | =C2=BBWith the first link, the chain is forged. The first
-\ / CAMPAIGN     | speech censured, the first thought forbidden, the
- X  AGAINST      | first freedom denied, chains us all irrevocably.=C2=AB
-/ \ HTML MAIL    | (Jean-Luc Picard, quoting Judge Aaron Satie)
-
---tvymzrgbesooq62h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEwo7muQJjlc+Prwj6NK3NAHIhXMYFAl6Fpr0ACgkQNK3NAHIh
-XMYTqw/7BhBxs9BmkUSB9GoV3D8XvYV4hqbHz5ntqTgPMJw7ZFoqbtygxpeWAMTJ
-mxNUmHBtOCPOM/yF00zmueYunhuHLP/OCMol9KaLY+CK8AZtit102ja3kvjSVU2f
-5DK1Lt8CR5VQIUp78+/FFIgK3DBLDOWhQHhNWTGcO+MDcqimMCfXdUMQwZmxKDIg
-YUo3qaK19f5nnehOj5fNRnBWlYNTtnsw4lNytq5poRCYDXSojmT7bNbnETllHU4Q
-/r58jjWPynRv6vZg36H6mnmLAC+er3Eo+FgqZnveu6QYitsUdvDCT5Q2ieXp1tJb
-yCIQRRezDA3Uh/5HRghjwU/H/5zhX/28FQsmeF/lRd06L6o+eBhJps32vcXV9Oux
-25SUMFI6RMD2AtWB1VnZqEgIqWIsepDFOlxtDVmLhusm00QSV96l1l9jtIH47t4d
-fJ7hOVGVqJfYweYg2axz+r4/MHHgSvmymrDdCf4cQZTw4AsBPasE49mWfmLNPnpU
-o7Ej5X8cyVoRrfjxgRFppAzK7n9ug7lLd3eAhJ4ziYKHZzG2EiK6nsebYUT+A5F5
-RnueuvXVEAc16RKUts4yYM/7gMkpWchd0hGdG5pQ7S8++pgyaPJcqW0tXIXWvT5v
-rdgBTSqIk+vw68LX1f2xG/KUXsCKi8urabu88lr/PyukNhbIucQ=
-=hRnY
------END PGP SIGNATURE-----
-
---tvymzrgbesooq62h--
