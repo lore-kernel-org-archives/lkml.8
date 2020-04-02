@@ -2,66 +2,125 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D53C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C43C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE012077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679312078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:40:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585849219;
+	bh=zDhAbgFiBp5xgrOISRQg46E+lTmZmLpU/ycGZY6jzxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eFQazyi4CBaTMkh7qrhA15YhZelJEiavz/Mba1teqiXSJV9oyvy6xvfkDS+8thrn5
+	 tui5HgSedREyMN3jgziSA/QBrT1Gps0uBy9uB1Bq8QithvPjd5gXWVGbZ5vP6sZgWA
+	 XQsgtxgx0DK+nsHLeHXKvBj7pwAFepta5+iNvVpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390046AbgDBRjr (ORCPT
+        id S2390056AbgDBRkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:39:47 -0400
-Received: from mail.monom.org ([188.138.9.77]:50030 "EHLO mail.monom.org"
+        Thu, 2 Apr 2020 13:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388677AbgDBRjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:39:47 -0400
-Received: from mail.monom.org (localhost [127.0.0.1])
-        by filter.mynetwork.local (Postfix) with ESMTP id 41E13500590;
-        Thu,  2 Apr 2020 19:39:45 +0200 (CEST)
-Received: from localhost (b9168fb3.cgn.dg-w.de [185.22.143.179])
-        by mail.monom.org (Postfix) with ESMTPSA id BBB0B50050F;
-        Thu,  2 Apr 2020 19:39:44 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 19:39:44 +0200
-From:   Daniel Wagner <wagi@monom.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        John Kacur <jkacur@redhat.com>,
-        Julia Cartwright <julia@ni.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: Re: [PATCH RT 2/3] irq_work: Fix checking of IRQ_WORK_LAZY flag set
- on non PREEMPT_RT
-Message-ID: <20200402173944.jmztz4vjsepjreye@beryllium.lan>
-References: <20200331163453.805082089@goodmis.org>
- <20200331163513.674653275@goodmis.org>
- <20200402172248.GA12483@duo.ucw.cz>
+        id S2388677AbgDBRkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 13:40:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2019E2077D;
+        Thu,  2 Apr 2020 17:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585849217;
+        bh=zDhAbgFiBp5xgrOISRQg46E+lTmZmLpU/ycGZY6jzxE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FYDqKJINHdC/NYXhdznGWU7wTiqkm0Zt3X+fEenD2pDhhwR1QGFXdvtylrcpJUXr6
+         p9kS6iFq/Cg9YSv0vfNnc12fDk5kbZVFL2C0PCz4G9nfzhEvmViS56tNTTiWgLT2jf
+         7d+VouGnELeJCDLGDx1P2duksAMWXYGoU43aim9M=
+Date:   Thu, 2 Apr 2020 19:40:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dirk Mueller <dmueller@suse.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4.9 061/102] scripts/dtc: Remove redundant YYLOC global
+ declaration
+Message-ID: <20200402174015.GA3221004@kroah.com>
+References: <20200401161530.451355388@linuxfoundation.org>
+ <20200401161543.380204082@linuxfoundation.org>
+ <20200401212553.GA43588@ubuntu-m2-xlarge-x86>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402172248.GA12483@duo.ucw.cz>
+In-Reply-To: <20200401212553.GA43588@ubuntu-m2-xlarge-x86>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-
-On Thu, Apr 02, 2020 at 07:22:49PM +0200, Pavel Machek wrote:
-> I'm currently playing with 4.4.X branch, but I'll eventually test it.
+On Wed, Apr 01, 2020 at 02:25:53PM -0700, Nathan Chancellor wrote:
+> On Wed, Apr 01, 2020 at 06:18:04PM +0200, Greg Kroah-Hartman wrote:
+> > From: Dirk Mueller <dmueller@suse.com>
+> > 
+> > commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
+> > 
+> > gcc 10 will default to -fno-common, which causes this error at link
+> > time:
+> > 
+> >   (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
+> > 
+> > This is because both dtc-lexer as well as dtc-parser define the same
+> > global symbol yyloc. Before with -fcommon those were merged into one
+> > defintion. The proper solution would be to to mark this as "extern",
+> > however that leads to:
+> > 
+> >   dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
+> >    26 | extern YYLTYPE yylloc;
+> >       |                ^~~~~~
+> > In file included from dtc-lexer.l:24:
+> > dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
+> >   127 | extern YYLTYPE yylloc;
+> >       |                ^~~~~~
+> > cc1: all warnings being treated as errors
+> > 
+> > which means the declaration is completely redundant and can just be
+> > dropped.
+> > 
+> > Signed-off-by: Dirk Mueller <dmueller@suse.com>
+> > Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+> > [robh: cherry-pick from upstream]
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > 
+> > ---
+> >  scripts/dtc/dtc-lexer.l |    1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > --- a/scripts/dtc/dtc-lexer.l
+> > +++ b/scripts/dtc/dtc-lexer.l
+> > @@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
+> >  #include "srcpos.h"
+> >  #include "dtc-parser.tab.h"
+> >  
+> > -YYLTYPE yylloc;
+> >  extern bool treesource_error;
+> >  
+> >  /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+> > 
+> > 
 > 
-> Is it possible that 4.4.X branch needs similar patch? My code review
-> suggests so...
+> Hi Greg,
+> 
+> Please see my email on the 5.5 version of this patch:
+> 
+> https://lore.kernel.org/stable/20200331192515.GA39354@ubuntu-m2-xlarge-x86/
+> 
+> As it stands how, this version of the patch does nothing.
 
-I was waiting for Steven to post the final patch. I'll pick it up for
-the next v4.4-rt release.
+I have picked those up now, sorry for the delay.
 
-Thanks,
-Daniel
+greg k-h
