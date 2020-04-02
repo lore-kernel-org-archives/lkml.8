@@ -2,414 +2,150 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78250C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33812C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 445F72078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05F72077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rg65ilh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389072AbgDBWfd (ORCPT
+        id S2389065AbgDBWhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 18:35:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55032 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730837AbgDBWfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 18:35:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 28D36AC11;
-        Thu,  2 Apr 2020 22:35:30 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Date:   Fri, 03 Apr 2020 09:35:21 +1100
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2 - v2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK instead.
-In-Reply-To: <20200402151009.GA14130@infradead.org>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87sghmyd8v.fsf@notabene.neil.brown.name> <87pncqyd7k.fsf@notabene.neil.brown.name> <20200402151009.GA14130@infradead.org>
-Message-ID: <87h7y1y0ra.fsf@notabene.neil.brown.name>
+        Thu, 2 Apr 2020 18:37:25 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59854 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgDBWhZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 18:37:25 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032MXwxV073343;
+        Thu, 2 Apr 2020 22:37:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=/6uoxnnJoOeGgVzkYhxiBt1cqT19bh9GMo8CCS7Cf88=;
+ b=Rg65ilh6HaH+PTMWhVr2RMU7pbQK8WXAbA7A5u4K/XbzKnrfRYD9wJEU10ghh5Y5neza
+ S840DHxwbCY0gIpxb4oLB+TyTBRT3b16gUxtJMTliZ1bYZrzqy66W+hdKXcrco1MPwI7
+ cZc+HiYuECVBulcSjZg/dPEdyIn6eigXSIpQw7tPGdpjQKP5dQHOY2qSq0Xj4EFz3sKA
+ fImlRwt1Sh2NV9q5C5bq9Z/PSRq6ADM4QZYgHp3nO317JYLUMoa/hGfRB9C4CCpv5pBu
+ eIrdZrJi5gMskcVOBW/qTlhPiI4Yt2S1ubHRUIbtI+7mGLIWQSr20xqcszRPuwWF7pXJ hw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 303yungsjx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 22:37:01 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032MX9GN050436;
+        Thu, 2 Apr 2020 22:37:01 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 304sjqsam6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 22:37:01 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032MawlW015810;
+        Thu, 2 Apr 2020 22:36:59 GMT
+Received: from vbusired-dt (/10.154.166.66)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 15:36:58 -0700
+Date:   Thu, 2 Apr 2020 17:36:53 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rientjes@google.com,
+        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
+Subject: Re: [PATCH v6 07/14] KVM: x86: Add AMD SEV specific Hypercall3
+Message-ID: <20200402223653.GA659595@vbusired-dt>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <6dda7016ab64490ac3d8e74f461f9f3d0ee3fc88.1585548051.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6dda7016ab64490ac3d8e74f461f9f3d0ee3fc88.1585548051.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 suspectscore=1 mlxlogscore=999 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020166
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=1 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 2020-03-30 06:21:52 +0000, Ashish Kalra wrote:
+> From: Brijesh Singh <Brijesh.Singh@amd.com>
+> 
+> KVM hypercall framework relies on alternative framework to patch the
+> VMCALL -> VMMCALL on AMD platform. If a hypercall is made before
+> apply_alternative() is called then it defaults to VMCALL. The approach
+> works fine on non SEV guest. A VMCALL would causes #UD, and hypervisor
+                                              ^^^^^^
+					      cause
+> will be able to decode the instruction and do the right things. But
+> when SEV is active, guest memory is encrypted with guest key and
+> hypervisor will not be able to decode the instruction bytes.
+> 
+> Add SEV specific hypercall3, it unconditionally uses VMMCALL. The hypercall
+                               ^^
+			       which
+> will be used by the SEV guest to notify encrypted pages to the hypervisor.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
+Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
 
-After an NFS page has been written it is considered "unstable" until a
-COMMIT request succeeds.  If the COMMIT fails, the page will be
-re-written.
-
-These "unstable" pages are currently accounted as "reclaimable", either
-in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
-'reclaimable' count.  This might have made sense when sending the COMMIT
-required a separate action by the VFS/MM (e.g.  releasepage() used to
-send a COMMIT).  However now that all writes generated by ->writepages()
-will automatically be followed by a COMMIT (since commit 919e3bd9a875
-("NFS: Ensure we commit after writeback is complete")) it makes more
-sense to treat them as writeback pages.
-
-So this patch removes NR_UNSTABLE_NFS and accounts unstable pages in
-NR_WRITEBACK and WB_WRITEBACK.
-
-A particular effect of this change is that when
-wb_check_background_flush() calls wb_over_bg_threshold(), the latter
-will report 'true' a lot less often as the 'unstable' pages are no
-longer considered 'dirty' (and there is nothing that writeback can do
-about them anyway).
-
-Currently wb_check_background_flush() will trigger writeback to NFS even
-when there are relatively few dirty pages (if there are lots of unstable
-pages), this can result in small writes going to the server (10s of
-Kilobytes rather than a Megabyte) which hurts throughput.
-With this patch, there are fewer writes which are each larger on average.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
-
-NR_UNSTABLE_NFS completely removed as recommended by Christoph, removal
-of an unnecessary comment, and improvements to commit message.
-Thanks.
-
- Documentation/filesystems/proc.txt |  3 ---
- drivers/base/node.c                |  2 --
- fs/fs-writeback.c                  |  1 -
- fs/nfs/internal.h                  | 10 +++++++---
- fs/nfs/write.c                     |  4 ++--
- fs/proc/meminfo.c                  |  2 --
- include/linux/mmzone.h             |  1 -
- include/trace/events/writeback.h   |  5 +----
- mm/memcontrol.c                    |  1 -
- mm/page-writeback.c                | 17 ++++-------------
- mm/page_alloc.c                    |  5 +----
- mm/vmstat.c                        |  1 -
- 12 files changed, 15 insertions(+), 37 deletions(-)
-
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems=
-/proc.txt
-index 99ca040e3f90..690c712f5f79 100644
-=2D-- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -904,7 +904,6 @@ Slab:           284364 kB
- SReclaimable:   159856 kB
- SUnreclaim:     124508 kB
- PageTables:      24448 kB
-=2DNFS_Unstable:        0 kB
- Bounce:              0 kB
- WritebackTmp:        0 kB
- CommitLimit:   7669796 kB
-@@ -975,8 +974,6 @@ SReclaimable: Part of Slab, that might be reclaimed, su=
-ch as caches
-   SUnreclaim: Part of Slab, that cannot be reclaimed on memory pressure
-   PageTables: amount of memory dedicated to the lowest level of page
-               tables.
-=2DNFS_Unstable: NFS pages sent to the server, but not yet committed to sta=
-ble
-=2D	      storage
-       Bounce: Memory used for block device "bounce buffers"
- WritebackTmp: Memory used by FUSE for temporary writeback buffers
-  CommitLimit: Based on the overcommit ratio ('vm.overcommit_ratio'),
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 98a31bafc8a2..7059021ce2af 100644
-=2D-- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -416,7 +416,6 @@ static ssize_t node_read_meminfo(struct device *dev,
- 		       "Node %d Shmem:          %8lu kB\n"
- 		       "Node %d KernelStack:    %8lu kB\n"
- 		       "Node %d PageTables:     %8lu kB\n"
-=2D		       "Node %d NFS_Unstable:   %8lu kB\n"
- 		       "Node %d Bounce:         %8lu kB\n"
- 		       "Node %d WritebackTmp:   %8lu kB\n"
- 		       "Node %d KReclaimable:   %8lu kB\n"
-@@ -439,7 +438,6 @@ static ssize_t node_read_meminfo(struct device *dev,
- 		       nid, K(i.sharedram),
- 		       nid, sum_zone_node_page_state(nid, NR_KERNEL_STACK_KB),
- 		       nid, K(sum_zone_node_page_state(nid, NR_PAGETABLE)),
-=2D		       nid, K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
- 		       nid, K(sum_zone_node_page_state(nid, NR_BOUNCE)),
- 		       nid, K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
- 		       nid, K(sreclaimable +
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 76ac9c7d32ec..c5bdf46e3b4b 100644
-=2D-- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -1070,7 +1070,6 @@ static void bdi_split_work_to_wbs(struct backing_dev_=
-info *bdi,
- static unsigned long get_nr_dirty_pages(void)
- {
- 	return global_node_page_state(NR_FILE_DIRTY) +
-=2D		global_node_page_state(NR_UNSTABLE_NFS) +
- 		get_nr_dirty_inodes();
- }
-=20
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index f80c47d5ff27..749da02b547a 100644
-=2D-- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -652,7 +652,8 @@ void nfs_super_set_maxbytes(struct super_block *sb, __u=
-64 maxfilesize)
- }
-=20
- /*
-=2D * Record the page as unstable and mark its inode as dirty.
-+ * Record the page as unstable (an extra writeback period) and mark its
-+ * inode as dirty.
-  */
- static inline
- void nfs_mark_page_unstable(struct page *page, struct nfs_commit_info *cin=
-fo)
-@@ -660,8 +661,11 @@ void nfs_mark_page_unstable(struct page *page, struct =
-nfs_commit_info *cinfo)
- 	if (!cinfo->dreq) {
- 		struct inode *inode =3D page_file_mapping(page)->host;
-=20
-=2D		inc_node_page_state(page, NR_UNSTABLE_NFS);
-=2D		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_RECLAIMABLE);
-+		/* This page is really still in write-back - just that the
-+		 * writeback is happening on the server now.
-+		 */
-+		inc_node_page_state(page, NR_WRITEBACK);
-+		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
- 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
- 	}
- }
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index c478b772cc49..2e15a56620b3 100644
-=2D-- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -958,9 +958,9 @@ nfs_mark_request_commit(struct nfs_page *req, struct pn=
-fs_layout_segment *lseg,
- static void
- nfs_clear_page_commit(struct page *page)
- {
-=2D	dec_node_page_state(page, NR_UNSTABLE_NFS);
-+	dec_node_page_state(page, NR_WRITEBACK);
- 	dec_wb_stat(&inode_to_bdi(page_file_mapping(page)->host)->wb,
-=2D		    WB_RECLAIMABLE);
-+		    WB_WRITEBACK);
- }
-=20
- /* Called holding the request lock on @req */
-diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-index 8c1f1bb1a5ce..1378a132ff7e 100644
-=2D-- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -106,8 +106,6 @@ static int meminfo_proc_show(struct seq_file *m, void *=
-v)
- 	show_val_kb(m, "PageTables:     ",
- 		    global_zone_page_state(NR_PAGETABLE));
-=20
-=2D	show_val_kb(m, "NFS_Unstable:   ",
-=2D		    global_node_page_state(NR_UNSTABLE_NFS));
- 	show_val_kb(m, "Bounce:         ",
- 		    global_zone_page_state(NR_BOUNCE));
- 	show_val_kb(m, "WritebackTmp:   ",
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 462f6873905a..a18611197bea 100644
-=2D-- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -237,7 +237,6 @@ enum node_stat_item {
- 	NR_FILE_THPS,
- 	NR_FILE_PMDMAPPED,
- 	NR_ANON_THPS,
-=2D	NR_UNSTABLE_NFS,	/* NFS unstable pages */
- 	NR_VMSCAN_WRITE,
- 	NR_VMSCAN_IMMEDIATE,	/* Prioritise for reclaim when writeback ends */
- 	NR_DIRTIED,		/* page dirtyings since bootup */
-diff --git a/include/trace/events/writeback.h b/include/trace/events/writeb=
-ack.h
-index d94def25e4dc..45b5fbdb1f62 100644
-=2D-- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -542,7 +542,6 @@ TRACE_EVENT(global_dirty_state,
- 	TP_STRUCT__entry(
- 		__field(unsigned long,	nr_dirty)
- 		__field(unsigned long,	nr_writeback)
-=2D		__field(unsigned long,	nr_unstable)
- 		__field(unsigned long,	background_thresh)
- 		__field(unsigned long,	dirty_thresh)
- 		__field(unsigned long,	dirty_limit)
-@@ -553,7 +552,6 @@ TRACE_EVENT(global_dirty_state,
- 	TP_fast_assign(
- 		__entry->nr_dirty	=3D global_node_page_state(NR_FILE_DIRTY);
- 		__entry->nr_writeback	=3D global_node_page_state(NR_WRITEBACK);
-=2D		__entry->nr_unstable	=3D global_node_page_state(NR_UNSTABLE_NFS);
- 		__entry->nr_dirtied	=3D global_node_page_state(NR_DIRTIED);
- 		__entry->nr_written	=3D global_node_page_state(NR_WRITTEN);
- 		__entry->background_thresh =3D background_thresh;
-@@ -561,12 +559,11 @@ TRACE_EVENT(global_dirty_state,
- 		__entry->dirty_limit	=3D global_wb_domain.dirty_limit;
- 	),
-=20
-=2D	TP_printk("dirty=3D%lu writeback=3D%lu unstable=3D%lu "
-+	TP_printk("dirty=3D%lu writeback=3D%lu "
- 		  "bg_thresh=3D%lu thresh=3D%lu limit=3D%lu "
- 		  "dirtied=3D%lu written=3D%lu",
- 		  __entry->nr_dirty,
- 		  __entry->nr_writeback,
-=2D		  __entry->nr_unstable,
- 		  __entry->background_thresh,
- 		  __entry->dirty_thresh,
- 		  __entry->dirty_limit,
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 7ddf91c4295f..fad8e8a23235 100644
-=2D-- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4317,7 +4317,6 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, un=
-signed long *pfilepages,
-=20
- 	*pdirty =3D memcg_exact_page_state(memcg, NR_FILE_DIRTY);
-=20
-=2D	/* this should eventually include NR_UNSTABLE_NFS */
- 	*pwriteback =3D memcg_exact_page_state(memcg, NR_WRITEBACK);
- 	*pfilepages =3D memcg_exact_page_state(memcg, NR_INACTIVE_FILE) +
- 			memcg_exact_page_state(memcg, NR_ACTIVE_FILE);
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 2afb09fa2fe0..dbc73522609e 100644
-=2D-- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -504,7 +504,6 @@ bool node_dirty_ok(struct pglist_data *pgdat)
- 	unsigned long nr_pages =3D 0;
-=20
- 	nr_pages +=3D node_page_state(pgdat, NR_FILE_DIRTY);
-=2D	nr_pages +=3D node_page_state(pgdat, NR_UNSTABLE_NFS);
- 	nr_pages +=3D node_page_state(pgdat, NR_WRITEBACK);
-=20
- 	return nr_pages <=3D limit;
-@@ -758,7 +757,7 @@ static void mdtc_calc_avail(struct dirty_throttle_contr=
-ol *mdtc,
-  * bounded by the bdi->min_ratio and/or bdi->max_ratio parameters, if set.
-  *
-  * Return: @wb's dirty limit in pages. The term "dirty" in the context of
-=2D * dirty balancing includes all PG_dirty, PG_writeback and NFS unstable =
-pages.
-+ * dirty balancing includes all PG_dirty and PG_writeback pages.
-  */
- static unsigned long __wb_calc_thresh(struct dirty_throttle_control *dtc)
- {
-@@ -1566,7 +1565,7 @@ static void balance_dirty_pages(struct bdi_writeback =
-*wb,
- 	struct dirty_throttle_control * const mdtc =3D mdtc_valid(&mdtc_stor) ?
- 						     &mdtc_stor : NULL;
- 	struct dirty_throttle_control *sdtc;
-=2D	unsigned long nr_reclaimable;	/* =3D file_dirty + unstable_nfs */
-+	unsigned long nr_reclaimable;	/* =3D file_dirty */
- 	long period;
- 	long pause;
- 	long max_pause;
-@@ -1589,14 +1588,7 @@ static void balance_dirty_pages(struct bdi_writeback=
- *wb,
- 		unsigned long m_thresh =3D 0;
- 		unsigned long m_bg_thresh =3D 0;
-=20
-=2D		/*
-=2D		 * Unstable writes are a feature of certain networked
-=2D		 * filesystems (i.e. NFS) in which data may have been
-=2D		 * written to the server's write cache, but has not yet
-=2D		 * been flushed to permanent storage.
-=2D		 */
-=2D		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY) +
-=2D					global_node_page_state(NR_UNSTABLE_NFS);
-+		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY);
- 		gdtc->avail =3D global_dirtyable_memory();
- 		gdtc->dirty =3D nr_reclaimable + global_node_page_state(NR_WRITEBACK);
-=20
-@@ -1940,8 +1932,7 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb)
- 	 * as we're trying to decide whether to put more under writeback.
- 	 */
- 	gdtc->avail =3D global_dirtyable_memory();
-=2D	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY) +
-=2D		      global_node_page_state(NR_UNSTABLE_NFS);
-+	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY);
- 	domain_dirty_limits(gdtc);
-=20
- 	if (gdtc->dirty > gdtc->bg_thresh)
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3c4eb750a199..6bd1112d590d 100644
-=2D-- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5239,7 +5239,7 @@ void show_free_areas(unsigned int filter, nodemask_t =
-*nodemask)
-=20
- 	printk("active_anon:%lu inactive_anon:%lu isolated_anon:%lu\n"
- 		" active_file:%lu inactive_file:%lu isolated_file:%lu\n"
-=2D		" unevictable:%lu dirty:%lu writeback:%lu unstable:%lu\n"
-+		" unevictable:%lu dirty:%lu writeback:%lu\n"
- 		" slab_reclaimable:%lu slab_unreclaimable:%lu\n"
- 		" mapped:%lu shmem:%lu pagetables:%lu bounce:%lu\n"
- 		" free:%lu free_pcp:%lu free_cma:%lu\n",
-@@ -5252,7 +5252,6 @@ void show_free_areas(unsigned int filter, nodemask_t =
-*nodemask)
- 		global_node_page_state(NR_UNEVICTABLE),
- 		global_node_page_state(NR_FILE_DIRTY),
- 		global_node_page_state(NR_WRITEBACK),
-=2D		global_node_page_state(NR_UNSTABLE_NFS),
- 		global_node_page_state(NR_SLAB_RECLAIMABLE),
- 		global_node_page_state(NR_SLAB_UNRECLAIMABLE),
- 		global_node_page_state(NR_FILE_MAPPED),
-@@ -5285,7 +5284,6 @@ void show_free_areas(unsigned int filter, nodemask_t =
-*nodemask)
- 			" anon_thp: %lukB"
- #endif
- 			" writeback_tmp:%lukB"
-=2D			" unstable:%lukB"
- 			" all_unreclaimable? %s"
- 			"\n",
- 			pgdat->node_id,
-@@ -5307,7 +5305,6 @@ void show_free_areas(unsigned int filter, nodemask_t =
-*nodemask)
- 			K(node_page_state(pgdat, NR_ANON_THPS) * HPAGE_PMD_NR),
- #endif
- 			K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
-=2D			K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
- 			pgdat->kswapd_failures >=3D MAX_RECLAIM_RETRIES ?
- 				"yes" : "no");
- 	}
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 78d53378db99..d1291537bbb9 100644
-=2D-- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1162,7 +1162,6 @@ const char * const vmstat_text[] =3D {
- 	"nr_file_hugepages",
- 	"nr_file_pmdmapped",
- 	"nr_anon_transparent_hugepages",
-=2D	"nr_unstable",
- 	"nr_vmscan_write",
- 	"nr_vmscan_immediate_reclaim",
- 	"nr_dirtied",
-=2D-=20
-2.26.0
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6GaKkACgkQOeye3VZi
-gbkRuA/+LS20dH3HWUsgzV+GtmOQNCLHwH6tkon9a3vck00xJIbwmGDOoKoaq3Ls
-DBZgNudNFUKzZx2NxHh8ycYK3UKms4/poWlrV9vRQ/oeUXuZmKfPoEX8KX1ISKYF
-vPz5E/e+8knMQBZR6AlswWRivKmE0O1s1mXcg10Hk/f9tPFH4/+SAax7YEKZ37u4
-GEofhlrOTKVXQ8iHjW6wwr5wr22xFAQJ7r4QYaJgD5wSXLx0bVzTlRkbzg+z9ido
-+Y6Cb5ZEHDAd0QUcf9iIg5ygopCRCSJBqRFDs0U/HFLGphQMi5fwvUC9GdD4bW98
-fZLDKG3dgEIe3xhCTCjeJd/824F0j80e4FCQj/bsiwYp/jCnhNvtlix6ww/eN72E
-hv8Mw8tG3EoZoSrVBpANVtPZ3jHXBVexTB+x1OhON/06XVU1HY1BvM/Gwa5VSoBc
-RkEd1uSnHb7PFeKi+CaldF8S3ZiT+CpLxS1DbzhcXIs+0YMULlllIfJalDaBPEga
-LK6w+IZmrTzocFFtQoqK6zWCkTDm9NCarsalVYKHqGRGTa7V8h5rVRG760Q7wJCH
-VyNXeZGlgcHVEeeWxsAPu1206YZ7qwfFJ+f88xtr6rdZXHDqaI1DEAHsDtH2aruj
-MH7k93h4JyvD+73hG1S7Z0u5dBlsrujB2rCo5vhjfNKYEjwB0ns=
-=fqXN
------END PGP SIGNATURE-----
---=-=-=--
+> ---
+>  arch/x86/include/asm/kvm_para.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+> index 9b4df6eaa11a..6c09255633a4 100644
+> --- a/arch/x86/include/asm/kvm_para.h
+> +++ b/arch/x86/include/asm/kvm_para.h
+> @@ -84,6 +84,18 @@ static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
+>  	return ret;
+>  }
+>  
+> +static inline long kvm_sev_hypercall3(unsigned int nr, unsigned long p1,
+> +				      unsigned long p2, unsigned long p3)
+> +{
+> +	long ret;
+> +
+> +	asm volatile("vmmcall"
+> +		     : "=a"(ret)
+> +		     : "a"(nr), "b"(p1), "c"(p2), "d"(p3)
+> +		     : "memory");
+> +	return ret;
+> +}
+> +
+>  #ifdef CONFIG_KVM_GUEST
+>  bool kvm_para_available(void);
+>  unsigned int kvm_arch_para_features(void);
+> -- 
+> 2.17.1
+> 
