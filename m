@@ -2,88 +2,103 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A8C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097AEC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A542072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="boBkZWPU"
+	by mail.kernel.org (Postfix) with ESMTP id DE7A8206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389088AbgDBPGJ (ORCPT
+        id S2389197AbgDBPGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:06:09 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36303 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388910AbgDBPGJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:06:09 -0400
-Received: by mail-ed1-f66.google.com with SMTP id i7so4610033edq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:06:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SYa3cCvl0gzc4EgAV+8fe+3EM4RpMu1aoLK0ocYUaYI=;
-        b=boBkZWPUlJHdDfU35dNzrcg1AfzrDF0aVCbQp696BuwvgvyZOrArd9WMSLNww1JgBg
-         +rYNv3hzZOFXzEAyPGJI8z7nlDuChH+xb0EfHMDMHFph1g5uz/xwzYu1uFKTYfH0rY7W
-         y29E0JRXt77q6g8b6X0aYvhRGgcEm9Szx/7D0pi34duqvqNBh5f4rJgUs8Kb/Ixz97yh
-         O6Rrb5eLhhUiJ/wMsDm0DPSO1xezPzEGb85w4Vf0H2md5OaUnYJ2x2LFQDOfYy+hTQkK
-         N5e/Dej8U1qbqIsPp/zfPgJK4dKNMTRP0LH9R5J2yIyjwxvXZPPcgWvihSsXzJ1iJWvb
-         8CKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SYa3cCvl0gzc4EgAV+8fe+3EM4RpMu1aoLK0ocYUaYI=;
-        b=QugeFtsBerzF5YcpKYpYoehYyBlC9ZMHJHmt62FMmkGpco9JkjnXakO+bglR6ftslB
-         BKY54Q0Od6gQs45l/4go/Q29qM8amPaGYPQdnuSE4RK+SrnUsGsNGRF6Df3P0V7Tb41h
-         gWmJTIH6M1XOzi/M5GO66inUBdszl4Z0v3zF7Ba6H+msSTpcJ8vVdhSCYhO1GRvJUbR3
-         1Q+QylnjY0WJ0WMgWqyKKsjM8T8ARnP8G7XdwpUcbbpRb/TLySstlxY4kHqF6HntGI3X
-         mQAhjWuZHyk1vpYbs34GbMB8GVtfRxOXfPiMG6fmJa7UVpGhn67eQmkhv5Pq9MB89VYU
-         DrQg==
-X-Gm-Message-State: AGi0PuZSIvhzvkRRbmRxCb9szZ5UUOfNd5BXt9qfUDUgyizTX3Wp+Aoq
-        uhyO6elCSL0uaNdqdnXcD3x0QZKmLCKtj27vOYlp1A==
-X-Google-Smtp-Source: APiQypJQFbqhZ0gDZhzt7n/E60CAxsNY9EqEXjQuMhLkPuX5AYm0XR1q1GZ1frMSVEWbZPl3DPiCgsomgRKnVLYo+H4=
-X-Received: by 2002:a50:9b53:: with SMTP id a19mr3514859edj.3.1585839966709;
- Thu, 02 Apr 2020 08:06:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200401225723.14164-1-pasha.tatashin@soleen.com>
- <20200401225723.14164-3-pasha.tatashin@soleen.com> <8a2fbe6b-c861-9d47-9f02-72d476265359@suse.cz>
-In-Reply-To: <8a2fbe6b-c861-9d47-9f02-72d476265359@suse.cz>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 2 Apr 2020 11:05:55 -0400
-Message-ID: <CA+CK2bDA4YOJWr8eKff3yowVS+TS+EdsjASes43ZLRiXs2jcsg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] mm: initialize deferred pages with interrupts enabled
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>,
+        Thu, 2 Apr 2020 11:06:23 -0400
+Received: from mga02.intel.com ([134.134.136.20]:46064 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389046AbgDBPGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 11:06:22 -0400
+IronPort-SDR: 4D8RU2cY6TDk9aDUSLGUhPGw896w78bSp+k1g3Ld/MFaJwjjZu7DmSqWpn4O2xVprYS7AlpOVl
+ a4IJzJXaE16w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 08:06:21 -0700
+IronPort-SDR: k0nZ9Qd2HT/5yhMfVt502GBN9EOzOQDTwehNxMiHA5YqPY8haqm9eO0q2ZPMWE2LbzRRSsLm3Z
+ 4Dgl2RNI/F9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="284807116"
+Received: from ccui-mobl1.amr.corp.intel.com (HELO [10.134.85.228]) ([10.134.85.228])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Apr 2020 08:06:20 -0700
+Subject: Re: [PATCH 2/2] dmaengine: ioat: Decreasing allocation chunk size 2M
+ -> 512K
+To:     leonid.ravich@dell.com, dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        David Hildenbrand <david@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+References: <20200402092725.15121-1-leonid.ravich@dell.com>
+ <20200402092725.15121-2-leonid.ravich@dell.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <793bc07b-fec9-27ee-7eff-203326e3608a@intel.com>
+Date:   Thu, 2 Apr 2020 08:06:19 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200402092725.15121-2-leonid.ravich@dell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> TBH I don't remember my concern anymore. Reading my mail now [1] it seems I was
-> thinking the problem could happen not just in interrupt context, but with other
-> kthreads as well.
-> Anyway I agree with the approach of waiting for actual issues being reported and
-> then eventually pre-growing more.
->
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-Thank you.
 
-Pasha
+On 4/2/2020 2:27 AM, leonid.ravich@dell.com wrote:
+> From: Leonid Ravich <Leonid.Ravich@emc.com>
+> 
+> current IOAT driver using big (2MB) allocations chunk for its descriptors
+> therefore each ioat dma engine need 2 such chunks
+> (64k entres in ring  each entry 64B = 4MB)
+> requiring 2 * 2M * dmaengine contiguies memory chunk
+> might fail due to memory fragmention.
+> 
+> so we decresging chunk size and using more chunks.
+
+decreasing
+
+> 
+> Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+
+Acked-by: Dave Jiang <dave.jiang@intel.com> if the two patches have been 
+tested on hw.
+
+> ---
+>   drivers/dma/ioat/dma.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+> index 535aba9..e9757bc 100644
+> --- a/drivers/dma/ioat/dma.h
+> +++ b/drivers/dma/ioat/dma.h
+> @@ -83,7 +83,7 @@ struct ioatdma_device {
+>   
+>   #define IOAT_MAX_ORDER 16
+>   #define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
+> -#define IOAT_CHUNK_SIZE (SZ_2M)
+> +#define IOAT_CHUNK_SIZE (SZ_512K)
+>   #define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE/IOAT_DESC_SZ)
+>   
+>   struct ioat_descs {
+> 
