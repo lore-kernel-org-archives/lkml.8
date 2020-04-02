@@ -2,207 +2,385 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A935C2BA18
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F444C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D3520719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D43520719
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:57:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UidUd81q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbgDBTz7 (ORCPT
+        id S2388686AbgDBT5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:55:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42184 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbgDBTz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:55:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4E2C5AC84;
-        Thu,  2 Apr 2020 19:55:55 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 047E81E11F4; Thu,  2 Apr 2020 21:55:52 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 21:55:51 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] Deprecate NR_UNSTABLE_NFS, use NR_WRITEBACK
-Message-ID: <20200402195551.GD9751@quack2.suse.cz>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name>
- <87v9miydai.fsf@notabene.neil.brown.name>
- <87sghmyd8v.fsf@notabene.neil.brown.name>
- <87pncqyd7k.fsf@notabene.neil.brown.name>
+        Thu, 2 Apr 2020 15:57:16 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59808 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731579AbgDBT5Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:57:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585857434;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RxyoZsi9Tn8jWziDAMFiYcGYLKriOIyoSHN1gbJsJzs=;
+        b=UidUd81qqJ+6OufmiNf5Z8NHVxIUeOyWlBtTnU/mOxdNqGRFqh1JRgV2WN1MW9UMzHGnBT
+        ZNbTtLOBQMuoq5lu0Ys2NvMB2v+VK+xnvOpH1n6+TlFA/sU6rngIl/SJu0hNP/r7We1+BH
+        pMeT8SjuDoViCaO4ropItH1CTqE+JTg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-228-ZZW0JrYzMsWT_D_Z6zHGUA-1; Thu, 02 Apr 2020 15:57:09 -0400
+X-MC-Unique: ZZW0JrYzMsWT_D_Z6zHGUA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5F32107ACCA;
+        Thu,  2 Apr 2020 19:57:07 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 321BE1001B09;
+        Thu,  2 Apr 2020 19:57:01 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 13:57:00 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     eric.auger@redhat.com, kevin.tian@intel.com,
+        jacob.jun.pan@linux.intel.com, joro@8bytes.org,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hao.wu@intel.com
+Subject: Re: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
+Message-ID: <20200402135700.0da30021@w520.home>
+In-Reply-To: <1584880325-10561-7-git-send-email-yi.l.liu@intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-7-git-send-email-yi.l.liu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pncqyd7k.fsf@notabene.neil.brown.name>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 02-04-20 10:54:07, NeilBrown wrote:
-> 
-> After an NFS page has been written it is considered "unstable" until a
-> COMMIT request succeeds.  If the COMMIT fails, the page will be
-> re-written.
-> 
-> These "unstable" pages are currently accounted as "reclaimable",
-> either in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
-> 'reclaimable' count.  This might have made sense when sending the COMMIT
-> required a separate action by the VFS/MM (e.g. releasepage() used to
-> send a COMMIT).  However now that all writes generated by ->writepages()
-> will automatically be followed by a COMMIT, it makes more sense to
-> treat them as writeback pages.
-> 
-> So this page deprecates NR_UNSTABLE_NFS and accounts unstable pages in
-> NR_WRITEBACK and WB_WRITEBACK.
-> 
-> A particular effect of this change is that when
-> wb_check_background_flush() calls wb_over_bg_threshold(), the latter
-> will report 'true' a lot less often as the 'unstable' pages are no
-> longer considered 'dirty' (and there is nothing that writeback can do
-> about them anyway).
-> 
-> Currently wb_check_background_flush() will trigger writeback to NFS even
-> when there are relatively few dirty pages (if there are lots of unstable
-> pages), this can result in small writes going to the server (10s of
-> Kilobytes rather than a Megabyte) which hurts throughput.
-> With this that, there are fewer writes which are each larger on average.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
+On Sun, 22 Mar 2020 05:32:03 -0700
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-The patch looks good to me. I agree with Christoph that it would be best to
-remove NR_UNSTABLE_NFS completely. We just have to be careful, not change
-format of any entries in /proc/ where it currently gets reported...
-
-								Honza
-
+> From: Liu Yi L <yi.l.liu@intel.com>
+> 
+> VFIO_TYPE1_NESTING_IOMMU is an IOMMU type which is backed by hardware
+> IOMMUs that have nesting DMA translation (a.k.a dual stage address
+> translation). For such hardware IOMMUs, there are two stages/levels of
+> address translation, and software may let userspace/VM to own the first-
+> level/stage-1 translation structures. Example of such usage is vSVA (
+> virtual Shared Virtual Addressing). VM owns the first-level/stage-1
+> translation structures and bind the structures to host, then hardware
+> IOMMU would utilize nesting translation when doing DMA translation fo
+> the devices behind such hardware IOMMU.
+> 
+> This patch adds vfio support for binding guest translation (a.k.a stage 1)
+> structure to host iommu. And for VFIO_TYPE1_NESTING_IOMMU, not only bind
+> guest page table is needed, it also requires to expose interface to guest
+> for iommu cache invalidation when guest modified the first-level/stage-1
+> translation structures since hardware needs to be notified to flush stale
+> iotlbs. This would be introduced in next patch.
+> 
+> In this patch, guest page table bind and unbind are done by using flags
+> VFIO_IOMMU_BIND_GUEST_PGTBL and VFIO_IOMMU_UNBIND_GUEST_PGTBL under IOCTL
+> VFIO_IOMMU_BIND, the bind/unbind data are conveyed by
+> struct iommu_gpasid_bind_data. Before binding guest page table to host,
+> VM should have got a PASID allocated by host via VFIO_IOMMU_PASID_REQUEST.
+> 
+> Bind guest translation structures (here is guest page table) to host
+> are the first step to setup vSVA (Virtual Shared Virtual Addressing).
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->  fs/fs-writeback.c      | 1 -
->  fs/nfs/internal.h      | 7 +++++--
->  fs/nfs/write.c         | 4 ++--
->  include/linux/mmzone.h | 2 +-
->  mm/memcontrol.c        | 1 -
->  mm/page-writeback.c    | 7 ++-----
->  6 files changed, 10 insertions(+), 12 deletions(-)
+>  drivers/vfio/vfio_iommu_type1.c | 158 ++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h       |  46 ++++++++++++
+>  2 files changed, 204 insertions(+)
 > 
-> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> index 76ac9c7d32ec..c5bdf46e3b4b 100644
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -1070,7 +1070,6 @@ static void bdi_split_work_to_wbs(struct backing_dev_info *bdi,
->  static unsigned long get_nr_dirty_pages(void)
->  {
->  	return global_node_page_state(NR_FILE_DIRTY) +
-> -		global_node_page_state(NR_UNSTABLE_NFS) +
->  		get_nr_dirty_inodes();
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 82a9e0b..a877747 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -130,6 +130,33 @@ struct vfio_regions {
+>  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
+>  					(!list_empty(&iommu->domain_list))
+>  
+> +struct domain_capsule {
+> +	struct iommu_domain *domain;
+> +	void *data;
+> +};
+> +
+> +/* iommu->lock must be held */
+> +static int vfio_iommu_for_each_dev(struct vfio_iommu *iommu,
+> +		      int (*fn)(struct device *dev, void *data),
+> +		      void *data)
+> +{
+> +	struct domain_capsule dc = {.data = data};
+> +	struct vfio_domain *d;
+> +	struct vfio_group *g;
+> +	int ret = 0;
+> +
+> +	list_for_each_entry(d, &iommu->domain_list, next) {
+> +		dc.domain = d->domain;
+> +		list_for_each_entry(g, &d->group_list, next) {
+> +			ret = iommu_group_for_each_dev(g->iommu_group,
+> +						       &dc, fn);
+> +			if (ret)
+> +				break;
+> +		}
+> +	}
+> +	return ret;
+> +}
+> +
+>  static int put_pfn(unsigned long pfn, int prot);
+>  
+>  /*
+> @@ -2314,6 +2341,88 @@ static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+>  	return 0;
 >  }
 >  
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index f80c47d5ff27..ba1ff5adeccd 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -660,8 +660,11 @@ void nfs_mark_page_unstable(struct page *page, struct nfs_commit_info *cinfo)
->  	if (!cinfo->dreq) {
->  		struct inode *inode = page_file_mapping(page)->host;
->  
-> -		inc_node_page_state(page, NR_UNSTABLE_NFS);
-> -		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_RECLAIMABLE);
-> +		/* This page is really still in write-back - just that the
-> +		 * writeback is happening on the server now.
+> +static int vfio_bind_gpasid_fn(struct device *dev, void *data)
+> +{
+> +	struct domain_capsule *dc = (struct domain_capsule *)data;
+> +	struct iommu_gpasid_bind_data *gbind_data =
+> +		(struct iommu_gpasid_bind_data *) dc->data;
+> +
+> +	return iommu_sva_bind_gpasid(dc->domain, dev, gbind_data);
+> +}
+> +
+> +static int vfio_unbind_gpasid_fn(struct device *dev, void *data)
+> +{
+> +	struct domain_capsule *dc = (struct domain_capsule *)data;
+> +	struct iommu_gpasid_bind_data *gbind_data =
+> +		(struct iommu_gpasid_bind_data *) dc->data;
+> +
+> +	return iommu_sva_unbind_gpasid(dc->domain, dev,
+> +					gbind_data->hpasid);
+> +}
+> +
+> +/**
+> + * Unbind specific gpasid, caller of this function requires hold
+> + * vfio_iommu->lock
+> + */
+> +static long vfio_iommu_type1_do_guest_unbind(struct vfio_iommu *iommu,
+> +				struct iommu_gpasid_bind_data *gbind_data)
+> +{
+> +	return vfio_iommu_for_each_dev(iommu,
+> +				vfio_unbind_gpasid_fn, gbind_data);
+> +}
+> +
+> +static long vfio_iommu_type1_bind_gpasid(struct vfio_iommu *iommu,
+> +				struct iommu_gpasid_bind_data *gbind_data)
+> +{
+> +	int ret = 0;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	if (!IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)) {
+> +		ret = -EINVAL;
+> +		goto out_unlock;
+> +	}
+> +
+> +	ret = vfio_iommu_for_each_dev(iommu,
+> +			vfio_bind_gpasid_fn, gbind_data);
+> +	/*
+> +	 * If bind failed, it may not be a total failure. Some devices
+> +	 * within the iommu group may have bind successfully. Although
+> +	 * we don't enable pasid capability for non-singletion iommu
+> +	 * groups, a unbind operation would be helpful to ensure no
+> +	 * partial binding for an iommu group.
+
+Where was the non-singleton group restriction done, I missed that.
+
+> +	 */
+> +	if (ret)
+> +		/*
+> +		 * Undo all binds that already succeeded, no need to
+> +		 * check the return value here since some device within
+> +		 * the group has no successful bind when coming to this
+> +		 * place switch.
 > +		 */
-> +		inc_node_page_state(page, NR_WRITEBACK);
-> +		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
->  		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
->  	}
->  }
-> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-> index c478b772cc49..2e15a56620b3 100644
-> --- a/fs/nfs/write.c
-> +++ b/fs/nfs/write.c
-> @@ -958,9 +958,9 @@ nfs_mark_request_commit(struct nfs_page *req, struct pnfs_layout_segment *lseg,
->  static void
->  nfs_clear_page_commit(struct page *page)
+> +		vfio_iommu_type1_do_guest_unbind(iommu, gbind_data);
+
+However, the for_each_dev function stops when the callback function
+returns error, are we just assuming we stop at the same device as we
+faulted on the first time and that we traverse the same set of devices
+the second time?  It seems strange to me that unbind should be able to
+fail.
+
+> +
+> +out_unlock:
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+> +static long vfio_iommu_type1_unbind_gpasid(struct vfio_iommu *iommu,
+> +				struct iommu_gpasid_bind_data *gbind_data)
+> +{
+> +	int ret = 0;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	if (!IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)) {
+> +		ret = -EINVAL;
+> +		goto out_unlock;
+> +	}
+> +
+> +	ret = vfio_iommu_type1_do_guest_unbind(iommu, gbind_data);
+
+How is a user supposed to respond to their unbind failing?
+
+> +
+> +out_unlock:
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+>  static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  				   unsigned int cmd, unsigned long arg)
 >  {
-> -	dec_node_page_state(page, NR_UNSTABLE_NFS);
-> +	dec_node_page_state(page, NR_WRITEBACK);
->  	dec_wb_stat(&inode_to_bdi(page_file_mapping(page)->host)->wb,
-> -		    WB_RECLAIMABLE);
-> +		    WB_WRITEBACK);
->  }
->  
->  /* Called holding the request lock on @req */
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 462f6873905a..227fcb8cd0e6 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -237,7 +237,7 @@ enum node_stat_item {
->  	NR_FILE_THPS,
->  	NR_FILE_PMDMAPPED,
->  	NR_ANON_THPS,
-> -	NR_UNSTABLE_NFS,	/* NFS unstable pages */
-> +	NR_UNSTABLE_NFS,	/* NFS unstable pages - DEPRECATED DO NOT USE */
->  	NR_VMSCAN_WRITE,
->  	NR_VMSCAN_IMMEDIATE,	/* Prioritise for reclaim when writeback ends */
->  	NR_DIRTIED,		/* page dirtyings since bootup */
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 7ddf91c4295f..fad8e8a23235 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4317,7 +4317,6 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
->  
->  	*pdirty = memcg_exact_page_state(memcg, NR_FILE_DIRTY);
->  
-> -	/* this should eventually include NR_UNSTABLE_NFS */
->  	*pwriteback = memcg_exact_page_state(memcg, NR_WRITEBACK);
->  	*pfilepages = memcg_exact_page_state(memcg, NR_INACTIVE_FILE) +
->  			memcg_exact_page_state(memcg, NR_ACTIVE_FILE);
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index 2afb09fa2fe0..d1f03c799d11 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -504,7 +504,6 @@ bool node_dirty_ok(struct pglist_data *pgdat)
->  	unsigned long nr_pages = 0;
->  
->  	nr_pages += node_page_state(pgdat, NR_FILE_DIRTY);
-> -	nr_pages += node_page_state(pgdat, NR_UNSTABLE_NFS);
->  	nr_pages += node_page_state(pgdat, NR_WRITEBACK);
->  
->  	return nr_pages <= limit;
-> @@ -1595,8 +1594,7 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
->  		 * written to the server's write cache, but has not yet
->  		 * been flushed to permanent storage.
->  		 */
-> -		nr_reclaimable = global_node_page_state(NR_FILE_DIRTY) +
-> -					global_node_page_state(NR_UNSTABLE_NFS);
-> +		nr_reclaimable = global_node_page_state(NR_FILE_DIRTY);
->  		gdtc->avail = global_dirtyable_memory();
->  		gdtc->dirty = nr_reclaimable + global_node_page_state(NR_WRITEBACK);
->  
-> @@ -1940,8 +1938,7 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb)
->  	 * as we're trying to decide whether to put more under writeback.
->  	 */
->  	gdtc->avail = global_dirtyable_memory();
-> -	gdtc->dirty = global_node_page_state(NR_FILE_DIRTY) +
-> -		      global_node_page_state(NR_UNSTABLE_NFS);
-> +	gdtc->dirty = global_node_page_state(NR_FILE_DIRTY);
->  	domain_dirty_limits(gdtc);
->  
->  	if (gdtc->dirty > gdtc->bg_thresh)
-> -- 
-> 2.26.0
-> 
+> @@ -2471,6 +2580,55 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  		default:
+>  			return -EINVAL;
+>  		}
+> +
+> +	} else if (cmd == VFIO_IOMMU_BIND) {
+> +		struct vfio_iommu_type1_bind bind;
+> +		u32 version;
+> +		int data_size;
+> +		void *gbind_data;
+> +		int ret;
+> +
+> +		minsz = offsetofend(struct vfio_iommu_type1_bind, flags);
+> +
+> +		if (copy_from_user(&bind, (void __user *)arg, minsz))
+> +			return -EFAULT;
+> +
+> +		if (bind.argsz < minsz)
+> +			return -EINVAL;
+> +
+> +		/* Get the version of struct iommu_gpasid_bind_data */
+> +		if (copy_from_user(&version,
+> +			(void __user *) (arg + minsz),
+> +					sizeof(version)))
+> +			return -EFAULT;
 
+Why are we coping things from beyond the size we've validated that the
+user has provided again?
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> +
+> +		data_size = iommu_uapi_get_data_size(
+> +				IOMMU_UAPI_BIND_GPASID, version);
+> +		gbind_data = kzalloc(data_size, GFP_KERNEL);
+> +		if (!gbind_data)
+> +			return -ENOMEM;
+> +
+> +		if (copy_from_user(gbind_data,
+> +			 (void __user *) (arg + minsz), data_size)) {
+> +			kfree(gbind_data);
+> +			return -EFAULT;
+> +		}
+
+And again.  argsz isn't just for minsz.
+
+> +
+> +		switch (bind.flags & VFIO_IOMMU_BIND_MASK) {
+> +		case VFIO_IOMMU_BIND_GUEST_PGTBL:
+> +			ret = vfio_iommu_type1_bind_gpasid(iommu,
+> +							   gbind_data);
+> +			break;
+> +		case VFIO_IOMMU_UNBIND_GUEST_PGTBL:
+> +			ret = vfio_iommu_type1_unbind_gpasid(iommu,
+> +							     gbind_data);
+> +			break;
+> +		default:
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +		kfree(gbind_data);
+> +		return ret;
+>  	}
+>  
+>  	return -ENOTTY;
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index ebeaf3e..2235bc6 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -14,6 +14,7 @@
+>  
+>  #include <linux/types.h>
+>  #include <linux/ioctl.h>
+> +#include <linux/iommu.h>
+>  
+>  #define VFIO_API_VERSION	0
+>  
+> @@ -853,6 +854,51 @@ struct vfio_iommu_type1_pasid_request {
+>   */
+>  #define VFIO_IOMMU_PASID_REQUEST	_IO(VFIO_TYPE, VFIO_BASE + 22)
+>  
+> +/**
+> + * Supported flags:
+> + *	- VFIO_IOMMU_BIND_GUEST_PGTBL: bind guest page tables to host for
+> + *			nesting type IOMMUs. In @data field It takes struct
+> + *			iommu_gpasid_bind_data.
+> + *	- VFIO_IOMMU_UNBIND_GUEST_PGTBL: undo a bind guest page table operation
+> + *			invoked by VFIO_IOMMU_BIND_GUEST_PGTBL.
+
+This must require iommu_gpasid_bind_data in the data field as well,
+right?
+
+> + *
+> + */
+> +struct vfio_iommu_type1_bind {
+> +	__u32		argsz;
+> +	__u32		flags;
+> +#define VFIO_IOMMU_BIND_GUEST_PGTBL	(1 << 0)
+> +#define VFIO_IOMMU_UNBIND_GUEST_PGTBL	(1 << 1)
+> +	__u8		data[];
+> +};
+> +
+> +#define VFIO_IOMMU_BIND_MASK	(VFIO_IOMMU_BIND_GUEST_PGTBL | \
+> +					VFIO_IOMMU_UNBIND_GUEST_PGTBL)
+> +
+> +/**
+> + * VFIO_IOMMU_BIND - _IOW(VFIO_TYPE, VFIO_BASE + 23,
+> + *				struct vfio_iommu_type1_bind)
+> + *
+> + * Manage address spaces of devices in this container. Initially a TYPE1
+> + * container can only have one address space, managed with
+> + * VFIO_IOMMU_MAP/UNMAP_DMA.
+> + *
+> + * An IOMMU of type VFIO_TYPE1_NESTING_IOMMU can be managed by both MAP/UNMAP
+> + * and BIND ioctls at the same time. MAP/UNMAP acts on the stage-2 (host) page
+> + * tables, and BIND manages the stage-1 (guest) page tables. Other types of
+> + * IOMMU may allow MAP/UNMAP and BIND to coexist, where MAP/UNMAP controls
+> + * the traffics only require single stage translation while BIND controls the
+> + * traffics require nesting translation. But this depends on the underlying
+> + * IOMMU architecture and isn't guaranteed. Example of this is the guest SVA
+> + * traffics, such traffics need nesting translation to gain gVA->gPA and then
+> + * gPA->hPA translation.
+> + *
+> + * Availability of this feature depends on the device, its bus, the underlying
+> + * IOMMU and the CPU architecture.
+> + *
+> + * returns: 0 on success, -errno on failure.
+> + */
+> +#define VFIO_IOMMU_BIND		_IO(VFIO_TYPE, VFIO_BASE + 23)
+> +
+>  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
+>  
+>  /*
+
