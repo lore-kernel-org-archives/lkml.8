@@ -2,148 +2,199 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F7DC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457D8C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4B8206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1222020737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:35:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hIzMlAza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389358AbgDBPf0 (ORCPT
+        id S2389368AbgDBPfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:35:26 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:59437 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732970AbgDBPfZ (ORCPT
+        Thu, 2 Apr 2020 11:35:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46626 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388972AbgDBPfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:35:25 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MEFCF-1jS2DG2pUb-00AHcI; Thu, 02 Apr 2020 17:35:07 +0200
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 7B9436506C3;
-        Thu,  2 Apr 2020 15:35:06 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QCfSTkeeb5TN; Thu,  2 Apr 2020 17:35:06 +0200 (CEST)
-Received: from pflmari.corp.cetitec.com (unknown [10.8.5.56])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 1E4F064C974;
-        Thu,  2 Apr 2020 17:35:06 +0200 (CEST)
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id D55D4804FB; Thu,  2 Apr 2020 17:35:05 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 17:35:05 +0200
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v4 9/9] arm64: dts: renesas: salvator: add a connection
- from adv748x codec (HDMI input) to the R-Car SoC
-Message-ID: <20200402153505.GC4291@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <cover.1585218857.git.alexander.riesen@cetitec.com>
- <ad15f80df51c95a7c24498bb0bd3a46f55fbb62e.1585218857.git.alexander.riesen@cetitec.com>
- <CAMuHMdV+joeNWJotKySVPHNW9OoT8+iODBwhK5fACspq2SX_eg@mail.gmail.com>
- <20200402141654.GB4291@pflmari>
- <CAMuHMdV6a=adKVmmRm_3qOSA37kDRfc63G+qQpN4UR-hj3R65g@mail.gmail.com>
+        Thu, 2 Apr 2020 11:35:48 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j17so4679091wru.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n0G8PgKT6N4LycPsn3YPbg8CmY7AYCMmAC0zQVOGL0M=;
+        b=hIzMlAzaySo3rTxfU67BAMFqDRt8Q6tAsfuKShRe0AA1rwasEPYNcL+NCR+UYLfLCn
+         dhAv7a9Q56lSxPJLPSCHKICJJUPPqnlrxuYNZjgl7hOAsqhFnEsxNFT146zv5euKKcCO
+         ySZ9Rsl+5MkjTLJto8AnE0NrTgRG1uuzufERGffV/1FnFG8ALwCQimgaNuZHaCQiG2Ky
+         q8TwXSQIr6k1zeZrUsP0u4vBXk71ONKKciGQtnO5+Ud3JU6IBcCUGGi54qH/bA1hMxbW
+         uCKvDVwSEgRfZBze2NLpE/Z+krqKCWhN3yBNhfDNG5AXLny4k9NfHL5yx3qeMOPZKkql
+         QMFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=n0G8PgKT6N4LycPsn3YPbg8CmY7AYCMmAC0zQVOGL0M=;
+        b=Tqi4GCNtvctJcZUEfEs+74AEWzwrpVGnDAWvgN2mSFfaHgsdjV8PsG4nSMJlFB3HDK
+         i/abNtjjP6IEaDbSdM49kAHp/Ej2A+sU+/6d//dbbJLErwM53KZu67wG6U9mnyxck09o
+         mFDeDgBcuXqKModrkzaC5AUEBmrurYG6SqvcZiKUn4TTk30wY6cv6fcXDW+r6q49dsVn
+         KZh9xbU7OQ1zOacGBM3+5Sg9+NVSln0lV4qFVujKZGHJjmFSfG3Xx+6dcf55xqn4e8jL
+         SKgvA97FXWevKV8zQLknG5ozeHoCx0rR54ydaoTrz9dAbvBsQWDKUKzzIm50y4rChfFf
+         s9DQ==
+X-Gm-Message-State: AGi0PuYXL0BTcSP1LcXLBPShdYBGxzf9FkOTeIoRU+CxLdTiILqVxUgv
+        Rdfld/kgKqbLpjgmqJezIv7KoU3zuPdvyA==
+X-Google-Smtp-Source: APiQypJ1XGUq/Qik2b9mDHCOvXzdSe550uTteLiXSgdV9eZoITWe9rl43BG//I3FD2EzT9gwi6PZlA==
+X-Received: by 2002:adf:bb06:: with SMTP id r6mr4194796wrg.324.1585841744387;
+        Thu, 02 Apr 2020 08:35:44 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
+        by smtp.gmail.com with ESMTPSA id c18sm7853918wrx.5.2020.04.02.08.35.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 08:35:43 -0700 (PDT)
+Subject: Re: [PATCH] crypto:amlogic - use platform_get_irq_optional()
+To:     "tangbin@cmss.chinamobile.com" <tangbin@cmss.chinamobile.com>,
+        clabbe <clabbe@baylibre.com>,
+        herbert <herbert@gondor.apana.org.au>,
+        davem <davem@davemloft.net>
+Cc:     linux-amlogic <linux-amlogic@lists.infradead.org>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200402113344.16772-1-tangbin@cmss.chinamobile.com>
+ <c43b85f8-2bc9-7b19-6b86-953246c88d2c@baylibre.com>
+ <202004022329105659148@cmss.chinamobile.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <f4cb309e-a873-5529-5be2-6992f7d89a96@baylibre.com>
+Date:   Thu, 2 Apr 2020 17:35:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV6a=adKVmmRm_3qOSA37kDRfc63G+qQpN4UR-hj3R65g@mail.gmail.com>
-X-Provags-ID: V03:K1:8YcpPR4OX9VjeYg9XwNdrfmOZD058GNbrfPvpaIBOHzJfJ+xmAM
- fh2HDdf8RvrwuYJnOFdqhE71JK4Zi3noK4t+M2p8JEcBOVMjhMj+om4Ye2RMw9W/hTY6/U5
- cfXwpWIfghgX7MtDjnZSW2kGQ/pkyY8Za31J4qXGZR57YFinNmOztQjeJ4gCzE9imwCOGSR
- 4fxm+XEG/l22liyDi8Gbg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lWqBRcmjNbU=:JWGxbOm6nPXQMvdnEhikmQ
- nhJNzMtLTk7NcX7kT2Sc7y+M580IwwNDLerkGErta19bwOOQdDE2rGVJj5tuFxOi1ShWBlXXV
- mCdWxLMRh7o5sh6UPzAWR5LWjCAIn8vPYqnFUGOVXmaCFoJ5tWNCal6IDGSLCMHSQLKq9iiii
- Poz00LV9WMOZpo/WjL2ve+tVgiMViLSbVv7qmp1qPwtx3/rcxLAhyPZkT63nZvA9KpvwSIKEj
- +Lo4DX1ZK/uCw4vnmgT1jLperGGTot4UTKrz2p9+dpfFHQ+7LXP8dZxrcbJC3ZEtZ9IMc5RCF
- aqHbpvQJuTqZv7/A+hr9GGEwKKjygau7+kxS4v/FIY/a/NZJsJZOh2J12y82+AobMLyzqu/mX
- K9SGVZwDJ9FeNhaEeTqqB3DQOajOX44aOo8mV6ph4B5mTi/FYasNHQFot7wgwZjSBX4GsFKvr
- r47U7lebdUMbTIEskSB7qxsumiIwZq0xOovICU3gBeskC9rnN9S1uCLqo6DHtOD+kKQvSgSXl
- FJ4jGfGYlniXDsNH8oZjfEWpQJJafvuTHv67YsY3dIILXW+QL8rwAX//D3REYKykvUfBi2LDL
- PUYzMdKTC9xZG/HOmDL/dV6excVkYW2DqsHf/uyWo/+E9QxpR10pQb1hFKnWX0gyDoa3Ra5Ba
- ufNQSn6FW314LIrzZw8K9M1ZhJ3sBMzUQ4dgTgLhKtKCE1TD0j8ZyR6beHzPqtLhASMCUPWa6
- jRvB/dYz5AZ/dl121bPUR/oykSnjIrWAMK5ELmyNe9rpAjFPkaBPb9sJzrc7/qT4rIF7771kj
- N7nJwhIslg6j9bv+2FhGCRh2gR8YvyJ5WaTKBfeBWfnWqoh6+r3lyimj2bYonnjaJxxM+rG
+In-Reply-To: <202004022329105659148@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert Uytterhoeven, Thu, Apr 02, 2020 17:26:15 +0200:
-> On Thu, Apr 2, 2020 at 5:03 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > Geert Uytterhoeven, Mon, Mar 30, 2020 10:32:47 +0200:
-> > > On Thu, Mar 26, 2020 at 11:55 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > > > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> > > > @@ -510,6 +511,15 @@ adv7482_txb: endpoint {
-> > > >                                 remote-endpoint = <&csi20_in>;
-> > > >                         };
-> > > >                 };
-> > > > +
-> > > > +               port@c {
-> > > > +                       reg = <12>;
-> > > > +
-> > > > +                       adv7482_i2s: endpoint {
-> > > > +                               remote-endpoint = <&rsnd_endpoint3>;
-> > > > +                               system-clock-direction-out;
-> > > > +                       };
-> > > > +               };
-> > >
-> > > As the adv748x driver just ignores "invalid" endpoints...
-> > >
-> > > > @@ -758,8 +769,19 @@ &rcar_sound {
-> > > >                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
-> > > >                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
-> > > >                  <&audio_clk_a>, <&cs2000>,
-> > > > -                <&audio_clk_c>,
-> > > > +                <&adv7482_hdmi_in>,
-> > > >                  <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
-> > >
-> > > ... and the rsnd driver ignores nonexistent-clocks, the DT change has no
-> > > hard dependency on the driver change, and won't introduce regressions
-> > > when included, right?
-> >
-> > Well, it maybe won't, but isn't it a little ... implicit?
-> > And I'm no haste to include the changes, if you mean I can (or should) submit
-> > the device tree patch separately.
-> 
-> OK, fine for me to postpone (that'll be for v5.9, I guess?).
-> 
-
-Looks scary :)
-But yes, fine with me too.
-
-v5 with ssi4 dummy in a moment.
-
-Regards,
-Alex
+SGksDQoNCk9uIDAyLzA0LzIwMjAgMTc6MjksIHRhbmdiaW5AY21zcy5jaGluYW1vYmlsZS5j
+b20gd3JvdGU6DQo+IERlYXIgTmVpbO+8mg0KPiDCoCDCoCDCoCDCoCBUaGFuayB5b3UgZm9y
+IHlvdXIgcmVwbGF577yMbWF5YmUgbXkgZGVzY3JpcHRpb24gaXMgbm90IHNvIGNsZWFy44CC
+V2hhdCBJIHdhbnQgdG8gc2F5IGlz77yaSW4gdGhpcyBwbGFjZSwgd2hlbiBzb21ldGhpbmcg
+Z29lcyB3cm9uZywgcGxhdGZvcm1fZ2V0X2lycSgpIHdpbGwgcHJpbnQgYW4gZXJyb3IgbWVz
+c2FnZSwgYW5kIHRoaXMgZnVuY3Rpb24gd2lsbCBwcmludCBib3Ro77yMc28gaWYgd2Ugd2Fu
+dCB0byBhdm9pZCB0aGUgc2l0dWF0aW9uIG9mIHJlcGVhdCBvdXRwdXTvvIx3ZSBjYW4gcmVt
+b3ZlIGRldl9lcnIoKSBoZXJlIG9yIHVzZSBwbGF0Zm9ybV9nZXRfaXJxX29wdGlvbmFsKCkg
+wqBpbnN0ZWFkIG9mIHBsYXRmb3JtX2dldF9pcnEoKeOAglRoYW5rIHlvdSB2ZXJ5IG11Y2jj
+gIINCg0KUGxlYXNlIGRvIG5vdCB0b3AtcG9zdC4NCg0KU2luY2UgdGhlIGlycSBpcyBub3Qg
+b3B0aW9uYWwsIHJlbW92aW5nIHRoZSBkZXZfZXJyKCkgaXMgdGhlIHJpZ2h0IHdheSB0byBn
+by4NCg0KTmVpbA0KDQo+IA0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gDQo+ICAgICDCoA0K
+PiAgICAgKkZyb206KsKgTmVpbCBBcm1zdHJvbmcgPG1haWx0bzpuYXJtc3Ryb25nQGJheWxp
+YnJlLmNvbT4NCj4gICAgICpEYXRlOirCoDIwMjAtMDQtMDLCoDIxOjI2DQo+ICAgICAqVG86
+KsKgVGFuZyBCaW4gPG1haWx0bzp0YW5nYmluQGNtc3MuY2hpbmFtb2JpbGUuY29tPjsgY2xh
+YmJlIDxtYWlsdG86Y2xhYmJlQGJheWxpYnJlLmNvbT47IGhlcmJlcnQgPG1haWx0bzpoZXJi
+ZXJ0QGdvbmRvci5hcGFuYS5vcmcuYXU+OyBkYXZlbSA8bWFpbHRvOmRhdmVtQGRhdmVtbG9m
+dC5uZXQ+DQo+ICAgICAqQ0M6KsKgbGludXgtYW1sb2dpYyA8bWFpbHRvOmxpbnV4LWFtbG9n
+aWNAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4LWNyeXB0byA8bWFpbHRvOmxpbnV4LWNy
+eXB0b0B2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1rZXJuZWwgPG1haWx0bzpsaW51eC1rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnPg0KPiAgICAgKlN1YmplY3Q6KsKgUmU6IFtQQVRDSF0gY3J5
+cHRvOmFtbG9naWMgLSB1c2UgcGxhdGZvcm1fZ2V0X2lycV9vcHRpb25hbCgpDQo+ICAgICBI
+aSwNCj4gICAgIMKgDQo+ICAgICBPbiAwMi8wNC8yMDIwIDEzOjMzLCBUYW5nIEJpbiB3cm90
+ZToNCj4gICAgID4gSW4gb3JkZXIgdG8gc2ltcGx5IGNvZGUsYmVjYXVzZSBwbGF0Zm9ybV9n
+ZXRfaXJxKCkgYWxyZWFkeSBoYXMNCj4gICAgID4gZGV2X2VycigpIG1lc3NhZ2UuDQo+ICAg
+ICA+DQo+ICAgICA+IFNpZ25lZC1vZmYtYnk6IFRhbmcgQmluIDx0YW5nYmluQGNtc3MuY2hp
+bmFtb2JpbGUuY29tPg0KPiAgICAgPiAtLS0NCj4gICAgID7CoCBkcml2ZXJzL2NyeXB0by9h
+bWxvZ2ljL2FtbG9naWMtZ3hsLWNvcmUuYyB8IDIgKy0NCj4gICAgID7CoCAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gICAgID4NCj4gICAgID4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3J5cHRvL2FtbG9naWMvYW1sb2dpYy1neGwtY29yZS5j
+IGIvZHJpdmVycy9jcnlwdG8vYW1sb2dpYy9hbWxvZ2ljLWd4bC1jb3JlLmMNCj4gICAgID4g
+aW5kZXggOWQ0ZWFkMmY3Li4zNzkwMWJkODEgMTAwNjQ0DQo+ICAgICA+IC0tLSBhL2RyaXZl
+cnMvY3J5cHRvL2FtbG9naWMvYW1sb2dpYy1neGwtY29yZS5jDQo+ICAgICA+ICsrKyBiL2Ry
+aXZlcnMvY3J5cHRvL2FtbG9naWMvYW1sb2dpYy1neGwtY29yZS5jDQo+ICAgICA+IEBAIC0y
+NTIsNyArMjUyLDcgQEAgc3RhdGljIGludCBtZXNvbl9jcnlwdG9fcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikNCj4gICAgID7CoA0KPiAgICAgPsKgIG1jLT5pcnFzID0g
+ZGV2bV9rY2FsbG9jKG1jLT5kZXYsIE1BWEZMT1csIHNpemVvZihpbnQpLCBHRlBfS0VSTkVM
+KTsNCj4gICAgID7CoCBmb3IgKGkgPSAwOyBpIDwgTUFYRkxPVzsgaSsrKSB7DQo+ICAgICA+
+IC0gbWMtPmlycXNbaV0gPSBwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIGkpOw0KPiAgICAgPiAr
+IG1jLT5pcnFzW2ldID0gcGxhdGZvcm1fZ2V0X2lycV9vcHRpb25hbChwZGV2LCBpKTsNCj4g
+ICAgID7CoCBpZiAobWMtPmlycXNbaV0gPCAwKSB7DQo+ICAgICA+wqAgZGV2X2VycihtYy0+
+ZGV2LCAiQ2Fubm90IGdldCBJUlEgZm9yIGZsb3cgJWRcbiIsIGkpOw0KPiAgICAgPsKgIHJl
+dHVybiBtYy0+aXJxc1tpXTsNCj4gICAgID4NCj4gICAgIMKgDQo+ICAgICBOQUNLLCB0aGUg
+aXJxIGlzIG5vdCBvcHRpb25hbCwgSSBkb24ndCBzZWUgd2h5IHBsYXRmb3JtX2dldF9pcnFf
+b3B0aW9uYWwoKSBzaG91bGQgYmUgdXNlZCBoZXJlDQo+ICAgICBhbmQgaG93IGl0IGNvdWxk
+ICJzaW1wbHkgY29kZSIuDQo+ICAgICDCoA0KPiAgICAgTmVpbA0KPiANCg0K
