@@ -2,225 +2,113 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA36C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10152C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB09F2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WYfXg3X3"
+	by mail.kernel.org (Postfix) with ESMTP id D8E6E20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:53:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585835611;
+	bh=e2mD8+QaUawKZUIdArDDRCxzyP8fJnIv/2Fv/9jRSbc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LpBQ1TIZW65Tlzc885r2UXVP/F+Vvm5M/yAWDuLpcHt2+dEWRge3uR/jKuPep/a45
+	 b3FHPAxSGTmsvhoCw4lHc4Z8WOHu6ux5eJj4PInkZploiwypbKWazkIOY5gYzEj11m
+	 frDtcmyfQSJ1ymKQ5YCVAR4jxro6CC8/WJql25K8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731785AbgDBNwx (ORCPT
+        id S1732402AbgDBNxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:52:53 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40897 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbgDBNww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:52:52 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a81so3727935wmf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 06:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Af2JSDwihc8nF6h/8r9tRfhzK4NkNkC7mPnujbacA4E=;
-        b=WYfXg3X36AvqTwJlAkbyeB6mKBOAK4tblKRvp+PMMksyR0S+HJiQ8pBMj3B8ZUuAyx
-         9iFRCYbcf7lfCQMiTODRucJHoBZHdViAHeeudHlctD3QMK3Nk6uqA4b6yPPC3ZrtUD/Z
-         c5vy1wJM/9q0Xg/l6zOKJJ7K9Pdum8Yk6zYxbAJLfrX1bgMDIBsISAHQ93Ww2aOTyF9H
-         jwL2pYynj7Sy+tGf70y/BhPAtrsRWlqoxT2kL2R3v3862E9vGOtoAK7yFFk4nfSD0oAw
-         Ksv7LLgk+aMBu8EqTzLL7LcEDcdMqxpBUaNqyrkWiOHrfRYMiOPaqTtrrkwRGO7ljpMl
-         KCHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Af2JSDwihc8nF6h/8r9tRfhzK4NkNkC7mPnujbacA4E=;
-        b=OHGlfVYSxhpUvs+8xC+GzvBGW6BLZTd0NqQoiibvik6pnm2/IzygYmyY+GCzQG1r67
-         1+GHXiEIG3nPHFMBuI7C0JhDJHLwy/E/2uotWQVozQietjq50SsjvEWluPjfWv3wyvXl
-         5YvhCAqzChELZrSBk6Y9UK3kHwA28HtPO1HDYieOjy/3knk5SG09Neqat+HNpnliBlVD
-         Uyfl6am6Dd5KdQ1n2VurZ1K+1pkJVwDMXS6sEBP4/iNN7E233nF8e+D5yU2qbkZ6WEJi
-         HYBy0xta/zpvLpb1bOCA0L1Go7DiG5RTyjAdI+HmLzHyXpvYm7h23lYrLlCH4qKtqGUW
-         nb5Q==
-X-Gm-Message-State: AGi0PuafY7IblyEy2dagUhKlEvIqNd3QsqNOo6oOPdjmiCb4maCnzd2E
-        sElh1JPm9VxGS2y8C+LFYLZ65Q==
-X-Google-Smtp-Source: APiQypLNnVYOD2AZt87qLBOpKyN+9iazNk3xW8ANrER0HUdIDL6UmjerB/gZbsECOzD4MivOwsvPlw==
-X-Received: by 2002:a1c:2285:: with SMTP id i127mr3827555wmi.152.1585835569034;
-        Thu, 02 Apr 2020 06:52:49 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:6097:1406:6470:33b5])
-        by smtp.gmail.com with ESMTPSA id w204sm7370919wma.1.2020.04.02.06.52.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 06:52:48 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 15:52:40 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     alex.williamson@redhat.com, eric.auger@redhat.com,
-        kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        joro@8bytes.org, ashok.raj@intel.com, jun.j.tian@intel.com,
-        yi.y.sun@intel.com, peterx@redhat.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hao.wu@intel.com
-Subject: Re: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Message-ID: <20200402135240.GE1176452@myrica>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
+        Thu, 2 Apr 2020 09:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726425AbgDBNxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:53:30 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2767E2073B;
+        Thu,  2 Apr 2020 13:53:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585835610;
+        bh=e2mD8+QaUawKZUIdArDDRCxzyP8fJnIv/2Fv/9jRSbc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aFK8PuE53AAEurbQ6VeYnOyh1G1pTUhbgyXsdRg2MbipOPO+gI+JyCrvqROJ7R9rS
+         zV8JP+Cg4wd7in8MVjarXIHfQ+KYx9XwXc/A/QoFB+R6f4ATHc5wTAdHiWi5Uz7zjx
+         Vb0Bim6QH05Wpi4bYe/MGDPagBZszEj1kfYIgaQ4=
+Date:   Thu, 2 Apr 2020 15:53:23 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        hverkuil@xs4all.nl,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        laurent.pinchart@ideasonboard.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: Re: [PATCH 1/1] lib/vsprintf: Add support for printing V4L2 and DRM
+ fourccs
+Message-ID: <20200402155323.6866b5c9@coco.lan>
+In-Reply-To: <87eet6mgk7.fsf@intel.com>
+References: <20200401140522.966-1-sakari.ailus@linux.intel.com>
+        <87eet6mgk7.fsf@intel.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yi,
+Em Thu, 02 Apr 2020 11:34:48 +0300
+Jani Nikula <jani.nikula@linux.intel.com> escreveu:
 
-On Sun, Mar 22, 2020 at 05:31:58AM -0700, Liu, Yi L wrote:
-> From: Liu Yi L <yi.l.liu@intel.com>
+> On Wed, 01 Apr 2020, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
+> > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
+> > the same implementation can be used.  
 > 
-> For a long time, devices have only one DMA address space from platform
-> IOMMU's point of view. This is true for both bare metal and directed-
-> access in virtualization environment. Reason is the source ID of DMA in
-> PCIe are BDF (bus/dev/fnc ID), which results in only device granularity
-> DMA isolation. However, this is changing with the latest advancement in
-> I/O technology area. More and more platform vendors are utilizing the PCIe
-> PASID TLP prefix in DMA requests, thus to give devices with multiple DMA
-> address spaces as identified by their individual PASIDs. For example,
-> Shared Virtual Addressing (SVA, a.k.a Shared Virtual Memory) is able to
-> let device access multiple process virtual address space by binding the
-> virtual address space with a PASID. Wherein the PASID is allocated in
-> software and programmed to device per device specific manner. Devices
-> which support PASID capability are called PASID-capable devices. If such
-> devices are passed through to VMs, guest software are also able to bind
-> guest process virtual address space on such devices. Therefore, the guest
-> software could reuse the bare metal software programming model, which
-> means guest software will also allocate PASID and program it to device
-> directly. This is a dangerous situation since it has potential PASID
-> conflicts and unauthorized address space access.
-
-It's worth noting that this applies to Intel VT-d with scalable mode, not
-IOMMUs that use one PASID space per VM
-
-> It would be safer to
-> let host intercept in the guest software's PASID allocation. Thus PASID
-> are managed system-wide.
+> I'm not going to take a strong stand in one way or the other regarding
+> the patch at hand, but I do think at some point we have to draw a line
+> what should be included in printk formats. Arguably they should be
+> reserved to things that are generally useful across large parts of the
+> kernel, right?
 > 
-> This patch adds VFIO_IOMMU_PASID_REQUEST ioctl which aims to passdown
-> PASID allocation/free request from the virtual IOMMU. Additionally, such
-> requests are intended to be invoked by QEMU or other applications which
-> are running in userspace, it is necessary to have a mechanism to prevent
-> single application from abusing available PASIDs in system. With such
-> consideration, this patch tracks the VFIO PASID allocation per-VM. There
-> was a discussion to make quota to be per assigned devices. e.g. if a VM
-> has many assigned devices, then it should have more quota. However, it
-> is not sure how many PASIDs an assigned devices will use. e.g. it is
-> possible that a VM with multiples assigned devices but requests less
-> PASIDs. Therefore per-VM quota would be better.
-> 
-> This patch uses struct mm pointer as a per-VM token. We also considered
-> using task structure pointer and vfio_iommu structure pointer. However,
-> task structure is per-thread, which means it cannot achieve per-VM PASID
-> alloc tracking purpose. While for vfio_iommu structure, it is visible
-> only within vfio. Therefore, structure mm pointer is selected. This patch
-> adds a structure vfio_mm. A vfio_mm is created when the first vfio
-> container is opened by a VM. On the reverse order, vfio_mm is free when
-> the last vfio container is released. Each VM is assigned with a PASID
-> quota, so that it is not able to request PASID beyond its quota. This
-> patch adds a default quota of 1000. This quota could be tuned by
-> administrator. Making PASID quota tunable will be added in another patch
-> in this series.
-> 
-> Previous discussions:
-> https://patchwork.kernel.org/patch/11209429/
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Yi Sun <yi.y.sun@linux.intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/vfio/vfio.c             | 130 ++++++++++++++++++++++++++++++++++++++++
->  drivers/vfio/vfio_iommu_type1.c | 104 ++++++++++++++++++++++++++++++++
->  include/linux/vfio.h            |  20 +++++++
->  include/uapi/linux/vfio.h       |  41 +++++++++++++
->  4 files changed, 295 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> index c848262..d13b483 100644
-> --- a/drivers/vfio/vfio.c
-> +++ b/drivers/vfio/vfio.c
-> @@ -32,6 +32,7 @@
->  #include <linux/vfio.h>
->  #include <linux/wait.h>
->  #include <linux/sched/signal.h>
-> +#include <linux/sched/mm.h>
->  
->  #define DRIVER_VERSION	"0.3"
->  #define DRIVER_AUTHOR	"Alex Williamson <alex.williamson@redhat.com>"
-> @@ -46,6 +47,8 @@ static struct vfio {
->  	struct mutex			group_lock;
->  	struct cdev			group_cdev;
->  	dev_t				group_devt;
-> +	struct list_head		vfio_mm_list;
-> +	struct mutex			vfio_mm_lock;
->  	wait_queue_head_t		release_q;
->  } vfio;
->  
-> @@ -2129,6 +2132,131 @@ int vfio_unregister_notifier(struct device *dev, enum vfio_notify_type type,
->  EXPORT_SYMBOL(vfio_unregister_notifier);
->  
->  /**
-> + * VFIO_MM objects - create, release, get, put, search
-> + * Caller of the function should have held vfio.vfio_mm_lock.
-> + */
-> +static struct vfio_mm *vfio_create_mm(struct mm_struct *mm)
-> +{
-> +	struct vfio_mm *vmm;
-> +	struct vfio_mm_token *token;
-> +	int ret = 0;
-> +
-> +	vmm = kzalloc(sizeof(*vmm), GFP_KERNEL);
-> +	if (!vmm)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	/* Per mm IOASID set used for quota control and group operations */
-> +	ret = ioasid_alloc_set((struct ioasid_set *) mm,
+> I think the more specialized you get, the more you should think about
+> just using the plain old %s, and your own helpers.
 
-Hmm, either we need to change the token of ioasid_alloc_set() to "void *",
-or pass an actual ioasid_set struct, but this cast doesn't look good :)
+As I suggested it, from my side, I'd like to have it inside printk :-)
 
-As I commented on the IOASID series, I think we could embed a struct
-ioasid_set into vfio_mm, pass that struct to all other ioasid_* functions,
-and get rid of ioasid_sid.
+There is a subset of formats that are subsystem-specific anyway at
+printk, like the network ones. We use extensively fourcc along the
+media subsystem (and you probably also use fourcc at DRM). Even some input
+devices nowadays may be using V4L2 core (some multi-sensor touching
+devices), with depends on it.
 
-> +			       VFIO_DEFAULT_PASID_QUOTA, &vmm->ioasid_sid);
-> +	if (ret) {
-> +		kfree(vmm);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	kref_init(&vmm->kref);
-> +	token = &vmm->token;
-> +	token->val = mm;
+So, those fourcc codes are pretty common. Having it at the printk
+infra makes a lot easier for people to use them.
 
-Why the intermediate token struct?  Could we just store the mm_struct
-pointer within vfio_mm?
+> Because frankly, the
+> kernel printk specifiers also start getting more than a little obscure.
+
+I liked one of the suggestions of using "%p4cc" (or maybe something
+similar, if having a number there is a problem, like "%pAcc" or "%pfcc")
+for this printk. This would be very easy for people to identify and 
+remember about its meaning.
+
+> Or could we conceive of a way to make this locally extensible yet safe,
+> letting callers use something like %{foo}, as well as providing a
+> locally relevant function to do the conversion?
+
+That's something that it makes sense to be implemented in the future,
+for things that would be self-contained inside an specific subsystem.
 
 Thanks,
-Jean
-
-> +	vmm->pasid_quota = VFIO_DEFAULT_PASID_QUOTA;
-> +	mutex_init(&vmm->pasid_lock);
-> +
-> +	list_add(&vmm->vfio_next, &vfio.vfio_mm_list);
-> +
-> +	return vmm;
-> +}
+Mauro
