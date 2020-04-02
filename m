@@ -2,123 +2,124 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE42EC2BA18
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BD6C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E9F20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C970C20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=bacher09.org header.i=@bacher09.org header.b="ZCMoDjDE"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="fmgw12Se"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390155AbgDBUi2 (ORCPT
+        id S2390086AbgDBUiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:38:28 -0400
-Received: from pub.regulars.win ([89.163.144.234]:50238 "EHLO pub.regulars.win"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbgDBUi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:38:26 -0400
-Subject: Re: [PATCH v4 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bacher09.org;
-        s=reg; t=1585859903;
+        Thu, 2 Apr 2020 16:38:24 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:49455 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgDBUhM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:37:12 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 96BBB2305B;
+        Thu,  2 Apr 2020 22:37:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1585859828;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=yU9hKHsWF04/aHMSAoqtWXojqC2smH8PJdSe85WG+s0=;
-        b=ZCMoDjDEQ+JMvQThTix0Oq40GUHZekLHqu/CMFOVQHlLzDzemAnV0G9FfYylWzY445heWK
-        jghG+YF5yjomUG0DryIiXNHyQHEZJ+HFnYokjYUD4Y2pMRmRehNbw5dQfgTI5J3rprAQt0
-        SA3TqCtBHlEzjZosZtNEXBknwyCTt6c=
-To:     Kees Cook <keescook@chromium.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Liu Yiding <liuyd.fnst@cn.fujitsu.com>, kpsingh@google.com
-References: <202004010849.CC7E9412@keescook>
- <20200402153335.38447-1-slava@bacher09.org>
- <f43f4e17-f496-9ee1-7d89-c8f742720a5f@bacher09.org>
- <CAEf4Bzb2mgDPcdNGWnBgoqsuWYqDiv39U2irn4iCp=7B3kx1nA@mail.gmail.com>
- <202004021328.E6161480@keescook>
-From:   Slava Bacherikov <slava@bacher09.org>
-Autocrypt: addr=slava@bacher09.org; prefer-encrypt=mutual; keydata=
- mQINBFFdcIUBEAC9HZz+DbqCs+jyJjpvRyped8U4bz716OZKvZCTH4fNxrrV0fYWRn7LJ/dU
- r5tBnwhmlTWD4v6hk88qpD9flagkSP4UuIAo+3aopxvrkyWXXYiEAjSL2uTFolcEO40HuYPk
- 7nprTEzHcHgcYq2wzJfE046gimzFYcUXkrv1gC89RdkwOgLTFb80QUpKyVeoKJWKWHPfRqGF
- FxpFwMnW3IrgZhOnl8X859WwKUc/agPz05LjaksGpAP8ayfruxtG/3Hl7OulYPWIkTuxHAtK
- xW9QL7Vt24P8rVLC7sgNZYcjaOcY70PCkGLnquETuIeeCwhKr/e2n+ymH+CxlAiUY+blNpO5
- S5P+rwb0qPvGDzjF+Drdp0ye/S3kMa+FNrELW06Fp74p7BgsPgNsuBVg300JWMFXiS7YeMZV
- cyedAzGbcO8yxrY6ZnuNF8rLiZOYde79yN82wTNw/fWZtHhz8QJELZzMNjZd3/w61ztSs9ng
- mduiqv9EyNKlEEuxy6N4jGTQ2YYLE/YcIx654rCfpJWJhj2kDd4k2uNRrhJI7t4duHC86K4M
- HiOwC7PIKlIbtrpYnTZPXXcQHp69LDzxCAA6dgGkhjZsUTVci0rTEfRQjkXYvK/f3P1SHF1M
- EHoeEaclqvpkuvPcbHQ/TBwBJs+ekdFCTmBzv0UwqZKfaPW5yQARAQABtDJTbGF2YSBCYWNo
- ZXJpa292IChNeSBOZXcgS2V5KSA8c2xhdmFAYmFjaGVyMDkub3JnPokCWQQTAQIAQwIbIwUJ
- DShogAcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAFiEEZkmc+DLOftzkG8AWUSYbvb34nfMF
- AlkF95wCGQEACgkQUSYbvb34nfO7FQ//drNtAxFi294vVZnN+wyVimXGiyBHpBPnEK5/hSQ5
- oBVvjFl8Ws7q13WWklhdPgM3atAukADMG5wr3IM3ctS1L2+502TYGv8W5jvUlso/TxjNdVQz
- SDicmPCMMs91BWHiJHkYKErUXxNtCaBQqVV2rAKiDoK1gtFrWfH/3OgP6RS+mLMt5eJ/PHsc
- kAuvaXOIzWxjclGMB2yAQzmK7SImOHp7YUBqXrOt523sz29p+1q0+y6ZRlPNctys/okUdnoK
- bi0rMBqbHngaoi/al9Clh9jrhqjZHJLPSM091u3ubuQkvtg3BOhqs0I/b7Xz83VxN0pj8XHI
- z4MRFwfhVSKW4pRLf92DKAa9PEYxA9QtboKafZG2EJfrUauba29/JoIh8Evi5MIuWNeZK7pK
- t3+NadAwXwcLP4RlLuOkVrF+DAuhEktvdJBvTfUkipeQo3YGcffm1daJWoUKiP2a3tqJ9fz8
- Zd5cy8hvKFCv5VsoqF2voc6uaadH1/Pwylnw2fzTfGzFP0bsz/HI8F7g3WFv0PrrtkXnPUCD
- 2IbmIGe8fi7NBTIqtc+mDMsqOIa4hlLBGkP8jHnCPv6oaGYlWemzcVhehU3XQOKyT2lroZan
- nnARpEW9lSSeWPba99+PJu0q2rEaQj/Vhy/m2db89kYeLcEuItd4DYKk7rHZSrHBKwM=
-Message-ID: <ddd2ac2e-fc7e-3216-69cd-4e9a01df1958@bacher09.org>
-Date:   Thu, 2 Apr 2020 23:38:21 +0300
+         in-reply-to:in-reply-to:references:references;
+        bh=yHhnQloQUToDXGnXijKLNbDzOyKNXrK7+WubSxFsj34=;
+        b=fmgw12SemaGEIfSEBCQzUnyWQHyCjVN4ngtWhMWFWjFdgEAM6M/7E9tl4Gk97tKm7jW1oo
+        tzXQfFZI83f5lSl1lrLDAImvRAeGk7FpnwYrV3YwXSKvHS/yC2MMPhuJF0sslDJlPJMihz
+        91YbaXZSQEyvxgc48mdxI5rpc8HA9CI=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v2 01/16] include/linux/ioport.h: add helper to define REG resource constructs
+Date:   Thu,  2 Apr 2020 22:36:41 +0200
+Message-Id: <20200402203656.27047-2-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200402203656.27047-1-michael@walle.cc>
+References: <20200402203656.27047-1-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <202004021328.E6161480@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 96BBB2305B
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[24];
+         MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.177];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Similar to the existing helpers, add one for IORESOURCE_REG which comes
+in handy for most common resource declarations.
 
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ include/linux/ioport.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-02.04.2020 23:34, Kees Cook wrote:
-> On Thu, Apr 02, 2020 at 12:31:36PM -0700, Andrii Nakryiko wrote:
->> On Thu, Apr 2, 2020 at 8:40 AM Slava Bacherikov <slava@bacher09.org> wrote:
->>>
->>>
->>>
->>> 02.04.2020 18:33, Slava Bacherikov wrote:
->>>> +     depends on DEBUG_INFO || COMPILE_TEST
->>>
->>> Andrii are you fine by this ?
->>
->> I think it needs a good comment explaining this weirdness, at least.
->> As I said, if there is no DEBUG_INFO, there is not point in doing
->> DWARF-to-BTF conversion, even more -- it actually might fail, I
->> haven't checked what pahole does in that case. So I'd rather drop
->> GCC_PLUGIN_RANDSTRUCT is that's the issue here. DEBUG_INFO_SPLIT and
->> DEBUG_INFO_REDUCED look good.
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index a9b9170b5dd2..cdcceeec0f86 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -165,6 +165,11 @@ enum {
+ #define DEFINE_RES_MEM(_start, _size)					\
+ 	DEFINE_RES_MEM_NAMED((_start), (_size), NULL)
+ 
++#define DEFINE_RES_REG_NAMED(_start, _size, _name)			\
++	DEFINE_RES_NAMED((_start), (_size), (_name), IORESOURCE_REG)
++#define DEFINE_RES_REG(_start, _size)					\
++	DEFINE_RES_REG_NAMED((_start), (_size), NULL)
++
+ #define DEFINE_RES_IRQ_NAMED(_irq, _name)				\
+ 	DEFINE_RES_NAMED((_irq), 1, (_name), IORESOURCE_IRQ)
+ #define DEFINE_RES_IRQ(_irq)						\
+-- 
+2.20.1
 
-Yesterday before sending it I tested it against latest bpf git with
-allyesconfig and it compiled fine, even worked in vm ;)
-> 
-> The DEBUG_INFO is separate, AIUI -- it sounds like BTF may entirely
-> break on a compile with weird DWARF configs.
-> 
-> The GCC_PLUGIN_RANDSTRUCT issue is separate: it doesn't make sense to
-> run a kernel built with BTF and GCC_PLUGIN_RANDSTRUCT. But they should
-> have nothing to do with each other with regard to compilation. So, to
-> keep GCC_PLUGIN_RANDSTRUCT disable for "real" builds but leave it on for
-> all*config, randconfig, etc, I'd like to keep the || COMPILE_TEST,
-> otherwise GCC_PLUGIN_RANDSTRUCT won't be part of the many CIs doing
-> compilation testing.
-> 
-> And FWIW, I'm fine to let GCC_PLUGIN_RANDSTRUCT and BTF build together.
-> But if they want to be depends-conflicted, I wanted to keep the test
-> compile trap door.
-> 
-
-Oh, seems I misunderstood you, if everyone agree I'll drop it.
