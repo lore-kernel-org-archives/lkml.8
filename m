@@ -2,109 +2,103 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C07C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D800C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4551A20719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354B420719
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="hoS09uFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388943AbgDBOyg (ORCPT
+        id S2388949AbgDBO5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:54:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:43852 "EHLO foss.arm.com"
+        Thu, 2 Apr 2020 10:57:04 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:31914 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388811AbgDBOyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:54:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 864DB31B;
-        Thu,  2 Apr 2020 07:54:35 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 287C03F71E;
-        Thu,  2 Apr 2020 07:54:35 -0700 (PDT)
-Subject: Re: [PATCH] ACPI: PPTT: Inform user that table offset used for
- Physical processor node ID
-To:     John Garry <john.garry@huawei.com>, rjw@rjwysocki.net,
-        lenb@kernel.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sudeep.holla@arm.com, linuxarm@huawei.com, wanghuiqiang@huawei.com
-References: <1585830145-208714-1-git-send-email-john.garry@huawei.com>
- <89f68a3c-264a-5d1b-e63a-d1147ea07320@arm.com>
- <0244dcc3-6006-2a67-e861-d2bcce4360f6@huawei.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <ab0754b0-cb4b-dbe5-8d93-cc0df8fa4a39@arm.com>
-Date:   Thu, 2 Apr 2020 09:54:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S2388761AbgDBO5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:57:04 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR3y0BTCzHd;
+        Thu,  2 Apr 2020 16:57:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1585839422; bh=8lunpxS98lM0f3PoyUteDz8Xwp4fV51FcDnCqkylrZA=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=hoS09uFW+GPXuh1z+aIpbT5MAjC6fnIv73IWsJ6Kx81UG0BtmCdCXIn0NpweywAKf
+         DssCFHbtDscIkD5JbBxkg4+UZ+Z2b4LDO4WIDkJGu2qhusWOWh0VaXX/xGUE9KcIkm
+         4L4Ig3fCovSKv1E/Bm4Zx3LSTZQ9xOVo2MzkjRG4xtvJ+tCdqKPm4/zfIcqh71dN2F
+         hXugqAitTvANvZCHLlGrD2qWnUaErvnhyMPYwsac0wyZp9HwtLWzdw4vwKgVUJoWnN
+         mznrqbWtMMLTTEtS+yb3T8b+jyqKFKFAnohlc8j03SnPLtnzUCPBXDKTR4oayf2Zdr
+         4OcC+gLo+egYg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Thu, 02 Apr 2020 16:57:01 +0200
+Message-Id: <cdf9c0b02acdee77721039d4e7557e0e232d837d.1585837575.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 1/7] power: supply: core: reduce power_supply_show_usb_type()
+ parameters
 MIME-Version: 1.0
-In-Reply-To: <0244dcc3-6006-2a67-e861-d2bcce4360f6@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Reduce power_supply_show_usb_type() parameter count by folding
+power_supply_desc dereference into the function.  This makes following
+patch making usb_types const easier.
 
-On 4/2/20 9:51 AM, John Garry wrote:
-> On 02/04/2020 14:55, Jeremy Linton wrote:
->> Hi,
->>
->> On 4/2/20 7:22 AM, John Garry wrote:
->>> If the the Processor ID valid is not set for a Physical Processor 
->>> Package
->>> node, then the node table offset is used as a substitute. As such, we
->>> may get info like this from sysfs:
->>>
->>> root@(none)$ pwd
->>> /sys/devices/system/cpu/cpu0/topology
->>> root@(none)$ more physical_package_id
->>> 56
->>>
->>> Inform the user of this in the bootlog, as it is much less than 
->>> ideal, and
->>> they can remedy this in their FW.
->>>
->>> This topic was originally discussed in:
->>> https://lore.kernel.org/linux-acpi/c325cfe2-7dbf-e341-7f0f-081b6545e890@huawei.com/T/#m0ec18637d8586f832084a8a6af22580e6174669a 
->>>
->>>
->>> Signed-off-by: John Garry <john.garry@huawei.com>
->>>
->>> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
->>> index 4ae93350b70d..b4ed3c818e00 100644
->>> --- a/drivers/acpi/pptt.c
->>> +++ b/drivers/acpi/pptt.c
->>> @@ -515,6 +515,8 @@ static int topology_get_acpi_cpu_tag(struct 
->>> acpi_table_header *table,
->>>           if (level == 0 ||
->>>               cpu_node->flags & ACPI_PPTT_ACPI_PROCESSOR_ID_VALID)
->>>               return cpu_node->acpi_processor_id;
->>> +        if (level == PPTT_ABORT_PACKAGE)
->>> +            pr_notice_once("Physical package node Processor ID valid 
->>> not set, will use table offset as substitute\n");
-> 
-> Hi Jeremy,
-> 
->>
->> What happens in the find_acpi_cpu_topology_hetro_id() case, if the 
->> last IDENTICAL node isn't a socket/etc. Are we expecting to warn of a 
->> missing processor container there as well?
-> 
-> ok, I could just use this then:
-> 
-> if (flags & ACPI_PPTT_PHYSCIAL_PACKAGE)
->      pr_notice_once("Physical package node Processor ID ...")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/power/supply/power_supply_sysfs.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-I think that is a better plan.
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index f37ad4eae60b..51de3f47b25d 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -78,8 +78,7 @@ static const char * const power_supply_scope_text[] = {
+ };
+ 
+ static ssize_t power_supply_show_usb_type(struct device *dev,
+-					  enum power_supply_usb_type *usb_types,
+-					  ssize_t num_usb_types,
++					  const struct power_supply_desc *desc,
+ 					  union power_supply_propval *value,
+ 					  char *buf)
+ {
+@@ -88,8 +87,8 @@ static ssize_t power_supply_show_usb_type(struct device *dev,
+ 	bool match = false;
+ 	int i;
+ 
+-	for (i = 0; i < num_usb_types; ++i) {
+-		usb_type = usb_types[i];
++	for (i = 0; i < desc->num_usb_types; ++i) {
++		usb_type = desc->usb_types[i];
+ 
+ 		if (value->intval == usb_type) {
+ 			count += sprintf(buf + count, "[%s] ",
+@@ -163,8 +162,7 @@ static ssize_t power_supply_show_property(struct device *dev,
+ 			      power_supply_type_text[value.intval]);
+ 		break;
+ 	case POWER_SUPPLY_PROP_USB_TYPE:
+-		ret = power_supply_show_usb_type(dev, psy->desc->usb_types,
+-						 psy->desc->num_usb_types,
++		ret = power_supply_show_usb_type(dev, psy->desc,
+ 						 &value, buf);
+ 		break;
+ 	case POWER_SUPPLY_PROP_SCOPE:
+-- 
+2.20.1
 
-> 
-> As I recall, this tag for hetro id is not exposed to userspace (yet).
-
-Correct.
