@@ -2,107 +2,102 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18936C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3785DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F7E20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0691A20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733311AbgDBC3X (ORCPT
+        id S1733270AbgDBCdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 22:29:23 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47118 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732462AbgDBC3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 22:29:23 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 90C198785B598A99A593;
-        Thu,  2 Apr 2020 10:29:14 +0800 (CST)
-Received: from [127.0.0.1] (10.173.223.234) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Apr 2020
- 10:29:10 +0800
-Subject: Re: [PATCH -next] ext4: Fix build error while CONFIG_PRINTK is n
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-References: <20200401073038.33076-1-yuehaibing@huawei.com>
- <20200401212859.GN768293@mit.edu>
-CC:     <adilger.kernel@dilger.ca>, <linux-ext4@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <b9e56f54-2180-4a2c-3e0b-47e85dec221b@huawei.com>
-Date:   Thu, 2 Apr 2020 10:29:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 1 Apr 2020 22:33:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:36260 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727135AbgDBCdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 22:33:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5664F30E;
+        Wed,  1 Apr 2020 19:33:19 -0700 (PDT)
+Received: from [10.163.1.8] (unknown [10.163.1.8])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D50E93F71E;
+        Wed,  1 Apr 2020 19:33:16 -0700 (PDT)
+Subject: Re: [PATCH 0/6] Introduce ID_PFR2 and other CPU feature changes
+To:     Peter Maydell <peter.maydell@linaro.org>
+Cc:     arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        kvmarm@lists.cs.columbia.edu
+References: <1580215149-21492-1-git-send-email-anshuman.khandual@arm.com>
+ <45ce930c-81b3-3161-ced6-34a8c8623ac8@arm.com>
+ <CAFEAcA_yZ55rOD1x+FE9wYO8HXx9seK72ZCmnWjtDVr_95-whg@mail.gmail.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <c2b672ca-9b74-89f8-388c-555bbcbd57ba@arm.com>
+Date:   Thu, 2 Apr 2020 08:03:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200401212859.GN768293@mit.edu>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAFEAcA_yZ55rOD1x+FE9wYO8HXx9seK72ZCmnWjtDVr_95-whg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/2 5:28, Theodore Y. Ts'o wrote:
-> On Wed, Apr 01, 2020 at 03:30:38PM +0800, YueHaibing wrote:
->> fs/ext4/balloc.c: In function ‘ext4_wait_block_bitmap’:
->> fs/ext4/balloc.c:519:3: error: implicit declaration of function ‘ext4_error_err’; did you mean ‘ext4_error’? [-Werror=implicit-function-declaration]
->>    ext4_error_err(sb, EIO, "Cannot read block bitmap - "
->>    ^~~~~~~~~~~~~~
+On 02/14/2020 09:28 PM, Peter Maydell wrote:
+> On Fri, 14 Feb 2020 at 04:23, Anshuman Khandual
+> <anshuman.khandual@arm.com> wrote:
 >>
->> Add missing stub helper and fix ext4_abort.
 >>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: 2ea2fc775321 ("ext4: save all error info in save_error_info() and drop ext4_set_errno()")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> 
-> Thanks; the patch isn't quite correct, though.  This is what I merged
-> into my tree's version of the "save all error info..." commit.
-> 
->      	       	       	      	    	      - Ted
-> 
+>>
+>> On 01/28/2020 06:09 PM, Anshuman Khandual wrote:
+>>> This series is primarily motivated from an adhoc list from Mark Rutland
+>>> during our ID_ISAR6 discussion [1]. Besides, it also includes a patch
+>>> which does macro replacement for various open bits shift encodings in
+>>> various CPU ID registers. This series is based on linux-next 20200124.
+>>>
+>>> [1] https://patchwork.kernel.org/patch/11287805/
+>>>
+>>> Is there anything else apart from these changes which can be accommodated
+>>> in this series, please do let me know. Thank you.
+>>
+>> Just a gentle ping. Any updates, does this series looks okay ? Is there
+>> anything else related to CPU ID register feature bits, which can be added
+>> up here. FWIW, the series still applies on v5.6-rc1.
 
-Ok, good to know this and thansk!
+Sorry for the delay in response, was distracted on some other patches.
 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index eacd2f9cc833..91eb4381cae5 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -2848,6 +2848,11 @@ do {									\
->  	no_printk(fmt, ##__VA_ARGS__);					\
->  	__ext4_error_inode(inode, "", 0, block, 0, " ");		\
->  } while (0)
-> +#define ext4_error_inode_err(inode, func, line, block, err, fmt, ...)	\
-> +do {									\
-> +	no_printk(fmt, ##__VA_ARGS__);					\
-> +	__ext4_error_inode(inode, "", 0, block, err, " ");		\
-> +} while (0)
->  #define ext4_error_file(file, func, line, block, fmt, ...)		\
->  do {									\
->  	no_printk(fmt, ##__VA_ARGS__);					\
-> @@ -2858,10 +2863,15 @@ do {									\
->  	no_printk(fmt, ##__VA_ARGS__);					\
->  	__ext4_error(sb, "", 0, 0, 0, " ");				\
->  } while (0)
-> -#define ext4_abort(sb, fmt, ...)					\
-> +#define ext4_error_err(sb, err, fmt, ...)				\
-> +do {									\
-> +	no_printk(fmt, ##__VA_ARGS__);					\
-> +	__ext4_error(sb, "", 0, err, 0, " ");				\
-> +} while (0)
-> +#define ext4_abort(sb, err, fmt, ...)					\
->  do {									\
->  	no_printk(fmt, ##__VA_ARGS__);					\
-> -	__ext4_abort(sb, "", 0, " ");					\
-> +	__ext4_abort(sb, "", 0, err, " ");				\
->  } while (0)
->  #define ext4_warning(sb, fmt, ...)					\
->  do {									\
 > 
-> .
-> 
+> I just ran into some "32-bit KVM doesn't expose all the ID
+> registers to userspace via the ONE_REG API" issues today.
+> I don't know if they'd be reasonable as something to include
+> in this patchset or if they're unrelated.
 
+IMHO, they are bit unrelated.
+
+> 
+> Anyway, missing stuff I have noticed specifically:
+>  * MVFR2
+>  * ID_MMFR4
+>  * ID_ISAR6
+> 
+> More generally I would have expected all these 32-bit registers
+> to exist and read-as-zero for the purpose of the ONE_REG APIs,
+> because that's what the architecture says is supposed to happen
+> and it means we have compatibility and QEMU doesn't gradually
+> build up lots of "kernel doesn't support this yet" conditionals...
+> I think we get this right for 64-bit KVM, but can we do it for
+> 32-bit as well?
+
+I am not very familiar with 32-bit KVM but will definitely keep these
+suggestions noted for later, also try and accommodate if possible.
+
+> thanks
+> -- PMM
+> 
