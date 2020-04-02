@@ -2,85 +2,145 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7EAC2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D59C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB07E2078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585833079;
-	bh=rrFl5xQKRZR2PkQNEwtH4MOruQArTRofxhl376m8Xvw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y6lfRbvwtvygiVJdgsJE6/XHH4nEETw5EJc51/aT7BIk5adXeVLrGCeaW9LLc5a5N
-	 gCv11oQS0nAXGiqKNGF1IaLcH2f3OXprrerPPy/UK7XH8uIrMS+J+bWF4NcbVmQM5A
-	 SWPrBXTYfn9pS7lvFTqoGcBQYk5YTvE0BIF3VA0g=
+	by mail.kernel.org (Postfix) with ESMTP id 6E5A4206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GfXyZcO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388511AbgDBNLT (ORCPT
+        id S2388518AbgDBNLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732262AbgDBNLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:11:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94E58206E9;
-        Thu,  2 Apr 2020 13:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585833078;
-        bh=rrFl5xQKRZR2PkQNEwtH4MOruQArTRofxhl376m8Xvw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nW5CCyTn4oSSyBV1cr38N8syGO4TOJpu0u6w8xLr0FJqEcprAKL3PTU3z+SkqlReT
-         ywzNQwrbYneeYIcJ+wZgxTPTDQ2DPU5ZtRx82pVz3wxzDsvRgQ+GM0fn98Ww2DAQFK
-         p+JEFd3UfE8s21ffSvqGmbNVHC+tJxAujjXYlaXk=
-Date:   Thu, 2 Apr 2020 15:11:15 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chris Paterson <Chris.Paterson2@renesas.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 000/116] 4.19.114-rc1 review
-Message-ID: <20200402131115.GB2891655@kroah.com>
-References: <20200401161542.669484650@linuxfoundation.org>
- <TYAPR01MB22855DF740F7C9D9493D49EFB7C90@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+        Thu, 2 Apr 2020 09:11:47 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:45202 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732262AbgDBNLr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:11:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=neWmpBaTCRzgvC5RnHDeEfc0nV2vBJLslYFOXDTjpJk=; b=GfXyZcO31CeVTBTHHUjISz2Ra
+        1/sk9nlEYINhahrMXRnJtAmOi+G9s+/5oL4lZEq28ZOhN/plLQpoklP53VIs73rSrcgMzvjESrQeD
+        rgieyxpA50KCE7oIbhMZpFKY3hevMHDxSgQvM1AtsHaaX0VzJVpMCNXi+Xh8NVjlAPIED4rWJ2Ypx
+        PU8XVxxQFN69FxfXJLUc/1KcTIt/bPPH+Fmt10GdUv/CQuutOKv8nKvyNYn04CrMhDEfasjdZ+WU0
+        1bpaIluTJrrCicy+RXmjeUWbNRXvOIwOfIiXDOOBYTLwA7+tI0Fi0CN0MWdqI6CnaMPahTWwLEuE1
+        lbVJtjkpg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:40558)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jJzdH-0003Nj-RU; Thu, 02 Apr 2020 14:11:44 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jJzdH-0001ij-A8; Thu, 02 Apr 2020 14:11:43 +0100
+Date:   Thu, 2 Apr 2020 14:11:43 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, kernel@collabora.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: exynos: update l2c_aux_mask to fix alert message
+Message-ID: <20200402131143.GZ25745@shell.armlinux.org.uk>
+References: <b29f34870380093e6268c11d3033033d6def61b7.1585756648.git.guillaume.tucker@collabora.com>
+ <20200401163101.GV25745@shell.armlinux.org.uk>
+ <35c7cf4b-e6b8-43aa-d934-4a1c2e738372@collabora.com>
+ <20200402130352.GY25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <TYAPR01MB22855DF740F7C9D9493D49EFB7C90@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+In-Reply-To: <20200402130352.GY25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 08:15:37PM +0000, Chris Paterson wrote:
-> Hello Greg,
-> 
-> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> > Behalf Of Greg Kroah-Hartman
-> > Sent: 01 April 2020 17:16
+On Thu, Apr 02, 2020 at 02:03:52PM +0100, Russell King - ARM Linux admin wrote:
+> On Thu, Apr 02, 2020 at 01:13:24PM +0100, Guillaume Tucker wrote:
+> > On 01/04/2020 17:31, Russell King - ARM Linux admin wrote:
+> > > On Wed, Apr 01, 2020 at 05:08:03PM +0100, Guillaume Tucker wrote:
+> > >> Allow setting the number of cycles for RAM reads in the pl310 cache
+> > >> controller L2 auxiliary control register mask (bits 0-2) since it
+> > >> needs to be changed in software.  This only affects exynos4210 and
+> > >> exynos4412 as they use the pl310 cache controller.
+> > >>
+> > >> With the mask used until now, the following warnings were generated,
+> > >> the 2nd one being a pr_alert():
+> > >>
+> > >>   L2C: platform modifies aux control register: 0x02070000 -> 0x3e470001
+> > >>   L2C: platform provided aux values permit register corruption.
+> > >>
+> > >> This latency cycles value has always been set in software in spite of
+> > >> the warnings.  Keep it this way but clear the alert message about
+> > >> register corruption to acknowledge it is a valid thing to do.
+> > > 
+> > > This is telling you that you are doing something you should not be
+> > > doing.  The L2C controller should be configured by board firmware
+> > > first and foremost, because if, for example, u-boot makes use of the
+> > > L2 cache, or any other pre-main kernel code (in other words,
+> > > decompressor) the setup of the L2 controller will be wrong.
+> > > 
+> > > So, NAK.
 > > 
-> > This is the start of the stable review cycle for the 4.19.114 release.
-> > There are 116 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+> > OK thanks, I guess I misinterpreted the meaning of the error
+> > message.  It's really saying that the register value was not the
+> > right one before the kernel tried to change it.  Next step for me
+> > is to look into U-Boot.
 > 
-> No build/boot issues seen for CIP configs for Linux 4.19.114-rc1 (558d25f4fc65).
+> The message "L2C: platform provided aux values permit register
+> corruption." means that bits are set in both the mask and the value
+> fields.  Since the new value is calculated as:
 > 
-> Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/131909855
-> GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip-pipelines/-/blob/master/trees/linux-4.19.y.yml
+> 	old = register value;
+> 	new = old & mask;
+> 	new |= val;
+> 
+> If bits are set in both "mask" and "val" for a multi-bit field, the
+> value ending up in the field may not be what is intended.  Consider
+> a 5-bit field set initially to 10101, and the requested value is
+> 01000 with a mask of 11111.  What you end up with is not 01000, but
+> 11101.  Hence, register corruption.  It is not possible to easily
+> tell whether the mask and values refer to a multi-bit field or not,
+> so the mere fact that bits are set in both issues the alert.
+> 
+> The message "L2C: platform modifies aux control register ..." means
+> that you're trying to modify the value of the auxiliary control
+> register, which brings with it the problems I stated in my previous
+> email; platform configuration of the L2C must be done by firmware and
+> not the kernel for the reasons I've set out.
 
-Thanks for testing 2 of these and letting me know.
+Actually, looking at the values there:
 
-greg k-h
+        .l2c_aux_val    = 0x3c400001,
+-       .l2c_aux_mask   = 0xc20fffff,
++       .l2c_aux_mask   = 0xc20ffff8,
+
+Bit 0 is L310_AUX_CTRL_FULL_LINE_ZERO feature bit, which platforms have
+no business fiddling with - it is a Cortex-A9/L2C310 specific feature
+that needs both ends to be configured correctly to work.  The L2C code
+knows this and will deal with it.  So, .l2c_aux_val should drop setting
+bit 0.
+
+It's also setting L310_AUX_CTRL_NS_LOCKDOWN, which the kernel already
+deals with - this bit should be dropped as well.
+
+It's clearing L310_AUX_CTRL_CACHE_REPLACE_RR - this should be setup by
+firmware.
+
+For the prefetching, I thought there were DT properties for that.
+Please look at that, and see whether you can eliminate most of the
+.l2c_aux_val field set bits, and the .l2c_aux_mask clear bits.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
