@@ -2,116 +2,84 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5181C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE0EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A62520675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:25:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0Y8bY0Q"
+	by mail.kernel.org (Postfix) with ESMTP id 6566A20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732945AbgDBBZV (ORCPT
+        id S1732752AbgDBB20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 21:25:21 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39392 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732462AbgDBBZV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 21:25:21 -0400
-Received: by mail-pl1-f193.google.com with SMTP id k18so716759pll.6
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 18:25:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ECaKk1XEhaLeQWM1QY7b2cbJfc2H+NtdzI3cEs6W3bc=;
-        b=e0Y8bY0Qfsg7n02ddZ8uiswipY9fuSgKm6X1sbnDAv/lfkxMia058WZBkqhK1Shm17
-         rbhURDSsKfGqJjKOlUlUV1hPqO/r5cxIWXuo9ebuaF40Cwx1NIv7hgfZMYswHlnED/uy
-         laXWmR2WR+D2bLl2xpsyRKvB0q1LRWQVbwujyCMO2IHN7v2HyE4eonQeMS3SafncKKi9
-         a5LEam9Ct4DCAiN63J2BaN5vV43vEQlKajNeDrT0wioFYYpGMIJpTJQ8+Z2XAvX1LnzC
-         wY/Y10MjzbOx4iwbFW0KTzL8oVlYWuoOPNiEIHLJXBzBwB4He1uIlnNFMg7OraR5KX3D
-         xWdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ECaKk1XEhaLeQWM1QY7b2cbJfc2H+NtdzI3cEs6W3bc=;
-        b=e9BGjkM5oqPrJILd+HSRSLkH+Qg3w+ztXaR/BPQlKb6mXXRx3k2mmOQljrEljazOyC
-         wcfvsBfBUvoABymVflsdUmS02WmY8U8auUlCE3540oe3AUo/Z1KkF9zWKt7AoXzMmXlt
-         4M1+OBIRh93X0EOPCMEO9rYdi/bi0/u5uzeoLB/Un5GSSURnn0VhSLF+SxM+iE8Y4gdl
-         yS6Jj1ea2JT4PLQXtNwa9rJpDuJoOScIQYY0WFzodg/+4Kq5k4DhUHtxdRCKh/09ai7p
-         myyLyjoRYIoJK0RNAyBuALYnyQ9H9D1AkIpb+SYyZXxMJTcLETBiLRfSyabxi3Ee6P2D
-         twWQ==
-X-Gm-Message-State: AGi0PuZ24Xtpw4yzwG6eK30kn0Iz+PYS3/fz9hF8AdV65vKWloC7zIJQ
-        Yp1PASAiQzeyo5+P4X8alzA=
-X-Google-Smtp-Source: APiQypLOFU9FlGJw8iOOANTLu4h97F20JAA88jZyZ5O8imCDYlYaifG5zMltxu9kuj6+J1fWyc7dAQ==
-X-Received: by 2002:a17:90a:36c7:: with SMTP id t65mr946992pjb.182.1585790720459;
-        Wed, 01 Apr 2020 18:25:20 -0700 (PDT)
-Received: from OptiPlexFedora.fios-router.home ([47.144.161.84])
-        by smtp.gmail.com with ESMTPSA id q71sm2516633pfc.92.2020.04.01.18.25.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 18:25:19 -0700 (PDT)
-From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
-To:     outreachy-kernel@googlegroups.com,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
-Subject: [PATCH] staging: android: ion: Fix parenthesis alignment
-Date:   Wed,  1 Apr 2020 18:25:15 -0700
-Message-Id: <20200402012515.429329-1-jbwyatt4@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 1 Apr 2020 21:28:26 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:44248 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbgDBB20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 21:28:26 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 51FC91A1109;
+        Thu,  2 Apr 2020 03:28:24 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 993D71A1105;
+        Thu,  2 Apr 2020 03:28:18 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DDF0A402DF;
+        Thu,  2 Apr 2020 09:28:11 +0800 (SGT)
+From:   Sherry Sun <sherry.sun@nxp.com>
+To:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
+        james.morse@arm.com, rrichter@marvell.com, michal.simek@xilinx.com,
+        manish.narani@xilinx.com
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, frank.li@nxp.com
+Subject: [patch v3 0/4] Add edac driver for i.MX8MP based on synopsys edac driver
+Date:   Thu,  2 Apr 2020 09:20:29 +0800
+Message-Id: <1585790433-31465-1-git-send-email-sherry.sun@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix 2 parenthesis alignment issues.
+This patchset add edac driver support for i.MX8MP, since i.MX8MP use the same
+synopsys memory controller with ZynqMP, so the driver is based on synopsys_edac
+driver.
 
-Reported by checkpatch.
+Considering that i.MX8MP dts file is still in kernel/git/shawnguo/linux.git and
+isn't in mainline now, I will add EDAC node in i.MX8MP dts after this file is
+pushed to mainline. 
 
-Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
----
- drivers/staging/android/ion/ion_page_pool.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+And the edac driver for i.MX8MP has been tested in kernel/git/shawnguo/linux.git
+where i.MX8MP is supported, it turns out that this driver works well to detect
+corrected and uncorrected errors for LPDDR4 in i.MX8MP.
 
-diff --git a/drivers/staging/android/ion/ion_page_pool.c b/drivers/staging/android/ion/ion_page_pool.c
-index f85ec5b16b65..0198b886d906 100644
---- a/drivers/staging/android/ion/ion_page_pool.c
-+++ b/drivers/staging/android/ion/ion_page_pool.c
-@@ -37,7 +37,7 @@ static void ion_page_pool_add(struct ion_page_pool *pool, struct page *page)
- 	}
- 
- 	mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
--							1 << pool->order);
-+			    1 << pool->order);
- 	mutex_unlock(&pool->mutex);
- }
- 
-@@ -57,7 +57,7 @@ static struct page *ion_page_pool_remove(struct ion_page_pool *pool, bool high)
- 
- 	list_del(&page->lru);
- 	mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
--							-(1 << pool->order));
-+			    -(1 << pool->order));
- 	return page;
- }
- 
+Changes since v2:
+=================
+- Use u64 data instead u32 data_low and u32 data_high as robert suggested in
+patch 4/4.
+- Add edac_dbg() for the != DEV_X8 cases in zynqmp_get_error_info() in patch
+4/4.
+- Change the format of the output data to avoid build warnings in patch 4/4.
+
+Changes since v1:
+=================
+- Reorganized the patchset, no content changes. 
+
+Sherry Sun (4):
+  dt-bindings: memory-controllers: Add i.MX8MP DDRC binding doc
+  EDAC: Add synopsys edac driver support for i.MX8MP
+  EDAC: synopsys: Add edac driver support for i.MX8MP
+  EDAC: synopsys: Add useful debug and output information for 64bit
+    systems
+
+ .../bindings/memory-controllers/synopsys.txt  |   8 +-
+ drivers/edac/Kconfig                          |   2 +-
+ drivers/edac/synopsys_edac.c                  | 248 ++++++++++++------
+ 3 files changed, 179 insertions(+), 79 deletions(-)
+
 -- 
-2.25.1
+2.17.1
 
