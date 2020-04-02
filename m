@@ -2,187 +2,133 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44797C2BA14
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E3DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D48820CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE23208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387832AbgDBIrn (ORCPT
+        id S2387835AbgDBIsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:47:43 -0400
-Received: from mga12.intel.com ([192.55.52.136]:8975 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728612AbgDBIrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:47:42 -0400
-IronPort-SDR: DWMcAXRx86fmknHj6cZRqNQyiKBtILt+Qm2EVUs8nUJ9M9ScMNQ3zMERLe+ROc8q/gu2TDiKsw
- CUUhcARQewcA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:47:41 -0700
-IronPort-SDR: zMOK9LqSUceG302HKwoy3Ps8RbtGK75fCbEyMpzU63K/hqX3A/Rej1tq8AEHKD7h0CaOF6QtLT
- AtLgD2dZC2Xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
-   d="scan'208";a="252925679"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 02 Apr 2020 01:47:41 -0700
-Received: from [10.249.226.252] (abudanko-mobl.ccr.corp.intel.com [10.249.226.252])
-        by linux.intel.com (Postfix) with ESMTP id AF4B2580781;
-        Thu,  2 Apr 2020 01:47:36 -0700 (PDT)
-Subject: [PATCH v8 04/12] perf tool: extend Perf tool with CAP_PERFMON
- capability support
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <a66d5648-2b8e-577e-e1f2-1d56c017ab5e@linux.intel.com>
-Date:   Thu, 2 Apr 2020 11:47:35 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 04:48:12 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:39989 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728803AbgDBIsL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:48:11 -0400
+Received: from methusalix.internal.home.lespocky.de ([92.117.37.184]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1M1qfu-1jM8Ra0HRw-002CQL; Thu, 02 Apr 2020 10:48:06 +0200
+Received: from falbala.internal.home.lespocky.de ([192.168.243.94])
+        by methusalix.internal.home.lespocky.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <post@lespocky.de>)
+        id 1jJvW7-0002JG-6M; Thu, 02 Apr 2020 10:48:04 +0200
+Date:   Thu, 2 Apr 2020 10:48:02 +0200
+From:   Alexander Dahl <post@lespocky.de>
+To:     linux-doc@vger.kernel.org
+Cc:     Florian Wolters <florian@florian-wolters.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Karsten Keil <isdn@linux-pingi.de>
+Subject: doc: Leftovers from CAPI remove?
+Message-ID: <20200402084801.soysci5abrazctog@falbala.internal.home.lespocky.de>
+Mail-Followup-To: linux-doc@vger.kernel.org,
+        Florian Wolters <florian@florian-wolters.de>,
+        Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Karsten Keil <isdn@linux-pingi.de>
 MIME-Version: 1.0
-In-Reply-To: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tvymzrgbesooq62h"
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Scan-Signature: 2e89b8130284c79aa2484230574bb425
+X-Provags-ID: V03:K1:WoG4PWMIhmmyPPgJD5uwY33yQ9PtnaOtaZPSlEfdVcmnpmqeluR
+ PPGb9KGTHZfe0w0zIGMMRFNqe6NImR7eez2JoPhmPO55ZPinAGXqOkT2ZHrgn1aoKD4U4wl
+ nvnTSeIrSUbjhFJ2UuGBccjwYbUPhikzs52b6+aNeGRkCifqyzRY+804Z2VfVqKiSUIpKeK
+ 6I2jiH/25i4yy2qSPOnjA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:V7YSUOLdg88=:cv5XUDbbL9T9LS2nNpo6b9
+ 4tXadBGkI96fYpa/E8KBVL6S2OuIEF9OG7TTZF5WUlaTznlOJsxOxxZJGSABzTS5alXq+LTdE
+ Y5YeJnQhrJ8dXjrvk9FPrUsd/+c3bPxDDdv21ibbyELleqtPfKhfBzf2eoFfuAyIQBe+FQL0Q
+ klxl1CY/49nYe4yrmjkG/FRkDrdQSWKMnevd1yh0jIW8tDj3pZPxOyMOL3XmYZzy44qc3lBZV
+ RwDb8wEBuZt6/KHg3Gixbci0fNcMzGanl26YKd6QnEUJTwcpytqSwDJ8Mt9p6u7vLE4zhYXhz
+ QlrrA2OEqLB1LVCVvhvZuZUUCnNftDsC9Yg//M6gchvFM7FEirAbrnyK1/WsanThvchm0Xztg
+ i54+KiK0b7U4plIJj2NemEYx2XAPChAjhMIFEDcOWgLJStlF3xyltakcvzdhA/EKaWZF4N0Lx
+ FTnphaorlRzpqbwd5UPxEXJuryWvNJU7chBMD1bSz9wGJGqpMy+Xx5WYNTCUff8swlqLJSOfX
+ UHGSUGNMWtH1DvRCKebczkscOrk6HrpCSmK1t1Vtc87q6stBb7ALeOEF8/WDrTTddYLLZqdmQ
+ UGWso3tmtwcTIPd/2y3caYbHAe872rkdt9gpK/cXvDykxT0yseiZbuDPadsq1Zv5jzkMzeENA
+ DkJp7ZGt3yWufUqQWafVRQaq0QYtclqoBFaaxySTcC1gJN4L6quaN+c7ovrx9igJMXW2E74DU
+ Zc50L2E3sqtwvGJ3qSYeKpj+3iND7ym3qM5W0ZuovDfvg16gKs9+nAVUfut7I5g7MEQpJCDwZ
+ aKdmQkzP0RBwbaTO2h4Q1HgUtVTLdlMUD5i/Ooe5+FfxbOI0VRP12VZa18bXQ6kegLw3X4x
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Extend error messages to mention CAP_PERFMON capability as an option
-to substitute CAP_SYS_ADMIN capability for secure system performance
-monitoring and observability operations. Make perf_event_paranoid_check()
-and __cmd_ftrace() to be aware of CAP_PERFMON capability.
+--tvymzrgbesooq62h
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-CAP_PERFMON implements the principal of least privilege for performance
-monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
-principle of least privilege: A security design principle that states
-that a process or program be granted only those privileges (e.g.,
-capabilities) necessary to accomplish its legitimate function, and only
-for the time that such privileges are actually required)
+Hei hei,
 
-For backward compatibility reasons access to perf_events subsystem remains
-open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
-secure perf_events monitoring is discouraged with respect to CAP_PERFMON
-capability.
+when accidentally building an old Fritz PCI driver=C2=B9 against v5.6.1 we
+hit this build error (which this mail is not about):
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
----
- tools/perf/builtin-ftrace.c |  5 +++--
- tools/perf/design.txt       |  3 ++-
- tools/perf/util/cap.h       |  4 ++++
- tools/perf/util/evsel.c     | 10 +++++-----
- tools/perf/util/util.c      |  1 +
- 5 files changed, 15 insertions(+), 8 deletions(-)
+/home/florian/.fbr/fbr-4.0-trunk-x86_64/buildroot/output/build/fcpci-2.6-43=
+=2Ex86_64-5.6.1/fritz/src/main.c:371:3:
+Fehler: Implizite Deklaration der Funktion =C2=BBregister_capi_driver=C2=AB=
+; meinten Sie =C2=BBregister_chrdev=C2=AB?  [-Werror=3Dimplicit-function-de=
+claration]
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index d5adc417a4ca..55eda54240fb 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -284,10 +284,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		.events = POLLIN,
- 	};
- 
--	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
-+	if (!(perf_cap__capable(CAP_PERFMON) ||
-+	      perf_cap__capable(CAP_SYS_ADMIN))) {
- 		pr_err("ftrace only works for %s!\n",
- #ifdef HAVE_LIBCAP_SUPPORT
--		"users with the SYS_ADMIN capability"
-+		"users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
- #else
- 		"root"
- #endif
-diff --git a/tools/perf/design.txt b/tools/perf/design.txt
-index 0453ba26cdbd..a42fab308ff6 100644
---- a/tools/perf/design.txt
-+++ b/tools/perf/design.txt
-@@ -258,7 +258,8 @@ gets schedule to. Per task counters can be created by any user, for
- their own tasks.
- 
- A 'pid == -1' and 'cpu == x' counter is a per CPU counter that counts
--all events on CPU-x. Per CPU counters need CAP_SYS_ADMIN privilege.
-+all events on CPU-x. Per CPU counters need CAP_PERFMON or CAP_SYS_ADMIN
-+privilege.
- 
- The 'flags' parameter is currently unused and must be zero.
- 
-diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
-index 051dc590ceee..ae52878c0b2e 100644
---- a/tools/perf/util/cap.h
-+++ b/tools/perf/util/cap.h
-@@ -29,4 +29,8 @@ static inline bool perf_cap__capable(int cap __maybe_unused)
- #define CAP_SYSLOG	34
- #endif
- 
-+#ifndef CAP_PERFMON
-+#define CAP_PERFMON	38
-+#endif
-+
- #endif /* __PERF_CAP_H */
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 816d930d774e..2696922f06bc 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2507,14 +2507,14 @@ int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
- 		 "You may not have permission to collect %sstats.\n\n"
- 		 "Consider tweaking /proc/sys/kernel/perf_event_paranoid,\n"
- 		 "which controls use of the performance events system by\n"
--		 "unprivileged users (without CAP_SYS_ADMIN).\n\n"
-+		 "unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).\n\n"
- 		 "The current value is %d:\n\n"
- 		 "  -1: Allow use of (almost) all events by all users\n"
- 		 "      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK\n"
--		 ">= 0: Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN\n"
--		 "      Disallow raw tracepoint access by users without CAP_SYS_ADMIN\n"
--		 ">= 1: Disallow CPU event access by users without CAP_SYS_ADMIN\n"
--		 ">= 2: Disallow kernel profiling by users without CAP_SYS_ADMIN\n\n"
-+		 ">= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
-+		 "      Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN\n"
-+		 ">= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
-+		 ">= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN\n\n"
- 		 "To make this setting permanent, edit /etc/sysctl.conf too, e.g.:\n\n"
- 		 "	kernel.perf_event_paranoid = -1\n" ,
- 				 target->system_wide ? "system-wide " : "",
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index d707c9624dd9..37a9492edb3e 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -290,6 +290,7 @@ int perf_event_paranoid(void)
- bool perf_event_paranoid_check(int max_level)
- {
- 	return perf_cap__capable(CAP_SYS_ADMIN) ||
-+			perf_cap__capable(CAP_PERFMON) ||
- 			perf_event_paranoid() <= max_level;
- }
- 
--- 
-2.24.1
+A quick grep in master revealed there are still hints to the function
+'register_capi_driver()' in file Documentation/isdn/interface_capi.rst
 
+I suppose after removing capi parts with f59aba2f7579 ("isdn: capi:
+dead code removal") and merging with 7ba31c3f2f1e ("Merge tag
+'staging-5.6-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging") these
+are leftovers in the documentation, which should be removed, right?
+
+Greets
+Alex
+
+=C2=B9we still have basic ISDN support in fli4l [1], although no one is
+motivated to maintain it, there are still users, mainly with local
+PBX installations =E2=80=A6
+
+[1] http://www.fli4l.de/
+
+--=20
+/"\ ASCII RIBBON | =C2=BBWith the first link, the chain is forged. The first
+\ / CAMPAIGN     | speech censured, the first thought forbidden, the
+ X  AGAINST      | first freedom denied, chains us all irrevocably.=C2=AB
+/ \ HTML MAIL    | (Jean-Luc Picard, quoting Judge Aaron Satie)
+
+--tvymzrgbesooq62h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEwo7muQJjlc+Prwj6NK3NAHIhXMYFAl6Fpr0ACgkQNK3NAHIh
+XMYTqw/7BhBxs9BmkUSB9GoV3D8XvYV4hqbHz5ntqTgPMJw7ZFoqbtygxpeWAMTJ
+mxNUmHBtOCPOM/yF00zmueYunhuHLP/OCMol9KaLY+CK8AZtit102ja3kvjSVU2f
+5DK1Lt8CR5VQIUp78+/FFIgK3DBLDOWhQHhNWTGcO+MDcqimMCfXdUMQwZmxKDIg
+YUo3qaK19f5nnehOj5fNRnBWlYNTtnsw4lNytq5poRCYDXSojmT7bNbnETllHU4Q
+/r58jjWPynRv6vZg36H6mnmLAC+er3Eo+FgqZnveu6QYitsUdvDCT5Q2ieXp1tJb
+yCIQRRezDA3Uh/5HRghjwU/H/5zhX/28FQsmeF/lRd06L6o+eBhJps32vcXV9Oux
+25SUMFI6RMD2AtWB1VnZqEgIqWIsepDFOlxtDVmLhusm00QSV96l1l9jtIH47t4d
+fJ7hOVGVqJfYweYg2axz+r4/MHHgSvmymrDdCf4cQZTw4AsBPasE49mWfmLNPnpU
+o7Ej5X8cyVoRrfjxgRFppAzK7n9ug7lLd3eAhJ4ziYKHZzG2EiK6nsebYUT+A5F5
+RnueuvXVEAc16RKUts4yYM/7gMkpWchd0hGdG5pQ7S8++pgyaPJcqW0tXIXWvT5v
+rdgBTSqIk+vw68LX1f2xG/KUXsCKi8urabu88lr/PyukNhbIucQ=
+=hRnY
+-----END PGP SIGNATURE-----
+
+--tvymzrgbesooq62h--
