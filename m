@@ -2,258 +2,121 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0150CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720A6C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52262072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499862072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PQYB6b0O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTJlCycd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731836AbgDBNq3 (ORCPT
+        id S1732213AbgDBNsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:46:29 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:63914 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgDBNq3 (ORCPT
+        Thu, 2 Apr 2020 09:48:07 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51074 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727734AbgDBNsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:46:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1585835189; x=1617371189;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DS6bxUN2ImDjhH5wRzTupKct7H43XvDw4TXp4H9sGcA=;
-  b=PQYB6b0OMNyXTKUbIsL5uOLbeUDA5awB0CTwVPu0prRq+lNvmYjsc5Ec
-   8P6iT/MSF7QJfBDMSw39VWU8pF9wI03fufrueQhD4dRPXfuBoDCmOt2yq
-   0vDAjJ8Q/ZJu7pr8ahbiqiI2/IZwARePThy6iHWAkChPwhFEZrqMh87dV
-   YEXKjvvgXI/mBNwgs2WG3MMkdr4OV98kuXJLBMlsW8OJj0l21hnnMAoAh
-   j7JqhWrWSv4QfwS3aBoUKQeyAdJxCJHUEkgwe7Pf868Xx67Lt1yy/Hbuk
-   IYWnOUn+OjGu9UiAqyElncWFKIiLQPkXQW+xxlYSSk5pUyIXyCrRtp05I
-   A==;
-IronPort-SDR: yairDGlYyJEj1Cn3VzBUHjEAc5RO5tfa6v79kIUwFMzNLaKfBVkB3yC41QBi+ixK3xh8YVaqf3
- bi5aul/nhlTNISz+VXUvhw9zSCrzO7twzvvsE1NW4XUxTSVu+EOE1WUgCuGtPhafhhrEtHBQ4v
- jDVR8i4d7+EtljR2RfX5B1+VLYWcPsNfRbUUtk6vYDZ/4I5Lr3mo4HlXaD7K3xVmRLKNBe1FLT
- bsjHU7VimR69/pVwl9nXIYJxHEfRYck6oQpI5DyjHCAizR6qVzQHUrU4/iYQr2mUUzzBfFJ1PC
- lug=
-X-IronPort-AV: E=Sophos;i="5.72,335,1580799600"; 
-   d="scan'208";a="69189997"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Apr 2020 06:46:28 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 2 Apr 2020 06:46:34 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Thu, 2 Apr 2020 06:46:27 -0700
-Date:   Thu, 2 Apr 2020 15:46:27 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <davem@davemloft.net>, <jiri@resnulli.us>, <ivecera@redhat.com>,
-        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
-        <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-Subject: Re: [RFC net-next v4 8/9] bridge: mrp: Integrate MRP into the bridge
-Message-ID: <20200402134627.pnypnxzazqbpjcd3@soft-dev3.microsemi.net>
-References: <20200327092126.15407-1-horatiu.vultur@microchip.com>
- <20200327092126.15407-9-horatiu.vultur@microchip.com>
- <17d9fb2a-cb48-7bb6-cb79-3876ca3a74b2@cumulusnetworks.com>
- <20200401161021.3s2sqvma7r7wpo7h@soft-dev3.microsemi.net>
- <d35f44a6-a70f-bc29-afa6-0dd04e331981@cumulusnetworks.com>
+        Thu, 2 Apr 2020 09:48:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t128so3484235wma.0;
+        Thu, 02 Apr 2020 06:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JdEZdR8yjtlVoMZNQrbxmUtK0B2+Djm4LLppLoO//ag=;
+        b=UTJlCycdxWzo8SkwC++itw0GwatKMfwLvoM8hEz5hz0itKOrDAtfARRjd08KAo/YlH
+         iYT7miwWVvjXGIMOVY3OjO3n0Mn8Ksa9rY5az4HK5BUJ68HWuftxPfKhAEhGYA4Yn2Dx
+         La5wev2ZBzXN90dpwna9UbVHyMHP4wB2LvKgVYRbqg7U00y7LfYpOp1n+6KQfV2sld/l
+         yav91x+sISP54xu2tPy0MbVaptxe9HBydeIqtNP10Zc2zcyTUnXn/ANeO5KMYsdqlk66
+         bfclrPNbmCjER1axdhz0RvwvbhQm2h+TcIw1ChSyayEzTqXtXCokTwUd8+MfFtI9EATW
+         Qkyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JdEZdR8yjtlVoMZNQrbxmUtK0B2+Djm4LLppLoO//ag=;
+        b=qbU8MErQGg7p0elz7YaLOXeBJaekOAWnz7+xxxqOJYosDfy01izaX9YO3imxHCGSFs
+         EdxY0q037hg49anIgxtO9jwTXduxzCFfZiUvTwPfGYJye2f4uBZ+xLm2qmM3Kl2oxgK5
+         ctRNBuimmNXhiQhY4bfeANTbw3xQJV0LNp899N3c6TogV/JJFBl9eLEX3h0yj+T2i5Ka
+         jgm4ZZGte5eAQr14UksCiYXtXYQI1yDOunioln9653eVTY0KF1X+SwZ+/v+vSQH6c+jC
+         H9PGcY1sZDvWRSqDndkEkGdxydq+jGCemwipFENh5F7XRs9uXj4paIYsnreUtpkr1TzV
+         5O0w==
+X-Gm-Message-State: AGi0PuYzgwO66EV33rwi1qy81FUPR8yhTCQ6XE1jM24EHVlecr+YmtpZ
+        3tTg0spqOPUssdl9V6Irwj8=
+X-Google-Smtp-Source: APiQypKpdlsAkbdIzYdLmLeSVwA00to9hBXvBdZjAZl5uSzVZ+jldunwGUNL5wE1hbN9a3RTQzrH8g==
+X-Received: by 2002:a7b:c185:: with SMTP id y5mr3723403wmi.90.1585835285227;
+        Thu, 02 Apr 2020 06:48:05 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id u13sm7008313wmm.32.2020.04.02.06.48.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 06:48:04 -0700 (PDT)
+To:     helen.koike@collabora.com
+Cc:     dafna.hirschfeld@collabora.com, devel@driverdev.osuosl.org,
+        devicetree@vger.kernel.org, ezequiel@collabora.com,
+        heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        karthik.poduval@gmail.com, kernel@collabora.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+References: <20200402000234.226466-4-helen.koike@collabora.com>
+Subject: Re: [PATCH 3/4] arm64: dts: rockchip: add rx0 mipi-phy for rk3399
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <970b9e48-e38f-7e7a-3472-7dc5a4737e58@gmail.com>
+Date:   Thu, 2 Apr 2020 15:48:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <d35f44a6-a70f-bc29-afa6-0dd04e331981@cumulusnetworks.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200402000234.226466-4-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 04/01/2020 19:33, Nikolay Aleksandrov wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On 01/04/2020 19:10, Horatiu Vultur wrote:
-> > Hi Nik,
-> >
-> > The 03/30/2020 19:16, Nikolay Aleksandrov wrote:
-> >> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >>
-> >> On 27/03/2020 11:21, Horatiu Vultur wrote:
-> >>> To integrate MRP into the bridge, the bridge needs to do the following:
-> >>> - add new flag(BR_MPP_AWARE) to the net bridge ports, this bit will be set when
-> >>>   the port is added to an MRP instance. In this way it knows if the frame was
-> >>>   received on MRP ring port
-> >>> - detect if the MRP frame was received on MRP ring port in that case it would be
-> >>>   processed otherwise just forward it as usual.
-> >>> - enable parsing of MRP
-> >>> - before whenever the bridge was set up, it would set all the ports in
-> >>>   forwarding state. Add an extra check to not set ports in forwarding state if
-> >>>   the port is an MRP ring port. The reason of this change is that if the MRP
-> >>>   instance initially sets the port in blocked state by setting the bridge up it
-> >>>   would overwrite this setting.
-> >>>
-> >>> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> >>> ---
-> >>>  include/linux/if_bridge.h |  1 +
-> >>>  net/bridge/br_device.c    |  3 +++
-> >>>  net/bridge/br_input.c     |  3 +++
-> >>>  net/bridge/br_netlink.c   |  5 +++++
-> >>>  net/bridge/br_private.h   | 22 ++++++++++++++++++++++
-> >>>  net/bridge/br_stp.c       |  6 ++++++
-> >>>  6 files changed, 40 insertions(+)
-> >>>
-> >>> diff --git a/include/linux/if_bridge.h b/include/linux/if_bridge.h
-> >>> index 9e57c4411734..10baa9efdae8 100644
-> >>> --- a/include/linux/if_bridge.h
-> >>> +++ b/include/linux/if_bridge.h
-> >>> @@ -47,6 +47,7 @@ struct br_ip_list {
-> >>>  #define BR_BCAST_FLOOD               BIT(14)
-> >>>  #define BR_NEIGH_SUPPRESS    BIT(15)
-> >>>  #define BR_ISOLATED          BIT(16)
-> >>> +#define BR_MRP_AWARE         BIT(17)
-> >>>
-> >>>  #define BR_DEFAULT_AGEING_TIME       (300 * HZ)
-> >>>
-> >>> diff --git a/net/bridge/br_device.c b/net/bridge/br_device.c
-> >>> index 0e3dbc5f3c34..8ec1362588af 100644
-> >>> --- a/net/bridge/br_device.c
-> >>> +++ b/net/bridge/br_device.c
-> >>> @@ -463,6 +463,9 @@ void br_dev_setup(struct net_device *dev)
-> >>>       spin_lock_init(&br->lock);
-> >>>       INIT_LIST_HEAD(&br->port_list);
-> >>>       INIT_HLIST_HEAD(&br->fdb_list);
-> >>> +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-> >>> +     INIT_LIST_HEAD(&br->mrp_list);
-> >>> +#endif
-> >>>       spin_lock_init(&br->hash_lock);
-> >>>
-> >>>       br->bridge_id.prio[0] = 0x80;
-> >>> diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
-> >>> index fcc260840028..d5c34f36f0f4 100644
-> >>> --- a/net/bridge/br_input.c
-> >>> +++ b/net/bridge/br_input.c
-> >>> @@ -342,6 +342,9 @@ rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
-> >>>               }
-> >>>       }
-> >>>
-> >>> +     if (unlikely(br_mrp_process(p, skb)))
-> >>> +             return RX_HANDLER_PASS;
-> >>> +
-> >>>  forward:
-> >>>       switch (p->state) {
-> >>>       case BR_STATE_FORWARDING:
-> >>> diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
-> >>> index 43dab4066f91..77bc96745be6 100644
-> >>> --- a/net/bridge/br_netlink.c
-> >>> +++ b/net/bridge/br_netlink.c
-> >>> @@ -669,6 +669,11 @@ static int br_afspec(struct net_bridge *br,
-> >>>                       if (err)
-> >>>                               return err;
-> >>>                       break;
-> >>> +             case IFLA_BRIDGE_MRP:
-> >>> +                     err = br_mrp_parse(br, p, attr, cmd);
-> >>> +                     if (err)
-> >>> +                             return err;
-> >>> +                     break;
-> >>>               }
-> >>>       }
-> >>>
-> >>> diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-> >>> index 1f97703a52ff..38894f2cf98f 100644
-> >>> --- a/net/bridge/br_private.h
-> >>> +++ b/net/bridge/br_private.h
-> >>> @@ -428,6 +428,10 @@ struct net_bridge {
-> >>>       int offload_fwd_mark;
-> >>>  #endif
-> >>>       struct hlist_head               fdb_list;
-> >>> +
-> >>> +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-> >>> +     struct list_head                __rcu mrp_list;
-> >>> +#endif
-> >>>  };
-> >>>
-> >>>  struct br_input_skb_cb {
-> >>> @@ -1304,6 +1308,24 @@ unsigned long br_timer_value(const struct timer_list *timer);
-> >>>  extern int (*br_fdb_test_addr_hook)(struct net_device *dev, unsigned char *addr);
-> >>>  #endif
-> >>>
-> >>> +/* br_mrp.c */
-> >>> +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
-> >>> +int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
-> >>> +              struct nlattr *attr, int cmd);
-> >>> +int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb);
-> >>> +#else
-> >>> +static inline int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
-> >>> +                            struct nlattr *attr, int cmd)
-> >>> +{
-> >>> +     return -1;
-> >>
-> >> You should return proper error here.
-> >
-> > It will return -EOPNOTSUPP.
-> >
-> >>
-> >>> +}
-> >>> +
-> >>> +static inline int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb)
-> >>> +{
-> >>> +     return -1;
-> >>
-> >> The bridge can't possibly work with MRP disabled with this.
-> >
-> > Good catch, it will return 0.
-> >
-> >>
-> >>> +}
-> >>> +#endif
-> >>> +
-> >>>  /* br_netlink.c */
-> >>>  extern struct rtnl_link_ops br_link_ops;
-> >>>  int br_netlink_init(void);
-> >>> diff --git a/net/bridge/br_stp.c b/net/bridge/br_stp.c
-> >>> index 1f14b8455345..3e88be7aa269 100644
-> >>> --- a/net/bridge/br_stp.c
-> >>> +++ b/net/bridge/br_stp.c
-> >>> @@ -36,6 +36,12 @@ void br_set_state(struct net_bridge_port *p, unsigned int state)
-> >>>       };
-> >>>       int err;
-> >>>
-> >>> +     /* Don't change the state of the ports if they are driven by a different
-> >>> +      * protocol.
-> >>> +      */
-> >>> +     if (p->flags & BR_MRP_AWARE)
-> >>> +             return;
-> >>> +
-> >>
-> >> Maybe disallow STP type (kernel/user-space/no-stp) changing as well, force it to no-stp.
-> >
-> > I am not sure that I understand completely here, do you want me to
-> > disable STP if MRP is started?
-> >
-> 
-> I think it should be one of the two since they can step on each other's toes. If MRP is
-> enabled then STP must be already disabled and should not be possible to enable while MRP
-> is active and vice-versa.
+Hi Helen,
 
-I will update this in the next patch series.
+> From: Helen Koike <helen.koike@collabora.com>
 
-> 
-> >>
-> >>>       p->state = state;
-> >>>       err = switchdev_port_attr_set(p->dev, &attr);
-> >>>       if (err && err != -EOPNOTSUPP)
-> >>>
-> >>
-> >
-> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 33cc21fcf4c10..fc0295d2a65a1 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -1394,6 +1394,17 @@ io_domains: io-domains {
+>  			status = "disabled";
+>  		};
+>  
 
--- 
-/Horatiu
+> +		mipi_dphy_rx0: mipi-dphy-rx0 {
+
+For Heiko sort syscon@ff770000 subnodes alphabetical or reg value first?
+
+> +			compatible = "rockchip,rk3399-mipi-dphy-rx0";
+> +			clocks = <&cru SCLK_MIPIDPHY_REF>,
+
+> +				<&cru SCLK_DPHY_RX0_CFG>,
+> +				<&cru PCLK_VIO_GRF>;
+
+Align                            ^
+
+> +			clock-names = "dphy-ref", "dphy-cfg", "grf";
+> +			power-domains = <&power RK3399_PD_VIO>;
+> +			#phy-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+>  		u2phy0: usb2-phy@e450 {
+>  			compatible = "rockchip,rk3399-usb2phy";
+>  			reg = <0xe450 0x10>;
+> -- 
+> 2.26.0
+
