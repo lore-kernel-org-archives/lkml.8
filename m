@@ -2,115 +2,316 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C66EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049A1C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C05207FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C271C207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pHAONuh2"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="b6uKoVWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732881AbgDBA0m (ORCPT
+        id S1733089AbgDBA17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 20:26:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32789 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732619AbgDBA0l (ORCPT
+        Wed, 1 Apr 2020 20:27:59 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36479 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732637AbgDBA17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 20:26:41 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c138so898069pfc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 17:26:41 -0700 (PDT)
+        Wed, 1 Apr 2020 20:27:59 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i7so2103200edq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 17:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ob50KPPitu/VAsCZRCb3jIgsR0wX/xQsKu6DYbArPO4=;
-        b=pHAONuh2cBAam65QtvHR6M5VI4wsm+z8NLQz0FSUy4wl0NcZnViOpfQYIAVwYqo+GZ
-         6u/yJcCBkg0GUBhSG+eGb8Z1GJWrDcwH3Wr5Ry3Ms1DEAEk7yD7os4vd6JhSOKjskUG4
-         r3wGD+dWECHTN6nYHUIfjqza7scSXkzCDEqQe6q5Jm+B/gCnFnsp+OMy6VjIcO592Sj2
-         xXlTkTicFXlyELgXpyjKervJ7cz84gj7hK65zerNKNVET0gcejyJGIFz5ka8k4RL3Hpl
-         MhTRtr5Jqi/dTDEmBmUoeRo4kXd5QMl/ivO71/Ze8GThkm01gienkv1OsisOlGAwhZmz
-         QbRQ==
+        bh=rMoG139BAS3vSwnWNPt9NkvE0YK9VqiQxacpdg4y9C8=;
+        b=b6uKoVWD6Cr/lKr0YKKqMS9MF7tOH9aunCZBAsMTrUwvYWsPp1CQ7F2m6pUvgy7vnC
+         7RoP8LQla92LBHCgkc2g8QdtBVJnzc0090CjTAM1Qi72DURzMZxg+e3varCSqD1vdYPW
+         M/J9cDqpOhDIQV8pOvn/Wi9N2bh1HIWmlCL9gpU0A+E2OcO1vE/3E9uIvB/gKd1dzfw9
+         cOKT2ahz2TY5AoDZtiyTHFtltYl4sHWpADTGK37DpLuiTdhIl4j/T+eRkmatFe2Dxpsa
+         kI6IxAFqojnBZm1JIGXsGk8QJgQIoQVNjJWwM41Euv2WGnSLotJt/HR6pWfn0S80QoFK
+         FCqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ob50KPPitu/VAsCZRCb3jIgsR0wX/xQsKu6DYbArPO4=;
-        b=IpdEzWyC7B+sxP/s9jyBJ8gDdOSRp/IPfsndQY0zrmvVmb/7KZ63VZMs+cI7hF6pw/
-         WdLJ9o60UxqAzCEDeLGdYCk5VEI5/VXygv7j42dxhgp9jmGjgS72/qNxYWPPMPN4gCa6
-         5I+rUZ8k8PhyQU8jGklMCjBVFZFe//pUIGmT/9XdCwtrscea/7TV8KYbuXWbv8tllfkK
-         8kSn4/sfdmIWTO5Lx08pOWiYfyvQrS3Rv323Zk0WQ32z1Iy9Gz7qdR3dQx8di+neXF0c
-         C5Ol48dhVCNJ5XIpdFfu5EiiKLSczTSqpYaP8uuxxCj/DHWCdHScLhudBSWnlgvwcrpO
-         Hq5g==
-X-Gm-Message-State: AGi0PuasW3n/MHZL+R9OMC6FTeefUupJwHnfpmGZTc1Dvoj4LImAYTsc
-        CMzahzR/kybV0NmNleCAv2rUtSGqDpvNXW4wO1rkxA==
-X-Google-Smtp-Source: APiQypKeG0RcaEryHPNpjDE3LJENFRlmFYUd6WwW6EYlUJOuCKtogvsWiFcehG/IvwaDMd5evl8Xm6x6apMH7SD2Ofc=
-X-Received: by 2002:a63:a34d:: with SMTP id v13mr837990pgn.10.1585787200467;
- Wed, 01 Apr 2020 17:26:40 -0700 (PDT)
+        bh=rMoG139BAS3vSwnWNPt9NkvE0YK9VqiQxacpdg4y9C8=;
+        b=MjS862COnNX4neEVwF0d0nAsPFe6mOFlv6cbm6t+Sr7480jrx+Su9K4a/OpJ9pCjZW
+         m9ZA1fBF6qogqrKUltdRHlW2C8n8p6G8l3u5yaHzXa+JpbHtB8OryKNas1lT2NgHlRUL
+         ZA0A7biSWv7M+UYEuiH8Mns1jlYSWoR+97ps98/FTOl7WHfrucKievuHbwUDejnvP1uM
+         CGgfo/FpklHLO+DQZFIUDHzJ/1/+JiQMdYrY1YL7zqeYeMD0fpwUtTymGpeInTD2fIDv
+         PvyCEdxMUzv5f4Wagq4pN191SgU6R3FrwUDzoaz+rSsKQoNi9uHlChclydcajfP0hfLP
+         0B9g==
+X-Gm-Message-State: AGi0PuYXvnB+iA6aprnVnR4/0g76F05XRemycup+9EbbnaVsUa9Cg56O
+        KA34pcqrlz4/b9iQIvsuN7+N6MUGcRzcv/jf7WdiRA==
+X-Google-Smtp-Source: APiQypK1MdubaXDzXDW0OryS7Btp1yg8dmm5kamYFesYesYpOR0BQWhTUFKcfXpacPdBoNYqNEriI3UdkexV9JqGWrM=
+X-Received: by 2002:a17:906:dbd4:: with SMTP id yc20mr703878ejb.335.1585787276297;
+ Wed, 01 Apr 2020 17:27:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200311024240.26834-1-elder@linaro.org> <20200401173515.142249-1-ndesaulniers@google.com>
- <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org> <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
- <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org> <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
- <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org> <CAKwvOdnZ9KL1Esmdjvk-BTP2a+C24bOWguNVaU3RSXKi1Ouh+w@mail.gmail.com>
- <5635b511-64f8-b612-eb25-20b43ced4ed3@linaro.org>
-In-Reply-To: <5635b511-64f8-b612-eb25-20b43ced4ed3@linaro.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 1 Apr 2020 17:26:29 -0700
-Message-ID: <CAKwvOdnO2=yjEerw50b_C2vrgdCh2es6ZRfQpBRVR9RCrvwi6Q@mail.gmail.com>
-Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
-To:     Alex Elder <elder@linaro.org>,
-        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-16-alastair@d-silva.org>
+In-Reply-To: <20200327071202.2159885-16-alastair@d-silva.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 1 Apr 2020 17:27:45 -0700
+Message-ID: <CAPcyv4hvg_tizkOWkm2nSpR841m8X2Kh54KzU-qX=kvJuGJ9fg@mail.gmail.com>
+Subject: Re: [PATCH v4 15/25] nvdimm/ocxl: Register a character device for
+ userspace to interact with
+To:     "Alastair D'Silva" <alastair@d-silva.org>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 4:18 PM Alex Elder <elder@linaro.org> wrote:
+On Sun, Mar 29, 2020 at 10:53 PM Alastair D'Silva <alastair@d-silva.org> wrote:
 >
-> On 4/1/20 5:26 PM, Nick Desaulniers wrote:
-> >
-> > mainline is hosed for aarch64 due to some dtc failures.  I'm not sure
-> > how TCWG's CI chooses the bisection starting point, but if mainline
-> > was broken, and it jumped back say 300 commits, then the automated
-> > bisection may have converged on your first patch, but not the second.
->
-> This is similar to the situation I discussed with Maxim this
-> morning.  A different failure (yes, DTC related) led to an
-> automated bisect process, which landed on my commit. And my
-> commit unfortunately has the the known issue that was later
-> corrected.
->
-> Maxim said this was what started the automated bisect:
-> ===
-> +# 00:01:41 make[2]: *** [arch/arm64/boot/dts/ti/k3-am654-base-board.dtb] Error 2
-> +# 00:01:41 make[2]: *** [arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dtb] Error 2
-> +# 00:01:41 make[1]: *** [arch/arm64/boot/dts/ti] Error 2
-> +# 00:01:41 make: *** [dtbs] Error 2
+> This patch introduces a character device (/dev/ocxlpmemX) which further
+> patches will use to interact with userspace, such as error logs,
+> controller stats and card debug functionality.
 
-DTC thread:
-https://lore.kernel.org/linux-arm-kernel/20200401223500.224253-1-ndesaulniers@google.com/
+This was asked earlier, but I'll reiterate, I do not see what
+justifies an ocxlpmemX private device ABI vs routing through the
+existing generic character ndbusX and nmemX character devices.
 
-Maxim, can you describe how the last known good sha is chosen?  If you
-persist anything between builds, like ccache dir, maybe you could
-propagate a sha of the last successful build, updating it if no
-regression occurred?  Then that can always be a precise last known
-good sha.  Though I don't know if the merge commits complicate this.
--- 
-Thanks,
-~Nick Desaulniers
+>
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  drivers/nvdimm/ocxl/main.c     | 117 ++++++++++++++++++++++++++++++++-
+>  drivers/nvdimm/ocxl/ocxlpmem.h |   2 +
+>  2 files changed, 117 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/nvdimm/ocxl/main.c b/drivers/nvdimm/ocxl/main.c
+> index 8db573036423..9b85fcd3f1c9 100644
+> --- a/drivers/nvdimm/ocxl/main.c
+> +++ b/drivers/nvdimm/ocxl/main.c
+> @@ -10,6 +10,7 @@
+>  #include <misc/ocxl.h>
+>  #include <linux/delay.h>
+>  #include <linux/ndctl.h>
+> +#include <linux/fs.h>
+>  #include <linux/mm_types.h>
+>  #include <linux/memory_hotplug.h>
+>  #include "ocxlpmem.h"
+> @@ -356,6 +357,67 @@ static int ocxlpmem_register(struct ocxlpmem *ocxlpmem)
+>         return device_register(&ocxlpmem->dev);
+>  }
+>
+> +static void ocxlpmem_put(struct ocxlpmem *ocxlpmem)
+> +{
+> +       put_device(&ocxlpmem->dev);
+> +}
+> +
+> +static struct ocxlpmem *ocxlpmem_get(struct ocxlpmem *ocxlpmem)
+> +{
+> +       return (!get_device(&ocxlpmem->dev)) ? NULL : ocxlpmem;
+> +}
+> +
+> +static struct ocxlpmem *find_and_get_ocxlpmem(dev_t devno)
+> +{
+> +       struct ocxlpmem *ocxlpmem;
+> +       int minor = MINOR(devno);
+> +
+> +       mutex_lock(&minors_idr_lock);
+> +       ocxlpmem = idr_find(&minors_idr, minor);
+> +       if (ocxlpmem)
+> +               ocxlpmem_get(ocxlpmem);
+> +       mutex_unlock(&minors_idr_lock);
+> +
+> +       return ocxlpmem;
+> +}
+> +
+> +static int file_open(struct inode *inode, struct file *file)
+> +{
+> +       struct ocxlpmem *ocxlpmem;
+> +
+> +       ocxlpmem = find_and_get_ocxlpmem(inode->i_rdev);
+> +       if (!ocxlpmem)
+> +               return -ENODEV;
+> +
+> +       file->private_data = ocxlpmem;
+> +       return 0;
+> +}
+> +
+> +static int file_release(struct inode *inode, struct file *file)
+> +{
+> +       struct ocxlpmem *ocxlpmem = file->private_data;
+> +
+> +       ocxlpmem_put(ocxlpmem);
+> +       return 0;
+> +}
+> +
+> +static const struct file_operations fops = {
+> +       .owner          = THIS_MODULE,
+> +       .open           = file_open,
+> +       .release        = file_release,
+> +};
+> +
+> +/**
+> + * create_cdev() - Create the chardev in /dev for the device
+> + * @ocxlpmem: the SCM metadata
+> + * Return: 0 on success, negative on failure
+> + */
+> +static int create_cdev(struct ocxlpmem *ocxlpmem)
+> +{
+> +       cdev_init(&ocxlpmem->cdev, &fops);
+> +       return cdev_add(&ocxlpmem->cdev, ocxlpmem->dev.devt, 1);
+> +}
+> +
+>  /**
+>   * ocxlpmem_remove() - Free an OpenCAPI persistent memory device
+>   * @pdev: the PCI device information struct
+> @@ -376,6 +438,13 @@ static void remove(struct pci_dev *pdev)
+>                 if (ocxlpmem->nvdimm_bus)
+>                         nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
+>
+> +               /*
+> +                * Remove the cdev early to prevent a race against userspace
+> +                * via the char dev
+> +                */
+> +               if (ocxlpmem->cdev.owner)
+> +                       cdev_del(&ocxlpmem->cdev);
+> +
+>                 device_unregister(&ocxlpmem->dev);
+>         }
+>  }
+> @@ -527,11 +596,18 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>                 goto err;
+>         }
+>
+> -       if (setup_command_metadata(ocxlpmem)) {
+> +       rc = setup_command_metadata(ocxlpmem);
+> +       if (rc) {
+>                 dev_err(&pdev->dev, "Could not read command metadata\n");
+>                 goto err;
+>         }
+>
+> +       rc = create_cdev(ocxlpmem);
+> +       if (rc) {
+> +               dev_err(&pdev->dev, "Could not create character device\n");
+> +               goto err;
+> +       }
+> +
+>         elapsed = 0;
+>         timeout = ocxlpmem->readiness_timeout +
+>                   ocxlpmem->memory_available_timeout;
+> @@ -599,6 +675,36 @@ static struct pci_driver pci_driver = {
+>         .shutdown = remove,
+>  };
+>
+> +static int file_init(void)
+> +{
+> +       int rc;
+> +
+> +       rc = alloc_chrdev_region(&ocxlpmem_dev, 0, NUM_MINORS, "ocxlpmem");
+> +       if (rc) {
+> +               idr_destroy(&minors_idr);
+> +               pr_err("Unable to allocate OpenCAPI persistent memory major number: %d\n",
+> +                      rc);
+> +               return rc;
+> +       }
+> +
+> +       ocxlpmem_class = class_create(THIS_MODULE, "ocxlpmem");
+> +       if (IS_ERR(ocxlpmem_class)) {
+> +               idr_destroy(&minors_idr);
+> +               pr_err("Unable to create ocxlpmem class\n");
+> +               unregister_chrdev_region(ocxlpmem_dev, NUM_MINORS);
+> +               return PTR_ERR(ocxlpmem_class);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void file_exit(void)
+> +{
+> +       class_destroy(ocxlpmem_class);
+> +       unregister_chrdev_region(ocxlpmem_dev, NUM_MINORS);
+> +       idr_destroy(&minors_idr);
+> +}
+> +
+>  static int __init ocxlpmem_init(void)
+>  {
+>         int rc;
+> @@ -606,16 +712,23 @@ static int __init ocxlpmem_init(void)
+>         mutex_init(&minors_idr_lock);
+>         idr_init(&minors_idr);
+>
+> -       rc = pci_register_driver(&pci_driver);
+> +       rc = file_init();
+>         if (rc)
+>                 return rc;
+>
+> +       rc = pci_register_driver(&pci_driver);
+> +       if (rc) {
+> +               file_exit();
+> +               return rc;
+> +       }
+> +
+>         return 0;
+>  }
+>
+>  static void ocxlpmem_exit(void)
+>  {
+>         pci_unregister_driver(&pci_driver);
+> +       file_exit();
+>  }
+>
+>  module_init(ocxlpmem_init);
+> diff --git a/drivers/nvdimm/ocxl/ocxlpmem.h b/drivers/nvdimm/ocxl/ocxlpmem.h
+> index b72b3f909fc3..ee3bd651f254 100644
+> --- a/drivers/nvdimm/ocxl/ocxlpmem.h
+> +++ b/drivers/nvdimm/ocxl/ocxlpmem.h
+> @@ -2,6 +2,7 @@
+>  // Copyright 2020 IBM Corp.
+>
+>  #include <linux/pci.h>
+> +#include <linux/cdev.h>
+>  #include <misc/ocxl.h>
+>  #include <linux/libnvdimm.h>
+>  #include <linux/mm.h>
+> @@ -103,6 +104,7 @@ struct command_metadata {
+>  struct ocxlpmem {
+>         struct device dev;
+>         struct pci_dev *pdev;
+> +       struct cdev cdev;
+>         struct ocxl_fn *ocxl_fn;
+>         struct nd_interleave_set nd_set;
+>         struct nvdimm_bus_descriptor bus_desc;
+> --
+> 2.24.1
+>
