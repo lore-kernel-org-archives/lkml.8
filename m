@@ -2,91 +2,190 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2532C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E7FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A414C206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:34:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zGjcgAXJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9AE732072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387905AbgDBJe3 (ORCPT
+        id S2387768AbgDBJgg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:34:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36383 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgDBJe3 (ORCPT
+        Thu, 2 Apr 2020 05:36:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36764 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgDBJgg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 05:34:29 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 31so3348453wrs.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 02:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=/JfishAOGXVYoBQSrKHeYa8JDBK0eNBxRAqMOtM/eC8=;
-        b=zGjcgAXJC0cvkQmg5AHOFLWM6LOrm1MKo973ZuXAsPEPdIABiL61jdtlfMmJwR1TjH
-         QmQNINPbryEdS+wLf8cunhwUEThDmQxncJ3zmmsr3+hEfPCCD5OFCpFoDarDgT6/64wC
-         CeiZLojAXT0zfweEhRHskaN6gcDBiryNcNJL61J+s33E3OKhWty58K5GHdVfIiOgWBmH
-         x6LAizpOYmtrOpNJ6am3nyAARiSMWQv+WBLrJBT487lybtC5nmpDpQbUUd1FRRg4WwA1
-         D6RD2KfQp2g5Jgxn7FvVb5ZZCeqUwlzbisBQx1idmVk2aZrlfdQN+RGfX2I+wB1YjhrG
-         7F3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/JfishAOGXVYoBQSrKHeYa8JDBK0eNBxRAqMOtM/eC8=;
-        b=fu4xX7wDVFAb6UaZeG4+9lVJYihjtK7apkA80LzTbb61JCsFnSxkzzlQhcGbkLc4an
-         vCqJS1bMZwxPKxANtgmILtlECW5tds+pOluBrNtY5gEqblcrIvfyyuel+uZlrYUEYShZ
-         nMnfA5bmL0/kRGSGjEg0e3y7hX+sjwPzZpSEldFOoATXati3ECPzJnyDmjItrI5pFI8Q
-         EvT8heaox2hnyNoSg155JzHzp/Y42DoZkKHuWo3CRYo7JSXrI1OsIB09ija0Ltp3EBI7
-         RYw8nhZ7SAz9usx4P3K7cN96GQa5Rm12jW6VtxDzx97lnvroJ4wcaw86xf8tNto1lfel
-         Z6yA==
-X-Gm-Message-State: AGi0PubjtJ5Kmz3a5xmVsJMGDjgzjN0oBmWVufb6zI5hoW6CJtOtjmeB
-        Rz7zHGKg+irMb84oo/a9K7J5JA==
-X-Google-Smtp-Source: APiQypKmqFjl8B/AWQFjq2q5ZN9yvy7ZyTVYBSo8g0LRGX2p1bc7qJ2fARK4rAjHDfe7Zu/GTRGgdQ==
-X-Received: by 2002:a5d:6182:: with SMTP id j2mr2487136wru.131.1585820066899;
-        Thu, 02 Apr 2020 02:34:26 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id 189sm6528042wme.31.2020.04.02.02.34.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 Apr 2020 02:34:26 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     linux@armlinux.org.uk, mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH] ARM: configs: sunxi: Add sun8i analog codec
-Date:   Thu,  2 Apr 2020 09:34:21 +0000
-Message-Id: <1585820061-24172-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 Apr 2020 05:36:36 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jJwGv-0000jL-VM; Thu, 02 Apr 2020 11:36:26 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E6FF1100D52; Thu,  2 Apr 2020 11:36:24 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jann Horn <jannh@google.com>,
+        Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David \(ChunMing\) Zhou" <David1.Zhou@amd.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: AMD DC graphics display code enables -mhard-float, -msse, -msse2 without any visible FPU state protection
+In-Reply-To: <CAG48ez1nHt2BRApHPp2S6rd4kr3P2kFsgHvStUsW7rqHSJprgg@mail.gmail.com>
+References: <CAG48ez2Sx4ELkM94aD_h_J7K7KBOeuGmvZLKRkg3n_f2WoZ_cg@mail.gmail.com> <4c5fe55d-9db9-2f61-59b2-1fb2e1b45ed0@amd.com> <CAG48ez1nHt2BRApHPp2S6rd4kr3P2kFsgHvStUsW7rqHSJprgg@mail.gmail.com>
+Date:   Thu, 02 Apr 2020 11:36:24 +0200
+Message-ID: <87k12yns9z.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On my orange pi PC, I got lot of "sun4i-codec 1c22c00.codec: Failed to register our card".
-This was due to a missing compoment: the sun8i analog codec.
+Jann Horn <jannh@google.com> writes:
+> On Thu, Apr 2, 2020 at 9:34 AM Christian König <christian.koenig@amd.com> wrote:
+>> Am 02.04.20 um 04:34 schrieb Jann Horn:
+>> > [x86 folks in CC so that they can chime in on the precise rules for
+>> > this stuff]
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- arch/arm/configs/sunxi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+They are pretty simple.
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 61b8be19e527..b105ce7120cc 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -107,6 +107,7 @@ CONFIG_SOUND=y
- CONFIG_SND=y
- CONFIG_SND_SOC=y
- CONFIG_SND_SUN4I_CODEC=y
-+CONFIG_SND_SUN8I_CODEC_ANALOG=y
- CONFIG_USB=y
- CONFIG_USB_EHCI_HCD=y
- CONFIG_USB_EHCI_HCD_PLATFORM=y
--- 
-2.24.1
+Any code using FPU needs to be completely isolated from regular code
+either by using inline asm or by moving it to a different compilation
+unit. The invocations need fpu_begin/end() of course.
+
+>> > I noticed that several makefiles under drivers/gpu/drm/amd/display/dc/
+>> > turn on floating-point instructions in the compiler flags
+>> > (-mhard-float, -msse and -msse2) in order to make the "float" and
+>> > "double" types usable from C code without requiring helper functions.
+>> >
+>> > However, as far as I know, code running in normal kernel context isn't
+>> > allowed to use floating-point registers without special protection
+>> > using helpers like kernel_fpu_begin() and kernel_fpu_end() (which also
+>> > require that the protected code never blocks). If you violate that
+>> > rule, that can lead to various issues - among other things, I think
+>> > the kernel will clobber userspace FPU register state, and I think the
+>> > kernel code can blow up if a context switch happens at the wrong time,
+>> > since in-kernel task switches don't preserve FPU state.
+>> >
+>> > Is there some hidden trick I'm missing that makes it okay to use FPU
+>> > registers here?
+>> >
+>> > I would try testing this, but unfortunately none of the AMD devices I
+>> > have here have the appropriate graphics hardware...
+>>
+>> yes, using the floating point calculations in the display code has been
+>> a source of numerous problems and confusion in the past.
+>>
+>> The calls to kernel_fpu_begin() and kernel_fpu_end() are hidden behind
+>> the DC_FP_START() and DC_FP_END() macros which are supposed to hide the
+>> architecture depend handling for x86 and PPC64.
+>
+> Hmm... but as far as I can tell, you're using those macros from inside
+> functions that are already compiled with the FPU on:
+>
+>  - drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c uses the macros,
+> but is already compiled with calcs_ccflags
+>  - drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c uses the
+> macros, but is already compiled with "-mhard-float -msse -msse2"
+>  - drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c uses the
+> macros, but is already compiled with "-mhard-float -msse -msse2"
+>
+> AFAIK as soon as you enter any function in any file compiled with FPU
+> instructions, you may encounter SSE instructions, e.g. via things like
+> compiler-generated memory-zeroing code - not just when you're actually
+> using doubles or floats.
+
+That's correct and this will silently cause FPU state corruption ...
+
+We really need objtool support to validate that.
+
+Peter, now that we know how to do it (noinstr, clac/stac) we can emit
+annotations (see patch below) and validate that any FPU instruction is
+inside a safe region. Hmm?
+
+Thanks,
+
+        tglx
+
+8<---------------
+--- a/arch/x86/include/asm/fpu/api.h
++++ b/arch/x86/include/asm/fpu/api.h
+@@ -19,8 +19,27 @@
+  * If you intend to use the FPU in softirq you need to check first with
+  * irq_fpu_usable() if it is possible.
+  */
+-extern void kernel_fpu_begin(void);
+-extern void kernel_fpu_end(void);
++extern void __kernel_fpu_begin(void);
++extern void __kernel_fpu_end(void);
++
++static inline void kernel_fpu_begin(void)
++{
++	asm volatile("%c0:\n\t"
++		     ".pushsection .discard.fpu_begin\n\t"
++		     ".long %c0b - .\n\t"
++		     ".popsection\n\t" : : "i" (__COUNTER__));
++	__kernel_fpu_begin();
++}
++
++static inline void kernel_fpu_end(void)
++{
++	__kernel_fpu_end();
++	asm volatile("%c0:\n\t"
++		     ".pushsection .discard.fpu_end\n\t"
++		     ".long %c0b - .\n\t"
++		     ".popsection\n\t" : : "i" (__COUNTER__));
++}
++
+ extern bool irq_fpu_usable(void);
+ extern void fpregs_mark_activate(void);
+ 
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -82,7 +82,7 @@ bool irq_fpu_usable(void)
+ }
+ EXPORT_SYMBOL(irq_fpu_usable);
+ 
+-void kernel_fpu_begin(void)
++void __kernel_fpu_begin(void)
+ {
+ 	preempt_disable();
+ 
+@@ -102,16 +102,16 @@ void kernel_fpu_begin(void)
+ 	}
+ 	__cpu_invalidate_fpregs_state();
+ }
+-EXPORT_SYMBOL_GPL(kernel_fpu_begin);
++EXPORT_SYMBOL_GPL(__kernel_fpu_begin);
+ 
+-void kernel_fpu_end(void)
++void __kernel_fpu_end(void)
+ {
+ 	WARN_ON_FPU(!this_cpu_read(in_kernel_fpu));
+ 
+ 	this_cpu_write(in_kernel_fpu, false);
+ 	preempt_enable();
+ }
+-EXPORT_SYMBOL_GPL(kernel_fpu_end);
++EXPORT_SYMBOL_GPL(__kernel_fpu_end);
+ 
+ /*
+  * Save the FPU state (mark it for reload if necessary):
+
+
 
