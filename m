@@ -2,101 +2,201 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A888C2BA16
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE48C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B4520737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585855180;
-	bh=rOPwtbBOBFiF82ie/2HapkDPckrKOlDUJEddYS++Ta8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0iyhtG/Cix8urcvMkzmod46fXkLUjKYE82vD9wm2UH03zQAANOdj0ZCaxUkbZCXh6
-	 2Np7UN2zqgJFVEj6k5+NkJCtJLI1kaSo1ExdYxSDY71L7A2e37WeHlobUVG1/m/1+O
-	 N0czYoq6K6Gr3HqrHtRu7idDK+hzF7FgAtcTiky0=
+	by mail.kernel.org (Postfix) with ESMTP id 95E8E206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d9zsM/xO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389638AbgDBTTj (ORCPT
+        id S2389671AbgDBTUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732937AbgDBTTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:19:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 2 Apr 2020 15:20:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36580 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732600AbgDBTUe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:20:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585855232;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Iy3b0tEw0WYsBUVVz0ZsRvSgmOMhz0jgg24jpdOh8c=;
+        b=d9zsM/xOrjKvRSQTZSXJTuXGO3jHFx78RB7u1+l9dKJgTWErfVW0bRpBMSR4wnNzsYLrO9
+        5P8K/7gQgsl0NbItiCmj22GD51Txjs/Q5h0kb8UeyuhB+DRA8V/rFJf6aox7jyX2UfhGjn
+        dVIaB/l/na5cVXwPCuHcV68AWQ/syPw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-488-l10McgFLN6-PWLYQYVF4GA-1; Thu, 02 Apr 2020 15:20:31 -0400
+X-MC-Unique: l10McgFLN6-PWLYQYVF4GA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B853206F8;
-        Thu,  2 Apr 2020 19:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585855178;
-        bh=rOPwtbBOBFiF82ie/2HapkDPckrKOlDUJEddYS++Ta8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H3Oj2jlpNO4TS98adrAw7QHhPX04DMY/VN1yWEKyYjDVaIqhScq5W7tIWAzVP28nt
-         nRJizaNBIZkrGk0hF3NbFboQrXQV1mdtv6bQwxjr6sWRppUbiIvoHo9+LtKLONXAQ5
-         t035E1wU8NKcj3Wzj4OTNvogYtowLPQEJeUWXEr8=
-Date:   Thu, 2 Apr 2020 21:19:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH 4.19 105/116] bpf: Explicitly memset the bpf_attr
- structure
-Message-ID: <20200402191936.GA3243295@kroah.com>
-References: <20200401161542.669484650@linuxfoundation.org>
- <20200401161555.630698707@linuxfoundation.org>
- <20200402185320.GA8077@duo.ucw.cz>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27D0818B641A;
+        Thu,  2 Apr 2020 19:20:20 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D507C5D9C9;
+        Thu,  2 Apr 2020 19:20:12 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 13:20:12 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     eric.auger@redhat.com, kevin.tian@intel.com,
+        jacob.jun.pan@linux.intel.com, joro@8bytes.org,
+        ashok.raj@intel.com, jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe@linaro.org, peterx@redhat.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hao.wu@intel.com
+Subject: Re: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Message-ID: <20200402132012.390a7b54@w520.home>
+In-Reply-To: <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402185320.GA8077@duo.ucw.cz>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 08:53:21PM +0200, Pavel Machek wrote:
-> Hi!
+On Sun, 22 Mar 2020 05:32:02 -0700
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+
+> From: Liu Yi L <yi.l.liu@intel.com>
 > 
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > commit 8096f229421f7b22433775e928d506f0342e5907 upstream.
-> > 
-> > For the bpf syscall, we are relying on the compiler to properly zero out
-> > the bpf_attr union that we copy userspace data into. Unfortunately that
-> > doesn't always work properly, padding and other oddities might not be
-> > correctly zeroed, and in some tests odd things have been found when the
-> > stack is pre-initialized to other values.
-> > 
-> > Fix this by explicitly memsetting the structure to 0 before using
-> > it.
+> VFIO exposes IOMMU nesting translation (a.k.a dual stage translation)
+> capability to userspace. Thus applications like QEMU could support
+> vIOMMU with hardware's nesting translation capability for pass-through
+> devices. Before setting up nesting translation for pass-through devices,
+> QEMU and other applications need to learn the supported 1st-lvl/stage-1
+> translation structure format like page table format.
 > 
-> Is not that a gcc bug?
+> Take vSVA (virtual Shared Virtual Addressing) as an example, to support
+> vSVA for pass-through devices, QEMU setup nesting translation for pass-
+> through devices. The guest page table are configured to host as 1st-lvl/
+> stage-1 page table. Therefore, guest format should be compatible with
+> host side.
+> 
+> This patch reports the supported 1st-lvl/stage-1 page table format on the
+> current platform to userspace. QEMU and other alike applications should
+> use this format info when trying to setup IOMMU nesting translation on
+> host IOMMU.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 56 +++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h       |  1 +
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 9aa2a67..82a9e0b 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -2234,11 +2234,66 @@ static int vfio_iommu_type1_pasid_free(struct vfio_iommu *iommu,
+>  	return ret;
+>  }
+>  
+> +static int vfio_iommu_get_stage1_format(struct vfio_iommu *iommu,
+> +					 u32 *stage1_format)
+> +{
+> +	struct vfio_domain *domain;
+> +	u32 format = 0, tmp_format = 0;
+> +	int ret;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	if (list_empty(&iommu->domain_list)) {
+> +		mutex_unlock(&iommu->lock);
+> +		return -EINVAL;
+> +	}
+> +
+> +	list_for_each_entry(domain, &iommu->domain_list, next) {
+> +		if (iommu_domain_get_attr(domain->domain,
+> +			DOMAIN_ATTR_PASID_FORMAT, &format)) {
+> +			ret = -EINVAL;
+> +			format = 0;
+> +			goto out_unlock;
+> +		}
+> +		/*
+> +		 * format is always non-zero (the first format is
+> +		 * IOMMU_PASID_FORMAT_INTEL_VTD which is 1). For
+> +		 * the reason of potential different backed IOMMU
+> +		 * formats, here we expect to have identical formats
+> +		 * in the domain list, no mixed formats support.
+> +		 * return -EINVAL to fail the attempt of setup
+> +		 * VFIO_TYPE1_NESTING_IOMMU if non-identical formats
+> +		 * are detected.
+> +		 */
+> +		if (tmp_format && tmp_format != format) {
+> +			ret = -EINVAL;
+> +			format = 0;
+> +			goto out_unlock;
+> +		}
+> +
+> +		tmp_format = format;
+> +	}
+> +	ret = 0;
+> +
+> +out_unlock:
+> +	if (format)
+> +		*stage1_format = format;
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+>  static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+>  					 struct vfio_info_cap *caps)
+>  {
+>  	struct vfio_info_cap_header *header;
+>  	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
+> +	u32 formats = 0;
+> +	int ret;
+> +
+> +	ret = vfio_iommu_get_stage1_format(iommu, &formats);
+> +	if (ret) {
+> +		pr_warn("Failed to get stage-1 format\n");
+> +		return ret;
 
-No.
+Looks like this generates a warning and causes the iommu_get_info ioctl
+to fail if the hardware doesn't support the pasid format attribute, or
+the domain list is empty.  This breaks users on existing hardware.
 
-> I mean, that's seriously unhelpful behaviour from security
-> perspective.
+> +	}
+>  
+>  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+>  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+> @@ -2254,6 +2309,7 @@ static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+>  		/* nesting iommu type supports PASID requests (alloc/free) */
+>  		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
+>  	}
+> +	nesting_cap->stage1_formats = formats;
+>  
+>  	return 0;
+>  }
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index ed9881d..ebeaf3e 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -763,6 +763,7 @@ struct vfio_iommu_type1_info_cap_nesting {
+>  	struct	vfio_info_cap_header header;
+>  #define VFIO_IOMMU_PASID_REQS	(1 << 0)
+>  	__u32	nesting_capabilities;
+> +	__u32	stage1_formats;
+>  };
+>  
+>  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
 
-I totally agree, and it is something we have been playing whack-a-mole
-over for a number of years now.
-
-Nothing new, but we do have a config option to zero out the stack all
-the time if you are feeling paranoid and can take the performance hit.
-
-> Is there any reason to believe this is not causing problems elsewhere?
-
-It probably is, please feel free to audit and fix up the remaining
-issues that you find.
-
-thanks,
-
-greg k-h
