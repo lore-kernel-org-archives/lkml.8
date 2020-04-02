@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD24C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246E7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8678F20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB7D220675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733233AbgDBB2a (ORCPT
+        id S1733301AbgDBB2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 21:28:30 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39008 "EHLO inva021.nxp.com"
+        Wed, 1 Apr 2020 21:28:35 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:44344 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbgDBB23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 21:28:29 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E75C2200F79;
-        Thu,  2 Apr 2020 03:28:26 +0200 (CEST)
+        id S1726319AbgDBB2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 21:28:32 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 108141A1104;
+        Thu,  2 Apr 2020 03:28:31 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 390BE200A6C;
-        Thu,  2 Apr 2020 03:28:21 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 200031A1103;
+        Thu,  2 Apr 2020 03:28:25 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7E309402E3;
-        Thu,  2 Apr 2020 09:28:14 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 65EA5402C1;
+        Thu,  2 Apr 2020 09:28:18 +0800 (SGT)
 From:   Sherry Sun <sherry.sun@nxp.com>
 To:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
         james.morse@arm.com, rrichter@marvell.com, michal.simek@xilinx.com,
         manish.narani@xilinx.com
 Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx@nxp.com, frank.li@nxp.com
-Subject: [patch v3 1/4] dt-bindings: memory-controllers: Add i.MX8MP DDRC binding doc
-Date:   Thu,  2 Apr 2020 09:20:30 +0800
-Message-Id: <1585790433-31465-2-git-send-email-sherry.sun@nxp.com>
+Subject: [patch v3 3/4] EDAC: synopsys: Add edac driver support for i.MX8MP
+Date:   Thu,  2 Apr 2020 09:20:32 +0800
+Message-Id: <1585790433-31465-4-git-send-email-sherry.sun@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585790433-31465-1-git-send-email-sherry.sun@nxp.com>
 References: <1585790433-31465-1-git-send-email-sherry.sun@nxp.com>
@@ -46,42 +46,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for i.MX8MP DDRC binding based on synopsys_edac doc,
-which use the same memory-controller IP.
+Since i.MX8MP use synopsys ddr controller IP, so add edac support
+for i.MX8MP based on synopsys edac driver. i.MX8MP use LPDDR4 and
+support interrupts for corrected and uncorrected errors. The main
+difference between ZynqMP and i.MX8MP ddr controller is the interrupt
+registers. So add another interrupt handler function, enable/disable
+interrupt function to distinguish with ZynqMP.
 
 Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/memory-controllers/synopsys.txt   | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/edac/synopsys_edac.c | 77 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 76 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-index 9d32762c47e1..4fd14ba61474 100644
---- a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-@@ -6,16 +6,20 @@ bus width configurations.
- The Zynq DDR ECC controller has an optional ECC support in half-bus width
- (16-bit) configuration.
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index 12211dc040e8..bf4202a24683 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -101,6 +101,7 @@
+ /* DDR ECC Quirks */
+ #define DDR_ECC_INTR_SUPPORT		BIT(0)
+ #define DDR_ECC_DATA_POISON_SUPPORT	BIT(1)
++#define DDR_ECC_IMX8MP			BIT(2)
  
--These both ECC controllers correct single bit ECC errors and detect double bit
-+The i.MX8MP DDR ECC controller has an ECC support in 64-bit bus width
-+configurations.
+ /* ZynqMP Enhanced DDR memory controller registers that are relevant to ECC */
+ /* ECC Configuration Registers */
+@@ -266,6 +267,11 @@
+ 
+ #define RANK_B0_BASE			6
+ 
++/* ECCCTL UE/CE Interrupt enable/disable for IMX8MP*/
++#define DDR_CE_INTR_EN_MASK			0x100
++#define DDR_UE_INTR_EN_MASK			0x200
++#define ECC_INTR_MASK				0x10100
 +
-+All the ECC controllers correct single bit ECC errors and detect double bit
- ECC errors.
+ /**
+  * struct ecc_error_info - ECC error log information.
+  * @row:	Row number.
+@@ -516,6 +522,54 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+ 	memset(p, 0, sizeof(*p));
+ }
  
- Required properties:
-  - compatible: One of:
- 	- 'xlnx,zynq-ddrc-a05' : Zynq DDR ECC controller
- 	- 'xlnx,zynqmp-ddrc-2.40a' : ZynqMP DDR ECC controller
-+	- 'fsl,imx8mp-ddrc' : i.MX8MP DDR ECC controller
-  - reg: Should contain DDR controller registers location and length.
++static void enable_intr_imx8mp(struct synps_edac_priv *priv)
++{
++	int regval;
++
++	regval = readl(priv->baseaddr + ECC_CLR_OFST);
++	regval |= (DDR_CE_INTR_EN_MASK | DDR_UE_INTR_EN_MASK);
++	writel(regval, priv->baseaddr + ECC_CLR_OFST);
++}
++
++static void disable_intr_imx8mp(struct synps_edac_priv *priv)
++{
++	int regval;
++
++	regval = readl(priv->baseaddr + ECC_CLR_OFST);
++	regval &= ~(DDR_CE_INTR_EN_MASK | DDR_UE_INTR_EN_MASK);
++	writel(regval, priv->baseaddr + ECC_CLR_OFST);
++}
++
++/* Interrupt Handler for ECC interrupts on imx8mp platform. */
++static irqreturn_t intr_handler_imx8mp(int irq, void *dev_id)
++{
++	const struct synps_platform_data *p_data;
++	struct mem_ctl_info *mci = dev_id;
++	struct synps_edac_priv *priv;
++	int status, regval;
++
++	priv = mci->pvt_info;
++	p_data = priv->p_data;
++
++	regval = readl(priv->baseaddr + ECC_STAT_OFST);
++	if (!(regval & ECC_INTR_MASK))
++		return IRQ_NONE;
++
++	status = p_data->get_error_info(priv);
++	if (status)
++		return IRQ_NONE;
++
++	priv->ce_cnt += priv->stat.ce_cnt;
++	priv->ue_cnt += priv->stat.ue_cnt;
++	handle_error(mci, &priv->stat);
++
++	edac_dbg(3, "Total error count CE %d UE %d\n",
++		 priv->ce_cnt, priv->ue_cnt);
++	enable_intr_imx8mp(priv);
++
++	return IRQ_HANDLED;
++}
++
+ /**
+  * intr_handler - Interrupt Handler for ECC interrupts.
+  * @irq:        IRQ number.
+@@ -533,6 +587,9 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
+ 	priv = mci->pvt_info;
+ 	p_data = priv->p_data;
  
--Required properties for "xlnx,zynqmp-ddrc-2.40a":
-+Required properties for "xlnx,zynqmp-ddrc-2.40a" and "fsl,imx8mp-ddrc":
-  - interrupts: Property with a value describing the interrupt number.
++	if (p_data->quirks & DDR_ECC_IMX8MP)
++		return intr_handler_imx8mp(irq, dev_id);
++
+ 	regval = readl(priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
+ 	regval &= (DDR_QOSCE_MASK | DDR_QOSUE_MASK);
+ 	if (!(regval & ECC_CE_UE_INTR_MASK))
+@@ -809,7 +866,7 @@ static void mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, mci);
  
- Example:
+ 	/* Initialize controller capabilities and configuration */
+-	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
++	mci->mtype_cap = MEM_FLAG_LRDDR4 | MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
+ 	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
+ 	mci->scrub_cap = SCRUB_HW_SRC;
+ 	mci->scrub_mode = SCRUB_NONE;
+@@ -834,6 +891,9 @@ static void mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
+ static void enable_intr(struct synps_edac_priv *priv)
+ {
+ 	/* Enable UE/CE Interrupts */
++	if (priv->p_data->quirks & DDR_ECC_IMX8MP)
++		return enable_intr_imx8mp(priv);
++
+ 	writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
+ 			priv->baseaddr + DDR_QOS_IRQ_EN_OFST);
+ }
+@@ -841,6 +901,9 @@ static void enable_intr(struct synps_edac_priv *priv)
+ static void disable_intr(struct synps_edac_priv *priv)
+ {
+ 	/* Disable UE/CE Interrupts */
++	if (priv->p_data->quirks & DDR_ECC_IMX8MP)
++		return disable_intr_imx8mp(priv);
++
+ 	writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
+ 			priv->baseaddr + DDR_QOS_IRQ_DB_OFST);
+ }
+@@ -890,6 +953,14 @@ static const struct synps_platform_data zynqmp_edac_def = {
+ 			  ),
+ };
+ 
++static const struct synps_platform_data imx8mp_edac_def = {
++	.get_error_info	= zynqmp_get_error_info,
++	.get_mtype	= zynqmp_get_mtype,
++	.get_dtype	= zynqmp_get_dtype,
++	.get_ecc_state	= zynqmp_get_ecc_state,
++	.quirks         = (DDR_ECC_INTR_SUPPORT | DDR_ECC_IMX8MP),
++};
++
+ static const struct of_device_id synps_edac_match[] = {
+ 	{
+ 		.compatible = "xlnx,zynq-ddrc-a05",
+@@ -899,6 +970,10 @@ static const struct of_device_id synps_edac_match[] = {
+ 		.compatible = "xlnx,zynqmp-ddrc-2.40a",
+ 		.data = (void *)&zynqmp_edac_def
+ 	},
++	{
++		.compatible = "fsl,imx8mp-ddrc",
++		.data = (void *)&imx8mp_edac_def
++	},
+ 	{
+ 		/* end of table */
+ 	}
 -- 
 2.17.1
 
