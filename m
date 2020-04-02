@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAF2C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16EBC10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8544420784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B353F208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387490AbgDBGxW (ORCPT
+        id S2387500AbgDBGyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 02:53:22 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:60098 "EHLO
+        Thu, 2 Apr 2020 02:54:00 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:25355 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387453AbgDBGxU (ORCPT
+        by vger.kernel.org with ESMTP id S1728585AbgDBGyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 02:53:20 -0400
+        Thu, 2 Apr 2020 02:54:00 -0400
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 02 Apr 2020 12:23:12 +0530
 Received: from mkrishn-linux.qualcomm.com ([10.204.66.35])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 02 Apr 2020 12:22:53 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 02 Apr 2020 12:22:55 +0530
 Received: by mkrishn-linux.qualcomm.com (Postfix, from userid 438394)
-        id 3641A457F; Thu,  2 Apr 2020 12:22:53 +0530 (IST)
+        id 89E49457F; Thu,  2 Apr 2020 12:22:54 +0530 (IST)
 From:   Krishna Manikandan <mkrishn@codeaurora.org>
 To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
@@ -33,9 +33,9 @@ Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
         linux-kernel@vger.kernel.org, robdclark@gmail.com,
         seanpaul@chromium.org, hoegsberg@chromium.org,
         kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v2 2/3] arm64: dts: sc7180: add bus clock to mdp node for sc7180 target
-Date:   Thu,  2 Apr 2020 12:22:49 +0530
-Message-Id: <1585810370-6099-2-git-send-email-mkrishn@codeaurora.org>
+Subject: [v2 3/3] arm64: dts: sc7180: add interconnect bindings for display
+Date:   Thu,  2 Apr 2020 12:22:50 +0530
+Message-Id: <1585810370-6099-3-git-send-email-mkrishn@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1585810370-6099-1-git-send-email-mkrishn@codeaurora.org>
 References: <1585810370-6099-1-git-send-email-mkrishn@codeaurora.org>
@@ -44,56 +44,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the bus clock to mdp device node,in order
-to facilitate bus band width scaling on sc7180
-target.
+This change adds the interconnect bindings to the
+MDSS node. This will establish Display to DDR path
+for bus bandwidth voting.
 
-The parent device MDSS will not vote for bus bw,
-instead the vote will be triggered by mdp device
-node. Since a minimum vote is required to turn
-on bus clock, move the clock node to mdp device
-from where the votes are requested.
-
-This patch has dependency on the below series
-https://patchwork.kernel.org/patch/11468783/
+Changes in v2:
+	- Change in commit message
 
 Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 998f101..ea1b0cd 100644
+index ea1b0cd..31fed6d 100644
 --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1510,10 +1510,9 @@
- 			power-domains = <&dispcc MDSS_GDSC>;
+@@ -1521,6 +1521,9 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <1>;
  
- 			clocks = <&gcc GCC_DISP_AHB_CLK>,
--				 <&gcc GCC_DISP_HF_AXI_CLK>,
- 				 <&dispcc DISP_CC_MDSS_AHB_CLK>,
- 				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
--			clock-names = "iface", "bus", "ahb", "core";
-+			clock-names = "iface", "ahb", "core";
++			interconnects = <&mmss_noc MASTER_MDP0 &mc_virt SLAVE_EBI1>;
++			interconnect-names = "mdp0-mem";
++
+ 			iommus = <&apps_smmu 0x800 0x2>;
  
- 			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
- 			assigned-clock-rates = <300000000>;
-@@ -1536,12 +1535,13 @@
- 				      <0 0x0aeb0000 0 0x2008>;
- 				reg-names = "mdp", "vbif";
- 
--				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+				clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
-+					 <&dispcc DISP_CC_MDSS_AHB_CLK>,
- 					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
- 					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
- 					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
- 					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
--				clock-names = "iface", "rot", "lut", "core",
-+				clock-names = "bus", "iface", "rot", "lut", "core",
- 					      "vsync";
- 				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
- 						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+ 			#address-cells = <2>;
 -- 
 1.9.1
 
