@@ -2,190 +2,82 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EABC2BA16
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA91C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548BA2078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC012080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:11:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cuhcJ+o5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388818AbgDBRJt (ORCPT
+        id S2388836AbgDBRLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:09:49 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45154 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388750AbgDBRJs (ORCPT
+        Thu, 2 Apr 2020 13:11:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28908 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727412AbgDBRLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:09:48 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: bbeckett)
-        with ESMTPSA id 76B35297E47
-From:   Robert Beckett <bob.beckett@collabora.com>
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Robert Beckett <bob.beckett@collabora.com>
-Subject: [PATCH v4.9.y] drm/etnaviv: replace MMU flush marker with flush sequence
-Date:   Thu,  2 Apr 2020 18:07:59 +0100
-Message-Id: <20200402170758.8315-4-bob.beckett@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200402170758.8315-1-bob.beckett@collabora.com>
-References: <20200402170758.8315-1-bob.beckett@collabora.com>
-Reply-To: <bob.beckett@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 2 Apr 2020 13:11:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585847475;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=umWPoQrI980x5zzMSW5/7VpEhYybv0fVnNUHzVpWWpc=;
+        b=cuhcJ+o5NJbfNcwiTlCY852ldIQV10cRyJ2GDbxSquo6z/z58FnYypW1NHhKnhBt6bsNdY
+        nKcVwqfRRvps5kFvqxv+Y5vsU7CQsM8MdDmuvNs8XsUHRQRSbqoTfWMmO/SFrJqi2PJFuq
+        Fe6EiFPJXjrsIdxUSz4fVwPQ8Qcfito=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-hPib8IDRP_WmKbz_ATvcTw-1; Thu, 02 Apr 2020 13:11:11 -0400
+X-MC-Unique: hPib8IDRP_WmKbz_ATvcTw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B160192D788;
+        Thu,  2 Apr 2020 17:11:10 +0000 (UTC)
+Received: from llong.com (ovpn-112-134.rdu2.redhat.com [10.10.112.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7F855C3F8;
+        Thu,  2 Apr 2020 17:11:05 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
+Subject: [PATCH] kernfs: Change kernfs_node lockdep name to "kn->active"
+Date:   Thu,  2 Apr 2020 13:10:56 -0400
+Message-Id: <20200402171056.27871-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+The kernfs_node lockdep tracking is being done on kn->active, the
+active reference count. The other reference count (kn->count) is not
+tracked by lockdep. So change the lockdep name to reflect what it is
+tracking.
 
-commit 4900dda90af2cb13bc1d4c12ce94b98acc8fe64e upstream
-
-If a MMU is shared between multiple GPUs, all of them need to flush their
-TLBs, so a single marker that gets reset on the first flush won't do.
-Replace the flush marker with a sequence number, so that it's possible to
-check if the TLB is in sync with the current page table state for each GPU.
-
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_buffer.c | 10 ++++++----
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c    |  2 +-
- drivers/gpu/drm/etnaviv/etnaviv_gpu.h    |  1 +
- drivers/gpu/drm/etnaviv/etnaviv_mmu.c    |  6 +++---
- drivers/gpu/drm/etnaviv/etnaviv_mmu.h    |  2 +-
- 5 files changed, 12 insertions(+), 9 deletions(-)
+ fs/kernfs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-index d9230132dfbc..d71fa2d9a196 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-@@ -257,6 +257,8 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, unsigned int event,
- 	unsigned int waitlink_offset = buffer->user_size - 16;
- 	u32 return_target, return_dwords;
- 	u32 link_target, link_dwords;
-+	unsigned int new_flush_seq = READ_ONCE(gpu->mmu->flush_seq);
-+	bool need_flush = gpu->flush_seq != new_flush_seq;
+diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
+index 34366db3620d..fd6ddfe4cd94 100644
+--- a/fs/kernfs/file.c
++++ b/fs/kernfs/file.c
+@@ -1010,7 +1010,7 @@ struct kernfs_node *__kernfs_create_file(struct kernfs_node *parent,
  
- 	if (drm_debug & DRM_UT_DRIVER)
- 		etnaviv_buffer_dump(gpu, buffer, 0, 0x50);
-@@ -269,14 +271,14 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, unsigned int event,
- 	 * need to append a mmu flush load state, followed by a new
- 	 * link to this buffer - a total of four additional words.
- 	 */
--	if (gpu->mmu->need_flush || gpu->switch_context) {
-+	if (need_flush || gpu->switch_context) {
- 		u32 target, extra_dwords;
- 
- 		/* link command */
- 		extra_dwords = 1;
- 
- 		/* flush command */
--		if (gpu->mmu->need_flush) {
-+		if (need_flush) {
- 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1)
- 				extra_dwords += 1;
- 			else
-@@ -289,7 +291,7 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, unsigned int event,
- 
- 		target = etnaviv_buffer_reserve(gpu, buffer, extra_dwords);
- 
--		if (gpu->mmu->need_flush) {
-+		if (need_flush) {
- 			/* Add the MMU flush */
- 			if (gpu->mmu->version == ETNAVIV_IOMMU_V1) {
- 				CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_MMU,
-@@ -309,7 +311,7 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, unsigned int event,
- 					SYNC_RECIPIENT_PE);
- 			}
- 
--			gpu->mmu->need_flush = false;
-+			gpu->flush_seq = new_flush_seq;
- 		}
- 
- 		if (gpu->switch_context) {
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index a336754698f8..dba0d769d17a 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -1313,7 +1313,7 @@ int etnaviv_gpu_submit(struct etnaviv_gpu *gpu,
- 	gpu->active_fence = submit->fence;
- 
- 	if (gpu->lastctx != cmdbuf->ctx) {
--		gpu->mmu->need_flush = true;
-+		gpu->mmu->flush_seq++;
- 		gpu->switch_context = true;
- 		gpu->lastctx = cmdbuf->ctx;
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	if (key) {
+-		lockdep_init_map(&kn->dep_map, "kn->count", key, 0);
++		lockdep_init_map(&kn->dep_map, "kn->active", key, 0);
+ 		kn->flags |= KERNFS_LOCKDEP;
  	}
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-index 73c278dc3706..416940b254a6 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
-@@ -135,6 +135,7 @@ struct etnaviv_gpu {
- 	int irq;
- 
- 	struct etnaviv_iommu *mmu;
-+	unsigned int flush_seq;
- 
- 	/* Power Control: */
- 	struct clk *clk_bus;
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-index fe0e85b41310..ef9df6158dc1 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-@@ -134,7 +134,7 @@ static int etnaviv_iommu_find_iova(struct etnaviv_iommu *mmu,
- 		 */
- 		if (mmu->last_iova) {
- 			mmu->last_iova = 0;
--			mmu->need_flush = true;
-+			mmu->flush_seq++;
- 			continue;
- 		}
- 
-@@ -197,7 +197,7 @@ static int etnaviv_iommu_find_iova(struct etnaviv_iommu *mmu,
- 		 * associated commit requesting this mapping, and retry the
- 		 * allocation one more time.
- 		 */
--		mmu->need_flush = true;
-+		mmu->flush_seq++;
- 	}
- 
- 	return ret;
-@@ -354,7 +354,7 @@ u32 etnaviv_iommu_get_cmdbuf_va(struct etnaviv_gpu *gpu,
- 		 * that the FE MMU prefetch won't load invalid entries.
- 		 */
- 		mmu->last_iova = buf->vram_node.start + buf->size + SZ_64K;
--		gpu->mmu->need_flush = true;
-+		mmu->flush_seq++;
- 		mutex_unlock(&mmu->lock);
- 
- 		return (u32)buf->vram_node.start;
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_mmu.h b/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
-index e787e49c9693..5bdc5f5601b1 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.h
-@@ -44,7 +44,7 @@ struct etnaviv_iommu {
- 	struct list_head mappings;
- 	struct drm_mm mm;
- 	u32 last_iova;
--	bool need_flush;
-+	unsigned int flush_seq;
- };
- 
- struct etnaviv_gem_object;
+ #endif
 -- 
-2.20.1
+2.18.1
 
