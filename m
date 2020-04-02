@@ -6,68 +6,68 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37AFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D210C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D30C9206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9F320675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388088AbgDBLTG (ORCPT
+        id S2388092AbgDBLUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:19:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38068 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbgDBLTG (ORCPT
+        Thu, 2 Apr 2020 07:20:48 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:51843 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728803AbgDBLUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:19:06 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jJxsF-0004zU-Tt; Thu, 02 Apr 2020 11:19:04 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Coly Li <colyli@suse.de>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] bcache: remove redundant variables i and n
-Date:   Thu,  2 Apr 2020 12:19:03 +0100
-Message-Id: <20200402111903.514146-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 2 Apr 2020 07:20:48 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5e85ca68e3a-5df00; Thu, 02 Apr 2020 19:20:08 +0800 (CST)
+X-RM-TRANSID: 2eeb5e85ca68e3a-5df00
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95e85ca66ca8-bc65c;
+        Thu, 02 Apr 2020 19:20:08 +0800 (CST)
+X-RM-TRANSID: 2ee95e85ca66ca8-bc65c
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     perex@perex.cz, tiwai@suse.com, nicolas.ferre@microchip.com
+Cc:     alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] ALSA:atmel:Use platform_get_irq_optional()
+Date:   Thu,  2 Apr 2020 19:21:35 +0800
+Message-Id: <20200402112135.18604-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+In order to simply code,because platform_get_irq() already has
+dev_err() message.
 
-Variables i and n are being assigned but are never used. They are
-redundant and can be removed.
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 ---
- drivers/md/bcache/btree.c | 2 --
- 1 file changed, 2 deletions(-)
+ sound/atmel/ac97c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 72856e5f23a3..114d0d73d909 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -1907,10 +1907,8 @@ static int bch_btree_check_thread(void *arg)
- 	struct btree_iter iter;
- 	struct bkey *k, *p;
- 	int cur_idx, prev_idx, skip_nr;
--	int i, n;
+diff --git a/sound/atmel/ac97c.c b/sound/atmel/ac97c.c
+index a1dce9725..25cfd5710 100644
+--- a/sound/atmel/ac97c.c
++++ b/sound/atmel/ac97c.c
+@@ -715,7 +715,7 @@ static int atmel_ac97c_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
  
- 	k = p = NULL;
--	i = n = 0;
- 	cur_idx = prev_idx = 0;
- 	ret = 0;
- 
+-	irq = platform_get_irq(pdev, 0);
++	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_dbg(&pdev->dev, "could not get irq: %d\n", irq);
+ 		return irq;
 -- 
-2.25.1
+2.20.1.windows.1
+
+
 
