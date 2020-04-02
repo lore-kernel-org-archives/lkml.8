@@ -2,143 +2,140 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F88C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222B8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AAAF2064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED12A20784
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:34:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IWuw7r+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgDBFYQ (ORCPT
+        id S1728029AbgDBFei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 01:24:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39762 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgDBFYQ (ORCPT
+        Thu, 2 Apr 2020 01:34:38 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42897 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgDBFeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 01:24:16 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJsKs-008Qfb-6k; Thu, 02 Apr 2020 05:24:14 +0000
-Date:   Thu, 2 Apr 2020 06:24:14 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] vfs.git pathwalk sanitizing
-Message-ID: <20200402052414.GE23230@ZenIV.linux.org.uk>
+        Thu, 2 Apr 2020 01:34:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h15so2626943wrx.9;
+        Wed, 01 Apr 2020 22:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WuhAaaws8KpzCDEuFiXmgMHdWSdeDew4B7D1DUiqies=;
+        b=IWuw7r+9WLAQYNPH6vtCw0hGgdbmhueMDOaTwXDQJedCrRbxaDwBSQ9aGVP0xUC2F7
+         uwrun0FjsoBrYAUEgW9J2vB0yaXTvFHjv7qiiP36KJ5AVvUDaCbzgI0uC9KXXmcI4mY/
+         iI9Osl2B8VDIqtXIMfXtHSO356T2pkg/CbL5N6J6cBNrLTBk+jVTMbRfPvZcXhZ9VA2L
+         DiUfVKqQbnDleF4FnA6uu7XFZG6nR8LrngXDiglqeFX/su2SapAh7iVMb8omarbBK9eQ
+         +a0IrVN3mweTBZY1KsYvSeOhqsuNkBt4RdBb0vF0RyTl9wgg96Q+CiOL+Lxa6DqNN3HM
+         7FAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WuhAaaws8KpzCDEuFiXmgMHdWSdeDew4B7D1DUiqies=;
+        b=THVeUfPoyQVuH5ziFPM08YAzaGhGnUhHId+h81gRnhZTbOSdTGUppuIRRxEw+lMYlE
+         jH2hHoMORLkLUChQNIqXgCbULnFbYu6X4tiSLF045lSliPU9Kz8r+LZaFtl1pR1MXGnE
+         UGK/7BFWGhRxUDWI9nEncl17ZzVrZILrvZLMw8SpKqEmvPiSJX3sMpwGk6FWsdDwia5I
+         UX6lCaVOFsAyKqVicyHqF/1z3K1JogoJbu3ehUTfCQ858pGsPE7s01zrT6aLTyxA3s/T
+         vkVFhHc4YdUNVwLPG3LQA/INj3rVIbc5Z1hGAA57kmkK7K0mPghWo4Lik4dEmHi10bQQ
+         3kbQ==
+X-Gm-Message-State: AGi0PuZzG77umVvloE/yeAsb4aNe0EYqMy5uKUxABGsx4H7Chu+hATKB
+        RamayvdRHt1zUHaDVDtEl44Qldt5
+X-Google-Smtp-Source: APiQypLJ3//aNZzLwASU9G1b8eTs/5otCVL2d5BjckLi81QkwqztH+VXJCCHRN8Gbu9O0FO7xXRVFg==
+X-Received: by 2002:a05:6000:108f:: with SMTP id y15mr1624814wrw.423.1585805676337;
+        Wed, 01 Apr 2020 22:34:36 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id u16sm5915920wro.23.2020.04.01.22.34.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 22:34:35 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man <linux-man@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, arul.jeniston@gmail.com,
+        "devi R.K" <devi.feb27@gmail.com>,
+        Marc Lehmann <debian-reportbug@plan9.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>
+Subject: Re: timer_settime() and ECANCELED
+To:     Thomas Gleixner <tglx@linutronix.de>
+References: <87pncrf6gd.fsf@nanos.tec.linutronix.de>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <4c557b44-4e4e-a689-a17b-f95e6c5ee4b0@gmail.com>
+Date:   Thu, 2 Apr 2020 07:34:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <87pncrf6gd.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Massive pathwalk rewrite and cleanups.  Several iterations had
-been posted; hopefully the damn thing is getting readable and understandable
-now.  Pretty much all parts of pathname resolutions are affected...
+Hi Thomas,
 
-The branch is identical to what has sat in -next, except for commit message in
-"lift all calls of step_into() out of follow_dotdot/follow_dotdot_rcu",
-crediting Qian Cai for reporting the bug; only commit message changed there.
- I'd folded the fix back in Mar 25, and it had been present in -next since then
-(see #work.dotdot).  I asked Qian Cai whether he wanted his tested-by on that
-thing, got no reply...
-	Anyway, all diffs in that branch are identical to the ones in
-#work.dotdot, which is what has sat in linux-next for the last week.
+On 4/1/20 7:42 PM, Thomas Gleixner wrote:
+> Michael,
+> 
+> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+>> Following on from our discussion of read() on a timerfd [1], I
+>> happened to remember a Debian bug report [2] that points out that
+>> timer_settime() can fail with the error ECANCELED, which is both
+>> surprising and odd (because despite the error, the timer does get
+>> updated).
+> ...
+>> (1) If the wall-clock is changed before the first timerfd_settime()
+>> call, the call succeeds. This is of course expected.
+>> (2) If the wall-clock is changed after a timerfd_settime() call, then
+>> the next timerfd_settime() call fails with ECANCELED.
+>> (3) Even if the timerfd_settime() call fails, the timer is still updated(!).
+>>
+>> Some questions:
+>> (a) What is the rationale for timerfd_settime() failing with ECANCELED
+>> in this case? (Currently, the manual page says nothing about this.)
+>> (b) It seems at the least surprising, but more likely a bug, that
+>> timerfd_settime() fails with ECANCELED while at the same time
+>> successfully updating the timer value.
+> 
+> Really good question and TBH I can't remember why this is implemented in
+> the way it is, but I have a faint memory that at least (a) is
+> intentional.
+> 
+> After staring at the code for a while I came up with the following
+> answers:
+> 
+> (a): If the clock was set event ("date -s ...") which triggered the
+>      cancel was not yet consumed by user space via read(), then that
+>      information would get lost because arming the timer to the new
+>      value has to reset the state.
+> 
+> (b): Arming the timer in that case is indeed very questionable, but it
+>      could be argued that because the clock was set event happened with
+>      the old expiry value that the new expiry value is not affected.
+>      
+>      I'd be happy to change that and not arm the timer in the case of a
+>      pending cancel, but I fear that some user space already depends on
+>      that behaviour.
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+Yes, that's the risk, of course. So, shall we just document all 
+this in the manual page?
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+Thanks,
 
-are available in the git repository at:
+Michael
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.dotdot1
 
-for you to fetch changes up to 99a4a90c8e9337e364136393286544e3753673c3:
-
-  lookup_open(): don't bother with fallbacks to lookup+create (2020-04-02 01:09:31 -0400)
-
-----------------------------------------------------------------
-Al Viro (69):
-      do_add_mount(): lift lock_mount/unlock_mount into callers
-      fix automount/automount race properly
-      follow_automount(): get rid of dead^Wstillborn code
-      follow_automount() doesn't need the entire nameidata
-      make build_open_flags() treat O_CREAT | O_EXCL as implying O_NOFOLLOW
-      handle_mounts(): start building a sane wrapper for follow_managed()
-      atomic_open(): saner calling conventions (return dentry on success)
-      lookup_open(): saner calling conventions (return dentry on success)
-      do_last(): collapse the call of path_to_nameidata()
-      handle_mounts(): pass dentry in, turn path into a pure out argument
-      lookup_fast(): consolidate the RCU success case
-      teach handle_mounts() to handle RCU mode
-      lookup_fast(): take mount traversal into callers
-      step_into() callers: dismiss the symlink earlier
-      new step_into() flag: WALK_NOFOLLOW
-      fold handle_mounts() into step_into()
-      LOOKUP_MOUNTPOINT: fold path_mountpointat() into path_lookupat()
-      expand the only remaining call of path_lookup_conditional()
-      merging pick_link() with get_link(), part 1
-      merging pick_link() with get_link(), part 2
-      merging pick_link() with get_link(), part 3
-      merging pick_link() with get_link(), part 4
-      merging pick_link() with get_link(), part 5
-      merging pick_link() with get_link(), part 6
-      finally fold get_link() into pick_link()
-      sanitize handling of nd->last_type, kill LAST_BIND
-      namei: invert the meaning of WALK_FOLLOW
-      pick_link(): check for WALK_TRAILING, not LOOKUP_PARENT
-      link_path_walk(): simplify stack handling
-      namei: have link_path_walk() maintain LOOKUP_PARENT
-      massage __follow_mount_rcu() a bit
-      new helper: traverse_mounts()
-      atomic_open(): return the right dentry in FMODE_OPENED case
-      atomic_open(): lift the call of may_open() into do_last()
-      do_last(): merge the may_open() calls
-      do_last(): don't bother with keeping got_write in FMODE_OPENED case
-      do_last(): rejoing the common path earlier in FMODE_{OPENED,CREATED} case
-      do_last(): simplify the liveness analysis past finish_open_created
-      do_last(): rejoin the common path even earlier in FMODE_{OPENED,CREATED} case
-      split the lookup-related parts of do_last() into a separate helper
-      path_connected(): pass mount and dentry separately
-      path_parent_directory(): leave changing path->dentry to callers
-      expand path_parent_directory() in its callers
-      follow_dotdot{,_rcu}(): lift switching nd->path to parent out of loop
-      follow_dotdot{,_rcu}(): lift LOOKUP_BENEATH checks out of loop
-      move handle_dots(), follow_dotdot() and follow_dotdot_rcu() past step_into()
-      handle_dots(), follow_dotdot{,_rcu}(): preparation to switch to step_into()
-      follow_dotdot{,_rcu}(): switch to use of step_into()
-      lift all calls of step_into() out of follow_dotdot/follow_dotdot_rcu
-      follow_dotdot{,_rcu}(): massage loops
-      follow_dotdot_rcu(): be lazy about changing nd->path
-      follow_dotdot(): be lazy about changing nd->path
-      helper for mount rootwards traversal
-      non-RCU analogue of the previous commit
-      fs/namei.c: kill follow_mount()
-      pick_link(): pass it struct path already with normal refcounting rules
-      fold path_to_nameidata() into its only remaining caller
-      pick_link(): more straightforward handling of allocation failures
-      pick_link(): take reserving space on stack into a new helper
-      reserve_stack(): switch to __nd_alloc_stack()
-      __nd_alloc_stack(): make it return bool
-      link_path_walk(): sample parent's i_uid and i_mode for the last component
-      take post-lookup part of do_last() out of loop
-      open_last_lookups(): consolidate fsnotify_create() calls
-      open_last_lookups(): don't abuse complete_walk() when all we want is unlazy
-      open_last_lookups(): lift O_EXCL|O_CREAT handling into do_open()
-      open_last_lookups(): move complete_walk() into do_open()
-      atomic_open(): no need to pass struct open_flags anymore
-      lookup_open(): don't bother with fallbacks to lookup+create
-
- Documentation/filesystems/path-lookup.rst |    7 +-
- fs/autofs/dev-ioctl.c                     |    6 +-
- fs/internal.h                             |    1 -
- fs/namei.c                                | 1488 ++++++++++++-----------------
- fs/namespace.c                            |   96 +-
- fs/open.c                                 |    4 +-
- include/linux/namei.h                     |    4 +-
- 7 files changed, 687 insertions(+), 919 deletions(-)
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
