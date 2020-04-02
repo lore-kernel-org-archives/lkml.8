@@ -2,83 +2,151 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0A9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CAFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACEC62064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585852551;
-	bh=KauE5lRKJDRHr+8/GnireyVC9maw8P+sgKRebMi2i4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=twyzkJSe8bIXumT09Db6wMDUVzxD9GLqCv1Jzs3YfLMVxmUOKs5hCA23ghEx2ky7w
-	 brIvwPSmpA+hbD5NPjK8Rd3KIc6IRcGyD6IbnHlhv8e7WjXbBusSfZAjfMwN3GiKRi
-	 DV4CnfUWqkbs3t4tXNPWa78KwRjo8FehLmZh1dNs=
+	by mail.kernel.org (Postfix) with ESMTP id C51D22064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:36:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IEfTzILK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389732AbgDBSfu (ORCPT
+        id S2389756AbgDBSgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:35:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389665AbgDBSfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 14:35:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E092064A;
-        Thu,  2 Apr 2020 18:35:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585852549;
-        bh=KauE5lRKJDRHr+8/GnireyVC9maw8P+sgKRebMi2i4Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ksl4a9aCACwGpWiD++aXNe08DuwRgOZORkpfDwlgQLzUConv4hGPmoq1/+QH2bBpm
-         ou3S0M2ruKcPVebdzQSeovQP1TYJYifJXCWabwwc7S8IfnjyKQQ3loUBm01jPGmSsB
-         VP/KaCnejJDZw6idZvvDkGJSvnwz9OANxYwpgIps=
-Date:   Thu, 2 Apr 2020 20:35:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jari Ruusu <jari.ruusu@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: Re: linux-4.14.175 broke audio
-Message-ID: <20200402183546.GA3234477@kroah.com>
-References: <CACMCwJ++6kikxaEUon3xfwm1h3hTQ+V9BoJEAeToJQKwTufDsA@mail.gmail.com>
+        Thu, 2 Apr 2020 14:36:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46559 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389564AbgDBSgA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 14:36:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k191so2213203pgc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 11:36:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MBBRhcWlTmLjshW9NwjTAABOEAhTDX32vhb9ox45OjU=;
+        b=IEfTzILKyLkhfpwHgMwKAHNo0SXkWWQIbDRvPlZWRptpe05omv5tLovfYlECAnyWcE
+         tiE4YcdCHVMysKGnFUGnEjP0YzlOl8lC/YVB5X+cGbPq+ubht5zYup99LDWEVEf37kzF
+         V2Lm4oZXPYl9YKd/oMwN6nHggdELP0qetvbBw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MBBRhcWlTmLjshW9NwjTAABOEAhTDX32vhb9ox45OjU=;
+        b=I8DYuKBxfmSLxqQSfjDzs0bhl17lF+kfewkOxGdbfP1fdhapLv1thZHj8YuwF5ovDI
+         QKeaA316xqQ34a+NGDfTIqzG1/7spto/5MWjh3EFWCG2elctbBZkeGSz5bGJD0drLHZy
+         Mdwu6Tfv49y88YGyazSi3kr7mGDsu0yh+zDC6zZPco6RwGhzWy1buBtN7XBDUgaWmh2E
+         ySsrSwq0gFCoaDmx31hIn6exgNap7wV9iJ0ysnIonkrFxkaAQYtJW9FvjbpC2ZS3q2B7
+         jw6dBeG8JmZlYZTSf76iJnNp7LtcIVEF5/hIZ9dIsi//ZhHPmwir3AZmD2o8SdaAUQ+4
+         yEKg==
+X-Gm-Message-State: AGi0PuYXzg8cs4HVHwae95EBikXZsuUWrrO2hLn3ThxVdc7KtK/menP2
+        tKzIu3/NIGGzuCPNgw4LGaWm8Gr5bt4=
+X-Google-Smtp-Source: APiQypL88WhZOnrTMVmaoC4rwp7riCtTsgSSYjJzsJsGIRi1RUlgzkKuTBBp5rtjR5K09Q2BMk3zag==
+X-Received: by 2002:a65:62ce:: with SMTP id m14mr56221pgv.174.1585852559728;
+        Thu, 02 Apr 2020 11:35:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h198sm4203102pfe.76.2020.04.02.11.35.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 11:35:58 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 11:35:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
+        daniel@ffwll.ch, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
+ user_write_access_begin/end
+Message-ID: <202004021132.813F8E88@keescook>
+References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+ <20200402162942.GG23230@ZenIV.linux.org.uk>
+ <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
+ <20200402175032.GH23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACMCwJ++6kikxaEUon3xfwm1h3hTQ+V9BoJEAeToJQKwTufDsA@mail.gmail.com>
+In-Reply-To: <20200402175032.GH23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 09:06:59PM +0300, Jari Ruusu wrote:
-> $ uname -s -r -m
-> Linux 4.14.175 x86_64
-> $ cat ${HOME}/.config/mpv/mpv.conf
-> ao=oss
-> vo=opengl
-> audio-channels=stereo
-> no-msg-color
-> $ mpv track18.mp3
-> Playing: track18.mp3
->  (+) Audio --aid=1 (mp3)
-> [ao/oss] Can't set audio device to s16 output.
-> [ao/oss] Can't set audio device to u8 output.
-> [ao/oss] Can't set sample format.
-> [ao] Failed to initialize audio driver 'oss'
-> Could not open/initialize audio device -> no sound.
-> Audio: no audio
+On Thu, Apr 02, 2020 at 06:50:32PM +0100, Al Viro wrote:
+> On Thu, Apr 02, 2020 at 07:03:28PM +0200, Christophe Leroy wrote:
 > 
+> > user_access_begin() grants both read and write.
+> > 
+> > This patch adds user_read_access_begin() and user_write_access_begin() but
+> > it doesn't remove user_access_begin()
 > 
-> Reverting "ALSA: pcm: oss: Avoid plugin buffer overflow"
-> upstream commit f2ecf903ef06eb1bbbfa969db9889643d487e73a
-> restored audio back to normal working state.
+> Ouch...  So the most generic name is for the rarest case?
+>  
+> > > What should we do about that?  Do we prohibit such blocks outside
+> > > of arch?
+> > > 
+> > > What should we do about arm and s390?  There we want a cookie passed
+> > > from beginning of block to its end; should that be a return value?
+> > 
+> > That was the way I implemented it in January, see
+> > https://patchwork.ozlabs.org/patch/1227926/
+> > 
+> > There was some discussion around that and most noticeable was:
+> > 
+> > H. Peter (hpa) said about it: "I have *deep* concern with carrying state in
+> > a "key" variable: it's a direct attack vector for a crowbar attack,
+> > especially since it is by definition live inside a user access region."
+> 
+> > This patch minimises the change by just adding user_read_access_begin() and
+> > user_write_access_begin() keeping the same parameters as the existing
+> > user_access_begin().
+> 
+> Umm...  What about the arm situation?  The same concerns would apply there,
+> wouldn't they?  Currently we have
+> static __always_inline unsigned int uaccess_save_and_enable(void)
+> {
+> #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+>         unsigned int old_domain = get_domain();
+> 
+>         /* Set the current domain access to permit user accesses */
+>         set_domain((old_domain & ~domain_mask(DOMAIN_USER)) |
+>                    domain_val(DOMAIN_USER, DOMAIN_CLIENT));
+> 
+>         return old_domain;
+> #else
+>         return 0;
+> #endif
+> }
+> and
+> static __always_inline void uaccess_restore(unsigned int flags)
+> {
+> #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+>         /* Restore the user access mask */
+>         set_domain(flags);
+> #endif
+> }
+> 
+> How much do we need nesting on those, anyway?  rmk?
 
-Is this also an issue in 4.19 and 5.4 and Linus's tree?
+Yup, I think it's a weakness of the ARM implementation and I'd like to
+not extend it further. AFAIK we should never nest, but I would not be
+surprised at all if we did.
 
-thanks,
+If we were looking at a design goal for all architectures, I'd like
+to be doing what the public PaX patchset did for their memory access
+switching, which is to alarm if calling into "enable" found the access
+already enabled, etc. Such a condition would show an unexpected nesting
+(like we've seen with similar constructs with set_fs() not getting reset
+during an exception handler, etc etc).
 
-greg k-h
+-- 
+Kees Cook
