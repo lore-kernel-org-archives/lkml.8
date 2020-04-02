@@ -2,221 +2,117 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBE8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B519C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED55206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:03:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TOs3VcdL"
+	by mail.kernel.org (Postfix) with ESMTP id 01CCF2078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585829124;
+	bh=DOCQ79khuQuDX0scByQjV/Dc+mOTV7PRi2d4y/PFuMw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oHL4dYq2Mmm1WuA0Dtbi9IMnvkQL+ncWC4vcb69QCygTHEGC8OfnVKo9lOB1Oxbnj
+	 e/Fssbs6dEN0sO1sflLCZjTvf3xgx28d2kXeiqOLSar0L5ukAiLwHdOLYuk7FHLp2B
+	 r9/oHGnoQAHu4/Hl3zf4CCzG0LkOYq1+uMqOhAs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388184AbgDBMDk (ORCPT
+        id S2388205AbgDBMFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:03:40 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34715 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387970AbgDBMDj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:03:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585829017;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GfESRpDFOBpYvyaYe9OQ6VKOjwSLnUlR1qO4lZ2nWm4=;
-        b=TOs3VcdLoeHPUHYs30Jk0xx6CJtgMU4HUEcpnSGdVICxGSBLUnw711oAICUwE8NOVabrVN
-        g0mW9nzt6ignu4umNUmpluLopPaA0oYmsMfXNBpdxLfXK2WP8fyddXJQ7iEhAba0CaUh7Y
-        n2rRLEDi577m/005Y4n691uizWoeF9k=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-OMTJu6FkOz2uPRbRbnzA9A-1; Thu, 02 Apr 2020 08:03:33 -0400
-X-MC-Unique: OMTJu6FkOz2uPRbRbnzA9A-1
-Received: by mail-wr1-f71.google.com with SMTP id c8so1365113wru.20
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 05:03:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GfESRpDFOBpYvyaYe9OQ6VKOjwSLnUlR1qO4lZ2nWm4=;
-        b=U1t81MXGjyLNlwhPEKghrR7uvaU5eVpU2AfnKiJCq0YrvveJ5SxLP8MKi+5xzNRw6g
-         TO2nKXgLrHwa14UhkjjcWsu18XtjuohhvRGu/TYjIhQZd6fbSy2lV3VNEMo64cP1qJ2W
-         O7JP8K74ihj4FvBqNnNEszHyrVsiVAYUGBP/8wkUihbY3bNDVjgwQzBK5kNL81zpJkF4
-         uQ7ojN6il5C3ncV0lyrlxsMB+hARFQxUCMpfc0/NRep9j+wsvmmp/UoZQKeTOyvtgG1Q
-         xpFUA1eQdMqOKRTNWt9TwpLF3b9QSsp4qJ99aZBY7pf2PPK6WzGKSHoqHMqDYozldJ2n
-         cqiw==
-X-Gm-Message-State: AGi0PuYvasdBmJH8St+SJb3tsN+eMB4Z+UXzHueR/S3RNeUI7rOmvaoM
-        1/VB5sZwGcCjeRfeo8vdh6OE876B2FM9Cahtrn+FU9SYzcvRok8MPCZms1wpOJh1NhQt35SgilJ
-        CAt82NiqYOWaN0um95TVL75S5
-X-Received: by 2002:adf:fe4b:: with SMTP id m11mr3180216wrs.20.1585829012688;
-        Thu, 02 Apr 2020 05:03:32 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKjFCVpshRyElyqpXfObjBocHX5FjAeDjNAq8junXcIE7ZT0ZQNyNjpzxh0S4V1pdgJG6Ir4A==
-X-Received: by 2002:adf:fe4b:: with SMTP id m11mr3180191wrs.20.1585829012358;
-        Thu, 02 Apr 2020 05:03:32 -0700 (PDT)
-Received: from [192.168.1.27] (lfbn-lyo-1-134-107.w86-202.abo.wanadoo.fr. [86.202.218.107])
-        by smtp.gmail.com with ESMTPSA id q9sm7704675wrp.84.2020.04.02.05.03.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 05:03:31 -0700 (PDT)
-Subject: Re: [PATCH 2/7] objtool: Allow branches within the same alternative.
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-3-alexandre.chartre@oracle.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <50e8a5d8-7cb4-f25c-9657-eb11038bd0b5@redhat.com>
-Date:   Thu, 2 Apr 2020 13:03:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 2 Apr 2020 08:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388089AbgDBMFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 08:05:22 -0400
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC80A2078B;
+        Thu,  2 Apr 2020 12:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585829121;
+        bh=DOCQ79khuQuDX0scByQjV/Dc+mOTV7PRi2d4y/PFuMw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iD87RcG6nBHeTUMhqFAjd+RBG0FGs4BeQ4ux6X6bhnYF6VnOep4M1fGpvbTOhrfQI
+         ebNclHF2SR1Ut2knX/Xv0Vgk8ZTvOB5ZDD0EaRIsU7djv1MJpx02Q/L5kbQXEQVxSA
+         xD+yUGtzFfRae/rBsiwinYeO9P6kFZGsZMpdMzhM=
+Received: by mail-io1-f46.google.com with SMTP id r25so3243683ioc.11;
+        Thu, 02 Apr 2020 05:05:21 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ4qwx7cKCOWtQBXJJ3BjULFp4eG46jSh078ohBOMiF2ajVWuJS
+        08x+bwiYwtbkTi8cMG+rY20NJqpqhFvxA6/O5uQ=
+X-Google-Smtp-Source: APiQypKiGRMVC/rZ/zmEQRLEdmyG/DKSK9Po+czO2H2U6ZtZ+m0OEYQCKxKanhryjTbOQCpeiqefVGI+Qu4nXgiL3E4=
+X-Received: by 2002:a6b:f413:: with SMTP id i19mr2424610iog.203.1585829121163;
+ Thu, 02 Apr 2020 05:05:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200402082220.808-3-alexandre.chartre@oracle.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <5a6807f19fd69f2de6622c794639cc5d70b9563a.1585513949.git.stefan@agner.ch>
+ <CAKwvOdkyOW6RXTOCt1xMp2H+uH28ofByQOjyx776t8RDxTED2w@mail.gmail.com>
+ <CAMj1kXGYiMobkue642iDRdOjEHQK=KXpp=Urrgik9UU-eWWibQ@mail.gmail.com> <DBBPR08MB4823129E272220712B470716F8C60@DBBPR08MB4823.eurprd08.prod.outlook.com>
+In-Reply-To: <DBBPR08MB4823129E272220712B470716F8C60@DBBPR08MB4823.eurprd08.prod.outlook.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 2 Apr 2020 14:05:10 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEQ4v9e6386ogPdy+s+++9H02DMPnDpTq0WSY2e78ts+Q@mail.gmail.com>
+Message-ID: <CAMj1kXEQ4v9e6386ogPdy+s+++9H02DMPnDpTq0WSY2e78ts+Q@mail.gmail.com>
+Subject: Re: [PATCH] ARM: OMAP2+: drop unnecessary adrl
+To:     Peter Smith <Peter.Smith@arm.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, nd <nd@arm.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Stefan Agner <stefan@agner.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+On Thu, 2 Apr 2020 at 13:50, Peter Smith <Peter.Smith@arm.com> wrote:
+>
+> > I take it this implies that the LLVM linker does not support the
+> > R_ARM_ALU_PC_Gn relocations? Since otherwise, adrl could simply be
+> > expanded to a pair of adds with the appropriate relocations, letting
+> > the linker fix up the immediates (and the ADD vs SUB bits)
+>
+> Not at the moment. I have a patch in review to add the G0 variants for th=
+ese in Arm state at reviews.llvm.org/D75349 . As far as I know LLVM MC does=
+ not have support for generating the relocations either. This could be adde=
+d though. I agree that using the G* relocations with a pair of add/sub inst=
+ructions would be the ideal solution. The adrl psuedo is essentially that b=
+ut implemented at assembly time. I think it would be possible to implement =
+in LLVM but at the time (4+ years ago) I wasn't confident in finding someon=
+e that would think that adrl support was worth the disruption, for example =
+the current Arm assembly backend can only produce 1 instruction as output a=
+nd adrl requires two.
+>
+> I'd be happy to look at group relocation support in LLD, I haven't got a =
+lot of spare time so progress is likely to be slow though.
+>
 
-I ran into the same issue for the arm64 work:
-https://lkml.org/lkml/2020/1/9/656
+For Linux, I have proposed another approach in the past, which is to
+define a (Linux-local) adr_l macro with unlimited range [0], which
+basically comes down to place relative movw/movt pairs for v7+, and
+something along the lines of
 
-Your solution seems nicer however.
+        ldr <reg>, 222f
+111:    add <reg>, <reg>, pc
+        .subsection 1
+222:    .long <sym> - (111b + 8)
+        .previous
 
-On 4/2/20 9:22 AM, Alexandre Chartre wrote:
-> Currently objtool prevents any branch to an alternative. While preventing
-> branching from the outside to the middle of an alternative makes perfect
-> sense, branching within the same alternative should be allowed. To do so,
-> identify each alternative and check that a branch to an alternative comes
-> from the same alternative.
-> 
-> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-> ---
->   tools/objtool/check.c | 19 +++++++++++++------
->   tools/objtool/check.h |  3 ++-
->   2 files changed, 15 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 708562fb89e1..214809ac2776 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -712,7 +712,9 @@ static int handle_group_alt(struct objtool_file *file,
->   			    struct instruction *orig_insn,
->   			    struct instruction **new_insn)
->   {
-> +	static unsigned int alt_group_next_index = 1;
->   	struct instruction *last_orig_insn, *last_new_insn, *insn, *fake_jump = NULL;
-> +	unsigned int alt_group = alt_group_next_index++;
->   	unsigned long dest_off;
->   
->   	last_orig_insn = NULL;
-> @@ -721,7 +723,7 @@ static int handle_group_alt(struct objtool_file *file,
->   		if (insn->offset >= special_alt->orig_off + special_alt->orig_len)
->   			break;
->   
-> -		insn->alt_group = true;
-> +		insn->alt_group = alt_group;
->   		last_orig_insn = insn;
->   	}
->   
-> @@ -1942,6 +1944,7 @@ static int validate_sibling_call(struct instruction *insn, struct insn_state *st
->    * tools/objtool/Documentation/stack-validation.txt.
->    */
->   static int validate_branch(struct objtool_file *file, struct symbol *func,
-> +			   struct instruction *from,
+for v6 and earlier. Could you comment on whether Clang's integrated
+assembler could support anything like this?
 
-Maybe instead of passing a new instruction pointer, just the alt_group 
-could be passed? 0 Meaning it was not in an alt group.
 
->   			   struct instruction *first, struct insn_state state)
->   {
->   	struct alternative *alt;
-> @@ -1953,7 +1956,9 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->   	insn = first;
->   	sec = insn->sec;
->   
-> -	if (insn->alt_group && list_empty(&insn->alts)) {
-> +	if (insn->alt_group &&
-> +	    (!from || from->alt_group != insn->alt_group) &&
-> +	    list_empty(&insn->alts)) {
+Thanks,
+Ard.
 
-This would become
 
-	if (insn->alt_group != alt_group && list_empty(&insn->alts))
 
-And the recursive validate_branch() calls would just take 
-insn->alt_group as parameter (and the calls in validate_functions() and 
-validate_unwind_hints() would take 0).
-
-Any opinions on that?
-
->   		WARN_FUNC("don't know how to handle branch to middle of alternative instruction group",
->   			  sec, insn->offset);
->   		return 1;
-> @@ -2035,7 +2040,8 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->   				if (alt->skip_orig)
->   					skip_orig = true;
->   
-> -				ret = validate_branch(file, func, alt->insn, state);
-> +				ret = validate_branch(file, func,
-> +						      NULL, alt->insn, state);
->   				if (ret) {
->   					if (backtrace)
->   						BT_FUNC("(alt)", insn);
-> @@ -2105,7 +2111,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->   					return ret;
->   
->   			} else if (insn->jump_dest) {
-> -				ret = validate_branch(file, func,
-> +				ret = validate_branch(file, func, insn,
->   						      insn->jump_dest, state);
->   				if (ret) {
->   					if (backtrace)
-> @@ -2236,7 +2242,8 @@ static int validate_unwind_hints(struct objtool_file *file)
->   
->   	for_each_insn(file, insn) {
->   		if (insn->hint && !insn->visited) {
-> -			ret = validate_branch(file, insn->func, insn, state);
-> +			ret = validate_branch(file, insn->func,
-> +					      NULL, insn, state);
->   			if (ret && backtrace)
->   				BT_FUNC("<=== (hint)", insn);
->   			warnings += ret;
-> @@ -2377,7 +2384,7 @@ static int validate_functions(struct objtool_file *file)
->   
->   			state.uaccess = func->uaccess_safe;
->   
-> -			ret = validate_branch(file, func, insn, state);
-> +			ret = validate_branch(file, func, NULL, insn, state);
->   			if (ret && backtrace)
->   				BT_FUNC("<=== (func)", insn);
->   			warnings += ret;
-> diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-> index 6d875ca6fce0..cffb23d81782 100644
-> --- a/tools/objtool/check.h
-> +++ b/tools/objtool/check.h
-> @@ -33,7 +33,8 @@ struct instruction {
->   	unsigned int len;
->   	enum insn_type type;
->   	unsigned long immediate;
-> -	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
-> +	unsigned int alt_group;
-> +	bool dead_end, ignore, hint, save, restore, ignore_alts;
->   	bool retpoline_safe;
->   	u8 visited;
->   	struct symbol *call_dest;
-> 
-
-Cheers,
-
--- 
-Julien Thierry
-
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/commit/?=
+h=3Darm-kaslr-latest&id=3Dfd440f1131553a5201ce3b94905419bd067b93b3
