@@ -2,107 +2,142 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1B7C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F763C18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6399F2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585815707;
-	bh=qCyktk0ccXs+tfi3/6MES0x0+xzJF96PjKdqYw9cSy4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a8x9e74QHnoDhXwSeYiUz80kcZbHJfvpITb6wPjdKZq6qzsr638idLE32KIcQCf5s
-	 Qp4Tb2P1Yuv/ZTCoMs7RAFLXBrLHxnLGhQgtitCiVKCKHoWFzeOqGwh6A8ry3ltm5l
-	 S7OmYCxFZ0D354vjzbBSiTvlMpA34Bt0DOck2bIY=
+	by mail.kernel.org (Postfix) with ESMTP id D9E16206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:24:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Z1QSr1ec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbgDBIVq (ORCPT
+        id S2387712AbgDBIYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:21:46 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35679 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387661AbgDBIVp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:21:45 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i19so2616184wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 01:21:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3yw/mZugffXhJm2+MbO9KEG1ll5RyPq6d+/bgOj0P7Y=;
-        b=qL2mpmgJL89FXVIoIFsPbjVOV373A4m4slm69eSaeMQ8hF4YZnj7H2r9qmNnlrWE+B
-         guJ17nHrE0/l1kfE4Xq75fpWyOCuNOvULyvgoomFV8enESFpc6eARQaePJFATEZsUmBk
-         3CDS7VOTdF+su6vuZKhj2k4zluk9PO8EUlFAGYq9qUmrfLB7kJXh902KgvaizzCnisUB
-         LdXjWzFetCiHM0Svpjg/MR5D/N1njlh5BIkaXspuqeBn0cUkpzpmqTuVshndxaMXVDDo
-         I2kYCMxOASmE8hv/gwLm2ZU3QBO2c2UgdALBWzcSy3SuILWOz6LdkwCrXLxOiN17I75Y
-         kxGw==
-X-Gm-Message-State: AGi0PuYBgQZs7IOtmWzC9Xi/RP1QcjqVIwkOBizYfggn/ambawDU2n4G
-        syN3ND1rAtZYLGIIe+gwb3k=
-X-Google-Smtp-Source: APiQypIRgfJOEvtCzoD8kQfJBLr/c8mDN70xY0FqOj5l0qXDaIAfoDdbVoz3p1CjTuk7lH3y8Jq/2A==
-X-Received: by 2002:a05:600c:291a:: with SMTP id i26mr2213291wmd.96.1585815704010;
-        Thu, 02 Apr 2020 01:21:44 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id j11sm6086257wmi.33.2020.04.02.01.21.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 01:21:43 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 10:21:42 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        =?utf-8?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: Re: [PATCH -V2] /proc/PID/smaps: Add PMD migration entry parsing
-Message-ID: <20200402082142.GL22681@dhcp22.suse.cz>
-References: <20200402020031.1611223-1-ying.huang@intel.com>
- <20200402064437.GC22681@dhcp22.suse.cz>
- <87zhbufjyc.fsf@yhuang-dev.intel.com>
- <20200402074411.GH22681@dhcp22.suse.cz>
- <87v9mifgui.fsf@yhuang-dev.intel.com>
+        Thu, 2 Apr 2020 04:24:33 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:39176 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387574AbgDBIYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:24:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 60C5141252;
+        Thu,  2 Apr 2020 08:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1585815868; x=1587630269; bh=Rk9xR31MTBz42inzc2zDfzMeZ
+        IDUkeMnBQo9b80woiI=; b=Z1QSr1ecssngt9KsASvvvGjwjmSfwzQLU7b3urygH
+        jfQ2eVzv51CZmehzgGEfVE7k2eKD4XeKdy4bNn5FuM69IJ/8R8TSMRkjdlYqLo+l
+        sVv85W8lYsBXvJiVl81kD24CAMcPvG0gRCh/A7cgjEUHSWrsTiigH3W7rFQ4TQPW
+        ok=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yIxdH8dGqypN; Thu,  2 Apr 2020 11:24:28 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 6E2EA41251;
+        Thu,  2 Apr 2020 11:24:28 +0300 (MSK)
+Received: from localhost.localdomain (10.199.3.154) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Thu, 2 Apr 2020 11:24:28 +0300
+Message-ID: <1e2c9b590a3626abee330a28cca86cbae7affb39.camel@yadro.com>
+Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 2 Apr 2020 11:24:36 +0300
+In-Reply-To: <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
+References: <20200401162416.24474-1-i.mikhaylov@yadro.com>
+         <20200401162416.24474-3-i.mikhaylov@yadro.com>
+         <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v9mifgui.fsf@yhuang-dev.intel.com>
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.3.154]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 02-04-20 16:10:29, Huang, Ying wrote:
-> Michal Hocko <mhocko@kernel.org> writes:
+On Wed, 2020-04-01 at 19:35 +0300, Andy Shevchenko wrote:
+> On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> > Proximity sensor driver based on light/vcnl4000.c code.
+> > For now supports only the single on-demand measurement.
+> > 
+> > The VCNL3020 is a fully integrated proximity sensor. Fully
+> > integrated means that the infrared emitter is included in the
+> > package. It has 16-bit resolution. It includes a signal
+> > processing IC and features standard I2C communication
+> > interface. It features an interrupt function.
 > 
-> > On Thu 02-04-20 15:03:23, Huang, Ying wrote:
-[...]
-> >> > Could you explain why do we need this WARN_ON? I haven't really checked
-> >> > the swap support for THP but cannot we have normal swap pmd entries?
-> >> 
-> >> I have some patches to add the swap pmd entry support, but they haven't
-> >> been merged yet.
-> >> 
-> >> Similar checks are for all THP migration code paths, so I follow the
-> >> same style.
-> >
-> > I haven't checked other migration code paths but what is the reason to
-> > add the warning here? Even if this shouldn't happen, smaps is perfectly
-> > fine to ignore that situation, no?
+> Thank you for an update, my comments below.
 > 
-> Yes. smaps itself is perfectly fine to ignore it.  I think this is used
-> to find bugs in other code paths such as THP migration related.
+> ...
+> 
+> > +static int get_and_apply_property(struct vcnl3020_data *data, const char
+> > *prop,
+> > +                                 u32 reg)
+> > +{
+> > +       int rc;
+> > +       u32 val;
+> > +
+> > +       rc = device_property_read_u32(data->dev, prop, &val);
+> > +       if (rc)
+> > +               return 0;
+> > +
+> > +       rc = regmap_write(data->regmap, reg, val);
+> > +       if (rc)
+> > +               dev_err(data->dev, "Error (%d) setting property (%s)",
+> > +                       rc, prop);
+> 
+> This requires {} according to the coding style
 
-Please do not add new warnings without a good an strong reasons. As a
-matter of fact there are people running with panic_on_warn and each
-warning is fatal for them. Please also note that this is a user trigable
-path and that requires even more care.
+checkpatch.pl doesn't say anything bad on this spot. Do you mean to make
+something like this?
 
--- 
-Michal Hocko
-SUSE Labs
+rc = regmap_write(data->regmap, reg, val);
+if (rc) {
+	dev_err(data->dev, "Error (%d) setting property (%s)",
+                rc, prop);
+}
+
+In previous notes you said to remove them. 
+
+> .
+> 
+> > +       return rc;
+> > +}
+> 
+> ...
+> 
+> > +static int vcnl3020_probe(struct i2c_client *client)
+> > +{
+> > +       indio_dev->name = VCNL_DRV_NAME;
+> 
+> It's definitely not a driver name. You have to put part number here.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/tsl4531.c?h=v5.6#n199
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/max44009.c?h=v5.6#n507
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/vl6180.c?h=v5.6#n515
+
+
