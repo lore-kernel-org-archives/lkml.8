@@ -2,106 +2,222 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A17C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5748C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45EE620675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cuX86C/a"
+	by mail.kernel.org (Postfix) with ESMTP id 97329206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388392AbgDBOOo (ORCPT
+        id S1733133AbgDBOPL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:14:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55497 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732446AbgDBOOn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:14:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585836882;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jHomtIlfVWCjz0uqN5tmjf5fA1sQAGrA5th4ZK/FkAU=;
-        b=cuX86C/a120lvfm63jNnZRIB4mcW1LHqbj7OC1tbBMk6dxVYNYzk4jsONk97naTx363Wxh
-        XGKQnK7c090YpVWMi5wNXLerWGfPOQ2aIU5fKg76MPrKjNvsD6UbQCq051pHKP3j6JmIMo
-        E2+iyNeUCgMaqIWSA/3J7pcnIFqX/LQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-1BusTZ8oOt2-QFfQoMK6lw-1; Thu, 02 Apr 2020 10:14:38 -0400
-X-MC-Unique: 1BusTZ8oOt2-QFfQoMK6lw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFCDC800D50;
-        Thu,  2 Apr 2020 14:14:34 +0000 (UTC)
-Received: from ws.net.home (unknown [10.40.194.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 39C1899E16;
-        Thu,  2 Apr 2020 14:14:27 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 16:14:24 +0200
-From:   Karel Zak <kzak@redhat.com>
-To:     Ian Kent <raven@themaw.net>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
-Message-ID: <20200402141424.3zyphot2kjf5vaoo@ws.net.home>
-References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
- <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com>
- <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net>
- <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com>
- <2465266.1585729649@warthog.procyon.org.uk>
- <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
- <459876eceda4bc68212faf4ed3d4bcb8570aa105.camel@themaw.net>
+        Thu, 2 Apr 2020 10:15:11 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:46592 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729033AbgDBOPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:15:10 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jK0cU-000843-Rk; Thu, 02 Apr 2020 16:14:58 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     =?ISO-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@collabora.com>, sboyd@kernel.org,
+        mturquette@baylibre.com, linux-kernel@vger.kernel.org,
+        kever.yang@rock-chips.com, linux-rockchip@lists.infradead.org,
+        geert@linux-m68k.org, kernel@collabora.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] soc: rockchip: Register a soc_device to retrieve revision
+Date:   Thu, 02 Apr 2020 16:14:58 +0200
+Message-ID: <4543799.QtudHIFNrS@diego>
+In-Reply-To: <4844d3ba-87fa-51f4-0a56-3131e390589a@arm.com>
+References: <20200401153513.423683-1-mylene.josserand@collabora.com> <5143930.cPWVAAQKI9@diego> <4844d3ba-87fa-51f4-0a56-3131e390589a@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <459876eceda4bc68212faf4ed3d4bcb8570aa105.camel@themaw.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 09:38:20AM +0800, Ian Kent wrote:
-> I prefer the system call interface and I'm not offering justification
-> for that other than a general dislike (and on occasion outright
-> frustration) of pretty much every proc implementation I have had to
-> look at.
+Am Donnerstag, 2. April 2020, 13:45:34 CEST schrieb Robin Murphy:
+> On 2020-04-01 5:34 pm, Heiko Stübner wrote:
+> [...]
+> > The possible problem I see here is clocking and power-domain of the hdmi
+> > controller in corner-cases. In the past we already had a lot of fun with
+> > kexec, which also indicates that people actually use kexec productively.
+> > 
+> > So while all clocks are ungated and all power-domains are powered on first
+> > boot, on a system without graphics the pclk+power-domain could be off when
+> > doing a kexec into a second kernel, which then would probably hang here.
+> 
+> Just to be that guy, how about kdump, where entry to the second kernel 
+> is predicated on there *not* being a nice clean shutdown? ;)
+> 
+> IMO relying on any particular bootloader behaviour in the kernel is 
+> fairly fragile - U-Boot has a lot more latitude in assuming it's running 
+> straight out of reset than Linux does.
 
-Frankly, I'm modest, what about to have both interfaces in kernel --
-fsinfo() as well mountfs? It's nothing unusual for example for block
-devices to have attribute accessible by /sys as well as by ioctl().
+You'll have to take into account that there are more boot options than
+uboot ;-) ... especially the rk3288 also needs to support some ancient
+version of coreboot - that definitly won't see any updates anymore
+and isn't really user upgradeable.
 
-I can imagine that for complex task or performance sensitive tasks
-it's better to use fsinfo(), but in another simple use-cases (for
-example to convert mountpoint to device name in shell) is better to
-read /proc/.../<atrtr>.
 
-    Karel
+> If we're not going to trust the 
+> DT to correctly describe the SoC variant in the first place,
 
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+I'm still all for "just put a rk3288w" into the devicetree compatible,
+but so far other participants seem to prefer a software solution ;-) .
+
+
+> then it's 
+> somewhat questionable whether we should trust it for indirectly 
+> identifying the SoC variant either - it would seem a lot more robust to 
+> just map the known physical addresses to run a canned sequence of 
+> register writes that puts things in a known-good state (on the basis 
+> that this has to run before the 'real' drivers for those things are up, 
+> and thus can't interfere with them).
+
+The problem is, the "known physical address" is part of the dw-hdmi
+controller ip block, so we'll also need to take into account clocks and
+power-domains.
+
+So that would mean the soc-"driver" would need to 
+- ioremap hdmi, cru and pmu
+- ungate all clocks (on reboot we don't know the hirarchy)
+- enable at least the pd_vio power-domain
+via direct register writes.
+
+Doable but definitly very ugly and I also don't really know what more
+people farther upstream would say to that.
+
+Anybody interested in just adding that new dt-compatible?
+
+
+Heiko
+
+> > Of course with the hdmi-pclk being sourced from hclk_vio we run into a
+> > chicken-egg-problem, as we need pclk_hdmi_ctrl to register hclk_vio at all.
+> > 
+> > So I guess one way out of this could be to
+> > - amend rk3288_clk_shutdown() to also ungate the hdmi-pclk on shutdown
+> > - add a shutdown mechanism to the power-domain driver so that it can
+> >    enable PD_VIO on shutdown
+> > 
+> >> +
+> >> +	if (readl_relaxed(hdmi_base + RK3288_HDMI_REV_REG)
+> >> +	    == RK3288W_HDMI_REV)
+> > 
+> > nit: a nicer look would be something like
+> > 	val = readl_relaxed(hdmi_base + RK3288_HDMI_REV_REG);
+> > 	if (val == RK3288W_HDMI_REV)
+> > 
+> >> +		revision = RK3288_SOC_REV_RK3288W;
+> >> +	else
+> >> +		revision = RK3288_SOC_REV_RK3288;
+> >> +
+> >> +	iounmap(hdmi_base);
+> >> +
+> >> +	return revision;
+> >> +}
+> >> +
+> >> +static const char *rk3288_socinfo_revision(u32 rev)
+> >> +{
+> >> +	const char *soc_rev;
+> >> +
+> >> +	switch (rev) {
+> >> +	case RK3288_SOC_REV_RK3288:
+> >> +		soc_rev = "RK3288";
+> >> +		break;
+> >> +
+> >> +	case RK3288_SOC_REV_RK3288W:
+> >> +		soc_rev = "RK3288w";
+> > 
+> > can we maybe use lower-case letters for all here?
+> > 
+> >> +		break;
+> >> +
+> >> +	case RK3288_SOC_REV_NOT_DETECT:
+> >> +		soc_rev = "";
+> >> +		break;
+> >> +
+> >> +	default:
+> >> +		soc_rev = "unknown";
+> >> +		break;
+> >> +	}
+> >> +
+> >> +	return kstrdup_const(soc_rev, GFP_KERNEL);
+> >> +}
+> >> +
+> >> +static const struct of_device_id rk3288_soc_match[] = {
+> >> +	{ .compatible = "rockchip,rk3288", },
+> >> +	{ }
+> >> +};
+> >> +
+> >> +static int __init rk3288_soc_init(void)
+> > 
+> > as noted at the top, I'd really like to see this more generalized so that
+> > other socs can just hook in there with a revision callback in a
+> > rockchip_soc_data struct.
+> > 
+> > 
+> >> +{
+> >> +	struct soc_device_attribute *soc_dev_attr;
+> >> +	struct soc_device *soc_dev;
+> >> +	struct device_node *np;
+> >> +
+> >> +	np = of_find_matching_node(NULL, rk3288_soc_match);
+> >> +	if (!np)
+> >> +		return -ENODEV;
+> >> +
+> >> +	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> >> +	if (!soc_dev_attr)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	soc_dev_attr->family = "Rockchip";
+> >> +	soc_dev_attr->soc_id = "RK32xx";
+> > 
+> > nit: rk3288 instead of "32xx" please
+> > 
+> >> +
+> >> +	np = of_find_node_by_path("/");
+> >> +	of_property_read_string(np, "model", &soc_dev_attr->machine);
+> >> +	of_node_put(np);
+> >> +
+> >> +	soc_dev_attr->revision = rk3288_socinfo_revision(rk3288_revision());
+> >> +
+> >> +	soc_dev = soc_device_register(soc_dev_attr);
+> >> +	if (IS_ERR(soc_dev)) {
+> >> +		kfree_const(soc_dev_attr->revision);
+> >> +		kfree_const(soc_dev_attr->soc_id);
+> >> +		kfree(soc_dev_attr);
+> >> +		return PTR_ERR(soc_dev);
+> >> +	}
+> >> +
+> >> +	dev_info(soc_device_to_device(soc_dev), "Rockchip %s %s detected\n",
+> >> +		 soc_dev_attr->soc_id, soc_dev_attr->revision);
+> > 
+> > nit: dev_dbg should be enough, that information doesn't really matter for
+> > most people, as it's only relevant to clock internals.
+> > 
+> > 
+> > Heiko
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > Linux-rockchip mailing list
+> > Linux-rockchip@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> > 
+> 
+
+
+
 
