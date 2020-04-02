@@ -6,74 +6,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DF7C2BA16
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A151C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7BA206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F18206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388002AbgDBLDi (ORCPT
+        id S2388025AbgDBLEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:03:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58168 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387477AbgDBLDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:03:38 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D0277D8FE0A6F619D048;
-        Thu,  2 Apr 2020 19:03:10 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 2 Apr 2020 19:03:02 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <rjw@rjwysocki.net>, <lenb@kernel.org>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sudeep.holla@arm.com>, <jeremy.linton@arm.com>,
-        <linuxarm@huawei.com>, <wanghuiqiang@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH] ACPI: PPTT: Inform user that table offset used for Physical processor node ID
-Date:   Thu, 2 Apr 2020 18:59:01 +0800
-Message-ID: <1585825141-107529-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 2 Apr 2020 07:04:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37539 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388004AbgDBLEO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:04:14 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jJxdr-00040x-G4; Thu, 02 Apr 2020 11:04:11 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] rtc: class: remove redundant assignment to variable err
+Date:   Thu,  2 Apr 2020 12:04:11 +0100
+Message-Id: <20200402110411.508534-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the the Processor ID valid is not set for a Physical Processor Package
-node, then the node table offset is used as a substitute. As such, we
-may get info like this from sysfs:
+From: Colin Ian King <colin.king@canonical.com>
 
-root@(none)$ pwd
-/sys/devices/system/cpu/cpu0/topology
-root@(none)$ more physical_package_id
-56
+The variable err is being initialized with a value that is never read
+and it is being updated later with a new value. The initialization
+is redundant and can be removed.
 
-Inform the user of this in the bootlog, as it is much less than ideal, and
-they can remedy this in their FW.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/rtc/class.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This topic was originally discussed in:
-https://lore.kernel.org/linux-acpi/c325cfe2-7dbf-e341-7f0f-081b6545e890@huawei.com/T/#m0ec18637d8586f832084a8a6af22580e6174669a
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-
-diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-index 4ae93350b70d..b4ed3c818e00 100644
---- a/drivers/acpi/pptt.c
-+++ b/drivers/acpi/pptt.c
-@@ -515,6 +515,8 @@ static int topology_get_acpi_cpu_tag(struct acpi_table_header *table,
- 		if (level == 0 ||
- 		    cpu_node->flags & ACPI_PPTT_ACPI_PROCESSOR_ID_VALID)
- 			return cpu_node->acpi_processor_id;
-+		if (level == PPTT_ABORT_PACKAGE)
-+			pr_notice_once("Physical package node Processor ID valid not set, will use table offset as substitute\n");
- 		return ACPI_PTR_DIFF(cpu_node, table);
- 	}
- 	pr_warn_once("PPTT table found, but unable to locate core %d (%d)\n",
+diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
+index 03d6516941a8..7c88d190c51f 100644
+--- a/drivers/rtc/class.c
++++ b/drivers/rtc/class.c
+@@ -48,7 +48,7 @@ int rtc_hctosys_ret = -ENODEV;
+ 
+ static void rtc_hctosys(struct rtc_device *rtc)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	struct rtc_time tm;
+ 	struct timespec64 tv64 = {
+ 		.tv_nsec = NSEC_PER_SEC >> 1,
 -- 
-2.16.4
+2.25.1
 
