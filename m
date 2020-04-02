@@ -2,126 +2,112 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED95C2BA13
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E026C10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1001A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C36208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387826AbgDBIv3 (ORCPT
+        id S2387878AbgDBIvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:51:29 -0400
-Received: from mga01.intel.com ([192.55.52.88]:59235 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387749AbgDBIv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:51:28 -0400
-IronPort-SDR: Hes3vf20lR4VALWzAuj2oCKsUAtWQllXB0S3Ld/IcpxCTPEUY5Jk2abExZPSnVWQPleQ1+evaV
- uM4gmXZBkXgA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:51:28 -0700
-IronPort-SDR: IF+cEYctsHFQ08Sbaj+anI96JPMe3wcbE8NaJKB88zsR9ywE+3in0DWyZ3mG1tpEK+HDlP5hvc
- AiHwhMHZ5AFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
-   d="scan'208";a="284706545"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Apr 2020 01:51:27 -0700
-Received: from [10.249.226.252] (abudanko-mobl.ccr.corp.intel.com [10.249.226.252])
-        by linux.intel.com (Postfix) with ESMTP id 97E76580544;
-        Thu,  2 Apr 2020 01:51:22 -0700 (PDT)
-Subject: [PATCH v8 09/12] drivers/perf: open access for CAP_PERFMON privileged
- process
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <4ec1d6f7-548c-8d1c-f84a-cebeb9674e4e@linux.intel.com>
-Date:   Thu, 2 Apr 2020 11:51:21 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 04:51:47 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12603 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387715AbgDBIvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:51:46 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8E3031276CA38C65E99B;
+        Thu,  2 Apr 2020 16:51:42 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Apr 2020
+ 16:51:34 +0800
+Subject: Re: [PATCH] scsi: hisi_sas: Fix build error without SATA_HOST
+To:     John Garry <john.garry@huawei.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <chenxiang66@hisilicon.com>
+References: <20200402063021.34672-1-yuehaibing@huawei.com>
+ <855fee9e-ae2d-ca70-8630-df27a273e6f3@huawei.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
+        <linux-ide@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <d965beec-bcdd-8e3e-e0a4-2b53d9681f19@huawei.com>
+Date:   Thu, 2 Apr 2020 16:51:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <855fee9e-ae2d-ca70-8630-df27a273e6f3@huawei.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Open access to monitoring for CAP_PERFMON privileged process.
-Providing the access under CAP_PERFMON capability singly, without
-the rest of CAP_SYS_ADMIN credentials, excludes chances to misuse
-the credentials and makes operation more secure.
 
-CAP_PERFMON implements the principal of least privilege for performance
-monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
-principle of least privilege: A security design principle that states
-that a process or program be granted only those privileges (e.g.,
-capabilities) necessary to accomplish its legitimate function, and
-only for the time that such privileges are actually required)
+On 2020/4/2 15:30, John Garry wrote:
+> On 02/04/2020 07:30, YueHaibing wrote:
+> 
+> +
+> 
+>> If SATA_HOST is n, build fails:
+>>
+>> drivers/scsi/hisi_sas/hisi_sas_main.o: In function `hisi_sas_fill_ata_reset_cmd':
+>> hisi_sas_main.c:(.text+0x2500): undefined reference to `ata_tf_to_fis'
+>>
+>> Select SATA_HOST to fix this.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: 7c594f0407de ("scsi: hisi_sas: add softreset function for SATA disk")
+> 
+> That's not right. SATA_HOST was only introduced recently in the ATA code. It would fix those kconfig changes.
 
-For backward compatibility reasons access to the monitoring remains
-open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage
-for secure monitoring is discouraged with respect to CAP_PERFMON
-capability.
+Ok, thanks
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: Will Deacon <will@kernel.org>
-Acked-by: James Morris <jamorris@linux.microsoft.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
----
- drivers/perf/arm_spe_pmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>   drivers/scsi/hisi_sas/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/scsi/hisi_sas/Kconfig b/drivers/scsi/hisi_sas/Kconfig
+>> index 90a17452a50d..13ed9073fc72 100644
+>> --- a/drivers/scsi/hisi_sas/Kconfig
+>> +++ b/drivers/scsi/hisi_sas/Kconfig
+>> @@ -6,6 +6,7 @@ config SCSI_HISI_SAS
+>>       select SCSI_SAS_LIBSAS
+>>       select BLK_DEV_INTEGRITY
+>>       depends on ATA
+>> +    select SATA_HOST
+> 
+> That does not feel right.
+> 
+> SCSI_HISI_SAS depends on ATA, but SATA_HOST also depends on ATA, so it seems better to just depend on SATA_HOST (and omit explicit ATA dependency), rather than select it.
 
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 4e4984a55cd1..5dff81bc3324 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -274,7 +274,7 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
- 	if (!attr->exclude_kernel)
- 		reg |= BIT(SYS_PMSCR_EL1_E1SPE_SHIFT);
- 
--	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && capable(CAP_SYS_ADMIN))
-+	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
- 		reg |= BIT(SYS_PMSCR_EL1_CX_SHIFT);
- 
- 	return reg;
-@@ -700,7 +700,7 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
- 		return -EOPNOTSUPP;
- 
- 	reg = arm_spe_event_to_pmscr(event);
--	if (!capable(CAP_SYS_ADMIN) &&
-+	if (!perfmon_capable() &&
- 	    (reg & (BIT(SYS_PMSCR_EL1_PA_SHIFT) |
- 		    BIT(SYS_PMSCR_EL1_CX_SHIFT) |
- 		    BIT(SYS_PMSCR_EL1_PCT_SHIFT))))
--- 
-2.24.1
+Depends on SATA_HOST will result int this:
+
+scripts/kconfig/mconf  Kconfig
+drivers/scsi/hisi_sas/Kconfig:2:error: recursive dependency detected!
+drivers/scsi/hisi_sas/Kconfig:2:        symbol SCSI_HISI_SAS depends on SATA_HOST
+drivers/ata/Kconfig:37: symbol SATA_HOST is selected by SCSI_SAS_ATA
+drivers/scsi/libsas/Kconfig:18: symbol SCSI_SAS_ATA depends on SCSI_SAS_LIBSAS
+drivers/scsi/libsas/Kconfig:9:  symbol SCSI_SAS_LIBSAS is selected by SCSI_HISI_SAS
+For a resolution refer to Documentation/kbuild/kconfig-language.rst
+subsection "Kconfig recursive dependency limitations"
+
+
+All users of SATA_HOST have the 'select' statement, so we should do the same here.
+
+> 
+> Thanks,
+> John
+> 
+> .
+> 
 
