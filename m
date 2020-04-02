@@ -2,113 +2,97 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8D4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E339C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D09A20737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585846579;
-	bh=SzRTiYJQyXkTcO2LgdHc3bkWIGPO6Dfe9q3jPW6nz7w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=a8z5w8cJDKAcmigBMZz9JJNIZq+SNwGSq1qgAVmJeOOEBSXQVmgOHVGEU5xAuPVnM
-	 Q8vVIMSnHiTcIW2Rv4v+neQKgKVUZ+YjNej0i6s03BNJ6BVhxR5tL/BwKjUl8N2KUc
-	 F73Wz9wPl9QJ3Qc+Ytt3puwYeFzDCIJFDceJBwUI=
+	by mail.kernel.org (Postfix) with ESMTP id DD30A20737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389942AbgDBQ4S (ORCPT
+        id S2389943AbgDBQ5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:56:18 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:63937 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388689AbgDBQ4S (ORCPT
+        Thu, 2 Apr 2020 12:57:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38659 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387700AbgDBQ5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:56:18 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 032Gtr9Q005498;
-        Fri, 3 Apr 2020 01:55:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 032Gtr9Q005498
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585846553;
-        bh=6ZZoDoOKiCZcq/ELjV72AkOj4e/qsdQ44YNPFtPuBW8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Qef/44hV4oi6lVtA9aEQGVHWtWBg+upwuvIuUF5RzsTDVr8iCoGwoyMS/zzUB//yW
-         ivhkcvQ16lcQFTyWhSz3aIS3sjw1w3ExXr//kgXfYO8WZpu6HQuFCgmQYiDu+9orgJ
-         kksKUKZrEN0f6xzBUwp5n7KmzDFwN8l4FKDboebFz0pErsALzDlK7oR063CbnyaR/e
-         qu25+T0Ikdvd1cPHQn0r+36Pc9WeaKHiccO9fhHY+rgRgvvw36Jx3BZu2UA+nUt8nK
-         BeGMVl8mjAxr/1cPgxYoOprIxzsRuKjZeN5ZeP8cQRA4qtUO7xVwtUPXH2uFxOYsaJ
-         U+LSe/LzhiHjg==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id z7so1480969uai.6;
-        Thu, 02 Apr 2020 09:55:53 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ7WURFzjFP65raaTXvu1S1q4XWYsEh1Vq2wjdhJdpLpWek35A8
-        esvZ5zLAdbZCNiESiNIII23wyl17uZ8VtNMvxeA=
-X-Google-Smtp-Source: APiQypJLFBtRFCp1KNv12TF1yrRC4t7p1ncbvfY89mY7bO0lPUtT6oW7iq/ahpxZmtxOjvpVB3iMEH55n2NSvKgqhwc=
-X-Received: by 2002:ab0:2085:: with SMTP id r5mr3490973uak.95.1585846552265;
- Thu, 02 Apr 2020 09:55:52 -0700 (PDT)
+        Thu, 2 Apr 2020 12:57:14 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jK39G-0008FO-Ds; Thu, 02 Apr 2020 18:56:58 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E8BA9100D52; Thu,  2 Apr 2020 18:56:57 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [patch 2/2] x86/kvm/vmx: Prevent split lock detection induced #AC wreckage
+In-Reply-To: <20200402153035.GA13879@linux.intel.com>
+References: <20200402123258.895628824@linutronix.de> <20200402124205.334622628@linutronix.de> <20200402153035.GA13879@linux.intel.com>
+Date:   Thu, 02 Apr 2020 18:56:57 +0200
+Message-ID: <87y2rdn7vq.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <cover.1585819250.git.mchehab+huawei@kernel.org>
-In-Reply-To: <cover.1585819250.git.mchehab+huawei@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 3 Apr 2020 01:55:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ49zWcZzGdnpkUBczR88DPHNRu2CFMOjvVVs5MB9MvVQ@mail.gmail.com>
-Message-ID: <CAK7LNAQ49zWcZzGdnpkUBczR88DPHNRu2CFMOjvVVs5MB9MvVQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Fix several issues at qconf.cc
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 6:28 PM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> On Thu, Apr 02, 2020 at 02:33:00PM +0200, Thomas Gleixner wrote:
+>> Mark the module with MOD_INFO(sld_safe, "Y") so the module loader does not
+>> force SLD off.
 >
-> Since its conversion to support Qt5, back on Kernel 3.14, the qconf.cc tool
-> has been having some issues.  With Kernel 5.6 (and Qt 5.13) it doesn't
-> work at all, on any of its modes.
->
-> This patch series restore its functionality to what it had before Kernel 3.14.
->
-> Now, all three modes should work as expected, and the layout will be shown
-> with a vertical split, with the help messages at the botton, for both Single and
-> Full modes.
->
-> The Split mode should also work properly, with its horizontal split showing
-> the main config items at the left and a per-items view at the right.
->
-> Mauro Carvalho Chehab (6):
->   kconfig: qconf: clean deprecated warnings
->   kconfig: qconf: Change title for the item window
->   kconfig: qconf: fix the content of the main widget
->   kconfig: qconf: fix support for the split view mode
->   kconfig: qconf: remove some old bogus TODOs
->   kconfig: qconf: Fix a few alignment issues
+> Some comments below.  But, any objection to taking Xiaoyao's patches that
+> do effectively the same things, minus the MOD_INFO()?  I'll repost them in
+> reply to this thread.
 
+If they are sane, I don't have a problem. But TBH, I really couldn't be
+bothered to actually scan my mails whether there surfaced something sane
+by now. Writing that up was just faster :)
 
-Thank you for fixing several issues!
+I'll have look.
 
-I will pick this series for v5.7-rc1 soon.
-
-
-
+>> +static bool guest_handles_ac(struct kvm_vcpu *vcpu)
+>> +{
+>> +	/*
+>> +	 * If guest has alignment checking enabled in CR0 and activated in
+>> +	 * eflags, then the #AC originated from CPL3 and the guest is able
+>> +	 * to handle it. It does not matter whether this is a regular or
+>> +	 * a split lock operation induced #AC.
+>> +	 */
+>> +	if (vcpu->arch.cr0 & X86_CR0_AM &&
 >
->  scripts/kconfig/qconf.cc | 90 ++++++++++++++++++++++++++++------------
->  scripts/kconfig/qconf.h  |  2 +
->  2 files changed, 66 insertions(+), 26 deletions(-)
->
-> --
-> 2.25.1
->
->
+> Technically not required since KVM doesn't let the gets toggle CR0.AM at
+> will, but going through kvm_read_cr0{_bits}() is preferred.
 
+You're the expert here.
 
--- 
-Best Regards
-Masahiro Yamada
+>> +	    vmx_get_rflags(vcpu) & X86_EFLAGS_AC)
+>
+> I don't think this is correct.  A guest could trigger a split-lock #AC at
+> CPL0 with EFLAGS.AC=1 and CR0.AM=1, and then panic because it didn't expect
+> #AC at CPL0.
+
+Indeed.
+
+Thanks,
+
+        tglx
