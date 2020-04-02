@@ -2,143 +2,78 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8B3C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DF7C2BA16
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3FB206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7BA206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387977AbgDBLCP (ORCPT
+        id S2388002AbgDBLDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:02:15 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:34982 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbgDBLCN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:02:13 -0400
-Received: by mail-io1-f69.google.com with SMTP id c10so2483204ioc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 04:02:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=HEen/pjteG0riA5Fq+vm6ECwHW6v+ASlw0ZuUHgsq9k=;
-        b=cDRr/or1k2ab4qVsZqhhUvhdU6+si7BZp54EYl/s1Ao0OxFucYMJXQrzakC4zsNtUj
-         LIXOG0pn1nRygkFFi8WoIpaHk7B76KkueyjfN0uAcNleVfGXOClPqdabL2p6agXvSAF4
-         D5IMc0kXdyBQCLmsWbwwtDDFZLA4qgG3IVQgBvFIvXvCxWkzFhnGGWfS6EeZcstmP3RG
-         m2UoZzLR4ofj9JJH57qTDfK4FlT7TyVA54WErNO9fxXxDni2n9afD3e4rFDAqSR1uI8b
-         yIPngMMUUt9VoR7qamHgXxNGF6HA2g5A0LzrUGvQ7mDIpaJNCHkjKMC4/4cPee1H3m+v
-         RJ4Q==
-X-Gm-Message-State: AGi0PuZLPZ4Nh74JRyCeFbxoWTfW2DCjh6lsMxjLVA6HBOsCgbRjpLKE
-        8UenyE3Oi5x1AmqgOKnLgHHibPD45grOoe1e/QG6iJzvpa4A
-X-Google-Smtp-Source: APiQypKHwawm+XbPWjWm1WiRkJzzTagLnpKvQGlicoTPOrocdiTCMJ/gjTwzIrZQK9hMY9riqRRVEZaqILPuquo840fL+Y/tOjQR
+        Thu, 2 Apr 2020 07:03:38 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58168 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387477AbgDBLDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:03:38 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D0277D8FE0A6F619D048;
+        Thu,  2 Apr 2020 19:03:10 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 2 Apr 2020 19:03:02 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <rjw@rjwysocki.net>, <lenb@kernel.org>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sudeep.holla@arm.com>, <jeremy.linton@arm.com>,
+        <linuxarm@huawei.com>, <wanghuiqiang@huawei.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH] ACPI: PPTT: Inform user that table offset used for Physical processor node ID
+Date:   Thu, 2 Apr 2020 18:59:01 +0800
+Message-ID: <1585825141-107529-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:8c4:: with SMTP id 187mr2706675jac.50.1585825331302;
- Thu, 02 Apr 2020 04:02:11 -0700 (PDT)
-Date:   Thu, 02 Apr 2020 04:02:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008c5a4605a24cbb16@google.com>
-Subject: WARNING in ext4_da_update_reserve_space
-From:   syzbot <syzbot+67e4f16db666b1c8253c@syzkaller.appspotmail.com>
-To:     a@unstable.cc, adilger.kernel@dilger.ca,
-        b.a.t.m.a.n@lists.open-mesh.org, benh@kernel.crashing.org,
-        davem@davemloft.net, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        mareklindner@neomailbox.ch, mpe@ellerman.id.au,
-        muriloo@linux.ibm.com, netdev@vger.kernel.org, paulus@samba.org,
-        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+If the the Processor ID valid is not set for a Physical Processor Package
+node, then the node table offset is used as a substitute. As such, we
+may get info like this from sysfs:
 
-syzbot found the following crash on:
+root@(none)$ pwd
+/sys/devices/system/cpu/cpu0/topology
+root@(none)$ more physical_package_id
+56
 
-HEAD commit:    1a147b74 Merge branch 'DSA-mtu'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14237713e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=46ee14d4915944bc
-dashboard link: https://syzkaller.appspot.com/bug?extid=67e4f16db666b1c8253c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12237713e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10ec7c97e00000
+Inform the user of this in the bootlog, as it is much less than ideal, and
+they can remedy this in their FW.
 
-The bug was bisected to:
+This topic was originally discussed in:
+https://lore.kernel.org/linux-acpi/c325cfe2-7dbf-e341-7f0f-081b6545e890@huawei.com/T/#m0ec18637d8586f832084a8a6af22580e6174669a
 
-commit 658b0f92bc7003bc734471f61bf7cd56339eb8c3
-Author: Murilo Opsfelder Araujo <muriloo@linux.ibm.com>
-Date:   Wed Aug 1 21:33:15 2018 +0000
+Signed-off-by: John Garry <john.garry@huawei.com>
 
-    powerpc/traps: Print unhandled signals in a separate function
+diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+index 4ae93350b70d..b4ed3c818e00 100644
+--- a/drivers/acpi/pptt.c
++++ b/drivers/acpi/pptt.c
+@@ -515,6 +515,8 @@ static int topology_get_acpi_cpu_tag(struct acpi_table_header *table,
+ 		if (level == 0 ||
+ 		    cpu_node->flags & ACPI_PPTT_ACPI_PROCESSOR_ID_VALID)
+ 			return cpu_node->acpi_processor_id;
++		if (level == PPTT_ABORT_PACKAGE)
++			pr_notice_once("Physical package node Processor ID valid not set, will use table offset as substitute\n");
+ 		return ACPI_PTR_DIFF(cpu_node, table);
+ 	}
+ 	pr_warn_once("PPTT table found, but unable to locate core %d (%d)\n",
+-- 
+2.16.4
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15979f5be00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=17979f5be00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13979f5be00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+67e4f16db666b1c8253c@syzkaller.appspotmail.com
-Fixes: 658b0f92bc70 ("powerpc/traps: Print unhandled signals in a separate function")
-
-EXT4-fs warning (device sda1): ext4_da_update_reserve_space:344: ext4_da_update_reserve_space: ino 15722, used 1 with only 0 reserved data blocks
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 359 at fs/ext4/inode.c:348 ext4_da_update_reserve_space+0x622/0x7d0 fs/ext4/inode.c:344
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 359 Comm: kworker/u4:5 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:ext4_da_update_reserve_space+0x622/0x7d0 fs/ext4/inode.c:348
-Code: 02 00 0f 85 94 01 00 00 48 8b 7d 28 49 c7 c0 20 72 3c 88 41 56 48 c7 c1 80 60 3c 88 53 ba 58 01 00 00 4c 89 c6 e8 1e 6d 0d 00 <0f> 0b 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 0f b6 04
-RSP: 0018:ffffc90002197288 EFLAGS: 00010296
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff820bf066 RDI: fffff52000432e21
-RBP: ffff888086b744c8 R08: 0000000000000091 R09: ffffed1015ce6659
-R10: ffffed1015ce6658 R11: ffff8880ae7332c7 R12: 0000000000000001
-R13: ffff888086b74990 R14: 0000000000000000 R15: ffff888086b74a40
- ext4_ext_map_blocks+0x24aa/0x37d0 fs/ext4/extents.c:4500
- ext4_map_blocks+0x4cb/0x1650 fs/ext4/inode.c:622
- mpage_map_one_extent fs/ext4/inode.c:2365 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2418 [inline]
- ext4_writepages+0x19eb/0x3080 fs/ext4/inode.c:2772
- do_writepages+0xfa/0x2a0 mm/page-writeback.c:2344
- __writeback_single_inode+0x12a/0x1410 fs/fs-writeback.c:1452
- writeback_sb_inodes+0x515/0xdd0 fs/fs-writeback.c:1716
- wb_writeback+0x2a5/0xd90 fs/fs-writeback.c:1892
- wb_do_writeback fs/fs-writeback.c:2037 [inline]
- wb_workfn+0x339/0x11c0 fs/fs-writeback.c:2078
- process_one_work+0x94b/0x1690 kernel/workqueue.c:2266
- worker_thread+0x96/0xe20 kernel/workqueue.c:2412
- kthread+0x357/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
