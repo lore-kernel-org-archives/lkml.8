@@ -4,171 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7DBC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEA7C2BA13
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB73208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A47321775
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387579AbgDBHSQ (ORCPT
+        id S2387593AbgDBHST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:18:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14313 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728612AbgDBHSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:18:16 -0400
-IronPort-SDR: mIWSqvW79cQ6UnJLC8H4+G0SdUJKZU9+v60dazXHFKhVi2b6okQZAdtHAUqcmO9qKxT9D7NvTq
- Qt+QaQJVEKqw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 00:18:16 -0700
-IronPort-SDR: zyO7eY/PpiDBlijGqIrfpK9HSgBMKM64PHofMZxjeIa//l2/MH+425bKclVjHvWatif5H2HZKX
- BD9r/3B5EsAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,334,1580803200"; 
-   d="scan'208";a="328726859"
-Received: from tronach-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.38.191])
-  by orsmga001.jf.intel.com with ESMTP; 02 Apr 2020 00:18:09 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id C0C9921F19; Thu,  2 Apr 2020 10:18:01 +0300 (EEST)
-Date:   Thu, 2 Apr 2020 10:18:01 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/1] lib/vsprintf: Add support for printing V4L2 and DRM
- fourccs
-Message-ID: <20200402071801.GA1522@kekkonen.localdomain>
-References: <20200401140522.966-1-sakari.ailus@linux.intel.com>
- <080ddddf-717e-61dc-8522-fbdbe52da94a@xs4all.nl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <080ddddf-717e-61dc-8522-fbdbe52da94a@xs4all.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 2 Apr 2020 03:18:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59818 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728628AbgDBHSR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:18:17 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03273xfq139313;
+        Thu, 2 Apr 2020 03:17:37 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 304g874q7d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 03:17:36 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0327446J139726;
+        Thu, 2 Apr 2020 03:17:36 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 304g874q73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 03:17:36 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0327Blet010604;
+        Thu, 2 Apr 2020 07:17:35 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02dal.us.ibm.com with ESMTP id 301x77gvbe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 07:17:35 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0327HXsv14156198
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Apr 2020 07:17:33 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE982136060;
+        Thu,  2 Apr 2020 07:17:33 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0189813604F;
+        Thu,  2 Apr 2020 07:17:32 +0000 (GMT)
+Received: from [9.70.82.143] (unknown [9.70.82.143])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  2 Apr 2020 07:17:32 +0000 (GMT)
+Subject: [PATCH v10 11/14] powerpc/vas: Do not use default credits for
+ receive window
+From:   Haren Myneni <haren@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
+        frederic.barrat@fr.ibm.com, ajd@linux.ibm.com,
+        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
+        oohall@gmail.com, clg@kaod.org, sukadev@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, herbert@gondor.apana.org.au
+In-Reply-To: <1585810846.2275.23.camel@hbabu-laptop>
+References: <1585810846.2275.23.camel@hbabu-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Date:   Thu, 02 Apr 2020 00:17:31 -0700
+Message-ID: <1585811851.2275.61.camel@hbabu-laptop>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.28.3 
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ impostorscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxlogscore=918 bulkscore=0 suspectscore=1 adultscore=0 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
 
-Thank you for the review.
+System checkstops if RxFIFO overruns with more requests than the
+maximum possible number of CRBs allowed in FIFO at any time. So
+max credits value (rxattr.wcreds_max) is set and is passed to
+vas_rx_win_open() by the the driver.
 
-On Wed, Apr 01, 2020 at 04:13:51PM +0200, Hans Verkuil wrote:
-> On 4/1/20 4:05 PM, Sakari Ailus wrote:
-> > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > the same implementation can be used.
-> > 
-> > Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  Documentation/core-api/printk-formats.rst | 11 +++++++++
-> >  lib/vsprintf.c                            | 29 +++++++++++++++++++++++
-> >  2 files changed, 40 insertions(+)
-> > 
-> > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> > index 8ebe46b1af39..b6249f513c09 100644
-> > --- a/Documentation/core-api/printk-formats.rst
-> > +++ b/Documentation/core-api/printk-formats.rst
-> > @@ -545,6 +545,17 @@ For printing netdev_features_t.
-> >  
-> >  Passed by reference.
-> >  
-> > +V4L2 and DRM fourcc code (pixel format)
-> > +---------------------------------------
-> > +
-> > +::
-> > +
-> > +	%ppf
-> > +
-> > +Print a 4cc code used by V4L2 or DRM.
-> 
-> FourCC appears to be the more-or-less official name (https://en.wikipedia.org/wiki/FourCC)
-> 
-> I would explain about the -BE suffix for bigendian fourcc variants.
+Signed-off-by: Haren Myneni <haren@linux.ibm.com>
+---
+ arch/powerpc/platforms/powernv/vas-window.c | 4 ++--
+ arch/powerpc/platforms/powernv/vas.h        | 2 --
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-Agreed, I'll address these in v2.
-
-> 
-> > +
-> > +Passed by reference.
-> > +
-> >  Thanks
-> >  ======
-> >  
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index 7c488a1ce318..b39f0ac317c5 100644
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -1721,6 +1721,32 @@ char *netdev_bits(char *buf, char *end, const void *addr,
-> >  	return special_hex_number(buf, end, num, size);
-> >  }
-> >  
-> > +static noinline_for_stack
-> > +char *pixel_format_string(char *buf, char *end, const u32 *fourcc,
-> > +			  struct printf_spec spec, const char *fmt)
-> > +{
-> > +	char ch[2] = { 0 };
-> 
-> This can just be '{ };'
-
-As Andy, I also do prefer { 0 }.
-
-> 
-> > +	unsigned int i;
-> > +
-> > +	if (check_pointer(&buf, end, fourcc, spec))
-> > +		return buf;
-> > +
-> > +	switch (fmt[1]) {
-> > +	case 'f':
-> > +		for (i = 0; i < sizeof(*fourcc); i++) {
-> > +			ch[0] = *fourcc >> (i << 3);
-> 
-> You need to AND with 0x7f, otherwise a big endian fourcc (bit 31 is set)
-> will look wrong. Also, each character is standard 7 bit ascii, bit 7 isn't
-> used except to indicate a BE variant.
-
-Good point, will fix for v2.
-
-> 
-> > +			buf = string(buf, end, ch, spec);
-> > +		}
-> > +
-> > +		if (*fourcc & BIT(31))
-> > +			buf = string(buf, end, "-BE", spec);
-> > +
-> > +		return buf;
-> > +	default:
-> > +		return error_string(buf, end, "(%pp?)", spec);
-> > +	}
-> > +}
-> > +
-> >  static noinline_for_stack
-> >  char *address_val(char *buf, char *end, const void *addr,
-> >  		  struct printf_spec spec, const char *fmt)
-> > @@ -2131,6 +2157,7 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
-> >   *       correctness of the format string and va_list arguments.
-> >   * - 'K' For a kernel pointer that should be hidden from unprivileged users
-> >   * - 'NF' For a netdev_features_t
-> > + * - 'pf' V4L2 or DRM pixel format.
-> 
-> I'd say 'FourCC format' instead of 'pixel format'.
-
-Will fix.
-
+diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
+index 3ef7120..4b5adf5 100644
+--- a/arch/powerpc/platforms/powernv/vas-window.c
++++ b/arch/powerpc/platforms/powernv/vas-window.c
+@@ -772,7 +772,7 @@ static bool rx_win_args_valid(enum vas_cop_type cop,
+ 	if (attr->rx_fifo_size > VAS_RX_FIFO_SIZE_MAX)
+ 		return false;
+ 
+-	if (attr->wcreds_max > VAS_RX_WCREDS_MAX)
++	if (!attr->wcreds_max)
+ 		return false;
+ 
+ 	if (attr->nx_win) {
+@@ -877,7 +877,7 @@ struct vas_window *vas_rx_win_open(int vasid, enum vas_cop_type cop,
+ 	rxwin->nx_win = rxattr->nx_win;
+ 	rxwin->user_win = rxattr->user_win;
+ 	rxwin->cop = cop;
+-	rxwin->wcreds_max = rxattr->wcreds_max ?: VAS_WCREDS_DEFAULT;
++	rxwin->wcreds_max = rxattr->wcreds_max;
+ 
+ 	init_winctx_for_rxwin(rxwin, rxattr, &winctx);
+ 	init_winctx_regs(rxwin, &winctx);
+diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
+index efdaa28..32b5261 100644
+--- a/arch/powerpc/platforms/powernv/vas.h
++++ b/arch/powerpc/platforms/powernv/vas.h
+@@ -101,11 +101,9 @@
+ /*
+  * Initial per-process credits.
+  * Max send window credits:    4K-1 (12-bits in VAS_TX_WCRED)
+- * Max receive window credits: 64K-1 (16 bits in VAS_LRX_WCRED)
+  *
+  * TODO: Needs tuning for per-process credits
+  */
+-#define VAS_RX_WCREDS_MAX		((64 << 10) - 1)
+ #define VAS_TX_WCREDS_MAX		((4 << 10) - 1)
+ #define VAS_WCREDS_DEFAULT		(1 << 10)
+ 
 -- 
-Regards,
+1.8.3.1
 
-Sakari Ailus
+
+
