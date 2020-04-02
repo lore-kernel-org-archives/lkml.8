@@ -2,124 +2,275 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FB9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38A2C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 030CB2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8824E2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387843AbgDBJb4 (ORCPT
+        id S2387858AbgDBJcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:31:56 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:41445 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgDBJb4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 05:31:56 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MlO9r-1iuClr41qn-00lpBO for <linux-kernel@vger.kernel.org>; Thu, 02 Apr
- 2020 11:31:55 +0200
-Received: by mail-qt1-f177.google.com with SMTP id t17so2614184qtn.12
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 02:31:54 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZWrPDQm8FP6TAVP9EDtII0P2MN4xMOyeio7uQXE7oJs0Zf1vc6
-        F6WmXD48cLJ2/g2BqCMrgxCbWDyr8PK0/0giSWc=
-X-Google-Smtp-Source: APiQypIyue+WNACvV18x6JnZkYlMs/gOnvsaV2sZZDOWo0BguT88H770dmf7hJplDaKl5fSsfEZ3gDVMPZpGGw8NTyc=
-X-Received: by 2002:ac8:7292:: with SMTP id v18mr1898092qto.304.1585819913839;
- Thu, 02 Apr 2020 02:31:53 -0700 (PDT)
+        Thu, 2 Apr 2020 05:32:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60456 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725965AbgDBJcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 05:32:52 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2444568442345BB538E0;
+        Thu,  2 Apr 2020 17:32:19 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 2 Apr 2020
+ 17:32:14 +0800
+Subject: Re: [PATCH v3] f2fs: fix long latency due to discard during umount
+To:     Sahitya Tummala <stummala@codeaurora.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <1585550730-1858-1-git-send-email-stummala@codeaurora.org>
+ <20200331184655.GB198665@google.com> <20200401092201.GB20234@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <417fffb8-0638-e674-cf39-e54665080c36@huawei.com>
+Date:   Thu, 2 Apr 2020 17:32:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20200331093241.3728-1-tesheng@andestech.com>
-In-Reply-To: <20200331093241.3728-1-tesheng@andestech.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Apr 2020 11:31:37 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3LokurC0n9XiwtPQh9ZgQcswMKY4b+TEsQh1VgYDNeWA@mail.gmail.com>
-Message-ID: <CAK8P3a3LokurC0n9XiwtPQh9ZgQcswMKY4b+TEsQh1VgYDNeWA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Highmem support for 32-bit RISC-V
-To:     Eric Lin <tesheng@andestech.com>
-Cc:     linux-riscv@lists.infradead.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Gary Guo <gary@garyguo.net>, alex@ghiti.fr,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>, atish.patra@wdc.com,
-        yash.shah@sifive.com, Palmer Dabbelt <palmer@dabbelt.com>,
-        Greentime Hu <green.hu@gmail.com>, zong.li@sifive.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:mZH8CricPUBuTLMEoGKz3luhD0XBZqzmZPaec3uE5Oo1LZLiu9D
- nCes7BdOdjX+e4OPEKf6KJnl1GOMTQWYpTNxnTm7e2XtWAdpnk3Qge0D5jy17NzlI5A7ErB
- 0DZe1ugkS5xHJdYyo7whtWwsJb0P2sRLo3xtJ42HTUNedx200T1rjTuzjh6B6K6GvRLe93K
- Jey3pyfWYCxxbcUy/IdLQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UFvhvFuRUEE=:xw+s9AXkz80ZpQ1r/k1Xc7
- /gFz7NzfkWyb8X/hs4CYFW/8Sf4WKLQ7cvI9lhIcML19pgr/1xW6mgngfEkkfzZcedPeeU/2S
- kdpb3P2IDwB4Ukt/pA9PSLgLzfBJom56etCNtoM9Z/uAILL+VZRll1q8ZP1xepEL2droxQn8I
- jzVYrCjTg0RqfNKQFfqLJgXfU7E4Me3ZDpgIYHv2eI5TRPrZKW5qiZAsn94OnKSgij5kd43Ft
- aJ/S1H+JzBEqRF+DTESUzRetyEnsl3oXCHF3iplqAuujv4FUYbK7w9rUAoAuNukkwVefiAfGd
- a25eZzMtWI1wW/p6tkWm8HuPO97ANj6rYxBIgZlkFnMcj1H60EfAFx45eeYdXcAIorij5JIXN
- XQawJDhBTC9hW3GRl//0gFKNa4yOIgdzDgk1CzT1NIklw3Stt/E1UUI6x4UVWq27zjL6KrX57
- VvIHJKvpQy9seVy/UKS8nePKxtAVZbeoOC0Vxg/pDf3eaBk4xptWAL0pv4YXh0lDGYc7m11Ss
- i/oSjKRsqXgs+h9if94OkJPGhEN5oRdgA0ocSVBbiGMLT1LRnEn/Lydu/le8U5aM0/cfNgFys
- 9QyXE1ETyGbGv2vxCoXQs+4aJF49I9i/A9o0wdnyTEstLzEc+SqD6FJZe25c+vWaZ9h+ZihDM
- 96vDehiyngFz2iBHugjjVe14QTIie9j9+fxcjGG3GptYxQzDRWYzYxlA/fETfSB4/SG46oOQI
- Z6r8mAoAFHtvw6qrsBPIw1iQ6NorWFEDpV6bticRli0mN+qG/+VGsq/1mMOfYGAgrfburGbyG
- Adaelst6Wt7j0L2LwGoANwNB06b/bUC645myozAHpRYtlvJkSc=
+In-Reply-To: <20200401092201.GB20234@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:34 AM Eric Lin <tesheng@andestech.com> wrote:
->
-> With Highmem support, the kernel can map more than 1GB physical memory.
->
-> This patchset implements Highmem for RV32, referencing to mostly nds32
-> and others like arm and mips, and it has been tested on Andes A25MP platform.
+On 2020/4/1 17:22, Sahitya Tummala wrote:
+> Hi Jaegeuk,
+> 
+> On Tue, Mar 31, 2020 at 11:46:55AM -0700, Jaegeuk Kim wrote:
+>> On 03/30, Sahitya Tummala wrote:
+>>> F2FS already has a default timeout of 5 secs for discards that
+>>> can be issued during umount, but it can take more than the 5 sec
+>>> timeout if the underlying UFS device queue is already full and there
+>>> are no more available free tags to be used. In that case, submit_bio()
+>>> will wait for the already queued discard requests to complete to get
+>>> a free tag, which can potentially take way more than 5 sec.
+>>>
+>>> Fix this by submitting the discard requests with REQ_NOWAIT
+>>> flags during umount. This will return -EAGAIN for UFS queue/tag full
+>>> scenario without waiting in the context of submit_bio(). The FS can
+>>> then handle these requests by retrying again within the stipulated
+>>> discard timeout period to avoid long latencies.
+>>
+>> Sorry, Sahitya, but, do we really need to do like this? How about just
+>> controlling # of outstanding discarding bios in __issue_discard_cmd()?
+> 
+> Do you mean something like this?
+> 
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 1a62b27..860dd43 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -1099,7 +1099,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+>         } else if (discard_type == DPOLICY_FSTRIM) {
+>                 dpolicy->io_aware = false;
+>         } else if (discard_type == DPOLICY_UMOUNT) {
+> -               dpolicy->max_requests = UINT_MAX;
+> +               dpolicy->max_requests = 30;
 
-I would much prefer to not see highmem added to new architectures at all
-if possible, see https://lwn.net/Articles/813201/ for some background.
+8 or 16?
 
-For the arm32 architecture, we are thinking about implementing a
-VMPLIT_4G_4G option to replace highmem in the long run. The most
-likely way this would turn out at the moment looks like:
+It looks more simple than previous implementation.
 
-- have a 256MB region for vmalloc space at the top of the 4GB address
-  space, containing vmlinux, module, mmio mappings and vmalloc
-  allocations
+Thanks,
 
-- have 3.75GB starting at address zero for either user space or the
-  linear map.
 
-- reserve one address space ID for kernel mappings to avoid tlb flushes
-  during normal context switches
-
-- On any kernel entry, switch the page table to the one with the linear
-  mapping, and back to the user page table before returning to user space
-
-- add a generic copy_from_user/copy_to_user implementation based
-  on get_user_pages() in asm-generic/uaccess.h, using memcpy()
-  to copy from/to the page in the linear map.
-
-- possible have architectures override get_user/put_user to use a
-  cheaper access based on a page table switch to read individual
-  words if that is cheaper than get_user_pages().
-
-There was an implementation of this for x86 a long time ago, but
-it never got merged, mainly because there were no ASIDs on x86
-at the time and the TLB flushing during context switch were really
-expensive. As far as I can tell, all of the modern embedded cores
-do have ASIDs, and unlike x86, most do not support more than 4GB
-of physical RAM, so this scheme can work to replace highmem
-in most of the remaining cases, and provide additional benefits
-(larger user address range, higher separate of kernel/user addresses)
-at a relatively small performance cost.
-
-       Arnd
+>                 dpolicy->io_aware = false;
+>                 /* we need to issue all to keep CP_TRIMMED_FLAG */
+>                 dpolicy->granularity = 1;
+> @@ -1470,12 +1470,14 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>         struct list_head *pend_list;
+>         struct discard_cmd *dc, *tmp;
+>         struct blk_plug plug;
+> -       int i, issued = 0;
+> +       int i, issued;
+>         bool io_interrupted = false;
+> 
+>         if (dpolicy->timeout != 0)
+>                 f2fs_update_time(sbi, dpolicy->timeout);
+> 
+> +retry:
+> +       issued = 0;
+>         for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+>                 if (dpolicy->timeout != 0 &&
+>                                 f2fs_time_over(sbi, dpolicy->timeout))
+> @@ -1522,6 +1524,11 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>                         break;
+>         }
+> 
+> +       if (dpolicy->type == DPOLICY_UMOUNT && issued) {
+> +               __wait_all_discard_cmd(sbi, dpolicy);
+> +               goto retry;
+> +       }
+> +
+>         if (!issued && io_interrupted)
+>                 issued = -1;
+> 
+> Thanks,
+> 
+>>
+>>>
+>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>>> ---
+>>> v3:
+>>> -Handle the regression reported by Chao with v2.
+>>> -simplify the logic to split the dc with multiple bios incase any bio returns
+>>>  EAGAIN and retry those new dc within 5 sec timeout.
+>>>
+>>>  fs/f2fs/segment.c | 65 +++++++++++++++++++++++++++++++++++++++++++------------
+>>>  1 file changed, 51 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>> index fb3e531..55d18c7 100644
+>>> --- a/fs/f2fs/segment.c
+>>> +++ b/fs/f2fs/segment.c
+>>> @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
+>>>  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
+>>>  	unsigned long flags;
+>>>  
+>>> -	dc->error = blk_status_to_errno(bio->bi_status);
+>>> -
+>>>  	spin_lock_irqsave(&dc->lock, flags);
+>>> +	if (!dc->error)
+>>> +		dc->error = blk_status_to_errno(bio->bi_status);
+>>> +
+>>>  	dc->bio_ref--;
+>>> -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
+>>> -		dc->state = D_DONE;
+>>> -		complete_all(&dc->wait);
+>>> +	if (!dc->bio_ref) {
+>>> +		if (dc->error || dc->state == D_SUBMIT) {
+>>> +			dc->state = D_DONE;
+>>> +			complete_all(&dc->wait);
+>>> +		}
+>>>  	}
+>>>  	spin_unlock_irqrestore(&dc->lock, flags);
+>>>  	bio_put(bio);
+>>> @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+>>>  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+>>>  					&(dcc->fstrim_list) : &(dcc->wait_list);
+>>> -	int flag = dpolicy->sync ? REQ_SYNC : 0;
+>>> +	int flag;
+>>>  	block_t lstart, start, len, total_len;
+>>>  	int err = 0;
+>>>  
+>>> +	flag = dpolicy->sync ? REQ_SYNC : 0;
+>>> +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+>>> +
+>>>  	if (dc->state != D_PREP)
+>>>  		return 0;
+>>>  
+>>> @@ -1192,10 +1198,6 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  		dc->bio_ref++;
+>>>  		spin_unlock_irqrestore(&dc->lock, flags);
+>>>  
+>>> -		atomic_inc(&dcc->queued_discard);
+>>> -		dc->queued++;
+>>> -		list_move_tail(&dc->list, wait_list);
+>>> -
+>>>  		/* sanity check on discard range */
+>>>  		__check_sit_bitmap(sbi, lstart, lstart + len);
+>>>  
+>>> @@ -1203,6 +1205,29 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  		bio->bi_end_io = f2fs_submit_discard_endio;
+>>>  		bio->bi_opf |= flag;
+>>>  		submit_bio(bio);
+>>> +		if (flag & REQ_NOWAIT) {
+>>> +			if (dc->error == -EAGAIN) {
+>>> +				spin_lock_irqsave(&dc->lock, flags);
+>>> +				dc->len -= len;
+>>> +				if (!dc->len) {
+>>> +					dc->len = total_len;
+>>> +					dc->state = D_PREP;
+>>> +					reinit_completion(&dc->wait);
+>>> +				} else {
+>>> +					dcc->undiscard_blks -= total_len;
+>>> +					if (dc->state == D_PARTIAL)
+>>> +						dc->state = D_SUBMIT;
+>>> +				}
+>>> +				err = dc->error;
+>>> +				dc->error = 0;
+>>> +				spin_unlock_irqrestore(&dc->lock, flags);
+>>> +				break;
+>>> +			}
+>>> +		}
+>>> +
+>>> +		atomic_inc(&dcc->queued_discard);
+>>> +		dc->queued++;
+>>> +		list_move_tail(&dc->list, wait_list);
+>>>  
+>>>  		atomic_inc(&dcc->issued_discard);
+>>>  
+>>> @@ -1214,8 +1239,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  		len = total_len;
+>>>  	}
+>>>  
+>>> -	if (!err && len)
+>>> -		__update_discard_tree_range(sbi, bdev, lstart, start, len);
+>>> +	if ((!err || err == -EAGAIN) && total_len && dc->start != start)
+>>> +		__update_discard_tree_range(sbi, bdev, lstart, start,
+>>> +					total_len);
+>>>  	return err;
+>>>  }
+>>>  
+>>> @@ -1470,12 +1496,15 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  	struct list_head *pend_list;
+>>>  	struct discard_cmd *dc, *tmp;
+>>>  	struct blk_plug plug;
+>>> -	int i, issued = 0;
+>>> +	int i, err, issued = 0;
+>>>  	bool io_interrupted = false;
+>>> +	bool retry;
+>>>  
+>>>  	if (dpolicy->timeout != 0)
+>>>  		f2fs_update_time(sbi, dpolicy->timeout);
+>>>  
+>>> +retry:
+>>> +	retry = false;
+>>>  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+>>>  		if (dpolicy->timeout != 0 &&
+>>>  				f2fs_time_over(sbi, dpolicy->timeout))
+>>> @@ -1509,7 +1538,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  				break;
+>>>  			}
+>>>  
+>>> -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+>>> +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+>>> +			if (err == -EAGAIN) {
+>>> +				congestion_wait(BLK_RW_ASYNC,
+>>> +						DEFAULT_IO_TIMEOUT);
+>>> +				retry = true;
+>>> +			}
+>>>  
+>>>  			if (issued >= dpolicy->max_requests)
+>>>  				break;
+>>> @@ -1522,6 +1556,9 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>  			break;
+>>>  	}
+>>>  
+>>> +	if (retry)
+>>> +		goto retry;
+>>> +
+>>>  	if (!issued && io_interrupted)
+>>>  		issued = -1;
+>>>  
+>>> -- 
+>>> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+>>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
