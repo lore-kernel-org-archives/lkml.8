@@ -2,113 +2,122 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B813FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244A6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7D82074D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DBA20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:40:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZDDJU7hB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fH8o+GZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389863AbgDBQj0 (ORCPT
+        id S2389877AbgDBQkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:39:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60362 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388555AbgDBQjZ (ORCPT
+        Thu, 2 Apr 2020 12:40:03 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34210 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389072AbgDBQkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:39:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=nqbyCH5YSO8hIQBl5BFO0PKfAkJhFfHblJDOEjQg06c=; b=ZDDJU7hB9Y4BeEoEvq0ZWkjyes
-        tWNN5+Q8Aps1yopdwx/p7ZC6pREcjUvJJLCTUIAKT04nXEe3PzZrjvSNYzCVCqQFZRWEazN+c3QTZ
-        xl2RxTS8yF5XbLZkoMHpcMAHS113mDStUTeONM4nTwPGsvJVpNteBsVGMAIFmkxS8mzQfD6te1RaO
-        mDcD9NE4oQrHAR8vMkY2jvhU+ry6apicMyChVMa2J1ugjNeOq7kjtD/iQ/I1U1sph25pL9wiqjf94
-        XlzEBxuOYYnCJgC3Sq0ClRadrVU0iOj53lr8qxteStNrPPWiLH0W8tPfLtPf+9Bn+a2qafP8SLIcm
-        9PmisVRQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK2rk-0007bD-EF; Thu, 02 Apr 2020 16:38:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7F0B03056DE;
-        Thu,  2 Apr 2020 18:38:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 423372B0DE293; Thu,  2 Apr 2020 18:38:49 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 18:38:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
-        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
-        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
-        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
-        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
-        broonie@kernel.org, guohanjun@huawei.com, corbet@lwn.net,
-        vgupta@synopsys.com, tony.luck@intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
-        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
-        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
-Subject: Re: [RFC PATCH v5 4/8] mm: tlb: Pass struct mmu_gather to
- flush_pmd_tlb_range
-Message-ID: <20200402163849.GM20713@hirez.programming.kicks-ass.net>
-References: <20200331142927.1237-1-yezhenyu2@huawei.com>
- <20200331142927.1237-5-yezhenyu2@huawei.com>
- <20200331151331.GS20730@hirez.programming.kicks-ass.net>
- <fe12101e-8efe-22ad-0258-e6aeafc798cc@huawei.com>
- <20200401122004.GE20713@hirez.programming.kicks-ass.net>
- <53675fb9-21c7-5309-07b8-1bbc1e775f9b@huawei.com>
+        Thu, 2 Apr 2020 12:40:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 23so2017942pfj.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 09:40:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=P5P7+32EPNiTA9W/bPQnunX4XIHQIJgt5gQH7DdKhy0=;
+        b=fH8o+GZDZ1xdsVdHSi6MAupKO7i5SOOdhKbMy9EC42AcredyeAYuEr60QU+fttr6C7
+         M2hu1qmBT0E9kEN76oM60aZ/2lEdUGRNSJhnMJgML3APaBmfOp6cNgas0HOFLn7YCJ9t
+         RwvAvDwKlwACh5Y2WaH8SYappE+KxFzPYG22EvIPo0pYp4eYGp52pNwS8JUBHX39jpGn
+         KyyV+sycOit5HZK8sukkfuVL/Bfn0cBmW79zilVLgTeAKHW5n0VQGehTG0J11yLPVzKS
+         JdSyKtBiFPzQ7ho0Qfjc201wn6fV1KNo4fb4K4jM1Jya+7jxx7diX9cQyFo2tgDVbssA
+         TyQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=P5P7+32EPNiTA9W/bPQnunX4XIHQIJgt5gQH7DdKhy0=;
+        b=fybLpQvstKuiPLVZXPTpgKmobQ3Ap844yHt/9iZzEv5GnXr2QoCd4SxB3bS/gIm44T
+         bYQZn0r3mhDH8puw4maItcn0rHKzwA+QIDfBzkY5LMwVKZiS2wRa5LEK9xs6/CCVW3bK
+         O8pS4FZ//bTRTGI3o+ZXFXZZXSQUg3+koy/rlta2ndP4GUT77HP1wAJlWtuljk6gjuNZ
+         bMqO0NwdtVzgaELPRQYOFLbkXV9AP1pbdehb+MRg0mIlQuoUjv8CwCAukX7DKRjsd+oa
+         Efb22OmrTtNnVL/1yddTzLot327mGBU4QJCQNP2mymDGNJSCGrbMZYm6PhaCRq8afdFl
+         09rw==
+X-Gm-Message-State: AGi0PuYE3rEsKoM+z1xoyR631Xrttc9f5jiAvd1wS7LZ16CnxAAxd+hk
+        qc4+A3IgL74hQBZmkPqKucudUA==
+X-Google-Smtp-Source: APiQypKH0DXiDCoSWxCJ+loJoi3QVtbfhkTZ6FkNR9ShOim7iSVt2e1XqX4CIaEPQbwY6vh2ItkDDg==
+X-Received: by 2002:a05:6a00:c8:: with SMTP id e8mr3777718pfj.131.1585845601274;
+        Thu, 02 Apr 2020 09:40:01 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id ci18sm4102094pjb.23.2020.04.02.09.40.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 09:40:00 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 09:39:57 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     'Nick Desaulniers' via Clang Built Linux 
+        <clang-built-linux@googlegroups.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sandeep Patil <sspatil@google.com>
+Subject: Re: [PATCH v2] Makefile.llvm: simplify LLVM build
+Message-ID: <20200402163957.lqgr3tpc4z7ish5e@google.com>
+References: <20200317215515.226917-1-ndesaulniers@google.com>
+ <20200327224246.GA12350@ubuntu-m2-xlarge-x86>
+ <CAK7LNAShb1gWuZyycLAGWm19EWn17zeNcmdPyqu1o=K9XrfJbg@mail.gmail.com>
+ <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
+ <CAKwvOd=5AG1ARw6JUXmkuiftuShuYHKLk0ZnueuLhvOdMr5dOA@mail.gmail.com>
+ <20200330190312.GA32257@ubuntu-m2-xlarge-x86>
+ <CAK7LNAT1HoV5wUZRdeU0+P1nYAm2xQ4tpOG+7UtT4947QByakg@mail.gmail.com>
+ <CAKwvOd==U6NvvYz8aUz8fUNdvz27pKrn8X5205rFadpGXzRC-Q@mail.gmail.com>
+ <CAK7LNAR0PPxibFVC5F07mytz4J2BbwQkpHcquH56j7=S_Mqj2g@mail.gmail.com>
+ <CAKwvOdnYXXcfxWT6bOZXCX9-ac8tb=p2J53W+T-_gOfUu9vvSg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <53675fb9-21c7-5309-07b8-1bbc1e775f9b@huawei.com>
+In-Reply-To: <CAKwvOdnYXXcfxWT6bOZXCX9-ac8tb=p2J53W+T-_gOfUu9vvSg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 07:24:04PM +0800, Zhenyu Ye wrote:
-> Thanks for your detailed explanation.  I notice that you used
-> `tlb_end_vma` replace `flush_tlb_range`, which will call `tlb_flush`,
-> then finally call `flush_tlb_range` in generic code.  However, some
-> architectures define tlb_end_vma|tlb_flush|flush_tlb_range themselves,
-> so this may cause problems.
-> 
-> For example, in s390, it defines:
-> 
-> #define tlb_end_vma(tlb, vma)			do { } while (0)
-> 
-> And it doesn't define it's own flush_pmd_tlb_range().  So there will be
-> a mistake if we changed flush_pmd_tlb_range() using tlb_end_vma().
-> 
-> Is this really a problem or something I understand wrong ?
 
-If tlb_end_vma() is a no-op, then tlb_finish_mmu() will do:
-tlb_flush_mmu() -> tlb_flush_mmu_tlbonly() -> tlb_flush()
+On 2020-04-01, 'Nick Desaulniers' via Clang Built Linux wrote:
+>On Tue, Mar 31, 2020 at 11:11 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>>
+>> On Wed, Apr 1, 2020 at 3:39 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>> >
+>> > On Mon, Mar 30, 2020 at 11:25 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>> > >
+>> > > Having both LLVM_DIR and LLVM_SUFFIX seems verbose.
+>> >
+>> > I agree, so maybe just LLVM=y, and we can support both non-standard
+>> > locations and debian suffixes via modifications to PATH.
+>>
+>>
+>>
+>> OK, so we will start with the boolean switch 'LLVM'.
+>>
+>> People can use PATH to cope with directory path and suffixes.
+>
+>Sounds good, we will modify our CI to use PATH modifications rather
+>than suffixes. We can even do that before such a patch to Makefile
+>exists.
 
-And s390 has tlb_flush().
-
-If tlb_end_vma() is not a no-op and it calls tlb_flush_mmu_tlbonly(),
-then tlb_finish_mmu()'s invocation of tlb_flush_mmu_tlbonly() will
-terniate early due o no flags set.
-
-IOW, it should all just work.
+The proposed LLVM=1 + PATH scheme looks good to me.
 
 
-FYI the whole tlb_{start,end}_vma() thing is a only needed when the
-architecture doesn't implement tlb_flush() and instead default to using
-flush_tlb_range(), at which point we need to provide a 'fake' vma.
+There seems to be one issue.
+OBJSIZE=llvm-objsize added in
+commit fcf1b6a35c16ac500fa908a4022238e5d666eabf "Documentation/llvm: add documentation on building w/ Clang/LLVM"
+is wrong.
 
-At the time I audited all architectures and they only look at VM_EXEC
-(to do $I invalidation) and VM_HUGETLB (for pmd level invalidations),
-but I forgot which architectures that were.
+The tool is named llvm-size. OBJSIZE is only used once:
 
-But that is all legacy code; eventually we'll get all archs a native
-tlb_flush() and this can go away.
+   arch/s390/scripts/Makefile.chkbss
+   14:     if ! $(OBJSIZE) --common $< | $(AWK) 'END { if ($$3) exit 1 }'; then \
