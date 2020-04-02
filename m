@@ -2,260 +2,185 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96E9C2BA13
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0AEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D99208E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585813385;
-	bh=bpiHU8A0oDRpgD0tmxFxrO99WqdpU6KRQOYxoldTLEs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x39YbgPag5g7bFbWwdlwWXIg9VlCYzWxAxAPPbLjcJVpVz5UWan/IBk/xxni+e6yA
-	 65dXWfV7WyyYm0hnrIwzjHH3EKY+fVCk2jsxOr+VRX/uo33IHrOPu5ISJ7RnVsJWOP
-	 QJUVkfQL/z1eftbJTrzi2okI+mtEbG8rH4VudW50=
+	by mail.kernel.org (Postfix) with ESMTP id 94A5720678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387550AbgDBHnE (ORCPT
+        id S2387604AbgDBHnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:43:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729030AbgDBHnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:43:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF3E720678;
-        Thu,  2 Apr 2020 07:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585813382;
-        bh=bpiHU8A0oDRpgD0tmxFxrO99WqdpU6KRQOYxoldTLEs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f2xnXA4c0EcNCIPyRwMbzkTF3nO830kNGtiIiKTQSdXIyITEyR6FFydvjD3dkcetm
-         MEqjVOI2/3Xrch+EKiO3UaUWGmdSXmnj8qtRuH4GNBTPWQZ1o/JFc+Lu54yepJ/yKx
-         WROB7+wewfkcy/JmtFVpQmeVOnwWDOkuiitaxE0M=
-Date:   Thu, 2 Apr 2020 09:42:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] drivers/soc/litex: add LiteX SoC Controller driver
-Message-ID: <20200402074259.GC2755501@kroah.com>
-References: <20200402084513.4173306-0-mholenko@antmicro.com>
- <20200402084513.4173306-3-mholenko@antmicro.com>
- <CAPk366QLHbR9cnLs244VbOXOLAg56yhG7O-DEAc1x1ZTvthiig@mail.gmail.com>
+        Thu, 2 Apr 2020 03:43:16 -0400
+Received: from mail-am6eur05olkn2063.outbound.protection.outlook.com ([40.92.91.63]:14464
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729030AbgDBHnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:43:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b2cUts5N16McRkteTSJ4tPxLs8Gq2KfmcQbL/xiRX18vgKFEUGxoUfHE0AQygrHTljDRlY3PknSNTlE9Vp27/ZJouN868WZZu9Wy46QbUpe/n9a2Mwrz6zjU/9+kEJD5Anfa3mCEeeLyS35DIa0NuZM/RAdrPzdsM/gPNhkeYGN2aasS7gNo+1fowto9MGTablBHNYNuG1Kc4JuAzjY5SLLqvzFmxCtLIG1abrbs2N6H2lYI17nQ82dmuZVn8O/oluFbHT1JCR4Hrn6ILkzU/Hx6FSfV9d48i8KEXyJ3G+BGlaEwDkNbeDlK1CtCExMaFy7EoC3bTiJWHpy6t+4O6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6lHvXv2qvgTocqZUByXvhXUr/SR9rYM63nGCFas6UBg=;
+ b=cAK4GUjCNakS5D1bMYhycPMPMSPHem+rT6iHb/CA+LvIKxbahY77uf2xDaNAhSjDrQp5tEfGTNnQeKTRtZWmHWfxvo6jrPFBLicsdCatdrFycySucygb2FVGwSiy0QtaTjRnwfEWnh+wKZ8JSMKIQaY/vcgjIrm4QqTfdZEUgNrrJwcyCGWX/qGh7dG/b5bUDby9OS9y4CDG14TA6YMzMwJLXVMthP2Cn6joe7cQDV+PScVz+v1vA83bpGKzW8x/48+LfghVB2bHcdSnvIZTMi2iyKOy6JKHBmRwKXymmIk+mb2KU3jIN1TlGeDL0FSD1Ow9cYVq6483fuIz9Rfrfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
+ dkim=pass header.d=hotmail.de; arc=none
+Received: from VI1EUR05FT049.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc12::4f) by
+ VI1EUR05HT254.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc12::409)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.17; Thu, 2 Apr
+ 2020 07:43:11 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2a01:111:e400:fc12::45) by VI1EUR05FT049.mail.protection.outlook.com
+ (2a01:111:e400:fc12::225) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend
+ Transport; Thu, 2 Apr 2020 07:43:11 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:192060CCA2EA40A98D1833EAB84E54207B905DDD96D0AF8A4991279F38F33890;UpperCasedChecksum:8C384A884F3961336F28F441EC3CD3CDD96C2E4AF458357192D86F2FA015439B;SizeAsReceived:9765;Count:50
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::d57:5853:a396:969d]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::d57:5853:a396:969d%7]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 07:43:11 +0000
+Subject: Re: [PATCH v6 00/16] Infrastructure to allow fixing exec deadlocks
+To:     Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170B2F5BE24A28980D05780E4F50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <871rpg8o7v.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170938306F22C3CF61CC573E4CD0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003282041.A2639091@keescook>
+ <AM6PR03MB5170E0E722ED0B05B149C135E4CB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <20200330201459.GF22483@bombadil.infradead.org>
+ <202004020037.67ED66C8B6@keescook>
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+Message-ID: <AM6PR03MB5170F3FD73A0E7A82AB25B96E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Thu, 2 Apr 2020 09:43:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+In-Reply-To: <202004020037.67ED66C8B6@keescook>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR0102CA0050.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208::27) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+X-Microsoft-Original-Message-ID: <9c2954ac-e6b7-4a0e-14e1-c265c24dccb2@hotmail.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPk366QLHbR9cnLs244VbOXOLAg56yhG7O-DEAc1x1ZTvthiig@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.101] (92.77.140.102) by AM0PR0102CA0050.eurprd01.prod.exchangelabs.com (2603:10a6:208::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Thu, 2 Apr 2020 07:43:09 +0000
+X-Microsoft-Original-Message-ID: <9c2954ac-e6b7-4a0e-14e1-c265c24dccb2@hotmail.de>
+X-TMN:  [88Bzfcadfsi95ESOfguVOxLRuBSSerjb]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 69f7d8f5-1a26-473a-4ac4-08d7d6d97e4b
+X-MS-TrafficTypeDiagnostic: VI1EUR05HT254:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LTn5N5b/BBeabhy5oIJokULLKJzCeEdlYW0Jhlue1ce0xKjwAWs6bSP32JFc6SEimOD31h0fTAw3AJD9xEy6hUba2K5qd74MUUV+mOKeFhl7Q81qqvmxz4g/NXayKbqQ0p8uuyMXx3PM7BOXvE4SbPVIyiDlzBt5mI4GJZ5pVclJjhsjEHwD1cGX+kJgDUQuTv+/7AsqnbmbVkX6e6fcPPexXCsIdqJ7Hk6eHwWaTEc=
+X-MS-Exchange-AntiSpam-MessageData: GXUhajBQ2ipAr/3zlk2B/izhvu+V8/q1X7GmsJV/bskG3kIqU53msJfIDErUSQFzFlg2rw5RYTAOhdMVmRrD+eTGFp+XDbquK+dnpFj5GnHPFficTwyQ7kAc5bc2eoh9g9tuHuhLCIYD49zNr3vlcQ==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69f7d8f5-1a26-473a-4ac4-08d7d6d97e4b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 07:43:11.4503
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1EUR05HT254
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 08:50:40AM +0200, Mateusz Holenko wrote:
-> On Thu, Apr 2, 2020 at 8:46 AM Mateusz Holenko <mholenko@antmicro.com> wrote:
-> >
-> > From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> >
-> > This commit adds driver for the FPGA-based LiteX SoC
-> > Controller from LiteX SoC builder.
-> >
-> > Co-developed-by: Mateusz Holenko <mholenko@antmicro.com>
-> > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-> > Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> > ---
-> >
-> > Notes:
-> >     Changes in v4:
-> >     - fixed indent in Kconfig's help section
-> >     - fixed copyright header
-> >     - changed compatible to "litex,soc-controller"
-> >     - simplified litex_soc_ctrl_probe
-> >     - removed unnecessary litex_soc_ctrl_remove
-> >
-> >     This commit has been introduced in v3 of the patchset.
-> >
-> >     It includes a simplified version of common 'litex.h'
-> >     header introduced in v2 of the patchset.
-> >
-> >  MAINTAINERS                        |   2 +
-> >  drivers/soc/Kconfig                |   1 +
-> >  drivers/soc/Makefile               |   1 +
-> >  drivers/soc/litex/Kconfig          |  14 ++
-> >  drivers/soc/litex/Makefile         |   3 +
-> >  drivers/soc/litex/litex_soc_ctrl.c | 217 +++++++++++++++++++++++++++++
-> >  include/linux/litex.h              |  45 ++++++
-> >  7 files changed, 283 insertions(+)
-> >  create mode 100644 drivers/soc/litex/Kconfig
-> >  create mode 100644 drivers/soc/litex/Makefile
-> >  create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
-> >  create mode 100644 include/linux/litex.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 2f5ede8a08aa..a35be1be90d5 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -9729,6 +9729,8 @@ M:        Karol Gugala <kgugala@antmicro.com>
-> >  M:     Mateusz Holenko <mholenko@antmicro.com>
-> >  S:     Maintained
-> >  F:     Documentation/devicetree/bindings/*/litex,*.yaml
-> > +F:     drivers/soc/litex/litex_soc_ctrl.c
-> > +F:     include/linux/litex.h
-> >
-> >  LIVE PATCHING
-> >  M:     Josh Poimboeuf <jpoimboe@redhat.com>
-> > diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-> > index 1778f8c62861..78add2a163be 100644
-> > --- a/drivers/soc/Kconfig
-> > +++ b/drivers/soc/Kconfig
-> > @@ -9,6 +9,7 @@ source "drivers/soc/bcm/Kconfig"
-> >  source "drivers/soc/fsl/Kconfig"
-> >  source "drivers/soc/imx/Kconfig"
-> >  source "drivers/soc/ixp4xx/Kconfig"
-> > +source "drivers/soc/litex/Kconfig"
-> >  source "drivers/soc/mediatek/Kconfig"
-> >  source "drivers/soc/qcom/Kconfig"
-> >  source "drivers/soc/renesas/Kconfig"
-> > diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> > index 8b49d782a1ab..fd016b51cddd 100644
-> > --- a/drivers/soc/Makefile
-> > +++ b/drivers/soc/Makefile
-> > @@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_GEMINI)     += gemini/
-> >  obj-$(CONFIG_ARCH_MXC)         += imx/
-> >  obj-$(CONFIG_ARCH_IXP4XX)      += ixp4xx/
-> >  obj-$(CONFIG_SOC_XWAY)         += lantiq/
-> > +obj-$(CONFIG_LITEX_SOC_CONTROLLER) += litex/
-> >  obj-y                          += mediatek/
-> >  obj-y                          += amlogic/
-> >  obj-y                          += qcom/
-> > diff --git a/drivers/soc/litex/Kconfig b/drivers/soc/litex/Kconfig
-> > new file mode 100644
-> > index 000000000000..71264c0e1d6c
-> > --- /dev/null
-> > +++ b/drivers/soc/litex/Kconfig
-> > @@ -0,0 +1,14 @@
-> > +# SPDX-License_Identifier: GPL-2.0
-> > +
-> > +menu "Enable LiteX SoC Builder specific drivers"
-> > +
-> > +config LITEX_SOC_CONTROLLER
-> > +       tristate "Enable LiteX SoC Controller driver"
-> > +       help
-> > +         This option enables the SoC Controller Driver which verifies
-> > +         LiteX CSR access and provides common litex_get_reg/litex_set_reg
-> > +         accessors.
-> > +         All drivers that use functions from litex.h must depend on
-> > +         LITEX_SOC_CONTROLLER.
-> > +
-> > +endmenu
-> > diff --git a/drivers/soc/litex/Makefile b/drivers/soc/litex/Makefile
-> > new file mode 100644
-> > index 000000000000..98ff7325b1c0
-> > --- /dev/null
-> > +++ b/drivers/soc/litex/Makefile
-> > @@ -0,0 +1,3 @@
-> > +# SPDX-License_Identifier: GPL-2.0
-> > +
-> > +obj-$(CONFIG_LITEX_SOC_CONTROLLER)     += litex_soc_ctrl.o
-> > diff --git a/drivers/soc/litex/litex_soc_ctrl.c b/drivers/soc/litex/litex_soc_ctrl.c
-> > new file mode 100644
-> > index 000000000000..5defba000fd4
-> > --- /dev/null
-> > +++ b/drivers/soc/litex/litex_soc_ctrl.c
-> > @@ -0,0 +1,217 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * LiteX SoC Controller Driver
-> > + *
-> > + * Copyright (C) 2020 Antmicro <www.antmicro.com>
-> > + *
-> > + */
-> > +
-> > +#include <linux/litex.h>
-> > +#include <linux/device.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/printk.h>
-> > +#include <linux/module.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/io.h>
-> > +
-> > +/*
-> > + * The parameters below are true for LiteX SoC
-> > + * configured for 8-bit CSR Bus, 32-bit aligned.
-> > + *
-> > + * Supporting other configurations will require
-> > + * extending the logic in this header.
-> > + */
-> > +#define LITEX_REG_SIZE             0x4
-> > +#define LITEX_SUBREG_SIZE          0x1
-> > +#define LITEX_SUBREG_SIZE_BIT      (LITEX_SUBREG_SIZE * 8)
-> > +
-> > +static DEFINE_SPINLOCK(csr_lock);
-> > +
-> > +static inline unsigned long read_pointer_with_barrier(
-> > +       const volatile void __iomem *addr)
-> > +{
-> > +       unsigned long val;
-> > +
-> > +       __io_br();
-> > +       val = *(const volatile unsigned long __force *)addr;
-> > +       __io_ar();
-> > +       return val;
-> > +}
-> > +
-> > +static inline void write_pointer_with_barrier(
-> > +       volatile void __iomem *addr, unsigned long val)
-> > +{
-> > +       __io_br();
-> > +       *(volatile unsigned long __force *)addr = val;
-> > +       __io_ar();
-> > +}
-> > +
+On 4/2/20 9:40 AM, Kees Cook wrote:
+> On Mon, Mar 30, 2020 at 01:14:59PM -0700, Matthew Wilcox wrote:
+>> On Mon, Mar 30, 2020 at 10:12:02PM +0200, Bernd Edlinger wrote:
+>>> On 3/29/20 5:44 AM, Kees Cook wrote:
+>>>> On Sat, Mar 28, 2020 at 11:32:35PM +0100, Bernd Edlinger wrote:
+>>>>> Oh, do I understand you right, that I can add a From: in the
+>>>>> *body* of the mail, and then the From: in the MIME header part
+>>>>> which I cannot change is ignored, so I can make you the author?
+>>>>
+>>>> Correct. (If you use "git send-email" it'll do this automatically.)
+>>>>
+>>>> e.g., trimmed from my workflow:
+>>>>
+>>>> git format-patch -n --to "$to" --cover-letter -o outgoing/ \
+>>>> 	--subject-prefix "PATCH v$version" "$SHA"
+>>>> edit outgoing/0000-*
+>>>> git send-email --transfer-encoding=8bit --8bit-encoding=UTF-8 \
+>>>> 	--from="$ME" --to="$to" --cc="$ME" --cc="...more..." outgoing/*
+>>>>
+>>>>
+>>>
+>>> Okay, thanks, I see that is very helpful information for me, and in
+>>> this case I had also fixed a small bug in one of Eric's patches, which
+>>> was initially overlooked (aquiring mutexes in wrong order,
+>>> releasing an unlocked mutex in some error paths).
+>>> I am completely unexperienced, and something that complex was not
+>>> expected to happen :-) so this is just to make sure I can handle it
+>>> correctly if something like this happens again.
+>>>
+>>> In the case of PATCH v6 05/16 I removed the Reviewd-by: Bernd Edlinger
+>>> since it is now somehow two authors and reviewing own code is obviously
+>>> not ok, instead I added a Signed-off-by: Bernd Edlinger (and posted the
+>>> whole series on Eric's behalf (after asking Eric's permissing per off-list
+>>> e-mail, which probably ended in his spam folder)
+>>>
+>>> Is this having two Signed-off-by: for mutliple authors the
+>>> correct way to handle a shared authorship?
+>>
+>> If the patch comes through you, then Reviewed-by: is inappropriate.
+>> Instead, you should use Signed-off-by: in the second sense of
+>> Documentation/process/submitting-patches.rst
+>>
+>> This also documents how to handle "minor changes" that you make.
 > 
-> I'm defining read_pointer_with_barrier/write_pointer_with_barrier in
-> order to make sure that a series of reads/writes to a single CSR
-> register will not be reordered by the compiler.
+> And in the true case of multiple authors, have both SoBs, but also add a
+> Co-developed-by: for the non-"git author" author. Specific details:
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+> 
 
-Please do not do this, there are core kernel calls for this, otherwise
-this would be required by every individual driver, which would be crazy.
+Thanks a lot, much appreciated information indeed.
 
-> Does __raw_readl/__raw_writel guarantee this property? If so, I could
-> drop my functions and use the system ones instead.
+I personally like to play together :-)
 
-Try it and see.  What's wrong with the normal iomem read/write
-functions?
 
-Also, just writing to a pointer like you did above is not how to do
-this, please use the normal function calls, that way your driver will
-work properly.
-
-thanks,
-
-greg k-h
+Bernd.
