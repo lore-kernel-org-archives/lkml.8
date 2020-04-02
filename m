@@ -2,64 +2,113 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AADC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8678C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05F0206CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB69D206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:03:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="K0tgwe57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389014AbgDBPCj (ORCPT
+        id S2389067AbgDBPDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:02:39 -0400
-Received: from mailbackend.panix.com ([166.84.1.89]:13189 "EHLO
-        mailbackend.panix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388823AbgDBPCj (ORCPT
+        Thu, 2 Apr 2020 11:03:00 -0400
+Received: from mail-m974.mail.163.com ([123.126.97.4]:39452 "EHLO
+        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388744AbgDBPDA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:02:39 -0400
-Received: from xps-7390 (c-73-241-154-233.hsd1.ca.comcast.net [73.241.154.233])
-        by mailbackend.panix.com (Postfix) with ESMTPSA id 48tRBP0Hq0zJrb;
-        Thu,  2 Apr 2020 11:02:36 -0400 (EDT)
-Date:   Thu, 2 Apr 2020 08:02:36 -0700 (PDT)
-From:   "Kenneth R. Crudup" <kenny@panix.com>
-Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [patch 1/2] x86,module: Detect VMX modules and disable
- Split-Lock-Detect
-In-Reply-To: <A3312A4A-96A6-46A3-8C37-5AF5312FDF29@amacapital.net>
-Message-ID: <alpine.DEB.2.21.2004020801210.10453@xps-7390>
-References: <A3312A4A-96A6-46A3-8C37-5AF5312FDF29@amacapital.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 2 Apr 2020 11:03:00 -0400
+X-Greylist: delayed 926 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Apr 2020 11:02:55 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=NoHn/
+        1xOFDtjQlisPK6W+3xORWJgJCeu5w3FV4CHJCs=; b=K0tgwe57xku+qga/Akr/Z
+        TN0Izw/eNyFbM1xxrErCoZNFbKKXy7HyBBQzBss1un/LwT2vQYE41O63Jlj4o371
+        Bj93sAOqAyyYwtLmu9zwlMk6s9eSNljPjIEicC3FMHaCdkkEVZoHrh5q3/Fi7j04
+        HTHsNJVVS4NCFeAqg7TzG8=
+Received: from [10.10.140.154] (unknown [167.220.255.26])
+        by smtp4 (Coremail) with SMTP id HNxpCgDHNjXd+oVefycuAA--.100S2;
+        Thu, 02 Apr 2020 22:47:10 +0800 (CST)
+Subject: Re: [EXTERNAL] [PATCH 1/5] Drivers: hv: copy from message page only
+ what's needed
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+References: <20200401103638.1406431-1-vkuznets@redhat.com>
+ <20200401103638.1406431-2-vkuznets@redhat.com>
+From:   163 <freedomsky1986@163.com>
+Message-ID: <3ed15a02-0b86-0ec1-6daf-df94f8fc6ba5@163.com>
+Date:   Thu, 2 Apr 2020 22:46:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200401103638.1406431-2-vkuznets@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: HNxpCgDHNjXd+oVefycuAA--.100S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tF47Gr1xZw1UKw17Cr18uFg_yoW8Cr4kpa
+        yakF4Yyrs5AFWIvwn7Kw4UCFW5Wwn2gFW7Grs5u34DZ3W5XFy7ta4UGryq9FZrtr1kua47
+        Zr4qvFn5CF1DWrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jRnm_UUUUU=
+X-Originating-IP: [167.220.255.26]
+X-CM-SenderInfo: piuhvv5rpvy5arzylqqrwthudrp/1tbiTg75s1UDCxrjEAAAs+
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/1/2020 6:36 PM, Vitaly Kuznetsov wrote:
+> Hyper-V Interrupt Message Page (SIMP) has 16 256-byte slots for
+> messages. Each message comes with a header (16 bytes) which specifies the
+> payload length (up to 240 bytes). vmbus_on_msg_dpc(), however, doesn't
+> look at the real message length and copies the whole slot to a temporary
+> buffer before passing it to message handlers. This is potentially dangerous
+> as hypervisor doesn't have to clean the whole slot when putting a new
+> message there and a message handler can get access to some data which
+> belongs to a previous message.
+> 
+> Note, this is not currently a problem because all message handlers are
+> in-kernel but eventually we may e.g. get this exported to userspace.
+> 
+> Note also, that this is not a performance critical path: messages (unlike
+> events) represent rare events so it doesn't really matter (from performance
+> point of view) if we copy too much.
+> 
+> Fix the issue by taking into account the real message length. The temporary
+> buffer allocated by vmbus_on_msg_dpc() remains fixed size for now.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>   drivers/hv/vmbus_drv.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 029378c27421..2b5572146358 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1043,7 +1043,8 @@ void vmbus_on_msg_dpc(unsigned long data)
+>   			return;
+>   
+>   		INIT_WORK(&ctx->work, vmbus_onmessage_work);
+> -		memcpy(&ctx->msg, msg, sizeof(*msg));
+> +		memcpy(&ctx->msg, msg, sizeof(msg->header) +
+> +		       msg->header.payload_size);
+>   
 
-On Thu, 2 Apr 2020, Andy Lutomirski wrote:
+Hi Vitaly:
+      I think we still need to check whether the payload_size passed from
+Hyper-V is valid or not here to avoid cross-border issue before doing
+copying.
 
-> This seems like much more of a fixup than we would usually do ....
-
-TBH, I was kinda surprised to see that patchset myself.
-
-	-Kenny, guessing Linus hasn't read this far yet :)
-
--- 
-Kenneth R. Crudup  Sr. SW Engineer, Scott County Consulting, Silicon Valley
