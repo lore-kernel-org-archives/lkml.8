@@ -2,100 +2,83 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACF0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675E3C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEF8206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 347AB20737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lNlymgKI"
+	dkim=pass (1024-bit key) header.d=bacher09.org header.i=@bacher09.org header.b="rp5rZGQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389386AbgDBPkJ (ORCPT
+        id S2389405AbgDBPkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:40:09 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:35031 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388591AbgDBPkJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:40:09 -0400
-Received: by mail-qv1-f68.google.com with SMTP id q73so1889986qvq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PYelBMpM/3QJH1rKStk9XKPwcLOdDKg6wW/AuMLbwA0=;
-        b=lNlymgKIirJd7VAjfYBBqRftLBhc6UFUfiuiLaxma5vrER6aASiWEFCmMywJMyOy0k
-         kIDZGJS/JcyPGJbWqzFLb3ZypGU+/LSLc+SxxZGyW7+Aa0MsJ0Zkxkvfosuep4srSdPG
-         MebPu1XuXHTN9hCyHpf2KRMX9gGegmAuSOwj0jyJB3T+/cHQ8sXXfOA117NUCQw94uoJ
-         a6uNqw6Vlf/oi3ADr368GSxVXLzM38IzfW1RCjgUzX19TrxT8I4BptPljilD28rawM6G
-         72HG7DZfFcayoxN4BjA8cH0EaK2jVN19iK1Ebem1CJNUP2jGybMBzP6ejISXGkC4LRUc
-         kNVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PYelBMpM/3QJH1rKStk9XKPwcLOdDKg6wW/AuMLbwA0=;
-        b=gTqSB0ivZsR5g8CN6SkNKifo0ESLCnY65czo3sh6XPHUN0NcEpillQu0UXNPrIssJl
-         eUt+t+RDEgRq53dt0KT2F8Iu7Rq/d1ctg9/o21L3/VjS/MiNuLD80t6HL3danj5+CpCV
-         JwixCrWo0wT2kYkvCiAfWbXWyaPb1N8hjguDa15N5MvENA3PUb0mr0uZ2VFsGk1k1a35
-         Q/BhoyclP9e7Yue4FmpeFHM8l93MR3V6qLWBWzZ2u+sAtgbemhqccEaDSXicwKJINJBG
-         VxkY0SBcstu93xazCTmz7sA9m6yyX29Ji0VpzbawRXrA378IVyCBObhTzLrZtqOEi9ZC
-         ZmfA==
-X-Gm-Message-State: AGi0PuZmWVW2jbKYHi3YONyq5t9NQKG6juZOFuAUdb1Tq7ezi1Rbbptj
-        VxkzYrtcHwj6roE6+rjtcVJdv6mmlhphJA==
-X-Google-Smtp-Source: APiQypI9is3KJbPY3xl6sirQXhgEy8iEvNue4xUMKbvI46xXBmbp9jGdyrp8NAfqhBcHwxpEFMSMrQ==
-X-Received: by 2002:ad4:5012:: with SMTP id s18mr3982997qvo.162.1585842008226;
-        Thu, 02 Apr 2020 08:40:08 -0700 (PDT)
-Received: from ovpn-66-203.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id n46sm4069873qtb.48.2020.04.02.08.40.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Apr 2020 08:40:07 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     pbonzini@redhat.com
-Cc:     sean.j.christopherson@intel.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] x86/kvm: fix a missing-prototypes "vmread_error"
-Date:   Thu,  2 Apr 2020 11:39:55 -0400
-Message-Id: <20200402153955.1695-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Thu, 2 Apr 2020 11:40:22 -0400
+Received: from pub.regulars.win ([89.163.144.234]:36068 "EHLO pub.regulars.win"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388591AbgDBPkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 11:40:22 -0400
+Subject: Re: [PATCH v4 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bacher09.org;
+        s=reg; t=1585842020;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=GZLGLGK0Ts+nwMLTKpmMA0gphkPeoQjdvofgRxfo/XQ=;
+        b=rp5rZGQMd0ceRJDBWcpjiTnamXyUc3Rl/Y4P4pOlgIRcRqMERZduQGjA0aCXJhoQ25trW7
+        dYNDBhqoGw2qpfMPpU7A9i4hNv3FUhWGxozJ2zJFJ3mZjVJ/95UG0TJmPCuQxiHrsOx/xS
+        s7bKQF55nqFd0X5/wZIkfL5QFa91urI=
+Cc:     Kees Cook <keescook@chromium.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jannh@google.com,
+        alexei.starovoitov@gmail.com, daniel@iogearbox.net,
+        kernel-hardening@lists.openwall.com, liuyd.fnst@cn.fujitsu.com,
+        kpsingh@google.com
+References: <202004010849.CC7E9412@keescook>
+ <20200402153335.38447-1-slava@bacher09.org>
+To:     Andrii Nakryiko <andriin@fb.com>
+From:   Slava Bacherikov <slava@bacher09.org>
+Autocrypt: addr=slava@bacher09.org; prefer-encrypt=mutual; keydata=
+ mQINBFFdcIUBEAC9HZz+DbqCs+jyJjpvRyped8U4bz716OZKvZCTH4fNxrrV0fYWRn7LJ/dU
+ r5tBnwhmlTWD4v6hk88qpD9flagkSP4UuIAo+3aopxvrkyWXXYiEAjSL2uTFolcEO40HuYPk
+ 7nprTEzHcHgcYq2wzJfE046gimzFYcUXkrv1gC89RdkwOgLTFb80QUpKyVeoKJWKWHPfRqGF
+ FxpFwMnW3IrgZhOnl8X859WwKUc/agPz05LjaksGpAP8ayfruxtG/3Hl7OulYPWIkTuxHAtK
+ xW9QL7Vt24P8rVLC7sgNZYcjaOcY70PCkGLnquETuIeeCwhKr/e2n+ymH+CxlAiUY+blNpO5
+ S5P+rwb0qPvGDzjF+Drdp0ye/S3kMa+FNrELW06Fp74p7BgsPgNsuBVg300JWMFXiS7YeMZV
+ cyedAzGbcO8yxrY6ZnuNF8rLiZOYde79yN82wTNw/fWZtHhz8QJELZzMNjZd3/w61ztSs9ng
+ mduiqv9EyNKlEEuxy6N4jGTQ2YYLE/YcIx654rCfpJWJhj2kDd4k2uNRrhJI7t4duHC86K4M
+ HiOwC7PIKlIbtrpYnTZPXXcQHp69LDzxCAA6dgGkhjZsUTVci0rTEfRQjkXYvK/f3P1SHF1M
+ EHoeEaclqvpkuvPcbHQ/TBwBJs+ekdFCTmBzv0UwqZKfaPW5yQARAQABtDJTbGF2YSBCYWNo
+ ZXJpa292IChNeSBOZXcgS2V5KSA8c2xhdmFAYmFjaGVyMDkub3JnPokCWQQTAQIAQwIbIwUJ
+ DShogAcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAFiEEZkmc+DLOftzkG8AWUSYbvb34nfMF
+ AlkF95wCGQEACgkQUSYbvb34nfO7FQ//drNtAxFi294vVZnN+wyVimXGiyBHpBPnEK5/hSQ5
+ oBVvjFl8Ws7q13WWklhdPgM3atAukADMG5wr3IM3ctS1L2+502TYGv8W5jvUlso/TxjNdVQz
+ SDicmPCMMs91BWHiJHkYKErUXxNtCaBQqVV2rAKiDoK1gtFrWfH/3OgP6RS+mLMt5eJ/PHsc
+ kAuvaXOIzWxjclGMB2yAQzmK7SImOHp7YUBqXrOt523sz29p+1q0+y6ZRlPNctys/okUdnoK
+ bi0rMBqbHngaoi/al9Clh9jrhqjZHJLPSM091u3ubuQkvtg3BOhqs0I/b7Xz83VxN0pj8XHI
+ z4MRFwfhVSKW4pRLf92DKAa9PEYxA9QtboKafZG2EJfrUauba29/JoIh8Evi5MIuWNeZK7pK
+ t3+NadAwXwcLP4RlLuOkVrF+DAuhEktvdJBvTfUkipeQo3YGcffm1daJWoUKiP2a3tqJ9fz8
+ Zd5cy8hvKFCv5VsoqF2voc6uaadH1/Pwylnw2fzTfGzFP0bsz/HI8F7g3WFv0PrrtkXnPUCD
+ 2IbmIGe8fi7NBTIqtc+mDMsqOIa4hlLBGkP8jHnCPv6oaGYlWemzcVhehU3XQOKyT2lroZan
+ nnARpEW9lSSeWPba99+PJu0q2rEaQj/Vhy/m2db89kYeLcEuItd4DYKk7rHZSrHBKwM=
+Message-ID: <f43f4e17-f496-9ee1-7d89-c8f742720a5f@bacher09.org>
+Date:   Thu, 2 Apr 2020 18:40:19 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200402153335.38447-1-slava@bacher09.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 842f4be95899 ("KVM: VMX: Add a trampoline to fix VMREAD error
-handling") removed the declaration of vmread_error() causes a W=1 build
-failure with KVM_WERROR=y. Fix it by adding it back.
 
-arch/x86/kvm/vmx/vmx.c:359:17: error: no previous prototype for 'vmread_error' [-Werror=missing-prototypes]
- asmlinkage void vmread_error(unsigned long field, bool fault)
-                 ^~~~~~~~~~~~
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/x86/kvm/vmx/ops.h | 1 +
- 1 file changed, 1 insertion(+)
+02.04.2020 18:33, Slava Bacherikov wrote:
+> +	depends on DEBUG_INFO || COMPILE_TEST
 
-diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
-index 09b0937d56b1..19717d0a1100 100644
---- a/arch/x86/kvm/vmx/ops.h
-+++ b/arch/x86/kvm/vmx/ops.h
-@@ -12,6 +12,7 @@
- 
- #define __ex(x) __kvm_handle_fault_on_reboot(x)
- 
-+asmlinkage void vmread_error(unsigned long field, bool fault);
- __attribute__((regparm(0))) void vmread_error_trampoline(unsigned long field,
- 							 bool fault);
- void vmwrite_error(unsigned long field, unsigned long value);
--- 
-2.21.0 (Apple Git-122.2)
-
+Andrii are you fine by this ?
