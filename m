@@ -2,159 +2,229 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1084C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363F9C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9132064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DAC62078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jT68wIMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387551AbgDBHcc (ORCPT
+        id S2387569AbgDBHcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:32:32 -0400
-Received: from mga14.intel.com ([192.55.52.115]:54283 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387516AbgDBHcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:32:32 -0400
-IronPort-SDR: KjlCnnBbhacVC+Qu+49V5qs1h8bUOGYC2gJzjS3jZOmIzynutONt/3J/kquBAvp6Zyf7zcJNgL
- VzBno0pFAfbw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 00:32:31 -0700
-IronPort-SDR: gdOzEhnqEgsoR8sAYDzfV05CATH4fzVWWsS+k0boW8O/yu3Xfi3sJxeG235iqhxdcOZT0BRZiL
- Wb4kADP/oc4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,334,1580803200"; 
-   d="scan'208";a="328729980"
-Received: from tronach-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.38.191])
-  by orsmga001.jf.intel.com with ESMTP; 02 Apr 2020 00:32:28 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id E279321F19; Thu,  2 Apr 2020 10:32:20 +0300 (EEST)
-Date:   Thu, 2 Apr 2020 10:32:20 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, Petr Mladek <pmladek@suse.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/1] lib/vsprintf: Add support for printing V4L2 and DRM
- fourccs
-Message-ID: <20200402073220.GB1522@kekkonen.localdomain>
-References: <20200401140522.966-1-sakari.ailus@linux.intel.com>
- <080ddddf-717e-61dc-8522-fbdbe52da94a@xs4all.nl>
- <20200401151332.GU1922688@smile.fi.intel.com>
+        Thu, 2 Apr 2020 03:32:50 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36144 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729477AbgDBHct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:32:49 -0400
+Received: by mail-lj1-f193.google.com with SMTP id b1so2168208ljp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KCRvXmznyUru0bfTbtl4BOGmXSWydWSvDGeo1jLZGE4=;
+        b=jT68wIMnkD5BYeB9SAi/0kb6KFG/QhGf0CduAmwTrQpDPwT0N+wFDQ0OEb81JMvHSJ
+         ArNdMQPrY61lV9u/d7sRJ+ifBt+tH7mY9P3RKv7FNRM3P+9NeJU7GG6t1zuOYjQ/AqHz
+         OSvmpQzG8R8TKksCX71UApVMh0XNaImeY8rD1LEcy4gxlE+VoiFiXkPQGnDrTurlnPEh
+         A+hfUFjhSWpWkaVnqfINK1j2LGAOyLv/OqZZIZ0QUB0ElCVr+dUj7FZzWILJtVo30zQt
+         CxzFCHvOwmEIe6lbaoogIqwcY3UrKO37Hgnn+XL5a7hY939tuXhLSg7d3sGPFtm7t1OH
+         PU/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KCRvXmznyUru0bfTbtl4BOGmXSWydWSvDGeo1jLZGE4=;
+        b=teKm6Pzvh2KOsFw2Tb4URV5cu43pyBw8kxQ/w8q/NFD8QT6VXVjlLmeYT3F8xOQwxD
+         Uf6UXrK5iaL0nnwjoTg7i4aDeT9YM8TaAvCec48tHk2ZGxFG629h0WarHsv/oF7hHsoE
+         UE3Fk+ftHcDBkGgK4pGO5Jpes/bdD2ZMBnzEt2KmH+NQiHvsHk0/BsOGiNAuwbd4IT70
+         1+TiG/3wDbTkWV3h+iR2jITjk6ktaG2pbmyFyaST32CUols3dUY5XUbDhD1f/coH5CD+
+         sDpRqhS+cBTNhVxrBl0GZPfG81YvZIL7EJNeFZQq9MwHnow9D8wzhbayIbDtYT1XDnYr
+         467A==
+X-Gm-Message-State: AGi0PuaXG9H2yq4Ym6ZSNe+KxXeVgxzltGU+luvzvr4FS/GcPZKmx2nv
+        wUzVjEtb3yLRp6VIcADVnTLv/XIL16pgsPYzQy/74A==
+X-Google-Smtp-Source: APiQypIbwgpPJFbYeng+8S0ZbPhuz9yyXh7XXaRadj01ToK6KPTk9RDdvXIGjvDKk1m7fKrotdSA7eXafJ97vPnrxLw=
+X-Received: by 2002:a2e:a495:: with SMTP id h21mr1183615lji.123.1585812766658;
+ Thu, 02 Apr 2020 00:32:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401151332.GU1922688@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200401161512.917494101@linuxfoundation.org>
+In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 2 Apr 2020 13:02:34 +0530
+Message-ID: <CA+G9fYtWSxUcLUahdoCq9rFHn+0L_+MnZ72DZ3h0utTu75+iow@mail.gmail.com>
+Subject: Re: [PATCH 4.4 00/91] 4.4.218-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Wed, 1 Apr 2020 at 22:00, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.218 release.
+> There are 91 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.218-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Thanks for the review.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-On Wed, Apr 01, 2020 at 06:13:32PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 01, 2020 at 04:13:51PM +0200, Hans Verkuil wrote:
-> > On 4/1/20 4:05 PM, Sakari Ailus wrote:
-> > > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > > the same implementation can be used.
-> 
-> %p4cc ?
+Summary
+------------------------------------------------------------------------
 
-Sounds good. Numbers have special handling but AFAIR only right after %
-sign, so this should be possible.
+kernel: 4.4.218-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 2d26509e19e30e927f01e298d1ce71dadc5ec33a
+git describe: v4.4.217-92-g2d26509e19e3
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.217-92-g2d26509e19e3
 
-> 
-> > > +	char ch[2] = { 0 };
-> > 
-> > This can just be '{ };'
-> 
-> The latter is GCC extension, while above is C standard. Former is slightly
-> better I think. Though see below.
-> 
-> > > +	unsigned int i;
-> > > +
-> > > +	if (check_pointer(&buf, end, fourcc, spec))
-> > > +		return buf;
-> > > +
-> > > +	switch (fmt[1]) {
-> > > +	case 'f':
-> 
-> > > +		for (i = 0; i < sizeof(*fourcc); i++) {
-> > > +			ch[0] = *fourcc >> (i << 3);
-> > 
-> > You need to AND with 0x7f, otherwise a big endian fourcc (bit 31 is set)
-> > will look wrong. Also, each character is standard 7 bit ascii, bit 7 isn't
-> > used except to indicate a BE variant.
-> 
-> Why not to do it once by a flag and do reset it once?
-> 
-> 	u32 tmp = *fourcc;
-> 	bool be4cc = tmp & BIT(31);
-> 
-> 	tmp &= BIT(31);
+No regressions (compared to build v4.4.217)
 
-I had two extra temporary variables in a version I didn't send but I
-figured they could be removed. :-)
+No fixes (compared to build v4.4.217)
 
-> 
-> On top of that, as promised above, why not simple do it in a simpler way, i.e.
-> using standard idiom:
-> 
-> 	for (i = 0; i < sizeof(*fourcc); i++) {
-> 		if (buf < end)
-> 			*buf = tmp >> (i * 8);
-> 		buf++;
-> 	}
-> ?
+Ran 25708 total tests in the following environments and test suites.
 
-I guess that's at least more efficient, and comparing buf to end is
-trivial. I'll do that in v2.
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
 
-> 
-> > > +			buf = string(buf, end, ch, spec);
-> > > +		}
-> > > +
-> > > +		if (*fourcc & BIT(31))
-> > > +			buf = string(buf, end, "-BE", spec);
-> 
-> Another possibility
-> 
-> 	u8 ch[8];
-> 
-> 	if (*fourcc & BIT(31)) {
-> 		put_unaligned_be32(tmp, &ch[0]);
-> 		strcpy(&ch[4], "-BE");
-> 	} else {
-> 		put_unaligned_le32(tmp, &ch[0]);
-> 		strcpy(&ch[4], "-LE");
-> 	}
-> 	return string(buf, end, &ch[0], spec);
+Test Suites
+-----------
+* build
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-cpuhotplug-tests
+* spectre-meltdown-checker-test
+* install-android-platform-tools-r2600
+* kselftest-vsyscall-mode-native
 
-I think I prefer the loop. I figured you can only call string once,
-otherwise field width handling will be broken. Let's see.
+Summary
+------------------------------------------------------------------------
 
-> 
-> > > +		return buf;
-> > > +	default:
-> > > +		return error_string(buf, end, "(%pp?)", spec);
-> > > +	}
-> > > +}
-> 
+kernel: 4.4.218-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.218-rc1-hikey-20200401-681
+git commit: 8cfe8e5827549778e493ffadf6ed59a020a03830
+git describe: 4.4.218-rc1-hikey-20200401-681
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.218-rc1-hikey-20200401-681
 
--- 
-Kind regards,
 
-Sakari Ailus
+No regressions (compared to build 4.4.218-rc1-hikey-20200331-679)
+
+
+No fixes (compared to build 4.4.218-rc1-hikey-20200331-679)
+
+Ran 1355 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
