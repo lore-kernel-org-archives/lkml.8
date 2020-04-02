@@ -2,104 +2,76 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B26C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C76C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCB62074D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBE52074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388607AbgDBRux (ORCPT
+        id S2388646AbgDBRv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:50:53 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49726 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbgDBRux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:50:53 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK3z6-008rAv-W9; Thu, 02 Apr 2020 17:50:33 +0000
-Date:   Thu, 2 Apr 2020 18:50:32 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
-        daniel@ffwll.ch, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, keescook@chromium.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
- user_write_access_begin/end
-Message-ID: <20200402175032.GH23230@ZenIV.linux.org.uk>
-References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
- <20200402162942.GG23230@ZenIV.linux.org.uk>
- <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
+        Thu, 2 Apr 2020 13:51:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:58673 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbgDBRv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 13:51:29 -0400
+IronPort-SDR: 024XrLFU2c7RJJYOyOnQCulgqClDopoCGwJNwkk+nftJl3cOBY5dHT/iNAzklsJO6VLVOTCQD3
+ uVcO1lASeTaA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 10:51:28 -0700
+IronPort-SDR: yNgpYBPuKehyV8NhgxZG31O/WMbdD7zDN+BaLjgXKSi3WVf8xnEcQNqs47hd2hQieWoPzjAYWI
+ CWeJWpazWz5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="295718629"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Apr 2020 10:51:28 -0700
+Date:   Thu, 2 Apr 2020 10:51:28 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [patch v2 1/2] x86,module: Detect VMX modules and disable
+ Split-Lock-Detect
+Message-ID: <20200402175127.GJ13879@linux.intel.com>
+References: <20200402123258.895628824@linutronix.de>
+ <20200402124205.242674296@linutronix.de>
+ <20200402152340.GL20713@hirez.programming.kicks-ass.net>
+ <725ca48f-8194-658e-0296-65d4368803b5@intel.com>
+ <20200402162548.GH20730@hirez.programming.kicks-ass.net>
+ <2d2140c4-712a-2f8d-cde7-b3e64c28b204@intel.com>
+ <87pncpn650.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
+In-Reply-To: <87pncpn650.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 07:03:28PM +0200, Christophe Leroy wrote:
+On Thu, Apr 02, 2020 at 07:34:35PM +0200, Thomas Gleixner wrote:
+> Aside of that I'm still against the attempt of proliferating crap,
+> i.e. disabling it because the host is triggering it and then exposing it
+> to guests. The above does not change my mind in any way. This proposal
+> is still wrong.
 
-> user_access_begin() grants both read and write.
-> 
-> This patch adds user_read_access_begin() and user_write_access_begin() but
-> it doesn't remove user_access_begin()
-
-Ouch...  So the most generic name is for the rarest case?
- 
-> > What should we do about that?  Do we prohibit such blocks outside
-> > of arch?
-> > 
-> > What should we do about arm and s390?  There we want a cookie passed
-> > from beginning of block to its end; should that be a return value?
-> 
-> That was the way I implemented it in January, see
-> https://patchwork.ozlabs.org/patch/1227926/
-> 
-> There was some discussion around that and most noticeable was:
-> 
-> H. Peter (hpa) said about it: "I have *deep* concern with carrying state in
-> a "key" variable: it's a direct attack vector for a crowbar attack,
-> especially since it is by definition live inside a user access region."
-
-> This patch minimises the change by just adding user_read_access_begin() and
-> user_write_access_begin() keeping the same parameters as the existing
-> user_access_begin().
-
-Umm...  What about the arm situation?  The same concerns would apply there,
-wouldn't they?  Currently we have
-static __always_inline unsigned int uaccess_save_and_enable(void)
-{
-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
-        unsigned int old_domain = get_domain();
-
-        /* Set the current domain access to permit user accesses */
-        set_domain((old_domain & ~domain_mask(DOMAIN_USER)) |
-                   domain_val(DOMAIN_USER, DOMAIN_CLIENT));
-
-        return old_domain;
-#else
-        return 0;
-#endif
-}
-and
-static __always_inline void uaccess_restore(unsigned int flags)
-{
-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
-        /* Restore the user access mask */
-        set_domain(flags);
-#endif
-}
-
-How much do we need nesting on those, anyway?  rmk?
+Eh, I still think the "off in host, on in guest" is a legit scenario for
+debug/development/testing, but I agree that the added complexity doesn't
+justify the minimal benefits versus sld_warn.
