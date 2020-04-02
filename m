@@ -2,189 +2,178 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5561C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD4BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8EFE20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3435B20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:17:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S6mH9uUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388837AbgDBSOp (ORCPT
+        id S2388931AbgDBSRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389276AbgDBSOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 14:14:44 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A57C72078E;
-        Thu,  2 Apr 2020 18:14:42 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 14:14:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>,
-        lkp@lists.01.org
-Subject: Re: [tracing] cd8f62b481:
- BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
-Message-ID: <20200402141440.7868465a@gandalf.local.home>
-In-Reply-To: <20200402161920.3b3649cac4cc47a52679d69b@kernel.org>
-References: <20200319232731.799117803@goodmis.org>
-        <20200326091256.GR11705@shao2-debian>
-        <20200401230700.d9ddb42b3459dca98144b55c@kernel.org>
-        <20200401102112.35036490@gandalf.local.home>
-        <20200401110401.23cda3b3@gandalf.local.home>
-        <20200402161920.3b3649cac4cc47a52679d69b@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 2 Apr 2020 14:17:38 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60468 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbgDBSRi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 14:17:38 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032I9cZD150233;
+        Thu, 2 Apr 2020 18:17:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=qWI5T/N7iP2w4FARfmbmB5Xd+vJTWKb7aE+P85B2lzk=;
+ b=S6mH9uUICCcIkTsz52Ldr2OvROziVylaQhyM3AzENR09IOZ4pmGrX1PCl0ZMsKL+eUrI
+ UqPYZ9FFiVvHbWW8vi/UwRUYOc8Yov1EZxpyFx1oqnYtRUHzt8hOvGWX0UJMg27gz5M6
+ To3vbMhttsY2uIx6IA797QhRuVxaP9DR1E7bkXhFV0h3Drv6XTIx3hp5HOW9YBeeLNea
+ OKNCg7gE4BNpyeXtauupY98ZZCudBopcbjUTmpHk9EcXCri7x37YWB0qo+QNbGSOS4EX
+ PBOebfp0RtrpBkqar03d1bNlKmeffds4eB+rY+UbSe5+ECOXaigxEumbp3yRtKQ1e4x8 UA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 303yunfpc2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 18:17:16 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032ID8SM017175;
+        Thu, 2 Apr 2020 18:17:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 304sjq6eb4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 18:17:15 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032IHEb9013046;
+        Thu, 2 Apr 2020 18:17:15 GMT
+Received: from vbusired-dt (/10.154.166.66)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 11:17:14 -0700
+Date:   Thu, 2 Apr 2020 13:17:10 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rientjes@google.com,
+        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
+Subject: Re: [PATCH v6 03/14] KVM: SVM: Add KVM_SEV_SEND_FINISH command
+Message-ID: <20200402181710.GA655710@vbusired-dt>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <798316bc964cef34d2760a87de0fb6dc4e5d9af3.1585548051.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <798316bc964cef34d2760a87de0fb6dc4e5d9af3.1585548051.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 suspectscore=1 mlxlogscore=999 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=1 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 16:19:20 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> On Wed, 1 Apr 2020 11:04:01 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On 2020-03-30 06:20:49 +0000, Ashish Kalra wrote:
+> From: Brijesh Singh <Brijesh.Singh@amd.com>
 > 
-> > On Wed, 1 Apr 2020 10:21:12 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > > index 6519b7afc499..7f1466253ca8 100644
-> > > --- a/kernel/trace/trace.c
-> > > +++ b/kernel/trace/trace.c
-> > > @@ -3487,6 +3487,14 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
-> > >  	 */
-> > >  	if (iter->ent && iter->ent != iter->temp) {
-> > >  		if (!iter->temp || iter->temp_size < iter->ent_size) {
-> > > +			/*
-> > > +			 * This function is only used to add markers between
-> > > +			 * events that are far apart (see trace_print_lat_context()),
-> > > +			 * but if this is called in an atomic context (like NMIs)
-> > > +			 * we can't call kmalloc(), thus just return NULL.
-> > > +			 */
-> > > +			if (in_atomic() || irqs_disabled())
-> > > +				return NULL;
-> > >  			kfree(iter->temp);
-> > >  			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
-> > >  			if (!iter->temp)  
-> > 
-> > Peter informed me on IRC not to use in_atomic() as it doesn't catch
-> > spin_locks when CONFIG_PREEMPT is not defined.
-> > 
-> > As the issue is just with ftrace_dump(), I'll have it use a static buffer
-> > instead of 128 bytes. Which should be big enough for most events, and if
-> > not, then it will just miss the markers.  
+> The command is used to finailize the encryption context created with
+> KVM_SEV_SEND_START command.
 > 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Steve Rutherford <srutherford@google.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
+>  arch/x86/kvm/svm.c                            | 23 +++++++++++++++++++
+>  2 files changed, 31 insertions(+)
 > 
-> That sounds good, but the below patch seems to do different thing.
-> Does it just makes trace_find_next_entry() always fail if it is
-> called from ftrace_dump()?
+> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+> index f46817ef7019..a45dcb5f8687 100644
+> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> @@ -314,6 +314,14 @@ Returns: 0 on success, -negative on error
+>                  __u32 trans_len;
+>          };
+>  
+> +12. KVM_SEV_SEND_FINISH
+> +------------------------
+> +
+> +After completion of the migration flow, the KVM_SEV_SEND_FINISH command can be
+> +issued by the hypervisor to delete the encryption context.
+> +
+> +Returns: 0 on success, -negative on error
 
-Bah! I send my emails on a different machine than I create the patches on.
-Below was my first iteration, then I decided to at least try to print some,
-changed it, but never copied the new version over, and ended up sending the
-last one.
+Didn't notice this earlier. I would suggest changing all occurrences of
+"-negative" to either "negative" or "less than 0" in this file.
 
-Here's the actual patch!
-
--- Steve
-
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH] tracing: Do not allocate buffer in trace_find_next_entry() in
- atomic
-
-When dumping out the trace data in latency format, a check is made to peek
-at the next event to compare its timestamp to the current one, and if the
-delta is of a greater size, it will add a marker showing so. But to do this,
-it needs to save the current event otherwise peeking at the next event will
-remove the current event. To save the event, a temp buffer is used, and if
-the event is bigger than the temp buffer, the temp buffer is freed and a
-bigger buffer is allocated.
-
-This allocation is a problem when called in atomic context. The only way
-this gets called via atomic context is via ftrace_dump(). Thus, use a static
-buffer of 128 bytes (which covers most events), and if the event is bigger
-than that, simply return NULL. The callers of trace_find_next_entry() need
-to handle a NULL case, as that's what would happen if the allocation failed.
-
-Link: https://lore.kernel.org/r/20200326091256.GR11705@shao2-debian
-
-Fixes: ff895103a84ab ("tracing: Save off entry when peeking at next entry")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6519b7afc499..4b7bbfe7f809 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3472,6 +3472,9 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
- 	return next;
- }
- 
-+#define STATIC_TEMP_BUF_SIZE	128
-+static char static_temp_buf[STATIC_TEMP_BUF_SIZE];
-+
- /* Find the next real entry, without updating the iterator itself */
- struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
- 					  int *ent_cpu, u64 *ent_ts)
-@@ -3480,13 +3483,26 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
- 	int ent_size = iter->ent_size;
- 	struct trace_entry *entry;
- 
-+	/*
-+	 * If called from ftrace_dump(), then the iter->temp buffer
-+	 * will be the static_temp_buf and not created from kmalloc.
-+	 * If the entry size is greater than the buffer, we can
-+	 * not save it. Just return NULL in that case. This is only
-+	 * used to add markers when two consecutive events' time
-+	 * stamps have a large delta. See trace_print_lat_context()
-+	 */
-+	if (iter->temp == static_temp_buf &&
-+	    STATIC_TEMP_BUF_SIZE < ent_size)
-+		return NULL;
-+
- 	/*
- 	 * The __find_next_entry() may call peek_next_entry(), which may
- 	 * call ring_buffer_peek() that may make the contents of iter->ent
- 	 * undefined. Need to copy iter->ent now.
- 	 */
- 	if (iter->ent && iter->ent != iter->temp) {
--		if (!iter->temp || iter->temp_size < iter->ent_size) {
-+		if ((!iter->temp || iter->temp_size < iter->ent_size) &&
-+		    !WARN_ON_ONCE(iter->temp == static_temp_buf)) {
- 			kfree(iter->temp);
- 			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
- 			if (!iter->temp)
-@@ -9203,6 +9219,8 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
- 
- 	/* Simulate the iterator */
- 	trace_init_global_iter(&iter);
-+	/* Can not use kmalloc for iter.temp */
-+	iter.temp = static_temp_buf;
- 
- 	for_each_tracing_cpu(cpu) {
- 		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
--- 
-2.20.1
-
+> +
+>  References
+>  ==========
+>  
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 8561c47cc4f9..71a4cb3b817d 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7399,6 +7399,26 @@ static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>  	return ret;
+>  }
+>  
+> +static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +	struct sev_data_send_finish *data;
+> +	int ret;
+> +
+> +	if (!sev_guest(kvm))
+> +		return -ENOTTY;
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->handle = sev->handle;
+> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_FINISH, data, &argp->error);
+> +
+> +	kfree(data);
+> +	return ret;
+> +}
+> +
+>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>  	struct kvm_sev_cmd sev_cmd;
+> @@ -7449,6 +7469,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  	case KVM_SEV_SEND_UPDATE_DATA:
+>  		r = sev_send_update_data(kvm, &sev_cmd);
+>  		break;
+> +	case KVM_SEV_SEND_FINISH:
+> +		r = sev_send_finish(kvm, &sev_cmd);
+> +		break;
+>  	default:
+>  		r = -EINVAL;
+>  		goto out;
+> -- 
+> 2.17.1
+> 
