@@ -2,99 +2,109 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5D7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53539C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9615C206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE572206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RfuZt35x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389630AbgDBWOb (ORCPT
+        id S2389573AbgDBWTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 18:14:31 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34952 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389402AbgDBWOb (ORCPT
+        Thu, 2 Apr 2020 18:19:02 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:19888 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgDBWTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 18:14:31 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i19so5517340wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 15:14:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fPUE5Ux6t1ZmXWbn6Wue8riIBLccyrWYZrJD4d05O54=;
-        b=YHfxXZ/YE9EU4X7s6JYTgyhLrfTyBHfxbtnZSWUPHNdkdHqXkwtdghjziXnJmBB9rs
-         JIDTR+hNOzCieeL3RyQLhLsFePR04J4rMpOcQSMkDIEZmqvpqTDxevq4YYWsZSBO0l4l
-         0c2S39JqfLaQu9rV8NXZHMM1En04RL+0Jx5qcuWBsJfkgxHLYYcyMLZieKb1MFKvQvqu
-         neGsqQe8XALRgu50eXjyhQlF2A2PUrdaV8CpjfdenLEy9KFpL2Bw4FuLp0XHrWLgrphr
-         a0nruGn4/40FlcuOq1JQEWOg2XSgtQtnisNiCfZWmxyE9NzkCuQCs47sURiBu+bzXMJg
-         Z4Ww==
-X-Gm-Message-State: AGi0PuakBFXy1OPtbnaenb1+ESo0aJHJBWgMpCDqQxvI5Shm/Y4O2pJO
-        Mnha4prgZMuK9qFJdmu2tN0yMxDN
-X-Google-Smtp-Source: APiQypI/XnKREPGfpJgJh9NMJG3NsY/n4DXqC18f+gjOyWgDV3yrb3YLGJymAcfZxGyGKJi3hKWQ8A==
-X-Received: by 2002:a1c:f213:: with SMTP id s19mr5375822wmc.116.1585865669036;
-        Thu, 02 Apr 2020 15:14:29 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:9069:e334:a021:3782? ([2601:647:4802:9070:9069:e334:a021:3782])
-        by smtp.gmail.com with ESMTPSA id n2sm9516018wro.25.2020.04.02.15.14.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Apr 2020 15:14:28 -0700 (PDT)
-Subject: Re: [PATCH] nvmet: add revalidation support to bdev and file backed
- namespaces
-To:     Anthony Iliopoulos <ailiop@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200402193052.19935-1-ailiop@suse.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <d6a3bf25-70c1-2501-2e8f-222135ebe9b8@grimberg.me>
-Date:   Thu, 2 Apr 2020 15:14:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Firefox/60.0 Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200402193052.19935-1-ailiop@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 2 Apr 2020 18:19:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585865941; x=1617401941;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=go/JuGKaHOod4bhA+dQw7sF/0xVz45NyR0D/yH5ioaY=;
+  b=RfuZt35xZEsJ0WS7223nq1GRmwkHi/Ptdv3fUEH0hOyebSKhlTOYaEaa
+   K1x3+jhZMnRYJFH0Jqe+JbSAiz8RzuJnbRkHSxQ/kuf3KHWC0bU7f6TWg
+   Td2ef1aqhV4aLjW7Xpwu4PkACQPEJupEYWZZ1OtZ6QKniiSzTnwA/gWJo
+   8=;
+IronPort-SDR: 852IGI2ccF7rlZp21kgF7tJPvTK1iXpluB4qRjimsaR2uQ3AsLsKyhhVTlG5bJ7XJ2GnbflUZA
+ 0tjSgGlLDaig==
+X-IronPort-AV: E=Sophos;i="5.72,337,1580774400"; 
+   d="scan'208";a="26637487"
+Subject: Re: [PATCH 3/3] arch/x86: Optionally flush L1D on context switch
+Thread-Topic: [PATCH 3/3] arch/x86: Optionally flush L1D on context switch
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 02 Apr 2020 22:18:58 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 90BEBA2361;
+        Thu,  2 Apr 2020 22:18:55 +0000 (UTC)
+Received: from EX13D01UWB001.ant.amazon.com (10.43.161.75) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 2 Apr 2020 22:18:55 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13d01UWB001.ant.amazon.com (10.43.161.75) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 2 Apr 2020 22:18:54 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
+ Thu, 2 Apr 2020 22:18:54 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "bp@alien8.de" <bp@alien8.de>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>
+Thread-Index: AQHWCLejDt1H7tG0W0uohgcqhgtMwKhmZcqAgAACKgA=
+Date:   Thu, 2 Apr 2020 22:18:54 +0000
+Message-ID: <b6655e68246bb19bd1dde17602c80dc4d9c9d2c8.camel@amazon.com>
+References: <20200402062401.29856-1-sblbir@amazon.com>
+         <20200402062401.29856-4-sblbir@amazon.com> <20200402221109.GJ9352@zn.tnic>
+In-Reply-To: <20200402221109.GJ9352@zn.tnic>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.171]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <481516BA7F7FA54A887902A526E7BDA6@amazon.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> +void nvmet_bdev_ns_revalidate(struct nvmet_ns *ns)
-> +{
-> +	loff_t size;
-> +
-> +	size = i_size_read(ns->bdev->bd_inode);
-> +
-> +	if (ns->size != size)
-> +		ns->size = size;
-
-Why is the if useful?
-
-> +}
-> +
->   static u16 blk_to_nvme_status(struct nvmet_req *req, blk_status_t blk_sts)
->   {
->   	u16 status = NVME_SC_SUCCESS;
-> diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
-> index cd5670b83118..c102437db72a 100644
-> --- a/drivers/nvme/target/io-cmd-file.c
-> +++ b/drivers/nvme/target/io-cmd-file.c
-> @@ -80,6 +80,20 @@ int nvmet_file_ns_enable(struct nvmet_ns *ns)
->   	return ret;
->   }
->   
-> +void nvmet_file_ns_revalidate(struct nvmet_ns *ns)
-> +{
-> +	struct kstat stat;
-> +
-> +	if (!ns->file)
-> +		return;
-
-When is !ns->file expected?
+T24gRnJpLCAyMDIwLTA0LTAzIGF0IDAwOjExICswMjAwLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6
+DQo+IENBVVRJT046IFRoaXMgZW1haWwgb3JpZ2luYXRlZCBmcm9tIG91dHNpZGUgb2YgdGhlIG9y
+Z2FuaXphdGlvbi4gRG8gbm90DQo+IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5s
+ZXNzIHlvdSBjYW4gY29uZmlybSB0aGUgc2VuZGVyIGFuZCBrbm93DQo+IHRoZSBjb250ZW50IGlz
+IHNhZmUuDQo+IA0KPiANCj4gDQo+IE9uIFRodSwgQXByIDAyLCAyMDIwIGF0IDA1OjI0OjAxUE0g
+KzExMDAsIEJhbGJpciBTaW5naCB3cm90ZToNCj4gPiAraW50IGVuYWJsZV9sMWRfZmx1c2hfZm9y
+X3Rhc2soc3RydWN0IHRhc2tfc3RydWN0ICp0c2spDQo+ID4gK3sNCj4gPiArICAgICBzdHJ1Y3Qg
+cGFnZSAqcGFnZTsNCj4gPiArICAgICBpbnQgcmV0ID0gMDsNCj4gPiArDQo+ID4gKyAgICAgaWYg
+KHN0YXRpY19jcHVfaGFzKFg4Nl9GRUFUVVJFX0ZMVVNIX0wxRCkpDQo+ID4gKyAgICAgICAgICAg
+ICBnb3RvIGRvbmU7DQo+ID4gKw0KPiA+ICsgICAgIHBhZ2UgPSBSRUFEX09OQ0UobDFkX2ZsdXNo
+X3BhZ2VzKTsNCj4gPiArICAgICBpZiAodW5saWtlbHkoIXBhZ2UpKSB7DQo+ID4gKyAgICAgICAg
+ICAgICBtdXRleF9sb2NrKCZsMWRfZmx1c2hfbXV0ZXgpOw0KPiA+ICsgICAgICAgICAgICAgaWYg
+KCFsMWRfZmx1c2hfcGFnZXMpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgbDFkX2ZsdXNo
+X3BhZ2VzID0gYWxsb2NfbDFkX2ZsdXNoX3BhZ2VzKCk7DQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgIGlmICghbDFkX2ZsdXNoX3BhZ2VzKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHJldHVybiAtRU5PTUVNOw0KPiANCj4gRG8gSSBzZWUgaXQgY29ycmVjdGx5IHRoYXQgeW91
+J2xsIHJldHVybiBoZXJlIHdpdGggbDFkX2ZsdXNoX211dGV4IHN0aWxsDQo+IGhlbGQ/DQoNCkRh
+cm4uLiA6KA0KDQpJIGhhZCBnb3RvIGRvbmUgdG8gcmVsZWFzZSB0aGUgbXV0ZXggZWFybGllciwg
+bGV0IG1lIGZpeCB0aGF0IDopDQoNClRoYW5rcywNCkJhbGJpciBTaW5naA0KDQo+IA0KPiA+ICsg
+ICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgICAgICAgbXV0ZXhfdW5sb2NrKCZsMWRfZmx1c2hf
+bXV0ZXgpOw0KPiA+ICsgICAgIH0NCj4gPiArICAgICAvKiBJIGRvbid0IHRoaW5rIHdlIG5lZWQg
+dG8gd29ycnkgYWJvdXQgS1NNICovDQo+IA0KPiBQbHMgdXNlIHBhc3NpdmUgdm9pY2U6IG5vICJ3
+ZSIgb3IgIkkiLCBldGMuDQo+IA0KPiAtLQ0KPiBSZWdhcmRzL0dydXNzLA0KPiAgICAgQm9yaXMu
+DQo+IA0KPiBodHRwczovL3Blb3BsZS5rZXJuZWwub3JnL3RnbHgvbm90ZXMtYWJvdXQtbmV0aXF1
+ZXR0ZQ0K
