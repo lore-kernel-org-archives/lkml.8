@@ -2,169 +2,127 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85C4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86514C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0212078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D87F2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cxn+mi5l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732432AbgDBO12 (ORCPT
+        id S1732686AbgDBO2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:27:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46222 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgDBO12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:27:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 81969AC44;
-        Thu,  2 Apr 2020 14:27:25 +0000 (UTC)
-Message-ID: <47c543e2144d5247743548b00d1931e9fc217f43.camel@suse.de>
-Subject: Re: [PATCH v6 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
- when present
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
-Date:   Thu, 02 Apr 2020 16:27:23 +0200
-In-Reply-To: <20200401204149.GA131584@google.com>
-References: <20200401204149.GA131584@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-UbnwTZ/sE1EQtQ8St3GX"
-User-Agent: Evolution 3.34.2 
-MIME-Version: 1.0
+        Thu, 2 Apr 2020 10:28:05 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40017 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731874AbgDBO2F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:28:05 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s8so2309422wrt.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=L6/ijDa/Jd9lpmxJXYPH3CFr+MtNwUzGkblaHQTuEUE=;
+        b=Cxn+mi5l8LNcQ9ooeTVNyp7YknSO5b0dzRvVoadai2f9VqETOlr7uW+s2jR5paIkPV
+         9FuWrxFWvscGJ0X8P1sDj7EeEOsKRVjYsEXZcCDsVs26wsti5C56AAdP8QWFz6wXeaHF
+         NTGZzWjxHI8/HKg3RyfaeNaXP8pVJYkQAZamfx953+Gwt7Huv7wc+GXGjUWL73KdYblM
+         cA2Eb5ZO6bdNzqEtRwF6IAJHnjcmBUZRmFK+FDf2gO0lMF5hi8lKxCQijDbjRVwTSM7e
+         qF12rf/yC5hAd5qU1IS5AiCQmgyzVTuMmY9apGgF/1cauc3E5aEndR8dpiFNf1O2XBd8
+         cqhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=L6/ijDa/Jd9lpmxJXYPH3CFr+MtNwUzGkblaHQTuEUE=;
+        b=LVxWxzYW85sEEuwUIbUHDVRaNdZROGAx8bH1RY+1/pWxXJyaPkqXsQuJIJ/3uZMom8
+         9bbTRL6glKeSo2MhBaddmxVtDUJetY+5t5Dks7qFO+SgNoXatG4frMW+LnuA74HntlMO
+         EwVEAd9udLyEiZYDtaa5eS0BB6IL8oxBfF8giDWR87TXEVKQPJkfRcLknnUEiSSA2qoM
+         AJ6X5hwLHGXpDRIjVK88VS9W6A8NdT0kuUtVta6zxOC2OVeuoTt/4F07TyHh1S4yv8do
+         hVfqe2iBb3KWHvFHKJCKs31G282uMePQ/qU6aar9soJbSRHg6HJW0e7W4njyA2yDl8zA
+         hO8g==
+X-Gm-Message-State: AGi0Puatqu3XCN5Uq63mNxvjeYTOl+TuSh0u+tG/t4Ta6luSX7KLzdF5
+        tjgsBn8403m5ig0ZUTqenEGn3g==
+X-Google-Smtp-Source: APiQypIUdnQDDdOEoeXFn6SQz3wAN0BAYyPNar/ytXY1aSsVIPaUfDXx8RyvFPho8qNwZDC8esAm6Q==
+X-Received: by 2002:a5d:53ce:: with SMTP id a14mr3711084wrw.129.1585837681758;
+        Thu, 02 Apr 2020 07:28:01 -0700 (PDT)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:4b2:e366:e86f:261a])
+        by smtp.gmail.com with ESMTPSA id a7sm7045186wmm.34.2020.04.02.07.28.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 07:28:01 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
+Cc:     amit.kucheria@verdurent.com,
+        linux-pm@vger.kernel.org (open list:THERMAL),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH V2 1/9] thermal: Move default governor config option to the internal header
+Date:   Thu,  2 Apr 2020 16:27:39 +0200
+Message-Id: <20200402142747.8307-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The default governor set at compilation time is a thermal internal
+business, no need to export to the global thermal header.
 
---=-UbnwTZ/sE1EQtQ8St3GX
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Move the config options to the internal header.
 
-Hi Bjorn,
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/thermal/thermal_core.h | 11 +++++++++++
+ include/linux/thermal.h        | 11 -----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-On Wed, 2020-04-01 at 15:41 -0500, Bjorn Helgaas wrote:
-> On Tue, Mar 24, 2020 at 07:28:11PM +0100, Nicolas Saenz Julienne wrote:
-> > xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
->=20
-> Is there a function name for this fixup that you can mention?
-
-Yes, rpi_firmware_init_vl805(), I'll update the description.
-
-> > RPi4's VideoCore firmware interface to be up and running. It's possible
-> > for both initializations to race, so make sure it's available prior to
-> > starting.
->=20
-> I guess "both initializations" means brcm_pcie_probe() and something
-> else?  It'd be nice to include that function name here, too.
-
-Noted, I'll be more explicit on the next version of the series. More in dep=
-th
-explanation below.
-
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >=20
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> > b/drivers/pci/controller/pcie-brcmstb.c
-> > index 3a10e678c7f4..a3d3070a5832 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -28,6 +28,8 @@
-> >  #include <linux/string.h>
-> >  #include <linux/types.h>
-> > =20
-> > +#include <soc/bcm2835/raspberrypi-firmware.h>
-> > +
-> >  #include "../pci.h"
-> > =20
-> >  /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config reg=
-s */
-> > @@ -917,11 +919,24 @@ static int brcm_pcie_probe(struct platform_device
-> > *pdev)
-> >  {
-> >  	struct device_node *np =3D pdev->dev.of_node, *msi_np;
-> >  	struct pci_host_bridge *bridge;
-> > +	struct device_node *fw_np;
-> >  	struct brcm_pcie *pcie;
-> >  	struct pci_bus *child;
-> >  	struct resource *res;
-> >  	int ret;
-> > =20
-> > +	/*
-> > +	 * We have to wait for the Raspberry Pi's firmware interface to be up
-> > +	 * as some PCI fixups depend on it.
->=20
-> It'd be nice to know the nature of this dependency between the
-> firmware interface and the fixups.  This may be useful for future
-> maintenance.  E.g., if PCI config access doesn't work until the
-> firmware interface is up, that would affect almost everything.  But
-> you say "some PCI fixups", so I suppose the actual dependency is
-> probably something else.
-
-Sorry it wasn't clear enough, I'll redo this comment. Also note that the PC=
-Ie
-bus and the XHCI chip are hardwired, so that's the only device that'll ever=
- be
-available on the bus.
-
-VIA805's XHCI firmware has to be loaded trough RPi's firmware mailbox in
-between the PCIe bus probe and the subsequent USB probe. Note that a PCI re=
-set
-clears the firmware. The only mechanism available in between the two operat=
-ions
-are PCI Fixups. These are limited in their own way, as I can't return
--EPROBE_DEFER if the firmware interface isn't available yet. Hence the need=
- for
-an explicit dependency between pcie-brcmstb and raspberrypi's firmware mail=
-box
-device.
-
-Your concern here showcases this series' limitations. From a high level
-perspective it's not clear to me who should be responsible for downloading =
-the
-firmware. And I get the feeling I'm abusing PCI fixups. I haven't found any
-smart way to deal with this three way dependency of platform/non-platform
-devices. I even looked into adding -EPROBE_DEFER support to fixups, but I f=
-ear
-that would entail moving them into the core device definition.
-
-Regards,
-Nicolas
-
-
---=-UbnwTZ/sE1EQtQ8St3GX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6F9ksACgkQlfZmHno8
-x/7wXQf9GeRwGPIeI/wbeH0RFkXsyiFyaYxhvRtWla25hLtNxPLBoPWmR9sR5YP3
-8ZM10ZELD5DqgwBhBeWqJk43ZzNYnJACp97N2fe7wZBVXFx9fCtlG1VmcqG02CiT
-JkIgFDeAAq5tjbgWfKEBtTiLXch+C66Ja+7H7XOAm0RhEdVDqhrCI9lZecoHYWev
-0TarGDoABp25KqujbYb/TXFzg4LPMEA39tNdvt8slPf28Z5En4IdPUpogXQ6+fA6
-WbbY64G1WCnBQBlnB/XFRX+cuVRcwX+FImDSzSowaEZHeuMyC1qXQcmMHkym59KP
-0cMQjaZhNNzZpO26RCF2+eJSzDzS5Q==
-=jbBy
------END PGP SIGNATURE-----
-
---=-UbnwTZ/sE1EQtQ8St3GX--
+diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+index 37cd4e2bead2..828305508556 100644
+--- a/drivers/thermal/thermal_core.h
++++ b/drivers/thermal/thermal_core.h
+@@ -12,6 +12,17 @@
+ #include <linux/device.h>
+ #include <linux/thermal.h>
+ 
++/* Default Thermal Governor */
++#if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
++#define DEFAULT_THERMAL_GOVERNOR       "step_wise"
++#elif defined(CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE)
++#define DEFAULT_THERMAL_GOVERNOR       "fair_share"
++#elif defined(CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE)
++#define DEFAULT_THERMAL_GOVERNOR       "user_space"
++#elif defined(CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR)
++#define DEFAULT_THERMAL_GOVERNOR       "power_allocator"
++#endif
++
+ /* Initial state of a cooling device during binding */
+ #define THERMAL_NO_TARGET -1UL
+ 
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index 448841ab0dca..71cff87dcb46 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -32,17 +32,6 @@
+ /* use value, which < 0K, to indicate an invalid/uninitialized temperature */
+ #define THERMAL_TEMP_INVALID	-274000
+ 
+-/* Default Thermal Governor */
+-#if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
+-#define DEFAULT_THERMAL_GOVERNOR       "step_wise"
+-#elif defined(CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE)
+-#define DEFAULT_THERMAL_GOVERNOR       "fair_share"
+-#elif defined(CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE)
+-#define DEFAULT_THERMAL_GOVERNOR       "user_space"
+-#elif defined(CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR)
+-#define DEFAULT_THERMAL_GOVERNOR       "power_allocator"
+-#endif
+-
+ struct thermal_zone_device;
+ struct thermal_cooling_device;
+ struct thermal_instance;
+-- 
+2.17.1
 
