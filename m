@@ -2,93 +2,144 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29156C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DC0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3720206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7914C208E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:44:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gijeFTk5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JpjpQ183"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389372AbgDBPmz (ORCPT
+        id S2389446AbgDBPoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:42:55 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39083 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389120AbgDBPmy (ORCPT
+        Thu, 2 Apr 2020 11:44:04 -0400
+Received: from mail-yb1-f202.google.com ([209.85.219.202]:47087 "EHLO
+        mail-yb1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389406AbgDBPoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:42:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585842173;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CTOYr9KXQUzM9+XwJrP/4qu2PE88TiWc2Y0lHTEoqhA=;
-        b=gijeFTk5a5MiEzV4hdpBGzY1CZ2WAtqmZZ10npzdPhwRrWCLpSepmzBTLCzsNG36TDz/n7
-        3hYoScKGFuw+0ADhiRQ8CJEtkPhwm9anTy6MrlMPByzkRsIpiIru9xFOLrCljIiW3mfpYQ
-        tvCGW8/NQ4IpirL0ZdsfyOL76YfxyNc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-268-Nqp4JTTMPki3dWjiR2Rn7A-1; Thu, 02 Apr 2020 11:42:52 -0400
-X-MC-Unique: Nqp4JTTMPki3dWjiR2Rn7A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC8491005513;
-        Thu,  2 Apr 2020 15:42:49 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A7EA85E000;
-        Thu,  2 Apr 2020 15:42:46 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpegv4=wAi+mH32pHM9g8gk+JGESWa25n04BwfnkhVBf=3rA@mail.gmail.com>
-References: <CAJfpegv4=wAi+mH32pHM9g8gk+JGESWa25n04BwfnkhVBf=3rA@mail.gmail.com> <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com> <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk> <2418286.1585691572@warthog.procyon.org.uk> <20200401090445.6t73dt7gz36bv4rh@ws.net.home> <2488530.1585749351@warthog.procyon.org.uk> <2488734.1585749502@warthog.procyon.org.uk> <CAJfpeguLJcAEgx2JWRNcKMkyFTWB0r4wS6F4fJHK3VHtY=EjXQ@mail.gmail.com> <2590276.1585756914@warthog.procyon.org.uk> <CAJfpeguxDiq3BW94AVFhgY75P+jy_+jk3pdyNZ5z-aJPXNvvGA@mail.gmail.com> <3070724.1585840971@warthog.procyon.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3072198.1585842165.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 02 Apr 2020 16:42:45 +0100
-Message-ID: <3072199.1585842165@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Thu, 2 Apr 2020 11:44:03 -0400
+Received: by mail-yb1-f202.google.com with SMTP id w2so4771422ybs.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=PEj2SoLtIBIPJsyo0FA9xsoHE/gV16M6OsZLhlT2sTo=;
+        b=JpjpQ183wAD5rxCPvMIWu21NdcQRzrWzLNy9v/EQUez8k/gTd9dofYnrvh0ayhUHDS
+         p9SB7a3KI+u/I0A2Sa2eMC9W3R/H0M8K9Fm3dP8KWn6rEbhV3Kltqc9SfS0r1OrVZ9MI
+         9rMpQ8f6gPvXcrFxY+cgCJMPhfJv8zWjhyjguDIikP94GkMOIFrFeLwOgyw/idBvTtCr
+         9SIAAQd+LXXhHW5ohcU1jA/srC7BipOHVEKcrsvZt547dyyPI1E6V/0HgQ6K09b0WlSY
+         QQ45+Z+yqk2TwxbhfP0qAl7jDGykOenUh+8Tt3HVvWw5ulsVS5f/UY780Lo1fvOBfewg
+         ILJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=PEj2SoLtIBIPJsyo0FA9xsoHE/gV16M6OsZLhlT2sTo=;
+        b=fRFJno2IijNsttuSrNbQo0MV3pfEXmGnWAQInrMUqimPtdSq0I+fJ/0rcM9MoU2MG+
+         c/hbhuooKyXfos4I6ynz2pjdV0Z6tLkXzVvF+z8kKUOM9rMeLcfy7mEojwy6umQzyvDx
+         LCZyEDrzHc1qwg4ru0bVW2t47eG89D19TkKjsNGgR2XzJksajL0hUne0P45JKBFvyk80
+         WRrcVm84oe/rctiedzzIJxbRzlZmrn3bHYo8SBQ/XY95I5WMrdK6YURn7SgF9vsUymir
+         bsRVK8SlqCmYmbi8tML0zZ41HZZM0oFrUQZrmZL7qU6ZDWKm1h43kBwmXC5mnnk1fzoZ
+         mebw==
+X-Gm-Message-State: AGi0PuZgeICyDl8iqMn1cSJ5Zx+vbRpL+yj1pVelL7ongfrcxBOPOav0
+        JWeQ+pTHw0Ra0gIHLsqAHG07wAre5EPf
+X-Google-Smtp-Source: APiQypJ9FfJfiYCUtHzmEMBN1Cawne5av8EOwvTFcw6T/rLH8SXcTDps1rzmMJy6ltoERMLVzcNsIY6pe3HJ
+X-Received: by 2002:a25:5f07:: with SMTP id t7mr6458820ybb.411.1585842242499;
+ Thu, 02 Apr 2020 08:44:02 -0700 (PDT)
+Date:   Thu,  2 Apr 2020 08:43:52 -0700
+Message-Id: <20200402154357.107873-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH v2 0/5] Benchmark and improve event synthesis performance
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrey Zhizhikin <andrey.z@gmail.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+Event synthesis is performance critical in common tasks using perf. For
+example, when perf record starts in system wide mode the /proc file
+system is scanned with events synthesized for each process and all
+executable mmaps. With large machines and lots of processes, we have seen
+O(seconds) of wall clock time while synthesis is occurring.
 
-> > ext4_show_mount(), for example, doesn't lock against "mount -o remount=
-", so
-> > the configuration can be changing whilst it's being rendered to text.
-> =
+This patch set adds a benchmark for synthesis performance in a new
+benchmark collection called 'internals'. The benchmark uses the
+machine__synthesize_threads function, single threaded on the perf process
+with a 'tool' that just drops the events, to measure how long synthesis
+takes.
 
-> Does s_umount nest inside namespace_sem?  I really don't see the
-> relation of those locks.
+By profiling this benchmark 2 performance bottlenecks were identified,
+hugetlbfs_mountpoint and stdio. The impact of theses changes are:
 
-If I understand aright what Al has told me, it's a bad idea to do any bloc=
-king
-operation inside of namespace_sem apart from kmalloc(GFP_KERNEL).
+Before:
+Average synthesis took: 167.616800 usec
+Average data synthesis took: 208.655600 usec
 
-David
+After hugetlbfs_mountpoint scalability fix:
+Average synthesis took: 120.195100 usec
+Average data synthesis took: 156.582300 usec
+
+After removal of stdio in /proc/pid/maps code:
+Average synthesis took: 67.189100 usec
+Average data synthesis took: 102.451600 usec
+
+Time was measured on an Intel Xeon 6154 compiling with Debian gcc 9.2.1.
+
+v2 of this patch set adds the new benchmark to the perf-bench man page
+and addresses review comments from Jiri Olsa, thanks!
+
+Two patches in the set were sent to LKML previously but are included
+here for context around the benchmark performance impact:
+https://lore.kernel.org/lkml/20200327172914.28603-1-irogers@google.com/T/#u
+https://lore.kernel.org/lkml/20200328014221.168130-1-irogers@google.com/T/#u
+
+A future area of improvement could be to add the perf top
+num-thread-synthesize option more widely to other perf commands, and
+also to benchmark its effectiveness.
+
+Ian Rogers (4):
+  perf bench: add event synthesis benchmark
+  perf synthetic-events: save 4kb from 2 stack frames
+  tools api: add a lightweight buffered reading api
+  perf synthetic events: Remove use of sscanf from /proc reading
+
+Stephane Eranian (1):
+  tools api fs: make xxx__mountpoint() more scalable
+
+ tools/lib/api/fs/fs.c                   |  17 +++
+ tools/lib/api/fs/fs.h                   |  12 ++
+ tools/lib/api/io.h                      | 107 ++++++++++++++
+ tools/perf/Documentation/perf-bench.txt |   8 ++
+ tools/perf/bench/Build                  |   2 +-
+ tools/perf/bench/bench.h                |   2 +-
+ tools/perf/bench/synthesize.c           | 101 ++++++++++++++
+ tools/perf/builtin-bench.c              |   6 +
+ tools/perf/util/synthetic-events.c      | 177 +++++++++++++++---------
+ 9 files changed, 367 insertions(+), 65 deletions(-)
+ create mode 100644 tools/lib/api/io.h
+ create mode 100644 tools/perf/bench/synthesize.c
+
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
 
