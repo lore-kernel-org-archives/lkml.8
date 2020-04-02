@@ -2,79 +2,74 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272CFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD5AC10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0493620784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C232078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgDBGCo (ORCPT
+        id S1728789AbgDBGLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 02:02:44 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:4101 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgDBGCo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 02:02:44 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee45e857fdeda6-54efe; Thu, 02 Apr 2020 14:02:07 +0800 (CST)
-X-RM-TRANSID: 2ee45e857fdeda6-54efe
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65e857fdd42d-1e2da;
-        Thu, 02 Apr 2020 14:02:06 +0800 (CST)
-X-RM-TRANSID: 2ee65e857fdd42d-1e2da
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     robdclark@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     joro@8bytes.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH v2]iommu/qcom:fix local_base status check
-Date:   Thu,  2 Apr 2020 14:03:33 +0800
-Message-Id: <20200402060333.9156-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Thu, 2 Apr 2020 02:11:20 -0400
+Received: from mga17.intel.com ([192.55.52.151]:59678 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgDBGLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 02:11:20 -0400
+IronPort-SDR: X7OAguWcNgc63dhsQYSMUkZ5/eGYG+nlqj0e+oVGSdqUaHlNa/WE534AeRvPsDu+cuAGfSZca4
+ yTcALrSdRXtQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 23:11:20 -0700
+IronPort-SDR: exkOiveDNLcOjGVtjAPqlsrbMD3aFL+4RW721fQJhvG/MIKPcC5/ny3qLp2ousnrxP/f3IAomf
+ tDmQVmGl9eEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,334,1580803200"; 
+   d="scan'208";a="396244478"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga004.jf.intel.com with ESMTP; 01 Apr 2020 23:11:16 -0700
+Date:   Thu, 2 Apr 2020 14:10:00 +0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@ucw.cz>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH][v2] PM / sleep: Add pm_debug_messages boot command
+ control
+Message-ID: <20200402061000.GA6633@chenyu-office.sh.intel.com>
+References: <20200329144640.20536-1-yu.c.chen@intel.com>
+ <CAJZ5v0gV2Tn_CQoJiuR92gjJ8-xjzLPY8esAkxgy=W8YkvUNyg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gV2Tn_CQoJiuR92gjJ8-xjzLPY8esAkxgy=W8YkvUNyg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-------v2-----------------
-As requested, add some {} around this chunk.
+Hi Rafael,
+On Wed, Apr 01, 2020 at 11:43:51AM +0200, Rafael J. Wysocki wrote:
+> On Sun, Mar 29, 2020 at 4:48 PM Chen Yu <yu.c.chen@intel.com> wrote:
+> > +__setup("pm_debug_message", pm_debug_message_setup);
+> 
+> I'd call this "pm_debug_messages" (just like the sysfs knob) and
+> rename the rest accordingly.
+Okay, I'll do in next version.
 
-------v1-----------------
-Release resources when exiting on error.
-
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- drivers/iommu/qcom_iommu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-index 4328da0b0..c08aa9651 100644
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -813,8 +813,11 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
- 	qcom_iommu->dev = dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (res)
-+	if (res) {
- 		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(qcom_iommu->local_base))
-+			return PTR_ERR(qcom_iommu->local_base);
-+	}
- 
- 	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
- 	if (IS_ERR(qcom_iommu->iface_clk)) {
--- 
-2.20.1.windows.1
-
-
-
+Thanks,
+Chenyu
