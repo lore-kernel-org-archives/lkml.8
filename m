@@ -2,173 +2,136 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023C8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF86C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB015206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:34:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wNmL09Wq"
+	by mail.kernel.org (Postfix) with ESMTP id A33092078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387979AbgDBKeU (ORCPT
+        id S2387994AbgDBKev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:34:20 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42928 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387610AbgDBKeT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:34:19 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 139so3307342qkd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 03:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LEP3RMsbwsrI38M6GC4MFJAeeR3HIT91ewh4ArtAzP0=;
-        b=wNmL09WqNAJCq/Zh7CB+zsPu6hCH6lwgl7TSW86QaaVtklcYMl0UFCOGoLO4c/O+E8
-         48ruYKc3EMXGfuats9p8cObcwf8+STLBDY2OW6ElsvqAvPnPUmePoTj81Lgbs/UIXIyA
-         Ej1wBVNPDC+vArdrWOzb1h7S6DhdVhM+um57UZ5SUVzjIYnnEJyn8cJ7yBCpxVV+4lQW
-         OpZEgAaqLZAJq+MJTZMVOunJlAB5b24LUqtA8Gbze2TCVXVYF7tpfwWFNIVtSzPfWQKx
-         4xnPB2QxUGCgvYMCZv/SHHrk3WkRiWWRiJeEUD7ngt1NQc/O5Ddsy1HqozmlCISuNG0S
-         V7Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LEP3RMsbwsrI38M6GC4MFJAeeR3HIT91ewh4ArtAzP0=;
-        b=PNOcl88eMewPZYsWtY0NFTpm0y6D7ZY+bx6Ei3bGyHkWi+ho9hW733xv044os6vlow
-         /UFU4OS4yavZFVav3CSKozxZmDSXMRgX34h5o4FxxEh1s1HVIUEVO0K6FoE0vJBnfgkg
-         JLoHLwd6fGV/FdpDy/GouUbAG1qRFWxkHQVsy13INakGfkw4qyumY3FGkWUM2LqtSaWB
-         D6EmeU3jwbDrivxDiCR+B/Hg8sXeum1iCee1w3qik+MB4ZHCqT9WXVrhBRRXSCbEgqZ0
-         tdT1ZpbQE0yyxk84rWQRUq9enicEPiUZM7WI72XnnrOcqL8lR66ExeApHADy9RW4BBq5
-         V2jA==
-X-Gm-Message-State: AGi0PuYKGRGIhIGavrVqK0ghxZVfaU0U8eXIDvRpYu64w2lT31nMk/oF
-        BTf4JScUgxwX2EecGylcGfVIcFoJ9Q7QkWYrw9u9QQ==
-X-Google-Smtp-Source: APiQypIOWiL9o+vRtZcgU4CkXRpytuU3rlYSZ7U093Yf4i6Z+QL4DvnkmoljSMw2R7FPJC+7DGue8ruoNLwJ0szuoOA=
-X-Received: by 2002:a05:620a:348:: with SMTP id t8mr2337035qkm.407.1585823657756;
- Thu, 02 Apr 2020 03:34:17 -0700 (PDT)
+        Thu, 2 Apr 2020 06:34:51 -0400
+Received: from mga17.intel.com ([192.55.52.151]:11633 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387709AbgDBKev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 06:34:51 -0400
+IronPort-SDR: acahSyckWk4vtwftEPcOL6VdNlHeeFnvxdh+hjTdekymvV6lgG+FZ37fNDvb+E1PE+6R11DFK0
+ qyEfTf94eVAg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 03:34:49 -0700
+IronPort-SDR: x1SMarOvKyOMzGfNszmZdzBhA2BSgS5sBkKeQNwkbLZJffPM/sxewNFyBYVS5YmL9ZWFGZyhYf
+ q7TpgjW0vZPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
+   d="scan'208";a="360157801"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 02 Apr 2020 03:34:48 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 02 Apr 2020 13:34:47 +0300
+Date:   Thu, 2 Apr 2020 13:34:47 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Ajay Gupta <ajayg@nvidia.com>
+Cc:     linux-i2c@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Subject: Re: [BUG] i2c_nvidia_gpu takes long time and makes system suspend &
+ resume failed with NVIDIA cards
+Message-ID: <20200402103447.GD1886416@kuha.fi.intel.com>
+References: <CAPpJ_edj++oy7_EDN95tM+BPdYFOztpCrRh-cfzFrY6unJb1Rw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200401180907.202604-1-trishalfonso@google.com> <20200401180907.202604-3-trishalfonso@google.com>
-In-Reply-To: <20200401180907.202604-3-trishalfonso@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 2 Apr 2020 12:34:05 +0200
-Message-ID: <CACT4Y+a6ijfY9styijimkxw2dd7xXTobw1vbj2kY_=GjhiUOZA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] KASAN: Testing Documentation
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPpJ_edj++oy7_EDN95tM+BPdYFOztpCrRh-cfzFrY6unJb1Rw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 8:09 PM Patricia Alfonso <trishalfonso@google.com> wrote:
->
-> Include documentation on how to test KASAN using CONFIG_TEST_KASAN and
-> CONFIG_TEST_KASAN_USER.
->
-> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+Hi,
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+On Thu, Apr 02, 2020 at 06:22:14PM +0800, Jian-Hong Pan wrote:
+> Hi,
+> 
+> We got some machines like Acer desktop equipped with NVIDIA GTX 1660
+> card, Acer Predator PH315-52 equipped with NVIDIA GeForce RTX 2060
+> Mobile and ASUS UX581LV equipped with NNVIDIA GeForce RTX 2060.
+> We found them take long time (more than 50 seconds) to resume after
+> suspend.  During the resuming time, the screen is blank.  And check
+> the dmesg, found the error during resume:
+> 
+> [   28.060831] PM: suspend entry (deep)
+> [   28.144260] Filesystems sync: 0.083 seconds
+> [   28.150219] Freezing user space processes ...
+> [   48.153282] Freezing of tasks failed after 20.003 seconds (1 tasks
+> refusing to freeze, wq_busy=0):
+> [   48.153447] systemd-udevd   D13440   382    330 0x80004124
+> [   48.153457] Call Trace:
+> [   48.153504]  ? __schedule+0x272/0x5a0
+> [   48.153558]  ? hrtimer_start_range_ns+0x18c/0x2c0
+> [   48.153622]  schedule+0x45/0xb0
+> [   48.153668]  schedule_hrtimeout_range_clock+0x8f/0x100
+> [   48.153738]  ? hrtimer_init_sleeper+0x80/0x80
+> [   48.153798]  usleep_range+0x5a/0x80
+> [   48.153850]  gpu_i2c_check_status.isra.0+0x3a/0xa0 [i2c_nvidia_gpu]
+> [   48.153933]  gpu_i2c_master_xfer+0x155/0x20e [i2c_nvidia_gpu]
+> [   48.154012]  __i2c_transfer+0x163/0x4c0
+> [   48.154067]  i2c_transfer+0x6e/0xc0
+> [   48.154120]  ccg_read+0x11f/0x170 [ucsi_ccg]
+> [   48.154182]  get_fw_info+0x17/0x50 [ucsi_ccg]
+> [   48.154242]  ucsi_ccg_probe+0xf4/0x200 [ucsi_ccg]
+> [   48.154312]  ? ucsi_ccg_init+0xe0/0xe0 [ucsi_ccg]
+> [   48.154377]  i2c_device_probe+0x113/0x210
+> [   48.154435]  really_probe+0xdf/0x280
+> [   48.154487]  driver_probe_device+0x4b/0xc0
+> [   48.154545]  device_driver_attach+0x4e/0x60
+> [   48.154604]  __driver_attach+0x44/0xb0
+> [   48.154657]  ? device_driver_attach+0x60/0x60
+> [   48.154717]  bus_for_each_dev+0x6c/0xb0
+> [   48.154772]  bus_add_driver+0x172/0x1c0
+> [   48.154824]  driver_register+0x67/0xb0
+> [   48.154877]  i2c_register_driver+0x39/0x70
+> [   48.154932]  ? 0xffffffffc00ac000
+> [   48.154978]  do_one_initcall+0x3e/0x1d0
+> [   48.155032]  ? free_vmap_area_noflush+0x8d/0xe0
+> [   48.155093]  ? _cond_resched+0x10/0x20
+> [   48.155145]  ? kmem_cache_alloc_trace+0x3a/0x1b0
+> [   48.155208]  do_init_module+0x56/0x200
+> [   48.155260]  load_module+0x21fe/0x24e0
+> [   48.155322]  ? __do_sys_finit_module+0xbf/0xe0
+> [   48.155381]  __do_sys_finit_module+0xbf/0xe0
+> [   48.155441]  do_syscall_64+0x3d/0x130
+> [   48.156841]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [   48.158074] RIP: 0033:0x7fba3b4bc2a9
+> [   48.158707] Code: Bad RIP value.
+> [   48.158990] RSP: 002b:00007ffe1da3a6d8 EFLAGS: 00000246 ORIG_RAX:
+> 0000000000000139
+> [   48.159259] RAX: ffffffffffffffda RBX: 000055ca6922c470 RCX: 00007fba3b4bc2a9
+> [   48.159566] RDX: 0000000000000000 RSI: 00007fba3b3c0cad RDI: 0000000000000010
+> [   48.159842] RBP: 00007fba3b3c0cad R08: 0000000000000000 R09: 0000000000000000
+> [   48.160117] R10: 0000000000000010 R11: 0000000000000246 R12: 0000000000000000
+> [   48.160412] R13: 000055ca6922f940 R14: 0000000000020000 R15: 000055ca6922c470
+> 
+> I have filed this to bugzilla and more detail:
+> https://bugzilla.kernel.org/show_bug.cgi?id=206653
+> 
+> Any comment will be appreciated.
 
-> ---
->  Documentation/dev-tools/kasan.rst | 70 +++++++++++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->
-> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
-> index c652d740735d..287ba063d9f6 100644
-> --- a/Documentation/dev-tools/kasan.rst
-> +++ b/Documentation/dev-tools/kasan.rst
-> @@ -281,3 +281,73 @@ unmapped. This will require changes in arch-specific code.
->
->  This allows ``VMAP_STACK`` support on x86, and can simplify support of
->  architectures that do not have a fixed module region.
-> +
-> +CONFIG_TEST_KASAN & CONFIG_TEST_KASAN_USER
-> +-------------------------------------------
-> +
-> +``CONFIG_TEST_KASAN`` utilizes the KUnit Test Framework for testing.
-> +This means each test focuses on a small unit of functionality and
-> +there are a few ways these tests can be run.
-> +
-> +Each test will print the KASAN report if an error is detected and then
-> +print the number of the test and the status of the test:
-> +
-> +pass::
-> +
-> +        ok 28 - kmalloc_double_kzfree
-> +or, if kmalloc failed::
-> +
-> +        # kmalloc_large_oob_right: ASSERTION FAILED at lib/test_kasan.c:163
-> +        Expected ptr is not null, but is
-> +        not ok 4 - kmalloc_large_oob_right
-> +or, if a KASAN report was expected, but not found::
-> +
-> +        # kmalloc_double_kzfree: EXPECTATION FAILED at lib/test_kasan.c:629
-> +        Expected kasan_data->report_expected == kasan_data->report_found, but
-> +        kasan_data->report_expected == 1
-> +        kasan_data->report_found == 0
-> +        not ok 28 - kmalloc_double_kzfree
-> +
-> +All test statuses are tracked as they run and an overall status will
-> +be printed at the end::
-> +
-> +        ok 1 - kasan_kunit_test
-> +
-> +or::
-> +
-> +        not ok 1 - kasan_kunit_test
-> +
-> +(1) Loadable Module
-> +~~~~~~~~~~~~~~~~~~~~
-> +
-> +With ``CONFIG_KUNIT`` built-in, ``CONFIG_TEST_KASAN`` can be built as
-> +a loadable module and run on any architecture that supports KASAN
-> +using something like insmod or modprobe.
-> +
-> +(2) Built-In
-> +~~~~~~~~~~~~~
-> +
-> +With ``CONFIG_KUNIT`` built-in, ``CONFIG_TEST_KASAN`` can be built-in
-> +on any architecure that supports KASAN. These and any other KUnit
-> +tests enabled will run and print the results at boot as a late-init
-> +call.
-> +
-> +(3) Using kunit_tool
-> +~~~~~~~~~~~~~~~~~~~~~
-> +
-> +With ``CONFIG_KUNIT`` and ``CONFIG_TEST_KASAN`` built-in, we can also
-> +use kunit_tool to see the results of these along with other KUnit
-> +tests in a more readable way. This will not print the KASAN reports
-> +of tests that passed. Use `KUnit documentation <https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html>`_ for more up-to-date
-> +information on kunit_tool.
-> +
-> +.. _KUnit: https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html
-> +
-> +``CONFIG_TEST_KASAN_USER`` is a set of KASAN tests that could not be
-> +converted to KUnit. These tests can be run only as a module with
-> +``CONFIG_TEST_KASAN_USER`` built as a loadable module and
-> +``CONFIG_KASAN`` built-in. The type of error expected and the
-> +function being run is printed before the expression expected to give
-> +an error. Then the error is printed, if found, and that test
-> +should be interpretted to pass only if the error was the one expected
-> +by the test.
-> --
-> 2.26.0.rc2.310.g2932bb562d-goog
->
+You are using an outdated kernel, 5.4.0. Please make sure that you can
+reproduce the issue with mainline, or at least with the longterm
+5.4.x.
+
+Ajay, based on the backtrace, the issue seems to be starting from your
+I2C driver. Please take a look at this.
+
+
+thanks,
+
+-- 
+heikki
