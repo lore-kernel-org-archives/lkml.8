@@ -2,178 +2,165 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD4BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D91AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3435B20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA7120675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S6mH9uUI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cTvopqsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388931AbgDBSRi (ORCPT
+        id S2388381AbgDBSWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:17:38 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60468 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgDBSRi (ORCPT
+        Thu, 2 Apr 2020 14:22:16 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:43490 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727734AbgDBSWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 14:17:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032I9cZD150233;
-        Thu, 2 Apr 2020 18:17:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=qWI5T/N7iP2w4FARfmbmB5Xd+vJTWKb7aE+P85B2lzk=;
- b=S6mH9uUICCcIkTsz52Ldr2OvROziVylaQhyM3AzENR09IOZ4pmGrX1PCl0ZMsKL+eUrI
- UqPYZ9FFiVvHbWW8vi/UwRUYOc8Yov1EZxpyFx1oqnYtRUHzt8hOvGWX0UJMg27gz5M6
- To3vbMhttsY2uIx6IA797QhRuVxaP9DR1E7bkXhFV0h3Drv6XTIx3hp5HOW9YBeeLNea
- OKNCg7gE4BNpyeXtauupY98ZZCudBopcbjUTmpHk9EcXCri7x37YWB0qo+QNbGSOS4EX
- PBOebfp0RtrpBkqar03d1bNlKmeffds4eB+rY+UbSe5+ECOXaigxEumbp3yRtKQ1e4x8 UA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 303yunfpc2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 18:17:16 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032ID8SM017175;
-        Thu, 2 Apr 2020 18:17:16 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 304sjq6eb4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 18:17:15 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032IHEb9013046;
-        Thu, 2 Apr 2020 18:17:15 GMT
-Received: from vbusired-dt (/10.154.166.66)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 11:17:14 -0700
-Date:   Thu, 2 Apr 2020 13:17:10 -0500
-From:   Venu Busireddy <venu.busireddy@oracle.com>
-To:     Ashish Kalra <Ashish.Kalra@amd.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
-        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com,
-        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
-Subject: Re: [PATCH v6 03/14] KVM: SVM: Add KVM_SEV_SEND_FINISH command
-Message-ID: <20200402181710.GA655710@vbusired-dt>
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <798316bc964cef34d2760a87de0fb6dc4e5d9af3.1585548051.git.ashish.kalra@amd.com>
+        Thu, 2 Apr 2020 14:22:16 -0400
+Received: by mail-vk1-f196.google.com with SMTP id v129so1212675vkf.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 11:22:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2UQRYNvKvusZq1CNM2OiULfI/O5UBgDCnpol3ajdzr4=;
+        b=cTvopqsvlFzBQ+scHoLdph1rkaUo8FxIt1QUrO45XhpTdABgMZBP9BnDAt2/ZQFayT
+         jm6Oe5z6AID5mB/EeVEZ4yNW7CwVhy7FX9Hl1K3JFriYoVkMkfwgy7+i3gKH1zuwAmSz
+         Xbhav/9izB9kkbrnLANJWRLYP+u7+K55TThUwF7y2nYturX1C0ks9sEbNRmq3+hQTUee
+         b5Hd4ySETzw6SKuBZqOGQScQbBfIHCXz4pyvtIR7H2wnyXhlSXRpIh0OLsNzIu4UazZd
+         FL3E98+kKMQG6SmQ3QNUUTTwiW64oMewOZvKYnz6sfeQits6P4Yhp4fdFej/1tdDK/7u
+         Gnlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2UQRYNvKvusZq1CNM2OiULfI/O5UBgDCnpol3ajdzr4=;
+        b=ixKXouwjYX6T4GrOO3SVy2s/NlOja7dVLOUlVjj3GGTcmY3jX5VHFT2k7NW62HppdD
+         nRV/xJe8nDbapR57meXIZkHAbLl2SmcSKvge+WWrn0wgZ2Tp3vdlnOO4OYzLM7dcBxw/
+         r8al+p4eIqLlMWj1cV8fVc9HD+vpPGoRq319e1L5X7YoqvJraMAt5PZZr3AoV5Sh3hL5
+         nF1ARpo64EDgnF71AD1+2IX0uzM73Vg7q7lO5w/hPAPuRmQfh4s5RKaaRuI3PH2u0FPW
+         Nzy7XGY2zK0J3nEkoSKNM9w55hjzP+GpZ92oV9+5RuyK8WICHw9TXuYn/OBsZjjJhiLq
+         SBuA==
+X-Gm-Message-State: AGi0PuaD0keic3N+HxCvZnxjSaqOgHk4mUhSUTW1sY43uHuwnGhqwZ2J
+        aSE097Utw0VYAy8fQwjEdaUCwwUhRwKoxZ+H4PSPpg==
+X-Google-Smtp-Source: APiQypJ/M3oQw7JsPNDJ+qCIC9xOjZVgvdI/Qjt+HJ5LAoB4q2sCQGSJdbewJQPfQOrwv8MFMy5guoxMEYu78gHFtSY=
+X-Received: by 2002:a1f:5003:: with SMTP id e3mr3198682vkb.59.1585851733351;
+ Thu, 02 Apr 2020 11:22:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <798316bc964cef34d2760a87de0fb6dc4e5d9af3.1585548051.git.ashish.kalra@amd.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
- malwarescore=0 phishscore=0 suspectscore=1 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020140
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- suspectscore=1 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020139
+References: <202004020117.6E434C035@keescook> <CAK7LNAQGTAgtADfY4H-k8X1J9nTMeOWvo8ZFfrUSHQUbhgcLKw@mail.gmail.com>
+In-Reply-To: <CAK7LNAQGTAgtADfY4H-k8X1J9nTMeOWvo8ZFfrUSHQUbhgcLKw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 2 Apr 2020 11:22:02 -0700
+Message-ID: <CAKwvOdnO_-jiQzCmy7pQNMGmZsgD9J=PYXVzOQ1NF1+u44MsOA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: mkcompile_h: Include $LD version in /proc/version
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sandeep Patil <sspatil@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-30 06:20:49 +0000, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
-> 
-> The command is used to finailize the encryption context created with
-> KVM_SEV_SEND_START command.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Steve Rutherford <srutherford@google.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
->  arch/x86/kvm/svm.c                            | 23 +++++++++++++++++++
->  2 files changed, 31 insertions(+)
-> 
-> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-> index f46817ef7019..a45dcb5f8687 100644
-> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
-> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-> @@ -314,6 +314,14 @@ Returns: 0 on success, -negative on error
->                  __u32 trans_len;
->          };
->  
-> +12. KVM_SEV_SEND_FINISH
-> +------------------------
-> +
-> +After completion of the migration flow, the KVM_SEV_SEND_FINISH command can be
-> +issued by the hypervisor to delete the encryption context.
-> +
-> +Returns: 0 on success, -negative on error
+On Thu, Apr 2, 2020 at 10:02 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Kees,
+>
+> On Thu, Apr 2, 2020 at 5:18 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > When doing Clang builds of the kernel, it is possible to link with
+> > either ld.bfd (binutils) or ld.lld (LLVM), but it is not possible to
+> > discover this from a running kernel. Add the "$LD -v" output to
+> > /proc/version.
+> >
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  init/Makefile       | 2 +-
+> >  scripts/mkcompile_h | 8 ++++++--
+> >  2 files changed, 7 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/init/Makefile b/init/Makefile
+> > index 6246a06364d0..82c15bdb42d7 100644
+> > --- a/init/Makefile
+> > +++ b/init/Makefile
+> > @@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
+> >         @$($(quiet)chk_compile.h)
+> >         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@   \
+> >         "$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"    \
+> > -       "$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)"
+> > +       "$(CONFIG_PREEMPT_RT)" "$(LD)" "$(CC) $(KBUILD_CFLAGS)"
+> > diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+> > index 3a5a4b210c86..f98c07709370 100755
+> > --- a/scripts/mkcompile_h
+> > +++ b/scripts/mkcompile_h
+> > @@ -6,7 +6,8 @@ ARCH=$2
+> >  SMP=$3
+> >  PREEMPT=$4
+> >  PREEMPT_RT=$5
+> > -CC=$6
+> > +LD=$6
+> > +CC=$7
+>
+>
+> Just a nit.
+>
+> If you just append 'LD',
+> you do not need to touch the 'CC=$6' line.
+>
+>
+> If you do not mind, I will fold the following
+> on top of your patch.
 
-Didn't notice this earlier. I would suggest changing all occurrences of
-"-negative" to either "negative" or "less than 0" in this file.
+With Kees patch + Masahiro's diff applied:
+$ cat /proc/version
+Linux version 5.6.0-rc7-next-20200330+ (ndesaulniers@<hostname
+scrubbed>) (clang version 11.0.0 (git@github.com:llvm/llvm-project.git
+6d71daed03ced011cd25f4e4f4122a368fdc757d), LLD 11.0.0
+(git@github.com:llvm/llvm-project.git
+6d71daed03ced011cd25f4e4f4122a368fdc757d)) #167 SMP Thu Apr 2 11:17:36
+PDT 2020
 
-> +
->  References
->  ==========
->  
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 8561c47cc4f9..71a4cb3b817d 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -7399,6 +7399,26 @@ static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
->  	return ret;
->  }
->  
-> +static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	struct sev_data_send_finish *data;
-> +	int ret;
-> +
-> +	if (!sev_guest(kvm))
-> +		return -ENOTTY;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->handle = sev->handle;
-> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_FINISH, data, &argp->error);
-> +
-> +	kfree(data);
-> +	return ret;
-> +}
-> +
->  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->  {
->  	struct kvm_sev_cmd sev_cmd;
-> @@ -7449,6 +7469,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->  	case KVM_SEV_SEND_UPDATE_DATA:
->  		r = sev_send_update_data(kvm, &sev_cmd);
->  		break;
-> +	case KVM_SEV_SEND_FINISH:
-> +		r = sev_send_finish(kvm, &sev_cmd);
-> +		break;
->  	default:
->  		r = -EINVAL;
->  		goto out;
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+
+We could actually use this in Android for a VTS test I've, uh, been
+meaning to write.  Also, LOL at scrubbing the "compatible with" part,
+reminds me of user agent strings in the browser, which are god awful.
+
+
+> --- a/init/Makefile
+> +++ b/init/Makefile
+> @@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
+>         @$($(quiet)chk_compile.h)
+>         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@   \
+>         "$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"    \
+> -       "$(CONFIG_PREEMPT_RT)" "$(LD)" "$(CC) $(KBUILD_CFLAGS)"
+> +       "$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)" "$(LD)"
+> diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+> index 8b38a96163e2..5b80a4699740 100755
+> --- a/scripts/mkcompile_h
+> +++ b/scripts/mkcompile_h
+> @@ -6,8 +6,8 @@ ARCH=$2
+>  SMP=$3
+>  PREEMPT=$4
+>  PREEMPT_RT=$5
+> -LD=$6
+> -CC=$7
+> +CC=$6
+> +LD=$7
+
+
+-- 
+Thanks,
+~Nick Desaulniers
