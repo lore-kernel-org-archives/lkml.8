@@ -6,75 +6,105 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34743C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D24BC2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD85206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D2A2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KBXKWSqm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bkN3qGxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388799AbgDBUNg (ORCPT
+        id S2388880AbgDBUNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:13:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51153 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728225AbgDBUNf (ORCPT
+        Thu, 2 Apr 2020 16:13:54 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:34616 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732404AbgDBUNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:13:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585858414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sEVid2/hqzCwbpXVjBCKhiCXLwn+Ox5cTajgLyA7oKE=;
-        b=KBXKWSqmFT5u0p+UOC0EXaFhczTIHfxouC02Zc40tmch7l1EP5rlnQo/VLu3LuQNB9/4XH
-        WsahDhcmaZW9Wvs5UDGweCwIWaQpsQHoUp7bZyez4IqQzvxtw8dBm9EYJPbnIkbfOII7uQ
-        TlAuJgibVWJjnuhotAyB6L5qhvILfBI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-NVKHwL8nNTaO8UvSt3bvrw-1; Thu, 02 Apr 2020 16:13:33 -0400
-X-MC-Unique: NVKHwL8nNTaO8UvSt3bvrw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 793508017CE;
-        Thu,  2 Apr 2020 20:13:31 +0000 (UTC)
-Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B8551001B09;
-        Thu,  2 Apr 2020 20:13:30 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 15:13:28 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Balbir Singh <sblbir@amazon.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, keescook@chromium.org, x86@kernel.org,
-        benh@kernel.crashing.org, dave.hansen@intel.com
-Subject: Re: [PATCH 0/3] arch/x86: Optionally flush L1D on context switch
-Message-ID: <20200402201328.zqnxwaetpk4ubg56@treble>
-References: <20200402062401.29856-1-sblbir@amazon.com>
+        Thu, 2 Apr 2020 16:13:53 -0400
+Received: by mail-ua1-f65.google.com with SMTP id d23so1838953uak.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:13:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E6t7teMCniYXDrukx0/8/B4CgKDn7KxOb6QKlbBBjMY=;
+        b=bkN3qGxK7rRzbiV+PJkqxHAOFPEo5zduKQYrG61/u054K4GYe5G5c4QbrvFU7o4Kz2
+         66dnjnuHvQyuf8frLWyqyHY7P7vpiM4gS/Z2daDfwbqNbzjfiufOHb/+naGmpJ/cA/XH
+         6rmxCIM2ekdipkaPURHP+dWrWnlbSgK49jfrM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E6t7teMCniYXDrukx0/8/B4CgKDn7KxOb6QKlbBBjMY=;
+        b=I//FrNOZ+Hbn/rWtxRBxHSkZj2Bvb6xtJeIDSyaD6l2R4PRmOsJV3U3ma41mWIWiL+
+         Oh+8o0vifqXA+esbeQlAf2gXm83KKfNHqB0f6hEd90o6y5xtHI6K8RqbXVLKjZF6ANLA
+         ik1R5iDxVJ6Gs/qF7MScmVEFcuPRVQlTypwISJXzsiIvMSbutYAdtDlooX6MUwwrYETM
+         YOW+TpCizRcRZdC71rGiNu4LabFyaukF4g4MMV3ot5f/XMmq3apqBQVTW1S0GYfFvNdG
+         cEiTSSTAm+8a9Yuzz/KIh1Z4BLjvjZOo7N9u48NYXj6Sq+E9PFfi8q8x9nlj1nAUh9cI
+         iIvg==
+X-Gm-Message-State: AGi0PuYZ/E6jI6HxXYh75fJoooyk6HFDJ92JJMvrBsvoT8yD1gOjEwb+
+        edmJtkw6RmgXYKpemEr23kL1E0mTUpI=
+X-Google-Smtp-Source: APiQypJj2txoVxWk5LppPNI3x8HlgG16YjQCa1SV6rYrsESOhBzvpRTVFylwdWgsKpFrO0pd5HW2aA==
+X-Received: by 2002:ab0:2e:: with SMTP id 43mr4335687uai.36.1585858432361;
+        Thu, 02 Apr 2020 13:13:52 -0700 (PDT)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id t193sm1667179vke.6.2020.04.02.13.13.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 13:13:51 -0700 (PDT)
+Received: by mail-ua1-f43.google.com with SMTP id m18so1824101uap.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:13:50 -0700 (PDT)
+X-Received: by 2002:ab0:1d10:: with SMTP id j16mr4123848uak.91.1585858429615;
+ Thu, 02 Apr 2020 13:13:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200402062401.29856-1-sblbir@amazon.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <1585660782-23416-1-git-send-email-mkshah@codeaurora.org> <1585660782-23416-6-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1585660782-23416-6-git-send-email-mkshah@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 2 Apr 2020 13:13:38 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XMwRFcNqgAKnTyYc85xgsrWSzs7Q_4nC2kOzpE=YJaUQ@mail.gmail.com>
+Message-ID: <CAD=FV=XMwRFcNqgAKnTyYc85xgsrWSzs7Q_4nC2kOzpE=YJaUQ@mail.gmail.com>
+Subject: Re: [PATCH v15 5/7] soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 05:23:58PM +1100, Balbir Singh wrote:
-> Provide a mechanisn to flush the L1D cache on context switch.  The goal
-> is to allow tasks that are paranoid due to the recent snoop assisted data
-> sampling vulnerabilites, to flush their L1D on being switched out.
+Hi,
 
-Hi Balbir,
+On Tue, Mar 31, 2020 at 6:20 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> +/**
+> + * rpmh_rsc_ctrlr_is_busy: Check if any of the AMCs are busy.
 
-Just curious, is it really vulnerabilities, plural?  I thought there was
-only one: CVE-2020-0550 (Snoop-assisted L1 Data Sampling).
+nit: this is still not quite kerneldoc format.  Specifically, the
+above should be:
 
-(There was a similar one without the "snoop": L1D Eviction Sampling, but
-it's supposed to get fixed in microcode).
+* rpmh_rsc_ctrlr_is_busy() - Check if any of the AMCs are busy
 
--- 
-Josh
+You may think I'm being nit picky, but try running:
 
+scripts/kernel-doc -rst drivers/soc/qcom/rpmh-rsc.c
+
+Now search the output for "Check if any of the AMCs are busy".  It
+won't be there as you have formatted it.  If you fix it to the proper
+format then it shows up.  I'm not saying that you should fix up all
+functions at once but if you're adding new functions why not make them
+compliant?
+
+
+Other than the kerneldoc nitpick which could happen later in a cleanup
+series for the whole driver at once, this patch looks fine to me now.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
