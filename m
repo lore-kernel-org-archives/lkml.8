@@ -2,218 +2,424 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DA9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818A9C2BA16
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355712078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585848251;
-	bh=QRxk5qzPbsHgYvvfvQaMgH88VEqcmn/DBBUnvptetWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ltL/Ql2y9SjovIJLoEaosfFk0JEInpGtJl7a+oRZo7eNSP6Y3cCOyJNfgHCQe/tcu
-	 oDgkgwn7wn9Nxc/4GSEfPsSfH9Nlec8GCM/4lChdormTvr9GLHa83ifr4lX38vaS6e
-	 senMFVuPTvaogHXHn5g7JK9Gu6dni5caxPeB6kao=
+	by mail.kernel.org (Postfix) with ESMTP id CB0702078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389198AbgDBRYJ (ORCPT
+        id S2389547AbgDBRYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:24:09 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37566 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732970AbgDBRYJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:24:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w10so5234299wrm.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 10:24:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gaMt57vPOGEf104iF+Okoz30/leVUnWlYWQaZv9joEs=;
-        b=DNJQBzgs2T4851pBZ9qtjY/2r8inpNWlnKz45ODIcL4jiBpYGCS1g0SCrpd9dyFX2x
-         QPNfF8OsovlKhKl7aXQ/dO0d5UzmPPcfvcSKOaWZgSo7ofMTIlBLnP84POFrtydNc5IE
-         EDJzVL5Aj3uwLpCZ6ERglwz+0uKWdrNKiNC0duw7zJJTuY6Fg5DVIlYhkLEMGt5zHyIn
-         CY6v8bCIU75TLRJM6B856WC9pRiXBf8xICMQeKEvfrJeKldlGk+qlr7y8x3GUMMI434p
-         kqYNyGJhuBoWOn1lK5yb/H9X367jgfA7CUcZ6DXp3oeV0eesZXbDDQaCfrhQmu8fFWFd
-         TJgQ==
-X-Gm-Message-State: AGi0PuYu93dsAscpjW/AdbgmPXpybXP4UBUIuiAUCNZVJbvijgUclxDJ
-        qnJYOe9At1b/PNARLSNbOt4=
-X-Google-Smtp-Source: APiQypJS5BBtet99zjncxG5VPVNNr9mscplYuCzxjsRdatXKvNHcZ1fWM/moVUdNiy2BoQkZZNFs0g==
-X-Received: by 2002:a5d:4e03:: with SMTP id p3mr4440369wrt.408.1585848246012;
-        Thu, 02 Apr 2020 10:24:06 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id 195sm8083093wmb.8.2020.04.02.10.24.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 10:24:05 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 19:24:04 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Roman Gushchin <guro@fb.com>, Aslan Bakirov <aslan@fb.com>,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kernel-team@fb.com, riel@surriel.com,
-        hannes@cmpxchg.org
-Subject: Re: [PATCH 2/2] mm: hugetlb: Use node interface of cma
-Message-ID: <20200402172404.GV22681@dhcp22.suse.cz>
-References: <20200326212718.3798742-1-aslan@fb.com>
- <20200326212718.3798742-2-aslan@fb.com>
- <20200327080610.GV27965@dhcp22.suse.cz>
- <20200327144155.GA194089@carbon.DHCP.thefacebook.com>
- <20200327151339.GF10449@dhcp22.suse.cz>
- <bc4af092-fb30-c8af-564c-ab2c0986109e@suse.cz>
+        Thu, 2 Apr 2020 13:24:17 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2633 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732754AbgDBRYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 13:24:16 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 744F8DD4AA664FA4A246;
+        Thu,  2 Apr 2020 18:24:14 +0100 (IST)
+Received: from localhost (10.47.26.250) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 2 Apr 2020
+ 18:24:13 +0100
+Date:   Thu, 2 Apr 2020 18:24:01 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 04/15] mm/damon: Implement region based sampling
+Message-ID: <20200402182401.000032a6@Huawei.com>
+In-Reply-To: <20200402135959.26336-1-sjpark@amazon.com>
+References: <20200401082222.21242-1-sjpark@amazon.com>
+        <20200402135959.26336-1-sjpark@amazon.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc4af092-fb30-c8af-564c-ab2c0986109e@suse.cz>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.26.250]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 02-04-20 17:20:01, Vlastimil Babka wrote:
-[...]
-> FWIW, for review purposes, this is Roman's patch with all followups from
-> mmotm/next (hopefully didn't miss any) and then squashed with patch 2/2 from
-> this thread. It can be applied like this:
-> 
-> - checkout v5.6
-> - apply patch 1/2 from this thread
-> - apply below
+On Thu, 2 Apr 2020 15:59:59 +0200
+SeongJae Park <sjpark@amazon.com> wrote:
 
-Thanks!
+> On Wed, 1 Apr 2020 10:22:22 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+> 
+> > On Tue, 31 Mar 2020 17:02:33 +0100 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> >   
+> > > On Wed, 18 Mar 2020 12:27:11 +0100
+> > > SeongJae Park <sjpark@amazon.com> wrote:
+> > >   
+> > > > From: SeongJae Park <sjpark@amazon.de>
+> > > > 
+> > > > This commit implements DAMON's basic access check and region based
+> > > > sampling mechanisms.  This change would seems make no sense, mainly
+> > > > because it is only a part of the DAMON's logics.  Following two commits
+> > > > will make more sense.
+> > > > 
+> > > > Basic Access Check
+> > > > ------------------
+> > > > 
+> > > > DAMON basically reports what pages are how frequently accessed.  Note
+> > > > that the frequency is not an absolute number of accesses, but a relative
+> > > > frequency among the pages of the target workloads.
+> > > > 
+> > > > Users can control the resolution of the reports by setting two time
+> > > > intervals, ``sampling interval`` and ``aggregation interval``.  In
+> > > > detail, DAMON checks access to each page per ``sampling interval``,
+> > > > aggregates the results (counts the number of the accesses to each page),
+> > > > and reports the aggregated results per ``aggregation interval``.  For
+> > > > the access check of each page, DAMON uses the Accessed bits of PTEs.
+> > > > 
+> > > > This is thus similar to common periodic access checks based access
+> > > > tracking mechanisms, which overhead is increasing as the size of the
+> > > > target process grows.
+> > > > 
+> > > > Region Based Sampling
+> > > > ---------------------
+> > > > 
+> > > > To avoid the unbounded increase of the overhead, DAMON groups a number
+> > > > of adjacent pages that assumed to have same access frequencies into a
+> > > > region.  As long as the assumption (pages in a region have same access
+> > > > frequencies) is kept, only one page in the region is required to be
+> > > > checked.  Thus, for each ``sampling interval``, DAMON randomly picks one
+> > > > page in each region and clears its Accessed bit.  After one more
+> > > > ``sampling interval``, DAMON reads the Accessed bit of the page and
+> > > > increases the access frequency of the region if the bit has set
+> > > > meanwhile.  Therefore, the monitoring overhead is controllable by
+> > > > setting the number of regions.
+> > > > 
+> > > > Nonetheless, this scheme cannot preserve the quality of the output if
+> > > > the assumption is not kept.  Following commit will introduce how we can
+> > > > make the guarantee with best effort.
+> > > > 
+> > > > Signed-off-by: SeongJae Park <sjpark@amazon.de>  
+> > > 
+> > > Hi.
+> > > 
+> > > A few comments inline.
+> > > 
+> > > I've still not replicated your benchmarks so may well have some more
+> > > feedback once I've managed that on one of our servers.  
+> > 
+> > Appreciate your comments.  If you need any help for the replication, please let
+> > me know.  I basically use my parsec3 wrapper scripts[1] to run parsec3 and
+> > splash2x workloads and `damo` tool, which resides in the kernel tree at
+> > `/tools/damon/`.
+> > 
+> > For example, below commands will reproduce ethp applied splash2x/fft run.
+> >     
+> >     $ echo "2M      null    5       null    null    null    hugepage
+> >     2M      null    null    5       1s      null    nohugepage" > ethp
+> >     $ parsec3_on_ubuntu/run.sh splash2x.fft
+> >     $ linux/tools/damon/damo schemes -c ethp `pidof fft`
+> > 
+> > [1] https://github.com/sjp38/parsec3_on_ubuntu
+> >   
+> > > 
+> > > Thanks,
+> > > 
+> > > Jonathan
+> > >   
+> > > > ---
+> > > >  include/linux/damon.h |  24 ++
+> > > >  mm/damon.c            | 553 ++++++++++++++++++++++++++++++++++++++++++
+> > > >  2 files changed, 577 insertions(+)
+> > > >   
+> > [...]  
+> > > > diff --git a/mm/damon.c b/mm/damon.c
+> > > > index d7e6226ab7f1..018016793555 100644
+> > > > --- a/mm/damon.c
+> > > > +++ b/mm/damon.c
+> > > > @@ -10,8 +10,14 @@
+> > > >  #define pr_fmt(fmt) "damon: " fmt
+> > > >  
+> > > >  #include <linux/damon.h>
+> > > > +#include <linux/delay.h>
+> > > > +#include <linux/kthread.h>
+> > > >  #include <linux/mm.h>
+> > > >  #include <linux/module.h>
+> > > > +#include <linux/page_idle.h>
+> > > > +#include <linux/random.h>
+> > > > +#include <linux/sched/mm.h>
+> > > > +#include <linux/sched/task.h>
+> > > >  #include <linux/slab.h>
+> > > >    
+> > [...]  
+> > > > +/*
+> > > > + * Size-evenly split a region into 'nr_pieces' small regions
+> > > > + *
+> > > > + * Returns 0 on success, or negative error code otherwise.
+> > > > + */
+> > > > +static int damon_split_region_evenly(struct damon_ctx *ctx,
+> > > > +		struct damon_region *r, unsigned int nr_pieces)
+> > > > +{
+> > > > +	unsigned long sz_orig, sz_piece, orig_end;
+> > > > +	struct damon_region *piece = NULL, *next;
+> > > > +	unsigned long start;
+> > > > +
+> > > > +	if (!r || !nr_pieces)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	orig_end = r->vm_end;
+> > > > +	sz_orig = r->vm_end - r->vm_start;
+> > > > +	sz_piece = sz_orig / nr_pieces;
+> > > > +
+> > > > +	if (!sz_piece)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	r->vm_end = r->vm_start + sz_piece;
+> > > > +	next = damon_next_region(r);
+> > > > +	for (start = r->vm_end; start + sz_piece <= orig_end;
+> > > > +			start += sz_piece) {
+> > > > +		piece = damon_new_region(ctx, start, start + sz_piece);  
+> > > piece may be n  
+> > 
+> > Yes, that name is short and more intuitive.  I will rename so.
+> >   
+> > > > +		damon_insert_region(piece, r, next);
+> > > > +		r = piece;
+> > > > +	}
+> > > > +	/* complement last region for possible rounding error */
+> > > > +	if (piece)
+> > > > +		piece->vm_end = orig_end;  
+> > > 
+> > > Update the sampling address to ensure it's in the region?  
+> > 
+> > I think `piece->vm_end` should be equal or smaller than `orig_end` and
+> > therefore the sampling address of `piece` will be still in the region.
+> >   
+> > >   
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +  
+> > [...]  
+> > > > +static void damon_pte_pmd_mkold(pte_t *pte, pmd_t *pmd)
+> > > > +{
+> > > > +	if (pte) {
+> > > > +		if (pte_young(*pte)) {
+> > > > +			clear_page_idle(pte_page(*pte));
+> > > > +			set_page_young(pte_page(*pte));
+> > > > +		}
+> > > > +		*pte = pte_mkold(*pte);
+> > > > +		return;
+> > > > +	}
+> > > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > > > +	if (pmd) {
+> > > > +		if (pmd_young(*pmd)) {
+> > > > +			clear_page_idle(pmd_page(*pmd));
+> > > > +			set_page_young(pmd_page(*pmd));
+> > > > +		}
+> > > > +		*pmd = pmd_mkold(*pmd);
+> > > > +	}
+> > > > +#endif /* CONFIG_TRANSPARENT_HUGEPAGE */  
+> > > 
+> > > No need to flush the TLBs?  
+> > 
+> > Good point!
+> > 
+> > I have intentionally skipped TLB flushing here to minimize the performance
+> > effect to the target workload.  I also thought this might not degrade the
+> > monitoring accuracy so much because we are targetting for the DRAM level
+> > accesses of memory-intensive workloads, which might make TLB flood frequently.
+> > 
+> > However, your comment makes me thinking differently now.  By flushing the TLB
+> > here, we will increase up to `number_of_regions` TLB misses for sampling
+> > interval.  This might be not a huge overhead.  Also, improving the monitoring
+> > accuracy makes no harm at all.  I even didn't measured the overhead.
+> > 
+> > I will test the overhead and if it is not significant, I will make this code to
+> > flush TLB, in the next spin.  
+> 
+> Hmm, it seems like 'page_idle.c' is also modifying the Accessed bit but doesn't
+> flush related TLB entries.  If I'm not missing something here, I would like to
+> leave this part as is to make the behavior consistent.
 
-> ----8<----
-> >From dc10a593f2b8dfc7be920b4b088a8d55068fc6bc Mon Sep 17 00:00:00 2001
-> From: Roman Gushchin <guro@fb.com>
-> Date: Thu, 2 Apr 2020 13:49:04 +1100
-> Subject: [PATCH] mm: hugetlb: optionally allocate gigantic hugepages using cma
-> 
-> Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation at
-> runtime") has added the run-time allocation of gigantic pages.  However it
-> actually works only at early stages of the system loading, when the
-> majority of memory is free.  After some time the memory gets fragmented by
-> non-movable pages, so the chances to find a contiguous 1 GB block are
-> getting close to zero.  Even dropping caches manually doesn't help a lot.
-> 
-> At large scale rebooting servers in order to allocate gigantic hugepages
-> is quite expensive and complex.  At the same time keeping some constant
-> percentage of memory in reserved hugepages even if the workload isn't
-> using it is a big waste: not all workloads can benefit from using 1 GB
-> pages.
-> 
-> The following solution can solve the problem:
-> 1) On boot time a dedicated cma area* is reserved. The size is passed
->    as a kernel argument.
-> 2) Run-time allocations of gigantic hugepages are performed using the
->    cma allocator and the dedicated cma area
-> 
-> In this case gigantic hugepages can be allocated successfully with a high
-> probability, however the memory isn't completely wasted if nobody is using
-> 1GB hugepages: it can be used for pagecache, anon memory, THPs, etc.
-> 
-> * On a multi-node machine a per-node cma area is allocated on each node.
->   Following gigantic hugetlb allocation are using the first available
->   numa node if the mask isn't specified by a user.
-> 
-> Usage:
-> 1) configure the kernel to allocate a cma area for hugetlb allocations:
->    pass hugetlb_cma=10G as a kernel argument
-> 
-> 2) allocate hugetlb pages as usual, e.g.
->    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
-> 
-> If the option isn't enabled or the allocation of the cma area failed,
-> the current behavior of the system is preserved.
-> 
-> x86 and arm-64 are covered by this patch, other architectures can be
-> trivially added later.
-> 
-> Link: http://lkml.kernel.org/r/20200311220920.2487528-1-guro@fb.com
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Tested-by: Andreas Schaufler <andreas.schaufler@gmx.de>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Andreas Schaufler <andreas.schaufler@gmx.de>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Joonsoo Kim <js1304@gmail.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> 
-> mm: hugetlb: Use node interface of cma
-> 
-> With introduction of numa node interface for CMA, this patch is for using that
-> interface for allocating memory on numa nodes if NUMA is configured.
-> This will be more efficient  and cleaner because first, instead of iterating
-> mem range of each numa node, cma_declare_contigueous_nid() will do
-> its own address finding if we pass 0 for  both min_pfn and max_pfn,
-> second, it can also handle caseswhere NUMA is not configured
-> by passing NUMA_NO_NODE as an argument.
-> 
-> In addition, checking if desired size of memory is available or not,
-> is happening in cma_declare_contiguous_nid()  because base and
-> limit will be determined there, since 0(any) for  base and
-> 0(any) for limit is passed as argument to the function.
-> 
-> Signed-off-by: Aslan Bakirov <aslan@fb.com>
-> Acked-by: Roman Gushchin <guro@fb.com>
+Interesting.  In that usecase, the risk is that the MMU believes
+the page still has the accessed bit set when we have cleared it and hence
+the accessed bit is not written out to the table in memory.
 
-Minor nit below. For the squashed version feel free to add
-Acked-by: Michal Hocko <mhocko@suse.com>
+That will give them a wrong decision so not great and would lead to them
+thinking more pages are idle than are.
 
-> ---
->  .../admin-guide/kernel-parameters.txt         |  7 ++
->  arch/arm64/mm/init.c                          |  6 ++
->  arch/x86/kernel/setup.c                       |  4 +
->  include/linux/hugetlb.h                       |  8 ++
->  mm/hugetlb.c                                  | 98 +++++++++++++++++++
->  5 files changed, 123 insertions(+)
+Here we could have a particular TLB entry for a huge page in which
+a region lies entirely.  Because we don't flush the TLB each time
+we could end with a count of 0 accesses when it should be the maximum.
+A very frequently accessed page might well sit in the TLB for a very
+long time (particularly if the TLB is running a clever eviction
+strategy).
+
+I think we would want to be test this and see if we get that
+pathological case sometimes.  Also worth benchmarking if it actually
+costs us very much to do the flushes.
+
+Jonathan
+
 > 
+> 
+> Thanks,
+> SeongJae Park
+> 
+> >   
+> > >   
+> > > > +}
+> > > > +  
+> > [...]  
+> > > > +/*
+> > > > + * The monitoring daemon that runs as a kernel thread
+> > > > + */
+> > > > +static int kdamond_fn(void *data)
+> > > > +{
+> > > > +	struct damon_ctx *ctx = data;
+> > > > +	struct damon_task *t;
+> > > > +	struct damon_region *r, *next;
+> > > > +	struct mm_struct *mm;
+> > > > +
+> > > > +	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
+> > > > +	kdamond_init_regions(ctx);  
+> > > 
+> > > We haven't called mkold on the initial regions so first check will
+> > > get us fairly random state.  
+> > 
+> > Yes, indeed.  However, the early results will not be accurate anyway because
+> > the adaptive regions adjustment algorithm will not take effect yet.  I would
+> > like to leave this part as is but add some comments about this point to keep
+> > the code simple.
+> >   
+> > >   
+> > > > +	while (!kdamond_need_stop(ctx)) {
+> > > > +		damon_for_each_task(ctx, t) {
+> > > > +			mm = damon_get_mm(t);
+> > > > +			if (!mm)
+> > > > +				continue;
+> > > > +			damon_for_each_region(r, t)
+> > > > +				kdamond_check_access(ctx, mm, r);
+> > > > +			mmput(mm);
+> > > > +		}
+> > > > +
+> > > > +		if (kdamond_aggregate_interval_passed(ctx))
+> > > > +			kdamond_reset_aggregated(ctx);
+> > > > +
+> > > > +		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
+> > > > +	}
+> > > > +	damon_for_each_task(ctx, t) {
+> > > > +		damon_for_each_region_safe(r, next, t)
+> > > > +			damon_destroy_region(r);
+> > > > +	}
+> > > > +	pr_debug("kdamond (%d) finishes\n", ctx->kdamond->pid);
+> > > > +	mutex_lock(&ctx->kdamond_lock);
+> > > > +	ctx->kdamond = NULL;
+> > > > +	mutex_unlock(&ctx->kdamond_lock);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +  
+> > [...]  
+> > > > +/*
+> > > > + * Start or stop the kdamond
+> > > > + *
+> > > > + * Returns 0 if success, negative error code otherwise.
+> > > > + */
+> > > > +static int damon_turn_kdamond(struct damon_ctx *ctx, bool on)
+> > > > +{
+> > > > +	int err = -EBUSY;
+> > > > +
+> > > > +	mutex_lock(&ctx->kdamond_lock);
+> > > > +	if (!ctx->kdamond && on) {  
+> > > 
+> > > Given there is very little shared code between on and off, I would
+> > > suggest just splitting it into two functions.  
+> > 
+> > Good point, I will do so in next spin.
+> >   
+> > >   
+> > > > +		err = 0;
+> > > > +		ctx->kdamond = kthread_run(kdamond_fn, ctx, "kdamond");
+> > > > +		if (IS_ERR(ctx->kdamond))
+> > > > +			err = PTR_ERR(ctx->kdamond);
+> > > > +	} else if (ctx->kdamond && !on) {
+> > > > +		mutex_unlock(&ctx->kdamond_lock);
+> > > > +		kthread_stop(ctx->kdamond);
+> > > > +		while (damon_kdamond_running(ctx))
+> > > > +			usleep_range(ctx->sample_interval,
+> > > > +					ctx->sample_interval * 2);
+> > > > +		return 0;
+> > > > +	}
+> > > > +	mutex_unlock(&ctx->kdamond_lock);
+> > > > +
+> > > > +	return err;
+> > > > +}
+> > > > +  
+> > [...]  
+> > > > +
+> > > > +/*  
+> > > 
+> > > Why not make these actual kernel-doc?  That way you can use the
+> > > kernel-doc scripts to sanity check them.  
+> > 
+> > Oops, I just forgot that it should start with '/**'.  Will fix it in next spin.
+> > 
+> > 
+> > Thanks,
+> > SeongJae Park
+> >   
+> > > 
+> > > /**
+> > >   
+> > > > + * damon_set_attrs() - Set attributes for the monitoring.
+> > > > + * @ctx:		monitoring context
+> > > > + * @sample_int:		time interval between samplings
+> > > > + * @aggr_int:		time interval between aggregations
+> > > > + * @min_nr_reg:		minimal number of regions
+> > > > + *
+> > > > + * This function should not be called while the kdamond is running.
+> > > > + * Every time interval is in micro-seconds.
+> > > > + *
+> > > > + * Return: 0 on success, negative error code otherwise.
+> > > > + */
+> > > > +int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
+> > > > +		unsigned long aggr_int, unsigned long min_nr_reg)
+> > > > +{
+> > > > +	if (min_nr_reg < 3) {
+> > > > +		pr_err("min_nr_regions (%lu) should be bigger than 2\n",
+> > > > +				min_nr_reg);
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	ctx->sample_interval = sample_int;
+> > > > +	ctx->aggr_interval = aggr_int;
+> > > > +	ctx->min_nr_regions = min_nr_reg;
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > >  static int __init damon_init(void)
+> > > >  {
+> > > >  	return 0;  
+> > >   
 
-[...]
 
-> +	reserved = 0;
-> +	for_each_node_state(nid, N_ONLINE) {
-> +		int res;
-> +
-> +		size = min(per_node, hugetlb_cma_size - reserved);
-> +		size = round_up(size, PAGE_SIZE << order);
-> +		
-> +		
-> +#ifndef CONFIG_NUMA
-> +		nid = NUMA_NO_NODE
-> +#endif		
-
-This can be dropped. UMA will simply use node 0 and the memblock
-allocator will just do the right thing.
-
-> +		res = cma_declare_contiguous_nid(0, size,
-> +					     0, 
-> +					     PAGE_SIZE << order,
-> +					     0, false,
-> +					     "hugetlb", &hugetlb_cma[nid], nid);		
-> +
-> +		if (res) {
-> +			pr_warn("%s: reservation failed: err %d, node %d\n",
-> +				__func__, res, nid);
-> +			break;
-> +		}
-> +
-> +		reserved += size;
-> +		pr_info("hugetlb_cma: reserved %lu MiB on node %d\n",
-> +			size / SZ_1M, nid);
-> +
-> +		if (reserved >= hugetlb_cma_size)
-> +			break;
-> +	}
-> +}
-> +
-> +#endif /* CONFIG_CMA */
-> -- 
-> 2.26.0
-
--- 
-Michal Hocko
-SUSE Labs
