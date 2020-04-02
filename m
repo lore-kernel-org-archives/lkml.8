@@ -2,71 +2,66 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27993C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D53C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC732078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE012077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390008AbgDBRj2 (ORCPT
+        id S2390046AbgDBRjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:39:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60506 "EHLO mx2.suse.de"
+        Thu, 2 Apr 2020 13:39:47 -0400
+Received: from mail.monom.org ([188.138.9.77]:50030 "EHLO mail.monom.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388677AbgDBRj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:39:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3B1E9AD27;
-        Thu,  2 Apr 2020 17:39:26 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 19:39:25 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Hu Haowen <xianfengting221@163.com>
-Cc:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: piix4: remove an empty and redundant comment line
-Message-ID: <20200402193925.1e11b336@endymion>
-In-Reply-To: <20200402140359.22017-1-xianfengting221@163.com>
-References: <20200402140359.22017-1-xianfengting221@163.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S2388677AbgDBRjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 13:39:47 -0400
+Received: from mail.monom.org (localhost [127.0.0.1])
+        by filter.mynetwork.local (Postfix) with ESMTP id 41E13500590;
+        Thu,  2 Apr 2020 19:39:45 +0200 (CEST)
+Received: from localhost (b9168fb3.cgn.dg-w.de [185.22.143.179])
+        by mail.monom.org (Postfix) with ESMTPSA id BBB0B50050F;
+        Thu,  2 Apr 2020 19:39:44 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 19:39:44 +0200
+From:   Daniel Wagner <wagi@monom.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        John Kacur <jkacur@redhat.com>,
+        Julia Cartwright <julia@ni.com>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: Re: [PATCH RT 2/3] irq_work: Fix checking of IRQ_WORK_LAZY flag set
+ on non PREEMPT_RT
+Message-ID: <20200402173944.jmztz4vjsepjreye@beryllium.lan>
+References: <20200331163453.805082089@goodmis.org>
+ <20200331163513.674653275@goodmis.org>
+ <20200402172248.GA12483@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402172248.GA12483@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  2 Apr 2020 22:03:59 +0800, Hu Haowen wrote:
-> This line in the comment is empty and redundant, so removed it.
-> 
-> Signed-off-by: Hu Haowen <xianfengting221@163.com>
-> ---
->  drivers/i2c/busses/i2c-piix4.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
-> index 30ded6422e7b..8bdb1d4abac5 100644
-> --- a/drivers/i2c/busses/i2c-piix4.c
-> +++ b/drivers/i2c/busses/i2c-piix4.c
-> @@ -2,7 +2,6 @@
->  /*
->      Copyright (c) 1998 - 2002 Frodo Looijaard <frodol@dds.nl> and
->      Philip Edelbrock <phil@netroedge.com>
-> -
->  */
->  
->  /*
+Hi Pavel,
 
-No, really, not wasting time reviewing and committing this. If you
-really care about these comments then please at least reformat them to
-comply with the standard. Stripping one line and leaving the rest
-improperly formatted doesn't help at all, sorry.
+On Thu, Apr 02, 2020 at 07:22:49PM +0200, Pavel Machek wrote:
+> I'm currently playing with 4.4.X branch, but I'll eventually test it.
+> 
+> Is it possible that 4.4.X branch needs similar patch? My code review
+> suggests so...
 
--- 
-Jean Delvare
-SUSE L3 Support
+I was waiting for Steven to post the final patch. I'll pick it up for
+the next v4.4-rt release.
+
+Thanks,
+Daniel
