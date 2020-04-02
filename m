@@ -2,243 +2,261 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF88CC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ACDC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75CE2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B8120678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:31:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YvFbM7Cp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389056AbgDBPag (ORCPT
+        id S2389274AbgDBPbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:30:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:22150 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388739AbgDBPag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:30:36 -0400
-IronPort-SDR: uk4CAogtLhBUnePm/vBL3ujKhdpl4l8bSsbsmbUsHHz7mlXJvy5c09+l1VEubWh76wpUaCSNf5
- oDSQpANDP1Aw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 08:30:35 -0700
-IronPort-SDR: W2EYfNet/z2POSuaOK1cHVhBxdYbD2WEpbooe2m486Q0y4tik3u/ZZo609eLervPCfebr/eJ4z
- WrqgVSPFdFUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="268058495"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 02 Apr 2020 08:30:35 -0700
-Date:   Thu, 2 Apr 2020 08:30:35 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [patch 2/2] x86/kvm/vmx: Prevent split lock detection induced
- #AC wreckage
-Message-ID: <20200402153035.GA13879@linux.intel.com>
-References: <20200402123258.895628824@linutronix.de>
- <20200402124205.334622628@linutronix.de>
+        Thu, 2 Apr 2020 11:31:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26922 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389125AbgDBPbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 11:31:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585841470;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8go+XmW7aV++71D9Zfcx9rh3RfL3DnAWTnY8WVwCfu0=;
+        b=YvFbM7CpzdN0kbT+SFNn/mFukuZwAvQNW7nR5Y8m1h3wDSKUcev1MlP/YF4Z6OmUWQqBMs
+        c9rd4mPnecWDxjNgj2oUQ4NlO6amKpiCf1nFx7ua9bj08z2ZPf+4oYQBoRv2UNrA10v9TO
+        NSomxJbOPD+4inGqLkqRnxCo5XkNIXI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-6h0Sq0ZAMae-mK0FHN3q3Q-1; Thu, 02 Apr 2020 11:31:08 -0400
+X-MC-Unique: 6h0Sq0ZAMae-mK0FHN3q3Q-1
+Received: by mail-wr1-f70.google.com with SMTP id y1so1629602wrn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:31:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8go+XmW7aV++71D9Zfcx9rh3RfL3DnAWTnY8WVwCfu0=;
+        b=GU3oOWjcXX4WdgvMeZ8j+4v8W8GjI9uPgumEYSpS0ZhFFYE5Cv/oIX/n2rw4n8Umfp
+         Ly4u6pzD1S1a+6borWrjtvVYgWVmMTKCWvc33naOMcWtqDwz/2x55kNKhgmdh1eTufi5
+         PA/QbSyHNEn8a5zQAtkS36L6V1lyAlKrZb6Pe+AzpfSxcbtkfxJafRbVK5++HGddaBtL
+         xX+/KZcQMYt1pYXAe5EC1MUA2rgrn/kg3q9c3CnxH01qwUZYnDehflq1EDCFGyAd1H0V
+         X5t0uW9FjiaP7930+RMBNWoMj916qG+vX8Y86KOBOZSylYDUI2TLN/9M9vZ3KEuY9uLT
+         10Eg==
+X-Gm-Message-State: AGi0Puar0U3rVxFfu3Er01xO+J6adP7err1cygjoxsMLdhrVVPwIESs2
+        axo8b3Hg0JQOeX0q4RrdIhpwvUsQIMrH056QjnQp8X2YlA20s2UUvFQYyRPz4IVGFktK5ZRoe+9
+        kci+5SjJvA+VQJC6ZxTN8PrBx
+X-Received: by 2002:a5d:6847:: with SMTP id o7mr4003921wrw.274.1585841467760;
+        Thu, 02 Apr 2020 08:31:07 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLmW+n29VyWMNvUZC3b0K01TfQQRNymQo6XGLC96/B0VA0Qj/dhPdQ6IzB/bNFcQPQVQ1/XKw==
+X-Received: by 2002:a5d:6847:: with SMTP id o7mr4003903wrw.274.1585841467485;
+        Thu, 02 Apr 2020 08:31:07 -0700 (PDT)
+Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
+        by smtp.gmail.com with ESMTPSA id a7sm7245427wmm.34.2020.04.02.08.31.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 08:31:06 -0700 (PDT)
+Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de
+References: <20200402082220.808-1-alexandre.chartre@oracle.com>
+ <20200402082220.808-5-alexandre.chartre@oracle.com>
+ <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
+ <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
+Date:   Thu, 2 Apr 2020 16:31:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402124205.334622628@linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 02:33:00PM +0200, Thomas Gleixner wrote:
-> Without at least minimal handling for split lock detection induced #AC, VMX
-> will just run into the same problem as the VMWare hypervisor, which was
-> reported by Kenneth.
-> 
-> It will inject the #AC blindly into the guest whether the guest is prepared
-> or not.
-> 
-> Add the minimal required handling for it:
-> 
->   - Check guest state whether CR0.AM is enabled and EFLAGS.AC is set.  If
->     so, then the #AC originated from CPL3 and the guest has is prepared to
->     handle it. In this case it does not matter whether the #AC is due to a
->     split lock or a regular unaligned check.
-> 
->  - Invoke a minimal split lock detection handler. If the host SLD mode is
->    sld_warn, then handle it in the same way as user space handling works:
->    Emit a warning, disable SLD and mark the current task with TIF_SLD.
->    With that resume the guest without injecting #AC.
-> 
->    If the host mode is sld_fatal or sld_off, emit a warning and deliver
->    the exception to user space which can crash and burn itself.
-> 
-> Mark the module with MOD_INFO(sld_safe, "Y") so the module loader does not
-> force SLD off.
 
-Some comments below.  But, any objection to taking Xiaoyao's patches that
-do effectively the same things, minus the MOD_INFO()?  I'll repost them in
-reply to this thread.
- 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: "Kenneth R. Crudup" <kenny@panix.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Fenghua Yu <fenghua.yu@intel.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Cc: Nadav Amit <namit@vmware.com>
-> Cc: Thomas Hellstrom <thellstrom@vmware.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> ---
->  arch/x86/include/asm/cpu.h  |    1 +
->  arch/x86/kernel/cpu/intel.c |   28 +++++++++++++++++++++++-----
->  arch/x86/kvm/vmx/vmx.c      |   40 +++++++++++++++++++++++++++++++++++++---
->  3 files changed, 61 insertions(+), 8 deletions(-)
+
+On 4/2/20 3:46 PM, Alexandre Chartre wrote:
 > 
-> --- a/arch/x86/include/asm/cpu.h
-> +++ b/arch/x86/include/asm/cpu.h
-> @@ -44,6 +44,7 @@ unsigned int x86_stepping(unsigned int s
->  extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
->  extern void switch_to_sld(unsigned long tifn);
->  extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-> +extern bool handle_guest_split_lock(unsigned long ip);
->  extern void split_lock_validate_module_text(struct module *me, void *text, void *text_end);
->  #else
->  static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -1102,13 +1102,10 @@ static void split_lock_init(void)
->  	split_lock_verify_msr(sld_state != sld_off);
->  }
->  
-> -bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> +static void split_lock_warn(unsigned long ip)
->  {
-> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> -		return false;
-> -
->  	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-> -			    current->comm, current->pid, regs->ip);
-> +			    current->comm, current->pid, ip);
->  
->  	/*
->  	 * Disable the split lock detection for this task so it can make
-> @@ -1117,6 +1114,27 @@ bool handle_user_split_lock(struct pt_re
->  	 */
->  	sld_update_msr(false);
->  	set_tsk_thread_flag(current, TIF_SLD);
-> +}
-> +
-> +bool handle_guest_split_lock(unsigned long ip)
-> +{
-> +	if (sld_state == sld_warn) {
-> +		split_lock_warn(ip);
-> +		return true;
-> +	}
-> +
-> +	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
-> +		     current->comm, current->pid,
-> +		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
-> +	return false;
-> +}
-> +EXPORT_SYMBOL_GPL(handle_guest_split_lock);
-> +
-> +bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> +{
-> +	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> +		return false;
-> +	split_lock_warn(regs->ip);
->  	return true;
->  }
->  
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -65,6 +65,7 @@
->  
->  MODULE_AUTHOR("Qumranet");
->  MODULE_LICENSE("GPL");
-> +MODULE_INFO(sld_safe, "Y");
->  
->  #ifdef MODULE
->  static const struct x86_cpu_id vmx_cpu_id[] = {
-> @@ -4623,6 +4624,22 @@ static int handle_machine_check(struct k
->  	return 1;
->  }
->  
-> +static bool guest_handles_ac(struct kvm_vcpu *vcpu)
-> +{
-> +	/*
-> +	 * If guest has alignment checking enabled in CR0 and activated in
-> +	 * eflags, then the #AC originated from CPL3 and the guest is able
-> +	 * to handle it. It does not matter whether this is a regular or
-> +	 * a split lock operation induced #AC.
-> +	 */
-> +	if (vcpu->arch.cr0 & X86_CR0_AM &&
-
-Technically not required since KVM doesn't let the gets toggle CR0.AM at
-will, but going through kvm_read_cr0{_bits}() is preferred.
-
-> +	    vmx_get_rflags(vcpu) & X86_EFLAGS_AC)
-
-I don't think this is correct.  A guest could trigger a split-lock #AC at
-CPL0 with EFLAGS.AC=1 and CR0.AM=1, and then panic because it didn't expect
-#AC at CPL0.
-
-> +		return true;
-> +
-> +	/* Add guest SLD handling checks here once it's supported */
-> +	return false;
-> +}
-> +
->  static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> @@ -4688,9 +4705,6 @@ static int handle_exception_nmi(struct k
->  		return handle_rmode_exception(vcpu, ex_no, error_code);
->  
->  	switch (ex_no) {
-> -	case AC_VECTOR:
-> -		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-> -		return 1;
->  	case DB_VECTOR:
->  		dr6 = vmcs_readl(EXIT_QUALIFICATION);
->  		if (!(vcpu->guest_debug &
-> @@ -4719,6 +4733,26 @@ static int handle_exception_nmi(struct k
->  		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
->  		kvm_run->debug.arch.exception = ex_no;
->  		break;
-> +	case AC_VECTOR:
-> +		if (guest_handles_ac(vcpu)) {
-> +			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-> +			return 1;
-> +		}
-> +		/*
-> +		 * Handle #AC caused by split lock detection. If the host
-> +		 * mode is sld_warn, then it warns, marks current with
-> +		 * TIF_SLD and disables split lock detection. So the guest
-> +		 * can just continue.
-> +		 *
-> +		 * If the host mode is fatal, the handling code warned. Let
-> +		 * qemu kill itself.
-> +		 *
-> +		 * If the host mode is off, then this #AC is bonkers and
-> +		 * something is badly wrong. Let it fail as well.
-> +		 */
-> +		if (handle_guest_split_lock(kvm_rip_read(vcpu)))
-> +			return 1;
-> +		/* fall through */
->  	default:
->  		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
->  		kvm_run->ex.exception = ex_no;
+> On 4/2/20 3:26 PM, Julien Thierry wrote:
+>> Hi Alexandre,
+>>
+>> On 4/2/20 9:22 AM, Alexandre Chartre wrote:
+>>> With retpoline, the return instruction is used to branch to an address
+>>> stored on the stack. So, unlike a regular return instruction, when a
+>>> retpoline return instruction is reached the stack has been modified
+>>> compared to what we have when the function was entered.
+>>>
+>>> Provide the mechanism to explicitly call-out such return instruction
+>>> so that objtool can correctly handle them.
+>>>
+>>> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+>>> ---
+>>>   tools/objtool/check.c | 78 +++++++++++++++++++++++++++++++++++++++++--
+>>>   tools/objtool/check.h |  1 +
+>>>   2 files changed, 76 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+>>> index 0cec91291d46..ed8e3ea1d8da 100644
+>>> --- a/tools/objtool/check.c
+>>> +++ b/tools/objtool/check.c
+>>> @@ -1344,6 +1344,48 @@ static int read_intra_function_call(struct 
+>>> objtool_file *file)
+>>>       return 0;
+>>>   }
+>>> +static int read_retpoline_ret(struct objtool_file *file)
+>>> +{
+>>> +    struct section *sec;
+>>> +    struct instruction *insn;
+>>> +    struct rela *rela;
+>>> +
+>>> +    sec = find_section_by_name(file->elf, 
+>>> ".rela.discard.retpoline_ret");
+>>> +    if (!sec)
+>>> +        return 0;
+>>> +
+>>> +    list_for_each_entry(rela, &sec->rela_list, list) {
+>>> +        if (rela->sym->type != STT_SECTION) {
+>>> +            WARN("unexpected relocation symbol type in %s",
+>>> +                 sec->name);
+>>> +            return -1;
+>>> +        }
+>>> +
+>>> +        insn = find_insn(file, rela->sym->sec, rela->addend);
+>>> +        if (!insn) {
+>>> +            WARN("bad .discard.retpoline_ret entry");
+>>> +            return -1;
+>>> +        }
+>>> +
+>>> +        if (insn->type != INSN_RETURN) {
+>>> +            WARN_FUNC("retpoline_ret not a return",
+>>> +                  insn->sec, insn->offset);
+>>> +            return -1;
+>>> +        }
+>>> +
+>>> +        insn->retpoline_ret = true;
+>>> +        /*
+>>> +         * For the impact on the stack, make a return trampoline
+>>> +         * behaves like a pop of the return address.
+>>> +         */
+>>> +        insn->stack_op.src.type = OP_SRC_POP;
+>>> +        insn->stack_op.dest.type = OP_DEST_REG;
+>>> +        insn->stack_op.dest.reg = CFI_RA;
+>>> +    }
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>>   static void mark_rodata(struct objtool_file *file)
+>>>   {
+>>>       struct section *sec;
+>>> @@ -1403,6 +1445,10 @@ static int decode_sections(struct objtool_file 
+>>> *file)
+>>>       if (ret)
+>>>           return ret;
+>>> +    ret = read_retpoline_ret(file);
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>>       ret = add_call_destinations(file);
+>>>       if (ret)
+>>>           return ret;
+>>> @@ -1432,7 +1478,8 @@ static bool is_fentry_call(struct instruction 
+>>> *insn)
+>>>       return false;
+>>>   }
+>>> -static bool has_modified_stack_frame(struct insn_state *state)
+>>> +static bool has_modified_stack_frame(struct insn_state *state,
+>>> +                     bool check_registers)
+>>>   {
+>>>       int i;
+>>> @@ -1442,6 +1489,9 @@ static bool has_modified_stack_frame(struct 
+>>> insn_state *state)
+>>>           state->drap)
+>>>           return true;
+>>> +    if (!check_registers)
+>>> +        return false;
+>>> +
+>>>       for (i = 0; i < CFI_NUM_REGS; i++)
+>>>           if (state->regs[i].base != initial_func_cfi.regs[i].base ||
+>>>               state->regs[i].offset != initial_func_cfi.regs[i].offset)
+>>> @@ -1987,7 +2037,7 @@ static int validate_call(struct instruction 
+>>> *insn, struct insn_state *state)
+>>>   static int validate_sibling_call(struct instruction *insn, struct 
+>>> insn_state *state)
+>>>   {
+>>> -    if (has_modified_stack_frame(state)) {
+>>> +    if (has_modified_stack_frame(state, true)) {
+>>>           WARN_FUNC("sibling call from callable instruction with 
+>>> modified stack frame",
+>>>                   insn->sec, insn->offset);
+>>>           return 1;
+>>> @@ -2009,6 +2059,7 @@ static int validate_branch(struct objtool_file 
+>>> *file, struct symbol *func,
+>>>       struct alternative *alt;
+>>>       struct instruction *insn, *next_insn;
+>>>       struct section *sec;
+>>> +    bool check_registers;
+>>>       u8 visited;
+>>>       int ret;
+>>> @@ -2130,7 +2181,28 @@ static int validate_branch(struct objtool_file 
+>>> *file, struct symbol *func,
+>>>                   return 1;
+>>>               }
+>>> -            if (func && has_modified_stack_frame(&state)) {
+>>> +            /*
+>>> +             * With retpoline, the return instruction is used
+>>> +             * to branch to an address stored on the stack.
+>>> +             * So when we reach the ret instruction, the stack
+>>> +             * frame has been modified with the address to
+>>> +             * branch to and we need update the stack state.
+>>> +             *
+>>> +             * The retpoline address to branch to is typically
+>>> +             * pushed on the stack from a register, but this
+>>> +             * confuses the logic which checks callee saved
+>>> +             * registers. So we don't check if registers have
+>>> +             * been modified if we have a return trampoline.
+>>
+>> I think there are two different things to consider here.
+>>
+>> First, the update of the stack frame which I believe should be done
+>> when returning from intra_function_calls, as it undoes what the call
+>> instruction did (push more stuff on the stack in the case of x86).
 > 
+> The problem is that an intra-function call is not necessarily going
+> to return. With retpoline (or RSB stuffing) intra-function calls are
+> basically fake calls only present to fill the RSB buffer. Such calls
+> won't return, the stack pointer is just adjusted to cancel the impact
+> of these calls on the stack.
+> 
+
+Right, but running into an intra-function call will start a validate 
+branch with a modified stack frame.
+
+So, starting from an intra-function call, if we run into a return, I 
+guess objtool will complain about a return with modified stack frame.
+
+My understanding is that once you find an intra-function call, either 
+you hit a return, ending the branch, so the return should undo the 
+modification the intra-function call did (whether is it a retpoline 
+return or not). Otherwise, the intra-function call branch will need to 
+reach an end in some way (e.g. hitting a CONTEXT_SWITCH instruction, 
+calling a dead_end_function).
+
+Am I missing something?
+
+-- 
+Julien Thierry
+
