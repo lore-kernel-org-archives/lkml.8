@@ -2,134 +2,151 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B15C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F92C10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CC120784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:44:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585809882;
-	bh=yATIdvmf/EDSajY/hPYGvoEaxnHtek8jhg7csrfWClw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OGKbdJwXFGoT5Qqunm98gljhvJZXmaeVk98LROpx1ZWa2YhK7FcYxiCMsLCbdW/jI
-	 vYcMC6s81gVD9+bu3jQ5Zv1zAifsFGFbes0Z33Y7qQn7KQ1ZbQqQ4RK5+lL8Awfs9Y
-	 m1W8SykL3KW7KQje+BN560m2rt6k+NQeg94UVFcQ=
+	by mail.kernel.org (Postfix) with ESMTP id E0FCB2078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="U25wmsLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgDBGol (ORCPT
+        id S1732739AbgDBGpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 02:44:41 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45838 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgDBGol (ORCPT
+        Thu, 2 Apr 2020 02:45:35 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39248 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728999AbgDBGpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 02:44:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t7so2736047wrw.12
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 23:44:40 -0700 (PDT)
+        Thu, 2 Apr 2020 02:45:34 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h6so1765808lfp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 23:45:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=EZyuiVnozfn4q8862+HLJ5Fa1ZANzh/YxUt+8Dn90Cw=;
+        b=U25wmsLnITOsDRVSjieHY9ctvRnpEZfY0UMZLiLcHNxLqyYAprfEgdE24OBiZ4BjNn
+         ia4VyvVImgmkhtXBuu4KVGFh/OejLtg6ndEb9r6VoSxGrlzt8Y+DnH9tVOgYooW4ON/Z
+         WWXDh0JXA0RVMCb3u8lxA4wji7yt+Aq7/zTn4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7x56Yl6IYss7cUYz/OjtuSd8iPo+r2To7flTG3SFpZg=;
-        b=ODO/CDe+1OggZonDdW7ncv0xKTtKL6uLrw7X67MaVCTxSurQbaX5yv/PH6bKxeDxpw
-         tJvoYeB+ePunL+jlsT2+lQVEcYDq4R/sY4wMbYs/XR356DgFULiH/WLwwXvv3ZPvuoBm
-         E18LegL4TSvB6jEG00dB/SYTdZcwIxxJ+vSom1xa6AClO9PAKO6Xr4imAIA5KPf+CcV3
-         vH6xtmUAj/EW40q1DKhO0FZWR9mTovDxyFV/GG3ieZinSxUg89LGSA64PbC3tlkBY/eE
-         AyMAfSgSTZBCmYy1d5OIvG1E1In1iByDriG/MdfD3qnd6fUEKN3QYjBCpKYBO/W8mEzi
-         grFQ==
-X-Gm-Message-State: AGi0PuZHPiYT1w+vmfa1HqdPBUfWvx7ku8pYm/UigGGaae/DW06UObro
-        KWOjLH1ru36tsVWBu3pKkMc=
-X-Google-Smtp-Source: APiQypJrtfd7qxASliBR8WfzCMddT44zDZWaD36dMrltK5ZOKe2i2CLK+OZDysVOVr363kmFLkylQw==
-X-Received: by 2002:adf:bc4a:: with SMTP id a10mr1841600wrh.7.1585809879583;
-        Wed, 01 Apr 2020 23:44:39 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id t17sm1165030wrv.53.2020.04.01.23.44.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=EZyuiVnozfn4q8862+HLJ5Fa1ZANzh/YxUt+8Dn90Cw=;
+        b=PwI1ppJP0/8vWI+gPyPQpK2WSrCu5DRUzSBS/acSE/p40/SisnDVLvg/e0mKSo0V0Q
+         H7xLkA7tvLtIGTnyJKYUtyJG4sOv32cVIMmuYRDQjGNg4kBZTzjGyjGXCA/nzlUpEMTV
+         y4mN74chGJDy+dfzVAkIxb9gEhrSHYUT0srVbjX1Dq24bCcJew2ZBekzS1g5Wa1lLfqQ
+         IpWbnVY6RmazFY5nhVS0RJVLy71JXm9CUH8R0oTppVpG13wZxTqLqCLTjXqxNLAOBSpQ
+         13veTV1WzikhEOnlSl+66e7XtZsebcfTjCtpjLIfkY2H/80CMwvqdK6h2SYF8UFYQnew
+         QZ1A==
+X-Gm-Message-State: AGi0PuZdVC0KapVyZsL2NhzpeUQc8x16PLX3hGUG+XY+5Yl75tTJ8SCU
+        xGJrAtLrd1EwFzQozaJ16x2LQA==
+X-Google-Smtp-Source: APiQypLVw29BfEQm2ylpYaYjCZ3N3s2Ld+g6aDIGQPJg9N768dBIDwpn94ed4SkR+xDdxF/ShVWhHw==
+X-Received: by 2002:a19:f017:: with SMTP id p23mr1178977lfc.150.1585809932026;
+        Wed, 01 Apr 2020 23:45:32 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id m12sm2530439lji.50.2020.04.01.23.45.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 23:44:38 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 08:44:37 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: Re: [PATCH -V2] /proc/PID/smaps: Add PMD migration entry parsing
-Message-ID: <20200402064437.GC22681@dhcp22.suse.cz>
-References: <20200402020031.1611223-1-ying.huang@intel.com>
+        Wed, 01 Apr 2020 23:45:31 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 08:45:26 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/5] LiteX SoC controller and LiteUART serial driver
+Message-ID: <20200402084513.4173306-0-mholenko@antmicro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402020031.1611223-1-ying.huang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 02-04-20 10:00:31, Huang, Ying wrote:
-> From: Huang Ying <ying.huang@intel.com>
-> 
-> Now, when read /proc/PID/smaps, the PMD migration entry in page table is simply
-> ignored.  To improve the accuracy of /proc/PID/smaps, its parsing and processing
-> is added.
-> 
-> Before the patch, for a fully populated 400 MB anonymous VMA, sometimes some THP
-> pages under migration may be lost as follows.
+This patchset introduces support for LiteX SoC Controller
+and LiteUART - serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
 
-Interesting. How did you reproduce this?
-[...]
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
 
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 8d382d4ec067..9c72f9ce2dd8 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -546,10 +546,19 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
->  	struct mem_size_stats *mss = walk->private;
->  	struct vm_area_struct *vma = walk->vma;
->  	bool locked = !!(vma->vm_flags & VM_LOCKED);
-> -	struct page *page;
-> +	struct page *page = NULL;
->  
-> -	/* FOLL_DUMP will return -EFAULT on huge zero page */
-> -	page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
-> +	if (pmd_present(*pmd)) {
-> +		/* FOLL_DUMP will return -EFAULT on huge zero page */
-> +		page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
-> +	} else if (unlikely(thp_migration_supported() && is_swap_pmd(*pmd))) {
-> +		swp_entry_t entry = pmd_to_swp_entry(*pmd);
-> +
-> +		if (is_migration_entry(entry))
-> +			page = migration_entry_to_page(entry);
-> +		else
-> +			VM_WARN_ON_ONCE(1);
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
 
-Could you explain why do we need this WARN_ON? I haven't really checked
-the swap support for THP but cannot we have normal swap pmd entries?
+Changes in v4:
+    - fixed copyright headers
+    - fixed SoC Controller's yaml
+    - simplified SoC Controller's driver
 
-> +	}
->  	if (IS_ERR_OR_NULL(page))
->  		return;
->  	if (PageAnon(page))
-> @@ -578,8 +587,7 @@ static int smaps_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
->  
->  	ptl = pmd_trans_huge_lock(pmd, vma);
->  	if (ptl) {
-> -		if (pmd_present(*pmd))
-> -			smaps_pmd_entry(pmd, addr, walk);
-> +		smaps_pmd_entry(pmd, addr, walk);
->  		spin_unlock(ptl);
->  		goto out;
->  	}
-> -- 
-> 2.25.0
+Changes in v3:
+    - added Acked-by and Reviewed-by tags
+    - introduced LiteX SoC Controller driver
+    - removed endianness detection (handled now by LiteX SoC Controller driver)
+    - modified litex.h header
+    - DTS aliases for LiteUART made optional
+    - renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
+    - changed PORT_LITEUART from 122 to 123
+
+Changes in v2:
+    - binding description rewritten to a yaml schema file
+    - added litex.h header with common register access functions
+
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
+
+Pawel Czarnecki (2):
+  dt-bindings: soc: document LiteX SoC Controller bindings
+  drivers/soc/litex: add LiteX SoC Controller driver
+
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../soc/litex/litex,soc-controller.yaml       |  39 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ drivers/soc/Kconfig                           |   1 +
+ drivers/soc/Makefile                          |   1 +
+ drivers/soc/litex/Kconfig                     |  14 +
+ drivers/soc/litex/Makefile                    |   3 +
+ drivers/soc/litex/litex_soc_ctrl.c            | 217 +++++++++
+ drivers/tty/serial/Kconfig                    |  32 +-
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 411 ++++++++++++++++++
+ include/linux/litex.h                         |  45 ++
+ include/uapi/linux/serial_core.h              |   3 +
+ 14 files changed, 815 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+ create mode 100644 drivers/soc/litex/Kconfig
+ create mode 100644 drivers/soc/litex/Makefile
+ create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
 
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
