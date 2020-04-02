@@ -2,163 +2,140 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EE5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93406C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5AE20857
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0E3206D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585808789;
+	bh=9t3QFsfMnBwg73lC7+GDMLXRSXRD6YDJKPSre/hB7IE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=FeHWUuBEc+CjIdDg0JtXSdI/m2GHMBpXmKbLEl74s99F3q6LNGD+Q/PqXkx+qzT2f
+	 TH785dkdFnfs7x+EohkEYx+QMEpcAMltH5vJbnro5tE8hlNvuAd5JSt9K4NL7flIbN
+	 CUzMVz3LS6Gm1LoUD+dZjsbSzlCPhZhtxpbxjxn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgDBGVu (ORCPT
+        id S1729120AbgDBG02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 02:21:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32032 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727746AbgDBGVt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 02:21:49 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03265FLi100851
-        for <linux-kernel@vger.kernel.org>; Thu, 2 Apr 2020 02:21:48 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 304gst2b4g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 02:21:48 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Thu, 2 Apr 2020 07:21:31 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 Apr 2020 07:21:23 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0326LbiA43254262
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Apr 2020 06:21:37 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D87214C050;
-        Thu,  2 Apr 2020 06:21:37 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 314D74C046;
-        Thu,  2 Apr 2020 06:21:37 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Apr 2020 06:21:37 +0000 (GMT)
-Received: from [9.102.43.12] (unknown [9.102.43.12])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Thu, 2 Apr 2020 02:26:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726743AbgDBG01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 02:26:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 67DCAA0130;
-        Thu,  2 Apr 2020 17:21:30 +1100 (AEDT)
-Subject: Re: [PATCH v4 06/25] ocxl: Tally up the LPC memory on a link & allow
- it to be mapped
-To:     Dan Williams <dan.j.williams@intel.com>,
-        "Alastair D'Silva" <alastair@d-silva.org>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 77E04206D3;
+        Thu,  2 Apr 2020 06:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585808784;
+        bh=9t3QFsfMnBwg73lC7+GDMLXRSXRD6YDJKPSre/hB7IE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=uPNOqjYrp7HqOZOhJkZc+8Wrq8BDGLo8pnD/TOlzbgJdVV7AV5O3hHdROJfAJ6xOe
+         SpD3QKwTBvgd5NnMoianj9Quo3GyOLVWFEnADxTjLvfvtXg57F7JFaEy2sPGIaK87d
+         PIDkVjK15YPdr417fhySmb/OEXhhSWywmi9PllXE=
+Date:   Thu, 2 Apr 2020 08:26:20 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-References: <20200327071202.2159885-1-alastair@d-silva.org>
- <20200327071202.2159885-7-alastair@d-silva.org>
- <CAPcyv4jyFQa5BDPCSQ6kmFY8CvWgbydePcn8B4M_Zyc1c7MGpg@mail.gmail.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Thu, 2 Apr 2020 17:21:34 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.6.2
+Message-ID: <20200402062620.GA2678935@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4jyFQa5BDPCSQ6kmFY8CvWgbydePcn8B4M_Zyc1c7MGpg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040206-4275-0000-0000-000003B8050E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040206-4276-0000-0000-000038CD59BE
-Message-Id: <0e188ea7-1845-c9ca-a18f-4f331f31b07c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- malwarescore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
- phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004020050
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/4/20 7:48 pm, Dan Williams wrote:
-> On Sun, Mar 29, 2020 at 10:53 PM Alastair D'Silva <alastair@d-silva.org> wrote:
->>
->> OpenCAPI LPC memory is allocated per link, but each link supports
->> multiple AFUs, and each AFU can have LPC memory assigned to it.
-> 
-> Is there an OpenCAPI primer to decode these objects and their
-> associations that I can reference?
 
-There isn't presently a primer that I think addresses these questions 
-nicely (to my knowledge - Fred might have something he can link to?) - 
-there are the specs published by the OpenCAPI Consortium at 
-https://opencapi.org but they're really for hardware implementers.
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We should probably expand what's currently documented in 
-Documentation/userspace-api/accelerators/ocxl.rst generally, and this 
-series should probably update that to include details on LPC.
+I'm announcing the release of the 5.6.2 kernel.
 
-To explain the specific objects here:
+All users of the 5.6 kernel series must upgrade.
 
-- A "link" is a point-to-point link between the host CPU, and a single 
-OpenCAPI card. (We don't currently support cards making use of multiple 
-links for increased bandwidth, though that is supported from a hardware 
-point of view.)
+The updated 5.6.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.6.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-- On POWER9, each link appears as a separate PCI domain, with a single 
-bus, and the card appears as a single device.
+thanks,
 
-- A device can have up to 8 functions, per PCI.
+greg k-h
 
-- An Attached Functional Unit (AFU) is the abstraction for a particular 
-application function. Each PCI function defines the number of AFUs it 
-has through a set of OpenCAPI-specific DVSECs, max 64 per function. The 
-ocxl driver handles AFU discovery.
+------------
 
-- On the host side, LPC memory is mapped by setting a single BAR for the 
-whole link, but on the device side, LPC memory is requested on a per-AFU 
-basis, through an AFU descriptor that is exposed through the 
-aforementioned DVSECs. Hence the need to loop through the AFUs and get 
-the total required LPC memory to work out the correct BAR value.
+ Makefile                                     |    2=20
+ drivers/platform/x86/pmc_atom.c              |    8 ++
+ drivers/tty/serial/sprd_serial.c             |    3 -
+ drivers/tty/vt/selection.c                   |    5 +
+ drivers/tty/vt/vt.c                          |   30 +++++++++-
+ drivers/tty/vt/vt_ioctl.c                    |   75 ++++++++++++++--------=
+-----
+ include/linux/selection.h                    |    4 +
+ include/linux/vt_kern.h                      |    2=20
+ net/mac80211/tx.c                            |    3 -
+ tools/testing/selftests/bpf/verifier/jmp32.c |    9 ++-
+ 10 files changed, 93 insertions(+), 48 deletions(-)
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+Daniel Borkmann (1):
+      bpf: update jmp32 test cases to fix range bound deduction
 
+Eric Biggers (3):
+      vt: vt_ioctl: remove unnecessary console allocation checks
+      vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
+      vt: vt_ioctl: fix use-after-free in vt_in_use()
+
+Georg M=FCller (1):
+      platform/x86: pmc_atom: Add Lex 2I385SW to critclk_systems DMI table
+
+Greg Kroah-Hartman (1):
+      Linux 5.6.2
+
+Jiri Slaby (3):
+      vt: selection, introduce vc_is_sel
+      vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
+      vt: switch vt_dont_switch to bool
+
+Johannes Berg (1):
+      mac80211: fix authentication with iwlwifi/mvm
+
+Lanqing Liu (1):
+      serial: sprd: Fix a dereference warning
+
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl6FhYkACgkQONu9yGCS
+aT7qKw//aIhkpWkdMMYM06ZOtXmWzaJWDKGjYFWZSnx9ywsYYbaUvqBHlhFdrUor
+yYTg1iBSTGyH3QhF3278KugyJVDO5rqGNSdocPIDRe5zvpDsRS1GMIim3dmldglz
+dKX6ykouMO6BeP2NR710ulGYpcF3LUCk0EG3Z/v7ppEmayyKOou+NYYvMgLtbWF6
+7vYIs3P2sWNJp/9dyp++X6FV+UKy+bi07yM2x7RyGDLrqIEOBL2756gouf9JJImO
+Uceycs17n0pVG2PjNYQhBQ5DsATMimEjZ/vgwGt/ySeki14eXfIzSvVx8/MrhiFX
+wxLQNV4gZumDQZm+fFR3AnNk6LCIYUwFHgx6csAlEOw+0IeOGWP16gle2O4ay6Rz
+N9c6vH+Bm/cGbbz29jeT56iShqdhAggNBMqSJPWuHnW0zlYv+OBXdjguckP8Vf1+
+jbW1j+ffr7gz6zWnhRbNhj1dn4vSfg9DSsu5O/neBWbCS3fOcpGhy/Unl29pl2C4
+ce9dCGKCIEnDh8fhuZ0gLM02y7C0BfP6LJXRI6saStFEyuZiWxGEKyNFF0ZB13lu
+MVK8qx/4ZSry26jD/yr5IS6klNl75JjNDNNOrZgcIsO7xGkJ++xUKo2KZfHAqWie
++UcpvdI3i/aTiAQjehFOGJtj4Miei//ER05e3rrxVy2y4kCqtrU=
+=45zP
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
