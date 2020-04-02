@@ -2,90 +2,110 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48389C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6A0C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA162073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77242073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:56:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYmJPkWR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732835AbgDBNzk (ORCPT
+        id S1732956AbgDBN4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:55:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:43052 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732349AbgDBNzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:55:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19C6230E;
-        Thu,  2 Apr 2020 06:55:39 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4DBC3F52E;
-        Thu,  2 Apr 2020 06:55:38 -0700 (PDT)
-Subject: Re: [PATCH] ACPI: PPTT: Inform user that table offset used for
- Physical processor node ID
-To:     John Garry <john.garry@huawei.com>, rjw@rjwysocki.net,
-        lenb@kernel.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sudeep.holla@arm.com, linuxarm@huawei.com, wanghuiqiang@huawei.com
-References: <1585830145-208714-1-git-send-email-john.garry@huawei.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <89f68a3c-264a-5d1b-e63a-d1147ea07320@arm.com>
-Date:   Thu, 2 Apr 2020 08:55:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 09:56:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57833 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727412AbgDBN4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:56:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585835789;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LynRBm0QdjHVu82HMM2DCC2CaC+mcsg4vB8dlsKoP9A=;
+        b=EYmJPkWRoCqVN3SdAcVr5xawEpQyvYCxy+w9U4NjpWK6jTE+sf6TlzX0mXCH4HloIOjnXe
+        3ahyB2wovLj7YwtA1SKGIRThmBA0uxO8pAm5hhaCQHjOeJgiCOSDelILuxDvoVM+3apNCu
+        JcKXGioxIhD+WuQ+qCnOn4w3Swhr4wU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-461-RDG4fjfhMsyhNBw_9UBvww-1; Thu, 02 Apr 2020 09:56:27 -0400
+X-MC-Unique: RDG4fjfhMsyhNBw_9UBvww-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DA9E18A6EC1;
+        Thu,  2 Apr 2020 13:56:26 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D5A151001938;
+        Thu,  2 Apr 2020 13:56:20 +0000 (UTC)
+Subject: Re: [PATCH 2/2] selftests: kvm: Add mem_slot_test test
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        david@redhat.com
+References: <20200330204310.21736-1-wainersm@redhat.com>
+ <20200330204310.21736-3-wainersm@redhat.com>
+ <20200402090029.pc6w6iqikgthflhq@kamzik.brq.redhat.com>
+From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
+Message-ID: <e6676068-3214-f9bf-832b-889facc8b091@redhat.com>
+Date:   Thu, 2 Apr 2020 10:56:18 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <1585830145-208714-1-git-send-email-john.garry@huawei.com>
+In-Reply-To: <20200402090029.pc6w6iqikgthflhq@kamzik.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 4/2/20 7:22 AM, John Garry wrote:
-> If the the Processor ID valid is not set for a Physical Processor Package
-> node, then the node table offset is used as a substitute. As such, we
-> may get info like this from sysfs:
-> 
-> root@(none)$ pwd
-> /sys/devices/system/cpu/cpu0/topology
-> root@(none)$ more physical_package_id
-> 56
-> 
-> Inform the user of this in the bootlog, as it is much less than ideal, and
-> they can remedy this in their FW.
-> 
-> This topic was originally discussed in:
-> https://lore.kernel.org/linux-acpi/c325cfe2-7dbf-e341-7f0f-081b6545e890@huawei.com/T/#m0ec18637d8586f832084a8a6af22580e6174669a
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> 
-> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-> index 4ae93350b70d..b4ed3c818e00 100644
-> --- a/drivers/acpi/pptt.c
-> +++ b/drivers/acpi/pptt.c
-> @@ -515,6 +515,8 @@ static int topology_get_acpi_cpu_tag(struct acpi_table_header *table,
->   		if (level == 0 ||
->   		    cpu_node->flags & ACPI_PPTT_ACPI_PROCESSOR_ID_VALID)
->   			return cpu_node->acpi_processor_id;
-> +		if (level == PPTT_ABORT_PACKAGE)
-> +			pr_notice_once("Physical package node Processor ID valid not set, will use table offset as substitute\n");
+On 4/2/20 6:00 AM, Andrew Jones wrote:
+> On Mon, Mar 30, 2020 at 05:43:10PM -0300, Wainer dos Santos Moschetta wrote:
+>> This patch introduces the mem_slot_test test which checks
+>> an VM can have added memory slots up to the limit defined in
+>> KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
+>> verify it fails as expected.
+>>
+>> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+>> ---
+>>   tools/testing/selftests/kvm/.gitignore      |  1 +
+>>   tools/testing/selftests/kvm/Makefile        |  3 +
+>>   tools/testing/selftests/kvm/mem_slot_test.c | 92 +++++++++++++++++++++
+>>   3 files changed, 96 insertions(+)
+>>   create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
+>>
+> BTW, in kvm/queue we also now have
+>
+> x86_64/set_memory_region_test.c
+>
+> I wonder if we shouldn't try to make x86_64/set_memory_region_test.c
+> arch-neutral and then integrate this new test with it.
 
-What happens in the find_acpi_cpu_topology_hetro_id() case, if the last 
-IDENTICAL node isn't a socket/etc. Are we expecting to warn of a missing 
-processor container there as well?
+When I started work on this test I called it "add_max_mem_slots" but 
+then I realized it could be rather a suite for other tests, so it was 
+renamed. So yes, I think we can try to merge those memory region tests 
+altogether.
+
+I'm about to send a v2 where I address all your comments and hopefully 
+we can use as the base for such as integration. Makes sense?
+
+Thanks!
+
+- Wainer
 
 
-
->   		return ACPI_PTR_DIFF(cpu_node, table);
->   	}
->   	pr_warn_once("PPTT table found, but unable to locate core %d (%d)\n",
-> 
+>
+> Thanks,
+> drew
 
