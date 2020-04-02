@@ -2,250 +2,114 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC09EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49C0C2BA17
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701A320737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:38:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="VLnri1CB"
+	by mail.kernel.org (Postfix) with ESMTP id C0DDC21556
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389369AbgDBPi5 (ORCPT
+        id S2389375AbgDBPjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:38:57 -0400
-Received: from sonic313-14.consmr.mail.ne1.yahoo.com ([66.163.185.37]:35906
-        "EHLO sonic313-14.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389312AbgDBPi5 (ORCPT
+        Thu, 2 Apr 2020 11:39:52 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:44200 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388916AbgDBPjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:38:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1585841935; bh=yokGOqbPBg7w2rl01YURGVEcZ5GD7Fg3h8J0REr+o0g=; h=Subject:To:References:From:Date:In-Reply-To:From:Subject; b=VLnri1CBbcSqYp8mAD2FqUOK5A5o+bNhXeCrfDJDDpej22JZFEulmw1faubhNAaxKqji2KjKJlhYN8BFKcdKjmM2GmwskrSCWuHEo4ZKrTVgL23sTWlRC8KEW0imadaQVWCFuVFFlA7TLU3nNT7u4FD90DA+UaM7Rvnf7aZ1lLGCHaiODryPQrPrzavi31rz/R3lfnjHRThgAXCduKtp0xFxOwNKtbD8hIuQ186vrwKPYaPZ+HqxbTOEuuUUSeyT5ywTu2W9Bvma7DQGOZJ3JTfRzg1dLMO0CiMNbEZLCjgDJOKHVl0+OSVyXoNa/J5Rq7ZtHwBbzyNNNKkRm1E+OQ==
-X-YMail-OSG: GJ6dvEsVM1lh6avaxiXiyn22Y8HV9g03fKWIPCJHyjbf50bsPmrv1zeZp12GTgE
- j.eSuhg54qq7ZG.pYNseCi5hxwhPG5EnanSk0mwttk8NTYKwqzanze8tNtp1muCLlqY.gzFe8yzS
- LfGcWsNbX6uvbXm0aO5DLOs5ihaI9TZs9KIFWkcHe9vS9oZtksRTcmSskkjc1Ay1gFSrHmntaic9
- 1gwuMLmLtNRen5C2JrmVHtvps4Am04.iRpMTm5bOYMH0dRXx_RWHvCBGhZtWY6u7OelEygfpksYY
- oMtkuZMCEbcHVfi1T0VqIGW0sShb9fT5_5GuQ7IvKQiFH8GueEuD9dyCflGHo2WwSB_l.ijGrjzF
- _tfIdxUolB2mieR1VSSmdXU31rd8UDsxIdBh.KU3I2IvyU62.sIeObfuxZO2lUdTFSnmKsRUgBJy
- A6y1oUTlc6Q9zc_PhTt_B8lD1W.tNZ8B8YgdMnef4PevaHpFtVCHC2XRxdvKAmvc6tHn8R7OfC6g
- plBML5xkmu_X22crv1lZbRomBRXmz8PqSWPKUcifxKpwmRQEnUkG7326_zOwk92NkNQVIZ25o7ZW
- ZQDqO5b.hq3pmpYVmTSRSSy7V6fzPRu1lM7X1SBNCkCQ9YfGY.Ug.MxC5PpXjHrCI.y8YLMrPOUG
- Aj9Hoj3vcIFH6.vx_e1hoer6rM3vP_4b2dKd2rU8S0Q3LvHIo9EY7UNEfE39uPZFOMCXjCXiU7eT
- JFEwDFGC1_Cv0LaBTo4NApvNGT7_n3CaokPNlEo0Q5BRzjTQ7LPXxBvPsKGld0qmIXVrO2CE4QEo
- huv6CJH2pqHbQXejVKxTNHrrr07nLf7U8kPz5hTroc8uV0qDhBLPAr4BqQsj_H9rnvz0al0610fG
- 010nIwSN4NbYoI4mks2rxaS_NUlshb_5bF6topFSj_mWHvGzAbqMMSZuJeVZAaFFj6OdfQNMCCW7
- SyGsUqD4YvlRaqVlkv8fKT3lzugZmiiH5jioS7OpobIBafSJeGLepcGeE1GBiRr8Z1HPrWkx.16L
- xYeQoHA1ftatsd5PVda6QLg9FrvVnyDs9tc1oxyTZ6cO_qVpBl1xAb4dOmLQOX43rJLMKJGA3otf
- SxXZtb.0CJInkVOdWAk86reKqcCMpa674B20y3KGoYWNJ7AyA1yCjVLNNPS8bR4MYIKIdHrThSA.
- KVnQ3kQGCPTxUuRN7VQemhSdYsgk7TvD0Abv066vjIXVVcmm6KWV6wlSeHj0ud4gv3LtC1N0oF58
- Bv0gC3MBsitsh_S1TMRZBfWfrXqCL1ijEo1OmnNslRi3rLo9BXvKvr45ThBWK9_TOIEbxgyuAIB8
- _ppn7fEP0IoJkejRjG8SRQJxTRAerJcgKL0aNP8fPDw84z5Gz4KZ36ttUeId2zBsrRMKBmhOWNaZ
- GvhPbQQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ne1.yahoo.com with HTTP; Thu, 2 Apr 2020 15:38:55 +0000
-Received: by smtp426.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 888e51d1dfccdd95cd8d762db68d7010;
-          Thu, 02 Apr 2020 15:38:51 +0000 (UTC)
-Subject: Re: [PATCH ghak96] audit: set cwd in audit context for file-related
- LSM audit records
-To:     Vladis Dronov <vdronov@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@redhat.com>, linux-audit@redhat.com,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200402141319.28714-1-vdronov@redhat.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <2d7174b1-115f-b86f-8054-a5caef4b69ff@schaufler-ca.com>
-Date:   Thu, 2 Apr 2020 08:38:51 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 11:39:52 -0400
+X-AuditID: c0a8fbf4-489ff70000004419-87-5e860746f190
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 73.47.17433.647068E5; Thu,  2 Apr 2020 17:39:50 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0487.000; Thu, 2 Apr 2020 17:39:49 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "brendanhiggins@google.com" <brendanhiggins@google.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "talgi@mellanox.com" <talgi@mellanox.com>,
+        "olteanv@gmail.com" <olteanv@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davidgow@google.com" <davidgow@google.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the
+ 'linear_ranges'
+Thread-Topic: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the
+ 'linear_ranges'
+Thread-Index: AQHWB1c4b3nN1Ux6yEinb5I8a1VXN6hi3q0AgAD00ICAAKifAIABXY+A
+Date:   Thu, 2 Apr 2020 15:39:48 +0000
+Message-ID: <bfb0093dc6fa5adb4f262f144585f7c937bd57c6.camel@fi.rohmeurope.com>
+References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+         <285da2166eadc1d46667dd9659d8dae74d28b0b9.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+         <CAFd5g460hY9uOtwicWHK2rhgLdL+gStbKGmLN5KLWi5JXDQEog@mail.gmail.com>
+         <4f915b8b8bee36a61ebea62ebf34c61845170ad5.camel@fi.rohmeurope.com>
+         <CAFd5g44gBrNti5Y_ctQKOE1_pWX3NAdTji1uH8m6dGj+tsJCew@mail.gmail.com>
+In-Reply-To: <CAFd5g44gBrNti5Y_ctQKOE1_pWX3NAdTji1uH8m6dGj+tsJCew@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <39F811E985B94B43959F1BBA38351B82@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200402141319.28714-1-vdronov@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Mailer: WebService/1.1.15585 hermes Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUwTZxzH89xd7w70zFnQPmM4Y6MYXKaSsORZZgwzGbn9s4jLYtQInnLQ
+        ztKS65Wh2x9kvGzCyMosVhtAB9ZX3mxVFKh20MzilMJQEVdJGhxZSUYmkDFS4nbHofDP83yf
+        5/t8nu/vSX4PjWu9VBJtNEuCaOZNejKe8F+Ked7LpCqyt191rUJ1bc0kqv7GiaGovRegmh9S
+        0eDTkziqjbwgkbN2AKC6UBmBgtfaCXQ20K9BpU1tJKqaSEahUDuF/nn0HYYc8xcxNNRZR6Lp
+        6gBA7uFBDNW5gwRqupiC2r2zGPor7CRQuS9AIZ/zggb92iWhU/U+Cnk9tTgannqGId+rOQL5
+        RqcB+uXlHMhYzzU3NAPu+uURjLvtek5xN/2buHMeG+e9tIVr6o5inOfKCZL78UKjhgs/6Sa5
+        yf5+iguejhGcvdEPuIa+LO5ufTPFjTt7sd0J+1fsOMxLRZ8Z883bdh5aYbBP/U4UPsOL/z1V
+        RpWAB3gliKMhmw5bQxGsEsTTWvYJgC03PaS6uAdgMPhcdmiaZHfAyhFKARLZD+F8yfeEcgZn
+        Kxj42OFeMBLY/bBl6E+gHjoAz4SvLepM6A9PLqQR7Ebo8J4nFM2wn8LhB+VADZvD4N8PyxaM
+        ODYLlrfMk4oG7Dp4omQSUzTO6qBnfFajls3C892hxSesgdGxV4v7G2DHbCuhFI2zqbCtc5uK
+        ZsBYh4NQ9QboqIpQag2rYd+ZF4QdrHUtS3At0a5ltGsZ7VpGnwOaKwAW8EZTPi8JaVtFwbZV
+        tBgK5OmIpcAD1PabuQX+6/mkB2A06AFv0Zh+DWOMlGdrVx225B4z8FZDjmgzCdYeAGlcn8h8
+        dFr2mFz+2HFBtLy23qYJvY7ZHKk5qGWVrKOCUCiIr91kmtZDJousyNauFoV8oTjPaJKWbIyO
+        Uy6PT0q0CuZcQeRtkiFHaZAcq9whirVSzq0AMs5YC/kCeVdF74M02h6tb8Tp3+Ya5DFQ727E
+        tYTZYhaSdEyORgZYBTDYzG/iJoCOBvoE5ohSzUr5J765bUIOwuSgx8WlSpDEL1lJJQClZG/a
+        aazKyywquvsuvNHVGm4bWz+bMeLvnRj48v373pmjyc49MynS9NjHsa/3Dtzx8U//KB1t+XYj
+        ZcFPpqec7QB9H2weHNsV7Q6889UXefeYn6M111PX4frxh+2+YbDrp+PYJN4lDRVO3Yk9KgpW
+        m0Z3xzr37GNx9+eWdN1Ll56wGvi0Lbho5f8H2k/4kkYEAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/2020 7:13 AM, Vladis Dronov wrote:
-> Set a current working directory in an audit context for the following record
-> types in dump_common_audit_data(): LSM_AUDIT_DATA_PATH, LSM_AUDIT_DATA_FILE,
-> LSM_AUDIT_DATA_IOCTL_OP, LSM_AUDIT_DATA_DENTRY, LSM_AUDIT_DATA_INODE so a
-> separate CWD record is emitted later.
->
-> Link: https://github.com/linux-audit/audit-kernel/issues/96
-
-I don't have a problem with the patch, but it sure would be nice
-if you explained why these events "could use a CWD record".
-
-> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-> ---
-> out-of-commit-message-note:
->
-> Hello,
-> Honestly, I'm not sure about "if (!context->in_syscall)" check in
-> __audit_getcwd(). It was copied from __audit_getname() and I do
-> not quite understand why it is there and if __audit_getcwd() needs
-> it. If you have an idea on this, could you please, tell?
->
->  include/linux/audit.h |  9 ++++++++-
->  kernel/auditsc.c      | 17 +++++++++++++++++
->  security/lsm_audit.c  |  5 +++++
->  3 files changed, 30 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index f9ceae57ca8d..b4306abc5891 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -268,7 +268,7 @@ extern void __audit_syscall_entry(int major, unsigned long a0, unsigned long a1,
->  extern void __audit_syscall_exit(int ret_success, long ret_value);
->  extern struct filename *__audit_reusename(const __user char *uptr);
->  extern void __audit_getname(struct filename *name);
-> -
-> +extern void __audit_getcwd(void);
->  extern void __audit_inode(struct filename *name, const struct dentry *dentry,
->  				unsigned int flags);
->  extern void __audit_file(const struct file *);
-> @@ -327,6 +327,11 @@ static inline void audit_getname(struct filename *name)
->  	if (unlikely(!audit_dummy_context()))
->  		__audit_getname(name);
->  }
-> +static inline void audit_getcwd(void)
-> +{
-> +	if (unlikely(!audit_dummy_context()))
-> +		__audit_getcwd();
-> +}
->  static inline void audit_inode(struct filename *name,
->  				const struct dentry *dentry,
->  				unsigned int aflags) {
-> @@ -545,6 +550,8 @@ static inline struct filename *audit_reusename(const __user char *name)
->  }
->  static inline void audit_getname(struct filename *name)
->  { }
-> +static inline void audit_getcwd(void)
-> +{ }
->  static inline void __audit_inode(struct filename *name,
->  					const struct dentry *dentry,
->  					unsigned int flags)
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index 814406a35db1..16316032ef9f 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -1890,6 +1890,23 @@ void __audit_getname(struct filename *name)
->  		get_fs_pwd(current->fs, &context->pwd);
->  }
->  
-> +/**
-> + * __audit_getcwd - set a current working directory
-> + *
-> + * Set a current working directory of an audited process for this context.
-> + * Called from security/lsm_audit.c:dump_common_audit_data().
-> + */
-> +void __audit_getcwd(void)
-> +{
-> +	struct audit_context *context = audit_context();
-> +
-> +	if (!context->in_syscall)
-> +		return;
-> +
-> +	if (!context->pwd.dentry)
-> +		get_fs_pwd(current->fs, &context->pwd);
-> +}
-> +
->  static inline int audit_copy_fcaps(struct audit_names *name,
->  				   const struct dentry *dentry)
->  {
-> diff --git a/security/lsm_audit.c b/security/lsm_audit.c
-> index 2d2bf49016f4..7c555621c2bd 100644
-> --- a/security/lsm_audit.c
-> +++ b/security/lsm_audit.c
-> @@ -241,6 +241,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
->  			audit_log_untrustedstring(ab, inode->i_sb->s_id);
->  			audit_log_format(ab, " ino=%lu", inode->i_ino);
->  		}
-> +		audit_getcwd();
->  		break;
->  	}
->  	case LSM_AUDIT_DATA_FILE: {
-> @@ -254,6 +255,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
->  			audit_log_untrustedstring(ab, inode->i_sb->s_id);
->  			audit_log_format(ab, " ino=%lu", inode->i_ino);
->  		}
-> +		audit_getcwd();
->  		break;
->  	}
->  	case LSM_AUDIT_DATA_IOCTL_OP: {
-> @@ -269,6 +271,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
->  		}
->  
->  		audit_log_format(ab, " ioctlcmd=0x%hx", a->u.op->cmd);
-> +		audit_getcwd();
->  		break;
->  	}
->  	case LSM_AUDIT_DATA_DENTRY: {
-> @@ -283,6 +286,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
->  			audit_log_untrustedstring(ab, inode->i_sb->s_id);
->  			audit_log_format(ab, " ino=%lu", inode->i_ino);
->  		}
-> +		audit_getcwd();
->  		break;
->  	}
->  	case LSM_AUDIT_DATA_INODE: {
-> @@ -300,6 +304,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
->  		audit_log_format(ab, " dev=");
->  		audit_log_untrustedstring(ab, inode->i_sb->s_id);
->  		audit_log_format(ab, " ino=%lu", inode->i_ino);
-> +		audit_getcwd();
->  		break;
->  	}
->  	case LSM_AUDIT_DATA_TASK: {
+DQpPbiBXZWQsIDIwMjAtMDQtMDEgYXQgMTE6NDggLTA3MDAsIEJyZW5kYW4gSGlnZ2lucyB3cm90
+ZToNCj4gT24gV2VkLCBBcHIgMSwgMjAyMCBhdCAxOjQ1IEFNIFZhaXR0aW5lbiwgTWF0dGkNCj4g
+PE1hdHRpLlZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4gd3JvdGU6DQo+IA0KPiBBYnNvbHV0
+ZWx5ISBXb3VsZCB5b3UgYmUgaW50ZXJlc3RlZCBpbiBqb2luaW5nIG91ciBtYWlsaW5nIGxpc3Q6
+DQo+IA0KPiBodHRwczovL2dyb3Vwcy5nb29nbGUuY29tL2cva3VuaXQtZGV2DQo+IA0KDQpTdXJl
+IDopIEhvdz8gVGhlIGxpbmsgZ2F2ZSBtZSA0MDQuLi4NCg0KQmVzdCBSZWdhcmRzLA0KCU1hdHRp
+DQo=
