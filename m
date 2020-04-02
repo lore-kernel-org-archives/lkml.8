@@ -2,329 +2,115 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD70C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C66EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EDDD20787
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C05207FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="VYBVid+R"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pHAONuh2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732849AbgDBAUk (ORCPT
+        id S1732881AbgDBA0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 20:20:40 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43623 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732527AbgDBAUk (ORCPT
+        Wed, 1 Apr 2020 20:26:42 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32789 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732619AbgDBA0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 20:20:40 -0400
-Received: by mail-ed1-f68.google.com with SMTP id bd14so2024477edb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 17:20:37 -0700 (PDT)
+        Wed, 1 Apr 2020 20:26:41 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c138so898069pfc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 17:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Cy8vIQz2yaGK0zk3nTridT+PraSHoSgW6yCapUf+4BA=;
-        b=VYBVid+R4R8MHVRoNK3oxU0Lzu3hLgOII+La6r+cIfCwIQqnZflVXrRIHHz3tvE2MI
-         Aipae//AdtnRp9Lo0oX5nPWKOSjVuNPljOolfSg1mo8XFeQAstf0SzReIZuxx/SgZUaX
-         gk8Xnfw/bW83bJMD7hQvFG9+InhhKSxonYtWIdBInrkdtiHyceDumbkLNf4IRrBAiCk/
-         FPd7nfxIEdCkXgN2khixYdOUJP/wPWkjzfolriu2S/f/DpiK0bnQGrS1s1bOizz72xf/
-         S3e4cF0Iw4vjDOmyt0tV2Aa418KcITIvZWvNZ0mMWw0RbbT5eVQjx812WB+KBYvLivNc
-         oL5w==
+        bh=ob50KPPitu/VAsCZRCb3jIgsR0wX/xQsKu6DYbArPO4=;
+        b=pHAONuh2cBAam65QtvHR6M5VI4wsm+z8NLQz0FSUy4wl0NcZnViOpfQYIAVwYqo+GZ
+         6u/yJcCBkg0GUBhSG+eGb8Z1GJWrDcwH3Wr5Ry3Ms1DEAEk7yD7os4vd6JhSOKjskUG4
+         r3wGD+dWECHTN6nYHUIfjqza7scSXkzCDEqQe6q5Jm+B/gCnFnsp+OMy6VjIcO592Sj2
+         xXlTkTicFXlyELgXpyjKervJ7cz84gj7hK65zerNKNVET0gcejyJGIFz5ka8k4RL3Hpl
+         MhTRtr5Jqi/dTDEmBmUoeRo4kXd5QMl/ivO71/Ze8GThkm01gienkv1OsisOlGAwhZmz
+         QbRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Cy8vIQz2yaGK0zk3nTridT+PraSHoSgW6yCapUf+4BA=;
-        b=M5vIL+Q3OUpWGrW3EGKZ2Sv7W32U3M/OlbvUKido3otaJaPKNoibUF32Soq04wOYLv
-         9jnSywgvGitucMXJfZ8zVWgypScHXwjpRqEZWOPmrJqN0Bnoxegm5B6kW5o8HwO3YtBR
-         RknG2SmCH83NMaDdg0Y+rtYRiER0aos/Ow5EobnI6gHzu6/UuGVI9KQaz+hZBgbRfP8e
-         qhXKO4aFgp4aO5V8qydrkL8Um6AK7RlC0NFLYJMC1YYykmNH5XcDeKIj64SPab90UD13
-         42js1ztdVbIW60RNbDf534CGUugSLjkY4wO/6mzKPHLFg69mI9YfDXyZLonet55wQbVq
-         izXg==
-X-Gm-Message-State: AGi0PubkPb6sZmCAzJf3OEJ148iEPeR2BpjbWkAbr2BFgas+XbuBFiLP
-        ThhXiJl2OSsnOu8A4WmMZWafe8rpIFLy/k0OnKC7CA==
-X-Google-Smtp-Source: APiQypKIqAXTv1ZZqKusrDKPxIGUrlYDyh3RjXfcsVx2S/ORtEczOYfOG4HxYoW0mRUMSHKh8Zriab2quE4xCKlv/60=
-X-Received: by 2002:a05:6402:3044:: with SMTP id bu4mr501326edb.123.1585786837024;
- Wed, 01 Apr 2020 17:20:37 -0700 (PDT)
+        bh=ob50KPPitu/VAsCZRCb3jIgsR0wX/xQsKu6DYbArPO4=;
+        b=IpdEzWyC7B+sxP/s9jyBJ8gDdOSRp/IPfsndQY0zrmvVmb/7KZ63VZMs+cI7hF6pw/
+         WdLJ9o60UxqAzCEDeLGdYCk5VEI5/VXygv7j42dxhgp9jmGjgS72/qNxYWPPMPN4gCa6
+         5I+rUZ8k8PhyQU8jGklMCjBVFZFe//pUIGmT/9XdCwtrscea/7TV8KYbuXWbv8tllfkK
+         8kSn4/sfdmIWTO5Lx08pOWiYfyvQrS3Rv323Zk0WQ32z1Iy9Gz7qdR3dQx8di+neXF0c
+         C5Ol48dhVCNJ5XIpdFfu5EiiKLSczTSqpYaP8uuxxCj/DHWCdHScLhudBSWnlgvwcrpO
+         Hq5g==
+X-Gm-Message-State: AGi0PuasW3n/MHZL+R9OMC6FTeefUupJwHnfpmGZTc1Dvoj4LImAYTsc
+        CMzahzR/kybV0NmNleCAv2rUtSGqDpvNXW4wO1rkxA==
+X-Google-Smtp-Source: APiQypKeG0RcaEryHPNpjDE3LJENFRlmFYUd6WwW6EYlUJOuCKtogvsWiFcehG/IvwaDMd5evl8Xm6x6apMH7SD2Ofc=
+X-Received: by 2002:a63:a34d:: with SMTP id v13mr837990pgn.10.1585787200467;
+ Wed, 01 Apr 2020 17:26:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-14-alastair@d-silva.org>
-In-Reply-To: <20200327071202.2159885-14-alastair@d-silva.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 1 Apr 2020 17:20:25 -0700
-Message-ID: <CAPcyv4jO_U-EOhdErFw9A+h0iai69jq8ni5w_8wUX-B4vS8JDA@mail.gmail.com>
-Subject: Re: [PATCH v4 13/25] nvdimm/ocxl: Read the capability registers &
- wait for device ready
-To:     "Alastair D'Silva" <alastair@d-silva.org>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+References: <20200311024240.26834-1-elder@linaro.org> <20200401173515.142249-1-ndesaulniers@google.com>
+ <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org> <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
+ <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org> <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
+ <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org> <CAKwvOdnZ9KL1Esmdjvk-BTP2a+C24bOWguNVaU3RSXKi1Ouh+w@mail.gmail.com>
+ <5635b511-64f8-b612-eb25-20b43ced4ed3@linaro.org>
+In-Reply-To: <5635b511-64f8-b612-eb25-20b43ced4ed3@linaro.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 1 Apr 2020 17:26:29 -0700
+Message-ID: <CAKwvOdnO2=yjEerw50b_C2vrgdCh2es6ZRfQpBRVR9RCrvwi6Q@mail.gmail.com>
+Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
+To:     Alex Elder <elder@linaro.org>,
+        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva <alastair@d-silva.org> wrote:
+On Wed, Apr 1, 2020 at 4:18 PM Alex Elder <elder@linaro.org> wrote:
 >
-> This patch reads timeouts & firmware version from the controller, and
-> uses those timeouts to wait for the controller to report that it is ready
-> before handing the memory over to libnvdimm.
+> On 4/1/20 5:26 PM, Nick Desaulniers wrote:
+> >
+> > mainline is hosed for aarch64 due to some dtc failures.  I'm not sure
+> > how TCWG's CI chooses the bisection starting point, but if mainline
+> > was broken, and it jumped back say 300 commits, then the automated
+> > bisection may have converged on your first patch, but not the second.
 >
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->  drivers/nvdimm/ocxl/Makefile            |  2 +-
->  drivers/nvdimm/ocxl/main.c              | 85 +++++++++++++++++++++++++
->  drivers/nvdimm/ocxl/ocxlpmem.h          | 29 +++++++++
->  drivers/nvdimm/ocxl/ocxlpmem_internal.c | 19 ++++++
->  4 files changed, 134 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/nvdimm/ocxl/ocxlpmem_internal.c
+> This is similar to the situation I discussed with Maxim this
+> morning.  A different failure (yes, DTC related) led to an
+> automated bisect process, which landed on my commit. And my
+> commit unfortunately has the the known issue that was later
+> corrected.
 >
-> diff --git a/drivers/nvdimm/ocxl/Makefile b/drivers/nvdimm/ocxl/Makefile
-> index e0e8ade1987a..bab97082e062 100644
-> --- a/drivers/nvdimm/ocxl/Makefile
-> +++ b/drivers/nvdimm/ocxl/Makefile
-> @@ -4,4 +4,4 @@ ccflags-$(CONFIG_PPC_WERROR)    += -Werror
->
->  obj-$(CONFIG_OCXL_PMEM) += ocxlpmem.o
->
-> -ocxlpmem-y := main.o
-> \ No newline at end of file
-> +ocxlpmem-y := main.o ocxlpmem_internal.o
-> diff --git a/drivers/nvdimm/ocxl/main.c b/drivers/nvdimm/ocxl/main.c
-> index c0066fedf9cc..be76acd33d74 100644
-> --- a/drivers/nvdimm/ocxl/main.c
-> +++ b/drivers/nvdimm/ocxl/main.c
-> @@ -8,6 +8,7 @@
->
->  #include <linux/module.h>
->  #include <misc/ocxl.h>
-> +#include <linux/delay.h>
->  #include <linux/ndctl.h>
->  #include <linux/mm_types.h>
->  #include <linux/memory_hotplug.h>
-> @@ -327,6 +328,50 @@ static void remove(struct pci_dev *pdev)
->         }
->  }
->
-> +/**
-> + * read_device_metadata() - Retrieve config information from the AFU and save it for future use
-> + * @ocxlpmem: the device metadata
-> + * Return: 0 on success, negative on failure
-> + */
-> +static int read_device_metadata(struct ocxlpmem *ocxlpmem)
-> +{
-> +       u64 val;
-> +       int rc;
-> +
-> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CCAP0,
-> +                                    OCXL_LITTLE_ENDIAN, &val);
+> Maxim said this was what started the automated bisect:
+> ===
+> +# 00:01:41 make[2]: *** [arch/arm64/boot/dts/ti/k3-am654-base-board.dtb] Error 2
+> +# 00:01:41 make[2]: *** [arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dtb] Error 2
+> +# 00:01:41 make[1]: *** [arch/arm64/boot/dts/ti] Error 2
+> +# 00:01:41 make: *** [dtbs] Error 2
 
-This calling convention would seem to defeat the ability of sparse to
-validate endian correctness. That's independent of this series, but I
-wonder how does someone review why this argument is sometimes
-OCXL_LITTLE_ENDIAN and sometimes OCXL_HOST_ENDIAN?
+DTC thread:
+https://lore.kernel.org/linux-arm-kernel/20200401223500.224253-1-ndesaulniers@google.com/
 
-> +       if (rc)
-> +               return rc;
-> +
-> +       ocxlpmem->scm_revision = val & 0xFFFF;
-> +       ocxlpmem->read_latency = (val >> 32) & 0xFFFF;
-> +       ocxlpmem->readiness_timeout = (val >> 48) & 0x0F;
-> +       ocxlpmem->memory_available_timeout = val >> 52;
-
-Maybe some macros to parse out these register fields?
-
-> +
-> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CCAP1,
-> +                                    OCXL_LITTLE_ENDIAN, &val);
-> +       if (rc)
-> +               return rc;
-> +
-> +       ocxlpmem->max_controller_dump_size = val & 0xFFFFFFFF;
-> +
-> +       // Extract firmware version text
-> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_FWVER,
-> +                                    OCXL_HOST_ENDIAN,
-> +                                    (u64 *)ocxlpmem->fw_version);
-> +       if (rc)
-> +               return rc;
-> +
-> +       ocxlpmem->fw_version[8] = '\0';
-> +
-> +       dev_info(&ocxlpmem->dev,
-> +                "Firmware version '%s' SCM revision %d:%d\n",
-> +                ocxlpmem->fw_version, ocxlpmem->scm_revision >> 4,
-> +                ocxlpmem->scm_revision & 0x0F);
-
-Does the driver need to be chatty here. If this data is relevant
-should it appear in sysfs by default?
-
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * probe_function0() - Set up function 0 for an OpenCAPI persistent memory device
->   * This is important as it enables templates higher than 0 across all other
-> @@ -359,6 +404,9 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  {
->         struct ocxlpmem *ocxlpmem;
->         int rc;
-> +       u64 chi;
-> +       u16 elapsed, timeout;
-> +       bool ready = false;
->
->         if (PCI_FUNC(pdev->devfn) == 0)
->                 return probe_function0(pdev);
-> @@ -413,6 +461,43 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->                 goto err;
->         }
->
-> +       rc = read_device_metadata(ocxlpmem);
-> +       if (rc) {
-> +               dev_err(&pdev->dev, "Could not read metadata\n");
-> +               goto err;
-> +       }
-> +
-> +       elapsed = 0;
-> +       timeout = ocxlpmem->readiness_timeout +
-> +                 ocxlpmem->memory_available_timeout;
-> +
-> +       while (true) {
-> +               rc = ocxlpmem_chi(ocxlpmem, &chi);
-> +               ready = (chi & (GLOBAL_MMIO_CHI_CRDY | GLOBAL_MMIO_CHI_MA)) ==
-> +                       (GLOBAL_MMIO_CHI_CRDY | GLOBAL_MMIO_CHI_MA);
-> +
-> +               if (ready)
-> +                       break;
-> +
-> +               if (elapsed++ > timeout) {
-> +                       dev_err(&ocxlpmem->dev,
-> +                               "OpenCAPI Persistent Memory ready timeout.\n");
-> +
-> +                       if (!(chi & GLOBAL_MMIO_CHI_CRDY))
-> +                               dev_err(&ocxlpmem->dev,
-> +                                       "controller is not ready.\n");
-> +
-> +                       if (!(chi & GLOBAL_MMIO_CHI_MA))
-> +                               dev_err(&ocxlpmem->dev,
-> +                                       "controller does not have memory available.\n");
-> +
-> +                       rc = -ENXIO;
-> +                       goto err;
-> +               }
-> +
-> +               msleep(1000);
-
-At platform boot this is going to serialize / delay other pci hardware
-init. Do you need this determination to be synchronous with the call
-to ->probe()? If not, let's move it out of line. For example nvdimm
-device registration is asynchronous by default with options to flush
-if userspace needs to know that the kernel has finished loading
-drivers.
-
-> +       }
-> +
->         rc = register_lpc_mem(ocxlpmem);
->         if (rc) {
->                 dev_err(&pdev->dev,
-> diff --git a/drivers/nvdimm/ocxl/ocxlpmem.h b/drivers/nvdimm/ocxl/ocxlpmem.h
-> index 322387873b4b..3eadbe19f6d0 100644
-> --- a/drivers/nvdimm/ocxl/ocxlpmem.h
-> +++ b/drivers/nvdimm/ocxl/ocxlpmem.h
-> @@ -93,4 +93,33 @@ struct ocxlpmem {
->         void *metadata_addr;
->         struct resource pmem_res;
->         struct nd_region *nd_region;
-> +       char fw_version[8 + 1];
-> +
-> +       u32 max_controller_dump_size;
-> +       u16 scm_revision; // major/minor
-> +       u8 readiness_timeout;  /* The worst case time (in seconds) that the host
-> +                               * shall wait for the controller to become
-> +                               * operational following a reset (CHI.CRDY).
-> +                               */
-> +       u8 memory_available_timeout;  /* The worst case time (in seconds) that
-> +                                      * the host shall wait for memory to
-> +                                      * become available following a reset
-> +                                      * (CHI.MA).
-> +                                      */
-> +
-> +       u16 read_latency; /* The nominal measure of latency (in nanoseconds)
-> +                          * associated with an unassisted read of a memory
-> +                          * block.
-> +                          * This represents the capability of the raw media
-> +                          * technology without assistance
-> +                          */
->  };
-> +
-> +/**
-> + * ocxlpmem_chi() - Get the value of the CHI register
-> + * @ocxlpmem: the device metadata
-> + * @chi: returns the CHI value
-> + *
-> + * Returns 0 on success, negative on error
-> + */
-> +int ocxlpmem_chi(const struct ocxlpmem *ocxlpmem, u64 *chi);
-> diff --git a/drivers/nvdimm/ocxl/ocxlpmem_internal.c b/drivers/nvdimm/ocxl/ocxlpmem_internal.c
-> new file mode 100644
-> index 000000000000..5578169b7515
-> --- /dev/null
-> +++ b/drivers/nvdimm/ocxl/ocxlpmem_internal.c
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// Copyright 2020 IBM Corp.
-> +
-> +#include <misc/ocxl.h>
-> +#include <linux/delay.h>
-> +#include "ocxlpmem.h"
-> +
-> +int ocxlpmem_chi(const struct ocxlpmem *ocxlpmem, u64 *chi)
-> +{
-> +       u64 val;
-> +       int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHI,
-> +                                        OCXL_LITTLE_ENDIAN, &val);
-> +       if (rc)
-> +               return rc;
-> +
-> +       *chi = val;
-> +
-> +       return 0;
-> +}
-> --
-> 2.24.1
->
+Maxim, can you describe how the last known good sha is chosen?  If you
+persist anything between builds, like ccache dir, maybe you could
+propagate a sha of the last successful build, updating it if no
+regression occurred?  Then that can always be a precise last known
+good sha.  Though I don't know if the merge commits complicate this.
+-- 
+Thanks,
+~Nick Desaulniers
