@@ -2,91 +2,94 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5D2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C03EC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22AA2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD1D2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:23:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GB3sDeom"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="FbW3d2tw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389208AbgDBPXC (ORCPT
+        id S2389232AbgDBPXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:23:02 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60144 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388234AbgDBPXB (ORCPT
+        Thu, 2 Apr 2020 11:23:07 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44239 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389199AbgDBPXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:23:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585840980;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1G4fW9kRqwkS0muZKrX5i3nTFV88PYpfmaEKwAh1/sk=;
-        b=GB3sDeom8VTDLyLjNe1dvln5zfpAT/FxFH//ZzIcp2MkT78cuNP+JnOINGbcWOzp4ewC8n
-        SWgQtRRy4OhdwN4YkMPn3YElcVt/zu6LeWqzm9uAXvIGeG/okiRY86ZFfU8I+rTS0yd8cf
-        V2ghL7gtoihlQbMad9xd3TLEfcxOm6A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-9EJhvMwNMPGRd1oIgwNyOA-1; Thu, 02 Apr 2020 11:22:58 -0400
-X-MC-Unique: 9EJhvMwNMPGRd1oIgwNyOA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 224038017FC;
-        Thu,  2 Apr 2020 15:22:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9617748;
-        Thu,  2 Apr 2020 15:22:52 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpeguxDiq3BW94AVFhgY75P+jy_+jk3pdyNZ5z-aJPXNvvGA@mail.gmail.com>
-References: <CAJfpeguxDiq3BW94AVFhgY75P+jy_+jk3pdyNZ5z-aJPXNvvGA@mail.gmail.com> <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com> <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk> <2418286.1585691572@warthog.procyon.org.uk> <20200401090445.6t73dt7gz36bv4rh@ws.net.home> <2488530.1585749351@warthog.procyon.org.uk> <2488734.1585749502@warthog.procyon.org.uk> <CAJfpeguLJcAEgx2JWRNcKMkyFTWB0r4wS6F4fJHK3VHtY=EjXQ@mail.gmail.com> <2590276.1585756914@warthog.procyon.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
+        Thu, 2 Apr 2020 11:23:03 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i16so4630168edy.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=la1b5Ou2yNh3JsPWbozq9MDt4G+rB5yxkaRSc5pmaiE=;
+        b=FbW3d2twbyZ4mtllP3ntlUwxpeUqJ3cuXzhPgbLcRcK7DgxF7GpM/NG2cj6b7bK0kv
+         3rYtfI2OchTF6M89+enP7/L2/EO9odtTm15fD4/NU/I3XjwErPdx8RT8ALiIAMU0fCzQ
+         thuf5FLYNjQ8Q3+JNQTciGito3W6QCOmhhYBw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=la1b5Ou2yNh3JsPWbozq9MDt4G+rB5yxkaRSc5pmaiE=;
+        b=hN2Mrj+KR6GbTJFBqNIM+OqsrjLiK1pWrr/aB392GFppPh+Tb/YAINTAkAsjy9Ni1x
+         on9zDbC/HYEXYNrBHRkCaib054AjM0yrDUnsnMzuk5v1fbka3CBHRgJ46L/wfoSKR4+P
+         psvdnwnwXgUIWkgVt7B7n0tPLcpLTPCyEAqq8cwtD+iJTuUzgHWyUWM9xHG5lBcJZWXL
+         +PTRaC7Kpm7+wz4d4uU7v6r5H+XIBFl405UJw6nLaz01TXh3XBXN2dekX2sKR9u80shj
+         /82mN2TUsYSNiu2BGH9DGg8fjHTkXmn1BbBEQUdd2G6aIHH81GPrAnlmid5faiT5AKJv
+         0xLQ==
+X-Gm-Message-State: AGi0PuZr73jEJj6JyyZP9ZQRLGbKfyy5/+JLsqD+xDnzuUudnEDN1pY1
+        7dBZeqSeLFX6chAWmydQfW5+FxTE+2J806gnVIBlLg==
+X-Google-Smtp-Source: APiQypICMqPIQd16vetsb2LQJpT3V/kbuhYk03Sj4n2WAAPFiFyV6LvcYLcfWOgYg1ssSkWsh9LfQGG1LiHAXWy3bE4=
+X-Received: by 2002:a50:c341:: with SMTP id q1mr3533190edb.247.1585840980469;
+ Thu, 02 Apr 2020 08:23:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk>
+ <2418286.1585691572@warthog.procyon.org.uk> <20200401144109.GA29945@gardel-login>
+ <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
+ <2590640.1585757211@warthog.procyon.org.uk> <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
+ <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
+ <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com> <20200402143623.GB31529@gardel-login>
+In-Reply-To: <20200402143623.GB31529@gardel-login>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 2 Apr 2020 17:22:49 +0200
+Message-ID: <CAJfpegtRi9epdxAeoVbm+7UxkZfzC6XmD4K_5dg=RKADxy_TVA@mail.gmail.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
         Christian Brauner <christian.brauner@ubuntu.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
         Miklos Szeredi <mszeredi@redhat.com>,
         Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3070723.1585840971.1@warthog.procyon.org.uk>
-Date:   Thu, 02 Apr 2020 16:22:51 +0100
-Message-ID: <3070724.1585840971@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+On Thu, Apr 2, 2020 at 4:36 PM Lennart Poettering <mzxreary@0pointer.de> wrote:
 
-> > > Not sure what you mean.  I think it shows precisely the information
-> > > Karel asked for.
-> >
-> > It's not atomic.
-> 
-> Yes it is.
+> You appear to be thinking about the "udisks" project or so?
 
-No, it really isn't - though it could be made so.
+Probably.
 
-ext4_show_mount(), for example, doesn't lock against "mount -o remount", so
-the configuration can be changing whilst it's being rendered to text.
+The real question is: is there a sane way to filter mount
+notifications so that systemd receives only those which it is
+interested in, rather than the tens of thousands that for example
+autofs is managing and has nothing to do with systemd?
 
-David
+Is there a specific mountpoint or mountpoints that systemd is waiting
+for?   How exactly does this work?
 
+Thanks,
+Miklos
