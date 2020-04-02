@@ -2,46 +2,43 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3628CC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76429C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF7220757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAD12078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="evQzZzAP"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="TK+rZo3m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388924AbgDBO50 (ORCPT
+        id S2388920AbgDBO5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:57:26 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:39629 "EHLO rere.qmqm.pl"
+        Thu, 2 Apr 2020 10:57:04 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:16195 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388823AbgDBO5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:57:05 -0400
+        id S2388239AbgDBO5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:57:04 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR3z3DK4zwy;
-        Thu,  2 Apr 2020 16:57:03 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR3x59J3z9j;
+        Thu,  2 Apr 2020 16:57:01 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585839423; bh=7bziPBmLgN03w+As65y0di/xcEI1r2q/jImfIySQxjY=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=evQzZzAPENuWhwsb5RJM9WMUYr5N7yFedykWzkdn0f4KnOPWDO3PtZ2Z/xcjpKQfG
-         d1sq9a/M29+/d11ArpffiBp3qUbzz9S0Vnt2V54P+A7KPqml4LUlCF78FGdTPO9kxQ
-         KeJKye1AzXETRDl3Em54jXjFmVefJ6wsxsJ4BlFtSR2JjFpc/NX0N4b0B26A5UpnXJ
-         zjgyFYNFxdbqojbhDC9lnY9yDBqv4STq3zMOsbGUPSJxqgJOpxISo4IIgRuBLB2wPx
-         3jRePJz/gzLuh3O77rCakHQXfHAR4wTjWWlbbq8YsbydwwIBOJTgqVuMoVviGBmwvR
-         supR66xMmB6XQ==
+        t=1585839421; bh=Cnipj6qlDTsuXA/1q+W9CTZs5JFIJcQJ/Vo8HSDyOEw=;
+        h=Date:From:Subject:To:Cc:From;
+        b=TK+rZo3mOPWc0JHqcwy76l3X+diXRQUPW8Wk4+XYzSwq7uyO68k6hYs2PSCkHV+6L
+         Bhg4f7wQzYaTXcQqrYDmroONiPrhzXQvA7u76iXJMQSZInTHqt3Ilpaz1mnrrKnLuK
+         dYHzQNr1h8Zen48pWQ+xtYrfFCwAbxFWBoFc5Y6bIwjYZF1Us5VL6dXlwDyVmqusCZ
+         SnE3VhlTI1MTRf99TI2J0Lq2tnWFtYMps+v0ZIZyFB4uJ8SCrmBds8l75ym63h1mWz
+         ZP8uaFvfuBEy6YS7gejagG3sb0z3krI5jssR4Vn64xeI/NFa24bAtvxMJkt6MHkLiU
+         jue152F0Lf0uQ==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 16:57:03 +0200
-Message-Id: <9dc504550be598dd333ebf41d28484b886ffd7c0.1585837575.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
+Date:   Thu, 02 Apr 2020 16:57:01 +0200
+Message-Id: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 4/7] power: supply: core: hide unused HWMON labels
+Subject: [PATCH 0/7] power: supply: core: extensions and fixes
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -54,76 +51,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently HWMON emulation shows all labels (temp and ambient temp)
-regardless if power supply supports reading the values. Check that at
-least one property is enabled for each label.
+This series covers three areas of power supply class:
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/power/supply/power_supply_hwmon.c | 43 +++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 3 deletions(-)
+1-2. constify property and usb_type lists as they should not be changed
+after driver registration
+3. make HWMON temp* labels match measurements
+4. filter out unused HWMON labels
+5-7. extend core to support input/battery/output supply point measurements
 
-diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-index 83318a21fb52..118d73a2ab4a 100644
---- a/drivers/power/supply/power_supply_hwmon.c
-+++ b/drivers/power/supply/power_supply_hwmon.c
-@@ -103,6 +103,40 @@ static bool power_supply_hwmon_is_a_label(enum hwmon_sensor_types type,
- 	return type == hwmon_temp && attr == hwmon_temp_label;
- }
- 
-+static bool power_supply_hwmon_has_property(
-+	const struct power_supply_hwmon *psyhw,
-+	enum hwmon_sensor_types type, u32 attr, int channel)
-+{
-+	int prop = power_supply_hwmon_to_property(type, attr, channel);
-+
-+	return prop >= 0 && test_bit(prop, psyhw->props);
-+}
-+
-+static bool power_supply_hwmon_has_input(
-+	const struct power_supply_hwmon *psyhw,
-+	enum hwmon_sensor_types type, int channel)
-+{
-+	static const enum hwmon_temp_attributes temp_attrs[] = {
-+		hwmon_temp_input,
-+		hwmon_temp_min, hwmon_temp_max,
-+		hwmon_temp_min_alarm, hwmon_temp_max_alarm,
-+	};
-+	size_t i;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		for (i = 0; i < ARRAY_SIZE(temp_attrs); ++i)
-+			if (power_supply_hwmon_has_property(psyhw, type,
-+					temp_attrs[i], channel))
-+				return true;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return false;
-+}
-+
- static bool power_supply_hwmon_is_writable(enum hwmon_sensor_types type,
- 					   u32 attr)
- {
-@@ -129,9 +163,12 @@ static umode_t power_supply_hwmon_is_visible(const void *data,
- 	const struct power_supply_hwmon *psyhw = data;
- 	int prop;
- 
--
--	if (power_supply_hwmon_is_a_label(type, attr))
--		return 0444;
-+	if (power_supply_hwmon_is_a_label(type, attr)) {
-+		if (power_supply_hwmon_has_input(psyhw, type, channel))
-+			return 0444;
-+		else
-+			return 0;
-+	}
- 
- 	prop = power_supply_hwmon_to_property(type, attr, channel);
- 	if (prop < 0 || !test_bit(prop, psyhw->props))
+A patchset extending bq25890 driver to use the new infrastructure will
+follow.
+
+Michał Mirosław (7):
+  power: supply: core: reduce power_supply_show_usb_type() parameters
+  power: supply: core: allow to constify property lists
+  power: supply: core: fix HWMON temperature labels
+  power: supply: core: hide unused HWMON labels
+  power: supply: core: add input voltage/current measurements
+  power: supply: core: add output voltage measurements
+  power: supply: core: document measurement points
+
+ Documentation/power/power_supply_class.rst |   6 +
+ drivers/power/supply/power_supply_hwmon.c  | 189 ++++++++++++++++++++-
+ drivers/power/supply/power_supply_sysfs.c  |  15 +-
+ include/linux/power_supply.h               |   9 +-
+ 4 files changed, 202 insertions(+), 17 deletions(-)
+
 -- 
 2.20.1
 
