@@ -2,102 +2,112 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3785DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280A3C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0691A20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED9E20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:33:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3LBbVdV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733270AbgDBCdU (ORCPT
+        id S2387408AbgDBCdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 22:33:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:36260 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbgDBCdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 22:33:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5664F30E;
-        Wed,  1 Apr 2020 19:33:19 -0700 (PDT)
-Received: from [10.163.1.8] (unknown [10.163.1.8])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D50E93F71E;
-        Wed,  1 Apr 2020 19:33:16 -0700 (PDT)
-Subject: Re: [PATCH 0/6] Introduce ID_PFR2 and other CPU feature changes
-To:     Peter Maydell <peter.maydell@linaro.org>
-Cc:     arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        kvmarm@lists.cs.columbia.edu
-References: <1580215149-21492-1-git-send-email-anshuman.khandual@arm.com>
- <45ce930c-81b3-3161-ced6-34a8c8623ac8@arm.com>
- <CAFEAcA_yZ55rOD1x+FE9wYO8HXx9seK72ZCmnWjtDVr_95-whg@mail.gmail.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c2b672ca-9b74-89f8-388c-555bbcbd57ba@arm.com>
-Date:   Thu, 2 Apr 2020 08:03:09 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 1 Apr 2020 22:33:22 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34218 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbgDBCdV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 22:33:21 -0400
+Received: by mail-pj1-f68.google.com with SMTP id q16so2821166pje.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 19:33:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ATIn1oIMiOwI325i99rfncSx0LFzAXo2FxSFZi+2kaM=;
+        b=n3LBbVdVMR9xztTWPZj9E4NAFROVpVuh4KUeELtpWMpWqKKx5lGsHyovhlSlocwRJf
+         nN/pb2bi91NTXpSJ1uY00zkUiaPE1bGQ1OESWp5M3dZfU5PDgILsOCat+syRefKVKUQd
+         NXAWZZRUUUWiZoDrpVBNkYiOUY3YwQbs4YN+1WLDGx4SIvMQHLOiGDrtnEZBewl7LeBk
+         bV7tfeAbWFkoGaMruVpc4b5Cmt71VHuO8gVt3bKcqOtUZ3+4XYu4x4S6yOMwfntDxKEi
+         Fn+YCM7DNZJ8NmjPzIxP8e2qLMH2U7SpRydjD4pitF5Y5D0juJOw5QqzRa2deSIgGTFi
+         RmVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ATIn1oIMiOwI325i99rfncSx0LFzAXo2FxSFZi+2kaM=;
+        b=fgrjDIlmWn/e81hzNx1blwZJ4TubD+bSgF1IpbXYeKU8WLahdMM2zd6IN20j41e5JJ
+         cjjx10a4TE3+zW81PiJa71x5jeULutz+gIydBYYCcnn6uXsTh1CDVzmf+DPBE6i2vVDH
+         6hlFb0Sdw4ylhH6u8Wae239+RYlAzp9I1bSHaVvBKU2xGlEH+iUx3Gwy9TPYbbAdzc5x
+         6Z4SFbdBGP4UK65AEavIxzQ3IQZdHkbAnPWQNGPgLBpV5dIllmyzXPTjvpdQwl6hvraD
+         53F6t/TogpnpeTbVo8/aLsjBoFncT7FrdbaizMs+NmO4+v7EEVY+AsEIrYx5ev9wUJcp
+         EL0Q==
+X-Gm-Message-State: AGi0Pua7riLlOdSrrRLTJeRPRnWY7kuUnvXF6q6u5lWzqR74Lgypqe+d
+        PULV0i4FWAnHV32rGtbzP4hgKGeU0b86cA==
+X-Google-Smtp-Source: APiQypLRbDTF91VykRK3Z/pEgpBEwK+uBtcjCC4EZ+kNI3dgYXQkXJFmPIpDmGRKtu9XXqqhig71Fg==
+X-Received: by 2002:a17:90a:24c5:: with SMTP id i63mr1182990pje.177.1585794800765;
+        Wed, 01 Apr 2020 19:33:20 -0700 (PDT)
+Received: from OptiPlexFedora.fios-router.home ([47.144.161.84])
+        by smtp.gmail.com with ESMTPSA id b2sm2609402pjc.6.2020.04.01.19.33.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 19:33:20 -0700 (PDT)
+From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
+To:     outreachy-kernel@googlegroups.com,
+        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
+Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Subject: [PATCH] staging: fsl-dpaa2: ethsw: Fix parenthesis alignment
+Date:   Wed,  1 Apr 2020 19:33:10 -0700
+Message-Id: <20200402023310.816245-1-jbwyatt4@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAFEAcA_yZ55rOD1x+FE9wYO8HXx9seK72ZCmnWjtDVr_95-whg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/14/2020 09:28 PM, Peter Maydell wrote:
-> On Fri, 14 Feb 2020 at 04:23, Anshuman Khandual
-> <anshuman.khandual@arm.com> wrote:
->>
->>
->>
->> On 01/28/2020 06:09 PM, Anshuman Khandual wrote:
->>> This series is primarily motivated from an adhoc list from Mark Rutland
->>> during our ID_ISAR6 discussion [1]. Besides, it also includes a patch
->>> which does macro replacement for various open bits shift encodings in
->>> various CPU ID registers. This series is based on linux-next 20200124.
->>>
->>> [1] https://patchwork.kernel.org/patch/11287805/
->>>
->>> Is there anything else apart from these changes which can be accommodated
->>> in this series, please do let me know. Thank you.
->>
->> Just a gentle ping. Any updates, does this series looks okay ? Is there
->> anything else related to CPU ID register feature bits, which can be added
->> up here. FWIW, the series still applies on v5.6-rc1.
+Fix 2 parenthesis alignment issues.
 
-Sorry for the delay in response, was distracted on some other patches.
+Reported by checkpatch.
 
-> 
-> I just ran into some "32-bit KVM doesn't expose all the ID
-> registers to userspace via the ONE_REG API" issues today.
-> I don't know if they'd be reasonable as something to include
-> in this patchset or if they're unrelated.
+Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+---
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-IMHO, they are bit unrelated.
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+index 676d1ad1b50d..546ad376df99 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+@@ -1094,7 +1094,8 @@ static int swdev_port_obj_del(struct net_device *netdev,
+ 
+ static int
+ ethsw_switchdev_port_attr_set_event(struct net_device *netdev,
+-		struct switchdev_notifier_port_attr_info *port_attr_info)
++				    struct switchdev_notifier_port_attr_info
++				    *port_attr_info)
+ {
+ 	int err;
+ 
+@@ -1277,7 +1278,8 @@ static int port_switchdev_event(struct notifier_block *unused,
+ 
+ static int
+ ethsw_switchdev_port_obj_event(unsigned long event, struct net_device *netdev,
+-			struct switchdev_notifier_port_obj_info *port_obj_info)
++			       struct switchdev_notifier_port_obj_info
++			       *port_obj_info)
+ {
+ 	int err = -EOPNOTSUPP;
+ 
+-- 
+2.25.1
 
-> 
-> Anyway, missing stuff I have noticed specifically:
->  * MVFR2
->  * ID_MMFR4
->  * ID_ISAR6
-> 
-> More generally I would have expected all these 32-bit registers
-> to exist and read-as-zero for the purpose of the ONE_REG APIs,
-> because that's what the architecture says is supposed to happen
-> and it means we have compatibility and QEMU doesn't gradually
-> build up lots of "kernel doesn't support this yet" conditionals...
-> I think we get this right for 64-bit KVM, but can we do it for
-> 32-bit as well?
-
-I am not very familiar with 32-bit KVM but will definitely keep these
-suggestions noted for later, also try and accommodate if possible.
-
-> thanks
-> -- PMM
-> 
