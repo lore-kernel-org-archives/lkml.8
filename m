@@ -2,100 +2,211 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5B2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F5DC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41D82064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SnFcrmj+"
+	by mail.kernel.org (Postfix) with ESMTP id BD0C2206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585861177;
+	bh=36MXe3TosgACEiMMrAZnP2CYf8D+J93/Jhy2msLoO7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X9iVJeydqky/Jn4YzWuq0hZX47DppV8tLPm15IqDr6YMndPN3Fzbo8ixQ3GH2vx7N
+	 xb1sDcIUYAEvIeLf0+IetJ8hGcWsenR9b3VoRgszQmUqaMSxJVYTLVyuSK0D1a+PKC
+	 RY+/Ca2xO8gC8Eue9XgEHLPhDg+gEJ58o/IyIVGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389387AbgDBU70 (ORCPT
+        id S2389534AbgDBU7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:59:26 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48407 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730837AbgDBU70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:59:26 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48tb632pHjz9sQt;
-        Fri,  3 Apr 2020 07:59:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585861163;
-        bh=A+oR9hYrpAXID36arZmYI+S3QzlBOfIt8pl4DJ3lP4U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SnFcrmj+5pd5Hyt6BS/oNj+TCs0yxTLASySQvrxSnkVoAFpp6cDsZFStHRchslABa
-         POutgJVVkAs0OdDenWV0qV1KfiV3Jkrvn8rwOat0hz0fJuTcfjZ6Nfzvo38CHLom1M
-         enAlcAGI228yRzlzibtjVbmtde6f8h1teAs6Ec3pR2zvfqjHoVZnr9Rxq1h0tZ3oNw
-         0rfZcYVgpJvHVjHP90MbTjUFGbDVAvqlzaGhohJlbPNH33iY1wM0nrcy7Wc8yhEACF
-         40xd9x3iTnmwtAGEVK3FnasJQS0GUm5htIJ1m/okV1GqGY8WMh/AT5zAgj5TzCaXYo
-         SbgM1zYc6frzw==
-Date:   Fri, 3 Apr 2020 07:59:19 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-Subject: linux-next: Fixes tag needs some work in the net tree
-Message-ID: <20200403075919.7b3cf1f5@canb.auug.org.au>
+        Thu, 2 Apr 2020 16:59:36 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35620 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730837AbgDBU7f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:59:35 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c12so1819725plz.2;
+        Thu, 02 Apr 2020 13:59:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0E1gU86DMMmY3TlJlUrGFci/4+h2XPiJTo24Taxnmhk=;
+        b=hGWYuylquG1JcHqkKl3SuE8RzsSvOp6AxmWbJf0ApEz3IfY1yVEPWaOM3+PAX0Qimd
+         uxcezioRxTYyPol2qm6U21+8QtSggBQyqClGpbkx0ECh0Ana4Pspfa9dGU0nMcfkStgF
+         4wdISQWe1oH8Y22JjWipnKunrElhBWVE9LZwkgk4rO2VqvFhmlWJxLjtua7JtZgSpOOD
+         vd+KVehUbqp5ucL/5ko9iTAM39sW1K515dm/j2CIInkhfq3uZSpNvSqzDaZsPeeLY0wQ
+         C5l8yw+bRofBOgReVJ+3ZnekUKF2kJAqurCqcynCS1rZtesRMOWKswxGVVR0PzcsV+7h
+         WK/Q==
+X-Gm-Message-State: AGi0PuZweXGcAXZgWGmyXmNV6qRSNg/karrxyjTV4PRZstBcyDSeqypT
+        vfKMZtSYbOeO3fN9FG4wFIE=
+X-Google-Smtp-Source: APiQypKKENrG0wlOjGqKZJ5An1gkwndU6fVXfEAr9ac0JndRmthMNo4kt+ZCJgtgyWpgIS5PNL79jQ==
+X-Received: by 2002:a17:902:e788:: with SMTP id cp8mr4627731plb.343.1585861174587;
+        Thu, 02 Apr 2020 13:59:34 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x17sm396140pfm.55.2020.04.02.13.59.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 13:59:33 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 52AA940254; Thu,  2 Apr 2020 20:59:32 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 20:59:32 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <20200402205932.GM11244@42.do-not-panic.com>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-2-vbabka@suse.cz>
+ <20200330224422.GX11244@42.do-not-panic.com>
+ <287ac6ae-a898-3e68-c7d8-4c1d17a40db9@suse.cz>
+ <20200402160442.GA11244@42.do-not-panic.com>
+ <202004021017.3A23B759@keescook>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/QE6o/a/tjzDPwQm.l780GoM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202004021017.3A23B759@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/QE6o/a/tjzDPwQm.l780GoM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 02, 2020 at 10:23:13AM -0700, Kees Cook wrote:
+> On Thu, Apr 02, 2020 at 04:04:42PM +0000, Luis Chamberlain wrote:
+> > On Wed, Apr 01, 2020 at 01:01:47PM +0200, Vlastimil Babka wrote:
+> > > On 3/31/20 12:44 AM, Luis Chamberlain wrote:
+> > > >> +	} else if (wret != len) {
+> > > >> +		pr_err("Wrote only %ld bytes of %d writing to proc file %s to set sysctl parameter '%s=%s'",
+> > > >> +			wret, len, path, param, val);
+> > > >> +	}
+> > > >> +
+> > > >> +	err = filp_close(file, NULL);
+> > > >> +	if (err)
+> > > >> +		pr_err("Error %pe closing proc file to set sysctl parameter '%s=%s'",
+> > > >> +			ERR_PTR(err), param, val);
+> > > >> +out:
+> > > >> +	kfree(path);
+> > > >> +	return 0;
+> > > >> +}
+> > > >> +
+> > > >> +void do_sysctl_args(void)
+> > > >> +{
+> > > >> +	char *command_line;
+> > > >> +	struct vfsmount *proc_mnt = NULL;
+> > > >> +
+> > > >> +	command_line = kstrdup(saved_command_line, GFP_KERNEL);
+> > > > 
+> > > > can you use kstrndup() ? And then use kfree_const()? Yes, feel free to
+> > > 
+> > > I don't follow, what am I missing? Do you mean this?
+> > > 
+> > > size_t len = strlen(saved_command_line);
+> > > command_line = kstrndup(saved_command_line, len, GFP_KERNEL);
+> > > 
+> > > What would be the advantage over plain kstrdup()?
+> > > As for kfree_const(), when would command_line be .rodata? I don't see using
+> > > kstrndup() resulting in that.
+> > 
+> > The const nature of using kstrdup() comes with using const for your
+> > purpose. ie:
+> > 
+> > const char *const_command_line = saved_command_line;
+> > 
+> > The point of a kstrncpy() then is to ensure force a const throughout
+> > your use if you know you don't need modifications.
+> 
+> I'm not following this suggestion. It _is_ modifying it. That's why it's
+> making a copy. What am I missing?
 
-Hi all,
+We modify the copied bootparams to allow new sysctls to map to old boot params?
 
-n commit
+If so, then yes, this cannot be used.
 
-  bf88dc327de8 ("net: dsa: dsa_bridge_mtu_normalization() can be static")
+> > > >> +	parse_args("Setting sysctl args", command_line,
+> > > >> +		   NULL, 0, -1, -1, &proc_mnt, process_sysctl_arg);
+> > > >> +
+> > > >> +	if (proc_mnt)
+> > > >> +		kern_unmount(proc_mnt);
+> > > >> +
+> > > >> +	kfree(command_line);
+> > > >> +}
+> > > > 
+> > > > Then, can we get this tested as part of lib/test_sysctl.c with its
+> > > > respective tools/testing/selftests/sysctl/sysctl.sh ?
+> > > 
+> > > Hmm so I add some sysctl to the test "module" (in fact the 'config' file says it
+> > > should be build with 'y', which would be needed anyway) and expand the test
+> > > instructions so that the test kernel boot has to include it on the command line,
+> > > and then I verify it has been set? Or do you see a better way?
+> > 
+> > We don't necessarily have a way to test the use boot params today.
+> > That reveals an are which we should eventually put some focus on
+> > in the future. In the meantime we have to deal with what we have.
+> > 
+> > So let's think about this:
+> > 
+> > You are adding a new cmdline sysctl boot param, and also a wrapper
+> > for those old boot bootparams to also work using both new sysctl
+> > path and old path. Testing just these both should suffice.
+> > 
+> > How about this:
+> > 
+> > For testing the new feature you are adding, can you extend the default
+> > boot params *always* if a new CONFIG_TEST_SYSCTL_CMDLINE is set? Then
+> > upon boot we can verify the proc handlers for these new boot params got
+> > kicked, and likewise some other proc handlers which also can be used
+> > from the cmdline are *not* set. For this later set, we already have
+> > a series of test syctls you can use. In fact, you can use the existing
+> > syctls for both cases already I believe, its just a matter of adding
+> > this new CONFIG_TEST_SYSCTL_CMDLINE which would extend the cmdline,
+> > and these tests would take place *first* on the script.
+> 
+> This seems... messy.
 
-Fixes tag
+It is all we have.
 
-  Fixes: f41071407c85 ("net: dsa: implement auto-normalization of MTU for b=
-ridge hardware datapath")
 
-has these problem(s):
+> I'm all for testing this,
 
-  - Target SHA1 does not exist
+OK so we do want to test it.
 
-Maybe you meant
+> but I'd rather this not be internally driven.
 
-Fixes: bff33f7e2ae2 ("net: dsa: implement auto-normalization of MTU for bri=
-dge hardware datapath")
+This is the least cumbersome solution I could think of. Other things
+would require things like using qemu, etc. That seems much more messsy.
 
---=20
-Cheers,
-Stephen Rothwell
+> This is an external interface (boot params), so
+> I'd rather an external driver handle that testing. We don't have a
+> common method to do that with the kernel, though.
 
---Sig_/QE6o/a/tjzDPwQm.l780GoM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Right... which begs the question now -- how do we test this sort of
+stuff? The above would at least get us coverage while we iron something
+more generic out for boot params.
 
------BEGIN PGP SIGNATURE-----
+> > That would test both cases with one kernel.
+> > 
+> > You could then also add a bogus new sysctl which also expands to a silly
+> > raw boot param to test the wrapper you are providing. That would be the
+> > only new test syctl you would need to add.
+> 
+> Sure, that seems reasonable. Supporting externally driven testing makes
+> sense for this.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6GUicACgkQAVBC80lX
-0GwsCQf/Q7YOGrhBDlI/W8UNAc1AwmOx/m/7SyCaD6X31sCd3wcRnSyS1cLAJhGa
-hZX6IQRSurA+uofJsZHMGpKqsbaHxkLdFbOX1k1JkW5CuOaECJY6eV3KQLsmqjet
-ol+aT4JCYzj36qYUB5MA7NZdFR0GLgdgwEVvuY6ILConclGGgyqZyroQcdoSJ9yu
-ucWWq7alm1V0YxuJ96MVONdh8mrGYba0xQVACX5qnF1s0oVisPUVxvHGK0A2Yt3/
-CzcSpbOXqhZkIeWAirGuqpEkJ+eonVhB1IT4BBmr3O4CDhL6ao5ji3B6TFtSUO3b
-3BXkklCMUh87eObTuGoB035+jwx8bA==
-=zimE
------END PGP SIGNATURE-----
+But again, what exactly?
 
---Sig_/QE6o/a/tjzDPwQm.l780GoM--
+  Luis
