@@ -2,219 +2,86 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8245DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9520C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574D22078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD772078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="ullTaSPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387590AbgDBHU6 (ORCPT
+        id S2387618AbgDBHVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:20:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49000 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728234AbgDBHU5 (ORCPT
+        Thu, 2 Apr 2020 03:21:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55742 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgDBHVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:20:57 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03273S6C074188;
-        Thu, 2 Apr 2020 03:20:29 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 303wry4xf9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 03:20:29 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03273s9g076210;
-        Thu, 2 Apr 2020 03:20:28 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 303wry4xey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 03:20:28 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0327HYkO030992;
-        Thu, 2 Apr 2020 07:20:27 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02wdc.us.ibm.com with ESMTP id 301x7772kb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 07:20:27 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0327KR3l53346634
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Apr 2020 07:20:27 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A313AC05B;
-        Thu,  2 Apr 2020 07:20:27 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD95AAC05E;
-        Thu,  2 Apr 2020 07:20:25 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Apr 2020 07:20:25 +0000 (GMT)
-Subject: [PATCH v10 14/14] powerpc: Use mm_context vas_windows counter to
- issue CP_ABORT
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, ajd@linux.ibm.com,
-        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
-        oohall@gmail.com, clg@kaod.org, sukadev@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, herbert@gondor.apana.org.au
-In-Reply-To: <1585810846.2275.23.camel@hbabu-laptop>
-References: <1585810846.2275.23.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Thu, 02 Apr 2020 00:20:24 -0700
-Message-ID: <1585812024.2275.68.camel@hbabu-laptop>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
+        Thu, 2 Apr 2020 03:21:00 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r16so2218158wmg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Rmss96OJTETJ5d6k4lJWjEjgufTDQZZVOZ3mFWcInTU=;
+        b=ullTaSPuuSxPAU6pdq4snMvy+5iOPZP4PxsElksZpXSvGy7jPNdd+P16TnRML4oAZ7
+         2xSMsGmKBbfRgJ068PI5SdEjSnskY0lpZdMC5ccVBY4Jh802f8K09pH6L0xE7FuRy/k1
+         Dk3BgyXSsc5/PdDA8Ly9I+45xP85/1LNRcXZPgA7f7HcbyFfHR1GI9OHH3T8nQRvCA92
+         p5Y3TOXvgOTn50xM8saxgQuDUm7795B/TO3JHg0S5xwerNHfeobmr9V6qzwTSEmmZkKD
+         74QgDaWusunmD2Dorr53zsz711/Wq3eouopiusg/gticIUMqz1eZGnC9RvbURlUQ/65m
+         Wl0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Rmss96OJTETJ5d6k4lJWjEjgufTDQZZVOZ3mFWcInTU=;
+        b=XQvhEZ2fCc2Eo6zsLnF1xdvS5D33dA5bCb8DwZ8ueeaXYZSgOoqv1hCakc6Aqxgw9l
+         ZeQd0hyz4eg9+SKE7AUElR3H4JPLsg7JzPn0T/A2nEQoz4J3BF32B1mreciJno4I4MLH
+         uIcepZ6hKi08exjkOEKKqHyo5zyfBM2YpXwkl+AQIZ2TUVnnxnOnSMGNd0W4w0yR60g5
+         Ow+Ag98HkWg5pysrKfQNP1bAvitYgOBNHlHmnWfZzFd47GiL7QqcehFsvt/Fy/aDokoA
+         /KBWU8t8kHLQwLZYJWLmfoxb5RhT4sOK+UcNBSqkbrz6lbt2lq1lSXX8pJb60Uw06K6P
+         odfg==
+X-Gm-Message-State: AGi0PuZgIQMMqrBimvFc+wGqmBpjg6Cx7oBDk/ZlmT/qnTjNcHv0NErN
+        qRWqRpUR9oYFLcpt8uBJ+zSPoA==
+X-Google-Smtp-Source: APiQypKFIbfFbHK3P7yKhCs6mZKwdUpZrLJcenhcir9vpI/T5+v8Biq0NXuCXIrwKAkdEg8KsFckDQ==
+X-Received: by 2002:a1c:7c18:: with SMTP id x24mr2072178wmc.41.1585812057382;
+        Thu, 02 Apr 2020 00:20:57 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([79.132.236.184])
+        by smtp.gmail.com with ESMTPSA id v186sm5909066wme.24.2020.04.02.00.20.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 00:20:56 -0700 (PDT)
+Subject: Re: [PATCH] selftests:mptcp: fix empty optstring
+To:     Li Zhijian <zhijianx.li@intel.com>, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Li Zhijian <lizhijian@cn.fujitsu.com>
+References: <20200402065216.23301-1-zhijianx.li@intel.com>
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <b4a0ceed-902d-cc08-18d5-d0d8ff6269c3@tessares.net>
+Date:   Thu, 2 Apr 2020 09:21:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200402065216.23301-1-zhijianx.li@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 clxscore=1015 bulkscore=0 malwarescore=0 suspectscore=1
- phishscore=0 priorityscore=1501 spamscore=0 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 02/04/2020 08:52, Li Zhijian wrote:
+> From: Li Zhijian <lizhijian@cn.fujitsu.com>
+> 
+> Signed-off-by: Li Zhijian <lizhijian@cn.fujitsu.com>
 
-set_thread_uses_vas() sets used_vas flag for a process that opened VAS
-window and issue CP_ABORT during context switch for only that process.
-In multi-thread application, windows can be shared. For example Thread A
-can open a window and Thread B can run COPY/PASTE instructions to send
-NX request which may cause corruption or snooping or a covert channel.
-Also once this flag is set, continue to run CP_ABORT even the VAS window
-is closed.
+LGTM, thanks Li!
 
-So define vas-windows counter in process mm_context, increment this
-counter for each window open and decrement it for window close. If
-vas-windows is set, issue CP_ABORT during context switch. It means
-clear the foreign real address mapping only if the process / thread uses
-COPY/PASTE. Then disable it for that process if windows are not open.
-
-Signed-off-by: Haren Myneni <haren@linux.ibm.com>
-Reported-by: Nicholas Piggin <npiggin@gmail.com>
-Suggested-by: Milton Miller <miltonm@us.ibm.com>
-Suggested-by: Nicholas Piggin <npiggin@gmail.com>
----
- arch/powerpc/include/asm/book3s/64/mmu.h    |  3 +++
- arch/powerpc/include/asm/mmu_context.h      | 22 ++++++++++++++++++++++
- arch/powerpc/include/asm/processor.h        |  1 -
- arch/powerpc/kernel/process.c               |  8 ++++++--
- arch/powerpc/platforms/powernv/vas-window.c |  1 +
- 5 files changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
-index bb3deb7..f0a9ff6 100644
---- a/arch/powerpc/include/asm/book3s/64/mmu.h
-+++ b/arch/powerpc/include/asm/book3s/64/mmu.h
-@@ -116,6 +116,9 @@ struct patb_entry {
- 	/* Number of users of the external (Nest) MMU */
- 	atomic_t copros;
- 
-+	/* Number of user space windows opened in process mm_context */
-+	atomic_t vas_windows;
-+
- 	struct hash_mm_context *hash_context;
- 
- 	unsigned long vdso_base;
-diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
-index 360367c..7fd249498 100644
---- a/arch/powerpc/include/asm/mmu_context.h
-+++ b/arch/powerpc/include/asm/mmu_context.h
-@@ -185,11 +185,33 @@ static inline void mm_context_remove_copro(struct mm_struct *mm)
- 			dec_mm_active_cpus(mm);
- 	}
- }
-+
-+/*
-+ * vas_windows counter shows number of open windows in the mm
-+ * context. During context switch, use this counter to clear the
-+ * foreign real address mapping (CP_ABORT) for the thread / process
-+ * that intend to use COPY/PASTE. When a process closes all windows,
-+ * disable CP_ABORT which is expensive to run.
-+ */
-+static inline void mm_context_add_vas_windows(struct mm_struct *mm)
-+{
-+	atomic_inc(&mm->context.vas_windows);
-+}
-+
-+static inline void mm_context_remove_vas_windows(struct mm_struct *mm)
-+{
-+	int c = atomic_dec_if_positive(&mm->context.vas_windows);
-+
-+	/* Detect imbalance between add and remove */
-+	WARN_ON(c < 0);
-+}
- #else
- static inline void inc_mm_active_cpus(struct mm_struct *mm) { }
- static inline void dec_mm_active_cpus(struct mm_struct *mm) { }
- static inline void mm_context_add_copro(struct mm_struct *mm) { }
- static inline void mm_context_remove_copro(struct mm_struct *mm) { }
-+static inline void mm_context_add_vas_windows(struct mm_struct *mm) { }
-+static inline void mm_context_remove_vas_windows(struct mm_struct *mm) { }
- #endif
- 
- 
-diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-index eedcbfb..bfa336f 100644
---- a/arch/powerpc/include/asm/processor.h
-+++ b/arch/powerpc/include/asm/processor.h
-@@ -272,7 +272,6 @@ struct thread_struct {
- 	unsigned 	mmcr0;
- 
- 	unsigned 	used_ebb;
--	unsigned int	used_vas;
- #endif
- };
- 
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index fad50db..a3ecaf9 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -1221,7 +1221,8 @@ struct task_struct *__switch_to(struct task_struct *prev,
- 		 * mappings, we must issue a cp_abort to clear any state and
- 		 * prevent snooping, corruption or a covert channel.
- 		 */
--		if (current->thread.used_vas)
-+		if (current->mm &&
-+			atomic_read(&current->mm->context.vas_windows))
- 			asm volatile(PPC_CP_ABORT);
- 	}
- #endif /* CONFIG_PPC_BOOK3S_64 */
-@@ -1466,7 +1467,10 @@ int set_thread_uses_vas(void)
- 	if (!cpu_has_feature(CPU_FTR_ARCH_300))
- 		return -EINVAL;
- 
--	current->thread.used_vas = 1;
-+	if (!current->mm)
-+		return -EINVAL;
-+
-+	mm_context_add_vas_windows(current->mm);
- 
- 	/*
- 	 * Even a process that has no foreign real address mapping can use
-diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-index 3ffad5a..33dfbbf 100644
---- a/arch/powerpc/platforms/powernv/vas-window.c
-+++ b/arch/powerpc/platforms/powernv/vas-window.c
-@@ -1333,6 +1333,7 @@ int vas_win_close(struct vas_window *window)
- 			put_pid(window->pid);
- 			if (window->mm) {
- 				mm_context_remove_copro(window->mm);
-+				mm_context_remove_vas_windows(window->mm);
- 				mmdrop(window->mm);
- 			}
- 		}
--- 
-1.8.3.1
-
-
-
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
