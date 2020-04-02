@@ -2,125 +2,174 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BA3C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC1FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86AB820719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585844049;
-	bh=YWCwFuRxlfQZCnQduX7beJeIGMvcM5FqEGUtc2q6GPY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vDcuCTq4h4f5nCco9fH6sAGiRfAuyq6c7L0WeErTRLLtxofOlhVP/nfQBTdSfIOtL
-	 T/j0qU4QKVu2oHw4+jVCVhMofRol0MAS5BQVkooQQ8xi5/KOIbgTpGeauNzVIpgRCB
-	 O5yIztnqLC/VZnwjmJ9TtAOndOnVGnJNdtLjbhS4=
+	by mail.kernel.org (Postfix) with ESMTP id 7B695206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:14:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="Hc8/3VyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389784AbgDBQOI (ORCPT
+        id S2389799AbgDBQOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:14:08 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44245 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389718AbgDBQOI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:14:08 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b72so1951435pfb.11;
-        Thu, 02 Apr 2020 09:14:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P7i2URrTnDx5tzzyJk7AR5qnVc+j04ViOkgAKhpw3Sk=;
-        b=OtG07gGLTkOjTZK/AqxMXL1OE+3P7C6TAqu44Gb16LJYXWkegE5apmBbCEvHQmWFkD
-         DGP8Nnvrjfy3edVn88azm2ApreAoRbyhRU3+gkpqsGoNeO6lfSkvZi1JgtDkuok4nFil
-         tArhKXe83a4UGgxGVmt6/2ULbiUSuzBdZX5F+Sh94kRefJqGL6Mbm9a8dzDkIjEUycjQ
-         j88TavbxwWaeB9kWu/NxWJMhkS4IpuGYllP6NkWO+GE2BMeVhy3+v6+3gsdu60CX+ZyM
-         fw6azSq8UJUAP9Hgrfu568L7IPlauT1spzFkGQfx4i6Jz9Dybk1w5/JzSP4YrENFatbb
-         KxhQ==
-X-Gm-Message-State: AGi0Pua14+9eeQAX8tNMaAYm+Ooa0Kxm1O1mAVyOJAREQiC2sDlwWToi
-        7sa36cx7744suN9gTtLclJM=
-X-Google-Smtp-Source: APiQypJ7nVgA8DvXN3x5K29X+h7zJol60u/kBlCNRDKrdex9FBSNttqYuXzqAeEmfrTTFVIQ8cZrNA==
-X-Received: by 2002:aa7:990e:: with SMTP id z14mr4016427pff.274.1585844046496;
-        Thu, 02 Apr 2020 09:14:06 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id t188sm4068670pfb.102.2020.04.02.09.14.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 09:14:04 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 1BDD040254; Thu,  2 Apr 2020 16:14:04 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 16:14:04 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        mhocko@suse.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bart Van Assche <bvanassche@acm.org>,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [RFC 2/3] blktrace: fix debugfs use after free
-Message-ID: <20200402161404.GD11244@42.do-not-panic.com>
-References: <20200402000002.7442-1-mcgrof@kernel.org>
- <20200402000002.7442-3-mcgrof@kernel.org>
- <9a6576cf-b89d-d1af-2d74-652878cb78c8@sandeen.net>
+        Thu, 2 Apr 2020 12:14:55 -0400
+Received: from mail-eopbgr700086.outbound.protection.outlook.com ([40.107.70.86]:27392
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389041AbgDBQOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 12:14:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WSEiKPbr8X5wL1jsZ5MvBPxxN6CiEOdeUKwfwfb60TjtsOpalGPaZ11pfm2da58bJbuQ7pqqLgapMYnCk++TPjsPR5QcH1fKIiAktoM3e8fYIUdjrAh2pzl1QsDkWWx0F7L4ecF6qSss+ZxHIcMl3F0DxelJhVtxdpf1u2YDYawxpomUX6f67qCYXzMkd9cQ6OiUK8AZqnj0Q3WxjzOVOnCJtW9HLzj7Wu2dsiL7v9NC31ag4Z/OABmMAwN5GoRbSUjX1EZH3csggEzFs5a7Qaxh8/eOfnRl6DY7lb5CppYhZ3U7kV54iY//fyH+hp71eSzBjU0uC6zsE2Ne1xnUaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+4NMsPse/N4poIiaYAtI0ewjmuBpTbdJRqPfkJBu4IY=;
+ b=aTV/kp5uOU5d7kY1JV6UBrR23gKBqjd+caVzp3PAfzub4vb112nzayHwKG2hWhfnrJuEyirVecLKYNZl5WkN1mBoE3rr31vg8Xhgx0giBlqWTUeY6AViIautxn8IfkyBdjfFp8PlYkHuQAGjNWC6xxpqD8BfZcnvz9p/6wZ4KAmOHjYpx9cD2+oT3NSsFGJU5HLV+clGPjIBZ/2yfohUD5Cp8UlaK/zz3iA1ZLnEbPedMK6P/TN0lPhJ5WUkhuo+fhA/ochiYeuYLdfBqdLVgoGcWzV33DD4F2R6O2r4ta0zsjwW9UyA2hGoOeOAU+kMxKvR4id4aO5hPhkd+D4MDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+4NMsPse/N4poIiaYAtI0ewjmuBpTbdJRqPfkJBu4IY=;
+ b=Hc8/3VyCAxEr593thwxImCjUbxc23uSyxmFxbHO5ySNvrsExk0m02Kdgsuy7AFNm7zgtXq/fOPst2kiBKuxfzharoECq70P+mH5Xnwxh/FpzFlxio8cx220lYRs+rasOFLzT64rhCSCFvmwFYMGyGJtdGh3oGYmMQNz3GlSKF0c=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
+ by MN2PR11MB4583.namprd11.prod.outlook.com (2603:10b6:208:26a::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Thu, 2 Apr
+ 2020 16:14:17 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 16:14:16 +0000
+From:   =?iso-8859-1?Q?J=E9r=F4me_Pouiller?= <Jerome.Pouiller@silabs.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 01/32] staging: wfx: add sanity checks to hif_join()
+Thread-Topic: [PATCH 01/32] staging: wfx: add sanity checks to hif_join()
+Thread-Index: AQHWCBVMCH2afVbB10mhdLojoO/GiKhlyCWAgAA7MQA=
+Date:   Thu, 2 Apr 2020 16:14:16 +0000
+Message-ID: <2026476.QLiXXEGFCf@pc-42>
+References: <20200401110405.80282-1-Jerome.Pouiller@silabs.com>
+ <20200401110405.80282-2-Jerome.Pouiller@silabs.com>
+ <20200402124223.GQ2001@kadam>
+In-Reply-To: <20200402124223.GQ2001@kadam>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [82.67.86.106]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 23c7bc09-d5a6-4eb0-9d8f-08d7d720e492
+x-ms-traffictypediagnostic: MN2PR11MB4583:
+x-microsoft-antispam-prvs: <MN2PR11MB4583BCB377290048452686E993C60@MN2PR11MB4583.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0361212EA8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4063.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(7916004)(376002)(366004)(396003)(39850400004)(136003)(346002)(6486002)(5660300002)(54906003)(2906002)(4326008)(316002)(26005)(71200400001)(33716001)(478600001)(9686003)(6916009)(6506007)(6512007)(66556008)(8676002)(66574012)(76116006)(186003)(91956017)(66946007)(86362001)(66446008)(64756008)(8936002)(66476007)(81166006)(81156014);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QXfLnyujnRrxkaefmhb8mK1hVk4gZrn9ocGhu4GMEQLrEWzDvBdfaVog2mxrG0wuNvK3iKHsJtdD0Q4sniNep3SFDr7vV7d2WbtXJBLAZTUlmEJTes6VNTect8BZPm4HqHRkzv0qYWB5XeswMYPp9s/fL9xKa5Nb/OmGxSpwyJ7sM3aGzqgIljm41vc/kldNVsKtbEONyaRgm+mSAGORS+oeL1wz6gQ/+7ymTYuGA3I1Mnbc2W2eNst1Po3Ui39c3hBvBcuW+UlwK1V94eVeUIeYwjDfPRQiQex1LV3OUEpC0fZY8qu28/UkfV2ItXYJONwvpKMssTDQ2nwO65SY8vBS0xtN7bFhnmqirwgIfGLRxSgXwVAhXJtY8EYtnPXCPOP6Vwxlzd/80P0BemOnnxUxLQTYnoxHLIblyhwyyBf5lid62F20W4d9d+2b27oK
+x-ms-exchange-antispam-messagedata: MmEW+CrhGX0UtLkFUXHPuv8NcD8SCSc2ajZywqZ3pG20U+OJMEG2P1tNB1Qn/vK44WVyTxijT/25Ljqlf45BR8Q7EGrdOH7Sro5q1FA3MuqygCh1K8ZIElMGGg36XXT9ZEx6EOlydtpYT6QkhyaxAA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <08CAE85A1A96544D80CD9EE9C3D0BFFA@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a6576cf-b89d-d1af-2d74-652878cb78c8@sandeen.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23c7bc09-d5a6-4eb0-9d8f-08d7d720e492
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 16:14:16.9004
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: b2KkUuV7Qy/z1/CxkOYexTCD6MQC+j2cytSat/9c4IuQhU0IBH3xPmjTD3Y5T3ERcqqIsJeZ4G/eQLQt7nlF0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4583
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 08:57:42PM -0500, Eric Sandeen wrote:
-> On 4/1/20 7:00 PM, Luis Chamberlain wrote:
-> > On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
-> > Omar fixed the original blktrace code for multiqueue use. This however
-> > left in place a possible crash, if you happen to abuse blktrace in a way
-> > it was not intended.
-> > 
-> > Namely, if you loop adding a device, setup the blktrace with BLKTRACESETUP,
-> > forget to BLKTRACETEARDOWN, and then just remove the device you end up
-> > with a panic:
-> 
-> Weird, I swear I tested that and didn't hit it, but ...
+On Thursday 2 April 2020 14:42:23 CEST Dan Carpenter wrote:
+> On Wed, Apr 01, 2020 at 01:03:34PM +0200, Jerome Pouiller wrote:
+> > From: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+> >
+> > Add a few check on start of hif_join().
+> >
+> > Signed-off-by: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+> > ---
+> >  drivers/staging/wfx/hif_tx.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.=
+c
+> > index 77bca43aca42..445906035e9d 100644
+> > --- a/drivers/staging/wfx/hif_tx.c
+> > +++ b/drivers/staging/wfx/hif_tx.c
+> > @@ -297,6 +297,8 @@ int hif_join(struct wfx_vif *wvif, const struct iee=
+e80211_bss_conf *conf,
+> >       struct hif_req_join *body =3D wfx_alloc_hif(sizeof(*body), &hif);
+>                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> We've got an allocation here.  It's a mistake to put the allocation in
+> the declaration block because you're going to forget to check for
+> failure.
 
-The real issue was also the dangling block device, a loop device proves
-easy to test that. I'll note that another way to test this as well would
-be to have a virtual machine with a block devices that goes in and out
-via whatever virsh shenanigans to make a block device appear / disappear.
+arf... this remark also applies to all functions of hif_tx.c. This
+issue has already been reported. I will send a patch that solve that in
+one batch.
 
-> > This issue can be reproduced with break-blktrace [2] using:
-> > 
-> >   break-blktrace -c 10 -d
-> 
-> + -s, right?
+> >       WARN_ON(!conf->basic_rates);
+> > +     WARN_ON(sizeof(body->ssid) < ssidlen);
+>=20
+> Put the variable on the left.  WARN_ON(ssidlen > sizeof(body->ssid)).
+> I'm not a big fan of adding this sort of debug code, just audit the
+> callers to see if it's possible or not.
 
-Yeap, sorry about that.
+My personal opinion is these checks does not replace the audit of the
+callers. It mainly provides a kind of documentation for the reader
+("not supported, please check the callers"). It is especially true when
+it is an internal API and there is only one caller.
 
-> > This patch fixes this issue. Note that there is also another
-> > respective UAF but from the ioctl path [3], this should also fix
-> > that issue.
-> > 
-> > This patch then also contends the severity of CVE-2019-19770 as
-> > this issue is only possible using root to shoot yourself in the
-> > foot by also misuing blktrace.
-> > 
-> > [0] https://bugzilla.kernel.org/show_bug.cgi?id=205713
-> > [1] https://nvd.nist.gov/vuln/detail/CVE-2019-19770
-> > [2] https://github.com/mcgrof/break-blktrace
-> 
-> I verified that this does reproduce the exact same KASAN splat on
-> kernel 4.19.83 as reported in the original bug, thanks!
+> I have audited the caller for you, and I believe that this condition
+> *is possible* so we need to return -EINVAL in this situation to prevent
+> memory corruption.
+>=20
+>         if (ssidlen > sizeof(body->ssid))
+>                 return -EINVAL;
 
-I just codified what Nicolai suspected, we should thank him :)
+In this case, I think the problem will also impact wfx_do_join() (the
+only caller of hif_join()):
 
-  Luis
+   514          u8 ssid[IEEE80211_MAX_SSID_LEN];
+   [...]
+   538          if (!conf->ibss_joined)
+   539                  ssidie =3D ieee80211_bss_get_ie(bss, WLAN_EID_SSID)=
+;
+   540          if (ssidie) {
+   541                  ssidlen =3D ssidie[1];
+   542                  memcpy(ssid, &ssidie[2], ssidie[1]);
+   543          }
+   [...]
+   554          ret =3D hif_join(wvif, conf, wvif->channel, ssid, ssidlen);
+
+Does data returned by ieee80211_bss_get_ie() could be bigger than
+IEEE80211_MAX_SSID_LEN? Not sure. I am going to add a check in
+wfx_do_join(), just in case.
+
+
+--=20
+J=E9r=F4me Pouiller
+
