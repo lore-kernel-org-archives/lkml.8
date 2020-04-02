@@ -2,166 +2,80 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B10AC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2728C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E03206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:16:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALLV3AjW"
+	by mail.kernel.org (Postfix) with ESMTP id 6DBEE20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585829898;
+	bh=71Iog+U1Pf2i1tJM4b6pe3IqJ3VZB7yjNL9XljQ9Nps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jfa/CImrg/iDINMnt1o+Pm4ffMHZxGVwCxI8P3Oka9K8x9J1Zi0KfA3Ny8POT6Uy5
+	 1GYAZLKfpUqUYeXZxED3IbLePRSMXtQr1F545OGeYmYJgn0EzBd90zvptuZhRYHxvI
+	 Oacd604bAZwDjJjrG4piwnaqD9bynYA79VSbyh8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388166AbgDBMQu (ORCPT
+        id S2388081AbgDBMSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:16:50 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46848 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387730AbgDBMQu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:16:50 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j17so3856549wru.13;
-        Thu, 02 Apr 2020 05:16:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9100ZMfQ3eWaJVwdNq9pSQeHCEwHDV/UJ/zuKVucMxA=;
-        b=ALLV3AjWxKR07II/OzlDnRe+odhQFSFArcf8cWjQukJmd6WXsg9+vyfD8DfKX9gWMN
-         o85KGRmQSCApKdFnuQRIdkmUme7sEKjqw5SXiIFrjdPkCVpclHE6AukhNWeb6yNKOhL8
-         mSBvda/9k8hhDcs8hxq7Ir3tcfWNZFcNPUaqnc4VZGHD9WT/x2/UGQ7N9VjavMYukKnM
-         K8ULMWCC9wgUMpVyfUQ+xkB0QzfidY2ZSgy9eCRnT7acIbLf8oyP71jF6JKhMbcYxj4Q
-         HrYzq3IEOcIOy3d+DvXGwz17yj0IpLyHJbIGtAohcctCquPEvV8uOKDwrwF9JRdhOKkc
-         77Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9100ZMfQ3eWaJVwdNq9pSQeHCEwHDV/UJ/zuKVucMxA=;
-        b=HKHDqahQqZ2Rmnr9v31Oypl1kFosLcJzRYsApOh+2yXMCJuWrgTlHipCl28mgK4X0c
-         2QYhgip3EhYMJCPR/mJsT33D6zxnt7rEUb1Ij2SlZt6pd+TQKHL0SI0IQwPIp8KRoz5i
-         1gZ14JJu9eyBAkCukK4IihzSAjoYkmBeX3MqNdWLD4ZqK+X1KiOS4hE6xOBfdkqcRhJp
-         4e6AhkMAKIZAxF5Tl06mJJJ3/8PclTxFRJohssiuSvC5u+rk8Mbi3Mps9W/QDt6aym4y
-         kiNOBkv5CPNHbqtbV9f5vS2TFiiJOvcza9JcX8+7YgjiJ4lKdeWqlzfBfZWTa+IvLkft
-         M1CQ==
-X-Gm-Message-State: AGi0PuaGmFT/Th+5ksbbLJ4LctIVB2LPLJ6rWC+di4Nu+fPSRplqBHoO
-        BWLcgvUHJnuC0Raouw9GerM=
-X-Google-Smtp-Source: APiQypKji7UWQsmE5huunWfu+sXG44AGFdjl0/jp9OPk+bxWF6qOU3UNOHuPQ1YmcSNtr/z7NyzQ1g==
-X-Received: by 2002:a5d:4c48:: with SMTP id n8mr3212293wrt.414.1585829807916;
-        Thu, 02 Apr 2020 05:16:47 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id y12sm4191207wrn.55.2020.04.02.05.16.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 05:16:47 -0700 (PDT)
-To:     helen.koike@collabora.com
-Cc:     dafna.hirschfeld@collabora.com, devel@driverdev.osuosl.org,
-        devicetree@vger.kernel.org, ezequiel@collabora.com,
-        heiko@sntech.de, hverkuil-cisco@xs4all.nl,
-        karthik.poduval@gmail.com, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-References: <20200402000234.226466-2-helen.koike@collabora.com>
-Subject: Re: [PATCH 1/4] dt-bindings: phy: phy-rockchip-dphy-rx0: move
- rockchip dphy rx0 bindings out of staging
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <bfefe00c-5673-ddcb-4e2a-425eb4771002@gmail.com>
-Date:   Thu, 2 Apr 2020 14:16:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 08:18:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387730AbgDBMSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 08:18:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17AF2206F8;
+        Thu,  2 Apr 2020 12:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585829896;
+        bh=71Iog+U1Pf2i1tJM4b6pe3IqJ3VZB7yjNL9XljQ9Nps=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e1F5KeO+jy4p7cBCOJqFbIgpbLxMud2IDkNuX1BGWM3NDmjRVu3ZyASftbQdYMqdw
+         gYAC+C2X6iuPq8qY5+RKjOnd9MYnz1dgdrN2ZFRjCoNqOpzHbtWIASnYtN/h2yS3CY
+         jVjA+k+4dOmuHMUT7Zj+kGGvaqn/gEY98CUUcw5A=
+Date:   Thu, 2 Apr 2020 14:18:14 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     krzk@kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tty: samsung_tty: 32-bit access for TX/RX hold
+ registers
+Message-ID: <20200402121814.GA2773800@kroah.com>
+References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+ <CGME20200402110609epcas2p4a5ec1fb3a5eaa3b12c20cfc2060162f3@epcas2p4.samsung.com>
+ <20200402110430.31156-1-hyunki00.koo@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200402000234.226466-2-helen.koike@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402110430.31156-1-hyunki00.koo@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
-
-> # SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> %YAML 1.2
+On Thu, Apr 02, 2020 at 08:04:29PM +0900, Hyunki Koo wrote:
+> Support 32-bit access for the TX/RX hold registers UTXH and URXH.
+> 
+> This is required for some newer SoCs.
+> 
+> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
 > ---
-> $id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy-rx0.yaml#
-> $schema: http://devicetree.org/meta-schemas/core.yaml#
-> 
-> title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
-> 
-> maintainers:
->   - Helen Koike <helen.koike@collabora.com>
->   - Ezequiel Garcia <ezequiel@collabora.com>
-> 
-> description: |
->   The Rockchip SoC has a MIPI D-PHY bus with an RX0 entry which connects to
->   the ISP1 (Image Signal Processing unit v1.0) for CSI cameras.
-> 
-> properties:
->   compatible:
->     const: rockchip,rk3399-mipi-dphy-rx0
-> 
+>  drivers/tty/serial/samsung_tty.c | 78 +++++++++++++++++++++++++++++++++-------
+>  1 file changed, 66 insertions(+), 12 deletions(-)
 
->   reg:
->     maxItems: 1
+What changed from v1?  Always put that under the --- line, as documented
+to do so.
 
-If 'reg' is not used => remove it.
+Please make a v3 with that information.
 
-> 
->   clocks:
->     items:
->       - description: MIPI D-PHY ref clock
->       - description: MIPI D-PHY RX0 cfg clock
->       - description: Video in/out general register file clock
-> 
->   clock-names:
->     items:
->       - const: dphy-ref
->       - const: dphy-cfg
->       - const: grf
-> 
->   '#phy-cells':
->     const: 0
-> 
->   power-domains:
->     description: Video in/out power domain.
->     maxItems: 1
-> 
-> required:
->   - compatible
->   - clocks
->   - clock-names
->   - '#phy-cells'
->   - power-domains
-> 
-> additionalProperties: false
-> 
-> examples:
->   - |
-> 
->     /*
->      * MIPI D-PHY RX0 use registers in "general register files", it
->      * should be a child of the GRF.
->      *
->      * grf: syscon@ff770000 {
->      *  compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
->      *  ...
->      * };
->      */
-> 
->     #include <dt-bindings/clock/rk3399-cru.h>
->     #include <dt-bindings/power/rk3399-power.h>
-> 
->     mipi_dphy_rx0: mipi-dphy-rx0 {
->         compatible = "rockchip,rk3399-mipi-dphy-rx0";
->         clocks = <&cru SCLK_MIPIDPHY_REF>,
->                  <&cru SCLK_DPHY_RX0_CFG>,
->                  <&cru PCLK_VIO_GRF>;
->         clock-names = "dphy-ref", "dphy-cfg", "grf";
->         power-domains = <&power RK3399_PD_VIO>;
->         #phy-cells = <0>;
->     };
+thanks,
+
+greg k-h
