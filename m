@@ -6,93 +6,165 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA87C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85C4C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDBC2080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0212078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732328AbgDBOZm (ORCPT
+        id S1732432AbgDBO12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:25:42 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:44551 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729166AbgDBOZl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:25:41 -0400
-Received: (qmail 12507 invoked by uid 500); 2 Apr 2020 10:18:58 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 2 Apr 2020 10:18:58 -0400
-Date:   Thu, 2 Apr 2020 10:18:58 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-cc:     gregkh@linuxfoundation.org, <hariprasad.kelam@gmail.com>,
-        <colin.king@canonical.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <ldv-project@linuxtesting.org>,
-        <andrianov@ispras.ru>
-Subject: Re: [PATCH] usb: host: u132-hcd: Traverse u132_static_list under
- mutex lock in u132_hcd_exit
-In-Reply-To: <20200401191735.10809-1-madhuparnabhowmik10@gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2004021015270.9681-100000@netrider.rowland.org>
+        Thu, 2 Apr 2020 10:27:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46222 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbgDBO12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:27:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 81969AC44;
+        Thu,  2 Apr 2020 14:27:25 +0000 (UTC)
+Message-ID: <47c543e2144d5247743548b00d1931e9fc217f43.camel@suse.de>
+Subject: Re: [PATCH v6 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
+ when present
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
+Date:   Thu, 02 Apr 2020 16:27:23 +0200
+In-Reply-To: <20200401204149.GA131584@google.com>
+References: <20200401204149.GA131584@google.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-UbnwTZ/sE1EQtQ8St3GX"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 madhuparnabhowmik10@gmail.com wrote:
 
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> The global list u132_static_list is protected by u132_module_lock.
-> Elements are added to this list in the probe function and this list is
-> traversed in u132_hcd_exit() to unregister devices.
-> 
-> If probe and exit execute simultaneously there can be a race condition
-> between writing to this list in probe and reading the list in exit as
-> u132_module_lock is not held in exit function.
-> 
-> Even though u132_exiting variable is used in probe to detect if the module is
-> exiting, it is ineffective as the probe function may read the value
-> before it is updated in exit and thus leading to a race condition.
-> 
-> Therefore, hold u132_module_lock while traversing u132_static_list in
-> exit function.
-> 
-> Found by Linux Driver Verification project (linuxtesting.org).
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> ---
->  drivers/usb/host/u132-hcd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-> index e9209e3e6248..1cadc4e0c9b2 100644
-> --- a/drivers/usb/host/u132-hcd.c
-> +++ b/drivers/usb/host/u132-hcd.c
-> @@ -3217,10 +3217,10 @@ static void __exit u132_hcd_exit(void)
->  	struct u132 *temp;
->  	mutex_lock(&u132_module_lock);
->  	u132_exiting += 1;
-> -	mutex_unlock(&u132_module_lock);
->  	list_for_each_entry_safe(u132, temp, &u132_static_list, u132_list) {
->  		platform_device_unregister(u132->platform_dev);
->  	}
-> +	mutex_unlock(&u132_module_lock);
+--=-UbnwTZ/sE1EQtQ8St3GX
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-How about just getting rid of this loop entirely, along with the 
-u132_static_list?  As far as I can see, that list doesn't do anything.
+Hi Bjorn,
 
-Not to mention that this driver has no business calling 
-platform_device_unregister() here, since it didn't call 
-platform_device_register() in the first place.  The call to 
-platform_driver_unregister() below should do all the necessary work.
+On Wed, 2020-04-01 at 15:41 -0500, Bjorn Helgaas wrote:
+> On Tue, Mar 24, 2020 at 07:28:11PM +0100, Nicolas Saenz Julienne wrote:
+> > xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
+>=20
+> Is there a function name for this fixup that you can mention?
 
-Alan Stern
+Yes, rpi_firmware_init_vl805(), I'll update the description.
 
->  	platform_driver_unregister(&u132_platform_driver);
->  	printk(KERN_INFO "u132-hcd driver deregistered\n");
->  	wait_event(u132_hcd_wait, u132_instances == 0);
+> > RPi4's VideoCore firmware interface to be up and running. It's possible
+> > for both initializations to race, so make sure it's available prior to
+> > starting.
+>=20
+> I guess "both initializations" means brcm_pcie_probe() and something
+> else?  It'd be nice to include that function name here, too.
+
+Noted, I'll be more explicit on the next version of the series. More in dep=
+th
+explanation below.
+
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >=20
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
+> > b/drivers/pci/controller/pcie-brcmstb.c
+> > index 3a10e678c7f4..a3d3070a5832 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -28,6 +28,8 @@
+> >  #include <linux/string.h>
+> >  #include <linux/types.h>
+> > =20
+> > +#include <soc/bcm2835/raspberrypi-firmware.h>
+> > +
+> >  #include "../pci.h"
+> > =20
+> >  /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config reg=
+s */
+> > @@ -917,11 +919,24 @@ static int brcm_pcie_probe(struct platform_device
+> > *pdev)
+> >  {
+> >  	struct device_node *np =3D pdev->dev.of_node, *msi_np;
+> >  	struct pci_host_bridge *bridge;
+> > +	struct device_node *fw_np;
+> >  	struct brcm_pcie *pcie;
+> >  	struct pci_bus *child;
+> >  	struct resource *res;
+> >  	int ret;
+> > =20
+> > +	/*
+> > +	 * We have to wait for the Raspberry Pi's firmware interface to be up
+> > +	 * as some PCI fixups depend on it.
+>=20
+> It'd be nice to know the nature of this dependency between the
+> firmware interface and the fixups.  This may be useful for future
+> maintenance.  E.g., if PCI config access doesn't work until the
+> firmware interface is up, that would affect almost everything.  But
+> you say "some PCI fixups", so I suppose the actual dependency is
+> probably something else.
+
+Sorry it wasn't clear enough, I'll redo this comment. Also note that the PC=
+Ie
+bus and the XHCI chip are hardwired, so that's the only device that'll ever=
+ be
+available on the bus.
+
+VIA805's XHCI firmware has to be loaded trough RPi's firmware mailbox in
+between the PCIe bus probe and the subsequent USB probe. Note that a PCI re=
+set
+clears the firmware. The only mechanism available in between the two operat=
+ions
+are PCI Fixups. These are limited in their own way, as I can't return
+-EPROBE_DEFER if the firmware interface isn't available yet. Hence the need=
+ for
+an explicit dependency between pcie-brcmstb and raspberrypi's firmware mail=
+box
+device.
+
+Your concern here showcases this series' limitations. From a high level
+perspective it's not clear to me who should be responsible for downloading =
+the
+firmware. And I get the feeling I'm abusing PCI fixups. I haven't found any
+smart way to deal with this three way dependency of platform/non-platform
+devices. I even looked into adding -EPROBE_DEFER support to fixups, but I f=
+ear
+that would entail moving them into the core device definition.
+
+Regards,
+Nicolas
+
+
+--=-UbnwTZ/sE1EQtQ8St3GX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6F9ksACgkQlfZmHno8
+x/7wXQf9GeRwGPIeI/wbeH0RFkXsyiFyaYxhvRtWla25hLtNxPLBoPWmR9sR5YP3
+8ZM10ZELD5DqgwBhBeWqJk43ZzNYnJACp97N2fe7wZBVXFx9fCtlG1VmcqG02CiT
+JkIgFDeAAq5tjbgWfKEBtTiLXch+C66Ja+7H7XOAm0RhEdVDqhrCI9lZecoHYWev
+0TarGDoABp25KqujbYb/TXFzg4LPMEA39tNdvt8slPf28Z5En4IdPUpogXQ6+fA6
+WbbY64G1WCnBQBlnB/XFRX+cuVRcwX+FImDSzSowaEZHeuMyC1qXQcmMHkym59KP
+0cMQjaZhNNzZpO26RCF2+eJSzDzS5Q==
+=jbBy
+-----END PGP SIGNATURE-----
+
+--=-UbnwTZ/sE1EQtQ8St3GX--
 
