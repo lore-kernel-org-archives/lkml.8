@@ -2,139 +2,67 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A5CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1342FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4512063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA7A208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585813458;
-	bh=q08hBGADzcgr9PuyQype6pUwKbbd2ytaSXgg1Fn6PLw=;
+	s=default; t=1585813462;
+	bh=d/t/ujtXfu28zEOz6+VRG1AW8IlGcvBVan5BajLdORM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ASB/8bg5IJV0LCojRPGyfZwvDttI2bdp4a/uMRFyCrnFr7GjEHxN6KR9AkOTfv1xf
-	 Y/o0FMe1k6tnICba2lfzGrriMbeuCjEe0XuWDexI68mWdWQMKuL1oSU5qc8cfL/z1D
-	 V0ededYt/pJ1Zb/9HuZqTSN3An7yO6Chgm1RE6wA=
+	b=lxy5MZw9W9n9NHxlImcm50gB7A4hADSi52FldBBCVagK58s/viVbla0pSGM7EQook
+	 zGxv8KOGx3zrrMv7oX5T1j8UEKXD1Izzc4GCYUKy9yOCg7hMZM04kz0MNTHLIMG1gz
+	 l9dSphqSR40PdzYRAnmIzp1+njcVMEJWJ5rY3ISE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387501AbgDBHoR (ORCPT
+        id S2387623AbgDBHoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:44:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33720 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgDBHoR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:44:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a25so2998287wrd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:44:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UBE7VI9FnbtBHIdXLo3J25c1IHbGbjYoWi7ozq8GSkw=;
-        b=ApGDE3OYM6E5igBx/hnbEBtdARdtNhcW/goX4e3tkKK1RsrQ9hiTXGK/6dj4/CS7dU
-         efWrSq+htbilFm/Vwnvd0Q8rCmOMVpPEKWuma03dId7qlJb5IeDOE4wLiXjH6CEdz/4r
-         lea15IYQJHu07LF9fcg08rSemd3CJJILhJwBMAJEGOHFwUI8IBge2+tyVlMPX6auEM2H
-         jDB3ZZuwZj8AI7KhCCrp+m+5LowBQJBECaLP5CxGpHcMOJuMp8Xvy5hQhLuZhiR4XZa5
-         7/OZwwljski8IEH0z3LRDGlktwDZa/eHxPVDrTn2ffoVtdxLD9+JW1MXo+/a4Fchp7kt
-         u6fw==
-X-Gm-Message-State: AGi0PuY3ItdQsDUBOmHVDr80IjKWn7BKExsNO2s7r0Rx6skHIpDFIY/O
-        ItsZQmpKv7gMspbXQ4jOfEI=
-X-Google-Smtp-Source: APiQypJOKL1DlYFdbEbI7pmv8zN7vXNpYVXMFImDay+xICRSRWkSegzmOrEqJY4ZmITPMktXMxiZCQ==
-X-Received: by 2002:adf:97c8:: with SMTP id t8mr2054345wrb.319.1585813453828;
-        Thu, 02 Apr 2020 00:44:13 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id b82sm5518287wme.25.2020.04.02.00.44.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 00:44:12 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 09:44:11 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        =?utf-8?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: Re: [PATCH -V2] /proc/PID/smaps: Add PMD migration entry parsing
-Message-ID: <20200402074411.GH22681@dhcp22.suse.cz>
-References: <20200402020031.1611223-1-ying.huang@intel.com>
- <20200402064437.GC22681@dhcp22.suse.cz>
- <87zhbufjyc.fsf@yhuang-dev.intel.com>
+        Thu, 2 Apr 2020 03:44:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbgDBHoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:44:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E81A2063A;
+        Thu,  2 Apr 2020 07:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585813461;
+        bh=d/t/ujtXfu28zEOz6+VRG1AW8IlGcvBVan5BajLdORM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XLku4gs1IZiQwF4QFe0O7SC6J3tvkwEMlX1UjDNr2ebi6Y+7CV5wi8pVr9/pMPWSH
+         /XJFl/7mgZyPwYrBlaQmCMakSc2GiZlXr9OiiLdY6FCFMVVi9XCTh6eUhhj1Kd61CM
+         wppysZScXU4zQ0fO6YtA6P3vhBtf6Ku/Qhtfk2yo=
+Date:   Thu, 2 Apr 2020 09:44:19 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, rostedt@goodmis.org,
+        mingo@redhat.com, jack@suse.cz, ming.lei@redhat.com,
+        nstange@suse.de, mhocko@suse.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 0/3] block: address blktrace use-after-free
+Message-ID: <20200402074419.GD2755501@kroah.com>
+References: <20200402000002.7442-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87zhbufjyc.fsf@yhuang-dev.intel.com>
+In-Reply-To: <20200402000002.7442-1-mcgrof@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 02-04-20 15:03:23, Huang, Ying wrote:
-> Michal Hocko <mhocko@kernel.org> writes:
-> 
-> > On Thu 02-04-20 10:00:31, Huang, Ying wrote:
-> >> From: Huang Ying <ying.huang@intel.com>
-> >> 
-> >> Now, when read /proc/PID/smaps, the PMD migration entry in page table is simply
-> >> ignored.  To improve the accuracy of /proc/PID/smaps, its parsing and processing
-> >> is added.
-> >> 
-> >> Before the patch, for a fully populated 400 MB anonymous VMA, sometimes some THP
-> >> pages under migration may be lost as follows.
-> >
-> > Interesting. How did you reproduce this?
-> > [...]
-> 
-> I run the pmbench in background to eat memory, then run
-> `/usr/bin/migratepages` and `cat /proc/PID/smaps` every second.  The
-> issue can be reproduced within 60 seconds.
+On Wed, Apr 01, 2020 at 11:59:59PM +0000, Luis Chamberlain wrote:
+> Upstream kernel.org korg#205713 contends that there is a UAF in
+> the core debugfs debugfs_remove() function, and has gone through
+> pushing for a CVE for this, CVE-2019-19770.
 
-Please add that information to the changelog. I was probably too
-optimistic about the migration duration because I found it highly
-unlikely to be visible. I was clearly wrong here.
+As you point out, that CVE is crazy and pointless, thanks for seeing
+this through.
 
-> >> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> >> index 8d382d4ec067..9c72f9ce2dd8 100644
-> >> --- a/fs/proc/task_mmu.c
-> >> +++ b/fs/proc/task_mmu.c
-> >> @@ -546,10 +546,19 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
-> >>  	struct mem_size_stats *mss = walk->private;
-> >>  	struct vm_area_struct *vma = walk->vma;
-> >>  	bool locked = !!(vma->vm_flags & VM_LOCKED);
-> >> -	struct page *page;
-> >> +	struct page *page = NULL;
-> >>  
-> >> -	/* FOLL_DUMP will return -EFAULT on huge zero page */
-> >> -	page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
-> >> +	if (pmd_present(*pmd)) {
-> >> +		/* FOLL_DUMP will return -EFAULT on huge zero page */
-> >> +		page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
-> >> +	} else if (unlikely(thp_migration_supported() && is_swap_pmd(*pmd))) {
-> >> +		swp_entry_t entry = pmd_to_swp_entry(*pmd);
-> >> +
-> >> +		if (is_migration_entry(entry))
-> >> +			page = migration_entry_to_page(entry);
-> >> +		else
-> >> +			VM_WARN_ON_ONCE(1);
-> >
-> > Could you explain why do we need this WARN_ON? I haven't really checked
-> > the swap support for THP but cannot we have normal swap pmd entries?
-> 
-> I have some patches to add the swap pmd entry support, but they haven't
-> been merged yet.
-> 
-> Similar checks are for all THP migration code paths, so I follow the
-> same style.
-
-I haven't checked other migration code paths but what is the reason to
-add the warning here? Even if this shouldn't happen, smaps is perfectly
-fine to ignore that situation, no?
--- 
-Michal Hocko
-SUSE Labs
+greg k-h
