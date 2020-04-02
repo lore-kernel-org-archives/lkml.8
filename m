@@ -2,159 +2,135 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C17C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA32C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A08320737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8A420737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 21:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389217AbgDBVQm (ORCPT
+        id S2389410AbgDBVQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 17:16:42 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:52329 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgDBVQl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 17:16:41 -0400
-Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MKbwg-1jckY00eB2-00KuMS; Thu, 02 Apr 2020 23:16:40 +0200
-Received: by mail-qv1-f50.google.com with SMTP id g4so2530578qvo.12;
-        Thu, 02 Apr 2020 14:16:39 -0700 (PDT)
-X-Gm-Message-State: AGi0PubW960BbOYGA+eCL/BGLcnc4bI5yp2vWsrxMCKd/gUbcFctl7hQ
-        fw3HCFhXGnHMvPvzMNwyeNHAzY5mQMPlLFN+IP0=
-X-Google-Smtp-Source: APiQypJGA8+k1W79tcyerK0UIap1gN48lClpbItZKUsRTQsWMzf1R1BJyzlohgyMqPgn9cM9EZAnuMgggZ49T4oS3UY=
-X-Received: by 2002:a0c:ec49:: with SMTP id n9mr5282512qvq.197.1585862198851;
- Thu, 02 Apr 2020 14:16:38 -0700 (PDT)
+        Thu, 2 Apr 2020 17:16:50 -0400
+Received: from mga12.intel.com ([192.55.52.136]:62658 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbgDBVQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 17:16:50 -0400
+IronPort-SDR: 8JhihgL0nwZweKa0iE+aAnKtfYC0eOgbQDhNp4/U+LIektiY3UwZrd5Kis1xCoKEAdSYIh/55E
+ 6m+E7PgpBXjg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 14:16:49 -0700
+IronPort-SDR: 4oGjkw+e1C/BxtLl7UO1+lAjcnIVLe5TjIZotoXcPJLEMEGgfv3cEBvADdLI28yPLyqovB3Hns
+ YSRdw6ziWYPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="423292223"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 02 Apr 2020 14:16:49 -0700
+Date:   Thu, 2 Apr 2020 14:16:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [patch v2 1/2] x86,module: Detect VMX modules and disable
+ Split-Lock-Detect
+Message-ID: <20200402211649.GA31023@linux.intel.com>
+References: <20200402124205.242674296@linutronix.de>
+ <20200402152340.GL20713@hirez.programming.kicks-ass.net>
+ <725ca48f-8194-658e-0296-65d4368803b5@intel.com>
+ <20200402162548.GH20730@hirez.programming.kicks-ass.net>
+ <2d2140c4-712a-2f8d-cde7-b3e64c28b204@intel.com>
+ <87pncpn650.fsf@nanos.tec.linutronix.de>
+ <20200402175127.GJ13879@linux.intel.com>
+ <20200402185148.GL20730@hirez.programming.kicks-ass.net>
+ <20200402202321.GL13879@linux.intel.com>
+ <87blo9mwfu.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <cover.1584667964.git.gurus@codeaurora.org> <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
- <20200330204359.GB5107@codeaurora.org> <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
- <20200331202058.GB25781@codeaurora.org> <20200331204929.GC2954599@ulmo> <20200402201654.GA9191@codeaurora.org>
-In-Reply-To: <20200402201654.GA9191@codeaurora.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 2 Apr 2020 23:16:22 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3mc_sYczyKiaDoQLTTwDj2odwHJ5LFNAOb4RaRyh0YLQ@mail.gmail.com>
-Message-ID: <CAK8P3a3mc_sYczyKiaDoQLTTwDj2odwHJ5LFNAOb4RaRyh0YLQ@mail.gmail.com>
-Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and function
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        David Collins <collinsd@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:xEGTmJejjOhevVW+LS3wPVrxEq9GUWLio507mu2afaZHP1sMEhE
- Ucfjy9sio/Rl8gyi91sw29MzHc5gRRGOwjmkwC2nKaOULSOm9k2lsYJ+Qc0HVmtqJMnZIvH
- +YAwGsOG1JGGIeN76PGxBIOTkLXFVjChuDzrqC9SmMB5LGiALJnNVhSuxdkyTVr38Nu4cHL
- PdlVHh8qMGVIZHutZCl/w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xBQCXjWELaM=:X+fZoPAw8rfvW0h8IvN7HV
- w0jWj2O2rk0zJiEDk4OsYR/6gnWZLg/lHXcu+8DEH+aAL0qByNtGFw8TOt3AvIKq++2A2frQW
- +DGS4DQWZCit3TzkGuEtqU/f4v5IWX65cnXDmDsW03VI1Pk2qbX1I9BRwLvojIsroaRiNBPii
- jcHEXdYGdxfCizUi3IPJQhk9KOrskKbItWS9dZsTWm1qcE5XFa0ydRy+GKhDY9jKBnxsHjfHy
- RKOP+qnPbZ1A1135v6Jr029/L5dEcAfhGasNGZ0xkzAOVMXMVmhCcSLaUxyxGRpa/DwLaVoLN
- CQG4Rp4JJLurZOwPNe1XEgeXWrep6gTnCu+bzUrnDp5gEJb38o8hDjYnBdLEE7mZvCqfA0Q1F
- 8nWGGgHCq39IK0/Jda/eLAhy+ZMEKqTphfEhXFsmUh7hriA9d16Sv8F0ykdva6rDw3g6o+9ja
- 7CcPLjmSv+SuqsLKwczity5807vLwr6nTevPmGDsIeSVWcsh86PkP1qXtL4dB8oDohElOa6Uw
- dVZ4bPbWNzm59jGU5+nQY7lay3qW93y9vxZ5wShss4u1613/xvazpaJwG77gwY6Ga8cI7p7IJ
- PfpxuYJ+0Dy3jylSc6qigs1k7fmMCaUK3mbyNzuHtQGQE+xQuJq4xuO9JNV5YMpnhnIO/k+iV
- KPMuT1P6u3OZbD2QVbZqlYGrk/+jMIZcPmFAsdDmiOdOSNtH+R292+AiAv74GWrKWb/PW8fpe
- FfNygJQjdzeovTpfBx/A/kvceNlc28+2sX08p90eHB4tWHzGg5eG9pIaPUPLiHjsJSOq5PG3W
- 1J3wneLlC/ICLRPFvYfS8qNP3qb/nD6Z9sfHzagewug4y1COqo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87blo9mwfu.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 10:16 PM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> On Tue, Mar 31, 2020 at 10:49:29PM +0200, Thierry Reding wrote:
-> > Doesn't that mean that anything below a 1 second period will be clamped
-> > to just 0?
->
-> True. How about this then?
->
-> int pwm_imx27_calc_period_cycles(struct pwm_state state,
->                                  unsigned long clk_rate,
->                                  unsigned long *period_cycles)
-> {
->         u64 c1, c2;
->
->         c1 = clk_rate;
->         c2 = state->period;
->         if (c2 > c1) {
->                 c2 = c1;
->                 c1 = state->period;
->         }
->
->         if (!c1 || !c2) {
->                 pr_err("clk rate and period should be nonzero\n");
->                 return -EINVAL;
->         }
->
->         if (c2 <= div64_u64(U64_MAX, c1)) {
->                 c = c1 * c2;
->                 do_div(c, 1000000000);
->         } else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000))) {
->                 do_div(c1, 1000);
->                 c = c1 * c2;
->                 do_div(c, 1000000);
->         } else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000))) {
->                 do_div(c1, 1000000);
->                 c = c1 * c2;
->                 do_div(c, 1000);
->         } else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000000))) {
->                 do_div(c1, 1000000000);
->                 c = c1 * c2;
->         }
->
->         *period_cycles = c;
->
->         return 0;
-> }
->
-> ...
->
-> ret = pwm_imx27_calc_period_cycles(state, clk_get_rate(imx->clk_per),
->                                    &period_cycles);
-> if (ret)
->         return ret;
->
-> I unit tested this logic out by calculating period_cycles using both the
-> existing logic and the proposed one, and the results are as below.
->
-> --------------------------------------------------------------------------------
->  clk_rate               period            existing            proposed
-> --------------------------------------------------------------------------------
-> 1000000000      18446744073709551615     18446744072    18446744073000000000
->                       (U64_MAX)
-> --------------------------------------------------------------------------------
-> 1000000000           4294967291          4294967291         4294967291
-> --------------------------------------------------------------------------------
->
-> Overflow occurs in the first case with the existing logic, whereas the
-> proposed logic handles it correctly. As for the second case where there are
-> more typical values of period, the proposed logic handles that correctly
-> too.
+On Thu, Apr 02, 2020 at 11:04:05PM +0200, Thomas Gleixner wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> > On Thu, Apr 02, 2020 at 08:51:48PM +0200, Peter Zijlstra wrote:
+> >> On Thu, Apr 02, 2020 at 10:51:28AM -0700, Sean Christopherson wrote:
+> >> > On Thu, Apr 02, 2020 at 07:34:35PM +0200, Thomas Gleixner wrote:
+> >> > > Aside of that I'm still against the attempt of proliferating crap,
+> >> > > i.e. disabling it because the host is triggering it and then exposing it
+> >> > > to guests. The above does not change my mind in any way. This proposal
+> >> > > is still wrong.
+> >> > 
+> >> > Eh, I still think the "off in host, on in guest" is a legit scenario for
+> >> > debug/development/testing, but I agree that the added complexity doesn't
+> >> > justify the minimal benefits versus sld_warn.
+> >> 
+> >> Off in host on in guest seems utterly insane to me. Why do you care
+> >> about that?
+> >
+> > For development/debug/testing.  Ignoring the core-scope stupidity of split
+> > lock, the _functional_ behavior of the host kernel and guest kernel are
+> > completely separate.  The host can generate split locks all it wants, but
+> > other than performance, its bad behavior has no impact on the guest.
+> >
+> > For example, all of the debug that was done to eliminate split locks in the
+> > kernel could have been done in a KVM guest, even though the host kernel
+> > would not have yet been split-lock free.
+> >
+> > It's somewhat of a moot point now that the kernel is split-lock free.  But,
+> > if I encountered a split lock panic on my system, the first thing I would
+> > do (after rebooting) would be to fire up a VM to try and reproduce and
+> > debug the issue.
+> >
+> > Oftentimes it's significantly easier to "enable" a feature in KVM, i.e.
+> > expose a feature to the guest, than it is to actually enable it in the
+> > kernel.  Enabling KVM first doesn't work if there are hard dependencies on
+> > kernel enabling, e.g. most things that have an XSAVE component, but for a
+> > lot of features it's a viable strategy to enable KVM first, and then do all
+> > testing and debug inside a KVM guest.
+> 
+> I can see that aspect, but there were pretty clear messages in one of
+> the other threads:
+> 
+>  "It's not about whether or not host is clean. It's for the cases that
+>   users just don't want it enabled on host, to not break the
+>   applications or drivers that do have split lock issue."
+> 
+>  "My thought is for CSPs that they might not turn on SLD on their
+>   product environment. Any split lock in kernel or drivers may break
+>   their service for tenants."
+> 
+> which I back then called out as proliferating crap and ensuring that
+> this stuff never gets fixed.
 
-This looks correct, but very expensive, and you don't really have to
-go this far, given that c1 is guaranteed to be a 32-bit number, and
-you divide by a constant in the end.
+Or more likely, gets fixed, just not in upstream :-)
 
-Why not do something like
+> I still call it out as exactly that and you know as well as I do that
+> this is the reality.
+>
+> For people like you who actually want to debug stuff in a guest, the
+> extra 10 lines of hack on top of the other 1000 lines of hacks you
+> already have are not really something which justifies to give hardware
+> and OS/application vendors the easy way out to avoid fixing their broken
+> crap.
 
-#define SHIFT 41 /* arbitrarily picked, not too big, not too small */
-#define MUL 2199 /* 2^SHIFT / NSEC_PER_SEC */
-period_cycles = clk_get_rate(imx->clk_per) * ((state->period * MUL) >> SHIFT);
-
-        Arnd
+Ya, I see where you're coming from.  As above, I agree that having a "KVM
+only" mode does more harm than good.
