@@ -2,414 +2,125 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74282C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8F9C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCF0206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3BFB20784
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585811676;
+	bh=FVq8i6uthrbfLR09edgbxiWw4ECv/fXnjsmRytRkY7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vcrsiSaIvuYQCQvBNDkIQgBL+/btHiiWz78g+0Zi8I+xeiqc3Wm7h3vh8telHH9A6
+	 gm6YuxMMO2oBMlDgt8f5khQYxzX00OCajadx/KXsn2C7+0TiyIfvIt1G3GGTenAPBC
+	 T4mhg8w3R64sfWpjwtpXcVn5PJqZm4fqu4f37JZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgDBHOU (ORCPT
+        id S2387506AbgDBHOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:14:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29776 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725789AbgDBHOT (ORCPT
+        Thu, 2 Apr 2020 03:14:35 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36714 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729289AbgDBHOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:14:19 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03274WZr069672;
-        Thu, 2 Apr 2020 03:13:57 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 304gst3hgt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 03:13:57 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03274aYZ070071;
-        Thu, 2 Apr 2020 03:13:57 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 304gst3hgk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 03:13:57 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0327Bjbh030793;
-        Thu, 2 Apr 2020 07:13:56 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04wdc.us.ibm.com with ESMTP id 301x76y2fh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 07:13:56 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0327DtId57409966
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Apr 2020 07:13:55 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5153F136055;
-        Thu,  2 Apr 2020 07:13:55 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B30E136053;
-        Thu,  2 Apr 2020 07:13:54 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Apr 2020 07:13:54 +0000 (GMT)
-Subject: [PATCH v10 07/14] powerpc/vas: Setup thread IRQ handler per VAS
- instance
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, ajd@linux.ibm.com,
-        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
-        oohall@gmail.com, clg@kaod.org, sukadev@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, herbert@gondor.apana.org.au
-In-Reply-To: <1585810846.2275.23.camel@hbabu-laptop>
-References: <1585810846.2275.23.camel@hbabu-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Thu, 02 Apr 2020 00:13:53 -0700
-Message-ID: <1585811633.2275.49.camel@hbabu-laptop>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- malwarescore=0 suspectscore=3 priorityscore=1501 lowpriorityscore=0
- phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004020060
+        Thu, 2 Apr 2020 03:14:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id d202so2408360wmd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:14:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6zSvzlPFPe5kHJzBH7BwpSL+DKal1qwCEGq/fwhdzrA=;
+        b=QJ9PZqGCl0XPyqkdFQpVBXNWRTyYa4HhN5pOyzO7GoVDz/GXoP3ScInMgZ1p24lvit
+         Gsd5iCHyVfOujdCug0OgaZJiwgpdMY8U9i80zMFiNgJHIg7AVd7qcrIoL0PTuxjox2JW
+         T19afUTKzTUFsK0o5bCwAfzRi8179FTGhO+uTpu5iQFyZi1JQVJ99S3W5FdjIBIO/2Jh
+         kP8eY74MtXqwPIt2siF9IA01lIjQUmQvRS4fJy9msQDv/NBwIrt2nRAWZdznjUp8yuul
+         mLGaapanH3WUOc3C4oUQyF7ZagC0YBMCVRwqShAN/qHoAB6WxAtoZWaL7ZG5tPiqZaXV
+         iojw==
+X-Gm-Message-State: AGi0PubhGqoqYr0a/hODqv0Ufkg+nKWGV6Io6DUeZ7nhkegi4iJXExOL
+        N7HctB27mLz5DpdlaWI+EYo=
+X-Google-Smtp-Source: APiQypKiVW22lJ+zXwmqgSewMfQ0EZe3P5GLY+hzyfn7cDXQkP9nUkwb6vE+mIG8HHsIvmk4wH3uVw==
+X-Received: by 2002:a1c:9ad7:: with SMTP id c206mr1976823wme.48.1585811673285;
+        Thu, 02 Apr 2020 00:14:33 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id t6sm5729079wma.30.2020.04.02.00.14.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 00:14:32 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 09:14:23 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org,
+        Rik van Riel <riel@surriel.com>,
+        Andreas Schaufler <andreas.schaufler@gmx.de>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH v3] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma
+Message-ID: <20200402071423.GE22681@dhcp22.suse.cz>
+References: <20200311220920.2487528-1-guro@fb.com>
+ <20200401192553.7f437f150203a5fa044a1f75@linux-foundation.org>
+ <20200402024406.GA69473@carbon.DHCP.thefacebook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402024406.GA69473@carbon.DHCP.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 01-04-20 19:44:06, Roman Gushchin wrote:
+> On Wed, Apr 01, 2020 at 07:25:53PM -0700, Andrew Morton wrote:
+> > On Wed, 11 Mar 2020 15:09:20 -0700 Roman Gushchin <guro@fb.com> wrote:
+> > 
+> > > At large scale rebooting servers in order to allocate gigantic hugepages
+> > > is quite expensive and complex. At the same time keeping some constant
+> > > percentage of memory in reserved hugepages even if the workload isn't
+> > > using it is a big waste: not all workloads can benefit from using 1 GB
+> > > pages.
+> > > 
+> > > The following solution can solve the problem:
+> > > 1) On boot time a dedicated cma area* is reserved. The size is passed
+> > >    as a kernel argument.
+> > > 2) Run-time allocations of gigantic hugepages are performed using the
+> > >    cma allocator and the dedicated cma area
+> > > 
+> > > In this case gigantic hugepages can be allocated successfully with a
+> > > high probability, however the memory isn't completely wasted if nobody
+> > > is using 1GB hugepages: it can be used for pagecache, anon memory,
+> > > THPs, etc.
+> > > 
+> > > * On a multi-node machine a per-node cma area is allocated on each node.
+> > >   Following gigantic hugetlb allocation are using the first available
+> > >   numa node if the mask isn't specified by a user.
+> > > 
+> > > Usage:
+> > > 1) configure the kernel to allocate a cma area for hugetlb allocations:
+> > >    pass hugetlb_cma=10G as a kernel argument
+> > > 
+> > > 2) allocate hugetlb pages as usual, e.g.
+> > >    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+> > > 
+> > > If the option isn't enabled or the allocation of the cma area failed,
+> > > the current behavior of the system is preserved.
+> > > 
+> > > x86 and arm-64 are covered by this patch, other architectures can be
+> > > trivially added later.
+> > 
+> > Lots of review input on v2, but then everyone went quiet ;)
+> > 
+> > Has everything been addressed?
+> 
+> I hope so. There is a nice cleanup from Aslan, which can be merged in or
+> treated as a separate patch.
 
-When NX encounters translation error on CRB and any request buffer,
-raises an interrupt on the CPU to handle the fault. It can raise one
-interrupt for multiple faults. Expects OS to handle these faults and
-return credits for fault window after processing faults.
-
-Setup thread IRQ handler and IRQ thread function per each VAS instance.
-IRQ handler checks if the thread is already woken up and can handle new
-faults. If so returns with IRQ_HANDLED, otherwise wake up thread to
-process new faults.
-
-The thread functions reads each CRB entry from fault FIFO until sees
-invalid entry. After reading each CRB, determine the corresponding
-send window using pswid (from CRB) and process fault CRB. Then
-invalidate the entry and return credit. Processing fault CRB and
-return credit is described in subsequent patches.
-
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Signed-off-by: Haren Myneni <haren@linux.ibm.com>
----
- arch/powerpc/platforms/powernv/vas-fault.c  | 131 ++++++++++++++++++++++++++++
- arch/powerpc/platforms/powernv/vas-window.c |  60 +++++++++++++
- arch/powerpc/platforms/powernv/vas.c        |  23 ++++-
- arch/powerpc/platforms/powernv/vas.h        |   7 ++
- 4 files changed, 220 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/platforms/powernv/vas-fault.c b/arch/powerpc/platforms/powernv/vas-fault.c
-index 4044998..0da8358 100644
---- a/arch/powerpc/platforms/powernv/vas-fault.c
-+++ b/arch/powerpc/platforms/powernv/vas-fault.c
-@@ -11,6 +11,7 @@
- #include <linux/slab.h>
- #include <linux/uaccess.h>
- #include <linux/kthread.h>
-+#include <linux/mmu_context.h>
- #include <asm/icswx.h>
- 
- #include "vas.h"
-@@ -25,6 +26,136 @@
- #define VAS_FAULT_WIN_FIFO_SIZE	(4 << 20)
- 
- /*
-+ * Process valid CRBs in fault FIFO.
-+ * NX process user space requests, return credit and update the status
-+ * in CRB. If it encounters transalation error when accessing CRB or
-+ * request buffers, raises interrupt on the CPU to handle the fault.
-+ * It takes credit on fault window, updates nx_fault_stamp in CRB with
-+ * the following information and pastes CRB in fault FIFO.
-+ *
-+ * pswid - window ID of the window on which the request is sent.
-+ * fault_storage_addr - fault address
-+ *
-+ * It can raise a single interrupt for multiple faults. Expects OS to
-+ * process all valid faults and return credit for each fault on user
-+ * space and fault windows. This fault FIFO control will be done with
-+ * credit mechanism. NX can continuously paste CRBs until credits are not
-+ * available on fault window. Otherwise, returns with RMA_reject.
-+ *
-+ * Total credits available on fault window: FIFO_SIZE(4MB)/CRBS_SIZE(128)
-+ *
-+ */
-+irqreturn_t vas_fault_thread_fn(int irq, void *data)
-+{
-+	struct vas_instance *vinst = data;
-+	struct coprocessor_request_block *crb, *entry;
-+	struct coprocessor_request_block buf;
-+	struct vas_window *window;
-+	unsigned long flags;
-+	void *fifo;
-+
-+	crb = &buf;
-+
-+	/*
-+	 * VAS can interrupt with multiple page faults. So process all
-+	 * valid CRBs within fault FIFO until reaches invalid CRB.
-+	 * We use CCW[0] and pswid to validate validate CRBs:
-+	 *
-+	 * CCW[0]	Reserved bit. When NX pastes CRB, CCW[0]=0
-+	 *		OS sets this bit to 1 after reading CRB.
-+	 * pswid	NX assigns window ID. Set pswid to -1 after
-+	 *		reading CRB from fault FIFO.
-+	 *
-+	 * We exit this function if no valid CRBs are available to process.
-+	 * So acquire fault_lock and reset fifo_in_progress to 0 before
-+	 * exit.
-+	 * In case kernel receives another interrupt with different page
-+	 * fault, interrupt handler returns with IRQ_HANDLED if
-+	 * fifo_in_progress is set. Means these new faults will be
-+	 * handled by the current thread. Otherwise set fifo_in_progress
-+	 * and return IRQ_WAKE_THREAD to wake up thread.
-+	 */
-+	while (true) {
-+		spin_lock_irqsave(&vinst->fault_lock, flags);
-+		/*
-+		 * Advance the fault fifo pointer to next CRB.
-+		 * Use CRB_SIZE rather than sizeof(*crb) since the latter is
-+		 * aligned to CRB_ALIGN (256) but the CRB written to by VAS is
-+		 * only CRB_SIZE in len.
-+		 */
-+		fifo = vinst->fault_fifo + (vinst->fault_crbs * CRB_SIZE);
-+		entry = fifo;
-+
-+		if ((entry->stamp.nx.pswid == cpu_to_be32(FIFO_INVALID_ENTRY))
-+			|| (entry->ccw & cpu_to_be32(CCW0_INVALID))) {
-+			vinst->fifo_in_progress = 0;
-+			spin_unlock_irqrestore(&vinst->fault_lock, flags);
-+			return IRQ_HANDLED;
-+		}
-+
-+		spin_unlock_irqrestore(&vinst->fault_lock, flags);
-+		vinst->fault_crbs++;
-+		if (vinst->fault_crbs == (vinst->fault_fifo_size / CRB_SIZE))
-+			vinst->fault_crbs = 0;
-+
-+		memcpy(crb, fifo, CRB_SIZE);
-+		entry->stamp.nx.pswid = cpu_to_be32(FIFO_INVALID_ENTRY);
-+		entry->ccw |= cpu_to_be32(CCW0_INVALID);
-+
-+		pr_devel("VAS[%d] fault_fifo %p, fifo %p, fault_crbs %d\n",
-+				vinst->vas_id, vinst->fault_fifo, fifo,
-+				vinst->fault_crbs);
-+
-+		window = vas_pswid_to_window(vinst,
-+				be32_to_cpu(crb->stamp.nx.pswid));
-+
-+		if (IS_ERR(window)) {
-+			/*
-+			 * We got an interrupt about a specific send
-+			 * window but we can't find that window and we can't
-+			 * even clean it up (return credit on user space
-+			 * window).
-+			 * But we should not get here.
-+			 * TODO: Disable IRQ.
-+			 */
-+			pr_err("VAS[%d] fault_fifo %p, fifo %p, pswid 0x%x, fault_crbs %d bad CRB?\n",
-+				vinst->vas_id, vinst->fault_fifo, fifo,
-+				be32_to_cpu(crb->stamp.nx.pswid),
-+				vinst->fault_crbs);
-+
-+			WARN_ON_ONCE(1);
-+		}
-+
-+	}
-+}
-+
-+irqreturn_t vas_fault_handler(int irq, void *dev_id)
-+{
-+	struct vas_instance *vinst = dev_id;
-+	irqreturn_t ret = IRQ_WAKE_THREAD;
-+	unsigned long flags;
-+
-+	/*
-+	 * NX can generate an interrupt for multiple faults. So the
-+	 * fault handler thread process all CRBs until finds invalid
-+	 * entry. In case if NX sees continuous faults, it is possible
-+	 * that the thread function entered with the first interrupt
-+	 * can execute and process all valid CRBs.
-+	 * So wake up thread only if the fault thread is not in progress.
-+	 */
-+	spin_lock_irqsave(&vinst->fault_lock, flags);
-+
-+	if (vinst->fifo_in_progress)
-+		ret = IRQ_HANDLED;
-+	else
-+		vinst->fifo_in_progress = 1;
-+
-+	spin_unlock_irqrestore(&vinst->fault_lock, flags);
-+
-+	return ret;
-+}
-+
-+/*
-  * Fault window is opened per VAS instance. NX pastes fault CRB in fault
-  * FIFO upon page faults.
-  */
-diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-index 063cda2..f12f7eb 100644
---- a/arch/powerpc/platforms/powernv/vas-window.c
-+++ b/arch/powerpc/platforms/powernv/vas-window.c
-@@ -1050,6 +1050,15 @@ struct vas_window *vas_tx_win_open(int vasid, enum vas_cop_type cop,
- 		}
- 	} else {
- 		/*
-+		 * Interrupt hanlder or fault window setup failed. Means
-+		 * NX can not generate fault for page fault. So not
-+		 * opening for user space tx window.
-+		 */
-+		if (!vinst->virq) {
-+			rc = -ENODEV;
-+			goto free_window;
-+		}
-+		/*
- 		 * A user mapping must ensure that context switch issues
- 		 * CP_ABORT for this thread.
- 		 */
-@@ -1307,3 +1316,54 @@ int vas_win_close(struct vas_window *window)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(vas_win_close);
-+
-+struct vas_window *vas_pswid_to_window(struct vas_instance *vinst,
-+		uint32_t pswid)
-+{
-+	struct vas_window *window;
-+	int winid;
-+
-+	if (!pswid) {
-+		pr_devel("%s: called for pswid 0!\n", __func__);
-+		return ERR_PTR(-ESRCH);
-+	}
-+
-+	decode_pswid(pswid, NULL, &winid);
-+
-+	if (winid >= VAS_WINDOWS_PER_CHIP)
-+		return ERR_PTR(-ESRCH);
-+
-+	/*
-+	 * If application closes the window before the hardware
-+	 * returns the fault CRB, we should wait in vas_win_close()
-+	 * for the pending requests. so the window must be active
-+	 * and the process alive.
-+	 *
-+	 * If its a kernel process, we should not get any faults and
-+	 * should not get here.
-+	 */
-+	window = vinst->windows[winid];
-+
-+	if (!window) {
-+		pr_err("PSWID decode: Could not find window for winid %d pswid %d vinst 0x%p\n",
-+			winid, pswid, vinst);
-+		return NULL;
-+	}
-+
-+	/*
-+	 * Do some sanity checks on the decoded window.  Window should be
-+	 * NX GZIP user send window. FTW windows should not incur faults
-+	 * since their CRBs are ignored (not queued on FIFO or processed
-+	 * by NX).
-+	 */
-+	if (!window->tx_win || !window->user_win || !window->nx_win ||
-+			window->cop == VAS_COP_TYPE_FAULT ||
-+			window->cop == VAS_COP_TYPE_FTW) {
-+		pr_err("PSWID decode: id %d, tx %d, user %d, nx %d, cop %d\n",
-+			winid, window->tx_win, window->user_win,
-+			window->nx_win, window->cop);
-+		WARN_ON(1);
-+	}
-+
-+	return window;
-+}
-diff --git a/arch/powerpc/platforms/powernv/vas.c b/arch/powerpc/platforms/powernv/vas.c
-index 9013a63..598e4cd 100644
---- a/arch/powerpc/platforms/powernv/vas.c
-+++ b/arch/powerpc/platforms/powernv/vas.c
-@@ -14,6 +14,8 @@
- #include <linux/of_platform.h>
- #include <linux/of_address.h>
- #include <linux/of.h>
-+#include <linux/irqdomain.h>
-+#include <linux/interrupt.h>
- #include <asm/prom.h>
- #include <asm/xive.h>
- 
-@@ -26,7 +28,25 @@
- 
- static int vas_irq_fault_window_setup(struct vas_instance *vinst)
- {
--	return vas_setup_fault_window(vinst);
-+	char devname[64];
-+	int rc = 0;
-+
-+	snprintf(devname, sizeof(devname), "vas-%d", vinst->vas_id);
-+	rc = request_threaded_irq(vinst->virq, vas_fault_handler,
-+				vas_fault_thread_fn, 0, devname, vinst);
-+
-+	if (rc) {
-+		pr_err("VAS[%d]: Request IRQ(%d) failed with %d\n",
-+				vinst->vas_id, vinst->virq, rc);
-+		goto out;
-+	}
-+
-+	rc = vas_setup_fault_window(vinst);
-+	if (rc)
-+		free_irq(vinst->virq, vinst);
-+
-+out:
-+	return rc;
- }
- 
- static int init_vas_instance(struct platform_device *pdev)
-@@ -119,6 +139,7 @@ static int init_vas_instance(struct platform_device *pdev)
- 	list_add(&vinst->node, &vas_instances);
- 	mutex_unlock(&vas_mutex);
- 
-+	spin_lock_init(&vinst->fault_lock);
- 	/*
- 	 * IRQ and fault handling setup is needed only for user space
- 	 * send windows.
-diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
-index 2a04072..0af7912 100644
---- a/arch/powerpc/platforms/powernv/vas.h
-+++ b/arch/powerpc/platforms/powernv/vas.h
-@@ -331,7 +331,10 @@ struct vas_instance {
- 
- 	u64 irq_port;
- 	int virq;
-+	int fault_crbs;
- 	int fault_fifo_size;
-+	int fifo_in_progress;
-+	spinlock_t fault_lock;
- 	void *fault_fifo;
- 	struct vas_window *fault_win; /* Fault window */
- 
-@@ -431,6 +434,10 @@ struct vas_winctx {
- extern void vas_window_init_dbgdir(struct vas_window *win);
- extern void vas_window_free_dbgdir(struct vas_window *win);
- extern int vas_setup_fault_window(struct vas_instance *vinst);
-+extern irqreturn_t vas_fault_thread_fn(int irq, void *data);
-+extern irqreturn_t vas_fault_handler(int irq, void *dev_id);
-+extern struct vas_window *vas_pswid_to_window(struct vas_instance *vinst,
-+						uint32_t pswid);
- 
- static inline int vas_window_pid(struct vas_window *window)
- {
+With the follow up patche I didn't have any objections. I would prefer
+having hugetlb parts folded into the original patch to make the review
+easier though. Then I can have a look again. If those patches are going
+to be as they are now then no problem with me.
 -- 
-1.8.3.1
-
-
-
+Michal Hocko
+SUSE Labs
