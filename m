@@ -2,169 +2,276 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCF6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B58C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A8E2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94612073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:06:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="giau6HUA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389988AbgDBXE0 (ORCPT
+        id S2389548AbgDBXG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:04:26 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:49346 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729549AbgDBXE0 (ORCPT
+        Thu, 2 Apr 2020 19:06:26 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:17969 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387919AbgDBXG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 19:04:26 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK8sp-0005Tp-0a; Thu, 02 Apr 2020 17:04:23 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK8sg-00008X-Tf; Thu, 02 Apr 2020 17:04:22 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
-        <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
-        <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
-Date:   Thu, 02 Apr 2020 18:01:32 -0500
-In-Reply-To: <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
-        (Linus Torvalds's message of "Thu, 2 Apr 2020 14:46:24 -0700")
-Message-ID: <87lfnda3w3.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 2 Apr 2020 19:06:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585868785; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=joEfBFYVnCUn1rHziGrcFQaULpvVa2IqWI3HP0gQeC0=; b=giau6HUAQWf8cTh7Y2w1B+BJjdu4XGWnd40sQBwdJ+30ThJA8yr5XELi4wB256NaJT/hNjFd
+ GkGRSHGhcZwKbEErLSLBjZNNJcss9dlFHIC0wbVKW/YnFLDfD+2kbO3TH4ARtxM6qSQMOKXH
+ EFCWy8dcQwtYVIr68DQrVIlsx6U=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e866ff0.7f06974ecea0-smtp-out-n02;
+ Thu, 02 Apr 2020 23:06:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D7368C4478C; Thu,  2 Apr 2020 23:06:24 +0000 (UTC)
+Received: from [10.110.122.98] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF71EC433D2;
+        Thu,  2 Apr 2020 23:06:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF71EC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v4 3/4] phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
+To:     Manu Gautam <mgautam@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jack Pham <jackp@codeaurora.org>
+References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
+ <1585597017-30683-4-git-send-email-wcheng@codeaurora.org>
+ <6295c8d8-9763-be1d-9227-e61369000536@codeaurora.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <b0382fcc-d580-79a8-65d8-85afbd2047f0@codeaurora.org>
+Date:   Thu, 2 Apr 2020 16:06:22 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jK8sg-00008X-Tf;;;mid=<87lfnda3w3.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/abTF2Bu9l/bRBd6j4R51hnTCJ4P/fyIE=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <6295c8d8-9763-be1d-9227-e61369000536@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+Hi Manu,
 
-> On Thu, Apr 2, 2020 at 2:00 PM Bernd Edlinger <bernd.edlinger@hotmail.de> wrote:
+On 4/2/2020 12:00 AM, Manu Gautam wrote:
+> 
+> On 3/31/2020 1:06 AM, Wesley Cheng wrote:
+>> From: Jack Pham <jackp@codeaurora.org>
 >>
->> There are two more patches, which might be of interest for you, just to
->> make the picture complete.
->> It is not clear if we go that way, or if Eric has a yet better idea.
+>> Add support for SM8150 QMP USB3 PHY with the necessary
+>> initialization sequences as well as additional QMP V4
+>> register definitions.
 >>
->> [PATCH v7 15/16] exec: Fix dead-lock in de_thread with ptrace_attach
->> https://www.spinics.net/lists/kernel/msg3459067.html
->
-> There is no way I would ever take that patch.
->
-> The amount of confusion in that patch is not acceptable. Randomly
-> unlocking the new lock?
->
-> That code makes everything worse, it's completely incomprehensible,
-> the locking rules make no sense ahwt-so-ever.
->
-> I'm seriously starting to feel like I should not have pulled this
-> code, because the future looks _worse_ than what we used to have.
->
-> No. No no no. Eric, this is not an acceptable direction.
+>> Signed-off-by: Jack Pham <jackp@codeaurora.org>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> ---
+>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 153 ++++++++++++++++++++++++++++
+>>  drivers/phy/qualcomm/phy-qcom-qmp.h | 198 +++++++++++++++++++++++++++++++++++-
+>>  2 files changed, 349 insertions(+), 2 deletions(-)
+> 
+> [snip]
+> 
+>>  
+>> -/* Only for QMP V4 PHY - PCS registers */
+>> +/* Only for QMP V4 PHY - UFS PCS registers */
+>>  #define QPHY_V4_PHY_START				0x000
+>>  #define QPHY_V4_POWER_DOWN_CONTROL			0x004
+>>  #define QPHY_V4_SW_RESET				0x008
+>> @@ -409,4 +446,161 @@
+>>  #define QPHY_V4_TX_MID_TERM_CTRL1			0x1d8
+>>  #define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
+>>  
+>> +/* Only for QMP V4 PHY - USB/PCIe PCS registers */
+>> +#define QPHY_V4_PCS_SW_RESET				0x000
+> 
+> It is a mess not given that UFS wrapper uses different PCS register layout:
+> E.g. UFS uses - QPHY_V4_SW_RESET 0x008
+> 
+> Would it help to add UFS prefix for UFS specific registers to avoid confusion and typos.
+> E.g. rename QPHY_V4_SW_RESET to QPHY_V4_UFS_PCS_SW_RESET ?
+> 
 
-That is not the direction I intend to take either.
+I think we can follow your suggestion.  The UFS PHY has a significantly
+different set of PCS registers versus USB/PCIe, so it will be good to
+differentiate them.  I will add a patch to rename the defines and add it
+to the patch series.
 
-I was hoping I could put off replying to this thread for a bit because
-I only managed to get 4 hours of sleep last night and I am not as alert
-to technical details as I would like to be.
+>> +#define QPHY_V4_PCS_REVISION_ID0			0x004
+>> +#define QPHY_V4_PCS_REVISION_ID1			0x008
+>> +#define QPHY_V4_PCS_REVISION_ID2			0x00c
+>> +#define QPHY_V4_PCS_REVISION_ID3			0x010
+>> +#define QPHY_V4_PCS_PCS_STATUS1				0x014
+>> +#define QPHY_V4_PCS_PCS_STATUS2				0x018
+>> +#define QPHY_V4_PCS_PCS_STATUS3				0x01c
+>> +#define QPHY_V4_PCS_PCS_STATUS4				0x020
+>> +#define QPHY_V4_PCS_PCS_STATUS5				0x024
+>> +#define QPHY_V4_PCS_PCS_STATUS6				0x028
+>> +#define QPHY_V4_PCS_PCS_STATUS7				0x02c
+>> +#define QPHY_V4_PCS_DEBUG_BUS_0_STATUS			0x030
+>> +#define QPHY_V4_PCS_DEBUG_BUS_1_STATUS			0x034
+>> +#define QPHY_V4_PCS_DEBUG_BUS_2_STATUS			0x038
+>> +#define QPHY_V4_PCS_DEBUG_BUS_3_STATUS			0x03c
+>> +#define QPHY_V4_PCS_POWER_DOWN_CONTROL			0x040
+>> +#define QPHY_V4_PCS_START_CONTROL			0x044
+>> +#define QPHY_V4_PCS_INSIG_SW_CTRL1			0x048
+>> +#define QPHY_V4_PCS_INSIG_SW_CTRL2			0x04c
+>> +#define QPHY_V4_PCS_INSIG_SW_CTRL3			0x050
+>> +#define QPHY_V4_PCS_INSIG_SW_CTRL4			0x054
+>> +#define QPHY_V4_PCS_INSIG_SW_CTRL5			0x058
+>> +#define QPHY_V4_PCS_INSIG_SW_CTRL6			0x05c
+>> +#define QPHY_V4_PCS_INSIG_SW_CTRL7			0x060
+>> +#define QPHY_V4_PCS_INSIG_SW_CTRL8			0x064
+>> +#define QPHY_V4_PCS_INSIG_MX_CTRL1			0x068
+>> +#define QPHY_V4_PCS_INSIG_MX_CTRL2			0x06c
+>> +#define QPHY_V4_PCS_INSIG_MX_CTRL3			0x070
+>> +#define QPHY_V4_PCS_INSIG_MX_CTRL4			0x074
+>> +#define QPHY_V4_PCS_INSIG_MX_CTRL5			0x078
+>> +#define QPHY_V4_PCS_INSIG_MX_CTRL7			0x07c
+>> +#define QPHY_V4_PCS_INSIG_MX_CTRL8			0x080
+>> +#define QPHY_V4_PCS_OUTSIG_SW_CTRL1			0x084
+>> +#define QPHY_V4_PCS_OUTSIG_MX_CTRL1			0x088
+>> +#define QPHY_V4_PCS_CLAMP_ENABLE			0x08c
+>> +#define QPHY_V4_PCS_POWER_STATE_CONFIG1			0x090
+>> +#define QPHY_V4_PCS_POWER_STATE_CONFIG2			0x094
+>> +#define QPHY_V4_PCS_FLL_CNTRL1				0x098
+>> +#define QPHY_V4_PCS_FLL_CNTRL2				0x09c
+>> +#define QPHY_V4_PCS_FLL_CNT_VAL_L			0x0a0
+>> +#define QPHY_V4_PCS_FLL_CNT_VAL_H_TOL			0x0a4
+>> +#define QPHY_V4_PCS_FLL_MAN_CODE			0x0a8
+>> +#define QPHY_V4_PCS_TEST_CONTROL1			0x0ac
+>> +#define QPHY_V4_PCS_TEST_CONTROL2			0x0b0
+>> +#define QPHY_V4_PCS_TEST_CONTROL3			0x0b4
+>> +#define QPHY_V4_PCS_TEST_CONTROL4			0x0b8
+>> +#define QPHY_V4_PCS_TEST_CONTROL5			0x0bc
+>> +#define QPHY_V4_PCS_TEST_CONTROL6			0x0c0
+>> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG1			0x0c4
+>> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG2			0x0c8
+>> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG3			0x0cc
+>> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG4			0x0d0
+>> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG5			0x0d4
+>> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG6			0x0d8
+>> +#define QPHY_V4_PCS_REFGEN_REQ_CONFIG1			0x0dc
+>> +#define QPHY_V4_PCS_REFGEN_REQ_CONFIG2			0x0e0
+>> +#define QPHY_V4_PCS_REFGEN_REQ_CONFIG3			0x0e4
+>> +#define QPHY_V4_PCS_BIST_CTRL				0x0e8
+>> +#define QPHY_V4_PCS_PRBS_POLY0				0x0ec
+>> +#define QPHY_V4_PCS_PRBS_POLY1				0x0f0
+>> +#define QPHY_V4_PCS_FIXED_PAT0				0x0f4
+>> +#define QPHY_V4_PCS_FIXED_PAT1				0x0f8
+>> +#define QPHY_V4_PCS_FIXED_PAT2				0x0fc
+>> +#define QPHY_V4_PCS_FIXED_PAT3				0x100
+>> +#define QPHY_V4_PCS_FIXED_PAT4				0x104
+>> +#define QPHY_V4_PCS_FIXED_PAT5				0x108
+>> +#define QPHY_V4_PCS_FIXED_PAT6				0x10c
+>> +#define QPHY_V4_PCS_FIXED_PAT7				0x110
+>> +#define QPHY_V4_PCS_FIXED_PAT8				0x114
+>> +#define QPHY_V4_PCS_FIXED_PAT9				0x118
+>> +#define QPHY_V4_PCS_FIXED_PAT10				0x11c
+>> +#define QPHY_V4_PCS_FIXED_PAT11				0x120
+>> +#define QPHY_V4_PCS_FIXED_PAT12				0x124
+>> +#define QPHY_V4_PCS_FIXED_PAT13				0x128
+>> +#define QPHY_V4_PCS_FIXED_PAT14				0x12c
+>> +#define QPHY_V4_PCS_FIXED_PAT15				0x130
+>> +#define QPHY_V4_PCS_TXMGN_CONFIG			0x134
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V0			0x138
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V1			0x13c
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V2			0x140
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V3			0x144
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V4			0x148
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V0_RS			0x14c
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V1_RS			0x150
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V2_RS			0x154
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V3_RS			0x158
+>> +#define QPHY_V4_PCS_G12S1_TXMGN_V4_RS			0x15c
+>> +#define QPHY_V4_PCS_G3S2_TXMGN_MAIN			0x160
+>> +#define QPHY_V4_PCS_G3S2_TXMGN_MAIN_RS			0x164
+>> +#define QPHY_V4_PCS_G12S1_TXDEEMPH_M6DB			0x168
+>> +#define QPHY_V4_PCS_G12S1_TXDEEMPH_M3P5DB		0x16c
+>> +#define QPHY_V4_PCS_G3S2_PRE_GAIN			0x170
+>> +#define QPHY_V4_PCS_G3S2_POST_GAIN			0x174
+>> +#define QPHY_V4_PCS_G3S2_PRE_POST_OFFSET		0x178
+>> +#define QPHY_V4_PCS_G3S2_PRE_GAIN_RS			0x17c
+>> +#define QPHY_V4_PCS_G3S2_POST_GAIN_RS			0x180
+>> +#define QPHY_V4_PCS_G3S2_PRE_POST_OFFSET_RS		0x184
+>> +#define QPHY_V4_PCS_RX_SIGDET_LVL			0x188
+>> +#define QPHY_V4_PCS_RX_SIGDET_DTCT_CNTRL		0x18c
+>> +#define QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_L		0x190
+>> +#define QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_H		0x194
+>> +#define QPHY_V4_PCS_RATE_SLEW_CNTRL1			0x198
+>> +#define QPHY_V4_PCS_RATE_SLEW_CNTRL2			0x19c
+>> +#define QPHY_V4_PCS_PWRUP_RESET_DLY_TIME_AUXCLK		0x1a0
+>> +#define QPHY_V4_PCS_P2U3_WAKEUP_DLY_TIME_AUXCLK_L	0x1a4
+>> +#define QPHY_V4_PCS_P2U3_WAKEUP_DLY_TIME_AUXCLK_H	0x1a8
+>> +#define QPHY_V4_PCS_TSYNC_RSYNC_TIME			0x1ac
+>> +#define QPHY_V4_PCS_CDR_RESET_TIME			0x1b0
+>> +#define QPHY_V4_PCS_TSYNC_DLY_TIME			0x1b4
+>> +#define QPHY_V4_PCS_ELECIDLE_DLY_SEL			0x1b8
+>> +#define QPHY_V4_PCS_CMN_ACK_OUT_SEL			0x1bc
+>> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG1		0x1c0
+>> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG2		0x1c4
+>> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG3		0x1c8
+>> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG4		0x1cc
+>> +#define QPHY_V4_PCS_PCS_TX_RX_CONFIG			0x1d0
+>> +#define QPHY_V4_PCS_RX_IDLE_DTCT_CNTRL			0x1d4
+>> +#define QPHY_V4_PCS_RX_DCC_CAL_CONFIG			0x1d8
+>> +#define QPHY_V4_PCS_EQ_CONFIG1				0x1dc
+>> +#define QPHY_V4_PCS_EQ_CONFIG2				0x1e0
+>> +#define QPHY_V4_PCS_EQ_CONFIG3				0x1e4
+>> +#define QPHY_V4_PCS_EQ_CONFIG4				0x1e8
+>> +#define QPHY_V4_PCS_EQ_CONFIG5				0x1ec
+>> +#define QPHY_V4_PCS_USB3_POWER_STATE_CONFIG1		0x300
+>> +#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_STATUS		0x304
+>> +#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_CTRL		0x308
+>> +#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_CTRL2		0x30c
+>> +#define QPHY_V4_PCS_USB3_LFPS_RXTERM_IRQ_SOURCE_STATUS	0x310
+>> +#define QPHY_V4_PCS_USB3_LFPS_RXTERM_IRQ_CLEAR		0x314
+>> +#define QPHY_V4_PCS_USB3_LFPS_DET_HIGH_COUNT_VAL	0x318
+>> +#define QPHY_V4_PCS_USB3_LFPS_TX_ECSTART		0x31c
+>> +#define QPHY_V4_PCS_USB3_LFPS_PER_TIMER_VAL		0x320
+>> +#define QPHY_V4_PCS_USB3_LFPS_TX_END_CNT_U3_START	0x324
+>> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_LOCK_TIME		0x328
+>> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_WAIT_TIME		0x32c
+>> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_CTLE_TIME		0x330
+>> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_WAIT_TIME_S2	0x334
+>> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_DFE_TIME_S2	0x338
+>> +#define QPHY_V4_PCS_USB3_RCVR_DTCT_DLY_U3_L		0x33c
+>> +#define QPHY_V4_PCS_USB3_RCVR_DTCT_DLY_U3_H		0x340
+>> +#define QPHY_V4_PCS_USB3_ARCVR_DTCT_EN_PERIOD		0x344
+>> +#define QPHY_V4_PCS_USB3_ARCVR_DTCT_CM_DLY		0x348
+>> +#define QPHY_V4_PCS_USB3_TXONESZEROS_RUN_LENGTH		0x34c
+>> +#define QPHY_V4_PCS_USB3_ALFPS_DEGLITCH_VAL		0x350
+>> +#define QPHY_V4_PCS_USB3_SIGDET_STARTUP_TIMER_VAL	0x354
+>> +#define QPHY_V4_PCS_USB3_TEST_CONTROL			0x358
+>> +
+>> +/* Only for QMP V4 PHY - PCS_MISC registers */
+>> +#define QPHY_V4_PCS_MISC_TYPEC_CTRL			0x00
+>> +#define QPHY_V4_PCS_MISC_TYPEC_PWRDN_CTRL		0x04
+>> +#define QPHY_V4_PCS_MISC_PCS_MISC_CONFIG1		0x08
+>> +#define QPHY_V4_PCS_MISC_CLAMP_ENABLE			0x0c
+>> +#define QPHY_V4_PCS_MISC_TYPEC_STATUS			0x10
+>> +#define QPHY_V4_PCS_MISC_PLACEHOLDER_STATUS		0x14
+>> +
+>>  #endif
+> 
 
-Long story short:
-
-The exec_update_mutex is to be a strict subset of today's
-cred_guard_mutex.  I tried to copy cred_guard_mutex's unlock style so
-that was obvious and that turns out was messier than I intended.
-
-I thought the changes to the individual locking changes were
-sufficiently unsubtle that they did not need my personal attention.
-Especially as they are just a substitution of one lock for another
-with a slightly smaller scope.
-
-I started working on the the series of changes that reorganizes
-the changes in exec.
-
-It was reported that something had gone wrong with my introduction
-of exec_update_mutex and I pulled it from linux-next.
-
-By the time I was ready to start putting humpty dumpty back together
-again Bernd had collected everything up and had it working.  I had seen
-that he had been given the feedback about better change descriptions.
-
-I had looked at the code of his patches earlier and the basic changes
-were trivial.
-
-Since I thought I already knew what was in the patches and the worst
-problem was the missing unlock of cred_guard_mutex, and I know Bernd's
-patches had been tested I applied them.  I missed that Bernd had added
-the exec_mmap_called flag into my patch.  I thought he had only added
-the missing unlock.
-
-I spotted the weirdness in unlocking exec_update_mutex, and because it
-does fix a real world deadlock with ptrace I did not back it out from my
-tree.
-
-I have been much laxer on the details than I like to be my apologies.
-
-The plan is:
-	exec_udpate_mutex will cover just the subset of cred_guard_mutex
-        after the point of no return, and after we do any actions that
-	might block waiting for userspace to do anything.
-
-	So exec_update_mutex will just cover those things that exec
-        is updating, so if you want an atomic snapshot of them
-        plus the appropriate struct cred you can grab exec_update_mutex.
-        
-	I added a new mutex instead of just fixing cred_guard_mutex so
-        that we can update or revert the individual code paths if it
-        is found that something is wrong.
-
-	The cred_guard_mutex also prevents other tasks from starting
-        to ptrace the task that is exec'ing, and other tasks from
-        setting no_new_privs on the task that is exec'ing.
-
-        My plan is to carefully refactor the code so it can perform
-        both the ptrace and no_new_privs checks after the point of
-        no return.
-
-I have uncovered all kinds of surprises while working in that direction
-and I realize it is going to take a very delicate and careful touch to
-achieve my goal.
-
-There are silly things like normal linux exec when you are ptraced and
-exec changes the credentials the ordinary code will continue with the
-old credentials, but the an LSM enabled your process is likely to be
-killed instead.
-
-There is the personal mind blowing scenario where selinux will increase
-your credentials upon exec but if a magic directive is supplied in it's
-rules will avoid setting AT_SECURE, so that userspace won't protect
-itself from hostile takeover from the pre credential change environment.
-Much to my surprise "noatsecure" is a known and documented feature of
-selinux.  I am not certain but I think I even spotted it in use on
-production.
-
-I will catch up on my sleep before I allow any more changes, and I will
-see replacing the called_exec_mmap flag with something saner.
-
-Eric
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
