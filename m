@@ -2,114 +2,100 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49C0C2BA17
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACF0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0DDC21556
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEF8206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lNlymgKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389375AbgDBPjw (ORCPT
+        id S2389386AbgDBPkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:39:52 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:44200 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388916AbgDBPjw (ORCPT
+        Thu, 2 Apr 2020 11:40:09 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:35031 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388591AbgDBPkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:39:52 -0400
-X-AuditID: c0a8fbf4-489ff70000004419-87-5e860746f190
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 73.47.17433.647068E5; Thu,  2 Apr 2020 17:39:50 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0487.000; Thu, 2 Apr 2020 17:39:49 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "brendanhiggins@google.com" <brendanhiggins@google.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "talgi@mellanox.com" <talgi@mellanox.com>,
-        "olteanv@gmail.com" <olteanv@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davidgow@google.com" <davidgow@google.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
-        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Thread-Topic: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Thread-Index: AQHWB1c4b3nN1Ux6yEinb5I8a1VXN6hi3q0AgAD00ICAAKifAIABXY+A
-Date:   Thu, 2 Apr 2020 15:39:48 +0000
-Message-ID: <bfb0093dc6fa5adb4f262f144585f7c937bd57c6.camel@fi.rohmeurope.com>
-References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-         <285da2166eadc1d46667dd9659d8dae74d28b0b9.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-         <CAFd5g460hY9uOtwicWHK2rhgLdL+gStbKGmLN5KLWi5JXDQEog@mail.gmail.com>
-         <4f915b8b8bee36a61ebea62ebf34c61845170ad5.camel@fi.rohmeurope.com>
-         <CAFd5g44gBrNti5Y_ctQKOE1_pWX3NAdTji1uH8m6dGj+tsJCew@mail.gmail.com>
-In-Reply-To: <CAFd5g44gBrNti5Y_ctQKOE1_pWX3NAdTji1uH8m6dGj+tsJCew@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <39F811E985B94B43959F1BBA38351B82@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Thu, 2 Apr 2020 11:40:09 -0400
+Received: by mail-qv1-f68.google.com with SMTP id q73so1889986qvq.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:40:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PYelBMpM/3QJH1rKStk9XKPwcLOdDKg6wW/AuMLbwA0=;
+        b=lNlymgKIirJd7VAjfYBBqRftLBhc6UFUfiuiLaxma5vrER6aASiWEFCmMywJMyOy0k
+         kIDZGJS/JcyPGJbWqzFLb3ZypGU+/LSLc+SxxZGyW7+Aa0MsJ0Zkxkvfosuep4srSdPG
+         MebPu1XuXHTN9hCyHpf2KRMX9gGegmAuSOwj0jyJB3T+/cHQ8sXXfOA117NUCQw94uoJ
+         a6uNqw6Vlf/oi3ADr368GSxVXLzM38IzfW1RCjgUzX19TrxT8I4BptPljilD28rawM6G
+         72HG7DZfFcayoxN4BjA8cH0EaK2jVN19iK1Ebem1CJNUP2jGybMBzP6ejISXGkC4LRUc
+         kNVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PYelBMpM/3QJH1rKStk9XKPwcLOdDKg6wW/AuMLbwA0=;
+        b=gTqSB0ivZsR5g8CN6SkNKifo0ESLCnY65czo3sh6XPHUN0NcEpillQu0UXNPrIssJl
+         eUt+t+RDEgRq53dt0KT2F8Iu7Rq/d1ctg9/o21L3/VjS/MiNuLD80t6HL3danj5+CpCV
+         JwixCrWo0wT2kYkvCiAfWbXWyaPb1N8hjguDa15N5MvENA3PUb0mr0uZ2VFsGk1k1a35
+         Q/BhoyclP9e7Yue4FmpeFHM8l93MR3V6qLWBWzZ2u+sAtgbemhqccEaDSXicwKJINJBG
+         VxkY0SBcstu93xazCTmz7sA9m6yyX29Ji0VpzbawRXrA378IVyCBObhTzLrZtqOEi9ZC
+         ZmfA==
+X-Gm-Message-State: AGi0PuZmWVW2jbKYHi3YONyq5t9NQKG6juZOFuAUdb1Tq7ezi1Rbbptj
+        VxkzYrtcHwj6roE6+rjtcVJdv6mmlhphJA==
+X-Google-Smtp-Source: APiQypI9is3KJbPY3xl6sirQXhgEy8iEvNue4xUMKbvI46xXBmbp9jGdyrp8NAfqhBcHwxpEFMSMrQ==
+X-Received: by 2002:ad4:5012:: with SMTP id s18mr3982997qvo.162.1585842008226;
+        Thu, 02 Apr 2020 08:40:08 -0700 (PDT)
+Received: from ovpn-66-203.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id n46sm4069873qtb.48.2020.04.02.08.40.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 Apr 2020 08:40:07 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     pbonzini@redhat.com
+Cc:     sean.j.christopherson@intel.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] x86/kvm: fix a missing-prototypes "vmread_error"
+Date:   Thu,  2 Apr 2020 11:39:55 -0400
+Message-Id: <20200402153955.1695-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUwTZxzH89xd7w70zFnQPmM4Y6MYXKaSsORZZgwzGbn9s4jLYtQInnLQ
-        ztKS65Wh2x9kvGzCyMosVhtAB9ZX3mxVFKh20MzilMJQEVdJGhxZSUYmkDFS4nbHofDP83yf
-        5/t8nu/vSX4PjWu9VBJtNEuCaOZNejKe8F+Ked7LpCqyt191rUJ1bc0kqv7GiaGovRegmh9S
-        0eDTkziqjbwgkbN2AKC6UBmBgtfaCXQ20K9BpU1tJKqaSEahUDuF/nn0HYYc8xcxNNRZR6Lp
-        6gBA7uFBDNW5gwRqupiC2r2zGPor7CRQuS9AIZ/zggb92iWhU/U+Cnk9tTgannqGId+rOQL5
-        RqcB+uXlHMhYzzU3NAPu+uURjLvtek5xN/2buHMeG+e9tIVr6o5inOfKCZL78UKjhgs/6Sa5
-        yf5+iguejhGcvdEPuIa+LO5ufTPFjTt7sd0J+1fsOMxLRZ8Z883bdh5aYbBP/U4UPsOL/z1V
-        RpWAB3gliKMhmw5bQxGsEsTTWvYJgC03PaS6uAdgMPhcdmiaZHfAyhFKARLZD+F8yfeEcgZn
-        Kxj42OFeMBLY/bBl6E+gHjoAz4SvLepM6A9PLqQR7Ebo8J4nFM2wn8LhB+VADZvD4N8PyxaM
-        ODYLlrfMk4oG7Dp4omQSUzTO6qBnfFajls3C892hxSesgdGxV4v7G2DHbCuhFI2zqbCtc5uK
-        ZsBYh4NQ9QboqIpQag2rYd+ZF4QdrHUtS3At0a5ltGsZ7VpGnwOaKwAW8EZTPi8JaVtFwbZV
-        tBgK5OmIpcAD1PabuQX+6/mkB2A06AFv0Zh+DWOMlGdrVx225B4z8FZDjmgzCdYeAGlcn8h8
-        dFr2mFz+2HFBtLy23qYJvY7ZHKk5qGWVrKOCUCiIr91kmtZDJousyNauFoV8oTjPaJKWbIyO
-        Uy6PT0q0CuZcQeRtkiFHaZAcq9whirVSzq0AMs5YC/kCeVdF74M02h6tb8Tp3+Ya5DFQ727E
-        tYTZYhaSdEyORgZYBTDYzG/iJoCOBvoE5ohSzUr5J765bUIOwuSgx8WlSpDEL1lJJQClZG/a
-        aazKyywquvsuvNHVGm4bWz+bMeLvnRj48v373pmjyc49MynS9NjHsa/3Dtzx8U//KB1t+XYj
-        ZcFPpqec7QB9H2weHNsV7Q6889UXefeYn6M111PX4frxh+2+YbDrp+PYJN4lDRVO3Yk9KgpW
-        m0Z3xzr37GNx9+eWdN1Ll56wGvi0Lbho5f8H2k/4kkYEAAA=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMjAtMDQtMDEgYXQgMTE6NDggLTA3MDAsIEJyZW5kYW4gSGlnZ2lucyB3cm90
-ZToNCj4gT24gV2VkLCBBcHIgMSwgMjAyMCBhdCAxOjQ1IEFNIFZhaXR0aW5lbiwgTWF0dGkNCj4g
-PE1hdHRpLlZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4gd3JvdGU6DQo+IA0KPiBBYnNvbHV0
-ZWx5ISBXb3VsZCB5b3UgYmUgaW50ZXJlc3RlZCBpbiBqb2luaW5nIG91ciBtYWlsaW5nIGxpc3Q6
-DQo+IA0KPiBodHRwczovL2dyb3Vwcy5nb29nbGUuY29tL2cva3VuaXQtZGV2DQo+IA0KDQpTdXJl
-IDopIEhvdz8gVGhlIGxpbmsgZ2F2ZSBtZSA0MDQuLi4NCg0KQmVzdCBSZWdhcmRzLA0KCU1hdHRp
-DQo=
+The commit 842f4be95899 ("KVM: VMX: Add a trampoline to fix VMREAD error
+handling") removed the declaration of vmread_error() causes a W=1 build
+failure with KVM_WERROR=y. Fix it by adding it back.
+
+arch/x86/kvm/vmx/vmx.c:359:17: error: no previous prototype for 'vmread_error' [-Werror=missing-prototypes]
+ asmlinkage void vmread_error(unsigned long field, bool fault)
+                 ^~~~~~~~~~~~
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/x86/kvm/vmx/ops.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
+index 09b0937d56b1..19717d0a1100 100644
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -12,6 +12,7 @@
+ 
+ #define __ex(x) __kvm_handle_fault_on_reboot(x)
+ 
++asmlinkage void vmread_error(unsigned long field, bool fault);
+ __attribute__((regparm(0))) void vmread_error_trampoline(unsigned long field,
+ 							 bool fault);
+ void vmwrite_error(unsigned long field, unsigned long value);
+-- 
+2.21.0 (Apple Git-122.2)
+
