@@ -2,93 +2,120 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F8BC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED55C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B78206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852CF20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eHVvXef8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MF6IMSIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388664AbgDBOqa (ORCPT
+        id S2388733AbgDBOqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:46:30 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:53426 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388516AbgDBOqa (ORCPT
+        Thu, 2 Apr 2020 10:46:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41202 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388266AbgDBOqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:46:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FD6RE/EUN36dlCHL75oNHHohhJhXaMYfinWxOVbw1CY=; b=eHVvXef8PjKYyExPlFfxyoyNjF
-        hwvfsn3JI9j8p4suyKUdfY/5O77Kb3NbGnxt709tlyIJ9iR4vB5iiK8LOveTk5NWLxYpMmjJFc2go
-        onrReXMC4xjtYntlNqA3FRskIO9oQZpx/zrnmyxrd/a5sSdl4r/aYAjM0rYz/c9wh8KFkvuVlVO03
-        4+b9x163MxRLQ3JdLiQyZX9eOgaBoR85baqXVnoGCgO0YEu0rxL0gj0ba/RY2qaoHr26c4/yjlq32
-        +ubLrUcFqIVI0fCOQ7HPCAJWtFuoLTFayZmk5t3NL6r4efR3U+2yN6qjxRRN1X2U6XKyrt0+pEUjP
-        zLy0pTCA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK16q-0003jx-4L; Thu, 02 Apr 2020 14:46:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8C4473056DE;
-        Thu,  2 Apr 2020 16:46:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6C5D72B0D9C8F; Thu,  2 Apr 2020 16:46:18 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 16:46:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kenneth R. Crudup" <kenny@panix.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [patch 0/2] x86: Prevent Split-Lock-Detection wreckage on VMX
- hypervisors
-Message-ID: <20200402144618.GC20730@hirez.programming.kicks-ass.net>
-References: <20200402123258.895628824@linutronix.de>
- <alpine.DEB.2.21.2004020641470.7052@xps-7390>
- <20200402143203.GJ20713@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.2004020735210.10453@xps-7390>
+        Thu, 2 Apr 2020 10:46:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585838802;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=247fWnWaIxGLXiVh3d5vG20xrpndo7qpcBC/YB6ZW/8=;
+        b=MF6IMSIXyQzG4ZB8BmyeYC4CnmdU5FK1Qrj73kk9Tm64MrOaJHBRpbAyletLdL66B7gVzf
+        jesn98nDDbI6brVqK6Uf9aGGT4n9Nq5Vw/7N5l3HkrRd5p6B80001Pm4ecu67CjFDeTWbR
+        gVKq/QDRL/lMctfh55BLg1/2QpjtOqU=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-nEPZGDqZNdm6zXPtLlSBkg-1; Thu, 02 Apr 2020 10:46:40 -0400
+X-MC-Unique: nEPZGDqZNdm6zXPtLlSBkg-1
+Received: by mail-qk1-f198.google.com with SMTP id y5so3226406qky.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:46:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=247fWnWaIxGLXiVh3d5vG20xrpndo7qpcBC/YB6ZW/8=;
+        b=rwBPV3F8FyuUF+305XTjYP3FGCEPKkaDrosob/SiU5YcdKk1kZc0GEh81gOj4j0rfe
+         Jnd9EYHRUOFZL2am827n30wU9SHyLpYNBwIBVTq79vDgbVqULTvoTcJqc8qc5q2nyfg6
+         W3uDe3dq81AMEZPgEIDijQBuHSEYVn72E82Tbk2LbwOTrEKRY1VIl7G2B3qyy94BK8/Z
+         if69chadbK5Dn/T3dr6L3uJnMxbj/A8sY+vux7lUA+g5O5m4lcIT+Jn3Q4sakdC9K3wG
+         Qkvg696SEZKTAe/vrPBzcTGef3ccmX18nDnEINwZbN9/CN8s437bOc9aOHRal6SDV8wB
+         bR8Q==
+X-Gm-Message-State: AGi0PubeEsrs1ZzJmLYJ3feEppO4+RN/0mFHhD4nEVPEHX/9dgDL93q5
+        z/2wo6W8inW+zFZdp2vljloI+iYd/NEofQBGj5XesSifKuXL28S44yB0Na1mrUQoVBym3zgFtQ2
+        jOV1o2HWDdmOzfoT6I3/hPjVV
+X-Received: by 2002:ae9:dd83:: with SMTP id r125mr3878508qkf.105.1585838799303;
+        Thu, 02 Apr 2020 07:46:39 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJrCvrYOfccOPc0wjpUe4Jhvl0Nl/n0u9FB6DDdrO18srx7Gu82PDrBByu2qXM5kAyNldGtag==
+X-Received: by 2002:ae9:dd83:: with SMTP id r125mr3878453qkf.105.1585838798775;
+        Thu, 02 Apr 2020 07:46:38 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id p9sm3672571qtu.3.2020.04.02.07.46.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 07:46:37 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 10:46:33 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v2] vhost: drop vring dependency on iotlb
+Message-ID: <20200402144519.34194-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2004020735210.10453@xps-7390>
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 07:41:41AM -0700, Kenneth R. Crudup wrote:
-> 
-> On Thu, 2 Apr 2020, Peter Zijlstra wrote:
-> 
-> > Hmm, you're not seeing this:
-> >   +       pr_warn("disabled due to VMLAUNCH in module: %s\n", me->name);
-> > fire when you load the vmware kernel module?
-> 
-> I just looked back at the syslog's copy of the kernel messages at the time
-> I'd tried it, and no, I don't see that message.
+vringh can now be built without IOTLB.
+Select IOTLB directly where it's used.
 
-Dang!
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
 
-> > Could you slip me a copy of that thing by private mail?
-> 
-> OK, gimme a couple of days though, I've gotta get a little work done.
-> (Also, what "thing" exactly did you want?)
+Applies on top of my vhost tree.
+Changes from v1:
+	VDPA_SIM needs VHOST_IOTLB
 
-All the .ko files that come with vmware. I want to dig through them to
-see why the VMLAUNCH detection thing isn't working.
+ drivers/vdpa/Kconfig  | 1 +
+ drivers/vhost/Kconfig | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
+index 7db1460104b7..08b615f2da39 100644
+--- a/drivers/vdpa/Kconfig
++++ b/drivers/vdpa/Kconfig
+@@ -17,6 +17,7 @@ config VDPA_SIM
+ 	depends on RUNTIME_TESTING_MENU
+ 	select VDPA
+ 	select VHOST_RING
++	select VHOST_IOTLB
+ 	default n
+ 	help
+ 	  vDPA networking device simulator which loop TX traffic back
+diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+index f0404ce255d1..cb6b17323eb2 100644
+--- a/drivers/vhost/Kconfig
++++ b/drivers/vhost/Kconfig
+@@ -8,7 +8,6 @@ config VHOST_IOTLB
+ 
+ config VHOST_RING
+ 	tristate
+-	select VHOST_IOTLB
+ 	help
+ 	  This option is selected by any driver which needs to access
+ 	  the host side of a virtio ring.
+-- 
+MST
+
