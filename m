@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FC1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72108C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B382E2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458F020787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585819708;
-	bh=cywDP6eNSmYYa3KeaQgosXJi4aqsO1zjpdq6I2/ZdSc=;
+	s=default; t=1585819716;
+	bh=SE01dDEIKYFr3cs2t9tU2AzJYIDH7MNSWH3AJAO9c0Q=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=EiS04nfqK0UjmU8hN0vE+3mfvp5KuhPiM2IU8+WFlGJ2hcJFf7hYwhBWs1mNycyVi
-	 kzQhnVepptJUo0w4/olBTUP0hi/u2z8IKddtJYzzsRdeus+3CHaEL0yeTfs4lwMuzX
-	 7/mm0xDpUreUPmo9ZiKJbOpCwrOWTie6CAmrt7PY=
+	b=nXMWgLNDtwKgPhg3IemtGf2KzvnGBHxu4TFD9AQlp5vo8cuUwau52BSx73FommqlI
+	 6z7K1z3Gb16S8Fn50Fjk79KvTqIyn4L5kzP2ZAIkrKfgUv8mMuFJO+9nrnBJzu8Yi7
+	 fEn+ua/L8n5gcnSnChzFPI1Z7zxDA6PVu2CELgVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387953AbgDBJ22 (ORCPT
+        id S2387969AbgDBJ2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:28:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49230 "EHLO mail.kernel.org"
+        Thu, 2 Apr 2020 05:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387721AbgDBJ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387726AbgDBJ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Apr 2020 05:28:08 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C492078C;
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB8F20787;
         Thu,  2 Apr 2020 09:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585819687;
-        bh=cywDP6eNSmYYa3KeaQgosXJi4aqsO1zjpdq6I2/ZdSc=;
+        s=default; t=1585819688;
+        bh=SE01dDEIKYFr3cs2t9tU2AzJYIDH7MNSWH3AJAO9c0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUZP7ipkni1ynrf/4zsRG4qpMiYSMcAxWfYuGiG75cP/GAEkg2z2j5rjYThRLCPR5
-         AMvxPEM3LHwFhhoscGrR9YYS8tGIZ0HH9PRuqf4ZsWzxH3nOJZv2b2StxdO35h9BuU
-         4e+WhgxrufovTdOWAYdoOIKJQq/YGQsAtibLreiY=
+        b=1CgWBnL5qmGwABehR2HJw2r9fvu96hO1NY+tIi760YBvqA0e4qQuyKdT2LTmi21KR
+         SLQp7k1L06JA8nMK8HhJRkgrj7OIfnnPpTYrGQ0bZwmNkH2Cp5oxZlkAXjTfSgDRCP
+         Cr/j0G1YOloZ25F5OP8HRfF3UsHPKMle3uYWEiyY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jJw8s-000AaA-2Y; Thu, 02 Apr 2020 11:28:06 +0200
+        id 1jJw8s-000AaK-4L; Thu, 02 Apr 2020 11:28:06 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kbuild@vger.kernel.org
-Subject: [PATCH 2/6] kconfig: qconf: Change title for the item window
-Date:   Thu,  2 Apr 2020 11:27:59 +0200
-Message-Id: <39c72450d98fc16b735237df296b066c8eebb066.1585819250.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 4/6] kconfig: qconf: fix support for the split view mode
+Date:   Thu,  2 Apr 2020 11:28:01 +0200
+Message-Id: <2407b050c25b9bb53743f089b16e4611143d2239.1585819250.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1585819250.git.mchehab+huawei@kernel.org>
 References: <cover.1585819250.git.mchehab+huawei@kernel.org>
@@ -62,46 +62,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both main config window and the item window have "Option"
-name. That sounds weird, and makes harder to debug issues
-of a window appearing at the wrong place.
+At least on my tests (building against Qt5.13), it seems to
+me that, since Kernel 3.14, the split view mode is broken.
 
-So, change the title to reflect the contents of each
-window.
+Maybe it was not a top priority during the conversion time.
+
+Anyway, this patch changes the logic in order to properly
+support the split view mode and the single view mode.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ scripts/kconfig/qconf.cc | 33 ++++++++++++++++++++++++++-------
+ scripts/kconfig/qconf.h  |  2 ++
+ 2 files changed, 28 insertions(+), 7 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index daa3325c0a49..2f4971906207 100644
+index 81ae6c059c1c..5a560c647321 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -318,7 +318,10 @@ ConfigList::ConfigList(ConfigView* p, const char *name)
- 	setVerticalScrollMode(ScrollPerPixel);
- 	setHorizontalScrollMode(ScrollPerPixel);
+@@ -744,7 +744,10 @@ void ConfigList::keyPressEvent(QKeyEvent* ev)
+ 		type = menu->prompt ? menu->prompt->type : P_UNKNOWN;
+ 		if (type == P_MENU && rootEntry != menu &&
+ 		    mode != fullMode && mode != menuMode) {
+-			emit menuSelected(menu);
++			if (mode == menuMode)
++				emit menuSelected(menu);
++			else
++				emit itemSelected(menu);
+ 			break;
+ 		}
+ 	case Qt::Key_Space:
+@@ -851,9 +854,12 @@ void ConfigList::mouseDoubleClickEvent(QMouseEvent* e)
+ 	if (!menu)
+ 		goto skip;
+ 	ptype = menu->prompt ? menu->prompt->type : P_UNKNOWN;
+-	if (ptype == P_MENU && (mode == singleMode || mode == symbolMode))
+-		emit menuSelected(menu);
+-	else if (menu->sym)
++	if (ptype == P_MENU) {
++		if (mode == singleMode)
++			emit itemSelected(menu);
++		else if (mode == symbolMode)
++			emit menuSelected(menu);
++	} else if (menu->sym)
+ 		changeValue(item);
  
--	setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
-+	if (mode == symbolMode)
-+		setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
-+	else
-+		setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
+ skip:
+@@ -1505,6 +1511,8 @@ ConfigMainWindow::ConfigMainWindow(void)
+ 		helpText, SLOT(setInfo(struct menu *)));
+ 	connect(configList, SIGNAL(menuSelected(struct menu *)),
+ 		SLOT(changeMenu(struct menu *)));
++	connect(configList, SIGNAL(itemSelected(struct menu *)),
++		SLOT(changeItens(struct menu *)));
+ 	connect(configList, SIGNAL(parentSelected()),
+ 		SLOT(goBack()));
+ 	connect(menuList, SIGNAL(menuChanged(struct menu *)),
+@@ -1601,15 +1609,26 @@ void ConfigMainWindow::searchConfig(void)
+ 	searchWindow->show();
+ }
  
- 	connect(this, SIGNAL(itemSelectionChanged(void)),
- 		SLOT(updateSelection(void)));
-@@ -399,6 +402,11 @@ void ConfigList::updateSelection(void)
- 	struct menu *menu;
- 	enum prop_type type;
- 
-+	if (mode == symbolMode)
-+		setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
-+	else
-+		setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
+-void ConfigMainWindow::changeMenu(struct menu *menu)
++void ConfigMainWindow::changeItens(struct menu *menu)
+ {
+ 	configList->setRootMenu(menu);
 +
- 	if (selectedItems().count() == 0)
- 		return;
+ 	if (configList->rootEntry->parent == &rootmenu)
+ 		backAction->setEnabled(false);
+ 	else
+ 		backAction->setEnabled(true);
+ }
  
++void ConfigMainWindow::changeMenu(struct menu *menu)
++{
++	menuList->setRootMenu(menu);
++
++	if (menuList->rootEntry->parent == &rootmenu)
++		backAction->setEnabled(false);
++	else
++		backAction->setEnabled(true);
++}
++
+ void ConfigMainWindow::setMenuLink(struct menu *menu)
+ {
+ 	struct menu *parent;
+@@ -1719,14 +1738,14 @@ void ConfigMainWindow::showSplitView(void)
+ 	fullViewAction->setEnabled(true);
+ 	fullViewAction->setChecked(false);
+ 
+-	configList->mode = symbolMode;
++	configList->mode = menuMode;
+ 	if (configList->rootEntry == &rootmenu)
+ 		configList->updateListAll();
+ 	else
+ 		configList->setRootMenu(&rootmenu);
+ 	configList->setAllOpen(true);
+ 	configApp->processEvents();
+-	menuList->mode = menuMode;
++	menuList->mode = symbolMode;
+ 	menuList->setRootMenu(&rootmenu);
+ 	menuList->setAllOpen(true);
+ 	menuView->show();
+diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
+index 45bfe9b2b966..c879d79ce817 100644
+--- a/scripts/kconfig/qconf.h
++++ b/scripts/kconfig/qconf.h
+@@ -71,6 +71,7 @@ public slots:
+ signals:
+ 	void menuChanged(struct menu *menu);
+ 	void menuSelected(struct menu *menu);
++	void itemSelected(struct menu *menu);
+ 	void parentSelected(void);
+ 	void gotFocus(struct menu *);
+ 
+@@ -298,6 +299,7 @@ class ConfigMainWindow : public QMainWindow {
+ 	ConfigMainWindow(void);
+ public slots:
+ 	void changeMenu(struct menu *);
++	void changeItens(struct menu *);
+ 	void setMenuLink(struct menu *);
+ 	void listFocusChanged(void);
+ 	void goBack(void);
 -- 
 2.25.1
 
