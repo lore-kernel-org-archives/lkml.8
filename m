@@ -2,115 +2,114 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7012C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5FBC2BA16
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A04208E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C162206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:37:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWt0UHi3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389635AbgDBTfC (ORCPT
+        id S2388572AbgDBThK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:35:02 -0400
-Received: from mga06.intel.com ([134.134.136.31]:1190 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729033AbgDBTfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:35:02 -0400
-IronPort-SDR: wMqRrVMjrRnjyzcailJHPpoDg3t/deQmIOlcCSCmIP8YDJQC3hKQVj29Rv8I8yc5ucYuht7jW0
- rIXqZ3f/lBuA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 12:35:01 -0700
-IronPort-SDR: D+9Y1E1mG1Ia8MPeB26kIXnYdPsDBlJCgNId6TdLwahKSnwDA0AhR8D+BOfYd6BnmPnmn2IWm+
- U6hfKN3jPpUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="243174003"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 02 Apr 2020 12:34:58 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jK5cC-00FF3h-3I; Thu, 02 Apr 2020 22:35:00 +0300
-Date:   Thu, 2 Apr 2020 22:35:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
-        tony.luck@intel.com, kuo-lang.tseng@intel.com, mingo@redhat.com,
-        babu.moger@amd.com, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/resctrl: Use appropriate API for strings
- terminated by newline
-Message-ID: <20200402193500.GC1922688@smile.fi.intel.com>
-References: <cover.1585765499.git.reinette.chatre@intel.com>
- <2a51c327497738ad7012e4f185046c530dba4594.1585765499.git.reinette.chatre@intel.com>
- <20200402130625.GA1922688@smile.fi.intel.com>
+        Thu, 2 Apr 2020 15:37:10 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38360 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729033AbgDBThK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:37:10 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w3so1730205plz.5;
+        Thu, 02 Apr 2020 12:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FPiP8vUXNxoiyRoUj40b+YKqluMTxbumtt4fEM2yA18=;
+        b=BWt0UHi3bvXJnxNzCG7kvOknquUWEgjXJowEbfKD3nxSIwd2tqBQsM0SA6evKO8R6L
+         LhJbJP+pu1D8jyADZxR5OTS5o0pbkIZThwRS8ErNFY7dglpoPwdUOIPalrMYfWMy0z8C
+         +4oCnNNjOewqq6V2u8UqIlOHLtzZTeaQgbVillRKx4iH6shH1lf+v2A2YXlheQeESXD3
+         NgGP0p3OXkWpV/tXIul+B8Yb6NHr40ghe596KKqdKieSz3xFMqy/Gm7Z2Lbh7q0jrLpw
+         m+QuNFgip3MmEvgVuMtjX+Ufdk73N3ziXn95hrjL1ZPX8P0Xvr814+jENCK/Jc0TY+as
+         +VMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FPiP8vUXNxoiyRoUj40b+YKqluMTxbumtt4fEM2yA18=;
+        b=OGJxmDNLI4kVkT7QAD0gTRWFWFhjxQZ2kTVI66oSDg3QY4tROW4jrr9U9V2j0Q5tE3
+         kySNn2PGZA7+9vliJEgpBWayOrBnLe00OuLuxItcluPtYL4otD+KHYytF3gLP6qzWTj/
+         WfNsHxfo5CTueyFfTnnfHdzErl8Fs/2Ubc/SHDawb1ZjSQwaIc6qvyJSb0wmnqnDaHjE
+         wqheQaKlkanQ97DOUu7hC6s6bg98i8qKUM0dD7GK/B52wrh3ts5UHcsqIpjtZflvQKDk
+         /kHQUkMz0dzwerY9icPsq/uS1ZdCA2/oF+HOZqqWl7bWjO/n2GHnjOTLMyPY+G2GWpaM
+         qcAQ==
+X-Gm-Message-State: AGi0PuZgF8pHm07OKACUk0dlJisqR+IQvcyZ/0OyJX/rsOT9J8Deb4mL
+        VRUZan59rGUVapaelyJQh20=
+X-Google-Smtp-Source: APiQypLSXeGBO7ws3EFv1RYRs4rW2w1BdaNrafCUO61aDthOMuACaK84phNAhgrL87B54gUHSGjLqQ==
+X-Received: by 2002:a17:90a:e02:: with SMTP id v2mr5664818pje.131.1585856228509;
+        Thu, 02 Apr 2020 12:37:08 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id 6sm4251824pfx.69.2020.04.02.12.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 12:37:07 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 12:37:05 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajatxjain@gmail.com
+Subject: Re: [PATCH v2] Input: input-event-codes.h: Update the license
+Message-ID: <20200402193705.GN75430@dtor-ws>
+References: <20200329172513.133548-1-rajatja@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402130625.GA1922688@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200329172513.133548-1-rajatja@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 04:06:25PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 01, 2020 at 11:30:48AM -0700, Reinette Chatre wrote:
-
-...
-
-> >  	int ret = 0;
-> > +	int user_m;
-
-...and forgot to mention this...
-
-	int user_m;
-	int ret;
-
-> >  	/* Valid input requires a trailing newline */
-> >  	if (nbytes == 0 || buf[nbytes - 1] != '\n')
-> >  		return -EINVAL;
-> > -	buf[nbytes - 1] = '\0';
+On Sun, Mar 29, 2020 at 10:25:13AM -0700, Rajat Jain wrote:
+> Replace the
+> /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> with
+> /* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
 > 
-> The above test is not needed and comment now is misleading.
-> WRT nbytes I believe that kernel fs code checks for that.
+> to help coreboot community consume this file without relaxing their
+> licensing requirements.
 > 
-> >  	rdtgrp = rdtgroup_kn_lock_live(of->kn);
-> >  	if (!rdtgrp) {
-> > @@ -1428,11 +1428,15 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
-> >  
-> >  	mode = rdtgrp->mode;
-> >  
-> > -	if ((!strcmp(buf, "shareable") && mode == RDT_MODE_SHAREABLE) ||
-> > -	    (!strcmp(buf, "exclusive") && mode == RDT_MODE_EXCLUSIVE) ||
-> > -	    (!strcmp(buf, "pseudo-locksetup") &&
-> > -	     mode == RDT_MODE_PSEUDO_LOCKSETUP) ||
-> > -	    (!strcmp(buf, "pseudo-locked") && mode == RDT_MODE_PSEUDO_LOCKED))
-> > +	user_m = sysfs_match_string(rdt_mode_str, buf);
-> > +	if (user_m < 0) {
-> > +		rdt_last_cmd_puts("Unknown or unsupported mode\n");
-> > +		ret = user_m;
-> > +		goto out;
-> > +	}
-> 
-> You can do it the way
-> 
-> 	ret = sysfs_match_string(...);
-> 	if (ret < 0) {
-> 		...
-> 	}
-> 	user_m = ret;
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 
-...and this changes
+Applied, thank you.
 
-	ret = 0;
+> ---
+> V2: Update the commit log
+> 
+>  include/uapi/linux/input-event-codes.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+> index 6923dc7e02982..b6a835d378263 100644
+> --- a/include/uapi/linux/input-event-codes.h
+> +++ b/include/uapi/linux/input-event-codes.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+>  /*
+>   * Input event codes
+>   *
+> -- 
+> 2.26.0.rc2.310.g2932bb562d-goog
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Dmitry
