@@ -2,125 +2,157 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8F9C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E003C10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BFB20784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585811676;
-	bh=FVq8i6uthrbfLR09edgbxiWw4ECv/fXnjsmRytRkY7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vcrsiSaIvuYQCQvBNDkIQgBL+/btHiiWz78g+0Zi8I+xeiqc3Wm7h3vh8telHH9A6
-	 gm6YuxMMO2oBMlDgt8f5khQYxzX00OCajadx/KXsn2C7+0TiyIfvIt1G3GGTenAPBC
-	 T4mhg8w3R64sfWpjwtpXcVn5PJqZm4fqu4f37JZc=
+	by mail.kernel.org (Postfix) with ESMTP id 398C920784
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:14:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O3900pH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387506AbgDBHOf (ORCPT
+        id S2387518AbgDBHO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:14:35 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36714 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729289AbgDBHOf (ORCPT
+        Thu, 2 Apr 2020 03:14:56 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55881 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725789AbgDBHOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:14:35 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d202so2408360wmd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:14:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6zSvzlPFPe5kHJzBH7BwpSL+DKal1qwCEGq/fwhdzrA=;
-        b=QJ9PZqGCl0XPyqkdFQpVBXNWRTyYa4HhN5pOyzO7GoVDz/GXoP3ScInMgZ1p24lvit
-         Gsd5iCHyVfOujdCug0OgaZJiwgpdMY8U9i80zMFiNgJHIg7AVd7qcrIoL0PTuxjox2JW
-         T19afUTKzTUFsK0o5bCwAfzRi8179FTGhO+uTpu5iQFyZi1JQVJ99S3W5FdjIBIO/2Jh
-         kP8eY74MtXqwPIt2siF9IA01lIjQUmQvRS4fJy9msQDv/NBwIrt2nRAWZdznjUp8yuul
-         mLGaapanH3WUOc3C4oUQyF7ZagC0YBMCVRwqShAN/qHoAB6WxAtoZWaL7ZG5tPiqZaXV
-         iojw==
-X-Gm-Message-State: AGi0PubhGqoqYr0a/hODqv0Ufkg+nKWGV6Io6DUeZ7nhkegi4iJXExOL
-        N7HctB27mLz5DpdlaWI+EYo=
-X-Google-Smtp-Source: APiQypKiVW22lJ+zXwmqgSewMfQ0EZe3P5GLY+hzyfn7cDXQkP9nUkwb6vE+mIG8HHsIvmk4wH3uVw==
-X-Received: by 2002:a1c:9ad7:: with SMTP id c206mr1976823wme.48.1585811673285;
-        Thu, 02 Apr 2020 00:14:33 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id t6sm5729079wma.30.2020.04.02.00.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 00:14:32 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 09:14:23 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org,
-        Rik van Riel <riel@surriel.com>,
-        Andreas Schaufler <andreas.schaufler@gmx.de>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH v3] mm: hugetlb: optionally allocate gigantic hugepages
- using cma
-Message-ID: <20200402071423.GE22681@dhcp22.suse.cz>
-References: <20200311220920.2487528-1-guro@fb.com>
- <20200401192553.7f437f150203a5fa044a1f75@linux-foundation.org>
- <20200402024406.GA69473@carbon.DHCP.thefacebook.com>
+        Thu, 2 Apr 2020 03:14:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585811694;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=90YwSP++jxTGaRSg9ToXXE3QaCOFJUwdQV7EQ1oO/hE=;
+        b=O3900pH63c7L1dmbvdw3oLWZ1369NlbIpzCnQTWLdiJR71ELYufOJSZRms6pZnPV+OxkkA
+        Yp3vT3hnuYtxGGK+r7GxSWfg32VeZDIO4lWxR6cU2XBiqMYzBNab8a9sw+OzOr2amtfusk
+        kRL5vgbisnvGLATV3DnziVUNaIooXyc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-393-LbopsO9CMICvrlMHy5WKxw-1; Thu, 02 Apr 2020 03:14:48 -0400
+X-MC-Unique: LbopsO9CMICvrlMHy5WKxw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BF7C18A5521;
+        Thu,  2 Apr 2020 07:14:46 +0000 (UTC)
+Received: from [10.36.114.29] (ovpn-114-29.ams2.redhat.com [10.36.114.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D80F71001B09;
+        Thu,  2 Apr 2020 07:14:42 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm: initialize deferred pages with interrupts
+ enabled
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        mhocko@suse.com, linux-mm@kvack.org, dan.j.williams@intel.com,
+        shile.zhang@linux.alibaba.com, daniel.m.jordan@oracle.com,
+        ktkhai@virtuozzo.com, jmorris@namei.org, sashal@kernel.org,
+        vbabka@suse.cz
+References: <20200401225723.14164-1-pasha.tatashin@soleen.com>
+ <20200401225723.14164-3-pasha.tatashin@soleen.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <875bcca7-7a95-d98f-ff0c-7eab224e6033@redhat.com>
+Date:   Thu, 2 Apr 2020 09:14:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402024406.GA69473@carbon.DHCP.thefacebook.com>
+In-Reply-To: <20200401225723.14164-3-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01-04-20 19:44:06, Roman Gushchin wrote:
-> On Wed, Apr 01, 2020 at 07:25:53PM -0700, Andrew Morton wrote:
-> > On Wed, 11 Mar 2020 15:09:20 -0700 Roman Gushchin <guro@fb.com> wrote:
-> > 
-> > > At large scale rebooting servers in order to allocate gigantic hugepages
-> > > is quite expensive and complex. At the same time keeping some constant
-> > > percentage of memory in reserved hugepages even if the workload isn't
-> > > using it is a big waste: not all workloads can benefit from using 1 GB
-> > > pages.
-> > > 
-> > > The following solution can solve the problem:
-> > > 1) On boot time a dedicated cma area* is reserved. The size is passed
-> > >    as a kernel argument.
-> > > 2) Run-time allocations of gigantic hugepages are performed using the
-> > >    cma allocator and the dedicated cma area
-> > > 
-> > > In this case gigantic hugepages can be allocated successfully with a
-> > > high probability, however the memory isn't completely wasted if nobody
-> > > is using 1GB hugepages: it can be used for pagecache, anon memory,
-> > > THPs, etc.
-> > > 
-> > > * On a multi-node machine a per-node cma area is allocated on each node.
-> > >   Following gigantic hugetlb allocation are using the first available
-> > >   numa node if the mask isn't specified by a user.
-> > > 
-> > > Usage:
-> > > 1) configure the kernel to allocate a cma area for hugetlb allocations:
-> > >    pass hugetlb_cma=10G as a kernel argument
-> > > 
-> > > 2) allocate hugetlb pages as usual, e.g.
-> > >    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
-> > > 
-> > > If the option isn't enabled or the allocation of the cma area failed,
-> > > the current behavior of the system is preserved.
-> > > 
-> > > x86 and arm-64 are covered by this patch, other architectures can be
-> > > trivially added later.
-> > 
-> > Lots of review input on v2, but then everyone went quiet ;)
-> > 
-> > Has everything been addressed?
+On 02.04.20 00:57, Pavel Tatashin wrote:
+> Initializing struct pages is a long task and keeping interrupts disabled
+> for the duration of this operation introduces a number of problems.
 > 
-> I hope so. There is a nice cleanup from Aslan, which can be merged in or
-> treated as a separate patch.
+> 1. jiffies are not updated for long period of time, and thus incorrect time
+>    is reported. See proposed solution and discussion here:
+>    lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
+> 2. It prevents farther improving deferred page initialization by allowing
+>    intra-node multi-threading.
+> 
+> We are keeping interrupts disabled to solve a rather theoretical problem
+> that was never observed in real world (See 3a2d7fa8a3d5).
+> 
+> Lets keep interrupts enabled. In case we ever encounter a scenario where
+> an interrupt thread wants to allocate large amount of memory this early in
+> boot we can deal with that by growing zone (see deferred_grow_zone()) by
+> the needed amount before starting deferred_init_memmap() threads.
+> 
+> Before:
+> [    1.232459] node 0 initialised, 12058412 pages in 1ms
+> 
+> After:
+> [    1.632580] node 0 initialised, 12051227 pages in 436ms
+> 
+> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
+> Cc: stable@vger.kernel.org # 4.17+
+> 
 
-With the follow up patche I didn't have any objections. I would prefer
-having hugetlb parts folded into the original patch to make the review
-easier though. Then I can have a look again. If those patches are going
-to be as they are now then no problem with me.
+Can you please add my details about the use of cond_resched() fixing
+detection of RCU stalls?
+
+https://lore.kernel.org/linux-mm/20200401104156.11564-2-david@redhat.com/
+
+In the meantime, I'll give these two patches a churn. Thanks
+
+
 -- 
-Michal Hocko
-SUSE Labs
+Thanks,
+
+David / dhildenb
+
