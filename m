@@ -2,109 +2,229 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54260C10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2217C10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F2120784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4922078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="g4UZnnWR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="dfv20e82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387576AbgDBHKK (ORCPT
+        id S2387586AbgDBHKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:10:10 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2905 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgDBHKK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:10:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e858f6f0000>; Thu, 02 Apr 2020 00:08:31 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 02 Apr 2020 00:10:09 -0700
+        Thu, 2 Apr 2020 03:10:30 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:53199 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728234AbgDBHK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:10:29 -0400
+IronPort-SDR: sUV6pGamhZnBd3ntboz/WPkR63NRAM5FlPEAt8NaFDmDLPdifmpXsFIMz5MebV/J4AGt9WiucP
+ OB9CrOk/ZWaZdnUDV2HQlr/AGDVOEjqbcX39sP+Er3gPH8SqWmXpK6C8GUj/q6I+ZB96Ehn88Y
+ 8NRwJFV4TsFw+7ox+elV75ZNkQEGIGSuSccdMZpbOQxrm56CQR6X1sWWBNnnls24zv5CZLF2DX
+ vnOlNXCfhOTGEIHuGSsip0kAmNwhN1CweVpCRDJugXX31Nl/0xrk+pY6ETOGuyRuUeVwrtG/TM
+ kzY=
+X-IronPort-AV: E=Sophos;i="5.72,334,1580770800"; 
+   d="scan'208";a="11656785"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 02 Apr 2020 09:10:27 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 02 Apr 2020 09:10:27 +0200
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 02 Apr 2020 00:10:09 -0700
-Received: from [10.26.72.253] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Apr
- 2020 07:10:06 +0000
-Subject: Re: [PATCH 4.19 000/116] 4.19.114-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200401161542.669484650@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <6979d502-1972-e8f3-8751-e2212e584063@nvidia.com>
-Date:   Thu, 2 Apr 2020 08:10:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        by tq-pgp-pr1.tq-net.de on Thu, 02 Apr 2020 09:10:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1585811427; x=1617347427;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=V+DaRroG8ClyjJOENjUeKU/FaoyteT1zWovnbFBIGgk=;
+  b=dfv20e82kINgFiCyLNjS0GKXNZ4YMi5ElbUFeNMVKkc6biKUGMSQSEQn
+   Bmqorm5aw0YlvIBYNqema2VFtGwUUEEuWQivlaLC6AoKiMQasHyIZtht0
+   w80uTek1vgH+pMsQIlFWFqEH2GfI7crvB/3eLFHhNLw9e4YWELypK/waZ
+   OECaVPXpg7fKNXNsxKW64i0yBzH2/R3CHhy7rt76jFbfZ5qv2gxGNCmk4
+   d5j0R9R5/gfQK/Yndzy5S7de4A/8kplDlwuPd8pEO4mpMuvWIzOmgWlwI
+   DgD/3fUMYrP/zL/l7JBAYv9l8shAaX+O/lgx2v4OKjQY6qFxL1bBZXH/p
+   w==;
+IronPort-SDR: 23YaI0cr4WgxH7qJoLxPCbEP5mvByS77wOroFSIwfASWXnyBLa4yo9RRDuHDFuJ507U8opxjdQ
+ qoOe4Fi9jRLeMXTB9UBD4TDlYygn96txachBBPiztAdUJ1wmud9wuj9GkAGJMrCkIfY29oL9Lj
+ TtTVVhHWMsz4g7LZXKlNR2DjPX8x7bfN4myKnpvT5NSsfibnuOsnnlqd7UOTCAkddnAUI4SpE8
+ IaXcm9jqh16WdjbxDX7Ap2udRItHssmRUtJbBOfn99ehIXeNtVRSr5oepqmSZDBWsl9BjKQv91
+ R3c=
+X-IronPort-AV: E=Sophos;i="5.72,334,1580770800"; 
+   d="scan'208";a="11656784"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 02 Apr 2020 09:10:27 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id F3BEE280065;
+        Thu,  2 Apr 2020 09:10:34 +0200 (CEST)
+Message-ID: <df9591bd009580842e193f28be1eb75d5af1b9f9.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle
+ struct element
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Clemens Gruber <clemens.gruber@pqgruber.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sven Van Asbroeck <TheSven73@gmail.com>
+Date:   Thu, 02 Apr 2020 09:10:25 +0200
+In-Reply-To: <20200401174540.GA2978178@ulmo>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+         <20200330130743.GB2431644@ulmo>
+         <CAHp75Vc_=czuRtyqgnmnYfie50gDnzrNqq3Bt+Gp_42MikX6VA@mail.gmail.com>
+         <20200330160238.GD2817345@ulmo> <20200401163640.GA91358@workstation.tuxnet>
+         <20200401174540.GA2978178@ulmo>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585811311; bh=oFxj42lnK5zsINX1LdF7uAo30FeHXUKRMqDqFE8AM1I=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=g4UZnnWROi6Zsu1QQulxi6t/AqiiT/OnYE+K5rOjI016S2gcwAhR34OkxkOn1L5C/
-         MJ1118S7M/9zah/76cD5DGu4GXmX20Fh6mpxNBehdf1b176L/UGgWO/XY+RWNVsvzt
-         BeRSYBKSbCBR/fd5A/jMsP2lWYEvSFBtnCMs4thN7XNUR7JvftaICfuA2LL+0DVrun
-         WQm8DhCAnjOhYr8NVUMk/7HixWCwax3cewzAj1K5bbiaN3bkaagqLjs7bwApCJps4l
-         iPFqwKOqb2ot4H6SLG6i9Cjm07wRlJu4kkBNsTGEwFxJwAhQ9Ib7E3pqDFZNzrniT1
-         b2SWifObRAESA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 01/04/2020 17:16, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.114 release.
-> There are 116 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, 2020-04-01 at 19:45 +0200, Thierry Reding wrote:
+> * PGP Signed by an unknown key
 > 
-> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
-> Anything received after that time might be too late.
+> On Wed, Apr 01, 2020 at 06:36:40PM +0200, Clemens Gruber wrote:
+> > On Mon, Mar 30, 2020 at 06:02:38PM +0200, Thierry Reding wrote:
+> > > On Mon, Mar 30, 2020 at 04:18:22PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, Mar 30, 2020 at 4:09 PM Thierry Reding <
+> > > > thierry.reding@gmail.com> wrote:
+> > > > > 
+> > > > > On Wed, Feb 26, 2020 at 02:52:26PM +0100, Matthias Schiffer
+> > > > > wrote:
+> > > > > > duty_cycle was only set, never read.
+> > > > > > 
+> > > > > > Signed-off-by: Matthias Schiffer <
+> > > > > > matthias.schiffer@ew.tq-group.com>
+> > > > > > ---
+> > > > > >  drivers/pwm/pwm-pca9685.c | 4 ----
+> > > > > >  1 file changed, 4 deletions(-)
+> > > > > 
+> > > > > Applied, thanks.
+> > > > 
+> > > > I'm not sure this patch is correct.
+> > > 
+> > > What makes you say that? If you look at the code, the driver sets
+> > > this
+> > > field to either 0 or some duty cycle value but ends up never
+> > > using it.
+> > > Why would it be wrong to remove that code?
+> > > 
+> > > > We already have broken GPIO in this driver. Do we need more
+> > > > breakage?
+> > > 
+> > > My understanding is that nobody was able to pinpoint exactly when
+> > > this
+> > > regressed, or if this only worked by accident to begin with. It
+> > > sounds
+> > > like Clemens has a way of testing this driver, so perhaps we can
+> > > solve
+> > > that GPIO issue while we're at it.
+> > > 
+> > > The last discussion on this seems to have been around the time
+> > > when you
+> > > posted a fix for it:
+> > > 
+> > >     https://patchwork.ozlabs.org/patch/1156012/
+> > > 
+> > > But then Sven had concerns that that also wasn't guaranteed to
+> > > work:
+> > > 
+> > >     https://lkml.org/lkml/2019/6/2/73
+> > > 
+> > > So I think we could either apply your patch to restore the old
+> > > behaviour
+> > > which I assume you tested, so at least it seems to work in
+> > > practice,
+> > > even if there's still a potential race that Sven pointed out in
+> > > the
+> > > above link.
+> > > 
+> > > I'd prefer something alternative because it's obviously confusing
+> > > and
+> > > completely undocumented. Mika had already proposed something
+> > > that's a
+> > > little bit better, though still somewhat confusing.
+> > > 
+> > > Oh... actually reading further through those threads there seems
+> > > to be a
+> > > patch from Sven that was reviewed by Mika but then nothing
+> > > happened:
+> > > 
+> > > 	https://lkml.org/lkml/2019/6/4/1039
+> > > 
+> > > with the corresponding patchwork URL:
+> > > 
+> > > 	https://patchwork.ozlabs.org/patch/1110083/
+> > > 
+> > > Andy, Clemens, do you have a way of testing the GPIO
+> > > functionality of
+> > > this driver? If so, it'd be great if you could check the above
+> > > patch
+> > > from Sven to fix PWM/GPIO interop.
+> > 
+> > Looks good. Tested it today and I can no longer reproduce the
+> > issues
+> > when switching between PWM and GPIO modes.
+> > It did not apply cleanly on the current mainline or for-next
+> > branch, so
+> > I'll send a fixed up version of the patch with my Tested-by tag
+> > shortly.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.114-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
+> Awesome, thank you!
 > 
-> thanks,
+> > I noticed an unrelated issue when disabling and enabling the
+> > channel
+> > though, for which I will either send a patch or maybe try to
+> > convert the
+> > driver to the atomic API first and then look if it is still a
+> > problem.
+> > (Issue is that if you disable the channel, the LED_OFF counter is
+> > cleared, which means you have to reconfigure the duty cycle after
+> > reenabling. It's probably better if only the FULL_OFF bit is
+> > toggled in
+> > enable/disable as it has precedence over the others anyway and then
+> > the
+> > previous state would not be changed..?)
 > 
-> greg k-h
+> Converting to the atomic API would certainly be beneficial because it
+> gives you much more control over what you want to program to
+> hardware.
+> 
+> Other than that, yes, if ->enable() called after ->disable() doesn't
+> put
+> the PWM into the same state that it was before ->disable(), then
+> that'd
+> be a bug. From what you're saying this will make the driver only work
+> if
+> there's a ->config() call after ->disable(). That's wrong.
+> 
+> So yes, setting only that LED_FULL bit in ->disable() and clearing it
+> in
+> ->enable() sounds like a better option than the current
+> implementation.
 
-All tests are passing for Tegra ...
+I think what you're seeing is the same bug that prompted me to send my
+patchset - patch 4/4 moves to the atomic API and changes the logic to
+fix the interaction between config() and enable()/disable(). As it
+seems like 2/4 will have to be reverted though and my 4/4 depends on
+the cleanup of 2/4 and 3/4 (and 3/4 and 4/4 still need some work as
+well), feel free to have a jab at the issue yourself, as I don't know
+when I'll be able to get back to it.
 
-Test results for stable-v4.19:
-    11 builds:	11 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    32 tests:	32 pass, 0 fail
+Thanks,
+Matthias
 
-Linux version:	4.19.114-rc1-g558d25f4fc65
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
 
-Cheers
-Jon
+> 
+> Thierry
+> 
+> * Unknown Key
+> * 0x7F3EB3A1
 
--- 
-nvpublic
