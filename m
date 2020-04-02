@@ -2,82 +2,68 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2B2C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B483C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CC220675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1A12072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585793105;
+	bh=9JjWTMQZTzxCAM732VmpHKueCSqSdGhwvAHvVXu14Ko=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=bgdcPiKHUmoXVEQP3oU8HxACUHVJRqFBnZ3orft7Wy7WKrSvG1Fmcia8shI2NX+oU
+	 WCAYp4p5QGmxQ5GAKRigsDD/9TTtJN43QFSiOSDDx1WhW5ShsF7Ow8lSDt2pH5c5dG
+	 9WWYnNUDPlOx6RXj211eHA+MGCfiniMHLcKcjUNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733310AbgDBCCV (ORCPT
+        id S1733305AbgDBCFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 22:02:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12598 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727135AbgDBCCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 22:02:21 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3FD3FC06D72E6BC5008D;
-        Thu,  2 Apr 2020 10:02:18 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Apr 2020
- 10:02:03 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ayush.sawal@chelsio.com>, <vinay.yadav@chelsio.com>,
-        <rohitm@chelsio.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net] crypto: chtls - Fix build error without IPV6
-Date:   Thu, 2 Apr 2020 09:43:23 +0800
-Message-ID: <20200402014323.36492-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+        Wed, 1 Apr 2020 22:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727135AbgDBCFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 22:05:04 -0400
+Subject: Re: [GIT PULL] XArray for 5.7-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585793103;
+        bh=9JjWTMQZTzxCAM732VmpHKueCSqSdGhwvAHvVXu14Ko=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=yBoLz3WSUxCRMOdaqvTr0pROExsRHFK3INr9lgdyqIdiO8+A+TTx7TUW5k6FmwRps
+         hqENVN2F9nRJ66yQjHTemlXZ6J8jXP1Y573rRyC6kgdPfDgvEqNXnV+qRKeb0qIfar
+         yV1nFId9nSzGSi0wQ7DkgIVvbzMLm2e/mIAx2icI=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200331141749.GB21484@bombadil.infradead.org>
+References: <20200331141749.GB21484@bombadil.infradead.org>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200331141749.GB21484@bombadil.infradead.org>
+X-PR-Tracked-Remote: git://git.infradead.org/users/willy/linux-dax.git
+ tags/xarray-5.7
+X-PR-Tracked-Commit-Id: 7e934cf5ace1dceeb804f7493fa28bb697ed3c52
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 193bc55b6d4e0a7b4ad0216ed9794252bee6436e
+Message-Id: <158579310371.873.17070096012445384076.pr-tracker-bot@kernel.org>
+Date:   Thu, 02 Apr 2020 02:05:03 +0000
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If IPV6 is not set, build fails:
+The pull request you sent on Tue, 31 Mar 2020 07:17:49 -0700:
 
-drivers/crypto/chelsio/chcr_ktls.c: In function ‘chcr_ktls_act_open_req6’:
-./include/net/sock.h:380:37: error: ‘struct sock_common’ has no member named ‘skc_v6_rcv_saddr’; did you mean ‘skc_rcv_saddr’?
- #define sk_v6_rcv_saddr __sk_common.skc_v6_rcv_saddr
-                                     ^
-drivers/crypto/chelsio/chcr_ktls.c:258:37: note: in expansion of macro ‘sk_v6_rcv_saddr’
-  cpl->local_ip_hi = *(__be64 *)&sk->sk_v6_rcv_saddr.in6_u.u6_addr8[0];
-                                     ^~~~~~~~~~~~~~~
+> git://git.infradead.org/users/willy/linux-dax.git tags/xarray-5.7
 
-Add IPV6 dependency to fix this.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/193bc55b6d4e0a7b4ad0216ed9794252bee6436e
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 62370a4f346d ("cxgb4/chcr: Add ipv6 support and statistics")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/crypto/chelsio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Thank you!
 
-diff --git a/drivers/crypto/chelsio/Kconfig b/drivers/crypto/chelsio/Kconfig
-index f2756836093f..7bf1d8152a5d 100644
---- a/drivers/crypto/chelsio/Kconfig
-+++ b/drivers/crypto/chelsio/Kconfig
-@@ -47,6 +47,7 @@ config CHELSIO_TLS_DEVICE
- 	bool "Chelsio Inline KTLS Offload"
- 	depends on CHELSIO_T4
- 	depends on TLS_DEVICE
-+	depends on IPV6
- 	select CRYPTO_DEV_CHELSIO
- 	default y
- 	help
 -- 
-2.17.1
-
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
