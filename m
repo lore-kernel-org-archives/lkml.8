@@ -2,162 +2,118 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D30C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A005C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914C520787
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41CF20787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McTkrTjE"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="M/TGYKy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388379AbgDBMvK (ORCPT
+        id S2388398AbgDBMxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:51:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34677 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgDBMvK (ORCPT
+        Thu, 2 Apr 2020 08:53:04 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36681 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388312AbgDBMxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:51:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 23so1721562pfj.1;
-        Thu, 02 Apr 2020 05:51:09 -0700 (PDT)
+        Thu, 2 Apr 2020 08:53:04 -0400
+Received: by mail-lj1-f193.google.com with SMTP id b1so3121751ljp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 05:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6/nWoRvmCe8w3U/nkA8FUKN/5D+Y/S7xThy2DIwl4ck=;
-        b=McTkrTjEtMRWK0fIQdesQ2rsYWNg49LLQuiXS4hSABxLsqa0USR11B0M+w8w1tZc2K
-         zW5N43j9kjwFwK53/IOQqEW8JF4nOLnv2WGsjWKyfWjqqea+J8DQUFrDAjVxdmra5hjr
-         Njwu9NVzilWhmlSRZ8Wz/QTc/gZpwp9a606vm19npi+GU9g+vnALciIZhheZeR1OWanu
-         zuzsUtxvAYgTRBlvJ1YhX8Hyn+T+3aam8IWHPfznL9ualr8qF+7rdLWCPtAWxNK4fQ09
-         o8YnY5KsT3PUWrdCqbXLUYQM3hbJIaIfz2fItFW8fymPTnKPmI4PCJM4QtADxQz1gv7g
-         MGjg==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VNWrHdXg3Yy9QNYyWfmhuoGwbW2EjORHJrKP3nYvVkI=;
+        b=M/TGYKy160b2KdmNMklbl4hrVhVHNqk0kvQK+9tThJ1rU1a2MQk3iD/AlhWwsEuaXw
+         Nd+jOxHYJrb3iSPKOQ8MK3YxO6YYAmzz2ty+XbNVahOvoPzLI18RfaxBUegH+8Jx1cBB
+         WnacijaPfsK07Y46soJkrbDlin9Dk06zHBT192xpRFuG8SKfxtOl+kvabxwD/ePoBbzy
+         lotjQsXtUWMDDINKn/r8Y04hhj58thTR0wRqF6p5i/jM2VORtlr5f+yLpzUd9405OgQs
+         +KbVqLR0dncjQfOE7z+l1HFwQsD3vtMy2s7FfBn39hASuu/kfjkdtA/LMackkd+53gGr
+         88Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6/nWoRvmCe8w3U/nkA8FUKN/5D+Y/S7xThy2DIwl4ck=;
-        b=i/x040Q0Xr+Tki2g6PC0zvn2ZEh+nYTVq3dH/1K+rjlrwZOkkc2FC9SbWQ4UscT7DA
-         u1Y3XL0B4KiHrTRzaz0qgBYcV/ViLa0XNJttMv2/VClp/IxCo60virFLrEV04W9QZ9kr
-         NN7FFxVyUVFyHXM72zujYyGk1IeQS/1ROA411GRFA081epmJiLnnFa6SYnUsymcV6BeQ
-         wqY5/Pge/VanWCQpi9FOV4NOIZBElgEcITzrv+o9zf0sUKchveluG3eqzJ4SNCh9SA5r
-         5AGagqk7J7at+Ap81Fqaq/ns89HyYBgXKbLktFfjTmnaVkSTl3WEvjpmBcy+NNWPw3BC
-         xD4w==
-X-Gm-Message-State: AGi0PuZjG/n6OqeI6rJMH+rXZ4/wC0o4Tnu+F7cH2u/ItuSVNU2Jon9S
-        0INwunl5NQqgx7aYULqa7mo=
-X-Google-Smtp-Source: APiQypJnJJoVs/cGvhRNyEmFUyU9+jjwcXiY5Svk8lisjjpi8LrjpiJBjfmpN/f7+PqjpWe66gRSew==
-X-Received: by 2002:aa7:870b:: with SMTP id b11mr3069588pfo.134.1585831868842;
-        Thu, 02 Apr 2020 05:51:08 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
-        by smtp.gmail.com with ESMTPSA id w16sm3758652pfj.79.2020.04.02.05.51.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 05:51:08 -0700 (PDT)
-Subject: Re: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when
- panic_on_oops is set
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-References: <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
- <20200331073832.12204-1-Tianyu.Lan@microsoft.com>
- <MW2PR2101MB1052A8FEF85F381B3EAF7D36D7C80@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <9eb81216-8e00-64e5-ab1c-b363983b245e@gmail.com>
- <20200401185336.fsnwxejwn3nd5lhx@debian>
-From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <634f84e8-01ce-5fa1-5b60-f7be7c4513cd@gmail.com>
-Date:   Thu, 2 Apr 2020 20:51:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VNWrHdXg3Yy9QNYyWfmhuoGwbW2EjORHJrKP3nYvVkI=;
+        b=OxM69KM6Zbb6sm2pQQlrHfotZ5NjnHv13O9pfuj+uwBIVXwpHec8xAAq3HzcM7D8G/
+         ioQpQP9cayDTl3Bxn0KnQqqgzb1K0R1X1JN4qyHwkqVNQNYKNdTkm/6Pt89UljSi5CkK
+         7omExCCmMl+WQVBxGIQBLTKQxo6O4TRK/1MIj4QzCPeEpMbpRA+JCdCcxbZ6lJb6RQev
+         LOpPIEbcsRs4QoqwrcKdm1/fJ5zPHegJCo8eRGo+GrljMnF40KiwRcpaGS3qEDCNuPqD
+         J4+YdLcqcE4UPT1vZJS/m8TJjrkyXyHULBmtKnODjPadx2HqcsXQkQ62sOqn4KTRLR4U
+         wheQ==
+X-Gm-Message-State: AGi0PuZHsn3Hd/fpJuIwYZ+ek9AOqVdqCShaH9ZRmK1vFTu2malbNWEc
+        cnC6hCQ9Dt9PX/Ph7pF0YwtuTM7pLR4=
+X-Google-Smtp-Source: APiQypKsnSMgPI+27x38wzO/S/ewac5zFRYA1l+vLUf8WoLmfmNvYKaBWkcP4JmWzGkuRlP5504YhQ==
+X-Received: by 2002:a05:651c:28a:: with SMTP id b10mr1968584ljo.223.1585831982476;
+        Thu, 02 Apr 2020 05:53:02 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id j2sm3799760lfm.44.2020.04.02.05.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 05:53:01 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 334071020A6; Thu,  2 Apr 2020 15:53:01 +0300 (+03)
+Date:   Thu, 2 Apr 2020 15:53:01 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Huang, Ying" <ying.huang@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Subject: Re: [PATCH -V2] /proc/PID/smaps: Add PMD migration entry parsing
+Message-ID: <20200402125301.mtngw2toytiohkee@box>
+References: <20200402020031.1611223-1-ying.huang@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200401185336.fsnwxejwn3nd5lhx@debian>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402020031.1611223-1-ying.huang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/2020 2:53 AM, Wei Liu wrote:
-> On Tue, Mar 31, 2020 at 10:26:06PM +0800, Tianyu Lan wrote:
->>
->>
->> On 3/31/2020 9:51 PM, Michael Kelley wrote:
->>> From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, March 31, 2020 12:39 AM
->>>>
->>>> When oops happens with panic_on_oops unset, the oops
->>>> thread is killed by die() and system continues to run.
->>>> In such case, guest should not report crash register
->>>> data to host since system still runs. Fix it.
->>>>
->>>> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
->>>> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
->>>> ---
->>>> Change since v3:
->>>> 	Fix compile error
->>>> ---
->>>>    drivers/hv/vmbus_drv.c | 3 ++-
->>>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
->>>> index 172ceae69abb..4bc02aea2098 100644
->>>> --- a/drivers/hv/vmbus_drv.c
->>>> +++ b/drivers/hv/vmbus_drv.c
->>>> @@ -31,6 +31,7 @@
->>>>    #include <linux/kdebug.h>
->>>>    #include <linux/efi.h>
->>>>    #include <linux/random.h>
->>>> +#include <linux/kernel.h>
->>>
->>> Unfortunately, adding the #include doesn't solve the problem.  The error occurs when
->>> CONFIG_HYPERV=m, because panic_on_oops is not exported.  I haven't thought it
->>> through, but hopefully there's a solution where panic_on_oops can be tested in
->>> hyperv_report_panic() or some other Hyper-V specific function that's never in a
->>> module, so that we don't need to export panic_on_oops.
->>
->> Yes, I don't consider modules case. I think we may introduce a check
->> function of panic_on_oops in the mshyperv.c and expose it to module.
->>
+On Thu, Apr 02, 2020 at 10:00:31AM +0800, Huang, Ying wrote:
+> From: Huang Ying <ying.huang@intel.com>
 > 
-> Why expose something new? You can just test panic_on_oops in
-> hyperv_report_panic and bail if it is false, right?
+> Now, when read /proc/PID/smaps, the PMD migration entry in page table is simply
+> ignored.  To improve the accuracy of /proc/PID/smaps, its parsing and processing
+> is added.
 > 
-> Something like the following (not compiled) diff:
+> Before the patch, for a fully populated 400 MB anonymous VMA, sometimes some THP
+> pages under migration may be lost as follows.
 > 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index b0da5320bcff..0dc229a9142c 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -424,6 +424,9 @@ void hyperv_report_panic(struct pt_regs *regs, long err)
->          static bool panic_reported;
->          u64 guest_id;
-> 
-> +       if (!panic_on_oops)
-> +               return;
-> +
->          /*
->           * We prefer to report panic on 'die' chain as we have proper
->           * registers to report, but if we miss it (e.g. on BUG()) we need
-> 
-> I haven't checked all the error reporting paths and don't know if this
-> works or not though.
+> 7f3f6a7e5000-7f3f837e5000 rw-p 00000000 00:00 0
+> Size:             409600 kB
+> KernelPageSize:        4 kB
+> MMUPageSize:           4 kB
+> Rss:              407552 kB
+> Pss:              407552 kB
+> Shared_Clean:          0 kB
+> Shared_Dirty:          0 kB
+> Private_Clean:         0 kB
+> Private_Dirty:    407552 kB
+> Referenced:       301056 kB
+> Anonymous:        407552 kB
+> LazyFree:              0 kB
+> AnonHugePages:    405504 kB
+> ShmemPmdMapped:        0 kB
+> FilePmdMapped:        0 kB
 
-Hi Wei:
-     hyperv_report_panic() is also called in panic() which may not be
-triggered by die(). In these cases, we still need to report crash
-register data to host even when panic_on_oops is unset.
-     Another approach is to add new parameter "in_die" for
-hyperv_report_panic() and just check panic_on_oops when the function is
-called in die notifier callback and "in_die" is set to true.
+The alignment makes me triggered.
+
+Andrew, could you please apply this patch:
+
+http://lore.kernel.org/r/20191230084125.267040-1-samuel.williams@oriontransfer.co.nz
+
+-- 
+ Kirill A. Shutemov
