@@ -2,118 +2,91 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104C7C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5D2C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60582072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22AA2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:23:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GB3sDeom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389227AbgDBPUK (ORCPT
+        id S2389208AbgDBPXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:20:10 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46162 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388942AbgDBPUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:20:09 -0400
-IronPort-SDR: fpgbcZoFPBopVCoOaJ6yuwkvXJMua+5qObOSorrdneHCeieWOFDBN4+ki9GyeXEC/K/htNuGXF
- SP0+wrocXtJg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 08:20:09 -0700
-IronPort-SDR: SnkEz5OyJ+NtvnY4nO2Yl2qLHSSAzAtmYe2C0f2byKCipNQvTSxMEjrbBWj9+JBIvcYcj2u1TA
- uisOTGCFQY9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="328854200"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 02 Apr 2020 08:20:08 -0700
-Received: from [10.249.226.252] (abudanko-mobl.ccr.corp.intel.com [10.249.226.252])
-        by linux.intel.com (Postfix) with ESMTP id CC6665802C8;
-        Thu,  2 Apr 2020 08:20:06 -0700 (PDT)
-Subject: Re: [PATCH v1 2/8] perf evlist: implement control command handling
- functions
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
- <1760b862-7a4a-3930-1a53-04667c71cf6f@linux.intel.com>
- <20200402141729.GN2518490@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <a1fd0e15-026f-6f84-ef82-9c01b7d9d48e@linux.intel.com>
-Date:   Thu, 2 Apr 2020 18:20:05 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 11:23:02 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60144 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388234AbgDBPXB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 11:23:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585840980;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1G4fW9kRqwkS0muZKrX5i3nTFV88PYpfmaEKwAh1/sk=;
+        b=GB3sDeom8VTDLyLjNe1dvln5zfpAT/FxFH//ZzIcp2MkT78cuNP+JnOINGbcWOzp4ewC8n
+        SWgQtRRy4OhdwN4YkMPn3YElcVt/zu6LeWqzm9uAXvIGeG/okiRY86ZFfU8I+rTS0yd8cf
+        V2ghL7gtoihlQbMad9xd3TLEfcxOm6A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-37-9EJhvMwNMPGRd1oIgwNyOA-1; Thu, 02 Apr 2020 11:22:58 -0400
+X-MC-Unique: 9EJhvMwNMPGRd1oIgwNyOA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 224038017FC;
+        Thu,  2 Apr 2020 15:22:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9617748;
+        Thu,  2 Apr 2020 15:22:52 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpeguxDiq3BW94AVFhgY75P+jy_+jk3pdyNZ5z-aJPXNvvGA@mail.gmail.com>
+References: <CAJfpeguxDiq3BW94AVFhgY75P+jy_+jk3pdyNZ5z-aJPXNvvGA@mail.gmail.com> <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com> <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk> <2418286.1585691572@warthog.procyon.org.uk> <20200401090445.6t73dt7gz36bv4rh@ws.net.home> <2488530.1585749351@warthog.procyon.org.uk> <2488734.1585749502@warthog.procyon.org.uk> <CAJfpeguLJcAEgx2JWRNcKMkyFTWB0r4wS6F4fJHK3VHtY=EjXQ@mail.gmail.com> <2590276.1585756914@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
+        andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
 MIME-Version: 1.0
-In-Reply-To: <20200402141729.GN2518490@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3070723.1585840971.1@warthog.procyon.org.uk>
+Date:   Thu, 02 Apr 2020 16:22:51 +0100
+Message-ID: <3070724.1585840971@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-On 02.04.2020 17:17, Jiri Olsa wrote:
-> On Fri, Mar 27, 2020 at 11:46:43AM +0300, Alexey Budankov wrote:
+> > > Not sure what you mean.  I think it shows precisely the information
+> > > Karel asked for.
+> >
+> > It's not atomic.
 > 
-> SNIP
-> 
->> +
->> +int perf_evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
->> +{
->> +	int err = 0;
->> +	int ctlfd_pos = evlist->ctl_fd_pos;
->> +	struct pollfd *entries = evlist->core.pollfd.entries;
->> +
->> +	if (!entries[ctlfd_pos].revents)
->> +		return 0;
->> +
->> +	if (entries[ctlfd_pos].revents & POLLIN) {
->> +		err = perf_evlist__ctlfd_recv(evlist, cmd);
->> +		if (err > 0) {
->> +			switch (*cmd) {
->> +			case CTL_CMD_RESUME:
->> +				evlist__enable(evlist);
->> +				break;
->> +			case CTL_CMD_PAUSE:
->> +				evlist__disable(evlist);
->> +				break;
-> 
-> would CTL_CMD_ENABLE, CTL_CMD_DISABLE be better fit in here?
+> Yes it is.
 
-Makes sense. Let's have it named like the corresponding ioctls, for clarity.
+No, it really isn't - though it could be made so.
 
-> 
-> especialy because we have the 'pause' ioctl for sampling,
-> which I was thinking initialy you are using for record,
-> 
-> and it's still might be better fit for sampling than disable, no?
+ext4_show_mount(), for example, doesn't lock against "mount -o remount", so
+the configuration can be changing whilst it's being rendered to text.
 
-PAUSE_OUTPUT ioctl doesn't stop NMIs but it should be avoided 
-in order not to affect workload execution during paused intervals.
+David
 
-PERF_EVENT_IOC_PAUSE_OUTPUT (since Linux 4.7)
-              This allows pausing and resuming the event's ring-buffer.  A
-              paused ring-buffer does not prevent generation of samples, but
-              simply discards them.  The discarded samples are considered
-              lost, and cause a PERF_RECORD_LOST sample to be generated when
-              possible.  An overflow signal may still be triggered by the
-              discarded sample even though the ring-buffer remains empty.
-
-              The argument is an unsigned 32-bit integer.  A nonzero value
-              pauses the ring-buffer, while a zero value resumes the ring-
-              buffer.
-
-~Alexey
