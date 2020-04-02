@@ -2,195 +2,135 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7F4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D674BC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C962072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585871078;
-	bh=JdlMP0CnYYzjEyV3KdnOwObgYvDMOBYns8n83Uq5Rdo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jWTKHZ9+9s20djBqAcS0hJuwaQkSw0ZPSODLexNZqqLdN8D6Xlbbe/9x41fCI0RV5
-	 CkhECZG4aWww5O2S1JVBvOlyO5DH8t4iiXCk1yFGNjAtBxUXVRtl2FF6v6w4esE49/
-	 rF8nQ+OyOPIJnULuvxatlmRIGFLaLZocLSz5bVLY=
+	by mail.kernel.org (Postfix) with ESMTP id A98622072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:45:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DyUHLDg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390246AbgDBXog (ORCPT
+        id S2390270AbgDBXpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:44:36 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34210 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390172AbgDBXog (ORCPT
+        Thu, 2 Apr 2020 19:45:00 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34812 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390172AbgDBXpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 19:44:36 -0400
-Received: by mail-lf1-f65.google.com with SMTP id e7so4274237lfq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:44:34 -0700 (PDT)
+        Thu, 2 Apr 2020 19:45:00 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a23so1983895plm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:44:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=suq7shsCYCEkha3tF10l6ky5KLq5d+L/cVszRe1OWJY=;
-        b=NGLO3tsDhJ1AssSXynspUzuMIiwe2LjVYg5MdUGKa4gKsk1GjxJIXG0vKRvCJBKmw3
-         t0nRr62n7kdIahaA+z72gyTS9pSoM1H6Wu0eD6wD/e/YAYI6MCCs6PMt9mWP6FGMAg6c
-         jeCO0yBhxbC2k2+H+GDRWDkvN5qkPv7nXbcsc=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=IcUXuPRxJQI5RCQqnjKMDNcCLnTPm1SBa74gYbeIkBY=;
+        b=DyUHLDg4Q8iCWGfd69LaO0+mou9XnqdjVX5kvqZ+DYN6xTB6D3cvDXDdEyv7NcNvcG
+         M20M6jgMNJjsJKyg+H6A4ScEe7xWy0TUeLrSG8I9625ok+MFgJVNywJjVWjC5qRbOJuF
+         eycoES/pIhuiBrj4P8Oi7FpcX26pUDyrJdEJiyYhjLuvSIa+uUzEPVWu6Wo1rAawj274
+         xG0tZ8fO/7Ptz/3CvYUM5+8DsSXrmYMvcAwkIuLT3k+2F5QvO0fxuWNBMMNKEqlCeyQG
+         lQdqM8ursthvgV2j4yHmWXOJqyXqJ7PXtg+HcTw5ustbHUbdUs3Zc677t5PAk1CPJzZO
+         +gRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=suq7shsCYCEkha3tF10l6ky5KLq5d+L/cVszRe1OWJY=;
-        b=SXVr7kiuExMuGT4nCRh2Ab9tLHVHeT01EM0vOOTX66IvZaCwtBMY+j6xTrITKxKsL/
-         NJ7uJBjghRCOuYuXakaKfs4Kw89gCSYPvAnCfG5UPkdTWKSbYNOmsZOPUXVBY92NPMh7
-         IsrhGbv3mpedIta36guJYVXVkdXpYPLyNLzTP8mTyj/QGk/DdAQrdRRZGokknrbOK0U0
-         m9JW1ef4hWfwZ0FlXSC09svxqbrDTMGBIz5TIvUrACd2TJGPJp2WKkVR25YHUPl0HnAr
-         8FR4zyVq1/p1ssc2LPU3IIJoa9y+bJaeXeVmRU1XooyBDDnOtSzkaQQEfifkpuaJVw0P
-         tViA==
-X-Gm-Message-State: AGi0PuaV3RbzxuzFqnFNheI1GUP7v30AHYnYa8GOLvYmVNtHVWeqpYFL
-        0SB9GE8xK2P3hTG7k0o/wjtBCZ6fuCo=
-X-Google-Smtp-Source: APiQypKFtTcGuNVkox54VJplBTehVXiOavpTmIzQP9TGgjlsxDyfwyoHnUtesQIoH7qNrBCyC9GY7Q==
-X-Received: by 2002:a05:6512:686:: with SMTP id t6mr3715624lfe.163.1585871072868;
-        Thu, 02 Apr 2020 16:44:32 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id j2sm4805355lfm.44.2020.04.02.16.44.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 16:44:32 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id j17so4233313lfe.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:44:32 -0700 (PDT)
-X-Received: by 2002:ac2:5e70:: with SMTP id a16mr3624110lfr.152.1585871071646;
- Thu, 02 Apr 2020 16:44:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <87blobnq02.fsf@x220.int.ebiederm.org> <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com> <87lfnda3w3.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87lfnda3w3.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 Apr 2020 16:44:15 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
-Message-ID: <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=IcUXuPRxJQI5RCQqnjKMDNcCLnTPm1SBa74gYbeIkBY=;
+        b=Sms4vaS8fAPP9YeHqGhlXnzjaVIGDuk+d5EdBATe+zzPZqyQ8kYzwV9m9pS7ZpJHtK
+         KoxuTZjG+IJg4vvRfYFs2j8gyWyPApjbpoShHDcv4/JiMC+sy6O/+dUlzLiPwEzKFFf1
+         cX7dxlReIEvS7unHywZ4uRuu3hPVxXsiUk6qX8zh5Y9sBrpC1lVuxu0v/Bq2auR78ktB
+         9M34vG5q27otreW3TiFZR/1HgVTQE4DekHmWjQaSTc4gJ+c3mKEz7bJnM6XmMaS6yzTb
+         Mtk7KslMmLONoz0RBw+LzxCcpZJfO5nA4OH7JU5KWwjD1+/+yqXOqL4Uc2zjhNJZNhWS
+         5Erg==
+X-Gm-Message-State: AGi0PuYd3mEETvMFyEmZ7PI8C7cIn3xhTjc9XDQT3p0wg9tMvLJhLW2w
+        K0z8KYwlHkmrVHfK7GujXY9QcW49C2M=
+X-Google-Smtp-Source: APiQypLLA09iAbXGXVuJYxW6lprsIUBovTbEFKjLafv05TQE436Pp93UgzeyhGoErgG1V6cnI5yeTQ==
+X-Received: by 2002:a17:90a:da06:: with SMTP id e6mr6592136pjv.14.1585871098591;
+        Thu, 02 Apr 2020 16:44:58 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id q71sm4481727pjb.5.2020.04.02.16.44.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 16:44:57 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
+Date:   Thu,  2 Apr 2020 23:44:55 +0000
+Message-Id: <20200402234455.75061-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200402223723.7150-1-john.stultz@linaro.org>
+References: <20200402223723.7150-1-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 4:04 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> That is not the direction I intend to take either.
+In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+as a generic compat string. However the change also removed
+the "qcom,sdm845-qusb2-phy" compat string, which is documented
+in the binding and already in use.
 
-Ahh, good. Because those kinds of "play games with dropping locks in
-the middle based on conditionals" really have been horrible.
+This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+which allows the driver to continue to work with existing dts
+entries such as found on the db845c.
 
-Yes, we've done it, and it's almost always been asource of truly subtle bugs.
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Manu Gautam <mgautam@codeaurora.org>
+Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>
+Cc: Stephen Boyd <swboyd@chromium.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
+Reported-by: YongQin Liu <yongqin.liu@linaro.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+v2: Add deprecation note on "qcom,sdm845-qusb2-phy" string
+    as suggested by Doug.
+---
+ drivers/phy/qualcomm/phy-qcom-qusb2.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> The exec_update_mutex is to be a strict subset of today's
-> cred_guard_mutex.  I tried to copy cred_guard_mutex's unlock style so
-> that was obvious and that turns out was messier than I intended.
+diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+index 3708d43b7508..393011a05b48 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
++++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+@@ -815,6 +815,13 @@ static const struct of_device_id qusb2_phy_of_match_table[] = {
+ 	}, {
+ 		.compatible	= "qcom,msm8998-qusb2-phy",
+ 		.data		= &msm8998_phy_cfg,
++	}, {
++		/*
++		 * Deprecated. Only here to support legacy device
++		 * trees that didn't include "qcom,qusb2-v2-phy"
++		 */
++		.compatible	= "qcom,sdm845-qusb2-phy",
++		.data		= &qusb2_v2_phy_cfg,
+ 	}, {
+ 		.compatible	= "qcom,qusb2-v2-phy",
+ 		.data		= &qusb2_v2_phy_cfg,
+-- 
+2.17.1
 
-Yes. That is why I had no problem pulling that subset, and my worries
-were mainly about the explanations and that flag use.
-
-> Since I thought I already knew what was in the patches and the worst
-> problem was the missing unlock of cred_guard_mutex, and I know Bernd's
-> patches had been tested I applied them.  I missed that Bernd had added
-> the exec_mmap_called flag into my patch.  I thought he had only added
-> the missing unlock.
-
-Ahh, so you meant for all of that to be entirely static refactoring,
-rather than the conditional unlock depending on just how far we had
-gotten.
-
-Good, that's generally the much superior approach.
-
-I absolutely _hate_ the "drop and retake" model, unless it's a very
-local case with a very explicit retry path.
-
-In contrast, the "we have a flag that shows how far we've gotten"
-_has_ been a successful model, and while I much prefer a static "lock
-pairs with unlock", that "I have done this, so you need to unlock" is
-not entirely out of the question when the static rules become too
-complex to think about.
-
-The vfs code has something similar in FMODE_OPENED which is basically
-a flag saying "I actually made it all the way to the ->open()"
-callback. We used to have a static model, but the rules for when we
-can use fput(), and when we have to use fdrop() were too hard for
-people.
-
-> I spotted the weirdness in unlocking exec_update_mutex, and because it
-> does fix a real world deadlock with ptrace I did not back it out from my
-> tree.
->
-> I have been much laxer on the details than I like to be my apologies.
-
-Ok, as long as we have a sane plan..
-
-And
-
-> The plan is:
->         exec_udpate_mutex will cover just the subset of cred_guard_mutex
->         after the point of no return, and after we do any actions that
->         might block waiting for userspace to do anything.
->
->         So exec_update_mutex will just cover those things that exec
->         is updating, so if you want an atomic snapshot of them
->         plus the appropriate struct cred you can grab exec_update_mutex.
->
->         I added a new mutex instead of just fixing cred_guard_mutex so
->         that we can update or revert the individual code paths if it
->         is found that something is wrong.
->
->         The cred_guard_mutex also prevents other tasks from starting
->         to ptrace the task that is exec'ing, and other tasks from
->         setting no_new_privs on the task that is exec'ing.
->
->         My plan is to carefully refactor the code so it can perform
->         both the ptrace and no_new_privs checks after the point of
->         no return.
-
-Ok. Sounds good.
-
-> I have uncovered all kinds of surprises while working in that direction
-> and I realize it is going to take a very delicate and careful touch to
-> achieve my goal.
->
-> There are silly things like normal linux exec when you are ptraced and
-> exec changes the credentials the ordinary code will continue with the
-> old credentials, but the an LSM enabled your process is likely to be
-> killed instead.
-
-Yeah. The "continue with old credentials" is actually very traditional
-and the original behavior, and is useful for handling the case of
-debugging something that is suid, but doesn't necessarily _require_
-it.
-
-But the LSM's just say yes/no.
-
-I have this dim memory that it also triggers when you do the debugging
-as root, but that may be some medication-induced memory.
-
-> There is the personal mind blowing scenario where selinux will increase
-> your credentials upon exec but if a magic directive is supplied in it's
-> rules will avoid setting AT_SECURE, so that userspace won't protect
-> itself from hostile takeover from the pre credential change environment.
-> Much to my surprise "noatsecure" is a known and documented feature of
-> selinux.  I am not certain but I think I even spotted it in use on
-> production.
-
-We have had a _ton_ of random small rules so that people could enable
-SElinux in legacy environments.
-
-They are _probably_ effectively dead code in this day and age, but
-it's hard to tell...
-
-            Linus
