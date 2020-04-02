@@ -2,146 +2,95 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78398C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169D9C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BAF20787
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:41:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AP2vLKhn"
+	by mail.kernel.org (Postfix) with ESMTP id E0B022078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585834881;
+	bh=uGqLN9OKnBbyA8w53Dt2jn5v0hokTKXjpPNu+Z3TREY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sYZkHWYrTFB2cRPj+OB8uNHGQfnmsf9HWGGwInf4L6zc1Tr3kx5YL9cVVH7igYmRL
+	 zzcHlNtR/zYgGdxxuJQkqfiNWKYQLg/kc2bwa36wazpWhV7Hrn7LWS32j6QXx45LFF
+	 wYHNnrAN+tMME/7CLijdmpgqYhSN1vGyB40luRTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388773AbgDBNlR (ORCPT
+        id S2388783AbgDBNlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:41:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37654 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388745AbgDBNlQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:41:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585834875;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hhEMRSGYDYFQ/KgBZ70DNva1ydxEodVvyfwI5v0wh74=;
-        b=AP2vLKhnCgFvpUp7a0fChY8TBZhIYuSm0xihw2CbaTt+m9Z72jE3lQE74yF55mf1Oiz4yQ
-        NRwU1a+3SIUMEykRTvQTj6xPJUJCZMMtQ+Tl9XGyd5kiG9VRKN1QeCKIWzdaeVAmza9I75
-        YlHsQymx2zylhgRw+rqRYlBCJFc9gwc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-44-fec4BehDO5aq4VcSnogc6g-1; Thu, 02 Apr 2020 09:41:11 -0400
-X-MC-Unique: fec4BehDO5aq4VcSnogc6g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 2 Apr 2020 09:41:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388745AbgDBNlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:41:19 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0C8FDB66;
-        Thu,  2 Apr 2020 13:41:08 +0000 (UTC)
-Received: from krava (unknown [10.40.194.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA4F81001B09;
-        Thu,  2 Apr 2020 13:41:05 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 15:41:03 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 5/5] perf synthetic events: Remove use of sscanf from
- /proc reading
-Message-ID: <20200402134103.GJ2518490@krava>
-References: <20200401233945.133550-1-irogers@google.com>
- <20200401233945.133550-6-irogers@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 16A81206F5;
+        Thu,  2 Apr 2020 13:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585834878;
+        bh=uGqLN9OKnBbyA8w53Dt2jn5v0hokTKXjpPNu+Z3TREY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GOJ3w8OZMnBouSV0+oG0BDUA7+OfMQbvPkjbRwZ+h6eU0Fr3RQUI/U7l0o5uBd89z
+         tETCeGxIDLn74TNnEQ3l652BWURBpVsqjJ41wVpMuvr8P3c9gahlxvbz8HxMd95+QC
+         FmoVcGqoMWvYVoFC9jtzLfy2D8F7QK/xMuTYbzTI=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@elte.hu>
+Subject: [PATCH -tip V5 4/4] kprobes: Remove redundant arch_disarm_kprobe() call
+Date:   Thu,  2 Apr 2020 22:41:13 +0900
+Message-Id: <158583487360.26060.7561147147547003265.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <158583483116.26060.10517933482238348979.stgit@devnote2>
+References: <158583483116.26060.10517933482238348979.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401233945.133550-6-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 04:39:45PM -0700, Ian Rogers wrote:
+Fix to remove redundant arch_disarm_kprobe() call in
+force_unoptimize_kprobe(). This arch_disarm_kprobe()
+will be invoked if the kprobe is optimized but disabled,
+but that means the kprobe (optprobe) is unused (and
+unoptimized) state.
 
-SNIP
+In that case, unoptimize_kprobe() puts it in freeing_list
+and kprobe_optimizer (do_unoptimize_kprobes()) automatically
+disarm it. Thus this arch_disarm_kprobe() is redundant.
 
-> @@ -279,9 +353,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
->  				       struct machine *machine,
->  				       bool mmap_data)
->  {
-> -	FILE *fp;
->  	unsigned long long t;
->  	char bf[BUFSIZ];
-> +	struct io io;
->  	bool truncation = false;
->  	unsigned long long timeout = proc_map_timeout * 1000000ULL;
->  	int rc = 0;
-> @@ -294,28 +368,39 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
->  	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
->  		machine->root_dir, pid, pid);
->  
-> -	fp = fopen(bf, "r");
-> -	if (fp == NULL) {
-> +	io.fd = open(bf, O_RDONLY, 0);
-> +	if (io.fd < 0) {
->  		/*
->  		 * We raced with a task exiting - just return:
->  		 */
->  		pr_debug("couldn't open %s\n", bf);
->  		return -1;
->  	}
-> +	init_io(&io, io.fd, bf, sizeof(bf));
->  
->  	event->header.type = PERF_RECORD_MMAP2;
->  	t = rdclock();
->  
-> -	while (1) {
-> -		char prot[5];
-> -		char execname[PATH_MAX];
-> -		char anonstr[] = "//anon";
-> -		unsigned int ino;
-> +	while (!io.eof) {
-> +		static const char anonstr[] = "//anon";
->  		size_t size;
-> -		ssize_t n;
->  
-> -		if (fgets(bf, sizeof(bf), fp) == NULL)
-> -			break;
-> +		/* ensure null termination since stack will be reused. */
-> +		strcpy(event->mmap2.filename, "");
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/kprobes.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-could you just do 'event->mmap2.filename[0] = 0x0' instad ?
-
-jirka
-
-> +
-> +		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
-> +		if (!read_proc_maps_line(&io,
-> +					&event->mmap2.start,
-> +					&event->mmap2.len,
-> +					&event->mmap2.prot,
-> +					&event->mmap2.flags,
-> +					&event->mmap2.pgoff,
-> +					&event->mmap2.maj,
-> +					&event->mmap2.min,
-> +					&event->mmap2.ino,
-> +					sizeof(event->mmap2.filename),
-> +					event->mmap2.filename))
-> +			continue;
->  
-
-SNIP
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 6d76a6e3e1a5..627fc1b7011a 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -675,8 +675,6 @@ static void force_unoptimize_kprobe(struct optimized_kprobe *op)
+ 	lockdep_assert_cpus_held();
+ 	arch_unoptimize_kprobe(op);
+ 	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+-	if (kprobe_disabled(&op->kp))
+-		arch_disarm_kprobe(&op->kp);
+ }
+ 
+ /* Unoptimize a kprobe if p is optimized */
 
