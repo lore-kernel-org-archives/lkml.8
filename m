@@ -2,95 +2,125 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B22C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BA3C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687DF20719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:11:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cRMdri6V"
+	by mail.kernel.org (Postfix) with ESMTP id 86AB820719
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585844049;
+	bh=YWCwFuRxlfQZCnQduX7beJeIGMvcM5FqEGUtc2q6GPY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vDcuCTq4h4f5nCco9fH6sAGiRfAuyq6c7L0WeErTRLLtxofOlhVP/nfQBTdSfIOtL
+	 T/j0qU4QKVu2oHw4+jVCVhMofRol0MAS5BQVkooQQ8xi5/KOIbgTpGeauNzVIpgRCB
+	 O5yIztnqLC/VZnwjmJ9TtAOndOnVGnJNdtLjbhS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389746AbgDBQLu (ORCPT
+        id S2389784AbgDBQOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:11:50 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39902 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389695AbgDBQLu (ORCPT
+        Thu, 2 Apr 2020 12:14:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44245 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389718AbgDBQOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:11:50 -0400
-Received: by mail-lf1-f66.google.com with SMTP id h6so3209521lfp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 09:11:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yt6zWERiKTCjDwTG56J7PYbCEtxdXxHidONUlaX/0Js=;
-        b=cRMdri6VXL1PrIKwuy81gkl35L7PPDq29lpPSc9oxeCIc5SGIiqZg8pZqrkDDLnVb9
-         ATIfA6ph4AX+mgQJ2g4xFtlTed8dXG9kFXpWDDmRmc9iZRJ/VvaCXIYwKdNcvGxYya9T
-         JrvodRpKIVTZYh5OZgKCQvDiX1x+OBqYoVfSEje9Sjp+wrWHzZu7VuCxoB8n27O7DS7K
-         m2VuRbXpPfA/c2K3BAp3HojSyhNMlssuF//ntu3Mv5fMltgcizzbIz2Hwvm4Rl5RrTh7
-         db1ESdeqzHZCuVNlj451tRQJnKHTM+fat+l1dFjPYun9ATeoy3nvp7eWR1J38Wv435Ab
-         BUYQ==
+        Thu, 2 Apr 2020 12:14:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b72so1951435pfb.11;
+        Thu, 02 Apr 2020 09:14:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yt6zWERiKTCjDwTG56J7PYbCEtxdXxHidONUlaX/0Js=;
-        b=ZO+kNInl5aAeZ9fgX+GtJVnju+SXuFH0RsysLk1gKW0E8TjV/vsOmhjn5GCqWlIVsM
-         iYtCiMWZz2T+/+wZY9YHmENhz69KbLmcO7tUtscvpaX//QEigJbUOQIW6JPBoJLe0xQR
-         W9+hHpyiPpfzCtPX3U9Ch0Bd5u/d/ZLiI1bf/Im2bQspY69iuiiekBOeNaYT2jWuCfp3
-         IUt+hDZYxKo0Znikb+KHUH1ZUZGWBJmG1qxpY4PKKh+b5d6Jjp1Xxi2PNoZ00A4vaW96
-         RTvNAMWJCkw+4sosiBhUtBydG/S+8/AdKcPy+SJbmSlaAFvBuw0LB+9ZvGXc3k7CfzV4
-         lG7A==
-X-Gm-Message-State: AGi0PuYXCyqiwxPD7v252tjeJAoI2pZh+tgSLF28+X/2Dc/fVk4862oG
-        OpPdJMwyXLrGbr+n8ulKEoYx0+LT9Ux3zYp429xzYA==
-X-Google-Smtp-Source: APiQypIY+3gHVfOON959mT3BWUZJaXvVOSvN8K0EQOmiQuny69JdN42ugLz+DORki8l/0FvOcEvx2X4tgIn4sOhB9vA=
-X-Received: by 2002:a19:700a:: with SMTP id h10mr2752575lfc.184.1585843907063;
- Thu, 02 Apr 2020 09:11:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P7i2URrTnDx5tzzyJk7AR5qnVc+j04ViOkgAKhpw3Sk=;
+        b=OtG07gGLTkOjTZK/AqxMXL1OE+3P7C6TAqu44Gb16LJYXWkegE5apmBbCEvHQmWFkD
+         DGP8Nnvrjfy3edVn88azm2ApreAoRbyhRU3+gkpqsGoNeO6lfSkvZi1JgtDkuok4nFil
+         tArhKXe83a4UGgxGVmt6/2ULbiUSuzBdZX5F+Sh94kRefJqGL6Mbm9a8dzDkIjEUycjQ
+         j88TavbxwWaeB9kWu/NxWJMhkS4IpuGYllP6NkWO+GE2BMeVhy3+v6+3gsdu60CX+ZyM
+         fw6azSq8UJUAP9Hgrfu568L7IPlauT1spzFkGQfx4i6Jz9Dybk1w5/JzSP4YrENFatbb
+         KxhQ==
+X-Gm-Message-State: AGi0Pua14+9eeQAX8tNMaAYm+Ooa0Kxm1O1mAVyOJAREQiC2sDlwWToi
+        7sa36cx7744suN9gTtLclJM=
+X-Google-Smtp-Source: APiQypJ7nVgA8DvXN3x5K29X+h7zJol60u/kBlCNRDKrdex9FBSNttqYuXzqAeEmfrTTFVIQ8cZrNA==
+X-Received: by 2002:aa7:990e:: with SMTP id z14mr4016427pff.274.1585844046496;
+        Thu, 02 Apr 2020 09:14:06 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id t188sm4068670pfb.102.2020.04.02.09.14.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 09:14:04 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 1BDD040254; Thu,  2 Apr 2020 16:14:04 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 16:14:04 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        mhocko@suse.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bart Van Assche <bvanassche@acm.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [RFC 2/3] blktrace: fix debugfs use after free
+Message-ID: <20200402161404.GD11244@42.do-not-panic.com>
+References: <20200402000002.7442-1-mcgrof@kernel.org>
+ <20200402000002.7442-3-mcgrof@kernel.org>
+ <9a6576cf-b89d-d1af-2d74-652878cb78c8@sandeen.net>
 MIME-Version: 1.0
-References: <20200327172331.418878-9-gladkov.alexey@gmail.com> <20200330111235.154182-1-gladkov.alexey@gmail.com>
-In-Reply-To: <20200330111235.154182-1-gladkov.alexey@gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 2 Apr 2020 18:11:20 +0200
-Message-ID: <CAG48ez2L__TODzwQW0MjYim6rh=WjkU__xvAoi2CtBCkNP2=Fg@mail.gmail.com>
-Subject: Re: [PATCH v11 8/9] proc: use human-readable values for hidehid
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a6576cf-b89d-d1af-2d74-652878cb78c8@sandeen.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 1:13 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
-> The hidepid parameter values are becoming more and more and it becomes
-> difficult to remember what each new magic number means.
+On Wed, Apr 01, 2020 at 08:57:42PM -0500, Eric Sandeen wrote:
+> On 4/1/20 7:00 PM, Luis Chamberlain wrote:
+> > On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
+> > Omar fixed the original blktrace code for multiqueue use. This however
+> > left in place a possible crash, if you happen to abuse blktrace in a way
+> > it was not intended.
+> > 
+> > Namely, if you loop adding a device, setup the blktrace with BLKTRACESETUP,
+> > forget to BLKTRACETEARDOWN, and then just remove the device you end up
+> > with a panic:
+> 
+> Weird, I swear I tested that and didn't hit it, but ...
 
-nit: subject line says "hidehid"
+The real issue was also the dangling block device, a loop device proves
+easy to test that. I'll note that another way to test this as well would
+be to have a virtual machine with a block devices that goes in and out
+via whatever virsh shenanigans to make a block device appear / disappear.
+
+> > This issue can be reproduced with break-blktrace [2] using:
+> > 
+> >   break-blktrace -c 10 -d
+> 
+> + -s, right?
+
+Yeap, sorry about that.
+
+> > This patch fixes this issue. Note that there is also another
+> > respective UAF but from the ioctl path [3], this should also fix
+> > that issue.
+> > 
+> > This patch then also contends the severity of CVE-2019-19770 as
+> > this issue is only possible using root to shoot yourself in the
+> > foot by also misuing blktrace.
+> > 
+> > [0] https://bugzilla.kernel.org/show_bug.cgi?id=205713
+> > [1] https://nvd.nist.gov/vuln/detail/CVE-2019-19770
+> > [2] https://github.com/mcgrof/break-blktrace
+> 
+> I verified that this does reproduce the exact same KASAN splat on
+> kernel 4.19.83 as reported in the original bug, thanks!
+
+I just codified what Nicolai suspected, we should thank him :)
+
+  Luis
