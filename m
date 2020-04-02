@@ -2,89 +2,134 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482B5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE12C2BA13
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0982073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80E22073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:48:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585820894;
+	bh=tQn980VNVD2NF8f3vV6R1mgERuk6VHI+6dEM25XXfqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sQ71VQYWDvCpOw3SI4oPOmJdlBbp94FfBQ9q1eTeFr8XelfNVuYwLoGPDvtvxL1Vw
+	 Yhp492KEGykD46/r15OguAhtZX0xztjhc106Q1otDmwNyRb+exe5sRcwwM3gOHzH0V
+	 +igzffMUH6Dqad8kgXoRmgtyFiTHDgL4QfVkOEwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387894AbgDBJsF (ORCPT
+        id S2387935AbgDBJsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:48:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:40708 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbgDBJsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 05:48:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB46E31B;
-        Thu,  2 Apr 2020 02:48:03 -0700 (PDT)
-Received: from [10.57.59.199] (unknown [10.57.59.199])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B477A3F71E;
-        Thu,  2 Apr 2020 02:48:01 -0700 (PDT)
-Subject: Re: [PATCH 1/3] rkisp1: Get rid of unused variable warning
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Thu, 2 Apr 2020 05:48:14 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44705 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgDBJsO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 05:48:14 -0400
+Received: by mail-ed1-f67.google.com with SMTP id i16so3301937edy.11;
+        Thu, 02 Apr 2020 02:48:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EebgA10aQonHAdiMTRoJOB7z11b/IU502qlsS+rdf6o=;
+        b=HQjEdUKPZeSEOI8knQyUZQUexZP58MzcnenQuTu7L5Ea9Qsk5uPlEba7VWaq2ybhN+
+         oXm4P8J+OckTV691brK5BNdpwXDhBjCcr9i7RmifNbb3Y70TmZ7MTxopEguf88kyrrjR
+         BxLG4/J6jIf60XJP6OGBPeld8RwLFbiEUZPDXtMlfRr/3nNmmu7QJjOAM/jU+MTgNK26
+         3qpCLx4jr0T0ABTIFAV1Bv0JkiXRC80Jyofzct2JuGUJOFBAzxxTJKah9S3xlXWE7IWT
+         wJXiTaaBspvcYlBZl1cD9A/L5dSXtIGNz4hTNAb2QU6dnAt41c7mw82df82vQnMAf853
+         HOiQ==
+X-Gm-Message-State: AGi0PubhvGdIxpIvMKbWtpbWQE96Ceegv+wAIIhMnkzDnBxSua9nsUPP
+        r//ieJ2+Y68aXLjL4Hro6O+7EGzi
+X-Google-Smtp-Source: APiQypIF74oGksjMDueJN1n5kxiy+DMCIipIZolflLnnlWIJFFfGO84ldJuhdl2ALOj87wiqKoQ0fQ==
+X-Received: by 2002:a17:906:9ca:: with SMTP id r10mr2262131eje.151.1585820891869;
+        Thu, 02 Apr 2020 02:48:11 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id qk2sm1008399ejb.80.2020.04.02.02.48.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 Apr 2020 02:48:11 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 11:48:08 +0200
+From:   'Krzysztof Kozlowski' <krzk@kernel.org>
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
+        hyunki00.koo@gmail.com, 'Kukjin Kim' <kgene@kernel.org>,
+        'Jiri Slaby' <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, kernel@collabora.com
-References: <20200401213721.24173-1-ezequiel@collabora.com>
- <20200401213721.24173-2-ezequiel@collabora.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b994a6fe-865b-d5c4-7f3f-ed6b1815f37f@arm.com>
-Date:   Thu, 2 Apr 2020 10:47:58 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: Re: [PATCH] tty: samsung_tty: 32-bit access for TX/RX hold registers
+Message-ID: <20200402094808.GA21903@kozik-lap>
+References: <CGME20200401082749epcas2p2a774da515805bc3f761b6b5a8dc9e3d2@epcas2p2.samsung.com>
+ <20200401082721.19431-1-hyunki00.koo@samsung.com>
+ <20200401085548.GC2026666@kroah.com>
+ <20200401091952.GA14425@kozik-lap>
+ <000001d608d3$5faa8260$1eff8720$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200401213721.24173-2-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <000001d608d3$5faa8260$1eff8720$@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-01 10:37 pm, Ezequiel Garcia wrote:
-> If CONFIG_OF is not selected, the compiler will complain:
+On Thu, Apr 02, 2020 at 06:44:58PM +0900, Hyunki Koo wrote:
+> On Wed, Apr 01, 2020 at 6:20:20PM +0900, Krzysztof Kozlowski
+> wrote:
+> > On Wed, Apr 01, 2020 at 10:55:48AM +0200, Greg Kroah-Hartman
+> > wrote:
+> > > On Wed, Apr 01, 2020 at 05:27:20PM +0900, Hyunki Koo wrote:
+> > > > -	if (np)
+> > > > +	if (np) {
+> > > >  		of_property_read_u32(np,
+> > > >  			"samsung,uart-fifosize", &ourport->port.fifosize);
+> > > >
+> > > > +		if (of_property_read_u32(np, "reg-io-width", &prop) ==
+> > 0) {
+> > > > +			switch (prop) {
+> > > > +			case 1:
+> > > > +				ourport->port.iotype = UPIO_MEM;
+> > > > +				break;
+> > > > +			case 4:
+> > > > +				ourport->port.iotype = UPIO_MEM32;
+> > > > +				break;
+> > > > +			default:
+> > > > +				dev_warn(&pdev->dev, "unsupported
+> > reg-io-width (%d)\n",
+> > > > +						prop);
+> > > > +				ret = -EINVAL;
+> > > > +				break;
+> > > > +			}
+> > > > +		}
+> > > > +	}
+> > > > +
+> > >
+> > > Does this mean that reg-io-width is now a required property for all
+> > > samsung uarts?  Does this break older dts files?  Or should you
+> > > fall-back to the previous operation if the attribute is not there?
+> > 
+> > Yes, it looks like silently breaking all boards.  Since
+> > of_property_read_u32() will return errno, the warning message won't be
+> > printed and all register reads will fail (return 0).
+> > 
+> > This looks like not tested on real HW.
+> > 
+> > Best regards,
+> > Krzysztof
 > 
-> drivers/staging/media/rkisp1/rkisp1-dev.c: In function ‘rkisp1_probe’:
-> drivers/staging/media/rkisp1/rkisp1-dev.c:457:22: warning: unused variable ‘node’ [-Wunused-variable]
->    457 |  struct device_node *node = pdev->dev.of_node;
-> 
-> Rework the code slightly and make the compiler happy.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->   drivers/staging/media/rkisp1/rkisp1-dev.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
-> index b1b3c058e957..5e7e797aad71 100644
-> --- a/drivers/staging/media/rkisp1/rkisp1-dev.c
-> +++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
-> @@ -454,7 +454,6 @@ static void rkisp1_debug_init(struct rkisp1_device *rkisp1)
->   
->   static int rkisp1_probe(struct platform_device *pdev)
->   {
-> -	struct device_node *node = pdev->dev.of_node;
->   	const struct rkisp1_match_data *clk_data;
->   	const struct of_device_id *match;
->   	struct device *dev = &pdev->dev;
-> @@ -463,7 +462,7 @@ static int rkisp1_probe(struct platform_device *pdev)
->   	unsigned int i;
->   	int ret, irq;
->   
-> -	match = of_match_node(rkisp1_of_match, node);
-> +	match = of_match_node(rkisp1_of_match, pdev->dev.of_node);
+> [Hyunki Koo] 
+> reg-io-width =4 is required for Samsung uart
+> To do not break older dts files, I will set default value in else of of_property_read_u32 like below.
+> +		if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
+> + ...
+> +		} else {
+> +			ourport->port.iotype = UPIO_MEM;
+> +		}
 
-FWIW you could clean up "match" too by using of_device_get_match_data().
+Thanks. Also, please test your patch on available Exynos boards, e.g.
+Odroid XU4 or HC1.
 
-Robin.
-
->   	rkisp1 = devm_kzalloc(dev, sizeof(*rkisp1), GFP_KERNEL);
->   	if (!rkisp1)
->   		return -ENOMEM;
-> 
+Best regards,
+Krzysztof
