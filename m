@@ -2,424 +2,348 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818A9C2BA16
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D128C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0702078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0AF20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:24:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bn/AxBTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389547AbgDBRYR (ORCPT
+        id S2389250AbgDBRYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:24:17 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2633 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732754AbgDBRYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:24:16 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 744F8DD4AA664FA4A246;
-        Thu,  2 Apr 2020 18:24:14 +0100 (IST)
-Received: from localhost (10.47.26.250) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 2 Apr 2020
- 18:24:13 +0100
-Date:   Thu, 2 Apr 2020 18:24:01 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 04/15] mm/damon: Implement region based sampling
-Message-ID: <20200402182401.000032a6@Huawei.com>
-In-Reply-To: <20200402135959.26336-1-sjpark@amazon.com>
-References: <20200401082222.21242-1-sjpark@amazon.com>
-        <20200402135959.26336-1-sjpark@amazon.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Thu, 2 Apr 2020 13:24:41 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34001 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388815AbgDBRYk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 13:24:40 -0400
+Received: by mail-pj1-f65.google.com with SMTP id q16so41873pje.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 10:24:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3fnsy5yUWiTn8/hbaEYoE5LAlbLYRS9NpYz2srxBPSc=;
+        b=Bn/AxBTw6+f7Ugyvn8/X27GiALp9ZzUBbvVFmCAX311aZJ/sSE1z9xHsZCPFarXNTC
+         A5E6BHWvIB4LFP3HwPNX2PGjjNdjNJT5YCf3+UipnGRuwKGi3rLqPi24V2SbvGNiLWfE
+         QEL3/krXOptE/5vPkdQayFfzeL0WhOFNUDDkb2GK2nDZFt36ELXhPp6J2lGyRjE05cHL
+         A0QB+KFY5p2WxzjZ360ZDW82j3j2bt+FjQMIAS97dxGggd64DLiUWily6BeBCORyQdxi
+         zu0k4ncWtLIZm2MVegIBN1+mCoHGSC6aCef4Qx6M1YbCNnxM6fgKaK2EFaD8+7QFZKlf
+         zqOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3fnsy5yUWiTn8/hbaEYoE5LAlbLYRS9NpYz2srxBPSc=;
+        b=h6QSNbiOwsKHlRsm2QDi5Jt+uzQObS4N5/Xvzw2szeJ46cy2J70gUUXdctDdE01wx9
+         dXmdNoJArJmUoI+XJf6B8l0vLurvOmfpvXui4UZqnuPXLKNib7+ODC70CAoEF1o6VO9S
+         cfmFKuuzWx6pkqgz8bnWbeR0zbHrxAMqMddwoPDlsf/VrS/VLQDHBFTUzRdg2csg2CzA
+         R0Jd7DkG3ZAUBoYbZYrj3TEWxYpjFTpGW25eEHowrU5nFwCZAuouRRo47WhF48EeXkgv
+         qSZv07igGLcZX9938vwdPeBq7M/c/D42MDRma5DEozWimdTYw0X2tyv1oKZq82peUygI
+         fvrQ==
+X-Gm-Message-State: AGi0Pua+L8Vq1eKm1aiRfGrO9CImosrDjyzV5f0X9uYXHgfaFV+zdXky
+        BCu6fyGgndvH9Vw2EVsRkS64XQ==
+X-Google-Smtp-Source: APiQypIDi0rLx2QohirhE4hbnmWiP62qjpU0khykmKrejrCa7upS0aaccQBryOdVLmKfCcYYqY7faQ==
+X-Received: by 2002:a17:90a:ba09:: with SMTP id s9mr5045176pjr.20.1585848278603;
+        Thu, 02 Apr 2020 10:24:38 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id p7sm4268021pjp.1.2020.04.02.10.24.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 10:24:37 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 11:24:35 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        ohad@wizery.com, psodagud@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org
+Subject: Re: [PATCH] remoteproc: core: Add a memory efficient coredump
+ function
+Message-ID: <20200402172435.GA2785@xps15>
+References: <1585353412-19644-1-git-send-email-rishabhb@codeaurora.org>
+ <20200401195114.GD267644@minitux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.26.250]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401195114.GD267644@minitux>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 15:59:59 +0200
-SeongJae Park <sjpark@amazon.com> wrote:
-
-> On Wed, 1 Apr 2020 10:22:22 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+On Wed, Apr 01, 2020 at 12:51:14PM -0700, Bjorn Andersson wrote:
+> On Fri 27 Mar 16:56 PDT 2020, Rishabh Bhatnagar wrote:
 > 
-> > On Tue, 31 Mar 2020 17:02:33 +0100 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> >   
-> > > On Wed, 18 Mar 2020 12:27:11 +0100
-> > > SeongJae Park <sjpark@amazon.com> wrote:
-> > >   
-> > > > From: SeongJae Park <sjpark@amazon.de>
-> > > > 
-> > > > This commit implements DAMON's basic access check and region based
-> > > > sampling mechanisms.  This change would seems make no sense, mainly
-> > > > because it is only a part of the DAMON's logics.  Following two commits
-> > > > will make more sense.
-> > > > 
-> > > > Basic Access Check
-> > > > ------------------
-> > > > 
-> > > > DAMON basically reports what pages are how frequently accessed.  Note
-> > > > that the frequency is not an absolute number of accesses, but a relative
-> > > > frequency among the pages of the target workloads.
-> > > > 
-> > > > Users can control the resolution of the reports by setting two time
-> > > > intervals, ``sampling interval`` and ``aggregation interval``.  In
-> > > > detail, DAMON checks access to each page per ``sampling interval``,
-> > > > aggregates the results (counts the number of the accesses to each page),
-> > > > and reports the aggregated results per ``aggregation interval``.  For
-> > > > the access check of each page, DAMON uses the Accessed bits of PTEs.
-> > > > 
-> > > > This is thus similar to common periodic access checks based access
-> > > > tracking mechanisms, which overhead is increasing as the size of the
-> > > > target process grows.
-> > > > 
-> > > > Region Based Sampling
-> > > > ---------------------
-> > > > 
-> > > > To avoid the unbounded increase of the overhead, DAMON groups a number
-> > > > of adjacent pages that assumed to have same access frequencies into a
-> > > > region.  As long as the assumption (pages in a region have same access
-> > > > frequencies) is kept, only one page in the region is required to be
-> > > > checked.  Thus, for each ``sampling interval``, DAMON randomly picks one
-> > > > page in each region and clears its Accessed bit.  After one more
-> > > > ``sampling interval``, DAMON reads the Accessed bit of the page and
-> > > > increases the access frequency of the region if the bit has set
-> > > > meanwhile.  Therefore, the monitoring overhead is controllable by
-> > > > setting the number of regions.
-> > > > 
-> > > > Nonetheless, this scheme cannot preserve the quality of the output if
-> > > > the assumption is not kept.  Following commit will introduce how we can
-> > > > make the guarantee with best effort.
-> > > > 
-> > > > Signed-off-by: SeongJae Park <sjpark@amazon.de>  
-> > > 
-> > > Hi.
-> > > 
-> > > A few comments inline.
-> > > 
-> > > I've still not replicated your benchmarks so may well have some more
-> > > feedback once I've managed that on one of our servers.  
+> > The current coredump implementation uses vmalloc area to copy
+> > all the segments. But this might put a lot of strain on low memory
+> > targets as the firmware size sometimes is in ten's of MBs.
+> > The situation becomes worse if there are multiple remote processors
+> > undergoing recovery at the same time.
+> > This patch directly copies the device memory to userspace buffer
+> > and avoids extra memory usage. This requires recovery to be halted
+> > until data is read by userspace and free function is called.
 > > 
-> > Appreciate your comments.  If you need any help for the replication, please let
-> > me know.  I basically use my parsec3 wrapper scripts[1] to run parsec3 and
-> > splash2x workloads and `damo` tool, which resides in the kernel tree at
-> > `/tools/damon/`.
+> > Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> > ---
+> >  drivers/remoteproc/remoteproc_core.c | 107 +++++++++++++++++++++++++++++------
+> >  include/linux/remoteproc.h           |   4 ++
+> >  2 files changed, 94 insertions(+), 17 deletions(-)
 > > 
-> > For example, below commands will reproduce ethp applied splash2x/fft run.
-> >     
-> >     $ echo "2M      null    5       null    null    null    hugepage
-> >     2M      null    null    5       1s      null    nohugepage" > ethp
-> >     $ parsec3_on_ubuntu/run.sh splash2x.fft
-> >     $ linux/tools/damon/damo schemes -c ethp `pidof fft`
-> > 
-> > [1] https://github.com/sjp38/parsec3_on_ubuntu
-> >   
-> > > 
-> > > Thanks,
-> > > 
-> > > Jonathan
-> > >   
-> > > > ---
-> > > >  include/linux/damon.h |  24 ++
-> > > >  mm/damon.c            | 553 ++++++++++++++++++++++++++++++++++++++++++
-> > > >  2 files changed, 577 insertions(+)
-> > > >   
-> > [...]  
-> > > > diff --git a/mm/damon.c b/mm/damon.c
-> > > > index d7e6226ab7f1..018016793555 100644
-> > > > --- a/mm/damon.c
-> > > > +++ b/mm/damon.c
-> > > > @@ -10,8 +10,14 @@
-> > > >  #define pr_fmt(fmt) "damon: " fmt
-> > > >  
-> > > >  #include <linux/damon.h>
-> > > > +#include <linux/delay.h>
-> > > > +#include <linux/kthread.h>
-> > > >  #include <linux/mm.h>
-> > > >  #include <linux/module.h>
-> > > > +#include <linux/page_idle.h>
-> > > > +#include <linux/random.h>
-> > > > +#include <linux/sched/mm.h>
-> > > > +#include <linux/sched/task.h>
-> > > >  #include <linux/slab.h>
-> > > >    
-> > [...]  
-> > > > +/*
-> > > > + * Size-evenly split a region into 'nr_pieces' small regions
-> > > > + *
-> > > > + * Returns 0 on success, or negative error code otherwise.
-> > > > + */
-> > > > +static int damon_split_region_evenly(struct damon_ctx *ctx,
-> > > > +		struct damon_region *r, unsigned int nr_pieces)
-> > > > +{
-> > > > +	unsigned long sz_orig, sz_piece, orig_end;
-> > > > +	struct damon_region *piece = NULL, *next;
-> > > > +	unsigned long start;
-> > > > +
-> > > > +	if (!r || !nr_pieces)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	orig_end = r->vm_end;
-> > > > +	sz_orig = r->vm_end - r->vm_start;
-> > > > +	sz_piece = sz_orig / nr_pieces;
-> > > > +
-> > > > +	if (!sz_piece)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	r->vm_end = r->vm_start + sz_piece;
-> > > > +	next = damon_next_region(r);
-> > > > +	for (start = r->vm_end; start + sz_piece <= orig_end;
-> > > > +			start += sz_piece) {
-> > > > +		piece = damon_new_region(ctx, start, start + sz_piece);  
-> > > piece may be n  
-> > 
-> > Yes, that name is short and more intuitive.  I will rename so.
-> >   
-> > > > +		damon_insert_region(piece, r, next);
-> > > > +		r = piece;
-> > > > +	}
-> > > > +	/* complement last region for possible rounding error */
-> > > > +	if (piece)
-> > > > +		piece->vm_end = orig_end;  
-> > > 
-> > > Update the sampling address to ensure it's in the region?  
-> > 
-> > I think `piece->vm_end` should be equal or smaller than `orig_end` and
-> > therefore the sampling address of `piece` will be still in the region.
-> >   
-> > >   
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +  
-> > [...]  
-> > > > +static void damon_pte_pmd_mkold(pte_t *pte, pmd_t *pmd)
-> > > > +{
-> > > > +	if (pte) {
-> > > > +		if (pte_young(*pte)) {
-> > > > +			clear_page_idle(pte_page(*pte));
-> > > > +			set_page_young(pte_page(*pte));
-> > > > +		}
-> > > > +		*pte = pte_mkold(*pte);
-> > > > +		return;
-> > > > +	}
-> > > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > > +	if (pmd) {
-> > > > +		if (pmd_young(*pmd)) {
-> > > > +			clear_page_idle(pmd_page(*pmd));
-> > > > +			set_page_young(pmd_page(*pmd));
-> > > > +		}
-> > > > +		*pmd = pmd_mkold(*pmd);
-> > > > +	}
-> > > > +#endif /* CONFIG_TRANSPARENT_HUGEPAGE */  
-> > > 
-> > > No need to flush the TLBs?  
-> > 
-> > Good point!
-> > 
-> > I have intentionally skipped TLB flushing here to minimize the performance
-> > effect to the target workload.  I also thought this might not degrade the
-> > monitoring accuracy so much because we are targetting for the DRAM level
-> > accesses of memory-intensive workloads, which might make TLB flood frequently.
-> > 
-> > However, your comment makes me thinking differently now.  By flushing the TLB
-> > here, we will increase up to `number_of_regions` TLB misses for sampling
-> > interval.  This might be not a huge overhead.  Also, improving the monitoring
-> > accuracy makes no harm at all.  I even didn't measured the overhead.
-> > 
-> > I will test the overhead and if it is not significant, I will make this code to
-> > flush TLB, in the next spin.  
+> > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> > index 097f33e..2d881e5 100644
+> > --- a/drivers/remoteproc/remoteproc_core.c
+> > +++ b/drivers/remoteproc/remoteproc_core.c
+> > @@ -1516,6 +1516,86 @@ int rproc_coredump_add_segment(struct rproc *rproc, dma_addr_t da, size_t size)
+> >  }
+> >  EXPORT_SYMBOL(rproc_coredump_add_segment);
+> >  
+> > +
+> > +void rproc_free_dump(void *data)
 > 
-> Hmm, it seems like 'page_idle.c' is also modifying the Accessed bit but doesn't
-> flush related TLB entries.  If I'm not missing something here, I would like to
-> leave this part as is to make the behavior consistent.
+> static
+> 
+> > +{
+> > +	struct rproc *rproc = data;
+> > +
+> > +	dev_info(&rproc->dev, "Userspace done reading rproc dump\n");
+> 
+> Please drop the info prints throughout.
+> 
+> > +	complete(&rproc->dump_done);
+> > +}
+> > +
+> > +static unsigned long get_offset(loff_t user_offset, struct list_head *segments,
+> > +				unsigned long *data_left)
+> 
+> Please rename this rproc_coredump_resolve_segment(), or something along
+> those lines.
+> 
+> > +{
+> > +	struct rproc_dump_segment *segment;
+> > +
+> > +	list_for_each_entry(segment, segments, node) {
+> > +		if (user_offset >= segment->size)
+> > +			user_offset -= segment->size;
+> > +		else
+> > +			break;
+> > +	}
+> > +
+> > +	if (&segment->node == segments) {
+> > +		*data_left = 0;
+> > +		return 0;
+> > +	}
+> > +
+> > +	*data_left = segment->size - user_offset;
+> > +
+> > +	return segment->da + user_offset;
+> > +}
+> > +
+> > +static ssize_t rproc_read_dump(char *buffer, loff_t offset, size_t count,
+> > +				void *data, size_t elfcorelen)
+> > +{
+> > +	void *device_mem = NULL;
+> > +	unsigned long data_left = 0;
+> > +	unsigned long bytes_left = count;
+> > +	unsigned long addr = 0;
+> > +	size_t copy_size = 0;
+> > +	struct rproc *rproc = data;
+> > +
+> > +	if (offset < elfcorelen) {
+> > +		copy_size = elfcorelen - offset;
+> > +		copy_size = min(copy_size, bytes_left);
+> > +
+> > +		memcpy(buffer, rproc->elfcore + offset, copy_size);
+> > +		offset += copy_size;
+> > +		bytes_left -= copy_size;
+> > +		buffer += copy_size;
+> > +	}
+> > +
+> > +	while (bytes_left) {
+> > +		addr = get_offset(offset - elfcorelen, &rproc->dump_segments,
+> > +				&data_left);
+> > +	/* EOF check */
+> 
+> Indentation, and "if no data left" does indicate that this is the end of
+> the loop already.
+> 
+> > +		if (data_left == 0) {
+> > +			pr_info("Ramdump complete. %lld bytes read.", offset);
+> > +			return 0;
+> 
+> You might have copied data to the buffer, so returning 0 here doesn't
+> seem right. Presumably instead you should break and return offset -
+> original offset or something like that.
+> 
+> > +		}
+> > +
+> > +		copy_size = min_t(size_t, bytes_left, data_left);
+> > +
+> > +		device_mem = rproc->ops->da_to_va(rproc, addr, copy_size);
+> > +		if (!device_mem) {
+> > +			pr_err("Unable to ioremap: addr %lx, size %zd\n",
+> > +				 addr, copy_size);
+> > +			return -ENOMEM;
+> > +		}
+> > +		memcpy(buffer, device_mem, copy_size);
+> > +
+> > +		offset += copy_size;
+> > +		buffer += copy_size;
+> > +		bytes_left -= copy_size;
+> > +		dev_dbg(&rproc->dev, "Copied %d bytes to userspace\n",
+> > +			copy_size);
+> > +	}
+> > +
+> > +	return count;
+> 
+> This should be the number of bytes actually returned, so if count is
+> larger than the sum of the segment sizes this will be wrong.
+> 
+> > +}
+> > +
+> >  /**
+> >   * rproc_coredump_add_custom_segment() - add custom coredump segment
+> >   * @rproc:	handle of a remote processor
+> > @@ -1566,27 +1646,27 @@ static void rproc_coredump(struct rproc *rproc)
+> >  	struct rproc_dump_segment *segment;
+> >  	struct elf32_phdr *phdr;
+> >  	struct elf32_hdr *ehdr;
+> > -	size_t data_size;
+> > +	size_t header_size;
+> >  	size_t offset;
+> >  	void *data;
+> > -	void *ptr;
+> >  	int phnum = 0;
+> >  
+> >  	if (list_empty(&rproc->dump_segments))
+> >  		return;
+> >  
+> > -	data_size = sizeof(*ehdr);
+> > +	header_size = sizeof(*ehdr);
+> >  	list_for_each_entry(segment, &rproc->dump_segments, node) {
+> > -		data_size += sizeof(*phdr) + segment->size;
+> > +		header_size += sizeof(*phdr);
+> >  
+> >  		phnum++;
+> >  	}
+> >  
+> > -	data = vmalloc(data_size);
+> > +	data = vmalloc(header_size);
+> >  	if (!data)
+> >  		return;
+> >  
+> >  	ehdr = data;
+> > +	rproc->elfcore = data;
+> 
+> Rather than using a rproc-global variable I would prefer that you create
+> a new rproc_coredump_state struct that carries the header pointer and
+> the information needed by the read & free functions.
+> 
+> >  
+> >  	memset(ehdr, 0, sizeof(*ehdr));
+> >  	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
+> > @@ -1618,23 +1698,14 @@ static void rproc_coredump(struct rproc *rproc)
+> >  
+> >  		if (segment->dump) {
+> >  			segment->dump(rproc, segment, data + offset);
 
-Interesting.  In that usecase, the risk is that the MMU believes
-the page still has the accessed bit set when we have cleared it and hence
-the accessed bit is not written out to the table in memory.
+I'm not exactly sure why custom segments can be copied to the elf image but not
+generic ones... And as far as I can tell accessing "data + offset" will blow up
+because only the memory for the program headers has been allocated, not for the
+program segments. 
 
-That will give them a wrong decision so not great and would lead to them
-thinking more pages are idle than are.
 
-Here we could have a particular TLB entry for a huge page in which
-a region lies entirely.  Because we don't flush the TLB each time
-we could end with a count of 0 accesses when it should be the maximum.
-A very frequently accessed page might well sit in the TLB for a very
-long time (particularly if the TLB is running a clever eviction
-strategy).
+> > -		} else {
+> > -			ptr = rproc_da_to_va(rproc, segment->da, segment->size);
+> > -			if (!ptr) {
+> > -				dev_err(&rproc->dev,
+> > -					"invalid coredump segment (%pad, %zu)\n",
+> > -					&segment->da, segment->size);
+> > -				memset(data + offset, 0xff, segment->size);
+> > -			} else {
+> > -				memcpy(data + offset, ptr, segment->size);
+> > -			}
+> > -		}
+> >  
+> >  		offset += phdr->p_filesz;
+> >  		phdr++;
+> >  	}
+> > +	dev_coredumpm(&rproc->dev, NULL, rproc, header_size, GFP_KERNEL,
+> > +			rproc_read_dump, rproc_free_dump);
+> >  
+> > -	dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
+> > +	wait_for_completion(&rproc->dump_done);
+> 
+> This will mean that recovery handling will break on installations that
+> doesn't have your ramdump collector - as it will just sit here forever
+> (5 minutes) waiting for userspace to do its job.
 
-I think we would want to be test this and see if we get that
-pathological case sometimes.  Also worth benchmarking if it actually
-costs us very much to do the flushes.
-
-Jonathan
+Right, that problem also came to mind.
 
 > 
-> 
-> Thanks,
-> SeongJae Park
-> 
-> >   
-> > >   
-> > > > +}
-> > > > +  
-> > [...]  
-> > > > +/*
-> > > > + * The monitoring daemon that runs as a kernel thread
-> > > > + */
-> > > > +static int kdamond_fn(void *data)
-> > > > +{
-> > > > +	struct damon_ctx *ctx = data;
-> > > > +	struct damon_task *t;
-> > > > +	struct damon_region *r, *next;
-> > > > +	struct mm_struct *mm;
-> > > > +
-> > > > +	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
-> > > > +	kdamond_init_regions(ctx);  
-> > > 
-> > > We haven't called mkold on the initial regions so first check will
-> > > get us fairly random state.  
-> > 
-> > Yes, indeed.  However, the early results will not be accurate anyway because
-> > the adaptive regions adjustment algorithm will not take effect yet.  I would
-> > like to leave this part as is but add some comments about this point to keep
-> > the code simple.
-> >   
-> > >   
-> > > > +	while (!kdamond_need_stop(ctx)) {
-> > > > +		damon_for_each_task(ctx, t) {
-> > > > +			mm = damon_get_mm(t);
-> > > > +			if (!mm)
-> > > > +				continue;
-> > > > +			damon_for_each_region(r, t)
-> > > > +				kdamond_check_access(ctx, mm, r);
-> > > > +			mmput(mm);
-> > > > +		}
-> > > > +
-> > > > +		if (kdamond_aggregate_interval_passed(ctx))
-> > > > +			kdamond_reset_aggregated(ctx);
-> > > > +
-> > > > +		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
-> > > > +	}
-> > > > +	damon_for_each_task(ctx, t) {
-> > > > +		damon_for_each_region_safe(r, next, t)
-> > > > +			damon_destroy_region(r);
-> > > > +	}
-> > > > +	pr_debug("kdamond (%d) finishes\n", ctx->kdamond->pid);
-> > > > +	mutex_lock(&ctx->kdamond_lock);
-> > > > +	ctx->kdamond = NULL;
-> > > > +	mutex_unlock(&ctx->kdamond_lock);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +  
-> > [...]  
-> > > > +/*
-> > > > + * Start or stop the kdamond
-> > > > + *
-> > > > + * Returns 0 if success, negative error code otherwise.
-> > > > + */
-> > > > +static int damon_turn_kdamond(struct damon_ctx *ctx, bool on)
-> > > > +{
-> > > > +	int err = -EBUSY;
-> > > > +
-> > > > +	mutex_lock(&ctx->kdamond_lock);
-> > > > +	if (!ctx->kdamond && on) {  
-> > > 
-> > > Given there is very little shared code between on and off, I would
-> > > suggest just splitting it into two functions.  
-> > 
-> > Good point, I will do so in next spin.
-> >   
-> > >   
-> > > > +		err = 0;
-> > > > +		ctx->kdamond = kthread_run(kdamond_fn, ctx, "kdamond");
-> > > > +		if (IS_ERR(ctx->kdamond))
-> > > > +			err = PTR_ERR(ctx->kdamond);
-> > > > +	} else if (ctx->kdamond && !on) {
-> > > > +		mutex_unlock(&ctx->kdamond_lock);
-> > > > +		kthread_stop(ctx->kdamond);
-> > > > +		while (damon_kdamond_running(ctx))
-> > > > +			usleep_range(ctx->sample_interval,
-> > > > +					ctx->sample_interval * 2);
-> > > > +		return 0;
-> > > > +	}
-> > > > +	mutex_unlock(&ctx->kdamond_lock);
-> > > > +
-> > > > +	return err;
-> > > > +}
-> > > > +  
-> > [...]  
-> > > > +
-> > > > +/*  
-> > > 
-> > > Why not make these actual kernel-doc?  That way you can use the
-> > > kernel-doc scripts to sanity check them.  
-> > 
-> > Oops, I just forgot that it should start with '/**'.  Will fix it in next spin.
-> > 
-> > 
-> > Thanks,
-> > SeongJae Park
-> >   
-> > > 
-> > > /**
-> > >   
-> > > > + * damon_set_attrs() - Set attributes for the monitoring.
-> > > > + * @ctx:		monitoring context
-> > > > + * @sample_int:		time interval between samplings
-> > > > + * @aggr_int:		time interval between aggregations
-> > > > + * @min_nr_reg:		minimal number of regions
-> > > > + *
-> > > > + * This function should not be called while the kdamond is running.
-> > > > + * Every time interval is in micro-seconds.
-> > > > + *
-> > > > + * Return: 0 on success, negative error code otherwise.
-> > > > + */
-> > > > +int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-> > > > +		unsigned long aggr_int, unsigned long min_nr_reg)
-> > > > +{
-> > > > +	if (min_nr_reg < 3) {
-> > > > +		pr_err("min_nr_regions (%lu) should be bigger than 2\n",
-> > > > +				min_nr_reg);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	ctx->sample_interval = sample_int;
-> > > > +	ctx->aggr_interval = aggr_int;
-> > > > +	ctx->min_nr_regions = min_nr_reg;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  static int __init damon_init(void)
-> > > >  {
-> > > >  	return 0;  
-> > >   
+> I think we need to device a new sysfs attribute, through which you can
+> enable the "inline" coredump mechanism. That way recovery would work for
+> all systems and in your specific case you could reconfigure it - perhaps
+> once the ramdump collector starts.
 
+Another option is to make rproc_coredump() customizable, as with all the other
+functions in remoteproc_internal.h.  That way the current rproc_coredump() is
+kept intact and we don't need a new sysfs entry.
 
+Thanks,
+Mathieu
+
+> 
+> Regards,
+> Bjorn
+> 
+> >  }
+> >  
+> >  /**
+> > @@ -1665,6 +1736,7 @@ int rproc_trigger_recovery(struct rproc *rproc)
+> >  
+> >  	/* generate coredump */
+> >  	rproc_coredump(rproc);
+> > +	reinit_completion(&rproc->dump_done);
+> >  
+> >  	/* load firmware */
+> >  	ret = request_firmware(&firmware_p, rproc->firmware, dev);
+> > @@ -2067,6 +2139,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+> >  	INIT_LIST_HEAD(&rproc->rvdevs);
+> >  	INIT_LIST_HEAD(&rproc->subdevs);
+> >  	INIT_LIST_HEAD(&rproc->dump_segments);
+> > +	init_completion(&rproc->dump_done);
+> >  
+> >  	INIT_WORK(&rproc->crash_handler, rproc_crash_handler_work);
+> >  
+> > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> > index 16ad666..461b235 100644
+> > --- a/include/linux/remoteproc.h
+> > +++ b/include/linux/remoteproc.h
+> > @@ -481,6 +481,8 @@ struct rproc_dump_segment {
+> >   * @auto_boot: flag to indicate if remote processor should be auto-started
+> >   * @dump_segments: list of segments in the firmware
+> >   * @nb_vdev: number of vdev currently handled by rproc
+> > + * @dump_done: completion variable when dump is complete
+> > + * @elfcore: pointer to elf header buffer
+> >   */
+> >  struct rproc {
+> >  	struct list_head node;
+> > @@ -514,6 +516,8 @@ struct rproc {
+> >  	bool auto_boot;
+> >  	struct list_head dump_segments;
+> >  	int nb_vdev;
+> > +	struct completion dump_done;
+> > +	void *elfcore;
+> >  };
+> >  
+> >  /**
+> > -- 
+> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> > a Linux Foundation Collaborative Project
