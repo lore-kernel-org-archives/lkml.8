@@ -2,135 +2,97 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D674BC2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B4EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98622072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DyUHLDg4"
+	by mail.kernel.org (Postfix) with ESMTP id 3F6AA2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585871149;
+	bh=Rgoti5syt3fdRTpeLFV/YqOOp6UnRfpNrTF3LLVIP1M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lbTxtOhqCGzvepd0KZ+A/8mr28D7i1uQBFhmlWg3TlPe2238+1m5qClOndd1jjkjW
+	 +KkaA0iUns7d+30WpnXFRZV4Cu4TBS9Ciynooi2BAPYNKHLbGbEdMga14iEE23DV1i
+	 tLUuWYE+DbD1J330sv8NVFrBhuonBfgQFkPsnImU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390270AbgDBXpA (ORCPT
+        id S2390276AbgDBXps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:45:00 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34812 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390172AbgDBXpA (ORCPT
+        Thu, 2 Apr 2020 19:45:48 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39354 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390219AbgDBXps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 19:45:00 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a23so1983895plm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:44:59 -0700 (PDT)
+        Thu, 2 Apr 2020 19:45:48 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h6so4253072lfp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:45:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IcUXuPRxJQI5RCQqnjKMDNcCLnTPm1SBa74gYbeIkBY=;
-        b=DyUHLDg4Q8iCWGfd69LaO0+mou9XnqdjVX5kvqZ+DYN6xTB6D3cvDXDdEyv7NcNvcG
-         M20M6jgMNJjsJKyg+H6A4ScEe7xWy0TUeLrSG8I9625ok+MFgJVNywJjVWjC5qRbOJuF
-         eycoES/pIhuiBrj4P8Oi7FpcX26pUDyrJdEJiyYhjLuvSIa+uUzEPVWu6Wo1rAawj274
-         xG0tZ8fO/7Ptz/3CvYUM5+8DsSXrmYMvcAwkIuLT3k+2F5QvO0fxuWNBMMNKEqlCeyQG
-         lQdqM8ursthvgV2j4yHmWXOJqyXqJ7PXtg+HcTw5ustbHUbdUs3Zc677t5PAk1CPJzZO
-         +gRw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MXfOpotsLj9yz9nbOTg4sr29DEDaHm+pBs9KhKDhO2c=;
+        b=KrPGKHP4VDnO/gg3naRF/HGa7S0RKtlQ2umXBQ3VOLEzXzyemfM0KeL5biR/B/nqRW
+         HcIU4NBA3/qKGtGmbQMSFe/ckI07DlhEjL7aeXIYIZsgF3FuGulMTgeXhkFPO4TZk2LN
+         VrkNPB9LyVQwGLqalusA8E3iv5CDZRYOtIRxo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IcUXuPRxJQI5RCQqnjKMDNcCLnTPm1SBa74gYbeIkBY=;
-        b=Sms4vaS8fAPP9YeHqGhlXnzjaVIGDuk+d5EdBATe+zzPZqyQ8kYzwV9m9pS7ZpJHtK
-         KoxuTZjG+IJg4vvRfYFs2j8gyWyPApjbpoShHDcv4/JiMC+sy6O/+dUlzLiPwEzKFFf1
-         cX7dxlReIEvS7unHywZ4uRuu3hPVxXsiUk6qX8zh5Y9sBrpC1lVuxu0v/Bq2auR78ktB
-         9M34vG5q27otreW3TiFZR/1HgVTQE4DekHmWjQaSTc4gJ+c3mKEz7bJnM6XmMaS6yzTb
-         Mtk7KslMmLONoz0RBw+LzxCcpZJfO5nA4OH7JU5KWwjD1+/+yqXOqL4Uc2zjhNJZNhWS
-         5Erg==
-X-Gm-Message-State: AGi0PuYd3mEETvMFyEmZ7PI8C7cIn3xhTjc9XDQT3p0wg9tMvLJhLW2w
-        K0z8KYwlHkmrVHfK7GujXY9QcW49C2M=
-X-Google-Smtp-Source: APiQypLLA09iAbXGXVuJYxW6lprsIUBovTbEFKjLafv05TQE436Pp93UgzeyhGoErgG1V6cnI5yeTQ==
-X-Received: by 2002:a17:90a:da06:: with SMTP id e6mr6592136pjv.14.1585871098591;
-        Thu, 02 Apr 2020 16:44:58 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id q71sm4481727pjb.5.2020.04.02.16.44.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 16:44:57 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
-Date:   Thu,  2 Apr 2020 23:44:55 +0000
-Message-Id: <20200402234455.75061-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200402223723.7150-1-john.stultz@linaro.org>
-References: <20200402223723.7150-1-john.stultz@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MXfOpotsLj9yz9nbOTg4sr29DEDaHm+pBs9KhKDhO2c=;
+        b=UeRsiZhu2oQK0y1OxLVWAn7HEos7M2koWa7MtwTRd7tFXCPtuSQlbEWuCH9LE+BBoX
+         7k8z4vXUVgolMd3pP5M9yTuqivFT8hF/OIIEZOVOlPDVCznmAOcT4a9F3WsovxUe3I/+
+         VM/iZngJP97MC45x9PwiI7aJ0tlXs/u/Y7qcBRvSCTch0my7eIZJfWsMxCUbjMW2vlyF
+         0oBwtPbmy4y40ha7tOuJ8lPZ34y2RRZwi4Ym3+F9u/XNeiDOKoN+tRiwuFCZOaKTfRaL
+         6U9bei13asgboiZ7HR+9gl/6BuZK/h4kXN9mvm98yxOdj+eH3goYFM8k1n6yBoF/+QEA
+         ideg==
+X-Gm-Message-State: AGi0PuYM0e1BNuK2VGLgduhG7VYT3RKc/7LcqCvCy8EKiyur9X6o/xho
+        PsrXsX1gbDYqCLvp85ZUiJqzlB4BAvs=
+X-Google-Smtp-Source: APiQypKpnxuk29BdXMnp8j0NIoUaI8S26uL+CvX4A73EziwRncJzwq224JYi5ELbsxOHaCIqZlVwKQ==
+X-Received: by 2002:ac2:51b3:: with SMTP id f19mr3613235lfk.77.1585871145467;
+        Thu, 02 Apr 2020 16:45:45 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id f26sm4033744lja.102.2020.04.02.16.45.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 16:45:44 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id w145so4258705lff.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:45:44 -0700 (PDT)
+X-Received: by 2002:a19:240a:: with SMTP id k10mr3666029lfk.30.1585871144327;
+ Thu, 02 Apr 2020 16:45:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <87blobnq02.fsf@x220.int.ebiederm.org> <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
+ <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
+ <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
+ <87lfnda3w3.fsf@x220.int.ebiederm.org> <AM6PR03MB51702497FDBDA78921515562E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+In-Reply-To: <AM6PR03MB51702497FDBDA78921515562E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 2 Apr 2020 16:45:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiVrDiNzh9HY4moub9b8v64O+ST3-eZ2p=OWj7NPj46iQ@mail.gmail.com>
+Message-ID: <CAHk-=wiVrDiNzh9HY4moub9b8v64O+ST3-eZ2p=OWj7NPj46iQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
-PHY support"), the change was made to add "qcom,qusb2-v2-phy"
-as a generic compat string. However the change also removed
-the "qcom,sdm845-qusb2-phy" compat string, which is documented
-in the binding and already in use.
+On Thu, Apr 2, 2020 at 4:42 PM Bernd Edlinger <bernd.edlinger@hotmail.de> wrote:
+>
+> Linus that is not the boolean I was talking in the other mail.
+> That boolean is called unsafe_execve_in_progres.
 
-This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
-which allows the driver to continue to work with existing dts
-entries such as found on the db845c.
+Yeah, I tracked what you were trying to say - I did understand how
+that patch worked.
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Manu Gautam <mgautam@codeaurora.org>
-Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Stephen Boyd <swboyd@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
-Reported-by: YongQin Liu <yongqin.liu@linaro.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v2: Add deprecation note on "qcom,sdm845-qusb2-phy" string
-    as suggested by Doug.
----
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+I just absolutely and utterly hated it ;/
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 3708d43b7508..393011a05b48 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -815,6 +815,13 @@ static const struct of_device_id qusb2_phy_of_match_table[] = {
- 	}, {
- 		.compatible	= "qcom,msm8998-qusb2-phy",
- 		.data		= &msm8998_phy_cfg,
-+	}, {
-+		/*
-+		 * Deprecated. Only here to support legacy device
-+		 * trees that didn't include "qcom,qusb2-v2-phy"
-+		 */
-+		.compatible	= "qcom,sdm845-qusb2-phy",
-+		.data		= &qusb2_v2_phy_cfg,
- 	}, {
- 		.compatible	= "qcom,qusb2-v2-phy",
- 		.data		= &qusb2_v2_phy_cfg,
--- 
-2.17.1
-
+              Linus
