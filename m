@@ -2,216 +2,113 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28590C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD9EC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFE820787
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E67208E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:33:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="HOUmEwr1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3Du/3zZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388141AbgDBLcl (ORCPT
+        id S2388150AbgDBLdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:32:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53158 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388001AbgDBLck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:32:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B6E05ACAE;
-        Thu,  2 Apr 2020 11:32:37 +0000 (UTC)
-Message-ID: <88456b80396331814fca9c929c2129861aaa35bd.camel@suse.de>
-Subject: Re: [PATCH v6 2/4] firmware: raspberrypi: Introduce vl805 init
- routine
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
-Date:   Thu, 02 Apr 2020 13:32:35 +0200
-In-Reply-To: <20200401203717.GA131226@google.com>
-References: <20200401203717.GA131226@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-FiRA9H8TcBeXjrnKFyig"
-User-Agent: Evolution 3.34.2 
+        Thu, 2 Apr 2020 07:33:06 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:52279 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388001AbgDBLdG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:33:06 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 5E0D95C0197;
+        Thu,  2 Apr 2020 07:33:02 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 02 Apr 2020 07:33:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=kA1QfLW3eMIxQfptPPeBMuZlNRg
+        ZIGrXylNEE/sNhVc=; b=HOUmEwr1sk1oEZD4aOIfaOtl7vLi7xDDxRPN/4TxLMp
+        hMf5IO4aZQnozWpA/Kpj+M2rzKrkcYxwoAsBgNNxJ786jvOQTe9wRY7hCUBQl4Qu
+        urALDKUiHsLMtSxgG8coH2YVwI6X4MJ75+Gy9IreSR81/pj78NPHodZNrInXum5F
+        t/hY9sjppmwcDU9hRFKP9R2o0qL1fZY1xvNAdU5ubh5TOjrUXOF03LhjAQfaEc6s
+        NvAqYyGCruaZ3dzfosuvCjPmOgWW0btO4hi7xFwCeaBFWiUr29nCE1gMQ1pCSZ8e
+        MzQRmKp5I0Jo5RdLnJHJtvVyBydiKbMT0m2JGTZlXqw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=kA1QfL
+        W3eMIxQfptPPeBMuZlNRgZIGrXylNEE/sNhVc=; b=3Du/3zZHqdsS0GGADq1tbb
+        UIq2LFztd7cF1pDIgJqY87xx5MWFqDIPrEjxMPh3BhKhQTXlcyOQDR9Ud2inbtY5
+        oqzPW1CNF9m/KNbRZ8uWv3nWXCMboEH9/cdBi8+e89GGNuO2q4yDwou6yCMyLomE
+        KmgxLCy83ynzA4AsYDPFRWHYkrdQcxHbTKjfwzvTZJw/oa3h4dgSwZ0oCaGjQ75k
+        W2PaDjs3dd36j0aWnt1xAF5aHFe5ORj3pLZuklXcOFbNYrsPCnXKC2JprZiprMEo
+        v4z96cFB0GHfn37vHh/TTeizJCq66GQipfTkc7ItQEUsmwZuWQpvir4IdQFnhXUQ
+        ==
+X-ME-Sender: <xms:bc2FXhuBLKzXVF2Vrdl04MrVTHvU1OwslYBmSfrdJRodbBIjNL1aFw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdeggdefiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:bc2FXjloDRyooU-ygixI0rB9CSbSu6saMZ3BresCuveeJOEUHDKnrg>
+    <xmx:bc2FXtoICRRfnfWvhvXf5GqocHseUQkLlZJbfsbBBSOMlFCbMKAfPA>
+    <xmx:bc2FXq2U32p1FQJp2CZB2rm3VG6s4HwKQ3m9dW4YEeoM-ekIsRa-kg>
+    <xmx:bs2FXurbv5p-sUVIc5P5YquHbTsJyXM0B9n_A9FKFXw9fG2aXDll0w>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 668683280066;
+        Thu,  2 Apr 2020 07:33:01 -0400 (EDT)
+Date:   Thu, 2 Apr 2020 13:32:59 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     linus.walleij@linaro.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] pinctrl: sunxi: handle probe defferal
+Message-ID: <20200402113259.jalwc7hwxtymtms4@gilmour.lan>
+References: <1585818532-23051-1-git-send-email-clabbe@baylibre.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tjv7bzkjk4m5tndt"
+Content-Disposition: inline
+In-Reply-To: <1585818532-23051-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-FiRA9H8TcBeXjrnKFyig
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--tjv7bzkjk4m5tndt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Bjorn,
-thanks for taking time with this.
+On Thu, Apr 02, 2020 at 09:08:52AM +0000, Corentin Labbe wrote:
+> When checking the logs on my sun8i-a33-olinuxino I saw:
+> sun8i-a23-r-pinctrl 1f02c00.pinctrl: Reset controller missing
+> but this driver was working after.
+> This message is just here because the reset controller was still not probed.
+> So don't say anything if the return code say to wait.
+>
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 
-On Wed, 2020-04-01 at 15:37 -0500, Bjorn Helgaas wrote:
-> On Tue, Mar 24, 2020 at 07:28:10PM +0100, Nicolas Saenz Julienne wrote:
-> > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either b=
-e
-> > loaded directly from an EEPROM or, if not present, by the SoC's
-> > VideCore. The function informs VideCore that VL805 was just reset, or
-> > requests for a probe defer.
->=20
-> Cover letter mentions both "VideCore" and "VideoCore".  I dunno which
-> is correct, but between the commit log and the comment, this patch
-> mentions "VideCore" four times.
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-Ouch, sorry, it's VideoCore. I have an auto complete thing, wrote it once w=
-rong
-and polluted the whole patch.
+Maxime
 
-> > Based on Tim Gover's downstream implementation.
->=20
-> Maybe a URL?
-
-I was under the impression that adding links in the commit log that are lik=
-ely
-to be short-lived was frowned upon. That said I could've added it into the
-cover letter. For reference here it is:
-
-https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce79723=
-8a1ab78bd
-
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> >=20
-> > ---
-> > Changes since v4:
-> >  - Inline function definition when RASPBERRYPI_FIRMWARE is not defined
-> >=20
-> > Changes since v1:
-> >  - Move include into .c file and add forward declaration to .h
-> >=20
-> >  drivers/firmware/raspberrypi.c             | 38 ++++++++++++++++++++++
-> >  include/soc/bcm2835/raspberrypi-firmware.h |  7 ++++
-> >  2 files changed, 45 insertions(+)
-> >=20
-> > diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberr=
-ypi.c
-> > index da26a584dca0..cbb495aff6a0 100644
-> > --- a/drivers/firmware/raspberrypi.c
-> > +++ b/drivers/firmware/raspberrypi.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/of_platform.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/pci.h>
-> >  #include <soc/bcm2835/raspberrypi-firmware.h>
-> > =20
-> >  #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) &
-> > 0xf))
-> > @@ -286,6 +287,43 @@ struct rpi_firmware *rpi_firmware_get(struct
-> > device_node *firmware_node)
-> >  }
-> >  EXPORT_SYMBOL_GPL(rpi_firmware_get);
-> > =20
-> > +/*
-> > + * On the Raspberry Pi 4, after a PCI reset, VL805's firmware may eith=
-er be
-> > + * loaded directly from an EEPROM or, if not present, by the SoC's
-> > VideCore.
-> > + * Inform VideCore that VL805 was just reset, or defer xhci's probe if=
- not
-> > yet
-> > + * joinable trough the mailbox interface.
->=20
-> s/trough/through/
-
-Noted.
-
-> I don't see anything in this patch that looks like a mailbox
-> interface, but maybe that's just because I don't know anything about
-> Raspberry Pi.
-
-There are two layers to this. The bcm2835-mailbox interface, that is generi=
-c to
-all SoC users and the Raspberry Pi firmware driver, which interacts with RP=
-i's
-custom VideoCore firmware trough the bcm2835-mailbox, and provides a light
-level of abstraction. It's like that to keep a clear separation between wha=
-t's
-a SoC feature an what is RPi specific.
-
-So with a call to rpi_firmware_get() you're supposed to get a handle to the
-shared RPi firmware structure. As long as it's ready. To pass messages down=
- the
-mailbox, you call rpi_firmware_property(), which takes care of contention,
-formating and DMA issues, before passing it into the actual mailbox interfa=
-ce
-and beyond.
-
-> > + */
-> > +int rpi_firmware_init_vl805(struct pci_dev *pdev)
-> > +{
-> > +	struct device_node *fw_np;
-> > +	struct rpi_firmware *fw;
-> > +	u32 dev_addr;
-> > +	int ret;
-> > +
-> > +	fw_np =3D of_find_compatible_node(NULL, NULL,
-> > +					"raspberrypi,bcm2835-firmware");
-> > +	if (!fw_np)
-> > +		return 0;
-> > +
-> > +	fw =3D rpi_firmware_get(fw_np);
-> > +	of_node_put(fw_np);
-> > +	if (!fw)
-> > +		return -EPROBE_DEFER;
-> > +
-> > +	dev_addr =3D pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
-> > +		   PCI_FUNC(pdev->devfn) << 12;
-> > +
-> > +	ret =3D rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
-> > +				    &dev_addr, sizeof(dev_addr));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	dev_dbg(&pdev->dev, "loaded Raspberry Pi's VL805 firmware\n");
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
-> > +
-> >  static const struct of_device_id rpi_firmware_of_match[] =3D {
-> >  	{ .compatible =3D "raspberrypi,bcm2835-firmware", },
-> >  	{},
-
-[...]
-
-Regards,
-Nicolas
-
-
---=-FiRA9H8TcBeXjrnKFyig
+--tjv7bzkjk4m5tndt
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6FzVMACgkQlfZmHno8
-x/6XXgf+LwwO8z0fa4clCjzpoTcA+JvZSQdOPRvtwOifxzSqLxye96mRQZKIKZAD
-Y8jnve5qm42rBHx7oWm1ERhsvIq0jrgViMu7+FsYtK5IdCVz59zNbfoqIfSBquWv
-oG1iffrTx6BkAi6UJa/EAI9o+8p8XcT9YzFKqVycmaD+MqLuxsKKbMo9UiwWKDpx
-4onv+6FxitSiDehOGo+g2XksOoAbC6+I6kciwSMxUBki4YnESF64iiTlGZN46/CV
-kkRV/X2gu1AhOpV9X3xS2oHck9dG+219ehexdMnDjPuAqC3wfjSFNM4JXFmVWUfW
-VvzTdB+AhCxVAadYNjeui2F9s8ULfA==
-=E/7W
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoXNawAKCRDj7w1vZxhR
+xfzAAP9ylLtzCnrw2H6mzX/G1HyeNRlmKneYZuDx6o5HAAm0BwEAmpRgI1Hh4Jln
+/kdUr3TBTGjQqWJO+H4/JvS/93oyhQs=
+=iteN
 -----END PGP SIGNATURE-----
 
---=-FiRA9H8TcBeXjrnKFyig--
-
+--tjv7bzkjk4m5tndt--
