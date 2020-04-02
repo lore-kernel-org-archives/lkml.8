@@ -2,158 +2,86 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94075C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6FFC2BA16
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6829A20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A6A2078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 18:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585853010;
+	bh=/N8RpHRBkiax7dlAoubTa4nq/TFtKL/RpzapX5Q8Nsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s9XeLs8LJ+Hu1OMojLT61gzvNSieZOSN/wFklQ5PEmYYAs1KERfZ84NsV7GV29oDu
+	 Bi/zYN5sJo+BPrfCAVwiMvImXKt1sBcgCEMwGnNTyv+8BkEXr9GagL9AU/2uxiFKAa
+	 Vv+APhOAdHxjRvkFNCavpYhiLf5bwSsXWj0+H7wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388764AbgDBSnN (ORCPT
+        id S2389836AbgDBSn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:43:13 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:50088 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389103AbgDBSnN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 14:43:13 -0400
-Received: by mail-io1-f72.google.com with SMTP id v19so3686159ioq.16
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 11:43:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=yoqnUjRtu8mgbvv/13mBn4nrRvAQngPro3mOt8IGEyc=;
-        b=Nz0UpExxCOenotJ32bZLjV1fsxF/o9AhgXD/kmUbdwIh7UIJxCYhe9EcsqKt6kaaR3
-         lSZd7kpFrMRg6LsAk8glm0SwbrqJQxhqGVtANfuG5bLgxxvIEYK5nZwvQI85Btm0MnSl
-         jCjhQRUbAFy/9VSe4JGgu0dyWOG3Xmfa3s6T6DckVR465wCfS0odNA9Hm1mx+SGmSqKc
-         tJ1u7Krsg5KbXt2JcJMuOLXoR6UIzJIPU/+anEwspQPCDgdH1CH7/rJCEhqyoxb5S6hI
-         7RcwFao1UofCDkPez6Rfp1+84V9gRapYdCHxX+GFiinX1iA7+dlbNr2u+B0j/r3HpRol
-         HrFA==
-X-Gm-Message-State: AGi0PuabUOQ/EjyxHIbf6UIm9oPbL9/STNgsFmbgbkr+NrN3M0ieJTzE
-        MYpOd6MKkwytkqHoOlbczMu7r8CzUX1AstD/V90nloH0Mn+S
-X-Google-Smtp-Source: APiQypJTLL+G338lLsPPlftz5FYyt7Zj4Yb5dOSEJfqQHqIdaImyApgkIj3rO3pVWniQSbfg9V8Od7ErArR2SgzZISGoixPw66T9
+        Thu, 2 Apr 2020 14:43:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387866AbgDBSn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 14:43:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCC9220675;
+        Thu,  2 Apr 2020 18:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585853007;
+        bh=/N8RpHRBkiax7dlAoubTa4nq/TFtKL/RpzapX5Q8Nsw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fEYckbJNwlGtK010RzAuxXfvMz/2z46GwXBEtcjcaaro9SvQzPeh0YR9iNC8waFr2
+         b24PGO5l9IOWDAla18i/ji/n2ZIg4HvN5HI/EyQ0/Ut64W4UYNiKxSXkKjvHRjCmtm
+         Him1J55PD4rB25m/1RoPhjHh04zjYnJvA2podwOs=
+Date:   Thu, 2 Apr 2020 20:43:24 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 00/30] 5.5.15-rc1 review
+Message-ID: <20200402184324.GA3235262@kroah.com>
+References: <20200401161414.345528747@linuxfoundation.org>
+ <72d786ac-e838-2c3a-8938-1bcb01923843@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:55c5:: with SMTP id e188mr4602763jab.57.1585852992156;
- Thu, 02 Apr 2020 11:43:12 -0700 (PDT)
-Date:   Thu, 02 Apr 2020 11:43:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000043794505a2532c6b@google.com>
-Subject: general protection fault in macsec_upd_offload
-From:   syzbot <syzbot+7022ab7c383875c17eff@syzkaller.appspotmail.com>
-To:     antoine.tenart@bootlin.com, davem@davemloft.net,
-        dbogdanov@marvell.com, irusskikh@marvell.com,
-        linux-kernel@vger.kernel.org, mathew.j.martineau@linux.intel.com,
-        matthieu.baerts@tessares.net, mayflowerera@gmail.com,
-        mstarovoitov@marvell.com, netdev@vger.kernel.org,
-        pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72d786ac-e838-2c3a-8938-1bcb01923843@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Apr 02, 2020 at 10:45:52AM -0600, shuah wrote:
+> On 4/1/20 10:17 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.15 release.
+> > There are 30 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.15-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-syzbot found the following crash on:
+Thanks for testing all of these and letting me know.
 
-HEAD commit:    304e0242 net_sched: add a temporary refcnt for struct tcin..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a6940be00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
-dashboard link: https://syzkaller.appspot.com/bug?extid=7022ab7c383875c17eff
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1099dadbe00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a63197e00000
-
-The bug was bisected to:
-
-commit 01cacb00b35cb62b139f07d5f84bcf0eeda8eff6
-Author: Paolo Abeni <pabeni@redhat.com>
-Date:   Fri Mar 27 21:48:51 2020 +0000
-
-    mptcp: add netlink-based PM
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16133ebde00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15133ebde00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11133ebde00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7022ab7c383875c17eff@syzkaller.appspotmail.com
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-
-batman_adv: batadv0: Interface activated: batadv_slave_1
-netlink: 'syz-executor343': attribute type 1 has an invalid length.
-general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 1 PID: 7006 Comm: syz-executor343 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:nla_get_u8 include/net/netlink.h:1543 [inline]
-RIP: 0010:macsec_upd_offload+0x1c9/0x5a0 drivers/net/macsec.c:2597
-Code: fd 00 f0 ff ff 0f 87 23 03 00 00 e8 01 c5 d0 fc 48 8b 5c 24 38 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 1b 03 00 00
-RSP: 0018:ffffc90001797558 EFLAGS: 00010247
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff84a2244d
-RDX: 0000000000000000 RSI: ffffffff84a2245f RDI: 0000000000000004
-RBP: ffff8880a8372000 R08: ffff888095cae5c0 R09: ffffc90001797588
-R10: fffff520002f2eb3 R11: ffffc9000179759f R12: 0000000000000000
-R13: ffff88809ffaff80 R14: 1ffff920002f2eab R15: 0000000000000000
-FS:  0000000000a6a880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fdd4d1316c0 CR3: 0000000093074000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
- genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x4438a9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 6b 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffdc14392d8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004438a9
-RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000003
-RBP: 00007ffdc14392f0 R08: 00000000bb1414ac R09: 00000000bb1414ac
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffdc1439320
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 98b6a7926fe123d8 ]---
-RIP: 0010:nla_get_u8 include/net/netlink.h:1543 [inline]
-RIP: 0010:macsec_upd_offload+0x1c9/0x5a0 drivers/net/macsec.c:2597
-Code: fd 00 f0 ff ff 0f 87 23 03 00 00 e8 01 c5 d0 fc 48 8b 5c 24 38 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 1b 03 00 00
-RSP: 0018:ffffc90001797558 EFLAGS: 00010247
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff84a2244d
-RDX: 0000000000000000 RSI: ffffffff84a2245f RDI: 0000000000000004
-RBP: ffff8880a8372000 R08: ffff888095cae5c0 R09: ffffc90001797588
-R10: fffff520002f2eb3 R11: ffffc9000179759f R12: 0000000000000000
-R13: ffff88809ffaff80 R14: 1ffff920002f2eab R15: 0000000000000000
-FS:  0000000000a6a880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fdd4d1316c0 CR3: 0000000093074000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+greg k-h
