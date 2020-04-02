@@ -2,249 +2,195 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41DFC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1436AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB5E20857
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A462063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="Jz8kb+Zq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dhL14h93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgDBEgh (ORCPT
+        id S1727756AbgDBErT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 00:36:37 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:35148 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgDBEgh (ORCPT
+        Thu, 2 Apr 2020 00:47:19 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37826 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbgDBErS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 00:36:37 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id DF6822DC3330;
-        Thu,  2 Apr 2020 15:36:34 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1585802195;
-        bh=NccxCUYjczr9RvJe6ZTHFYb1tTCAe/GnhOOeFES5kJE=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=Jz8kb+ZqAkhBJz5YLsHaQKojre1PdBeC66XBqXJQ8a8X2PccH0Dv62iTVxCqzvGGQ
-         OeuYyWbib6UfsFA/H18d3WqaClbH81AFv+78QikStXxty8qAqEfLaqmBBk+wGtiyhF
-         i57SXsCyuhK6cEjCs9urekR21w+AaH456c0LDsahaYjkxgwMut1ThTSr6NXO95fDcw
-         9DRM0+cm19LAgtTE7XwJJNRAMAjttX6YHJhXBZEKnlpt2xkKzyVKbonW0ji2+d74q2
-         A9zVjvao5NUfXSYGc5mDoH4FzUOfj0JhAST5fHLLql3MZpnoEle4riAHhhABY7qOWc
-         wgttMOa3WsQQNz5WsdmJke9tHiMIlZlGmnn+hd0eldvP5sZkEZbyjFRrJtnI8t7sO3
-         5YfTreAKhMOakHe20beq/v+vsjO3AdceKXgubt8seYGhPVH3yj5BOE+NlYbHgISAtl
-         yaiStNEd9hUsx6lkUPZZpYysp9ejEhXJplbWCMDMUXeNnvOvcIZmkX/b8xMEARO6R4
-         zregEeDmv83PjfVNNrvC0D4C7pDNACeW+w/hd4o6zlBViUKQM5o6ERRGGWYkWQc2TS
-         cPUcSJ67/1Q9f91p+Mg1avH9moJVwb142w//tmZLr/vbbOeBnApG25uWljoO1XCyob
-         yeR3Byh0UdfSXnuOTHsK/Rz4=
-Received: from Hawking (ntp.lan [10.0.1.1])
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id 0324aU03089960
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 2 Apr 2020 15:36:30 +1100 (AEDT)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     "'Dan Williams'" <dan.j.williams@intel.com>
-Cc:     "'Aneesh Kumar K . V'" <aneesh.kumar@linux.ibm.com>,
-        "'Oliver O'Halloran'" <oohall@gmail.com>,
-        "'Benjamin Herrenschmidt'" <benh@kernel.crashing.org>,
-        "'Paul Mackerras'" <paulus@samba.org>,
-        "'Michael Ellerman'" <mpe@ellerman.id.au>,
-        "'Frederic Barrat'" <fbarrat@linux.ibm.com>,
-        "'Andrew Donnellan'" <ajd@linux.ibm.com>,
-        "'Arnd Bergmann'" <arnd@arndb.de>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Vishal Verma'" <vishal.l.verma@intel.com>,
-        "'Dave Jiang'" <dave.jiang@intel.com>,
-        "'Ira Weiny'" <ira.weiny@intel.com>,
-        "'Andrew Morton'" <akpm@linux-foundation.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Rob Herring'" <robh@kernel.org>,
-        "'Anton Blanchard'" <anton@ozlabs.org>,
-        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
-        "'Mahesh Salgaonkar'" <mahesh@linux.vnet.ibm.com>,
-        "'Madhavan Srinivasan'" <maddy@linux.vnet.ibm.com>,
-        "=?utf-8?Q?'C=C3=A9dric_Le_Goater'?=" <clg@kaod.org>,
-        "'Anju T Sudhakar'" <anju@linux.vnet.ibm.com>,
-        "'Hari Bathini'" <hbathini@linux.ibm.com>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Greg Kurz'" <groug@kaod.org>,
-        "'Nicholas Piggin'" <npiggin@gmail.com>,
-        "'Masahiro Yamada'" <yamada.masahiro@socionext.com>,
-        "'Alexey Kardashevskiy'" <aik@ozlabs.ru>,
-        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
-        "'linuxppc-dev'" <linuxppc-dev@lists.ozlabs.org>,
-        "'linux-nvdimm'" <linux-nvdimm@lists.01.org>,
-        "'Linux MM'" <linux-mm@kvack.org>
-References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-4-alastair@d-silva.org> <CAPcyv4iGEHJpZctEm+Do1-kOZBUDeKKcREr=BqcK4kCvLWhAQQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4iGEHJpZctEm+Do1-kOZBUDeKKcREr=BqcK4kCvLWhAQQ@mail.gmail.com>
-Subject: RE: [PATCH v4 03/25] powerpc/powernv: Map & release OpenCAPI LPC memory
-Date:   Thu, 2 Apr 2020 15:36:28 +1100
-Message-ID: <2e7701d608a8$473a0140$d5ae03c0$@d-silva.org>
+        Thu, 2 Apr 2020 00:47:18 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t11so1609627lfe.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 21:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jR+qIpvmW6w7QrK4EeBLopQUhlKrIw/Ns9wdRSazZHg=;
+        b=dhL14h93WaTSS60LNQEAJklTYojZDe/3+TROSGuTio9zoR60uehsWr2N4rY72cS7ID
+         p7V1dDyTiUIG/uvQskYbl++LLTRxwNQr7JiiQdsayyMYivkebSEkaSzCp1+ThLQXWlP7
+         nF31UQamN1nET3f15oAP1v7rfok+scYPxpTthr96Y3KgwRUq4Uqsk3Yx6suqCBnJeIco
+         Ee8U+8V+KAOatHUJnjY3NJpi2un4Bao4skakJ8w0EAb81JrcYzJo+AnN3m79shk5xUHw
+         Ir2HNvn+xgx8aOzpAUCPmfvz4SPfYJkrvZWhTQdHYSFwxS+GZ2EwbAugSEgbdtsZyes5
+         7PMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jR+qIpvmW6w7QrK4EeBLopQUhlKrIw/Ns9wdRSazZHg=;
+        b=DkxmbRgQbaFQhkSwJA+tLL0Qgfkaos0DxR2mLtigwbGbnkznuA/9LRnwva23B3/naZ
+         AUF0BcVIbz//z8kv3jx8cGhknmmjlCoY9dusAYRrnfWarYZ1aZ7yIshoBp1KHuw9dkCl
+         XWwP6ALGM2L8/LDCAvJONWlDTSVkA6W1YCyz5EiLs0wMS9aHUll42nLqrQfl0BvGhW+w
+         8hGaQpxgpH2PsB0kcVEFjFc8SNWdmRevgLR4Yu2cBiOIy7+SJfu/XJYlW0mou7e8GmxT
+         VCzvOfnbNM0zz73tctBN7FsC4TL+/wOggdcJPc9N5DkSOdjlRVXQ3YT30eOszl5rIjxb
+         C+Fg==
+X-Gm-Message-State: AGi0PubhU7pcK7utW82xVZn6Jn19G+MUC1VStSBPUWiN0WmWQf3G9j2o
+        kPBliGUn6Y5Xmmv1awxFs17KXpasC81T3TIOXbZpkw==
+X-Google-Smtp-Source: APiQypLSjiGAg9joy8hbB/o/hkZaYk+LlpEo3A/FmQpiP4CeIcpPJLZSrJEltGl7ItJHI3b+IcM8UDg80JrfPfsF54s=
+X-Received: by 2002:a19:ad43:: with SMTP id s3mr939777lfd.63.1585802835829;
+ Wed, 01 Apr 2020 21:47:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-au
-Thread-Index: AQJ5L4Hn/mp5p0p1jYAFWLJ+xmWSbgIEmlkbAeDU20mm/8VSIA==
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Thu, 02 Apr 2020 15:36:30 +1100 (AEDT)
+References: <20200324215049.GA3710@pi3.com.pl> <202003291528.730A329@keescook> <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 2 Apr 2020 06:46:49 +0200
+Message-ID: <CAG48ez1dCPw9Dep-+GWn=SnHv1nVv4Npv1FpFxmomk6tmazB-g@mail.gmail.com>
+Subject: Re: [PATCH] signal: Extend exec_id to 64bits
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Adam Zabrocki <pi3@pi3.com.pl>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Dan Williams <dan.j.williams@intel.com>
-> Sent: Wednesday, 1 April 2020 7:49 PM
-> To: Alastair D'Silva <alastair@d-silva.org>
-> Cc: Aneesh Kumar K . V <aneesh.kumar@linux.ibm.com>; Oliver O'Halloran
-> <oohall@gmail.com>; Benjamin Herrenschmidt
-> <benh@kernel.crashing.org>; Paul Mackerras <paulus@samba.org>; Michael
-> Ellerman <mpe@ellerman.id.au>; Frederic Barrat =
-<fbarrat@linux.ibm.com>;
-> Andrew Donnellan <ajd@linux.ibm.com>; Arnd Bergmann
-> <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>;
-> Vishal Verma <vishal.l.verma@intel.com>; Dave Jiang
-> <dave.jiang@intel.com>; Ira Weiny <ira.weiny@intel.com>; Andrew Morton
-> <akpm@linux-foundation.org>; Mauro Carvalho Chehab
-> <mchehab+samsung@kernel.org>; David S. Miller <davem@davemloft.net>;
-> Rob Herring <robh@kernel.org>; Anton Blanchard <anton@ozlabs.org>;
-> Krzysztof Kozlowski <krzk@kernel.org>; Mahesh Salgaonkar
-> <mahesh@linux.vnet.ibm.com>; Madhavan Srinivasan
-> <maddy@linux.vnet.ibm.com>; C=C3=A9dric Le Goater <clg@kaod.org>; Anju =
-T
-> Sudhakar <anju@linux.vnet.ibm.com>; Hari Bathini
-> <hbathini@linux.ibm.com>; Thomas Gleixner <tglx@linutronix.de>; Greg
-> Kurz <groug@kaod.org>; Nicholas Piggin <npiggin@gmail.com>; Masahiro
-> Yamada <yamada.masahiro@socionext.com>; Alexey Kardashevskiy
-> <aik@ozlabs.ru>; Linux Kernel Mailing List =
-<linux-kernel@vger.kernel.org>;
-> linuxppc-dev <linuxppc-dev@lists.ozlabs.org>; linux-nvdimm <linux-
-> nvdimm@lists.01.org>; Linux MM <linux-mm@kvack.org>
-> Subject: Re: [PATCH v4 03/25] powerpc/powernv: Map & release OpenCAPI
-> LPC memory
->=20
-> On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva =
-<alastair@d-silva.org>
-> wrote:
-> >
-> > This patch adds OPAL calls to powernv so that the OpenCAPI driver =
-can
-> > map & release LPC (Lowest Point of Coherency)  memory.
-> >
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-> > ---
-> >  arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
-> >  arch/powerpc/platforms/powernv/ocxl.c | 43
-> > +++++++++++++++++++++++++++
-> >  2 files changed, 45 insertions(+)
-> >
-> > diff --git a/arch/powerpc/include/asm/pnv-ocxl.h
-> > b/arch/powerpc/include/asm/pnv-ocxl.h
-> > index 7de82647e761..560a19bb71b7 100644
-> > --- a/arch/powerpc/include/asm/pnv-ocxl.h
-> > +++ b/arch/powerpc/include/asm/pnv-ocxl.h
-> > @@ -32,5 +32,7 @@ extern int
-> pnv_ocxl_spa_remove_pe_from_cache(void
-> > *platform_data, int pe_handle)
-> >
-> >  extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
-> > extern void pnv_ocxl_free_xive_irq(u32 irq);
-> > +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size); =
-void
-> > +pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
-> >
-> >  #endif /* _ASM_PNV_OCXL_H */
-> > diff --git a/arch/powerpc/platforms/powernv/ocxl.c
-> > b/arch/powerpc/platforms/powernv/ocxl.c
-> > index 8c65aacda9c8..f13119a7c026 100644
-> > --- a/arch/powerpc/platforms/powernv/ocxl.c
-> > +++ b/arch/powerpc/platforms/powernv/ocxl.c
-> > @@ -475,6 +475,49 @@ void pnv_ocxl_spa_release(void *platform_data)
-> }
-> > EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
-> >
-> > +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size) {
-> > +       struct pci_controller *hose =3D pci_bus_to_host(pdev->bus);
-> > +       struct pnv_phb *phb =3D hose->private_data;
->=20
-> Is calling the local variable 'hose' instead of 'host' on purpose?
->=20
+On Wed, Apr 1, 2020 at 10:50 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> Replace the 32bit exec_id with a 64bit exec_id to make it impossible
+> to wrap the exec_id counter.  With care an attacker can cause exec_id
+> wrap and send arbitrary signals to a newly exec'd parent.  This
+> bypasses the signal sending checks if the parent changes their
+> credentials during exec.
+>
+> The severity of this problem can been seen that in my limited testing
+> of a 32bit exec_id it can take as little as 19s to exec 65536 times.
+> Which means that it can take as little as 14 days to wrap a 32bit
+> exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
+> days.  Even my slower timing is in the uptime of a typical server.
 
-Yes, this follows the convention used in other functions in this file.
+FYI, if you actually optimize this, it's more like 12s to exec 1048576
+times according to my test, which means ~14 hours for 2^32 executions
+(on a single core). That's on an i7-4790 (a Haswell desktop processor
+that was launched about six years ago, in 2014).
 
-> > +       u32 bdfn =3D pci_dev_id(pdev);
-> > +       __be64 base_addr_be64;
-> > +       u64 base_addr;
-> > +       int rc;
-> > +
-> > +       rc =3D opal_npu_mem_alloc(phb->opal_id, bdfn, size,
-> &base_addr_be64);
-> > +       if (rc) {
-> > +               dev_warn(&pdev->dev,
-> > +                        "OPAL could not allocate LPC memory, =
-rc=3D%d\n", rc);
-> > +               return 0;
-> > +       }
-> > +
-> > +       base_addr =3D be64_to_cpu(base_addr_be64);
-> > +
-> > +#ifdef CONFIG_MEMORY_HOTPLUG_SPARSE
->=20
-> With the proposed cleanup in patch2 the ifdef can be elided here.
+Here's my test code:
 
-Ok
->=20
-> > +       rc =3D check_hotplug_memory_addressable(base_addr >> =
-PAGE_SHIFT,
-> > +                                             size >> PAGE_SHIFT);
-> > +       if (rc)
-> > +               return 0;
->=20
-> Is this an error worth logging if someone is wondering why their =
-device is not
-> showing up?
->=20
+=============
+$ grep 'model name' /proc/cpuinfo | head -n1
+model name : Intel(R) Core(TM) i7-4790 CPU @ 3.60GHz
+$ cat build.sh
+#!/bin/sh
+set -e
+nasm -felf32 -o fast_execve.o fast_execve.asm
+ld -m elf_i386 -o fast_execve fast_execve.o
+gcc -o launch launch.c -Wall
+gcc -o finish finish.c -Wall
+$ cat fast_execve.asm
+bits 32
 
-Yes, I'll add a message.
+section .text
+global _start
+_start:
+; eax = argv[0]
+; expected to be 8 hex digits, with 'a' meaning 0x0 and 'p' meaning 0xf
+mov eax, [esp+4]
 
->=20
-> > +#endif
-> > +
-> > +       return base_addr;
-> > +}
-> > +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
-> > +
-> > +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev) {
-> > +       struct pci_controller *hose =3D pci_bus_to_host(pdev->bus);
-> > +       struct pnv_phb *phb =3D hose->private_data;
-> > +       u32 bdfn =3D pci_dev_id(pdev);
-> > +       int rc;
-> > +
-> > +       rc =3D opal_npu_mem_release(phb->opal_id, bdfn);
-> > +       if (rc)
-> > +               dev_warn(&pdev->dev,
-> > +                        "OPAL reported rc=3D%d when releasing LPC
-> > +memory\n", rc); }
-> EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
-> > +
-> >  int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int
-> > pe_handle)  {
-> >         struct spa_data *data =3D (struct spa_data *) platform_data;
-> > --
-> > 2.24.1
-> >
->=20
->=20
-> --
-> This email has been checked for viruses by AVG.
-> https://www.avg.com
+mov ebx, 0 ; loop counter
+hex_digit_loop:
+inc byte [eax+ebx]
+cmp byte [eax+ebx], 'a'+16
+jne next_exec
+mov byte [eax+ebx], 'a'
+inc ebx
+cmp ebx, 5 ;;;;;;;;;;;;;;;;;; this is N, where iteration_count=pow(16,N)
+jne hex_digit_loop
 
 
+; reached pow(256,N) execs, get out
+
+; first make the stack big again
+mov eax, 75 ; setrlimit (32-bit ABI)
+mov ebx, 3 ; RLIMIT_STACK
+mov ecx, stacklim
+int 0x80
+
+; execute end helper
+mov ebx, 4 ; dirfd = 4
+jmp common_exec
+
+next_exec:
+mov ebx, 3 ; dirfd = 3
+
+common_exec: ; execveat() with file descriptor passed in as ebx
+mov ecx, nullval ; pathname = empty string
+lea edx, [esp+4] ; argv
+mov esi, 0 ; envp
+mov edi, 0x1000 ; flags = AT_EMPTY_PATH
+mov eax, 358 ; execveat (32-bit ABI)
+int 0x80
+int3
+
+nullval:
+dd 0
+stacklim:
+dd 0x02000000
+dd 0xffffffff
+$ cat launch.c
+#define _GNU_SOURCE
+#include <fcntl.h>
+#include <err.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <sys/resource.h>
+int main(void) {
+  close(3);
+  close(4);
+  if (open("fast_execve", O_PATH) != 3)
+    err(1, "open fast_execve");
+  if (open("finish", O_PATH) != 4)
+    err(1, "open finish");
+  char *argv[] = { "aaaaaaaa", NULL };
+
+  struct rlimit lim;
+  if (getrlimit(RLIMIT_STACK, &lim))
+    err(1, "getrlimit");
+  lim.rlim_cur = 0x4000;
+  if (setrlimit(RLIMIT_STACK, &lim))
+    err(1, "setrlimit");
+
+  syscall(__NR_execveat, 3, "", argv, NULL, AT_EMPTY_PATH);
+}
+$ cat finish.c
+#include <stdlib.h>
+int main(void) {
+  exit(0);
+}
+$ ./build.sh
+$ time ./launch
+
+real 0m12,075s
+user 0m0,905s
+sys 0m11,026s
+$
+=============
