@@ -2,92 +2,137 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CA7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79993C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35AA206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E3920737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:27:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GGpF3sT/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OpsyYHBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389741AbgDBQ0G (ORCPT
+        id S2389695AbgDBQ07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:26:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55232 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732214AbgDBQ0F (ORCPT
+        Thu, 2 Apr 2020 12:26:59 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48056 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732214AbgDBQ07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:26:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=a/KDs39ormLqYNyLDXxwevKak24hvsf4Webm/o9jua4=; b=GGpF3sT/GT1ehshCwxDJ11YFlz
-        GcGkq2F5vRMTQuZwqK5zL5KoB86HbBCLJYbf+WpUhglk7xWQlpNOlgQjCxqmQVyS9IfxCbeUDysJI
-        akM7TfiHrFikfOd1j7HJc++qyNZDTUl1yCT4UHxHxslyWiYrIZJo04oPtUAPsFn4dtFxR2Uambvop
-        SvkN+r8qhf6ZvvNMi0jMFmlDvPiVUTHATU8Ipab6XH8hQI/NZEjZFiTXByCnbOPzq3zYM1nYePyFU
-        NzzwOXY1ITC+f9+GuXYf43Nlk/m6nfNDRLdpKYIAsmTasltFzreB/LuUKpwP2uuWS8eoLxMeRQF1X
-        qy1V0oDQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK2f9-0000hd-9t; Thu, 02 Apr 2020 16:25:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EC0B63010BC;
-        Thu,  2 Apr 2020 18:25:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 99DF12B0DC2C1; Thu,  2 Apr 2020 18:25:48 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 18:25:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [patch v2 1/2] x86,module: Detect VMX modules and disable
- Split-Lock-Detect
-Message-ID: <20200402162548.GH20730@hirez.programming.kicks-ass.net>
-References: <20200402123258.895628824@linutronix.de>
- <20200402124205.242674296@linutronix.de>
- <20200402152340.GL20713@hirez.programming.kicks-ass.net>
- <725ca48f-8194-658e-0296-65d4368803b5@intel.com>
+        Thu, 2 Apr 2020 12:26:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585844817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i1hPxQZ7Mm/qEFVQDP8poIUxCGgiGUs8Gv2myvdE6Zk=;
+        b=OpsyYHBm8Low6hS3O3HJvj2DABwmuUHX07gWnbMbv+KKFOqj91isWhhCzKlC+qc3LdzmJk
+        vSDMooPp7kZBukvwqrj9mR6IzvoBD2QfSjejEz5id3aeAXEMhvnBxoTeRCUiCuFoHYiQeo
+        ap0mS4hAy+jN+wzQUqVDhfXS+S95AWI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-514-MsQVSHyKMsKrlQtGhkhVUw-1; Thu, 02 Apr 2020 12:26:55 -0400
+X-MC-Unique: MsQVSHyKMsKrlQtGhkhVUw-1
+Received: by mail-wr1-f71.google.com with SMTP id v14so1702844wrq.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 09:26:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=i1hPxQZ7Mm/qEFVQDP8poIUxCGgiGUs8Gv2myvdE6Zk=;
+        b=pnj5L1BIttPaKpG0eAudMZXq5ObvTQz6+S30cUstcoPAt10WZ9K38jg2/+mgm6+z0x
+         2F+zPMqfOYYghtYUUg6+VW+QWM+7SQEugmmwyLONyH6vHoAERDTmfM/hGErg2GrN199i
+         bIe6TmpxfwWDiG2fU11i0Alq2VLSo9bUg7opT1KvWmD6gDJOviSvjWfGaCwPVKAotlkb
+         XC6Uv4aLqi+yAh6nb4E9L4A7xM8c5ozNPgFvHt1k6deYTKAx+nW7bXl056Uk2OGeRwBv
+         KR+AsxjuSVl+4Kym6goEM2w41rnBrUa4Mk1RjFlFDPRDxuLSLF2oNBw1K1YUXyGVXxnk
+         Iucw==
+X-Gm-Message-State: AGi0PubDb1z9IjR41x2N+G1FMXdd6BDUBk81C7RMlAZ8ufZqY0j2r4An
+        hCK4+LvhsGYAexqpS/t5ZKiIvtC71Rz5rPSujCZuzdGwF+ST3eQ8R/BgGHkWDWkPUIFcuG6cJKV
+        On+sAlLs+/9cLv3gqH4u4hekc
+X-Received: by 2002:a1c:b7c2:: with SMTP id h185mr4308588wmf.67.1585844814130;
+        Thu, 02 Apr 2020 09:26:54 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJj8MtdbkTrtF/6xim1pBMiG2j2Ba38Z0fdoGdU9XGR5GAwyAOga8h+SKPWJjJ8EakD3pf1ZA==
+X-Received: by 2002:a1c:b7c2:: with SMTP id h185mr4308564wmf.67.1585844813859;
+        Thu, 02 Apr 2020 09:26:53 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id o67sm7971904wmo.5.2020.04.02.09.26.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 09:26:53 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     163 <freedomsky1986@163.com>, linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "Andrea Parri \(Microsoft\)" <parri.andrea@gmail.com>
+Subject: Re: [EXTERNAL] [PATCH 1/5] Drivers: hv: copy from message page only what's needed
+In-Reply-To: <3ed15a02-0b86-0ec1-6daf-df94f8fc6ba5@163.com>
+References: <20200401103638.1406431-1-vkuznets@redhat.com> <20200401103638.1406431-2-vkuznets@redhat.com> <3ed15a02-0b86-0ec1-6daf-df94f8fc6ba5@163.com>
+Date:   Thu, 02 Apr 2020 18:26:52 +0200
+Message-ID: <87a73tzwdv.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <725ca48f-8194-658e-0296-65d4368803b5@intel.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+163 <freedomsky1986@163.com> writes:
 
-Learn to trim your replies already!
+> On 4/1/2020 6:36 PM, Vitaly Kuznetsov wrote:
+>> Hyper-V Interrupt Message Page (SIMP) has 16 256-byte slots for
+>> messages. Each message comes with a header (16 bytes) which specifies the
+>> payload length (up to 240 bytes). vmbus_on_msg_dpc(), however, doesn't
+>> look at the real message length and copies the whole slot to a temporary
+>> buffer before passing it to message handlers. This is potentially dangerous
+>> as hypervisor doesn't have to clean the whole slot when putting a new
+>> message there and a message handler can get access to some data which
+>> belongs to a previous message.
+>> 
+>> Note, this is not currently a problem because all message handlers are
+>> in-kernel but eventually we may e.g. get this exported to userspace.
+>> 
+>> Note also, that this is not a performance critical path: messages (unlike
+>> events) represent rare events so it doesn't really matter (from performance
+>> point of view) if we copy too much.
+>> 
+>> Fix the issue by taking into account the real message length. The temporary
+>> buffer allocated by vmbus_on_msg_dpc() remains fixed size for now.
+>> 
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>   drivers/hv/vmbus_drv.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index 029378c27421..2b5572146358 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -1043,7 +1043,8 @@ void vmbus_on_msg_dpc(unsigned long data)
+>>   			return;
+>>   
+>>   		INIT_WORK(&ctx->work, vmbus_onmessage_work);
+>> -		memcpy(&ctx->msg, msg, sizeof(*msg));
+>> +		memcpy(&ctx->msg, msg, sizeof(msg->header) +
+>> +		       msg->header.payload_size);
+>>   
+>
+> Hi Vitaly:
+>       I think we still need to check whether the payload_size passed from
+> Hyper-V is valid or not here to avoid cross-border issue before doing
+> copying.
 
-On Fri, Apr 03, 2020 at 12:20:08AM +0800, Xiaoyao Li wrote:
-> On 4/2/2020 11:23 PM, Peter Zijlstra wrote:
+Sure,
 
-> > +bad_module:
-> > +	pr_warn("disabled due to VMX in module: %s\n", me->name);
-> > +	sld_state = sld_off;
-> 
-> shouldn't we remove the __ro_after_init of sld_state?
+the header.payload_size must be 0 <= header.payload_size <= 240
 
-Oh, that's probably a good idea. I can't actually test this due to no
-hardware.
+I'll add the check.
 
-> And, shouldn't we clear X86_FEATURE_SPLIT_LOCK_DETECT flag?
+-- 
+Vitaly
 
-Don't think you can do that this late. Also, the hardware has the MSR
-and it works, it's just that we should not.
