@@ -2,125 +2,181 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79475C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CDEC10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4B22078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB7E5208E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="kimZVNAG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OevCM+9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387672AbgDBIHc (ORCPT
+        id S2387692AbgDBIHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:07:32 -0400
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:40244 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387476AbgDBIHc (ORCPT
+        Thu, 2 Apr 2020 04:07:33 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44539 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387552AbgDBIHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Apr 2020 04:07:32 -0400
-Received: by mail-wr1-f48.google.com with SMTP id s8so873244wrt.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 01:07:31 -0700 (PDT)
+Received: by mail-lf1-f68.google.com with SMTP id 131so1894302lfh.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 01:07:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rFtafj8G3p6uylJpT3LxPW3DfRAp8Fyv/LimRAr9TMk=;
-        b=kimZVNAGXwCuOkN4OBZz/FkvFPotAj/bw5l9yyVqCbO7OEmZD14W1Sds/6Uvlt51O9
-         OOYrx77C6acyKzgxtKVjIk3UxiPp7XbIB8slejG33+0PFkERjBRmRHbt6/1gcpsh3OHK
-         g5s+vK8ybk62dtiDNDWcpJDrwTFU059BdQq8IlYHxXo3SrKzD2xI2MSFgRNay2KwtPXU
-         l7IMGGVoYJFdrL1vqRI98E3fSSae6etQ1hs115INSsupTqU8HYXbTXhTKzuiJ90GjvJb
-         f+wtLV9OaGAu1gd71W4NoTY0n817N60y6Lh/pZ3TFTkPGoNLSRTnI5EA9Q5gcUokj/Vi
-         QVrg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=eooaPyyGEPHfmVsHpJUJuFilqkiRH1mDIj1guNanCkA=;
+        b=OevCM+9jSn7Zc4bEY1F3FDRwJd1YexcIZ9Qo78p5FcW8GU50YAOU0ydnAGUVARwAsI
+         oddvXXKpj5R1icye774vhlyTYIkUTxhY+r4e7l+uAl9Mm7vfd6aue9mFEyW3URuDAVKD
+         EWT1gmzeXPWW8XMc4VOYiPE1BQCskg8EjsqMnIwabnMG6/K0dtkSpal7itKKaX81jcBU
+         ZEAPVibGvw1e7tyfrDPK+TcHV50aX8yktCOdv3PuylK1VH5W39XePbZlHkhVX2ZSqEHd
+         7fSwGNZ7o+9/3Kv0qJrIA88dLzCW35C0d+YcyrHL/N0V4H7qwbl4wvDhq2iUB/8e1SYl
+         tWfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rFtafj8G3p6uylJpT3LxPW3DfRAp8Fyv/LimRAr9TMk=;
-        b=UJWRByJCmWBVag3ZilSV0iZ60W/RBa/i5H2D6RWBAnlMga7LL+2oG00YRH1d9cp3e6
-         MRbfpE4XldBc5p3O7Hg9UXsSEEqfwovb/twHUM2wblX5bMS+FFM6SjO9cyja94KdAIuk
-         8lGA7xNng9avl1mqghv2f7vjFLGR7Do01lWfMVKO/bS0RlR0rjCGc7qbf64243Sp5FY6
-         9lr9G8zewEiwHe8MNLUvqpZSloy/nuNurYZBZp9lWfqQ6sbnXQXXRHFM2hMf8/kt6Y8P
-         IOzQNSjiGd8BUVmy/0qbEjzx9woqvUNu/NfAmHEqDsSxNDvrN5XLYNkSIIIbI37N5mT7
-         al7A==
-X-Gm-Message-State: AGi0PuaGDBBrFyNe59K3Zf2gOTaxblnZGLRpxYKbVjzg8v+7pKmKWLCY
-        Y7jePvPSlghl76CxI+UrtEwMVQ==
-X-Google-Smtp-Source: APiQypLeuzM1SXog1adVslcN8rAHhURouHDugYLsv+YoexQ0M9ZMz7jTgOOCL6PkdU8DrNcEtc20+Q==
-X-Received: by 2002:a5d:4c48:: with SMTP id n8mr2154904wrt.414.1585814850456;
-        Thu, 02 Apr 2020 01:07:30 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([79.132.236.184])
-        by smtp.gmail.com with ESMTPSA id h132sm6489763wmf.18.2020.04.02.01.07.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 01:07:29 -0700 (PDT)
-Subject: Re: [MPTCP] [selftests] eedbc68532:
- kernel-selftests.net/mptcp.pm_netlink.sh.fail
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        mptcp@lists.01.org
-References: <20200402074609.GH8179@shao2-debian>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <7a1b24ac-73f2-bac1-f450-d8e6c802c0ce@tessares.net>
-Date:   Thu, 2 Apr 2020 10:07:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=eooaPyyGEPHfmVsHpJUJuFilqkiRH1mDIj1guNanCkA=;
+        b=E/ONLQg5DBWDQhpkxwthpQoO3Q5clDhRJtoK6Py0MjZrGq0qJJiPYUutRvA3ieu2a/
+         Ugn2Xr9Jg/FHDEDC8dDrUxu1FT59BWELF1qvYuQ89IYFLQXbJWsEThPiW4F2waOcL5XU
+         Hh4xP5oNZGlMIrGd9ec3O5DHEars5LHoPCSBWssz13CI/2n/Lia2cUucWVzO9B3lqEz5
+         wqq44muJToqMs3VzX1DbRUsSEMpMei1Jz/kSJ10cYvKh65xrfG+E77dFkc+oEQp0Vtgv
+         Q/QLU3FMBVXXxoxq/p/5yzQFvy3+abDyuwj4ydsA6xLsjbFoqVaDMMUPvF8PUX6nLfvD
+         onSA==
+X-Gm-Message-State: AGi0PuaO/CPme2uNbslUunYESkwAd9G0Ycu05vcr05iEjHFtxhdy1LRt
+        zQ5WmJGnTuPO/vUa0Rbu3rckaxcELBXijA07hOWKbw==
+X-Google-Smtp-Source: APiQypKRQiZi7fSolJ5wqrlW+9kriH2NCRBRw6TY8ovFFr+o2+TxBRlzqa6N3CrK54+QepunOq4o0XN1Ra7pw8n2r50=
+X-Received: by 2002:ac2:5183:: with SMTP id u3mr1414261lfi.26.1585814848630;
+ Thu, 02 Apr 2020 01:07:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200402074609.GH8179@shao2-debian>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200401161542.669484650@linuxfoundation.org>
+In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 2 Apr 2020 13:37:17 +0530
+Message-ID: <CA+G9fYtSWuC-XGZ=a_9_5Hzj-yRSwFjgynfntF0u7_JDLUD18A@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/116] 4.19.114-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 1 Apr 2020 at 21:54, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.114 release.
+> There are 116 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.114-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Thank you for the automatic bug report!
 
-On 02/04/2020 09:46, kernel test robot wrote:
-> FYI, we noticed the following commit (built with gcc-7):
-> 
-> commit: eedbc685321b38fea58a14c9fbd258c4b2c2747c ("selftests: add PM netlink functional tests")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-(...)
+Summary
+------------------------------------------------------------------------
 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+kernel: 4.19.114-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 558d25f4fc651a7a3febb5018aa9135178a836db
+git describe: v4.19.113-117-g558d25f4fc65
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.113-117-g558d25f4fc65
 
-(...)
+No regressions (compared to build v4.19.113)
 
-> # selftests: net/mptcp: pm_netlink.sh
-> # defaults addr list                                 [ OK ]
-> # defaults limits                                    [ OK ]
-> # simple add/get addr                                [ OK ]
-> # dump addrs                                         [FAIL] expected 'id 1 flags  10.0.1.1
-> # id 2 flags subflow dev lo 10.0.1.2
-> # id 3 flags signal,backup 10.0.1.3 ' got 'id 1 flags  10.0.1.1
+No fixes (compared to build v4.19.113)
 
-(...)
+Ran 30648 total tests in the following environments and test suites.
 
-> not ok 2 selftests: net/mptcp: pm_netlink.sh # exit=1
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
 
-This issue has already been fixed:
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* kvm-unit-tests
+* libhugetlbfs
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-hugetlb-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* network-basic-tests
+* v4l2-compliance
+* ltp-fs-tests
+* ltp-open-posix-tests
+* spectre-meltdown-checker-test
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
 
-   3aeaaa59fd69 (selftests:mptcp: fix failure due to whitespace damage)
-
-This commit -- making both Git AM and selftests happy :) -- has been 
-quickly applied by David (thank you for that!) and it is already in 
-Linus tree.
-
-Cheers,
-Matt
--- 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts@tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+--=20
+Linaro LKFT
+https://lkft.linaro.org
