@@ -2,100 +2,140 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB76C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CC7C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812F320721
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C100620721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x2FfgDff"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xou3o/cd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733254AbgDBBIn (ORCPT
+        id S1733164AbgDBBK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 21:08:43 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53206 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732462AbgDBBIn (ORCPT
+        Wed, 1 Apr 2020 21:10:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37818 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732435AbgDBBK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 21:08:43 -0400
-Received: by mail-pj1-f66.google.com with SMTP id ng8so867486pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 18:08:41 -0700 (PDT)
+        Wed, 1 Apr 2020 21:10:59 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i34so1052681pgl.4;
+        Wed, 01 Apr 2020 18:10:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=ugT5XXd14ijtpN2Hcg23GtWvr136nCMP/a+tddTYftg=;
-        b=x2FfgDffWuPCb3iqPQXusSrJ2Jg4mJneLdYc+zcx3YcUfkDozfKVRcZxzTlXYSCZ9X
-         2ANIQ6LekB022DMzPxuDeE5vhgGldCLzqQVQ8/X1DYICNdizfTFK7jQKtejzJTx2GUlT
-         XA++HCSYvvdPjtX8Qzw8IqS+Wei8/s8bWqRecBQqtoJxKzXgzJf8cnTxxGZJlxeZ6G+M
-         29JZdenCUaYZ9XCW7g5FFY02Lrly/JDPRFU7F8haXacZxvftfBAst3pWm3WM/uCn8u2p
-         Gc1nDEeaTFetizm8iUIxOGx3IaX4EMDm/D7H4Ds78laUuXB6KGFMzCicbT/mcsCMzUO9
-         2tpQ==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5c2I+BEVhN1hhsdvxaTeYLAXXkA/Wk3ZY2+LtO91AoI=;
+        b=Xou3o/cdOX81dLjACcfQUwFgfwvI44sSC9kB3JNVFr+/S8OOD30IGUM/j7CZ8PI7nv
+         S8XIyADtBHif8YOUc4umXVCJMHOZ7i8OHzDQpISSfgJFI+Jb6qRh5413WAgsNZNqzkpU
+         jJDyaZ5d2D03mW1acdD79Fter8aZMOPvnO4a+r1gtN1IfrAtvWzMzFXxMLKIfGTJ4Vwc
+         BHxEzWwUv9I30Ur3vsEapvE9H5PzKfqTGBeHjpbnl5DaLY1fm+HARW8OV+aIdmJJNPn+
+         cqRgnD35IL2+5uHl571/CZGTK/X23nNGb5KVx2be92nS8KjI9kg/NBKOTuucCRLg4UL0
+         cG1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=ugT5XXd14ijtpN2Hcg23GtWvr136nCMP/a+tddTYftg=;
-        b=bsjCuSTo557wRuQy8GWt89THsvwxIhIMfyrRX5vdtBGj7I6d08h3MegxZp6+lj3emv
-         oKQtbQmLkWvkBioffbfkBAhUGbUVj32gcva4oXYa6MPZlSG4Myl0M/FeS9Zm/j785SiX
-         LSVP02WOOnSQRmuNWXh0dgFfmXJQAaqI8Evp85zYd55Z8ZTIb0Z93pt1qJ1Rd0T3XnOz
-         IwtEQr+YVTds18vb3UD6XHc57XwSFSFK2SUHBu9gk7/Y8sTI4te8W9g5PM+HmRcrjGSz
-         XDErfhrjNrJKHwBht6hjk1sw7smFCcmi/rH1oEjlRznyLJ4HYucmI/m/L2uy4c6modzb
-         wQ7g==
-X-Gm-Message-State: AGi0PuYeOU8uudQKWRBd3Qmg9m2GW0QsLtvs8KztoplImLmAsj1Jyztq
-        tPeEp0HJoa80x5tB5nZsxkgctA==
-X-Google-Smtp-Source: APiQypIFgAZ5m3lls8sFY57ACWOX7DXY3R/lYBPHIct2oj/PeLwE5hdc+/QpiPC7fmbj6sxlT3JBjA==
-X-Received: by 2002:a17:90a:cc14:: with SMTP id b20mr944517pju.75.1585789720512;
-        Wed, 01 Apr 2020 18:08:40 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u13sm2281011pgp.49.2020.04.01.18.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 18:08:40 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 18:08:37 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Baolin Wang <baolin.wang7@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [GIT PULL] hwspinlock updates for v5.7
-Message-ID: <20200402010837.GB751391@yoga>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=5c2I+BEVhN1hhsdvxaTeYLAXXkA/Wk3ZY2+LtO91AoI=;
+        b=Pc0PQtO27Vbd4McfU39FlRFjiflPQ0ZR10fxlF8ENXlmpnClvo0FMeEFE+C7dO5YXR
+         SdO2Mr1c3+JlfCqiMEHHPXpTHR/v34Rg17B/8OpEIU8GRyXHx2AAZpcmo/keyFz+0UUr
+         FG+B3JqgbdeV/hLJfqN4QUpnvPJoXxYGfbOuFVUZolOWNWiRYrTGIkHqBkWjzusNtfMk
+         YgqLtMkueUpl5Dl2UYidujP0i+JUNnsd9HhR3mVcASKOnyJiSGc2lyxsLJ1IVSGBvOv8
+         YihHV2keMNvXc2qXTkhBOOqHNDNrqfTl4QAngQsIhpa7FgY+w8M/dEKyEKrP7OMPY891
+         DTxQ==
+X-Gm-Message-State: AGi0PubdM2SmTGdyMrvV3/v7BIHSq+OWKfUPgdQfsTjELEO8O2/2+7DO
+        cK1r+yzkM/DweXgmab9OAlnmu0Fz
+X-Google-Smtp-Source: APiQypJTJH0yHgnz94AzMNc9w6pwlExYJr6E4ormA8+NvemjumW/r3fa3ZdUgO/YB6tock/zOo45/A==
+X-Received: by 2002:a63:8041:: with SMTP id j62mr897321pgd.273.1585789857684;
+        Wed, 01 Apr 2020 18:10:57 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a26sm2343154pgn.14.2020.04.01.18.10.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 18:10:56 -0700 (PDT)
+Subject: Re: [PATCH 4.9 000/102] 4.9.218-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200401161530.451355388@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <cdf46324-39bd-931a-be18-84cb99039fb5@roeck-us.net>
+Date:   Wed, 1 Apr 2020 18:10:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+On 4/1/20 9:17 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.218 release.
+> There are 102 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
+> Anything received after that time might be too late.
+> 
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+Build results:
+	total: 171 pass: 171 fail: 0
+Qemu test results:
+	total: 384 pass: 384 fail: 0
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/hwlock-v5.7
-
-for you to fetch changes up to ef17f5193edd42e8913c93d0b601c101c56a15bb:
-
-  hwspinlock: hwspinlock_internal.h: Replace zero-length array with flexible-array member (2020-03-25 22:30:46 -0700)
-
-----------------------------------------------------------------
-hwspinlock updates for v5.7
-
-This marks all hwspinlock driver COMPILE_TESTable and replaces the zero-length
-array in hwspinlock_device with a flexible-array member.
-
-----------------------------------------------------------------
-Baolin Wang (1):
-      hwspinlock: Allow drivers to be built with COMPILE_TEST
-
-Gustavo A. R. Silva (1):
-      hwspinlock: hwspinlock_internal.h: Replace zero-length array with flexible-array member
-
- drivers/hwspinlock/Kconfig               | 12 ++++++------
- drivers/hwspinlock/hwspinlock_internal.h |  2 +-
- 2 files changed, 7 insertions(+), 7 deletions(-)
+Guenter
