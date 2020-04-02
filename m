@@ -2,136 +2,146 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6ACC2BA17
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6733C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738E42077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735E52077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uW+kxEWS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJH8mUDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390010AbgDBXIT (ORCPT
+        id S2390061AbgDBXIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:08:19 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42807 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732600AbgDBXIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 19:08:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48tdyk4kLXz9sPF;
-        Fri,  3 Apr 2020 10:08:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585868897;
-        bh=xjh9AgkxUA5QJJTBCFGf5e9Ac6fS8f/uGzdRf6ffL4U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uW+kxEWSqf9a3f7i5pWR0QAMRc6Z4beWF7OFweWnfXUocMFNiK3XhaAi45g/Gjhev
-         fLfOkIHZ8ta9q4HT0KZvph1Cvgj1+51q/SwhlzC/YVlJ48sOKwk1lzsD6YNcKGgr+u
-         DGlEnE9+VYuqS3xCGd3rQO5L6Zyw+ahIMFgOsmRU/1SrK+W6FpKXX61WvSsMXvtKGc
-         2KTzHzVPVi3Ra5H2dxoVQl/e5Gt4S/S6Z1qAVMawfK4BDG/GMPyJHZxawyktbSi8ZN
-         EMmaBmreJ0ghjGyksFWIi/vLxVG9qbYCNWGTsIomaC01VoVJ/2aA45r3/RiLEvejp0
-         69Bz5AkOmcAzw==
-Date:   Fri, 3 Apr 2020 10:08:10 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: linux-next: manual merge of the drm tree with the omap tree
-Message-ID: <20200403100810.09e27872@canb.auug.org.au>
-In-Reply-To: <20200318135034.242d9edf@canb.auug.org.au>
-References: <20200318135034.242d9edf@canb.auug.org.au>
+        Thu, 2 Apr 2020 19:08:34 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46918 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732600AbgDBXIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 19:08:34 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 111so5322839oth.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:08:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QQeb3TySrXKWjqdpdystZzrLdZhobbR4wczMyxU9daE=;
+        b=NJH8mUDyS4vydKm8ozgwIwBIN0a+isHGLQhu1Xa7KlLuolkz3lTRHWLGbQWqH3DraZ
+         GVKcNeq10kJshsCpCmD1ur2WOCalb70yJRRqscOw6we52/btmA03mOpNDeepRwaZoCKx
+         dJnRiSXTU6iVG2WpqT5DIUkzfttiDahvRrN9Ewboh/gzEwIivf1ZemL3a2CfwUbgyEk+
+         2hChBjqqFqpMhYxoe+FEq53Gsdh4f2ziNfFkSadQSpgWvqL+EBX+bXP8uMgyvWFIYFUI
+         90w2wzB44wDQeY7nCWytwHwPOT1gRiQLyRCC3DnFQq2w4RQ2VwXqZVzPKsRGfmhCuw6R
+         MIaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QQeb3TySrXKWjqdpdystZzrLdZhobbR4wczMyxU9daE=;
+        b=IcGriauBpKKLCrdwnh/wUt3kVKgaxB7r3YYDKkw35QZbDaQEEZ5aBkFrIqRGbypu3g
+         Ng4RSCR2TBgK1rzBL6C2nRf+o6r8Aj0gJQq5qPAaSIBRWarSijoZjFxzfpZ5IC2Y20/Y
+         PZq76LX0wyUzuEF6LxHfNWLsQLlmVePia1UzKuzG/x0LpO1BdeWgA3V3AcTbZIqqDmHv
+         jOilQQ09/CkbIzRPhg+l5LG9g7tFOjmhvJoRi2sE3eHrlimTCE34CUKQRsEi9JweU0ny
+         xObvFDWsVxmgr6aafAKw8hrvDXNDLULB2rgZPqic2eBEHQvEDp8bPezRnt0ZBnLOmopv
+         BmPQ==
+X-Gm-Message-State: AGi0PubwAAcIo7BcTuMAdH21BAwNER3nmVMQox3yL8ZFx140u91f0mLO
+        /frESRgQ7GyuQc96XZMzrCpNahurOmsOqIthQq6NSQ==
+X-Google-Smtp-Source: APiQypLZA26Q+M0Ymf7b40RsmQRLEnKqmqg5on5PqLiHU2wifOGb73iVFhOLTaxXIGxQBRFM25QTMqgRbY3IyGi8mMM=
+X-Received: by 2002:a9d:344:: with SMTP id 62mr4591686otv.102.1585868913011;
+ Thu, 02 Apr 2020 16:08:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9XvUIyYhQ_VUv6ebWs45tsP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
+ <20200402223723.7150-1-john.stultz@linaro.org> <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
+In-Reply-To: <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 2 Apr 2020 16:08:21 -0700
+Message-ID: <CALAqxLXfd+7Wc79_XWRv8cKLFu+MpM1w9e3byx9z5bXSdTemLg@mail.gmail.com>
+Subject: Re: [PATCH] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9XvUIyYhQ_VUv6ebWs45tsP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Wed, 18 Mar 2020 13:50:34 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Thu, Apr 2, 2020 at 3:56 PM Doug Anderson <dianders@chromium.org> wrote:
 >
-> Today's linux-next merge of the drm tree got a conflict in:
->=20
->   arch/arm/configs/omap2plus_defconfig
->=20
-> between commit:
->=20
->   98c2cc359f8f ("ARM: omap2plus_defconfig: Update for moved and dropped o=
-ptions")
->=20
-> from the omap tree and commit:
->=20
->   e7e67d9a2f1d ("drm/omap: Switch the HDMI and VENC outputs to drm_bridge=
-")
->=20
-> from the drm tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc arch/arm/configs/omap2plus_defconfig
-> index eedb26ff93f9,54f1a21de7e0..000000000000
-> --- a/arch/arm/configs/omap2plus_defconfig
-> +++ b/arch/arm/configs/omap2plus_defconfig
-> @@@ -360,10 -353,10 +360,9 @@@ CONFIG_OMAP2_DSS_DSI=3D
->   CONFIG_DRM_OMAP_PANEL_DSI_CM=3Dm
->   CONFIG_DRM_TILCDC=3Dm
->   CONFIG_DRM_PANEL_SIMPLE=3Dm
-> + CONFIG_DRM_DISPLAY_CONNECTOR=3Dm
-> + CONFIG_DRM_SIMPLE_BRIDGE=3Dm
->  -CONFIG_DRM_TI_TFP410=3Dm
-> + CONFIG_DRM_TI_TPD12S015=3Dm
->   CONFIG_DRM_PANEL_LG_LB035Q02=3Dm
->   CONFIG_DRM_PANEL_NEC_NL8048HL11=3Dm
->   CONFIG_DRM_PANEL_SHARP_LS037V7DW01=3Dm
+> Hi,
+>
+> On Thu, Apr 2, 2020 at 3:37 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+> > PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+> > as a generic compat string. However the change also removed
+> > the "qcom,sdm845-qusb2-phy" compat string, which is documented
+> > in the binding and already in use.
+> >
+> > This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+> > which allows the driver to continue to work with existing dts
+> > entries such as found on the db845c.
+> >
+> > Cc: Andy Gross <agross@kernel.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Doug Anderson <dianders@chromium.org>
+> > Cc: Manu Gautam <mgautam@codeaurora.org>
+> > Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+> > Cc: Matthias Kaehlcke <mka@chromium.org>
+> > Cc: Stephen Boyd <swboyd@chromium.org>
+> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > Cc: linux-arm-msm@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
+> > Reported-by: YongQin Liu <yongqin.liu@linaro.org>
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> >  drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+>
+> Do you have an out-of-tree dts file?  If not, I'd prefer that the fix
+> was for this patch to land instead:
+>
+> https://lore.kernel.org/r/1583747589-17267-9-git-send-email-sanm@codeaurora.org
 
-This is now a conflict between the arm-soc tree and Linus' tree.
+No, no out of tree dts.  The usage is already in tree:
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845.dtsi#n2389
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/9XvUIyYhQ_VUv6ebWs45tsP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> While we can land your patch if someone needs it for supporting an
+> out-of-tree dts, it gives people supporting future SoCs the idea that
+> they need to add themselves to this table too.  That's now discouraged
+> unless there's a specific quirk that needs to be handled just for this
+> SoC.
 
------BEGIN PGP SIGNATURE-----
+My understanding with dts bindings is that they are effectively an
+ABI. While maybe it makes sense to deprecate the
+"qcom,sdm845-qusb2-phy" string in the Documentation to avoid new
+users, I'd think we'd want to keep the support in the driver as we
+aren't supposed to have tight coupling between the DTB and kernel (at
+least for official bindings).
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6GcFoACgkQAVBC80lX
-0GyOngf/eygzgm029Brs1/8L3hVH03GHwrwtdkYN8ZyMRVN31zCLrWZCPwgG0Cb7
-hzGXZbuQe0haxrgRCMUIHX6oePqmmWe51RrCsxreyHgWKcB27MiYiqf/GQYzIRss
-hb9h2RkQEfE6ZMoGgZegiBIH7UmLNYa2MdWmeDL+k1qA4q3LY25Wbszsfa/GngKp
-AvMY3RJAIuvLv5Ztv194zAjt/3eAMY4I+Ldp73TPAaacWkkI7ln4/4DWL9c3pcag
-o+/HepxZrC3JSbdEaFj55Ey2Qy0N1VlTIEtoOpniAyCODZ1V4sQNWAjTwmu+Qhoe
-iQW1YRoRdLk15BEZWzJrposx+K5TzA==
-=dPjZ
------END PGP SIGNATURE-----
+Granted, I've not gotten much experience with boards that were fully
+upstream and thus didn't have an eternally evolving dts file that had
+to be kept in sync with the kernel, so in practice either solution
+does work for me, but in theory it seems like we should at least
+pretend these things are stable. :)
 
---Sig_/9XvUIyYhQ_VUv6ebWs45tsP--
+thanks
+-john
