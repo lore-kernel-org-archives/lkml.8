@@ -2,89 +2,132 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182A6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12478C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5522080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0CF20737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ar1cQ7cc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QiJY6vAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389420AbgDBPk2 (ORCPT
+        id S2389440AbgDBPki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:40:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33142 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388972AbgDBPk1 (ORCPT
+        Thu, 2 Apr 2020 11:40:38 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34162 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388972AbgDBPkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:40:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=esjjBZxKnGNy+IIHWT7KnlJCrv+OC0h6w5d5h2JWV7c=; b=Ar1cQ7ccV2xZGXsK/bV7FKiDyY
-        n4ihXvv0gfo/dEQWwHTG9Xsy+1cskV86+pyGqRkswFzaUB5ubPEUinmc69JVK0/T0YEfS0cZ9m/W4
-        k52nbYod9CIaa1U2XhbmtjuD3nNXS7PUwSoNz0MkAqTWluVbBIJ3RMqkGTPvv5oEXkdkfYQhuQPS8
-        64IF49iZupFeDD4DI9HYjfGsGqpiPV9lkP2eptc1sawEnYmFCFgYK5zwEKVWzkpCVa8vtYq6Iuo7d
-        y3crhlCEQ/0u8zDGRtPlP5hLydCRKB7yfI8WnBsJ+jyvXvmF2jdSQv1ZtSfE0U6amjuXPTwTlXY4d
-        8svU6Xkg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK1xA-0003kO-GG; Thu, 02 Apr 2020 15:40:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C3A48306089;
-        Thu,  2 Apr 2020 17:40:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AE9B92B0DED96; Thu,  2 Apr 2020 17:40:22 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 17:40:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
-Message-ID: <20200402154022.GG20730@hirez.programming.kicks-ass.net>
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-5-alexandre.chartre@oracle.com>
- <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
- <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
- <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
+        Thu, 2 Apr 2020 11:40:37 -0400
+Received: by mail-lf1-f65.google.com with SMTP id e7so3144533lfq.1;
+        Thu, 02 Apr 2020 08:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1+2erfkkbu3TLnQgP4FNOMyrP6eIdZu6/WJPUCTbdAA=;
+        b=QiJY6vAFVaADxgmOmeE784cvy5UzSNFL7qXv9U7OiG/ZMEuwa2vEwY6vVWcaccQ7na
+         GbAEDP+GKI/k7Z4eVfyfmSz10A/spb4g63pOAA3oq6T/nxAAd3YUVZOuzoqxoF3wW+PZ
+         qFpyF74CkGNiCdMXkCbmmeBtF20TG/+rjyFJSvz4kQY/Euvsp7hRzDziIIm0nnx9VHw/
+         j37WbJT9HhQEk3LDifhUHXz33V1hGVfNvTalDT9wQtshYzrIjXb72WeZPCKw2+9LATR4
+         8/6cxXD8+ZnYsyxq2OTIkr6OKTFV3DJOYwoLKFDF0/QHs1li4pbHyfpO2TP66E/0SDuZ
+         hxeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1+2erfkkbu3TLnQgP4FNOMyrP6eIdZu6/WJPUCTbdAA=;
+        b=UWKsQ/EjjHANV9fLPgBni5oyPbDuTlHhQ7B8wH9bW+p1Q45etwe9a2FOLVkUNUMVwG
+         W30k76KOx3JjcoffDPv7ki0pITqam0iQPabpmw5peoFqbgZoKsc2e3zLIOmWvnvVMcHj
+         fLKazb0hpYPmrsuvJA7R5nWhb9trTj1ptwUGsZXSuU71n5GN2eZDT+XG0UvRgKyVYLxT
+         Qtl4PH9QudOew7it/NY9BgHM0q1pSuFj/mJP7dlq7psaU5SRp3jhALwjwMbET3Z4ftGk
+         7TCNx26wLUSlpC9QPJJECnhhTt/6WaMDTB8RisjQLyr9h0lQw+6sPwHtinIjqy15PN4Y
+         5g0w==
+X-Gm-Message-State: AGi0PuaaMPw8GauXvn0zkVSKsxgM5ie5/7v0dnmfT58q5A6gOTCERg1I
+        US9GSYayGON622+QjrYpVqotdirxuNQmKxKsZ88=
+X-Google-Smtp-Source: APiQypIdvYJc6O/exwVrWe6ToU6iOSXmBNO1FTBzi81ghhxfIzKlP+jfokCDAjIOMT0OgNS+I5in+pfDYpMcW1SGxZc=
+X-Received: by 2002:a19:40ca:: with SMTP id n193mr2503030lfa.196.1585842035185;
+ Thu, 02 Apr 2020 08:40:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
+References: <fb5ab568-9bc8-3145-a8db-3e975ccdf846@gmail.com>
+ <20200331060641.79999-1-maowenan@huawei.com> <7a1d55ad-1427-67fe-f204-4d4a0ab2c4b1@gmail.com>
+ <20200401181419.7acd2aa6@carbon> <ede2f407-839e-d29e-0ebe-aa39dd461bfd@gmail.com>
+ <20200402110619.48f31a63@carbon>
+In-Reply-To: <20200402110619.48f31a63@carbon>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 2 Apr 2020 08:40:23 -0700
+Message-ID: <CAADnVQKEyv_bRhEfu1Jp=DSggj_O2xjJyd_QZ7a4LJY+dUO2rg@mail.gmail.com>
+Subject: Re: [PATCH net v2] veth: xdp: use head instead of hard_start
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, jwi@linux.ibm.com,
+        jianglidong3@jd.com, Eric Dumazet <edumazet@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 04:31:05PM +0100, Julien Thierry wrote:
-> My understanding is that once you find an intra-function call, either you
-> hit a return, ending the branch, so the return should undo the modification
-> the intra-function call did (whether is it a retpoline return or not).
-> Otherwise, the intra-function call branch will need to reach an end in some
-> way (e.g. hitting a CONTEXT_SWITCH instruction, calling a
-> dead_end_function).
-> 
-> Am I missing something?
+On Thu, Apr 2, 2020 at 2:06 AM Jesper Dangaard Brouer <brouer@redhat.com> wrote:
+>
+> On Thu, 2 Apr 2020 09:47:03 +0900
+> Toshiaki Makita <toshiaki.makita1@gmail.com> wrote:
+>
+> > On 2020/04/02 1:15, Jesper Dangaard Brouer wrote:
+> > ...
+> > > [PATCH RFC net-next] veth: adjust hard_start offset on redirect XDP frames
+> > >
+> > > When native XDP redirect into a veth device, the frame arrives in the
+> > > xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
+> > > which can run a new XDP bpf_prog on the packet. Doing so requires
+> > > converting xdp_frame to xdp_buff, but the tricky part is that
+> > > xdp_frame memory area is located in the top (data_hard_start) memory
+> > > area that xdp_buff will point into.
+> > >
+> > > The current code tried to protect the xdp_frame area, by assigning
+> > > xdp_buff.data_hard_start past this memory. This results in 32 bytes
+> > > less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
+> > >
+> > > This protect step is actually not needed, because BPF-helper
+> > > bpf_xdp_adjust_head() already reserve this area, and don't allow
+> > > BPF-prog to expand into it. Thus, it is safe to point data_hard_start
+> > > directly at xdp_frame memory area.
+> > >
+> > > Cc: Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>
+> >
+> > FYI: This mail address is deprecated.
+> >
+> > > Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
+> > > Reported-by: Mao Wenan <maowenan@huawei.com>
+> > > Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+> >
+> > FWIW,
+> >
+> > Acked-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+>
+> Thanks.
+>
+> I have updated your email and added your ack in my patchset.  I will
+> submit this officially once net-next opens up again[1], as part my
+> larger patchset for introducing XDP frame_sz.
 
-The thing is basically doing:
-
-	mov  $n, cx
-1:	call 2f
-2:	dec  cx
-	jnz  1b
-	add  8*n, sp
-
-So it does N calls to self, then subtracts N words from the stack.
-
-The reason being that the CPU has a return-stack-buffer for predicting
-returns, and call/ret being naturally paired, that works. The above
-is a software flush of the RSB.
-
+It looks like bug fix to me.
+The way I read it that behavior of bpf_xdp_adjust_head() is a bit
+buggy with veth netdev,
+so why wait ?
