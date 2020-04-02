@@ -2,87 +2,93 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EFFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188F6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E850F20719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C0720719
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:10:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sj9DyXa0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387912AbgDBJJi (ORCPT
+        id S2387927AbgDBJKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:09:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2630 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387723AbgDBJJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 05:09:38 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id D73D17AD3C2D0714641B;
-        Thu,  2 Apr 2020 10:09:36 +0100 (IST)
-Received: from [127.0.0.1] (10.47.6.242) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 2 Apr 2020
- 10:09:35 +0100
-Subject: Re: [PATCH v2] scsi: hisi_sas: Fix build error without SATA_HOST
-To:     YueHaibing <yuehaibing@huawei.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <chenxiang66@hisilicon.com>,
-        <b.zolnierkie@samsung.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200402063021.34672-1-yuehaibing@huawei.com>
- <20200402085812.32948-1-yuehaibing@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <8470370b-5359-4b82-ed55-8018f8b60697@huawei.com>
-Date:   Thu, 2 Apr 2020 10:09:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20200402085812.32948-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.6.242]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Thu, 2 Apr 2020 05:10:02 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34710 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728612AbgDBJKC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 05:10:02 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 23so1489266pfj.1;
+        Thu, 02 Apr 2020 02:09:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lyeZTvUdEO08q5cYNk+mvRstQFpcEQbu5+5Lc8L3CO4=;
+        b=Sj9DyXa0Fu1r1eUcNACjYWM5FYKBqJkd0peGKUD6heoPM4JE3ks646BR7INqOIVkzn
+         n7W/oQW3TkKszyO3DpbgnrCQkqLRQXCGGmDzkBDcjaNbMuzTsmMPYOtGuL/t4URasxte
+         WMwJOJumT5iDeVLvZ1IMBNxNwstseWTQ1kx5IkhAOLLSZykkkJ7hYx+N7CO4vQ/RUR2g
+         N+H0tgjnar+mwK9bTTBTGrlBpOhrza8VRcZyh8Z+8ts92jRtcmMYnvly4qr7ur/dSaVn
+         RdwuWhYPpJYs8/9YiXDItsr2P5DeA6sg/o3HvZQgBQcmPjQ935IM4tWSZTWNjjyXAuCM
+         l5Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lyeZTvUdEO08q5cYNk+mvRstQFpcEQbu5+5Lc8L3CO4=;
+        b=NoGeJFz0TxW1A1ty756fg0YUQj4dci4APaiwIhN98s5Sb0J0JRZzJFajk60IQU6PYT
+         YJsW0m9f0yanV1xExz/GB1LRAxyPKEKUfFqaYpVl6jUBHlgq9bcq0Q90vtaFUl0bhZgV
+         +m/gAkZElWG37PARAReWYZLLdwyYkiAcskE9hEqkEgnLvvSagCgLYi1MO5cCSUXkvlVZ
+         0KmGUMANrRPPiwP09MWqevWHufJOcbjbmdH9BFP18p1ZQ/uxYWCqBigU/aciDq+0YU3d
+         0pa/1nO3zFUFHTctw8+9i2Mh94XB8gCExq8dWDXW6SwH7ec28UHydpo+nvx7g4hLvfTT
+         HWtA==
+X-Gm-Message-State: AGi0PuYe+hL0Ulv7ch1GSiSQ12dm4O9ekV9XL2j4ot7Iycnr0kRw+0xn
+        fzrZpxYFf46sHQhf7R1/DYk=
+X-Google-Smtp-Source: APiQypJbjLepPHtz3d5RSCznavAALcW1Hr49x+tOcSl02fzCkZGs3DhIvUfn8+x/g7hiUfWEn4y2Jg==
+X-Received: by 2002:aa7:962d:: with SMTP id r13mr2301739pfg.244.1585818599370;
+        Thu, 02 Apr 2020 02:09:59 -0700 (PDT)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id d21sm3241749pfo.49.2020.04.02.02.09.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 Apr 2020 02:09:58 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, songliubraving@fb.com
+Cc:     akpm@linux-foundation.org, skhan@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] lib/Kconfig.debug: fix a typo "capabilitiy" -> "capability"
+Date:   Thu,  2 Apr 2020 17:09:54 +0800
+Message-Id: <1585818594-27373-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/2020 09:58, YueHaibing wrote:
-> If SATA_HOST is n, build fails:
-> 
-> drivers/scsi/hisi_sas/hisi_sas_main.o: In function `hisi_sas_fill_ata_reset_cmd':
-> hisi_sas_main.c:(.text+0x2500): undefined reference to `ata_tf_to_fis'
-> 
-> Select SATA_HOST to fix this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: bd322af15ce9 ("ata: make SATA_PMP option selectable only if any SATA host driver is enabled")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+s/capabilitiy/capability
 
-Acked-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ lib/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
-> v2: use correct Fixes tag
-> ---
->   drivers/scsi/hisi_sas/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/scsi/hisi_sas/Kconfig b/drivers/scsi/hisi_sas/Kconfig
-> index 90a17452a50d..13ed9073fc72 100644
-> --- a/drivers/scsi/hisi_sas/Kconfig
-> +++ b/drivers/scsi/hisi_sas/Kconfig
-> @@ -6,6 +6,7 @@ config SCSI_HISI_SAS
->   	select SCSI_SAS_LIBSAS
->   	select BLK_DEV_INTEGRITY
->   	depends on ATA
-> +	select SATA_HOST
->   	help
->   		This driver supports HiSilicon's SAS HBA, including support based
->   		on platform device
-> 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 69def4a..20bf1ee 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1628,7 +1628,7 @@ config FAILSLAB
+ 	  Provide fault-injection capability for kmalloc.
+ 
+ config FAIL_PAGE_ALLOC
+-	bool "Fault-injection capabilitiy for alloc_pages()"
++	bool "Fault-injection capability for alloc_pages()"
+ 	depends on FAULT_INJECTION
+ 	help
+ 	  Provide fault-injection capability for alloc_pages().
+-- 
+1.8.3.1
 
