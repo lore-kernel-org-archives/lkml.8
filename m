@@ -2,103 +2,105 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9518FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6937C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D59820737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B162078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qkBBy5U3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlAh8ZM2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390135AbgDBRlf (ORCPT
+        id S2390018AbgDBRmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:41:35 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:33457 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389093AbgDBRle (ORCPT
+        Thu, 2 Apr 2020 13:42:55 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37042 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389264AbgDBRmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:41:34 -0400
-Received: by mail-pf1-f202.google.com with SMTP id o5so3573444pfp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 10:41:34 -0700 (PDT)
+        Thu, 2 Apr 2020 13:42:55 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g23so4350181otq.4;
+        Thu, 02 Apr 2020 10:42:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=371o/vNhJY1GWeYnWWYQwId4nlaG8dGoisjj7qeE9aM=;
-        b=qkBBy5U3CMM7MZifcMDDdewLDPNKJAomOP8csqTCRViOau1jlVdJ7cylogBTm4NSZB
-         jcI0H99RSpOCgYqr7Rv9sepwzun5PqKILYEXEQKLc/H5TqUQchwp6oObnjkK2bawZVfm
-         cBYGJwwx8EehsKB8RiJQXp3lHHeMaz4v0GE3B/k2mAmsMtZY8ZzTdnxbocVxYw+VlWEw
-         91x7AAlfhnAL0JZxMVlqmLt7zfQRVIOYqZW4VJnMqbD5NB7MmyCabpiIkiXFcExcYCbi
-         KcbbE8yiXIxrCcc1cU/4OHea0UQE7wvIMtaauz4ttnblB8kfWVp5B5HkzcOufUroOcyG
-         NzIg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AM4asBwnLyBdo8YxbWkR1sjxTEK7w5QaIa+bEyGHEF0=;
+        b=MlAh8ZM29LF90S2zcrhijXtgJLYbw7Ir/pEHmbf8ESKR8q4xlyOo1VgSMsY3vjCbjP
+         I8nCjEgqsuC4S5B9j34DJesXpU56AB7ZAF/t6xAsgSMm0oYMEyOUKdk6C/NuJQJmAKxk
+         iXIJ9PkNU8q22b8gy2uE5S0WfoXdyrafuNRfyW6fSrExDVGEoKJ4B8418gn9m+6qQR0R
+         XdufofDVDIb0GBTq/6n3Igh8MBvLXXJ3JXjZ8lJawZnwpkUkPGSkiymCNoeghjE674/8
+         fiAL1z/zRiRGiU+5ObnPKpihKZ6EmRs8bnacizEZL9TcPzYUzzlRuKML1iHuSaMRKo8P
+         zsSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=371o/vNhJY1GWeYnWWYQwId4nlaG8dGoisjj7qeE9aM=;
-        b=Z5CQQ3rgxXNlKHUSbLVJJTin1O3zwxfKtn3PljPf+VqEOR9jfkIYf/AJDxrvngLqrJ
-         KCNv8suBNTK+0+4C+RQdixn/WXdfU1eaKDm43WSZyb7D7AH0JRPVW410l9kEoE96zPBQ
-         knw0/g4fs9rEEfOlKQ8+dYDoSNHCH1HAsjm/QFQm1ALiMp8WcGA6iII39LsDb7jVO87I
-         sabld0eow1W2sXj1cb8BtzVqjv/1nKkkD9ElB0/aIZILh2+liBQNIxYDWW5eR6Wad8wf
-         +u3U2aYiPSqmURSyFXxP9XeLvlGRGSAZvDCCCLISn6syjoutdcryC3mY3ubeoAwt+mct
-         M/Jg==
-X-Gm-Message-State: AGi0PubQgfE9imYRc//lDDTVSo5lIQyCrAZ7FwHNDG8wnpSxiZDunaNS
-        LafoZeTeYwLqnAhg5nwgkNbyRS7r8tWX
-X-Google-Smtp-Source: APiQypJepdKj0PDf1373XbxO5BqkbKcEEtSv8GdcD9TG2LRknOWN3R4OthW3IhKm1jLGeqaITsZPTG0bTNVz
-X-Received: by 2002:a17:90a:32c5:: with SMTP id l63mr5185816pjb.47.1585849293626;
- Thu, 02 Apr 2020 10:41:33 -0700 (PDT)
-Date:   Thu,  2 Apr 2020 10:41:30 -0700
-Message-Id: <20200402174130.140319-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: [PATCH] perf script: add -S/--symbols documentation
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AM4asBwnLyBdo8YxbWkR1sjxTEK7w5QaIa+bEyGHEF0=;
+        b=Egqq0lti4LFLUkJoDj+xI2ozLw+kXZ3DLZV+Fg21VB2vWUVrpMJ9yIFMyMYQQz+Xxs
+         6Dq175CvBBqFuC1dvL7dadiehKz2ngdGHo9Ho+Rr6ACWq81dNl3qq3ZYgLzV8IHsHQIa
+         PSm9IWikxa9PfnPk0eXUdODuUAs37iwylnF8a64QKfrGwNPkdu4OBD8dEBRPs4oQLY5j
+         eiSl4ByJgz4XPCBmk5iBw+Ui7prI2nNBWqGtm6bi70MdAJanMWa6vBRuRUK8uiuIThWn
+         4ysaZbET6TWzL2KFpa97IksaPo4teu9+ez7PahcO6cLgoHFRyZTrm2+t75Hfi5miOAUd
+         ndeg==
+X-Gm-Message-State: AGi0PuZ/6aWs+9Z0OBIOi5wDk4+cu5tI6nS7mQWPcG2DTeo/0aVSRbPd
+        ege9Z4NIE8qLq6EpJKYRDuc=
+X-Google-Smtp-Source: APiQypL0G7qtJatfkm3zFmTfdY40b5htA/BYVHuSk6t2vZlEBWANr89SzjyjA4oSLWcMkQT0nEpnlw==
+X-Received: by 2002:a9d:7c94:: with SMTP id q20mr2929597otn.150.1585849373038;
+        Thu, 02 Apr 2020 10:42:53 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id k24sm1505151oik.24.2020.04.02.10.42.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 Apr 2020 10:42:52 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 10:42:50 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Fangrui Song <maskray@google.com>
+Cc:     corbet@lwn.net, masahiroy@kernel.org, linux-doc@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] Documentation/llvm: fix the name of llvm-size
+Message-ID: <20200402174250.GA33476@ubuntu-m2-xlarge-x86>
+References: <20200402173842.96013-1-maskray@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402173842.96013-1-maskray@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Capture both that this option exists and that symbols can be hexadecimal
-addresses.
+On Thu, Apr 02, 2020 at 10:38:42AM -0700, 'Fangrui Song' via Clang Built Linux wrote:
+> The tool is called llvm-size, not llvm-objsize.
+> 
+> Fixes: fcf1b6a35c16 ("Documentation/llvm: add documentation on building w/ Clang/LLVM")
+> Signed-off-by: Fangrui Song <maskray@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-script.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 99a9853a11ba..963487e82edc 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -412,6 +412,14 @@ include::itrace.txt[]
- --xed::
- 	Run xed disassembler on output. Requires installing the xed disassembler.
- 
-+-S::
-+--symbols=symbol[,symbol...]::
-+	Only consider the listed symbols. Symbols are typically a name
-+	but they may also be hexadecimal address.
-+
-+	For example, to select the symbol noploop or the address 0x4007a0:
-+	perf script --symbols=noploop,0x4007a0
-+
- --call-trace::
- 	Show call stream for intel_pt traces. The CPUs are interleaved, but
- 	can be filtered with -C.
--- 
-2.26.0.rc2.310.g2932bb562d-goog
-
+> ---
+>  Documentation/kbuild/llvm.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> index d6c79eb4e23e..eefbdfa3e4d9 100644
+> --- a/Documentation/kbuild/llvm.rst
+> +++ b/Documentation/kbuild/llvm.rst
+> @@ -51,7 +51,7 @@ LLVM has substitutes for GNU binutils utilities. These can be invoked as
+>  additional parameters to `make`.
+>  
+>  	make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
+> -	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
+> +	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-size \\
+>  	  READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
+>  	  HOSTLD=ld.lld
+>  
+> -- 
+> 2.26.0.rc2.310.g2932bb562d-goog
+> 
