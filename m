@@ -2,144 +2,121 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB70C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE36C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF7520757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85CD20787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:57:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t/FWoThd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389693AbgDBP5D (ORCPT
+        id S2389705AbgDBP5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:57:03 -0400
-Received: from mga06.intel.com ([134.134.136.31]:50591 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389318AbgDBP4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:56:50 -0400
-IronPort-SDR: YfTEspLrUd9NC6Y5bg0S6asn26YdGedv+WaFPQPTI5YW2FFP75kA3l6iWiNGeN/qhc081Y6ckr
- l/+pXrycsejA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 08:56:49 -0700
-IronPort-SDR: hOmnY10zsClqRvcXjfjp1LY7mswTggcs1bi9KCHgPjwwUa+iuvtVhFNa1fsTtWR6WUvHFiUNKF
- UBNwd/7pGtcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="396413085"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 02 Apr 2020 08:56:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     x86@kernel.org, "Kenneth R . Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] x86/split_lock: Refactor and export handle_user_split_lock() for KVM
-Date:   Thu,  2 Apr 2020 08:55:53 -0700
-Message-Id: <20200402155554.27705-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200402155554.27705-1-sean.j.christopherson@intel.com>
-References: <20200402124205.334622628@linutronix.de>
- <20200402155554.27705-1-sean.j.christopherson@intel.com>
+        Thu, 2 Apr 2020 11:57:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46580 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389318AbgDBP5O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 11:57:14 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q3so1919051pff.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:57:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+f7ztlhRO8KaQ2k4S8l5uJ9SeBU7fnG5Wf7hP3kHn5I=;
+        b=t/FWoThdyFUJcn5JyvLffbYUxmclqELwOEsrwOd2uo7tYHH4mWliWdd529c/gCoqTl
+         DasIyU8bEjLQVPkGwY/CfG5j1lNOaqqPfnvDh8lf8KXX3uWf2SUGFx0Uesy5lZGlwhNv
+         JUm9o7hlcqm5Kxd8tQxwAxgT9xv1FN1J1SPskxdeUnxLsReMUoXXbg2tggHm3Sw1CzfM
+         ZubsHrvBIe3AR54sJqMwg8q/zDViiTW/3ftJGMZ6sbYsAgfSkPnucgkD0q0fKGJuTPhu
+         BFoNFt2MqauRK8lW0MK+FI2yBcCHPbHaH0DK0geP/L7zSjYAWmLxuVHiclbaBkH/HRB/
+         vphA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+f7ztlhRO8KaQ2k4S8l5uJ9SeBU7fnG5Wf7hP3kHn5I=;
+        b=Nw/O1SkXhtRkAURVS+K77wnGibLgt2tZdyIhLgtoZ2fMClmqIaDhd1Gi384C8Ztzj6
+         9mzDPxW3eCOKRRvx76/rSTZahiBgQz0XtH3pANz10h+KgIe9anp+ztu5lJ3Cp7pZsfpS
+         jx9+EJAhlCJwb7AsonZD7rzu7+lRzDQTgx21CC7oNUlCvKvUlQIG554u9AOSn9pxMKd0
+         iIP9WGpTQ/7iF7Oo+dvI+i4lUUUYo5DvPL6eqIZTlzTukcVp7eJ1K9yTGvFJqJJF7Lkw
+         xFwOikLME9QMtOcUG0oM9X3rsfQLf0mZ9EaNCCKLWbwPXFbtS0nmVOkUuMd8V2BStT4A
+         Yyjg==
+X-Gm-Message-State: AGi0PuZPJWtfCpUdOlcdpb1hGl57saMJAG2yyuy7tzFJ7MfXMHiDiR/0
+        mtbGAEljDs2Efw4a0KJMGbD8qrNAd9I2l1Dcbows0g==
+X-Google-Smtp-Source: APiQypIhP5QcwIz3sGFRAXhXluVx9mRCbbCvr8u6mvQedlVnjNdfX1RFcNXG1rVCWGnm8fwdhv0VxysfCl6L7qILleI=
+X-Received: by 2002:a63:f411:: with SMTP id g17mr3872394pgi.440.1585843031627;
+ Thu, 02 Apr 2020 08:57:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Pine.LNX.4.44L0.2004021133440.13377-100000@netrider.rowland.org> <000000000000c3793205a250cb6a@google.com>
+In-Reply-To: <000000000000c3793205a250cb6a@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 2 Apr 2020 17:57:00 +0200
+Message-ID: <CAAeHK+wpZ3t-1WFr9Tyt51HFP+m=umFz_=EKcNAGif1Ekyf=gQ@mail.gmail.com>
+Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
+To:     syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ingrassia@epigenesys.com, LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: multipart/mixed; boundary="00000000000092a98705a250dae5"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoyao Li <xiaoyao.li@intel.com>
+--00000000000092a98705a250dae5
+Content-Type: text/plain; charset="UTF-8"
 
-In the future, KVM will use handle_user_split_lock() to handle #AC
-caused by split lock in guest. Due to the fact that KVM doesn't have
-a @regs context and will pre-check EFLAGS.AC, move the EFLAGS.AC check
-to do_alignment_check().
+On Thu, Apr 2, 2020 at 5:53 PM syzbot
+<syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot has tested the proposed patch and the reproducer did not trigger crash:
+>
+> Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
+>
+> Tested on:
+>
+> commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+> git tree:       https://github.com/google/kasan.git
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+> dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=143c2c63e00000
+>
+> Note: testing is done by a robot and is best-effort only.
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/include/asm/cpu.h  | 4 ++--
- arch/x86/kernel/cpu/intel.c | 7 ++++---
- arch/x86/kernel/traps.c     | 2 +-
- 3 files changed, 7 insertions(+), 6 deletions(-)
+Let's try this once again, maybe the reproducer is extremely unreliable.
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index ff6f3ca649b3..ff567afa6ee1 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -43,11 +43,11 @@ unsigned int x86_stepping(unsigned int sig);
- #ifdef CONFIG_CPU_SUP_INTEL
- extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
- extern void switch_to_sld(unsigned long tifn);
--extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-+extern bool handle_user_split_lock(unsigned long ip);
- #else
- static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
- static inline void switch_to_sld(unsigned long tifn) {}
--static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+static inline bool handle_user_split_lock(unsigned long ip)
- {
- 	return false;
- }
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 9a26e972cdea..7688f51aabdb 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1066,13 +1066,13 @@ static void split_lock_init(void)
- 	split_lock_verify_msr(sld_state != sld_off);
- }
- 
--bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+bool handle_user_split_lock(unsigned long ip)
- {
--	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-+	if (sld_state == sld_fatal)
- 		return false;
- 
- 	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
--			    current->comm, current->pid, regs->ip);
-+			    current->comm, current->pid, ip);
- 
- 	/*
- 	 * Disable the split lock detection for this task so it can make
-@@ -1083,6 +1083,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
- 	set_tsk_thread_flag(current, TIF_SLD);
- 	return true;
- }
-+EXPORT_SYMBOL_GPL(handle_user_split_lock);
- 
- /*
-  * This function is called only when switching between tasks with
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index d54cffdc7cac..55902c5bf0aa 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -304,7 +304,7 @@ dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
- 
- 	local_irq_enable();
- 
--	if (handle_user_split_lock(regs, error_code))
-+	if (!(regs->flags & X86_EFLAGS_AC) && handle_user_split_lock(regs->ip))
- 		return;
- 
- 	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
--- 
-2.24.1
+#syz test: https://github.com/google/kasan.git 0fa84af8
 
+--00000000000092a98705a250dae5
+Content-Type: text/x-patch; charset="US-ASCII"; name="usb.patch"
+Content-Disposition: attachment; filename="usb.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k8ixzckk0>
+X-Attachment-Id: f_k8ixzckk0
+
+SW5kZXg6IHVzYi1kZXZlbC9kcml2ZXJzL3VzYi9jb3JlL3VyYi5jCj09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KLS0tIHVz
+Yi1kZXZlbC5vcmlnL2RyaXZlcnMvdXNiL2NvcmUvdXJiLmMKKysrIHVzYi1kZXZlbC9kcml2ZXJz
+L3VzYi9jb3JlL3VyYi5jCkBAIC00NzUsOCArNDc1LDkgQEAgaW50IHVzYl9zdWJtaXRfdXJiKHN0
+cnVjdCB1cmIgKnVyYiwgZ2ZwXwogCiAJLyogQ2hlY2sgdGhhdCB0aGUgcGlwZSdzIHR5cGUgbWF0
+Y2hlcyB0aGUgZW5kcG9pbnQncyB0eXBlICovCiAJaWYgKHVzYl91cmJfZXBfdHlwZV9jaGVjayh1
+cmIpKQotCQlkZXZfV0FSTigmZGV2LT5kZXYsICJCT0dVUyB1cmIgeGZlciwgcGlwZSAleCAhPSB0
+eXBlICV4XG4iLAotCQkJdXNiX3BpcGV0eXBlKHVyYi0+cGlwZSksIHBpcGV0eXBlc1t4ZmVydHlw
+ZV0pOworCQlkZXZfV0FSTigmZGV2LT5kZXYsICJCT0dVUyB1cmIgeGZlciwgcGlwZSAleCAhPSB0
+eXBlICV4LCBlcCBhZGRyIDB4JTAyeCwgcGlwZSAweCV4LCB4ZmVydHlwZSAlZFxuIiwKKwkJCXVz
+Yl9waXBldHlwZSh1cmItPnBpcGUpLCBwaXBldHlwZXNbeGZlcnR5cGVdLAorCQkJZXAtPmRlc2Mu
+YkVuZHBvaW50QWRkcmVzcywgdXJiLT5waXBlLCB4ZmVydHlwZSk7CiAKIAkvKiBDaGVjayBhZ2Fp
+bnN0IGEgc2ltcGxlL3N0YW5kYXJkIHBvbGljeSAqLwogCWFsbG93ZWQgPSAoVVJCX05PX1RSQU5T
+RkVSX0RNQV9NQVAgfCBVUkJfTk9fSU5URVJSVVBUIHwgVVJCX0RJUl9NQVNLIHwK
+--00000000000092a98705a250dae5--
