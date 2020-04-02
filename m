@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12A9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBD1C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8205F2063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4628C2063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:44:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A1ASF1c0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b3HdyWTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389513AbgDBPoS (ORCPT
+        id S2389502AbgDBPoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:44:18 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:57112 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389491AbgDBPoP (ORCPT
+        Thu, 2 Apr 2020 11:44:16 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:49293 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389485AbgDBPoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:44:15 -0400
-Received: by mail-qk1-f201.google.com with SMTP id o14so3362901qke.23
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:44:15 -0700 (PDT)
+        Thu, 2 Apr 2020 11:44:14 -0400
+Received: by mail-pl1-f202.google.com with SMTP id l2so2869579pld.16
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 08:44:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=8NafyOVUhJE7GQyMOzfSsmcL2IBU8ziCZAboaynAxpM=;
-        b=A1ASF1c0OjaklxAKqlD5pR7jJ9OHJEjVvKp5yNUpXDaJugIqw2vzGJOiB2025SyEK8
-         6o3QHEquIz9/dTOuBtaMbM9ndh+JGm+R5q/ZuUgNihNVM2Rzc/n0nMdzyrB4IubZnwq2
-         jQTwLWn0H+dr9e3KmX/zoEr/NMAeVhe7/FeXA27vuwQ2u1oHabB0FRn1Pi6YOuABvIgi
-         q6pVjw5MrRQMrt2WzXOsEqS0dvUAi2JQ+qeFNXpOBwOl9Z/XMPY7LManFLlz48E0zCfk
-         D2VdxJdX52TYK+Q3p5rVC5IuOeWX4tB9uhNtqJee/ERFCItBH3pFrJ6N95I72gmg4/g8
-         P65g==
+        bh=7gXpeqckpwQ44bfU327VZsCirSAnwIgzhx4tHJH9S9E=;
+        b=b3HdyWTx6A1PAhiA+OzR5zisfpsi4tLGVY9djuY5LWxa2pdaNOw4+w4kEy7ULtZCdt
+         0v8WqdL+lT4bsW4EJO+VwlOsFMfOSRu+ZVl6EJ63ctZhLvgQtsbIxe5D1V/J1C1iDBMb
+         a4yw1ytqPlPgrMb8XEKMa3XFBM6KPueTQcESaz9m1cdcKj5hRdYCE1xny+JeHu+giSe7
+         +Mdir9OD3h95Z/hdopITRsVavYakFzOCC9iAYLxFUKmjrTPYqhXrKa+SksYoNiQ5iZTe
+         00GK8NSt8HLjmKsZ0fdHRAmTek59K9shPjx9pygD33jqheiaxO66XjW4weJ3v17mfANi
+         Vnbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=8NafyOVUhJE7GQyMOzfSsmcL2IBU8ziCZAboaynAxpM=;
-        b=TbCn9C4RFTw91zKWLgMR8fzle8IxJev/KPA87y1er5s2M8WzQerrCExjNO4bOJdDrh
-         O2/SRrx41IgrCaUhgqjWh69Kc/7BeH3SQJTEEuQXxmWVzMyR8AIOzDrpT1C0ObIg8x+P
-         5qQ2DAd3fAVeRCyyHuXse4XLXK8TuRtkSECmiODRo60b1Tg0HX2Etsd/dTZ9ndIZPP9G
-         Ktd5FpVSiLTYkCDky5mK2KHds+zfvWt1vSFVaxNoeLPTyb3Py56cfsOSfTpKlPRKjTQA
-         AScmnuDK9BI0su/cTGU4xCRmLy8NZJIixrmibO9QZZ/XLxh6U7ZbPatTXyOvfw7TRJji
-         kgzw==
-X-Gm-Message-State: AGi0PubFY1U8kaEz1ljbhJPa3gAyR/ICQRW4qpfVaBRj7rtC+SIu2iko
-        ulKCakzAnyDx1wZjj8Sy+LPQTj4BjuES
-X-Google-Smtp-Source: APiQypJ1r+Ovywn2qmjdTUpD15l2BGwgt/Qq22GeA1PQtD6rirgwP0lRcDkC7WOwWW0RzuKAh3IZ6nQBL1sT
-X-Received: by 2002:a0c:fe04:: with SMTP id x4mr3866703qvr.69.1585842254585;
- Thu, 02 Apr 2020 08:44:14 -0700 (PDT)
-Date:   Thu,  2 Apr 2020 08:43:57 -0700
+        bh=7gXpeqckpwQ44bfU327VZsCirSAnwIgzhx4tHJH9S9E=;
+        b=mkCjdid3kBYfGLHFPtoWCJ693DZmwX0rZeXtZSWH0BFFiCA2HBmP8rzMgJhSVqIi8q
+         U1R3sQ8we7kdPp4gB5AvB84M7F+SBJLA5RLKB0zcxa9HggZFKxY9jjicLorPt42UkC4M
+         DcbDt/y1QnjZz23xrg358diYD/Ed3hjPLNz/4KAzcbue3JZSUrF6gMUMDDRzBaoNspky
+         1VFzF7EWEjGH+gzcqMytp/ynukQAEJU3P1WJdATcjEVrPcD679QbTTsj3dZuMG09MrFE
+         REQ6TP793PSzzdZq6DU2yBrxd33GohkFI5owuvAFLGdDZfnNnfn8OurJgB3jGjsLzNbM
+         z8tQ==
+X-Gm-Message-State: AGi0PuaLQ3eT3F/Exyz69Z7280tQCoVyfFYcEMjv/14cRVN3MpsAk7LA
+        UWtwdNMFtYnf1Pd2TnwjqWJdnC6itZq6
+X-Google-Smtp-Source: APiQypIf4ojHHMLNIrpSpic4PqWzqwZGXeDLG3tPVucAC1eJV1Y/84p5fAIZAjz5Ma8TDsK/MAooKDvORG4X
+X-Received: by 2002:a63:7b57:: with SMTP id k23mr3983859pgn.307.1585842251942;
+ Thu, 02 Apr 2020 08:44:11 -0700 (PDT)
+Date:   Thu,  2 Apr 2020 08:43:56 -0700
 In-Reply-To: <20200402154357.107873-1-irogers@google.com>
-Message-Id: <20200402154357.107873-6-irogers@google.com>
+Message-Id: <20200402154357.107873-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20200402154357.107873-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: [PATCH v2 5/5] perf synthetic events: Remove use of sscanf from /proc reading
+Subject: [PATCH v2 4/5] tools api: add a lightweight buffered reading api
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -81,265 +81,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The synthesize benchmark, run on a single process and thread, shows
-perf_event__synthesize_mmap_events as the hottest function with fgets
-and sscanf taking the majority of execution time. fscanf performs
-similarly well. Replace the scanf call with manual reading of each field
-of the /proc/pid/maps line, and remove some unnecessary buffering.
-This change also addresses potential, but unlikely, buffer overruns for
-the string values read by scanf.
-
-Performance before is:
-Average synthesis took: 120.195100 usec
-Average data synthesis took: 156.582300 usec
-
-And after is:
-Average synthesis took: 67.189100 usec
-Average data synthesis took: 102.451600 usec
-
-On a Intel Xeon 6154 compiling with Debian gcc 9.2.1.
+The synthesize benchmark shows the majority of execution time going to
+fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
+reading library that will be used to replace these calls in a follow-up
+CL.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/synthetic-events.c | 157 +++++++++++++++++++----------
- 1 file changed, 105 insertions(+), 52 deletions(-)
+ tools/lib/api/io.h | 107 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+ create mode 100644 tools/lib/api/io.h
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 1f3d8d4bb879..ebe48e35499d 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -36,6 +36,7 @@
- #include <string.h>
- #include <uapi/linux/mman.h> /* To get things like MAP_HUGETLB even on older libc headers */
- #include <api/fs/fs.h>
-+#include <api/io.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <fcntl.h>
-@@ -272,6 +273,79 @@ static int perf_event__synthesize_fork(struct perf_tool *tool,
- 	return 0;
- }
- 
-+static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
-+				u32 *prot, u32 *flags, __u64 *offset,
-+				u32 *maj, u32 *min,
-+				__u64 *inode,
-+				ssize_t pathname_size, char *pathname)
+diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+new file mode 100644
+index 000000000000..5aa5b0e26a7a
+--- /dev/null
++++ b/tools/lib/api/io.h
+@@ -0,0 +1,107 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Lightweight buffered reading library.
++ *
++ * Copyright 2019 Google LLC.
++ */
++#ifndef __API_IO__
++#define __API_IO__
++
++struct io {
++	/* File descriptor being read/ */
++	int fd;
++	/* Size of the read buffer. */
++	unsigned int buf_len;
++	/* Pointer to storage for buffering read. */
++	char *buf;
++	/* End of the storage. */
++	char *end;
++	/* Currently accessed data pointer. */
++	char *data;
++	/* Set true on when the end of file on read error. */
++	bool eof;
++};
++
++static inline void io__init(struct io *io, int fd,
++			    char *buf, unsigned int buf_len)
 +{
-+	__u64 temp;
-+	int ch;
-+	char *start_pathname = pathname;
++	io->fd = fd;
++	io->buf_len = buf_len;
++	io->buf = buf;
++	io->end = buf;
++	io->data = buf;
++	io->eof = false;
++}
 +
-+	if (io__get_hex(io, start) != '-')
-+		return false;
-+	if (io__get_hex(io, end) != ' ')
-+		return false;
++/* Reads one character from the "io" file with similar semantics to fgetc. */
++static inline int io__get_char(struct io *io)
++{
++	char *ptr = io->data;
 +
-+	/* map protection and flags bits */
-+	*prot = 0;
-+	ch = io__get_char(io);
-+	if (ch == 'r')
-+		*prot |= PROT_READ;
-+	else if (ch != '-')
-+		return false;
-+	ch = io__get_char(io);
-+	if (ch == 'w')
-+		*prot |= PROT_WRITE;
-+	else if (ch != '-')
-+		return false;
-+	ch = io__get_char(io);
-+	if (ch == 'x')
-+		*prot |= PROT_EXEC;
-+	else if (ch != '-')
-+		return false;
-+	ch = io__get_char(io);
-+	if (ch == 's')
-+		*flags = MAP_SHARED;
-+	else if (ch == 'p')
-+		*flags = MAP_PRIVATE;
-+	else
-+		return false;
-+	if (io__get_char(io) != ' ')
-+		return false;
++	if (ptr == io->end) {
++		ssize_t n = read(io->fd, io->buf, io->buf_len);
 +
-+	if (io__get_hex(io, offset) != ' ')
-+		return false;
-+
-+	if (io__get_hex(io, &temp) != ':')
-+		return false;
-+	*maj = temp;
-+	if (io__get_hex(io, &temp) != ' ')
-+		return false;
-+	*min = temp;
-+
-+	ch = io__get_dec(io, inode);
-+	if (ch != ' ') {
-+		*pathname = '\0';
-+		return ch == '\n';
-+	}
-+	do {
-+		ch = io__get_char(io);
-+	} while (ch == ' ');
-+	while (true) {
-+		if (ch < 0)
-+			return false;
-+		if (ch == '\0' || ch == '\n' ||
-+		    (pathname + 1 - start_pathname) >= pathname_size) {
-+			*pathname = '\0';
-+			return true;
++		if (n <= 0) {
++			io->eof = true;
++			return -1;
 +		}
-+		*pathname++ = ch;
-+		ch = io__get_char(io);
++		ptr = &io->buf[0];
++		io->end = &io->buf[n];
++	}
++	io->data = ptr + 1;
++	return *ptr;
++}
++
++/* Read a hexadecimal value with no 0x prefix into the out argument hex.
++ * Returns -1 on error or if nothing is read, otherwise returns the character
++ * after the hexadecimal value.
++ */
++static inline int io__get_hex(struct io *io, __u64 *hex)
++{
++	bool first_read = true;
++
++	*hex = 0;
++	while (true) {
++		char ch = io__get_char(io);
++
++		if (ch < 0)
++			return ch;
++		if (ch >= '0' && ch <= '9')
++			*hex = (*hex << 4) | (ch - '0');
++		else if (ch >= 'a' && ch <= 'f')
++			*hex = (*hex << 4) | (ch - 'a' + 10);
++		else if (ch >= 'A' && ch <= 'F')
++			*hex = (*hex << 4) | (ch - 'A' + 10);
++		else if (first_read)
++			return -1;
++		else
++			return ch;
++		first_read = false;
 +	}
 +}
 +
- int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 				       union perf_event *event,
- 				       pid_t pid, pid_t tgid,
-@@ -279,9 +353,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 				       struct machine *machine,
- 				       bool mmap_data)
- {
--	FILE *fp;
- 	unsigned long long t;
- 	char bf[BUFSIZ];
-+	struct io io;
- 	bool truncation = false;
- 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
- 	int rc = 0;
-@@ -294,28 +368,39 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
- 		machine->root_dir, pid, pid);
- 
--	fp = fopen(bf, "r");
--	if (fp == NULL) {
-+	io.fd = open(bf, O_RDONLY, 0);
-+	if (io.fd < 0) {
- 		/*
- 		 * We raced with a task exiting - just return:
- 		 */
- 		pr_debug("couldn't open %s\n", bf);
- 		return -1;
- 	}
-+	io__init(&io, io.fd, bf, sizeof(bf));
- 
- 	event->header.type = PERF_RECORD_MMAP2;
- 	t = rdclock();
- 
--	while (1) {
--		char prot[5];
--		char execname[PATH_MAX];
--		char anonstr[] = "//anon";
--		unsigned int ino;
-+	while (!io.eof) {
-+		static const char anonstr[] = "//anon";
- 		size_t size;
--		ssize_t n;
- 
--		if (fgets(bf, sizeof(bf), fp) == NULL)
--			break;
-+		/* ensure null termination since stack will be reused. */
-+		event->mmap2.filename[0] = '\0';
++/* Read a decimal value into the out argument dec.
++ * Returns -1 on error or if nothing is read, otherwise returns the character
++ * after the decimal value.
++ */
++static inline int io__get_dec(struct io *io, __u64 *dec)
++{
++	bool first_read = true;
 +
-+		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
-+		if (!read_proc_maps_line(&io,
-+					&event->mmap2.start,
-+					&event->mmap2.len,
-+					&event->mmap2.prot,
-+					&event->mmap2.flags,
-+					&event->mmap2.pgoff,
-+					&event->mmap2.maj,
-+					&event->mmap2.min,
-+					&event->mmap2.ino,
-+					sizeof(event->mmap2.filename),
-+					event->mmap2.filename))
-+			continue;
- 
- 		if ((rdclock() - t) > timeout) {
- 			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
-@@ -326,23 +411,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			goto out;
- 		}
- 
--		/* ensure null termination since stack will be reused. */
--		strcpy(execname, "");
--
--		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
--		n = sscanf(bf, "%"PRI_lx64"-%"PRI_lx64" %s %"PRI_lx64" %x:%x %u %[^\n]\n",
--		       &event->mmap2.start, &event->mmap2.len, prot,
--		       &event->mmap2.pgoff, &event->mmap2.maj,
--		       &event->mmap2.min,
--		       &ino, execname);
--
--		/*
-- 		 * Anon maps don't have the execname.
-- 		 */
--		if (n < 7)
--			continue;
--
--		event->mmap2.ino = (u64)ino;
- 		event->mmap2.ino_generation = 0;
- 
- 		/*
-@@ -353,23 +421,8 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 		else
- 			event->header.misc = PERF_RECORD_MISC_GUEST_USER;
- 
--		/* map protection and flags bits */
--		event->mmap2.prot = 0;
--		event->mmap2.flags = 0;
--		if (prot[0] == 'r')
--			event->mmap2.prot |= PROT_READ;
--		if (prot[1] == 'w')
--			event->mmap2.prot |= PROT_WRITE;
--		if (prot[2] == 'x')
--			event->mmap2.prot |= PROT_EXEC;
--
--		if (prot[3] == 's')
--			event->mmap2.flags |= MAP_SHARED;
--		else
--			event->mmap2.flags |= MAP_PRIVATE;
--
--		if (prot[2] != 'x') {
--			if (!mmap_data || prot[0] != 'r')
-+		if ((event->mmap2.prot & PROT_EXEC) == 0) {
-+			if (!mmap_data || (event->mmap2.prot & PROT_READ) == 0)
- 				continue;
- 
- 			event->header.misc |= PERF_RECORD_MISC_MMAP_DATA;
-@@ -379,17 +432,17 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 		if (truncation)
- 			event->header.misc |= PERF_RECORD_MISC_PROC_MAP_PARSE_TIMEOUT;
- 
--		if (!strcmp(execname, ""))
--			strcpy(execname, anonstr);
-+		if (!strcmp(event->mmap2.filename, ""))
-+			strcpy(event->mmap2.filename, anonstr);
- 
- 		if (hugetlbfs_mnt_len &&
--		    !strncmp(execname, hugetlbfs_mnt, hugetlbfs_mnt_len)) {
--			strcpy(execname, anonstr);
-+		    !strncmp(event->mmap2.filename, hugetlbfs_mnt,
-+			     hugetlbfs_mnt_len)) {
-+			strcpy(event->mmap2.filename, anonstr);
- 			event->mmap2.flags |= MAP_HUGETLB;
- 		}
- 
--		size = strlen(execname) + 1;
--		memcpy(event->mmap2.filename, execname, size);
-+		size = strlen(event->mmap2.filename) + 1;
- 		size = PERF_ALIGN(size, sizeof(u64));
- 		event->mmap2.len -= event->mmap.start;
- 		event->mmap2.header.size = (sizeof(event->mmap2) -
-@@ -408,7 +461,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			break;
- 	}
- 
--	fclose(fp);
-+	close(io.fd);
- 	return rc;
- }
- 
++	*dec = 0;
++	while (true) {
++		char ch = io__get_char(io);
++
++		if (ch < 0)
++			return ch;
++		if (ch >= '0' && ch <= '9')
++			*dec = (*dec * 10) + ch - '0';
++		else if (first_read)
++			return -1;
++		else
++			return ch;
++		first_read = false;
++	}
++}
++
++#endif /* __API_IO__ */
 -- 
 2.26.0.rc2.310.g2932bb562d-goog
 
