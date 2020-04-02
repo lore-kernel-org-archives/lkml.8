@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3116FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EFFC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB18420757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C51C20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="aVyemHYt"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="b8lt+tkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388232AbgDBLzL (ORCPT
+        id S2388177AbgDBLy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:55:11 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:23679 "EHLO rere.qmqm.pl"
+        Thu, 2 Apr 2020 07:54:59 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:25271 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387988AbgDBLzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:55:01 -0400
+        id S2387988AbgDBLy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:54:58 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tM1t51G6z1vh;
-        Thu,  2 Apr 2020 13:54:58 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tM1q4wR6zpX;
+        Thu,  2 Apr 2020 13:54:55 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585828498; bh=MhmlsMfvkZ/jxtgV76LjVAGMwapDNRZk0vRzuKiw1Lc=;
+        t=1585828495; bh=8B8kq1VKlq4SBlVvHVGlJ4PmNNXHAOiZiONRej4jb3Q=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=aVyemHYt6ay7agExHU3z9CkG0HakP+LveeeQ+IG1ZvMTlyzZqkIhv7c721tw57yao
-         C79ZYKUO9tWADfUSB/PdMFT5W1Cke1hdD2R/4gKWnFXWzmmi5s60mYPHC8Cdf4Bnn2
-         YztGPrmF6kJxEc2/8ZANqeINlERfScGMa0CUenLO1v/xeNT1ThZfEGsZHn+EZTummg
-         F1lr7SnqP9hvhmRO1zBZ9ui3MrlkKYqTLG3lmwtG+n7jc5f1sOR3uZyUv1e4r+4k96
-         cuR+Mc3kRBFq3NllsQyLk/fE2WeJ3gEKAytF5mECqiHk0WNr+0xApblKxQbO9z47jG
-         3+81UyfnQrOPg==
+        b=b8lt+tkv83BaIkNxaetnNQ/mWk/8T1qO+TUUTGQ4cnIm4LiojnPSQHA3MgzCWutjG
+         8X0yB0A2q68LALhJk7w5VWP5QZAE7gVC3UGNmAW4+6iKoCsXBqZm1Yrqiu1Ls4C4rK
+         NXTZhExHIWOE9jy6FBe7m+nPd8JxDX8GlhoEj43ioxAhxuaQ3qC62ZIeQoE3nXaCMa
+         RFMUTmYmVmxkABz3xLbbupYzVu/oAZ1A3Vvomcio5YdCqHk2a6+7WtpKwsSZ/wUqRK
+         QRydDwJJ0daSGRI0faDXj5tQaflQ2nKPPESe0bIVUSeI79jZJj4VXlxUYCJTVhyFwD
+         oBBAy1kIEKaWA==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 13:54:58 +0200
-Message-Id: <84482c3f74fae701f8366bea681fc799918b1ab8.1585827904.git.mirq-linux@rere.qmqm.pl>
+Date:   Thu, 02 Apr 2020 13:54:55 +0200
+Message-Id: <0077b8bc2a4da024a3b985dd622674ebebe5b71b.1585827904.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 7/7] mmc: sdhci: respect non-zero div quirk in programmable
- clock mode
+Subject: [PATCH 2/7] mmc: sdhci: fix programmable clock config from preset
+ value
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -57,41 +57,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN respected also in programmable
-clock mode.
+When host controller uses programmable clock presets but doesn't
+advertise programmable clock support, we can only guess what frequency
+it generates. Let's at least return correct SDHCI_PROG_CLOCK_MODE bit
+value in this case.
 
+Fixes: 52983382c74f ("mmc: sdhci: enhance preset value function")
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/mmc/host/sdhci.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 01fd897f8f3c..df80f39c570b 100644
+index 9aa3af5826df..b2dc4f1cfa5c 100644
 --- a/drivers/mmc/host/sdhci.c
 +++ b/drivers/mmc/host/sdhci.c
-@@ -1807,9 +1807,6 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+@@ -1767,11 +1767,10 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
  
- 	div = DIV_ROUND_UP(host->max_clk, clock);
- 
--	if (div == 1 && (host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN))
--		div = 2;
--
- 	if (host->version >= SDHCI_SPEC_300) {
- 		/* Version 3.00 divisors must be a multiple of 2. */
- 		div = min(div, SDHCI_MAX_DIV_SPEC_300);
-@@ -1823,6 +1820,12 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
- 	real_div = div * 2 + !div;
- 
- clock_set:
-+	if (!div && (host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)) {
-+		/* for div == 1, clock rate is divided by 2 in both modes */
-+		div = 1;
-+		real_div = 2;
-+	}
-+
- 	*actual_clock = (host->max_clk * clk_mul) / real_div;
- 	clk |= (div & SDHCI_DIV_MASK) << SDHCI_DIVIDER_SHIFT;
- 	clk |= ((div & SDHCI_DIV_HI_MASK) >> SDHCI_DIV_MASK_LEN)
+ 			pre_val = sdhci_get_preset_value(host);
+ 			div = FIELD_GET(SDHCI_PRESET_SDCLK_FREQ_MASK, pre_val);
+-			if (host->clk_mul &&
+-				(pre_val & SDHCI_PRESET_CLKGEN_SEL)) {
++			if (pre_val & SDHCI_PRESET_CLKGEN_SEL) {
+ 				clk = SDHCI_PROG_CLOCK_MODE;
+ 				real_div = div + 1;
+-				clk_mul = host->clk_mul;
++				clk_mul = host->clk_mul ?: 1;
+ 			} else {
+ 				real_div = max_t(int, 1, div << 1);
+ 			}
 -- 
 2.20.1
 
