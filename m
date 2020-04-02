@@ -2,89 +2,117 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39967C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FCCC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154D8206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE4E206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:17:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIS2UUZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732614AbgDBOR3 (ORCPT
+        id S1732760AbgDBORs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:17:29 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:33362 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731783AbgDBOR2 (ORCPT
+        Thu, 2 Apr 2020 10:17:48 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49430 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729213AbgDBORs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:17:28 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK0es-0003sC-5r; Thu, 02 Apr 2020 08:17:26 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK0en-0002Mh-AX; Thu, 02 Apr 2020 08:17:25 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Jann Horn <jannh@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Adam Zabrocki <pi3@pi3.com.pl>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable <stable@vger.kernel.org>
-References: <20200324215049.GA3710@pi3.com.pl> <202003291528.730A329@keescook>
-        <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org>
-        <CAG48ez1dCPw9Dep-+GWn=SnHv1nVv4Npv1FpFxmomk6tmazB-g@mail.gmail.com>
-Date:   Thu, 02 Apr 2020 09:14:38 -0500
-In-Reply-To: <CAG48ez1dCPw9Dep-+GWn=SnHv1nVv4Npv1FpFxmomk6tmazB-g@mail.gmail.com>
-        (Jann Horn's message of "Thu, 2 Apr 2020 06:46:49 +0200")
-Message-ID: <87y2rekm9d.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 2 Apr 2020 10:17:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585837067;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CuGP7aJnDFhdZgpYgnvv0xosaA7xrwclM14mlI59qEU=;
+        b=SIS2UUZvZbgf0Pa3jGgsVQYYXR+xx9f8vSAp/seBxHdzeIXscIXMU7/fGIwWqIEoagdNJG
+        PYLN1kN1I7gJZ1iGmo1PixK3d1+KkUL4TVkSxoCtBAkWyfm4Y+aDuZAKMHPO1sZnTkIV1u
+        /22IERFz71sucuDn0zK/Axp7XigA32U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-aZ0J-bxwOPu7RQ4y9aTC0Q-1; Thu, 02 Apr 2020 10:17:44 -0400
+X-MC-Unique: aZ0J-bxwOPu7RQ4y9aTC0Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 185501922966;
+        Thu,  2 Apr 2020 14:17:34 +0000 (UTC)
+Received: from krava (unknown [10.40.194.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 47F6CA63A6;
+        Thu,  2 Apr 2020 14:17:32 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 16:17:29 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/8] perf evlist: implement control command handling
+ functions
+Message-ID: <20200402141729.GN2518490@krava>
+References: <825a5132-b58d-c0b6-b050-5a6040386ec7@linux.intel.com>
+ <1760b862-7a4a-3930-1a53-04667c71cf6f@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jK0en-0002Mh-AX;;;mid=<87y2rekm9d.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19aHVbkFFXhJEzKOhX85KQe0ZY2f9JbahM=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] signal: Extend exec_id to 64bits
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1760b862-7a4a-3930-1a53-04667c71cf6f@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> writes:
+On Fri, Mar 27, 2020 at 11:46:43AM +0300, Alexey Budankov wrote:
 
-> On Wed, Apr 1, 2020 at 10:50 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->> Replace the 32bit exec_id with a 64bit exec_id to make it impossible
->> to wrap the exec_id counter.  With care an attacker can cause exec_id
->> wrap and send arbitrary signals to a newly exec'd parent.  This
->> bypasses the signal sending checks if the parent changes their
->> credentials during exec.
->>
->> The severity of this problem can been seen that in my limited testing
->> of a 32bit exec_id it can take as little as 19s to exec 65536 times.
->> Which means that it can take as little as 14 days to wrap a 32bit
->> exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
->> days.  Even my slower timing is in the uptime of a typical server.
->
-> FYI, if you actually optimize this, it's more like 12s to exec 1048576
-> times according to my test, which means ~14 hours for 2^32 executions
-> (on a single core). That's on an i7-4790 (a Haswell desktop processor
-> that was launched about six years ago, in 2014).
+SNIP
 
-Half a day.  I am not at all surprised, but it is good to know it can
-take so little time.
+> +
+> +int perf_evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
+> +{
+> +	int err = 0;
+> +	int ctlfd_pos = evlist->ctl_fd_pos;
+> +	struct pollfd *entries = evlist->core.pollfd.entries;
+> +
+> +	if (!entries[ctlfd_pos].revents)
+> +		return 0;
+> +
+> +	if (entries[ctlfd_pos].revents & POLLIN) {
+> +		err = perf_evlist__ctlfd_recv(evlist, cmd);
+> +		if (err > 0) {
+> +			switch (*cmd) {
+> +			case CTL_CMD_RESUME:
+> +				evlist__enable(evlist);
+> +				break;
+> +			case CTL_CMD_PAUSE:
+> +				evlist__disable(evlist);
+> +				break;
 
-Eric
+would CTL_CMD_ENABLE, CTL_CMD_DISABLE be better fit in here?
+
+especialy because we have the 'pause' ioctl for sampling,
+which I was thinking initialy you are using for record,
+
+and it's still might be better fit for sampling than disable, no?
+
+jirka
+
+> +			case CTL_CMD_ACK:
+> +			case CTL_CMD_UNSUPPORTED:
+> +			default:
+> +				pr_debug("ctlfd: unsupported %d\n", *cmd);
+> +				break;
+> +			}
+> +			if (!(*cmd == CTL_CMD_ACK || *cmd == CTL_CMD_UNSUPPORTED))
+> +				perf_evlist__ctlfd_ack(evlist);
+> +		}
+> +	}
+> +
+
+SNIP
+
