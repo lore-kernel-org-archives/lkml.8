@@ -2,261 +2,121 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C4EC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441F6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67DD320787
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585842849;
-	bh=4Eu298RZ2IWYgmD/vOfOB6+9cpJ48Q2EoWqLKqCJRtc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=HJGk5dOQnDloOrmCrZK7/dFYj5WHSy8etvgJ9U5eFmXjN0gCURnop/GjQOlQ6uuVD
-	 wgJQ/l8SDMc+MHn4svoUB5OnrgqddxOPjJQHybFhpZNuigkhJpNr3N0I1gQbpUt2Mu
-	 KxAbaEspmsrfrIj9EkHZeYR8kovB63i/cBa6tTK0=
+	by mail.kernel.org (Postfix) with ESMTP id 143EC20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="URcYYJoF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389560AbgDBPyI (ORCPT
+        id S2389591AbgDBPyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:54:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388677AbgDBPyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:54:07 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 2 Apr 2020 11:54:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49427 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388677AbgDBPyo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 11:54:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585842883;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Hgr1szwPzLJm+lu6P65U6An0uZy5Dnb2dNnfpMioOSk=;
+        b=URcYYJoFGkHNvp3xSZNoDsJxdUhvttRFO2/mS+9w55V382Ra5XD3lctF/eHM2vk1Um9+qY
+        cWVcVQqfVG4Bss0wE8B5+VJziHAfV8ThBUGGh8pX5kly4nBdFohDwF9V27duQgaxbehSlz
+        K0ATr2kSYiyfzfxxnRgmuZNbJUn/ZNg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-449-DNu9NLHiNjmr8LkkHduC1A-1; Thu, 02 Apr 2020 11:54:41 -0400
+X-MC-Unique: DNu9NLHiNjmr8LkkHduC1A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 793FD2063A;
-        Thu,  2 Apr 2020 15:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585842846;
-        bh=4Eu298RZ2IWYgmD/vOfOB6+9cpJ48Q2EoWqLKqCJRtc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Ay8L+idr6K8LOgJLPqEPdE0Z1gVQT47uLiObP4g66rkbmMb/PXuVhVjBucd7eTcWf
-         n5UA5MbyZBE13CQCInce1Kv4ohKzrPFNYQRND3IQale4O5OWn525djNEuult6w5bUo
-         1aUY8NBcEBqpe5tiEL6fORJCFENwC9AaI5f/mnkQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 499613521885; Thu,  2 Apr 2020 08:54:06 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 08:54:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        tglx@linutronix.de,
-        "James.Bottomley@hansenpartnership.com" 
-        <James.Bottomley@HansenPartnership.com>, deller@gmx.de,
-        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2] sched/core: fix illegal RCU from offline CPUs
-Message-ID: <20200402155406.GP19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200401214033.8448-1-cai@lca.pw>
- <87369mt9kf.fsf@mpe.ellerman.id.au>
- <C0F26F4C-77A0-41DF-856A-B7E29C56A4B6@lca.pw>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B1C6107ACCC;
+        Thu,  2 Apr 2020 15:54:40 +0000 (UTC)
+Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C738F5D9CD;
+        Thu,  2 Apr 2020 15:54:38 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 10:54:36 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Julien Thierry <jthierry@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH 3/7] objtool: Add support for intra-function calls
+Message-ID: <20200402155436.q6qbuezmmarr24qp@treble>
+References: <20200402082220.808-1-alexandre.chartre@oracle.com>
+ <20200402082220.808-4-alexandre.chartre@oracle.com>
+ <db508586-258a-0616-d649-e76e95df9611@redhat.com>
+ <4e779423-395d-5e2e-b641-5604902bf096@oracle.com>
+ <20200402150407.GD20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <C0F26F4C-77A0-41DF-856A-B7E29C56A4B6@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200402150407.GD20730@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 10:00:16AM -0400, Qian Cai wrote:
-> 
-> 
-> > On Apr 2, 2020, at 7:24 AM, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> > 
-> > Qian Cai <cai@lca.pw> writes:
-> >> From: Peter Zijlstra <peterz@infradead.org>
-> >> 
-> >> In the CPU-offline process, it calls mmdrop() after idle entry and the
-> >> subsequent call to cpuhp_report_idle_dead(). Once execution passes the
-> >> call to rcu_report_dead(), RCU is ignoring the CPU, which results in
-> >> lockdep complaining when mmdrop() uses RCU from either memcg or
-> >> debugobjects below.
-> >> 
-> >> Fix it by cleaning up the active_mm state from BP instead. Every arch
-> >> which has CONFIG_HOTPLUG_CPU should have already called idle_task_exit()
-> >> from AP. The only exception is parisc because it switches them to
-> >> &init_mm unconditionally (see smp_boot_one_cpu() and smp_cpu_init()),
-> >> but the patch will still work there because it calls mmgrab(&init_mm) in
-> >> smp_cpu_init() and then should call mmdrop(&init_mm) in finish_cpu().
-> > 
-> > Thanks for debugging this. How did you hit it in the first place?
-> 
-> Just repeatedly offline/online CPUs which will eventually cause an idle thread
-> refcount goes to 0 and trigger __mmdrop() and of course it needs to enable
-> lockdep (PROVE_RCU?) as well as having luck to hit the cgroup, workqueue
-> or debugobject code paths to call RCU.
-> 
-> > 
-> > A link to the original thread would have helped me:
-> > 
-> >  https://lore.kernel.org/lkml/20200113190331.12788-1-cai@lca.pw/
-> > 
-> >> WARNING: suspicious RCU usage
-> >> -----------------------------
-> >> kernel/workqueue.c:710 RCU or wq_pool_mutex should be held!
-> >> 
-> >> other info that might help us debug this:
-> >> 
-> >> RCU used illegally from offline CPU!
-> >> Call Trace:
-> >> dump_stack+0xf4/0x164 (unreliable)
-> >> lockdep_rcu_suspicious+0x140/0x164
-> >> get_work_pool+0x110/0x150
-> >> __queue_work+0x1bc/0xca0
-> >> queue_work_on+0x114/0x120
-> >> css_release+0x9c/0xc0
-> >> percpu_ref_put_many+0x204/0x230
-> >> free_pcp_prepare+0x264/0x570
-> >> free_unref_page+0x38/0xf0
-> >> __mmdrop+0x21c/0x2c0
-> >> idle_task_exit+0x170/0x1b0
-> >> pnv_smp_cpu_kill_self+0x38/0x2e0
-> >> cpu_die+0x48/0x64
-> >> arch_cpu_idle_dead+0x30/0x50
-> >> do_idle+0x2f4/0x470
-> >> cpu_startup_entry+0x38/0x40
-> >> start_secondary+0x7a8/0xa80
-> >> start_secondary_resume+0x10/0x14
-> > 
-> > Do we know when this started happening? ie. can we determine a Fixes
-> > tag?
-> 
-> I don’t know. I looked at some commits that it seems the code was like that
-> even 10-year ago. It must be nobody who cares to run lockdep (PROVE_RCU?)
-> with CPU hotplug very regularly.
+On Thu, Apr 02, 2020 at 05:04:07PM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 02, 2020 at 03:24:45PM +0200, Alexandre Chartre wrote:
+> > On 4/2/20 2:53 PM, Julien Thierry wrote:
+> > > On 4/2/20 9:22 AM, Alexandre Chartre wrote:
+>=20
+> > > > +=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0 sec =3D find_section_by_nam=
+e(file->elf,
+> > > > +=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=
+=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=
+=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=C3=82=C2=A0=
+ ".rela.discard.intra_function_call");
+> > >=20
+> > > I'm wondering, do we really need to annotate the intra_function_cal=
+l
+> > > and group the in a section?
+> > >=20
+> > > Would it be a problem to consider all (static) call instructions wi=
+th
+> > > a destination that is not the start offset of a symbol to be an
+> > > intra-function call (and set insn->intra_function_call and
+> > > insn->jump_dest accordingly)?
+> >=20
+> > Correct, we could automatically detect intra-function calls instead o=
+f
+> > having to annotate them. However, I choose to annotate them because I=
+ don't
+> > think that's not an expected construct in a "normal" code flow (at le=
+ast
+> > on x86). So objtool would still issue a warning on intra-function cal=
+ls
+> > by default, and you can annotate them to indicate if they are expecte=
+d.
+>=20
+> I wondered the same thing when reading the patch. I'm confliected on
+> this. On the one hand auto-detecting this seems like an excellent idea.
+>=20
+> If/when the compiler generates them, they had better be okay too.
+>=20
+> Josh?
 
-I do run this combination quite frequently, but only as part of
-rcutorture, which might not be a representative workload.  For one thing,
-it has a minimal userspace consisting only of a trivial init program.
-I don't recall having ever seen this.  (I have seen one recent complaint
-about an IPI being sent to an offline CPU, but I cannot prove that this
-was not due to RCU bugs that I was chasing at the time.)
+In general I prefer to keep it simple, and keep the annotations to a
+minimum.  And I don't think this warning has ever found anything useful.
+So I'd be inclined to say just allow them and automatically detect them.
 
-							Thanx, Paul
+However the fact that arm64 asm actually uses them worries me a bit.
 
-> >> <Peter to sign off here>
-> >> Signed-off-by: Qian Cai <cai@lca.pw>
-> >> ---
-> >> arch/powerpc/platforms/powernv/smp.c |  1 -
-> >> include/linux/sched/mm.h             |  2 ++
-> >> kernel/cpu.c                         | 18 +++++++++++++++++-
-> >> kernel/sched/core.c                  |  5 +++--
-> >> 4 files changed, 22 insertions(+), 4 deletions(-)
-> >> 
-> >> diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
-> >> index 13e251699346..b2ba3e95bda7 100644
-> >> --- a/arch/powerpc/platforms/powernv/smp.c
-> >> +++ b/arch/powerpc/platforms/powernv/smp.c
-> >> @@ -167,7 +167,6 @@ static void pnv_smp_cpu_kill_self(void)
-> >> 	/* Standard hot unplug procedure */
-> >> 
-> >> 	idle_task_exit();
-> >> -	current->active_mm = NULL; /* for sanity */
-> > 
-> > If I'm reading it right, we'll now be running with active_mm == init_mm
-> > in the offline loop.
-> > 
-> > I guess that's fine, I can't think of any reason it would matter, and it
-> > seems like we were NULL'ing it out just for paranoia's sake not because
-> > of any actual problem.
-> > 
-> > Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-> > 
-> > 
-> > cheers
-> > 
-> >> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> >> index c49257a3b510..a132d875d351 100644
-> >> --- a/include/linux/sched/mm.h
-> >> +++ b/include/linux/sched/mm.h
-> >> @@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
-> >> 		__mmdrop(mm);
-> >> }
-> >> 
-> >> +void mmdrop(struct mm_struct *mm);
-> >> +
-> >> /*
-> >>  * This has to be called after a get_task_mm()/mmget_not_zero()
-> >>  * followed by taking the mmap_sem for writing before modifying the
-> >> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> >> index 2371292f30b0..244d30544377 100644
-> >> --- a/kernel/cpu.c
-> >> +++ b/kernel/cpu.c
-> >> @@ -3,6 +3,7 @@
-> >>  *
-> >>  * This code is licenced under the GPL.
-> >>  */
-> >> +#include <linux/sched/mm.h>
-> >> #include <linux/proc_fs.h>
-> >> #include <linux/smp.h>
-> >> #include <linux/init.h>
-> >> @@ -564,6 +565,21 @@ static int bringup_cpu(unsigned int cpu)
-> >> 	return bringup_wait_for_ap(cpu);
-> >> }
-> >> 
-> >> +static int finish_cpu(unsigned int cpu)
-> >> +{
-> >> +	struct task_struct *idle = idle_thread_get(cpu);
-> >> +	struct mm_struct *mm = idle->active_mm;
-> >> +
-> >> +	/*
-> >> +	 * idle_task_exit() will have switched to &init_mm, now
-> >> +	 * clean up any remaining active_mm state.
-> >> +	 */
-> >> +	if (mm != &init_mm)
-> >> +		idle->active_mm = &init_mm;
-> >> +	mmdrop(mm);
-> >> +	return 0;
-> >> +}
-> >> +
-> >> /*
-> >>  * Hotplug state machine related functions
-> >>  */
-> >> @@ -1549,7 +1565,7 @@ static struct cpuhp_step cpuhp_hp_states[] = {
-> >> 	[CPUHP_BRINGUP_CPU] = {
-> >> 		.name			= "cpu:bringup",
-> >> 		.startup.single		= bringup_cpu,
-> >> -		.teardown.single	= NULL,
-> >> +		.teardown.single	= finish_cpu,
-> >> 		.cant_stop		= true,
-> >> 	},
-> >> 	/* Final state before CPU kills itself */
-> >> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> >> index a2694ba82874..8787958339d5 100644
-> >> --- a/kernel/sched/core.c
-> >> +++ b/kernel/sched/core.c
-> >> @@ -6200,13 +6200,14 @@ void idle_task_exit(void)
-> >> 	struct mm_struct *mm = current->active_mm;
-> >> 
-> >> 	BUG_ON(cpu_online(smp_processor_id()));
-> >> +	BUG_ON(current != this_rq()->idle);
-> >> 
-> >> 	if (mm != &init_mm) {
-> >> 		switch_mm(mm, &init_mm, current);
-> >> -		current->active_mm = &init_mm;
-> >> 		finish_arch_post_lock_switch();
-> >> 	}
-> >> -	mmdrop(mm);
-> >> +
-> >> +	/* finish_cpu(), as ran on the BP, will clean up the active_mm state */
-> >> }
-> >> 
-> >> /*
-> >> -- 
-> >> 2.21.0 (Apple Git-122.2)
-> 
+So for me it kind of hinges on whether arm64 has a legitimate use case
+for them, or if the warning actually points to smelly code.
+
+--=20
+Josh
+
