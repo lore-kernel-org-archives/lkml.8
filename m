@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9767CC43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41E9C2D0E9
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F01720784
+	by mail.kernel.org (Postfix) with ESMTP id 9AEA72078E
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 05:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emWiWxRZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YX4kK4/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgDBFg1 (ORCPT
+        id S1728961AbgDBFga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 01:36:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33148 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgDBFg1 (ORCPT
+        Thu, 2 Apr 2020 01:36:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36711 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbgDBFg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 01:36:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c138so1252095pfc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 22:36:26 -0700 (PDT)
+        Thu, 2 Apr 2020 01:36:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id c23so1341746pgj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 22:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IAh7UMloMAsOoi/+PgYpkgLYca+CmRu3t0XReUuJ4tk=;
-        b=emWiWxRZn9S+bqaR9D56ZUCgLabBF8zrQYPHzSlVMuFNfqroqPigGnFZbaSqLcXyia
-         c75i0fPsGyIvSYmYGik6oKogT8lCvzw6MF6vNvuArNMgLwXSCPXd6vJ1+6lrFbqDrdNm
-         26kdg/wkDTiigvjYGuC7badIIixE3CDwpHWxsG499qyXBYr3ZrTff8aivmSgcN4zbfGA
-         /2tiOIY5x2A/T66ptBcrGN0p43qo8hJr9nf6iyluWyitOIm6DLDQHEz4VAtibqQWLKol
-         s6QY2c8aH8nyUGHf/WO8b5ZquAvsNSoBfVHGTDCqkNfVb9ti10q2P++hOTtw6nFVpueJ
-         oaGA==
+        bh=qRIzo5o5vpllI++B3nY//4/moCStw1oArBNgpNNZWE0=;
+        b=YX4kK4/l4v2Dc+sIlNifTF+eu7cc0Xwqmrkw6+903BF5W9hYTPcWEQ1O8+LgEOjeXJ
+         QXFfirICEm2ToMk+K+f0BAw2q3aM4+7i/mtghVUotn2aFVQr/rkHHVy4LVTDEhrRC3q5
+         bG9OMYPBR3q3H/nLiX2GyaPOIqz5tskvc9Oyg/MuabGNsxkYzFRjlQCzUafRlE5XYHAq
+         lXfnvpaasLeK+GEb7tU+b2Xxu9ZrwbqDiVUXeweP+wX9flK1mvhJRUyrWxmL/Prxknt4
+         lE9I+3V7sQZxFcL0CdBjr6rIg+ML2jv5LdLcdtU2QhmAsVwdSUHcvQAgE6VYtTngmeYK
+         qj2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IAh7UMloMAsOoi/+PgYpkgLYca+CmRu3t0XReUuJ4tk=;
-        b=QKHN/gooOE0fNMNiDSl4+UTSyCB2w4tRVECck1H6MKUhISLVxu9x6glekEb2z1P5v3
-         +8XbYeovxo20If8ZBtylY/ACw5tu889nB827BiWF+gWNEsH9dkKa8x//3nfIIL4MdaRu
-         e2UJHNNMadL5maJF7RZpOJcZAUPQmbolWPQLUm5nPJOfw3WeSFYulKEyQfop0a7g/xqX
-         ih4pUWd9TCzkp5PLTj02YmnPvfOvM1IU3lvFDzVeVPhKfbtMm4aAorUjgBypi7/imLtY
-         fcD/EGomOQblRbMV4//tckdWlJORaiEEblQzfisCJr4eh9u5GU9GbQRy5V43rNUFkT74
-         rr3w==
-X-Gm-Message-State: AGi0PuYwvR7hph7s7Zw2xPZMvb+geFW58WNKr/L8vU/PU3jB28pssM9B
-        cHab9PdfeBfQDsB2Yvoelxo=
-X-Google-Smtp-Source: APiQypLBx8wymvTZN5pVSUzPbgkNr6Uo8Oq28moaA64ap2WlXHGMyFFgshdRpwK7NEWGTEFIlhH3/g==
-X-Received: by 2002:a65:5249:: with SMTP id q9mr1774384pgp.150.1585805785687;
-        Wed, 01 Apr 2020 22:36:25 -0700 (PDT)
+        bh=qRIzo5o5vpllI++B3nY//4/moCStw1oArBNgpNNZWE0=;
+        b=cWpD+xmwcXSKOF2DLJDFhoQtBM+ooFvqd96uyQqB7SsO3cIaqELu8w6YWzv1+cq+/R
+         L3U6yzSeeHgw58omcQisZc97PU/pixVou9kRT90uMCdV6zchZHlYiEHAwkw6fJuidWMZ
+         Ig0IZEOYvWTmXjVGlCklF7RPHFBxI2fDUmyoG2i1NlC4bF7gkvw/mHnA14q3NAxdeQhF
+         VVsJkoRxrsBiq6xfwvvK/29KnUD+7gCKaytQeYxoBoCDlpIRyCYt7MSeSeOaNi1xRsV3
+         zznSouhknqO4gQ/MnVPbzeCxsS1AZchBJ+Xnq9YnseHDjuFAO94POKUb5TTpdiP0i33s
+         ZzlA==
+X-Gm-Message-State: AGi0PuZ1QkxnLb7ojadwHRr+xF+8w5hbw0fuQYJKyAE3/sHuPL/+bJbc
+        oQVnwQnJwysjwRHWtv32xpY=
+X-Google-Smtp-Source: APiQypIAgreB/HoC94SMNNTLUG92Y3nyUkudT6yq5FXpvuXoHAEl+87D1f6IfaXfXj/J4INNUM45eg==
+X-Received: by 2002:a62:7950:: with SMTP id u77mr1573409pfc.34.1585805788026;
+        Wed, 01 Apr 2020 22:36:28 -0700 (PDT)
 Received: from OptiPlexFedora.fios-router.home ([47.144.161.84])
-        by smtp.gmail.com with ESMTPSA id y28sm2863136pfp.128.2020.04.01.22.36.24
+        by smtp.gmail.com with ESMTPSA id y28sm2863136pfp.128.2020.04.01.22.36.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 22:36:25 -0700 (PDT)
+        Wed, 01 Apr 2020 22:36:27 -0700 (PDT)
 From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
 To:     outreachy-kernel@googlegroups.com,
         Rob Springer <rspringer@google.com>,
@@ -65,9 +65,9 @@ To:     outreachy-kernel@googlegroups.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
 Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
-Subject: [PATCH 1/2] staging: gasket: Fix 4 over 80 char warnings
-Date:   Wed,  1 Apr 2020 22:36:16 -0700
-Message-Id: <20200402053617.826678-2-jbwyatt4@gmail.com>
+Subject: [PATCH 2/2] staging: gasket: Fix comment 75 character limit warning
+Date:   Wed,  1 Apr 2020 22:36:17 -0700
+Message-Id: <20200402053617.826678-3-jbwyatt4@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200402053617.826678-1-jbwyatt4@gmail.com>
 References: <20200402053617.826678-1-jbwyatt4@gmail.com>
@@ -78,77 +78,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix 4 over 80 char warnings by caching long enum values into local
-variables.
-
-All enums are only used once inside each function (and once inside
-the entire file).
+Fix 75 character limit warning in comment reported by checkpatch.
 
 Reported by checkpatch.
 
 Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
 ---
- drivers/staging/gasket/apex_driver.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/staging/gasket/apex_driver.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/staging/gasket/apex_driver.c b/drivers/staging/gasket/apex_driver.c
-index 46199c8ca441..f48209ec7d24 100644
+index f48209ec7d24..5ad15f398893 100644
 --- a/drivers/staging/gasket/apex_driver.c
 +++ b/drivers/staging/gasket/apex_driver.c
-@@ -253,6 +253,8 @@ static int apex_get_status(struct gasket_dev *gasket_dev)
- /* Enter GCB reset state. */
- static int apex_enter_reset(struct gasket_dev *gasket_dev)
- {
-+	int idle_gen_reg = APEX_BAR2_REG_IDLEGENERATOR_IDLEGEN_IDLEREGISTER;
-+
- 	if (bypass_top_level)
- 		return 0;
+@@ -50,8 +50,8 @@
+ #define NUM_NODES 1
  
-@@ -263,7 +265,7 @@ static int apex_enter_reset(struct gasket_dev *gasket_dev)
- 	 *    - Enable GCB idle
- 	 */
- 	gasket_read_modify_write_64(gasket_dev, APEX_BAR_INDEX,
--				    APEX_BAR2_REG_IDLEGENERATOR_IDLEGEN_IDLEREGISTER,
-+				    idle_gen_reg,
- 				    0x0, 1, 32);
+ /*
+- * The total number of entries in the page table. Should match the value read
+- * from the register APEX_BAR2_REG_KERNEL_HIB_PAGE_TABLE_SIZE.
++ * The total number of entries in the page table. Should match the
++ * value read from the register APEX_BAR2_REG_KERNEL_HIB_PAGE_TABLE_SIZE.
+  */
+ #define APEX_PAGE_TABLE_TOTAL_ENTRIES 8192
  
- 	/*    - Initiate DMA pause */
-@@ -395,11 +397,12 @@ static int apex_device_cleanup(struct gasket_dev *gasket_dev)
- 	u64 scalar_error;
- 	u64 hib_error;
- 	int ret = 0;
-+	int status = APEX_BAR2_REG_SCALAR_CORE_ERROR_STATUS;
- 
- 	hib_error = gasket_dev_read_64(gasket_dev, APEX_BAR_INDEX,
- 				       APEX_BAR2_REG_USER_HIB_ERROR_STATUS);
- 	scalar_error = gasket_dev_read_64(gasket_dev, APEX_BAR_INDEX,
--					  APEX_BAR2_REG_SCALAR_CORE_ERROR_STATUS);
-+					  status);
- 
- 	dev_dbg(gasket_dev->dev,
- 		"%s 0x%p hib_error 0x%llx scalar_error 0x%llx\n",
-@@ -584,6 +587,8 @@ static int apex_pci_probe(struct pci_dev *pci_dev,
- 	ulong page_table_ready, msix_table_ready;
- 	int retries = 0;
- 	struct gasket_dev *gasket_dev;
-+	int page_table_init = APEX_BAR2_REG_KERNEL_HIB_PAGE_TABLE_INIT;
-+	int msix_table_init = APEX_BAR2_REG_KERNEL_HIB_MSIX_TABLE_INIT;
- 
- 	ret = pci_enable_device(pci_dev);
- 	if (ret) {
-@@ -606,10 +611,10 @@ static int apex_pci_probe(struct pci_dev *pci_dev,
- 	while (retries < APEX_RESET_RETRY) {
- 		page_table_ready =
- 			gasket_dev_read_64(gasket_dev, APEX_BAR_INDEX,
--					   APEX_BAR2_REG_KERNEL_HIB_PAGE_TABLE_INIT);
-+					   page_table_init);
- 		msix_table_ready =
- 			gasket_dev_read_64(gasket_dev, APEX_BAR_INDEX,
--					   APEX_BAR2_REG_KERNEL_HIB_MSIX_TABLE_INIT);
-+					   msix_table_init);
- 		if (page_table_ready && msix_table_ready)
- 			break;
- 		schedule_timeout(msecs_to_jiffies(APEX_RESET_DELAY));
 -- 
 2.25.1
 
