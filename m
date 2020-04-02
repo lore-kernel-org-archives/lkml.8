@@ -2,120 +2,172 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F223C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC0CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A4420675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:04:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5RW5c7a"
+	by mail.kernel.org (Postfix) with ESMTP id 69C9520678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388244AbgDBNEm (ORCPT
+        id S2388315AbgDBNG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:04:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35054 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388174AbgDBNEl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:04:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585832679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oT4Uo1Yp60nG/JqRSBwCHQqcnmWJYfv2TpClsO2iQGA=;
-        b=Y5RW5c7abtW4vf4qBVJi4gmtY5gxJkwbo3ks5MQZehO+FkuHuhkQSw8CVCjVq2jWkqEM1T
-        EORZyajUFTdGNh2hTscpGn0rCtfGvInzfQ1eVxUIymTj7+L6E3SGJyizLmFKMq3ACDNHoi
-        5g3Lp1nVeRQ0xvp/hhLwkspNgZnMoNU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-502-Csuf1Xb4OAeqfRrgeyCEkA-1; Thu, 02 Apr 2020 09:04:36 -0400
-X-MC-Unique: Csuf1Xb4OAeqfRrgeyCEkA-1
-Received: by mail-wr1-f69.google.com with SMTP id h95so1442483wrh.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 06:04:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oT4Uo1Yp60nG/JqRSBwCHQqcnmWJYfv2TpClsO2iQGA=;
-        b=Q5m2xl0CDSHyjcg/xzcY3aRn1xKAGSZiNIK2R7G8pDEySbiFlmThF2an9sxSzxzbUS
-         B9DuTV+uzkSHzSs808nYKZo99cTmy79soLJaUptjeXqJjCXC84Aqbta/gQBcXQsXiPtv
-         AcQBafAV5zKhd6enLmSp6evVpgjIFdvFTRze4+h9Cf7/ZN12P12Ne69GIoeVIyrviMZp
-         D/ZQNumdr8iVrk64X/QmJB1YtYWW0boiwyhC82LUYVX58dPYDSIQ3Oa/Zb1c6GBFSSQc
-         T3plDDHyIDRLe+qOiaple4Jj5imt6KkP61p8sCFX/G0epN2Kw35/sx1IoobLiAu9DmLc
-         gf0A==
-X-Gm-Message-State: AGi0PuZEwhZwjdqB6UQut5e2Ny4qYOMjRm7E7C/coIHNS23mHkOpaMrI
-        ECdbJCq0qCgWCMeXBPHkCmwOzfPdqlPBuUj47sw1NnqJeEFlVYZYs/3WqK7mmOJxuZ2DlrqLX/Y
-        4fhYp98mzaYTrCS2VnxwFHeQB
-X-Received: by 2002:adf:800e:: with SMTP id 14mr3328747wrk.369.1585832674539;
-        Thu, 02 Apr 2020 06:04:34 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIe/nCBpsjbXD1D5gjLIkOslPVlF6W7YKWIfNby8hSlxW5unstzr92So9V03fZyrhMVK3yV1A==
-X-Received: by 2002:adf:800e:: with SMTP id 14mr3328714wrk.369.1585832674308;
-        Thu, 02 Apr 2020 06:04:34 -0700 (PDT)
-Received: from ?IPv6:2a02:8388:7c1:1280:a281:9dab:554b:2fdc? (2a02-8388-07c1-1280-a281-9dab-554b-2fdc.cable.dynamic.v6.surfer.at. [2a02:8388:7c1:1280:a281:9dab:554b:2fdc])
-        by smtp.gmail.com with ESMTPSA id z12sm7627688wrt.27.2020.04.02.06.04.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 06:04:33 -0700 (PDT)
-Subject: Re: [PATCH] perf script: add flamegraph.py script
-To:     Kim Phillips <kim.phillips@amd.com>,
-        linux-perf-users@vger.kernel.org
-Cc:     Martin Spier <mspier@netflix.com>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Thu, 2 Apr 2020 09:06:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:8948 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388164AbgDBNG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:06:28 -0400
+IronPort-SDR: kiPqEZ81J5ZmP5EtiEOUhNYh7oLbG+/eR+DZ26FzaH85WdAWXLGqYCYojLo3S49HOqjIak+40X
+ WGYnZ1d8fP+Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 06:06:27 -0700
+IronPort-SDR: idcsqHoXSSXxGkVux4mKE874KkDLCoxFie4vyjyMKQtx3ybMgvtajdWkD0ERizGAXXkrcuczpN
+ vc5xl6y2+Ccw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
+   d="scan'208";a="249822813"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 02 Apr 2020 06:06:23 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jJzY9-00FAdn-PV; Thu, 02 Apr 2020 16:06:25 +0300
+Date:   Thu, 2 Apr 2020 16:06:25 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>
+Cc:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com, kuo-lang.tseng@intel.com, mingo@redhat.com,
+        babu.moger@amd.com, hpa@zytor.com, x86@kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200320151355.66302-1-agerstmayr@redhat.com>
- <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
- <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
- <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
-From:   Andreas Gerstmayr <agerstmayr@redhat.com>
-Message-ID: <833a5e74-645a-130c-ceab-068880e0c69a@redhat.com>
-Date:   Thu, 2 Apr 2020 15:04:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: Re: [PATCH 2/2] x86/resctrl: Use appropriate API for strings
+ terminated by newline
+Message-ID: <20200402130625.GA1922688@smile.fi.intel.com>
+References: <cover.1585765499.git.reinette.chatre@intel.com>
+ <2a51c327497738ad7012e4f185046c530dba4594.1585765499.git.reinette.chatre@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a51c327497738ad7012e4f185046c530dba4594.1585765499.git.reinette.chatre@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.03.20 20:04, Kim Phillips wrote:
-> I now get a SIGSEGV when executing perf script report flamegraph.
+On Wed, Apr 01, 2020 at 11:30:48AM -0700, Reinette Chatre wrote:
+> The user input to files in the resctrl filesystem are expected to be
+> terminated with a newline. Testing the user input includes a test for
+> the presence of a newline and then replacing the newline with NUL
+> byte followed by comparison using strcmp().
 > 
-> Here's a trace:
+> sysfs_streq() exists to test if strings are equal, treating both NUL and
+> newline-then-NUL as equivalent string terminations. Even more,
+> sysfs_match_string() exists to match a given string in an array using
+> sysfs_streq().
 > 
-> #0  0x000055555590a9b2 in regs_map (regs=0x7fffffffbfc8, mask=16715775,
->      bf=0x7fffffffba60 "", size=512) at util/scripting-engines/trace-event-python.c:696
-> #1  0x000055555590ab03 in set_regs_in_dict (dict=0x7ffff61dd500, sample=0x7fffffffbf20,
->      evsel=0x555555d7a700) at util/scripting-engines/trace-event-python.c:718
+> Replace existing strcmp() comparisons of strings that are terminated
+> with a newline with more appropriate sysfs_streq() via the
+> sysfs_match_string() API that can perform the match across the different
+> mode strings that are already maintained in an array.
+> 
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+> ---
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 25 +++++++++++++------------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index fbee891a7d6e..623e33c0a290 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -1412,11 +1412,11 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+>  	struct rdtgroup *rdtgrp;
+>  	enum rdtgrp_mode mode;
+>  	int ret = 0;
+> +	int user_m;
+>  
 
-This error seems unrelated to flamegraph.py (occurs also with the 
-stackcollapse.py script).
+>  	/* Valid input requires a trailing newline */
+>  	if (nbytes == 0 || buf[nbytes - 1] != '\n')
+>  		return -EINVAL;
+> -	buf[nbytes - 1] = '\0';
 
-Looks like the intr_regs->regs can be 0 when running in DWARF mode (this 
-error doesn't occur in the default mode). I've added a check and sent a 
-patch. While at it, valgrind reported an invalid read in a different 
-code path, which is fixed by the other patch I just sent a few minutes ago.
+The above test is not needed and comment now is misleading.
+WRT nbytes I believe that kernel fs code checks for that.
 
-Can you please test again and report if there are any other issues?
+>  	rdtgrp = rdtgroup_kn_lock_live(of->kn);
+>  	if (!rdtgrp) {
+> @@ -1428,11 +1428,15 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+>  
+>  	mode = rdtgrp->mode;
+>  
+> -	if ((!strcmp(buf, "shareable") && mode == RDT_MODE_SHAREABLE) ||
+> -	    (!strcmp(buf, "exclusive") && mode == RDT_MODE_EXCLUSIVE) ||
+> -	    (!strcmp(buf, "pseudo-locksetup") &&
+> -	     mode == RDT_MODE_PSEUDO_LOCKSETUP) ||
+> -	    (!strcmp(buf, "pseudo-locked") && mode == RDT_MODE_PSEUDO_LOCKED))
+> +	user_m = sysfs_match_string(rdt_mode_str, buf);
+> +	if (user_m < 0) {
+> +		rdt_last_cmd_puts("Unknown or unsupported mode\n");
+> +		ret = user_m;
+> +		goto out;
+> +	}
 
+You can do it the way
 
-Cheers,
-Andreas
+	ret = sysfs_match_string(...);
+	if (ret < 0) {
+		...
+	}
+	user_m = ret;
+
+> +	/* Do nothing and return success if user asks for current mode */
+> +	if (user_m == mode)
+>  		goto out;
+>  
+>  	if (mode == RDT_MODE_PSEUDO_LOCKED) {
+> @@ -1441,14 +1445,14 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+>  		goto out;
+>  	}
+>  
+> -	if (!strcmp(buf, "shareable")) {
+> +	if (user_m == RDT_MODE_SHAREABLE) {
+>  		if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
+>  			ret = rdtgroup_locksetup_exit(rdtgrp);
+>  			if (ret)
+>  				goto out;
+>  		}
+>  		rdtgrp->mode = RDT_MODE_SHAREABLE;
+> -	} else if (!strcmp(buf, "exclusive")) {
+> +	} else if (user_m == RDT_MODE_EXCLUSIVE) {
+>  		if (!rdtgroup_mode_test_exclusive(rdtgrp)) {
+>  			ret = -EINVAL;
+>  			goto out;
+> @@ -1459,14 +1463,11 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
+>  				goto out;
+>  		}
+>  		rdtgrp->mode = RDT_MODE_EXCLUSIVE;
+> -	} else if (!strcmp(buf, "pseudo-locksetup")) {
+> +	} else if (user_m == RDT_MODE_PSEUDO_LOCKSETUP) {
+>  		ret = rdtgroup_locksetup_enter(rdtgrp);
+>  		if (ret)
+>  			goto out;
+>  		rdtgrp->mode = RDT_MODE_PSEUDO_LOCKSETUP;
+> -	} else {
+> -		rdt_last_cmd_puts("Unknown or unsupported mode\n");
+> -		ret = -EINVAL;
+>  	}
+>  
+>  out:
+> -- 
+> 2.21.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
