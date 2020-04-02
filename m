@@ -2,116 +2,124 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393BCC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FB9C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA582072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:31:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vD1K2c1W"
+	by mail.kernel.org (Postfix) with ESMTP id 030CB2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387767AbgDBJbh (ORCPT
+        id S2387843AbgDBJb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:31:37 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:35236 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgDBJbg (ORCPT
+        Thu, 2 Apr 2020 05:31:56 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:41445 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgDBJb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 05:31:36 -0400
-Received: by mail-wm1-f53.google.com with SMTP id i19so2856652wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 02:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=98HEBPiTX0aD3yRnqTr3ggCDi/1mz/vXtTE23yid15E=;
-        b=vD1K2c1WL4si1ajAZXFoDPHP/BjEqLOh8b3osiGpVteRFdKRBprFNSRJbvljV9tZrx
-         5YN5yLS951Txt51ksklVfbvhxCJ/H/opFF7AWjwJdiNAX+4u8SUk5BTd4jrGz0mWvKG2
-         iU7fzILjEP1ld21lkMPKNX+rP/gRx3AXi0GHbOGKojaGO2cZMbpdoaMuH/NCOEF+s3OB
-         xYTNTMGrEQfHaTLAUBe/TP6LJfVYFthDSXNGAF88ANIM260zIm3Vr9Bmuog9lllGQquL
-         jgK0RWPksO3KMch+nqo0MOcpwFaY+tPlEsiNlc1HoUj9MEfAsZwxtoUSLnafdMZ2Z04N
-         Hfkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=98HEBPiTX0aD3yRnqTr3ggCDi/1mz/vXtTE23yid15E=;
-        b=NVBUN2v9zY8hqpjXvQ5D+egbLylOuk0cp4BuPYnvBQjXpDkAxQ+jWMwXktPBRHicPs
-         kC6XVyWedf9IGZBIGtSltumfCugvyg+5INSQk9Qf1zTRsakW63Y44iwwX623TDwkOoXs
-         f2zTSPoSzTlDf+XQnoYXNn6y1ArTFviF5Qc+fo+PyG9KjJrHDVAVZzVEqeiTDL9ENdI0
-         mDrqhAZrrnDMrbvpZHE/AONya+0P+M5dIojNs8BLYM6dh9TeGJGYoq0pZwG89VCa64gA
-         YLi49+Mm6zeTPZ3SACVx6n9NrlfR9u06ADzmdcSVAS3wSVhZ3/KjSWqnSJrrjUmdex8R
-         wdEw==
-X-Gm-Message-State: AGi0PuaKR08Y6iAJ6fA4oyWH3E0MNYbIMRos1imxWAVVEcwWp64wIYBA
-        uydB5lGFGMlPAdZ5qzV3fY7RzIoO
-X-Google-Smtp-Source: APiQypLzUjaETps37sNknaNpJRd69e4q4Njurum7A/YgheUuLkxBGJ0L+S9BOzo0gzPYgFm4gGc56g==
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr2417618wmc.129.1585819895057;
-        Thu, 02 Apr 2020 02:31:35 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id q9sm7144883wrp.84.2020.04.02.02.31.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 02:31:34 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 11:31:32 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     qemu-discuss@nongnu.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: qemu-x86: kernel panic when host is loaded
-Message-ID: <20200402093132.GA15839@Red>
+        Thu, 2 Apr 2020 05:31:56 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MlO9r-1iuClr41qn-00lpBO for <linux-kernel@vger.kernel.org>; Thu, 02 Apr
+ 2020 11:31:55 +0200
+Received: by mail-qt1-f177.google.com with SMTP id t17so2614184qtn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 02:31:54 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZWrPDQm8FP6TAVP9EDtII0P2MN4xMOyeio7uQXE7oJs0Zf1vc6
+        F6WmXD48cLJ2/g2BqCMrgxCbWDyr8PK0/0giSWc=
+X-Google-Smtp-Source: APiQypIyue+WNACvV18x6JnZkYlMs/gOnvsaV2sZZDOWo0BguT88H770dmf7hJplDaKl5fSsfEZ3gDVMPZpGGw8NTyc=
+X-Received: by 2002:ac8:7292:: with SMTP id v18mr1898092qto.304.1585819913839;
+ Thu, 02 Apr 2020 02:31:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200331093241.3728-1-tesheng@andestech.com>
+In-Reply-To: <20200331093241.3728-1-tesheng@andestech.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 2 Apr 2020 11:31:37 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3LokurC0n9XiwtPQh9ZgQcswMKY4b+TEsQh1VgYDNeWA@mail.gmail.com>
+Message-ID: <CAK8P3a3LokurC0n9XiwtPQh9ZgQcswMKY4b+TEsQh1VgYDNeWA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Highmem support for 32-bit RISC-V
+To:     Eric Lin <tesheng@andestech.com>
+Cc:     linux-riscv@lists.infradead.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Gary Guo <gary@garyguo.net>, alex@ghiti.fr,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>, atish.patra@wdc.com,
+        yash.shah@sifive.com, Palmer Dabbelt <palmer@dabbelt.com>,
+        Greentime Hu <green.hu@gmail.com>, zong.li@sifive.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:mZH8CricPUBuTLMEoGKz3luhD0XBZqzmZPaec3uE5Oo1LZLiu9D
+ nCes7BdOdjX+e4OPEKf6KJnl1GOMTQWYpTNxnTm7e2XtWAdpnk3Qge0D5jy17NzlI5A7ErB
+ 0DZe1ugkS5xHJdYyo7whtWwsJb0P2sRLo3xtJ42HTUNedx200T1rjTuzjh6B6K6GvRLe93K
+ Jey3pyfWYCxxbcUy/IdLQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UFvhvFuRUEE=:xw+s9AXkz80ZpQ1r/k1Xc7
+ /gFz7NzfkWyb8X/hs4CYFW/8Sf4WKLQ7cvI9lhIcML19pgr/1xW6mgngfEkkfzZcedPeeU/2S
+ kdpb3P2IDwB4Ukt/pA9PSLgLzfBJom56etCNtoM9Z/uAILL+VZRll1q8ZP1xepEL2droxQn8I
+ jzVYrCjTg0RqfNKQFfqLJgXfU7E4Me3ZDpgIYHv2eI5TRPrZKW5qiZAsn94OnKSgij5kd43Ft
+ aJ/S1H+JzBEqRF+DTESUzRetyEnsl3oXCHF3iplqAuujv4FUYbK7w9rUAoAuNukkwVefiAfGd
+ a25eZzMtWI1wW/p6tkWm8HuPO97ANj6rYxBIgZlkFnMcj1H60EfAFx45eeYdXcAIorij5JIXN
+ XQawJDhBTC9hW3GRl//0gFKNa4yOIgdzDgk1CzT1NIklw3Stt/E1UUI6x4UVWq27zjL6KrX57
+ VvIHJKvpQy9seVy/UKS8nePKxtAVZbeoOC0Vxg/pDf3eaBk4xptWAL0pv4YXh0lDGYc7m11Ss
+ i/oSjKRsqXgs+h9if94OkJPGhEN5oRdgA0ocSVBbiGMLT1LRnEn/Lydu/le8U5aM0/cfNgFys
+ 9QyXE1ETyGbGv2vxCoXQs+4aJF49I9i/A9o0wdnyTEstLzEc+SqD6FJZe25c+vWaZ9h+ZihDM
+ 96vDehiyngFz2iBHugjjVe14QTIie9j9+fxcjGG3GptYxQzDRWYzYxlA/fETfSB4/SG46oOQI
+ Z6r8mAoAFHtvw6qrsBPIw1iQ6NorWFEDpV6bticRli0mN+qG/+VGsq/1mMOfYGAgrfburGbyG
+ Adaelst6Wt7j0L2LwGoANwNB06b/bUC645myozAHpRYtlvJkSc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Tue, Mar 31, 2020 at 11:34 AM Eric Lin <tesheng@andestech.com> wrote:
+>
+> With Highmem support, the kernel can map more than 1GB physical memory.
+>
+> This patchset implements Highmem for RV32, referencing to mostly nds32
+> and others like arm and mips, and it has been tested on Andes A25MP platform.
 
-On our kernelci lab, each qemu worker pass an healtcheck job each day and after each job failure, so it is heavily used.
-The healtcheck job is a Linux boot with a stable release.
+I would much prefer to not see highmem added to new architectures at all
+if possible, see https://lwn.net/Articles/813201/ for some background.
 
-Since we upgraded our worker to buster, the qemu x86_64 healthcheck randomly panic with:
-<6>[    0.001000] APIC: Switch to symmetric I/O mode setup
-<6>[    0.001000] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
-<3>[    0.005000] ..MP-BIOS bug: 8254 timer not connected to IO-APIC
-<6>[    0.005000] ...trying to set up timer (IRQ0) through the 8259A ...
-<6>[    0.005000] ..... (found apic 0 pin 2) ...
-<6>[    0.009000] ....... failed.
-<6>[    0.009000] ...trying to set up timer as Virtual Wire IRQ...
-<6>[    0.009000] ..... failed.
-<6>[    0.009000] ...trying to set up timer as ExtINT IRQ...
-<6>[    0.009000] ..... failed :(.
-<0>[    0.009000] Kernel panic - not syncing: IO-APIC + timer doesn't work!  Boot with apic=debug and send a report.  Then try booting with the 'noapic' option.
-<4>[    0.009000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.23 #1
-<4>[    0.009000] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-<4>[    0.009000] Call Trace:
-<4>[    0.009000]  dump_stack+0x50/0x70
-<4>[    0.009000]  panic+0xf6/0x2b7
-<4>[    0.009000]  setup_IO_APIC+0x7c3/0x81c
-<4>[    0.009000]  ? clear_IO_APIC_pin+0xb3/0x100
-<4>[    0.009000]  x86_late_time_init+0x1b/0x20
-<4>[    0.009000]  start_kernel+0x429/0x4e2
-<4>[    0.009000]  secondary_startup_64+0xa4/0xb0
+For the arm32 architecture, we are thinking about implementing a
+VMPLIT_4G_4G option to replace highmem in the long run. The most
+likely way this would turn out at the moment looks like:
 
-The qemu is called with:
-/usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic -net nic,model=virtio,macaddr=52:54:00:12:34:58 -net user -m 512 -monitor none -kernel /var/lib/lava/dispatcher/tmp/741722/deployimages-xl6ogak_/kernel/bzImage -append "console=ttyS0,115200 root=/dev/ram0 debug verbose console_msg_format=syslog" -initrd /var/lib/lava/dispatcher/tmp/741722/deployimages-xl6ogak_/ramdisk/rootfs.cpio.gz -drive format=qcow2,file=/var/lib/lava/dispatcher/tmp/741722/apply-overlay-guest-sfn3zqna/lava-guest.qcow2,media=disk,if=ide,id=lavatest
+- have a 256MB region for vmalloc space at the top of the 4GB address
+  space, containing vmlinux, module, mmio mappings and vmalloc
+  allocations
 
-We have tried to upgrade the Linux version from 5.0.21 to 5.4.23 without any change.
-Only our buster worker fail like this, no problem with stretch.
+- have 3.75GB starting at address zero for either user space or the
+  linear map.
 
-We believing that only buster's qemu was failling since my other lab (gentoo with qemu 4.2) never failed.
-This was until yesterday, were I hit the same problem on this gentoo lab.
+- reserve one address space ID for kernel mappings to avoid tlb flushes
+  during normal context switches
 
-After some test I found the source of this kernel panic, the host is loaded and qemu run "slower".
-Simply renicing all qemu removed this behavour.
+- On any kernel entry, switch the page table to the one with the linear
+  mapping, and back to the user page table before returning to user space
 
-So now what can I do ?
-Appart renicing qemu process, does something could be done ?
+- add a generic copy_from_user/copy_to_user implementation based
+  on get_user_pages() in asm-generic/uaccess.h, using memcpy()
+  to copy from/to the page in the linear map.
 
-Thanks
-Regards
+- possible have architectures override get_user/put_user to use a
+  cheaper access based on a page table switch to read individual
+  words if that is cheaper than get_user_pages().
+
+There was an implementation of this for x86 a long time ago, but
+it never got merged, mainly because there were no ASIDs on x86
+at the time and the TLB flushing during context switch were really
+expensive. As far as I can tell, all of the modern embedded cores
+do have ASIDs, and unlike x86, most do not support more than 4GB
+of physical RAM, so this scheme can work to replace highmem
+in most of the remaining cases, and provide additional benefits
+(larger user address range, higher separate of kernel/user addresses)
+at a relatively small performance cost.
+
+       Arnd
