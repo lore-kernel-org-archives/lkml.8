@@ -2,189 +2,142 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183FCC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E76EC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9116206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530A6206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 04:02:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dWDtlgF0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgO2uaxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgDBECH (ORCPT
+        id S1728394AbgDBECc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 00:02:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39650 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725788AbgDBECG (ORCPT
+        Thu, 2 Apr 2020 00:02:32 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39313 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbgDBECb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 00:02:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585800126;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+zSv1WA+rPbGSzOupPYuZO2qP78Tb9ejg8WqBI3qnMo=;
-        b=dWDtlgF0kcnAnyS1iJCNBPdxY4xp3s2xySVF3bnsmjYb/BZAi+X3I+At7hiqoJnsdHbQZH
-        ipbM3vXD3Syc0zNKiBJp4ixpVSpwpXLXoI8f8/Sd+uacGCW0MyIfWSl8nQhwdtQwzhPS20
-        3TcSOxU//yqEsykHom11NZ/trblCoVE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-LUxoOoOCPzGXTIuUcfvDzQ-1; Thu, 02 Apr 2020 00:02:04 -0400
-X-MC-Unique: LUxoOoOCPzGXTIuUcfvDzQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2816E107ACC4;
-        Thu,  2 Apr 2020 04:02:03 +0000 (UTC)
-Received: from [10.72.13.209] (ovpn-13-209.pek2.redhat.com [10.72.13.209])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F012719C69;
-        Thu,  2 Apr 2020 04:01:57 +0000 (UTC)
-Subject: Re: [PATCH] virtio/test: fix up after IOTLB changes
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org
-References: <20200401165100.276039-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <921fe999-e183-058d-722a-1a6a6ab066e0@redhat.com>
-Date:   Thu, 2 Apr 2020 12:01:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 2 Apr 2020 00:02:31 -0400
+Received: by mail-qt1-f196.google.com with SMTP id f20so2225472qtq.6;
+        Wed, 01 Apr 2020 21:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/jw2WZ6aHnORJ8qH5PbT0GtwmWt6wJffdnj2epPitNs=;
+        b=RgO2uaxFVrmvxGIheHJFmd2euaYJzPmwzonN/sulS7pSoSDC32XNN4/VzwiXOPczrg
+         N4DBS4HIMwKOHo/iwfYgdScX7uy+2fhomXdO4l30X/PsztnSa6JxV21zWMZuQ0e+Sl9N
+         o8LjJYYb5Zu79X+0e35dqfIX0mFFZFY6rlkQ4yqbISrpXN+4z39PyJCQXPiePV8ZjJXS
+         fYfP1daGeG1hYtA6RSetq3ud5i4FYK5evGbY3VNU+Crfi/c4nbiiDCjqLA9lnvv59d5k
+         6saQEsT9ChKQZVs6RzDu7lAgSBQSH22bdWP3Yp46jQ9Pyui9u10+sX5fAFaz0a6S8D3e
+         uBEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/jw2WZ6aHnORJ8qH5PbT0GtwmWt6wJffdnj2epPitNs=;
+        b=PwUYZtartRNbSwa0unlWa6NCYhlj1jGUr2DzIM5laVknInqvYAHzpqMttMs7PfAYr5
+         Eqt+La1iE7NPSPjkhba9Uy4UasOMIJkg1BJdCDiVyTK1GwNibyzS7jFbHZLCvyMjeQZy
+         d2GHfXt7TU+dRaMoSqz4VGtjWCVk/L4M1BguNZSKyPbOAEgXHYeOtVTmCa/aMccGqcME
+         tNvi78cMJsA1PPwYvld3ATCweHnJ9GQD35WKVTCB5dU8p4sPCfXzQZv00S74iEFvdPp7
+         hOyb2n5jZ/4wg09vpdqkoHMsgwMsiAmMmKUS20hjyAz5K/bm5Iua6aOMN8Jp8TID2EST
+         DxuA==
+X-Gm-Message-State: AGi0PuatVxtp+LGZy2LXpas+3nfve2zp8zzBI4KjoZTvxk3D0BWsRJw+
+        QYNnPK4iR4UfO6KOtmKkXx3fiP6B5JabVA==
+X-Google-Smtp-Source: APiQypLHBdJLcacAP39uZyzAC5X3t9Jb0FA3mUxgEx6ZlY/YRiBYA3sNmCO3+ecWdvQsu0NGw7gpTw==
+X-Received: by 2002:ac8:358f:: with SMTP id k15mr1019998qtb.113.1585800148357;
+        Wed, 01 Apr 2020 21:02:28 -0700 (PDT)
+Received: from stingray.lan (pool-173-76-255-234.bstnma.fios.verizon.net. [173.76.255.234])
+        by smtp.gmail.com with ESMTPSA id c6sm627749qkg.88.2020.04.01.21.02.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 21:02:27 -0700 (PDT)
+From:   Thomas Hebb <tommyhebb@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Hebb <tommyhebb@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        linux-hwmon@vger.kernel.org
+Subject: [PATCH] hwmon: (dell-smm) Use one DMI match for all XPS models
+Date:   Thu,  2 Apr 2020 00:02:21 -0400
+Message-Id: <be17c0a111983e886d871db8dc2fc8fbfe8e2da0.1585800134.git.tommyhebb@gmail.com>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-In-Reply-To: <20200401165100.276039-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, each new XPS has to be added manually for module autoloading
+to work. Since fan multiplier autodetection should work fine on all XPS
+models, just match them all with one block like is done for Precision
+and Studio.
 
-On 2020/4/2 =E4=B8=8A=E5=8D=8812:51, Michael S. Tsirkin wrote:
-> Allow building vringh without IOTLB (that's the case for userspace
-> builds, will be useful for CAIF/VOD down the road too).
-> Update for API tweaks.
-> Don't include vringh with kernel builds.
+The only match we replace that doesn't already use autodetection is
+"XPS13" which, according to Google, only matches the XPS 13 9333. (All
+other XPS 13 models have "XPS" as its own word, surrounded by spaces.)
+According to the thread at [1], autodetection works for the XPS 13 9333,
+meaning this shouldn't regress it. I do not own one to confirm with,
+though.
 
+Tested on an XPS 13 9350 and confirmed the module now autoloads and
+reports reasonable-looking data. I am using BIOS 1.12.2 and do not see
+any freezes when querying fan speed.
 
-I'm not quite sure we need this.
+[1] https://lore.kernel.org/patchwork/patch/525367/
 
-E.g the userspace accessor is not used by CAIF/VOP.
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+---
 
+ drivers/hwmon/dell-smm-hwmon.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
->
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: Eugenio P=C3=A9rez <eperezma@redhat.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   drivers/vhost/test.c   | 4 ++--
->   drivers/vhost/vringh.c | 5 +++++
->   include/linux/vringh.h | 2 ++
->   tools/virtio/Makefile  | 3 ++-
->   4 files changed, 11 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
-> index 394e2e5c772d..9a3a09005e03 100644
-> --- a/drivers/vhost/test.c
-> +++ b/drivers/vhost/test.c
-> @@ -120,7 +120,7 @@ static int vhost_test_open(struct inode *inode, str=
-uct file *f)
->   	vqs[VHOST_TEST_VQ] =3D &n->vqs[VHOST_TEST_VQ];
->   	n->vqs[VHOST_TEST_VQ].handle_kick =3D handle_vq_kick;
->   	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
-> -		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
-> +		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
->  =20
->   	f->private_data =3D n;
->  =20
-> @@ -225,7 +225,7 @@ static long vhost_test_reset_owner(struct vhost_tes=
-t *n)
->   {
->   	void *priv =3D NULL;
->   	long err;
-> -	struct vhost_umem *umem;
-> +	struct vhost_iotlb *umem;
->  =20
->   	mutex_lock(&n->dev.mutex);
->   	err =3D vhost_dev_check_owner(&n->dev);
-> diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
-> index ee0491f579ac..878e565dfffe 100644
-> --- a/drivers/vhost/vringh.c
-> +++ b/drivers/vhost/vringh.c
-> @@ -13,9 +13,11 @@
->   #include <linux/uaccess.h>
->   #include <linux/slab.h>
->   #include <linux/export.h>
-> +#ifdef VHOST_IOTLB
-
-
-Kbuild bot reports build issues with this.
-
-It looks to me we should use #if IS_ENABLED(CONFIG_VHOST_IOTLB) here and=20
-following checks.
-
-Thanks
-
-
->   #include <linux/bvec.h>
->   #include <linux/highmem.h>
->   #include <linux/vhost_iotlb.h>
-> +#endif
->   #include <uapi/linux/virtio_config.h>
->  =20
->   static __printf(1,2) __cold void vringh_bad(const char *fmt, ...)
-> @@ -1059,6 +1061,8 @@ int vringh_need_notify_kern(struct vringh *vrh)
->   }
->   EXPORT_SYMBOL(vringh_need_notify_kern);
->  =20
-> +#ifdef VHOST_IOTLB
-> +
->   static int iotlb_translate(const struct vringh *vrh,
->   			   u64 addr, u64 len, struct bio_vec iov[],
->   			   int iov_size, u32 perm)
-> @@ -1416,5 +1420,6 @@ int vringh_need_notify_iotlb(struct vringh *vrh)
->   }
->   EXPORT_SYMBOL(vringh_need_notify_iotlb);
->  =20
-> +#endif
->  =20
->   MODULE_LICENSE("GPL");
-> diff --git a/include/linux/vringh.h b/include/linux/vringh.h
-> index bd0503ca6f8f..ebff121c0b02 100644
-> --- a/include/linux/vringh.h
-> +++ b/include/linux/vringh.h
-> @@ -14,8 +14,10 @@
->   #include <linux/virtio_byteorder.h>
->   #include <linux/uio.h>
->   #include <linux/slab.h>
-> +#ifdef VHOST_IOTLB
->   #include <linux/dma-direction.h>
->   #include <linux/vhost_iotlb.h>
-> +#endif
->   #include <asm/barrier.h>
->  =20
->   /* virtio_ring with information needed for host access. */
-> diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
-> index f33f32f1d208..d3f152f4660b 100644
-> --- a/tools/virtio/Makefile
-> +++ b/tools/virtio/Makefile
-> @@ -22,7 +22,8 @@ OOT_CONFIGS=3D\
->   	CONFIG_VHOST=3Dm \
->   	CONFIG_VHOST_NET=3Dn \
->   	CONFIG_VHOST_SCSI=3Dn \
-> -	CONFIG_VHOST_VSOCK=3Dn
-> +	CONFIG_VHOST_VSOCK=3Dn \
-> +	CONFIG_VHOST_RING=3Dn
->   OOT_BUILD=3DKCFLAGS=3D"-I "${OOT_VHOST} ${MAKE} -C ${OOT_KSRC} V=3D${=
-V}
->   oot-build:
->   	echo "UNSUPPORTED! Don't use the resulting modules in production!"
+diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+index d4c83009d625..c1af4c801dd8 100644
+--- a/drivers/hwmon/dell-smm-hwmon.c
++++ b/drivers/hwmon/dell-smm-hwmon.c
+@@ -1087,14 +1087,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
+ 		},
+ 		.driver_data = (void *)&i8k_config_data[DELL_STUDIO],
+ 	},
+-	{
+-		.ident = "Dell XPS 13",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "XPS13"),
+-		},
+-		.driver_data = (void *)&i8k_config_data[DELL_XPS],
+-	},
+ 	{
+ 		.ident = "Dell XPS M140",
+ 		.matches = {
+@@ -1104,17 +1096,10 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
+ 		.driver_data = (void *)&i8k_config_data[DELL_XPS],
+ 	},
+ 	{
+-		.ident = "Dell XPS 15 9560",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9560"),
+-		},
+-	},
+-	{
+-		.ident = "Dell XPS 15 9570",
++		.ident = "Dell XPS",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9570"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "XPS"),
+ 		},
+ 	},
+ 	{ }
+-- 
+2.25.2
 
