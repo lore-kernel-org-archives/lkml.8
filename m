@@ -2,169 +2,270 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887D1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3E4C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D84B20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585847670;
-	bh=A5ItmfcA7Yv2x4qRrlNthPxxFgjkWWtGjlTU669N2AQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1XIJTm57uJ5mAelBYNgWcoTfj6f275Oi1S3/PPjEeSEX3uRxCbbuCn7AgqZcg8TAV
-	 DeKz5cDZuEmnNuZBabYmqqLp3vmL6dI4WoLCTsj4uS/OB8n5eZozGuerIqL3x/NXS8
-	 NnKOvrGfp2yWAQvVij7RWFByb3CAsIUy3F9YaZyc=
+	by mail.kernel.org (Postfix) with ESMTP id DC04A20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M593RqYD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388953AbgDBRO3 (ORCPT
+        id S2388626AbgDBRQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:14:29 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:31125 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388136AbgDBRO2 (ORCPT
+        Thu, 2 Apr 2020 13:16:19 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41646 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732299AbgDBRQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:14:28 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 032HENKg001465;
-        Fri, 3 Apr 2020 02:14:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 032HENKg001465
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585847664;
-        bh=VV9RCquaBUqKTgTNvl6x45RtGx68PHxnzewnWe363KQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qlZuXzUgOjt1YRjdpZ8jvTTkU+olMBIPWMLjJF7eyl4j44uPVN0gmhq65eBGH9bjA
-         LXjM+OLJRXE8RWpSyzLmM/23PtvEcj8PZS7FP818EzEWqUo5GkoGtyq8kXDGeq/eqO
-         aZ0LixI45onrSVpqQOIaVMkVSJgUXvtz8AVf3jt92XKuwPKuvnTRPpyAFvX85HjK0/
-         3A3/RSbbnDetEZ2N/exMsyuo67Z8iwyo9kOE3zEMrdBm6bfhIDm4hmjFpUcmkd4AYd
-         i8X0/o+6Ic0nn0d+aa6rZEsySURy7iAZU+ejsA0nvvWhqeYI1BFmlYFIEvlKSelg1Q
-         Svl5563/ePFzw==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id w14so2886598vsf.7;
-        Thu, 02 Apr 2020 10:14:24 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZqoeyGscCOFKrtlA0Iy7j7xnu9jLwYm3CLvbS8DZLrZ7AJwS+y
-        UryrQToOQpnLCqLw0urKql2hgJa/3qP0tjnP3PI=
-X-Google-Smtp-Source: APiQypLi6VNdR0LJcxnztEKTu9mm4aCOQVyBOR7HhoPha0nrOLv/Bys5d+dBX54lAC1p0IfDAxTTHz8EmuqD0HPmlks=
-X-Received: by 2002:a67:33cb:: with SMTP id z194mr3230237vsz.155.1585847663196;
- Thu, 02 Apr 2020 10:14:23 -0700 (PDT)
+        Thu, 2 Apr 2020 13:16:19 -0400
+Received: by mail-io1-f68.google.com with SMTP id b12so4413631ion.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 10:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
+        bh=ZeUM1Zbxf3DFHiYmqaA0ExB43/d8ErQdiQ3jz9thhKU=;
+        b=M593RqYDNsg0MXFTlEXp5sTKDhY7WbjRBOCDILUYgx4Vhl8xLFZZQWqxADhyX73RRg
+         5ZGaXDNFieKMag3HqTfC6IsQKUqjF6900d14ctB79Z4SuUJ1XuANi0iBVNX8k734lj7e
+         dxs8jdAI2lN6v9HdS5t3se4jsyOIN2z05z+ZEg8Dk9xI3Xk1Q3oQe2i+F5r6b1ERCDiV
+         2TPCZn6b719lqCvipVRAwDXeQdMZdUSfe6XAG1kwale7pYo53EbB5IKf3PxFnYa4RNFB
+         qB/rql6u0VmATk1Pw1HtZ+b3CaePwk2YelOpGNDMvXT4hgm65CZeap76jJvZao2dONhu
+         2WBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:cc;
+        bh=ZeUM1Zbxf3DFHiYmqaA0ExB43/d8ErQdiQ3jz9thhKU=;
+        b=kHpjQpX4TgBRnppIOymJg4tgQyebTEqbO766ewLCJHM+LT2SAhZXdQyjJwuIhf1GaF
+         g95BXiC92rQkz7josd7bf7CL2TAmI8d4sz5+jt0eT2xD9fEzXNU3GvkdO9oMoELCqTeg
+         HaxkJ9WNaH915k6uACSssyS+TIwowzE1P6EdA3jmZbjz5Vto1vy0WiiSXqyvpQk5Zxd0
+         Gx5PBb4/JfKUPt00BWb01xFA6Lo6kDpiv9lB3WPVm4VJPX6OdKYu1+x4n63N5HbbTAjI
+         jmJ2byXS8mjhme6HhVgsV3V9RrzXdKVm9iRrG6z7IMeHo5E1UOtD44SkQA/rmbzJpVA1
+         n/6A==
+X-Gm-Message-State: AGi0PuZYyhttNS8DS2Xqo3hb/9l9xfmLT2hwzPBgJUIHRAd/VBebD8l3
+        f27FUPP8m/VkvwmDcecx3wLOmLmLlAa1lG1EtNxUnOWQ
+X-Received: by 2002:a02:c888:: with SMTP id m8mt3386103jao.51.1585847777977;
+ Thu, 02 Apr 2020 10:16:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200311223725.27662-1-masahiroy@kernel.org> <20200311223725.27662-2-masahiroy@kernel.org>
-In-Reply-To: <20200311223725.27662-2-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 3 Apr 2020 02:13:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT3SR3rc5F1BYA0=Wxp3PRbd+ueDZ-h_UzCj=9m8CLWLQ@mail.gmail.com>
-Message-ID: <CAK7LNAT3SR3rc5F1BYA0=Wxp3PRbd+ueDZ-h_UzCj=9m8CLWLQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] kbuild: link lib-y objects to vmlinux forcibly
- when CONFIG_MODULES=y
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     sparclinux <sparclinux@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
+References: <be17c0a111983e886d871db8dc2fc8fbfe8e2da0.1585800134.git.tommyhebb@gmail.com>
+ <a7ee8173-bbb8-a68c-8b46-da2174cd08ad@roeck-us.net> <CAMcCCgQ4SQHoSirXFbHU5AjikVnjmULSd73MBSjeyVGDG2j5bQ@mail.gmail.com>
+In-Reply-To: <CAMcCCgQ4SQHoSirXFbHU5AjikVnjmULSd73MBSjeyVGDG2j5bQ@mail.gmail.com>
+From:   Tom Hebb <tommyhebb@gmail.com>
+Date:   Thu, 2 Apr 2020 13:16:06 -0400
+Message-ID: <CAMcCCgR=wt8XrEMCGPvSx1BVa=ZxrQseE-HG0HLD5VG9QmMqMQ@mail.gmail.com>
+Subject: Re: [PATCH] hwmon: (dell-smm) Use one DMI match for all XPS models
+Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 7:38 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Kbuild supports not only obj-y but also lib-y to list objects linked to
-> vmlinux.
->
-> The difference between them is that all the objects from obj-y are
-> forcibly linked to vmlinux by using --whole-archive, whereas the objects
-> from lib-y are linked as needed; if there is no user of a lib-y object,
-> it is not linked.
->
-> lib-y is intended to list utility functions that may be called from all
-> over the place (and may be unused at all), but it is a problem for
-> EXPORT_SYMBOL(). Even if there is no call-site in the vmlinux, we need
-> to keep exported symbols for the use from loadable modules.
->
-> Commit 7f2084fa55e6 ("[kbuild] handle exports in lib-y objects reliably")
-> worked around it by linking a dummy object, lib-ksyms.o, which contains
-> references to all the symbols exported from lib.a in that directory.
-> It uses the linker script command, EXTERN. Unfortunately, the meaning of
-> EXTERN of ld.lld is different from that of ld.bfd. Therefore, this does
-> not work with LD=ld.lld (CBL issue #515).
->
-> Anyway, the build rule of lib-ksyms.o is somewhat tricky. So, I want to
-> get rid of it.
->
-> At first, I was thinking of accumulating lib-y objects into obj-y
-> (or even replacing lib-y with obj-y entirely), but the lib-y syntax
-> is used beyond the ordinary use in lib/ and arch/*/lib/.
->
-> Examples:
->
->  - drivers/firmware/efi/libstub/Makefile builds lib.a, which is linked
->    into vmlinux in the own way (arm64), or linked to the decompressor
->    (arm, x86).
->
->  - arch/alpha/lib/Makefile builds lib.a which is linked not only to
->    vmlinux, but also to bootloaders in arch/alpha/boot/Makefile.
->
->  - arch/xtensa/boot/lib/Makefile builds lib.a for use from
->    arch/xtensa/boot/boot-redboot/Makefile.
->
-> One more thing, adding everything to obj-y would increase the vmlinux
-> size of allnoconfig (or tinyconfig).
->
-> For less impact, I tweaked the destination of lib.a at the top Makefile;
-> when CONFIG_MODULES=y, lib.a goes to KBUILD_VMLINUX_OBJS, which is
-> forcibly linked to vmlinux, otherwise lib.a goes to KBUILD_VMLINUX_LIBS
-> as before.
->
-> The size impact for normal usecases is quite small since at lease one
-> symbol in every lib-y object is eventually called by someone. In case
-> you are intrested, here are the figures.
->
-> x86_64_defconfig:
->
->    text    data     bss     dec     hex filename
-> 19566602 5422072 1589328 26578002 1958c52 vmlinux.before
-> 19566932 5422104 1589328 26578364 1958dbc vmlinux.after
->
-> The case with the biggest impact is allnoconfig + CONFIG_MODULES=y.
->
-> ARCH=x86 allnoconfig + CONFIG_MODULES=y:
->
->    text    data     bss     dec     hex filename
-> 1175162  254740 1220608 2650510  28718e vmlinux.before
-> 1177974  254836 1220608 2653418  287cea vmlinux.after
->
-> Hopefully this is still not a big deal. The per-file trimming with the
-> static library is not so effective after all.
->
-> If fine-grained optimization is desired, some architectures support
-> CONFIG_LD_DEAD_CODE_DATA_ELIMINATION, which trims dead code per-symbol
-> basis. When LTO is supported in mainline, even better optimization will
-> be possible.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/515
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> ---
+Thanks for the quick review!
 
-Applied to linux-kbuild.
-
-I will rebase my branch during this MW,
-so the commit ID will be unstable.
-Please do not record it until it lands in Linus' tree.
+On Thu, Apr 2, 2020 at 2:15 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 4/1/20 9:02 PM, Thomas Hebb wrote:
+> > Currently, each new XPS has to be added manually for module autoloading
+> > to work. Since fan multiplier autodetection should work fine on all XPS
+> > models, just match them all with one block like is done for Precision
+> > and Studio.
+> >
+> > The only match we replace that doesn't already use autodetection is
+> > "XPS13" which, according to Google, only matches the XPS 13 9333. (All
+> > other XPS 13 models have "XPS" as its own word, surrounded by spaces.)
+> > According to the thread at [1], autodetection works for the XPS 13 9333,
+> > meaning this shouldn't regress it. I do not own one to confirm with,
+> > though.
+> >
+> > Tested on an XPS 13 9350 and confirmed the module now autoloads and
+> > reports reasonable-looking data. I am using BIOS 1.12.2 and do not see
+> > any freezes when querying fan speed.
+> >
+> > [1] https://lore.kernel.org/patchwork/patch/525367/
+> >
+> > Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+> > ---
+> >
+> >  drivers/hwmon/dell-smm-hwmon.c | 19 ++-----------------
+> >  1 file changed, 2 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+> > index d4c83009d625..c1af4c801dd8 100644
+> > --- a/drivers/hwmon/dell-smm-hwmon.c
+> > +++ b/drivers/hwmon/dell-smm-hwmon.c
+> > @@ -1087,14 +1087,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
+> >               },
+> >               .driver_data = (void *)&i8k_config_data[DELL_STUDIO],
+> >       },
+> > -     {
+> > -             .ident = "Dell XPS 13",
+> > -             .matches = {
+> > -                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> > -                     DMI_MATCH(DMI_PRODUCT_NAME, "XPS13"),
+> > -             },
+> > -             .driver_data = (void *)&i8k_config_data[DELL_XPS],
+>
+> So .driver_data is no longer needed for xps 13 models ? Really ?
 
 
+That is my understanding, yes. As of commit 8f21d8e939b8 ("i8k:
+Autodetect fan RPM multiplier"), an explicit fan_mult from driver_data
+is not needed on any machine where i8k_get_fan_nominal_speed()
+works. The email thread I linked from my commit message, specifically
+message #13 from Gabriele Mazzotta[1], indicates that function works
+on the XPS 13 9333, as it did on all other laptops tested in that thread.
+The only other information in driver_data is fan_max, which defaults to
+I8K_FAN_HIGH and so won't change for the XPS 13 9333.
+
+Note that the version of the autodetection code which actually
+landed[2] (which, coincidentally, was part of the same series
+containing your initial XPS 13 support) fixed the bugs mentioned
+in [1] and properly tries i8k_get_fan_nominal_speed() for all fans.
+
+[1] https://lore.kernel.org/patchwork/patch/525367/#708707
+[2] https://lore.kernel.org/patchwork/patch/532107/
+
+>
+> Guenter
+>
+> > -     },
+> >       {
+> >               .ident = "Dell XPS M140",
+> >               .matches = {
+> > @@ -1104,17 +1096,10 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
+> >               .driver_data = (void *)&i8k_config_data[DELL_XPS],
+> >       },
+> >       {
+> > -             .ident = "Dell XPS 15 9560",
+> > -             .matches = {
+> > -                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> > -                     DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9560"),
+> > -             },
+> > -     },
+> > -     {
+> > -             .ident = "Dell XPS 15 9570",
+> > +             .ident = "Dell XPS",
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> > -                     DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9570"),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "XPS"),
+>
+> Quite frankly, I'd want to have this tested on many more models.
+> I don't really want to deal with the fallout if it doesn't work
+> on all xps a3 and xps 15 systems, especially since Dell doesn't
+> support the BIOS interface used by this driver.
 
 
+What fallout are you imagining? There are two XPS 15 models, 9560
+and 9570, that were already matched, neither of which required
+driver_data or were blacklisted for bad BIOS behavior., and I've tested
+on a 9350 with the same result.
 
--- 
-Best Regards
-Masahiro Yamada
+The worst case scenario I could imagine is that one of 9550, 9360, or
+9370 has bad BIOS behavior and starts showing hiccups after this
+patch. I don't think that's likely, though, given that the list of tested
+models includes one from each generation, sampling across both 13
+and 15. Additionally, the existing generic matches on "Studio",
+"inspiron", "Latitude", "Precision", and "Vostro" indicate that we're
+willing to accept the possibility of future breakage in exchange for
+automatic detection of new machines.
+
+-Tom
+
+>
+> Guenter
+>
+> >               },
+> >       },
+> >       { }
+> >
+>
+
+On Thu, Apr 2, 2020 at 2:15 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 4/1/20 9:02 PM, Thomas Hebb wrote:
+> > Currently, each new XPS has to be added manually for module autoloading
+> > to work. Since fan multiplier autodetection should work fine on all XPS
+> > models, just match them all with one block like is done for Precision
+> > and Studio.
+> >
+> > The only match we replace that doesn't already use autodetection is
+> > "XPS13" which, according to Google, only matches the XPS 13 9333. (All
+> > other XPS 13 models have "XPS" as its own word, surrounded by spaces.)
+> > According to the thread at [1], autodetection works for the XPS 13 9333,
+> > meaning this shouldn't regress it. I do not own one to confirm with,
+> > though.
+> >
+> > Tested on an XPS 13 9350 and confirmed the module now autoloads and
+> > reports reasonable-looking data. I am using BIOS 1.12.2 and do not see
+> > any freezes when querying fan speed.
+> >
+> > [1] https://lore.kernel.org/patchwork/patch/525367/
+> >
+> > Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+> > ---
+> >
+> >  drivers/hwmon/dell-smm-hwmon.c | 19 ++-----------------
+> >  1 file changed, 2 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+> > index d4c83009d625..c1af4c801dd8 100644
+> > --- a/drivers/hwmon/dell-smm-hwmon.c
+> > +++ b/drivers/hwmon/dell-smm-hwmon.c
+> > @@ -1087,14 +1087,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
+> >               },
+> >               .driver_data = (void *)&i8k_config_data[DELL_STUDIO],
+> >       },
+> > -     {
+> > -             .ident = "Dell XPS 13",
+> > -             .matches = {
+> > -                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> > -                     DMI_MATCH(DMI_PRODUCT_NAME, "XPS13"),
+> > -             },
+> > -             .driver_data = (void *)&i8k_config_data[DELL_XPS],
+>
+> So .driver_data is no longer needed for xps 13 models ? Really ?
+>
+> Guenter
+>
+> > -     },
+> >       {
+> >               .ident = "Dell XPS M140",
+> >               .matches = {
+> > @@ -1104,17 +1096,10 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
+> >               .driver_data = (void *)&i8k_config_data[DELL_XPS],
+> >       },
+> >       {
+> > -             .ident = "Dell XPS 15 9560",
+> > -             .matches = {
+> > -                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> > -                     DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9560"),
+> > -             },
+> > -     },
+> > -     {
+> > -             .ident = "Dell XPS 15 9570",
+> > +             .ident = "Dell XPS",
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> > -                     DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9570"),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "XPS"),
+>
+> Quite frankly, I'd want to have this tested on many more models.
+> I don't really want to deal with the fallout if it doesn't work
+> on all xps a3 and xps 15 systems, especially since Dell doesn't
+> support the BIOS interface used by this driver.
+>
+> Guenter
+>
+> >               },
+> >       },
+> >       { }
+> >
+>
