@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC2DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29029C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C657320678
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C1A20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZOkEjTm+"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="sj04Le7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390240AbgDBUiC (ORCPT
+        id S2389813AbgDBUhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:38:02 -0400
+        Thu, 2 Apr 2020 16:37:18 -0400
 Received: from ssl.serverraum.org ([176.9.125.105]:43695 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389651AbgDBUhT (ORCPT
+        with ESMTP id S1731842AbgDBUhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:37:19 -0400
+        Thu, 2 Apr 2020 16:37:15 -0400
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 4EF6323E25;
-        Thu,  2 Apr 2020 22:37:16 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id D49A023D18;
+        Thu,  2 Apr 2020 22:37:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585859836;
+        t=1585859832;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JvYoNQ4vYXa7PEuB0qIntxPYyqileIK/r/q7Cu1/J5A=;
-        b=ZOkEjTm+yEGMmGkmb/7ooVQcA3UNk8ElExjwpU089P0LjkBSYfKdmndlvjX1Na8KWxWFzT
-        1wSn/pokAfsjKU1uGrjZ0IFsMsiDfGk3Wp+oRMm4kUdNrXz5NkGcSl2pA+05kjWynFkmKZ
-        Nz9uZ53BHw5RC0/Ws0bIiXfAxu+Yat4=
+        bh=KXy7nJgnAk11tydoI+EmDNRy8IKIQCr6Ymye2zVSgho=;
+        b=sj04Le7bjNMJiONy1LtO66Ph9iQ0NlIh4+hsvT2YvUjcC1GJ2kTl5s8rEbUJssdseAAdcq
+        XZf41kpOQ3wjFwTZ2h/9xzbYuKTbaLr83e1hGPoy8oxvriCTBq6xRmGO7EFsvaePwXLVj4
+        PguuQxFRGKkj6Ne4EszTeNR8yf/sYWY=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -60,9 +60,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
-Date:   Thu,  2 Apr 2020 22:36:50 +0200
-Message-Id: <20200402203656.27047-11-michael@walle.cc>
+Subject: [PATCH v2 05/16] dt-bindings: mfd: Add bindings for sl28cpld
+Date:   Thu,  2 Apr 2020 22:36:45 +0200
+Message-Id: <20200402203656.27047-6-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200402203656.27047-1-michael@walle.cc>
 References: <20200402203656.27047-1-michael@walle.cc>
@@ -70,7 +70,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
 X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 4EF6323E25
+X-Rspamd-Queue-Id: D49A023D18
 X-Spamd-Result: default: False [6.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -80,10 +80,11 @@ X-Spamd-Result: default: False [6.40 / 15.00];
          MIME_GOOD(-0.10)[text/plain];
          BROKEN_CONTENT_TYPE(1.50)[];
          TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.049];
          DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.0.0.2:email,0.0.0.1:email,0.0.0.6:email,0.0.0.7:email,0.0.0.5:email,0.0.0.4:email,0.0.0.3:email,0.0.0.0:email];
          RCPT_COUNT_TWELVE(0.00)[24];
          MID_CONTAINS_FROM(1.00)[];
-         NEURAL_HAM(-0.00)[-0.182];
          RCVD_COUNT_ZERO(0.00)[0];
          FROM_EQ_ENVFROM(0.00)[];
          MIME_TRACE(0.00)[0:+];
@@ -96,480 +97,363 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are quite a lot simple GPIO controller which are using regmap to
-access the hardware. This driver tries to be a base to unify existing
-code into one place. This won't cover everything but it should be a good
-starting point.
-
-It does not implement its own irq_chip because there is already a
-generic one for regmap based devices. Instead, the irq_chip will be
-instanciated in the parent driver and its irq domain will be associate
-to this driver.
-
-For now it consists of the usual registers, like set (and an optional
-clear) data register, an input register and direction registers.
-Out-of-the-box, it supports consecutive register mappings and mappings
-where the registers have gaps between them with a linear mapping between
-GPIO offset and bit position. For weirder mappings the user can register
-its own .xlate().
+This adds device tree bindings for the board management controller found
+on the Kontron SMARC-sAL28 board.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- drivers/gpio/Kconfig        |   4 +
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-regmap.c  | 320 ++++++++++++++++++++++++++++++++++++
- include/linux/gpio-regmap.h |  88 ++++++++++
- 4 files changed, 413 insertions(+)
- create mode 100644 drivers/gpio/gpio-regmap.c
- create mode 100644 include/linux/gpio-regmap.h
+ .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  51 ++++++
+ .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 +++
+ .../bindings/mfd/kontron,sl28cpld.yaml        | 162 ++++++++++++++++++
+ .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+ .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
+ 5 files changed, 310 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1b96169d84f7..a8e148f4b2e0 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -73,6 +73,10 @@ config GPIO_GENERIC
- 	depends on HAS_IOMEM # Only for IOMEM drivers
- 	tristate
- 
-+config GPIO_REGMAP
-+	depends on REGMAP
-+	tristate
-+
- # put drivers in the right section, in alphabetical order
- 
- # This symbol is selected by both I2C and SPI expanders
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index b2cfc21a97f3..93e139fdfa57 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
- obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
- 
- # Device drivers. Generally keep list sorted alphabetically
-+obj-$(CONFIG_GPIO_REGMAP)	+= gpio-regmap.o
- obj-$(CONFIG_GPIO_GENERIC)	+= gpio-generic.o
- 
- # directly supported by gpio-generic
-diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+diff --git a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
 new file mode 100644
-index 000000000000..cc4437dc0521
+index 000000000000..291ca116743d
 --- /dev/null
-+++ b/drivers/gpio/gpio-regmap.c
-@@ -0,0 +1,320 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * regmap based generic GPIO driver
-+ *
-+ * Copyright 2019 Michael Walle <michael@walle.cc>
-+ */
++++ b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio-regmap.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
++title: GPIO driver for the sl28cpld board management controller
 +
-+struct gpio_regmap_data {
-+	struct gpio_chip gpio_chip;
-+	struct gpio_regmap *gpio;
-+};
++maintainers:
++  - Michael Walle <michael@walle.cc>
 +
-+/**
-+ * gpio_regmap_simple_xlate() - translate base/offset to reg/mask
-+ *
-+ * Use a simple linear mapping to translate the offset to the bitmask.
-+ */
-+int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int base,
-+			     unsigned int offset,
-+			     unsigned int *reg, unsigned int *mask)
-+{
-+	unsigned int line = offset % gpio->ngpio_per_reg;
-+	unsigned int stride = offset / gpio->ngpio_per_reg;
++description: |
++  This module is part of the sl28cpld multi-function device. For more
++  details see Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
 +
-+	*reg = base + stride * gpio->reg_stride;
-+	*mask = BIT(line);
++  There are three flavors of the GPIO controller, one full featured
++  input/output with interrupt support (kontron,sl28cpld-gpio), one
++  output-only (kontron,sl28-gpo) and one input-only (kontron,sl28-gpi).
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(gpio_regmap_simple_xlate);
++  Each controller supports 8 GPIO lines.
 +
-+static int gpio_regmap_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpio_regmap_data *data = gpiochip_get_data(chip);
-+	struct gpio_regmap *gpio = data->gpio;
-+	unsigned int base;
-+	unsigned int val, reg, mask;
-+	int ret;
++properties:
++  compatible:
++    enum:
++      - kontron,sl28cpld-gpio
++      - kontron,sl28cpld-gpi
++      - kontron,sl28cpld-gpo
 +
-+	/* we might not have an output register if we are input only */
-+	if (gpio->reg_dat_base.valid)
-+		base = gpio->reg_dat_base.addr;
-+	else
-+		base = gpio->reg_set_base.addr;
++  reg:
++    maxItems: 1
 +
-+	ret = gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-+	if (ret)
-+		return ret;
++  "#interrupt-cells":
++    const: 2
 +
-+	ret = regmap_read(gpio->regmap, reg, &val);
-+	if (ret)
-+		return ret;
++  interrupt-controller: true
 +
-+	return (val & mask) ? 1 : 0;
-+}
++  "#gpio-cells":
++    const: 2
 +
-+static void gpio_regmap_set(struct gpio_chip *chip, unsigned int offset,
-+			    int val)
-+{
-+	struct gpio_regmap_data *data = gpiochip_get_data(chip);
-+	struct gpio_regmap *gpio = data->gpio;
-+	unsigned int base = gpio->reg_set_base.addr;
-+	unsigned int reg, mask;
++  gpio-controller: true
 +
-+	gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-+	if (val)
-+		regmap_update_bits(gpio->regmap, reg, mask, mask);
-+	else
-+		regmap_update_bits(gpio->regmap, reg, mask, 0);
-+}
++  gpio-line-names:
++      minItems: 1
++      maxItems: 8
 +
-+static void gpio_regmap_set_with_clear(struct gpio_chip *chip,
-+				       unsigned int offset, int val)
-+{
-+	struct gpio_regmap_data *data = gpiochip_get_data(chip);
-+	struct gpio_regmap *gpio = data->gpio;
-+	unsigned int base;
-+	unsigned int reg, mask;
++required:
++  - compatible
++  - "#gpio-cells"
++  - gpio-controller
 +
-+	if (val)
-+		base = gpio->reg_set_base.addr;
-+	else
-+		base = gpio->reg_clr_base.addr;
-+
-+	gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-+	regmap_write(gpio->regmap, reg, mask);
-+}
-+
-+static int gpio_regmap_get_direction(struct gpio_chip *chip,
-+				     unsigned int offset)
-+{
-+	struct gpio_regmap_data *data = gpiochip_get_data(chip);
-+	struct gpio_regmap *gpio = data->gpio;
-+	unsigned int val, reg, mask;
-+	unsigned int base;
-+	int invert;
-+	int ret;
-+
-+	if (gpio->reg_dir_out_base.valid) {
-+		base = gpio->reg_dir_out_base.addr;
-+		invert = 0;
-+	} else if (gpio->reg_dir_in_base.valid) {
-+		base = gpio->reg_dir_in_base.addr;
-+		invert = 1;
-+	} else {
-+		return GPIO_LINE_DIRECTION_IN;
-+	}
-+
-+	ret = gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(gpio->regmap, reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (!!(val & mask) ^ invert)
-+		return GPIO_LINE_DIRECTION_OUT;
-+	else
-+		return GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static int gpio_regmap_set_direction(struct gpio_chip *chip,
-+				     unsigned int offset, bool output)
-+{
-+	struct gpio_regmap_data *data = gpiochip_get_data(chip);
-+	struct gpio_regmap *gpio = data->gpio;
-+	unsigned int val, reg, mask;
-+	unsigned int base;
-+	int invert;
-+	int ret;
-+
-+	if (gpio->reg_dir_out_base.valid) {
-+		base = gpio->reg_dir_out_base.addr;
-+		invert = 0;
-+	} else if (gpio->reg_dir_in_base.valid) {
-+		base = gpio->reg_dir_in_base.addr;
-+		invert = 1;
-+	} else {
-+		return 0;
-+	}
-+
-+	ret = gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-+	if (ret)
-+		return ret;
-+
-+	if (!invert)
-+		val = (output) ? mask : 0;
-+	else
-+		val = (output) ? 0 : mask;
-+
-+	return regmap_update_bits(gpio->regmap, reg, mask, val);
-+}
-+
-+static int gpio_regmap_direction_input(struct gpio_chip *chip,
-+				       unsigned int offset)
-+{
-+	return gpio_regmap_set_direction(chip, offset, false);
-+}
-+
-+static int gpio_regmap_direction_output(struct gpio_chip *chip,
-+					unsigned int offset, int value)
-+{
-+	gpio_regmap_set(chip, offset, value);
-+	return gpio_regmap_set_direction(chip, offset, true);
-+}
-+
-+static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpio_regmap_data *data = gpiochip_get_data(chip);
-+	struct gpio_regmap *gpio = data->gpio;
-+
-+	/* the user might have its own .to_irq callback */
-+	if (gpio->to_irq)
-+		return gpio->to_irq(gpio, offset);
-+
-+	return irq_create_mapping(gpio->irq_domain, offset);
-+}
-+
-+/**
-+ * gpio_regmap_register() - Register a generic regmap GPIO controller
-+ *
-+ * @gpio: gpio_regmap device to register
-+ *
-+ * Returns 0 on success or an errno on failure.
-+ */
-+int gpio_regmap_register(struct gpio_regmap *gpio)
-+{
-+	struct gpio_regmap_data *d;
-+	struct gpio_chip *chip;
-+	int ret;
-+
-+	if (!gpio->parent)
-+		return -EINVAL;
-+
-+	if (!gpio->ngpio)
-+		return -EINVAL;
-+
-+	/* we need at least one */
-+	if (!gpio->reg_dat_base.valid && !gpio->reg_set_base.valid)
-+		return -EINVAL;
-+
-+	/* we don't support having both registers simulaniously for now */
-+	if (gpio->reg_dir_out_base.valid && gpio->reg_dir_in_base.valid)
-+		return -EINVAL;
-+
-+	/* if not set, assume they are consecutive */
-+	if (!gpio->reg_stride)
-+		gpio->reg_stride = 1;
-+
-+	/* if not set, assume there is only one register */
-+	if (!gpio->ngpio_per_reg)
-+		gpio->ngpio_per_reg = gpio->ngpio;
-+
-+	if (!gpio->reg_mask_xlate)
-+		gpio->reg_mask_xlate = gpio_regmap_simple_xlate;
-+
-+	d = kzalloc(sizeof(*d), GFP_KERNEL);
-+	if (!d)
-+		return -ENOMEM;
-+
-+	gpio->data = d;
-+	d->gpio = gpio;
-+
-+	chip = &d->gpio_chip;
-+	chip->parent = gpio->parent;
-+	chip->label = gpio->label;
-+	chip->base = -1;
-+	chip->ngpio = gpio->ngpio;
-+	chip->can_sleep = true;
-+	chip->get = gpio_regmap_get;
-+
-+	if (!chip->label)
-+		chip->label = dev_name(gpio->parent);
-+
-+	if (gpio->reg_set_base.valid && gpio->reg_clr_base.valid)
-+		chip->set = gpio_regmap_set_with_clear;
-+	else if (gpio->reg_set_base.valid)
-+		chip->set = gpio_regmap_set;
-+
-+	if (gpio->reg_dir_in_base.valid || gpio->reg_dir_out_base.valid) {
-+		chip->get_direction = gpio_regmap_get_direction;
-+		chip->direction_input = gpio_regmap_direction_input;
-+		chip->direction_output = gpio_regmap_direction_output;
-+	}
-+
-+	if (gpio->irq_domain)
-+		chip->to_irq = gpio_regmap_to_irq;
-+
-+	ret = gpiochip_add_data(chip, d);
-+	if (ret < 0)
-+		goto err_alloc;
-+
-+	return 0;
-+
-+err_alloc:
-+	kfree(d);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(gpio_regmap_register);
-+
-+/**
-+ * gpio_regmap_unregister() - Unregister a generic regmap GPIO controller
-+ *
-+ * @gpio: gpio_regmap device to unregister
-+ */
-+void gpio_regmap_unregister(struct gpio_regmap *gpio)
-+{
-+	gpiochip_remove(&gpio->data->gpio_chip);
-+	kfree(gpio->data);
-+}
-+EXPORT_SYMBOL_GPL(gpio_regmap_unregister);
-+
-+static void devm_gpio_regmap_unregister(struct device *dev, void *res)
-+{
-+	gpio_regmap_unregister(*(struct gpio_regmap **)res);
-+}
-+
-+/**
-+ * devm_gpio_regmap_register() - resource managed gpio_regmap_register()
-+ *
-+ * @dev: device that is registering this GPIO device
-+ * @gpio: gpio_regmap device to register
-+ *
-+ * Managed gpio_regmap_register(). For generic regmap GPIO device registered by
-+ * this function, gpio_regmap_unregister() is automatically called on driver
-+ * detach. See gpio_regmap_register() for more information.
-+ */
-+int devm_gpio_regmap_register(struct device *dev, struct gpio_regmap *gpio)
-+{
-+	struct gpio_regmap **ptr;
-+	int ret;
-+
-+	ptr = devres_alloc(devm_gpio_regmap_unregister, sizeof(*ptr),
-+			   GFP_KERNEL);
-+	if (!ptr)
-+		return -ENOMEM;
-+
-+	ret = gpio_regmap_register(gpio);
-+	if (ret) {
-+		devres_free(ptr);
-+		return ret;
-+	}
-+
-+	*ptr = gpio;
-+	devres_add(dev, ptr);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(devm_gpio_regmap_register);
-+
-+MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-+MODULE_DESCRIPTION("GPIO generic regmap driver core");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
++additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
 new file mode 100644
-index 000000000000..ad63955e0e43
+index 000000000000..1cebd61c6c32
 --- /dev/null
-+++ b/include/linux/gpio-regmap.h
-@@ -0,0 +1,88 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+@@ -0,0 +1,27 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwmon/kontron,sl28cpld-hwmon.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#ifndef _LINUX_GPIO_REGMAP_H
-+#define _LINUX_GPIO_REGMAP_H
++title: Hardware monitoring driver for the sl28cpld board management controller
 +
-+struct gpio_regmap_addr {
-+	unsigned int addr;
-+	bool valid;
-+};
-+#define GPIO_REGMAP_ADDR(_addr) \
-+	((struct gpio_regmap_addr) { .addr = _addr, .valid = true })
++maintainers:
++  - Michael Walle <michael@walle.cc>
 +
-+/**
-+ * struct gpio_regmap - Description of a generic regmap gpio_chip.
-+ *
-+ * @parent:		The parent device
-+ * @regmap:		The regmap use to access the registers
-+ *			given, the name of the device is used
-+ * @label:		(Optional) Descriptive name for GPIO controller.
-+ *			If not given, the name of the device is used.
-+ * @ngpio:		Number of GPIOs
-+ * @reg_dat_base:	(Optional) (in) register base address
-+ * @reg_set_base:	(Optional) set register base address
-+ * @reg_clr_base:	(Optional) clear register base address
-+ * @reg_dir_in_base:	(Optional) out setting register base address
-+ * @reg_dir_out_base:	(Optional) in setting register base address
-+ * @reg_stride:		(Optional) May be set if the registers (of the
-+ *			same type, dat, set, etc) are not consecutive.
-+ * @ngpio_per_reg:	Number of GPIOs per register
-+ * @irq_domain:		(Optional) IRQ domain if the controller is
-+ *			interrupt-capable
-+ * @reg_mask_xlate:     (Optional) Translates base address and GPIO
-+ *			offset to a register/bitmask pair. If not
-+ *			given the default gpio_regmap_simple_xlate()
-+ *			is used.
-+ * @to_irq:		(Optional) Maps GPIO offset to a irq number.
-+ *			By default assumes a linear mapping of the
-+ *			given irq_domain.
-+ * @driver_data:	Pointer to the drivers private data. Not used by
-+ *			gpio-regmap.
-+ *
-+ * The reg_mask_xlate translates a given base address and GPIO offset to
-+ * register and mask pair. The base address is one of the given reg_*_base.
-+ */
-+struct gpio_regmap {
-+	struct device *parent;
-+	struct regmap *regmap;
-+	struct gpio_regmap_data *data;
++description: |
++  This module is part of the sl28cpld multi-function device. For more
++  details see Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
 +
-+	const char *label;
-+	int ngpio;
++properties:
++  compatible:
++    enum:
++      - kontron,sl28cpld-fan
 +
-+	struct gpio_regmap_addr reg_dat_base;
-+	struct gpio_regmap_addr reg_set_base;
-+	struct gpio_regmap_addr reg_clr_base;
-+	struct gpio_regmap_addr reg_dir_in_base;
-+	struct gpio_regmap_addr reg_dir_out_base;
-+	int reg_stride;
-+	int ngpio_per_reg;
-+	struct irq_domain *irq_domain;
++  reg:
++    maxItems: 1
 +
-+	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
-+			      unsigned int offset, unsigned int *reg,
-+			      unsigned int *mask);
-+	int (*to_irq)(struct gpio_regmap *gpio, unsigned int offset);
++required:
++  - compatible
 +
-+	void *driver_data;
-+};
++additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+new file mode 100644
+index 000000000000..e155e3035513
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+@@ -0,0 +1,162 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static inline void gpio_regmap_set_drvdata(struct gpio_regmap *gpio,
-+					   void *data)
-+{
-+	gpio->driver_data = data;
-+}
++title: Kontron's sl28cpld board management controller
 +
-+static inline void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
-+{
-+	return gpio->driver_data;
-+}
++maintainers:
++  - Michael Walle <michael@walle.cc>
 +
-+int gpio_regmap_register(struct gpio_regmap *gpio);
-+void gpio_regmap_unregister(struct gpio_regmap *gpio);
-+int devm_gpio_regmap_register(struct device *dev, struct gpio_regmap *gpio);
-+int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int base,
-+			     unsigned int offset,
-+			     unsigned int *reg, unsigned int *mask);
++description: |
++  The board management controller may contain different IP blocks like
++  watchdog, fan monitoring, PWM controller, interrupt controller and a
++  GPIO controller.
 +
-+#endif /* _LINUX_GPIO_REGMAP_H */
++  Currently the MFD exports the following functions at the given
++  unit-addresses.
++
++  === =========== =======================
++   ua name        compatible
++  === =========== =======================
++   0  watchdog    kontron,sl28cpld-wdt
++   1  hwmon       kontron,sl28cpld-fan
++   2  pwm         kontron,sl28cpld-pwm
++   3  pwm         kontron,sl28cpld-pwm
++   4  gpio        kontron,sl28cpld-gpio
++   5  gpio        kontron,sl28cpld-gpio
++   6  gpio        kontron,sl28cpld-gpo
++   7  gpio        kontron,sl28cpld-gpi
++  === =========== =======================
++
++  The MFD driver will match the child nodes according to the unit-address
++  (eg. the reg property) and the compatible string.
++
++properties:
++  compatible:
++    const: kontron,sl28cpld
++
++  reg:
++    description:
++      I2C device address.
++    maxItems: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  "#interrupt-cells":
++    const: 2
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++patternProperties:
++  "^gpio(@[0-9]+)?$":
++    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
++
++  "^hwmon(@[0-9]+)?$":
++    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
++
++  "^pwm(@[0-9]+)?$":
++    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
++
++  "^watchdog(@[0-9]+)?$":
++    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
++
++required:
++  - "#address-cells"
++  - "#size-cells"
++  - compatible
++  - reg
++  - interrupts
++  - "#interrupt-cells"
++  - interrupt-controller
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        sl28cpld@4a {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            compatible = "kontron,sl28cpld";
++            reg = <0x4a>;
++            interrupts-extended = <&gpio2 6 IRQ_TYPE_EDGE_FALLING>;
++
++            #interrupt-cells = <2>;
++            interrupt-controller;
++
++            watchdog@0 {
++                compatible = "kontron,sl28cpld-wdt";
++                reg = <0>;
++                kontron,assert-wdt-timeout-pin;
++            };
++
++            hwmon@1 {
++                compatible = "kontron,sl28cpld-fan";
++                reg = <1>;
++            };
++
++            pwm@2 {
++                compatible = "kontron,sl28cpld-pwm";
++                reg = <2>;
++                #pwm-cells = <2>;
++            };
++
++            pwm@3 {
++                compatible = "kontron,sl28cpld-pwm";
++                reg = <3>;
++                #pwm-cells = <2>;
++            };
++
++            gpio@4 {
++                compatible = "kontron,sl28cpld-gpio";
++                reg = <4>;
++
++                gpio-controller;
++                #gpio-cells = <2>;
++
++                interrupt-controller;
++                #interrupt-cells = <2>;
++            };
++
++            gpio@5 {
++                compatible = "kontron,sl28cpld-gpio";
++                reg = <5>;
++
++                gpio-controller;
++                #gpio-cells = <2>;
++
++                interrupt-controller;
++                #interrupt-cells = <2>;
++            };
++
++            gpio@6 {
++                compatible = "kontron,sl28cpld-gpo";
++                reg = <6>;
++
++                gpio-controller;
++                #gpio-cells = <2>;
++                gpio-line-names = "a", "b", "c";
++            };
++
++            gpio@7 {
++                compatible = "kontron,sl28cpld-gpi";
++                reg = <7>;
++
++                gpio-controller;
++                #gpio-cells = <2>;
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml b/Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+new file mode 100644
+index 000000000000..02fe88c30233
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/kontron,sl28cpld-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: PWM driver for the sl28cpld board management controller
++
++maintainers:
++  - Michael Walle <michael@walle.cc>
++
++description: |
++  This module is part of the sl28cpld multi-function device. For more
++  details see Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
++
++  The controller supports one PWM channel and supports only four distinct
++  frequencies (250Hz, 500Hz, 1kHz, 2kHz).
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    const: kontron,sl28cpld-pwm
++
++  reg:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 2
++
++required:
++  - compatible
++
++additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml b/Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+new file mode 100644
+index 000000000000..dd6559f2973a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/watchdog/kontron,sl28cpld-wdt.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Watchdog driver for the sl28cpld board management controller
++
++maintainers:
++  - Michael Walle <michael@walle.cc>
++
++description: |
++  This module is part of the sl28cpld multi-function device. For more
++  details see Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
++
++allOf:
++  - $ref: watchdog.yaml#
++
++properties:
++  compatible:
++    const: kontron,sl28cpld-wdt
++
++  reg:
++    maxItems: 1
++
++  kontron,assert-wdt-timeout-pin:
++    description: The SMARC standard defines a WDT_TIME_OUT# pin. If this
++      property is set, this output will be pulsed when the watchdog bites
++      and the system resets.
++    type: boolean
++
++required:
++  - compatible
++
++additionalProperties: false
 -- 
 2.20.1
 
