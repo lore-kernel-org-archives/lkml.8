@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C581C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C6CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208FF20757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2AE20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="py4C8dEl"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Kdmo72yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389127AbgDBO66 (ORCPT
+        id S2388954AbgDBO7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:58:58 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:45187 "EHLO rere.qmqm.pl"
+        Thu, 2 Apr 2020 10:59:05 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:40831 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389047AbgDBO6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:58:36 -0400
+        id S2389041AbgDBO6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:58:35 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR5k2S3Rz1vh;
-        Thu,  2 Apr 2020 16:58:34 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR5j2Bpvz9j;
+        Thu,  2 Apr 2020 16:58:33 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585839514; bh=gRqyNiKmpXtCcJah85qRJb4ZmdxMMi1xeLY32RUkzmw=;
+        t=1585839513; bh=CtdnXaW3M9J6/3+oqZVerhtAMCemduwcslAGnqFReTw=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=py4C8dEl3mEDGP6diNl5IGaONluJgCjEUrAgpOdCMlmzzGB+kSQ8UsqPbkOmzyB/6
-         ClF+RNRKliZzAMgD302oZzOfqzGBH91lP/LL0REBDLF9uktKub9S/AcvzjwuT7be/B
-         09VS8Z68vdLkgpsbzDuCP/xI22ZvTc57YzfZsU4HBWXswZOgj9Ouj7AsuLVusj5gzd
-         idMtkYtb7qbKhj7zbvaZbJrQniLkQs3Ny85rtAdjBsZeKYvMI5jFcV7YAGgS42bP5t
-         K7fz5257DiYFWmRpbG4sZ8zhz84k7fLyTLf+Q9Ot+zfPGh4+vvrNLiqjMDfScm6tVz
-         m3+K+7kTpS06Q==
+        b=Kdmo72ywkGxiqa5vrzjpXFuEm59PmujDUIiEgUrQ1yB8yhMkO37IDPZu4A608+kFn
+         dETm6BpadQ+/JuYUGw4gFiR/wc24zZ+DjjQIk2EwBMBKHbCiCyo1ZLOOwO1ZuerPrE
+         /HyCyYMXBXB2nHNtFyDIi5PIMx9XSGEv9qI3s0wG2uPJKiPDi11NPEUHcnmm7QWB2u
+         CLhzzbzsr5RsFnHGWjV5rIwku7Hd2MZClonth48ZGUfTYSuUCA20fffwNyacbcORLP
+         xYXbEW+FLMlhn3ysqu8S4R0RCZVNt6/gJnj/pdtkpjdYRXEMj+IlvfUptGdI9MwZjr
+         NNlid/rDhU9Yg==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 16:58:33 +0200
-Message-Id: <e60a23192ff336dd5b7307bc059ebf3e876183b1.1585838679.git.mirq-linux@rere.qmqm.pl>
+Date:   Thu, 02 Apr 2020 16:58:32 +0200
+Message-Id: <a5056368c4056445ec9b98d7abf01aced590905f.1585838679.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1585838678.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1585838678.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 09/14] power: supply: bq25890: implement INPUT_CURRENT_LIMIT
- property
+Subject: [PATCH 07/14] power: supply: bq25890: implement CHARGE_TYPE property
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -53,56 +52,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Report REG00.IINLIM value as INPUT_CURRENT_LIMIT property.
+Report charging type based on recently read state.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/power/supply/bq25890_charger.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/power/supply/bq25890_charger.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index b48685009048..87c5832e23d3 100644
+index e4368d01396a..ad0901fdceb6 100644
 --- a/drivers/power/supply/bq25890_charger.c
 +++ b/drivers/power/supply/bq25890_charger.c
-@@ -254,6 +254,7 @@ enum bq25890_table_ids {
- 	/* range tables */
- 	TBL_ICHG,
- 	TBL_ITERM,
-+	TBL_IILIM,
- 	TBL_VREG,
- 	TBL_BOOSTV,
- 	TBL_SYSVMIN,
-@@ -294,6 +295,7 @@ static const union {
- 	/* TODO: BQ25896 has max ICHG 3008 mA */
- 	[TBL_ICHG] =	{ .rt = {0,	  5056000, 64000} },	 /* uA */
- 	[TBL_ITERM] =	{ .rt = {64000,   1024000, 64000} },	 /* uA */
-+	[TBL_IILIM] =   { .rt = {50000,   3200000, 50000} },	 /* uA */
- 	[TBL_VREG] =	{ .rt = {3840000, 4608000, 16000} },	 /* uV */
- 	[TBL_BOOSTV] =	{ .rt = {4550000, 5510000, 64000} },	 /* uV */
- 	[TBL_SYSVMIN] = { .rt = {3000000, 3700000, 100000} },	 /* uV */
-@@ -505,6 +507,14 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
- 		val->intval = bq25890_find_val(bq->init_data.iterm, TBL_ITERM);
+@@ -429,6 +429,18 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
+ 
  		break;
  
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		ret = bq25890_field_read(bq, F_IILIM);
-+		if (ret < 0)
-+			return ret;
-+
-+		val->intval = bq25890_find_val(ret, TBL_IILIM);
++	case POWER_SUPPLY_PROP_CHARGE_TYPE:
++		if (!state.online || state.chrg_status == STATUS_NOT_CHARGING ||
++		    state.chrg_status == STATUS_TERMINATION_DONE)
++			val->intval = POWER_SUPPLY_CHARGE_TYPE_NONE;
++		else if (state.chrg_status == STATUS_PRE_CHARGING)
++			val->intval = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
++		else if (state.chrg_status == STATUS_FAST_CHARGING)
++			val->intval = POWER_SUPPLY_CHARGE_TYPE_FAST;
++		else /* unreachable */
++			val->intval = POWER_SUPPLY_CHARGE_TYPE_UNKNOWN;
 +		break;
 +
- 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
- 		ret = bq25890_field_read(bq, F_SYSV); /* read measured value */
- 		if (ret < 0)
-@@ -695,6 +705,7 @@ static const enum power_supply_property bq25890_power_supply_props[] = {
- 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
- 	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
- 	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
- };
- 
+ 	case POWER_SUPPLY_PROP_MANUFACTURER:
+ 		val->strval = BQ25890_MANUFACTURER;
+ 		break;
+@@ -670,6 +682,7 @@ static const enum power_supply_property bq25890_power_supply_props[] = {
+ 	POWER_SUPPLY_PROP_MANUFACTURER,
+ 	POWER_SUPPLY_PROP_MODEL_NAME,
+ 	POWER_SUPPLY_PROP_STATUS,
++	POWER_SUPPLY_PROP_CHARGE_TYPE,
+ 	POWER_SUPPLY_PROP_ONLINE,
+ 	POWER_SUPPLY_PROP_HEALTH,
+ 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
 -- 
 2.20.1
 
