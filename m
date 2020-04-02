@@ -2,196 +2,428 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E01C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9133CC10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2132078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1ED206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oq/YYrvp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UHX6mCNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgDBGl5 (ORCPT
+        id S1729156AbgDBGn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 02:41:57 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23986 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725789AbgDBGl5 (ORCPT
+        Thu, 2 Apr 2020 02:43:59 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:36420 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725875AbgDBGn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 02:41:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585809713;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vp8T3NOJdA2k/zwZH2Kfq+w4ReMOCQ7AV7O43MaM2x0=;
-        b=Oq/YYrvpL7NlKZJbuIDKplEzUOKcKHA10PT97evykUD1f3uP/ENR4yTNQU0M1ur/Qj79pw
-        hb9ptmH1Rp2QVeXN1IdMi0O7dEZI/4gVznGL1gVASgYyeuH8OJnUl50LkmEVfvFVCEGfKs
-        h5kib47QJj3c/mH0thEEA56UKJOJNNI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-eZyn5DpWNEeJpJboWrsDTw-1; Thu, 02 Apr 2020 02:41:50 -0400
-X-MC-Unique: eZyn5DpWNEeJpJboWrsDTw-1
-Received: by mail-wr1-f71.google.com with SMTP id r15so992296wrm.22
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 23:41:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vp8T3NOJdA2k/zwZH2Kfq+w4ReMOCQ7AV7O43MaM2x0=;
-        b=KmuZQXvRHDE0+u/4P1DqZGk/p/GLmeGMJpkmAIi4xpy5yO9AaF2PxYdIYIr7FBX4nu
-         NY8j8zvjCLKVsBX+ZKKW1ClNUpf9biYef6OGdaN5CFmUoPXnoJCkXLHcVPFo5hcQnIVQ
-         2cXNZuBjuhJ4nNGIaLRV8QP9tC2sRShtqjr5fpVdyWJadkG4ZYRa0lTz5zqdLQQi+ae2
-         z5WEZ6xPgSSUByEhzUNRcLTHbepqFaca7GZq6APFt5bnZCuiMzvxluOi5+zKn/1LfTAy
-         UKyHYTBDFgd8u3QBDB7rfuDtSy84HKuBwQHKBKQqNuFmsvFAk/wy16HIR5ticTBhzrmZ
-         jDbg==
-X-Gm-Message-State: AGi0PubTmvUJ9jZodyr+1GRv8FYAGBR4fFEFA8X79lOL1StxHYSKETFB
-        rNOfLS6IRc7DAhwbCyXsoQmPrK+7+dJDby3FMbrGKKYZg4VblzdfzgEQSpWdEqLt/6AG48D3nhp
-        ftEL9Xs9/purA7PzY6l8i3jqZ
-X-Received: by 2002:a1c:a145:: with SMTP id k66mr1846973wme.26.1585809708869;
-        Wed, 01 Apr 2020 23:41:48 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKfbCUmoGOf9fKCWtsxWv+vB80pUl+ZIaOxbmGFZomkReboA7PDGK591OytjHKUCi3j5A1a3Q==
-X-Received: by 2002:a1c:a145:: with SMTP id k66mr1846954wme.26.1585809708628;
-        Wed, 01 Apr 2020 23:41:48 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id j188sm6003182wmj.36.2020.04.01.23.41.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 23:41:48 -0700 (PDT)
-Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz, Steven Rostedt <rostedt@goodmis.org>
-References: <20200330170200.GU20713@hirez.programming.kicks-ass.net>
- <20200330190205.k5ssixd5hpshpjjq@treble>
- <20200330200254.GV20713@hirez.programming.kicks-ass.net>
- <20200331111652.GH20760@hirez.programming.kicks-ass.net>
- <20200331202315.zialorhlxmml6ec7@treble>
- <20200331204047.GF2452@worktop.programming.kicks-ass.net>
- <20200331211755.pb7f3wa6oxzjnswc@treble>
- <20200331212040.7lrzmj7tbbx2jgrj@treble>
- <20200331222703.GH2452@worktop.programming.kicks-ass.net>
- <d2cad75e-1708-f0bf-7f88-194bcb29e61d@redhat.com>
- <20200401170910.GX20730@hirez.programming.kicks-ass.net>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <684d6e29-4a01-b4a5-f906-7bdee5ad108f@redhat.com>
-Date:   Thu, 2 Apr 2020 07:41:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 2 Apr 2020 02:43:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585809837; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=M8p0949sPWEO1HAjvejjWEjccYQLNmfsi3SKnE6pCHU=; b=UHX6mCNJbdIF8Ci8W/CVE8SrdX+nhFQg2x+Du1zgAKso4HwBb0nP4SZZ9T/pBU30DeVObmLE
+ cmwjA0U+sAq9fJF2nTmfGLeuaHP2p8OcHwoWVu5QC2JBCgii08pPaacWxIVYvm4cg0gaVy17
+ 2xQW50SCRLdo1ikBTnY7rQqwPa4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e85899e.7f1f95bff5a8-smtp-out-n05;
+ Thu, 02 Apr 2020 06:43:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8FD66C43637; Thu,  2 Apr 2020 06:43:41 +0000 (UTC)
+Received: from [10.111.194.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mgautam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A5457C433D2;
+        Thu,  2 Apr 2020 06:43:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A5457C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
+Subject: Re: [PATCH v4 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM
+ based SOCs
+To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
+ <1585597017-30683-3-git-send-email-wcheng@codeaurora.org>
+From:   Manu Gautam <mgautam@codeaurora.org>
+Message-ID: <9272b529-f1e1-41d9-0750-00d5cd0f6826@codeaurora.org>
+Date:   Thu, 2 Apr 2020 12:13:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200401170910.GX20730@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <1585597017-30683-3-git-send-email-wcheng@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 3/31/2020 1:06 AM, Wesley Cheng wrote:
+> This adds the SNPS FemtoPHY driver used in QCOM SOCs.  There
+> are potentially multiple instances of this UTMI PHY on the
+> SOC, all which can utilize this driver.
+>
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> Reviewed-by: Philipp Zabel <pza@pengutronix.de>
+> ---
+>  drivers/phy/qualcomm/Kconfig             |  10 ++
+>  drivers/phy/qualcomm/Makefile            |   1 +
+>  drivers/phy/qualcomm/phy-qcom-snps-7nm.c | 294 +++++++++++++++++++++++++++++++
+>  3 files changed, 305 insertions(+)
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+>
+> diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+> index e46824d..3158c14 100644
+> --- a/drivers/phy/qualcomm/Kconfig
+> +++ b/drivers/phy/qualcomm/Kconfig
+> @@ -85,6 +85,16 @@ config PHY_QCOM_USB_HS
+>  	  Support for the USB high-speed ULPI compliant phy on Qualcomm
+>  	  chipsets.
+>  
+> +config PHY_QCOM_USB_SNPS_HS_7NM
+> +	tristate "Qualcomm 7nm USB HS PHY module"
 
-On 4/1/20 6:09 PM, Peter Zijlstra wrote:
-> On Wed, Apr 01, 2020 at 04:43:35PM +0100, Julien Thierry wrote:
-> 
->>> +static bool has_modified_stack_frame(struct instruction *insn, struct insn_state *state)
->>>    {
->>> +	u8 ret_offset = insn->ret_offset;
->>>    	int i;
->>>
->>> -	if (state->cfa.base != initial_func_cfi.cfa.base ||
->>> -	    state->cfa.offset != initial_func_cfi.cfa.offset ||
->>> -	    state->stack_size != initial_func_cfi.cfa.offset ||
->>> -	    state->drap)
->>> +	if (state->cfa.base != initial_func_cfi.cfa.base || state->drap)
->>> +		return true;
->>> +
->>> +	if (state->cfa.offset != initial_func_cfi.cfa.offset &&
->>> +	    !(ret_offset && state->cfa.offset == initial_func_cfi.cfa.offset + ret_offset))
->>
->> Isn't that the same thing as "state->cfa.offset !=
->> initial_func_cfi.cfa.offset + ret_offset" ?
-> 
-> I'm confused on what cfa.offset is, sometimes it increase with
-> stack_size, sometimes it doesn't.
-> 
+Should we really refer this as 7nm PHY or just femto-v2 PHY? femto-v1 being the
+one that is used on 28nm.
+And we can add this to binding as well -
 
-Steven already replied for me about that :) .
+- "qcom,usb-snps-femto-v2-phy",
+- "qcom,usb-snps-hs-7nm-phy",
+- "qcom,sm8150-usb-hs-phy",
 
-> ISTR that for the ftrace case it was indeed cfa.offset + 8, but for the
-> IRET case below (where it is now not used anymore) it was cfa.offset
-> (not cfa.offset + 40, which I was expecting).
-> 
->>> +		return true;
->>> +
->>> +	if (state->stack_size != initial_func_cfi.cfa.offset + ret_offset)
->>>    		return true;
->>>
->>> -	for (i = 0; i < CFI_NUM_REGS; i++)
->>> +	for (i = 0; i < CFI_NUM_REGS; i++) {
->>>    		if (state->regs[i].base != initial_func_cfi.regs[i].base ||
->>>    		    state->regs[i].offset != initial_func_cfi.regs[i].offset)
->>>    			return true;
->>> +	}
->>>
->>>    	return false;
->>>    }
-> 
->>> @@ -2185,6 +2148,13 @@ static int validate_branch(struct objtoo
->>>
->>>    			break;
->>>
->>> +		case INSN_EXCEPTION_RETURN:
->>> +			if (func) {
->>> +				state.stack_size -= arch_exception_frame_size;
->>> +				break;
->>
->> Why break instead of returning? Shouldn't an exception return mark the end
->> of a branch (whether inside or outside a function) ?
->>
->> Here it seems it will continue to the next instruction which might have been
->> unreachable.
-> 
-> The code in question (x86's sync_core()), is an exception return to
-> self. It pushes an exception frame that points to right after the
-> exception return instruction.
-> 
-> This is the only usage of IRET in STT_FUNC symbols.
-> 
-> So rather than teaching objtool how to interpret the whole
-> push;push;push;push;push;iret sequence, teach it how big the frame is
-> (arch_exception_frame_size) and let it continue.
-> 
-> All the other (real) IRETs are in STT_NOTYPE in the entry assembly.
-> 
-
-Right, I see.. However I'm not completely convinced by this. I must 
-admit I haven't followed the whole conversation, but what was the issue 
-with the HINT_IRET_SELF? It seemed more elegant, but I might be missing 
-some context.
-
-Otherwise, it might be worth having a comment in the code to point that 
-this only handles the sync_core() case.
-
-
-Also, instead of adding a special "arch_exception_frame_size", I could 
-suggest:
-- Picking this patch [1] from a completely arbitrary source
-- Getting rid of INSN_STACK type, any instruction could then include 
-stack ops on top of their existing semantics, they can just have an 
-empty list if they don't touch SP/BP
-- x86 decoder adds a stack_op to the iret to modify the stack pointer by 
-the right amount
-
-[1] https://www.spinics.net/lists/kernel/msg3453725.html
-
-Thanks,
+> +	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable support for the USB high-speed SNPS phy on Qualcomm 7nm
+> +	  chipsets.  This PHY has differences in the register map compared
+> +	  to the 28nm variant.  The PHY is paired with a Synopsys DWC3 USB
+> +	  controller on MSM SOCs.
+> +
+>  config PHY_QCOM_USB_HSIC
+>  	tristate "Qualcomm USB HSIC ULPI PHY module"
+>  	depends on USB_ULPI_BUS
+> diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+> index 283251d..06bdb40 100644
+> --- a/drivers/phy/qualcomm/Makefile
+> +++ b/drivers/phy/qualcomm/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
+>  obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
+>  obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
+>  obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
+> +obj-$(CONFIG_PHY_QCOM_USB_SNPS_HS_7NM)		+= phy-qcom-snps-7nm.o
+> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> new file mode 100644
+> index 0000000..00a46cd
+> --- /dev/null
+> +++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> @@ -0,0 +1,294 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+> +#include <linux/slab.h>
+> +
+> +#define USB2_PHY_USB_PHY_UTMI_CTRL0		(0x3c)
+> +#define OPMODE_MASK					GENMASK(4, 3)
+> +#define OPMODE_NORMAL				(0x00)
+> +#define OPMODE_NONDRIVING			BIT(3)
+> +#define SLEEPM						BIT(0)
+> +#define TERMSEL						BIT(5)
+> +
+> +#define USB2_PHY_USB_PHY_UTMI_CTRL1		(0x40)
+> +#define XCVRSEL						BIT(0)
+> +
+> +#define USB2_PHY_USB_PHY_UTMI_CTRL5		(0x50)
+> +#define POR							BIT(1)
+> +
+> +#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0	(0x54)
+> +#define RETENABLEN							BIT(3)
+> +#define FSEL_MASK							GENMASK(7, 5)
+> +#define FSEL_DEFAULT						(0x3 << 4)
+> +
+> +#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1	(0x58)
+> +#define VBUSVLDEXTSEL0						BIT(4)
+> +#define PLLBTUNE							BIT(5)
+> +
+> +#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2	(0x5c)
+> +#define VREGBYPASS							BIT(0)
+> +
+> +#define USB2_PHY_USB_PHY_HS_PHY_CTRL1	(0x60)
+> +#define VBUSVLDEXT0					BIT(0)
+> +
+> +#define USB2_PHY_USB_PHY_HS_PHY_CTRL2	(0x64)
+> +#define USB2_AUTO_RESUME			BIT(0)
+> +#define USB2_SUSPEND_N				BIT(2)
+> +#define USB2_SUSPEND_N_SEL			BIT(3)
+> +
+> +#define USB2_PHY_USB_PHY_CFG0					(0x94)
+> +#define UTMI_PHY_DATAPATH_CTRL_OVERRIDE_EN	BIT(0)
+> +#define UTMI_PHY_CMN_CTRL_OVERRIDE_EN		BIT(1)
+> +
+> +#define USB2_PHY_USB_PHY_REFCLK_CTRL	(0xa0)
+> +#define REFCLK_SEL_MASK				GENMASK(1, 0)
+> +#define REFCLK_SEL_DEFAULT			(0x2 << 0)
+> +
+> +static const char * const qcom_snps_hsphy_vreg_names[] = {
+> +	"vdda-pll", "vdda33", "vdda18",
+> +};
+> +
+> +#define SNPS_HS_NUM_VREGS		ARRAY_SIZE(qcom_snps_hsphy_vreg_names)
+> +
+> +/**
+> + * struct qcom_snps_hsphy - structure holding snps hs phy attributes
+> + *
+> + * @phy: generic phy
+> + * @base: iomapped memory space for qubs2 phy
+> + *
+> + * @cfg_ahb_clk: AHB2PHY interface clock
+> + * @ref_clk: phy reference clock
+> + * @iface_clk: phy interface clock
+> + * @phy_reset: phy reset control
+> + * @vregs: regulator supplies bulk data
+> +
+> + * @phy_initialized: if PHY has been initialized correctly
+> + *
+> + */
+> +struct qcom_snps_hsphy {
+> +	struct phy *phy;
+> +	void __iomem *base;
+> +
+> +	struct clk *cfg_ahb_clk;
+> +	struct clk *ref_clk;
+> +	struct reset_control *phy_reset;
+> +	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
+> +
+> +	bool phy_initialized;
+> +};
+> +
+> +static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+> +				    u32 mask, u32 val)
+> +{
+> +	u32 reg;
+> +
+> +	reg = readl(base + offset);
+> +	reg &= ~mask;
+> +	reg |= val & mask;
+> +	writel(reg, base + offset);
+> +
+> +	/* Ensure above write is completed */
+> +	readl(base + offset);
+> +}
+> +
+> +static int qcom_snps_hsphy_init(struct phy *phy)
+> +{
+> +	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	dev_vdbg(&phy->dev, "%s(): Initializing SNPS HS phy\n", __func__);
+> +
+> +	/* turn on regulator supplies */
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* enable ahb interface clock to program phy */
+> +	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
+> +	if (ret) {
+> +		dev_err(&phy->dev, "failed to enable cfg ahb clock, %d\n", ret);
+> +		goto poweroff_phy;
+> +	}
+> +
+> +	/* Perform phy reset */
+> +	ret = reset_control_assert(hsphy->phy_reset);
+> +	if (ret) {
+> +		dev_err(&phy->dev, "failed to assert phy_reset, %d\n", ret);
+> +		goto disable_ahb_clk;
+> +	}
+> +
+> +	/* 100 us delay to keep PHY in reset mode */
+> +	usleep_range(100, 150);
+> +
+> +	ret = reset_control_deassert(hsphy->phy_reset);
+> +	if (ret) {
+> +		dev_err(&phy->dev, "failed to de-assert phy_reset, %d\n", ret);
+> +		goto disable_ahb_clk;
+> +	}
+> +
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
+> +							UTMI_PHY_CMN_CTRL_OVERRIDE_EN,
+> +							UTMI_PHY_CMN_CTRL_OVERRIDE_EN);
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
+> +							POR, POR);
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0,
+> +							FSEL_MASK, 0);
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
+> +					PLLBTUNE, PLLBTUNE);
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_REFCLK_CTRL,
+> +					REFCLK_SEL_DEFAULT, REFCLK_SEL_MASK);
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
+> +					VBUSVLDEXTSEL0, VBUSVLDEXTSEL0);
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL1,
+> +					VBUSVLDEXT0, VBUSVLDEXT0);
+> +
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2,
+> +					VREGBYPASS, VREGBYPASS);
+> +
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
+> +					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N,
+> +					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N);
+> +
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL0,
+> +					SLEEPM, SLEEPM);
+> +
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
+> +					POR, 0);
+> +
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
+> +					USB2_SUSPEND_N_SEL, 0);
+> +
+> +	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
+> +					UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
+> +
+> +	hsphy->phy_initialized = true;
+> +
+> +	return 0;
+> +
+> +disable_ahb_clk:
+> +	clk_disable_unprepare(hsphy->cfg_ahb_clk);
+> +poweroff_phy:
+> +	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_snps_hsphy_exit(struct phy *phy)
+> +{
+> +	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
+> +
+> +	reset_control_assert(hsphy->phy_reset);
+> +	clk_disable_unprepare(hsphy->cfg_ahb_clk);
+> +	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
+> +	hsphy->phy_initialized = false;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops qcom_snps_hsphy_gen_ops = {
+> +	.init		= qcom_snps_hsphy_init,
+> +	.exit		= qcom_snps_hsphy_exit,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct of_device_id qcom_snps_hsphy_of_match_table[] = {
+> +	{
+> +		.compatible	= "qcom,sm8150-usb-hs-phy",
+> +	},
+> +	{
+> +		.compatible	= "qcom,usb-snps-hs-7nm-phy",
+> +	},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
+> +
+> +static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct qcom_snps_hsphy *hsphy;
+> +	struct phy_provider *phy_provider;
+> +	struct phy *generic_phy;
+> +	struct resource *res;
+> +	int ret, i;
+> +	int num;
+> +
+> +	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
+> +	if (!hsphy)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	hsphy->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(hsphy->base))
+> +		return PTR_ERR(hsphy->base);
+> +
+> +	hsphy->ref_clk = devm_clk_get(dev, "ref");
+> +	if (IS_ERR(hsphy->ref_clk)) {
+> +		ret = PTR_ERR(hsphy->ref_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get ref clk, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	hsphy->phy_reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+> +	if (IS_ERR(hsphy->phy_reset)) {
+> +		dev_err(dev, "failed to get phy core reset\n");
+> +		return PTR_ERR(hsphy->phy_reset);
+> +	}
+> +
+> +	num = ARRAY_SIZE(hsphy->vregs);
+> +	for (i = 0; i < num; i++)
+> +		hsphy->vregs[i].supply = qcom_snps_hsphy_vreg_names[i];
+> +
+> +	ret = devm_regulator_bulk_get(dev, num, hsphy->vregs);
+> +	if (ret) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get regulator supplies: %d\n",
+> +				ret);
+> +		return ret;
+> +	}
+> +
+> +	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
+> +	if (IS_ERR(generic_phy)) {
+> +		ret = PTR_ERR(generic_phy);
+> +		dev_err(dev, "failed to create phy, %d\n", ret);
+> +		return ret;
+> +	}
+> +	hsphy->phy = generic_phy;
+> +
+> +	dev_set_drvdata(dev, hsphy);
+> +	phy_set_drvdata(generic_phy, hsphy);
+> +
+> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	if (!IS_ERR(phy_provider))
+> +		dev_info(dev, "Registered Qcom-SNPS HS phy\n");
+> +
+> +	return PTR_ERR_OR_ZERO(phy_provider);
+> +}
+> +
+> +static struct platform_driver qcom_snps_hsphy_driver = {
+> +	.probe		= qcom_snps_hsphy_probe,
+> +	.driver = {
+> +		.name	= "qcom-snps-hs-7nm-phy",
+> +		.of_match_table = qcom_snps_hsphy_of_match_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(qcom_snps_hsphy_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm 7nm USB HS PHY driver");
+> +MODULE_LICENSE("GPL v2");
 
 -- 
-Julien Thierry
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
