@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B483C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0850FC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1A12072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBE82078C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 02:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585793105;
-	bh=9JjWTMQZTzxCAM732VmpHKueCSqSdGhwvAHvVXu14Ko=;
+	s=default; t=1585793118;
+	bh=pD50+G67RvTnYdHaeKb2fCdRnpD/kpnt6hQ005gFHw0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=bgdcPiKHUmoXVEQP3oU8HxACUHVJRqFBnZ3orft7Wy7WKrSvG1Fmcia8shI2NX+oU
-	 WCAYp4p5QGmxQ5GAKRigsDD/9TTtJN43QFSiOSDDx1WhW5ShsF7Ow8lSDt2pH5c5dG
-	 9WWYnNUDPlOx6RXj211eHA+MGCfiniMHLcKcjUNw=
+	b=kBd4TcjqOK0RZbW9Hm7vfwHeclbjePhV5W0yVUJSEZ++QkzhVY2NIMkbF3tGGzydE
+	 40pOShPY/NVLejKFdCiNbyARwY8CpADOLCwUbsjbyTI2Ab5nW/0KYTLjPaPnvnBRQL
+	 Ys/HaIa+eKHLHrK8vsVYpqyZ+0E44n4QStVap6b4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733305AbgDBCFE (ORCPT
+        id S2387438AbgDBCFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 22:05:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 22:05:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbgDBCFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 22:05:04 -0400
-Subject: Re: [GIT PULL] XArray for 5.7-rc1
+        id S2387408AbgDBCFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 22:05:17 -0400
+Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585793103;
-        bh=9JjWTMQZTzxCAM732VmpHKueCSqSdGhwvAHvVXu14Ko=;
+        s=default; t=1585793117;
+        bh=pD50+G67RvTnYdHaeKb2fCdRnpD/kpnt6hQ005gFHw0=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=yBoLz3WSUxCRMOdaqvTr0pROExsRHFK3INr9lgdyqIdiO8+A+TTx7TUW5k6FmwRps
-         hqENVN2F9nRJ66yQjHTemlXZ6J8jXP1Y573rRyC6kgdPfDgvEqNXnV+qRKeb0qIfar
-         yV1nFId9nSzGSi0wQ7DkgIVvbzMLm2e/mIAx2icI=
+        b=IURR+xiMzxCVTNSfKhRqwpl62s6BqQZOP3hGT6zg7Ika1u4vhGiPkxxdRpqb7BO+0
+         Gt53StEuJOKLBG4/tywO1dpP8NprauHaclFVNgy7dkedRw4vJGlq+If1iV2YfgxZf5
+         bfEaTSlyYGpnZ7E7zwm8h5+OK18nykOcwQRssT94=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200331141749.GB21484@bombadil.infradead.org>
-References: <20200331141749.GB21484@bombadil.infradead.org>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200331141749.GB21484@bombadil.infradead.org>
-X-PR-Tracked-Remote: git://git.infradead.org/users/willy/linux-dax.git
- tags/xarray-5.7
-X-PR-Tracked-Commit-Id: 7e934cf5ace1dceeb804f7493fa28bb697ed3c52
+In-Reply-To: <20200401230133.GA14469@ziepe.ca>
+References: <20200401230133.GA14469@ziepe.ca>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200401230133.GA14469@ziepe.ca>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+X-PR-Tracked-Commit-Id: b4d8ddf8356d8ac73fb931d16bcc661a83b2c0fe
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 193bc55b6d4e0a7b4ad0216ed9794252bee6436e
-Message-Id: <158579310371.873.17070096012445384076.pr-tracker-bot@kernel.org>
-Date:   Thu, 02 Apr 2020 02:05:03 +0000
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 919dce24701f7b34681a6a1d3ef95c9f6c4fb1cc
+Message-Id: <158579311701.873.13975313564510123629.pr-tracker-bot@kernel.org>
+Date:   Thu, 02 Apr 2020 02:05:17 +0000
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 31 Mar 2020 07:17:49 -0700:
+The pull request you sent on Wed, 1 Apr 2020 20:01:33 -0300:
 
-> git://git.infradead.org/users/willy/linux-dax.git tags/xarray-5.7
+> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/193bc55b6d4e0a7b4ad0216ed9794252bee6436e
+https://git.kernel.org/torvalds/c/919dce24701f7b34681a6a1d3ef95c9f6c4fb1cc
 
 Thank you!
 
