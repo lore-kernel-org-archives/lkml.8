@@ -2,43 +2,46 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76429C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B8EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CAD12078C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0ED20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="TK+rZo3m"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Mi0V/TvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388920AbgDBO5E (ORCPT
+        id S2389024AbgDBO5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:57:04 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:16195 "EHLO rere.qmqm.pl"
+        Thu, 2 Apr 2020 10:57:34 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:19534 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388239AbgDBO5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388781AbgDBO5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Apr 2020 10:57:04 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR3x59J3z9j;
-        Thu,  2 Apr 2020 16:57:01 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tR3y3r2gzpX;
+        Thu,  2 Apr 2020 16:57:02 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585839421; bh=Cnipj6qlDTsuXA/1q+W9CTZs5JFIJcQJ/Vo8HSDyOEw=;
-        h=Date:From:Subject:To:Cc:From;
-        b=TK+rZo3mOPWc0JHqcwy76l3X+diXRQUPW8Wk4+XYzSwq7uyO68k6hYs2PSCkHV+6L
-         Bhg4f7wQzYaTXcQqrYDmroONiPrhzXQvA7u76iXJMQSZInTHqt3Ilpaz1mnrrKnLuK
-         dYHzQNr1h8Zen48pWQ+xtYrfFCwAbxFWBoFc5Y6bIwjYZF1Us5VL6dXlwDyVmqusCZ
-         SnE3VhlTI1MTRf99TI2J0Lq2tnWFtYMps+v0ZIZyFB4uJ8SCrmBds8l75ym63h1mWz
-         ZP8uaFvfuBEy6YS7gejagG3sb0z3krI5jssR4Vn64xeI/NFa24bAtvxMJkt6MHkLiU
-         jue152F0Lf0uQ==
+        t=1585839422; bh=K+vbcp79f0yG60D3y6nK9BE+zeYjqGJsmkCt6t37wr0=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=Mi0V/TvNKwA1OLrLq3LGyPRuGDs77F1SP7rPgrZKFFOXlPOdjDMIsD9EHg5ADdUuO
+         ExdV36+kU3N3uloYaKuKi0TDUiR0TPDJTdqZv5/4je2ujMN/jmkYnmYqbgR+Cw5PR5
+         AxOxyMn89Z2AyD77CgmVk7KN3WCLJiOWfMRXZUHV9AUfatiQcwDmh+GkUA6b8Xhmu9
+         1VshBE7unV6uiVXimKYQHNBLZH2LgKLw0SHbWagLYkinCwVmOroaPBsenlfUCGPptK
+         sXUuGRKnnin97NRusN1Q5DzIaV+pZogkle33k+9pcel22pVUw+c7yV1oKRf24NyWAO
+         0Vuip3IDQmDVw==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 16:57:01 +0200
-Message-Id: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
+Date:   Thu, 02 Apr 2020 16:57:02 +0200
+Message-Id: <edb51336ad361f8dad6d9745e47823da6a94a204.1585837575.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1585837575.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 0/7] power: supply: core: extensions and fixes
+Subject: [PATCH 2/7] power: supply: core: allow to constify property lists
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -51,32 +54,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series covers three areas of power supply class:
+Since tables pointed to by power_supply_desc->properties and
+->usb_types are not expected to change after registration, mark
+the pointers accordingly
 
-1-2. constify property and usb_type lists as they should not be changed
-after driver registration
-3. make HWMON temp* labels match measurements
-4. filter out unused HWMON labels
-5-7. extend core to support input/battery/output supply point measurements
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ include/linux/power_supply.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-A patchset extending bq25890 driver to use the new infrastructure will
-follow.
-
-Michał Mirosław (7):
-  power: supply: core: reduce power_supply_show_usb_type() parameters
-  power: supply: core: allow to constify property lists
-  power: supply: core: fix HWMON temperature labels
-  power: supply: core: hide unused HWMON labels
-  power: supply: core: add input voltage/current measurements
-  power: supply: core: add output voltage measurements
-  power: supply: core: document measurement points
-
- Documentation/power/power_supply_class.rst |   6 +
- drivers/power/supply/power_supply_hwmon.c  | 189 ++++++++++++++++++++-
- drivers/power/supply/power_supply_sysfs.c  |  15 +-
- include/linux/power_supply.h               |   9 +-
- 4 files changed, 202 insertions(+), 17 deletions(-)
-
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index dcd5a71e6c67..6a34df65d4d1 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -223,9 +223,9 @@ struct power_supply_config {
+ struct power_supply_desc {
+ 	const char *name;
+ 	enum power_supply_type type;
+-	enum power_supply_usb_type *usb_types;
++	const enum power_supply_usb_type *usb_types;
+ 	size_t num_usb_types;
+-	enum power_supply_property *properties;
++	const enum power_supply_property *properties;
+ 	size_t num_properties;
+ 
+ 	/*
 -- 
 2.20.1
 
