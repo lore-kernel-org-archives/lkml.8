@@ -2,142 +2,110 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F763C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AE5C10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E16206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:24:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Z1QSr1ec"
+	by mail.kernel.org (Postfix) with ESMTP id 10AAB206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387712AbgDBIYd (ORCPT
+        id S2387708AbgDBI20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:24:33 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:39176 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387574AbgDBIYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:24:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 60C5141252;
-        Thu,  2 Apr 2020 08:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1585815868; x=1587630269; bh=Rk9xR31MTBz42inzc2zDfzMeZ
-        IDUkeMnBQo9b80woiI=; b=Z1QSr1ecssngt9KsASvvvGjwjmSfwzQLU7b3urygH
-        jfQ2eVzv51CZmehzgGEfVE7k2eKD4XeKdy4bNn5FuM69IJ/8R8TSMRkjdlYqLo+l
-        sVv85W8lYsBXvJiVl81kD24CAMcPvG0gRCh/A7cgjEUHSWrsTiigH3W7rFQ4TQPW
-        ok=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yIxdH8dGqypN; Thu,  2 Apr 2020 11:24:28 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 6E2EA41251;
-        Thu,  2 Apr 2020 11:24:28 +0300 (MSK)
-Received: from localhost.localdomain (10.199.3.154) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Thu, 2 Apr 2020 11:24:28 +0300
-Message-ID: <1e2c9b590a3626abee330a28cca86cbae7affb39.camel@yadro.com>
-Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 2 Apr 2020 11:24:36 +0300
-In-Reply-To: <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
-References: <20200401162416.24474-1-i.mikhaylov@yadro.com>
-         <20200401162416.24474-3-i.mikhaylov@yadro.com>
-         <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Thu, 2 Apr 2020 04:28:26 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:62250 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728612AbgDBI2Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:28:25 -0400
+IronPort-SDR: 86xBzyAXgimbX+yrEBnR5DlA1qZWKy9NK2pQBu7Sv5pdzhWQ4bKj6N8ZI/P+cWm+WJGQXxXLQl
+ 2SK6TGtxceLgJM/9qpsUBqscmlzb0SblY57AUF0wZAGwdtfP728CEGPg9UPczq2h+2hVXXNKKj
+ aCWR3qcMa4wlQRVQq2msAQxyWpzN5guNpjJiz2GIn9ylxrM4LbLkPnl+oNAwnNLM9iYQtOKXZS
+ fvteiXP0zWBQATbemmkRRoIgpz3JLE8lMCTUmJz64ZRl/XIyl4KIUcD6KcLJ5K+rWO17woFLpr
+ OGc=
+X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
+   d="scan'208";a="47414252"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 02 Apr 2020 00:28:25 -0800
+IronPort-SDR: HnzTHpxRUTPLRNdw7UbDjJKlLT6DsPKNnJPI2Qdn6c6fSQ+Y4IeOIDcJIpZujzqARSSyxStwLv
+ S/tdsDmsqtfT69N5nQc4QxxVpvW+yBY6uoWknkWE9xAWzYXg0AXMxaRLLr3ItUDqH+oURiUZqr
+ vzgWyD3lm/5wE16W9pZc1yA95k89WsTMKxYo8n+QU8lFuMEAwXlia221lXDHHJZ66c+hqsIIyQ
+ ZoS8ePSeLFQwW5qZAtaELLht9nqIpiEHWSTBIx0I1dXCG4kf/SnGtVD7KqNBcU1AvwEb/9j1W/
+ VYQ=
+Subject: Re: [PATCH v10 13/55] dt-bindings: input: atmel: add suspend mode
+ support
+To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-14-jiada_wang@mentor.com>
+ <dd09ab5d-4e33-7ca0-9dfe-80be1cee307f@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <ea94e940-50c4-2857-fb4f-8e91ec7bcb5e@mentor.com>
+Date:   Thu, 2 Apr 2020 17:28:18 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.199.3.154]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+In-Reply-To: <dd09ab5d-4e33-7ca0-9dfe-80be1cee307f@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-01 at 19:35 +0300, Andy Shevchenko wrote:
-> On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > Proximity sensor driver based on light/vcnl4000.c code.
-> > For now supports only the single on-demand measurement.
-> > 
-> > The VCNL3020 is a fully integrated proximity sensor. Fully
-> > integrated means that the infrared emitter is included in the
-> > package. It has 16-bit resolution. It includes a signal
-> > processing IC and features standard I2C communication
-> > interface. It features an interrupt function.
-> 
-> Thank you for an update, my comments below.
-> 
-> ...
-> 
-> > +static int get_and_apply_property(struct vcnl3020_data *data, const char
-> > *prop,
-> > +                                 u32 reg)
-> > +{
-> > +       int rc;
-> > +       u32 val;
-> > +
-> > +       rc = device_property_read_u32(data->dev, prop, &val);
-> > +       if (rc)
-> > +               return 0;
-> > +
-> > +       rc = regmap_write(data->regmap, reg, val);
-> > +       if (rc)
-> > +               dev_err(data->dev, "Error (%d) setting property (%s)",
-> > +                       rc, prop);
-> 
-> This requires {} according to the coding style
+Hi Dmitry
 
-checkpatch.pl doesn't say anything bad on this spot. Do you mean to make
-something like this?
-
-rc = regmap_write(data->regmap, reg, val);
-if (rc) {
-	dev_err(data->dev, "Error (%d) setting property (%s)",
-                rc, prop);
-}
-
-In previous notes you said to remove them. 
-
-> .
+On 2020/04/02 0:42, Dmitry Osipenko wrote:
+> 31.03.2020 13:50, Jiada Wang пишет:
+>> Add suspend mode support for atmel touchscreen driver
+>>
+>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>> ---
+>>   .../bindings/input/atmel,maxtouch.txt         |  9 ++++++++
+>>   MAINTAINERS                                   |  1 +
+>>   include/dt-bindings/input/atmel_mxt_ts.h      | 23 +++++++++++++++++++
+>>   3 files changed, 33 insertions(+)
+>>   create mode 100644 include/dt-bindings/input/atmel_mxt_ts.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>> index c88919480d37..0307e7f7bb43 100644
+>> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>> @@ -31,6 +31,15 @@ Optional properties for main touchpad device:
+>>   
+>>   - reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
+>>   
+>> +- atmel,suspend-mode: Select method used to suspend:
+>> +    MXT_SUSPEND_DEEP_SLEEP - use T7 to suspend the device into deep sleep
+>> +    MXT_SUSPEND_T9_CTRL - use T9.CTRL to turn off touch processing
+>> +    MXT_SUSPEND_REGULATOR - use regulators to power down device during suspend
+>> +    Definitions are in <dt-bindings/input/atmel_mxt_ts.h>.
+>> +
+>> +- vdd: Required supply regulator when MXT_SUSPEND_REGULATOR is used to suspend
+>> +- avdd: Required supply regulator when MXT_SUSPEND_REGULATOR is used to suspend
 > 
-> > +       return rc;
-> > +}
+> Some of NVIDIA Tegra devices have a VDD regulator in a form of GPIO,
+> which is turned off by default at a boot time, and thus, the
+> power-regulator needs to be enabled by the driver at a probe time in
+> order to power-up the touchscreen.
 > 
-> ...
+> I think the VDD/AVDD description isn't correct because these are the
+> essential power regulators, they aren't used only for the suspending.
 > 
-> > +static int vcnl3020_probe(struct i2c_client *client)
-> > +{
-> > +       indio_dev->name = VCNL_DRV_NAME;
+> What about something more generic, like this:
 > 
-> It's definitely not a driver name. You have to put part number here.
+> - vdd: phandle to Power supply regulator
+> - avdd: phandle to Analog Power supply regulator
+> 
+I agree, will update with generic descriptions
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/tsl4531.c?h=v5.6#n199
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/max44009.c?h=v5.6#n507
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/vl6180.c?h=v5.6#n515
-
-
+Thanks,
+Jiada
