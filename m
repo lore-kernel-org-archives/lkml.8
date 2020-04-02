@@ -2,176 +2,93 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECE6C10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BA6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E1221D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4750420678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tVdsT151";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="sDcfnAZ8"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NfVW5khy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387933AbgDBK15 (ORCPT
+        id S2387957AbgDBK31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:27:57 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:30163 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbgDBK15 (ORCPT
+        Thu, 2 Apr 2020 06:29:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57368 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728612AbgDBK31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:27:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1585823277; x=1617359277;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=ndhSa4x9PpFHoaUU3O7E6t0UEEy1BOQvQPSKWiyPvW0=;
-  b=tVdsT15122olGc/8AJqL5S0jiQwR6fFGQ9okGHfLDiP9Y5jM5JrZR0nj
-   4mj6yCAkf3JYbIlFbTtHxropQBwilk7zq26VbduK0TuGm7LT0X8GGbPWu
-   DQFXHcQtxYHi3TpzL+nbxFSVy1ZNPldeUZwnedfX4cQHDLEX3pHQ/YrJb
-   t+C/oo1GhRxpKrIpuBuJPU5McV5yoolFDj7T8i0+uIfgy1NXD3I9Go9dP
-   B+5ZVR31vywNMI5lEelkNjx583B+ZKZsTN1tTIj5+7e4BWU0FIaUmmVcS
-   afL+3BLs04YbDnPJ9xsMpUyRHYvvKoUVrYEL6zn1/DDejxfMN0QLttVVt
-   Q==;
-IronPort-SDR: anqNssSy6CjzTHTjzZEQx2slPSZk112NoICjk1SLgJIy/EEXIJuWevUdhkQ/Q2dGty7SqtzViW
- CW6ytT5VMKYv/xMYy/s8evZTku2ocUhlbCEtO+9d7c+dlzBK4UB6dWEqX0Ch5F87LxquTv12pf
- u9DZnx4aX6lvwtVMGCyFQqodBfWWFwFE1sujE4YWhva95ZSInWfwBX5qNmY3wLRjOew3KsXAiy
- h2JaIVvLXAyOWqPUBKQdioEvhhtNQ/Hmv5MTUOT0vtlfJyj4v8kNfj5VGlKL8voAGUH6G0Zgh/
- rBs=
-X-IronPort-AV: E=Sophos;i="5.72,335,1580799600"; 
-   d="scan'208";a="71184908"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Apr 2020 03:27:57 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 2 Apr 2020 03:28:02 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 2 Apr 2020 03:27:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zj+4w+M4cyTAVNx8Bn7oTg2Z4g8e4tBWIWgjG+48Ot/NM7Zqow88fFcFuSsWQBhdSH5/Exf8MMFa+N8ial7Jgtx4M3ZqMgoVHaXNFhhVnpDKPHcKjkaKjp+ze9EyBzeRxo+/Cz4ppOfRJLeFMK81qCm53TmuPmqFmNkzY5Kwr57J+xxufxqb8JWFSrhNs7TlK35gdG42d1DrDZv/8iBx6wZYSpnVM7W7JKFRxYVC7GwqzPoNsmmOD9UAO1bj+Vh0Z+1Vs3WEe2DJH+HwPSzG4geg3ZmITdCQN03SsdHqpHC26qZjtiZWVnT1NqhjhA8FArAAFS+ojxbUsR6fhwEklw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ndhSa4x9PpFHoaUU3O7E6t0UEEy1BOQvQPSKWiyPvW0=;
- b=QdQA2nuP3ZOAUWgS8K3LIgo0JSxpUwoXnASf41/dDJfzRVGpdXRVqCPlTMtmz3/H9AL5F64oUTysmmfcjMpIo5IaOh1Yp0tyVJmbobCprCQQU9EvhSiJqntQ9/duV9t07c5qytbXIhueCTro8ic05yxN2pubcwKFFgkhN7wDJowuPjP3mGLGPVAEzKkH3lKW32YLjCEE+0n4FeIQjnCaQttt9S+PbuGugoCQy3TXQEy/pI6P4rJd2jcKZmbgM2C8Ik7qbljbCC4Ca0ennMjEwVzXR4YjwHaCIidgqc9vlPXQozPNBORPvy9vgIfKO10KhhNpgvdlupvlNoD662c0cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ndhSa4x9PpFHoaUU3O7E6t0UEEy1BOQvQPSKWiyPvW0=;
- b=sDcfnAZ85+Yfn/zH8aLXUizxP1MlP1fx23VWtTQf/zYXjFOGEk/nQ8rlnr35LjWfEN19FBhCzvQrdYGDDWPWcJ0Ftbt8X3pFzYF12M9TWreMB46HJZHJIgTsLME6ZbUNeviGPkNjfEAHcqWVdpo3YpecVqacitawb0Bk9pTSk0o=
-Received: from DM6PR11MB4123.namprd11.prod.outlook.com (2603:10b6:5:196::12)
- by DM6PR11MB3563.namprd11.prod.outlook.com (2603:10b6:5:13e::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Thu, 2 Apr
- 2020 10:27:54 +0000
-Received: from DM6PR11MB4123.namprd11.prod.outlook.com
- ([fe80::f42c:82b3:ecda:5ff4]) by DM6PR11MB4123.namprd11.prod.outlook.com
- ([fe80::f42c:82b3:ecda:5ff4%6]) with mapi id 15.20.2878.017; Thu, 2 Apr 2020
- 10:27:54 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <Tudor.Ambarus@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <Codrin.Ciubotariu@microchip.com>, <Cristian.Birsan@microchip.com>
-Subject: Re: [PATCH 1/5] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node
- description
-Thread-Topic: [PATCH 1/5] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node
- description
-Thread-Index: AQHWCHMUVzqU8dzz1022okz8VD+yc6hljvCAgAANQ4CAAAWggA==
-Date:   Thu, 2 Apr 2020 10:27:54 +0000
-Message-ID: <8f7194a7-ad9e-5d27-7db1-d41a88d909de@microchip.com>
-References: <20200401221504.41196-1-ludovic.desroches@microchip.com>
- <b4fe14af-a812-8798-187e-704541a6a75f@microchip.com>
- <5f762bdc-fe07-adbc-af8d-7670b5b4b286@microchip.com>
-In-Reply-To: <5f762bdc-fe07-adbc-af8d-7670b5b4b286@microchip.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Eugen.Hristev@microchip.com; 
-x-originating-ip: [86.120.188.33]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bb655fed-4239-42c8-d482-08d7d6f0812f
-x-ms-traffictypediagnostic: DM6PR11MB3563:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3563085B8950BB31DF5FA401E8C60@DM6PR11MB3563.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0361212EA8
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4123.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(366004)(136003)(396003)(39860400002)(376002)(346002)(86362001)(66446008)(316002)(53546011)(6506007)(91956017)(66476007)(76116006)(6486002)(64756008)(6512007)(107886003)(66946007)(31696002)(4326008)(2616005)(66556008)(478600001)(8676002)(36756003)(81156014)(2906002)(186003)(54906003)(5660300002)(81166006)(110136005)(8936002)(26005)(31686004)(71200400001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HiGmLWTpRmbhlUOVvrI6aSAF52lnpfUCHe1r5I8kHQV7KFraY5uHMd57uU2Ly9BAkWi7SAMrdCs0IhuOSFBgjEoR6jxFmSTkHbzFXFPvgmj3eD6TNq81Kvjr+7j1oPYl75JwDNVlZzGYsncpbXF33OVaAU6HeumY+OwlJY37rzDg2FBZnj9T3W9dZ+D9Y/dlttZB5GRTjpbtOYigG/GBkUWr8ipTI9K3qvdqNorqdSqHcHgKWQnPOinsZuZ7KBMElOBXJ48szVUMKKpySeWkTcsOhjPK0IlsQQW82O8C/SC4HNXkKkhREzBWhKvNbWKmIYimiPIAwUPA/ae8Rj3h55434vZsQ7jMZiDStyZHR2jKHxIazyqx6TXNbPWmfhLGN1k1deG0eWebljN7maisX8ZnwJ/A0FfcsQTJ+2CWvpoX6p3GXLpsXg9CYNPOHqB6
-x-ms-exchange-antispam-messagedata: naprie2a2C9mfdXykOh4E3eEgTki9ZWbaA4bRgWDgqb2jve/pWJXbfPQnquMNfyIF/Tn9ynV3otkIjvspX6QuqQYJrSClbiIHL9vIAoiU/lncSfG+n4mA66Qmpy8vQxoc9ZxIDZtjplOGZYPI6VOag==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ECB0E1658EBC484598C5826C7D7C9C41@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 2 Apr 2020 06:29:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032ASgkd053871;
+        Thu, 2 Apr 2020 10:29:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Gf+Yo/C5PzY+12lI1HYzhTJ60y718z+JSw1SNvlFOHU=;
+ b=NfVW5khyQUykcRyhzQtzLcajIXT9xCsDWv7E/9waCQe3W3WmoxGw29O5fYhhxMqHIR4E
+ X0vhqAcTVpaR+9G/lMgr57/OL+9B6bs/Mi+IhUCVf1k5KODoec7A9MrOKuftDtk+/kY9
+ NbLTmbyBKER5oUnSFQuLATXyd2FZ+Ohyd0fTjDG/UWeWEO32pL+aozweaSMJL3CgcsJM
+ uaFnKBr2skkN2bv19175VQyYADuIcrF2fHS3HjMkIYQNZnXlrRrMpRlTvrlQiZXsPOUa
+ KPU61c2y8F07Uo/EI4PalLkqWGqeXHPh74NfEfz8XPoDx7LAYvQE+6uLxMiyesLN0qrD BA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 303aqhtyvp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 10:29:18 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032AR6JO045545;
+        Thu, 2 Apr 2020 10:29:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 304sjp349x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 10:29:17 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032ATEno017592;
+        Thu, 2 Apr 2020 10:29:15 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 03:29:14 -0700
+Date:   Thu, 2 Apr 2020 13:29:06 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Aiman Najjar <aiman.najjar@hurranet.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v3 0/5] staging: rtl8712: rtl871x_xmit.{c, h} code style
+ improvements
+Message-ID: <20200402102906.GK2001@kadam>
+References: <cover.1585508171.git.aiman.najjar@hurranet.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb655fed-4239-42c8-d482-08d7d6f0812f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 10:27:54.2745
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oHIRzvScbYAGkMW+SxutsXErCjxMhzxwfvQHsvcQJSjNrCV2YP/sD4UQ9evJO4UuSl+J+1UCsxGr86jGb5u80GeZ/WvnW0Q/fJ+z9tUbuXo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3563
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1585508171.git.aiman.najjar@hurranet.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=890 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020095
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxlogscore=948 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDIuMDQuMjAyMCAxMzowNywgTHVkb3ZpYyBEZXNyb2NoZXMgLSBNNDMyMTggd3JvdGU6DQo+
-IE9uIDQvMi8yMDIwIDExOjIwIEFNLCBFdWdlbiBIcmlzdGV2IC0gTTE4MjgyIHdyb3RlOg0KPj4g
-T24gMDIuMDQuMjAyMCAwMToxNSwgTHVkb3ZpYyBEZXNyb2NoZXMgd3JvdGU6DQo+Pj4gUmVtb3Zl
-IG5vbi1yZW1vdmFibGUgYW5kIG1tYy1kZHItMV84diBwcm9wZXJ0aWVzIGZyb20gdGhlIHNkbW1j
-MA0KPj4+IG5vZGUgd2hpY2ggY29tZSBwcm9iYWJseSBmcm9tIGFuIHVuY2hlY2tlZCBjb3B5L3Bh
-c3RlLg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogTHVkb3ZpYyBEZXNyb2NoZXMgPGx1ZG92aWMu
-ZGVzcm9jaGVzQG1pY3JvY2hpcC5jb20+DQo+Pj4gRml4ZXM6NDJlZDUzNTU5NWVjICJBUk06IGR0
-czogYXQ5MTogaW50cm9kdWNlIHRoZSBzYW1hNWQyIHB0YyBlayBib2FyZCINCj4+PiBDYzogc3Rh
-YmxlQHZnZXIua2VybmVsLm9yZyAjIDQuMTkgYW5kIGxhdGVyDQo+Pj4gLS0tDQo+Pj4gICAgIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkMl9wdGNfZWsuZHRzIHwgMiAtLQ0KPj4+ICAgICAx
-IGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkNCj4+Pg0KPj4+IGRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9hdDkxLXNhbWE1ZDJfcHRjX2VrLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2F0OTEtc2FtYTVkMl9wdGNfZWsuZHRzDQo+Pj4gaW5kZXggMWMyNGFjODAxOWJhNy4uNzcyODA5
-YzU0YzFmMyAxMDA2NDQNCj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbWE1ZDJf
-cHRjX2VrLmR0cw0KPj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkMl9wdGNf
-ZWsuZHRzDQo+Pj4gQEAgLTEyNSw4ICsxMjUsNiBAQCBzZG1tYzA6IHNkaW8taG9zdEBhMDAwMDAw
-MCB7DQo+Pj4gICAgIAkJCWJ1cy13aWR0aCA9IDw4PjsNCj4+PiAgICAgCQkJcGluY3RybC1uYW1l
-cyA9ICJkZWZhdWx0IjsNCj4+PiAgICAgCQkJcGluY3RybC0wID0gPCZwaW5jdHJsX3NkbW1jMF9k
-ZWZhdWx0PjsNCj4+PiAtCQkJbm9uLXJlbW92YWJsZTsNCj4+PiAtCQkJbW1jLWRkci0xXzh2Ow0K
-Pj4NCj4+IEhpIEx1ZG92aWMsDQo+Pg0KPj4gSSBhbSBub3Qgc3VyZSBhYm91dCB0aGUgcmVtb3Zh
-bCBvZiBtbWMtZGRyLTFfOHY7IHRoaXMgbWVhbnMgZU1NQ3MNCj4+IGNvbm5lY3RlZCBvbiB0aGlz
-IHNsb3Qgd29uJ3Qgd29yayBpbiBoaWdoIHNwZWVkIG1vZGUsIHNvbWUgcGVvcGxlIHVzZQ0KPj4g
-ZU1NQyB0byBTRC1DYXJkIGFkYXB0ZXJzIGFuZCBzdGljayB0aGVtIGludG8gU0QtQ2FyZCBzbG90
-cy4NCj4+IFdvdWxkIGl0IGJlIGEgcHJvYmxlbSB0byBrZWVwIHRoaXMgcHJvcGVydHkgaGVyZSA/
-DQo+IA0KPiBIaSBFdWdlbiwNCj4gDQo+IEl0J3Mgbm90IGEgcHJvYmxlbSB0byBrZWVwIGl0LCBi
-dXQgSSBkb24ndCB0aGluayBpdCBtYWtlcyBzZW5zZS4gSW4gdGhpcw0KPiBjYXNlIG1tYy1kZHIt
-M18zdiBzaG91bGQgYmUgYWRkZWQgdG9vLg0KPiANCj4gV2lsbCBpdCB3b3JrICdvdXQgb2YgdGhl
-IGJveCcgd2l0aCBhbnkgZU1NQyB0byBTRC1DYXJkIGFkYXB0ZXJzIGFuZA0KPiBlTU1Dcz8gSSBy
-ZW1lbWJlciBkaXNjdXNzaW9ucyB3aGVyZSB3ZSBzYWlkIEhXIGNoYW5nZXMgd2VyZSBuZWVkZWQg
-dG8gYmUNCj4gYWJsZSB0byBzZWxlY3QgdGhlIHZvbHRhZ2UgZm9yIHRoZSBJT3Mgb3RoZXIgdGhh
-biB1c2luZyB0aGUgVkREU0VMDQo+IHNpZ25hbCBvZiB0aGUgY29udHJvbGxlci4NCg0KWWVzIGlu
-ZGVlZCAsIGRkci0zXzN2IHdvdWxkIGJlIG5lZWRlZCBmb3IgdGhvc2UuIEkgY2FuIGZvbGxvdyB1
-cCBsYXRlciANCndpdGggYSBwYXRjaCB0byBhZGQgdGhhdCBpZiByZXF1aXJlZC4NCg0KVGhhbmtz
-ICENCg0KPiANCj4gUmVnYXJkcw0KPiANCj4gTHVkb3ZpYw0KPiANCj4gDQo+Pg0KPj4gVGhhbmtz
-LA0KPj4gRXVnZW4NCj4+DQo+Pj4gICAgIAkJCXN0YXR1cyA9ICJva2F5IjsNCj4+PiAgICAgCQl9
-Ow0KPj4+ICAgICANCj4+Pg0KPj4NCj4gDQoNCg==
+Looks good.  Thanks!
+
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+regards,
+dan carpenter
+
