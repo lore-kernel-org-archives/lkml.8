@@ -2,136 +2,122 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7187CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C12C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453622080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69DE82078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:21:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TaE3ZUOz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KUww6XPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387852AbgDBIUk (ORCPT
+        id S2387759AbgDBIVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:20:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36086 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387758AbgDBIUi (ORCPT
+        Thu, 2 Apr 2020 04:21:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54848 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387700AbgDBIVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:20:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id c23so1519428pgj.3;
-        Thu, 02 Apr 2020 01:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8Z8cYPNA1Nnx+ynlfYUK6Uh1qA4I2RWYXKrKRt2N0YE=;
-        b=TaE3ZUOzA30XMRfT+yR0W+Dehn3OsZr2WVfVPdfJCTu+8KszJMoFO0HLFdE8Kh/inK
-         MN8BLu1H0/Fu6PEudaPiSJ0m67syIyZ/1b11Nixu+Yw38bnTBJyjNFZxAe7wImsN8AP2
-         JHMwMO8o68fB+5h/GxhIlpj6jfQ35JfsCI5fkOI91BC0tW9zw6FIoJI6yFZHQpp6mkJ0
-         0kQUAs5UxfJ+v0aNV0oXy609R4gXnH4QYb8kNze+Uy7Re6yewZaI8RyRQNq1vXIgJHOV
-         nk0jRIY3moCDne1/4HRdSGSmMr3DUb98d3voJ4pTzKG+WZ5GD0P+BKi1rkcDZGN+HRBB
-         GIyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8Z8cYPNA1Nnx+ynlfYUK6Uh1qA4I2RWYXKrKRt2N0YE=;
-        b=JerOUt5wSzhL0HinTK18R44HTwINYUhuZfrhKaPdCAdFbtCppEZ8RVV2TzYKxYF/2v
-         FHdkVThlf/zeCKjqYYcpfYAx9eAiAMht1j/N4JB6bszG8uSthvV5w5NZSPinifRXs1AJ
-         wcrYrFFc6HrgEizrk8KptiW9on4nObMxc/Z4QndTuU9A9bT6BxpDCi1aTfDy9uSKD2Kk
-         0CbVTdMfLA2p7mBGebMPAkeBnsmZTgegqBdkOOenmJlRkO9pQQc5MZ61DAJQvzqJAGVv
-         Hhi6+/zbRSPQgch0f6AKSOsUiFC3IR1xac8C3vt5DGujMTmuzOQnN/n58md4jRgAXy8t
-         TDqQ==
-X-Gm-Message-State: AGi0Pub3FHKEoTljxOxA8kvT5qVEeEdTJPQXiEaZQhUowio+bMNHuCi5
-        dHSO1Qbp4OfctWxmPlU14dXSTAx4
-X-Google-Smtp-Source: APiQypIIAufGAqI+ZirSMDqJch/Bi85bNdgeXU+O3Y0/LbEsbZ9NGBOW+SxQ8K8SjgseJLB1kGLgPw==
-X-Received: by 2002:aa7:8439:: with SMTP id q25mr905932pfn.172.1585815637154;
-        Thu, 02 Apr 2020 01:20:37 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id ci18sm3226454pjb.23.2020.04.02.01.20.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 Apr 2020 01:20:36 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH v3] KVM: X86: Filter out the broadcast dest for IPI fastpath
-Date:   Thu,  2 Apr 2020 16:20:26 +0800
-Message-Id: <1585815626-28370-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 Apr 2020 04:21:14 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0328In6m148305;
+        Thu, 2 Apr 2020 08:20:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=S0KcJ+/HxSntHkE6YeHdP5O/WgQiF9EjD5DgCzgQWDU=;
+ b=KUww6XPN5EVJX/b3dnxhJiNJrcq35B07mDJOfskt23N+RtGqvCc+Nr5mQz6joMGW7SbU
+ c+6gjRGpYq7rW912nBhFQ9MnGL528P7ws3Mcl4qmzEC7CQsttj31oZ/MMKEY8MVR4me+
+ yC/9oRS5dSb4lEmw3PbH7O6N50Ox0J2BzNUPYzOSQgy4KtJ7ZIS6wmqtvSChW5uiOY1O
+ xeuoNCcAGg/qLk3VX7FKs85BIHyGjTRquuweQsG4IcKyyITi5Mggri4kjUTbrqefr1L9
+ fuPhsTA9FEuflnaAJkmHOuwWGbV8MsDW5sBMjExP/97UweDyLrhGMXKHunIHQjBuNGvY NQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 303aqhtaj4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 08:20:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0328H7fx126298;
+        Thu, 2 Apr 2020 08:20:07 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 304sjnswnj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 08:20:06 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0328K4Bo023025;
+        Thu, 2 Apr 2020 08:20:04 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 01:20:03 -0700
+Date:   Thu, 2 Apr 2020 11:19:56 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     aimannajjar <aiman.najjar@hurranet.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        linux-kernel@vger.kernel.org,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Re: [PATCH v2 1/5] staging: rtl8712: fix checkpatch long-line warning
+Message-ID: <20200402081956.GF2001@kadam>
+References: <20200327080429.GB1627562@kroah.com>
+ <cover.1585353747.git.aiman.najjar@hurranet.com>
+ <6a4d94b4e5446f4665dc11290ed1351661554f01.1585353747.git.aiman.najjar@hurranet.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6a4d94b4e5446f4665dc11290ed1351661554f01.1585353747.git.aiman.najjar@hurranet.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 suspectscore=2 mlxlogscore=999 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020075
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Fri, Mar 27, 2020 at 08:08:07PM -0400, aimannajjar wrote:
+> This patch fixes these two long-line checkpatch warnings
+> in rtl871x_xmit.c:
+> 
+> WARNING: line over 80 characters
+> \#74: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:74:
+> +       * Please allocate memory with the sz = (struct xmit_frame) * NR_XMITFRAME,
+> 
+> WARNING: line over 80 characters
+> \#79: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:79:
+> +               kmalloc(NR_XMITFRAME * sizeof(struct xmit_frame) + 4, GFP_ATOMIC);
+> 
+> Signed-off-by: aimannajjar <aiman.najjar@hurranet.com>
+> ---
+>  drivers/staging/rtl8712/rtl871x_xmit.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
+> index f0b85338b567..628e4bad1547 100644
+> --- a/drivers/staging/rtl8712/rtl871x_xmit.c
+> +++ b/drivers/staging/rtl8712/rtl871x_xmit.c
+> @@ -71,12 +71,13 @@ int _r8712_init_xmit_priv(struct xmit_priv *pxmitpriv,
+>  	_init_queue(&pxmitpriv->apsd_queue);
+>  	_init_queue(&pxmitpriv->free_xmit_queue);
+>  	/*
+> -	 * Please allocate memory with the sz = (struct xmit_frame) * NR_XMITFRAME,
+> +	 * Please allocate memory with sz = (struct xmit_frame) * NR_XMITFRAME,
+>  	 * and initialize free_xmit_frame below.
+>  	 * Please also apply  free_txobj to link_up all the xmit_frames...
 
-Except destination shorthand, a destination value 0xffffffff is used to
-broadcast interrupts, let's also filter out this for single target IPI 
-fastpath.
+Probably you could delete the "Please ".
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
-v1 -> v2:
- * update subject and patch description
-
- arch/x86/kvm/lapic.c | 3 ---
- arch/x86/kvm/lapic.h | 3 +++
- arch/x86/kvm/x86.c   | 3 ++-
- 3 files changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index e24d405..d528bed 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -59,9 +59,6 @@
- #define MAX_APIC_VECTOR			256
- #define APIC_VECTORS_PER_REG		32
- 
--#define APIC_BROADCAST			0xFF
--#define X2APIC_BROADCAST		0xFFFFFFFFul
--
- static bool lapic_timer_advance_dynamic __read_mostly;
- #define LAPIC_TIMER_ADVANCE_ADJUST_MIN	100	/* clock cycles */
- #define LAPIC_TIMER_ADVANCE_ADJUST_MAX	10000	/* clock cycles */
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index bc76860..25b77a6 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -17,6 +17,9 @@
- #define APIC_BUS_CYCLE_NS       1
- #define APIC_BUS_FREQUENCY      (1000000000ULL / APIC_BUS_CYCLE_NS)
- 
-+#define APIC_BROADCAST			0xFF
-+#define X2APIC_BROADCAST		0xFFFFFFFFul
-+
- enum lapic_mode {
- 	LAPIC_MODE_DISABLED = 0,
- 	LAPIC_MODE_INVALID = X2APIC_ENABLE,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5e95950..5a645df 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1559,7 +1559,8 @@ static int handle_fastpath_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64 data
- 
- 	if (((data & APIC_SHORT_MASK) == APIC_DEST_NOSHORT) &&
- 		((data & APIC_DEST_MASK) == APIC_DEST_PHYSICAL) &&
--		((data & APIC_MODE_MASK) == APIC_DM_FIXED)) {
-+		((data & APIC_MODE_MASK) == APIC_DM_FIXED) &&
-+		((u32)(data >> 32) != X2APIC_BROADCAST)) {
- 
- 		data &= ~(1 << 12);
- 		kvm_apic_send_ipi(vcpu->arch.apic, (u32)data, (u32)(data >> 32));
--- 
-2.7.4
+regards,
+dan carpenter
 
