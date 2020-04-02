@@ -2,125 +2,128 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72300C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF6EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386B82074D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:57:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="SExtHH2/"
+	by mail.kernel.org (Postfix) with ESMTP id 313BE2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:57:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733020AbgDBN5P (ORCPT
+        id S1733058AbgDBN5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:57:15 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:54808 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727439AbgDBN5O (ORCPT
+        Thu, 2 Apr 2020 09:57:35 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:55991 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbgDBN5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:57:14 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D0ABB43BB0;
-        Thu,  2 Apr 2020 13:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1585835834; bh=WxB9gfK7GgZCSSdeiOrOcAWKApS/sOPCGGGM63tiPEQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SExtHH2/3uXBmmuJPIQIqhFRsoYdNajCJQ1pS2JGL7z5jnl3R/dZNe6/0He/izxdO
-         v+zCqA/rU8SvFWnQcfbsO/vyzcNwleriVnxioC+RGwbza21xF1XC3U721RWJXkBWRm
-         IL6AEBis1v/gyRaBVsEEDbXpLrSIz+thlhyyiAOGUpOsJVjK8/jKfIyn9op/WO66xq
-         5lMNl0X/lQnw5BPXsRqTmMZ1m1pnlCITIQj4LxdU1hqqzXG58qRPKE++lvBQFIt46o
-         C1GY4XqJ8Ku7z04idUbEWry9734w2OeXZlGEE8EZm6cQT3wpdQu4eb2XqR8HYfYjel
-         mmSmWFe6x0Wjw==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 93E62A005B;
-        Thu,  2 Apr 2020 13:57:11 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: stmmac: xgmac: Fix VLAN register handling
-Date:   Thu,  2 Apr 2020 15:57:07 +0200
-Message-Id: <daf6d10d679c24e9b33b758b249b9b70e5eb1f01.1585835790.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 Apr 2020 09:57:35 -0400
+X-Originating-IP: 93.29.109.196
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id E40DB6000D;
+        Thu,  2 Apr 2020 13:57:31 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 15:57:31 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] rtc: sun6i: switch to
+ rtc_time64_to_tm/rtc_tm_to_time64
+Message-ID: <20200402135731.GA625345@aptenodytes>
+References: <20200330201510.861217-1-alexandre.belloni@bootlin.com>
+ <20200330201510.861217-3-alexandre.belloni@bootlin.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
+Content-Disposition: inline
+In-Reply-To: <20200330201510.861217-3-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 907a076881f1, forgot that we need to clear old values of
-XGMAC_VLAN_TAG register when we switch from VLAN perfect matching to
-HASH matching.
 
-Fix it.
+--fUYQa+Pmc3FrFX/N
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 907a076881f1 ("net: stmmac: xgmac: fix incorrect XGMAC_VLAN_TAG register writting")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Hi,
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Mon 30 Mar 20, 22:15, Alexandre Belloni wrote:
+> Call the 64bit versions of rtc_tm time conversion.
+>=20
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 0e4575f7bedb..ad4df9bddcf3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -577,8 +577,13 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
- 			value |= XGMAC_VLAN_EDVLP;
- 			value |= XGMAC_VLAN_ESVL;
- 			value |= XGMAC_VLAN_DOVLTC;
-+		} else {
-+			value &= ~XGMAC_VLAN_EDVLP;
-+			value &= ~XGMAC_VLAN_ESVL;
-+			value &= ~XGMAC_VLAN_DOVLTC;
- 		}
- 
-+		value &= ~XGMAC_VLAN_VID;
- 		writel(value, ioaddr + XGMAC_VLAN_TAG);
- 	} else if (perfect_match) {
- 		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
-@@ -589,13 +594,19 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
- 
- 		value = readl(ioaddr + XGMAC_VLAN_TAG);
- 
-+		value &= ~XGMAC_VLAN_VTHM;
- 		value |= XGMAC_VLAN_ETV;
- 		if (is_double) {
- 			value |= XGMAC_VLAN_EDVLP;
- 			value |= XGMAC_VLAN_ESVL;
- 			value |= XGMAC_VLAN_DOVLTC;
-+		} else {
-+			value &= ~XGMAC_VLAN_EDVLP;
-+			value &= ~XGMAC_VLAN_ESVL;
-+			value &= ~XGMAC_VLAN_DOVLTC;
- 		}
- 
-+		value &= ~XGMAC_VLAN_VID;
- 		writel(value | perfect_match, ioaddr + XGMAC_VLAN_TAG);
- 	} else {
- 		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
--- 
-2.7.4
+This was successfully:
+Tested-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
+Cheers,
+
+Paul
+
+> ---
+>  drivers/rtc/rtc-sun6i.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> index 446ce38c1592..e2b8b150bcb4 100644
+> --- a/drivers/rtc/rtc-sun6i.c
+> +++ b/drivers/rtc/rtc-sun6i.c
+> @@ -498,7 +498,7 @@ static int sun6i_rtc_getalarm(struct device *dev, str=
+uct rtc_wkalrm *wkalrm)
+> =20
+>  	wkalrm->enabled =3D !!(alrm_en & SUN6I_ALRM_EN_CNT_EN);
+>  	wkalrm->pending =3D !!(alrm_st & SUN6I_ALRM_EN_CNT_EN);
+> -	rtc_time_to_tm(chip->alarm, &wkalrm->time);
+> +	rtc_time64_to_tm(chip->alarm, &wkalrm->time);
+> =20
+>  	return 0;
+>  }
+> @@ -519,8 +519,8 @@ static int sun6i_rtc_setalarm(struct device *dev, str=
+uct rtc_wkalrm *wkalrm)
+>  		return -EINVAL;
+>  	}
+> =20
+> -	rtc_tm_to_time(alrm_tm, &time_set);
+> -	rtc_tm_to_time(&tm_now, &time_now);
+> +	time_set =3D rtc_tm_to_time64(alrm_tm);
+> +	time_now =3D rtc_tm_to_time64(&tm_now);
+>  	if (time_set <=3D time_now) {
+>  		dev_err(dev, "Date to set in the past\n");
+>  		return -EINVAL;
+> --=20
+> 2.25.1
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--fUYQa+Pmc3FrFX/N
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6F70sACgkQ3cLmz3+f
+v9FADgf/Z8x/NG6rzW4iNYoe/p42n/FIn4dXr7WV1OAzVj+G2wBINasXpLZtHsOI
+yOoKl5GNGQXF85p1b6sQaZ+FVwA0YqZsGfzum93w0s0YeoQpBSMjhYjUuneHarB0
+hsQR0LWjcgTe2/FmvBKgsjZ+iAo+6M+iB0R0M/qVLpFl3vzNltJFPcLTABAbdFOX
+WLy84aeTTrwWnvjPkxIZpMQGXkAnEfYe+NlejO/KqlvUZVvOsbVVokqmCk2/4iib
+oOV+35FTm8Bg0jwD7VORvp8CcMbNRTDT3dIivW+SzG4qnx2Q1kGyRKxYDpMSdgyc
+M+gTvQcwLkm5zpwNxP85+Y0aIqBYxA==
+=/1Dq
+-----END PGP SIGNATURE-----
+
+--fUYQa+Pmc3FrFX/N--
