@@ -2,140 +2,97 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D322C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27D2C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5492072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937E220721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733182AbgDBBbq (ORCPT
+        id S1733223AbgDBBeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 21:31:46 -0400
-Received: from smtprelay0003.hostedemail.com ([216.40.44.3]:35042 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732462AbgDBBbp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 21:31:45 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 0FB2E1802914A;
-        Thu,  2 Apr 2020 01:31:44 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: magic31_e7601e651344
-X-Filterd-Recvd-Size: 4003
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  2 Apr 2020 01:31:39 +0000 (UTC)
-Message-ID: <aac1e71953b564d48f2d1288e50924ebd7e3e98a.camel@perches.com>
-Subject: Re: [PATCH v4 08/25] ocxl: Emit a log message showing how much LPC
- memory was detected
-From:   Joe Perches <joe@perches.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Alastair D'Silva <alastair@d-silva.org>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-Date:   Wed, 01 Apr 2020 18:29:42 -0700
-In-Reply-To: <CAPcyv4j4_owxEVjanwH5TiuMMJB3CaMannDzpXnaHedX7LuarQ@mail.gmail.com>
-References: <20200327071202.2159885-1-alastair@d-silva.org>
-         <20200327071202.2159885-9-alastair@d-silva.org>
-         <CAPcyv4j4_owxEVjanwH5TiuMMJB3CaMannDzpXnaHedX7LuarQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 1 Apr 2020 21:34:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:50388 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732435AbgDBBeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 21:34:11 -0400
+IronPort-SDR: ra9YLEl274kI59wj+a5RbZeX7jKAITXRVUj+ykR7Wp8jiR8Id2rs07wBcOxd+YoKogGPieVmww
+ JVBEyNDdaLWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 18:34:09 -0700
+IronPort-SDR: DLqdeTOYf1qgCyqWcABZ76eQylWBG4nUtfyaR4TwN5AwSYlI27YVFKD+fyy3yED2/41SExpUBb
+ OXBET1F/8Aow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,333,1580803200"; 
+   d="scan'208";a="422942571"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by orsmga005.jf.intel.com with ESMTP; 01 Apr 2020 18:34:07 -0700
+Subject: Re: [kbuild-all] Re: [RFC PATCH] usb: cdns3:
+ cdns3_clear_register_bit() can be static
+From:   Rong Chen <rong.a.chen@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Colin King <colin.king@canonical.com>, kbuild-all@lists.01.org,
+        Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200325125041.94769-1-colin.king@canonical.com>
+ <20200326122858.GA50118@cde5a4ed3207> <20200326130418.GA1295433@kroah.com>
+ <571960b6-5ed7-2106-7091-3ea83c31051a@intel.com>
+ <20200327064255.GA1603489@kroah.com>
+ <372f30ad-fbea-d411-c58f-2d4692509a60@intel.com>
+Message-ID: <556997e2-1921-e3dd-c103-d6e3c8f91888@intel.com>
+Date:   Thu, 2 Apr 2020 09:33:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <372f30ad-fbea-d411-c58f-2d4692509a60@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-01 at 01:49 -0700, Dan Williams wrote:
-> On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva <alastair@d-silva.org> wrote:
-> > This patch emits a message showing how much LPC memory & special purpose
-> > memory was detected on an OCXL device.
-[]
-> > diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-[]
-> > @@ -568,6 +568,10 @@ static int read_afu_lpc_memory_info(struct pci_dev *dev,
-> >                 afu->special_purpose_mem_size =
-> >                         total_mem_size - lpc_mem_size;
-> >         }
-> > +
-> > +       dev_info(&dev->dev, "Probed LPC memory of %#llx bytes and special purpose memory of %#llx bytes\n",
-> > +                afu->lpc_mem_size, afu->special_purpose_mem_size);
-> 
-> A patch for a single log message is too fine grained for my taste,
-> let's squash this into another patch in the series.
-
-Is the granularity of lpc_mem_size actually bytes?
-Might this be better as KiB or something using functions
-
-Maybe something like:
-
-unsigned long si_val(unsigned long val)
-{
-	static const char units[] = "BKMGTPE";
-	const char *unit = units;
-
-	while (!(val & 1023) && unit[1]) {
-		val >>= 10;
-		unit++;
-	}
-
-	return val;
-}
-
-char si_type(unsigned long val)
-{
-	static const char units[] = "BKMGTPE";
-	const char *unit = units;
-
-	while (!(val & 1023) && unit[1]) {
-		val >>= 10;
-		unit++;
-	}
-
-	return *unit;
-}
-
-so this could be something like:
-
-       dev_info(&dev->dev, "Probed LPC memory of %#llu%c and special purpose memory of %#llu%c\n",
-                si_val(afu->lpc_mem_size), si_type(afu->lpc_mem_size),
-		si_val(afu->special_purpose_mem_size), si_type(afu->special_purpose_mem_size));
 
 
+On 3/27/20 2:53 PM, Rong Chen wrote:
+>
+>
+> On 3/27/20 2:42 PM, Greg Kroah-Hartman wrote:
+>> On Fri, Mar 27, 2020 at 08:34:52AM +0800, Rong Chen wrote:
+>>>
+>>> On 3/26/20 9:04 PM, Greg Kroah-Hartman wrote:
+>>>> On Thu, Mar 26, 2020 at 08:28:58PM +0800, kbuild test robot wrote:
+>>>>> Fixes: 87db1192dc33 ("usb: cdns3: make signed 1 bit bitfields 
+>>>>> unsigned")
+>>>> This original patch did not "cause" this problem, it's just that 
+>>>> you for
+>>>> some reason ran sparse for the first time on the file.
+>>>>
+>>>> So I can't take this as-is, can you remove this line and resend?
+>>> Hi Greg,
+>>>
+>>> Sorry for the inconvenience, the patch was generated by the bot,
+>>> we'll check and resend it.
+>> It's fine that it was generated, it's a bug somewhere that thinks this
+>> specific patch was a problem so that this generated patch fixed it.
+> Yes, you are right, we'll fix the bug asap.
+>
 
+Hi Greg,
+
+The commit 87db1192dc33 ("usb: cdns3: make signed 1 bit bitfields 
+unsigned") fixed a sparse error
+which causes many sparse warnings exposed, we'll remove the wrong 
+"Fixes" in our patch in future.
+
+Best Regards,
+Rong Chen
