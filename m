@@ -2,109 +2,75 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5E0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CFCC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6D6206F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:48:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="iJRHq44Z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xGnG1PMP"
+	by mail.kernel.org (Postfix) with ESMTP id 5E9DD206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387998AbgDBKsh (ORCPT
+        id S2388011AbgDBKuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:48:37 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:42311 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728612AbgDBKsh (ORCPT
+        Thu, 2 Apr 2020 06:50:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37351 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728612AbgDBKuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:48:37 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id B600958026F;
-        Thu,  2 Apr 2020 06:48:35 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 02 Apr 2020 06:48:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=+D7VcHcSiM0jYaijsTuec/8aXp01c7Q
-        cNu1qwr7scf8=; b=iJRHq44ZjRiN+PUDGv0B0SkOys1S3JYTIdGtOwy4SQeGevr
-        idfuVTTpg1ueU5+aBep9iVkp1c47vpcLuVSlSzDZhOWwVkJXFl+7AyrdXBb4Sc5A
-        JLQN1ZvN8M85yJrud1dK1KRWRgHN90XfChPidLn/XQBJCSh/befplS3r+ZelM5XE
-        egFBa2eX9d9xBAWHZG2q+mAc8pMuy4iDTD8lsziox9d33h73QFSxrsxZMtfhnNiD
-        DUPdfx3NSuAzKAJR3GdRQU06x28y6NWXDilwlMOBt3SiaWO2i/zd48LAiTFsal4X
-        MflU3kp+fEBe8a/56o6nTM+Q9bQ4f7AZ61SzVmw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+D7VcH
-        cSiM0jYaijsTuec/8aXp01c7QcNu1qwr7scf8=; b=xGnG1PMP8tOJZe4fOzGtzC
-        rv7vzrM8CQ8o6tdS4yJYLWzQ1MZsSC6xH6vadcDa6KKgpo5i10/PqckZxOLENMNX
-        bq9B4n+iE47v9O9IMyxfdr3Gblydce/ypRXQ9YdEtqd8xM591VqkFr5RPKummpn1
-        hv9j1A2V1vmZW9ZTqkeICieKJVDucDtVgffEqyVW2xZ7vrBjVhiKN+/2QnpEgyH6
-        kLzkEqEMc1tUSoSkMuyU+xcoNDN0esN+sJ2UoWwwC2W4wXnW19p12tiiiIn3FEuv
-        OTCOtJZimHpWz9MqG58du8yWDZVAKs2U/MlR7NBV3X/YjqLqf/rMn1JY1b5GSNLA
-        ==
-X-ME-Sender: <xms:AMOFXldeEkjXsJ7diQipgn0qxovg0PlDuheJ-E2ZX1ildObUqRyzyA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdeggddvjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
-    rdhiugdrrghu
-X-ME-Proxy: <xmx:AMOFXvo5Ns1q9RuY6hGg-kPWZwS-cmt3iNEOQLVeNKZaJQKkRMufDw>
-    <xmx:AMOFXtYQBjqP-aRB503nTiPDl6hqDf1cLloQDFhbWLGu3r1wHexa1A>
-    <xmx:AMOFXlF7RSbA1HXjtdv1YjiqS_Hd-43ak8oAV2G99u8OiNAmy88X4Q>
-    <xmx:A8OFXpdSmb-NEB1_q8gS7lmd4eNPdo2SpKRqDW2UZXoYEVEoQ0Mieg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 43330E00B9; Thu,  2 Apr 2020 06:48:32 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-1080-gca5de7b-fmstable-20200402v5
-Mime-Version: 1.0
-Message-Id: <9d9120dd-31c9-4cd8-bb91-c6350febb8ad@www.fastmail.com>
-In-Reply-To: <1947a3705a220ce14a2fda482c833b38a4d9fe9a.camel@kernel.crashing.org>
-References: <20200401105624.17423-1-xianfengting221@163.com>
- <1947a3705a220ce14a2fda482c833b38a4d9fe9a.camel@kernel.crashing.org>
-Date:   Thu, 02 Apr 2020 21:18:44 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
-        "Hu Haowen" <xianfengting221@163.com>,
-        "David Miller" <davem@davemloft.net>,
-        "Andrew Lunn" <andrew@lunn.ch>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Jonathan Corbet" <corbet@lwn.net>
-Cc:     stfrench@microsoft.com, chris@chris-wilson.co.uk,
-        xiubli@redhat.com, airlied@redhat.com, tglx@linutronix.de,
-        "Heiner Kallweit" <hkallweit1@gmail.com>,
-        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: =?UTF-8?Q?Re:_[PATCH]_net/faraday:_fix_grammar_in_function_ftgmac100=5Fs?=
- =?UTF-8?Q?etup=5Fclk()_in_ftgmac100.c?=
-Content-Type: text/plain
+        Thu, 2 Apr 2020 06:50:04 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jJxQ8-0003JL-GG; Thu, 02 Apr 2020 10:50:00 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] binderfs: remove redundant assignment to pointer ctx
+Date:   Thu,  2 Apr 2020 11:50:00 +0100
+Message-Id: <20200402105000.506296-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
+The pointer ctx is being initialized with a value that is never read
+and it is being updated later with a new value. The initialization
+is redundant and can be removed.
 
-On Thu, 2 Apr 2020, at 21:13, Benjamin Herrenschmidt wrote:
-> On Wed, 2020-04-01 at 18:56 +0800, Hu Haowen wrote:
-> > "its not" is wrong. The words should be "it's not".
-> > 
-> > Signed-off-by: Hu Haowen <xianfengting221@163.com>
-> 
-> Typo more than grammer :-)
-> 
-> Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> 
->  (the offender) 
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/android/binderfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-No, I am Spartacus!
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index 9ecad74183a3..8352a3d160bf 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -747,7 +747,7 @@ static const struct fs_context_operations binderfs_fs_context_ops = {
+ 
+ static int binderfs_init_fs_context(struct fs_context *fc)
+ {
+-	struct binderfs_mount_opts *ctx = fc->fs_private;
++	struct binderfs_mount_opts *ctx;
+ 
+ 	ctx = kzalloc(sizeof(struct binderfs_mount_opts), GFP_KERNEL);
+ 	if (!ctx)
+-- 
+2.25.1
 
-But yeah:
-
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
