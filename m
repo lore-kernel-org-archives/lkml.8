@@ -2,244 +2,200 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F684C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFE4C2BA17
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2624C206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B54420787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ZpA3sU1K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmhoYbnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388102AbgDBL2E (ORCPT
+        id S2388116AbgDBL2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:28:04 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36061 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388029AbgDBL2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:28:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48tLQm15kFz9sQt;
-        Thu,  2 Apr 2020 22:28:00 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1585826880;
-        bh=2maxqirMAdfGWnzmoaa6OOtiptHYwQlsC8pMIxyqg2Q=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=ZpA3sU1KMKWa93mUZns4lsgqvOgN9l/hyNwKu+DqRaotT5XPACFP0KYbfalrdMbUo
-         nhqzWA4CNLLrkoc7ARYaFjZXMshRW1JT3iqhZN/xA366OgtBg3/fReEaqUqUxuTxaF
-         GUiZP2KXkbElZXBiNMLQkGio1Xl7J9BxMpex7tqrixKV1ZI1iETVFxz65i/1Xzd04g
-         AY3XFMeWV8Vp2yrdY/xsXnLfs5NoCnPy556kH5ib2gXw9JjBYnpYeUbLCewB/x1qQ1
-         svN6Qg43JA+fvdM1WOoCXUgSuf+fFPSRmFCj9ipjR9YwsgmN0FmdxctgAhbPuNbED1
-         AIK33NIOHRMcQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Enrico Weigelt <info@metux.net>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        peterz@infradead.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] ppc/crash: Reset spinlocks during crash
-In-Reply-To: <20200401000020.590447-1-leonardo@linux.ibm.com>
-References: <20200401000020.590447-1-leonardo@linux.ibm.com>
-Date:   Thu, 02 Apr 2020 22:28:09 +1100
-Message-ID: <871rp6t9di.fsf@mpe.ellerman.id.au>
+        Thu, 2 Apr 2020 07:28:21 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46783 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388001AbgDBL2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:28:21 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 111so2957796oth.13;
+        Thu, 02 Apr 2020 04:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2bgnm/uDYdJ1detYPhI27bQkF7tTu5YY9ijywxHgELg=;
+        b=cmhoYbnDjQ0noiUH4NKgmI2exZ8QJ8k7PnsPhRMB2PpduNDdMZw3wu8S7lPprn6R7X
+         aP4Y2Vxfd4F0srhHHtK0y9FFfm2ER6mdbi5RkxXTkabUrmYeoQ/5PF+Bn2OC1oxqxdgG
+         Px3qvJy+mCpEqEVSj2wSI2Bm3SU9Yahc1Yu7VhjvCaBFYqglefOVCmVgPRhm82DkZZ9y
+         iH1JxXBv1ucwsoNCEMljyhJZzIP0ro/2/rBxX1ZvBMYK493WvlU2Jz5VwZSA3GikeA+X
+         2qmH5pv4fCTbkFiL/dcQRkTvQhllbdfCcVH69IXr+Xn5SKq0YDq6lf3tClccnK0xPXKl
+         Lkpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2bgnm/uDYdJ1detYPhI27bQkF7tTu5YY9ijywxHgELg=;
+        b=aT5ei7YqdmdpHjXbkLdFJk/263KaFr3jTzZy2dD+/eemsYoYW+2XJSADyopejND4yw
+         Wxt9asLSHbjveX89+l28zGeTNdnyVM0h5VbcwtSbOUBc46D49/09dq95HoV6X4Sr8U+3
+         vOAQqUob0BUk7BO205+BhsNQ2zTO6AxauHtyuWNsvpEB/1W7RkEiuy5e5qRLeabWKIDg
+         aDHmVwd2SQK6tjw+YdANtK7TGiLYu7ZlMIyDwlCSAH0rYR9ZQKG4XF57suDvKtFGx+Nh
+         DexZdp8ZkRjqSkdMv3REN/88Jes61oVBRfDJhzIBLQt+m6m3p2aYOYVzemuLi8vtWCfJ
+         a+tA==
+X-Gm-Message-State: AGi0PuYZLPYaS8Yk9lhVa/5CupdTOOyK0y1NmsXLusBmYXePYuGuMGWc
+        hse2JaJMxhjHl+b8WYI0thjwuAQtbE+dBzmRA8Y=
+X-Google-Smtp-Source: APiQypLJSpXhoA6Ak+/dJnAb0ch+tzn79KYUCPw/2juatq28FHNuYiFUIkHu9IYlnlBPisvI0Iro/kiGCGeQnVYTijs=
+X-Received: by 2002:a9d:895:: with SMTP id 21mr1850329otf.365.1585826899753;
+ Thu, 02 Apr 2020 04:28:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
+ <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com>
+ <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+ <CAMuHMdXmfQ0x7mCZ-E7OPQFv2z-=mFDT20hJ2_JKax=OePB8eA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXmfQ0x7mCZ-E7OPQFv2z-=mFDT20hJ2_JKax=OePB8eA@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 2 Apr 2020 12:27:53 +0100
+Message-ID: <CA+V-a8vPn_z_j1Vwr_1F=dCw8H=g5UMWvWxgRqBeVR7dzHPz8Q@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
+ in correct sequence
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hao Bui <hao.bui.yg@renesas.com>,
+        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Chris Brandt <Chris.Brandt@renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Leonardo Bras <leonardo@linux.ibm.com> writes:
-> During a crash, there is chance that the cpus that handle the NMI IPI
-> are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
-> will cause a deadlock. (rtas.lock and printk logbuf_lock as of today)
+Hi Geert,
+
+On Wed, Apr 1, 2020 at 1:43 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> This is a problem if the system has kdump set up, given if it crashes
-> for any reason kdump may not be saved for crash analysis.
+> Hi Prabhakar,
 >
-> After NMI IPI is sent to all other cpus, force unlock all spinlocks
-> needed for finishing crash routine.
+> On Tue, Mar 31, 2020 at 5:58 PM Prabhakar Mahadev Lad
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > -----Original Message-----
+> > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > On Fri, Mar 27, 2020 at 7:17 PM Kazuhiro Fujita
+> > > <kazuhiro.fujita.jg@renesas.com> wrote:
+> > > > For SCIF and HSCIF interfaces the SCxSR register holds the status of
+> > > > data that is to be read next from SCxRDR register, But where as for
+> > > > SCIFA and SCIFB interfaces SCxSR register holds status of data that is
+> > > > previously read from SCxRDR register.
+> > > >
+> > > > This patch makes sure the status register is read depending on the port
+> > > > types so that errors are caught accordingly.
+> > > >
+> > > > Cc: <stable@vger.kernel.org>
+> > > > Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
+> > > > Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
+> > > > Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> > > Nevertheless, this patch will need some testing on various hardware.
+> > > Do you have a test case to verify the broken/fixed behavior?
+> > >
+> > Agreed, its been tested on RZ/G2x & RZ/G1x  by doing a loopback test, configure one interface as CS8 mode(8-bits data, No parity) and other as CS7 mode (7-bits data, 1-bit Parity) and parity errors should be detected.
+>
+> This can easily be tested on the console.  Basic testing can even be
+> done with an unmodified kernel, as there is already a "parity error"
+> notice message in the driver.
+>
+> Enable even parity on the console:
+>
+> $ stty evenp
+>
+> (use "oddp" for odd parity, and invert all below)
+>
+> Typing e.g. a single "p" should trigger a parity error.
+> Typing "o" shouldn't.
+> Without this patch, no parity error is detected on SCIF.
+>
+> Likewise, pasting a sequence of "p" characters should trigger a lot of
+> parity errors, "o" shouldn't.
+> Without this patch, parity errors are detected on SCIF, except for the
+> first character.
+>
+> For more advanced testing, make the following change to the driver:
+>
+> - dev_notice(port->dev, "parity error\n");
+> + dev_notice(port->dev, "parity error for char 0x%02x hweight %u\n",
+> c, hweight8(c));
+>
+> Pasting an alternating sequence of "p" and "o" characters should trigger
+> parity errors for the "p" characters.
+> Without this patch, they are triggered for the "o" characters instead.
+>
+Thank you that makes life easier.
 
-I'm not convinced this is the right approach.
+> With this patch, the issues above are fixed on SCIF.
+> This has been verified on:
+>   1. SCIF on R-Car Gen 2,
+>   2. SCIF on R-Car Gen3
+>   3. SCIF on RZ/A1H,
+>   4. SCIF on RZ/A2M.
+>
+Thank you for the testing.
 
-Busting locks is risky, it could easily cause a crash if data structures
-are left in some inconsistent state.
+> However, I also tried this on HSCIF on R-Car Gen3, where I cannot
+> trigger parity errors at all.
+> Parabhakar: have you tried HSCIF on RZ/G1 and RZ/G2? Can you trigger
+> parity errors on HSCIF?
+>
+I couldnt test this in RZ/Gx as the hscif interface is connected to
+wifi, but I did manage to trigger this
+on M3N following are the steps:
+1: Set console as ttySC1 in booatargs
+2: The login console will come up on both SC0&1
+3: Login through SC0
+4: Append securetty file: echo ttySC1 >> /etc/securetty
+5: Login through SC1 (CN26 on M3N)
+6:  And finally I repeated your steps using stty on SC1 (CN26) to
+introduce parity error.
 
-I think we need to make this code more careful about what it's doing.
-There's a clue at the top of default_machine_crash_shutdown(), which
-calls crash_kexec_prepare_cpus():
+> This has been regression-tested on:
+>   1. SCIFA on SH-Mobile AG5, R-Mobile A1, and R-Mobile APE6.
+>
+> I haven't tested it yet on:
+>   1. SCIFB on SH/R-Mobile (needs wiring up),
+>   2. SCIFA, SCIFB, and HSCIF on R-Car Gen2 (needs wiring up),
+>   3. (H)SCIF on R-Car Gen1 (remote boards unaccessible at the moment),
+>   4. SuperH (only remote Migo-R available, but unaccessible).
+>
+> I can test 1 and 2 (and perhaps 3 and 4) later, if needed.
+probably testing this on SuperH is gonna be a pain due to lack of
+hardware availability,
+(it needs to be tested on 19 platforms)
+how about #ifdef CONFIG_ARCH_RENESAS || CONFIG_H8300 and the fix ?
 
-	 * This function is only called after the system
-	 * has panicked or is otherwise in a critical state.
-	 * The minimum amount of code to allow a kexec'd kernel
-	 * to run successfully needs to happen here.
+Cheers,
+--Prabhakar
 
-
-You said the "IPI complete" message was the cause of one lockup:
-
-  #0  arch_spin_lock 
-  #1  do_raw_spin_lock 
-  #2  __raw_spin_lock 
-  #3  _raw_spin_lock 
-  #4  vprintk_emit 
-  #5  vprintk_func
-  #7  crash_kexec_prepare_cpus 
-  #8  default_machine_crash_shutdown
-  #9  machine_crash_shutdown 
-  #10 __crash_kexec
-  #11 crash_kexec
-  #12 oops_end
-
-TBH I think we could just drop that printk() entirely.
-
-Or we could tell printk() that we're in NMI context so that it uses the
-percpu buffers.
-
-We should probably do the latter anyway, in case there's any other code
-we call that inadvertently calls printk().
-
-
-The RTAS trace you sent was:
-
-  #0 arch_spin_lock
-  #1  lock_rtas () 
-  #2  rtas_call (token=8204, nargs=1, nret=1, outputs=0x0)
-  #3  ics_rtas_mask_real_irq (hw_irq=4100) 
-  #4  machine_kexec_mask_interrupts
-  #5  default_machine_crash_shutdown
-  #6  machine_crash_shutdown 
-  #7  __crash_kexec
-  #8  crash_kexec
-  #9  oops_end
-
-
-Which doesn't make it clear who holds the RTAS lock. We really shouldn't
-be crashing while holding the RTAS lock, but I guess it could happen.
-Can you get a full backtrace?
-
-
-PAPR says we are not allowed to have multiple CPUs calling RTAS at once,
-except for a very small list of RTAS calls. So if we bust the RTAS lock
-there's a risk we violate that part of PAPR and crash even harder.
-
-Also it's not specific to kdump, we can't even get through a normal
-reboot if we crash with the RTAS lock held.
-
-Anyway here's a patch with some ideas. That allows me to get from a
-crash with the RTAS lock held through kdump into the 2nd kernel. But it
-only works if it's the crashing CPU that holds the RTAS lock.
-
-cheers
-
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index c5fa251b8950..44ce74966d60 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -25,6 +25,7 @@
- #include <linux/reboot.h>
- #include <linux/syscalls.h>
- 
-+#include <asm/debugfs.h>
- #include <asm/prom.h>
- #include <asm/rtas.h>
- #include <asm/hvcall.h>
-@@ -65,6 +66,8 @@ unsigned long rtas_rmo_buf;
- void (*rtas_flash_term_hook)(int);
- EXPORT_SYMBOL(rtas_flash_term_hook);
- 
-+static int rtas_lock_holder = -1;
-+
- /* RTAS use home made raw locking instead of spin_lock_irqsave
-  * because those can be called from within really nasty contexts
-  * such as having the timebase stopped which would lockup with
-@@ -76,7 +79,20 @@ static unsigned long lock_rtas(void)
- 
- 	local_irq_save(flags);
- 	preempt_disable();
--	arch_spin_lock(&rtas.lock);
-+
-+	if (!arch_spin_trylock(&rtas.lock)) {
-+		// Couldn't get the lock, do we already hold it?
-+		if (rtas_lock_holder == smp_processor_id())
-+			// Yes, so we would have deadlocked on ourself. Assume
-+			// we're crashing and continue on hopefully ...
-+			return flags;
-+
-+		// No, wait on the lock
-+		arch_spin_lock(&rtas.lock);
-+	}
-+
-+	rtas_lock_holder = smp_processor_id();
-+
- 	return flags;
- }
- 
-@@ -85,6 +101,8 @@ static void unlock_rtas(unsigned long flags)
- 	arch_spin_unlock(&rtas.lock);
- 	local_irq_restore(flags);
- 	preempt_enable();
-+
-+	rtas_lock_holder = -1;
- }
- 
- /*
-@@ -1263,3 +1281,24 @@ void rtas_take_timebase(void)
- 	timebase = 0;
- 	arch_spin_unlock(&timebase_lock);
- }
-+
-+static int rtas_crash_set(void *data, u64 val)
-+{
-+	printk("%s: Taking RTAS lock and then crashing ...\n", __func__);
-+	lock_rtas();
-+
-+	*((volatile int *) 0) = 0;
-+
-+	return 0;
-+}
-+
-+DEFINE_DEBUGFS_ATTRIBUTE(fops_rtas_crash, NULL, rtas_crash_set, "%llu\n");
-+
-+static __init int rtas_crash_debugfs_init(void)
-+{
-+	debugfs_create_file_unsafe("crash_in_rtas", 0200,
-+				   powerpc_debugfs_root, NULL,
-+				   &fops_rtas_crash);
-+	return 0;
-+}
-+device_initcall(rtas_crash_debugfs_init);
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index d488311efab1..4c52cb58e889 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -15,6 +15,7 @@
- #include <linux/crash_dump.h>
- #include <linux/delay.h>
- #include <linux/irq.h>
-+#include <linux/printk.h>
- #include <linux/types.h>
- 
- #include <asm/processor.h>
-@@ -311,6 +312,8 @@ void default_machine_crash_shutdown(struct pt_regs *regs)
- 	unsigned int i;
- 	int (*old_handler)(struct pt_regs *regs);
- 
-+	printk_nmi_enter();
-+
- 	/*
- 	 * This function is only called after the system
- 	 * has panicked or is otherwise in a critical state.
-
-
+> Thanks!
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
