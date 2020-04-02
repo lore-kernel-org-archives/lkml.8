@@ -2,173 +2,499 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF34DC2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088EBC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C143F206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:25:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVB9MaL1"
+	by mail.kernel.org (Postfix) with ESMTP id D397A20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585859170;
+	bh=1GP0Ou8s3HzT/VZwg/95iRpBuOS3a8RikHsb47BiI9I=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=DL4y6/of233Du+A2xcSIEmEQUjR2Z6QGIJ9fL+uGJk7A7Rl02K9DZJAzUVGvCfaNN
+	 RHLcNuUhL0xbHLw+EdE5zjru4B2Xf/sJXHKl0I/4pI3bGy6DZoah6WKkwW/jWObKYr
+	 BbZhW9dnWSVn9G9TQg/Ew5C9ytBQhLpqs+ldY9LU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390254AbgDBUZb (ORCPT
+        id S2389700AbgDBU0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:25:31 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55125 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389482AbgDBUZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:25:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c81so4820588wmd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0R+Zb4Bn66vFsZizGJzx0NCiSitSXH3XAYXfHz+ebXo=;
-        b=UVB9MaL1O9chhvoFLjpgg5KF/B7YEqi0IjJKZlSuzDxVkcdPoN6lgvDtXGNY1szS3B
-         eASbnD5dMdxixd+YijjubvjbiexHbZex7QRtOQec2rQrUXx9qlshYIwxX/7utHMbp/Ox
-         86V41avD6Q0m+0cKAHuOa08ZwcpcFkiTiiKS/tPk9KoGyBiBx9kr9SRPQgyIrotiP9se
-         DEaoEDZwvrVSlHab0ZfzdaTWHjNEhSpJ98oFBsHTangL1Btkcrn5kd6zlUw+pkXWf1To
-         2AaxxOZ3iNgE09yFWyLqcM+0GzamGRZn2H2vmNGREA8uU5j3ns1UWvcpaqJvAwo9VcgO
-         lN3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0R+Zb4Bn66vFsZizGJzx0NCiSitSXH3XAYXfHz+ebXo=;
-        b=hM3TEvnR3EdivKPjkmuIZhnUqa3IzpvxV7z/V4hNEgesCIAllpz6jqWskHTtCHmw3A
-         CaV7CCns1IbaJ8okXwX7+5MltcB29w2B31Wy3Al+9vZGFXgpvtdedQzX1iCMyJVNzoGY
-         +yFMedQZ55aPFyh6xBrnxLcRd+6DisEwyPJ2A3XhgDaJ1hsBI8+hjQmULzU8rjcrJHob
-         afq3BRIoyC1M74iWqv01EYT1QVU5N1FB2tOBDDxJ0yt1h0lBbgn3lzvyZcWum9ZIGBmz
-         RCXE8Ma+p4Uo0MEZOvIrDTaOzEgvQ7ceLRcB2BEazTno9PAbCL8nEFIQul4G+1R5CXhR
-         iCCg==
-X-Gm-Message-State: AGi0PuYeZpRE+haCjVdtURefhPx9G5KDXpT8oPjG0biRVRNeODOuwJ2w
-        1VR3SonEJiKOtm77ALF8xgs=
-X-Google-Smtp-Source: APiQypISLNuqVS01PWZev9lb3aevpwhA/0jCPUeAUvuQyk8PM3zT2RKjdOn37ddArpGrF+zi9Ki1XA==
-X-Received: by 2002:a7b:c24a:: with SMTP id b10mr4912304wmj.61.1585859128291;
-        Thu, 02 Apr 2020 13:25:28 -0700 (PDT)
-Received: from 5f9ad775e7f6 ([213.137.85.32])
-        by smtp.gmail.com with ESMTPSA id t126sm8853865wmb.27.2020.04.02.13.25.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 Apr 2020 13:25:27 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 20:25:24 +0000
-From:   Daniel Shaulov <daniel.shaulov@gmail.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Daniel Shaulov <daniel.shaulov@granulate.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: Add support for DW_OP_call_frame_cfa vars
-Message-ID: <20200402202523.GA55594@5f9ad775e7f6>
-References: <20200401161954.44640-1-daniel.shaulov@granulate.io>
- <20200402184943.GB23243@kernel.org>
+        Thu, 2 Apr 2020 16:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732263AbgDBU0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:26:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DE5320678;
+        Thu,  2 Apr 2020 20:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585859168;
+        bh=1GP0Ou8s3HzT/VZwg/95iRpBuOS3a8RikHsb47BiI9I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LdG5hGHmNFHQ+evFCtbCnA/uptwzJAihGr5ZFraAnqovoPQbEmWCyLPCKrTezS05L
+         XT+bP+BDnxG8u2/kqcvObkejC+Tte7jX+GM2NOKg3ER2+steCZepMSVmBx6J5qGqmh
+         kb8Yx8xB7958fUyX9sOm87hMzZFyprodTp1ZSQuI=
+Date:   Thu, 2 Apr 2020 22:26:05 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.19.114
+Message-ID: <20200402202605.GA3259510@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
 Content-Disposition: inline
-In-Reply-To: <20200402184943.GB23243@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 03:49:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> Daniel, next time please consider providing precise steps to show what
-> wasn't working and then how the patch solves the problem, i.e. get some
-> go program, show the command lines used to build, probe, etc.
->
-> - Arnaldo
 
-Sure thing:
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----- contents of example.go ----
-package main
+I'm announcing the release of the 4.19.114 kernel.
 
-import "fmt"
+All users of the 4.19 kernel series must upgrade.
 
-func example(param1 int, param2 int) {
-	fmt.Println(param1, param2)
-}
+The updated 4.19.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.19.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-func main() {
-	example(111, 222)
-}
----- end contents of example.go ----
+thanks,
 
-Build with:
-$ go build example.go
+greg k-h
 
-Note that the output file is named after the directory.
+------------
 
-Then try to probe it with:
-$ perf probe -x ./example 'main.example param1 param2'
+ Documentation/devicetree/bindings/net/fsl-fman.txt         |    7=20
+ Makefile                                                   |    2=20
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts                   |    1=20
+ arch/arm/boot/dts/dra7.dtsi                                |    1=20
+ arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi          |    4=20
+ arch/arm/boot/dts/omap3-n900.dts                           |   44 ++--
+ arch/arm/boot/dts/omap5.dtsi                               |    1=20
+ arch/arm/boot/dts/ox810se.dtsi                             |    4=20
+ arch/arm/boot/dts/ox820.dtsi                               |    4=20
+ arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi         |    2=20
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts          |    4=20
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts          |    4=20
+ arch/arm64/include/asm/alternative.h                       |    2=20
+ arch/x86/kernel/ftrace.c                                   |    2=20
+ drivers/ata/ahci.c                                         |    1=20
+ drivers/gpio/gpiolib-acpi.c                                |  140 ++++++++=
+++---
+ drivers/gpu/drm/drm_dp_mst_topology.c                      |   15 -
+ drivers/i2c/busses/i2c-hix5hd2.c                           |    1=20
+ drivers/infiniband/core/security.c                         |   11 -
+ drivers/infiniband/hw/mlx5/qp.c                            |    4=20
+ drivers/input/mouse/synaptics.c                            |    1=20
+ drivers/input/touchscreen/raydium_i2c_ts.c                 |    8=20
+ drivers/media/usb/b2c2/flexcop-usb.c                       |    6=20
+ drivers/media/usb/dvb-usb/dib0700_core.c                   |    4=20
+ drivers/media/usb/gspca/ov519.c                            |   10=20
+ drivers/media/usb/gspca/stv06xx/stv06xx.c                  |   19 +
+ drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c           |    4=20
+ drivers/media/usb/gspca/xirlink_cit.c                      |   18 +
+ drivers/media/usb/usbtv/usbtv-core.c                       |    2=20
+ drivers/media/usb/usbtv/usbtv-video.c                      |    5=20
+ drivers/mmc/core/core.c                                    |    5=20
+ drivers/mmc/core/mmc.c                                     |    7=20
+ drivers/mmc/core/mmc_ops.c                                 |    8=20
+ drivers/mmc/host/sdhci-omap.c                              |    3=20
+ drivers/mmc/host/sdhci-tegra.c                             |    3=20
+ drivers/net/can/slcan.c                                    |    3=20
+ drivers/net/dsa/mt7530.c                                   |    2=20
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c                  |    4=20
+ drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c              |   15 -
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c             |    4=20
+ drivers/net/ethernet/freescale/fman/Kconfig                |   28 ++
+ drivers/net/ethernet/freescale/fman/fman.c                 |   18 +
+ drivers/net/ethernet/freescale/fman/fman.h                 |    5=20
+ drivers/net/ethernet/marvell/mvneta.c                      |    3=20
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_mr.c          |    8=20
+ drivers/net/ethernet/micrel/ks8851_mll.c                   |   56 ++++-
+ drivers/net/ethernet/realtek/r8169.c                       |   11 -
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c            |    2=20
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c             |    2=20
+ drivers/net/geneve.c                                       |    8=20
+ drivers/net/macsec.c                                       |    3=20
+ drivers/net/phy/mdio-mux-bcm-iproc.c                       |    7=20
+ drivers/net/usb/qmi_wwan.c                                 |    1=20
+ drivers/net/vxlan.c                                        |   11 -
+ drivers/nfc/fdp/fdp.c                                      |    5=20
+ drivers/of/of_mdio.c                                       |    1=20
+ drivers/platform/x86/pmc_atom.c                            |    8=20
+ drivers/s390/net/qeth_core_main.c                          |   13 -
+ drivers/scsi/ipr.c                                         |    3=20
+ drivers/scsi/ipr.h                                         |    1=20
+ drivers/scsi/sd.c                                          |    4=20
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c                |    1=20
+ drivers/staging/wlan-ng/hfa384x_usb.c                      |    2=20
+ drivers/staging/wlan-ng/prism2usb.c                        |    1=20
+ drivers/tty/vt/selection.c                                 |    5=20
+ drivers/tty/vt/vt.c                                        |   30 ++
+ drivers/tty/vt/vt_ioctl.c                                  |   80 +++----
+ drivers/usb/class/cdc-acm.c                                |   18 -
+ drivers/usb/musb/musb_host.c                               |   17 -
+ drivers/usb/serial/io_edgeport.c                           |    2=20
+ drivers/usb/serial/option.c                                |    6=20
+ fs/afs/rxrpc.c                                             |    4=20
+ fs/ceph/file.c                                             |   14 +
+ fs/libfs.c                                                 |    8=20
+ fs/nfs/client.c                                            |    1=20
+ fs/nfs/fscache.c                                           |    2=20
+ fs/nfs/nfs4client.c                                        |    1=20
+ include/linux/ceph/osdmap.h                                |    4=20
+ include/linux/ceph/rados.h                                 |    6=20
+ include/linux/mmc/host.h                                   |    1=20
+ include/linux/selection.h                                  |    4=20
+ include/linux/vt_kern.h                                    |    2=20
+ include/trace/events/afs.h                                 |    2=20
+ include/uapi/linux/serio.h                                 |   10=20
+ kernel/bpf/btf.c                                           |    5=20
+ kernel/bpf/syscall.c                                       |    9=20
+ kernel/cgroup/cgroup-v1.c                                  |    3=20
+ kernel/irq/manage.c                                        |   11 -
+ net/ceph/osdmap.c                                          |    9=20
+ net/dsa/tag_brcm.c                                         |    2=20
+ net/hsr/hsr_framereg.c                                     |   10=20
+ net/hsr/hsr_netlink.c                                      |   74 +++---
+ net/hsr/hsr_slave.c                                        |    8=20
+ net/ipv4/Kconfig                                           |    1=20
+ net/ipv4/ip_gre.c                                          |  105 ++++++++-
+ net/ipv4/ip_vti.c                                          |   38 ++-
+ net/ipv4/tcp.c                                             |    4=20
+ net/ipv6/ip6_vti.c                                         |   34 ++-
+ net/mac80211/ieee80211_i.h                                 |    3=20
+ net/mac80211/mesh_hwmp.c                                   |    3=20
+ net/mac80211/sta_info.c                                    |    7=20
+ net/mac80211/tdls.c                                        |    2=20
+ net/mac80211/tx.c                                          |   44 +++-
+ net/netfilter/nf_flow_table_ip.c                           |    2=20
+ net/netfilter/nft_fwd_netdev.c                             |    9=20
+ net/packet/af_packet.c                                     |   21 +
+ net/packet/internal.h                                      |    5=20
+ net/sched/cls_route.c                                      |    4=20
+ net/sched/cls_tcindex.c                                    |    1=20
+ net/sched/sch_cbs.c                                        |   12 +
+ net/wireless/nl80211.c                                     |    2=20
+ net/xfrm/xfrm_device.c                                     |    1=20
+ net/xfrm/xfrm_policy.c                                     |    2=20
+ net/xfrm/xfrm_user.c                                       |    6=20
+ scripts/dtc/dtc-lexer.l                                    |    1=20
+ tools/perf/Makefile                                        |    2=20
+ tools/perf/util/map.c                                      |    2=20
+ tools/perf/util/probe-finder.c                             |   11 -
+ tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  |    2=20
+ tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    |    2=20
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c |    2=20
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h |    2=20
+ tools/scripts/Makefile.include                             |    4=20
+ 123 files changed, 928 insertions(+), 341 deletions(-)
 
-The result is:
-> Target program is compiled without optimization. Skipping prologue.
-> Probe on address 0x4820f0 to force probing at the function entry.
->
-> Sorry, we don't support this variable location yet.
->   Error: Failed to add events.
+Arthur Demchenkov (1):
+      ARM: dts: N900: fix onenand timings
 
-With my changes the event is added successfuly.
-The reason for the change can be observed in the output of:
-$ readelf --debug-dump=info ./example
+Chuhong Yuan (1):
+      i2c: hix5hd2: add missed clk_disable_unprepare in remove
 
-Where we have the following for the main.example function (with go >= 1.10):
- <1><63dd2>: Abbrev Number: 2 (DW_TAG_subprogram)
-    <63dd3>   DW_AT_name        : main.example
-    <63de0>   DW_AT_low_pc      : 0x4820f0
-    <63de8>   DW_AT_high_pc     : 0x4821c2
-    <63df0>   DW_AT_frame_base  : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
-    <63df2>   DW_AT_decl_file   : 0x1
-    <63df6>   DW_AT_external    : 1
- <2><63df7>: Abbrev Number: 14 (DW_TAG_formal_parameter)
-    <63df8>   DW_AT_name        : param1
-    <63dff>   DW_AT_variable_parameter: 0
-    <63e00>   DW_AT_decl_line   : 5
-    <63e01>   DW_AT_type        : <0x220f>
-    <63e05>   DW_AT_location    : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
- <2><63e07>: Abbrev Number: 14 (DW_TAG_formal_parameter)
-    <63e08>   DW_AT_name        : param2
-    <63e0f>   DW_AT_variable_parameter: 0
-    <63e10>   DW_AT_decl_line   : 5
-    <63e11>   DW_AT_type        : <0x220f>
-    <63e15>   DW_AT_location    : 2 byte block: 91 8 	(DW_OP_fbreg: 8)
- <2><63e18>: Abbrev Number: 0
+Cong Wang (2):
+      net_sched: cls_route: remove the right filter from hashtable
+      net_sched: keep alloc_hash updated after hash allocation
 
-The go compiler (after 1.10) uses DW_OP_call_frame_cfa for the first parameter and DW_OP_fbreg for the rest.
-On go versions lower than 1.10, it used DW_OP_call_frame_cfa for all parameters.
-Here is example output of the readelf on main.example, compiled with go1.9.7:
- <1><2634d>: Abbrev Number: 2 (DW_TAG_subprogram)
-    <2634e>   DW_AT_name        : main.example
-    <2635b>   DW_AT_low_pc      : 0x487db0
-    <26363>   DW_AT_high_pc     : 0x487e99
-    <2636b>   DW_AT_frame_base  : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
-    <2636d>   DW_AT_external    : 1
- <2><2636e>: Abbrev Number: 5 (DW_TAG_formal_parameter)
-    <2636f>   DW_AT_name        : param1
-    <26376>   DW_AT_location    : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
-    <26378>   DW_AT_type        : <0x27f1c>
- <2><2637c>: Abbrev Number: 5 (DW_TAG_formal_parameter)
-    <2637d>   DW_AT_name        : param2
-    <26384>   DW_AT_location    : 4 byte block: 9c 11 8 22 	(DW_OP_call_frame_cfa; DW_OP_consts: 8; DW_OP_plus)
-    <26389>   DW_AT_type        : <0x27f1c>
- <2><2638d>: Abbrev Number: 0
+Dajun Jin (1):
+      drivers/of/of_mdio.c:fix of_mdiobus_register()
 
-Hope this makes things easier to understand.
+Dan Carpenter (2):
+      NFC: fdp: Fix a signedness bug in fdp_nci_send_patch()
+      Input: raydium_i2c_ts - fix error codes in raydium_i2c_boot_trigger()
 
-Daniel.
+David Howells (1):
+      afs: Fix some tracing details
 
+Dirk Mueller (1):
+      scripts/dtc: Remove redundant YYLOC global declaration
+
+Dominik Czarnota (1):
+      sxgbe: Fix off by one in samsung driver strncpy size arg
+
+Edward Cree (1):
+      genirq: Fix reference leaks on irq affinity notifiers
+
+Edwin Peer (1):
+      bnxt_en: fix memory leaks in bnxt_dcbnl_ieee_getets()
+
+Emil Renner Berthing (1):
+      net: stmmac: dwmac-rk: fix error path in rk_gmac_probe
+
+Eric Biggers (4):
+      libfs: fix infoleak in simple_attr_read()
+      vt: vt_ioctl: remove unnecessary console allocation checks
+      vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
+      vt: vt_ioctl: fix use-after-free in vt_in_use()
+
+Eric Dumazet (1):
+      tcp: repair: fix TCP_QUEUE_SEQ implementation
+
+Eugene Syromiatnikov (1):
+      Input: avoid BIT() macro usage in the serio.h UAPI header
+
+Florian Fainelli (1):
+      net: dsa: Fix duplicate frames flooded by learning
+
+Florian Westphal (1):
+      geneve: move debug check after netdev unregister
+
+Georg M=FCller (1):
+      platform/x86: pmc_atom: Add Lex 2I385SW to critclk_systems DMI table
+
+Greg Kroah-Hartman (4):
+      Revert "r8169: check that Realtek PHY driver module is loaded"
+      bpf: Explicitly memset the bpf_attr structure
+      bpf: Explicitly memset some bpf info structures declared on the stack
+      Linux 4.19.114
+
+Haishuang Yan (1):
+      netfilter: flowtable: reload ip{v6}h in nf_flow_tuple_ip{v6}
+
+Hans de Goede (4):
+      gpiolib: acpi: Correct comment for HP x2 10 honor_wakeup quirk
+      gpiolib: acpi: Rework honor_wakeup option into an ignore_wake option
+      gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 BYT + AXP28=
+8 model
+      gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 CHT + AXP28=
+8 model
+
+Heiner Kallweit (1):
+      r8169: re-enable MSI on RTL8168c
+
+Ido Schimmel (1):
+      mlxsw: spectrum_mr: Fix list iteration in error path
+
+Ilie Halip (1):
+      arm64: alternative: fix build with clang integrated assembler
+
+Ilya Dryomov (1):
+      ceph: check POOL_FLAG_FULL/NEARFULL in addition to OSDMAP_FULL/NEARFU=
+LL
+
+Jiri Kosina (1):
+      ftrace/x86: Anotate text_mutex split between ftrace_arch_code_modify_=
+post_process() and ftrace_arch_code_modify_prepare()
+
+Jiri Slaby (3):
+      vt: selection, introduce vc_is_sel
+      vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
+      vt: switch vt_dont_switch to bool
+
+Jisheng Zhang (1):
+      net: mvneta: Fix the case where the last poll did not process all rx
+
+Johan Hovold (6):
+      media: flexcop-usb: fix endpoint sanity check
+      media: usbtv: fix control-message timeouts
+      media: ov519: add missing endpoint sanity checks
+      media: dib0700: fix rc endpoint lookup
+      media: stv06xx: add missing descriptor sanity checks
+      media: xirlink_cit: add missing descriptor sanity checks
+
+Johannes Berg (4):
+      nl80211: fix NL80211_ATTR_CHANNEL_WIDTH attribute type
+      mac80211: mark station unauthorized before key removal
+      mac80211: set IEEE80211_TX_CTRL_PORT_CTRL_PROTO for nl80211 TX
+      mac80211: fix authentication with iwlwifi/mvm
+
+Jouni Malinen (1):
+      mac80211: Check port authorization in the ieee80211_tx_dequeue() case
+
+Julian Wiedmann (1):
+      s390/qeth: handle error when backing RX buffer
+
+Kai-Heng Feng (1):
+      ahci: Add Intel Comet Lake H RAID PCI ID
+
+Larry Finger (1):
+      staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
+
+Lyude Paul (1):
+      Revert "drm/dp_mst: Skip validating ports during destruction, just re=
+f"
+
+Madalin Bucur (5):
+      dt-bindings: net: FMan erratum A050385
+      arm64: dts: ls1043a: FMan erratum A050385
+      fsl/fman: detect FMan erratum A050385
+      arm64: dts: ls1043a-rdb: correct RGMII delay mode to rgmii-id
+      arm64: dts: ls1046ardb: set RGMII interfaces to RGMII_ID mode
+
+Mans Rullgard (1):
+      usb: musb: fix crash with highmen PIO and usbmon
+
+Maor Gottlieb (1):
+      RDMA/mlx5: Block delay drop to unprivileged users
+
+Marco Felsch (1):
+      ARM: dts: imx6: phycore-som: fix arm and soc minimum voltage
+
+Marek Vasut (1):
+      net: ks8851-ml: Fix IO operations, again
+
+Martin K. Petersen (1):
+      scsi: sd: Fix optimal I/O size for devices that change reported values
+
+Masami Hiramatsu (2):
+      perf probe: Do not depend on dwfl_module_addrsym()
+      tools: Let O=3D makes handle a relative path with -C option
+
+Matthias Reichl (1):
+      USB: cdc-acm: restore capability check order
+
+Mike Gilbert (1):
+      cpupower: avoid multiple definition with gcc -fno-common
+
+Mike Marciniszyn (1):
+      RDMA/core: Ensure security pkey modify is not lost
+
+Nathan Chancellor (1):
+      dpaa_eth: Remove unnecessary boolean expression in dpaa_get_headroom
+
+Nick Hudson (1):
+      ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
+
+Nicolas Cavallari (1):
+      mac80211: Do not send mesh HWMP PREQ if HWMP is disabled
+
+Nicolas Dichtel (1):
+      vti[6]: fix packet tx through bpf_redirect() in XinY cases
+
+Oliver Hartkopp (1):
+      slcan: not call free_netdev before rtnl_unlock in slcan_open
+
+Pablo Neira Ayuso (1):
+      netfilter: nft_fwd_netdev: validate family and chain type
+
+Pawel Dembicki (4):
+      net: qmi_wwan: add support for ASKEY WWHC050
+      USB: serial: option: add support for ASKEY WWHC050
+      USB: serial: option: add BroadMobi BM806U
+      USB: serial: option: add Wistron Neweb D19Q1
+
+Petr Machata (2):
+      net: ip_gre: Separate ERSPAN newlink / changelink callbacks
+      net: ip_gre: Accept IFLA_INFO_DATA-less configuration
+
+Qiujun Huang (3):
+      USB: serial: io_edgeport: fix slab-out-of-bounds read in edge_interru=
+pt_callback
+      staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
+      staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
+
+Raed Salem (1):
+      xfrm: handle NETDEV_UNREGISTER for xfrm device
+
+Rajkumar Manoharan (1):
+      mac80211: add option for setting control flags
+
+Rayagonda Kokatanur (1):
+      net: phy: mdio-mux-bcm-iproc: check clk_prepare_enable() return value
+
+Ren=E9 van Dorst (1):
+      net: dsa: mt7530: Change the LINK bit to reflect the link status
+
+Roger Quadros (2):
+      ARM: dts: dra7: Add bus_dma_limit for L3 bus
+      ARM: dts: omap5: Add bus_dma_limit for L3 bus
+
+Scott Mayhew (1):
+      nfs: add minor version to nfs_server_key for fscache
+
+Sungbo Eo (1):
+      ARM: dts: oxnas: Fix clear-mask property
+
+Taehee Yoo (5):
+      hsr: fix general protection fault in hsr_addr_is_self()
+      vxlan: check return value of gro_cells_init()
+      hsr: use rcu_read_lock() in hsr_get_node_{list/status}()
+      hsr: add restart routine into hsr_get_node_list()
+      hsr: set .netnsok flag
+
+Torsten Hilbrich (1):
+      vti6: Fix memory leak of skb if input policy check fails
+
+Tycho Andersen (1):
+      cgroup1: don't call release_agent when it is ""
+
+Ulf Hansson (5):
+      mmc: core: Allow host controllers to require R1B for CMD6
+      mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
+      mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command
+      mmc: sdhci-omap: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
+      mmc: sdhci-tegra: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
+
+Vasily Averin (1):
+      cgroup-v1: cgroup_pidlist_next should update position index
+
+Vasundhara Volam (1):
+      bnxt_en: Reset rings if ring reservation fails during open()
+
+Wen Xiong (1):
+      scsi: ipr: Fix softlockup when rescanning devices in petitboot
+
+Willem de Bruijn (2):
+      macsec: restrict to ethernet devices
+      net/packet: tpacket_rcv: avoid a producer race condition
+
+Xin Long (2):
+      xfrm: fix uctx len check in verify_sec_ctx_len
+      xfrm: add the missing verify_sec_ctx_len check in xfrm_add_acquire
+
+Yoshiki Komachi (1):
+      bpf/btf: Fix BTF verification of enum members in struct/union
+
+YueHaibing (1):
+      xfrm: policy: Fix doulbe free in xfrm_policy_timer
+
+Yussuf Khalil (1):
+      Input: synaptics - enable RMI on HP Envy 13-ad105ng
+
+Zh-yuan Ye (1):
+      net: cbs: Fix software cbs to consider packet sending time
+
+disconnect3d (1):
+      perf map: Fix off by one in strncpy() size argument
+
+
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl6GSl0ACgkQONu9yGCS
+aT6gBRAAxdhXnzg55YFfLSJkIYUvkVIOkeoC8sGfUCvp8QFk5ddS5u/dPmgl/Lcv
+UNcuk+4fE152if2cIonLf+IghG3oA+6Xk10rQ6MEK7OpOk321XBeZsmfsjC8hh4n
+Y4aT8zXygx6J/4bFsNbIL6yi1Na3KBK9IId8pDZDtMZgEguBzmRayPbrgBRlr80J
+zH3T8G92Rucq0XJyEJGCpWtQprKsnXgVKHOfBlT/YxqrXzf+sQg0jA2ClJXBf+4V
+TV0fNkkZ0clvU+d233iYkW/IJ0wyjriJcAhvScWGDF4IUUcj2x60+Ca0KI7bZmFe
+R3cm0VgE2xzlHN0OaIXItuegSeizgtpG6rQIDqMDiw+E4jpDdlgMhc3gQedk4e4y
+CWtPNAvUHylPaUXq+TMqTjh/e+ZYk/CMlLHSVY4oV6KNlcOmnUSPrfvPdo7Ii5Y0
+yZWB1OvPLVvmlXim840DDCep88e3ieeqztv2LPVXEJHtXjo1K1fyEFJPJ5zZQW7q
+k3L5170afkUL1ITfD3nM9XAbw5nTtUG9Cb3hChZRMuNKDANWD+pln1VzWr9CS8lb
++5Cx4CFssxSbjFonmd9G+76VyfpNVojPY+pDqf/iSVQwjjhcbz5P+xSCKl8RPq6H
+wVFxEZLcO16tNJQoV1g5GXa+vj9HDWR1jTbERCfPPZW+bgfQVIA=
+=jj6f
+-----END PGP SIGNATURE-----
+
+--45Z9DzgjV8m4Oswq--
