@@ -2,184 +2,122 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E1CC10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455D2C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BED82054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199872074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="BIAYcmrK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387736AbgDBKDe (ORCPT
+        id S2387841AbgDBKGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:03:34 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9961 "EHLO mga17.intel.com"
+        Thu, 2 Apr 2020 06:06:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:52063 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbgDBKDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:03:34 -0400
-IronPort-SDR: VNtJCpi3C0hajX7Pb9sW+Yi/Fwa/+z5ZsXVrwY7Ly9Jp6OtRXHdLgEFEaorQi6RQS8Twffytjq
- ZFXCGgJ3ij+w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 03:03:33 -0700
-IronPort-SDR: SWftxASmWsrHWKHUlQKXRotx3DqavKlCC8J4s1r3GXLtJ+UrMVQwJ7unwzzc/SOuiFmjfX8HKJ
- qot8dldoGrAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
-   d="scan'208";a="252944095"
-Received: from lyan3-mobl.ccr.corp.intel.com ([10.255.28.246])
-  by orsmga006.jf.intel.com with ESMTP; 02 Apr 2020 03:03:31 -0700
-Message-ID: <0926f44775e91145a83c9eb88a468c64261af20d.camel@intel.com>
-Subject: Re: OOB access on ACPI processor thermal device via sysfs write
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 02 Apr 2020 18:03:30 +0800
-In-Reply-To: <s5h1rp6w97p.wl-tiwai@suse.de>
-References: <s5h5zeiwd01.wl-tiwai@suse.de>
-         <744357E9AAD1214791ACBA4B0B90926377CEB399@SHSMSX108.ccr.corp.intel.com>
-         <s5h1rp6w97p.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1728135AbgDBKGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 06:06:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48tJc24ckyz9sR4;
+        Thu,  2 Apr 2020 21:05:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1585821957;
+        bh=VWV5VVYaAJNLZ0qhNZ2vXZ3ZVuH1QjojCUmH4J7cvRM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=BIAYcmrKq1LF5D5nT2gJkPD5FXCcgc658kciTx3sX+axQbjk3V2h07eqg6P3sQFtw
+         WZH2du4hEAjbq6MucoA118QF1GDycOJONVlClQKdeEOwTgpwMgzHQgHoLHHY/99h8q
+         NZF0h2aW+zXmsTl1aZpEs8j7uHhm8YSAZfyiNiNehPYenQ7tc3BaEQkDi/60Fu+agl
+         yFbkROHRPHEafu2+ycumDNj9Sn85R4SRDp0JrhXlvEzFZRjbsIjGWgCOkWGnS8Dgxv
+         KCEXJZ95U3du4XOtVJMWjWbxkddWIX/CG9xoI/0/E4gWVMxEhV/VNg7slBH7PHXuHY
+         fzkz6rZ7j6Jgw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Oliver O'Halloran <oohall@gmail.com>
+Cc:     Alastair D'Silva <alastair@d-silva.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [PATCH v4 00/25] Add support for OpenCAPI Persistent Memory devices
+In-Reply-To: <CAOSf1CHdpFyT_6zetKM6eHDK3AT8-UNTzjdd2y+QqYT2AO9VDw@mail.gmail.com>
+References: <20200327071202.2159885-1-alastair@d-silva.org> <CAPcyv4iJYZBVhV1NW7EB6-EwETiUAy6r1iiE+F+HvFXfGZt9Aw@mail.gmail.com> <2d6901d60877$16aa7a90$43ff6fb0$@d-silva.org> <87imiituxm.fsf@mpe.ellerman.id.au> <CAOSf1CHdpFyT_6zetKM6eHDK3AT8-UNTzjdd2y+QqYT2AO9VDw@mail.gmail.com>
+Date:   Thu, 02 Apr 2020 21:06:01 +1100
+Message-ID: <87bloatd6e.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-02 at 11:03 +0200, Takashi Iwai wrote:
-> On Thu, 02 Apr 2020 09:47:50 +0200,
-> Zhang, Rui wrote:
-> > 
-> > CC Viresh.
-> > 
-> > Yes, I've received it.
-> > 
-> > To me, there is not a hard rule that the cooling device max_state
-> > must be static.
-> > We should be able to detect the max_state change and reset the
-> > stats table when necessary.
-> > 
-> > I just finished a prototype patch to do so, and will paste it
-> > later.
-> 
-> Great, that sounds like a feasible option, indeed.
-> 
-> 
-Please try the patch below and see if the problem goes away or not.
+"Oliver O'Halloran" <oohall@gmail.com> writes:
+> On Thu, Apr 2, 2020 at 2:42 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>> "Alastair D'Silva" <alastair@d-silva.org> writes:
+>> >> -----Original Message-----
+>> >> From: Dan Williams <dan.j.williams@intel.com>
+>> >>
+>> >> On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva <alastair@d-silva.org>
+>> >> wrote:
+>> >> >
+>> >> > *snip*
+>> >> Are OPAL calls similar to ACPI DSMs? I.e. methods for the OS to invoke
+>> >> platform firmware services? What's Skiboot?
+>> >
+>> > Yes, OPAL is the interface to firmware for POWER. Skiboot is the open-source (and only) implementation of OPAL.
+>>
+>>   https://github.com/open-power/skiboot
+>>
+>> In particular the tokens for calls are defined here:
+>>
+>>   https://github.com/open-power/skiboot/blob/master/include/opal-api.h#L220
+>>
+>> And you can grep for the token to find the implementation:
+>>
+>>   https://github.com/open-power/skiboot/blob/master/hw/npu2-opencapi.c#L2328
+>
+> I'm not sure I'd encourage anyone to read npu2-opencapi.c. I find it
+> hard enough to follow even with access to the workbooks.
 
-From 7b429674a0e1a6226734c8919b876bb57d946b1d Mon Sep 17 00:00:00 2001
-From: Zhang Rui <rui.zhang@intel.com>
-Date: Thu, 2 Apr 2020 11:18:44 +0800
-Subject: [RFC PATCH] thermal: update thermal stats table when max cooling
- state changed
+Compared to certain firmwares that run on certain other platforms it's
+actually pretty readable code ;)
 
-The maximum cooling state of a cooling device may be changed at
-runtime. Thus the statistics table must be updated to handle the real
-maximum cooling states supported.
+> There's an OPAL call API reference here:
+> http://open-power.github.io/skiboot/doc/opal-api/index.html
 
-This fixes an OOB issue when updating the statistics of the processor
-cooling device, because it only supports 1 cooling state before cpufreq
-driver loaded.
+Even better.
 
-Fixes: 8ea229511e06 ("thermal: Add cooling device's statistics in sysfs")
-Reported-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- drivers/thermal/thermal_sysfs.c | 38 +++++++++++++++++++++++++++------
- 1 file changed, 31 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-index aa99edb4dff7..c69173eb4b24 100644
---- a/drivers/thermal/thermal_sysfs.c
-+++ b/drivers/thermal/thermal_sysfs.c
-@@ -755,6 +755,9 @@ struct cooling_dev_stats {
- 	unsigned int *trans_table;
- };
- 
-+static int cooling_device_stats_table_update(struct thermal_cooling_device *cdev);
-+static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev);
-+
- static void update_time_in_state(struct cooling_dev_stats *stats)
- {
- 	ktime_t now = ktime_get(), delta;
-@@ -768,8 +771,12 @@ static void update_time_in_state(struct cooling_dev_stats *stats)
- void thermal_cooling_device_stats_update(struct thermal_cooling_device *cdev,
- 					 unsigned long new_state)
- {
--	struct cooling_dev_stats *stats = cdev->stats;
-+	struct cooling_dev_stats *stats;
- 
-+	if (cooling_device_stats_table_update(cdev))
-+		return;
-+
-+	stats = cdev->stats;
- 	spin_lock(&stats->lock);
- 
- 	if (stats->state == new_state)
-@@ -904,24 +911,32 @@ static const struct attribute_group cooling_device_stats_attr_group = {
- 	.name = "stats"
- };
- 
--static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
-+static int cooling_device_stats_table_update(struct thermal_cooling_device *cdev)
- {
- 	struct cooling_dev_stats *stats;
- 	unsigned long states;
--	int var;
-+	int var, ret;
- 
--	if (cdev->ops->get_max_state(cdev, &states))
--		return;
-+	ret = cdev->ops->get_max_state(cdev, &states);
-+	if (ret)
-+		return ret;
- 
- 	states++; /* Total number of states is highest state + 1 */
- 
-+	stats = cdev->stats;
-+	if (stats) {
-+		if (stats->max_states == states)
-+			return 0;
-+		else
-+			cooling_device_stats_destroy(cdev);
-+	}
-+
- 	var = sizeof(*stats);
- 	var += sizeof(*stats->time_in_state) * states;
- 	var += sizeof(*stats->trans_table) * states * states;
--
- 	stats = kzalloc(var, GFP_KERNEL);
- 	if (!stats)
--		return;
-+		return -ENOMEM;
- 
- 	stats->time_in_state = (ktime_t *)(stats + 1);
- 	stats->trans_table = (unsigned int *)(stats->time_in_state + states);
-@@ -930,6 +945,15 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
- 	stats->max_states = states;
- 
- 	spin_lock_init(&stats->lock);
-+	return 0;
-+}
-+
-+static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
-+{
-+	int var;
-+
-+	if (cooling_device_stats_table_update(cdev))
-+		return;
- 
- 	/* Fill the empty slot left in cooling_device_attr_groups */
- 	var = ARRAY_SIZE(cooling_device_attr_groups) - 2;
--- 
-2.17.1
-
-
+cheers
