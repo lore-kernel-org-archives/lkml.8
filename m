@@ -8,57 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4869DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5181C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1BB20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A62520675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrnBX7I6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0Y8bY0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733264AbgDBBXt (ORCPT
+        id S1732945AbgDBBZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 21:23:49 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:56115 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732462AbgDBBXs (ORCPT
+        Wed, 1 Apr 2020 21:25:21 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39392 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732462AbgDBBZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 21:23:48 -0400
-Received: by mail-pj1-f67.google.com with SMTP id fh8so870721pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 18:23:47 -0700 (PDT)
+        Wed, 1 Apr 2020 21:25:21 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k18so716759pll.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 18:25:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=ECaKk1XEhaLeQWM1QY7b2cbJfc2H+NtdzI3cEs6W3bc=;
-        b=lrnBX7I6IKNCgf1u3GPjWv9QoK7is/FfxG+LIXGzXoYz1Q+HIXh/mCNNMKcQjJRmQS
-         2dBtTJMH24EcnO3L40rmSFnqUTq5oFVKQBhXCqzS8e3j0lJ3hznCoyUj3CjHiPXPnN/Q
-         VLMKCIvdn3WhMDO54WQqDsUf2+bybLMzkzn9nRL30XD/sEozqQi77BBlKBuJ6FJXiniW
-         7TT7bLBuDnoDhpTHg77HLwEqzqKv/2C4eKDrFfhbXqDCxcLGgq+FaU01o/cBd6nTlR1I
-         1G9feHEB3Z1ObO1GSPb0sMl4d6re664SUkngnuJz9ao8jlwf7D0gJNpEEYp6mwKEqPJl
-         x1+w==
+        b=e0Y8bY0Qfsg7n02ddZ8uiswipY9fuSgKm6X1sbnDAv/lfkxMia058WZBkqhK1Shm17
+         rbhURDSsKfGqJjKOlUlUV1hPqO/r5cxIWXuo9ebuaF40Cwx1NIv7hgfZMYswHlnED/uy
+         laXWmR2WR+D2bLl2xpsyRKvB0q1LRWQVbwujyCMO2IHN7v2HyE4eonQeMS3SafncKKi9
+         a5LEam9Ct4DCAiN63J2BaN5vV43vEQlKajNeDrT0wioFYYpGMIJpTJQ8+Z2XAvX1LnzC
+         wY/Y10MjzbOx4iwbFW0KTzL8oVlYWuoOPNiEIHLJXBzBwB4He1uIlnNFMg7OraR5KX3D
+         xWdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=ECaKk1XEhaLeQWM1QY7b2cbJfc2H+NtdzI3cEs6W3bc=;
-        b=W/9wVvFOioZXfAL+hRYUoxqAHy/Bsx7H0SdgnlzkNSXUmGBHUYAabWGCeQZnJOEHJf
-         gy8QyjeNMANQCbu6xVi8X0KSvIWGEPP3jJTu8OSWyc88jAM18qOPptntrX5KOHrjHASp
-         4UQU3WmW/kjglxvw5xfibsmnGrSmBdQYu+RZ9ffZWrOcmgyP1pzpGva61uhGy/Xig4qA
-         SXQbOQxqyACWw0nSrrkOR0qDRimhbcj06fkIvTOh/bI0a8lgS2x2K6W0TfRL8gOmZ4n0
-         2KKDc9HgP5Eril5dmMGhh4Tjq+OCI0eTC0DoLlCfQAvRtGY7W5r00ebkdv+/frQx8pGh
-         Zdug==
-X-Gm-Message-State: AGi0PuY2epHR6rU7bAtzQA2jU25Qnof68EicvsneRpPHKaMS9X8UgKrb
-        ulgsxxULUlTpxPMjQhqYpyw=
-X-Google-Smtp-Source: APiQypKphdtygtFszPZHfDmC+v0cOhFzs1P9x5/bGH+iexQPlMgBXonWT55xdU1Z9qFQawYE5bgI5Q==
-X-Received: by 2002:a17:90a:a602:: with SMTP id c2mr931092pjq.135.1585790627416;
-        Wed, 01 Apr 2020 18:23:47 -0700 (PDT)
+        b=e9BGjkM5oqPrJILd+HSRSLkH+Qg3w+ztXaR/BPQlKb6mXXRx3k2mmOQljrEljazOyC
+         wcfvsBfBUvoABymVflsdUmS02WmY8U8auUlCE3540oe3AUo/Z1KkF9zWKt7AoXzMmXlt
+         4M1+OBIRh93X0EOPCMEO9rYdi/bi0/u5uzeoLB/Un5GSSURnn0VhSLF+SxM+iE8Y4gdl
+         yS6Jj1ea2JT4PLQXtNwa9rJpDuJoOScIQYY0WFzodg/+4Kq5k4DhUHtxdRCKh/09ai7p
+         myyLyjoRYIoJK0RNAyBuALYnyQ9H9D1AkIpb+SYyZXxMJTcLETBiLRfSyabxi3Ee6P2D
+         twWQ==
+X-Gm-Message-State: AGi0PuZ24Xtpw4yzwG6eK30kn0Iz+PYS3/fz9hF8AdV65vKWloC7zIJQ
+        Yp1PASAiQzeyo5+P4X8alzA=
+X-Google-Smtp-Source: APiQypLOFU9FlGJw8iOOANTLu4h97F20JAA88jZyZ5O8imCDYlYaifG5zMltxu9kuj6+J1fWyc7dAQ==
+X-Received: by 2002:a17:90a:36c7:: with SMTP id t65mr946992pjb.182.1585790720459;
+        Wed, 01 Apr 2020 18:25:20 -0700 (PDT)
 Received: from OptiPlexFedora.fios-router.home ([47.144.161.84])
-        by smtp.gmail.com with ESMTPSA id x71sm2424587pfd.129.2020.04.01.18.23.45
+        by smtp.gmail.com with ESMTPSA id q71sm2516633pfc.92.2020.04.01.18.25.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 18:23:46 -0700 (PDT)
+        Wed, 01 Apr 2020 18:25:19 -0700 (PDT)
 From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
-To:     Laura Abbott <labbott@redhat.com>,
+To:     outreachy-kernel@googlegroups.com,
+        Laura Abbott <labbott@redhat.com>,
         Sumit Semwal <sumit.semwal@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
@@ -70,8 +71,8 @@ To:     Laura Abbott <labbott@redhat.com>,
         linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
 Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
 Subject: [PATCH] staging: android: ion: Fix parenthesis alignment
-Date:   Wed,  1 Apr 2020 18:23:15 -0700
-Message-Id: <20200402012315.429064-1-jbwyatt4@gmail.com>
+Date:   Wed,  1 Apr 2020 18:25:15 -0700
+Message-Id: <20200402012515.429329-1-jbwyatt4@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
