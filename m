@@ -2,219 +2,96 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 310CCC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67C9C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DDD20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD7A20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388451AbgDBQb5 (ORCPT
+        id S2388557AbgDBQd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:31:57 -0400
-Received: from mga05.intel.com ([192.55.52.43]:14837 "EHLO mga05.intel.com"
+        Thu, 2 Apr 2020 12:33:26 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:43112 "EHLO raptor.unsafe.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732569AbgDBQb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:31:56 -0400
-IronPort-SDR: DGdlAtuC4RY4me/TepBYDXgQI4Bg7rZuUN8dBAARdmA7A173D3uP5sG87Q4n4/+Q/8M7MH/q1k
- qsIXo7e+5bzQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 09:31:55 -0700
-IronPort-SDR: yMhx5BpJGPCrcKNsgH7MZX+o+HbRoyvQiYwv4QH042Z8i6B9PkvvZ5RJs0m6KcG6NnRWc9BN7/
- NuALdQI3mlPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="450989371"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Apr 2020 09:31:53 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jK2kz-000Fz9-9p; Fri, 03 Apr 2020 00:31:53 +0800
-Date:   Fri, 03 Apr 2020 00:31:22 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- ee8bac724cc7767dcf9480afb656318994f22c3d
-Message-ID: <5e86135a.62xQyte+l5F0YmUl%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1732412AbgDBQd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 12:33:26 -0400
+Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id 19CEB2052E;
+        Thu,  2 Apr 2020 16:32:51 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 18:32:46 +0200
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v10 2/9] proc: allow to mount many instances of proc in
+ one pid namespace
+Message-ID: <20200402163246.7kfzujkku65belrw@comp-core-i7-2640m-0182e6>
+References: <20200327172331.418878-1-gladkov.alexey@gmail.com>
+ <20200327172331.418878-3-gladkov.alexey@gmail.com>
+ <87eet5lx97.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <87eet5lx97.fsf@x220.int.ebiederm.org>
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Thu, 02 Apr 2020 16:33:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: ee8bac724cc7767dcf9480afb656318994f22c3d  Merge branch 'irq/urgent'
+On Thu, Apr 02, 2020 at 10:31:48AM -0500, Eric W. Biederman wrote:
+> 
+> > diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+> > index 40a7982b7285..5920a4ecd71b 100644
+> > --- a/include/linux/proc_fs.h
+> > +++ b/include/linux/proc_fs.h
+> > @@ -27,6 +27,17 @@ struct proc_ops {
+> >  	unsigned long (*proc_get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+> >  };
+> >  
+> > +struct proc_fs_info {
+> > +	struct pid_namespace *pid_ns;
+> > +	struct dentry *proc_self;        /* For /proc/self */
+> > +	struct dentry *proc_thread_self; /* For /proc/thread-self */
+> > +};
+> 
+> Minor nit.
+> 
+> I have not seen a patch where you remove proc_self and proc_thread_self
+> from struct pid_namepace.
+> 
+> Ideally it would have been in this patch.  But as it won't break
+> anyone's bisection can you please have a follow up patch that removes
+> those fields?
 
-elapsed time: 485m
+Yep. I miss that. I will make v11 to address this and other nits.
 
-configs tested: 152
-configs skipped: 0
+-- 
+Rgrds, legion
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-sh                  sh7785lcr_32bit_defconfig
-arc                                 defconfig
-c6x                        evmc6678_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200402
-x86_64               randconfig-a002-20200402
-x86_64               randconfig-a003-20200402
-i386                 randconfig-a001-20200402
-i386                 randconfig-a002-20200402
-i386                 randconfig-a003-20200402
-alpha                randconfig-a001-20200402
-m68k                 randconfig-a001-20200402
-mips                 randconfig-a001-20200402
-nds32                randconfig-a001-20200402
-parisc               randconfig-a001-20200402
-riscv                randconfig-a001-20200402
-sparc64              randconfig-a001-20200402
-h8300                randconfig-a001-20200402
-nios2                randconfig-a001-20200402
-microblaze           randconfig-a001-20200402
-c6x                  randconfig-a001-20200402
-s390                 randconfig-a001-20200402
-xtensa               randconfig-a001-20200402
-csky                 randconfig-a001-20200402
-openrisc             randconfig-a001-20200402
-sh                   randconfig-a001-20200402
-i386                 randconfig-b003-20200402
-x86_64               randconfig-b002-20200402
-x86_64               randconfig-b003-20200402
-x86_64               randconfig-b001-20200402
-i386                 randconfig-b001-20200402
-i386                 randconfig-b002-20200402
-x86_64               randconfig-d001-20200402
-x86_64               randconfig-d002-20200402
-x86_64               randconfig-d003-20200402
-i386                 randconfig-d001-20200402
-i386                 randconfig-d002-20200402
-i386                 randconfig-d003-20200402
-x86_64               randconfig-e001-20200402
-x86_64               randconfig-e002-20200402
-x86_64               randconfig-e003-20200402
-i386                 randconfig-e001-20200402
-i386                 randconfig-e002-20200402
-i386                 randconfig-e003-20200402
-x86_64               randconfig-f001-20200402
-x86_64               randconfig-f002-20200402
-x86_64               randconfig-f003-20200402
-i386                 randconfig-f001-20200402
-i386                 randconfig-f002-20200402
-i386                 randconfig-f003-20200402
-x86_64               randconfig-g001-20200402
-x86_64               randconfig-g002-20200402
-x86_64               randconfig-g003-20200402
-i386                 randconfig-g001-20200402
-i386                 randconfig-g002-20200402
-i386                 randconfig-g003-20200402
-arc                  randconfig-a001-20200402
-arm                  randconfig-a001-20200402
-arm64                randconfig-a001-20200402
-ia64                 randconfig-a001-20200402
-powerpc              randconfig-a001-20200402
-sparc                randconfig-a001-20200402
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
