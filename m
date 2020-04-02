@@ -2,92 +2,169 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C6BC10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715BCC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514E520857
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0B32063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387509AbgDBIaj (ORCPT
+        id S2387705AbgDBIfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:30:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39980 "EHLO mx2.suse.de"
+        Thu, 2 Apr 2020 04:35:03 -0400
+Received: from mga01.intel.com ([192.55.52.88]:57902 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727012AbgDBIaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:30:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 080ABACC6;
-        Thu,  2 Apr 2020 08:30:37 +0000 (UTC)
-Subject: Re: [PATCH] mm, dump_page(): do not crash with invalid mapping
- pointer
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Petr Tesarik <ptesarik@suse.cz>
-References: <20200331165454.12263-1-vbabka@suse.cz>
- <20200401140544.pkhgfmo5pks3dw6v@box>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <a5ebb5eb-ccda-eb74-422c-cddea792894f@suse.cz>
-Date:   Thu, 2 Apr 2020 10:30:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1729166AbgDBIfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:35:02 -0400
+IronPort-SDR: gN8u/DOcfz4UWHuTmfbDBBaLoAYRYMSkfRxbfQYwTjlHYOWZ60HJffAmp4tCdDcjZCqYOJPakI
+ nD6bgDfz8Vng==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:35:02 -0700
+IronPort-SDR: mMYzz6H5D5xoa4LoyAVyyzL6Hz0UJwAygbl2JSIJ7JKQ9evbNFNqZG1KRaSO52Y38Tih2SNbQ6
+ KXQLBlY8D9xw==
+X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
+   d="scan'208";a="423047048"
+Received: from assenmac-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.35.117])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:34:53 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     mchehab@kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        hverkuil@xs4all.nl,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        laurent.pinchart@ideasonboard.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: Re: [PATCH 1/1] lib/vsprintf: Add support for printing V4L2 and DRM fourccs
+In-Reply-To: <20200401140522.966-1-sakari.ailus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200401140522.966-1-sakari.ailus@linux.intel.com>
+Date:   Thu, 02 Apr 2020 11:34:48 +0300
+Message-ID: <87eet6mgk7.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200401140544.pkhgfmo5pks3dw6v@box>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 4:05 PM, Kirill A. Shutemov wrote:
-> On Tue, Mar 31, 2020 at 06:54:54PM +0200, Vlastimil Babka wrote:
->> We have seen a following problem on a RPi4 with 1G RAM:
->> 
->> Besides the underlying issue with page->mapping containing a bogus value for
->> some reason, we can see that __dump_page() crashed by trying to read the
->> pointer at mapping->host, turning a recoverable warning into full Oops.
->> 
->> It can be expected that when page is reported as bad state for some reason, the
->> pointers there should not be trusted blindly. So this patch treats all data in
->> __dump_page() that depends on page->mapping as lava, using
->> probe_kernel_read_strict(). Ideally this would include the dentry->d_parent
->> recursively, but that would mean changing printk handler for %pd. Chances of
->> reaching the dentry printing part with an initially bogus mapping pointer
->> should be rather low, though.
->> 
->> Also prefix printing mapping->a_ops with a description of what is being
->> printed.  In case the value is bogus, %ps will print raw value instead of
->> the symbol name and then it's not obvious at all that it's printing a_ops.
->> 
->> Reported-by: Petr Tesarik <ptesarik@suse.cz>
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
->> ---
->>  mm/debug.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++------
->>  1 file changed, 50 insertions(+), 6 deletions(-)
-> 
-> I'm not sure it worth the effort. It looks way too complex for what it
-> does.
+On Wed, 01 Apr 2020, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
+> pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
+> the same implementation can be used.
 
-Well the human effort is done, and CPU cycles are cheap :P Complex is better
-than to crash, IMHO.
+I'm not going to take a strong stand in one way or the other regarding
+the patch at hand, but I do think at some point we have to draw a line
+what should be included in printk formats. Arguably they should be
+reserved to things that are generally useful across large parts of the
+kernel, right?
 
-> I also expect it to slowdown dump_page(), which is hotpath for some debug
-> scenarios :P
+I think the more specialized you get, the more you should think about
+just using the plain old %s, and your own helpers. Because frankly, the
+kernel printk specifiers also start getting more than a little obscure.
 
-It's still a debug code, better safe than fast :P
+Or could we conceive of a way to make this locally extensible yet safe,
+letting callers use something like %{foo}, as well as providing a
+locally relevant function to do the conversion?
 
-> Maybe just move printing this info to the end, so we would see the rest
-> even if ->mapping is bogus?
 
-Well the thing is designed to be recoverable. Just today "mm: improve
-dump_page() for compound pages" was merged that AFAICS prevents similar crashes
-when the compound_head() is bogus.
+BR,
+Jani.
+
+
+>
+> Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  Documentation/core-api/printk-formats.rst | 11 +++++++++
+>  lib/vsprintf.c                            | 29 +++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+>
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index 8ebe46b1af39..b6249f513c09 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -545,6 +545,17 @@ For printing netdev_features_t.
+>  
+>  Passed by reference.
+>  
+> +V4L2 and DRM fourcc code (pixel format)
+> +---------------------------------------
+> +
+> +::
+> +
+> +	%ppf
+> +
+> +Print a 4cc code used by V4L2 or DRM.
+> +
+> +Passed by reference.
+> +
+>  Thanks
+>  ======
+>  
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 7c488a1ce318..b39f0ac317c5 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1721,6 +1721,32 @@ char *netdev_bits(char *buf, char *end, const void *addr,
+>  	return special_hex_number(buf, end, num, size);
+>  }
+>  
+> +static noinline_for_stack
+> +char *pixel_format_string(char *buf, char *end, const u32 *fourcc,
+> +			  struct printf_spec spec, const char *fmt)
+> +{
+> +	char ch[2] = { 0 };
+> +	unsigned int i;
+> +
+> +	if (check_pointer(&buf, end, fourcc, spec))
+> +		return buf;
+> +
+> +	switch (fmt[1]) {
+> +	case 'f':
+> +		for (i = 0; i < sizeof(*fourcc); i++) {
+> +			ch[0] = *fourcc >> (i << 3);
+> +			buf = string(buf, end, ch, spec);
+> +		}
+> +
+> +		if (*fourcc & BIT(31))
+> +			buf = string(buf, end, "-BE", spec);
+> +
+> +		return buf;
+> +	default:
+> +		return error_string(buf, end, "(%pp?)", spec);
+> +	}
+> +}
+> +
+>  static noinline_for_stack
+>  char *address_val(char *buf, char *end, const void *addr,
+>  		  struct printf_spec spec, const char *fmt)
+> @@ -2131,6 +2157,7 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+>   *       correctness of the format string and va_list arguments.
+>   * - 'K' For a kernel pointer that should be hidden from unprivileged users
+>   * - 'NF' For a netdev_features_t
+> + * - 'pf' V4L2 or DRM pixel format.
+>   * - 'h[CDN]' For a variable-length buffer, it prints it as a hex string with
+>   *            a certain separator (' ' by default):
+>   *              C colon
+> @@ -2223,6 +2250,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  		return restricted_pointer(buf, end, ptr, spec);
+>  	case 'N':
+>  		return netdev_bits(buf, end, ptr, spec, fmt);
+> +	case 'p':
+> +		return pixel_format_string(buf, end, ptr, spec, fmt);
+>  	case 'a':
+>  		return address_val(buf, end, ptr, spec, fmt);
+>  	case 'd':
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
