@@ -2,76 +2,43 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548E5C2BA17
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00D7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AEEA2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RRn91FPf"
+	by mail.kernel.org (Postfix) with ESMTP id 9DFC72072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389180AbgDBO7l (ORCPT
+        id S2389190AbgDBO7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:59:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35170 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388782AbgDBO7k (ORCPT
+        Thu, 2 Apr 2020 10:59:49 -0400
+Received: from [103.51.140.103] ([103.51.140.103]:37766 "EHLO
+        E6440.gar.corp.intel.com" rhost-flags-FAIL-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388782AbgDBO7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:59:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585839579;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Yqap4whYtfmJejxzuBxb/FdAQnMsGBhBjZtdGx1iIUk=;
-        b=RRn91FPfKVirv7wPkWNQxQXmgbFuAnYqnP5sHAFIDVRhmvh1usHNBA+cfjF0d40x4Tfa+X
-        tc47JNu9Bh53pZxULSoNs58hk/jiuQo3H51s9EC0okJiwBmWrS8reNGiPQrLaRyV4hDXp/
-        2zvTGsQ0hPeq695Quk3xykctwyTP68M=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-RAU6iGq9NS-vzIWr7BGaNw-1; Thu, 02 Apr 2020 10:59:38 -0400
-X-MC-Unique: RAU6iGq9NS-vzIWr7BGaNw-1
-Received: by mail-wr1-f70.google.com with SMTP id v17so1580072wro.21
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:59:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yqap4whYtfmJejxzuBxb/FdAQnMsGBhBjZtdGx1iIUk=;
-        b=GyF9058hMj/owJBzkEBQldfmbChGfLdhrKqNgRp2NGt1ZTJvDPyKAOMT26s1dnPBzm
-         cc7Mte/H98KLIfHLkGNwyAdjLtw7HMR/4xuosHNS/FwEsfxGRKsHwib8Lm/t9b4H5cHl
-         ++O1gx4Rzy+A4tFVpEvPGdtB/bFtQonjfienKOdnojhOHyLxGiluF7MtN8qMUJZYkSAI
-         96pstt6QIkO+2Xur5bMNr9Qz4uyKLDATVuMbkESCEqbt/3lz58BAAAHwKDw2UFsyhBac
-         QMcBmIO7OBgGoiFu3Gyt9+B72H+0hM2bYiJL0esS+BUqZxa7J/dGnk+QSjw8aC8SPBEy
-         etoA==
-X-Gm-Message-State: AGi0PuZBPf/ML+PHmubhbZUqWrtQjaTZZighE19CpIhCCrbyGPVy3feg
-        LltueTG+KCdxDHWsod1NzwylCjiLn6+X2r4TPLauDBWGlNmjpo0b+64HZ8wViLplFvu7CuCkW/P
-        0N2dSvbPBehbC/IVatDxQ0ISA
-X-Received: by 2002:adf:e744:: with SMTP id c4mr3767379wrn.133.1585839573538;
-        Thu, 02 Apr 2020 07:59:33 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK3Oo6MLesIzVPde3UkEXepI21m0scERK4nlg2Qpodmma+whmcrF38HqppY2MVQPBGZT11SRw==
-X-Received: by 2002:adf:e744:: with SMTP id c4mr3767358wrn.133.1585839573260;
-        Thu, 02 Apr 2020 07:59:33 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id r17sm588857wrg.71.2020.04.02.07.59.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 07:59:32 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterx@redhat.com, Ming Lei <ming.lei@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 2 Apr 2020 10:59:49 -0400
+X-Greylist: delayed 499 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Apr 2020 10:59:48 EDT
+Received: from E6440.gar.corp.intel.com (localhost [127.0.0.1])
+        by E6440.gar.corp.intel.com (Postfix) with ESMTP id 31FF9C05C7;
+        Thu,  2 Apr 2020 22:48:07 +0800 (CST)
+From:   Harry Pan <harry.pan@intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2] sched/isolation: Allow "isolcpus=" to skip unknown sub-parameters
-Date:   Thu,  2 Apr 2020 10:59:29 -0400
-Message-Id: <20200402145929.102587-1-peterx@redhat.com>
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+Subject: [PATCH] perf/x86/cstate: Add Jasper Lake CPU support
+Date:   Thu,  2 Apr 2020 22:48:05 +0800
+Message-Id: <20200402224802.1.Ic02e891daac41303aed1f2fc6c64f6110edd27bd@changeid>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,79 +47,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "isolcpus=" parameter allows sub-parameters to exist before the
-cpulist is specified, and if it sees unknown sub-parameters the whole
-parameter will be ignored.  This design is incompatible with itself
-when we add more sub-parameters to "isolcpus=", because the old
-kernels will not recognize the new "isolcpus=" sub-parameters, then it
-will invalidate the whole parameter so the CPU isolation will not
-really take effect if we start to use the new sub-parameters while
-later we reboot into an old kernel. Instead we will see this when
-booting the old kernel:
+Jasper Lake processor is Tremont microarchitecture, we can
+reuse the glm_cstates table of Goldmont and Goldmont Plus
+to enable the C-states residency profiling.
 
-    isolcpus: Error, unknown flag
+Signed-off-by: Harry Pan <harry.pan@intel.com>
 
-The better and compatible way is to allow "isolcpus=" to skip unknown
-sub-parameters, so that even if we add new sub-parameters to it the
-old kernel will still be able to behave as usual even if with the new
-sub-parameter is specified.
-
-Ideally this patch should be there when we introduce the first
-sub-parameter for "isolcpus=", so it's already a bit late.  However
-late is better than nothing.
-
-CC: Ming Lei <ming.lei@redhat.com>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Juri Lelli <juri.lelli@redhat.com>
-CC: Luiz Capitulino <lcapitulino@redhat.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
-v2:
-- only allow isalpha() for sub-parameters [tglx]
----
- kernel/sched/isolation.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 008d6ac2342b..c2e8b4a778d6 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -149,6 +149,9 @@ __setup("nohz_full=", housekeeping_nohz_full_setup);
- static int __init housekeeping_isolcpus_setup(char *str)
- {
- 	unsigned int flags = 0;
-+	char *par;
-+	int len;
-+	bool illegal = false;
+ arch/x86/events/intel/cstate.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index e4aa20c0426f..442e1ed4acd4 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -643,6 +643,7 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&glm_cstates),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&glm_cstates),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	&glm_cstates),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&glm_cstates),
  
- 	while (isalpha(*str)) {
- 		if (!strncmp(str, "nohz,", 5)) {
-@@ -169,8 +172,21 @@ static int __init housekeeping_isolcpus_setup(char *str)
- 			continue;
- 		}
- 
--		pr_warn("isolcpus: Error, unknown flag\n");
--		return 0;
-+		/*
-+		 * Skip unknown sub-parameter and validate that it is not
-+		 * containing an invalid character.
-+		 */
-+		for (par = str, len = 0; *str && *str != ','; str++, len++)
-+			if (!isalpha(*str))
-+				illegal = true;
-+
-+		if (illegal) {
-+			pr_warn("isolcpus: Invalid flag %.*s\n", len, par);
-+			return 0;
-+		}
-+
-+		pr_info("isolcpus: Skipped unknown flag %.*s\n", len, par);
-+		str++;
- 	}
- 
- 	/* Default behaviour for isolcpus without flags */
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&icl_cstates),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&icl_cstates),
 -- 
 2.24.1
 
