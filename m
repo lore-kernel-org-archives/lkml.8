@@ -2,129 +2,154 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB17C10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E64C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2522064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585812855;
-	bh=kg+mYWRJcXUsin3JbbqPUkk4x02wuKXJQUva8u5M7J4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zf5+7AI9TYQQ/BEnf46ASzz7o4sWAoAVvte2umQNWxSvDFR6fK1nGsDoiPpSq6FfV
-	 JqAoYxqggqf/Ep0OgxjlZoVDVkj5EnzlFDg1FtDGVjqBDkxqGi165jy4E2jWLel5H/
-	 v4T2e0xa5ff8Tq3dhMrHcvNlKNWYG26V8Sgh59B0=
+	by mail.kernel.org (Postfix) with ESMTP id 5BF8420678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:34:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eTReEbIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732537AbgDBHeO (ORCPT
+        id S2387529AbgDBHeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:34:14 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45643 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbgDBHeO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:34:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t7so2871814wrw.12
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:34:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=epdqCPxnoC+zcq08DlC7aOQBj0oB2B3DQy9u2NkQk+U=;
-        b=eArYa0gl7risEI2DirdQt61jA1s36Honozddp2ffGYmk7fiR55AhJG9759IKPYHNXt
-         SrgmHuClNkoyVinlD8tTpHgV+cs0Ya1rAjeCk4YD/ht46yreRQmrb2JBpd7U8hy0s0pf
-         b1ruVArChJmsqoIXdtsnvTclGWRlgWFTC8ooH79g0GS2r03Qt0C9TX6YnZ1xhTfI/nTi
-         5NwyTjhafv59NM7hvcdlHtqqmnMJWi371FbPfzo1V6gWWIDwvErEFT3zk8ftymy9rblI
-         f5ej0qNtOPwBaGU1DgClsmZ+c2H9xPeBwpkcgcFe67iMd3mdTlLVGY2ygiD49LEf6iSD
-         Qj7Q==
-X-Gm-Message-State: AGi0Pub080LdebWexy2Rkg1xLxGlV7/c4PgS9AI8lG5CCP4e7B1NJ2tj
-        82TwjZGyh0Q2/iHppyEBIoE=
-X-Google-Smtp-Source: APiQypK3ZFbdRdx2Cy++KiBT48fpK60xOXPMXBHmur7Ae9nQHnt4p5Qkh5mD5rZLlsdtoU+53/ipNQ==
-X-Received: by 2002:adf:8164:: with SMTP id 91mr2001835wrm.422.1585812852386;
-        Thu, 02 Apr 2020 00:34:12 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id 9sm5760238wmm.6.2020.04.02.00.34.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 00:34:11 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 09:34:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        David Hildenbrand <david@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH] mm: initialize deferred pages with interrupts enabled
-Message-ID: <20200402073410.GF22681@dhcp22.suse.cz>
-References: <20200401193238.22544-1-pasha.tatashin@soleen.com>
- <20200401195721.GZ22681@dhcp22.suse.cz>
- <CA+CK2bBC-KBRuCBjJminVp+NmYSK3mhRZgmTmcBY5C5a-xVoMw@mail.gmail.com>
+        Thu, 2 Apr 2020 03:34:19 -0400
+Received: from mail-dm6nam10on2088.outbound.protection.outlook.com ([40.107.93.88]:2144
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725845AbgDBHeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:34:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gnUIy16Z9lDU+XLXwFychWr1ZIWhhwfF1mpMY7k/K64AaAULkQCi03fJgpRZ721aMbOBepxjRo3oSSMKgg8KbdTGVrIvb8I+yMjV7eI+nYsxLGc3GX+rRYVwsewiWcIi9gnF3eBEsk+2JWhbwUXQ5syPyHgrueyL0txKzdy8cJOM7vgXUJQnjMx5Bq6wMI7S1UZos2tzOacDK3PXfsRdCGznc44IhSn8xDd5Q+s/Hh2w/KIMjHZ+NOgRD5GDUWyUMWVeYErpAp4J9R9ATPQdXYsuFUXIKsFTyqL0HQW4K/5g8bjfbJGSYox3S+Gtx9TP3G5Qe5UXh7nBxC5CF/Kh4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yx1XF22oMCwtp8k1x4Jo1yufwfNv/qE9z5qlr4PXJ6c=;
+ b=lB7BL/UOQ5FkI07k0CdlobtX007LfoXBX/9rmKi/j0Hhw/219aSUEgg884DE9fkjaEosQqAZqieg+sZOc4wP1wDdgI3DNVB7VqHeZaJTqcsCqNg+sMJOg8f4jg2zGA8Gb0D4aJvi94H2ODq7YPPbD+U2RHpNIteQmZd4FIiGV0knOoR3nu0+B+lDP7nBO6Sm0Uj4UAdMUb4FnxlQ/M+ryee/XcrXWy1UgfglchHTOCzxb0F9/EgTgB5gUqS3/lZiHT4qN0wbuCVQrmms70PP9WVSVRtH5FW0vj2aV40kb43GaamXYmBrAtTxYvT8pOnU0gtAQn8dhp4eAGzehnJH2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yx1XF22oMCwtp8k1x4Jo1yufwfNv/qE9z5qlr4PXJ6c=;
+ b=eTReEbInVeUHEFn3G5+M2TH3O0zD9IpKwJmpYtebrVXJ9o9HqK8Vit0PJ8V5xQRt+mMt5sgrKjM9dxAa7ucl2YPJ+x43hJpotY8R1qjb8syBYH946nz2j1wwtuudtTKFqI7wAogP6kMBbpKvhwKcSwKkSV0UqFccV/KLhprBZPs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
+ by DM6PR12MB3913.namprd12.prod.outlook.com (2603:10b6:5:1cc::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Thu, 2 Apr
+ 2020 07:34:03 +0000
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::f164:85c4:1b51:14d2]) by DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::f164:85c4:1b51:14d2%4]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 07:34:03 +0000
+Subject: Re: AMD DC graphics display code enables -mhard-float, -msse, -msse2
+ without any visible FPU state protection
+To:     Jann Horn <jannh@google.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>
+References: <CAG48ez2Sx4ELkM94aD_h_J7K7KBOeuGmvZLKRkg3n_f2WoZ_cg@mail.gmail.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <4c5fe55d-9db9-2f61-59b2-1fb2e1b45ed0@amd.com>
+Date:   Thu, 2 Apr 2020 09:33:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <CAG48ez2Sx4ELkM94aD_h_J7K7KBOeuGmvZLKRkg3n_f2WoZ_cg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR01CA0099.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:10e::40) To DM6PR12MB4401.namprd12.prod.outlook.com
+ (2603:10b6:5:2a9::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+CK2bBC-KBRuCBjJminVp+NmYSK3mhRZgmTmcBY5C5a-xVoMw@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR01CA0099.eurprd01.prod.exchangelabs.com (2603:10a6:208:10e::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Thu, 2 Apr 2020 07:33:58 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d5416cc3-da8f-47b6-e246-08d7d6d837a4
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3913:|DM6PR12MB3913:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB39136CF72994DCDEAC4BA6EF83C60@DM6PR12MB3913.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0361212EA8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(376002)(346002)(396003)(366004)(39860400002)(2616005)(52116002)(31696002)(186003)(4326008)(110136005)(7416002)(16526019)(54906003)(478600001)(8676002)(6666004)(36756003)(6636002)(66476007)(81166006)(66946007)(66556008)(81156014)(316002)(8936002)(86362001)(2906002)(31686004)(5660300002)(6486002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hOMmNFLzX9IgZhSD29Bs9/bUaNVQrCWKAtMg5R+vzlgGn59E4Ujd0UfzdEM1TX/mfkZjJj/SRV3ppjkoZiVB+BISeb2Fq9+ReNxOR8TzcfzabUrTsY52Guppo9ctDLVwMaQ/xuOeO2SQtKokEaf2m3pjRNNrepHaLtuxw0g9CEqrZz86aghNv2KKN7GDZy0IK65kSAGTV3zcGlgHXhv49PXaKop+EldeCNWIrpmYrM/VVHWz8sgcUMKZs1He/tMbMcDyZJtufnu6+xyX9p//Q8MycfICCzkZI+QIKUCVu1GrOnldNgYimbWtDTMy8wajJ7GRn0oC4QyvrZaHLoVkYCDEBYMP20nEXj+5YFvV6eI/Ci1CSXsqbMtlDKsVy1+p4v7KfiPdxv57Gfl4ByxDe8AYPoLdjBW4ByEA5w9xmWgYeoUl1+tQd4wKB1jCjGaP
+X-MS-Exchange-AntiSpam-MessageData: 6/BzDC+dmV3F/VSZE936k0LsPFi/EB8W8AHyHle4oTh34UDpSe482Em/qTb1rM2rkIv5EOxOhmNrZomXsL28KMjrXNXGZW6fgkXfxe8kxYoYUiRR7d+VYPyvM8he210Hwj6MeE/vEQD42bDkTUtzp+FZvTYQod+NyWEfd4sAAOBIBupNzf7muf/N58j+j+Ae+mgDnhsvDGisP34V+PnaBQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5416cc3-da8f-47b6-e246-08d7d6d837a4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 07:34:03.4870
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LoJAvslZ1LA2L5uhpz8Z4FdAb4u6T5Azv+bk8dw+8EvHUb54qUMotoyU/UAY+So7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3913
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01-04-20 16:27:33, Pavel Tatashin wrote:
-> On Wed, Apr 1, 2020 at 3:57 PM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Wed 01-04-20 15:32:38, Pavel Tatashin wrote:
-> > > Initializing struct pages is a long task and keeping interrupts disabled
-> > > for the duration of this operation introduces a number of problems.
-> > >
-> > > 1. jiffies are not updated for long period of time, and thus incorrect time
-> > >    is reported. See proposed solution and discussion here:
-> > >    lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
-> >
-> > http://lkml.kernel.org/r/20200311123848.118638-1-shile.zhang@linux.alibaba.com
-> >
-> > > 2. It prevents farther improving deferred page initialization by allowing
-> > >    inter-node multi-threading.
-> > >
-> > > We are keeping interrupts disabled to solve a rather theoretical problem
-> > > that was never observed in real world (See 3a2d7fa8a3d5).
-> > >
-> > > Lets keep interrupts enabled. In case we ever encounter a scenario where
-> > > an interrupt thread wants to allocate large amount of memory this early in
-> > > boot we can deal with that by growing zone (see deferred_grow_zone()) by
-> > > the needed amount before starting deferred_init_memmap() threads.
-> > >
-> > > Before:
-> > > [    1.232459] node 0 initialised, 12058412 pages in 1ms
-> > >
-> > > After:
-> > > [    1.632580] node 0 initialised, 12051227 pages in 436ms
-> > >
-> >
-> > Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
-> > > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> >
-> > I would much rather see pgdat_resize_lock completely out of both the
-> > allocator and deferred init path altogether but this can be done in a
-> > separate patch. This one looks slightly safer for stable backports.
-> 
-> This is what I wanted to do, but after studying deferred_grow_zone(),
-> I do not see a simple way to solve this. It is one thing to fail an
-> allocation, and it is another thing to have a corruption because of
-> race.
+Hi Jann,
 
-Let's discuss deferred_grow_zone after this all settles down. I still
-have to study it because I wasn't aware that this is actually a page
-allocator path relying on the resize lock. My recollection was that the
-resize lock is only about memory hotplug. Your patches flew by and I
-didn't have time to review them back then. So I have to admit I have
-seen the resize lock too simple.
--- 
-Michal Hocko
-SUSE Labs
+Am 02.04.20 um 04:34 schrieb Jann Horn:
+> [x86 folks in CC so that they can chime in on the precise rules for this stuff]
+>
+> Hi!
+>
+> I noticed that several makefiles under drivers/gpu/drm/amd/display/dc/
+> turn on floating-point instructions in the compiler flags
+> (-mhard-float, -msse and -msse2) in order to make the "float" and
+> "double" types usable from C code without requiring helper functions.
+>
+> However, as far as I know, code running in normal kernel context isn't
+> allowed to use floating-point registers without special protection
+> using helpers like kernel_fpu_begin() and kernel_fpu_end() (which also
+> require that the protected code never blocks). If you violate that
+> rule, that can lead to various issues - among other things, I think
+> the kernel will clobber userspace FPU register state, and I think the
+> kernel code can blow up if a context switch happens at the wrong time,
+> since in-kernel task switches don't preserve FPU state.
+>
+> Is there some hidden trick I'm missing that makes it okay to use FPU
+> registers here?
+>
+> I would try testing this, but unfortunately none of the AMD devices I
+> have here have the appropriate graphics hardware...
+
+yes, using the floating point calculations in the display code has been 
+a source of numerous problems and confusion in the past.
+
+The calls to kernel_fpu_begin() and kernel_fpu_end() are hidden behind 
+the DC_FP_START() and DC_FP_END() macros which are supposed to hide the 
+architecture depend handling for x86 and PPC64.
+
+This originated from the graphics block integrated into AMD CPU (where 
+we knew which fp unit we had), but as far as I know is now also used for 
+dedicated AMD GPUs as well.
+
+I'm not really a fan of this either, but so far we weren't able to 
+convince the hardware engineers to not use floating point calculations 
+for the display stuff.
+
+Regards,
+Christian.
