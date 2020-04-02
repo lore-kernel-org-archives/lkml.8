@@ -2,117 +2,162 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554EFC10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFF5C18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A6E206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2135F2137B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="K2qSbeVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387674AbgDBH6Y (ORCPT
+        id S2387683AbgDBH7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:58:24 -0400
-Received: from mga02.intel.com ([134.134.136.20]:21192 "EHLO mga02.intel.com"
+        Thu, 2 Apr 2020 03:59:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:15715 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbgDBH6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:58:23 -0400
-IronPort-SDR: RMdMDC4xPTADYH2XmaMBFhhVvLroWAd6LDBKiIc4zhT05neeiG931pHXiOjIZ8ZZQCRvoFlqbp
- TK7xieU2L2GQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 00:58:22 -0700
-IronPort-SDR: aWH9WU2pFjjgDUCmJAflWgcnacYwmqpUottW9hVSjKilfTfLSLozUVxCbsFcpHCXLgRBwcJ1GL
- zHXsu4/5/knQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
-   d="scan'208";a="273469236"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Apr 2020 00:58:19 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@ucw.cz>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH][v3] PM / sleep: Add pm_debug_messages boot command control
-Date:   Thu,  2 Apr 2020 15:56:52 +0800
-Message-Id: <20200402075652.13289-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S2387482AbgDBH7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:59:44 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48tFpP4VCTz9txn7;
+        Thu,  2 Apr 2020 09:59:41 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=K2qSbeVr; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id tbdPKUFxzZ1c; Thu,  2 Apr 2020 09:59:41 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48tFpP32Vdz9txn5;
+        Thu,  2 Apr 2020 09:59:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585814381; bh=43GKGI0k75m1jMuar17d+4+DhdGR59q9yzVFw5zV0xg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=K2qSbeVrPsfu8z1CMpXAlEYM1yWe37c7NfFevmx7ryqhDzQfVQRDRs32WIX5yp+TZ
+         ywtDBo55GNAC5LEHXK38csaNzIV+L8t0pry8KwAfr0f5yZHSbG5+18iTKc2PfJjSN8
+         A62kH9kShZs4OS9xtLYqVd9modYuFioAzsIKVvQM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 582B18B776;
+        Thu,  2 Apr 2020 09:59:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Y1pqTqStopDu; Thu,  2 Apr 2020 09:59:42 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 076088B75E;
+        Thu,  2 Apr 2020 09:59:39 +0200 (CEST)
+Subject: Re: [PATCH RESEND 3/4] drm/i915/gem: Replace user_access_begin by
+ user_write_access_begin
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
+        daniel@ffwll.ch, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, akpm@linux-foundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org
+References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+ <6da6fa391c0d6344cc9ff99a69fcaa65666f3947.1585811416.git.christophe.leroy@c-s.fr>
+ <202004020051.649C6B8@keescook>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <e5e1ad22-e3b2-5779-2662-1bd464eae175@c-s.fr>
+Date:   Thu, 2 Apr 2020 09:59:36 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <202004020051.649C6B8@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debug messages from the system suspend/hibernation infrastructure
-is disabled by default, and can only be enabled after the system
-has boot up via /sys/power/pm_debug_messages. This makes the hibernation
-resume hard to track as it involves system boot up across hibernation.
-There's no chance for software_resume() to track the resume process,
-eg.
 
-Turning on the pm_debug_messages during boot up by appending
-'pm_debug_messages'.
 
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
-v2: According to Randy's suggestion, add the command line
-    option to Documentation/admin-guide/kernel-parameters.txt
+Le 02/04/2020 à 09:52, Kees Cook a écrit :
+> On Thu, Apr 02, 2020 at 07:34:18AM +0000, Christophe Leroy wrote:
+>> When i915_gem_execbuffer2_ioctl() is using user_access_begin(),
+>> that's only to perform unsafe_put_user() so use
+>> user_write_access_begin() in order to only open write access.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> 
+> Why is this split from the other conversions?
 
-v3: According to Rafael's suggestion, rename the boot command
-    to pm_debug_messages
----
- Documentation/admin-guide/kernel-parameters.txt | 3 +++
- kernel/power/main.c                             | 7 +++++++
- 2 files changed, 10 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ed73df5f1369..3fb9cbee8d28 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3720,6 +3720,9 @@
- 			Override pmtimer IOPort with a hex value.
- 			e.g. pmtmr=0x508
- 
-+	pm_debug_messages	[SUSPEND,KNL]
-+			Enable suspend/resume debug messages during boot up.
-+
- 	pnp.debug=1	[PNP]
- 			Enable PNP debug messages (depends on the
- 			CONFIG_PNP_DEBUG_MESSAGES option).  Change at run-time
-diff --git a/kernel/power/main.c b/kernel/power/main.c
-index 69b7a8aeca3b..40f86ec4ab30 100644
---- a/kernel/power/main.c
-+++ b/kernel/power/main.c
-@@ -535,6 +535,13 @@ static ssize_t pm_debug_messages_store(struct kobject *kobj,
- 
- power_attr(pm_debug_messages);
- 
-+static int __init pm_debug_messages_setup(char *str)
-+{
-+	pm_debug_messages_on = true;
-+	return 1;
-+}
-+__setup("pm_debug_messages", pm_debug_messages_setup);
-+
- /**
-  * __pm_pr_dbg - Print a suspend debug message to the kernel log.
-  * @defer: Whether or not to use printk_deferred() to print the message.
--- 
-2.17.1
+I split it from the other because this one is in drivers while other 
+ones are in core part of the kernel.
 
+Is it better to squash it in the previous patch ?
+
+Christophe
+
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> 
+>> ---
+>>   drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c | 11 ++++++-----
+>>   1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+>> index 7643a30ba4cd..4be8205a70b6 100644
+>> --- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+>> +++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+>> @@ -1611,14 +1611,14 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
+>>   		 * happened we would make the mistake of assuming that the
+>>   		 * relocations were valid.
+>>   		 */
+>> -		if (!user_access_begin(urelocs, size))
+>> +		if (!user_write_access_begin(urelocs, size))
+>>   			goto end;
+>>   
+>>   		for (copied = 0; copied < nreloc; copied++)
+>>   			unsafe_put_user(-1,
+>>   					&urelocs[copied].presumed_offset,
+>>   					end_user);
+>> -		user_access_end();
+>> +		user_write_access_end();
+>>   
+>>   		eb->exec[i].relocs_ptr = (uintptr_t)relocs;
+>>   	}
+>> @@ -1626,7 +1626,7 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
+>>   	return 0;
+>>   
+>>   end_user:
+>> -	user_access_end();
+>> +	user_write_access_end();
+>>   end:
+>>   	kvfree(relocs);
+>>   	err = -EFAULT;
+>> @@ -2991,7 +2991,8 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
+>>   		 * And this range already got effectively checked earlier
+>>   		 * when we did the "copy_from_user()" above.
+>>   		 */
+>> -		if (!user_access_begin(user_exec_list, count * sizeof(*user_exec_list)))
+>> +		if (!user_write_access_begin(user_exec_list,
+>> +					     count * sizeof(*user_exec_list)))
+>>   			goto end;
+>>   
+>>   		for (i = 0; i < args->buffer_count; i++) {
+>> @@ -3005,7 +3006,7 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
+>>   					end_user);
+>>   		}
+>>   end_user:
+>> -		user_access_end();
+>> +		user_write_access_end();
+>>   end:;
+>>   	}
+>>   
+>> -- 
+>> 2.25.0
+>>
+> 
