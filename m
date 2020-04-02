@@ -2,87 +2,73 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4936C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5FCC2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0912073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585867643;
-	bh=XvBGSTZIz8tQ3dcznCOh3NDhQl0Z07A4ntvcJgby23o=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=1W5zwCzw/HmAbAZii14sKYm5MdHBo5jzSdNVN0TTjckn276Euwg8maHyqpWQ5Hhn2
-	 u6SPrkPxKhQT4vr2SlWJ1iIfdU9hqnr8DVnL7oT6MkzQ4MDtorn1m8tCrjK4UZF2GN
-	 ouPp7GOrZICrxXXceqO8+A3B3JP1vlPLgkBCUW18=
+	by mail.kernel.org (Postfix) with ESMTP id F2F7A2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390022AbgDBWrW (ORCPT
+        id S2389913AbgDBWuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 18:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389402AbgDBWrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 18:47:22 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F6492072E;
-        Thu,  2 Apr 2020 22:47:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585867641;
-        bh=XvBGSTZIz8tQ3dcznCOh3NDhQl0Z07A4ntvcJgby23o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=B/AETOtwWiRZ+WH+0cLHbEB3QC4v9O0DdK6YTeQ4AinegbWOUz4wAsZ2c9IqCKhu0
-         DGX200/omt39fJJ54EpKQqY93fxKu2E4BcWnhVypLKkjidKf+WiPwAT/IFDsCs6GfA
-         tJ7OSZSQ3TWXQnIm3jWfZ9Qru9SihFsF9dhuBCqo=
-Subject: Re: [PATCH 4.14 000/148] 4.14.175-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200401161552.245876366@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <595bd91a-3be3-acfc-0784-d81a9076b60a@kernel.org>
-Date:   Thu, 2 Apr 2020 16:47:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 2 Apr 2020 18:50:05 -0400
+Received: from www62.your-server.de ([213.133.104.62]:34828 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387919AbgDBWuE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 18:50:04 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jK8et-0004Gd-BY; Fri, 03 Apr 2020 00:49:59 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jK8es-000S0u-Vb; Fri, 03 Apr 2020 00:49:59 +0200
+Subject: Re: [PATCH v5 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
+To:     Slava Bacherikov <slava@bacher09.org>, andriin@fb.com
+Cc:     keescook@chromium.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jannh@google.com,
+        alexei.starovoitov@gmail.com, kernel-hardening@lists.openwall.com,
+        liuyd.fnst@cn.fujitsu.com, kpsingh@google.com
+References: <202004021328.E6161480@keescook>
+ <20200402204138.408021-1-slava@bacher09.org>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <f55123e4-4034-b22a-a509-4ddf40f1ca22@iogearbox.net>
+Date:   Fri, 3 Apr 2020 00:49:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
+In-Reply-To: <20200402204138.408021-1-slava@bacher09.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25770/Thu Apr  2 14:58:54 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 10:16 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.175 release.
-> There are 148 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 4/2/20 10:41 PM, Slava Bacherikov wrote:
+> Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
+> enabled will produce invalid btf file, since gen_btf function in
+> link-vmlinux.sh script doesn't handle *.dwo files.
 > 
-> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
-> Anything received after that time might be too late.
+> Enabling DEBUG_INFO_REDUCED will also produce invalid btf file, and
+> using GCC_PLUGIN_RANDSTRUCT with BTF makes no sense.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.175-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> Signed-off-by: Slava Bacherikov <slava@bacher09.org>
+> Reported-by: Jann Horn <jannh@google.com>
+> Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
+> Acked-by: KP Singh <kpsingh@google.com>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info for vmlinux")
 
-Compiled and booted on my test system. No dmesg regressions.
-
-thanks,
--- Shuah
+Applied, thanks!
