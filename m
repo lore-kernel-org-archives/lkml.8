@@ -2,91 +2,238 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9E1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEF0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1EE520719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53B6206E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388631AbgDBN2C (ORCPT
+        id S2388619AbgDBNaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:28:02 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40290 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388274AbgDBN2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:28:02 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1FE8C294CC790EBC8BF1;
-        Thu,  2 Apr 2020 21:28:00 +0800 (CST)
-Received: from [127.0.0.1] (10.173.223.234) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 2 Apr 2020
- 21:27:56 +0800
-Subject: Re: [PATCH -next] virtio-balloon: Make virtballoon_free_page_report
- static
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-References: <20200402024302.35192-1-yuehaibing@huawei.com>
- <20200402090550-mutt-send-email-mst@kernel.org>
-CC:     <jasowang@redhat.com>, <virtualization@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <d1f5d775-17b6-7953-f54a-3adfcea79cfa@huawei.com>
-Date:   Thu, 2 Apr 2020 21:27:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 2 Apr 2020 09:30:11 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:45466 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388274AbgDBNaK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:30:10 -0400
+X-Greylist: delayed 504 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Apr 2020 09:30:09 EDT
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 0D5B312F211;
+        Thu,  2 Apr 2020 22:21:45 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-18) with ESMTPS id 032DLh4e005613
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Thu, 2 Apr 2020 22:21:44 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-18) with ESMTPS id 032DLh7I041706
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Thu, 2 Apr 2020 22:21:43 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 032DLhlQ041705;
+        Thu, 2 Apr 2020 22:21:43 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     hyeongseok.kim@lge.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: fat: Improve the readahead for FAT entries
+Date:   Thu, 02 Apr 2020 22:21:43 +0900
+Message-ID: <87eet6rpjs.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200402090550-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/2 21:06, Michael S. Tsirkin wrote:
-> On Thu, Apr 02, 2020 at 10:43:02AM +0800, YueHaibing wrote:
->> Fix sparse warning:
->>
->> drivers/virtio/virtio_balloon.c:168:5: warning:
->>  symbol 'virtballoon_free_page_report' was not declared. Should it be static?
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> 
-> This is for the mm tree right? You need to tag the subject
-> appropriately and copy the relevant lists.
+Current readahead for FAT entries is very simple but is having some
+flaws, so it is not working well for some environments. This patch
+improves the readahead more or less.
 
-Oh, I should have noticed this, sorry for noise.
+The key points of modification are,
 
-> 
->> ---
->>  drivers/virtio/virtio_balloon.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
->> index 0ef16566c3f3..bc10f94718e3 100644
->> --- a/drivers/virtio/virtio_balloon.c
->> +++ b/drivers/virtio/virtio_balloon.c
->> @@ -165,8 +165,9 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
->>  
->>  }
->>  
->> +static
->>  int virtballoon_free_page_report(struct page_reporting_dev_info *pr_dev_info,
->> -				   struct scatterlist *sg, unsigned int nents)
->> +				 struct scatterlist *sg, unsigned int nents)
->>  {
->>  	struct virtio_balloon *vb =
->>  		container_of(pr_dev_info, struct virtio_balloon, pr_dev_info);
->> -- 
->> 2.17.1
->>
-> 
-> 
-> 
+  - make the readahead size tunable by using bdi->ra_pages
+  - care the bdi->io_pages to avoid the small size I/O request
+  - update readahead window before fully exhausting
 
+With this patch, on slow USB connected 2TB hdd:
+
+[before]
+383.18sec
+
+[after]
+51.03sec
+
+Tested-by: hyeongseok.kim <hyeongseok.kim@lge.com>
+Reviewed-by: hyeongseok.kim <hyeongseok.kim@lge.com>
+Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+---
+ fs/fat/fatent.c |  103 ++++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 75 insertions(+), 28 deletions(-)
+
+diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
+index 3647c65..bbfe18c 100644
+--- a/fs/fat/fatent.c	2020-04-01 23:57:18.572871992 +0900
++++ b/fs/fat/fatent.c	2020-04-01 23:57:35.256611854 +0900
+@@ -632,20 +632,80 @@ error:
+ }
+ EXPORT_SYMBOL_GPL(fat_free_clusters);
+ 
+-/* 128kb is the whole sectors for FAT12 and FAT16 */
+-#define FAT_READA_SIZE		(128 * 1024)
++struct fatent_ra {
++	sector_t cur;
++	sector_t limit;
++
++	unsigned int ra_blocks;
++	sector_t ra_advance;
++	sector_t ra_next;
++	sector_t ra_limit;
++};
+ 
+-static void fat_ent_reada(struct super_block *sb, struct fat_entry *fatent,
+-			  unsigned long reada_blocks)
++static void fat_ra_init(struct super_block *sb, struct fatent_ra *ra,
++			struct fat_entry *fatent, int ent_limit)
+ {
+-	const struct fatent_operations *ops = MSDOS_SB(sb)->fatent_ops;
+-	sector_t blocknr;
+-	int i, offset;
++	struct msdos_sb_info *sbi = MSDOS_SB(sb);
++	const struct fatent_operations *ops = sbi->fatent_ops;
++	sector_t blocknr, block_end;
++	int offset;
++	/*
++	 * This is the sequential read, so ra_pages * 2 (but try to
++	 * align the optimal hardware IO size).
++	 * [BTW, 128kb covers the whole sectors for FAT12 and FAT16]
++	 */
++	unsigned long ra_pages = sb->s_bdi->ra_pages;
++	unsigned int reada_blocks;
++
++	if (ra_pages > sb->s_bdi->io_pages)
++		ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
++	reada_blocks = ra_pages << (PAGE_SHIFT - sb->s_blocksize_bits + 1);
+ 
++	/* Initialize the range for sequential read */
+ 	ops->ent_blocknr(sb, fatent->entry, &offset, &blocknr);
++	ops->ent_blocknr(sb, ent_limit - 1, &offset, &block_end);
++	ra->cur = 0;
++	ra->limit = (block_end + 1) - blocknr;
++
++	/* Advancing the window at half size */
++	ra->ra_blocks = reada_blocks >> 1;
++	ra->ra_advance = ra->cur;
++	ra->ra_next = ra->cur;
++	ra->ra_limit = ra->cur + min_t(sector_t, reada_blocks, ra->limit);
++}
+ 
+-	for (i = 0; i < reada_blocks; i++)
+-		sb_breadahead(sb, blocknr + i);
++/* Assuming to be called before reading a new block (increments ->cur). */
++static void fat_ent_reada(struct super_block *sb, struct fatent_ra *ra,
++			  struct fat_entry *fatent)
++{
++	if (ra->ra_next >= ra->ra_limit)
++		return;
++
++	if (ra->cur >= ra->ra_advance) {
++		struct msdos_sb_info *sbi = MSDOS_SB(sb);
++		const struct fatent_operations *ops = sbi->fatent_ops;
++		struct blk_plug plug;
++		sector_t blocknr, diff;
++		int offset;
++
++		ops->ent_blocknr(sb, fatent->entry, &offset, &blocknr);
++
++		diff = blocknr - ra->cur;
++		blk_start_plug(&plug);
++		/*
++		 * FIXME: we would want to directly use the bio with
++		 * pages to reduce the number of segments.
++		 */
++		for (; ra->ra_next < ra->ra_limit; ra->ra_next++)
++			sb_breadahead(sb, ra->ra_next + diff);
++		blk_finish_plug(&plug);
++
++		/* Advance the readahead window */
++		ra->ra_advance += ra->ra_blocks;
++		ra->ra_limit += min_t(sector_t,
++				      ra->ra_blocks, ra->limit - ra->ra_limit);
++	}
++	ra->cur++;
+ }
+ 
+ int fat_count_free_clusters(struct super_block *sb)
+@@ -653,27 +713,20 @@ int fat_count_free_clusters(struct super
+ 	struct msdos_sb_info *sbi = MSDOS_SB(sb);
+ 	const struct fatent_operations *ops = sbi->fatent_ops;
+ 	struct fat_entry fatent;
+-	unsigned long reada_blocks, reada_mask, cur_block;
++	struct fatent_ra fatent_ra;
+ 	int err = 0, free;
+ 
+ 	lock_fat(sbi);
+ 	if (sbi->free_clusters != -1 && sbi->free_clus_valid)
+ 		goto out;
+ 
+-	reada_blocks = FAT_READA_SIZE >> sb->s_blocksize_bits;
+-	reada_mask = reada_blocks - 1;
+-	cur_block = 0;
+-
+ 	free = 0;
+ 	fatent_init(&fatent);
+ 	fatent_set_entry(&fatent, FAT_START_ENT);
++	fat_ra_init(sb, &fatent_ra, &fatent, sbi->max_cluster);
+ 	while (fatent.entry < sbi->max_cluster) {
+ 		/* readahead of fat blocks */
+-		if ((cur_block & reada_mask) == 0) {
+-			unsigned long rest = sbi->fat_length - cur_block;
+-			fat_ent_reada(sb, &fatent, min(reada_blocks, rest));
+-		}
+-		cur_block++;
++		fat_ent_reada(sb, &fatent_ra, &fatent);
+ 
+ 		err = fat_ent_read_block(sb, &fatent);
+ 		if (err)
+@@ -707,9 +760,9 @@ int fat_trim_fs(struct inode *inode, str
+ 	struct msdos_sb_info *sbi = MSDOS_SB(sb);
+ 	const struct fatent_operations *ops = sbi->fatent_ops;
+ 	struct fat_entry fatent;
++	struct fatent_ra fatent_ra;
+ 	u64 ent_start, ent_end, minlen, trimmed = 0;
+ 	u32 free = 0;
+-	unsigned long reada_blocks, reada_mask, cur_block = 0;
+ 	int err = 0;
+ 
+ 	/*
+@@ -727,19 +780,13 @@ int fat_trim_fs(struct inode *inode, str
+ 	if (ent_end >= sbi->max_cluster)
+ 		ent_end = sbi->max_cluster - 1;
+ 
+-	reada_blocks = FAT_READA_SIZE >> sb->s_blocksize_bits;
+-	reada_mask = reada_blocks - 1;
+-
+ 	fatent_init(&fatent);
+ 	lock_fat(sbi);
+ 	fatent_set_entry(&fatent, ent_start);
++	fat_ra_init(sb, &fatent_ra, &fatent, ent_end + 1);
+ 	while (fatent.entry <= ent_end) {
+ 		/* readahead of fat blocks */
+-		if ((cur_block & reada_mask) == 0) {
+-			unsigned long rest = sbi->fat_length - cur_block;
+-			fat_ent_reada(sb, &fatent, min(reada_blocks, rest));
+-		}
+-		cur_block++;
++		fat_ent_reada(sb, &fatent_ra, &fatent);
+ 
+ 		err = fat_ent_read_block(sb, &fatent);
+ 		if (err)
+_
+
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
