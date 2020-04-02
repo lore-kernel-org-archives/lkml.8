@@ -2,293 +2,82 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6F6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97E6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0721A206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:06:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oTkP/W3j"
+	by mail.kernel.org (Postfix) with ESMTP id BB7E8206F8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388069AbgDBLGS (ORCPT
+        id S2388035AbgDBLIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:06:18 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:23462 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388053AbgDBLGR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:06:17 -0400
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200402110614epoutp04c8751c4be79f55c001b4736be8e61767~B_-VW3xY-0563305633epoutp04I
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Apr 2020 11:06:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200402110614epoutp04c8751c4be79f55c001b4736be8e61767~B_-VW3xY-0563305633epoutp04I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585825574;
-        bh=3CcBbWuPo6LyRKbbMU3GycnwvkdPbEAHLXZVM7cpQt0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oTkP/W3j5fGwR8LnXlt+vEFLtbiJTLpL6ew/WnIKrQduL/MvlRmH2PGcMug+PylfM
-         DlciIwhjrOgSF0hd4YJ7ua7v+HlwM3gf5lEbC6l3MIVfrzaEUxCGAZgDlsCrCPmsun
-         c1M+rOou5vsIFAd/v+KJNWinG4VZFnhJ0+5+IZl8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20200402110613epcas2p470c31a6e4040b2bc046c92bb531e7498~B_-Ub0Ajh1489614896epcas2p4O;
-        Thu,  2 Apr 2020 11:06:13 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.40.184]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 48tKxb6s4szMqYkW; Thu,  2 Apr
-        2020 11:06:11 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6B.16.04704.227C58E5; Thu,  2 Apr 2020 20:06:10 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200402110609epcas2p4a5ec1fb3a5eaa3b12c20cfc2060162f3~B_-QcqcMi0732307323epcas2p4F;
-        Thu,  2 Apr 2020 11:06:09 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200402110609epsmtrp2d38b06fc7cc5288e6ecf5485fa01b271~B_-Qb7NsW3134931349epsmtrp2i;
-        Thu,  2 Apr 2020 11:06:09 +0000 (GMT)
-X-AuditID: b6c32a46-829ff70000001260-23-5e85c7228d8d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B8.F8.04024.127C58E5; Thu,  2 Apr 2020 20:06:09 +0900 (KST)
-Received: from ishtar.dsn.sec.samsung.com (unknown [12.36.155.159]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200402110609epsmtip1ae068865aca85691e6bfb2903f46b5b8~B_-QO5gqC2583825838epsmtip1b;
-        Thu,  2 Apr 2020 11:06:09 +0000 (GMT)
-From:   Hyunki Koo <hyunki00.koo@samsung.com>
-To:     gregkh@linuxfoundation.org, krzk@kernel.org
-Cc:     Hyunki Koo <hyunki00.koo@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] tty: samsung_tty: 32-bit access for TX/RX hold registers
-Date:   Thu,  2 Apr 2020 20:04:29 +0900
-Message-Id: <20200402110430.31156-1-hyunki00.koo@samsung.com>
-X-Mailer: git-send-email 2.15.0.rc1
-In-Reply-To: <20200401082721.19431-1-hyunki00.koo@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBKsWRmVeSWpSXmKPExsWy7bCmma7S8dY4gwUblSyaF69ns1i19Aaz
-        xZQNH5gs+h+/ZrY4f34Du8Wmx9dYLS7vmsNmMeP8PiaLM4t72R04PTat6mTz2D93DbvH5iX1
-        Hn1bVjF6rN9ylcXj8ya5ALaoHJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtzJYW8
-        xNxUWyUXnwBdt8wcoKOUFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQWGhgV6xYm5
-        xaV56XrJ+blWhgYGRqZAlQk5GYc3TWcqeKNVcaHnLVsDY4dyFyMnh4SAicSjOZeYQWwhgR2M
-        EmuOxHQxcgHZn4DsLc1MEM43RokffYdZYTq2T21mhkjsZZT48rOZFcL5wSix6fIhNpAqNgFt
-        iTffZwJVcXCICOhLPNnqAVLDLPCRUeLS6TVMIDXCAj5Ak/6D7WYRUJXo3rAcbAOvgK3E0tV3
-        mCC2KUtceLcELM4pYCexceYxsGUSAmvYJF48mgJ1kovEuVNzmSFsYYlXx7ewQ9hSEp/f7WWD
-        sOsl9rVNZIdo7mGU+PnhKVSzscSsZ+2MIJcyC2hKrN+lD2KCLD5yiwWkglmAT6Lj8F92iDCv
-        REebEESjmsS6by+gzpSRWPN0F9RWD4nP7b1skDCZyCgx9dBRxgmMcrMQFixgZFzFKJZaUJyb
-        nlpsVGCEHGObGMGpTsttB+OScz6HGAU4GJV4eBkOtsYJsSaWFVfmHmKU4GBWEuF1nAEU4k1J
-        rKxKLcqPLyrNSS0+xGgKDMmJzFKiyfnANJxXEm9oamRmZmBpamFqZmShJM67iftmjJBAemJJ
-        anZqakFqEUwfEwenVANjuEJHYHPN7raXmz/urVYNezNNd6vJTrsCmzXmj4/f4dyvoZPSe+ZS
-        Vo7o/H1zMkOE68uVV/5lTi4J7VIuYuuzrrjHpcTVffJ09vXARPuzc/q96/9ltEwTVX3rczou
-        6Pwh7zzBk/tDwud8vmicfW+f/l8TxVT/03zWHfbGq15riR7Vbf2mYarEUpyRaKjFXFScCAAb
-        hDVOiwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrILMWRmVeSWpSXmKPExsWy7bCSnK7i8dY4g72TVCyaF69ns1i19Aaz
-        xZQNH5gs+h+/ZrY4f34Du8Wmx9dYLS7vmsNmMeP8PiaLM4t72R04PTat6mTz2D93DbvH5iX1
-        Hn1bVjF6rN9ylcXj8ya5ALYoLpuU1JzMstQifbsErozDm6YzFbzRqrjQ85atgbFDuYuRk0NC
-        wERi+9RmZhBbSGA3o8TbM7EQcRmJCS+WMEPYwhL3W46wQtR8Y5S4tr0UxGYT0JZ4830mWI2I
-        gKHElzv9LF2MXBzMAt8ZJZYfn8ECkhAW8AFa8B+siEVAVaJ7w3KwQbwCthJLV99hgligLHHh
-        3RKwOKeAncTGmcegltlKvFzXzjyBkW8BI8MqRsnUguLc9NxiwwLDvNRyveLE3OLSvHS95Pzc
-        TYzggNTS3MF4eUn8IUYBDkYlHl6Gg61xQqyJZcWVuYcYJTiYlUR4HWcAhXhTEiurUovy44tK
-        c1KLDzFKc7AoifM+zTsWKSSQnliSmp2aWpBaBJNl4uCUamBUSeEz8JfequAgrK+ZoNl3UOvb
-        TAGPicvrVrsfmtcyU7XhvkGK51G+p68fSAiU/Tl7kPfEHPXolVt/JOnfuNIQK1V/JuZAm1T9
-        xnDbnuUSmyyexxRcL1746fYSHp3QMon/eRKWrWHZpxlbl5yb5sxZ3v680OCeUHPByb79Tgs+
-        LhJc+l0+4pESS3FGoqEWc1FxIgDrVclYRAIAAA==
-X-CMS-MailID: 20200402110609epcas2p4a5ec1fb3a5eaa3b12c20cfc2060162f3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200402110609epcas2p4a5ec1fb3a5eaa3b12c20cfc2060162f3
-References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
-        <CGME20200402110609epcas2p4a5ec1fb3a5eaa3b12c20cfc2060162f3@epcas2p4.samsung.com>
+        Thu, 2 Apr 2020 07:08:47 -0400
+Received: from smtp25.cstnet.cn ([159.226.251.25]:44028 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387963AbgDBLIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:08:47 -0400
+Received: from ubuntu.localdomain (unknown [223.104.3.153])
+        by APP-05 (Coremail) with SMTP id zQCowAAnLGyxx4VeS_XwAQ--.24489S2;
+        Thu, 02 Apr 2020 19:08:33 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     kxie@chelsio.com, jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: cxgb4i: Remove unneeded null check
+Date:   Thu,  2 Apr 2020 19:08:32 +0800
+Message-Id: <20200402110832.12712-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: zQCowAAnLGyxx4VeS_XwAQ--.24489S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtF4UXF1kuryDGr4UWr4UArb_yoWDGrX_K3
+        yqgF429r4UWr4jyr48K3Z5Jr9Fvw4rZa4kuw4Sq3ZY9wn5AryfX3yUZFWDA345urWkAF15
+        Gr47Xr18CrnxJjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbFAYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
+        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+        WUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
+        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8v_M3UUUUU==
+X-Originating-IP: [223.104.3.153]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCwMOA1z4jLRprQAAsd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support 32-bit access for the TX/RX hold registers UTXH and URXH.
+In do_abort_rpl_rss, the null check of 'clk'
+is unneeded to be done twice.
 
-This is required for some newer SoCs.
-
-Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 ---
- drivers/tty/serial/samsung_tty.c | 78 +++++++++++++++++++++++++++++++++-------
- 1 file changed, 66 insertions(+), 12 deletions(-)
+ drivers/scsi/cxgbi/cxgb4i/cxgb4i.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index 73f951d65b93..826d8c5846a6 100644
---- a/drivers/tty/serial/samsung_tty.c
-+++ b/drivers/tty/serial/samsung_tty.c
-@@ -154,12 +154,47 @@ struct s3c24xx_uart_port {
- #define portaddrl(port, reg) \
- 	((unsigned long *)(unsigned long)((port)->membase + (reg)))
+diff --git a/drivers/scsi/cxgbi/cxgb4i/cxgb4i.c b/drivers/scsi/cxgbi/cxgb4i/cxgb4i.c
+index bc1086ae6835..8ce8592f6a64 100644
+--- a/drivers/scsi/cxgbi/cxgb4i/cxgb4i.c
++++ b/drivers/scsi/cxgbi/cxgb4i/cxgb4i.c
+@@ -1127,10 +1127,9 @@ static void do_abort_rpl_rss(struct cxgbi_device *cdev, struct sk_buff *skb)
+ 	if (!csk)
+ 		goto rel_skb;
  
--#define rd_regb(port, reg) (readb_relaxed(portaddr(port, reg)))
-+static unsigned int rd_reg(struct uart_port *port, int reg)
-+{
-+	switch (port->iotype) {
-+	case UPIO_MEM:
-+		return readb_relaxed(portaddr(port, reg));
-+	case UPIO_MEM32:
-+		return readl_relaxed(portaddr(port, reg));
-+	default:
-+		return 0;
-+	}
-+	return 0;
-+}
-+
- #define rd_regl(port, reg) (readl_relaxed(portaddr(port, reg)))
+-	if (csk)
+-		pr_info_ipaddr("csk 0x%p,%u,0x%lx,%u, status %u.\n",
+-			       (&csk->saddr), (&csk->daddr), csk,
+-			       csk->state, csk->flags, csk->tid, rpl->status);
++	pr_info_ipaddr("csk 0x%p,%u,0x%lx,%u, status %u.\n",
++		       (&csk->saddr), (&csk->daddr), csk,
++		       csk->state, csk->flags, csk->tid, rpl->status);
  
--#define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
-+static void wr_reg(struct uart_port *port, int reg, int val)
-+{
-+	switch (port->iotype) {
-+	case UPIO_MEM:
-+		writeb_relaxed(val, portaddr(port, reg));
-+		break;
-+	case UPIO_MEM32:
-+		writel_relaxed(val, portaddr(port, reg));
-+		break;
-+	}
-+}
-+
- #define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port, reg))
- 
-+static void write_buf(struct uart_port *port, int reg, int val)
-+{
-+	switch (port->iotype) {
-+	case UPIO_MEM:
-+		writeb(val, portaddr(port, reg));
-+		break;
-+	case UPIO_MEM32:
-+		writel(val, portaddr(port, reg));
-+		break;
-+	}
-+}
-+
- /* Byte-order aware bit setting/clearing functions. */
- 
- static inline void s3c24xx_set_bit(struct uart_port *port, int idx,
-@@ -714,7 +749,7 @@ static void s3c24xx_serial_rx_drain_fifo(struct s3c24xx_uart_port *ourport)
- 		fifocnt--;
- 
- 		uerstat = rd_regl(port, S3C2410_UERSTAT);
--		ch = rd_regb(port, S3C2410_URXH);
-+		ch = rd_reg(port, S3C2410_URXH);
- 
- 		if (port->flags & UPF_CONS_FLOW) {
- 			int txe = s3c24xx_serial_txempty_nofifo(port);
-@@ -826,7 +861,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
- 	}
- 
- 	if (port->x_char) {
--		wr_regb(port, S3C2410_UTXH, port->x_char);
-+		wr_reg(port, S3C2410_UTXH, port->x_char);
- 		port->icount.tx++;
- 		port->x_char = 0;
- 		goto out;
-@@ -852,7 +887,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
- 		if (rd_regl(port, S3C2410_UFSTAT) & ourport->info->tx_fifofull)
- 			break;
- 
--		wr_regb(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
-+		wr_reg(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
- 		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
- 		port->icount.tx++;
- 		count--;
-@@ -916,7 +951,7 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
- /* no modem control lines */
- static unsigned int s3c24xx_serial_get_mctrl(struct uart_port *port)
- {
--	unsigned int umstat = rd_regb(port, S3C2410_UMSTAT);
-+	unsigned int umstat = rd_reg(port, S3C2410_UMSTAT);
- 
- 	if (umstat & S3C2410_UMSTAT_CTS)
- 		return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
-@@ -1974,7 +2009,7 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct s3c24xx_uart_port *ourport;
- 	int index = probe_index;
--	int ret;
-+	int ret, prop = 0;
- 
- 	if (np) {
- 		ret = of_alias_get_id(np, "serial");
-@@ -2000,10 +2035,29 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
- 			dev_get_platdata(&pdev->dev) :
- 			ourport->drv_data->def_cfg;
- 
--	if (np)
-+	if (np) {
- 		of_property_read_u32(np,
- 			"samsung,uart-fifosize", &ourport->port.fifosize);
- 
-+		if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
-+			switch (prop) {
-+			case 1:
-+				ourport->port.iotype = UPIO_MEM;
-+				break;
-+			case 4:
-+				ourport->port.iotype = UPIO_MEM32;
-+				break;
-+			default:
-+				dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
-+						prop);
-+				ret = -EINVAL;
-+				break;
-+			}
-+		} else {
-+			ourport->port.iotype = UPIO_MEM;
-+		}
-+	}
-+
- 	if (ourport->drv_data->fifosize[index])
- 		ourport->port.fifosize = ourport->drv_data->fifosize[index];
- 	else if (ourport->info->fifosize)
-@@ -2185,7 +2239,7 @@ static int s3c24xx_serial_get_poll_char(struct uart_port *port)
- 	if (s3c24xx_serial_rx_fifocnt(ourport, ufstat) == 0)
- 		return NO_POLL_CHAR;
- 
--	return rd_regb(port, S3C2410_URXH);
-+	return rd_reg(port, S3C2410_URXH);
- }
- 
- static void s3c24xx_serial_put_poll_char(struct uart_port *port,
-@@ -2200,7 +2254,7 @@ static void s3c24xx_serial_put_poll_char(struct uart_port *port,
- 
- 	while (!s3c24xx_serial_console_txrdy(port, ufcon))
- 		cpu_relax();
--	wr_regb(port, S3C2410_UTXH, c);
-+	wr_reg(port, S3C2410_UTXH, c);
- }
- 
- #endif /* CONFIG_CONSOLE_POLL */
-@@ -2212,7 +2266,7 @@ s3c24xx_serial_console_putchar(struct uart_port *port, int ch)
- 
- 	while (!s3c24xx_serial_console_txrdy(port, ufcon))
- 		cpu_relax();
--	wr_regb(port, S3C2410_UTXH, ch);
-+	wr_reg(port, S3C2410_UTXH, ch);
- }
- 
- static void
-@@ -2612,7 +2666,7 @@ static void samsung_early_putc(struct uart_port *port, int c)
- 	else
- 		samsung_early_busyuart(port);
- 
--	writeb(c, port->membase + S3C2410_UTXH);
-+	write_buf(port, S3C2410_UTXH, c);
- }
- 
- static void samsung_early_write(struct console *con, const char *s,
+ 	if (rpl->status == CPL_ERR_ABORT_FAILED)
+ 		goto rel_skb;
 -- 
-2.15.0.rc1
+2.17.1
 
