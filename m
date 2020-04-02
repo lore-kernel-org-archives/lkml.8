@@ -2,190 +2,164 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6C0C2BA18
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11ABC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C32CF2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875EB20857
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zt8tfbGG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DNJyYXWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732546AbgDBOYa (ORCPT
+        id S1732766AbgDBOYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:24:30 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48662 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731579AbgDBOY3 (ORCPT
+        Thu, 2 Apr 2020 10:24:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50571 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729275AbgDBOYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:24:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585837469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5mYSo22iWcFqA/r6k/de5Mv2kT9DwYwYj/Ezb0Wvqxk=;
-        b=Zt8tfbGGVIGMKWix3Aswo+JPqLi8w7D4sCZR3q+ZQgjzc/kvRit6kfNK1JBEo5Hpsr5KhU
-        1WHYE/tgeJTa8hMAW21CUKXXTj4O5hFJXvQGeS9iYC/Xq76UI2/WbML02Cn7x9XVaOetxF
-        JHUiCY12MKAoxFl50DOPFza0wHBuULI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-oMzpdL5KPNC8pTQTYyXmrw-1; Thu, 02 Apr 2020 10:24:24 -0400
-X-MC-Unique: oMzpdL5KPNC8pTQTYyXmrw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B17D5805733;
-        Thu,  2 Apr 2020 14:24:21 +0000 (UTC)
-Received: from [10.72.12.172] (ovpn-12-172.pek2.redhat.com [10.72.12.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A4675D9C9;
-        Thu,  2 Apr 2020 14:24:00 +0000 (UTC)
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <20200401092004-mutt-send-email-mst@kernel.org>
- <6b4d169a-9962-6014-5423-1507059343e9@redhat.com>
- <20200401100954-mutt-send-email-mst@kernel.org>
- <3dd3b7e7-e3d9-dba4-00fc-868081f95ab7@redhat.com>
- <20200401120643-mutt-send-email-mst@kernel.org>
- <c11c2195-88eb-2096-af47-40f2da5b389f@redhat.com>
- <20200402100257-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <279ed96c-5331-9da6-f9c1-b49e87d49c31@redhat.com>
-Date:   Thu, 2 Apr 2020 22:23:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 2 Apr 2020 10:24:31 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t128so3620098wma.0;
+        Thu, 02 Apr 2020 07:24:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=n3PDnctBOZZXWd2LbmIwxNVKZxM3wgowDyh1vzhpv5A=;
+        b=DNJyYXWg7yUdzW8pIUDDFIiyrkbhbOckIO6REVwXspjhoeCVg3srHfqGEHFzeo0Q7M
+         Fgwv/O+XO2zwhGiq5khGVY9sRsAt6Roi+eqFweXFTKwvNlKvYtZNxdYCb3j5U/kJ+q8R
+         02I9d52piEPczGyjfsG+4klfsXnEA6cyg0gkNQ0D2/C4VAenTEZSDnMYv6akCYNVPR8o
+         eVkfzB1Q+1dfxTLY79MaFr9eRRH8eeqQ2+x89bVSJ0X2ugYXsepKpi+2DuIvHB5HfMsz
+         GijCm8E+RY4JRVudpKwL49c16q/6HCaFfPwck3ZrWj5hHpaSZ5Te5C2+DrwwBILMIgcK
+         wyPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=n3PDnctBOZZXWd2LbmIwxNVKZxM3wgowDyh1vzhpv5A=;
+        b=i39LLYjVmKhTO+/C8G+RbqnFYHb86Eh/EJ1cTvuVW2FeiUnEsXalM50XO88p6YeK3G
+         AqxSIZKsKniPO1T5SuDdH4/WuH3SbiC75IaOzKmqn85DKbyzH2MewANDydFyvJiTFmkA
+         dDqIjpjyBUqm8KH16Y1f30Kw7Gvg7JlGkyyed95ddTO7FLKEcf0wrwa0SxfLYiXsBwcS
+         KLPoRkS0lZ8R9F+OdC8Tx3AAsW+cl0QpQY4F/TUCAGkiRB5qczSG0vmlFqzpsPVd6D/x
+         H/nnZtwKKD+bjTMtN5mlLgDNDnbrStmMGHya4BKNHSGbfeKTc8gTh3YQixOgW+oeCbn+
+         1j9A==
+X-Gm-Message-State: AGi0Pua+XPk1Ik5Z3J4mHQRsiZCzXDMYuvU2eC0bD4WuJXWgQvWIMAZO
+        sOrcXsgECUMjKs7l5USNB4PpWkEzLIHoqQDpctM=
+X-Google-Smtp-Source: APiQypIaJ5gs4ylgjiRxYhODKUqObmPaRUdDE22IcihJRWPT5lFNvkU8mUAjpMf20D4GOAug9/x5Iv9JvGDNmCH3QpM=
+X-Received: by 2002:a7b:c850:: with SMTP id c16mr3895360wml.163.1585837469897;
+ Thu, 02 Apr 2020 07:24:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200402100257-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+References: <202004020117.6E434C035@keescook>
+In-Reply-To: <202004020117.6E434C035@keescook>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 2 Apr 2020 16:24:36 +0200
+Message-ID: <CA+icZUW0R9LDGJ1YjJAB2oWkcEQxCO79xYmdVEoh=P8Fy_AL1A@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: mkcompile_h: Include $LD version in /proc/version
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kbuild@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/4/2 =E4=B8=8B=E5=8D=8810:03, Michael S. Tsirkin wrote:
-> On Thu, Apr 02, 2020 at 11:22:57AM +0800, Jason Wang wrote:
->> On 2020/4/2 =E4=B8=8A=E5=8D=8812:08, Michael S. Tsirkin wrote:
->>> On Wed, Apr 01, 2020 at 10:29:32PM +0800, Jason Wang wrote:
->>>> >From 9b3a5d23b8bf6b0a11e65e688335d782f8e6aa5c Mon Sep 17 00:00:00 2=
-001
->>>> From: Jason Wang <jasowang@redhat.com>
->>>> Date: Wed, 1 Apr 2020 22:17:27 +0800
->>>> Subject: [PATCH] vhost: let CONFIG_VHOST to be selected by drivers
->>>>
->>>> The defconfig on some archs enable vhost_net or vhost_vsock by
->>>> default. So instead of adding CONFIG_VHOST=3Dm to all of those files=
-,
->>>> simply letting CONFIG_VHOST to be selected by all of the vhost
->>>> drivers. This fixes the build on the archs with CONFIG_VHOST_NET=3Dm=
- in
->>>> their defconfig.
->>>>
->>>> Signed-off-by: Jason Wang <jasowang@redhat.com>
->>>> ---
->>>>    drivers/vhost/Kconfig | 15 +++++++++++----
->>>>    1 file changed, 11 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
->>>> index 2523a1d4290a..362b832f5338 100644
->>>> --- a/drivers/vhost/Kconfig
->>>> +++ b/drivers/vhost/Kconfig
->>>> @@ -11,19 +11,23 @@ config VHOST_RING
->>>>    	  This option is selected by any driver which needs to access
->>>>    	  the host side of a virtio ring.
->>>> -menuconfig VHOST
->>>> -	tristate "Host kernel accelerator for virtio (VHOST)"
->>>> -	depends on EVENTFD
->>>> +config VHOST
->>>> +	tristate
->>>>    	select VHOST_IOTLB
->>>>    	help
->>>>    	  This option is selected by any driver which needs to access
->>>>    	  the core of vhost.
->>>> -if VHOST
->>>> +menuconfig VHOST_MENU
->>>> +	bool "VHOST drivers"
->>>> +	default y
->>>> +
->>>> +if VHOST_MENU
->>>>    config VHOST_NET
->>>>    	tristate "Host kernel accelerator for virtio net"
->>>>    	depends on NET && EVENTFD && (TUN || !TUN) && (TAP || !TAP)
->>>> +	select VHOST
->>>>    	---help---
->>>>    	  This kernel module can be loaded in host kernel to accelerate
->>>>    	  guest networking with virtio_net. Not to be confused with virt=
-io_net
->>>> @@ -35,6 +39,7 @@ config VHOST_NET
->>>>    config VHOST_SCSI
->>>>    	tristate "VHOST_SCSI TCM fabric driver"
->>>>    	depends on TARGET_CORE && EVENTFD
->>>> +	select VHOST
->>>>    	default n
->>>>    	---help---
->>>>    	Say M here to enable the vhost_scsi TCM fabric module
->>>> @@ -43,6 +48,7 @@ config VHOST_SCSI
->>>>    config VHOST_VSOCK
->>>>    	tristate "vhost virtio-vsock driver"
->>>>    	depends on VSOCKETS && EVENTFD
->>>> +	select VHOST
->>>>    	select VIRTIO_VSOCKETS_COMMON
->>>>    	default n
->>>>    	---help---
->>>> @@ -56,6 +62,7 @@ config VHOST_VSOCK
->>>>    config VHOST_VDPA
->>>>    	tristate "Vhost driver for vDPA-based backend"
->>>>    	depends on EVENTFD
->>>> +	select VHOST
->>
->> This part is not squashed.
->>
->>
->>>>    	select VDPA
->>>>    	help
->>>>    	  This kernel module can be loaded in host kernel to accelerate
->>> OK so I squashed this into the original buggy patch.
->>> Could you please play with vhost branch of my tree on various
->>> arches? If it looks ok to you let me know I'll push
->>> this to next.
->>
->> With the above part squashed. I've tested all the archs whose defconfi=
-g have
->> VHOST_NET or VHOST_VSOCK enabled.
->>
->> All looks fine.
->>
->> Thanks
+On Thu, Apr 2, 2020 at 10:18 AM Kees Cook <keescook@chromium.org> wrote:
 >
-> I'm a bit confused. So is the next tag in my tree ok now?
-
-
-Still need to select CONFIG_VHOST for=C2=A0 CONFIG_VHOST_VDPA. Others are=
- ok.
-
-Thanks
-
-
+> When doing Clang builds of the kernel, it is possible to link with
+> either ld.bfd (binutils) or ld.lld (LLVM), but it is not possible to
+> discover this from a running kernel. Add the "$LD -v" output to
+> /proc/version.
 >
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
+Hi Kees,
+
+this patch is really really a good one!
+
+I use Clang and LLD to build my Linux-kernels.
+
+For archiving important informations of my latest build I did:
+
+cd linux
+readelf -p .comment vmlinux > ../archives/readelf-p-comment_vmlinux.txt
+...or...
+readelf -p .comment arch/x86/boot/compressed/vmlinux >
+../archives/readelf-p-comment_vmlinux-compressed.txt
+
+The output looks like:
+
+String dump of section '.comment':
+  [     0]  Linker: LLD 10.0.0
+  [    14]  clang version 10.0.0-1
+
+With my next linux-kernel build I will include this one.
+
+Feel free to add any appropriate credits.
+
+Thanks.
+
+Regards,
+- Sedat -
+
+> ---
+>  init/Makefile       | 2 +-
+>  scripts/mkcompile_h | 8 ++++++--
+>  2 files changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/init/Makefile b/init/Makefile
+> index 6246a06364d0..82c15bdb42d7 100644
+> --- a/init/Makefile
+> +++ b/init/Makefile
+> @@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
+>         @$($(quiet)chk_compile.h)
+>         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@   \
+>         "$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"    \
+> -       "$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)"
+> +       "$(CONFIG_PREEMPT_RT)" "$(LD)" "$(CC) $(KBUILD_CFLAGS)"
+> diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+> index 3a5a4b210c86..f98c07709370 100755
+> --- a/scripts/mkcompile_h
+> +++ b/scripts/mkcompile_h
+> @@ -6,7 +6,8 @@ ARCH=$2
+>  SMP=$3
+>  PREEMPT=$4
+>  PREEMPT_RT=$5
+> -CC=$6
+> +LD=$6
+> +CC=$7
+>
+>  vecho() { [ "${quiet}" = "silent_" ] || echo "$@" ; }
+>
+> @@ -72,7 +73,10 @@ UTS_VERSION="$(echo $UTS_VERSION $CONFIG_FLAGS $TIMESTAMP | cut -b -$UTS_LEN)"
+>    printf '#define LINUX_COMPILE_BY "%s"\n' "$LINUX_COMPILE_BY"
+>    echo \#define LINUX_COMPILE_HOST \"$LINUX_COMPILE_HOST\"
+>
+> -  echo \#define LINUX_COMPILER \"`$CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//'`\"
+> +  CC_VERSION=$($CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//')
+> +  LD_VERSION=$($LD -v | head -n1 | sed 's/(compatible with [^)]*)//' \
+> +                     | sed 's/[[:space:]]*$//')
+> +  printf '#define LINUX_COMPILER "%s"\n' "$CC_VERSION, $LD_VERSION"
+>  } > .tmpcompile
+>
+>  # Only replace the real compile.h if the new one is different,
+> --
+> 2.20.1
+>
+>
+> --
+> Kees Cook
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/202004020117.6E434C035%40keescook.
