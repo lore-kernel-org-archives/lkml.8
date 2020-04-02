@@ -2,81 +2,101 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAB9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A888C2BA16
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4129920737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B4520737
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:19:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585855180;
+	bh=rOPwtbBOBFiF82ie/2HapkDPckrKOlDUJEddYS++Ta8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0iyhtG/Cix8urcvMkzmod46fXkLUjKYE82vD9wm2UH03zQAANOdj0ZCaxUkbZCXh6
+	 2Np7UN2zqgJFVEj6k5+NkJCtJLI1kaSo1ExdYxSDY71L7A2e37WeHlobUVG1/m/1+O
+	 N0czYoq6K6Gr3HqrHtRu7idDK+hzF7FgAtcTiky0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389460AbgDBTRn (ORCPT
+        id S2389638AbgDBTTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:17:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38889 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgDBTRn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:17:43 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jK5LQ-0001k9-Kr; Thu, 02 Apr 2020 21:17:40 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 15EA1100D52; Thu,  2 Apr 2020 21:17:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     lars@metafoo.de
-Subject: Re: [RFC] genirq: prevent allocated_irqs from being smaller than NR_IRQS
-In-Reply-To: <20200402150820.GB5886@smtp.gmail.com>
-References: <20200402150820.GB5886@smtp.gmail.com>
-Date:   Thu, 02 Apr 2020 21:17:40 +0200
-Message-ID: <87k12xn1d7.fsf@nanos.tec.linutronix.de>
+        Thu, 2 Apr 2020 15:19:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732937AbgDBTTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:19:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B853206F8;
+        Thu,  2 Apr 2020 19:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585855178;
+        bh=rOPwtbBOBFiF82ie/2HapkDPckrKOlDUJEddYS++Ta8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H3Oj2jlpNO4TS98adrAw7QHhPX04DMY/VN1yWEKyYjDVaIqhScq5W7tIWAzVP28nt
+         nRJizaNBIZkrGk0hF3NbFboQrXQV1mdtv6bQwxjr6sWRppUbiIvoHo9+LtKLONXAQ5
+         t035E1wU8NKcj3Wzj4OTNvogYtowLPQEJeUWXEr8=
+Date:   Thu, 2 Apr 2020 21:19:36 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH 4.19 105/116] bpf: Explicitly memset the bpf_attr
+ structure
+Message-ID: <20200402191936.GA3243295@kroah.com>
+References: <20200401161542.669484650@linuxfoundation.org>
+ <20200401161555.630698707@linuxfoundation.org>
+ <20200402185320.GA8077@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402185320.GA8077@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marcelo,
+On Thu, Apr 02, 2020 at 08:53:21PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > 
+> > commit 8096f229421f7b22433775e928d506f0342e5907 upstream.
+> > 
+> > For the bpf syscall, we are relying on the compiler to properly zero out
+> > the bpf_attr union that we copy userspace data into. Unfortunately that
+> > doesn't always work properly, padding and other oddities might not be
+> > correctly zeroed, and in some tests odd things have been found when the
+> > stack is pre-initialized to other values.
+> > 
+> > Fix this by explicitly memsetting the structure to 0 before using
+> > it.
+> 
+> Is not that a gcc bug?
 
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> writes:
-> #ifdef CONFIG_SPARSE_IRQ
-> # define IRQ_BITMAP_BITS (NR_IRQS + 8196)
-> #else
-> # define IRQ_BITMAP_BITS NR_IRQS
-> #endif
->
-> The thing I'm troubled about is that BITS_TO_LONGS divides
-> IRQ_BITMAP_BITS by sizeof(long) * 8, which makes it possible for the
-> size of allocated_irqs to be smaller than NR_IRQS.
+No.
 
-No. It calculates the number of longs which are required to store
-IRQ_BITMAP_BITS bits. And it does not only divide, it also takes the
-reminder into account.
+> I mean, that's seriously unhelpful behaviour from security
+> perspective.
 
-One byte fits 8 bits. Multiplied with sizeof(long) tells you how many
-bits fit into a long: Unsurprisingly that 32 on 32bit and 64 on 64bit
-systems.
+I totally agree, and it is something we have been playing whack-a-mole
+over for a number of years now.
 
-> By the way, is there any mailing list for IRQ related discussions?
-> I couldn't find one at vger.kernel.org.
+Nothing new, but we do have a config option to zero out the stack all
+the time if you are feeling paranoid and can take the performance hit.
 
-The MAINTAINERS file tells you:
+> Is there any reason to believe this is not causing problems elsewhere?
 
-IRQ SUBSYSTEM
-L:      linux-kernel@vger.kernel.org
+It probably is, please feel free to audit and fix up the remaining
+issues that you find.
 
-So you picked the right one.
+thanks,
 
-Thanks,
-
-        tglx
+greg k-h
