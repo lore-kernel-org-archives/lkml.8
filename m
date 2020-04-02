@@ -2,192 +2,167 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5B2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527B9C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E4E206F8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4B820757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OLQx/qjW"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="GxEMuBtj";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="hbz39oJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbgDBM0p (ORCPT
+        id S2387990AbgDBMak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:26:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54258 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgDBM0p (ORCPT
+        Thu, 2 Apr 2020 08:30:40 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:64246 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387699AbgDBMaj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:26:45 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d77so3188968wmd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 05:26:43 -0700 (PDT)
+        Thu, 2 Apr 2020 08:30:39 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 032CQSws013368;
+        Thu, 2 Apr 2020 05:30:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=sIj2I/oq7s90i91AUPFKv8/XHA3/u6H7T4NENAjESxU=;
+ b=GxEMuBtjVYYckgmTaULmKK4zVUl2aZUBWdZ7aeGvjGPd6w+rSS4YMakWV+irrUAvoTca
+ Y2c4IKJtZ8PH7xN8NMrW0uHqiwRHB2dxqDfGRizeH3DqtezzwkvOGDYM4AHf9byYgqLn
+ qllhQuZIWTacDfHnLgUf2res0CMmt8dMD++o7zL2V6HCUwbGfmHcxYJEyQyqFCtwl6m0
+ ZO6XRZEWTAYfg/WwmAyf28de3kjkHkiRktYw68Mo11l91hKWUspf3yxoXfVy4Smhyx0B
+ MHPGNT3GM0GY+FGkJsnPkyhgzzJec7suYk2A2TnweomlIGamVLo8EcCTeRoGCSXF09vO Uw== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 304855st1m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 05:30:15 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Apr
+ 2020 05:30:14 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Apr
+ 2020 05:30:13 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
+ by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Thu, 2 Apr 2020 05:30:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P6/ULQCOrxalJUtbcxDSx0SPGNkqqX85IwKM3KRXngf/oeWHT2OY1qcgK5u7HgzYcpZ37OKFRSb/JFCagr52mBQ+VF8H3x+yV0eh+/Et/0QE5s2Q0SFgNcZFV6jnOmFMgjPrqpN3xWXiKaRX4yxTkJgisvMtCJxGm8X72ZqZhIR90xOtgyfrDecBaQOOcxggkvYO8I2chyDF2jDsFLDIah3tkZlqV0fkzHLePIFbjw7j6F/7Xbi+lfSOGB2RE1Iy1+ituttlMTX5OM5kXsDTI/3QEerE8qY5TYmVNC7G97DyM737lxrmF8fkyRJKUARGH0A0WO5oxLb6RawGIsgRZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sIj2I/oq7s90i91AUPFKv8/XHA3/u6H7T4NENAjESxU=;
+ b=cfZfR1bYJVUxUEL3bPL9ashh3IJ1J6FFZ4EFZ2Etg3ra/iuVkMEDBqj1cbBiGa2FmI83UsDvXJY++jv7SjEHgtK1GYFN028z+V64FhwJLYNgfA/6zfk+zRSzw60rtSYoCUrowdcOc8Yo/N6LGxWGTva+hIShO6tZ6jAHi3tUizEnyDsWlboMGLIEAD2oneWXcXCChkfxWLLO/EEhJ5TrAY8lt6+1dKlbLlJw/5tn3BJjqvlshrOwLdT8tsfZM/2/lBAKsw04O+mDweT0FzmmQO5ZMeZU/ASkUWR4q9A6cmekIUjc4mWWiYRV7y7ZF+tbZ3rWa4sdV0NqFIj/8H84OA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a1sowiBfL15GLUed5KqQt2eL3Z7cOMMJ+ue7eLAAHpg=;
-        b=OLQx/qjWoQWRSw516BMzPOE1maQgDDkZFxu4vMVff/9zatoOlCrH6HQyzA7PilAPiA
-         nW7HDTWuDWrxUn43ZxAIHTNdk32KCKKKu1mh3LwM+4vBQNRWwMUmvNT+kATwUClneRpp
-         SnbEePOwxCsce8d0dvjUpga8yl9suc6/DZyGpvOadTMNU5xJ1y1ioeHR9VGsAb1nAqnF
-         vVPX7jwPjfDcEMAUkt5GzU8QxMbFV0UUjLPBRpuCeaZYBynSoQHmRLxiZJy/v5oJPqa7
-         Q8JCxSJ2sjuSWL29vbVBU7zGkA8FTerCFk6LypaQh3QC3JPd0V8daW1Hg0Mz53i5dS47
-         vrEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a1sowiBfL15GLUed5KqQt2eL3Z7cOMMJ+ue7eLAAHpg=;
-        b=r7t7CfhSuaIRNuoKBQXt9Eufy0T6JP9WEywlZ82/I5YTvB4PYj1UkFocg0gNFvGRyU
-         KdgbvpM+WcNi33QT7XdUW8sZxe9AKZugkOJVoqw1RmImPJ04WUiL5CGe+G2fLpOceE9i
-         hDh26T3peCNJ6CcyE4io028wcrv6eqSR5VcfyAGhbrR9nFvFpagR8k/oKCBXJgrspTCV
-         1RmDj2ptNadK6MHtdCNXX7sBidoX2B56A25FwlF8ev/zxRE/jZf8oZOcB9ddHdFXrXmV
-         86JsM5gjb6DVZ6gbaDlQLYQszrB7Vzc6YfzZGW3sX9TP2WRJzQqXpI7W5h9auaEf6BNn
-         hWjA==
-X-Gm-Message-State: AGi0PuY9cszFUVbse9ZVHDqx+lEy2fdY8cgAgJCYQ8JLLuy6ENzQ1y41
-        fwdyytfvEW1ayJ69Svp4eTeHvw==
-X-Google-Smtp-Source: APiQypKLB8kIej+i6vxcTdo7MIDhbttMQUjbDGR2mwfdqghm1yadCsQgBUQwfJoG/TYMaslo/zOe4A==
-X-Received: by 2002:a1c:2506:: with SMTP id l6mr3158093wml.44.1585830402901;
-        Thu, 02 Apr 2020 05:26:42 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:6097:1406:6470:33b5])
-        by smtp.gmail.com with ESMTPSA id y4sm846109wma.20.2020.04.02.05.26.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 05:26:42 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 14:26:33 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH 00/10] IOASID extensions for guest SVA
-Message-ID: <20200402122633.GC1176452@myrica>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <20200401140301.GJ882512@myrica>
- <20200401163842.09c8e1a6@jacob-builder>
-MIME-Version: 1.0
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sIj2I/oq7s90i91AUPFKv8/XHA3/u6H7T4NENAjESxU=;
+ b=hbz39oJSFG3fMMCEMpg1krwLZCFNrg0i0Kz8L5JuLZGa2tj/HPJksc5f5BwglYZHVJVAjP8awgfBjaS7f1QI32lpgZ9uDxL+BOhJ5Tdc4yRek3TFYHD8z74MBxRII75qPzPdrTYEXECZe7M5F3Ig7eOdo5U10j7SwLSrLnARhBs=
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
+ by BYAPR18MB2485.namprd18.prod.outlook.com (2603:10b6:a03:132::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Thu, 2 Apr
+ 2020 12:30:11 +0000
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::78a2:38df:6c52:a953]) by BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::78a2:38df:6c52:a953%3]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 12:30:11 +0000
+Date:   Thu, 2 Apr 2020 14:30:02 +0200
+From:   Robert Richter <rrichter@marvell.com>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+CC:     <thor.thayer@linux.intel.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
+        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC/altera:Use platform_get_irq_optional()
+Message-ID: <20200402123001.obgzqmlure4cfvh7@rric.localdomain>
+References: <20200402112740.15580-1-tangbin@cmss.chinamobile.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401163842.09c8e1a6@jacob-builder>
+In-Reply-To: <20200402112740.15580-1-tangbin@cmss.chinamobile.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR05CA0192.eurprd05.prod.outlook.com
+ (2603:10a6:3:f9::16) To BYAPR18MB2661.namprd18.prod.outlook.com
+ (2603:10b6:a03:136::26)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR05CA0192.eurprd05.prod.outlook.com (2603:10a6:3:f9::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Thu, 2 Apr 2020 12:30:09 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 479888b1-33c6-4a02-5a5d-08d7d7019652
+X-MS-TrafficTypeDiagnostic: BYAPR18MB2485:
+X-Microsoft-Antispam-PRVS: <BYAPR18MB24857D685875FD4F8C23421CD9C60@BYAPR18MB2485.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:660;
+X-Forefront-PRVS: 0361212EA8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(396003)(346002)(366004)(16526019)(81166006)(1076003)(86362001)(66946007)(66556008)(66476007)(6666004)(9686003)(478600001)(81156014)(55016002)(5660300002)(8676002)(316002)(2906002)(26005)(186003)(7696005)(956004)(52116002)(8936002)(6916009)(53546011)(6506007)(4326008);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: o39WEXSMvx6BKat03knhyDw2TcrgMEAAjto5IQVOxyQXVqfBG/G8DS9MzgGa76NOzYve2sIiCHO1CLVGgqS18JUFzmQjLs9bDvr9tYGJjAWPGOr/wwOLNUtSs0lrdUfcnNz1lITwsypK75iKffLBV1jFpeFWehTjz0UjMWcPbgcY60764HdyJs/aHywyWujlCDEa6wVTK/EJHXmEyjGWAzBmUhvOIQIFRF6XQN5oHD4287Hb0YnTsAJmXm7yiMX8mTl5DayYednvjeWJ+EJdc8+k/D9Vwo47BvVEZXaBLU5ij3jVq8/VD4kX7O9cMWPC8U9M8vsDMlXbeBiqzHa8Xyea/d8FIz6Er3PcDZFQLu8V2HlLDe7V5eKO42PLtJv42vaFOuciCsxQFC6yy9t4bQkxV+hupuA51C9eMAYvO2PR5GklRnZG32GvBqYiqLkv
+X-MS-Exchange-AntiSpam-MessageData: hzzIi2uRmeXLqwEk5Hxu1nzTzBk4hyfMWBRvQJD4Lj8TRaIpKuFROSPADwbcW+YPxtY12dS8Y9OrQAeUVihMXgsMkqtQW+e8v1SluM85Tysg0JmM0xyeCtap2u75y5CkGf0l/3WNCeJp/R1A6d8Klw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 479888b1-33c6-4a02-5a5d-08d7d7019652
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 12:30:11.6900
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UTvlZDf3vJKwN40CJq96DsI+S3uVN3am/MpXgY1PNtK9OPfJWuL+PTNteO/IMWth2Evd7BTw96S+aO6U9WWy/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2485
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-02_04:2020-03-31,2020-04-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 04:38:42PM -0700, Jacob Pan wrote:
-> On Wed, 1 Apr 2020 16:03:01 +0200
-> Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
-> 
-> > Hi Jacob,
-> > 
-> > On Wed, Mar 25, 2020 at 10:55:21AM -0700, Jacob Pan wrote:
-> > > IOASID was introduced in v5.5 as a generic kernel allocator service
-> > > for both PCIe Process Address Space ID (PASID) and ARM SMMU's Sub
-> > > Stream ID. In addition to basic ID allocation, ioasid_set was
-> > > introduced as a token that is shared by a group of IOASIDs. This
-> > > set token can be used for permission checking but lack of some
-> > > features needed by guest Shared Virtual Address (SVA). In addition,
-> > > IOASID support for life cycle management is needed among multiple
-> > > users.
-> > > 
-> > > This patchset introduces two extensions to the IOASID code,
-> > > 1. IOASID set operations
-> > > 2. Notifications for IOASID state synchronization  
-> > 
-> > My main concern with this series is patch 7 changing the spinlock to a
-> > mutex, which prevents SVA from calling ioasid_free() from the RCU
-> > callback of MMU notifiers. Could we use atomic notifiers, or do the
-> > FREE notification another way?
-> > 
-> Maybe I am looking at the wrong code, I thought
-> mmu_notifier_ops.free_notifier() is called outside spinlock with
-> call_srcu(), which will be invoked in the thread context.
-> in mmu_notifier.c mmu_notifier_put()
-> 	spin_unlock(&mm->notifier_subscriptions->lock);
-> 
-> 	call_srcu(&srcu, &subscription->rcu, mmu_notifier_free_rcu);
+On 02.04.20 19:27:40, Tang Bin wrote:
+> In order to simply code,because platform_get_irq() already has
+> dev_err() message.
 
-free_notifier() is called from RCU callback, and according to
-Documentation/RCU/checklist.txt:
-
-5.      If call_rcu() or call_srcu() is used, the callback function will
-        be called from softirq context.  In particular, it cannot block.
-
-When applying the patch I get the sleep-in-atomic warning:
-
-[   87.861793] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
-[   87.863293] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 74, name: kworker/6:1
-[   87.863993] 2 locks held by kworker/6:1/74:
-[   87.864493]  #0: ffffff885ac12538 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x740/0x1880
-[   87.865593]  #1: ffffff88591efd30 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: process_one_work+0x740/0x1880
-[   87.866993] CPU: 6 PID: 74 Comm: kworker/6:1 Not tainted 5.6.0-next-20200331+ #121
-[   87.867393] Hardware name: FVP Base (DT)
-[   87.867893] Workqueue: rcu_gp srcu_invoke_callbacks
-[   87.868393] Call trace:
-[   87.868793]  dump_backtrace+0x0/0x310
-[   87.869293]  show_stack+0x14/0x20
-[   87.869693]  dump_stack+0x124/0x180
-[   87.870193]  ___might_sleep+0x2ac/0x428
-[   87.870693]  __might_sleep+0x88/0x168
-[   87.871094]  __mutex_lock+0xa0/0x1270
-[   87.871593]  mutex_lock_nested+0x1c/0x28
-[   87.872093]  ioasid_free+0x28/0x48
-[   87.872493]  io_mm_free+0x1d0/0x608
-[   87.872993]  mmu_notifier_free_rcu+0x74/0xe8
-[   87.873393]  srcu_invoke_callbacks+0x1d0/0x2c8
-[   87.873893]  process_one_work+0x858/0x1880
-[   87.874393]  worker_thread+0x314/0xcd0
-[   87.874793]  kthread+0x318/0x400
-[   87.875293]  ret_from_fork+0x10/0x18
-
-> 
-> Anyway, if we have to use atomic. I tried atomic notifier first, there
-> are two subscribers to the free event on x86.
-> 1. IOMMU
-> 2. KVM
-> 
-> For #1, the problem is that in the free operation, VT-d driver
-> needs to do a lot of clean up in thread context.
-> - hold a mutex to traverse a list of devices
-> - clear PASID entry and flush cache
-> 
-> For #2, KVM might be able to deal with spinlocks for updating VMCS
-> PASID translation table. +Hao
-> 
-> Perhaps two solutions I can think of:
-> 1. Use a cyclic IOASID allocator. The main reason of clean up at free
-> is to prevent race with IOASID alloc. Similar to PID, 2M IOASID
-> will take long time overflow. Then we can use atomic notifier and a
-> deferred workqueue to do IOMMU cleanup. The downside is a large and
-> growing PASID table, may not be a performance issue since it has TLB.
-
-That might be a problem for SMMU, which has 1024 * 64kB leaf PASID tables,
-for a total of 64MB per endpoint if there is too much fragmentation in
-the IOASID space.
-
-> 2. Let VFIO ensure free always happen after unbind. Then there is no
-> need to do cleanup. But that requires VFIO to keep track of all the
-> PASIDs within each VM. When the VM terminates, VFIO is responsible for
-> the clean up. That was Yi's original proposal. I also tried to provide
-> an IOASID set iterator for VFIO to free the IOASIDs within each VM/set,
-> but the private data belongs to IOMMU driver.
-
-Not really my place to comment on this, but I find it nicer to use the
-same gpasid_unbind() path when VFIO frees a PASID as when the guest
-explicitly unbinds before freeing. 
+I don't see a difference other than hiding a -EPROBE_DEFER error
+message. If that is your intention, please update subject and
+description accordingly.
 
 Thanks,
-Jean
 
+-Robert
+
+> 
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>  drivers/edac/altera_edac.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+> index e91cf1147..e12bad148 100644
+> --- a/drivers/edac/altera_edac.c
+> +++ b/drivers/edac/altera_edac.c
+> @@ -2099,7 +2099,7 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	}
+>  
+> -	edac->sb_irq = platform_get_irq(pdev, 0);
+> +	edac->sb_irq = platform_get_irq_optional(pdev, 0);
+>  	if (edac->sb_irq < 0) {
+>  		dev_err(&pdev->dev, "No SBERR IRQ resource\n");
+>  		return edac->sb_irq;
+> @@ -2134,7 +2134,7 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  #else
+> -	edac->db_irq = platform_get_irq(pdev, 1);
+> +	edac->db_irq = platform_get_irq_optional(pdev, 1);
+>  	if (edac->db_irq < 0) {
+>  		dev_err(&pdev->dev, "No DBERR IRQ resource\n");
+>  		return edac->db_irq;
+> -- 
+> 2.20.1.windows.1
+> 
+> 
+> 
