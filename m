@@ -2,90 +2,123 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F12C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25763C18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4936206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EDAhEOXC"
+	by mail.kernel.org (Postfix) with ESMTP id 0605E206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387884AbgDBJAq (ORCPT
+        id S2387864AbgDBJDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:00:46 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48910 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728612AbgDBJAp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 05:00:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585818044;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WLbI8tl/lGeAZC2ZqPQOvymWN2MF7fjTbT3WDjZTIW4=;
-        b=EDAhEOXC31VIGGCEsGR8Rkv0qgGHpcQO9Y5KVC0WddQCZ/oO/gNB2Vct23a7xoy9J/BYke
-        QdBpqPhachHvpnhqzB8aIIRgvaYjLi+g49Xn7QGfkasbOMPyklsrCcR7pE3jLWhobgZkkb
-        CNoZ32lUxBQeV/tfb85CsJUYJYwYdbU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-ViIzXaFRMCuH1SC4nYcA3g-1; Thu, 02 Apr 2020 05:00:42 -0400
-X-MC-Unique: ViIzXaFRMCuH1SC4nYcA3g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EA7518A551F;
-        Thu,  2 Apr 2020 09:00:41 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.40.192.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D79BE5E037;
-        Thu,  2 Apr 2020 09:00:32 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 11:00:29 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Wainer dos Santos Moschetta <wainersm@redhat.com>
-Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        david@redhat.com
-Subject: Re: [PATCH 2/2] selftests: kvm: Add mem_slot_test test
-Message-ID: <20200402090029.pc6w6iqikgthflhq@kamzik.brq.redhat.com>
-References: <20200330204310.21736-1-wainersm@redhat.com>
- <20200330204310.21736-3-wainersm@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330204310.21736-3-wainersm@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Thu, 2 Apr 2020 05:03:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33036 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728612AbgDBJDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 05:03:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 04D87AB8B;
+        Thu,  2 Apr 2020 09:03:22 +0000 (UTC)
+Date:   Thu, 02 Apr 2020 11:03:22 +0200
+Message-ID: <s5h1rp6w97p.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Zhang, Rui" <rui.zhang@intel.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: OOB access on ACPI processor thermal device via sysfs write
+In-Reply-To: <744357E9AAD1214791ACBA4B0B90926377CEB399@SHSMSX108.ccr.corp.intel.com>
+References: <s5h5zeiwd01.wl-tiwai@suse.de>
+        <744357E9AAD1214791ACBA4B0B90926377CEB399@SHSMSX108.ccr.corp.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 05:43:10PM -0300, Wainer dos Santos Moschetta wrote:
-> This patch introduces the mem_slot_test test which checks
-> an VM can have added memory slots up to the limit defined in
-> KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
-> verify it fails as expected.
+On Thu, 02 Apr 2020 09:47:50 +0200,
+Zhang, Rui wrote:
 > 
-> Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
-> ---
->  tools/testing/selftests/kvm/.gitignore      |  1 +
->  tools/testing/selftests/kvm/Makefile        |  3 +
->  tools/testing/selftests/kvm/mem_slot_test.c | 92 +++++++++++++++++++++
->  3 files changed, 96 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
->
+> CC Viresh.
+> 
+> Yes, I've received it.
+> 
+> To me, there is not a hard rule that the cooling device max_state must be static.
+> We should be able to detect the max_state change and reset the stats table when necessary.
+> 
+> I just finished a prototype patch to do so, and will paste it later.
 
-BTW, in kvm/queue we also now have
+Great, that sounds like a feasible option, indeed.
 
-x86_64/set_memory_region_test.c
 
-I wonder if we shouldn't try to make x86_64/set_memory_region_test.c
-arch-neutral and then integrate this new test with it.
+thanks,
 
-Thanks,
-drew
+Takashi
 
+> 
+> Thanks,
+> rui
+> 
+> -----Original Message-----
+> From: Takashi Iwai <tiwai@suse.de> 
+> Sent: Thursday, April 02, 2020 3:42 PM
+> To: linux-acpi@vger.kernel.org
+> Cc: Zhang, Rui <rui.zhang@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; linux-kernel@vger.kernel.org
+> Subject: OOB access on ACPI processor thermal device via sysfs write
+> Importance: High
+> 
+> [ My post yesterday didn't seem go out properly, so I'm resending with
+>   a different MTA setup; sorry if you already received it ]
+> 
+> Hi,
+> 
+> after my recent patch [*], I started looking at the root cause more closely, and found that it's a side-effect of the device initialization order between acpi_processor_driver and cpufreq.
+>   [*] https://lore.kernel.org/linux-pm/20200330140859.12535-1-tiwai@suse.de/
+> 
+> In short:
+>   
+> - acpi_processor_driver_init() is called fairly early boot stage, and
+>   it registers a thermal device for each CPU. 
+> 
+> - A thermal device allocates a statistics table with the fixed size
+>   determined by get_max_state() ops call at its probe time.
+>   (The table entry is updated at each time a write to thermal state
+>   file happens.)
+> 
+>   For ACPI, processor_get_max_state() is called and it invokes
+>   acpi_processor_max_state() that calculates the max states depending
+>   on cpufreq, cpufreq_get_max_state().
+> 
+>   cpufreq_get_max_state() returns 0 at this stage because no cpufreq
+>   driver is available.  So the table size is set to 1.
+> 
+> - Later on, after cpufreq get initialized, the following sysfs write
+>   causes an OOB access and corrupts memory (eventually Oops):
+>     # echo 3 > /sys/class/thermal/cooling_device0/cur_state
+> 
+>   The reason is that now processor_get_max_state() returns 3 as
+>   cpufreq became available.  So the thermal driver believes as if it
+>   were a valid value, and updates the table accordingly although it
+>   overflows.
+> 
+> 
+> My patch above detects and avoids such an overflow, but it's no real fix for the cause.  The proper fix needs either the shuffling of the device creation order or some automatic resize of statistics table.
+> 
+> Do you guys have any suggestion how to solve it?
+> 
+> FWIW, I could reproduce the problem locally on my laptop with 5.6 kernel, and I believe this can be seen generically on most of machines.
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
