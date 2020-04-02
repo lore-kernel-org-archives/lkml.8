@@ -2,198 +2,194 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CB3C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA2CC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F9120757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050C8212CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:04:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JT+pqZBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389528AbgDBQD3 (ORCPT
+        id S2389664AbgDBQEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:03:29 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33633 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389294AbgDBQD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:03:29 -0400
-IronPort-SDR: 1CsBR6RRXz8ca2orVT2kuBk1FxMFfxl1SzIhLqF1gtQMOOR6Un2eYwOZ9saZW0ySIFFKeMnnuP
- ClRkE3kSzquQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 09:03:22 -0700
-IronPort-SDR: +PTP4JYn8XK4q0RknKK20vQVFoXwKNg18a3TRxi854Bd++K8fHXvnUFPJ0LsjZVpMxxc77RLVV
- bFcOXo+vokeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="450978955"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Apr 2020 09:03:21 -0700
-Date:   Thu, 2 Apr 2020 09:09:09 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 00/10] IOASID extensions for guest SVA
-Message-ID: <20200402090909.4475d430@jacob-builder>
-In-Reply-To: <20200402122633.GC1176452@myrica>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200401140301.GJ882512@myrica>
-        <20200401163842.09c8e1a6@jacob-builder>
-        <20200402122633.GC1176452@myrica>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 2 Apr 2020 12:04:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54212 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389510AbgDBQEA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 12:04:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585843439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=LC1IhDGMwOoCs1ATU0smmtXiTC7wJag/6mmsKHxnpiI=;
+        b=JT+pqZBCc7YJROtc6UaiGpLsyeykPmfZGXmXDntMMU2clHcgXXZ5VJyRGgOcQEkoACeuBo
+        sFkwk5PPeZtiFN4z0TA5sNdFYc2SYPLbNz+WHiQNvF9SfUlzJAJq0a54uBiTn8Dx535s8G
+        U08OE9cXSGSp3dCneK3gg8krBTTwgqE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-75-eCl0v7XiM9SgJSiEucJ0BQ-1; Thu, 02 Apr 2020 12:03:57 -0400
+X-MC-Unique: eCl0v7XiM9SgJSiEucJ0BQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2958F18A8C80;
+        Thu,  2 Apr 2020 16:03:56 +0000 (UTC)
+Received: from [10.36.114.29] (ovpn-114-29.ams2.redhat.com [10.36.114.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0646910002D0;
+        Thu,  2 Apr 2020 16:03:54 +0000 (UTC)
+Subject: Re: [PATVH v1 RESEND] mm: remove unused
+ free_bootmem_with_active_regions
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org
+References: <20200402143455.5145-1-bhe@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <482901b3-f114-a34a-799a-866138ea9ad6@redhat.com>
+Date:   Thu, 2 Apr 2020 18:03:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200402143455.5145-1-bhe@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 14:26:33 +0200
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
-
-> On Wed, Apr 01, 2020 at 04:38:42PM -0700, Jacob Pan wrote:
-> > On Wed, 1 Apr 2020 16:03:01 +0200
-> > Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
-> >   
-> > > Hi Jacob,
-> > > 
-> > > On Wed, Mar 25, 2020 at 10:55:21AM -0700, Jacob Pan wrote:  
-> > > > IOASID was introduced in v5.5 as a generic kernel allocator
-> > > > service for both PCIe Process Address Space ID (PASID) and ARM
-> > > > SMMU's Sub Stream ID. In addition to basic ID allocation,
-> > > > ioasid_set was introduced as a token that is shared by a group
-> > > > of IOASIDs. This set token can be used for permission checking
-> > > > but lack of some features needed by guest Shared Virtual
-> > > > Address (SVA). In addition, IOASID support for life cycle
-> > > > management is needed among multiple users.
-> > > > 
-> > > > This patchset introduces two extensions to the IOASID code,
-> > > > 1. IOASID set operations
-> > > > 2. Notifications for IOASID state synchronization    
-> > > 
-> > > My main concern with this series is patch 7 changing the spinlock
-> > > to a mutex, which prevents SVA from calling ioasid_free() from
-> > > the RCU callback of MMU notifiers. Could we use atomic notifiers,
-> > > or do the FREE notification another way?
-> > >   
-> > Maybe I am looking at the wrong code, I thought
-> > mmu_notifier_ops.free_notifier() is called outside spinlock with
-> > call_srcu(), which will be invoked in the thread context.
-> > in mmu_notifier.c mmu_notifier_put()
-> > 	spin_unlock(&mm->notifier_subscriptions->lock);
-> > 
-> > 	call_srcu(&srcu, &subscription->rcu,
-> > mmu_notifier_free_rcu);  
+On 02.04.20 16:34, Baoquan He wrote:
+> Since commit 397dc00e249ec64e10 ("mips: sgi-ip27: switch from DISCONTIGMEM
+> to SPARSEMEM"), the last caller of free_bootmem_with_active_regions() was
+> gone. Now no user calls it any more.
 > 
-> free_notifier() is called from RCU callback, and according to
-> Documentation/RCU/checklist.txt:
+> Let's remove it.
 > 
-> 5.      If call_rcu() or call_srcu() is used, the callback function
-> will be called from softirq context.  In particular, it cannot block.
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+> RESEND:
+>   To add linux-mm to CC list.
 > 
-> When applying the patch I get the sleep-in-atomic warning:
+>  include/linux/mm.h |  4 ----
+>  mm/page_alloc.c    | 25 -------------------------
+>  2 files changed, 29 deletions(-)
 > 
-> [   87.861793] BUG: sleeping function called from invalid context at
-> kernel/locking/mutex.c:935 [   87.863293] in_atomic(): 1,
-> irqs_disabled(): 0, non_block: 0, pid: 74, name: kworker/6:1
-> [   87.863993] 2 locks held by kworker/6:1/74: [   87.864493]  #0:
-> ffffff885ac12538 ((wq_completion)rcu_gp){+.+.}-{0:0}, at:
-> process_one_work+0x740/0x1880 [   87.865593]  #1: ffffff88591efd30
-> ((work_completion)(&sdp->work)){+.+.}-{0:0}, at:
-> process_one_work+0x740/0x1880 [   87.866993] CPU: 6 PID: 74 Comm:
-> kworker/6:1 Not tainted 5.6.0-next-20200331+ #121 [   87.867393]
-> Hardware name: FVP Base (DT) [   87.867893] Workqueue: rcu_gp
-> srcu_invoke_callbacks [   87.868393] Call trace: [   87.868793]
-> dump_backtrace+0x0/0x310 [   87.869293]  show_stack+0x14/0x20
-> [   87.869693]  dump_stack+0x124/0x180 [   87.870193]
-> ___might_sleep+0x2ac/0x428 [   87.870693]  __might_sleep+0x88/0x168
-> [   87.871094]  __mutex_lock+0xa0/0x1270
-> [   87.871593]  mutex_lock_nested+0x1c/0x28
-> [   87.872093]  ioasid_free+0x28/0x48
-> [   87.872493]  io_mm_free+0x1d0/0x608
-> [   87.872993]  mmu_notifier_free_rcu+0x74/0xe8
-> [   87.873393]  srcu_invoke_callbacks+0x1d0/0x2c8
-> [   87.873893]  process_one_work+0x858/0x1880
-> [   87.874393]  worker_thread+0x314/0xcd0
-> [   87.874793]  kthread+0x318/0x400
-> [   87.875293]  ret_from_fork+0x10/0x18
-> 
-You are right, I was reading call_srcu comments too fast. I guess
-rcu callbacks are still in softirq not offloaded to kernel threads.
-
- *
- * The callback will be invoked from process context, but must
- *  nevertheless be fast and must not block.
- */
-So even atomic works in principle but not a good idea since it may take
-a long time.
-
-> > 
-> > Anyway, if we have to use atomic. I tried atomic notifier first,
-> > there are two subscribers to the free event on x86.
-> > 1. IOMMU
-> > 2. KVM
-> > 
-> > For #1, the problem is that in the free operation, VT-d driver
-> > needs to do a lot of clean up in thread context.
-> > - hold a mutex to traverse a list of devices
-> > - clear PASID entry and flush cache
-> > 
-> > For #2, KVM might be able to deal with spinlocks for updating VMCS
-> > PASID translation table. +Hao
-> > 
-> > Perhaps two solutions I can think of:
-> > 1. Use a cyclic IOASID allocator. The main reason of clean up at
-> > free is to prevent race with IOASID alloc. Similar to PID, 2M IOASID
-> > will take long time overflow. Then we can use atomic notifier and a
-> > deferred workqueue to do IOMMU cleanup. The downside is a large and
-> > growing PASID table, may not be a performance issue since it has
-> > TLB.  
-> 
-> That might be a problem for SMMU, which has 1024 * 64kB leaf PASID
-> tables, for a total of 64MB per endpoint if there is too much
-> fragmentation in the IOASID space.
-> 
-OK. Not an option here :(
-
-> > 2. Let VFIO ensure free always happen after unbind. Then there is no
-> > need to do cleanup. But that requires VFIO to keep track of all the
-> > PASIDs within each VM. When the VM terminates, VFIO is responsible
-> > for the clean up. That was Yi's original proposal. I also tried to
-> > provide an IOASID set iterator for VFIO to free the IOASIDs within
-> > each VM/set, but the private data belongs to IOMMU driver.  
-> 
-> Not really my place to comment on this, but I find it nicer to use the
-> same gpasid_unbind() path when VFIO frees a PASID as when the guest
-> explicitly unbinds before freeing. 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 1cd8b8f8534d..9c093f7c751d 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2363,8 +2363,6 @@ static inline unsigned long get_num_physpages(void)
+>   * 	memblock_add_node(base, size, nid)
+>   * free_area_init_nodes(max_zone_pfns);
+>   *
+> - * free_bootmem_with_active_regions() calls free_bootmem_node() for each
+> - * registered physical page range.  Similarly
+>   * sparse_memory_present_with_active_regions() calls memory_present() for
+>   * each range when SPARSEMEM is enabled.
+>   *
+> @@ -2380,8 +2378,6 @@ extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+>  extern void get_pfn_range_for_nid(unsigned int nid,
+>  			unsigned long *start_pfn, unsigned long *end_pfn);
+>  extern unsigned long find_min_pfn_with_active_regions(void);
+> -extern void free_bootmem_with_active_regions(int nid,
+> -						unsigned long max_low_pfn);
+>  extern void sparse_memory_present_with_active_regions(int nid);
+>  
+>  #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 138a56c0f48f..2892ebeaa6c9 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -6356,31 +6356,6 @@ int __meminit __early_pfn_to_nid(unsigned long pfn,
+>  }
+>  #endif /* CONFIG_HAVE_ARCH_EARLY_PFN_TO_NID */
+>  
+> -/**
+> - * free_bootmem_with_active_regions - Call memblock_free_early_nid for each active range
+> - * @nid: The node to free memory on. If MAX_NUMNODES, all nodes are freed.
+> - * @max_low_pfn: The highest PFN that will be passed to memblock_free_early_nid
+> - *
+> - * If an architecture guarantees that all ranges registered contain no holes
+> - * and may be freed, this this function may be used instead of calling
+> - * memblock_free_early_nid() manually.
+> - */
+> -void __init free_bootmem_with_active_regions(int nid, unsigned long max_low_pfn)
+> -{
+> -	unsigned long start_pfn, end_pfn;
+> -	int i, this_nid;
+> -
+> -	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, &this_nid) {
+> -		start_pfn = min(start_pfn, max_low_pfn);
+> -		end_pfn = min(end_pfn, max_low_pfn);
+> -
+> -		if (start_pfn < end_pfn)
+> -			memblock_free_early_nid(PFN_PHYS(start_pfn),
+> -					(end_pfn - start_pfn) << PAGE_SHIFT,
+> -					this_nid);
+> -	}
+> -}
+> -
+>  /**
+>   * sparse_memory_present_with_active_regions - Call memory_present for each active range
+>   * @nid: The node to call memory_present for. If MAX_NUMNODES, all nodes will be used.
 > 
 
-Might be the only option now.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
+-- 
 Thanks,
 
-Jacob
+David / dhildenb
 
-> Thanks,
-> Jean
-> 
-
-[Jacob Pan]
