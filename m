@@ -2,131 +2,229 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F98C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DBDC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851A6208FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BC4208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:47:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kW4gnNy0";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="aJ5EC5iL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387793AbgDBIrI (ORCPT
+        id S2387818AbgDBIr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:47:08 -0400
-Received: from mga12.intel.com ([192.55.52.136]:8925 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728612AbgDBIrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:47:08 -0400
-IronPort-SDR: 4vbGSjMO6dritYfBjM6LxmYRM7yOgdqyNJ7RkBJvNE+xdTkVriYs2L9Vwkoug80Jgcfy/2AB6l
- 19nmj9Isq4rg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:47:07 -0700
-IronPort-SDR: 7tJLumpdWYlkcHYhVh+R3ZpZwhs962ucUkWwav961GZbQ6z8behCfxQAdYKbhRUR6299u21Aok
- UYT0iKhJujpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
-   d="scan'208";a="242465231"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 02 Apr 2020 01:47:07 -0700
-Received: from [10.249.226.252] (abudanko-mobl.ccr.corp.intel.com [10.249.226.252])
-        by linux.intel.com (Postfix) with ESMTP id 75565580544;
-        Thu,  2 Apr 2020 01:47:02 -0700 (PDT)
-Subject: [PATCH v8 03/12] perf/core: open access to probes for CAP_PERFMON
- privileged process
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <3c129d9a-ba8a-3483-ecc5-ad6c8e7c203f@linux.intel.com>
-Date:   Thu, 2 Apr 2020 11:47:01 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 2 Apr 2020 04:47:26 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:44888 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728612AbgDBIr0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:47:26 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A0CBD43B8F;
+        Thu,  2 Apr 2020 08:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1585817245; bh=CaINlGi23bNbQCPiqG4hTFVNa3myp/r7lwLxBr7cgi0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=kW4gnNy0mYDEexf4Fqpyy/5bcyuiALY+97oCmjRztxWkdVLL7bl4GR8Slr05Meb9j
+         4Q3PgM+chPItqNuRVuE2kMOKAzaQ9yO9IQb03eb1khfYnH5u7rYdKI9+3VwtNRZCyx
+         VqbajeHF5Um/Ba1g8sPIMz2IdjAG3ZMHTDfqr4q4+4c20PdFLGY63/aFpFdLSQnqyH
+         mskwJ0ERq13d1DM0yMWJ3LVDRVYSJePTXBpOruGoC5Cb7i4vvJjKJWiYalSE5HCXuv
+         6Iy2VEG5WZ0mQPKAFoJNdbpLmx1FDLeoETyu4D6ae6Kex3Sx+BYxnqGldhO7aiOblt
+         c6sHsmGUEFvkw==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id C475AA006F;
+        Thu,  2 Apr 2020 08:47:21 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 2 Apr 2020 01:47:21 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 2 Apr 2020 01:47:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OXGDiCbc7ewn8hVIK651WFay1ogwyBMkhJBJsd1R6zhOGWzhlEYAEgD44j/WUemAZbaVFmhPnfC4STAMXB5zCm1O1biZWdPSXeDlACB4e0d70VhOjDxrHwza6OyXXfEPuoWgNOpe4xU8MzIpIMldj7vbWhu5gx+HBx+AggS7iLk+kqyeEN26T4g1BNQwqKiUAZqjLOmcp78UzGO+58rfN+JIl8GykAXWvieJ9ETPvFjaMHypLu9uNVac8aF2sPVZtO2V8fnOqvk1RiBfBiwP9bp9Fv7l0HQFPRsA5DhOhzyXH/JCpzVLZrWZl5f4cMdh6qgDsvIJzeWI0wD/uMnBjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P23z2v1OauJc6AvIdXWF2WCDeNFto71PSMaYlOhb40Q=;
+ b=AiuxVgXsm3P/6C1hvUFmIX3sWV8wBAJ6VH1xqMTgQ16D9hqRvmVmyfXal0bO6tk4JZmUMpAXYq86BQAzGRBPKxNpURbqmnjC8mfUH3kIrlFQgaE+hFp7v4q3SRIHJKESfyTEverHrusTadl3+Zm+68Jpdp4udSY80tLy5CA9s1T/M/EPSMcbxRMra8hiFll7l2jhAdPrYF9iEOcvZiwfVXFDzdpTMPSqUX5E3kbI09sWj4X3x5eSRDi+CT+k/6Cp1Ds2oh1vusGCADNH6k/XTus63egMw12KUKfhHzoRQ5ok977sMVuz5Qkz3cBRdhGIOPIcrD21sZWVkappO5l5bQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P23z2v1OauJc6AvIdXWF2WCDeNFto71PSMaYlOhb40Q=;
+ b=aJ5EC5iLunzUrQioy+vtUjL3/+Kv3K5yv0UCxttfhKXi01kyoz6EA64ADwpNmYucuoEBqPK+SAq2+ZW8H9723sQPdFtDTB22a1omIPka19wACgbTlyoTBmGc2lhIjMHsK2LNuufSF42RcUGG4Yb0Fiin2aIjFLBChnYNSl6yyGc=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (2603:10b6:408:6e::17)
+ by BN8PR12MB3091.namprd12.prod.outlook.com (2603:10b6:408:44::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Thu, 2 Apr
+ 2020 08:47:19 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::651e:afe5:d0fb:def4]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::651e:afe5:d0fb:def4%3]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 08:47:19 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     "Voon, Weifeng" <weifeng.voon@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: RE: [RFC,net-next,v1, 1/1] net: stmmac: Enable SERDES power up/down
+ sequence
+Thread-Topic: [RFC,net-next,v1, 1/1] net: stmmac: Enable SERDES power up/down
+ sequence
+Thread-Index: AQHWAE03JZEV2gP9CkiKXaQcDq7OzahVzGeAgAAJs4CAAAleQIAAdfeAgA4MGYCAATPU0A==
+Date:   Thu, 2 Apr 2020 08:47:19 +0000
+Message-ID: <BN8PR12MB326674C44D4D44C3D2B86C73D3C60@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20200322132342.2687-1-weifeng.voon@intel.com>
+ <20200322132342.2687-2-weifeng.voon@intel.com>
+ <BN8PR12MB3266ACFFA4808A133BB72F9DD3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <BYAPR11MB27575EF05D65A8AA9AF4128488F00@BYAPR11MB2757.namprd11.prod.outlook.com>
+ <BN8PR12MB326606DE1FEB055B7361A939D3F00@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <BYAPR11MB2757B80101035B9A599E357B88F00@BYAPR11MB2757.namprd11.prod.outlook.com>
+ <BYAPR11MB3125359A86ECE3A845595E3888C90@BYAPR11MB3125.namprd11.prod.outlook.com>
+In-Reply-To: <BYAPR11MB3125359A86ECE3A845595E3888C90@BYAPR11MB3125.namprd11.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [82.155.99.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1c101dfb-54be-4a6f-c844-08d7d6e2740e
+x-ms-traffictypediagnostic: BN8PR12MB3091:
+x-microsoft-antispam-prvs: <BN8PR12MB30915FE3B8CA0FBA29E2E7BED3C60@BN8PR12MB3091.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0361212EA8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3266.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(396003)(39860400002)(136003)(366004)(346002)(376002)(8676002)(186003)(5660300002)(66556008)(86362001)(52536014)(71200400001)(8936002)(81166006)(4326008)(478600001)(66446008)(26005)(33656002)(9686003)(6506007)(2906002)(76116006)(66476007)(81156014)(55016002)(64756008)(316002)(66946007)(7696005)(54906003)(110136005)(142933001);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XkpQcCnxa79t7ARjE+9m7MabWmH0v8/1RO3OdUOxMGHrhqS1SIZFGTNxU6rY4d9Ih812JNhVjnpP9QDoxjjFnZ3w/+XC0VJWhngiX3zZw+gpWU0JTP4j9HifMPxPz+k22tvuzzIMjqVyRUUmsNcyvzieeZO0Ta2IAgDvspEtH4iXcSZxqblRgafCAZbfFaFn4JEwAQCKTNMVNtOk09IL0lkUAB1o4IfqZvckETmVH6VhPSBIPQGX47rUM+6VCAueEXBrCpJ1sosnzam/a1jTxKxzWurQhjsQCUiDsayPplA7RVN0vxoeXQiGpW1HIGsIVHcdIllPkH/GCbRi9yYPEMG+wdDrzNAfTvYyrhfEEdM9ud7WHinyOZd30JyI61Brc/A/duup8IV1A2Eg0opOQlDYxoMVaxi45KibvMmUDqMniIKxCHI9AP0fO1OugHuQEyDbLKhgtTvNimGi1wvEeM99EMCmg26mAb6ujhuj3W8Ptkt0eTmfQy0WzrZZzzPt
+x-ms-exchange-antispam-messagedata: UlsjHtf6TVqSDduiIOX4jIFMnhjOyKT3da2M0QIrGYFun2t+c4mHslTK3mxwA7+skz1bwuHAcxsebIcoOWnZVoz8yG6huexdOGJZ8DE5NJ2sR1q34xf89WZ+8MXbcRTUUbSIo1IOs3gojT3KfPEqCQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c101dfb-54be-4a6f-c844-08d7d6e2740e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 08:47:19.3024
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /vYqAOI8RIoPbiUv/qqNf+lol7fIpwzMZt/8Tlwur30/k8QzPOsjk6B9/rSczfJyg8l/LXfGJbVp/O4x5DuVDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3091
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Voon, Weifeng <weifeng.voon@intel.com>
+Date: Apr/01/2020, 15:23:09 (UTC+00:00)
 
-Open access to monitoring via kprobes and uprobes and eBPF tracing for
-CAP_PERFMON privileged process. Providing the access under CAP_PERFMON
-capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes
-chances to misuse the credentials and makes operation more secure.
+> > > > > > This patch is to enable Intel SERDES power up/down sequence. Th=
+e
+> > > > > > SERDES converts 8/10 bits data to SGMII signal. Below is an
+> > > > > > example of HW configuration for SGMII mode. The SERDES is
+> > > > > > located in the PHY IF in the diagram below.
+> > > > > >
+> > > > > > <-----------------GBE Controller---------->|<--External PHY
+> > > > > > chip-->
+> > > > > > +----------+         +----+            +---+           +-------=
+-
+> > --
+> > > +
+> > > > > > |   EQoS   | <-GMII->| DW | < ------ > |PHY| <-SGMII-> |
+> > External
+> > > |
+> > > > > > |   MAC    |         |xPCS|            |IF |           | PHY
+> > > |
+> > > > > > +----------+         +----+            +---+           +-------=
+-
+> > --
+> > > +
+> > > > > >        ^               ^                 ^                ^
+> > > > > >        |               |                 |                |
+> > > > > >        +---------------------MDIO-------------------------+
+> > > > > >
+> > > > > > PHY IF configuration and status registers are accessible throug=
+h
+> > > > > > mdio address 0x15 which is defined as intel_adhoc_addr. During
+> > > > > > D0, The driver will need to power up PHY IF by changing the
+> > > > > > power
+> > > state to P0.
+> > > > > > Likewise, for D3, the driver sets PHY IF power state to P3.
+> > > > >
+> > > > > I don't think this is the right approach.
+> > > > >
+> > > > > You could just add a new "mdio-intel-serdes" to phy/ folder just
+> > > > > like I did with XPCS because this is mostly related with PHY
+> > > > > settings rather than EQoS.
+> > > > I am taking this approach to put it in stmmac folder rather than ph=
+y
+> > > > folder as a generic mdio-intel-serdes as this is a specific Intel
+> > > > serdes architecture which would only pair with DW EQos and DW xPCS
+> > HW.
+> > > > Since this serdes will not able to pair other MAC or other non-Inte=
+l
+> > > > platform, I would like you to reconsider this approach. I am open
+> > > > for
+> > > discussion.
+> > > > Thanks Jose for the fast response.
+> > >
+> > > OK, then I think we should use the BSP init/exit functions that are
+> > > already available for platform setups (.init and .exit callback of
+> > > plat_stmmacenet_data struct). We just need to extend this to PCI base=
+d
+> > > setups.
+> > >
+> > > You can take a look at stmmac_platform.c and check what's done.
+> > > Basically:
+> > > 	- Call priv->plat->init() at probe() and resume()
+> > > 	- Call priv->plat->exit() at remove() and suspend()
+> > >
+> > I have 2 concern if using the suggested BSP init/exit function.
+> > 1. Serdes is configured through MDIO bus. But the mdio bus register onl=
+y
+> > happens in stmmac_dvr_probe() in stmmac_main.c.
+> >=20
+> > 2. All tx/rx packets requires serdes to be in the correct power state.
+> > If the driver power-down before stopping all the dma, it will cause tx
+> > queue timeout as packets are not able to be transmitted out. Hence, the
+> > serdes cannot be power-down before calling the stmmac_dvr_remove(). The
+> > stmmac_dvr_remove() will unregister the mdio bus. So, the
+> > driver cannot powerdown the serdes after the stmmac_dvr_remove() too.
+>=20
+> I went through the code again, I understand that your intention is to kee=
+p the
+> platform specific setup in its own file and keep the main dwmac logic cle=
+an.
+> But, I did not see any way to separate this SERDES configuration from the=
+=20
+> stmmac_main logic cleanly.=20
+> Hope to get more ideas and discussion. Thanks.
 
-perf kprobes and uprobes are used by ftrace and eBPF. perf probe uses
-ftrace to define new kprobe events, and those events are treated as
-tracepoint events. eBPF defines new probes via perf_event_open interface
-and then the probes are used in eBPF tracing.
+Sorry for the late reply!
 
-CAP_PERFMON implements the principal of least privilege for performance
-monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39 principle
-of least privilege: A security design principle that states that a process or
-program be granted only those privileges (e.g., capabilities) necessary to
-accomplish its legitimate function, and only for the time that such privileges
-are actually required)
+Yes, that's exactly my intention. Maybe we can add a new set of callbacks=20
+for BSP. Something like ->start(), ->stop() ?
 
-For backward compatibility reasons access to perf_events subsystem remains
-open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
-secure perf_events monitoring is discouraged with respect to CAP_PERFMON
-capability.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: James Morris <jamorris@linux.microsoft.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
 ---
- kernel/events/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2af0f4557b63..364c233c3f25 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9259,7 +9259,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
- 	if (event->attr.type != perf_kprobe.type)
- 		return -ENOENT;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EACCES;
- 
- 	/*
-@@ -9319,7 +9319,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
- 	if (event->attr.type != perf_uprobe.type)
- 		return -ENOENT;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EACCES;
- 
- 	/*
--- 
-2.24.1
-
-
+Thanks,
+Jose Miguel Abreu
