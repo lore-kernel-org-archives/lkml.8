@@ -2,112 +2,178 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CE0C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7B6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A1E20784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B94220784
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 06:46:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KNE5T8qn"
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="eKwqVvG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387463AbgDBGp5 (ORCPT
+        id S2387484AbgDBGqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 02:45:57 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42930 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728425AbgDBGp5 (ORCPT
+        Thu, 2 Apr 2020 02:46:02 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41782 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728425AbgDBGqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 02:45:57 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 22so1296746pfa.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 23:45:56 -0700 (PDT)
+        Thu, 2 Apr 2020 02:46:02 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n17so2007343lji.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 23:46:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=antmicro.com; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=QnW1FRwTH4xbg6LjM8uAuRTxGm5LQR9zZzf7WroNXlk=;
-        b=KNE5T8qnOrg8DU2Uf0oSMAWQslv7RAp37B4JyeQ3UXi+xSSIhp/xde1qIF/pvqxL9J
-         uxZGuNG4rugzfgwvQE8KO6Q9zN4Gn2dem01V61dEZ4+yTTmhAUzhQuxb4qetrbd2QzQ9
-         VZ/5M5Ai8cumWOzOutq4YrufW5MGwo0BkntamiaU4X7bIamT+y67fMt8yADlN9TylaUH
-         K8F9HomtVYyoxklKUgsWeuDhjNcxaJbb5dhX4UFj73+0sZW+WkOrdQTHhP3RSnke6AVV
-         0GUCdQa0Egz+xressXuZyWEB+f5tjVbuymp2GuRRrw4Q0lliCdINuQjSevox+BOjLR+G
-         QQCg==
+        bh=9xnZbxvNOKHFAZYRn5/ijjeLydct9dBBxLdIGW7A/1s=;
+        b=eKwqVvG/nU10Aj1fIjxcIlnBIAW/UAhyk+8spqGbl4M1nzkJAQGK7aiXHgyF290n5C
+         qnu5SXmd5sdqBePY5exZQrd/hen9mtA+pmwiH4qcPxkfh3jDQ+ngZKTRoEs2a5xXoWzr
+         HG4Br6j52jlUlFCxZ9FShqQI5KWiWw9z+hkxs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=QnW1FRwTH4xbg6LjM8uAuRTxGm5LQR9zZzf7WroNXlk=;
-        b=sIquo30pAHoPLXnTo2mkaA8Sg5K+FZawcyOuKkkPzcLNuS5Qzn+Zqu8A9fw1axTG31
-         e/b5Dz5DpXHestHdqJQBkCkdoWn8agDF+YHt06oaGq1iYc9BHuSwdw6I+fwslvrzhO+9
-         P//gR1XVk+0JVE1tE1p+eTJXGSrPDaf9NjaJ5dAEPwjXqlA9ZY+gpVqWj7EkdPhyxsYn
-         3gaL/K5e/vKoeNMsot3VwyfHt9BB7thF58RB8n8SEZvtU8Iv1QpTV3RZ8QM3OTE6+iT2
-         i8K5o2OYau5iPRgRSZjM1BkvcDens4U9YlPwhx0drgM7fx+E1Y3XeoZczFiVN7waq8yz
-         AHlQ==
-X-Gm-Message-State: AGi0PuaZWt5Hcsfj0qqoTfWjU1Vhp8vGulRa+ZfI3Lx2Om/x/QMDyej3
-        Gq6btzZeS/IbONsC+dUPLQ2SnhB08eE=
-X-Google-Smtp-Source: APiQypLGCELqQ+CVBf3q8b/1bk+rBZgF5Fqa4XWZ5iwiVgkfN8O0vF2RVSrCHg3HEEPGfX83+uu63Q==
-X-Received: by 2002:a62:cdcc:: with SMTP id o195mr1696130pfg.323.1585809955390;
-        Wed, 01 Apr 2020 23:45:55 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id ck3sm3006406pjb.44.2020.04.01.23.45.54
+        bh=9xnZbxvNOKHFAZYRn5/ijjeLydct9dBBxLdIGW7A/1s=;
+        b=A3Oy9PEuovMoXb4/kHvO465uSkcCRDK5VtOFSUVW8ecpZzjuViddLmTs7g2HsuJMeF
+         X2MMVFpCFP+Xyg3XvD833cH9kSCB+RiIHmUXD+JLE/ejzMEzN7ZCfel8fW0M1BwN4Olj
+         24kO94OKmWgq8xNfXj4nplAMIZPCN7TQUuITwx4iTZar3YkhfBa2BHb3sTMbq8d87Daz
+         QuoHb+/TMYC2hAb1m7lebUv4wsGl/fHNqFz1nDn9nvWud4PYRoaIm4iChAWb1CScOI38
+         GlYpZ2e1eodoe2eNaG2DWqqvGeE6uYzT0rjrh0dO5q7fOgN+HaaCBQFxOG0Qa/SKmaum
+         ZOcw==
+X-Gm-Message-State: AGi0Puaq7WiHDPJ/X7GF0IOlPyJ57v6RIo8GvFSAsBuu98vFF43kaIVt
+        6RpJqH37W3HitFNcffHM+3v3VQ==
+X-Google-Smtp-Source: APiQypL5ab8kUwVRVcWcIiAwRrCmT//wFOwkdykPYlBYC88rMzjY4NOYcT/9iGaPrjtsMaol4ojq7g==
+X-Received: by 2002:a2e:9588:: with SMTP id w8mr1064366ljh.262.1585809960043;
+        Wed, 01 Apr 2020 23:46:00 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id n26sm2559155ljg.93.2020.04.01.23.45.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 23:45:54 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 23:45:52 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     agross@kernel.org, robdclark@gmail.com, joro@8bytes.org,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Wed, 01 Apr 2020 23:45:59 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 08:45:54 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/qcom:fix local_base status check
-Message-ID: <20200402064552.GG663905@yoga>
-References: <20200402063302.20640-1-tangbin@cmss.chinamobile.com>
+Subject: [PATCH v4 2/5] dt-bindings: soc: document LiteX SoC Controller
+ bindings
+Message-ID: <20200402084513.4173306-2-mholenko@antmicro.com>
+References: <20200402084513.4173306-0-mholenko@antmicro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402063302.20640-1-tangbin@cmss.chinamobile.com>
+In-Reply-To: <20200402084513.4173306-0-mholenko@antmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01 Apr 23:33 PDT 2020, Tang Bin wrote:
+From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
 
-> Release resources when exiting on error.
-> 
+Add documentation for LiteX SoC Controller bindings.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+---
 
-Regards,
-Bjorn
+Notes:
+    Changes in v4:
+    - changes compatible to "litex,soc-controller"
+    - fixed yaml's header
+    - removed unnecessary sections from yaml
+    - fixed indentation in yaml
 
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> ---
->  drivers/iommu/qcom_iommu.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-> index 4328da0b0..c08aa9651 100644
-> --- a/drivers/iommu/qcom_iommu.c
-> +++ b/drivers/iommu/qcom_iommu.c
-> @@ -813,8 +813,11 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
->  	qcom_iommu->dev = dev;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (res)
-> +	if (res) {
->  		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(qcom_iommu->local_base))
-> +			return PTR_ERR(qcom_iommu->local_base);
-> +	}
->  
->  	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
->  	if (IS_ERR(qcom_iommu->iface_clk)) {
-> -- 
-> 2.20.1.windows.1
-> 
-> 
-> 
+    This commit has been introduced in v3 of the patchset.
+
+ .../soc/litex/litex,soc-controller.yaml       | 39 +++++++++++++++++++
+ MAINTAINERS                                   |  6 +++
+ 2 files changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+
+diff --git a/Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml b/Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+new file mode 100644
+index 000000000000..b118ddbf04a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright 2020 Antmicro <www.antmicro.com>
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/soc/litex/litex,soc-controller.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: LiteX SoC Controller driver
++
++description: |
++  This is the SoC Controller driver for the LiteX SoC Builder.
++  It's purpose is to verify LiteX CSR (Control&Status Register) access
++  operations and provide function for other drivers to read/write CSRs
++  and to check if those accessors are ready to use.
++
++maintainers:
++  - Karol Gugala <kgugala@antmicro.com>
++  - Mateusz Holenko <mholenko@antmicro.com>
++
++properties:
++  compatible:
++    const: litex,soc-controller
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    soc_ctrl0: soc-controller@f0000000 {
++        compatible = "litex,soc-controller";
++        reg = <0x0 0xf0000000 0x0 0xC>;
++        status = "okay";
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cc1d18cb5d18..2f5ede8a08aa 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9724,6 +9724,12 @@ L:	kunit-dev@googlegroups.com
+ S:	Maintained
+ F:	lib/list-test.c
+ 
++LITEX PLATFORM
++M:	Karol Gugala <kgugala@antmicro.com>
++M:	Mateusz Holenko <mholenko@antmicro.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/*/litex,*.yaml
++
+ LIVE PATCHING
+ M:	Josh Poimboeuf <jpoimboe@redhat.com>
+ M:	Jiri Kosina <jikos@kernel.org>
+-- 
+2.25.1
+
