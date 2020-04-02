@@ -2,126 +2,152 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8A7C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCBDC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02A82073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB8D206F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:44:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="jyo3dG6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388651AbgDBOnR (ORCPT
+        id S2388660AbgDBOod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:43:17 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39808 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388629AbgDBOnQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:43:16 -0400
-Received: by mail-qk1-f196.google.com with SMTP id b62so4140861qkf.6;
-        Thu, 02 Apr 2020 07:43:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Sf8xIW95po41MsNtorwWl8pTLbgWf5KTPswmS5tTSsU=;
-        b=UOetwqE1YsTb0QB80/0e41jqYfMjdLnehYJEBfvCd3AyR29SN7tdb9iZ1q3HN0uKq/
-         U+aZStQsg17w3pc7sJH4xcW0d+WXax7gyVx3h4I0bjIuxwVQyDQATkBjSf1Dru5PBwTl
-         NvhMDtcwX1ywpEgCLp/N73e71lVslaq8DnDUtvnIJeygEEbUj4Den18/8iW7jYVUByTp
-         7kOazrs+Q/emmpQOPOPcCVKKE9Sf5wGiUb+PKnEZr+hqiuoHbkzUmVGW2oBESQO8LQgL
-         4eOhdM12Gh5DV9HSn0CfigjoQNC36KjS3p1/kSiV8ITspIhK7SYpbxHogU7QepgZN0ae
-         IwSw==
-X-Gm-Message-State: AGi0Pua8fCW7q2DZE/pNRMV91ybxTJMheXyFLJZ4DTTKEhFtsN9/2Sw8
-        e8nquEv0wljDLt4TQA9SEyQ=
-X-Google-Smtp-Source: APiQypLgY4tJeyyCC6GdSOIL8CordFKveXDU9v51XGmiU1NOSceqRS3uwwpK4nCiEdIek1LdlDKtRg==
-X-Received: by 2002:a37:4648:: with SMTP id t69mr3604208qka.299.1585838595746;
-        Thu, 02 Apr 2020 07:43:15 -0700 (PDT)
-Received: from ?IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d? ([2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d])
-        by smtp.gmail.com with ESMTPSA id l7sm3630805qkb.47.2020.04.02.07.43.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 07:43:14 -0700 (PDT)
-Subject: Re: [PATCH 3/4] arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Johan Jonker <jbx6244@gmail.com>
-Cc:     helen.koike@collabora.com, dafna.hirschfeld@collabora.com,
-        devel@driverdev.osuosl.org, devicetree@vger.kernel.org,
-        ezequiel@collabora.com, hverkuil-cisco@xs4all.nl,
-        karthik.poduval@gmail.com, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-References: <20200402000234.226466-4-helen.koike@collabora.com>
- <970b9e48-e38f-7e7a-3472-7dc5a4737e58@gmail.com> <105956984.FXDh2DO4ZE@diego>
-From:   Helen Koike <helen@koikeco.de>
-Message-ID: <2fa1b497-509a-d02f-b893-058639655133@koikeco.de>
-Date:   Thu, 2 Apr 2020 11:43:08 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <105956984.FXDh2DO4ZE@diego>
-Content-Type: text/plain; charset=utf-8
+        Thu, 2 Apr 2020 10:44:33 -0400
+Received: from mail-bn7nam10on2073.outbound.protection.outlook.com ([40.107.92.73]:19071
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726927AbgDBOoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 10:44:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WjTAHXXLstHMZRb7xdcf5AQRuTwron/973AMdHXlSleM7I6mmF6M7Vk/ggDIfRbNha+3W0V/qRdXYnGll08nSiLQwd2fH1WX85nGmLHmjj3j5jPgcFTxZXalqt5VwdIrM9orOVfR8Xr7iRs3bPLmJNZXlIfZFqt3tSluJ0eyCz1WXjlNbPmEt4GXcB09K4UjJO6p1b2URzPDl7P8EE9+7INisUwWGZJoB6VBrTTQEnJX6o3xbbDsONjPzLDFL01HQY1/u/Q4pEPckSAxPGTb9ax0kDIYiZKvrsEY6wYhj9ly8hN3NLqlAPChy9kEGxdtJxwnJL5cWhe+zRx2lkQ3vQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mwulQ/eypPEaHJOqvXIZmNw8VXJEFXb5KR+PxXrLmqE=;
+ b=A0dAuG96ZWJXW2pltpI1+QhBu51YwVwUt0FltSAKD+YEKhIvON6jM+j8YCkhEifC4AmeEQ7Etr0xotYSjnckJAJNH7U7mQ5+Fl4jzp9B/4nPtPpeMVRcixkSwmbOh//TsV/p8E466H1pTOnc1bsmbNrKZCONM+SFV6Gx1OeTWXWGO/Uh0zHQ1pfWyNJ1XKLa6cDkDlvKltKnX2RPVQtsW/w8JyXAc66tKOJHNc1hd9DXTDc6aNd8X2TCwxEmWgXLIc01Z3NOEi1CfqiO9d1sp1M1jxQcwN1/RgQuC9c3JUXTLj0sjWPnMwHOFcxiyyXtnsmyJu/uVyC22hclI78C/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mwulQ/eypPEaHJOqvXIZmNw8VXJEFXb5KR+PxXrLmqE=;
+ b=jyo3dG6ufY7q2z0qkK+Rn5fyD0UdoPAiDydeP+N7MZM6mSr5HT6wZZzUkZQ6c4wxPhZJ+sVzkCgyQNAyBPKFJAIh6bgW6X/KyjRzdIZKiWdpakWJR+10gWlDei4LxSMRWb/IhJ01tPlerc/f0Sr5VDZ7XvF6fYiLAnchHI6khAQ=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
+ by MN2PR11MB4111.namprd11.prod.outlook.com (2603:10b6:208:138::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Thu, 2 Apr
+ 2020 14:44:28 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 14:44:28 +0000
+From:   =?iso-8859-1?Q?J=E9r=F4me_Pouiller?= <Jerome.Pouiller@silabs.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 08/32] staging: wfx: simplify hif_handle_tx_data()
+Thread-Topic: [PATCH 08/32] staging: wfx: simplify hif_handle_tx_data()
+Thread-Index: AQHWCBVUexyIf33Hc0Wntu9/9TuZnKhl0OGAgAAZXIA=
+Date:   Thu, 2 Apr 2020 14:44:27 +0000
+Message-ID: <2302785.6C7ODC2LYm@pc-42>
+References: <20200401110405.80282-1-Jerome.Pouiller@silabs.com>
+ <20200401110405.80282-9-Jerome.Pouiller@silabs.com>
+ <20200402131338.GS2001@kadam>
+In-Reply-To: <20200402131338.GS2001@kadam>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [82.67.86.106]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c93d4cad-62e4-4a6d-7c7f-08d7d7145888
+x-ms-traffictypediagnostic: MN2PR11MB4111:
+x-microsoft-antispam-prvs: <MN2PR11MB4111168DF26CAD2705FBAC0693C60@MN2PR11MB4111.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0361212EA8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4063.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(7916004)(346002)(136003)(39850400004)(366004)(396003)(376002)(86362001)(9686003)(66574012)(64756008)(66556008)(316002)(8936002)(66946007)(6916009)(4326008)(6506007)(71200400001)(81166006)(478600001)(54906003)(91956017)(76116006)(66476007)(8676002)(33716001)(81156014)(2906002)(66446008)(26005)(186003)(5660300002)(6486002)(6512007)(39026012);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QsLfHr1tSgvLzEQL8s7gzPgqBN88QEuEmar/0C6/Zm/AfA94XE6gcFpEpJii6H24fHphFIllAptfo38ugkBvO4qYr06gaI6Qczi9CsYUjaEeCNF+e5GGQX71a1wTJ5RSO2LQ7+VPufOaPXao7Me/x/Ax+wWRpu0+rELbfouyFEIo47ZTGfcTCJqZOJZD2rXgT6RtEXPzwIKHyiZxdEVwIGIgl8LPsYsv2aj6kLx0Fc+Hvo1SpsPRXygr7k6GDngn5XrI38X+BPYbjplrX8gK9w1w47qltlbbCtTq1ivab5+OHj6SINEQ7S6y5KYEhP7DULbhLqz0nqpopcE1j9I2SIvIWulKBo34DgRdl8LC/EOgLZbOXBx8VDzLo6w31ylnPVqNItZdPsrrU80WryQ8cQajPA23HGAJRl4h5RC4rMJOFdKkobdVShHfUeLb0VfqZiCt7U9AAvrd8UkLNhBrhYj+lddZLzq/NOfAu3uCMNRicckII6HiVwmCO4H3r6CJ
+x-ms-exchange-antispam-messagedata: IkXquhejaYXKoe8xG2HKfo0klBEr/1wLoKec7dre2WTMxcIFWmFM8I6sB13PcFpFNF6MJgEBbsZtnJen+oiZY2tf9u0P9xPKErAyLn3p0E1xpogMIF7O2h41xJkOiYxbLgWIGUQnC36K6grg+xVaSA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <E6DDB03D4B3FDC428B4A6E0D581CADF2@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c93d4cad-62e4-4a6d-7c7f-08d7d7145888
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 14:44:27.9452
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Zc8MtgB8VyizDSKBT45y0FK5Jdj7b2IbftUlDGSZyoqe0bIG8kO5Jlf+Ejx4ZL2lltNZwweSClcIH0mmxd9h+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thursday 2 April 2020 15:13:39 CEST Dan Carpenter wrote:
+> On Wed, Apr 01, 2020 at 01:03:41PM +0200, Jerome Pouiller wrote:
+[...]
+> This is on the TX side so it's probably okay, but one problem I have
+> noticed is that we do this on the RX side as well with checking that
+>=20
+>         if (skb->len < sizeof(struct hif_msg))
+>                 return -EINVAL;
+>=20
+> So we could be reading beyond the end of the skb.  If we got really
+> unlucky it could lead to an Oops.
+>=20
+> regards,
+> dan carpenter
+>=20
+>=20
+Hello Dan,
 
-On 4/2/20 11:31 AM, Heiko Stübner wrote:
-> Am Donnerstag, 2. April 2020, 15:48:02 CEST schrieb Johan Jonker:
->> Hi Helen,
->>
->>> From: Helen Koike <helen.koike@collabora.com>
->>
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>> index 33cc21fcf4c10..fc0295d2a65a1 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>> @@ -1394,6 +1394,17 @@ io_domains: io-domains {
->>>  			status = "disabled";
->>>  		};
->>>  
->>
->>> +		mipi_dphy_rx0: mipi-dphy-rx0 {
->>
->> For Heiko sort syscon@ff770000 subnodes alphabetical or reg value first?
-> 
-> Similar to main nodes ... so things without reg alphabetical,
-> the rest by reg address
-> 
-> 
->>
->>> +			compatible = "rockchip,rk3399-mipi-dphy-rx0";
->>> +			clocks = <&cru SCLK_MIPIDPHY_REF>,
->>
->>> +				<&cru SCLK_DPHY_RX0_CFG>,
->>> +				<&cru PCLK_VIO_GRF>;
->>
->> Align                            ^
+The function rx_helper() in bh.c already do some sanity checks received dat=
+a:
 
-ack.
+    60          WARN(read_len < 4, "corrupted read");
+    [...]
+    92          } else {
+    93                  computed_len =3D round_up(hif->len, 2);
+    94          }
+    95          if (computed_len !=3D read_len) {
+    96                  dev_err(wdev->dev, "inconsistent message length: %z=
+u !=3D %zu\n",
+    97                          computed_len, read_len);
+    98                  print_hex_dump(KERN_INFO, "hif: ", DUMP_PREFIX_OFFS=
+ET, 16, 1,
+    99                                 hif, read_len, true);
+   100                  goto err;
+   101          }
 
-Thanks
-Helen
 
->>
->>> +			clock-names = "dphy-ref", "dphy-cfg", "grf";
->>> +			power-domains = <&power RK3399_PD_VIO>;
->>> +			#phy-cells = <0>;
->>> +			status = "disabled";
->>> +		};
->>> +
->>>  		u2phy0: usb2-phy@e450 {
->>>  			compatible = "rockchip,rk3399-usb2phy";
->>>  			reg = <0xe450 0x10>;
->>
->>
-> 
-> 
-> 
-> 
+However, I can improve this code:
+   - "4" should be replaced by "sizeof(struct hif_msg)" for readability=20
+   - hif->len is tested through computed_len, but I am not sure to be able
+     to prove that it covers all cases
+   - rx_helper() should recover the error if read_len < 4
+
+I add that on my TODO list.
+
+--=20
+J=E9r=F4me Pouiller
+
