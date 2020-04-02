@@ -2,169 +2,125 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01D9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC02C2BA14
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8288F2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274E52078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nEVfV1Ae"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QpMmA0a3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387751AbgDBIRX (ORCPT
+        id S2387765AbgDBIRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:17:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47324 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387601AbgDBIRW (ORCPT
+        Thu, 2 Apr 2020 04:17:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41110 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387661AbgDBIRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:17:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4rneyj2uBbyN/s3snHsjsVNWi1oFhxVS3X5MPkEZ0VI=; b=nEVfV1AedlA1a/UIMBE6GgwzQN
-        kVnL2sLRv+PFV3LXhXQImgNjqfc/9NpBtFa6z7Jv0gBRYGH+qK/xc6vnqAgSWqdkUanDjYUnvD7Dg
-        LKwoENjF077+pFzgAAWBuDNLYNx0Y5KL4/1joYmDNAwgfvMAO4i59p6kCILyHqPecUr2YNS7mN1Tn
-        U9CcsrMT9nPONYXIbpZIeqO/ARwoOJRaPmAaGKOcAaYwoc45s2pn0swa5SmSBZN16yAxCKfkRJutK
-        5Yqj3QdjqTwxxHP7it5FL0WMK4jsf6mfS6vUezzphBjquyJWvbDcXQDkIrKldsx5xOgiZu1X6gtXZ
-        lnuWntAQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJv2G-0005bV-E6; Thu, 02 Apr 2020 08:17:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CBEA1306CD2;
-        Thu,  2 Apr 2020 10:17:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 80F18202451B7; Thu,  2 Apr 2020 10:17:10 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 10:17:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
-Message-ID: <20200402081710.GJ20760@hirez.programming.kicks-ass.net>
-References: <20200331111652.GH20760@hirez.programming.kicks-ass.net>
- <20200331202315.zialorhlxmml6ec7@treble>
- <20200331204047.GF2452@worktop.programming.kicks-ass.net>
- <20200331211755.pb7f3wa6oxzjnswc@treble>
- <20200331212040.7lrzmj7tbbx2jgrj@treble>
- <20200331222703.GH2452@worktop.programming.kicks-ass.net>
- <d2cad75e-1708-f0bf-7f88-194bcb29e61d@redhat.com>
- <20200401170910.GX20730@hirez.programming.kicks-ass.net>
- <684d6e29-4a01-b4a5-f906-7bdee5ad108f@redhat.com>
- <20200402075036.GA20730@hirez.programming.kicks-ass.net>
+        Thu, 2 Apr 2020 04:17:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585815460;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qrXk8LVQd/CXKhg1TsCqsO3eX0JuDNOSoaTAXR1nr78=;
+        b=QpMmA0a3ViOskkEX0qZIgwy8adP+b9m+zeWJh/ydJdfeKttDVaiTaJRwHWlV1mP4y2qUMh
+        WUxGpVWMYOZ0Cr4Y/7xsFnjDcDe7GwnXXk/TG9ayptY9Noy0VAOzOMkOOzScuuraVFiwnk
+        MUoJInVYyAfngKi5LtONidV9kUhWE6E=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-oE_NL-NoPdKG6EivgrLtkw-1; Thu, 02 Apr 2020 04:17:39 -0400
+X-MC-Unique: oE_NL-NoPdKG6EivgrLtkw-1
+Received: by mail-qt1-f200.google.com with SMTP id g25so2495104qts.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 01:17:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qrXk8LVQd/CXKhg1TsCqsO3eX0JuDNOSoaTAXR1nr78=;
+        b=Yiv64t+u0xKoXYfxAhMQItsoFeaG92IrAM4mVhNpug75KX30Ul15XwtpODX+3ijK6V
+         dp/PpppHUZ67/joHEaGoJkEbmzN1MVT6Q5xoiIGAVg/Yh/rRJtPS9BpHZubdCXzp7K8m
+         hQhS8HKEgK7CC3kPVefPmhLpaDixdQjBkrjIQCd8BtfFPyYkZ/uvIPrwKcCUlL+ksia5
+         pHTIqZ6RD/3PHP0vtd2eyJMz57u0qEC+PVBNWlB0SsqQB3J/nbMpDYFJ1T0aRGe4V+OM
+         RLzrRDRcs9rXqS2LwX3Eq+daX0b7MFsPPST8xBeZGmeCEFVuaPnD+DoJ3MXFzuNE60Oj
+         uS1Q==
+X-Gm-Message-State: AGi0PuYvAZ+9ryXwLCKulNE1XAKsemFaXfYthuwQZxC7Ow1R13YqJTZc
+        f46HLPzrq0Q3fiOB58Kl3w8rr2QHU3KDxJiRBEOrG8jde+ciaSFW6H9Sp96hT1G8/+nHx5UYCpZ
+        M43HANZo4woZaKYD5eSd5fLrCQaKCnd0XUB2a1xLX
+X-Received: by 2002:ac8:740b:: with SMTP id p11mr1626583qtq.379.1585815457648;
+        Thu, 02 Apr 2020 01:17:37 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIWKQ0r7BLw/mXFg9PX+PpdHbG2jGnLDwo9XSxTQBg5Q2ggffGwidECmAS47ycvsUD64mF34zIwUE9GnhztrQo=
+X-Received: by 2002:ac8:740b:: with SMTP id p11mr1626573qtq.379.1585815457383;
+ Thu, 02 Apr 2020 01:17:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402075036.GA20730@hirez.programming.kicks-ass.net>
+References: <20200331192804.6019-1-eperezma@redhat.com> <c4d2b0b4-0b6d-cd74-0eb5-e7fdfe063d42@de.ibm.com>
+ <CAJaqyWc+fNzHE_p-pApZtj2ypNQfFLawCWf8GJmP8e=k=C+EgA@mail.gmail.com>
+ <916e60f8-45fe-5cc1-d5a1-defdcd00d75b@de.ibm.com> <6d16572f-34e9-4806-a5f8-94d8f75db352@de.ibm.com>
+In-Reply-To: <6d16572f-34e9-4806-a5f8-94d8f75db352@de.ibm.com>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Thu, 2 Apr 2020 10:17:01 +0200
+Message-ID: <CAJaqyWdwqdyfY_ZrWXEGogoUKajEPpT3FdsDMdEUCZ0tt4Dh9w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] vhost: Reset batched descriptors on SET_VRING_BASE call
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 09:50:36AM +0200, Peter Zijlstra wrote:
-> On Thu, Apr 02, 2020 at 07:41:46AM +0100, Julien Thierry wrote:
+On Wed, Apr 1, 2020 at 9:13 PM Christian Borntraeger
+<borntraeger@de.ibm.com> wrote:
+>
+> >> Would it be possible to investigate when qemu launches the offending ioctls?
+> >
+> > During guest reboot. This is obvious, no?
+> >
+>
 
-> > Also, instead of adding a special "arch_exception_frame_size", I could
-> > suggest:
-> > - Picking this patch [1] from a completely arbitrary source
-> > - Getting rid of INSN_STACK type, any instruction could then include stack
-> > ops on top of their existing semantics, they can just have an empty list if
-> > they don't touch SP/BP
-> > - x86 decoder adds a stack_op to the iret to modify the stack pointer by the
-> > right amount
-> 
-> That's not the worst idea, lemme try that.
+Got it. I thought you received it after the reboot AND once you sent
+the firsts packets, since you said that some pings worked. But now
+that this point is clear, I think we can move forward :). Thank you
+very much!
 
-Something like so then?
 
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -738,7 +738,6 @@ static inline void sync_core(void)
- 	unsigned int tmp;
- 
- 	asm volatile (
--		UNWIND_HINT_SAVE
- 		"mov %%ss, %0\n\t"
- 		"pushq %q0\n\t"
- 		"pushq %%rsp\n\t"
-@@ -748,7 +747,6 @@ static inline void sync_core(void)
- 		"pushq %q0\n\t"
- 		"pushq $1f\n\t"
- 		"iretq\n\t"
--		UNWIND_HINT_RESTORE
- 		"1:"
- 		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
- #endif
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -19,6 +19,7 @@ enum insn_type {
- 	INSN_CALL,
- 	INSN_CALL_DYNAMIC,
- 	INSN_RETURN,
-+	INSN_EXCEPTION_RETURN,
- 	INSN_CONTEXT_SWITCH,
- 	INSN_STACK,
- 	INSN_BUG,
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -435,9 +435,19 @@ int arch_decode_instruction(struct elf *
- 		*type = INSN_RETURN;
- 		break;
- 
-+	case 0xcf: /* iret */
-+		*type = INSN_EXCEPTION_RETURN;
-+
-+		/* add $40, %rsp */
-+		op->src.type = OP_SRC_ADD;
-+		op->src.reg = CFI_SP;
-+		op->src.offset = 5*8;
-+		op->dest.type = OP_DEST_REG;
-+		op->dest.reg = CFI_SP;
-+		break;
-+
- 	case 0xca: /* retf */
- 	case 0xcb: /* retf */
--	case 0xcf: /* iret */
- 		*type = INSN_CONTEXT_SWITCH;
- 		break;
- 
-@@ -483,7 +493,7 @@ int arch_decode_instruction(struct elf *
- 
- 	*immediate = insn.immediate.nbytes ? insn.immediate.value : 0;
- 
--	if (*type == INSN_STACK)
-+	if (*type == INSN_STACK || *type == INSN_EXCEPTION_RETURN)
- 		list_add_tail(&op->list, ops_list);
- 	else
- 		free(op);
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2224,6 +2224,20 @@ static int validate_branch(struct objtoo
- 
- 			break;
- 
-+		case INSN_EXCEPTION_RETURN:
-+			if (handle_insn_ops(insn, &state))
-+				return 1;
-+
-+			/*
-+			 * This handles x86's sync_core() case, where we use an
-+			 * IRET to self. All 'normal' IRET instructions are in
-+			 * STT_NOTYPE entry symbols.
-+			 */
-+			if (func)
-+				break;
-+
-+			return 0;
-+
- 		case INSN_CONTEXT_SWITCH:
- 			if (func && (!next_insn || !next_insn->hint)) {
- 				WARN_FUNC("unsupported instruction in callable function",
+>
+> For example during reboot we do re-setup the virt queues:
+>
+> #1  0x00000000010f3e7a in vhost_kernel_set_vring_base (dev=0x21f5f30, ring=0x3ff84d74e88) at /home/cborntra/REPOS/qemu/hw/virtio/vhost-backend.c:126
+> #2  0x00000000010f2f92 in vhost_virtqueue_start (idx=0, vq=0x21f6180, vdev=0x241d570, dev=0x21f5f30) at /home/cborntra/REPOS/qemu/hw/virtio/vhost.c:1016
+> #3  vhost_dev_start (hdev=hdev@entry=0x21f5f30, vdev=vdev@entry=0x241d570) at /home/cborntra/REPOS/qemu/hw/virtio/vhost.c:1646
+> #4  0x00000000011c265a in vhost_net_start_one (dev=0x241d570, net=0x21f5f30) at /home/cborntra/REPOS/qemu/hw/net/vhost_net.c:236
+> #5  vhost_net_start (dev=dev@entry=0x241d570, ncs=0x2450f40, total_queues=total_queues@entry=1) at /home/cborntra/REPOS/qemu/hw/net/vhost_net.c:338
+> #6  0x00000000010cfdfe in virtio_net_vhost_status (status=15 '\017', n=0x241d570) at /home/cborntra/REPOS/qemu/hw/net/virtio-net.c:250
+> #7  virtio_net_set_status (vdev=0x241d570, status=<optimized out>) at /home/cborntra/REPOS/qemu/hw/net/virtio-net.c:331
+> #8  0x00000000010eaef4 in virtio_set_status (vdev=vdev@entry=0x241d570, val=<optimized out>) at /home/cborntra/REPOS/qemu/hw/virtio/virtio.c:1956
+> #9  0x000000000110ba78 in virtio_ccw_cb (sch=0x2422c30, ccw=...) at /home/cborntra/REPOS/qemu/hw/s390x/virtio-ccw.c:509
+> #10 0x00000000011053fc in css_interpret_ccw (sch=sch@entry=0x2422c30, ccw_addr=<optimized out>, suspend_allowed=suspend_allowed@entry=false) at /home/cborntra/REPOS/qemu/hw/s390x/css.c:1108
+> #11 0x000000000110557c in sch_handle_start_func_virtual (sch=0x2422c30) at /home/cborntra/REPOS/qemu/hw/s390x/css.c:1162
+> #12 do_subchannel_work_virtual (sch=0x2422c30) at /home/cborntra/REPOS/qemu/hw/s390x/css.c:1256
+> #13 0x0000000001168592 in ioinst_handle_ssch (cpu=cpu@entry=0x234b920, reg1=<optimized out>, ipb=<optimized out>, ra=ra@entry=0) at /home/cborntra/REPOS/qemu/target/s390x/ioinst.c:218
+> #14 0x0000000001170012 in handle_b2 (ipa1=<optimized out>, run=0x3ff97880000, cpu=0x234b920) at /home/cborntra/REPOS/qemu/target/s390x/kvm.c:1279
+> #15 handle_instruction (run=0x3ff97880000, cpu=0x234b920) at /home/cborntra/REPOS/qemu/target/s390x/kvm.c:1664
+> #16 handle_intercept (cpu=0x234b920) at /home/cborntra/REPOS/qemu/target/s390x/kvm.c:1747
+> #17 kvm_arch_handle_exit (cs=cs@entry=0x234b920, run=run@entry=0x3ff97880000) at /home/cborntra/REPOS/qemu/target/s390x/kvm.c:1937
+> #18 0x00000000010972dc in kvm_cpu_exec (cpu=cpu@entry=0x234b920) at /home/cborntra/REPOS/qemu/accel/kvm/kvm-all.c:2445
+> #19 0x00000000010784f6 in qemu_kvm_cpu_thread_fn (arg=0x234b920) at /home/cborntra/REPOS/qemu/cpus.c:1246
+> #20 qemu_kvm_cpu_thread_fn (arg=arg@entry=0x234b920) at /home/cborntra/REPOS/qemu/cpus.c:1218
+> #21 0x00000000013891fa in qemu_thread_start (args=0x2372f30) at /home/cborntra/REPOS/qemu/util/qemu-thread-posix.c:519
+> #22 0x000003ff93809ed6 in start_thread () from target:/lib64/libpthread.so.0
+> #23 0x000003ff93705e46 in thread_start () from target:/lib64/libc.so.6
+>
+
