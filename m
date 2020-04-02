@@ -2,117 +2,159 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B519C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFB4C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01CCF2078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:05:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585829124;
-	bh=DOCQ79khuQuDX0scByQjV/Dc+mOTV7PRi2d4y/PFuMw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oHL4dYq2Mmm1WuA0Dtbi9IMnvkQL+ncWC4vcb69QCygTHEGC8OfnVKo9lOB1Oxbnj
-	 e/Fssbs6dEN0sO1sflLCZjTvf3xgx28d2kXeiqOLSar0L5ukAiLwHdOLYuk7FHLp2B
-	 r9/oHGnoQAHu4/Hl3zf4CCzG0LkOYq1+uMqOhAs0=
+	by mail.kernel.org (Postfix) with ESMTP id E1F7E20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388205AbgDBMFX (ORCPT
+        id S2388217AbgDBMJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:05:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37692 "EHLO mail.kernel.org"
+        Thu, 2 Apr 2020 08:09:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39218 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388089AbgDBMFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:05:22 -0400
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC80A2078B;
-        Thu,  2 Apr 2020 12:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585829121;
-        bh=DOCQ79khuQuDX0scByQjV/Dc+mOTV7PRi2d4y/PFuMw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iD87RcG6nBHeTUMhqFAjd+RBG0FGs4BeQ4ux6X6bhnYF6VnOep4M1fGpvbTOhrfQI
-         ebNclHF2SR1Ut2knX/Xv0Vgk8ZTvOB5ZDD0EaRIsU7djv1MJpx02Q/L5kbQXEQVxSA
-         xD+yUGtzFfRae/rBsiwinYeO9P6kFZGsZMpdMzhM=
-Received: by mail-io1-f46.google.com with SMTP id r25so3243683ioc.11;
-        Thu, 02 Apr 2020 05:05:21 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ4qwx7cKCOWtQBXJJ3BjULFp4eG46jSh078ohBOMiF2ajVWuJS
-        08x+bwiYwtbkTi8cMG+rY20NJqpqhFvxA6/O5uQ=
-X-Google-Smtp-Source: APiQypKiGRMVC/rZ/zmEQRLEdmyG/DKSK9Po+czO2H2U6ZtZ+m0OEYQCKxKanhryjTbOQCpeiqefVGI+Qu4nXgiL3E4=
-X-Received: by 2002:a6b:f413:: with SMTP id i19mr2424610iog.203.1585829121163;
- Thu, 02 Apr 2020 05:05:21 -0700 (PDT)
+        id S2387958AbgDBMJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 08:09:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 85F2CAA55;
+        Thu,  2 Apr 2020 12:09:24 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm: initialize deferred pages with interrupts
+ enabled
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        mhocko@suse.com, linux-mm@kvack.org, dan.j.williams@intel.com,
+        shile.zhang@linux.alibaba.com, daniel.m.jordan@oracle.com,
+        ktkhai@virtuozzo.com, david@redhat.com, jmorris@namei.org,
+        sashal@kernel.org
+References: <20200401225723.14164-1-pasha.tatashin@soleen.com>
+ <20200401225723.14164-3-pasha.tatashin@soleen.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <8a2fbe6b-c861-9d47-9f02-72d476265359@suse.cz>
+Date:   Thu, 2 Apr 2020 14:09:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <5a6807f19fd69f2de6622c794639cc5d70b9563a.1585513949.git.stefan@agner.ch>
- <CAKwvOdkyOW6RXTOCt1xMp2H+uH28ofByQOjyx776t8RDxTED2w@mail.gmail.com>
- <CAMj1kXGYiMobkue642iDRdOjEHQK=KXpp=Urrgik9UU-eWWibQ@mail.gmail.com> <DBBPR08MB4823129E272220712B470716F8C60@DBBPR08MB4823.eurprd08.prod.outlook.com>
-In-Reply-To: <DBBPR08MB4823129E272220712B470716F8C60@DBBPR08MB4823.eurprd08.prod.outlook.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 2 Apr 2020 14:05:10 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEQ4v9e6386ogPdy+s+++9H02DMPnDpTq0WSY2e78ts+Q@mail.gmail.com>
-Message-ID: <CAMj1kXEQ4v9e6386ogPdy+s+++9H02DMPnDpTq0WSY2e78ts+Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: OMAP2+: drop unnecessary adrl
-To:     Peter Smith <Peter.Smith@arm.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>, nd <nd@arm.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Stefan Agner <stefan@agner.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200401225723.14164-3-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 at 13:50, Peter Smith <Peter.Smith@arm.com> wrote:
->
-> > I take it this implies that the LLVM linker does not support the
-> > R_ARM_ALU_PC_Gn relocations? Since otherwise, adrl could simply be
-> > expanded to a pair of adds with the appropriate relocations, letting
-> > the linker fix up the immediates (and the ADD vs SUB bits)
->
-> Not at the moment. I have a patch in review to add the G0 variants for th=
-ese in Arm state at reviews.llvm.org/D75349 . As far as I know LLVM MC does=
- not have support for generating the relocations either. This could be adde=
-d though. I agree that using the G* relocations with a pair of add/sub inst=
-ructions would be the ideal solution. The adrl psuedo is essentially that b=
-ut implemented at assembly time. I think it would be possible to implement =
-in LLVM but at the time (4+ years ago) I wasn't confident in finding someon=
-e that would think that adrl support was worth the disruption, for example =
-the current Arm assembly backend can only produce 1 instruction as output a=
-nd adrl requires two.
->
-> I'd be happy to look at group relocation support in LLD, I haven't got a =
-lot of spare time so progress is likely to be slow though.
->
+On 4/2/20 12:57 AM, Pavel Tatashin wrote:
+> Initializing struct pages is a long task and keeping interrupts disabled
+> for the duration of this operation introduces a number of problems.
+> 
+> 1. jiffies are not updated for long period of time, and thus incorrect time
+>    is reported. See proposed solution and discussion here:
+>    lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
+> 2. It prevents farther improving deferred page initialization by allowing
+>    intra-node multi-threading.
+> 
+> We are keeping interrupts disabled to solve a rather theoretical problem
+> that was never observed in real world (See 3a2d7fa8a3d5).
+> 
+> Lets keep interrupts enabled. In case we ever encounter a scenario where
+> an interrupt thread wants to allocate large amount of memory this early in
+> boot we can deal with that by growing zone (see deferred_grow_zone()) by
+> the needed amount before starting deferred_init_memmap() threads.
+> 
+> Before:
+> [    1.232459] node 0 initialised, 12058412 pages in 1ms
+> 
+> After:
+> [    1.632580] node 0 initialised, 12051227 pages in 436ms
+> 
+> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
+> Cc: stable@vger.kernel.org # 4.17+
 
-For Linux, I have proposed another approach in the past, which is to
-define a (Linux-local) adr_l macro with unlimited range [0], which
-basically comes down to place relative movw/movt pairs for v7+, and
-something along the lines of
+TBH I don't remember my concern anymore. Reading my mail now [1] it seems I was
+thinking the problem could happen not just in interrupt context, but with other
+kthreads as well.
+Anyway I agree with the approach of waiting for actual issues being reported and
+then eventually pre-growing more.
 
-        ldr <reg>, 222f
-111:    add <reg>, <reg>, pc
-        .subsection 1
-222:    .long <sym> - (111b + 8)
-        .previous
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-for v6 and earlier. Could you comment on whether Clang's integrated
-assembler could support anything like this?
+[1] https://lore.kernel.org/linux-mm/33e3a3ff-0318-1a07-3c57-6be638046c87@suse.cz/
 
+> Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> ---
+>  include/linux/mmzone.h |  2 ++
+>  mm/page_alloc.c        | 22 ++++++++--------------
+>  2 files changed, 10 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 462f6873905a..c5bdf55da034 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -721,6 +721,8 @@ typedef struct pglist_data {
+>  	/*
+>  	 * Must be held any time you expect node_start_pfn,
+>  	 * node_present_pages, node_spanned_pages or nr_zones to stay constant.
+> +	 * Also synchronizes pgdat->first_deferred_pfn during deferred page
+> +	 * init.
+>  	 *
+>  	 * pgdat_resize_lock() and pgdat_resize_unlock() are provided to
+>  	 * manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index e8ff6a176164..68669d3a5a66 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1790,6 +1790,13 @@ static int __init deferred_init_memmap(void *data)
+>  	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
+>  	pgdat->first_deferred_pfn = ULONG_MAX;
+>  
+> +	/*
+> +	 * Once we unlock here, the zone cannot be grown anymore, thus if an
+> +	 * interrupt thread must allocate this early in boot, zone must be
+> +	 * pre-grown prior to start of deferred page initialization.
+> +	 */
+> +	pgdat_resize_unlock(pgdat, &flags);
+> +
+>  	/* Only the highest zone is deferred so find it */
+>  	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
+>  		zone = pgdat->node_zones + zid;
+> @@ -1809,11 +1816,9 @@ static int __init deferred_init_memmap(void *data)
+>  	 */
+>  	while (spfn < epfn) {
+>  		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> -		touch_nmi_watchdog();
+> +		cond_resched();
+>  	}
+>  zone_empty:
+> -	pgdat_resize_unlock(pgdat, &flags);
+> -
+>  	/* Sanity check that the next zone really is unpopulated */
+>  	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
+>  
+> @@ -1855,17 +1860,6 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
+>  
+>  	pgdat_resize_lock(pgdat, &flags);
+>  
+> -	/*
+> -	 * If deferred pages have been initialized while we were waiting for
+> -	 * the lock, return true, as the zone was grown.  The caller will retry
+> -	 * this zone.  We won't return to this function since the caller also
+> -	 * has this static branch.
+> -	 */
+> -	if (!static_branch_unlikely(&deferred_pages)) {
+> -		pgdat_resize_unlock(pgdat, &flags);
+> -		return true;
+> -	}
+> -
+>  	/*
+>  	 * If someone grew this zone while we were waiting for spinlock, return
+>  	 * true, as there might be enough pages already.
+> 
 
-Thanks,
-Ard.
-
-
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/commit/?=
-h=3Darm-kaslr-latest&id=3Dfd440f1131553a5201ce3b94905419bd067b93b3
