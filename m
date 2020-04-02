@@ -2,125 +2,237 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD90C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87174C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C482078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCD020721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:31:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3IUlRfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732450AbgDBQaN (ORCPT
+        id S2387552AbgDBQba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:30:13 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48542 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbgDBQaN (ORCPT
+        Thu, 2 Apr 2020 12:31:30 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48511 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732569AbgDBQb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:30:13 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK2is-008oQu-I7; Thu, 02 Apr 2020 16:29:42 +0000
-Date:   Thu, 2 Apr 2020 17:29:42 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
-        daniel@ffwll.ch, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, keescook@chromium.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
- user_write_access_begin/end
-Message-ID: <20200402162942.GG23230@ZenIV.linux.org.uk>
-References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+        Thu, 2 Apr 2020 12:31:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585845088;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WmJvDE6tIUjYbNnLMH2FiH7kEbwg6hJX/9E4DYyHw6k=;
+        b=N3IUlRfAUuW5CefbGqo+YuHRYp431p1NYAoXD9qhyT+M1yw4rdV85FuTUklLK7rt2pMJAy
+        xNPcWHl+gpkJ2SSWUa5lcjFl9eGwYmcj5gZhm1nTjQapYqEgkQ2NsV4/1FlvhCH1vZtd/0
+        swf6JiEmuomK7Ez3SwAMB0kxTjcWd/g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-490-UZzm0zuSNEC8JpfdYVJXHQ-1; Thu, 02 Apr 2020 12:31:24 -0400
+X-MC-Unique: UZzm0zuSNEC8JpfdYVJXHQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBC3A8010FD;
+        Thu,  2 Apr 2020 16:31:22 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B5945C553;
+        Thu,  2 Apr 2020 16:31:22 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id B2C5118089C8;
+        Thu,  2 Apr 2020 16:31:21 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 12:31:21 -0400 (EDT)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Richard Guy Briggs <rgb@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
+        linux-audit@redhat.com, James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <1800109401.20260657.1585845081366.JavaMail.zimbra@redhat.com>
+In-Reply-To: <2d7174b1-115f-b86f-8054-a5caef4b69ff@schaufler-ca.com>
+References: <20200402141319.28714-1-vdronov@redhat.com> <2d7174b1-115f-b86f-8054-a5caef4b69ff@schaufler-ca.com>
+Subject: Re: [PATCH ghak96] audit: set cwd in audit context for file-related
+ LSM audit records
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.193.197, 10.4.195.11]
+Thread-Topic: audit: set cwd in audit context for file-related LSM audit records
+Thread-Index: 8e3qF2g6AHt9X4Hh2HYCY+d3jKkEsw==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 07:34:16AM +0000, Christophe Leroy wrote:
-> Some architectures like powerpc64 have the capability to separate
-> read access and write access protection.
-> For get_user() and copy_from_user(), powerpc64 only open read access.
-> For put_user() and copy_to_user(), powerpc64 only open write access.
-> But when using unsafe_get_user() or unsafe_put_user(),
-> user_access_begin open both read and write.
+Hello, Casey, all,
+
+----- Original Message -----
+> From: "Casey Schaufler" <casey@schaufler-ca.com>
+> Subject: Re: [PATCH ghak96] audit: set cwd in audit context for file-related LSM audit records
 > 
-> Other architectures like powerpc book3s 32 bits only allow write
-> access protection. And on this architecture protection is an heavy
-> operation as it requires locking/unlocking per segment of 256Mbytes.
-> On those architecture it is therefore desirable to do the unlocking
-> only for write access. (Note that book3s/32 ranges from very old
-> powermac from the 90's with powerpc 601 processor, till modern
-> ADSL boxes with PowerQuicc II modern processors for instance so it
-> is still worth considering)
+> On 4/2/2020 7:13 AM, Vladis Dronov wrote:
+> > Set a current working directory in an audit context for the following
+> > record
+> > types in dump_common_audit_data(): LSM_AUDIT_DATA_PATH,
+> > LSM_AUDIT_DATA_FILE,
+> > LSM_AUDIT_DATA_IOCTL_OP, LSM_AUDIT_DATA_DENTRY, LSM_AUDIT_DATA_INODE so a
+> > separate CWD record is emitted later.
+> >
+> > Link: https://github.com/linux-audit/audit-kernel/issues/96
 > 
-> In order to avoid any risk based of hacking some variable parameters
-> passed to user_access_begin/end that would allow hacking and
-> leaving user access open or opening too much, it is preferable to
-> use dedicated static functions that can't be overridden.
-> 
-> Add a user_read_access_begin and user_read_access_end to only open
-> read access.
-> 
-> Add a user_write_access_begin and user_write_access_end to only open
-> write access.
-> 
-> By default, when undefined, those new access helpers default on the
-> existing user_access_begin and user_access_end.
+> I don't have a problem with the patch, but it sure would be nice
+> if you explained why these events "could use a CWD record".
 
-The only problem I have is that we'd better choose the calling
-conventions that work for other architectures as well.
+(adding Richard Guy Briggs <rgb@redhat.com> which I should have been done earlier)
 
-AFAICS, aside of ppc and x86 we have (at least) this:
-arm:
-	unsigned int __ua_flags = uaccess_save_and_enable();
-	...
-	uaccess_restore(__ua_flags);
-arm64:
-	uaccess_enable_not_uao();
-	...
-	uaccess_disable_not_uao();
-riscv:
-	__enable_user_access();
-	...
-	__disable_user_access();
-s390/mvc:
-	old_fs = enable_sacf_uaccess();
-	...
-        disable_sacf_uaccess(old_fs);
+I would agree, adding "cwd=" field in the LSM record itself is simpler to me.
 
-arm64 and riscv are easy - they map well on what we have now.
-The interesting ones are ppc, arm and s390.
+Unfortunately, all I can say for now is "The intent was a separate CWD record,
+that is already defined" requirement from the ghak#96 issue.
 
-You wants to specify the kind of access; OK, but...  it's not just read
-vs. write - there's read-write as well.  AFAICS, there are 3 users of
-that:
-	* copy_in_user()
-	* arch_futex_atomic_op_inuser()
-	* futex_atomic_cmpxchg_inatomic()
-The former is of dubious utility (all users outside of arch are in
-the badly done compat code), but the other two are not going to go
-away.
+Richard, could you, please, clarify since you've posted this requirement in
+the ghak#96's description?
+ 
+> > Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+> > ---
+> > out-of-commit-message-note:
+> >
+> > Hello,
+> > Honestly, I'm not sure about "if (!context->in_syscall)" check in
+> > __audit_getcwd(). It was copied from __audit_getname() and I do
+> > not quite understand why it is there and if __audit_getcwd() needs
+> > it. If you have an idea on this, could you please, tell?
+> >
+> >  include/linux/audit.h |  9 ++++++++-
+> >  kernel/auditsc.c      | 17 +++++++++++++++++
+> >  security/lsm_audit.c  |  5 +++++
+> >  3 files changed, 30 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > index f9ceae57ca8d..b4306abc5891 100644
+> > --- a/include/linux/audit.h
+> > +++ b/include/linux/audit.h
+> > @@ -268,7 +268,7 @@ extern void __audit_syscall_entry(int major, unsigned
+> > long a0, unsigned long a1,
+> >  extern void __audit_syscall_exit(int ret_success, long ret_value);
+> >  extern struct filename *__audit_reusename(const __user char *uptr);
+> >  extern void __audit_getname(struct filename *name);
+> > -
+> > +extern void __audit_getcwd(void);
+> >  extern void __audit_inode(struct filename *name, const struct dentry
+> >  *dentry,
+> >  				unsigned int flags);
+> >  extern void __audit_file(const struct file *);
+> > @@ -327,6 +327,11 @@ static inline void audit_getname(struct filename
+> > *name)
+> >  	if (unlikely(!audit_dummy_context()))
+> >  		__audit_getname(name);
+> >  }
+> > +static inline void audit_getcwd(void)
+> > +{
+> > +	if (unlikely(!audit_dummy_context()))
+> > +		__audit_getcwd();
+> > +}
+> >  static inline void audit_inode(struct filename *name,
+> >  				const struct dentry *dentry,
+> >  				unsigned int aflags) {
+> > @@ -545,6 +550,8 @@ static inline struct filename *audit_reusename(const
+> > __user char *name)
+> >  }
+> >  static inline void audit_getname(struct filename *name)
+> >  { }
+> > +static inline void audit_getcwd(void)
+> > +{ }
+> >  static inline void __audit_inode(struct filename *name,
+> >  					const struct dentry *dentry,
+> >  					unsigned int flags)
+> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > index 814406a35db1..16316032ef9f 100644
+> > --- a/kernel/auditsc.c
+> > +++ b/kernel/auditsc.c
+> > @@ -1890,6 +1890,23 @@ void __audit_getname(struct filename *name)
+> >  		get_fs_pwd(current->fs, &context->pwd);
+> >  }
+> >  
+> > +/**
+> > + * __audit_getcwd - set a current working directory
+> > + *
+> > + * Set a current working directory of an audited process for this context.
+> > + * Called from security/lsm_audit.c:dump_common_audit_data().
+> > + */
+> > +void __audit_getcwd(void)
+> > +{
+> > +	struct audit_context *context = audit_context();
+> > +
+> > +	if (!context->in_syscall)
+> > +		return;
+> > +
+> > +	if (!context->pwd.dentry)
+> > +		get_fs_pwd(current->fs, &context->pwd);
+> > +}
+> > +
+> >  static inline int audit_copy_fcaps(struct audit_names *name,
+> >  				   const struct dentry *dentry)
+> >  {
+> > diff --git a/security/lsm_audit.c b/security/lsm_audit.c
+> > index 2d2bf49016f4..7c555621c2bd 100644
+> > --- a/security/lsm_audit.c
+> > +++ b/security/lsm_audit.c
+> > @@ -241,6 +241,7 @@ static void dump_common_audit_data(struct audit_buffer
+> > *ab,
+> >  			audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> >  			audit_log_format(ab, " ino=%lu", inode->i_ino);
+> >  		}
+> > +		audit_getcwd();
+> >  		break;
+> >  	}
+> >  	case LSM_AUDIT_DATA_FILE: {
+> > @@ -254,6 +255,7 @@ static void dump_common_audit_data(struct audit_buffer
+> > *ab,
+> >  			audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> >  			audit_log_format(ab, " ino=%lu", inode->i_ino);
+> >  		}
+> > +		audit_getcwd();
+> >  		break;
+> >  	}
+> >  	case LSM_AUDIT_DATA_IOCTL_OP: {
+> > @@ -269,6 +271,7 @@ static void dump_common_audit_data(struct audit_buffer
+> > *ab,
+> >  		}
+> >  
+> >  		audit_log_format(ab, " ioctlcmd=0x%hx", a->u.op->cmd);
+> > +		audit_getcwd();
+> >  		break;
+> >  	}
+> >  	case LSM_AUDIT_DATA_DENTRY: {
+> > @@ -283,6 +286,7 @@ static void dump_common_audit_data(struct audit_buffer
+> > *ab,
+> >  			audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> >  			audit_log_format(ab, " ino=%lu", inode->i_ino);
+> >  		}
+> > +		audit_getcwd();
+> >  		break;
+> >  	}
+> >  	case LSM_AUDIT_DATA_INODE: {
+> > @@ -300,6 +304,7 @@ static void dump_common_audit_data(struct audit_buffer
+> > *ab,
+> >  		audit_log_format(ab, " dev=");
+> >  		audit_log_untrustedstring(ab, inode->i_sb->s_id);
+> >  		audit_log_format(ab, " ino=%lu", inode->i_ino);
+> > +		audit_getcwd();
+> >  		break;
+> >  	}
+> >  	case LSM_AUDIT_DATA_TASK: {
 
-What should we do about that?  Do we prohibit such blocks outside
-of arch?
+Best regards,
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
 
-What should we do about arm and s390?  There we want a cookie passed
-from beginning of block to its end; should that be a return value?
-
-And at least on arm that thing nests (see e.g. __clear_user_memset()
-there), so "stash that cookie in current->something" is not a solution...
-
-Folks, let's sort that out while we still have few users of that
-interface; changing the calling conventions later will be much harder.
-Comments?
