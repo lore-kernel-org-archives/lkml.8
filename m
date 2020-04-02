@@ -2,112 +2,219 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C1FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FFDC2BA18
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1320206E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5044F20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:37:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="h/TL51fw"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="bY2/8Jth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388658AbgDBUgM (ORCPT
+        id S2389086AbgDBUhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:36:12 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38158 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729549AbgDBUgM (ORCPT
+        Thu, 2 Apr 2020 16:37:12 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:55213 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731842AbgDBUhL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:36:12 -0400
-Received: by mail-pj1-f68.google.com with SMTP id m15so1968585pje.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 13:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=5Tvvg+jX0GG9uHDoaYNmJitk6pKLfYUjlwPpA4nOY8c=;
-        b=h/TL51fwxBfbFddA9eXzFEK5DtH/YBEal9qplDsoh3mxwYkcQE2z1eJ5U3z+3lh5Bq
-         VLfCqQDeRi83OHvScQvnNm7luL6VtmLoEkbjTcpwqjPPvq2hCfNPT3SXFzOQT/piwXXH
-         T0NqBW+H0T9F8TTmOtrdr+SlwvZhvEszkuTUe2yiKGFFXO3yivBeiZCFKCgor6wO9RHF
-         BaH2hIyZwICXGZKQOoh8NmHFTGePT7fHHhXVVQ5bOJ6qwCmH6aTzXeNZ3H6x8+EJRYnS
-         3z0ND3iDD0zJ+0pM/YqgDE+4XT4jqtoOIkpj+AynzrjLvT07RRlb9YCnYhDNabv2GKNi
-         Sg3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=5Tvvg+jX0GG9uHDoaYNmJitk6pKLfYUjlwPpA4nOY8c=;
-        b=doIplalR409w3lGNYg1NEg0/xVcfGDgRfLMwZ6/ifKSKf/yevDXLzmf4KrvzF+kRKg
-         Uis+0BfViwyiFIPDkK0V+gy8NYNo+ILfOK0tnjI7VYl3S51nebfig+I4CyH5iB8pBXEA
-         D33o64VyMk5U2OHfirOwxuSGN7s5Ty39c17KrI3RYNgDm9obaYddhFYNvNbcPvVIEzJQ
-         PHPuIRjocbk4t+DtTbZGrzDA3eKLjkLPPt0jHDhAKDIAmzss4GUTtSVnS3d3tJDoK9/T
-         emwnzrS0tqd5fcDERFPhi6UQj7wk/WLkoSsQzaEdfd0NZXFJ1xDytzcJfZ3x8ehMmPb2
-         KEyg==
-X-Gm-Message-State: AGi0Pua0mJgfUEhteZWWXryp8zf7KVnCIAX92XEu6GPNcG7dRfmflohl
-        R6hRy8kiygR4wOP+meu1uGtEXg==
-X-Google-Smtp-Source: APiQypJwwiuCucj4ZpH3FL5V1GUvNK9TzMm3eb1wW/iOjUU0tRn1Sb/G6pQHUNrpI8dDCEvBaDVd/A==
-X-Received: by 2002:a17:90a:e64e:: with SMTP id ep14mr5954301pjb.149.1585859770830;
-        Thu, 02 Apr 2020 13:36:10 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:20df:efa9:6ad3:9221? ([2601:646:c200:1ef2:20df:efa9:6ad3:9221])
-        by smtp.gmail.com with ESMTPSA id y207sm4428233pfb.189.2020.04.02.13.36.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 13:36:10 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 3/3] KVM: VMX: Extend VMX's #AC interceptor to handle split lock #AC in guest
-Date:   Thu, 2 Apr 2020 13:36:08 -0700
-Message-Id: <D6B8E21D-6DB2-4DF8-8B73-12DD36476F55@amacapital.net>
-References: <87h7y1mz2s.fsf@nanos.tec.linutronix.de>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86@kernel.org, "Kenneth R . Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <87h7y1mz2s.fsf@nanos.tec.linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-X-Mailer: iPhone Mail (17D50)
+        Thu, 2 Apr 2020 16:37:11 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 0328D2305A;
+        Thu,  2 Apr 2020 22:37:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1585859827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=mnKmTNZijE88RiWkWLDxCt0MHlKHzP9p+BwmR51VIrQ=;
+        b=bY2/8Jth9XsAsvZdDjoPfpawlQtJEkJRbsY/xgcUTDLEh+SIqSZu9SNlf3AJaoX3m0rl6w
+        Pt3DQNCybMZ+qrGOTLqwauIgQZ0YHlDUTmzqBH8RVZlvuJ7rbrH29yj7esGMEHD3ydkDOa
+        iGTC8lyg09CCxseWRurmXQDHjum0lsM=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v2 00/16] Add support for Kontron sl28cpld
+Date:   Thu,  2 Apr 2020 22:36:40 +0200
+Message-Id: <20200402203656.27047-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 0328D2305A
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[24];
+         MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.141];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Kontron sl28cpld is a board management chip providing gpio, pwm, fan
+monitoring and an interrupt controller. For now this controller is used on
+the Kontron SMARC-sAL28 board. But because of its flexible nature, it
+might also be used on other boards in the future. The individual blocks
+(like gpio, pwm, etc) are kept intentionally small. The MFD core driver
+then instantiates different (or multiple of the same) blocks. It also
+provides the register layout so it might be updated in the future without a
+device tree change; and support other boards with a different layout or
+functionalities.
 
+See also [1] for more information.
 
-> On Apr 2, 2020, at 1:07 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
->=20
+This is my first take of a MFD driver. I don't know whether the subsystem
+maintainers should only be CCed on the patches which affect the subsystem
+or on all patches for this series. I've chosen the latter so you can get a
+more complete picture.
 
->=20
->=20
-> TBH, the more I learn about this, the more I tend to just give up on
-> this whole split lock stuff in its current form and wait until HW folks
-> provide something which is actually usable:
->=20
->   - Per thread
->   - Properly distinguishable from a regular #AC via error code
+[1] https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
 
-Why the latter?  I would argue that #AC from CPL3 with EFLAGS.AC set is almo=
-st by construction not a split lock. In particular, if you meet these condit=
-ions, how exactly can you do a split lock without simultaneously triggering a=
-n alignment check?  (Maybe CMPXCHG16B?
+Changes since v1:
+ - use of_match_table in all drivers, needed for automatic module loading,
+   when using OF_MFD_CELL()
+ - add new gpio-regmap.c which adds a generic regmap gpio_chip implemention
+ - new patch for reqmap_irq, so we can reuse its implementation
+ - remove almost any code from gpio-sl28cpld.c, instead use gpio-regmap and
+   regmap-irq
+ - change the handling of the mfd core vs device tree nodes; add a new
+   property "of_reg" to the mfd_cell struct which, when set, is matched to
+   the unit-address of the device tree nodes.
+ - fix sl28cpld watchdog when it is not initialized by the bootloader.
+   Explicitly set the operation mode.
+ - also add support for kontron,assert-wdt-timeout-pin in sl28cpld-wdt.
 
->=20
-> OTOH, that means I won't be able to use it before retirement. Oh well.
->=20
-> Thanks,
->=20
->        tglx
+As suggested by Bartosz Golaszewski:
+ - define registers as hex
+ - make gpio enum uppercase
+ - move parent regmap check before memory allocation
+ - use device_property_read_bool() instead of the of_ version
+ - mention the gpio flavors in the bindings documentation
+
+As suggested by Guenter Roeck:
+ - cleanup #includes and sort them
+ - use devm_watchdog_register_device()
+ - use watchdog_stop_on_reboot()
+ - provide a Documentation/hwmon/sl28cpld.rst
+ - cleaned up the weird tristate->bool and I2C=y issue. Instead mention
+   that the MFD driver is bool because of the following intc patch
+ - removed the SL28CPLD_IRQ typo
+
+As suggested by Rob Herring:
+ - combine all dt bindings docs into one patch
+ - change the node name for all gpio flavors to "gpio"
+ - removed the interrupts-extended rule
+ - cleaned up the unit-address space, see above
+
+Michael Walle (16):
+  include/linux/ioport.h: add helper to define REG resource constructs
+  mfd: mfd-core: Don't overwrite the dma_mask of the child device
+  mfd: mfd-core: match device tree node against reg property
+  regmap-irq: make it possible to add irq_chip do a specific device node
+  dt-bindings: mfd: Add bindings for sl28cpld
+  mfd: Add support for Kontron sl28cpld management controller
+  irqchip: add sl28cpld interrupt controller support
+  watchdog: add support for sl28cpld watchdog
+  pwm: add support for sl28cpld PWM controller
+  gpio: add a reusable generic gpio_chip using regmap
+  gpio: add support for the sl28cpld GPIO controller
+  hwmon: add support for the sl28cpld hardware monitoring controller
+  arm64: dts: freescale: sl28: enable sl28cpld
+  arm64: dts: freescale: sl28: map GPIOs to input events
+  arm64: dts: freescale: sl28: enable LED support
+  arm64: dts: freescale: sl28: enable fan support
+
+ .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  51 +++
+ .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++
+ .../bindings/mfd/kontron,sl28cpld.yaml        | 162 +++++++++
+ .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++
+ .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++
+ Documentation/hwmon/sl28cpld.rst              |  36 ++
+ .../fsl-ls1028a-kontron-kbox-a-230-ls.dts     |  14 +
+ .../fsl-ls1028a-kontron-sl28-var3-ads2.dts    |   9 +
+ .../freescale/fsl-ls1028a-kontron-sl28.dts    | 124 +++++++
+ drivers/base/regmap/regmap-irq.c              |  84 ++++-
+ drivers/gpio/Kconfig                          |  15 +
+ drivers/gpio/Makefile                         |   2 +
+ drivers/gpio/gpio-regmap.c                    | 321 ++++++++++++++++++
+ drivers/gpio/gpio-sl28cpld.c                  | 187 ++++++++++
+ drivers/hwmon/Kconfig                         |  10 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/sl28cpld-hwmon.c                | 152 +++++++++
+ drivers/irqchip/Kconfig                       |   3 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-sl28cpld.c                |  99 ++++++
+ drivers/mfd/Kconfig                           |  21 ++
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/mfd-core.c                        |  31 +-
+ drivers/mfd/sl28cpld.c                        | 154 +++++++++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-sl28cpld.c                    | 204 +++++++++++
+ drivers/watchdog/Kconfig                      |  11 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/sl28cpld_wdt.c               | 242 +++++++++++++
+ include/linux/gpio-regmap.h                   |  88 +++++
+ include/linux/ioport.h                        |   5 +
+ include/linux/mfd/core.h                      |  26 +-
+ include/linux/regmap.h                        |  10 +
+ 34 files changed, 2142 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+ create mode 100644 Documentation/hwmon/sl28cpld.rst
+ create mode 100644 drivers/gpio/gpio-regmap.c
+ create mode 100644 drivers/gpio/gpio-sl28cpld.c
+ create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
+ create mode 100644 drivers/irqchip/irq-sl28cpld.c
+ create mode 100644 drivers/mfd/sl28cpld.c
+ create mode 100644 drivers/pwm/pwm-sl28cpld.c
+ create mode 100644 drivers/watchdog/sl28cpld_wdt.c
+ create mode 100644 include/linux/gpio-regmap.h
+
+-- 
+2.20.1
+
