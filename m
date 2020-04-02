@@ -2,49 +2,53 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052A4C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820A0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF863206D3
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5854C20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="YpVB3Y0E"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="PWyfGkYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388153AbgDBLy5 (ORCPT
+        id S2388201AbgDBLzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:54:57 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:57265 "EHLO rere.qmqm.pl"
+        Thu, 2 Apr 2020 07:55:02 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:59778 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387722AbgDBLy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:54:56 -0400
+        id S2388154AbgDBLy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:54:59 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tM1p09thz9j;
-        Thu,  2 Apr 2020 13:54:53 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48tM1r4wP3zwy;
+        Thu,  2 Apr 2020 13:54:56 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585828495; bh=SUZOg/tdo/PI/jczvgr7ZOhvxU+amuVx28JA0/7SYOQ=;
-        h=Date:From:Subject:To:Cc:From;
-        b=YpVB3Y0Ew1pROTQ2fQHIls1smJnMniRdywu9QNwke2+AA2git5jCCmMilOtF78E2z
-         wr1B7bLsRS9IAlWZbulnUKLVQaOs55Q5zc9Tl4gldMHHl/+6ZMaPmp239MwtI4Y8QY
-         Vm7t1Ri0KfV+1/hhu9fGSs4s0cgLIyHPaEZVys1vaXXpNIRB3m41Vi0P9jVRrUx8HI
-         U+bfYJgDTG1Eb2zvVQEXwkkO3916m3388AU732dnIrpVGBBROlRHSftibYQavam2yk
-         9KCwVPq79KUrXkp289+XqZ29LgfzCgpRzfw1jye1E8PvUdIojuRzYk5ro/01rRjmm/
-         6Pu6TJY90ujXA==
+        t=1585828496; bh=w9lqLlJJ6XJvsSd0hc1eF6HC5pdJ5YRJaBkIo26sigY=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=PWyfGkYNRr4N0Y5lOGgGjsFgSBRyoc+aLbRXWxRSwy0sPpZ8G9UoUnN3OqT5n3jNc
+         8txyg0ATQrXD3htPqOnwp1mdqFtu7prKp10nPdR+7D6GEq+GrLm4S6KAs2PoqPR9jp
+         QQC51qH8vj0pg0Rf4eYiNjsR1xpf9d4BYFNsl4X7F1+9YutJWBKJ1zvcs+VWhpadfQ
+         S/N4A38fzQHNZpcedANbD/FFr6Rk5kSVDUoadXOFCRSNBNkZ0GJ/OmGfvN0n5aQfOO
+         5Dq7wk7J7871Rktm1iFF9KTuNT7v6SzHhvHfGxRyWPGLI9+Od06zOTnhzy5y6EdVoJ
+         HV+cajuQpA/0Q==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 02 Apr 2020 13:54:53 +0200
-Message-Id: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
+Date:   Thu, 02 Apr 2020 13:54:56 +0200
+Message-Id: <637b9bea4c28a0eeacf754d2930596b8e6673808.1585827904.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1585827904.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 0/7] SDHCI clock handling fixes and cleanups
+Subject: [PATCH 4/7] mmc: sdhci: move SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
+ frequency limit
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Adrian Hunter <adrian.hunter@intel.com>,
+To:     Michal Simek <michal.simek@xilinx.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Kevin Liu <kliu5@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
         Suneel Garapati <suneel.garapati@xilinx.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
@@ -53,24 +57,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set combines a few of code improvements for SDHCI clock handling.
-Besides small fixes, most value comes from simplifying the code, so it's
-easier to understand.
+Move clock frequency limit for SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN where
+it belongs.
 
-Michał Mirosław (7):
-  mmc: sdhci: fix base clock usage in preset value
-  mmc: sdhci: fix programmable clock config from preset value
-  mmc: sdhci: fix SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN
-  mmc: sdhci: move SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN frequency limit
-  mmc: sdhci: simplify clock frequency calculation
-  mmc: sdhci: squash v2/v3+ clock calculation differences
-  mmc: sdhci: respect non-zero div quirk in programmable clock mode
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/mmc/host/sdhci-of-arasan.c | 7 ++++---
+ drivers/mmc/host/sdhci.c           | 3 +--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
- drivers/mmc/host/sdhci-of-arasan.c |   7 +-
- drivers/mmc/host/sdhci.c           | 126 +++++++++++++----------------
- drivers/mmc/host/sdhci.h           |   4 +-
- 3 files changed, 64 insertions(+), 73 deletions(-)
-
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index d4905c106c06..5e3b9131a631 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -339,7 +339,6 @@ static const struct sdhci_pltfm_data sdhci_arasan_pdata = {
+ 	.ops = &sdhci_arasan_ops,
+ 	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+ 	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+-			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
+ 			SDHCI_QUIRK2_STOP_WITH_TC,
+ };
+ 
+@@ -410,8 +409,7 @@ static const struct sdhci_ops sdhci_arasan_cqe_ops = {
+ static const struct sdhci_pltfm_data sdhci_arasan_cqe_pdata = {
+ 	.ops = &sdhci_arasan_cqe_ops,
+ 	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+-			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+ };
+ 
+ static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
+@@ -1155,6 +1153,9 @@ static int sdhci_arasan_add_host(struct sdhci_arasan_data *sdhci_arasan)
+ 	bool dma64;
+ 	int ret;
+ 
++	if (sdhci_pltfm_clk_get_max_clock(host) <= 25000000)
++		host->quirks2 |= SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN;
++
+ 	if (!sdhci_arasan->has_cqe)
+ 		return sdhci_add_host(host);
+ 
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index a043bf5e3565..ed88ac4e4cf3 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1809,8 +1809,7 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+ 			/* Version 3.00 divisors must be a multiple of 2. */
+ 			if (host->max_clk <= clock) {
+ 				div = 1;
+-				if ((host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
+-					&& host->max_clk <= 25000000)
++				if (host->quirks2 & SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN)
+ 					div = 2;
+ 			} else {
+ 				for (div = 2; div < SDHCI_MAX_DIV_SPEC_300;
 -- 
 2.20.1
 
