@@ -2,109 +2,178 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AF9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AECC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0A620757
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585834848;
-	bh=PfXVwen4hTVjQMRYwec2sWG+kkHoy5njpKLA4uQB6ls=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19xXjdV2ZnH7WRaU8s+D2GCEfDujp8JNwiXhZPZcjS7M2eJIRpHlVTg6IJzAUbTjp
-	 oR1hK/eMgk7ZbvUZINW7SMwafjMoPTAI5Qviwa0n0DjGWbm463OGAp6ddPLuxxKVBW
-	 PNliIOGnjp7OYgR0TD79vOBm0VQq9123VvUhfTgQ=
+	by mail.kernel.org (Postfix) with ESMTP id 62ECC20757
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:40:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="Cf0jEKAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388702AbgDBNkr (ORCPT
+        id S2388718AbgDBNkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388520AbgDBNkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:40:47 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57662206F5;
-        Thu,  2 Apr 2020 13:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585834846;
-        bh=PfXVwen4hTVjQMRYwec2sWG+kkHoy5njpKLA4uQB6ls=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DrzESxqfJ7BHfotsVyOkEJMPp2Ro068kAZT13mGGzs0d4glTxeUOh6R09YTuWhmh/
-         m7EX38Vk//CgxdSqfXFKDd2pcf+XsP6sdtamMe2pIf7YOdYSg3trcueKBQwvUY6XUD
-         yQftC90pBapgQjneErycLmbyjEtyMtEhHtdQXEQQ=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@elte.hu>
-Subject: [PATCH -tip V5 1/4] kprobes: Suppress the suspicious RCU warning on kprobes
-Date:   Thu,  2 Apr 2020 22:40:42 +0900
-Message-Id: <158583484186.26060.10457956369009643624.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <158583483116.26060.10517933482238348979.stgit@devnote2>
-References: <158583483116.26060.10517933482238348979.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 2 Apr 2020 09:40:52 -0400
+Received: from mx01-sz.bfs.de ([194.94.69.67]:42177 "EHLO mx02-sz.bfs.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388704AbgDBNkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 09:40:52 -0400
+Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
+        by mx02-sz.bfs.de (Postfix) with ESMTPS id AAA892032C;
+        Thu,  2 Apr 2020 15:40:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1585834849;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QlZyfiAFQ9KUa3zeoxNhARJVXQImLekdjEDxCvhasc4=;
+        b=Cf0jEKAhDqDvM0dE4hGtZNgiNPz0F5tb7EOeCsUjkVtXHNdEkLFL+jGKFnNWKxlr33DHoj
+        e+VswiL+MGUfg8WYDJtT68M6zMZanhUoY0rkvX5BhPkEVKpJnUzLhq2kFJoX0dKF5sGTh1
+        EMRZ5T74SEJcPLtq12cztffp5llGp09lbhh3YYFAzG3HR51Pux/8n6/+ch6hRhYvWvEehl
+        j3+j6UU9iZ/ef3g5kCo/dIt8voc50K2cIgRe+9q4nmVDM+q1wg4su9Rmo4ewBFl76OETQn
+        hwpFZB/dGdD7ym6b41E1OPbhzV1wHj7OXKwIuH4fJZxaRpd9Af1MKQ4FSKCKeg==
+Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
+ (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.1913.5; Thu, 2 Apr 2020
+ 15:40:49 +0200
+Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
+ SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
+ 15.01.1913.005; Thu, 2 Apr 2020 15:40:49 +0200
+From:   Walter Harms <wharms@bfs.de>
+To:     Colin King <colin.king@canonical.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: AW: [PATCH][next] rtc: ds1307: check for failed memory allocation on
+ wdt
+Thread-Topic: [PATCH][next] rtc: ds1307: check for failed memory allocation on
+ wdt
+Thread-Index: AQHWCPC8EF0a6BxpC06p5UODJlWRsahl1nQZ
+Date:   Thu, 2 Apr 2020 13:40:49 +0000
+Message-ID: <54a09b5502ee45e9a926a025ae576498@bfs.de>
+References: <20200402131441.539088-1-colin.king@canonical.com>
+In-Reply-To: <20200402131441.539088-1-colin.king@canonical.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.137.16.39]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Authentication-Results: mx02-sz.bfs.de;
+        none
+X-Spamd-Result: default: False [-2.87 / 7.00];
+         ARC_NA(0.00)[];
+         TO_DN_EQ_ADDR_SOME(0.00)[];
+         HAS_XOIP(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         BAYES_HAM(-2.87)[99.44%]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anders reported that the lockdep warns that suspicious
-RCU list usage in register_kprobe() (detected by
-CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
-access kprobe_table[] by hlist_for_each_entry_rcu()
-without rcu_read_lock.
 
-If we call get_kprobe() from the breakpoint handler context,
-it is run with preempt disabled, so this is not a problem.
-But in other cases, instead of rcu_read_lock(), we locks
-kprobe_mutex so that the kprobe_table[] is not updated.
-So, current code is safe, but still not good from the view
-point of RCU.
+________________________________________
+Von: kernel-janitors-owner@vger.kernel.org <kernel-janitors-owner@vger.kern=
+el.org> im Auftrag von Colin King <colin.king@canonical.com>
+Gesendet: Donnerstag, 2. April 2020 15:14
+An: Alessandro Zummo; Alexandre Belloni; Guenter Roeck; Chris Packham; linu=
+x-rtc@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
+Betreff: [PATCH][next] rtc: ds1307: check for failed memory allocation on w=
+dt
 
-Joel suggested that we can silent that warning by passing
-lockdep_is_held() to the last argument of
-hlist_for_each_entry_rcu().
+From: Colin Ian King <colin.king@canonical.com>
 
-Add lockdep_is_held(&kprobe_mutex) at the end of the
-hlist_for_each_entry_rcu() to suppress the warning.
+Currently a failed memory allocation will lead to a null pointer
+dereference on point wdt.  Fix this by checking for a failed allocation
+and adding error return handling to function ds1307_wdt_register.
 
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Suggested-by: Joel Fernandes <joel@joelfernandes.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Addresses-Coverity: ("Dereference null return")
+Fixes: fd90d48db037 ("rtc: ds1307: add support for watchdog timer on ds1388=
+")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- kernel/kprobes.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-ds1307.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 2625c241ac00..bd484392d789 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
- 	struct kprobe *p;
- 
- 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
--	hlist_for_each_entry_rcu(p, head, hlist) {
-+	hlist_for_each_entry_rcu(p, head, hlist,
-+				 lockdep_is_held(&kprobe_mutex)) {
- 		if (p->addr == addr)
- 			return p;
- 	}
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index fad042118862..95c5b6facc59 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -1665,14 +1665,16 @@ static const struct watchdog_ops ds1388_wdt_ops =3D=
+ {
 
+ };
+
+-static void ds1307_wdt_register(struct ds1307 *ds1307)
++static int ds1307_wdt_register(struct ds1307 *ds1307)
+ {
+        struct watchdog_device  *wdt;
+
+        if (ds1307->type !=3D ds_1388)
+-               return;
++               return 0;
+
+        wdt =3D devm_kzalloc(ds1307->dev, sizeof(*wdt), GFP_KERNEL);
++       if (!wdt)
++               return -ENOMEM;
+
+        wdt->info =3D &ds1388_wdt_info;
+        wdt->ops =3D &ds1388_wdt_ops;
+@@ -1683,10 +1685,13 @@ static void ds1307_wdt_register(struct ds1307 *ds13=
+07)
+        watchdog_init_timeout(wdt, 0, ds1307->dev);
+        watchdog_set_drvdata(wdt, ds1307);
+        devm_watchdog_register_device(ds1307->dev, wdt);
++
++       return 0;
+ }
+ #else
+-static void ds1307_wdt_register(struct ds1307 *ds1307)
++static int ds1307_wdt_register(struct ds1307 *ds1307)
+ {
++       return 0;
+ }
+ #endif /* CONFIG_WATCHDOG_CORE */
+
+@@ -1979,9 +1984,9 @@ static int ds1307_probe(struct i2c_client *client,
+
+        ds1307_hwmon_register(ds1307);
+        ds1307_clks_register(ds1307);
+-       ds1307_wdt_register(ds1307);
++       err =3D ds1307_wdt_register(ds1307);
+
+-       return 0;
++       return err;
+
+ exit:
+        return err;
+--
+2.25.1
+
+IMHO, one "return err;" is sufficient.
+
+re,
+ wh
