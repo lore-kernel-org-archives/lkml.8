@@ -2,109 +2,169 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0642AC2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F7AC2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9A22077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEF12077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:40:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="gbcQgrA2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387987AbgDBKij (ORCPT
+        id S2387980AbgDBKkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:38:39 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:37650 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728612AbgDBKii (ORCPT
+        Thu, 2 Apr 2020 06:40:16 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:37771 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728803AbgDBKkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:38:38 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 032Abb5C028468
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 2 Apr 2020 05:37:40 -0500
-Message-ID: <c556467d63cd5de806b4bf1806caee013ba5a808.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
- ID/string properties
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tao Ren <taoren@fb.com>
-Date:   Thu, 02 Apr 2020 21:37:35 +1100
-In-Reply-To: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
-References: <20200315191632.12536-1-rentao.bupt@gmail.com>
-         <20200315191632.12536-7-rentao.bupt@gmail.com>
-         <20200330192347.GA6388@bogus>
-         <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
-         <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
+        Thu, 2 Apr 2020 06:40:15 -0400
+Received: by mail-ua1-f67.google.com with SMTP id l18so979512uak.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 03:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EKz0BYCnAYaxNPQCfa65G2LlOu2wy+lcqbRhsvRTDzY=;
+        b=gbcQgrA22EAyItGP+TKMeDdvt9CVIT/R2GLUGHK8fjYaSwYAmzZjrigV8/ZEc97Cs/
+         RNx49zr/EmMLCKs3yICV3DbWcDYNC5Edq669CkOvAdg3+O1GS2jZbpZOCtZQ6l7yebBe
+         DcE5X2RyzxPvE4l95PLzY7VkQp2hTqveDSVtEZd9yAZEIGIIb1ayiV74u9DWw1el7iMl
+         tBMNVst2x0cB6yx6mL/+mwCZbUBehcbP9DWmWpXhe7ZdE/NU+bYYJ0T4rxkQk1zpYaZY
+         //r41sobGat2KcV4rgWj0zoDrb9ujZcg71SJcQQypNO3b7Zv+97mRrl5whWtKXgFY2t5
+         j6Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EKz0BYCnAYaxNPQCfa65G2LlOu2wy+lcqbRhsvRTDzY=;
+        b=WlCjgTXnf18mWhuxYV8amKraUkzkbmIu4r/nP66iiKZIlOCKNWnnmoORrofmuY2VBN
+         BDVb44ggTSjRGO3TjiVUhFJnsz2VG3lc+sc9imjmgaGpFWrbh6sth+l7TT76uYdojZ0u
+         Gn9vPF2gN+Y7/Jt54o0LGUcxrRXGoysvKQsR/Jf+DqhHalB0l4Ak6fgsDFoiQCq60jqI
+         N9SPuLTiVJEYAUSwkwyx7rUT7emsW4N/yp3mJNRXCCEyeJao+QAi8HjymwS6ZgsUUM4D
+         7YEBWS9VtO0lBENh+tz6Ry5SF11ITzrHhi9QULBCUmV9QtNh2jm4VSBVetuV57BC18ow
+         R8/Q==
+X-Gm-Message-State: AGi0PubZBrfWwZqsv20wiVinwJda0z2+DpByKfgkRuDvtfM2W73O7GlW
+        4TYLlnNaFoZlCN76RWSv1920fFVTq5Cv5Po3QYS4XQ==
+X-Google-Smtp-Source: APiQypI83QnOQ6D0d7POmo0QouJRjj7RkZV/O1KQNeqzJrIRwpmjlcrHV9wDaSFuXhDoh9ukC8k3b+Ye0lKDq5mhdK8=
+X-Received: by 2002:ab0:70d9:: with SMTP id r25mr2082703ual.67.1585824014129;
+ Thu, 02 Apr 2020 03:40:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com> <1584966504-21719-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1584966504-21719-3-git-send-email-Anson.Huang@nxp.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 2 Apr 2020 16:10:03 +0530
+Message-ID: <CAHLCerNG3ZBbWrTwXxCbd1BOfyHxuvpAuo5tW_bNKgWcO5zESA@mail.gmail.com>
+Subject: Re: [PATCH V3 3/3] arm64: dts: imx8mp: Add thermal zones support
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        Fabio Estevam <festevam@gmail.com>, horia.geanta@nxp.com,
+        peng.fan@nxp.com, Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, Linux-imx@nxp.com
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-31 at 10:21 -0600, Rob Herring wrote:
-> Surely the descriptor building code can be shared at a minimum.
-> 
-> Regardless of whether gadget configfs fits, usually it is pretty clear
-> whether something belongs in DT or userspace. That should be decided
-> first.
-> 
-> > Maybe we could expose the port as UDCs but not actually expose them on
-> > the bus until the hub is "activated" via a special configfs entry...
-> 
-> If control of the hub is done by userspace, I'd think configuration
-> should be there too.
-
-It's not in the current driver. For now, I expose the hub when the
-driver loads/initializes, and it creates UDCs for each port, which are
-then controlled from userspace.
-
-That said, I did it this way because it was easy, not because there are
-fundamental reasons to do so...
-
-The main reason to want to change the hub descriptor is for the device
-to advertise a vendor/device ID rather than our generic linux one,
-which some vendors might want to do for ... reasons. I didn't implement
-that functionality initially as in openbmc case, we didn't care. But I
-know some vendors would like to, if anything because from a user
-perspective, it's actually nice to have the string tell you that it's
-your BMC rather than Linux Fundation Hub.
-
-Originally I suggested we allow that via the device-tree because it was
-the simplest way to get there and I love have to deal with less code ..
-:)
-
-However, if we want to support the whole language string set etc... it
-gets really clumsy. So if there's a strong will to get there all the
-way, then configfs is probably the way to go.
-
-In that case, some sugery will probably be needed to make the gadget
-descriptor building code a bit less dependent on the overall gadget
-stuff... either that, or pre-create a "hub" gadget at driver loading
-time that userspace can modify before "plugging".
-
-In that case, the discussion should move back to linux-usb...
-
-Cheers,
-Ben.
+On Mon, Mar 23, 2020 at 6:05 PM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> i.MX8MP has a TMU inside which supports two thermal zones, add support
+> for them.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
 
+[snip]
+
+>
+> +       thermal-zones {
+> +               cpu-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <2000>;
+> +                       thermal-sensors = <&tmu 0x0>;
+
+No need for 0x0, just use 0
+
+> +                       trips {
+> +                               cpu_alert0: trip0 {
+> +                                       temperature = <85000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit0: trip1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +
+> +                       cooling-maps {
+> +                               map0 {
+> +                                       trip = <&cpu_alert0>;
+> +                                       cooling-device =
+> +                                               <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               soc-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <2000>;
+> +                       thermal-sensors = <&tmu 0x1>;
+
+No need for 0x1, just use 1
+
+> +                       trips {
+> +                               soc_alert0: trip0 {
+> +                                       temperature = <85000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               soc_crit0: trip1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+
+You need a cooling-map here since you have a passive trip point.
+
+
+> +               };
+> +       };
+> +
+>         timer {
+>                 compatible = "arm,armv8-timer";
+>                 interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+> @@ -215,6 +271,13 @@
+>                                 gpio-ranges = <&iomuxc 0 114 30>;
+>                         };
+>
+> +                       tmu: tmu@30260000 {
+> +                               compatible = "fsl,imx8mp-tmu";
+> +                               reg = <0x30260000 0x10000>;
+> +                               clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
+> +                               #thermal-sensor-cells = <1>;
+> +                       };
+> +
+>                         wdog1: watchdog@30280000 {
+>                                 compatible = "fsl,imx8mp-wdt", "fsl,imx21-wdt";
+>                                 reg = <0x30280000 0x10000>;
+> --
+> 2.7.4
+>
