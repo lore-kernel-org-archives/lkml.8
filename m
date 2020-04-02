@@ -2,122 +2,157 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97771C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34920C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3FA20787
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2EF2206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N5KoIne3"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DCq1mAXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387903AbgDBJGj (ORCPT
+        id S2387812AbgDBJIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:06:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30186 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387716AbgDBJGi (ORCPT
+        Thu, 2 Apr 2020 05:08:10 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:43207 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387477AbgDBJIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 05:06:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585818397;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=65cLaBQBBxQNS4tib9PUIecsC4BcpagR0uIUdTj5N9c=;
-        b=N5KoIne36YXUT9uW4cRYgza9cWPTR4Grwx3HX8V86nGXgHVYm2u8C+YJ7b+4PIYpp4tHC6
-        19vOvYqBLJQ5CvsT2ZKbcJg6+g18j6kQTZDxXFTnl6/TegVyqLd2uzdHDdRDCZek/du3/b
-        +ZDepoSXTdsky9RpYxBZME57qmo26F0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-175-xaPBBNPnMLaUxkTVbBxdmA-1; Thu, 02 Apr 2020 05:06:33 -0400
-X-MC-Unique: xaPBBNPnMLaUxkTVbBxdmA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EAE4F1083E8A;
-        Thu,  2 Apr 2020 09:06:29 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5033526DC3;
-        Thu,  2 Apr 2020 09:06:21 +0000 (UTC)
-Date:   Thu, 2 Apr 2020 11:06:19 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Toshiaki Makita <toshiaki.makita1@gmail.com>
-Cc:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net,
-        ast@kernel.org, daniel@iogearbox.net, kuba@kernel.org,
-        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        jwi@linux.ibm.com, jianglidong3@jd.com, edumazet@google.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        brouer@redhat.com
-Subject: Re: [PATCH net v2] veth: xdp: use head instead of hard_start
-Message-ID: <20200402110619.48f31a63@carbon>
-In-Reply-To: <ede2f407-839e-d29e-0ebe-aa39dd461bfd@gmail.com>
-References: <fb5ab568-9bc8-3145-a8db-3e975ccdf846@gmail.com>
-        <20200331060641.79999-1-maowenan@huawei.com>
-        <7a1d55ad-1427-67fe-f204-4d4a0ab2c4b1@gmail.com>
-        <20200401181419.7acd2aa6@carbon>
-        <ede2f407-839e-d29e-0ebe-aa39dd461bfd@gmail.com>
+        Thu, 2 Apr 2020 05:08:10 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200402090808euoutp02f7266da292104ac3843ef05551aef7f4~B9YNoSMZP2463224632euoutp02U
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Apr 2020 09:08:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200402090808euoutp02f7266da292104ac3843ef05551aef7f4~B9YNoSMZP2463224632euoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585818488;
+        bh=asznQ57AgKXctQyXnSLxpd9aafCh0Jk4sgBlNpSnANU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=DCq1mAXxIDaSxHxpeRIVkne8Wj7EmZloM/tdjWAcOmOCJECrruQ1CVh/vyiPHrcOw
+         aPi/PFq+WQojiM8QzV1a26nfs69xZSaE5fSn9PQ5Mfj0AWB3cZbfidTjBuAwk8mKtF
+         JiLQgl5Tjqob102AIjW/FmhhyCbtCyvqq13rvYY4=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200402090808eucas1p1fbfc3689c5f07a6a265c2b3ed47adb4c~B9YNYBsuP3050630506eucas1p1k;
+        Thu,  2 Apr 2020 09:08:08 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 89.4F.60679.87BA58E5; Thu,  2
+        Apr 2020 10:08:08 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200402090807eucas1p28d1d6230415b824480aa85b26799e557~B9YM86rAZ0745007450eucas1p2m;
+        Thu,  2 Apr 2020 09:08:07 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200402090807eusmtrp15838a1b52c2cc4e831f78afe3915b957~B9YM8Gyby0619506195eusmtrp1j;
+        Thu,  2 Apr 2020 09:08:07 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-95-5e85ab78b09b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7A.9B.07950.77BA58E5; Thu,  2
+        Apr 2020 10:08:07 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200402090807eusmtip1e36bef344917b921797df3b92c373652~B9YMfgCMF1756717567eusmtip1s;
+        Thu,  2 Apr 2020 09:08:07 +0000 (GMT)
+Subject: Re: [PATCH v2] scsi: hisi_sas: Fix build error without SATA_HOST
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     john.garry@huawei.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, chenxiang66@hisilicon.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <c4e9d7a0-668a-5dee-2a15-5e5392c2f275@samsung.com>
+Date:   Thu, 2 Apr 2020 11:08:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200402085812.32948-1-yuehaibing@huawei.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djP87oVq1vjDJqX81lcv3aF0WLRjW1M
+        Fpv2N7FaXN41h82i+/oONovlx/8xWdz5+pzFgd3j8dyN7B4tR96yekxYdIDR4+PTWywenzfJ
+        BbBGcdmkpOZklqUW6dslcGWc6ZzEXLCWq+LrwltsDYxHOLoYOTkkBEwkXl9/wtLFyMUhJLCC
+        UeLwhd/sEM4XRokXr58yg1QJCXxmlDh+LAOmo3nyVSaIouWMEs+evmWDcN4CtR9sYAKpEhbw
+        lJjTvQbMFhFQk2g5tYUZpIhZYBGjxLeFc8ESbAJWEhPbVzGC2LwCdhLt2z6zgtgsAioS/060
+        s4PYogIREp8eHGaFqBGUODkT5FhODk4Ba4m3dy+B9TILiEvcejKfCcKWl9j+dg7YMgmBXewS
+        L3tWskDc7SJx7slBKFtY4tXxLewQtozE6ck9LBAN6xgl/na8gOreziixfPI/Nogqa4k7534B
+        2RxAKzQl1u/Shwg7Sty5e5MRJCwhwCdx460gxBF8EpO2TWeGCPNKdLQJQVSrSWxYtoENZm3X
+        zpXMExiVZiF5bRaSd2YheWcWwt4FjCyrGMVTS4tz01OLjfJSy/WKE3OLS/PS9ZLzczcxAtPQ
+        6X/Hv+xg3PUn6RCjAAejEg9vRUZLnBBrYllxZe4hRgkOZiURXscZrXFCvCmJlVWpRfnxRaU5
+        qcWHGKU5WJTEeY0XvYwVEkhPLEnNTk0tSC2CyTJxcEo1MNbo9nfp6hllOT3o2udRN2+SGNdL
+        5sU712UemaouFnLir+TbyzyeVpEitlIFf45d+f398xELGReubJs+cfNsfmGTfO7+iuD/fy9o
+        hToqq/v/Zb2vOv379yTDHzNmnmq5lsl5LlS+6fb8W1FX0p+032K5yN+mZaW29u3qmi0XXVJv
+        WDlmLNugpsRSnJFoqMVcVJwIANGFncQ/AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHIsWRmVeSWpSXmKPExsVy+t/xu7rlq1vjDO4u1rW4fu0Ko8WiG9uY
+        LDbtb2K1uLxrDptF9/UdbBbLj/9jsrjz9TmLA7vH47kb2T1ajrxl9Ziw6ACjx8ent1g8Pm+S
+        C2CN0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0Ms4
+        0zmJuWAtV8XXhbfYGhiPcHQxcnJICJhINE++ytTFyMUhJLCUUeLH1dUsXYwcQAkZiePryyBq
+        hCX+XOtig6h5zSjx4MsjNpCEsICnxJzuNUwgtoiAmkTLqS3MIEXMAosYJVYu6WGE6NjPKLH8
+        3D12kCo2ASuJie2rGEFsXgE7ifZtn1lBbBYBFYl/J9rBakQFIiQO75gFVSMocXLmExYQm1PA
+        WuLt3UtgcWYBdYk/8y4xQ9jiEreezGeCsOUltr+dwzyBUWgWkvZZSFpmIWmZhaRlASPLKkaR
+        1NLi3PTcYiO94sTc4tK8dL3k/NxNjMC423bs55YdjF3vgg8xCnAwKvHwVmS0xAmxJpYVV+Ye
+        YpTgYFYS4XWc0RonxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnAlJBXEm9oamhuYWlobmxu
+        bGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoFxQtJvltCWo1PYuFc8fP+Fg8122r4yuZj2
+        +tpXuYpv/H0P186ctc3gZFptzRmDtlUlrl32C0O89Nr4l+UvWWr3tjHhjnbSrMmnfj5LO/Qj
+        brtld1DlrrUrE2a+PnXuB9O5dRtzf5Y/iljc9X/Z8/1pmf4WK8rTlM44LJ9R6nX6zII5s6Iv
+        CbquVGIpzkg01GIuKk4EANCH//DRAgAA
+X-CMS-MailID: 20200402090807eucas1p28d1d6230415b824480aa85b26799e557
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200402085851eucas1p2b2173a11582e32a73689d4fc98d94c6a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200402085851eucas1p2b2173a11582e32a73689d4fc98d94c6a
+References: <20200402063021.34672-1-yuehaibing@huawei.com>
+        <CGME20200402085851eucas1p2b2173a11582e32a73689d4fc98d94c6a@eucas1p2.samsung.com>
+        <20200402085812.32948-1-yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 09:47:03 +0900
-Toshiaki Makita <toshiaki.makita1@gmail.com> wrote:
 
-> On 2020/04/02 1:15, Jesper Dangaard Brouer wrote:
-> ...
-> > [PATCH RFC net-next] veth: adjust hard_start offset on redirect XDP frames
-> > 
-> > When native XDP redirect into a veth device, the frame arrives in the
-> > xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
-> > which can run a new XDP bpf_prog on the packet. Doing so requires
-> > converting xdp_frame to xdp_buff, but the tricky part is that
-> > xdp_frame memory area is located in the top (data_hard_start) memory
-> > area that xdp_buff will point into.
-> > 
-> > The current code tried to protect the xdp_frame area, by assigning
-> > xdp_buff.data_hard_start past this memory. This results in 32 bytes
-> > less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
-> > 
-> > This protect step is actually not needed, because BPF-helper
-> > bpf_xdp_adjust_head() already reserve this area, and don't allow
-> > BPF-prog to expand into it. Thus, it is safe to point data_hard_start
-> > directly at xdp_frame memory area.
-> > 
-> > Cc: Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>  
+On 4/2/20 10:58 AM, YueHaibing wrote:
+> If SATA_HOST is n, build fails:
 > 
-> FYI: This mail address is deprecated.
+> drivers/scsi/hisi_sas/hisi_sas_main.o: In function `hisi_sas_fill_ata_reset_cmd':
+> hisi_sas_main.c:(.text+0x2500): undefined reference to `ata_tf_to_fis'
 > 
-> > Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
-> > Reported-by: Mao Wenan <maowenan@huawei.com>
-> > Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>  
+> Select SATA_HOST to fix this.
 > 
-> FWIW,
-> 
-> Acked-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: bd322af15ce9 ("ata: make SATA_PMP option selectable only if any SATA host driver is enabled")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Thanks.
+Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-I have updated your email and added your ack in my patchset.  I will
-submit this officially once net-next opens up again[1], as part my
-larger patchset for introducing XDP frame_sz.
+PS I have audited all drivers dependent on ATA again and this is
+the only driver needing fixing.
 
-[1] http://vger.kernel.org/~davem/net-next.html
--- 
+> ---
+> v2: use correct Fixes tag
+> ---
+>  drivers/scsi/hisi_sas/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/scsi/hisi_sas/Kconfig b/drivers/scsi/hisi_sas/Kconfig
+> index 90a17452a50d..13ed9073fc72 100644
+> --- a/drivers/scsi/hisi_sas/Kconfig
+> +++ b/drivers/scsi/hisi_sas/Kconfig
+> @@ -6,6 +6,7 @@ config SCSI_HISI_SAS
+>  	select SCSI_SAS_LIBSAS
+>  	select BLK_DEV_INTEGRITY
+>  	depends on ATA
+> +	select SATA_HOST
+>  	help
+>  		This driver supports HiSilicon's SAS HBA, including support based
+>  		on platform device
+> 
+
 Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
