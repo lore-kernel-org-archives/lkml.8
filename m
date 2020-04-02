@@ -2,258 +2,203 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70D7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C66C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD47C20784
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A4720784
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d0H7/o+b"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RnfgyI9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388406AbgDBMx4 (ORCPT
+        id S2388426AbgDBMyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:53:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51161 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387580AbgDBMx4 (ORCPT
+        Thu, 2 Apr 2020 08:54:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55960 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388332AbgDBMyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:53:56 -0400
+        Thu, 2 Apr 2020 08:54:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585832034;
+        s=mimecast20190719; t=1585832046;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=42pzLWIJUxN/RPJi5X2VMq+xSfBaEpwkLRUnGS91eDg=;
-        b=d0H7/o+bet7m6rGJfihom6GHUxXqH2vi+yJlR+nU66qWZyN9yCezS/A4rHrBEzTHti9jVY
-        Cj91Q4ptx3lxxNFu+EolUohLm/OYLiUEngDHELI2jJGngIwvRzxcTLhmCl8Lg2dub5VH5M
-        zu+oORHtGWNjCQx/5uB4RKxk46/PDtE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-136-eIp2g71qOjOyvvbNMuyfoQ-1; Thu, 02 Apr 2020 08:53:53 -0400
-X-MC-Unique: eIp2g71qOjOyvvbNMuyfoQ-1
-Received: by mail-wr1-f72.google.com with SMTP id q14so1433769wro.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 05:53:53 -0700 (PDT)
+        bh=e+rpGY/lQzxU62GHHMv3q/FRvIYAGToP29ghNExNLYc=;
+        b=RnfgyI9+oyMc3AuIbdtm6rrOc3vRp8y16aj+7KDdObR1zzjbELDemQJmQ9nBAXDh0CqtV7
+        YshEO7NY2ybY+RRJA+t7j8A5HewgLXpKDX1h6aH+CcXS7hVnEpPdSw4jB21r8h0vX4Qdif
+        AFFzVnrGAy8DXyTnyC1hpHpujER3UUw=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-280-2kbaBs38MwWBGrezlkjw7g-1; Thu, 02 Apr 2020 08:54:05 -0400
+X-MC-Unique: 2kbaBs38MwWBGrezlkjw7g-1
+Received: by mail-qt1-f199.google.com with SMTP id z5so3051871qtd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 05:54:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=42pzLWIJUxN/RPJi5X2VMq+xSfBaEpwkLRUnGS91eDg=;
-        b=EMUOmchzYsbBeDN5HOygRocfkah1YcVnhc9JEpB7fJxND/fZXVJDWV02SX0KQoZt53
-         HV0fxYHsPPjSrII+pHUwnc3TW0Qt8KAgeZeeDCpJeHy+aSadrxblvibpc+sorDmFHzxX
-         gXEZDIOJeyO9n6ICa3dcCRpPZGLGEDmU+gi2gVknZNbvCB+nRrSJMR7wrJH+yuGy1hQe
-         0flWItZNqtcXk9z9HGJU4jTJfXiPg67494QzM0i4TWi2xLYkbSZtk0wYlN2Vwe0BXn2K
-         3O3nLkmF/KOA3m+1s8Z1cDqN8Fxn4kl39rATDJqbfzIkIIrpytV3PjL3HEbP+e8UFsoB
-         YlIg==
-X-Gm-Message-State: AGi0PuZU8Tz7aZ5HKQNA/BucoMY+IUmJ+aZK6rDLZi+RJCXyjJ24iavE
-        wWkMEy1Owb8Yui4Wda82IEGB6uLSUXY+mMiQkut4IDO2oqLI5V2kOyc5fQKpqsVVCXP2dMn3zyz
-        lZOPEA2VA0Q66Hhk++rfbGKIx
-X-Received: by 2002:a1c:5401:: with SMTP id i1mr3443659wmb.172.1585832031940;
-        Thu, 02 Apr 2020 05:53:51 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK3P7X3pIQnwqrxs8wrhbG234OTB4HDC8KFqpb7pQg9NcJCk7MXbKXpQdINCmHIlYsVFcvYag==
-X-Received: by 2002:a1c:5401:: with SMTP id i1mr3443642wmb.172.1585832031718;
-        Thu, 02 Apr 2020 05:53:51 -0700 (PDT)
-Received: from [192.168.1.27] (lfbn-lyo-1-134-107.w86-202.abo.wanadoo.fr. [86.202.218.107])
-        by smtp.gmail.com with ESMTPSA id 9sm6802824wmm.6.2020.04.02.05.53.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 05:53:50 -0700 (PDT)
-Subject: Re: [PATCH 3/7] objtool: Add support for intra-function calls
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-4-alexandre.chartre@oracle.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <db508586-258a-0616-d649-e76e95df9611@redhat.com>
-Date:   Thu, 2 Apr 2020 13:53:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=e+rpGY/lQzxU62GHHMv3q/FRvIYAGToP29ghNExNLYc=;
+        b=Q1Vj6aH1TAtB0LiZowQ+Pk/PbiUvhYNM4c3AWFtDLXZNomUyvfe0zeCN9ujh5dTWMd
+         iFOicMwVhnkRmZIRD6EUJGSm8OUcMKssAGYhQBs6qwaDVdF+q29PcP3sAvLcMVZNMNHy
+         Qxeup9CEGx/HudxmRRbz/yRqMr/NS7ELCRItrJaZ4F4PR7YW9qEprsZFT6Mt6LuARMFu
+         mD1ZtQwLtSQWLAzh3yIau+m5oakO13RRZKmvqy4m+2w4GtOwadVelzNT7oVYpGLSM1cc
+         D38/pt8pVuYxmsGtw9nH9H2sbBrLsZDILg6W5zr28ODIZDQMBLptjOn7dHFEWJ11bvu0
+         UdlQ==
+X-Gm-Message-State: AGi0PubgHu/mxRiwWCFBwLgBNIp4nTX54AFjB+dGCZrP49jW32QiMsUU
+        bufBKhCx+iqvbwgzfjD50MbgXAItYr5WiohPB9GBSTnUljd4SGRkjlPFVmM68yzCXtFy+RUoXMR
+        zYGlhfwd74G8CyXRY0hvn9Fab
+X-Received: by 2002:a37:b17:: with SMTP id 23mr3444709qkl.326.1585832044800;
+        Thu, 02 Apr 2020 05:54:04 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKWAXrSE3QY71rFZEVKPyM9P23H/+nJyT2FOKqzUpxwU6y4/YNd29YMt69nqsRb7v9SGkCigg==
+X-Received: by 2002:a37:b17:: with SMTP id 23mr3444679qkl.326.1585832044434;
+        Thu, 02 Apr 2020 05:54:04 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id m27sm3713948qtf.80.2020.04.02.05.54.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 05:54:03 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 08:53:58 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] virtio/test: fix up after IOTLB changes
+Message-ID: <20200402084021-mutt-send-email-mst@kernel.org>
+References: <20200401165100.276039-1-mst@redhat.com>
+ <921fe999-e183-058d-722a-1a6a6ab066e0@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200402082220.808-4-alexandre.chartre@oracle.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <921fe999-e183-058d-722a-1a6a6ab066e0@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
-
-I ran into the limitation of intra-function call for the arm64 support 
-but didn't take the time to make a clean patch to support them properly.
-
-Nice to see you've gone through that work :) .
-
-On 4/2/20 9:22 AM, Alexandre Chartre wrote:
-> Change objtool to support intra-function calls. An intra-function call
-> is represented in objtool as a push onto the stack (of the return
-
-I have to disagree a bit with that. The push onto the stack is true on 
-x86, but other architectures might not have that (arm/arm64 have a link 
-register that gets set by "bl" instructions and do not modify the stack).
-
-> address), and a jump to the destination address. That way the stack
-> information is correctly updated and the call flow is still accurate.
+On Thu, Apr 02, 2020 at 12:01:56PM +0800, Jason Wang wrote:
 > 
-> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-> ---
->   tools/objtool/check.c | 73 ++++++++++++++++++++++++++++++++++++++++++-
->   tools/objtool/check.h |  1 +
->   2 files changed, 73 insertions(+), 1 deletion(-)
+> On 2020/4/2 上午12:51, Michael S. Tsirkin wrote:
+> > Allow building vringh without IOTLB (that's the case for userspace
+> > builds, will be useful for CAIF/VOD down the road too).
+> > Update for API tweaks.
+> > Don't include vringh with kernel builds.
 > 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 214809ac2776..0cec91291d46 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -657,6 +657,18 @@ static int add_call_destinations(struct objtool_file *file)
->   		if (insn->type != INSN_CALL)
->   			continue;
->   
-> +		if (insn->intra_function_call) {
-> +			dest_off = insn->offset + insn->len + insn->immediate;
-> +			insn->jump_dest = find_insn(file, insn->sec, dest_off);
-> +			if (insn->jump_dest)
-> +				continue;
-> +
-> +			WARN_FUNC("can't find call dest at %s+0x%lx",
-> +				  insn->sec, insn->offset,
-> +				  insn->sec->name, dest_off);
-> +			return -1;
-> +		}
-> +
->   		rela = find_rela_by_dest_range(insn->sec, insn->offset,
->   					       insn->len);
->   		if (!rela) {
-> @@ -1289,6 +1301,49 @@ static int read_retpoline_hints(struct objtool_file *file)
->   	return 0;
->   }
->   
-> +static int read_intra_function_call(struct objtool_file *file)
-> +{
-> +	struct section *sec;
-> +	struct instruction *insn;
-> +	struct rela *rela;
-> +
-> +	sec = find_section_by_name(file->elf,
-> +				   ".rela.discard.intra_function_call");
+> 
+> I'm not quite sure we need this.
+> 
+> E.g the userspace accessor is not used by CAIF/VOP.
 
-I'm wondering, do we really need to annotate the intra_function_call and 
-group the in a section?
+Well any exported symbols are always compiled in, right?
+So we can save some kernel memory by not building unused stuff ...
 
-Would it be a problem to consider all (static) call instructions with a 
-destination that is not the start offset of a symbol to be an 
-intra-function call (and set insn->intra_function_call and 
-insn->jump_dest accordingly)?
 
-Other than that the logic would stay the same.
-
-> +	if (!sec)
-> +		return 0;
-> +
-> +	list_for_each_entry(rela, &sec->rela_list, list) {
-> +		if (rela->sym->type != STT_SECTION) {
-> +			WARN("unexpected relocation symbol type in %s",
-> +			     sec->name);
-> +			return -1;
-> +		}
-> +
-> +		insn = find_insn(file, rela->sym->sec, rela->addend);
-> +		if (!insn) {
-> +			WARN("bad .discard.intra_function_call entry");
-> +			return -1;
-> +		}
-> +
-> +		if (insn->type != INSN_CALL) {
-> +			WARN_FUNC("intra_function_call not a call",
-> +				  insn->sec, insn->offset);
-
-Nit: This could be slightly confusing with INSN_CALL_DYNAMIC. Maybe just:
-	"unsupported instruction for intra-function call " ?
-
-> +			return -1;
-> +		}
-> +
-> +		insn->intra_function_call = true;
-> +		/*
-> +		 * For the impact on the stack, make an intra-function
-> +		 * call behaves like a push of an immediate value (the
-> +		 * return address).
-> +		 */
-> +		insn->stack_op.src.type = OP_SRC_CONST;
-> +		insn->stack_op.dest.type = OP_DEST_PUSH;
-
-As commented above, this should be arch dependent.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static void mark_rodata(struct objtool_file *file)
->   {
->   	struct section *sec;
-> @@ -1344,6 +1399,10 @@ static int decode_sections(struct objtool_file *file)
->   	if (ret)
->   		return ret;
->   
-> +	ret = read_intra_function_call(file);
-> +	if (ret)
-> +		return ret;
-> +
->   	ret = add_call_destinations(file);
->   	if (ret)
->   		return ret;
-> @@ -2092,7 +2151,8 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->   				return ret;
->   
->   			if (!no_fp && func && !is_fentry_call(insn) &&
-> -			    !has_valid_stack_frame(&state)) {
-> +			    !has_valid_stack_frame(&state) &&
-> +			    !insn->intra_function_call) {
->   				WARN_FUNC("call without frame pointer save/setup",
->   					  sec, insn->offset);
->   				return 1;
-> @@ -2101,6 +2161,17 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->   			if (dead_end_function(file, insn->call_dest))
->   				return 0;
->   
-> +			if (insn->intra_function_call) {
-> +				update_insn_state(insn, &state);
-> +				ret = validate_branch(file, func, insn,
-> +						      insn->jump_dest, state);
-> +				if (ret) {
-> +					if (backtrace)
-> +						BT_FUNC("(intra-call)", insn);
-> +					return ret;
-> +				}
-> +			}
-> +
->   			break;
->   
->   		case INSN_JUMP_CONDITIONAL:
-> diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-> index cffb23d81782..2bd6d2f46baa 100644
-> --- a/tools/objtool/check.h
-> +++ b/tools/objtool/check.h
-> @@ -35,6 +35,7 @@ struct instruction {
->   	unsigned long immediate;
->   	unsigned int alt_group;
->   	bool dead_end, ignore, hint, save, restore, ignore_alts;
-> +	bool intra_function_call;
->   	bool retpoline_safe;
->   	u8 visited;
->   	struct symbol *call_dest;
+> > 
+> > Cc: Jason Wang <jasowang@redhat.com>
+> > Cc: Eugenio Pérez <eperezma@redhat.com>
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> >   drivers/vhost/test.c   | 4 ++--
+> >   drivers/vhost/vringh.c | 5 +++++
+> >   include/linux/vringh.h | 2 ++
+> >   tools/virtio/Makefile  | 3 ++-
+> >   4 files changed, 11 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+> > index 394e2e5c772d..9a3a09005e03 100644
+> > --- a/drivers/vhost/test.c
+> > +++ b/drivers/vhost/test.c
+> > @@ -120,7 +120,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
+> >   	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
+> >   	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
+> >   	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
+> > -		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
+> > +		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
+> >   	f->private_data = n;
+> > @@ -225,7 +225,7 @@ static long vhost_test_reset_owner(struct vhost_test *n)
+> >   {
+> >   	void *priv = NULL;
+> >   	long err;
+> > -	struct vhost_umem *umem;
+> > +	struct vhost_iotlb *umem;
+> >   	mutex_lock(&n->dev.mutex);
+> >   	err = vhost_dev_check_owner(&n->dev);
+> > diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+> > index ee0491f579ac..878e565dfffe 100644
+> > --- a/drivers/vhost/vringh.c
+> > +++ b/drivers/vhost/vringh.c
+> > @@ -13,9 +13,11 @@
+> >   #include <linux/uaccess.h>
+> >   #include <linux/slab.h>
+> >   #include <linux/export.h>
+> > +#ifdef VHOST_IOTLB
+> 
+> 
+> Kbuild bot reports build issues with this.
+> 
+> It looks to me we should use #if IS_ENABLED(CONFIG_VHOST_IOTLB) here and
+> following checks.
+> 
+> Thanks
 > 
 
-Thanks,
+In fact IS_REACHEABLE is probably the right thing to do.
 
--- 
-Julien Thierry
+
+> 
+> >   #include <linux/bvec.h>
+> >   #include <linux/highmem.h>
+> >   #include <linux/vhost_iotlb.h>
+> > +#endif
+> >   #include <uapi/linux/virtio_config.h>
+> >   static __printf(1,2) __cold void vringh_bad(const char *fmt, ...)
+> > @@ -1059,6 +1061,8 @@ int vringh_need_notify_kern(struct vringh *vrh)
+> >   }
+> >   EXPORT_SYMBOL(vringh_need_notify_kern);
+> > +#ifdef VHOST_IOTLB
+> > +
+> >   static int iotlb_translate(const struct vringh *vrh,
+> >   			   u64 addr, u64 len, struct bio_vec iov[],
+> >   			   int iov_size, u32 perm)
+> > @@ -1416,5 +1420,6 @@ int vringh_need_notify_iotlb(struct vringh *vrh)
+> >   }
+> >   EXPORT_SYMBOL(vringh_need_notify_iotlb);
+> > +#endif
+> >   MODULE_LICENSE("GPL");
+> > diff --git a/include/linux/vringh.h b/include/linux/vringh.h
+> > index bd0503ca6f8f..ebff121c0b02 100644
+> > --- a/include/linux/vringh.h
+> > +++ b/include/linux/vringh.h
+> > @@ -14,8 +14,10 @@
+> >   #include <linux/virtio_byteorder.h>
+> >   #include <linux/uio.h>
+> >   #include <linux/slab.h>
+> > +#ifdef VHOST_IOTLB
+> >   #include <linux/dma-direction.h>
+> >   #include <linux/vhost_iotlb.h>
+> > +#endif
+> >   #include <asm/barrier.h>
+> >   /* virtio_ring with information needed for host access. */
+> > diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
+> > index f33f32f1d208..d3f152f4660b 100644
+> > --- a/tools/virtio/Makefile
+> > +++ b/tools/virtio/Makefile
+> > @@ -22,7 +22,8 @@ OOT_CONFIGS=\
+> >   	CONFIG_VHOST=m \
+> >   	CONFIG_VHOST_NET=n \
+> >   	CONFIG_VHOST_SCSI=n \
+> > -	CONFIG_VHOST_VSOCK=n
+> > +	CONFIG_VHOST_VSOCK=n \
+> > +	CONFIG_VHOST_RING=n
+> >   OOT_BUILD=KCFLAGS="-I "${OOT_VHOST} ${MAKE} -C ${OOT_KSRC} V=${V}
+> >   oot-build:
+> >   	echo "UNSUPPORTED! Don't use the resulting modules in production!"
 
