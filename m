@@ -2,114 +2,103 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F43C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A6EC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB38F2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13B520B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585855993;
-	bh=mYqoGLfUyvbdSbBXG282XzhrTLZ31L+XrX9dy+hzoEU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tt0WK8accdWAdk93UKoXa9krCAOpgMfjMaEQHMr4sO/bTmKi23WSEbFMHUP3IT0eR
-	 kq2OiAJPcaYK9HarxXP/GMEWOpRbBUvSWnlOPUcgITvLga3zhnlhUkh98T84rbqTGE
-	 O0kaytE2eGjJovrKR2luDXspvSorrSUQZco3Xdi8=
+	s=default; t=1585856051;
+	bh=1JzoXcWz3hij2feVyT6t2nJm6hf4czR8TBPqJp2nkqI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=b+WOeCi/UHy+6c9Awp0W1CVWsyXrHJvPqkczhWjvBFSVPp1YFtU8q+qTl7XwIKaGg
+	 CTuqzlEdYuMbIO2kgIEKFn6OgUtxAh/BWEjgM2cAkJPeF6NtAC2KhaLJRRRZ+WZkPZ
+	 9dmXDPCmPF2p5CJuznRqwf6BkQH8twFySIge4Tm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389325AbgDBTdM (ORCPT
+        id S2389052AbgDBTeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:33:12 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46148 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729033AbgDBTdM (ORCPT
+        Thu, 2 Apr 2020 15:34:10 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:42649 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729033AbgDBTeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:33:12 -0400
-Received: by mail-ed1-f68.google.com with SMTP id cf14so5827617edb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 12:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VNVfYQcU5r7QqnygVgwbeTwWR3NWKnCIk7XJifmEK+g=;
-        b=WFRj2oMOOBQ9Ye/JZJICZujrvRy2hkbOR9uXKlMdFDvf9Q5Lq80wgWioeP0e0rs0oj
-         n0Wk/vH8ieHoUcWgLtyDYX5P7nJxjuAYNdlNyNknULgO81UVaZJ0LqdKLLefqzuqrqZf
-         RMdkwJXPuZPoAbZGgiU6xp+RQahaYFh5oXLKg=
+        Thu, 2 Apr 2020 15:34:10 -0400
+Received: by mail-qv1-f66.google.com with SMTP id ca9so2351409qvb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 12:34:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VNVfYQcU5r7QqnygVgwbeTwWR3NWKnCIk7XJifmEK+g=;
-        b=hJUbA6WWPUpTFFAEP2Kd7TpSl6r3vL5oV0fTTRf7jkKLHnA+lsxHTr05lzfjaBzDqD
-         midmDoGUVwyFK+15epjG0rmHLjRf5eg0ON7QVXvFTiElW1SCT1V7FuWBOL1wflod36J8
-         bTNXUUjaTMzbdh4jxdbvVaxgJyTAHdfx6gkeJY92d151z600Ljn8njLx8UPJHRIq+EZ2
-         QgZXrnn2sbtrODH04by/zfJwnj5j08W8qlMKdc8I5daXw455W0VsWFq9MCp8wXUNox+w
-         eZGCWwFMiJPWMywk9nfCIojoGMinLFAvygqkh+BoimqQixf0C6NxamotWlX5vOOUZMGG
-         0xpw==
-X-Gm-Message-State: AGi0Pub0fya7nc2XwaMBXW5GPwiXa8MqT5ah6MWL39BmMmE2eK0Fghd2
-        g0XFKZPF8DhJv45XbSdEGpL4XfnVhc0=
-X-Google-Smtp-Source: APiQypLxS5pFtPUKQVZk4pYmw/PxBOSX42WwV0hlHJ+biivDhGUbq1JxJ76sSchl4xOOlBuJmQgPTQ==
-X-Received: by 2002:a05:6402:17a7:: with SMTP id j7mr4646605edy.334.1585855988524;
-        Thu, 02 Apr 2020 12:33:08 -0700 (PDT)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id d23sm1246832ejk.26.2020.04.02.12.33.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 12:33:08 -0700 (PDT)
-Received: by mail-wr1-f47.google.com with SMTP id c7so5639304wrx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 12:33:08 -0700 (PDT)
-X-Received: by 2002:a2e:8911:: with SMTP id d17mr2938169lji.16.1585855628859;
- Thu, 02 Apr 2020 12:27:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=5nIZlZKWjxlLnnHhs1gakYHEKHBE6JYgP01PsDatF0U=;
+        b=CPPAQGiwsa5Taa8JRa86X/5KETJdJgODL/3gq+OwpgAYjoLoTjmgVeJ5gIcSbVggL2
+         ENRyulRw0yPZoOVtPh3leM4b+L8l6HRLQFHRB1EygeEcgd2wLMPmyrGAFLCKdlrbmMMd
+         5813G2VOpRPRb0V/Y/F1doxaeydMfFhwS1xpwmdB6mVqeJNoFVqNmaUzJpeLv3C1ZPxQ
+         QLxlNtIpz0Ewo1vpQXdQgT1XK7rnaTqWQjcuqcbFsJ/tYjCzGPULK0hz52huCyiuQ6az
+         ZtTak9ob0Xj3gNPsEsqmaDiKfTYzWtlCwKZ8wPw1HwgBOtLH1MKJYhDbzf++K91sw2Hk
+         I/wg==
+X-Gm-Message-State: AGi0PuYgMMKu1eJ/a63b4AEkNN82RKBQkTGGHVLhlANCvrCGoy1dnTY4
+        DBPug0RBnNC2cuxrFFXe4W0iR7phigo=
+X-Google-Smtp-Source: APiQypI6ncleeN1Ci/FHsko9mI0ApbSB9QSEplnw9jY5o+6Cbns2CqrKcl+HcueNyTY2+79LiVD1pw==
+X-Received: by 2002:a0c:bd99:: with SMTP id n25mr4971589qvg.149.1585856049254;
+        Thu, 02 Apr 2020 12:34:09 -0700 (PDT)
+Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c091:480::7841])
+        by smtp.gmail.com with ESMTPSA id e16sm2637979qtq.78.2020.04.02.12.34.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 12:34:08 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 14:34:03 -0500
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] percpu changes for v5.7-rc1
+Message-ID: <20200402193403.GA8781@dennisz-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
- <20200402162942.GG23230@ZenIV.linux.org.uk> <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
- <20200402175032.GH23230@ZenIV.linux.org.uk> <202004021132.813F8E88@keescook>
-In-Reply-To: <202004021132.813F8E88@keescook>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 Apr 2020 12:26:52 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg9cSm=AjPmkasNHBDwuW4D10jszjv6EeCKp8V9Qbx2hg@mail.gmail.com>
-Message-ID: <CAHk-=wg9cSm=AjPmkasNHBDwuW4D10jszjv6EeCKp8V9Qbx2hg@mail.gmail.com>
-Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and user_write_access_begin/end
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Anvin <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 11:36 AM Kees Cook <keescook@chromium.org> wrote:
->
-> Yup, I think it's a weakness of the ARM implementation and I'd like to
-> not extend it further. AFAIK we should never nest, but I would not be
-> surprised at all if we did.
+Hello,
 
-Wel, at least the user_access_begin/end() sections can't nest. objtool
-verifies and warns about that on x86.
+This is just a few documentation fixes for percpu refcount, bitmap
+helpers that went in v5.6, and moving my emails to all be at korg.
 
-> If we were looking at a design goal for all architectures, I'd like
-> to be doing what the public PaX patchset
+Thanks,
+Dennis
 
-We already do better than PaX ever did. Seriously. Mainline has long
-since passed their hacky garbage.
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
 
-Plus PaX  and grsecurity should be actively shunned. Don't look at it,
-don't use it, and tell everybody you know to not use that shit.
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
 
-                Linus
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-5.7
+
+for you to fetch changes up to bfacd38f8d5b1f12b80aaacae2c15e1ffe11f06e:
+
+  percpu: update copyright emails to dennis@kernel.org (2020-04-01 10:09:12 -0700)
+
+----------------------------------------------------------------
+Dennis Zhou (1):
+      percpu: update copyright emails to dennis@kernel.org
+
+Ira Weiny (1):
+      percpu_ref: Fix comment regarding percpu_ref_init flags
+
+Wolfram Sang (2):
+      include/bitmap.h: add missing parameter in docs
+      include/bitmap.h: add new functions to documentation
+
+ include/linux/bitmap.h | 8 +++++++-
+ lib/percpu-refcount.c  | 7 ++++---
+ mm/percpu-stats.c      | 2 +-
+ mm/percpu.c            | 2 +-
+ 4 files changed, 13 insertions(+), 6 deletions(-)
