@@ -2,114 +2,138 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEB3C2BA17
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4FEC2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC12206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C99E206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 23:54:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wSRw9XzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390312AbgDBXxs (ORCPT
+        id S2390323AbgDBXyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:53:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390299AbgDBXxr (ORCPT
+        Thu, 2 Apr 2020 19:54:15 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37832 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390267AbgDBXyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 19:53:47 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 032NXmhP034954
-        for <linux-kernel@vger.kernel.org>; Thu, 2 Apr 2020 19:53:46 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 304r5154d7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 19:53:46 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 3 Apr 2020 00:53:31 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 Apr 2020 00:53:27 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 032Nrd4454591736
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Apr 2020 23:53:39 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 634154C046;
-        Thu,  2 Apr 2020 23:53:39 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 720924C040;
-        Thu,  2 Apr 2020 23:53:38 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.192.10])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Apr 2020 23:53:38 +0000 (GMT)
-Subject: Re: [PATCH v4 1/7] ima: Switch to ima_hash_algo for boot aggregate
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        James.Bottomley@HansenPartnership.com,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Thu, 02 Apr 2020 19:53:37 -0400
-In-Reply-To: <20200325104712.25694-2-roberto.sassu@huawei.com>
-References: <20200325104712.25694-1-roberto.sassu@huawei.com>
-         <20200325104712.25694-2-roberto.sassu@huawei.com>
+        Thu, 2 Apr 2020 19:54:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id u20so4555315oic.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 16:54:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MkVjVANpcM96YTP/artLgGpoBzA7LQYeml3uEpxUsEQ=;
+        b=wSRw9XzRiBybQLd7br9k7afPC7Rj5x3o8UDf1DIiDxl26R2ISpzh28VA/aCw6AgQ3r
+         xuvnlxkR+knRDPbx3sXs2gVcudJLcu2lc1Tz4ewwZrR65itu6LgqK1YV+JQyJpR3WUXg
+         A/Mcg+H/AvqA+PHrZpQwWa1DkfSVVxvyQ/DN98Gv55vtWRBVia8xI7uYHHTD8QI2FpvG
+         zkB/KLVn6ElyebU/hCoWiC0P6lHPaxF5iRs4uOAjVk/lpGD1uuj3RRRSejuE9zrwoHtc
+         9DGavumf8OKF7RWI9+k656CDmhalsGx8Q64HSmbnNgL7fGfrFFrxaXm1FwUE8NiUz/DW
+         QKBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MkVjVANpcM96YTP/artLgGpoBzA7LQYeml3uEpxUsEQ=;
+        b=UeuUYm20TWCmePnf2lvqtDPOR591QfC4gAeDESziQkKjOZQeRJDSxLZvfvqT8uHYJk
+         HiM0dEcMCraZ5ui52uQPFCjw2I+O/YsfX1QdsaujqupwWcIokmzMMKNnZibXpeeO75uV
+         4RY6CnD2AVH523CxuRRLBgRpKWr9txEuyLju6n/5FOPVY08BqbPSXpqCWRXMRzrtd0d1
+         zzVUuMcRNWIAPYjnua8Rt+H85IobzlKxX3uIUWhIHnEvc43q7iGGKotBYaHdh8qlvoOk
+         mCbBfDujQRWO6N1e4kE954vDVMLqnYc1plFVNgfQpO1tH5qsjbnojtPmt+xP42j1XHqH
+         Z7Dg==
+X-Gm-Message-State: AGi0PuZMtz7IWEnHsF1eJLW8b8BMXI0V6OcwGMQR2eKihhsM9/layIRt
+        LdIX1xTI7+U9GZcfvk+hhvAH5KKWTmy8RCpm6CUakQ==
+X-Google-Smtp-Source: APiQypJ1ZSdBUd3//b0o+rdxCAtF34zyk2+np7OTHfHudJN4riuwjNAt1eydJ7G7VnJwzPwsibZMWSQvVjikVhy04CY=
+X-Received: by 2002:aca:5208:: with SMTP id g8mr1073389oib.169.1585871654146;
+ Thu, 02 Apr 2020 16:54:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
+ <20200402223723.7150-1-john.stultz@linaro.org> <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
+ <CALAqxLXfd+7Wc79_XWRv8cKLFu+MpM1w9e3byx9z5bXSdTemLg@mail.gmail.com> <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
+In-Reply-To: <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 2 Apr 2020 16:54:02 -0700
+Message-ID: <CALAqxLVt9nZDWVTi=yHRnbT26PGCKANsqfhr9=3qnkOCOCFDhQ@mail.gmail.com>
+Subject: Re: [PATCH] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040223-0008-0000-0000-0000036956FE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040223-0009-0000-0000-00004A8AE4C0
-Message-Id: <1585871617.7311.5.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-02_13:2020-04-02,2020-04-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- phishscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
- spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0 clxscore=1015
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004020169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roberto,
+On Thu, Apr 2, 2020 at 4:19 PM Doug Anderson <dianders@chromium.org> wrote:
+> On Thu, Apr 2, 2020 at 4:08 PM John Stultz <john.stultz@linaro.org> wrote:
+> > My understanding with dts bindings is that they are effectively an
+> > ABI. While maybe it makes sense to deprecate the
+> > "qcom,sdm845-qusb2-phy" string in the Documentation to avoid new
+> > users, I'd think we'd want to keep the support in the driver as we
+> > aren't supposed to have tight coupling between the DTB and kernel (at
+> > least for official bindings).
+>
+> If nothing else if we're going to land your patch, can you at least
+> put a comment in there that says "only needed to support legacy device
+> trees that didn't include "qcom,qusb2-v2-phy" in the compatible
+> string.  Then the person who adds the next Qualcomm SoC will know not
+> to add themselves to the table too.
 
-On Wed, 2020-03-25 at 11:47 +0100, Roberto Sassu wrote:
-> boot_aggregate is the first entry of IMA measurement list. Its purpose is
-> to link pre-boot measurements to IMA measurements. As IMA was designed to
-> work with a TPM 1.2, the SHA1 PCR bank was always selected even if a
-> TPM 2.0 with support for stronger hash algorithms is available.
-> 
-> This patch first tries to find a PCR bank with the IMA default hash
-> algorithm. If it does not find it, it selects the SHA256 PCR bank for
-> TPM 2.0 and SHA1 for TPM 1.2. Ultimately, it selects SHA1 also for TPM 2.0
-> if the SHA256 PCR bank is not found.
-> 
-> If none of the PCR banks above can be found, boot_aggregate file digest is
-> filled with zeros, as for TPM bypass, making it impossible to perform a
-> remote attestation of the system.
-> 
-> Cc: stable@vger.kernel.org # 5.1.x
-> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with PCR read")
-> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> Suggested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Done.
 
-Thank you!  This patch set is now queued in next-integrity-testing
-during the open window.  Jerry, I assume this works for you.  Could we
-get your tag?
 
-thanks!
+> > Granted, I've not gotten much experience with boards that were fully
+> > upstream and thus didn't have an eternally evolving dts file that had
+> > to be kept in sync with the kernel, so in practice either solution
+> > does work for me, but in theory it seems like we should at least
+> > pretend these things are stable. :)
+>
+> Yeah, I don't want to get into the whole stable ABI argument, but what
+> you say is the official word.  The bindings are supposed to be a
+> stable ABI and it's a good goal to strive for.
+>
+> ...but in reality most people are OK with it not being quite so stable
+> as long as it's not hurting anyone.  What should have happened here is
+> that the bindings and dts should have landed in one Linux version and
+> the driver change landed in the next Linux version.  Now we're stuck
+> with the breakage, though.  :(  In general for "new" architectures
+> it's considered more OK to break compatibility, though I guess you can
+> argue whether sdm845 is really new enough.  I guess to get at the meat
+> of the issue though: if you need a patch to fix your problem anyway,
+> why not land the patch that doesn't end up chewing extra up extra code
+> space and providing a bad example for someone to copy?
+>
+> Now certainly if changing your DTS was an undue burden (like you've
+> already baked device trees into firmware) there's no question we
+> should land your patch.  I'm just not sure the lofty goal of "it's
+> supposed to be a stable ABI so let's add an entry to the table that
+> nobody will ever care about after the dts change lands" is enough of a
+> reason to land it now.
 
-Mimi
+Personally, I'm fine with either solution (as there's still dts
+changes for db845c pending that we're carrying), but I also want to
+make sure we're setting a good standard for future changes (as these
+sorts of things seem to bite me far too frequently on the db845c,
+sometimes even resulting in forced userland changes that we've so far
+been able to adapt to, but are not ideal).
 
+So I've resubmitted my version to let the maintainers decide.  :)
+
+thanks
+-john
