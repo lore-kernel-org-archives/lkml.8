@@ -2,83 +2,91 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D55CC2BA16
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79BEC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA622077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB922078B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qtiL8TpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390034AbgDBTbr (ORCPT
+        id S2390057AbgDBTbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:31:47 -0400
-Received: from mga09.intel.com ([134.134.136.24]:55074 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389108AbgDBTbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:31:46 -0400
-IronPort-SDR: QiGyNbUFGh/kl5UgT6MXL48AH32OQO4b+wdFF1SQuiKXpRPWXpxnZRSX5vZzWUlPvDaGLC7whV
- hqnavcRWXi8Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 12:31:39 -0700
-IronPort-SDR: e818wdZCBUVsYzp4U6BJ2Qs8+Q43Q9Q/oXz4HQxZxW1jZNUehwjhCwCUuZOXi121xQ+V+8oFYI
- Ksm606buqnuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="240914698"
-Received: from hbriegel-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.39.101])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Apr 2020 12:31:36 -0700
-Date:   Thu, 2 Apr 2020 22:31:34 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sachin Sant <sachinp@linux.vnet.ibm.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-next@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v2] qtpm2: Export tpm2_get_cc_attrs_tbl for ibmvtpm
- driver as module
-Message-ID: <20200402193134.GC10314@linux.intel.com>
-References: <20200319010017.738677-1-stefanb@linux.vnet.ibm.com>
- <20200319195706.GD24804@linux.intel.com>
- <2BF66599-184A-4647-BC57-105A1512F119@linux.vnet.ibm.com>
+        Thu, 2 Apr 2020 15:31:50 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40194 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389108AbgDBTbt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:31:49 -0400
+Received: by mail-qk1-f193.google.com with SMTP id l25so5406980qki.7;
+        Thu, 02 Apr 2020 12:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7I6mCCWO0NI2W9Hv1j2ODnDFaCT13IrYKH20fIeShyM=;
+        b=qtiL8TpB80vLSxlF06cwi699QC+hLcU4dTsjnFf39v34jsBq6n0YTbCvrIiysheT5e
+         0iDCSMRVYq48fkYuwf7bD68+pxz7nQ74cvtLS3nYaJvZ/0obYVA+yCpyTHkq7mg+SMkQ
+         8f1FSy+tnNukU5h6Ew2OMmoz4LRVMG1Hy91BKk6TaIta7EWlN7Im+cdyphWu6CHElvxQ
+         DI6YuEBFoXYi0/2CuK1IpIDQrK2TiGauWUnjjcXO3tbCTNXIgzwz0uY+weQQYLLwH4qV
+         HMR0Up/BJT+QPMlycRANAHWJQePSQ3f0ZrLLcHFbcQdmKZVoe2t3s0mBEG/syw612Eko
+         iu4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7I6mCCWO0NI2W9Hv1j2ODnDFaCT13IrYKH20fIeShyM=;
+        b=iO1TQrhKCdF/9JFs2YDL9/No7/v6XhhhpIyEAYXS8pGNyk/CAzbzxZNA6zhW5b53+m
+         j9MVAs49Glfx3KDHds3uGBCqrl9lc5QRk9LQUzDchlcd8E2qyf5qPlgJoZlGKX+omwY7
+         jLigLxRBYyfVWdIt4Vv5e/2qeqr1RlslH6p0bfPKFoyvHigfC9wKkJKjKjMLyS6ol22F
+         5TuwkZ0G/v9sAqG5eT5cXeufqpxav238zinQOK4uckvb0zRjOvzG7dpg+tke8dUzW2a0
+         5yk4sKCyc2qF/FPUDzKXCvFidatSFjuF/081XOOlXXN+/njRtCqk4xWeMvWX5ccbHtM3
+         PgIQ==
+X-Gm-Message-State: AGi0PuZ/8R61U06U7cm9WlGbf1ENSomLLiyjCQl6fi0u1Y2icIkbeLXH
+        Cf0mdOWrL1zDBuFmxiClm/qsjEXx0NyOnGHW7e4=
+X-Google-Smtp-Source: APiQypK/ZbpMk9Dj0Hosok9jPEo30Su45nhINvZzVFcgTSuckkMrLuD8FT88jQlIP1pGI5Y6rlhHf2KJzp2UlipKQtA=
+X-Received: by 2002:a37:6411:: with SMTP id y17mr5397810qkb.437.1585855906945;
+ Thu, 02 Apr 2020 12:31:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2BF66599-184A-4647-BC57-105A1512F119@linux.vnet.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <202004010849.CC7E9412@keescook> <20200402153335.38447-1-slava@bacher09.org>
+ <f43f4e17-f496-9ee1-7d89-c8f742720a5f@bacher09.org>
+In-Reply-To: <f43f4e17-f496-9ee1-7d89-c8f742720a5f@bacher09.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 2 Apr 2020 12:31:36 -0700
+Message-ID: <CAEf4Bzb2mgDPcdNGWnBgoqsuWYqDiv39U2irn4iCp=7B3kx1nA@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
+To:     Slava Bacherikov <slava@bacher09.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Kees Cook <keescook@chromium.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Liu Yiding <liuyd.fnst@cn.fujitsu.com>, kpsingh@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 02:40:30PM +0530, Sachin Sant wrote:
-> 
-> 
-> > On 20-Mar-2020, at 1:27 AM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> > 
-> > On Wed, Mar 18, 2020 at 09:00:17PM -0400, Stefan Berger wrote:
-> >> From: Stefan Berger <stefanb@linux.ibm.com>
-> >> 
-> >> This patch fixes the following problem when the ibmvtpm driver
-> >> is built as a module:
-> >> 
-> >> ERROR: modpost: "tpm2_get_cc_attrs_tbl" [drivers/char/tpm/tpm_ibmvtpm.ko] undefined!
-> >> make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
-> >> make: *** [Makefile:1298: modules] Error 2
-> >> 
-> >> Fixes: 18b3670d79ae ("tpm: ibmvtpm: Add support for TPM2")
-> >> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> >> Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-> >> Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-> > 
-> 
-> Ping. This failure can now be seen in mainline (cad18da0af) as well.
+On Thu, Apr 2, 2020 at 8:40 AM Slava Bacherikov <slava@bacher09.org> wrote:
+>
+>
+>
+> 02.04.2020 18:33, Slava Bacherikov wrote:
+> > +     depends on DEBUG_INFO || COMPILE_TEST
+>
+> Andrii are you fine by this ?
 
-It is in my tree
-
-/Jarkko
+I think it needs a good comment explaining this weirdness, at least.
+As I said, if there is no DEBUG_INFO, there is not point in doing
+DWARF-to-BTF conversion, even more -- it actually might fail, I
+haven't checked what pahole does in that case. So I'd rather drop
+GCC_PLUGIN_RANDSTRUCT is that's the issue here. DEBUG_INFO_SPLIT and
+DEBUG_INFO_REDUCED look good.
