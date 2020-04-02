@@ -2,91 +2,223 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1ACC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7509AC2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D5720675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAAA20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 11:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V4h4DEgr"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="WBA8Q4J9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388093AbgDBLWP (ORCPT
+        id S2388095AbgDBLX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:22:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44022 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388012AbgDBLWP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 07:22:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032BDkNn088511;
-        Thu, 2 Apr 2020 11:21:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=AJdz6L/Vw6hmin7lipJ5B/HV3aW2/d8FK2eFPWDTde4=;
- b=V4h4DEgrooTwo8Gp+yNfnUO829ofSbMSOpY4QwsaBhwUR/u/3QLq/RSwdCHIFCD09MBC
- r0NMa/PxZhtLQ/hjZfX1DZgqFc6ZclYhtQnNq0T5FB3KRN5pbdJvILOpr/1L1PHuWs15
- q0SV99aD4I8h3ORwO+zk+VkJFZMqykQY027UFvjwB+ByslB51AIXMiymRW5iFDASZ9MD
- 2AqHKYknQR+61T5YsUkv1y/41zWr0H/+5v0d2HXN1yDg22n2Kvi63bEN4gWS91cfnDpf
- cBeluIcUn+Io+YuK/QLUCXLp0IJ1rjzEyJ+jqRDoxVchuWQkbT0M5A7SlWGRGpuRsj0/ jw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 303cevaqxp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 11:21:53 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032BCx8q078899;
-        Thu, 2 Apr 2020 11:21:53 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 302g2jcvv1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 11:21:53 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 032BLnCJ008878;
-        Thu, 2 Apr 2020 11:21:49 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 04:21:48 -0700
-Date:   Thu, 2 Apr 2020 14:21:37 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     ltykernel@gmail.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, michael.h.kelley@microsoft.com, wei.liu@kernel.org,
-        devel@linuxdriverproject.org, vkuznets@redhat.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Update PATCH] x86/Hyper-V: Initialize Syn timer clock when it's
-Message-ID: <20200402112137.GM2001@kadam>
-References: <20200330141708.12822-1-Tianyu.Lan@microsoft.com>
+        Thu, 2 Apr 2020 07:23:58 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36361 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388039AbgDBLX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 07:23:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48tLKz3MYhz9sQt;
+        Thu,  2 Apr 2020 22:23:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1585826634;
+        bh=pbSAXegT+8Z7l+avNPLwehmYnEsWWDO1v7MhVYfnlXQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=WBA8Q4J9sICs9xdSJobj+NAfU8iWBq+SIuyZsPoatm6SJyynjd/gDpSp8Q2IRLDAj
+         qZ+iNATA+K/H1WTtmn68sbjnFno/g4Beb5PLSEi6h3QlGXkW4iCmQUeCd06yzlsh9N
+         rY3ckrUC4nYLEOlJn0d4JZnmg7grBQmkzFyOPX+Rk0xFHFogaa/vsPtpcTkLYVpMag
+         CYvbnUYFJF0159LbLkXs5vfYv1NvrRX3oW9uSbWq0R2Goc3QCmQnGgowk5kgCnPb85
+         /WRTeLt/QnmTptocrCOg0qQKSatI6wCxQ5+7e7dI2hu95e/8NQ0I8dCz/tAwQOX063
+         +CCfaQAvD9tjg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Qian Cai <cai@lca.pw>, peterz@infradead.org, mingo@redhat.com
+Cc:     juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        bsegall@google.com, mgorman@suse.de, paulmck@kernel.org,
+        tglx@linutronix.de, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, linuxppc-dev@lists.ozlabs.org,
+        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2] sched/core: fix illegal RCU from offline CPUs
+In-Reply-To: <20200401214033.8448-1-cai@lca.pw>
+References: <20200401214033.8448-1-cai@lca.pw>
+Date:   Thu, 02 Apr 2020 22:24:00 +1100
+Message-ID: <87369mt9kf.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330141708.12822-1-Tianyu.Lan@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=1 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020102
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1011 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=1 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020102
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This doesn't apply to today's linux-next.
+Qian Cai <cai@lca.pw> writes:
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> In the CPU-offline process, it calls mmdrop() after idle entry and the
+> subsequent call to cpuhp_report_idle_dead(). Once execution passes the
+> call to rcu_report_dead(), RCU is ignoring the CPU, which results in
+> lockdep complaining when mmdrop() uses RCU from either memcg or
+> debugobjects below.
+>
+> Fix it by cleaning up the active_mm state from BP instead. Every arch
+> which has CONFIG_HOTPLUG_CPU should have already called idle_task_exit()
+> from AP. The only exception is parisc because it switches them to
+> &init_mm unconditionally (see smp_boot_one_cpu() and smp_cpu_init()),
+> but the patch will still work there because it calls mmgrab(&init_mm) in
+> smp_cpu_init() and then should call mmdrop(&init_mm) in finish_cpu().
 
-regards,
-dan carpenter
+Thanks for debugging this. How did you hit it in the first place?
 
+A link to the original thread would have helped me:
+
+  https://lore.kernel.org/lkml/20200113190331.12788-1-cai@lca.pw/
+
+> WARNING: suspicious RCU usage
+> -----------------------------
+> kernel/workqueue.c:710 RCU or wq_pool_mutex should be held!
+>
+> other info that might help us debug this:
+>
+> RCU used illegally from offline CPU!
+> Call Trace:
+>  dump_stack+0xf4/0x164 (unreliable)
+>  lockdep_rcu_suspicious+0x140/0x164
+>  get_work_pool+0x110/0x150
+>  __queue_work+0x1bc/0xca0
+>  queue_work_on+0x114/0x120
+>  css_release+0x9c/0xc0
+>  percpu_ref_put_many+0x204/0x230
+>  free_pcp_prepare+0x264/0x570
+>  free_unref_page+0x38/0xf0
+>  __mmdrop+0x21c/0x2c0
+>  idle_task_exit+0x170/0x1b0
+>  pnv_smp_cpu_kill_self+0x38/0x2e0
+>  cpu_die+0x48/0x64
+>  arch_cpu_idle_dead+0x30/0x50
+>  do_idle+0x2f4/0x470
+>  cpu_startup_entry+0x38/0x40
+>  start_secondary+0x7a8/0xa80
+>  start_secondary_resume+0x10/0x14
+
+Do we know when this started happening? ie. can we determine a Fixes
+tag?
+
+> <Peter to sign off here>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/powerpc/platforms/powernv/smp.c |  1 -
+>  include/linux/sched/mm.h             |  2 ++
+>  kernel/cpu.c                         | 18 +++++++++++++++++-
+>  kernel/sched/core.c                  |  5 +++--
+>  4 files changed, 22 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
+> index 13e251699346..b2ba3e95bda7 100644
+> --- a/arch/powerpc/platforms/powernv/smp.c
+> +++ b/arch/powerpc/platforms/powernv/smp.c
+> @@ -167,7 +167,6 @@ static void pnv_smp_cpu_kill_self(void)
+>  	/* Standard hot unplug procedure */
+>  
+>  	idle_task_exit();
+> -	current->active_mm = NULL; /* for sanity */
+
+If I'm reading it right, we'll now be running with active_mm == init_mm
+in the offline loop.
+
+I guess that's fine, I can't think of any reason it would matter, and it
+seems like we were NULL'ing it out just for paranoia's sake not because
+of any actual problem.
+
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+
+
+cheers
+
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index c49257a3b510..a132d875d351 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
+>  		__mmdrop(mm);
+>  }
+>  
+> +void mmdrop(struct mm_struct *mm);
+> +
+>  /*
+>   * This has to be called after a get_task_mm()/mmget_not_zero()
+>   * followed by taking the mmap_sem for writing before modifying the
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 2371292f30b0..244d30544377 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -3,6 +3,7 @@
+>   *
+>   * This code is licenced under the GPL.
+>   */
+> +#include <linux/sched/mm.h>
+>  #include <linux/proc_fs.h>
+>  #include <linux/smp.h>
+>  #include <linux/init.h>
+> @@ -564,6 +565,21 @@ static int bringup_cpu(unsigned int cpu)
+>  	return bringup_wait_for_ap(cpu);
+>  }
+>  
+> +static int finish_cpu(unsigned int cpu)
+> +{
+> +	struct task_struct *idle = idle_thread_get(cpu);
+> +	struct mm_struct *mm = idle->active_mm;
+> +
+> +	/*
+> +	 * idle_task_exit() will have switched to &init_mm, now
+> +	 * clean up any remaining active_mm state.
+> +	 */
+> +	if (mm != &init_mm)
+> +		idle->active_mm = &init_mm;
+> +	mmdrop(mm);
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Hotplug state machine related functions
+>   */
+> @@ -1549,7 +1565,7 @@ static struct cpuhp_step cpuhp_hp_states[] = {
+>  	[CPUHP_BRINGUP_CPU] = {
+>  		.name			= "cpu:bringup",
+>  		.startup.single		= bringup_cpu,
+> -		.teardown.single	= NULL,
+> +		.teardown.single	= finish_cpu,
+>  		.cant_stop		= true,
+>  	},
+>  	/* Final state before CPU kills itself */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index a2694ba82874..8787958339d5 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -6200,13 +6200,14 @@ void idle_task_exit(void)
+>  	struct mm_struct *mm = current->active_mm;
+>  
+>  	BUG_ON(cpu_online(smp_processor_id()));
+> +	BUG_ON(current != this_rq()->idle);
+>  
+>  	if (mm != &init_mm) {
+>  		switch_mm(mm, &init_mm, current);
+> -		current->active_mm = &init_mm;
+>  		finish_arch_post_lock_switch();
+>  	}
+> -	mmdrop(mm);
+> +
+> +	/* finish_cpu(), as ran on the BP, will clean up the active_mm state */
+>  }
+>  
+>  /*
+> -- 
+> 2.21.0 (Apple Git-122.2)
