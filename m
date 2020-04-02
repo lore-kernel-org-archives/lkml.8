@@ -2,338 +2,137 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B297C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7163C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC4DD20719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:50:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qQLKTeia"
+	by mail.kernel.org (Postfix) with ESMTP id 8F51D212CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 20:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390144AbgDBUuk (ORCPT
+        id S2390150AbgDBUvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:50:40 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37574 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgDBUuj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:50:39 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 032KoQIH073739;
-        Thu, 2 Apr 2020 15:50:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585860626;
-        bh=gecQ/nrPzueOFwjU/S7YNaMux9NZT6tuIgXOBnNn0KY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qQLKTeiaCyWsJv5iIu2rap2fJrF+mGlfc3KH15gFApHAQi/ghQFw83/21lCGhWxPY
-         XxsJLlANz+6MvqtmXUgtxgb0DaMu1CEve2cTs2bMN60ddSgJEwkNsMu6vM33+Ve2Lf
-         uJXeTs2rv4nGPOLvl51kREF3VuWo+QVEBj5CsjK4=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 032KoQMC085417
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 Apr 2020 15:50:26 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 2 Apr
- 2020 15:50:25 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 2 Apr 2020 15:50:25 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 032KoPJC088485;
-        Thu, 2 Apr 2020 15:50:25 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v19 18/18] dt: bindings: Update lp55xx binding to recommended LED naming
-Date:   Thu, 2 Apr 2020 15:43:11 -0500
-Message-ID: <20200402204311.14998-19-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200402204311.14998-1-dmurphy@ti.com>
-References: <20200402204311.14998-1-dmurphy@ti.com>
+        Thu, 2 Apr 2020 16:51:10 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6017 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbgDBUvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:51:10 -0400
+IronPort-SDR: nnazKzwo7o4t2pBqjM51DSZmx/Vdm1AYDxoE2Q7gBpcGLGPcwqhG0ljKjimiO+WEo/uiqIt7X5
+ bMZ4VzU+w+nw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 13:51:09 -0700
+IronPort-SDR: xDndagnINHEsIccR1lmNLrp85M8OlP1m8autthF7KfNKOzl2PmQG29nHNaCPldzq8FHZbt+HgU
+ 7weqTDm8QGVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="243196843"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga008.jf.intel.com with ESMTP; 02 Apr 2020 13:51:09 -0700
+Date:   Thu, 2 Apr 2020 13:51:09 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     x86@kernel.org, "Kenneth R . Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] KVM: VMX: Extend VMX's #AC interceptor to handle
+ split lock #AC in guest
+Message-ID: <20200402205109.GM13879@linux.intel.com>
+References: <20200402124205.334622628@linutronix.de>
+ <20200402155554.27705-1-sean.j.christopherson@intel.com>
+ <20200402155554.27705-4-sean.j.christopherson@intel.com>
+ <87sghln6tr.fsf@nanos.tec.linutronix.de>
+ <20200402174023.GI13879@linux.intel.com>
+ <87h7y1mz2s.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7y1mz2s.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the LP55xx DT binding examples to the recommended node
-naming convention.  There are no changes to the DT properties.
+On Thu, Apr 02, 2020 at 10:07:07PM +0200, Thomas Gleixner wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> > On Thu, Apr 02, 2020 at 07:19:44PM +0200, Thomas Gleixner wrote:
+> >> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> > That puts KVM in a weird spot if/when intercepting #AC is no longer
+> > necessary, e.g. "if" future CPUs happen to gain a feature that traps into
+> > the hypervisor (KVM) if a potential near-infinite ucode loop is detected.
+> >
+> > The only reason KVM intercepts #AC (before split-lock) is to prevent a
+> > malicious guest from executing a DoS attack on the host by putting the #AC
+> > handler in ring 3.  Current CPUs will get stuck in ucode vectoring #AC
+> > faults more or less indefinitely, e.g. long enough to trigger watchdogs in
+> > the host.
+> 
+> Which is thankfully well documented in the VMX code and the
+> corresponding chapter in the SDM. 
+> 
+> > Injecting #AC if and only if KVM is 100% certain the guest wants the #AC
+> > would lead to divergent behavior if KVM chose to not intercept #AC, e.g.
+> 
+> AFAICT, #AC is not really something which is performance relevant, but I
+> might obviously be uninformed on that.
+> 
+> Assumed it is not, then there is neither a hard requirement nor a real
+> incentive to give up on intercepting #AC even when future CPUs have a
+> fix for the above wreckage.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Tony Lindgren <tony@atomide.com>
-CC: "Benoît Cousson" <bcousson@baylibre.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- .../devicetree/bindings/leds/leds-lp55xx.txt  | 58 +++++++++----------
- 1 file changed, 29 insertions(+), 29 deletions(-)
+Agreed that there's no hard requirement, but general speaking, the less KVM
+needs to poke into the guest the better.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index 0ccc1efc2499..5475f45ef51f 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -48,7 +48,7 @@ example 1) LP5521
- 'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
- on channel 0.
- 
--lp5521@32 {
-+led-controller@32 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	compatible = "national,lp5521";
-@@ -56,20 +56,20 @@ lp5521@32 {
- 	label = "lp5521_pri";
- 	clock-mode = /bits/ 8 <2>;
- 
--	chan@0 {
-+	led@0 {
- 		reg = <0>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 		linux,default-trigger = "heartbeat";
- 	};
- 
--	chan@1 {
-+	led@1 {
- 		reg = <1>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
- 
--	chan@2 {
-+	led@2 {
- 		reg = <2>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
-@@ -88,70 +88,70 @@ ASEL1    ASEL0    Address
-  VEN      GND       34h
-  VEN      VEN       35h
- 
--lp5523@32 {
-+led-controller@32 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	compatible = "national,lp5523";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <1>;
- 
--	chan@0 {
-+	led@0 {
- 		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@1 {
-+	led@1 {
- 		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@2 {
-+	led@2 {
- 		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@3 {
-+	led@3 {
- 		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@4 {
-+	led@4 {
- 		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@5 {
-+	led@5 {
- 		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@6 {
-+	led@6 {
- 		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@7 {
-+	led@7 {
- 		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@8 {
-+	led@8 {
- 		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
-@@ -162,35 +162,35 @@ lp5523@32 {
- example 3) LP5562
- 4 channels are defined.
- 
--lp5562@30 {
-+led-controller@30 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	compatible = "ti,lp5562";
- 	reg = <0x30>;
- 	clock-mode = /bits/8 <2>;
- 
--	chan@0 {
-+	led@0 {
- 		reg = <0>;
- 		chan-name = "R";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan@1 {
-+	led@1 {
- 		reg = <1>;
- 		chan-name = "G";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan@2 {
-+	led@2 {
- 		reg = <2>;
- 		chan-name = "B";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan@3 {
-+	led@3 {
- 		reg = <3>;
- 		chan-name = "W";
- 		led-cur = /bits/ 8 <0x20>;
-@@ -202,7 +202,7 @@ example 4) LP8501
- 9 channels are defined. The 'pwr-sel' is LP8501 specific property.
- Others are same as LP5523.
- 
--lp8501@32 {
-+led-controller@32 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	compatible = "ti,lp8501";
-@@ -210,63 +210,63 @@ lp8501@32 {
- 	clock-mode = /bits/ 8 <2>;
- 	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
- 
--	chan@0 {
-+	led@0 {
- 		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@1 {
-+	led@1 {
- 		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@2 {
-+	led@2 {
- 		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@3 {
-+	led@3 {
- 		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@4 {
-+	led@4 {
- 		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@5 {
-+	led@5 {
- 		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@6 {
-+	led@6 {
- 		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@7 {
-+	led@7 {
- 		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@8 {
-+	led@8 {
- 		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
--- 
-2.25.1
+> > some theoretical unknown #AC source would conditionally result in exits to
+> > userspace depending on whether or not KVM wanted to intercept #AC for
+> > other reasons.
+> 
+> I'd rather like to know when there is an unknown #AC source instead of
+> letting the guest silently swallow it.
 
+Trying to prevent the guest from squashing a spurious fault is a fools
+errand.   For example, with nested virtualization, the correct behavior
+from an architectural perspective is to forward exceptions from L2 (the
+nested VM) to L1 (the direct VM) that L1 wants to intercept.  E.g. if L1
+wants to intercept #AC faults that happen in L2, then KVM reflects all #AC
+faults into L1 as VM-Exits without ever reaching this code.
+
+Nested virt aside, detecting spurious #AC and a few other exceptions is
+mostly feasible, but for many exceptions it's flat out impossible.
+
+Anyways, this particular case isn't a sticking point, i.e. I'd be ok with
+exiting to userspace on a spurious #AC, I just don't see the value in doing
+so.  Returning KVM_EXIT_EXCEPTION doesn't necessarily equate to throwing up
+a red flag, e.g. from a kernel perspective you'd still be relying on the
+userspace VMM to report the error in a sane manner.  I think at one point
+Xiaoyao had a WARN_ON for a spurious #AC, but it was removed because the
+odds of a false positive due to some funky corner case seemed higher than
+detecting a CPU bug.
+
+> TBH, the more I learn about this, the more I tend to just give up on
+> this whole split lock stuff in its current form and wait until HW folks
+> provide something which is actually usable:
+> 
+>    - Per thread
+>    - Properly distinguishable from a regular #AC via error code
+> 
+> OTOH, that means I won't be able to use it before retirement. Oh well.
+> 
+> Thanks,
+> 
+>         tglx
