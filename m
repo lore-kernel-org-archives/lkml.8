@@ -2,78 +2,160 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2147C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A72C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705D72145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359432145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 14:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nBAHwiN9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pULk7rj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388396AbgDBO23 (ORCPT
+        id S2387754AbgDBO2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:28:29 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51332 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387732AbgDBO22 (ORCPT
+        Thu, 2 Apr 2020 10:28:08 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40025 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732474AbgDBO2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 10:28:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=j/8a96fqeZAuiVy6S5hR0dB16EbF/5r64jo0EgfpZqw=; b=nBAHwiN9U4ETGo8K3sVmLBS5Zh
-        i49IKbjJ8/jWrEkVatZcsAWpm2rveMNK7/35SB+klm33JYaqGf8+13FlGBZlfTmgrcw21ZvwfpPPr
-        cM77QfLIQyKzgzRCurRv289EruAkgJcxrnd4LC2Nxcp7KRe0rnSCgY2WCwg/j6C3jYh/gnN3MR4WK
-        gdP0Sgy4UfOpfyqHTvh1KEorBu/IFzOvHMelc5aZkE5W+OI/5KADrYP0qtH2pWrKdmO1dRlqPTfs+
-        Nkm7Pp24wAEvHJA+lxltBPwx+SKSlLLOnz25u2dcrInG5TnV/e81bjXcXNc7f1QYd4ntob7EWIC+h
-        fFQSXz+Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jK0pU-0003C3-H6; Thu, 02 Apr 2020 14:28:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AD50F307062;
-        Thu,  2 Apr 2020 16:28:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8FF0C2B0D8F6B; Thu,  2 Apr 2020 16:28:21 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 16:28:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>,
-        Julien Thierry <jthierry@redhat.com>
-Subject: Re: [PATCH 0/5] objtool fixes
-Message-ID: <20200402142821.GI20713@hirez.programming.kicks-ass.net>
-References: <cover.1585761021.git.jpoimboe@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1585761021.git.jpoimboe@redhat.com>
+        Thu, 2 Apr 2020 10:28:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s8so2309638wrt.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 07:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=+cHrwJ2Hn5m/Qb3jLfMLFnnm5DKsUGWGJFUk2Y++pX0=;
+        b=pULk7rj3GE/OloQs/UlEPA3hGEuRaujr/vzLWqxhalI8dIxY/sAGfzu5hMUOuFI9ZB
+         z4tRJJMehohhlfyAQ0DVR4ZCRGLNrQr96ZLmJZzRaMPudcchNQwbcprKP67fb+GqWtCT
+         RYBayP/aWoVYXea164mZ7/tCnVN45RFj4QK/LSk7uvQAC61NyxrvfTjXUGEiiinRRjXv
+         Ao76MhSv6xU/IXBUwLSFaLHo1wVrnRX+035n+amJubfinxJ9jDv+KwhIKyfWE6v5Hzk6
+         qrsxJ74FSpgyeE7P48mdwLM3legrLvc0/R23PKlQaDIP8vu0IG4qq3wJEei5++wdJxyc
+         CSjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=+cHrwJ2Hn5m/Qb3jLfMLFnnm5DKsUGWGJFUk2Y++pX0=;
+        b=mTxd0I59iDAEIGQWiEGQrSogXlRU+QfpH0/gKpjtlvSo/ruX4oZtoW+2wtiZB73sqT
+         JrdH+tqyxJ2Y7qYx3Adb7EZGrcNTnIlPe0byNKF3SUhAbu6OhsaTaC31dHGRNxjVsARD
+         NTrggUs4M9gwZGdeVn7HZYhVy+t3KSQfBd2aHu82PxPf7cjtBMgC6bDfqC7Ic0JQ9ggq
+         JvGp1NidwG8PqFMha4gR7vcY0Zmt0Fs4Azi3sK++ErHxFfTCzJvxhdTfHvJEwE22rfUG
+         RAjbWzJA6SM3NaQRCmLmc4qNdzOQN+zWqhe4qBEgXZa912O1q6UxFx38HOAKBjMVUUgo
+         umIg==
+X-Gm-Message-State: AGi0PuZ1qR2FMTtdB8W912hdA/OYo26h27NY2HXXRgjVuCAWQLV3pglq
+        35YBMrpVxoprRjI1Q6xp6tV0CQ==
+X-Google-Smtp-Source: APiQypK+3IkY+QbxGgVh1nczO4PMUAzFmJPq5vNl2asf7Eve6C5rflARXmwY7NtjH9HNoyosCPb4Dg==
+X-Received: by 2002:adf:b6a9:: with SMTP id j41mr1387106wre.70.1585837684482;
+        Thu, 02 Apr 2020 07:28:04 -0700 (PDT)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:4b2:e366:e86f:261a])
+        by smtp.gmail.com with ESMTPSA id a7sm7045186wmm.34.2020.04.02.07.28.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 07:28:03 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
+Cc:     amit.kucheria@verdurent.com,
+        linux-pm@vger.kernel.org (open list:THERMAL),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH V2 3/9] thermal: Move internal IPA functions
+Date:   Thu,  2 Apr 2020 16:27:41 +0200
+Message-Id: <20200402142747.8307-3-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200402142747.8307-1-daniel.lezcano@linaro.org>
+References: <20200402142747.8307-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 01:23:24PM -0500, Josh Poimboeuf wrote:
-> Some objtool fixes related to CONFIG_UBSAN_TRAP, Clang assembler, and
-> more...
-> 
-> Josh Poimboeuf (5):
->   objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
->   objtool: Support Clang non-section symbols in ORC dump
->   objtool: Support Clang non-section symbols in ORC generation
->   objtool: Fix switch table detection in .text.unlikely
->   objtool: Make BP scratch register warning more robust
-> 
->  tools/objtool/check.c    | 26 ++++++++++++++++--------
->  tools/objtool/orc_dump.c | 44 ++++++++++++++++++++++++----------------
->  tools/objtool/orc_gen.c  | 33 +++++++++++++++++++++++-------
->  3 files changed, 71 insertions(+), 32 deletions(-)
+The exported IPA functions are used by the IPA. It is pointless to
+declare the functions in the thermal.h file.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+For better self-encapsulation and less impact for the compilation if a
+change is made on it. Move the code in the thermal core internal
+header file.
+
+As the users depends on THERMAL then it is pointless to have the stub,
+remove them.
+
+Take also the opportunity to fix checkpatch warnings/errors when
+moving the code around.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/thermal/thermal_core.h | 13 +++++++++++++
+ include/linux/thermal.h        | 24 ------------------------
+ 2 files changed, 13 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+index 5d08ad60d9df..f99551ce9838 100644
+--- a/drivers/thermal/thermal_core.h
++++ b/drivers/thermal/thermal_core.h
+@@ -46,6 +46,19 @@ struct thermal_attr {
+ 	char name[THERMAL_NAME_LENGTH];
+ };
+ 
++static inline bool cdev_is_power_actor(struct thermal_cooling_device *cdev)
++{
++	return cdev->ops->get_requested_power && cdev->ops->state2power &&
++		cdev->ops->power2state;
++}
++
++int power_actor_get_max_power(struct thermal_cooling_device *cdev,
++			      struct thermal_zone_device *tz, u32 *max_power);
++int power_actor_get_min_power(struct thermal_cooling_device *cdev,
++			      struct thermal_zone_device *tz, u32 *min_power);
++int power_actor_set_power(struct thermal_cooling_device *cdev,
++			  struct thermal_instance *ti, u32 power);
++
+ /*
+  * This structure is used to describe the behavior of
+  * a certain cooling device on a certain trip point
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index 5aa80fb2fb61..e0279f7b43f4 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -399,18 +399,6 @@ void devm_thermal_zone_of_sensor_unregister(struct device *dev,
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_THERMAL)
+-static inline bool cdev_is_power_actor(struct thermal_cooling_device *cdev)
+-{
+-	return cdev->ops->get_requested_power && cdev->ops->state2power &&
+-		cdev->ops->power2state;
+-}
+-
+-int power_actor_get_max_power(struct thermal_cooling_device *,
+-			      struct thermal_zone_device *tz, u32 *max_power);
+-int power_actor_get_min_power(struct thermal_cooling_device *,
+-			      struct thermal_zone_device *tz, u32 *min_power);
+-int power_actor_set_power(struct thermal_cooling_device *,
+-			  struct thermal_instance *, u32);
+ struct thermal_zone_device *thermal_zone_device_register(const char *, int, int,
+ 		void *, struct thermal_zone_device_ops *,
+ 		struct thermal_zone_params *, int, int);
+@@ -447,18 +435,6 @@ struct thermal_instance *get_thermal_instance(struct thermal_zone_device *,
+ void thermal_cdev_update(struct thermal_cooling_device *);
+ void thermal_notify_framework(struct thermal_zone_device *, int);
+ #else
+-static inline bool cdev_is_power_actor(struct thermal_cooling_device *cdev)
+-{ return false; }
+-static inline int power_actor_get_max_power(struct thermal_cooling_device *cdev,
+-			      struct thermal_zone_device *tz, u32 *max_power)
+-{ return 0; }
+-static inline int power_actor_get_min_power(struct thermal_cooling_device *cdev,
+-					    struct thermal_zone_device *tz,
+-					    u32 *min_power)
+-{ return -ENODEV; }
+-static inline int power_actor_set_power(struct thermal_cooling_device *cdev,
+-			  struct thermal_instance *tz, u32 power)
+-{ return 0; }
+ static inline struct thermal_zone_device *thermal_zone_device_register(
+ 	const char *type, int trips, int mask, void *devdata,
+ 	struct thermal_zone_device_ops *ops,
+-- 
+2.17.1
+
