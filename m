@@ -2,86 +2,188 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9520C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285B5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD772078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E802520678
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:22:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="ullTaSPu"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="pw3j5SJY";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="aWrtaKAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387618AbgDBHVB (ORCPT
+        id S2387464AbgDBHW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:21:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55742 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgDBHVA (ORCPT
+        Thu, 2 Apr 2020 03:22:27 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:12440 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728425AbgDBHW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:21:00 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r16so2218158wmg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:20:58 -0700 (PDT)
+        Thu, 2 Apr 2020 03:22:26 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0327Elet013637;
+        Thu, 2 Apr 2020 00:22:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=Md42puJJAFH/sBQ50npBLuwgDD07AAjSdXrTKV9uz60=;
+ b=pw3j5SJYs/or+QnD/1aG6uUjh5jNtHM4pEXNBhg8xLmBJDySwYTIL2j6tFYPBaaPDjv9
+ v8lGqnR+onHj43/MjliQfzxGIngwZn9eUKzGW4nKhmU3bP6Lhf/vH5+UdE8c6AFKaWiN
+ zHrrOPllf4DXCme1t5X1rIvZYCyMbuAekieZwqOHV65m6hkjpBuvEXERWe7ipVqcTPhq
+ MdMc3dpGeVI/VyxZXEZwsqSGo4Kkh0hIPlHExYWMJnvk0Of9gTrx2/oeHnnWFyXR68H3
+ 0uD83ysLxpmQrRaSqKN+KutHnyWCmkvEn21X+MVZGzKgtj4gmBLXUs+gmp/nvSZRnvKa yQ== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 3046h618mq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 00:22:15 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Apr
+ 2020 00:22:13 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
+ by SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Thu, 2 Apr 2020 00:22:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YoXA1RAUrmWtNohym00h5XfTR6YPJyrJlDCgYHOG9q+h7cjAXkt5+LpnLdZlLazMeo0Wrbp10Ys9Xnfe8siZfTk8NMnEbkatzIveJ/SgcNud1+zR8guvBSmhFK5SzVlWBId15F48mGMwHwEQw/f/9lPSA98ic6wgkN74q9tH6z4kzUJuZSTWvx8D+u8CbmmYe7NKoHqQD8IDr2CPlIsgW8LqCmcW5Nbqpjm7NWSVMN7hZ9imMDbbRB9jziOJO0DkacbT8Q96YWNZJrTYXvT1Ko8xt3Wcm8w3lDkzHKE9BB5tRBbayhqgAWd1B/x6TIU7LOyaYcxTDLeln4AH+/5NYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Md42puJJAFH/sBQ50npBLuwgDD07AAjSdXrTKV9uz60=;
+ b=J2DBTm+UlUmLnQ1HBJCGVq3xWQwwJPx/s6NY8qqpYCgop9Leyao13RQX++RjtnsDSYlRpiZRe+MOseMu0fZw19CUVIYfJhlbHffcy2lzScn7kAWY9uG+Vq4pYN/ipQL+0+5uV8Oe0WEJVEJCfvW+4vdmTLhar0ZJwugFMKjP5aT0DVdZ1ouJ4zGJoTwvmJ0hBjbrQ4puOUmFgWpwFdMrKNcFAYHOgECRYjHHx+ceKFMn6guH+E0QcxCAyN77js8JNEfcpL0oIA8EtaCfue7IlUroFjcqeA93LuC/VzL0kiUoBbxnWjDN2AL96p0GiYxIwcqfywHxlPLUM+AHiw8rbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Rmss96OJTETJ5d6k4lJWjEjgufTDQZZVOZ3mFWcInTU=;
-        b=ullTaSPuuSxPAU6pdq4snMvy+5iOPZP4PxsElksZpXSvGy7jPNdd+P16TnRML4oAZ7
-         2xSMsGmKBbfRgJ068PI5SdEjSnskY0lpZdMC5ccVBY4Jh802f8K09pH6L0xE7FuRy/k1
-         Dk3BgyXSsc5/PdDA8Ly9I+45xP85/1LNRcXZPgA7f7HcbyFfHR1GI9OHH3T8nQRvCA92
-         p5Y3TOXvgOTn50xM8saxgQuDUm7795B/TO3JHg0S5xwerNHfeobmr9V6qzwTSEmmZkKD
-         74QgDaWusunmD2Dorr53zsz711/Wq3eouopiusg/gticIUMqz1eZGnC9RvbURlUQ/65m
-         Wl0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Rmss96OJTETJ5d6k4lJWjEjgufTDQZZVOZ3mFWcInTU=;
-        b=XQvhEZ2fCc2Eo6zsLnF1xdvS5D33dA5bCb8DwZ8ueeaXYZSgOoqv1hCakc6Aqxgw9l
-         ZeQd0hyz4eg9+SKE7AUElR3H4JPLsg7JzPn0T/A2nEQoz4J3BF32B1mreciJno4I4MLH
-         uIcepZ6hKi08exjkOEKKqHyo5zyfBM2YpXwkl+AQIZ2TUVnnxnOnSMGNd0W4w0yR60g5
-         Ow+Ag98HkWg5pysrKfQNP1bAvitYgOBNHlHmnWfZzFd47GiL7QqcehFsvt/Fy/aDokoA
-         /KBWU8t8kHLQwLZYJWLmfoxb5RhT4sOK+UcNBSqkbrz6lbt2lq1lSXX8pJb60Uw06K6P
-         odfg==
-X-Gm-Message-State: AGi0PuZgIQMMqrBimvFc+wGqmBpjg6Cx7oBDk/ZlmT/qnTjNcHv0NErN
-        qRWqRpUR9oYFLcpt8uBJ+zSPoA==
-X-Google-Smtp-Source: APiQypKFIbfFbHK3P7yKhCs6mZKwdUpZrLJcenhcir9vpI/T5+v8Biq0NXuCXIrwKAkdEg8KsFckDQ==
-X-Received: by 2002:a1c:7c18:: with SMTP id x24mr2072178wmc.41.1585812057382;
-        Thu, 02 Apr 2020 00:20:57 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([79.132.236.184])
-        by smtp.gmail.com with ESMTPSA id v186sm5909066wme.24.2020.04.02.00.20.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 00:20:56 -0700 (PDT)
-Subject: Re: [PATCH] selftests:mptcp: fix empty optstring
-To:     Li Zhijian <zhijianx.li@intel.com>, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Li Zhijian <lizhijian@cn.fujitsu.com>
-References: <20200402065216.23301-1-zhijianx.li@intel.com>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <b4a0ceed-902d-cc08-18d5-d0d8ff6269c3@tessares.net>
-Date:   Thu, 2 Apr 2020 09:21:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Md42puJJAFH/sBQ50npBLuwgDD07AAjSdXrTKV9uz60=;
+ b=aWrtaKAFajxqNeenI+8RQCMQn+tv/3xN+y1pXl27BhNVER4E+T94U8KyOgn5Tryh43lIzH/99VefEoEkEVlmea+LifzCcw8lzOPiZz0xwfo5FDzT9Ug03pnqhwzKdUJdeHg1B7QYLP/IIl9wCkb+khtXpyd3bnMEHuP6zLcwwg4=
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com (2603:10b6:a03:136::26)
+ by BYAPR18MB2807.namprd18.prod.outlook.com (2603:10b6:a03:111::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Thu, 2 Apr
+ 2020 07:22:11 +0000
+Received: from BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::78a2:38df:6c52:a953]) by BYAPR18MB2661.namprd18.prod.outlook.com
+ ([fe80::78a2:38df:6c52:a953%3]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 07:22:11 +0000
+Date:   Thu, 2 Apr 2020 09:22:01 +0200
+From:   Robert Richter <rrichter@marvell.com>
+To:     Sherry Sun <sherry.sun@nxp.com>
+CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
+        <james.morse@arm.com>, <michal.simek@xilinx.com>,
+        <manish.narani@xilinx.com>, <linux-edac@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-imx@nxp.com>,
+        <frank.li@nxp.com>
+Subject: Re: [patch v3 3/4] EDAC: synopsys: Add edac driver support for
+ i.MX8MP
+Message-ID: <20200402072200.o6c6u3uim6jwopo6@rric.localdomain>
+References: <1585790433-31465-1-git-send-email-sherry.sun@nxp.com>
+ <1585790433-31465-4-git-send-email-sherry.sun@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585790433-31465-4-git-send-email-sherry.sun@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR0802CA0002.eurprd08.prod.outlook.com
+ (2603:10a6:3:bd::12) To BYAPR18MB2661.namprd18.prod.outlook.com
+ (2603:10b6:a03:136::26)
 MIME-Version: 1.0
-In-Reply-To: <20200402065216.23301-1-zhijianx.li@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR0802CA0002.eurprd08.prod.outlook.com (2603:10a6:3:bd::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend Transport; Thu, 2 Apr 2020 07:22:08 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 85aa5aaa-defd-40c2-7a53-08d7d6d68f4f
+X-MS-TrafficTypeDiagnostic: BYAPR18MB2807:
+X-Microsoft-Antispam-PRVS: <BYAPR18MB280733AAD6D098B533D14219D9C60@BYAPR18MB2807.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
+X-Forefront-PRVS: 0361212EA8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2661.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(376002)(366004)(316002)(478600001)(9686003)(7696005)(55016002)(8676002)(66946007)(8936002)(66476007)(86362001)(66556008)(6506007)(81166006)(5660300002)(6916009)(1076003)(4326008)(53546011)(2906002)(186003)(16526019)(81156014)(6666004)(7416002)(52116002)(956004)(26005);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /CcaogxsmyksOKoLHiHmQ/tN6yCLW6+4ikUzAId/iS+dn9M97+qazzBCuR5Na1GslpsdLBqdqPLh7YwHAlSuqZ2+dqJoXdh+DOGWBxHc7nNe/RQ5yhgUIq3WF/eeUVkhEbRy67nJB9CR1DQI0atbNu6pgEGl7RpKEkdDrxcR1C7cA3EC1MOHyO8Obla4l05DlIYPLJ8xY6q5LwDKKnjKYybMcuAJpXxFV4h7MidRScKiphhwWs4dLkA9XguL4q76uNM75+yDUaTun5Tih5Au/tEgFeGzI1W6duSTq7mhH16sgSU6BjQd7fbMlZMxm7txDZBbGOyErbsvgftaw4I2Ucy8IfaadXgHNhOrgLPvC9plURo+64WXUC2fAQ/JtSp4gWbnEN9gpt8pefvxSI1SEhfhbNkozaZ83vQStFsY/u8fRtlP7/97E7a8WX6asS98
+X-MS-Exchange-AntiSpam-MessageData: typb0a36701QNo3spn4jMhaLkjsCCoqAAIgB1b9sifHv+CwBsJVTvUoiVeDMNKbRzd1THUC/B4Vskdy8FG6mQdfTf7tkPNfLiEEoekuPb1UZpP+g0U/ayZKj3yr5pdVGm0o4kDSJ1wF32PaakT2Wjg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85aa5aaa-defd-40c2-7a53-08d7d6d68f4f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 07:22:11.5548
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ReEx4lJsEdcZZpjk3fW1YXnlyb9k9GUCvWbTRTl3CJeE4I15a8sTm5ObwZuAPUhUnfsUo3g1cuHOWd4RiH3ZLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2807
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/2020 08:52, Li Zhijian wrote:
-> From: Li Zhijian <lizhijian@cn.fujitsu.com>
+On 02.04.20 09:20:32, Sherry Sun wrote:
+> Since i.MX8MP use synopsys ddr controller IP, so add edac support
+> for i.MX8MP based on synopsys edac driver. i.MX8MP use LPDDR4 and
+> support interrupts for corrected and uncorrected errors. The main
+> difference between ZynqMP and i.MX8MP ddr controller is the interrupt
+> registers. So add another interrupt handler function, enable/disable
+> interrupt function to distinguish with ZynqMP.
 > 
-> Signed-off-by: Li Zhijian <lizhijian@cn.fujitsu.com>
+> Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+> ---
+>  drivers/edac/synopsys_edac.c | 77 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 76 insertions(+), 1 deletion(-)
 
-LGTM, thanks Li!
+> +static void enable_intr_imx8mp(struct synps_edac_priv *priv)
+> +{
+> +	int regval;
+> +
+> +	regval = readl(priv->baseaddr + ECC_CLR_OFST);
+> +	regval |= (DDR_CE_INTR_EN_MASK | DDR_UE_INTR_EN_MASK);
+> +	writel(regval, priv->baseaddr + ECC_CLR_OFST);
+> +}
+> +
+> +static void disable_intr_imx8mp(struct synps_edac_priv *priv)
+> +{
+> +	int regval;
+> +
+> +	regval = readl(priv->baseaddr + ECC_CLR_OFST);
+> +	regval &= ~(DDR_CE_INTR_EN_MASK | DDR_UE_INTR_EN_MASK);
+> +	writel(regval, priv->baseaddr + ECC_CLR_OFST);
+> +}
+> +
+> +/* Interrupt Handler for ECC interrupts on imx8mp platform. */
+> +static irqreturn_t intr_handler_imx8mp(int irq, void *dev_id)
+> +{
+> +	const struct synps_platform_data *p_data;
+> +	struct mem_ctl_info *mci = dev_id;
+> +	struct synps_edac_priv *priv;
+> +	int status, regval;
+> +
+> +	priv = mci->pvt_info;
+> +	p_data = priv->p_data;
+> +
+> +	regval = readl(priv->baseaddr + ECC_STAT_OFST);
+> +	if (!(regval & ECC_INTR_MASK))
+> +		return IRQ_NONE;
+> +
+> +	status = p_data->get_error_info(priv);
+> +	if (status)
+> +		return IRQ_NONE;
+> +
+> +	priv->ce_cnt += priv->stat.ce_cnt;
+> +	priv->ue_cnt += priv->stat.ue_cnt;
+> +	handle_error(mci, &priv->stat);
+> +
+> +	edac_dbg(3, "Total error count CE %d UE %d\n",
+> +		 priv->ce_cnt, priv->ue_cnt);
+> +	enable_intr_imx8mp(priv);
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Why do you enable interrupts here?
+
+-Robert
+
+> +
+> +	return IRQ_HANDLED;
+> +}
