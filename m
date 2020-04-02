@@ -2,270 +2,213 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED957C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A287C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B084A2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1AC2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 22:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m+Syx9aM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIuef1iE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389833AbgDBWcK (ORCPT
+        id S2389856AbgDBWd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 18:32:10 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48664 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388218AbgDBWcK (ORCPT
+        Thu, 2 Apr 2020 18:33:27 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50940 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729549AbgDBWd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 18:32:10 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032MRvg1040823;
-        Thu, 2 Apr 2020 22:31:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=SZocQty41xyA03Ov0i0QqgwxuviOkjnJM8QExzU6N2g=;
- b=m+Syx9aMUfJ2fURsjo/qLKkSNfgsK6Mho//wZXvr6WoMcfNCLYkuAcZ4kMgPPyW4LTaT
- L1px0J4q6J34c8IZlPlSEBkqmX0KgB9es4ZuhGvpokPclR93UNblcYxPN1BiXIB6UC0E
- ZAB95qXMAyIYme3HeSuf9gD/5EwyzmzRpd1dXIlg4wOs4Yt5zkLa8Ibu+WLSpbOup3G1
- x1TLESB5OM4DwWGWbq82xm2OwAZ+3iYlaScaqL7zndyLnMW/zd0cWKzwi6X5rAF+qldX
- 0jWTIwHWx0z06pqh/G44gAm6XyHdRfvO/LJPtucSjEWTyEJ501PiYBecAhXJdUiiqyy1 Ug== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 303ceve6e9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 22:31:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032MSKfl011576;
-        Thu, 2 Apr 2020 22:29:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 302g4w927r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 02 Apr 2020 22:29:49 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032MTmW4004576;
-        Thu, 2 Apr 2020 22:29:48 GMT
-Received: from vbusired-dt (/10.154.166.66)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 15:29:48 -0700
-Date:   Thu, 2 Apr 2020 17:29:43 -0500
-From:   Venu Busireddy <venu.busireddy@oracle.com>
-To:     Ashish Kalra <Ashish.Kalra@amd.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
-        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com,
-        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
-Subject: Re: [PATCH v6 05/14] KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA
- command
-Message-ID: <20200402222943.GA659464@vbusired-dt>
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <871a1e89a4dff59f50d9c264c6d9a4cfd0eab50f.1585548051.git.ashish.kalra@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <871a1e89a4dff59f50d9c264c6d9a4cfd0eab50f.1585548051.git.ashish.kalra@amd.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=5
- mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=5 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020165
+        Thu, 2 Apr 2020 18:33:27 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t128so5207866wma.0;
+        Thu, 02 Apr 2020 15:33:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=OmDjT9copZDYM4pmPAbt/TsexMujcYzhtWf1bez84nA=;
+        b=mIuef1iE5HqYFwoNjZRieAmjV7htv0wNmJV5Nta79Yast/o20W8VW9esTccDprQhUQ
+         KD6JJtaxj1gK8iAA9S7/cyP0umJ5H3LDjtk2Oc2JvVQ7drV1Pk1CzoQ5IU90fdu6sos0
+         gQ4MuCkSaD7LFJcJ/t8V/oxEs8dC7zpifdYO6OsCU1MlCMShn6Hr8sDvcrOnmIdAEkTG
+         oCNNYzCrEYeHpQfyHK98EbApZ2PJhN7a3flWeJnwC+8hH+4p6DgKkMSiKXwz7wXVbL5C
+         OCywYSxs5/mw10ZGlFA2EWsn8JYUWoNz3n0XPeitUXL+7kxD35TNLiXnLxfnERx9hXpE
+         UGoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OmDjT9copZDYM4pmPAbt/TsexMujcYzhtWf1bez84nA=;
+        b=KDcazE0+fn6POBTX/c5JS4DfsnQiAxoKTwbxWbbevtBNnoUiBGvQDMPqZyGG6yD4yj
+         wnuXJS9nCFUdQWRqwKiRzmQm8X5t8aPUvZMMfB9xEe0UbznjGBw+Nzw/9X2NDjeiSrio
+         c8GYvOwHQqeTZkPA9hsdyfSlRYdheiFNfR9WZGVERKiIbs7TUNFCqvf2fVc/4bmn5MJO
+         9EzpAvRQfYuph/AGy6Wr1CSFJdnUaL39aRaoh7HgpmSaS3M5R7808rj6KSAoPeSJufsw
+         iPtrhmIKg7YIhkzGC6b0I6QDD0ep5k8oTZ894jlM3O2fthmYwi+Q9Jz/Bmp26rc5jnuY
+         dMXg==
+X-Gm-Message-State: AGi0Pub5eioq7FA1yghUjqnRC+1mOtRXjnBi9pWs1ClFVZiz8MMbVh3T
+        x490z8LqN3oLMAivIMW+Gul9/33w
+X-Google-Smtp-Source: APiQypI6KSN4jgb1ptryf1N/48uD/v7HmEuB61QFUUzsXobb6C4PD97FmDdsZpsVoXI7Qu9xSfwqwQ==
+X-Received: by 2002:a05:600c:218d:: with SMTP id e13mr5504068wme.148.1585866804335;
+        Thu, 02 Apr 2020 15:33:24 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id g186sm9267729wmg.36.2020.04.02.15.33.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 Apr 2020 15:33:23 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     jacob-chen@iotwrt.com
+Cc:     ezequiel@collabora.com, mchehab@kernel.org, robh+dt@kernel.org,
+        heiko@sntech.de, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] dt-bindings: media: convert rockchip rga bindings to yaml
+Date:   Fri,  3 Apr 2020 00:33:14 +0200
+Message-Id: <20200402223315.12260-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-30 06:21:20 +0000, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
-> 
-> The command is used for copying the incoming buffer into the
-> SEV guest memory space.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Current dts files for Rockchip with 'rga' nodes
+are manually verified. In order to automate this process
+rockchip-rga.txt has to be converted to yaml.
 
-Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
+Changed:
+  Add missing reg property
 
-> ---
->  .../virt/kvm/amd-memory-encryption.rst        | 24 ++++++
->  arch/x86/kvm/svm.c                            | 79 +++++++++++++++++++
->  include/uapi/linux/kvm.h                      |  9 +++
->  3 files changed, 112 insertions(+)
-> 
-> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-> index ef1f1f3a5b40..554aa33a99cc 100644
-> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
-> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-> @@ -351,6 +351,30 @@ On success, the 'handle' field contains a new handle and on error, a negative va
->  
->  For more details, see SEV spec Section 6.12.
->  
-> +14. KVM_SEV_RECEIVE_UPDATE_DATA
-> +----------------------------
-> +
-> +The KVM_SEV_RECEIVE_UPDATE_DATA command can be used by the hypervisor to copy
-> +the incoming buffers into the guest memory region with encryption context
-> +created during the KVM_SEV_RECEIVE_START.
-> +
-> +Parameters (in): struct kvm_sev_receive_update_data
-> +
-> +Returns: 0 on success, -negative on error
-> +
-> +::
-> +
-> +        struct kvm_sev_launch_receive_update_data {
-> +                __u64 hdr_uaddr;        /* userspace address containing the packet header */
-> +                __u32 hdr_len;
-> +
-> +                __u64 guest_uaddr;      /* the destination guest memory region */
-> +                __u32 guest_len;
-> +
-> +                __u64 trans_uaddr;      /* the incoming buffer memory region  */
-> +                __u32 trans_len;
-> +        };
-> +
->  References
->  ==========
->  
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 038b47685733..5fc5355536d7 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -7497,6 +7497,82 @@ static int sev_receive_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
->  	return ret;
->  }
->  
-> +static int sev_receive_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	struct kvm_sev_receive_update_data params;
-> +	struct sev_data_receive_update_data *data;
-> +	void *hdr = NULL, *trans = NULL;
-> +	struct page **guest_page;
-> +	unsigned long n;
-> +	int ret, offset;
-> +
-> +	if (!sev_guest(kvm))
-> +		return -EINVAL;
-> +
-> +	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
-> +			sizeof(struct kvm_sev_receive_update_data)))
-> +		return -EFAULT;
-> +
-> +	if (!params.hdr_uaddr || !params.hdr_len ||
-> +	    !params.guest_uaddr || !params.guest_len ||
-> +	    !params.trans_uaddr || !params.trans_len)
-> +		return -EINVAL;
-> +
-> +	/* Check if we are crossing the page boundary */
-> +	offset = params.guest_uaddr & (PAGE_SIZE - 1);
-> +	if ((params.guest_len + offset > PAGE_SIZE))
-> +		return -EINVAL;
-> +
-> +	hdr = psp_copy_user_blob(params.hdr_uaddr, params.hdr_len);
-> +	if (IS_ERR(hdr))
-> +		return PTR_ERR(hdr);
-> +
-> +	trans = psp_copy_user_blob(params.trans_uaddr, params.trans_len);
-> +	if (IS_ERR(trans)) {
-> +		ret = PTR_ERR(trans);
-> +		goto e_free_hdr;
-> +	}
-> +
-> +	ret = -ENOMEM;
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		goto e_free_trans;
-> +
-> +	data->hdr_address = __psp_pa(hdr);
-> +	data->hdr_len = params.hdr_len;
-> +	data->trans_address = __psp_pa(trans);
-> +	data->trans_len = params.trans_len;
-> +
-> +	/* Pin guest memory */
-> +	ret = -EFAULT;
-> +	guest_page = sev_pin_memory(kvm, params.guest_uaddr & PAGE_MASK,
-> +				    PAGE_SIZE, &n, 0);
-> +	if (!guest_page)
-> +		goto e_free;
-> +
-> +	/* The RECEIVE_UPDATE_DATA command requires C-bit to be always set. */
-> +	data->guest_address = (page_to_pfn(guest_page[0]) << PAGE_SHIFT) +
-> +				offset;
-> +	data->guest_address |= sev_me_mask;
-> +	data->guest_len = params.guest_len;
-> +	data->handle = sev->handle;
-> +
-> +	ret = sev_issue_cmd(kvm, SEV_CMD_RECEIVE_UPDATE_DATA, data,
-> +				&argp->error);
-> +
-> +	sev_unpin_memory(kvm, guest_page, n);
-> +
-> +e_free:
-> +	kfree(data);
-> +e_free_trans:
-> +	kfree(trans);
-> +e_free_hdr:
-> +	kfree(hdr);
-> +
-> +	return ret;
-> +}
-> +
->  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->  {
->  	struct kvm_sev_cmd sev_cmd;
-> @@ -7553,6 +7629,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->  	case KVM_SEV_RECEIVE_START:
->  		r = sev_receive_start(kvm, &sev_cmd);
->  		break;
-> +	case KVM_SEV_RECEIVE_UPDATE_DATA:
-> +		r = sev_receive_update_data(kvm, &sev_cmd);
-> +		break;
->  	default:
->  		r = -EINVAL;
->  		goto out;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 74764b9db5fa..4e80c57a3182 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1588,6 +1588,15 @@ struct kvm_sev_receive_start {
->  	__u32 session_len;
->  };
->  
-> +struct kvm_sev_receive_update_data {
-> +	__u64 hdr_uaddr;
-> +	__u32 hdr_len;
-> +	__u64 guest_uaddr;
-> +	__u32 guest_len;
-> +	__u64 trans_uaddr;
-> +	__u32 trans_len;
-> +};
-> +
->  #define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
->  #define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
->  #define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
-> -- 
-> 2.17.1
-> 
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ .../devicetree/bindings/media/rockchip-rga.txt     | 34 ----------
+ .../devicetree/bindings/media/rockchip-rga.yaml    | 78 ++++++++++++++++++++++
+ 2 files changed, 78 insertions(+), 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.yaml
+
+diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
+deleted file mode 100644
+index c53a8e513..000000000
+--- a/Documentation/devicetree/bindings/media/rockchip-rga.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-device-tree bindings for rockchip 2D raster graphic acceleration controller (RGA)
+-
+-RGA is a standalone 2D raster graphic acceleration unit. It accelerates 2D
+-graphics operations, such as point/line drawing, image scaling, rotation,
+-BitBLT, alpha blending and image blur/sharpness.
+-
+-Required properties:
+-- compatible: value should be one of the following
+-  "rockchip,rk3228-rga", "rockchip,rk3288-rga": for Rockchip RK3228
+-  "rockchip,rk3288-rga": for Rockchip RK3288
+-  "rockchip,rk3399-rga": for Rockchip RK3399
+-
+-- interrupts: RGA interrupt specifier.
+-
+-- clocks: phandle to RGA sclk/hclk/aclk clocks
+-
+-- clock-names: should be "aclk", "hclk" and "sclk"
+-
+-- resets: Must contain an entry for each entry in reset-names.
+-  See ../reset/reset.txt for details.
+-- reset-names: should be "core", "axi" and "ahb"
+-
+-Example:
+-SoC-specific DT entry:
+-	rga: rga@ff680000 {
+-		compatible = "rockchip,rk3399-rga";
+-		reg = <0xff680000 0x10000>;
+-		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
+-		clock-names = "aclk", "hclk", "sclk";
+-
+-		resets = <&cru SRST_RGA_CORE>, <&cru SRST_A_RGA>, <&cru SRST_H_RGA>;
+-		reset-names = "core, "axi", "ahb";
+-	};
+diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.yaml b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+new file mode 100644
+index 000000000..3b110b574
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/rockchip-rga.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip 2D raster graphic acceleration controller (RGA)
++
++description:
++  RGA is a standalone 2D raster graphic acceleration unit. It accelerates 2D
++  graphics operations, such as point/line drawing, image scaling, rotation,
++  BitBLT, alpha blending and image blur/sharpness.
++
++maintainers:
++  - Jacob Chen <jacob-chen@iotwrt.com>
++  - Ezequiel Garcia <ezequiel@collabora.com>
++
++properties:
++  compatible:
++    oneOf:
++      - const: rockchip,rk3288-rga
++      - const: rockchip,rk3399-rga
++      - items:
++          - const: rockchip,rk3228-rga
++          - const: rockchip,rk3288-rga
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 3
++
++  clock-names:
++    items:
++      - const: aclk
++      - const: hclk
++      - const: sclk
++
++  resets:
++    maxItems: 3
++
++  reset-names:
++    items:
++      - const: core
++      - const: axi
++      - const: ahb
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3399-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    rga: rga@ff680000 {
++      compatible = "rockchip,rk3399-rga";
++      reg = <0xff680000 0x10000>;
++      interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru ACLK_RGA>,
++               <&cru HCLK_RGA>,
++               <&cru SCLK_RGA_CORE>;
++      clock-names = "aclk", "hclk", "sclk";
++      resets = <&cru SRST_RGA_CORE>,
++               <&cru SRST_A_RGA>,
++               <&cru SRST_H_RGA>;
++      reset-names = "core", "axi", "ahb";
++    };
+-- 
+2.11.0
+
