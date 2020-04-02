@@ -2,236 +2,131 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E446FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D3CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B07B520721
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659DC20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 00:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LhCJsl1Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0jhSZQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733312AbgDBAFE (ORCPT
+        id S1732735AbgDBAHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 20:05:04 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38548 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732872AbgDBAFE (ORCPT
+        Wed, 1 Apr 2020 20:07:48 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:34722 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732137AbgDBAHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 20:05:04 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c5so1246583lfp.5
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 17:05:01 -0700 (PDT)
+        Wed, 1 Apr 2020 20:07:48 -0400
+Received: by mail-il1-f195.google.com with SMTP id t11so1886377ils.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 17:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HbToDyfvISc0MzdSRiZMdo2xILcDDxUI1mnFelsEDqQ=;
-        b=LhCJsl1ZVXkiiIaRr7trZvle/wKMDu6R1ix6l2+VcimCvMksOWsbf+l/PtbMXtJ8v2
-         sBNoLpvThmCkpWgEBwz7/3tB2h1PW7GguOPp8ERH8ltg0Zjr3Yf2MSlmXICXAtUFTyLw
-         30JJukxFnhYXHNKCnsqG7hVk04lBbvKt7VBEk1mBFCVAJs8nD7B7dAcaac4iBkIbm2KL
-         DPe84t0uxAfvrCzlhxUYzPh3wQUHHW+nOhXwalmGsjTBgjwmp5zPoMJ1ZDdLr8LRLw6H
-         VFbfIUzWVc6pLlbnXKeOEBEFan5KSXRlDPB7kSCiVrkrd4l4kcXQQEfEsf7Jt6Bz/OVb
-         FWrw==
+         :cc:content-transfer-encoding;
+        bh=N4lUFYhSPSno/B7zHZ88HhgsSs6cCcRd0Ct0S+LW7sA=;
+        b=a0jhSZQZpIvwANQUvz/KpGmiptmEPARdT86t9EaS56dP+5s0Tk0cHTy2seWymQet4k
+         aRsf8fMNXc9ir9mjC4f34q1x9EUaT8ofr8NyJT6U0W2WsjK9xL3qwZh5qb2TcpBoQFzj
+         32r8BjkXGZssAjmze28jBiKIGfFNt93K+4DpS1lWNPJQFSbE5/IXcOt6vTIiM/+Hxbi9
+         sAA4YneljKS/tnMw0p3rFhnsiuqYgj0DvyHZJbX/yIg1CUzKxuQ5UH2pAJae7Cs5laSx
+         ZJfR8RcNlaHQIh0GTpiTONEaCe1nX2vvfoapd/8X/PfzuA3e2hiy6FyG55UnETrwVeYL
+         P5Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HbToDyfvISc0MzdSRiZMdo2xILcDDxUI1mnFelsEDqQ=;
-        b=N7ppIeFmlqe1I7cQ5HmwZws2fHAabg3tXkc6vxqPifppSgBgt23vxtcXCGmt5hGCYp
-         A83JEGEacD+xv8IOaRZvTqvA2RPTPs4RyP4hO7qZwb459uAp2XRcgHIpLVzZehymzgzi
-         w0WNCTdFZW8vJK9DMcjgARbFbtNS4a0VffdTvAEEr31iLI2j/iyoDo4qwcK8KX8hgSkM
-         FsiHahZArGbfKZ5QPz+ZzJrjBMN7LiW2i31VeKIbYYez38C62wtxSsS5nZSc/gJUTiSU
-         fR2Q8LlYZEh8bhg/gWgxXGZJWPe//Zqum7TbBsgMfMA9dvu5iXqVrFoc2jfwKt2G5Yse
-         03Xw==
-X-Gm-Message-State: AGi0PuYdbZDFB0Fnyi6hpMDzRrxhBTt8uSEJBoCU4UCageuuzEo6QEmF
-        nJ/9kegcXBHec3qnNacnwcmWB+iVJI5aDsksiNC/pQ==
-X-Google-Smtp-Source: APiQypJHwJ0enCR4HaS8q1uSgcIrkO2prI5+GV2q0nCYRVW7wbZgxHI2ld7yaYHAW9Cx0KGA3Eie4eFU2CzvD8jRPnQ=
-X-Received: by 2002:ac2:545a:: with SMTP id d26mr419914lfn.85.1585785900862;
- Wed, 01 Apr 2020 17:05:00 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=N4lUFYhSPSno/B7zHZ88HhgsSs6cCcRd0Ct0S+LW7sA=;
+        b=dFZnGyPBJyfg0iMpyjCulDfKXt3o1OGvI1hUqi/FCqO8sg8lkNddEBicbFRTNUq42C
+         HO0q7TVJBZsUVqwg2cZNNa1mIxnQRS/rYnCTJqEho92dBXpqzFN8vQbo/HH3U9cg6+6a
+         Jn7modAqNu3/keOcy8QKjUyXq9/JQosh6S2ZGZzLRKsRVTIyEXlywcG5hxmzVoDs/PFO
+         KnxqSFVih8SSAI1MInI1V+jAAKdojVPXlxuhoA64YC8LWcPoXPArdXZzJxFjGMxY9ROG
+         CTLlxbSw2oGFhwtdnmZ45NJXEWvWXbnUBhyG8sp3/B0rN0TyLBblX96sUUQz2SqwEyNl
+         xPuw==
+X-Gm-Message-State: AGi0PuZosEc1xq38CyMLY+IDG2FHe1gtXpvNAMID2NS1sauv+6z9VKcd
+        hflOaJffo/7mI1HeJmzgjkvZ3nm9FRO6GGtgo+bIZ9Ij
+X-Google-Smtp-Source: APiQypIg4OVOEAKMMANmen+nbk0Yvx8OP/YDpxHQhOU5zmGnNPF40JjEgj6sLEU3X4CKO6BGsvXvklR2EKMAgN5xDFQ=
+X-Received: by 2002:a92:3d84:: with SMTP id k4mr617537ilf.47.1585786067160;
+ Wed, 01 Apr 2020 17:07:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <CABEDWGzfTDtmq==j-GcK3YYbdPX4-Ms=PDuDEiQusV78bUGvDA@mail.gmail.com>
- <20200401202937.GA130497@google.com> <CABEDWGxTifrvYVF7B2geN7K4Uhor-JcHK95L60T_xQar4XTqBQ@mail.gmail.com>
- <CABEDWGxaZMZxkpG1kQX4kKvgv-sJzvKtgyvhuJLSTEzqp50LNw@mail.gmail.com>
-In-Reply-To: <CABEDWGxaZMZxkpG1kQX4kKvgv-sJzvKtgyvhuJLSTEzqp50LNw@mail.gmail.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 1 Apr 2020 17:04:49 -0700
-Message-ID: <CABEDWGz44DXbhmrOHcp+ZepyK-MmtCSuL1dPbo39+pCt0aQqPA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Warn about MEM resource size being too big
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
+References: <20200327074308.GY11705@shao2-debian> <20200327175350.rw5gex6cwum3ohnu@linutronix.de>
+ <CAJhGHyDmw5Fwq5mgb1h=7GBegQKP2HQnPTxcRps-0PvGbC2PWg@mail.gmail.com>
+ <CAJhGHyBS9Z=x-X2Bxzbic2sfqj=STqr+K8Tgu1UfYMQDm6MtBg@mail.gmail.com> <20200401130346.e7cdsqgxppa6ohje@linutronix.de>
+In-Reply-To: <20200401130346.e7cdsqgxppa6ohje@linutronix.de>
+From:   Lai Jiangshan <jiangshanlai@gmail.com>
+Date:   Thu, 2 Apr 2020 08:07:35 +0800
+Message-ID: <CAJhGHyBmcY75Rhc7UFyK7Ozho+aqOcX2EaxePhZFu9rt0w3-mA@mail.gmail.com>
+Subject: Re: [PATCH] workqueue: Don't double assign worker->sleeping
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     kernel test robot <lkp@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@lists.01.org>,
+        Tejun Heo <tj@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 3:02 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+On Wed, Apr 1, 2020 at 9:03 PM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
 >
-> On Wed, Apr 1, 2020 at 2:01 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
-> >
-> > On Wed, Apr 1, 2020 at 1:29 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On 2020-04-01 11:44:06 [+0800], Lai Jiangshan wrote:
+> > On Wed, Apr 1, 2020 at 11:22 AM Lai Jiangshan <jiangshanlai@gmail.com> =
+wrote:
 > > >
-> > > On Tue, Mar 31, 2020 at 01:36:04PM -0700, Alan Mikhak wrote:
-> > > > On Tue, Mar 31, 2020 at 1:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > On Mon, Mar 30, 2020 at 05:19:47PM -0700, Alan Mikhak wrote:
-> > > > > > Output a warning for MEM resource size with
-> > > > > > non-zero upper 32-bits.
-> > > > > >
-> > > > > > ATU programming functions limit the size of
-> > > > > > the translated region to 4GB by using a u32 size
-> > > > > > parameter. Function dw_pcie_prog_outbound_atu()
-> > > > > > does not program the upper 32-bit ATU limit
-> > > > > > register. This may result in undefined behavior
-> > > > > > for resource sizes with non-zero upper 32-bits.
-> > > > > >
-> > > > > > For example, a 128GB address space starting at
-> > > > > > physical CPU address of 0x2000000000 with size of
-> > > > > > 0x2000000000 needs the following values programmed
-> > > > > > into the lower and upper 32-bit limit registers:
-> > > > > >  0x3fffffff in the upper 32-bit limit register
-> > > > > >  0xffffffff in the lower 32-bit limit register
-> > > > > >
-> > > > > > Currently, only the lower 32-bit limit register is
-> > > > > > programmed with a value of 0xffffffff but the upper
-> > > > > > 32-bit limit register is not being programmed.
-> > > > > > As a result, the upper 32-bit limit register remains
-> > > > > > at its default value after reset of 0x0. This would
-> > > > > > be a problem for a 128GB PCIe space because in
-> > > > > > effect its size gets reduced to 4GB.
-> > > > > >
-> > > > > > ATU programming functions can be changed to
-> > > > > > specify a u64 size parameter for the translated
-> > > > > > region. Along with this change, the internal
-> > > > > > calculation of the limit address, the address of
-> > > > > > the last byte in the translated region, needs to
-> > > > > > change such that both the lower 32-bit and upper
-> > > > > > 32-bit limit registers can be programmed correctly.
-> > > > > >
-> > > > > > Changing the ATU programming functions is high
-> > > > > > impact. Without change, this issue can go
-> > > > > > unnoticed. A warning may prompt the user to
-> > > > > > look into possible issues.
-> > > > >
-> > > > > So this is basically a warning, and we could actually *fix* the
-> > > > > problem with more effort?  I vote for the fix.
-> > > >
-> > > > The fix would impact all PCIe drivers that depend on dwc.
-> > >
-> > > Is that another way of saying "the fix would *fix* all the drivers
-> > > that depend on dwc"?
-> >
-> > Thanks Bjorn for your comments.
-> >
-> > Not at all. I'm not suggesting that. I'm just stating the dilemma.
-> >
-> > One option is, as you may be alluding, the *fix* would include
-> > modification to all drivers that depend on dwc to at least not break
-> > the build.. Whoever embarks on such a *fix* would have to take
-> > that on before submitting the patch.
-> >
-> > Another option is to produce an alternate ATU programming
-> > API for the Linux PCI sub-system to support u64 size. That
-> > way individual driver owners can choose if and when to migrate
-> > their drivers to the new API on their own timeline. Such an
-> > alternative API can also be generic to support not only
-> > Designware PCIe controllers but others.
-> >
-> > >
-> > > > I would have no way of validating such a fix without
-> > > > breaking it for everyone let alone the bandwidth it needs.
-> > > > All drivers that depend on dwc seem to be currently happy
-> > > > with the u32 size limit. I suggest we add the warning but
-> > > > keep this issue in mind for a solution that allows existing
-> > > > PCe drivers to phase into the fix on their own individual
-> > > > schedules, if they need to.
-> > >
-> > > Obviously it would *nice* to test all the drivers that depend on dwc,
-> > > but if you're fixing a problem, you verify the fix on your system, and
-> > > the relevant people review it, I don't think exhaustive testing is a
-> > > hard requirement, and I certainly wouldn't expect you to do it.
-> >
-> > That is a relief for whoever commits to take this on.
-> >
-> > >
-> > > If we want to live with a 32-bit limit, I think we should change the
-> > > relevant interfaces to use u32 so there's not a way to venture into
-> > > this region of undefined behavior.  I don't think "warning + undefined
-> > > behavior" is a very maintainable situation.
-> >
-> > I cannot live with the 32-bit limit. I need a 64-bit solution. I had
-> > to implement a solution that suits my needs. I have worked
-> > out some of the issue. It is generic enough for my use with PCIe
-> > controllers from more than one vendor. But, it requires pulling a
-> > lot of code from Designware layer into a separate framework
-> > which I believe can become common for Linux PCI subsystem.
-> > If it gets in, others who need 64-bit can migrate over to it without
-> > being migrated involuntarily.
-> >
+> > > Hello
+> Hi Lai,
 >
-> The "undefined" behavior part of the problem can be fixed
-> separately in the function dw_pcie_prog_outbound_atu_unroll()
-> by modifying its internal calculation of the limit address and
-> programming the ATU upper limit address register.
+> =E2=80=A6
+> > > 2) wq_worker_running() can be interrupted(async-page-faulted in virtu=
+al machine)
+> > > and nr_running would be decreased twice.
+> >
+> > would be *increased* twice
+> >
+> > I just saw the V2 patch, this issue is not listed, but need to be fixed=
+ too.
 >
-> With the above fix in dw_pcie_prog_outbound_atu_unroll(),
-> the total problem reduces to the size issued being reduced
-> to 4G max.
+> | void wq_worker_running(struct task_struct *task)
+> | {
+> |         struct worker *worker =3D kthread_data(task);
+> |
+> |         if (!worker->sleeping)
+> |                 return;
+> |         if (!(worker->flags & WORKER_NOT_RUNNING))
+> |                 atomic_inc(&worker->pool->nr_running);
+> *0
+> |         worker->sleeping =3D 0;
+> *1
+> | }
 >
+> So an interrupt
+> - before *0, the preempting caller drop early in wq_worker_sleeping(), on=
+ly one
+>   atomic_inc()
 
-Bjorn,
+If it is preempted on *0, the preempting caller drop early in
+wq_worker_sleeping()
+so there is no atomic decreasing, only one atomic_inc() in the
+preempting caller.
+The preempted point here, wq_worker_running(), has already just done
+atomic_inc(),
+the total number of atomic_inc() is two, while the number of atomic decreas=
+ing
+is one.
 
-Thinking about your comment, I decided to submit a separate
-patch to fix the "undefined" behavior portion of these issues by
-modifying dw_pcie_prog_outbound_atu_unroll(). Would the warning
-plus the patch for dw_pcie_prog_outbound_atu_unroll() make
-the remaining 32-bit size limit issue more maintainable?
-
-Regards,
-Alan
-
-> > >
-> > > > > > This limitation also means that multiple ATUs
-> > > > > > would need to be used to map larger regions.
-> > > > > >
-> > > > > > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > > > > > ---
-> > > > > >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
-> > > > > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > index 395feb8ca051..37a8c71ef89a 100644
-> > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > @@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > > > >       struct pci_bus *child;
-> > > > > >       struct pci_host_bridge *bridge;
-> > > > > >       struct resource *cfg_res;
-> > > > > > +     resource_size_t mem_size;
-> > > > > >       u32 hdr_type;
-> > > > > >       int ret;
-> > > > > >
-> > > > > > @@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > > > >               case IORESOURCE_MEM:
-> > > > > >                       pp->mem = win->res;
-> > > > > >                       pp->mem->name = "MEM";
-> > > > > > -                     pp->mem_size = resource_size(pp->mem);
-> > > > > > +                     mem_size = resource_size(pp->mem);
-> > > > > > +                     if (upper_32_bits(mem_size))
-> > > > > > +                             dev_warn(dev, "MEM resource size too big\n");
-> > > > > > +                     pp->mem_size = mem_size;
-> > > > > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
-> > > > > >                       break;
-> > > > > >               case 0:
-> > > > > > --
-> > > > > > 2.7.4
-> > > > > >
+>
+> - after *1, the preempting task will invoke wq_worker_sleeping() and do
+>   dec() + inc().
+>
+> What did I miss here?
+>
+> Sebastian
