@@ -2,141 +2,93 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CF8C2BA12
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B6BC10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9A42080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V+COQAxI"
+	by mail.kernel.org (Postfix) with ESMTP id D4E5D2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733114AbgDBHam (ORCPT
+        id S2387508AbgDBHbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:30:42 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46326 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgDBHam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:30:42 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k191so1432273pgc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DVqNkiJ8dAgtFZhXgT1A32VI+149xn1Gsgt+wdCSTjE=;
-        b=V+COQAxIniDRCPd3Vq5FAa6kChS/sUrfhl+HUWZ7mJEGtLTBgR5kSzJYdcvjcmH3um
-         UKMyI2AvWfvlt3gp2xmSYZE/4FGSyIFY471dzZCbrnknD7UqZjVxaQbO9qAFOz8D+tTg
-         x/PQNC2nnrj68UYq49g7yvwH/bX7EurYG89F8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DVqNkiJ8dAgtFZhXgT1A32VI+149xn1Gsgt+wdCSTjE=;
-        b=PXiQmpprsrsytPc6KHfA37yu2CsSV8KK3o9j8fg7ULZw/BEn1p8F52xGVt6smXsoLu
-         wOPHucnf+N2ZSKxNRXc8SnxGqRs6FpVTCQN0n5IC4DxgdmYAaV9zgWiYFdO3FjV+xObj
-         kSkZpdT0yCgP2CNTN7k2NaHkDtNij56KAhl1F06uxtkZKCC7YlXfdTfmx0RElPvFqRfH
-         8K6SQMnQ+uQzvUrrBbhbOlS4fMnz0+Iki3+AtMExh48nNgdneFFLDDv9cOAyY4x+61Tq
-         inPvI6P7aKP/Jn84hmBsE8HbGBeoFaRDImjn0Zlb012EcLpjmIWLa6buIOjUguKbW1NJ
-         Vy4w==
-X-Gm-Message-State: AGi0PuYrUO7M/i2oI+vWLDcIWICt30vQWQiOx3y+i78Zwvk6it+pkb6S
-        ENblIAl3bBEkh1fRss71a1p94YMYoJM=
-X-Google-Smtp-Source: APiQypIu59LNvQH4O6YHPfKQcLQl+kaYyht6h+Dqy3QeqTrBB7MyRDbDFYEJvIz0HgFygDHtkV3DhQ==
-X-Received: by 2002:aa7:9a8e:: with SMTP id w14mr1840684pfi.113.1585812640239;
-        Thu, 02 Apr 2020 00:30:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x70sm2980143pfc.21.2020.04.02.00.30.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 00:30:39 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 00:30:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Julien Thierry <jthierry@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 1/5] objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
-Message-ID: <202004020030.209A886D3C@keescook>
-References: <cover.1585761021.git.jpoimboe@redhat.com>
- <6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com>
+        Thu, 2 Apr 2020 03:31:03 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2629 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727012AbgDBHbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:31:03 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 1C90EA1B68B64323459F;
+        Thu,  2 Apr 2020 08:31:01 +0100 (IST)
+Received: from [127.0.0.1] (10.47.6.242) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 2 Apr 2020
+ 08:31:00 +0100
+Subject: Re: [PATCH] scsi: hisi_sas: Fix build error without SATA_HOST
+To:     YueHaibing <yuehaibing@huawei.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <chenxiang66@hisilicon.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        <linux-ide@vger.kernel.org>
+References: <20200402063021.34672-1-yuehaibing@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <855fee9e-ae2d-ca70-8630-df27a273e6f3@huawei.com>
+Date:   Thu, 2 Apr 2020 08:30:42 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com>
+In-Reply-To: <20200402063021.34672-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.6.242]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 01:23:25PM -0500, Josh Poimboeuf wrote:
-> CONFIG_UBSAN_TRAP causes GCC to emit a UD2 whenever it encounters an
-> unreachable code path.  This includes __builtin_unreachable().  Because
-> the BUG() macro uses __builtin_unreachable() after it emits its own UD2,
-> this results in a double UD2.  In this case objtool rightfully detects
-> that the second UD2 is unreachable:
+On 02/04/2020 07:30, YueHaibing wrote:
+
++
+
+> If SATA_HOST is n, build fails:
 > 
->   init/main.o: warning: objtool: repair_env_string()+0x1c8: unreachable instruction
+> drivers/scsi/hisi_sas/hisi_sas_main.o: In function `hisi_sas_fill_ata_reset_cmd':
+> hisi_sas_main.c:(.text+0x2500): undefined reference to `ata_tf_to_fis'
 > 
-> We weren't able to figure out a way to get rid of the double UD2s, so
-> just silence the warning.
+> Select SATA_HOST to fix this.
 > 
-> Cc: Kees Cook <keescook@chromium.org>
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 7c594f0407de ("scsi: hisi_sas: add softreset function for SATA disk")
 
-Thanks for finding a way to work around this!
+That's not right. SATA_HOST was only introduced recently in the ATA 
+code. It would fix those kconfig changes.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  tools/objtool/check.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
+>   drivers/scsi/hisi_sas/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index e3bb76358148..aaec5e1277ea 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -2382,14 +2382,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
->  	    !strcmp(insn->sec->name, ".altinstr_aux"))
->  		return true;
->  
-> +	if (!insn->func)
-> +		return false;
-> +
-> +	/*
-> +	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
-> +	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
-> +	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
-> +	 * (or occasionally a JMP to UD2).
-> +	 */
-> +	if (list_prev_entry(insn, list)->dead_end &&
-> +	    (insn->type == INSN_BUG ||
-> +	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
-> +	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
-> +		return true;
-> +
->  	/*
->  	 * Check if this (or a subsequent) instruction is related to
->  	 * CONFIG_UBSAN or CONFIG_KASAN.
->  	 *
->  	 * End the search at 5 instructions to avoid going into the weeds.
->  	 */
-> -	if (!insn->func)
-> -		return false;
->  	for (i = 0; i < 5; i++) {
->  
->  		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
-> -- 
-> 2.21.1
-> 
+> diff --git a/drivers/scsi/hisi_sas/Kconfig b/drivers/scsi/hisi_sas/Kconfig
+> index 90a17452a50d..13ed9073fc72 100644
+> --- a/drivers/scsi/hisi_sas/Kconfig
+> +++ b/drivers/scsi/hisi_sas/Kconfig
+> @@ -6,6 +6,7 @@ config SCSI_HISI_SAS
+>   	select SCSI_SAS_LIBSAS
+>   	select BLK_DEV_INTEGRITY
+>   	depends on ATA
+> +	select SATA_HOST
 
--- 
-Kees Cook
+That does not feel right.
+
+SCSI_HISI_SAS depends on ATA, but SATA_HOST also depends on ATA, so it 
+seems better to just depend on SATA_HOST (and omit explicit ATA 
+dependency), rather than select it.
+
+Thanks,
+John
