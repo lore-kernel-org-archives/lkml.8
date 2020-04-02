@@ -2,146 +2,116 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ABBC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A526C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22EFD206F6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D540206F6
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B8VYQz83"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agymgViU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbgDBMKf (ORCPT
+        id S2388231AbgDBMMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:10:35 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:14406 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387958AbgDBMKf (ORCPT
+        Thu, 2 Apr 2020 08:12:00 -0400
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:35444 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387730AbgDBML7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 08:10:35 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200402121032epoutp0378b0d95a4283c83c8bc0aea8be3c593b~B-3eWbnjl1731317313epoutp03O
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Apr 2020 12:10:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200402121032epoutp0378b0d95a4283c83c8bc0aea8be3c593b~B-3eWbnjl1731317313epoutp03O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585829432;
-        bh=W1uGLnSfO0xhdPy733z8ZFnqmNvQ5mZd5PW1888pFIQ=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=B8VYQz834wH1Qxg41E08Pw6zfgTbf2bFmZaT0diIwXQt5/EdFK77qlVg9aVCNxA7N
-         uiGkrkxU4wjTGcZK92cy18ROF91RX+59oSijWk2BbBZdZppZ31DFgBcqWihgNM5IuL
-         HGcrMNdgrl2OgaGnIUD5Ouczs7cL0jf+movJ4yBE=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200402121032epcas1p2956ea13226d3883536e916f5a972ed4e~B-3eEhxi63107131071epcas1p2G;
-        Thu,  2 Apr 2020 12:10:32 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 48tMMq3wbnzMqYkY; Thu,  2 Apr
-        2020 12:10:31 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EF.8F.04402.736D58E5; Thu,  2 Apr 2020 21:10:31 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200402121030epcas1p443ac0b9ee2bbdc2afe8790bad9ab436b~B-3cjHdDB0745707457epcas1p4h;
-        Thu,  2 Apr 2020 12:10:30 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200402121030epsmtrp2679b1b0437107037b1a58c9c99139350~B-3ciewha0196701967epsmtrp2L;
-        Thu,  2 Apr 2020 12:10:30 +0000 (GMT)
-X-AuditID: b6c32a35-76bff70000001132-d5-5e85d6379325
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        46.9A.04158.636D58E5; Thu,  2 Apr 2020 21:10:30 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.88.100.192]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200402121030epsmtip2d9ec8e4c7a3e1dacafdabfefd2273d94~B-3cZhTr-3176931769epsmtip2W;
-        Thu,  2 Apr 2020 12:10:30 +0000 (GMT)
-From:   Jungseung Lee <js07.lee@samsung.com>
-To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jungseung Lee <js07.lee@samsung.com>
-Subject: [PATCH] spi: spi-ep93xx: fix wrong SPI mode selection
-Date:   Thu,  2 Apr 2020 21:10:22 +0900
-Message-Id: <20200402121022.9976-1-js07.lee@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRmVeSWpSXmKPExsWy7bCmnq75tdY4g9eN0hZTHz5hs3h08zer
-        xeVdc9gsGj/eZHdg8di0qpPNo2/LKkaPz5vkApijcmwyUhNTUosUUvOS81My89JtlbyD453j
-        Tc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgLYpKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yV
-        UgtScgoMDQr0ihNzi0vz0vWS83OtDA0MjEyBKhNyMl49vcxe0MNZcfjlRuYGxk3sXYycHBIC
-        JhKzLr0Fs4UEdjBKrFyp2sXIBWR/YpT4/ngqM4TzjVHi+oRJjF2MHGAdF65AFe1llGiafoYF
-        wvnMKNE3vQlsFJuAlsSN35tYQWwRgTiJE8vmgtnMAhoSvw/cZAGxhQXsJC7duswCMpRFQFWi
-        90YdSJhXwELi9IYtjBDXyUus3nAA7AgJgYesEh+3LGCGSLhIbLx6jA3CFpZ4dXwL1DtSEp/f
-        7YWKF0vsXDmRHaK5hVHi0fIlUEXGEu/ermUGWcwsoCmxfpc+RFhRYufvuYwQd/JJvPvawwrx
-        MK9ER5sQRImSxJsHLSwQtoTEhce9UCUeEqtfxkICMVZiwZLdTBMYZWchzF/AyLiKUSy1oDg3
-        PbXYsMAQOYo2MYLTj5bpDsYp53wOMQpwMCrx8DIcbI0TYk0sK67MPcQowcGsJMLrOAMoxJuS
-        WFmVWpQfX1Sak1p8iNEUGHYTmaVEk/OBqTGvJN7Q1MjY2NjCxMzczNRYSZx36vWcOCGB9MSS
-        1OzU1ILUIpg+Jg5OqQZGuxah3Veygvc/Tnt6RmdlNk/CHI4ag59bhT8rbE9j7hX+07yk6lhz
-        t7160ete5rkXptjLnvgRf3+V3d87j2K7hBOPbM5W9iv6s4x1o1A/L5eRbXfJD7Nyw8N9s19x
-        sh3me3iN/5IXT5jibjVTBd18a/tZOasqtfmPGt9Ico+Xv/j48bcFD6crsRRnJBpqMRcVJwIA
-        MTDHy1UDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAJMWRmVeSWpSXmKPExsWy7bCSvK7ZtdY4g1sPTS2mPnzCZvHo5m9W
-        i8u75rBZNH68ye7A4rFpVSebR9+WVYwenzfJBTBHcdmkpOZklqUW6dslcGW8enqZvaCHs+Lw
-        y43MDYyb2LsYOTgkBEwkLlxR7WLk4hAS2M0o8ez6SaYuRk6guITEo51fWCBqhCUOHy6GqPnI
-        KLH5xGxWkBo2AS2JG783gdkiAgkS//4sYgexmQU0JH4fuMkCYgsL2ElcunUZbA6LgKpE7406
-        kDCvgIXE6Q1bGCFWyUus3nCAeQIjzwJGhlWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmb
-        GMHhoKW1g/HEifhDjAIcjEo8vAwHW+OEWBPLiitzDzFKcDArifA6zgAK8aYkVlalFuXHF5Xm
-        pBYfYpTmYFES55XPPxYpJJCeWJKanZpakFoEk2Xi4JRqYNT3XV72YubG0qUOnm+/FIVc5bBf
-        7ZV4ZzI/66dz3V07mjli/X/yH38YkvTuILfWFMvua2KCe84cPT9n292myZH2HltXSwVKXV9u
-        MSf0lW/Cpj6NGUV353SqREUXTDn4/HjeqV2C30VyT/g8ebnjkG21Zrup3p2LZ36dTpdJnPO7
-        9sHikMCKhYFKLMUZiYZazEXFiQDEpwoWAwIAAA==
-X-CMS-MailID: 20200402121030epcas1p443ac0b9ee2bbdc2afe8790bad9ab436b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200402121030epcas1p443ac0b9ee2bbdc2afe8790bad9ab436b
-References: <CGME20200402121030epcas1p443ac0b9ee2bbdc2afe8790bad9ab436b@epcas1p4.samsung.com>
+        Thu, 2 Apr 2020 08:11:59 -0400
+Received: by mail-ed1-f43.google.com with SMTP id a20so3822155edj.2;
+        Thu, 02 Apr 2020 05:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dQNKCc7PUxqRbfY956FD6h+k4Y66wdaQrbWQY54QQ5w=;
+        b=agymgViUtAI2emTrH34p5ZHRX2vFxpJYQZfO6Ph/EpAkAH2SKbGh9Gwowg/y5F2xF9
+         GN9bUassTsCq6TmOom09VHTeAwUjAGfKm8kyfj8L5nGKieUt7e9AmBZ0/ZTmGkrOLi9N
+         pr+6N6O7GHNu8M8Iu1GZGh3K0wLBtSPqGXELUNzjNXnj/DFNRaqkfc9QZto9nWu40mDz
+         GZ2nhih6haNInv37Cq8PqojOPRewbPgnPnex1rzGDwVqgC31gSH+X7GQNx0ioCcTTAet
+         GS4NOrCtJ2TuSOIXnr3rZMN64006zcLHMZ2xA+KOGNbosVbW8GmBGh6odMjJ9ZwM4eB9
+         iEMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dQNKCc7PUxqRbfY956FD6h+k4Y66wdaQrbWQY54QQ5w=;
+        b=uiNfsFjatiixPhFU0JiUfPN3qh4EEOsQFy65bQKQQdKqKJTRsc7k5vG5hD9PWN++3E
+         eP0JG5c3CZiTQZVBBntxnDsTrLIF23QOUyky4OHYZpKjlrgEGVudgLkzoBbG2OIU7Sh7
+         yJiyTGtajFNSctrnCGx7vYD6gEcwB8cWE5XJms5I6VV+fINAUGZkUKPSU0Wa0pnuSZAM
+         WmGXtRdCSCNmCyHxR/D0kj4UoBgJjOZ/YI02RrVK59lnqsNxWUszEX7YxpBROKap5kYB
+         fD7he1MwTMriJosnDIPIE5IDdTO6sYbwg0eYXtC6Fru+HM3//FsgVuYTJxasjmCPLL9y
+         ryCw==
+X-Gm-Message-State: AGi0PuaOkBUGyZxKcu0ShUmcHM9vYgY/iNp2bDBoBH4EX21szL48GJcG
+        UlNqZVNxkFko96pdKiYMr5w=
+X-Google-Smtp-Source: APiQypLPNlmjZYpYHEbYalA5cdj8vdbm+4lcqgc+IcUsx4IEdOq3RzlqeMTeSu9WJGrGxVExBWuiNQ==
+X-Received: by 2002:a50:da49:: with SMTP id a9mr2429759edk.388.1585829515709;
+        Thu, 02 Apr 2020 05:11:55 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host250-251-dynamic.250-95-r.retail.telecomitalia.it. [95.250.251.250])
+        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.11.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 05:11:54 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/10] Multiple fixes in PCIe qcom driver
+Date:   Thu,  2 Apr 2020 14:11:37 +0200
+Message-Id: <20200402121148.1767-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mode bits on control register 0 are in a different order compared
-to the spi mode define values. Thus, in the current code, it fails to
-set the correct SPI mode selection. Fix it.
+This contains multiple fix for PCIe qcom driver.
+Some optional reset and clocks were missing.
+Fix a problem with no PARF programming that cause kernel lock on load.
+Add support to force gen 1 speed if needed. (due to hardware limitation)
+Add ipq8064 rev 2 support that use a different tx termination offset.
 
-Signed-off-by: Jungseung Lee <js07.lee@samsung.com>
----
- drivers/spi/spi-ep93xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+v2:
+* Drop iATU programming (already done in pcie init)
+* Use max-link-speed instead of force-gen1 custom definition
+* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+* Introduce a new variant for different revision of ipq8064
 
-diff --git a/drivers/spi/spi-ep93xx.c b/drivers/spi/spi-ep93xx.c
-index 4e1ccd4e52b6..8c854b187b1d 100644
---- a/drivers/spi/spi-ep93xx.c
-+++ b/drivers/spi/spi-ep93xx.c
-@@ -31,7 +31,8 @@
- #include <linux/platform_data/spi-ep93xx.h>
- 
- #define SSPCR0			0x0000
--#define SSPCR0_MODE_SHIFT	6
-+#define SSPCR0_SPO		BIT(6)
-+#define SSPCR0_SPH		BIT(7)
- #define SSPCR0_SCR_SHIFT	8
- 
- #define SSPCR1			0x0004
-@@ -159,7 +160,10 @@ static int ep93xx_spi_chip_setup(struct spi_master *master,
- 		return err;
- 
- 	cr0 = div_scr << SSPCR0_SCR_SHIFT;
--	cr0 |= (spi->mode & (SPI_CPHA | SPI_CPOL)) << SSPCR0_MODE_SHIFT;
-+	if (spi->mode & SPI_CPOL)
-+		cr0 |= SSPCR0_SPO;
-+	if (spi->mode & SPI_CPHA)
-+		cr0 |= SSPCR0_SPH;
- 	cr0 |= dss;
- 
- 	dev_dbg(&master->dev, "setup: mode %d, cpsr %d, scr %d, dss %d\n",
+Abhishek Sahu (1):
+  PCIe: qcom: change duplicate PCI reset to phy reset
+
+Ansuel Smith (7):
+  PCIe: qcom: add missing ipq806x clocks in PCIe driver
+  devicetree: bindings: pci: add missing clks to qcom,pcie
+  PCIe: qcom: Fixed pcie_phy_clk branch issue
+  PCIe: qcom: add missing reset for ipq806x
+  devicetree: bindings: pci: add ext reset to qcom,pcie
+  PCIe: qcom: fix init problem with missing PARF programming
+  devicetree: bindings: pci: add ipq8064 rev 2 variant to qcom,pcie
+
+Sham Muthayyan (2):
+  PCIe: qcom: add ipq8064 rev2 variant and set tx term offset
+  PCIe: qcom: add Force GEN1 support
+
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  56 +++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 134 +++++++++++++++---
+ 2 files changed, 167 insertions(+), 23 deletions(-)
+
 -- 
-2.17.1
+2.25.1
 
