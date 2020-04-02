@@ -2,119 +2,95 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36669C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B447C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0648C2078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OHFqzXVg"
+	by mail.kernel.org (Postfix) with ESMTP id 2C8742078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585815234;
+	bh=MfvQQkIj2OFoUDYO9jUXwG7FM99uzokTU3uHkH5wg0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zlvCFR9JBv/juZhNsse1wBTv0LwEkypbrot3ImXRKp0pZJ88oBWN6HVaLvaucgF7+
+	 EtwlfnLUov2L31+ip/AY/a3HgIV84Ag81ta/HuKYuMMmzQkhWt6N4OsGpW0c89zE0O
+	 m+3/ZVJqTGDM3IDVBF2wylvgDZUfUe1y0Vy/4f8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387689AbgDBIKu (ORCPT
+        id S2387679AbgDBINw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:10:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43916 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387449AbgDBIKu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:10:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id g20so1486210pgk.10
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 01:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=rr2+JiyOTzs2D6VximK33Aonne21icc+eHi8FG/OnsQ=;
-        b=OHFqzXVgCRW79+evfsGJ+kuZ94Ph3DbjI/cTcvPV402yG5nto9O5kiCL6nH1/ilwad
-         P6532gUewqNBMEgllX6tCRBOtx3JEva1KlJfeC0UgLZdWSfZwkIgEzx0gn3MZuq/clpu
-         xzv5W/9bmWHbnCVGIKEOWh01uMHGtNQu0mxXY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=rr2+JiyOTzs2D6VximK33Aonne21icc+eHi8FG/OnsQ=;
-        b=icvrjpUY0MOAWC1bSXsNV+F5iIz5Ehsao8eCefPZ1tQGP1/x8afU/1+W9KOWHY6slC
-         ZgepAgnCBEp9qbQq77N6LbZWVFYCzyGs+4k6HK3C4ZkwbSBTPv64rCAP22PuWLLgQAof
-         WcJ4a7aDO30rPglHhn4xXDU8mGL/hNRt+fzQ3CwupfFp+GrCQfu+5aty0MlwswTjuk5/
-         jeOBBlz5WpnFFHDB0Ax5gLQH8SWgs2FAL3bGfw0i0IIZ+x4Omk/oY41mHDsfb5Acc157
-         4v+JvDuHkNnh2U/uiSkreCNwV6zbXA23KcxirPc8Xax0B/3XsZwkB8JGhC9IsYJDW/cD
-         zZ9w==
-X-Gm-Message-State: AGi0PuZwzf1JCkyZHy01nHdVj51hYbLG69cgeUNOUKBNk5qYQE2w2sTT
-        z0ityQkDKWy9mBSgzrYhD+z2ug==
-X-Google-Smtp-Source: APiQypJ1LS6Q4XLKxKhj4KtCkhkkBK2oMRUFgRtWym8HkRx+R3SgX2/W68HhQ4MfO49pRYbr+N4Gmw==
-X-Received: by 2002:a63:cf50:: with SMTP id b16mr2200848pgj.189.1585815049479;
-        Thu, 02 Apr 2020 01:10:49 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i15sm2908549pgc.74.2020.04.02.01.10.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 01:10:48 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 01:10:47 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     kernel-hardening@lists.openwall.com
-Cc:     Alexander Popov <alex.popov@linux.com>,
-        Emese Revfy <re.emese@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] gcc-plugins/stackleak: Avoid assignment for unused macro
- argument
-Message-ID: <202004020103.731F201@keescook>
+        Thu, 2 Apr 2020 04:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726841AbgDBINw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:13:52 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD42F2078B;
+        Thu,  2 Apr 2020 08:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585815232;
+        bh=MfvQQkIj2OFoUDYO9jUXwG7FM99uzokTU3uHkH5wg0k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lq/LJrlM2qvKHHPYYTWR7RsC++8+oesBipjopjmq3dFbpRSnuBHDI9xa8/9afO/s1
+         GhDRHhUSi7sdxX9Ps1865zTSvyjC/n+k1bjKPrVBosVPvvP/Fg/jToNU2O/XicfKJH
+         /iEcLGvV4zdP4OlFXxZOt0Y4+V/NH4W7D6Ki5VZc=
+Date:   Thu, 2 Apr 2020 09:13:47 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, hsinyi@chromium.org,
+        geert+renesas@glider.be, swboyd@chromium.org, robh@kernel.org,
+        tytso@mit.edu
+Subject: Re: [PATCH] Documentation: dt-bindings: Document 'rng-seed' for
+ /chosen
+Message-ID: <20200402081346.GA2548@willie-the-truck>
+References: <20200402033640.12465-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200402033640.12465-1-f.fainelli@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With GCC version >= 8, the cgraph_create_edge() macro argument using
-"frequency" goes unused. Instead of assigning a temporary variable for
-the argument, pass the compute_call_stmt_bb_frequency() call directly
-as the macro argument so that it will just not be uncalled when it is
-not wanted by the macros.
+Hi Florian,
 
-Silences the warning:
+On Wed, Apr 01, 2020 at 08:36:40PM -0700, Florian Fainelli wrote:
+> The /chosen node can have a 'rng-seed' property read as a u32 quantity
+> which would contain a random number provided by the boot agent. This is
+> useful in configurations where the kernel does not have access to a
+> random number generator.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/chosen.txt | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 
-scripts/gcc-plugins/stackleak_plugin.c:54:6: warning: variable ‘frequency’ set but not used [-Wunused-but-set-variable]
+Thanks for doing this; I realised it was undocumented the other day when I
+tried to look it up myself.
 
-Now builds cleanly with gcc-7 and gcc-9. Both boot and pass
-STACKLEAK_ERASING LKDTM test.
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 45e79172a646..126b31eecfeb 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -28,6 +28,19 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
+>  the Linux EFI stub (which will populate the property itself, using
+>  EFI_RNG_PROTOCOL).
+>  
+> +rng-seed
+> +--------
+> +
+> +This property is used to initialize the kernel's entropy pool from a
+> +trusted boot agent capable of providing a random number. It is parsed
+> +as a u32 value, e.g.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- scripts/gcc-plugins/stackleak_plugin.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Are you sure about this being limited to a u32 value? I thought you could
+pass an arbitrary-length value here.
 
-diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
-index dbd37460c573..cc75eeba0be1 100644
---- a/scripts/gcc-plugins/stackleak_plugin.c
-+++ b/scripts/gcc-plugins/stackleak_plugin.c
-@@ -51,7 +51,6 @@ static void stackleak_add_track_stack(gimple_stmt_iterator *gsi, bool after)
- 	gimple stmt;
- 	gcall *stackleak_track_stack;
- 	cgraph_node_ptr node;
--	int frequency;
- 	basic_block bb;
- 
- 	/* Insert call to void stackleak_track_stack(void) */
-@@ -68,9 +67,9 @@ static void stackleak_add_track_stack(gimple_stmt_iterator *gsi, bool after)
- 	bb = gimple_bb(stackleak_track_stack);
- 	node = cgraph_get_create_node(track_function_decl);
- 	gcc_assert(node);
--	frequency = compute_call_stmt_bb_frequency(current_function_decl, bb);
- 	cgraph_create_edge(cgraph_get_node(current_function_decl), node,
--			stackleak_track_stack, bb->count, frequency);
-+			stackleak_track_stack, bb->count,
-+			compute_call_stmt_bb_frequency(current_function_decl, bb));
- }
- 
- static bool is_alloca(gimple stmt)
--- 
-2.20.1
-
-
--- 
-Kees Cook
+Will
