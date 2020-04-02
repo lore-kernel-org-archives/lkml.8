@@ -2,244 +2,125 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8CBC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51457C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E1D20719
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2909520719
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:08:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="MqSe8fIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388788AbgDBTGx (ORCPT
+        id S2388960AbgDBTIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:06:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38864 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732598AbgDBTGw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:06:52 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jK5AO-0001Yn-7q; Thu, 02 Apr 2020 21:06:16 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2444D100D52; Thu,  2 Apr 2020 21:06:15 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, "Kenneth R . Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        Thu, 2 Apr 2020 15:08:01 -0400
+Received: from mail-bn8nam11on2050.outbound.protection.outlook.com ([40.107.236.50]:34238
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732598AbgDBTIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:08:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=llIc3YCjZkmyNN5o0aNvQfN+osYIbIWsu2Upyi6+V9y7u4jLR/6iqoEmg44owMYvHHzpb/KHD4fNXENlmShXk/PYRIUGNzbdiQO0wKvU78GRoz3wcEar41dW+4Yy4+zFQ54kZBlFBAx+Rax1Sk6hXhx6ZNmCnMhKOTCa/5RxI9g+Hg5hmdXOZXP6TH8585g/YHtUBYO+6YR3dbPEY2ZuwazeWVPMjhItw92OIcsu9BAYcjfCoOJBr+x2LOSI4wYQ/+5nI4o57kW8tNA03CDcBwl2nwIzi1Ihh0zqWr9H9Neny/eHpDyIKNrbhEHg813Z70VaTTZZoDoVv157gvo5yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VNEe0beCXYSDjfBtQ3gndhOngMgyAESRPXxPNqsukK0=;
+ b=DE+/OIp253OVORfSUehSShup79KW4V+7QOEmyj//sVfqA+Sgnj2Dw27PrJllazRzsXpB13LFvKe0y/maa1GeX9bCzqWS1yTql/HBdCrWrt+yVYoY/1/y4uVyuyx1EJ7Gcp7Sg0Kk5YVW5uwPK3Ih5ZZ+qi6wc8Y22wsV15zlAbXFNwtbODKtsrDvmQSVk838cF+YyrqE6mjZ3uHAyqMtUg5gOyk6lTs3K1XvNnX1hunhrKkpjACoauqs1zTNi9vb4mHJFgZ2rUO/PFaDqEobAxEIkuIQOabPxAocJUDGFlmNlgxPgPlwe865fMvd/UAKQmD3itQ1okW6W/KFlq1Cow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VNEe0beCXYSDjfBtQ3gndhOngMgyAESRPXxPNqsukK0=;
+ b=MqSe8fIWCUDRpkqSD3PBruMcqk0AJeF5Z9I+IuFUtJqR7KxKfNJZywEAi1j7fn8cKB2sQyuu8Qdtx3nzm/+icE1w9Cfv6CCMZqCGt12aQOt/mrJvGgfVvvhWP/4chS4zA2WZvOfMOysx2wk5YJ1VqUFDs++UT3jttRKs42lWl/E=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
+ by SN6PR12MB2750.namprd12.prod.outlook.com (2603:10b6:805:77::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Thu, 2 Apr
+ 2020 19:07:57 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::654c:5d93:fd49:88b3]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::654c:5d93:fd49:88b3%4]) with mapi id 15.20.2878.017; Thu, 2 Apr 2020
+ 19:07:56 +0000
+Subject: Re: [PATCH] perf script report: fix segfault when using DWARF mode
+To:     Andreas Gerstmayr <agerstmayr@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] x86/split_lock: Refactor and export handle_user_split_lock() for KVM
-In-Reply-To: <20200402171946.GH13879@linux.intel.com>
-References: <20200402124205.334622628@linutronix.de> <20200402155554.27705-1-sean.j.christopherson@intel.com> <20200402155554.27705-3-sean.j.christopherson@intel.com> <87v9mhn7nf.fsf@nanos.tec.linutronix.de> <20200402171946.GH13879@linux.intel.com>
-Date:   Thu, 02 Apr 2020 21:06:15 +0200
-Message-ID: <87mu7tn1w8.fsf@nanos.tec.linutronix.de>
+References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+ <20200402125417.422232-1-agerstmayr@redhat.com>
+From:   Kim Phillips <kim.phillips@amd.com>
+Message-ID: <6a098ce1-1981-dcff-ea62-af5fc07ec7fb@amd.com>
+Date:   Thu, 2 Apr 2020 14:07:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200402125417.422232-1-agerstmayr@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN6PR1201CA0006.namprd12.prod.outlook.com
+ (2603:10b6:405:4c::16) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.252.0.18] (165.204.84.11) by BN6PR1201CA0006.namprd12.prod.outlook.com (2603:10b6:405:4c::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Thu, 2 Apr 2020 19:07:54 +0000
+X-Originating-IP: [165.204.84.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 47d680ef-08c5-4504-d337-08d7d7392708
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2750:
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2750BD125BC8483BBE13511A87C60@SN6PR12MB2750.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-Forefront-PRVS: 0361212EA8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2845.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(366004)(396003)(39860400002)(6666004)(54906003)(6486002)(66556008)(4744005)(66476007)(478600001)(66946007)(16576012)(2906002)(5660300002)(8676002)(31696002)(36756003)(956004)(86362001)(4326008)(81156014)(16526019)(31686004)(81166006)(316002)(7416002)(53546011)(52116002)(44832011)(26005)(186003)(8936002)(2616005);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GOp7OrvVtCVG5TuxQVu4f+MbBtovrXrpaSqV4yGsl6xNa3/OH7w/zgtlSI8z9XVAk6Tyl3LRHWa70sVDhQogNybgA+dj1jP3PDTe0U6He3WGvOig9Um0SEx7Zuj4ojZs1A1rhjXTIhHgQA6k1n9ReKBnMU9bZRW9n4hnVVR6B63JnfvaSGIFfNjdbKH38n/DyCC+FmeS8U7/48WtKzNDt0WVpkF9z7W3D8uSWnuOR8cVX+MwIpPFkP1m8zvhRU0Hm1XFr3NSd5r4FXokoOjx3DfKibzbyeXm9MC/fviHofMp0uOX2x8HzZK8VaM5ifpRAiciaFMGFcMOKyqDdtVfDr5hTy/IpYXYrdHUD+G29j3wdzCpsEDivay4/jy7kTF+U6MWrZM3Jy31FSaFbsWzqmxPk0VU8VULPO1xqTsubmKbk5RLWZklG3oSORqoV27j
+X-MS-Exchange-AntiSpam-MessageData: /DIshPDhnKNhgp7WP2RgziDCP8SLJCjnSq/9PvMxARf/rMMoXA+KyT8alnHRh+5Cm37WAG/4bfOU+CxttQM0m6uDwscr7f/gS9iyrCDEyVBnHYgUidG3uzAtSkp24qM5PbystuLpBT+D/M7dv1KKhw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47d680ef-08c5-4504-d337-08d7d7392708
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 19:07:56.7570
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eGt0ftC/GSCO67a+NvQvOQ5PfgPnNe0UfIE+X509lupyCq9n8zMDrH7TQVDBHdsMbLRul88ATEauCDecCsM0mA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2750
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> On Thu, Apr 02, 2020 at 07:01:56PM +0200, Thomas Gleixner wrote:
->> >  static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
->> >  static inline void switch_to_sld(unsigned long tifn) {}
->> > -static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
->> > +static inline bool handle_user_split_lock(unsigned long ip)
->> 
->> This is necessary because VMX can be compiled without CPU_SUP_INTEL?
->
-> Ya, it came about when cleaning up the IA32_FEATURE_CONTROL MSR handling
-> to consolidate duplicate code.
->
-> config KVM_INTEL
->         tristate "KVM for Intel (and compatible) processors support"
->         depends on KVM && IA32_FEAT_CTL
->
-> config IA32_FEAT_CTL
->         def_bool y
->         depends on CPU_SUP_INTEL || CPU_SUP_CENTAUR || CPU_SUP_ZHAOXIN
+On 4/2/20 7:54 AM, Andreas Gerstmayr wrote:
+> When running perf script report with a Python script and a callgraph in
+> DWARF mode, intr_regs->regs can be 0 and therefore crashing the regs_map
+> function.
+> 
+> Added a check for this condition (same check as in builtin-script.c:595).
+> 
+> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+> ---
 
-Ah, indeed. So something like the below would make sense. Hmm?
-
-Of course that can be mangled into Xiaoyao's patches, I'm not worried
-about my patch count :)
-
-Aside of that I really wish Intel HW folks had indicated the source of
-the #AC via the error code. It can only be 0 or 1 for the regular #AC so
-there would have been 31 bits to chose from.
+Tested-by: Kim Phillips <kim.phillips@amd.com>
 
 Thanks,
 
-        tglx
-
-8<----------------
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -43,14 +43,14 @@ unsigned int x86_stepping(unsigned int s
- #ifdef CONFIG_CPU_SUP_INTEL
- extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
- extern void switch_to_sld(unsigned long tifn);
--extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-+extern int handle_ac_split_lock(unsigned long ip);
- extern void split_lock_validate_module_text(struct module *me, void *text, void *text_end);
- #else
- static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
- static inline void switch_to_sld(unsigned long tifn) {}
--static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+static int handle_ac_split_lock(unsigned long ip)
- {
--	return false;
-+	return -ENOSYS;
- }
- static inline void split_lock_validate_module_text(struct module *me, void *text, void *text_end) {}
- #endif
-
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1102,13 +1102,20 @@ static void split_lock_init(void)
- 	split_lock_verify_msr(sld_state != sld_off);
- }
- 
--bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-+int handle_ac_split_lock(unsigned long ip)
- {
--	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
--		return false;
-+	switch (sld_state) {
-+	case sld_warn:
-+		break;
-+	case sld_off:
-+		pr_warn_once("#AC: Spurious trap at address: 0x%lx\n", ip);
-+		return -ENOSYS;
-+	case sld_fatal:
-+		return -EFAULT;
-+	}
- 
- 	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
--			    current->comm, current->pid, regs->ip);
-+			    current->comm, current->pid, ip);
- 
- 	/*
- 	 * Disable the split lock detection for this task so it can make
-@@ -1117,8 +1124,9 @@ bool handle_user_split_lock(struct pt_re
- 	 */
- 	sld_update_msr(false);
- 	set_tsk_thread_flag(current, TIF_SLD);
--	return true;
-+	return 0;
- }
-+EXPORT_SYMBOL_GPL(handle_ac_split_lock);
- 
- /*
-  * This function is called only when switching between tasks with
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -304,7 +304,7 @@ dotraplinkage void do_alignment_check(st
- 
- 	local_irq_enable();
- 
--	if (handle_user_split_lock(regs, error_code))
-+	if (!(regs->flags & X86_EFLAGS_AC) && !handle_ac_split_lock(regs->ip))
- 		return;
- 
- 	do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -65,6 +65,7 @@
- 
- MODULE_AUTHOR("Qumranet");
- MODULE_LICENSE("GPL");
-+MODULE_INFO(sld_safe, "Y");
- 
- #ifdef MODULE
- static const struct x86_cpu_id vmx_cpu_id[] = {
-@@ -4623,6 +4624,22 @@ static int handle_machine_check(struct k
- 	return 1;
- }
- 
-+static bool guest_handles_ac(struct kvm_vcpu *vcpu)
-+{
-+	/*
-+	 * If guest has alignment checking enabled in CR0 and activated in
-+	 * eflags, then the #AC originated from CPL3 and the guest is able
-+	 * to handle it. It does not matter whether this is a regular or
-+	 * a split lock operation induced #AC.
-+	 */
-+	if (vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
-+	    kvm_get_rflags(vcpu) & X86_EFLAGS_AC)
-+		return true;
-+
-+	/* Add guest SLD handling checks here once it's supported */
-+	return false;
-+}
-+
- static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -4630,6 +4647,7 @@ static int handle_exception_nmi(struct k
- 	u32 intr_info, ex_no, error_code;
- 	unsigned long cr2, rip, dr6;
- 	u32 vect_info;
-+	int err;
- 
- 	vect_info = vmx->idt_vectoring_info;
- 	intr_info = vmx->exit_intr_info;
-@@ -4688,9 +4706,6 @@ static int handle_exception_nmi(struct k
- 		return handle_rmode_exception(vcpu, ex_no, error_code);
- 
- 	switch (ex_no) {
--	case AC_VECTOR:
--		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
--		return 1;
- 	case DB_VECTOR:
- 		dr6 = vmcs_readl(EXIT_QUALIFICATION);
- 		if (!(vcpu->guest_debug &
-@@ -4719,6 +4734,29 @@ static int handle_exception_nmi(struct k
- 		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
- 		kvm_run->debug.arch.exception = ex_no;
- 		break;
-+	case AC_VECTOR:
-+		if (guest_handles_ac(vcpu)) {
-+			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-+			return 1;
-+		}
-+		/*
-+		 * Handle #AC caused by split lock detection. If the host
-+		 * mode is sld_warn, then it warns, marks current with
-+		 * TIF_SLD and disables split lock detection. So the guest
-+		 * can just continue.
-+		 *
-+		 * If the host mode is fatal, the handling code warned. Let
-+		 * qemu kill itself.
-+		 *
-+		 * If the host mode is off, then this #AC is bonkers and
-+		 * something is badly wrong. Let it fail as well.
-+		 */
-+		err = handle_ac_split_lock(kvm_rip_read(vcpu));
-+		if (!err)
-+			return 1;
-+		/* Propagate the error type to user space */
-+		error_code = err == -EFAULT ? 0x100 : 0x200;
-+		fallthrough;
- 	default:
- 		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
- 		kvm_run->ex.exception = ex_no;
+Kim
