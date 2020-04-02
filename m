@@ -2,97 +2,134 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27D2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04871C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937E220721
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFD920721
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 01:36:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iy/+QP+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733223AbgDBBeL (ORCPT
+        id S1733094AbgDBBgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 21:34:11 -0400
-Received: from mga07.intel.com ([134.134.136.100]:50388 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732435AbgDBBeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 21:34:11 -0400
-IronPort-SDR: ra9YLEl274kI59wj+a5RbZeX7jKAITXRVUj+ykR7Wp8jiR8Id2rs07wBcOxd+YoKogGPieVmww
- JVBEyNDdaLWA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 18:34:09 -0700
-IronPort-SDR: DLqdeTOYf1qgCyqWcABZ76eQylWBG4nUtfyaR4TwN5AwSYlI27YVFKD+fyy3yED2/41SExpUBb
- OXBET1F/8Aow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,333,1580803200"; 
-   d="scan'208";a="422942571"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga005.jf.intel.com with ESMTP; 01 Apr 2020 18:34:07 -0700
-Subject: Re: [kbuild-all] Re: [RFC PATCH] usb: cdns3:
- cdns3_clear_register_bit() can be static
-From:   Rong Chen <rong.a.chen@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Colin King <colin.king@canonical.com>, kbuild-all@lists.01.org,
-        Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200325125041.94769-1-colin.king@canonical.com>
- <20200326122858.GA50118@cde5a4ed3207> <20200326130418.GA1295433@kroah.com>
- <571960b6-5ed7-2106-7091-3ea83c31051a@intel.com>
- <20200327064255.GA1603489@kroah.com>
- <372f30ad-fbea-d411-c58f-2d4692509a60@intel.com>
-Message-ID: <556997e2-1921-e3dd-c103-d6e3c8f91888@intel.com>
-Date:   Thu, 2 Apr 2020 09:33:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 Apr 2020 21:36:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36269 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbgDBBgN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 21:36:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id w145so1385174lff.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 18:36:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p4NjOGhfdlS01zHiaiGfeK4n/oNGr20mOQ6J0VtQZkU=;
+        b=Iy/+QP+K5SVCnjZXEYKbe6gJZoALpPVWnCdKolTHVAcRIpAX95p8NjKGPKSonJCPQl
+         f++BgT7PPp9l1iSRQ0/AkB8k2GJ9laThTMzZvs8e1TP/X1f6WX5Cn8xFtFCbwwx3rX8n
+         RnnPYSdakwGWTapISLCz8yL9IB8meP8yGhRhNjjZEBk8dsZU1QIY+BK0XB9LSfeKWt0W
+         o/ZyWF5EEO830dCD5ifrmYe5HtawBOZlRnV6pZmMlt43dZFsqqFubXhVRsFGQQ1NPDqe
+         N9jUDMHkwlob6QtCmqRhRNG5E0keVN4DvKm0VvPZiQO901MdnKX/cFt9MAbYIYKiTjz2
+         h+Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p4NjOGhfdlS01zHiaiGfeK4n/oNGr20mOQ6J0VtQZkU=;
+        b=OlbyFIXT8Hjr0XGhBzYiaP/zAUh0IBQJZEUAG/YIh13Oi/MDYh9XFW8+vMcmJxOUAS
+         qKgw7ihD5xWamudroldgO785bpBdUMLH9NuZbKILcsS4x1n1OqzGDvTfkMQELDMAEFHm
+         pxKswVZg4ATdMF44Hc/CW5Sn+QNttHTPDgLP3sD7kXTvMQws8ljr5czT9NPH/t31PMol
+         UkdUNAMAUf6BWU0/NTjHP5FixFu/hE9blSe5JNQE5yqxPEuFrIWp6/afmJ8pNkBQv/AH
+         9z8rSF0NKvvhnnuMH+iQ+/7VTxPzbBf4dVN+99DNPN69tptgl8M9ULKdLQtH+VC9qHf1
+         XT8w==
+X-Gm-Message-State: AGi0PubVE2XhDHP608fuP+6BAiRxOJUxV25CVvQiEK7+DC0yHpJZC3fw
+        j68OUDE8KQk1qGhaRFKYF6QTxSq2FBnpTzTayoNwGg==
+X-Google-Smtp-Source: APiQypJ85uH6hjieFIQ+DVaZ/3dHevVDests4L8XYzQdjxgBwQoqkLkbfa12keCBxd4QZw2RSaoFcAay8z6J77nuKhw=
+X-Received: by 2002:a05:6512:3127:: with SMTP id p7mr583281lfd.108.1585791371001;
+ Wed, 01 Apr 2020 18:36:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <372f30ad-fbea-d411-c58f-2d4692509a60@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200324215049.GA3710@pi3.com.pl> <202003291528.730A329@keescook>
+ <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org> <CAG48ez3nYr7dj340Rk5-QbzhsFq0JTKPf2MvVJ1-oi1Zug1ftQ@mail.gmail.com>
+ <CAHk-=wjz0LEi68oGJSQzZ--3JTFF+dX2yDaXDRKUpYxtBB=Zfw@mail.gmail.com> <CAHk-=wgM3qZeChs_1yFt8p8ye1pOaM_cX57BZ_0+qdEPcAiaCQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgM3qZeChs_1yFt8p8ye1pOaM_cX57BZ_0+qdEPcAiaCQ@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 2 Apr 2020 03:35:44 +0200
+Message-ID: <CAG48ez1f82re_V=DzQuRHpy7wOWs1iixrah4GYYxngF1v-moZw@mail.gmail.com>
+Subject: Re: [PATCH] signal: Extend exec_id to 64bits
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Adam Zabrocki <pi3@pi3.com.pl>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>, Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/27/20 2:53 PM, Rong Chen wrote:
+On Thu, Apr 2, 2020 at 1:55 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Wed, Apr 1, 2020 at 4:51 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > It's literally testing a sequence counter for equality. If you get
+> > tearing in the high bits on the write (or the read), you'd still need
+> > to have the low bits turn around 4G times to get a matching value.
 >
+> Put another way: first you'd have to work however many weeks to do 4
+> billion execve() calls, and then you need to hit basically a
+> single-instruction race to take advantage of it.
 >
-> On 3/27/20 2:42 PM, Greg Kroah-Hartman wrote:
->> On Fri, Mar 27, 2020 at 08:34:52AM +0800, Rong Chen wrote:
->>>
->>> On 3/26/20 9:04 PM, Greg Kroah-Hartman wrote:
->>>> On Thu, Mar 26, 2020 at 08:28:58PM +0800, kbuild test robot wrote:
->>>>> Fixes: 87db1192dc33 ("usb: cdns3: make signed 1 bit bitfields 
->>>>> unsigned")
->>>> This original patch did not "cause" this problem, it's just that 
->>>> you for
->>>> some reason ran sparse for the first time on the file.
->>>>
->>>> So I can't take this as-is, can you remove this line and resend?
->>> Hi Greg,
->>>
->>> Sorry for the inconvenience, the patch was generated by the bot,
->>> we'll check and resend it.
->> It's fine that it was generated, it's a bug somewhere that thinks this
->> specific patch was a problem so that this generated patch fixed it.
-> Yes, you are right, we'll fix the bug asap.
->
+> Good luck with that. If you have that kind of God-like capability,
+> whoever you're attacking stands no chance in the first place.
 
-Hi Greg,
+I'm not really worried about someone being able to hit this in
+practice, especially given that the only thing it lets you do is send
+signals; I just think that the code is wrong in principle, and that we
+should avoid having "technically wrong, but works in practice" code in
+the kernel.
 
-The commit 87db1192dc33 ("usb: cdns3: make signed 1 bit bitfields 
-unsigned") fixed a sparse error
-which causes many sparse warnings exposed, we'll remove the wrong 
-"Fixes" in our patch in future.
+This kind of intentional race might also trip up testing tools like
+the upcoming KCSAN instrumentation, unless it is specifically
+annotated as an intentionally racing instruction. (For now, KCSAN is
+64-bit only, so it won't actually be able to detect this though; and
+the current KCSAN development branch actually incorrectly considers
+WRITE_ONCE() to always be atomic; but still, in principle it's the
+kind of issue KCSAN is supposed to detect, I think.)
 
-Best Regards,
-Rong Chen
+But even without KCSAN, if we have tearing stores racing with loads, I
+think that we ought to *at least* have a comment noting that we're
+intentionally doing that so that people don't copy this kind of code
+to a place where the high bits change more frequently and correctness
+matters more.
+
+Since the read is already protected by the tasklist_lock, an
+alternative might be to let the execve path also take that lock to
+protect the sequence number update, given that execve is not a
+particularly hot path. Or we could hand-code the equality check and
+increment operations to be properly race-free.
