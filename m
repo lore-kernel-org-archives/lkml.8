@@ -2,102 +2,179 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BB9C2BA12
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361612078B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D316820787
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 16:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389890AbgDBQmD (ORCPT
+        id S2389897AbgDBQme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 12:42:03 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55493 "EHLO mga18.intel.com"
+        Thu, 2 Apr 2020 12:42:34 -0400
+Received: from mga12.intel.com ([192.55.52.136]:42590 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727178AbgDBQmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 12:42:02 -0400
-IronPort-SDR: KCUgcajdfJNsnPeo+czqs1faKay3oyHniad+b38d65kHZjJRwVAcikGCgC6QzBM2dipps9Br6v
- C6gYVezyqbHA==
+        id S2387700AbgDBQme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 12:42:34 -0400
+IronPort-SDR: bbey3+EGeI6OICaxYkZUS8TkCGcRDWxEsVEGPsNlIez0qxhG9tEPeBJ/7YXiAqANR0eCOdFuWL
+ mO9+vTMoHf4w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 09:42:02 -0700
-IronPort-SDR: nRCn5XujqpcJlyzDA7FP1e7OHy2RhPcU9qyjSkkoPKWIN1REVvqGWirY0hqNhf0H9KZH+Hao9r
- 4BJRTGJn/ZzA==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 09:42:33 -0700
+IronPort-SDR: xyPNoODnPSttd/r0rSoKDKpbMqbmd3j8SNTaRLcmwrLjoKy4v625zAobylDPgsEQcCPjgFqqMc
+ z7PH4zTAna/Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="273629977"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.179]) ([10.249.169.179])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Apr 2020 09:41:58 -0700
-Subject: Re: [patch v2 1/2] x86,module: Detect VMX modules and disable
- Split-Lock-Detect
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20200402123258.895628824@linutronix.de>
- <20200402124205.242674296@linutronix.de>
- <20200402152340.GL20713@hirez.programming.kicks-ass.net>
- <725ca48f-8194-658e-0296-65d4368803b5@intel.com>
- <20200402162548.GH20730@hirez.programming.kicks-ass.net>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <2d2140c4-712a-2f8d-cde7-b3e64c28b204@intel.com>
-Date:   Fri, 3 Apr 2020 00:41:57 +0800
+   d="scan'208";a="284840272"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.134.85.228]) ([10.134.85.228])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Apr 2020 09:42:32 -0700
+Subject: Re: [PATCH v2 1/2] dmaengine: ioat: fixing chunk sizing macros
+ dependency
+To:     "leonid.ravich@dell.com" <leonid.ravich@dell.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Cc:     "lravich@gmail.com" <lravich@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Zavras, Alexios" <alexios.zavras@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200402092725.15121-2-leonid.ravich@dell.com>
+ <20200402163356.9029-1-leonid.ravich@dell.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <accfd50c-cf70-1145-6776-e4030e7c37fc@intel.com>
+Date:   Thu, 2 Apr 2020 09:42:31 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200402162548.GH20730@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200402163356.9029-1-leonid.ravich@dell.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/2020 12:25 AM, Peter Zijlstra wrote:
+
+
+On 4/2/2020 9:33 AM, leonid.ravich@dell.com wrote:
+> From: Leonid Ravich <Leonid.Ravich@emc.com>
 > 
-> Learn to trim your replies already!
-
-Sorry.
-
-> On Fri, Apr 03, 2020 at 12:20:08AM +0800, Xiaoyao Li wrote:
->> On 4/2/2020 11:23 PM, Peter Zijlstra wrote:
+> prepare for changing alloc size.
 > 
->>> +bad_module:
->>> +	pr_warn("disabled due to VMX in module: %s\n", me->name);
->>> +	sld_state = sld_off;
->>
->> shouldn't we remove the __ro_after_init of sld_state?
+> Acked-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+
+Hi Leonid, I haven't actually acked this patch yet, pending your answer 
+on if this has been tested on hardware. Thanks.
+
+> ---
+>   drivers/dma/ioat/dma.c  | 14 ++++++++------
+>   drivers/dma/ioat/dma.h  | 10 ++++++----
+>   drivers/dma/ioat/init.c |  2 +-
+>   3 files changed, 15 insertions(+), 11 deletions(-)
 > 
-> Oh, that's probably a good idea. I can't actually test this due to no
-> hardware.
+> diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+> index 18c011e..1e0e6c1 100644
+> --- a/drivers/dma/ioat/dma.c
+> +++ b/drivers/dma/ioat/dma.c
+> @@ -332,8 +332,8 @@ static dma_cookie_t ioat_tx_submit_unlock(struct dma_async_tx_descriptor *tx)
+>   	u8 *pos;
+>   	off_t offs;
+>   
+> -	chunk = idx / IOAT_DESCS_PER_2M;
+> -	idx &= (IOAT_DESCS_PER_2M - 1);
+> +	chunk = idx / IOAT_DESCS_PER_CHUNK;
+> +	idx &= (IOAT_DESCS_PER_CHUNK - 1);
+>   	offs = idx * IOAT_DESC_SZ;
+>   	pos = (u8 *)ioat_chan->descs[chunk].virt + offs;
+>   	phys = ioat_chan->descs[chunk].hw + offs;
+> @@ -370,7 +370,8 @@ struct ioat_ring_ent **
+>   	if (!ring)
+>   		return NULL;
+>   
+> -	ioat_chan->desc_chunks = chunks = (total_descs * IOAT_DESC_SZ) / SZ_2M;
+> +	chunks = (total_descs * IOAT_DESC_SZ) / IOAT_CHUNK_SIZE;
+> +	ioat_chan->desc_chunks = chunks;
+>   
+>   	for (i = 0; i < chunks; i++) {
+>   		struct ioat_descs *descs = &ioat_chan->descs[i];
+> @@ -382,8 +383,9 @@ struct ioat_ring_ent **
+>   
+>   			for (idx = 0; idx < i; idx++) {
+>   				descs = &ioat_chan->descs[idx];
+> -				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+> -						  descs->virt, descs->hw);
+> +				dma_free_coherent(to_dev(ioat_chan),
+> +						IOAT_CHUNK_SIZE,
+> +						descs->virt, descs->hw);
+>   				descs->virt = NULL;
+>   				descs->hw = 0;
+>   			}
+> @@ -404,7 +406,7 @@ struct ioat_ring_ent **
+>   
+>   			for (idx = 0; idx < ioat_chan->desc_chunks; idx++) {
+>   				dma_free_coherent(to_dev(ioat_chan),
+> -						  SZ_2M,
+> +						  IOAT_CHUNK_SIZE,
+>   						  ioat_chan->descs[idx].virt,
+>   						  ioat_chan->descs[idx].hw);
+>   				ioat_chan->descs[idx].virt = NULL;
+> diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+> index b8e8e0b..5216c6b 100644
+> --- a/drivers/dma/ioat/dma.h
+> +++ b/drivers/dma/ioat/dma.h
+> @@ -81,6 +81,11 @@ struct ioatdma_device {
+>   	u32 msixpba;
+>   };
+>   
+> +#define IOAT_MAX_ORDER 16
+> +#define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
+> +#define IOAT_CHUNK_SIZE (SZ_2M)
+> +#define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE / IOAT_DESC_SZ)
+> +
+>   struct ioat_descs {
+>   	void *virt;
+>   	dma_addr_t hw;
+> @@ -128,7 +133,7 @@ struct ioatdma_chan {
+>   	u16 produce;
+>   	struct ioat_ring_ent **ring;
+>   	spinlock_t prep_lock;
+> -	struct ioat_descs descs[2];
+> +	struct ioat_descs descs[IOAT_MAX_DESCS / IOAT_DESCS_PER_CHUNK];
+>   	int desc_chunks;
+>   	int intr_coalesce;
+>   	int prev_intr_coalesce;
+> @@ -301,9 +306,6 @@ static inline bool is_ioat_bug(unsigned long err)
+>   	return !!err;
+>   }
+>   
+> -#define IOAT_MAX_ORDER 16
+> -#define IOAT_MAX_DESCS 65536
+> -#define IOAT_DESCS_PER_2M 32768
+>   
+>   static inline u32 ioat_ring_size(struct ioatdma_chan *ioat_chan)
+>   {
+> diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+> index 60e9afb..58d1356 100644
+> --- a/drivers/dma/ioat/init.c
+> +++ b/drivers/dma/ioat/init.c
+> @@ -651,7 +651,7 @@ static void ioat_free_chan_resources(struct dma_chan *c)
+>   	}
+>   
+>   	for (i = 0; i < ioat_chan->desc_chunks; i++) {
+> -		dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+> +		dma_free_coherent(to_dev(ioat_chan), IOAT_CHUNK_SIZE,
+>   				  ioat_chan->descs[i].virt,
+>   				  ioat_chan->descs[i].hw);
+>   		ioat_chan->descs[i].virt = NULL;
 > 
->> And, shouldn't we clear X86_FEATURE_SPLIT_LOCK_DETECT flag?
-> 
-> Don't think you can do that this late. Also, the hardware has the MSR
-> and it works, it's just that we should not.
-> 
-
-Actually, I agree to keep this flag.
-
-But, during the previous patch review, tglx wants to make
-
-	sld_off = no X86_FEATURE_SPLIT_LOCK_DETECT
-
-I'm not sure whether he still insists on it now.
-
-I really want to decouple sld_off and X86_FEATURE_SPLIT_LOCK_DETECT.
-So if X86_FEATURE_SPLIT_LOCK_DETECT is set, we can virtualize and expose 
-it to guest even when host is sld_off.
