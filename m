@@ -2,169 +2,179 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CD1C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04D1C2BA13
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9740F2074D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:07:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="dhLgZ1k2";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="rD1gW5CS"
+	by mail.kernel.org (Postfix) with ESMTP id 8E93C2074D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387868AbgDBKHr (ORCPT
+        id S2387890AbgDBKJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:07:47 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:24687 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgDBKHr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:07:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1585822066; x=1617358066;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=MKZR/RB3na+J3TRzmd+RKfsjGXibvkM8M/kiXa7rRa0=;
-  b=dhLgZ1k2eM3ofHxTr64BLYjhRM7hIrAWQr68+eXLcgmBnoUpnnGGfmyt
-   Kj4QnPWNnHW0apb8VyJ8iUwK5QnhJA6wF2g/DX5USR8LfED2Qxqn6XhxY
-   3Cj1dBXVJ/6ZHCrj4fz/bfQUzru+aSoYsLqgPAdu3YRuQXtWDhUXGx1Vy
-   1lTWDDNY/t+q7nL9mI1KG5dVWkAomyeGf2SosQDjqWG+qV6hM3lNr28Uz
-   bPEfeJ+veujXuIT3EyhY3DI5tFtq4UX2pOmmsOAvAUFvIknVDOiQGhG4b
-   0f6qIGAMFJGXI0sBC9vwrqypzbqmEXdMOxNHY83zayFBDADJ20AlGzbNt
-   g==;
-IronPort-SDR: 8xHe2f95JAIDo8Dd/bjKXKlyixn1j0H4P605U5wfFMTKEwWgwoYB39EQRzPRAHiXFDPy+BaS4z
- DPj7NUedmc+eF+HimYbw6Mgz6deFDqA49rYwc3HEQVaup1wu/NNMdrHy44Uv5VTUczk4JmC9MU
- jYOOvC0N6KZZyER1aBv46jacbu+MotZoFNQptoNq7rli2UDzdhF06QHqLtMHzKVmE6JPQlLH9U
- WSpGw7YiPSqKTrmq2aN16o5m3wm1h1rzG3PMHW8uL3q2bvnevuoBN199fAS/r/cahNPBah63vx
- QIs=
-X-IronPort-AV: E=Sophos;i="5.72,335,1580799600"; 
-   d="scan'208";a="71003402"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Apr 2020 03:07:45 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 2 Apr 2020 03:07:45 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 2 Apr 2020 03:07:45 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nfhPBpxtoSWS8q8BZ8wYSh1b+PWt8Aj+dlGVESWXk1S/1EmtoEhudx07YxqnXStv4PlKf7jJluK8LFaqIhTIM0jIhTpoIL1iixqKEHB8c8Sa6nDQPCd6T359yK5GMhuKy3zasK0yH9T2QYgbPsTvUg+6iPiFhogVV+butBBCZbBqvBvl92Z4IS5BH5r38To1tvqkdS4ZM/uPbPYuqQbiQfWaFepTXtQito4kSIuxBV/VQL0COcbftalDj8woJ6UFln+ttaUjFO1CN3QsvadNsZPmU7D/zoERrLFLHwMFe/uWQXfiuJfwjGyHWhuBUjpJkDbpxgIXuof7qB7N85OGzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MKZR/RB3na+J3TRzmd+RKfsjGXibvkM8M/kiXa7rRa0=;
- b=EgyyQQH+qnGUm2U67CM+JkeTtiTrwpEi0bqnNSVMgCJ4AOuRMlDlVqSO75rVwsuUsDVZPGhnDs1HnHiYHZCTiWb3gU+MDFSdiFl3plyORSsmzca25eVwg8D+/xbvJEt+mBJXUDUday9UvS/8E3pA1ywzpkmBOG68tqpOnsOKDLMyZzYXE+ZYfiJyJ+Z1nqlkP4tVO2sjbbuOpb3qqDMtWpHNtBfu5NrbiwiYxbFMTRcvK98QZg6blpOyiV1ejdv/4neMBMMycWYsQ7MA48qlJzYXEn7oWI46ho4E9jfOw1pxdLA0N4BBw7h+z5+NTaGaSa7yB7Uo3EXT8raMeSVfOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MKZR/RB3na+J3TRzmd+RKfsjGXibvkM8M/kiXa7rRa0=;
- b=rD1gW5CSqpZiM/KD5sEOAwR4no+GhMax4UjphLk7nqKqcuqanCs83yJ4Pe9h5FbxafQDP1wAd5J0d249i+J3BUoIDbdf8URiLAD2zC7HLZody1GQR4jmQmFtsTBtyLxAy02+fYaOeRLNC9UFoHL2dY+yniv5u/+A5f9fVF8YIg8=
-Received: from DM6PR11MB2777.namprd11.prod.outlook.com (2603:10b6:5:bf::31) by
- DM6PR11MB4548.namprd11.prod.outlook.com (2603:10b6:5:2ad::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.15; Thu, 2 Apr 2020 10:07:43 +0000
-Received: from DM6PR11MB2777.namprd11.prod.outlook.com
- ([fe80::3903:ed89:1141:fca6]) by DM6PR11MB2777.namprd11.prod.outlook.com
- ([fe80::3903:ed89:1141:fca6%5]) with mapi id 15.20.2878.016; Thu, 2 Apr 2020
- 10:07:43 +0000
-From:   <Ludovic.Desroches@microchip.com>
-To:     <Eugen.Hristev@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <Tudor.Ambarus@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <Codrin.Ciubotariu@microchip.com>, <Cristian.Birsan@microchip.com>
-Subject: Re: [PATCH 1/5] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node
- description
-Thread-Topic: [PATCH 1/5] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node
- description
-Thread-Index: AQHWCHML62OsZNg8VU2miyKNJtKsbKhljvEAgAANUoA=
-Date:   Thu, 2 Apr 2020 10:07:43 +0000
-Message-ID: <5f762bdc-fe07-adbc-af8d-7670b5b4b286@microchip.com>
-References: <20200401221504.41196-1-ludovic.desroches@microchip.com>
- <b4fe14af-a812-8798-187e-704541a6a75f@microchip.com>
-In-Reply-To: <b4fe14af-a812-8798-187e-704541a6a75f@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Ludovic.Desroches@microchip.com; 
-x-originating-ip: [109.210.131.96]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7f2c0146-7ad5-495e-309c-08d7d6edaf83
-x-ms-traffictypediagnostic: DM6PR11MB4548:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB4548D2AA6EE3BF7158D37286EFC60@DM6PR11MB4548.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0361212EA8
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2777.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(366004)(39860400002)(396003)(136003)(346002)(91956017)(66556008)(31696002)(81166006)(76116006)(4326008)(81156014)(66476007)(186003)(66946007)(64756008)(8936002)(86362001)(66446008)(31686004)(6512007)(478600001)(8676002)(26005)(6506007)(107886003)(53546011)(54906003)(36756003)(71200400001)(2616005)(316002)(110136005)(2906002)(5660300002)(6486002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: agTtK3k9w0v5q5DOtDSxjp0caRBzEKGzClQh5X7AValvxjPzlmT+7OhZiMneA1Hon/3449aN/ddOpYF0BgRtujo9gE4bQkPYhVzVX2h9AtDTp45kU8fPYDxPEXfeksjVonkaLdjnh/wMu6PG4oxSPDGQjQAr3Wrn9jk9RTbiE9glZUDT3jDazcZvOG48nPEZa8T6zZnTR+TQ33QBKLZlXHQ/AReCm83u/raHVpNLOY1svwcJtXlyhMT9QS0Whxso5RRkG7OjZVAVacHaOUk6uwjYmtW0iTxINHP3G2WGXCpxUZbLETT6NJmeqQHA777bxYGMefoor23+nYyoC2Z6mmSEh9GVOvropvVnWQVkDTCMxAbS9/SFGkbOchZRlFaRgSkp0srNbuUHtyJZFSHIwHcGOyh5sC4lggcnncYmzvgdwOwsS0Vpg09utkx1+qow
-x-ms-exchange-antispam-messagedata: LamDJTfUIdE+uVA+jrhgja2yavZa0po5Xs+M69GUyf0vbzvM7/IdlLNc4LhNHGDzl5+d6jnbbJQMpwIa9kkZBaX/FLNrhckHsC9BQtTOGepa2amILcgJWQPYYfp202TkSE+6RMaI3rkTfx0kBnHyhA==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CCB1BF68517C7F41994CBD4EB142EED8@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f2c0146-7ad5-495e-309c-08d7d6edaf83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 10:07:43.4999
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IvFukyciQ5VYh1EYVcxvspOVJB/ofLIzyAvdv1qb1rRyn7e5r+j9f3soaO3k3SoRCFcFwxomRrL7dttSu+x9w7ZfXrpJOF7SWoD8vmmBa24=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4548
+        Thu, 2 Apr 2020 06:09:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41502 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728135AbgDBKJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 06:09:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EEB66AC0C;
+        Thu,  2 Apr 2020 10:09:52 +0000 (UTC)
+Date:   Thu, 02 Apr 2020 12:09:52 +0200
+Message-ID: <s5hpncqurkf.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: OOB access on ACPI processor thermal device via sysfs write
+In-Reply-To: <0926f44775e91145a83c9eb88a468c64261af20d.camel@intel.com>
+References: <s5h5zeiwd01.wl-tiwai@suse.de>
+        <744357E9AAD1214791ACBA4B0B90926377CEB399@SHSMSX108.ccr.corp.intel.com>
+        <s5h1rp6w97p.wl-tiwai@suse.de>
+        <0926f44775e91145a83c9eb88a468c64261af20d.camel@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8yLzIwMjAgMTE6MjAgQU0sIEV1Z2VuIEhyaXN0ZXYgLSBNMTgyODIgd3JvdGU6DQo+IE9u
-IDAyLjA0LjIwMjAgMDE6MTUsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPj4gUmVtb3ZlIG5v
-bi1yZW1vdmFibGUgYW5kIG1tYy1kZHItMV84diBwcm9wZXJ0aWVzIGZyb20gdGhlIHNkbW1jMA0K
-Pj4gbm9kZSB3aGljaCBjb21lIHByb2JhYmx5IGZyb20gYW4gdW5jaGVja2VkIGNvcHkvcGFzdGUu
-DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogTHVkb3ZpYyBEZXNyb2NoZXMgPGx1ZG92aWMuZGVzcm9j
-aGVzQG1pY3JvY2hpcC5jb20+DQo+PiBGaXhlczo0MmVkNTM1NTk1ZWMgIkFSTTogZHRzOiBhdDkx
-OiBpbnRyb2R1Y2UgdGhlIHNhbWE1ZDIgcHRjIGVrIGJvYXJkIg0KPj4gQ2M6IHN0YWJsZUB2Z2Vy
-Lmtlcm5lbC5vcmcgIyA0LjE5IGFuZCBsYXRlcg0KPj4gLS0tDQo+PiAgICBhcmNoL2FybS9ib290
-L2R0cy9hdDkxLXNhbWE1ZDJfcHRjX2VrLmR0cyB8IDIgLS0NCj4+ICAgIDEgZmlsZSBjaGFuZ2Vk
-LCAyIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9h
-dDkxLXNhbWE1ZDJfcHRjX2VrLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkMl9w
-dGNfZWsuZHRzDQo+PiBpbmRleCAxYzI0YWM4MDE5YmE3Li43NzI4MDljNTRjMWYzIDEwMDY0NA0K
-Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyX3B0Y19lay5kdHMNCj4+ICsr
-KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkMl9wdGNfZWsuZHRzDQo+PiBAQCAtMTI1
-LDggKzEyNSw2IEBAIHNkbW1jMDogc2Rpby1ob3N0QGEwMDAwMDAwIHsNCj4+ICAgIAkJCWJ1cy13
-aWR0aCA9IDw4PjsNCj4+ICAgIAkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+PiAgICAJ
-CQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfc2RtbWMwX2RlZmF1bHQ+Ow0KPj4gLQkJCW5vbi1yZW1v
-dmFibGU7DQo+PiAtCQkJbW1jLWRkci0xXzh2Ow0KPiANCj4gSGkgTHVkb3ZpYywNCj4gDQo+IEkg
-YW0gbm90IHN1cmUgYWJvdXQgdGhlIHJlbW92YWwgb2YgbW1jLWRkci0xXzh2OyB0aGlzIG1lYW5z
-IGVNTUNzDQo+IGNvbm5lY3RlZCBvbiB0aGlzIHNsb3Qgd29uJ3Qgd29yayBpbiBoaWdoIHNwZWVk
-IG1vZGUsIHNvbWUgcGVvcGxlIHVzZQ0KPiBlTU1DIHRvIFNELUNhcmQgYWRhcHRlcnMgYW5kIHN0
-aWNrIHRoZW0gaW50byBTRC1DYXJkIHNsb3RzLg0KPiBXb3VsZCBpdCBiZSBhIHByb2JsZW0gdG8g
-a2VlcCB0aGlzIHByb3BlcnR5IGhlcmUgPw0KDQpIaSBFdWdlbiwNCg0KSXQncyBub3QgYSBwcm9i
-bGVtIHRvIGtlZXAgaXQsIGJ1dCBJIGRvbid0IHRoaW5rIGl0IG1ha2VzIHNlbnNlLiBJbiB0aGlz
-IA0KY2FzZSBtbWMtZGRyLTNfM3Ygc2hvdWxkIGJlIGFkZGVkIHRvby4NCg0KV2lsbCBpdCB3b3Jr
-ICdvdXQgb2YgdGhlIGJveCcgd2l0aCBhbnkgZU1NQyB0byBTRC1DYXJkIGFkYXB0ZXJzIGFuZCAN
-CmVNTUNzPyBJIHJlbWVtYmVyIGRpc2N1c3Npb25zIHdoZXJlIHdlIHNhaWQgSFcgY2hhbmdlcyB3
-ZXJlIG5lZWRlZCB0byBiZSANCmFibGUgdG8gc2VsZWN0IHRoZSB2b2x0YWdlIGZvciB0aGUgSU9z
-IG90aGVyIHRoYW4gdXNpbmcgdGhlIFZERFNFTCANCnNpZ25hbCBvZiB0aGUgY29udHJvbGxlci4N
-Cg0KUmVnYXJkcw0KDQpMdWRvdmljDQoNCg0KPiANCj4gVGhhbmtzLA0KPiBFdWdlbg0KPiANCj4+
-ICAgIAkJCXN0YXR1cyA9ICJva2F5IjsNCj4+ICAgIAkJfTsNCj4+ICAgIA0KPj4NCj4gDQoNCg==
+On Thu, 02 Apr 2020 12:03:30 +0200,
+Zhang Rui wrote:
+> 
+> On Thu, 2020-04-02 at 11:03 +0200, Takashi Iwai wrote:
+> > On Thu, 02 Apr 2020 09:47:50 +0200,
+> > Zhang, Rui wrote:
+> > > 
+> > > CC Viresh.
+> > > 
+> > > Yes, I've received it.
+> > > 
+> > > To me, there is not a hard rule that the cooling device max_state
+> > > must be static.
+> > > We should be able to detect the max_state change and reset the
+> > > stats table when necessary.
+> > > 
+> > > I just finished a prototype patch to do so, and will paste it
+> > > later.
+> > 
+> > Great, that sounds like a feasible option, indeed.
+> > 
+> > 
+> Please try the patch below and see if the problem goes away or not.
+> 
+> >From 7b429674a0e1a6226734c8919b876bb57d946b1d Mon Sep 17 00:00:00 2001
+> From: Zhang Rui <rui.zhang@intel.com>
+> Date: Thu, 2 Apr 2020 11:18:44 +0800
+> Subject: [RFC PATCH] thermal: update thermal stats table when max cooling
+>  state changed
+> 
+> The maximum cooling state of a cooling device may be changed at
+> runtime. Thus the statistics table must be updated to handle the real
+> maximum cooling states supported.
+> 
+> This fixes an OOB issue when updating the statistics of the processor
+> cooling device, because it only supports 1 cooling state before cpufreq
+> driver loaded.
+> 
+> Fixes: 8ea229511e06 ("thermal: Add cooling device's statistics in sysfs")
+> Reported-by: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> ---
+>  drivers/thermal/thermal_sysfs.c | 38 +++++++++++++++++++++++++++------
+>  1 file changed, 31 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+> index aa99edb4dff7..c69173eb4b24 100644
+> --- a/drivers/thermal/thermal_sysfs.c
+> +++ b/drivers/thermal/thermal_sysfs.c
+> @@ -755,6 +755,9 @@ struct cooling_dev_stats {
+>  	unsigned int *trans_table;
+>  };
+>  
+> +static int cooling_device_stats_table_update(struct thermal_cooling_device *cdev);
+> +static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev);
+> +
+>  static void update_time_in_state(struct cooling_dev_stats *stats)
+>  {
+>  	ktime_t now = ktime_get(), delta;
+> @@ -768,8 +771,12 @@ static void update_time_in_state(struct cooling_dev_stats *stats)
+>  void thermal_cooling_device_stats_update(struct thermal_cooling_device *cdev,
+>  					 unsigned long new_state)
+>  {
+> -	struct cooling_dev_stats *stats = cdev->stats;
+> +	struct cooling_dev_stats *stats;
+>  
+> +	if (cooling_device_stats_table_update(cdev))
+> +		return;
+> +
+> +	stats = cdev->stats;
+>  	spin_lock(&stats->lock);
+>  
+>  	if (stats->state == new_state)
+> @@ -904,24 +911,32 @@ static const struct attribute_group cooling_device_stats_attr_group = {
+>  	.name = "stats"
+>  };
+>  
+> -static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
+> +static int cooling_device_stats_table_update(struct thermal_cooling_device *cdev)
+>  {
+>  	struct cooling_dev_stats *stats;
+>  	unsigned long states;
+> -	int var;
+> +	int var, ret;
+>  
+> -	if (cdev->ops->get_max_state(cdev, &states))
+> -		return;
+> +	ret = cdev->ops->get_max_state(cdev, &states);
+> +	if (ret)
+> +		return ret;
+>  
+>  	states++; /* Total number of states is highest state + 1 */
+>  
+> +	stats = cdev->stats;
+> +	if (stats) {
+> +		if (stats->max_states == states)
+> +			return 0;
+> +		else
+> +			cooling_device_stats_destroy(cdev);
+> +	}
+
+This looks racy.  We may have concurrent accesses and it'll lead to
+another access-after-free.
+
+>  	var = sizeof(*stats);
+>  	var += sizeof(*stats->time_in_state) * states;
+>  	var += sizeof(*stats->trans_table) * states * states;
+> -
+>  	stats = kzalloc(var, GFP_KERNEL);
+>  	if (!stats)
+> -		return;
+> +		return -ENOMEM;
+
+... and this leaves NULL to cdev->stats.  Then a later access to sysfs
+would lead to NULL derference.
+
+
+>  	stats->time_in_state = (ktime_t *)(stats + 1);
+>  	stats->trans_table = (unsigned int *)(stats->time_in_state + states);
+> @@ -930,6 +945,15 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
+>  	stats->max_states = states;
+>  
+>  	spin_lock_init(&stats->lock);
+
+Also we must not re-initialize spinlock here at each resizing.
+Rather use spinlock for switching to the new table.
+
+
+thanks,
+
+Takashi
