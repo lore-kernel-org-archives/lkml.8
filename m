@@ -2,187 +2,181 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9578C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0734C18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C8921655
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8744B2064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 07:54:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JVhBgOBN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KdyEFz94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387653AbgDBHwq (ORCPT
+        id S2387575AbgDBHyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:52:46 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33938 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgDBHwq (ORCPT
+        Thu, 2 Apr 2020 03:54:15 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35014 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgDBHyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 03:52:46 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l14so1494133pgb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:52:44 -0700 (PDT)
+        Thu, 2 Apr 2020 03:54:15 -0400
+Received: by mail-lf1-f67.google.com with SMTP id d15so119944lfn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 00:54:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wMJKmTTsK/J+IkhN0DYHwWD+qI/x4I12UK39qAaI4hw=;
-        b=JVhBgOBNj/ogaZ6plMcURom9R/4s6tKRMUcMQabcCnJ/9rsQpv5Ie069+tPiB7QCI1
-         Y0ppqs59FxVwUEe6y3sIhTHE62x5W9Xl/nk7kcjX05pnj4FSI2lsKBg9mK+ANa2M9tUH
-         DOK61ctwVrS0KCqZqrJM+wHmAX4j0XrVJ+eSc=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8+9G4M4fPPKqyjj0sFBu7xOpvf42HPywIxllN2E1ZZg=;
+        b=KdyEFz94YKOC4f+rXyzOXeiUnbNS/1p2sIpVQq8VSiUZsfGVB/bR6KQWQ2gpqyUk2O
+         0INeEPSuyuP42WrwTHj4yqg+GUDhsxyD3BxjbIAQ2q4AxHkNuQwbC5ngn72BbjJvFGUg
+         G4tZUfBUBo6nAi/AptI7TS9lm59OkTA66Jr8nGzEP1aysRdCMTeq3T9F7VFYTR/Bl1W6
+         eGx0/SOs0my/MAsMYDdix4qw5borl4pTjVMz/THhQ8HScZ8aFeggICinlGTuIAjANEd5
+         pk3a8XjL4euZQ4SC5PnYC8Tc2jlQu0FIta/xpkcttgOT2gl16N3jTjDFy7+B337NRAd/
+         g/cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wMJKmTTsK/J+IkhN0DYHwWD+qI/x4I12UK39qAaI4hw=;
-        b=SdRAERBa/pGkfnukLyoRJVRyr/zNVL+4Y+KskV5uvUyuoT1mAggwCmZckd0z639quT
-         2QVWCoGTt4/rSpxyok2hTClHB5P5/LPMteINGTJZ6OEigc1PBC9ZQzwR45aD753Qp2b9
-         s0olsVZc0HWe64AlF5+wjnV8KZSi5D00XIWlg5yHYiojmjju5gJYeIGG8GP9qtazxUhj
-         MAHgg8kFljeSHBpcWeKWnh/l9sbttvBk+ToYYfD9O1kUGcUOD94klBjNo2PjlsjAwWMn
-         enLDkukksm9Dkxn54dxn8rPUeHTb4jG7t1esZjOgZD4G33Z/ZmuyvAGcIqEmHdgbXFUV
-         Htfg==
-X-Gm-Message-State: AGi0PuZaKEaEEZHlzR0UFIgltfN2qKzy56Z3h+6zEAGP+VjTWFi1+DEh
-        nHaWpp/bOa6Bmuo6Zr5H3etmvg==
-X-Google-Smtp-Source: APiQypLxyScrMFlGEbqcPJce1oUPxqcVt+1SraiQF0IBuOLbROJ84rjl6KmSAQXSXKHNuRXpGB/I/Q==
-X-Received: by 2002:a63:c212:: with SMTP id b18mr2109019pgd.92.1585813964449;
-        Thu, 02 Apr 2020 00:52:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q91sm3157033pjb.11.2020.04.02.00.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 00:52:43 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 00:52:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
-        daniel@ffwll.ch, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, akpm@linux-foundation.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH RESEND 4/4] powerpc/uaccess: Implement
- user_read_access_begin and user_write_access_begin
-Message-ID: <202004020052.47DB88E3C@keescook>
-References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
- <ebcf8256e02a7dffb292f3d800e264dce263cac5.1585811416.git.christophe.leroy@c-s.fr>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8+9G4M4fPPKqyjj0sFBu7xOpvf42HPywIxllN2E1ZZg=;
+        b=LfEXqZ/c9QBLUocFxAiGpO5t4O/OqVhaRX3DweyB3KW9Lc/zAmp01xAOsquUp0NPbO
+         5XZYN1kpekNmVgT5D8A+hsX2g8q70/P2S6wIGtem18T4yLAEr+aSwI01D/VbkPiqF6ht
+         Y8JxOa2lJs1ZDrLCYllkUHATeEhPhxfWM1X1MccJpo8ofeMm77N6n4yeRsEWOqdtldtB
+         ksBu8dJc4kaaCE0+lt9/iANJdsvV6gZeBSgwz7RsllwUI48uSvg0uBM3m2fYl/UoH7t0
+         lAMRVdN0fmEJ4A/1ug5/SZ5WTygxE8kZwiWbdXlLcVoBVLS1e1aW62vcGB7v4AnajpCv
+         FH5Q==
+X-Gm-Message-State: AGi0PuYd3wUSXAUEQPFOjy9TymULlgHokorTiEHSHTYhJMNqQvLFz5eC
+        2Pc0qzbCjSnp2OAttPuMcZblR+MhThfjfY0ew1g1Nw==
+X-Google-Smtp-Source: APiQypLGmvOLWPH4fecZAAUfR1XClrEvPnQEMnQD3k8OwsQJ12DwYu3fZsy9Wo7n8y7yO6PHZ7tvycwUFHzWlCAyIro=
+X-Received: by 2002:ac2:5183:: with SMTP id u3mr1379665lfi.26.1585814053017;
+ Thu, 02 Apr 2020 00:54:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ebcf8256e02a7dffb292f3d800e264dce263cac5.1585811416.git.christophe.leroy@c-s.fr>
+References: <20200401161552.245876366@linuxfoundation.org>
+In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 2 Apr 2020 13:24:01 +0530
+Message-ID: <CA+G9fYsR9ssXj2QeNALzUuP7_yOqDakoyED9c33pYX7pXF592Q@mail.gmail.com>
+Subject: Re: [PATCH 4.14 000/148] 4.14.175-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 07:34:19AM +0000, Christophe Leroy wrote:
-> Add support for selective read or write user access with
-> user_read_access_begin/end and user_write_access_begin/end.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+On Wed, 1 Apr 2020 at 22:11, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.175 release.
+> There are 148 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.175-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
--Kees
+Summary
+------------------------------------------------------------------------
 
-> ---
->  arch/powerpc/include/asm/book3s/32/kup.h |  4 ++--
->  arch/powerpc/include/asm/kup.h           | 14 +++++++++++++-
->  arch/powerpc/include/asm/uaccess.h       | 22 ++++++++++++++++++++++
->  3 files changed, 37 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
-> index 3c0ba22dc360..1617e73bee30 100644
-> --- a/arch/powerpc/include/asm/book3s/32/kup.h
-> +++ b/arch/powerpc/include/asm/book3s/32/kup.h
-> @@ -108,7 +108,7 @@ static __always_inline void allow_user_access(void __user *to, const void __user
->  	u32 addr, end;
->  
->  	BUILD_BUG_ON(!__builtin_constant_p(dir));
-> -	BUILD_BUG_ON(dir == KUAP_CURRENT);
-> +	BUILD_BUG_ON(dir & ~KUAP_READ_WRITE);
->  
->  	if (!(dir & KUAP_WRITE))
->  		return;
-> @@ -131,7 +131,7 @@ static __always_inline void prevent_user_access(void __user *to, const void __us
->  
->  	BUILD_BUG_ON(!__builtin_constant_p(dir));
->  
-> -	if (dir == KUAP_CURRENT) {
-> +	if (dir & KUAP_CURRENT_WRITE) {
->  		u32 kuap = current->thread.kuap;
->  
->  		if (unlikely(!kuap))
-> diff --git a/arch/powerpc/include/asm/kup.h b/arch/powerpc/include/asm/kup.h
-> index 92bcd1a26d73..c745ee41ad66 100644
-> --- a/arch/powerpc/include/asm/kup.h
-> +++ b/arch/powerpc/include/asm/kup.h
-> @@ -10,7 +10,9 @@
->   * Use the current saved situation instead of the to/from/size params.
->   * Used on book3s/32
->   */
-> -#define KUAP_CURRENT	4
-> +#define KUAP_CURRENT_READ	4
-> +#define KUAP_CURRENT_WRITE	8
-> +#define KUAP_CURRENT		(KUAP_CURRENT_READ | KUAP_CURRENT_WRITE)
->  
->  #ifdef CONFIG_PPC64
->  #include <asm/book3s/64/kup-radix.h>
-> @@ -101,6 +103,16 @@ static inline void prevent_current_access_user(void)
->  	prevent_user_access(NULL, NULL, ~0UL, KUAP_CURRENT);
->  }
->  
-> +static inline void prevent_current_read_from_user(void)
-> +{
-> +	prevent_user_access(NULL, NULL, ~0UL, KUAP_CURRENT_READ);
-> +}
-> +
-> +static inline void prevent_current_write_to_user(void)
-> +{
-> +	prevent_user_access(NULL, NULL, ~0UL, KUAP_CURRENT_WRITE);
-> +}
-> +
->  #endif /* !__ASSEMBLY__ */
->  
->  #endif /* _ASM_POWERPC_KUAP_H_ */
-> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-> index 2f500debae21..4427d419eb1d 100644
-> --- a/arch/powerpc/include/asm/uaccess.h
-> +++ b/arch/powerpc/include/asm/uaccess.h
-> @@ -468,6 +468,28 @@ static __must_check inline bool user_access_begin(const void __user *ptr, size_t
->  #define user_access_save	prevent_user_access_return
->  #define user_access_restore	restore_user_access
->  
-> +static __must_check inline bool
-> +user_read_access_begin(const void __user *ptr, size_t len)
-> +{
-> +	if (unlikely(!access_ok(ptr, len)))
-> +		return false;
-> +	allow_read_from_user(ptr, len);
-> +	return true;
-> +}
-> +#define user_read_access_begin	user_read_access_begin
-> +#define user_read_access_end		prevent_current_read_from_user
-> +
-> +static __must_check inline bool
-> +user_write_access_begin(const void __user *ptr, size_t len)
-> +{
-> +	if (unlikely(!access_ok(ptr, len)))
-> +		return false;
-> +	allow_write_to_user((void __user *)ptr, len);
-> +	return true;
-> +}
-> +#define user_write_access_begin	user_write_access_begin
-> +#define user_write_access_end		prevent_current_write_to_user
-> +
->  #define unsafe_op_wrap(op, err) do { if (unlikely(op)) goto err; } while (0)
->  #define unsafe_get_user(x, p, e) unsafe_op_wrap(__get_user_allowed(x, p), e)
->  #define unsafe_put_user(x, p, e) unsafe_op_wrap(__put_user_allowed(x, p), e)
-> -- 
-> 2.25.0
-> 
+kernel: 4.14.175-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: bc03924ca6eab72bec9fb6f455ea41bca1fa5ccc
+git describe: v4.14.174-149-gbc03924ca6ea
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.174-149-gbc03924ca6ea
 
--- 
-Kees Cook
+
+No regressions (compared to build v4.14.174)
+
+
+No fixes (compared to build v4.14.174)
+
+Ran 41452 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-sched-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* spectre-meltdown-checker-test
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
