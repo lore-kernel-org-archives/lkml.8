@@ -2,121 +2,87 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720A6C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B56C2BA15
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499862072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE902073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 13:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTJlCycd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V3zE8BGQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732213AbgDBNsH (ORCPT
+        id S1732303AbgDBNtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 09:48:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51074 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727734AbgDBNsH (ORCPT
+        Thu, 2 Apr 2020 09:49:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26866 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732242AbgDBNtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 09:48:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t128so3484235wma.0;
-        Thu, 02 Apr 2020 06:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JdEZdR8yjtlVoMZNQrbxmUtK0B2+Djm4LLppLoO//ag=;
-        b=UTJlCycdxWzo8SkwC++itw0GwatKMfwLvoM8hEz5hz0itKOrDAtfARRjd08KAo/YlH
-         iYT7miwWVvjXGIMOVY3OjO3n0Mn8Ksa9rY5az4HK5BUJ68HWuftxPfKhAEhGYA4Yn2Dx
-         La5wev2ZBzXN90dpwna9UbVHyMHP4wB2LvKgVYRbqg7U00y7LfYpOp1n+6KQfV2sld/l
-         yav91x+sISP54xu2tPy0MbVaptxe9HBydeIqtNP10Zc2zcyTUnXn/ANeO5KMYsdqlk66
-         bfclrPNbmCjER1axdhz0RvwvbhQm2h+TcIw1ChSyayEzTqXtXCokTwUd8+MfFtI9EATW
-         Qkyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JdEZdR8yjtlVoMZNQrbxmUtK0B2+Djm4LLppLoO//ag=;
-        b=qbU8MErQGg7p0elz7YaLOXeBJaekOAWnz7+xxxqOJYosDfy01izaX9YO3imxHCGSFs
-         EdxY0q037hg49anIgxtO9jwTXduxzCFfZiUvTwPfGYJye2f4uBZ+xLm2qmM3Kl2oxgK5
-         ctRNBuimmNXhiQhY4bfeANTbw3xQJV0LNp899N3c6TogV/JJFBl9eLEX3h0yj+T2i5Ka
-         jgm4ZZGte5eAQr14UksCiYXtXYQI1yDOunioln9653eVTY0KF1X+SwZ+/v+vSQH6c+jC
-         H9PGcY1sZDvWRSqDndkEkGdxydq+jGCemwipFENh5F7XRs9uXj4paIYsnreUtpkr1TzV
-         5O0w==
-X-Gm-Message-State: AGi0PuYzgwO66EV33rwi1qy81FUPR8yhTCQ6XE1jM24EHVlecr+YmtpZ
-        3tTg0spqOPUssdl9V6Irwj8=
-X-Google-Smtp-Source: APiQypKpdlsAkbdIzYdLmLeSVwA00to9hBXvBdZjAZl5uSzVZ+jldunwGUNL5wE1hbN9a3RTQzrH8g==
-X-Received: by 2002:a7b:c185:: with SMTP id y5mr3723403wmi.90.1585835285227;
-        Thu, 02 Apr 2020 06:48:05 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id u13sm7008313wmm.32.2020.04.02.06.48.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 06:48:04 -0700 (PDT)
-To:     helen.koike@collabora.com
-Cc:     dafna.hirschfeld@collabora.com, devel@driverdev.osuosl.org,
-        devicetree@vger.kernel.org, ezequiel@collabora.com,
-        heiko@sntech.de, hverkuil-cisco@xs4all.nl,
-        karthik.poduval@gmail.com, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-References: <20200402000234.226466-4-helen.koike@collabora.com>
-Subject: Re: [PATCH 3/4] arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <970b9e48-e38f-7e7a-3472-7dc5a4737e58@gmail.com>
-Date:   Thu, 2 Apr 2020 15:48:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 09:49:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585835342;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sRYOIM9RD5rPKV4o1MvvC6ajpiY3rykWsJveuXILyf0=;
+        b=V3zE8BGQ1hrAaC443v13fDIcVBCS2SzznzQyKhJaBZKP59ZupBa+PHudL7QuoXQonqUE57
+        moBz79sEUcDhTbYWSO8/sNeP4IxdA05qAE3plFV7uHMGcQWYkJ4qQqWGmix3Uc6alHzyxQ
+        aPTdzNVhLjrMpJ66aiTsw0ABhUsoT/s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-403-_BcmWwjoO_6vLsTQP3GR2g-1; Thu, 02 Apr 2020 09:49:00 -0400
+X-MC-Unique: _BcmWwjoO_6vLsTQP3GR2g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AF76149C7;
+        Thu,  2 Apr 2020 13:48:59 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 60F0FDA11C;
+        Thu,  2 Apr 2020 13:48:53 +0000 (UTC)
+Subject: Re: [PATCH 2/2] selftests: kvm: Add mem_slot_test test
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        david@redhat.com
+References: <20200330204310.21736-1-wainersm@redhat.com>
+ <20200330204310.21736-3-wainersm@redhat.com>
+ <20200331081632.ithcwuzjyjhiwphy@kamzik.brq.redhat.com>
+ <b261aa4f-87d5-2ac8-9f66-9f10e1a0803a@redhat.com>
+ <20200401063817.gb5f4ah45qvtqkhw@kamzik.brq.redhat.com>
+From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
+Message-ID: <fef1fa29-b189-aa97-eea4-0340a72a6f67@redhat.com>
+Date:   Thu, 2 Apr 2020 10:48:51 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20200402000234.226466-4-helen.koike@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200401063817.gb5f4ah45qvtqkhw@kamzik.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
 
-> From: Helen Koike <helen.koike@collabora.com>
+On 4/1/20 3:38 AM, Andrew Jones wrote:
+> On Tue, Mar 31, 2020 at 06:42:21PM -0300, Wainer dos Santos Moschetta wrote:
+>> It would be nice to exercise the code by adding slots with different page
+>> flags. But for this test that simple checks the limit, the use of
+>> KVM_MEM_READONLY is enough. I will change it on v2.
+> It would be good to test more memslot error conditions as well. Do you plan
+> to expand on this test?
 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 33cc21fcf4c10..fc0295d2a65a1 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1394,6 +1394,17 @@ io_domains: io-domains {
->  			status = "disabled";
->  		};
->  
+Yes, I do. For example, check memory slots addresses can't overlap.
 
-> +		mipi_dphy_rx0: mipi-dphy-rx0 {
-
-For Heiko sort syscon@ff770000 subnodes alphabetical or reg value first?
-
-> +			compatible = "rockchip,rk3399-mipi-dphy-rx0";
-> +			clocks = <&cru SCLK_MIPIDPHY_REF>,
-
-> +				<&cru SCLK_DPHY_RX0_CFG>,
-> +				<&cru PCLK_VIO_GRF>;
-
-Align                            ^
-
-> +			clock-names = "dphy-ref", "dphy-cfg", "grf";
-> +			power-domains = <&power RK3399_PD_VIO>;
-> +			#phy-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->  		u2phy0: usb2-phy@e450 {
->  			compatible = "rockchip,rk3399-usb2phy";
->  			reg = <0xe450 0x10>;
-> -- 
-> 2.26.0
+>
+> Thanks,
+> drew
 
