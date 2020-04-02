@@ -3,83 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0467C2BA15
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD63C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE36A2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A0D2166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 10:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387968AbgDBKmv (ORCPT
+        id S2387996AbgDBKnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:42:51 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:38236 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728612AbgDBKmu (ORCPT
+        Thu, 2 Apr 2020 06:43:01 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:37706 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728612AbgDBKnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 06:42:50 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id A65211C2EC0; Thu,  2 Apr 2020 12:42:48 +0200 (CEST)
-Date:   Thu, 2 Apr 2020 12:42:48 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Madalin Bucur <madalin.bucur@nxp.com>,
+        Thu, 2 Apr 2020 06:43:00 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 032AfWgw028540
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 2 Apr 2020 05:41:35 -0500
+Message-ID: <f763d9d8487e77006b233bc16e0883f956850b6c.camel@kernel.crashing.org>
+Subject: Re: [PATCH v4 03/25] powerpc/powernv: Map & release OpenCAPI LPC
+ memory
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        "Alastair D'Silva" <alastair@d-silva.org>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 040/116] fsl/fman: detect FMan erratum A050385
-Message-ID: <20200402104247.GA31202@duo.ucw.cz>
-References: <20200401161542.669484650@linuxfoundation.org>
- <20200401161547.550838813@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
-Content-Disposition: inline
-In-Reply-To: <20200401161547.550838813@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
+Date:   Thu, 02 Apr 2020 21:41:30 +1100
+In-Reply-To: <CAPcyv4iGEHJpZctEm+Do1-kOZBUDeKKcREr=BqcK4kCvLWhAQQ@mail.gmail.com>
+References: <20200327071202.2159885-1-alastair@d-silva.org>
+         <20200327071202.2159885-4-alastair@d-silva.org>
+         <CAPcyv4iGEHJpZctEm+Do1-kOZBUDeKKcREr=BqcK4kCvLWhAQQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2020-04-01 at 01:48 -0700, Dan Williams wrote:
+> > 
+> > +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
+> > +{
+> > +       struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> > +       struct pnv_phb *phb = hose->private_data;
+> 
+> Is calling the local variable 'hose' instead of 'host' on purpose?
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Haha that's funny :-)
 
-Hi!
+It's an oooooooold usage that comes iirc from sparc ? or maybe alpha ?
+I somewhat accidentally picked it up when adding multiple host-bridge
+support on powerpc in the early 2000's and it hasn't quite died yet :)
 
-> From: Madalin Bucur <madalin.bucur@nxp.com>
->=20
-> [ Upstream commit b281f7b93b258ce1419043bbd898a29254d5c9c7 ]
->=20
-> Detect the presence of the A050385 erratum.
+Cheers,
+Ben.
 
-This and the other two patches... _detect_ the erratum, but there are
-no patches that actually use the information. Mainline has such code
-(3c68b8fffb48c0018c24e73c48f2bac768c6203e) but it was not queued for
-stable.
-
-So all this is simply adding unused code, and not suitable for stable.
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXoXBpwAKCRAw5/Bqldv6
-8g8KAJ4sTcUFEu2qK1MtG7mlrnTASn460QCeOA68yrcX4ErnCWUH07Y0KUNXjQ0=
-=L8Je
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
