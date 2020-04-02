@@ -2,174 +2,131 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA483C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F98C18E5B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861BD208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851A6208FE
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387781AbgDBIqr (ORCPT
+        id S2387793AbgDBIrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:46:47 -0400
-Received: from 19.mo5.mail-out.ovh.net ([46.105.35.78]:41555 "EHLO
-        19.mo5.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387526AbgDBIqr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:46:47 -0400
-X-Greylist: delayed 1199 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Apr 2020 04:46:46 EDT
-Received: from player786.ha.ovh.net (unknown [10.108.54.108])
-        by mo5.mail-out.ovh.net (Postfix) with ESMTP id 27D6C277E79
-        for <linux-kernel@vger.kernel.org>; Thu,  2 Apr 2020 10:08:29 +0200 (CEST)
-Received: from kaod.org (82-64-250-170.subs.proxad.net [82.64.250.170])
-        (Authenticated sender: clg@kaod.org)
-        by player786.ha.ovh.net (Postfix) with ESMTPSA id 552F5113122F9;
-        Thu,  2 Apr 2020 08:08:13 +0000 (UTC)
-Subject: Re: [PATCH v10 03/14] powerpc/vas: Alloc and setup IRQ and trigger
- port address
-To:     Haren Myneni <haren@linux.ibm.com>, mpe@ellerman.id.au
-Cc:     mikey@neuling.org, srikar@linux.vnet.ibm.com,
-        frederic.barrat@fr.ibm.com, ajd@linux.ibm.com,
-        linux-kernel@vger.kernel.org, npiggin@gmail.com, hch@infradead.org,
-        oohall@gmail.com, sukadev@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, herbert@gondor.apana.org.au
-References: <1585810846.2275.23.camel@hbabu-laptop>
- <1585811431.2275.39.camel@hbabu-laptop>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Message-ID: <99d4f018-0e2d-9ab4-b4d4-58af7e494ec3@kaod.org>
-Date:   Thu, 2 Apr 2020 10:08:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 2 Apr 2020 04:47:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:8925 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728612AbgDBIrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:47:08 -0400
+IronPort-SDR: 4vbGSjMO6dritYfBjM6LxmYRM7yOgdqyNJ7RkBJvNE+xdTkVriYs2L9Vwkoug80Jgcfy/2AB6l
+ 19nmj9Isq4rg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:47:07 -0700
+IronPort-SDR: 7tJLumpdWYlkcHYhVh+R3ZpZwhs962ucUkWwav961GZbQ6z8behCfxQAdYKbhRUR6299u21Aok
+ UYT0iKhJujpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
+   d="scan'208";a="242465231"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Apr 2020 01:47:07 -0700
+Received: from [10.249.226.252] (abudanko-mobl.ccr.corp.intel.com [10.249.226.252])
+        by linux.intel.com (Postfix) with ESMTP id 75565580544;
+        Thu,  2 Apr 2020 01:47:02 -0700 (PDT)
+Subject: [PATCH v8 03/12] perf/core: open access to probes for CAP_PERFMON
+ privileged process
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <3c129d9a-ba8a-3483-ecc5-ad6c8e7c203f@linux.intel.com>
+Date:   Thu, 2 Apr 2020 11:47:01 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1585811431.2275.39.camel@hbabu-laptop>
+In-Reply-To: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 11347945162253044702
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrtdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucfkpheptddrtddrtddrtddpkedvrdeigedrvdehtddrudejtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejkeeirdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheptghlgheskhgrohgurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/20 9:10 AM, Haren Myneni wrote:
-> 
-> Allocate a xive irq on each chip with a vas instance. The NX coprocessor
-> raises a host CPU interrupt via vas if it encounters page fault on user
-> space request buffer. Subsequent patches register the trigger port with
-> the NX coprocessor, and create a vas fault handler for this interrupt
-> mapping.
 
-Looks good !
+Open access to monitoring via kprobes and uprobes and eBPF tracing for
+CAP_PERFMON privileged process. Providing the access under CAP_PERFMON
+capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes
+chances to misuse the credentials and makes operation more secure.
 
-> Signed-off-by: Haren Myneni <haren@linux.ibm.com>
+perf kprobes and uprobes are used by ftrace and eBPF. perf probe uses
+ftrace to define new kprobe events, and those events are treated as
+tracepoint events. eBPF defines new probes via perf_event_open interface
+and then the probes are used in eBPF tracing.
 
+CAP_PERFMON implements the principal of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39 principle
+of least privilege: A security design principle that states that a process or
+program be granted only those privileges (e.g., capabilities) necessary to
+accomplish its legitimate function, and only for the time that such privileges
+are actually required)
 
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
+For backward compatibility reasons access to perf_events subsystem remains
+open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
+secure perf_events monitoring is discouraged with respect to CAP_PERFMON
+capability.
 
-Thanks,
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Acked-by: James Morris <jamorris@linux.microsoft.com>
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+---
+ kernel/events/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-C.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2af0f4557b63..364c233c3f25 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9259,7 +9259,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
+ 	if (event->attr.type != perf_kprobe.type)
+ 		return -ENOENT;
+ 
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!perfmon_capable())
+ 		return -EACCES;
+ 
+ 	/*
+@@ -9319,7 +9319,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
+ 	if (event->attr.type != perf_uprobe.type)
+ 		return -ENOENT;
+ 
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!perfmon_capable())
+ 		return -EACCES;
+ 
+ 	/*
+-- 
+2.24.1
 
-> ---
->  arch/powerpc/platforms/powernv/vas.c | 44 +++++++++++++++++++++++++++++++-----
->  arch/powerpc/platforms/powernv/vas.h |  2 ++
->  2 files changed, 40 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/vas.c b/arch/powerpc/platforms/powernv/vas.c
-> index ed9cc6d..3303cfe 100644
-> --- a/arch/powerpc/platforms/powernv/vas.c
-> +++ b/arch/powerpc/platforms/powernv/vas.c
-> @@ -15,6 +15,7 @@
->  #include <linux/of_address.h>
->  #include <linux/of.h>
->  #include <asm/prom.h>
-> +#include <asm/xive.h>
->  
->  #include "vas.h"
->  
-> @@ -25,10 +26,12 @@
->  
->  static int init_vas_instance(struct platform_device *pdev)
->  {
-> -	int rc, cpu, vasid;
-> -	struct resource *res;
-> -	struct vas_instance *vinst;
->  	struct device_node *dn = pdev->dev.of_node;
-> +	struct vas_instance *vinst;
-> +	struct xive_irq_data *xd;
-> +	uint32_t chipid, hwirq;
-> +	struct resource *res;
-> +	int rc, cpu, vasid;
->  
->  	rc = of_property_read_u32(dn, "ibm,vas-id", &vasid);
->  	if (rc) {
-> @@ -36,6 +39,12 @@ static int init_vas_instance(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> +	rc = of_property_read_u32(dn, "ibm,chip-id", &chipid);
-> +	if (rc) {
-> +		pr_err("No ibm,chip-id property for %s?\n", pdev->name);
-> +		return -ENODEV;
-> +	}
-> +
->  	if (pdev->num_resources != 4) {
->  		pr_err("Unexpected DT configuration for [%s, %d]\n",
->  				pdev->name, vasid);
-> @@ -69,9 +78,32 @@ static int init_vas_instance(struct platform_device *pdev)
->  
->  	vinst->paste_win_id_shift = 63 - res->end;
->  
-> -	pr_devel("Initialized instance [%s, %d], paste_base 0x%llx, "
-> -			"paste_win_id_shift 0x%llx\n", pdev->name, vasid,
-> -			vinst->paste_base_addr, vinst->paste_win_id_shift);
-> +	hwirq = xive_native_alloc_irq_on_chip(chipid);
-> +	if (!hwirq) {
-> +		pr_err("Inst%d: Unable to allocate global irq for chip %d\n",
-> +				vinst->vas_id, chipid);
-> +		return -ENOENT;
-> +	}
-> +
-> +	vinst->virq = irq_create_mapping(NULL, hwirq);
-> +	if (!vinst->virq) {
-> +		pr_err("Inst%d: Unable to map global irq %d\n",
-> +				vinst->vas_id, hwirq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	xd = irq_get_handler_data(vinst->virq);
-> +	if (!xd) {
-> +		pr_err("Inst%d: Invalid virq %d\n",
-> +				vinst->vas_id, vinst->virq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	vinst->irq_port = xd->trig_page;
-> +	pr_devel("Initialized instance [%s, %d] paste_base 0x%llx paste_win_id_shift 0x%llx IRQ %d Port 0x%llx\n",
-> +			pdev->name, vasid, vinst->paste_base_addr,
-> +			vinst->paste_win_id_shift, vinst->virq,
-> +			vinst->irq_port);
->  
->  	for_each_possible_cpu(cpu) {
->  		if (cpu_to_chip_id(cpu) == of_get_ibm_chip_id(dn))
-> diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
-> index 5574aec..598608b 100644
-> --- a/arch/powerpc/platforms/powernv/vas.h
-> +++ b/arch/powerpc/platforms/powernv/vas.h
-> @@ -313,6 +313,8 @@ struct vas_instance {
->  	u64 paste_base_addr;
->  	u64 paste_win_id_shift;
->  
-> +	u64 irq_port;
-> +	int virq;
->  	struct mutex mutex;
->  	struct vas_window *rxwin[VAS_COP_TYPE_MAX];
->  	struct vas_window *windows[VAS_WINDOWS_PER_CHIP];
-> 
 
