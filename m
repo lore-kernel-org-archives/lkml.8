@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5D1C18E5B
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FC1C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55FE215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B382E2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 09:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585819706;
-	bh=GxD2mP2VPelWfZbCtWzT8FlS64HgoRgkaYW8jMe+pTM=;
+	s=default; t=1585819708;
+	bh=cywDP6eNSmYYa3KeaQgosXJi4aqsO1zjpdq6I2/ZdSc=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=iWDES6q+OgAcYUSbOrhO3w2OBGUGRkeKb9HFx7P1XKiib6ienl4PORRsl/C+/7f+I
-	 qZ2l+xTTS+kN80OTN03EZY+nxoB3F5Ad2xPnc5iEb69c2s2O+AAQI9IrIgRhPsRb9m
-	 7MKK1dbjM9NkPFW4mxvzyzPjQ7htDAL3A1q+JE/k=
+	b=EiS04nfqK0UjmU8hN0vE+3mfvp5KuhPiM2IU8+WFlGJ2hcJFf7hYwhBWs1mNycyVi
+	 kzQhnVepptJUo0w4/olBTUP0hi/u2z8IKddtJYzzsRdeus+3CHaEL0yeTfs4lwMuzX
+	 7/mm0xDpUreUPmo9ZiKJbOpCwrOWTie6CAmrt7PY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387948AbgDBJ2Z (ORCPT
+        id S2387953AbgDBJ22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:28:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49244 "EHLO mail.kernel.org"
+        Thu, 2 Apr 2020 05:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387723AbgDBJ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387721AbgDBJ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 2 Apr 2020 05:28:08 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCC6E207FF;
+        by mail.kernel.org (Postfix) with ESMTPSA id C6C492078C;
         Thu,  2 Apr 2020 09:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585819688;
-        bh=GxD2mP2VPelWfZbCtWzT8FlS64HgoRgkaYW8jMe+pTM=;
+        s=default; t=1585819687;
+        bh=cywDP6eNSmYYa3KeaQgosXJi4aqsO1zjpdq6I2/ZdSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QLC3SaPDWXGYceTPisq3HpJrpQw6Ks98LM3ZbWZYFtsLToL0c2fk7FuDEPGzZy/gT
-         8DOYh9nmoe8ywSUOwh/IY5wK6/kpx02gdAnTjpt0VRayhFPQKlP/tQu3M3EjaDub0p
-         jqUpVXyFAVZC3rMzBtkXC3k+s7DgcoQTJXSLbjOM=
+        b=HUZP7ipkni1ynrf/4zsRG4qpMiYSMcAxWfYuGiG75cP/GAEkg2z2j5rjYThRLCPR5
+         AMvxPEM3LHwFhhoscGrR9YYS8tGIZ0HH9PRuqf4ZsWzxH3nOJZv2b2StxdO35h9BuU
+         4e+WhgxrufovTdOWAYdoOIKJQq/YGQsAtibLreiY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jJw8s-000AaF-3M; Thu, 02 Apr 2020 11:28:06 +0200
+        id 1jJw8s-000AaA-2Y; Thu, 02 Apr 2020 11:28:06 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kbuild@vger.kernel.org
-Subject: [PATCH 3/6] kconfig: qconf: fix the content of the main widget
-Date:   Thu,  2 Apr 2020 11:28:00 +0200
-Message-Id: <3f87c3c69b198ee3b42b92d5d230c3976115b60e.1585819250.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 2/6] kconfig: qconf: Change title for the item window
+Date:   Thu,  2 Apr 2020 11:27:59 +0200
+Message-Id: <39c72450d98fc16b735237df296b066c8eebb066.1585819250.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1585819250.git.mchehab+huawei@kernel.org>
 References: <cover.1585819250.git.mchehab+huawei@kernel.org>
@@ -62,61 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The port to Qt5 tried to preserve the same way as it used
-to work with Qt3 and Qt4. However, at least with newer
-versions of Qt5 (5.13), this doesn't work properly.
+Both main config window and the item window have "Option"
+name. That sounds weird, and makes harder to debug issues
+of a window appearing at the wrong place.
 
-Change the schema by adding a vertical layout, in order
-for it to start working properly again.
+So, change the title to reflect the contents of each
+window.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ scripts/kconfig/qconf.cc | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 2f4971906207..81ae6c059c1c 100644
+index daa3325c0a49..2f4971906207 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -1362,21 +1362,32 @@ ConfigMainWindow::ConfigMainWindow(void)
- 	if ((x.isValid())&&(y.isValid()))
- 		move(x.toInt(), y.toInt());
+@@ -318,7 +318,10 @@ ConfigList::ConfigList(ConfigView* p, const char *name)
+ 	setVerticalScrollMode(ScrollPerPixel);
+ 	setHorizontalScrollMode(ScrollPerPixel);
  
--	split1 = new QSplitter(this);
-+	QWidget *widget = new QWidget(this);
-+	QVBoxLayout *layout = new QVBoxLayout(widget);
-+	setCentralWidget(widget);
+-	setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
++	if (mode == symbolMode)
++		setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
++	else
++		setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
+ 
+ 	connect(this, SIGNAL(itemSelectionChanged(void)),
+ 		SLOT(updateSelection(void)));
+@@ -399,6 +402,11 @@ void ConfigList::updateSelection(void)
+ 	struct menu *menu;
+ 	enum prop_type type;
+ 
++	if (mode == symbolMode)
++		setHeaderLabels(QStringList() << "Item" << "Name" << "N" << "M" << "Y" << "Value");
++	else
++		setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
 +
-+	split1 = new QSplitter(widget);
- 	split1->setOrientation(Qt::Horizontal);
--	setCentralWidget(split1);
-+	split1->setChildrenCollapsible(false);
+ 	if (selectedItems().count() == 0)
+ 		return;
  
--	menuView = new ConfigView(split1, "menu");
-+	menuView = new ConfigView(widget, "menu");
- 	menuList = menuView->list;
- 
--	split2 = new QSplitter(split1);
-+	split2 = new QSplitter(widget);
-+	split2->setChildrenCollapsible(false);
- 	split2->setOrientation(Qt::Vertical);
- 
- 	// create config tree
--	configView = new ConfigView(split2, "config");
-+	configView = new ConfigView(widget, "config");
- 	configList = configView->list;
- 
--	helpText = new ConfigInfoView(split2, "help");
-+	helpText = new ConfigInfoView(widget, "help");
-+
-+	layout->addWidget(split2);
-+	split2->addWidget(split1);
-+	split1->addWidget(configView);
-+	split1->addWidget(menuView);
-+	split2->addWidget(helpText);
- 
- 	setTabOrder(configList, helpText);
- 	configList->setFocus();
 -- 
 2.25.1
 
