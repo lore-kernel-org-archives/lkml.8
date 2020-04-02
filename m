@@ -2,84 +2,132 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48F9C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A020D2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1DD20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 15:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KG+2icdW"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ASIJARDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389256AbgDBPYL (ORCPT
+        id S2389266AbgDBPYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 11:24:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49496 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388905AbgDBPYL (ORCPT
+        Thu, 2 Apr 2020 11:24:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44406 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388740AbgDBPYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 11:24:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585841050;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Gsu7Y1M95mXEBh13JhGtdspG9myhzcu+bx9ATjgS7Pk=;
-        b=KG+2icdWr4H08NOa9OP2/kVsBmD4qprLNZTzMHwuiXBacpjiEMEj9FJQmCGWoruRd0iOwo
-        0tO73d3zqJ8DGrEAYkK7LilaAOr0YLBT1uX4psFSdaJgMZQg/lOkBOJES/CA2Khb8+uppE
-        u0Bj5JYkE41Cslq7dY9+9AbN8GD2vu4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-I-hRn52OOy6_ExoNmAS1vw-1; Thu, 02 Apr 2020 11:24:08 -0400
-X-MC-Unique: I-hRn52OOy6_ExoNmAS1vw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA628800D5F;
-        Thu,  2 Apr 2020 15:24:06 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A5D8A9B924;
-        Thu,  2 Apr 2020 15:24:03 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <3070724.1585840971@warthog.procyon.org.uk>
-References: <3070724.1585840971@warthog.procyon.org.uk> <CAJfpeguxDiq3BW94AVFhgY75P+jy_+jk3pdyNZ5z-aJPXNvvGA@mail.gmail.com> <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com> <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk> <2418286.1585691572@warthog.procyon.org.uk> <20200401090445.6t73dt7gz36bv4rh@ws.net.home> <2488530.1585749351@warthog.procyon.org.uk> <2488734.1585749502@warthog.procyon.org.uk> <CAJfpeguLJcAEgx2JWRNcKMkyFTWB0r4wS6F4fJHK3VHtY=EjXQ@mail.gmail.com> <2590276.1585756914@warthog.procyon.org.uk>
-Cc:     dhowells@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Karel Zak <kzak@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+        Thu, 2 Apr 2020 11:24:30 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032F9dqH135553;
+        Thu, 2 Apr 2020 15:24:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=YGiAhHtA16Q4tYk3m8cxFMkmHJt5fwf0CJBlxo32jHs=;
+ b=ASIJARDm1PIk4kwOZIQ/G2LV3UUzl+F21EoYeQOkgwMYJ4ZIRGUPGWN4oPVyuvJ3VMxB
+ HUCzIOI1gvCHxqUIx8A3AOYC7qzcXB1yKbwMrGmY+6okK0DL5Rw28qfSsK7QA5bo8ORw
+ 85aBsx/SkdgrQ+huiQZJrFvrhIi8qF+jFVX2UjlHVUOet632/R8PNQqQ1YFl8WgzclbU
+ LXvizAMtZ2ZmeUJbZAcLbgoq2+vjs4TXd34QJCNuGgrtcX0ergwmzix2saYUV5jPNFsY
+ VjdhuUO/6rgD7XTNu1rcwUsNogrsQI+ot7hpqJKdHpAcbzoTJDRGBiydKGOcnAEeMtWl hw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 303cevc52w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 15:24:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032F8U37188492;
+        Thu, 2 Apr 2020 15:24:20 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 302g4vq7td-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 02 Apr 2020 15:24:20 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 032FOHRv019903;
+        Thu, 2 Apr 2020 15:24:17 GMT
+Received: from localhost.localdomain (/95.45.14.174)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 02 Apr 2020 08:24:17 -0700
+Date:   Thu, 2 Apr 2020 16:24:10 +0100 (BST)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@localhost
+To:     Colin King <colin.king@canonical.com>
+cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Frank Rowand <frank.rowand@sony.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] kunit: fix dereference of suite before it has been
+ null checked
+In-Reply-To: <20200402150314.568044-1-colin.king@canonical.com>
+Message-ID: <alpine.LRH.2.21.2004021623270.21551@localhost>
+References: <20200402150314.568044-1-colin.king@canonical.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3070846.1585841042.1@warthog.procyon.org.uk>
-Date:   Thu, 02 Apr 2020 16:24:02 +0100
-Message-ID: <3070847.1585841042@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
+ clxscore=1011 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004020131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Howells <dhowells@redhat.com> wrote:
+On Thu, 2 Apr 2020, Colin King wrote:
 
-> ext4_show_mount()
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently pointer 'suite' is dereferenced when variable success
+> is being initialized before the pointer is null checked. Fix this
+> by only dereferencing suite after is has been null checked.
+> 
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: e2219db280e3 ("kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-ext4_show_options(), sorry.
+Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
 
-David
+Thanks for spotting this!
 
+Alan
+
+> ---
+>  lib/kunit/debugfs.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/kunit/debugfs.c b/lib/kunit/debugfs.c
+> index 9214c493d8b7..05547642f37c 100644
+> --- a/lib/kunit/debugfs.c
+> +++ b/lib/kunit/debugfs.c
+> @@ -52,12 +52,13 @@ static void debugfs_print_result(struct seq_file *seq,
+>  static int debugfs_print_results(struct seq_file *seq, void *v)
+>  {
+>  	struct kunit_suite *suite = (struct kunit_suite *)seq->private;
+> -	bool success = kunit_suite_has_succeeded(suite);
+> +	bool success;
+>  	struct kunit_case *test_case;
+>  
+>  	if (!suite || !suite->log)
+>  		return 0;
+>  
+> +	success = kunit_suite_has_succeeded(suite);
+>  	seq_printf(seq, "%s", suite->log);
+>  
+>  	kunit_suite_for_each_test_case(suite, test_case)
+> -- 
+> 2.25.1
+> 
+> 
