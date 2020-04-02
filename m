@@ -2,75 +2,102 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA811C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35474C2BA16
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F04A20737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585855257;
-	bh=mdROf5FDATZ7QP97pw47LQyxagMXuoP+y7Kaxh6NErM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PQoL8DySZGjfca5rDAUwd6xPLRpnh6MJ3GXMV3a8IWVEyaRZShNG5ldDNMIHpUXAe
-	 8X15D6OcFbZUk7e29dL0hOjg6hn7l90BxHRZmCPJW/8P6ST7zHApJsL2y37PDDQFW9
-	 JGRgkWjGp7yJpGVfwdAioKLBueCbO7xvCiZKW1kk=
+	by mail.kernel.org (Postfix) with ESMTP id 0C8792077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 19:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389838AbgDBTU4 (ORCPT
+        id S2389879AbgDBTWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:20:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44484 "EHLO mail.kernel.org"
+        Thu, 2 Apr 2020 15:22:03 -0400
+Received: from mga11.intel.com ([192.55.52.93]:40920 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389261AbgDBTU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 15:20:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 208E8206F8;
-        Thu,  2 Apr 2020 19:20:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585855255;
-        bh=mdROf5FDATZ7QP97pw47LQyxagMXuoP+y7Kaxh6NErM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L+rTAt0fHo/krTsbIxVlaFbiH3a630gdyVE6f4HA6qC54/KKEwURGtEMnU21vWygR
-         del+6EMtTZ+Amw3nflUoCTHRWjiIMsiCrNwu5XGTQ7OZZrkstHbAga8OmPyLZDuO81
-         LI0QpDjAFcnNDavJEKpe0aDJIDhmaJl9549G/Kyw=
-Date:   Thu, 2 Apr 2020 21:20:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH 4.19 105/116] bpf: Explicitly memset the bpf_attr
- structure
-Message-ID: <20200402192053.GB3243295@kroah.com>
-References: <20200401161542.669484650@linuxfoundation.org>
- <20200401161555.630698707@linuxfoundation.org>
- <20200402185320.GA8077@duo.ucw.cz>
+        id S1732625AbgDBTWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:22:03 -0400
+IronPort-SDR: LVoV64XSlcBf2YFP5MixYctj01nU7A/aoWUnZ57XQZG5z8aROlLEzGywkiJMki3K3FDgpL0Fic
+ oonUTB1XRcUg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 12:22:02 -0700
+IronPort-SDR: HPlrlLEifWROXK4+Dc1PcEvewa6yrANYd49N+uhhrAgGykfTHlVfk/hOoA+z5G7tR9/eMPMwPE
+ q7MhMagLko8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="242612758"
+Received: from hbriegel-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.39.101])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Apr 2020 12:21:58 -0700
+Date:   Thu, 2 Apr 2020 22:21:57 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-integrity@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v3] acpi: Extend TPM2 ACPI table with missing log fields
+Message-ID: <20200402192145.GB10314@linux.intel.com>
+References: <20200331214949.883781-1-stefanb@linux.vnet.ibm.com>
+ <20200401083729.GD17325@linux.intel.com>
+ <CAJZ5v0gQ04h1+zN4wHj1vkwPvqu3RPfsY60VJ+GOtgUrvWuxLQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402185320.GA8077@duo.ucw.cz>
+In-Reply-To: <CAJZ5v0gQ04h1+zN4wHj1vkwPvqu3RPfsY60VJ+GOtgUrvWuxLQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 08:53:21PM +0200, Pavel Machek wrote:
-> Should we fix gcc, instead?
+On Wed, Apr 01, 2020 at 11:05:36AM +0200, Rafael J. Wysocki wrote:
+> On Wed, Apr 1, 2020 at 10:37 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > On Tue, Mar 31, 2020 at 05:49:49PM -0400, Stefan Berger wrote:
+> > > From: Stefan Berger <stefanb@linux.ibm.com>
+> > >
+> > > Recent extensions of the TPM2 ACPI table added 3 more fields
+> > > including 12 bytes of start method specific parameters and Log Area
+> > > Minimum Length (u32) and Log Area Start Address (u64). So, we extend
+> > > the existing structure with these fields to allow non-UEFI systems
+> > > to access the TPM2's log.
+> > >
+> > > The specification that has the new fields is the following:
+> > >   TCG ACPI Specification
+> > >   Family "1.2" and "2.0"
+> > >   Version 1.2, Revision 8
+> > >
+> > > Adapt all existing table size calculations to use
+> > > offsetof(struct acpi_table_tpm2, start_method_specific)
+> > > [where start_method_specific is a newly added field]
+> > > rather than sizeof(struct acpi_table_tpm2) so that the addition
+> > > of the new fields does not affect current systems that may not
+> > > have them.
+> > >
+> > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> > > Cc: linux-acpi@vger.kernel.org
+> >
+> > I think I'm cool with this but needs an ack from ACPI maintainer.
+> >
+> > Rafael, given that this not an intrusive change in any possible means,
+> > can I pick this patch and put it to my next pull request?
+> 
+> Yes, please.
+> 
+> Thanks!
 
-Also, this is allowed in the C standard, and both clang and gcc
-sometimes emit code that does not clear padding in structures.  Changing
-the compiler to not do this would be wonderful, but we still have to
-live with this for the next 10 years as those older compilers age-out.
+Great, thanks Rafael.
 
-sorry,
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-greg k-h
+Do you mind if I add your ack to the commit?
+
+/Jarkko
