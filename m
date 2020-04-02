@@ -2,322 +2,225 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194FAC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E54C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFC320737
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6ADD2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 17:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WIn+vTZc"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="b4n4Ly0X";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="b4n4Ly0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389955AbgDBRrY (ORCPT
+        id S1732948AbgDBRuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:47:24 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40561 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732784AbgDBRrY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 13:47:24 -0400
-Received: by mail-il1-f195.google.com with SMTP id j9so4485215ilr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 10:47:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7tyjlIV/2N0ARSrmOSXoDfKybdDWJ1zVvs4tCYf0i/w=;
-        b=WIn+vTZciEAII1pqjyivQ1oU/4Tql4s5w6b3N6Pj6lK28NBIzSTgE82av/gaTkujH9
-         uIZXyZyY9db5NPDylikYSMAgjIE2Vlum+0ND6xe6sLHa/0VfzRTBtwCjW+BZHKhxe4II
-         rZLW4umjx7zNZVfTIa2t3LY7ePRlijW8lSsqBPA1RL/WII37a2bcZgmbEK47kyHULLNZ
-         E9XZ1Fgf/J7I1PNLeARHk+aoVJn9LNmNKgLcO8/J3YlrTEmlEKSywJcAoUodeJZh5ryx
-         gXY5028liMLkOmUSU8daIlKsq6sMDZs3+e2m4gPb2EFTzIK6+MjdNNXRqAhWleyGb1YS
-         MgCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7tyjlIV/2N0ARSrmOSXoDfKybdDWJ1zVvs4tCYf0i/w=;
-        b=LCFVjaMGnkFKpjsOyrPIfZ0fr1t3QvRtK+7M45L9JDZpJYrIqFOOOvUNPwC2cHxBku
-         8hqahrQ0L3lV3PjyZXxpvqaZOjeg0CBZsIbT3tBMzrsrjdCOaM8wbWmHMeXtbgdCtVmg
-         7HsQD9oQmWrpX5JrlPw8x2Z+KHXxeRXSGw8IhneRJ0GV7KP0R54+wqJahAn7Di9iXGE6
-         lZKgaZ2zGvj1ZWEDBPxdy0Zh19DaD7eIAL896MCwVzVKYkmuiX7EYIq3tmIDJ3ocp68k
-         1GcpgBCG77KRIIQ+ud/6MtIJU5Hn01JCvdr0SWcB7I9qWUoH8FH/uB1AByndqo/sSUL7
-         iGrw==
-X-Gm-Message-State: AGi0PubG4Yh+USqv/JpV4I8DxbVtnZBc51pwD0+z04sCzUqKCdIvEIwo
-        luTAJanVjeS9cokjDr+51ZsaiC0ZwtOXP7eU6/JGSQ==
-X-Google-Smtp-Source: APiQypKz3Kwv9DPfJaatShj+kFJdZu0incWoyAV2P37mLvdgxzx17KnZpVbtMYlW5s5jOfrz5Y2YxVho0Dyf4uJRkzc=
-X-Received: by 2002:a92:8352:: with SMTP id f79mr4349489ild.58.1585849642843;
- Thu, 02 Apr 2020 10:47:22 -0700 (PDT)
+        Thu, 2 Apr 2020 13:50:18 -0400
+Received: from mail-eopbgr00046.outbound.protection.outlook.com ([40.107.0.46]:48448
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727439AbgDBRuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 13:50:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vVMHUfOQgALOiKL8InNQ7Yp4ndl4SN/+rjy/kAAA/iI=;
+ b=b4n4Ly0Xm8PLd5P5hMlB2DnkFjzA35DTWgb1l2BybEUhLXbhjzvm4jKHVw4McWieQ6NCEY2piY3cDFsV7P8YSUV91qIdp2LivGSvZ665e4ITX/zdBoVMwXdcugIFOW683vLJ1OrkZ9Foe//1ouALOHccTjsJ4Doq+xn7+zE4MNE=
+Received: from AM7PR02CA0006.eurprd02.prod.outlook.com (2603:10a6:20b:100::16)
+ by DB6PR0801MB1719.eurprd08.prod.outlook.com (2603:10a6:4:3a::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Thu, 2 Apr
+ 2020 17:50:11 +0000
+Received: from AM5EUR03FT007.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:100:cafe::61) by AM7PR02CA0006.outlook.office365.com
+ (2603:10a6:20b:100::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend
+ Transport; Thu, 2 Apr 2020 17:50:11 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT007.mail.protection.outlook.com (10.152.16.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.17 via Frontend Transport; Thu, 2 Apr 2020 17:50:11 +0000
+Received: ("Tessian outbound 9e48e1321951:v50"); Thu, 02 Apr 2020 17:50:10 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: e3dc6baae79d8492
+X-CR-MTA-TID: 64aa7808
+Received: from ddd8da16107b.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 43C295ED-E368-40FE-87FC-0E7833B70E44.1;
+        Thu, 02 Apr 2020 17:50:05 +0000
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id ddd8da16107b.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 02 Apr 2020 17:50:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B6v1MQDq1Gue+AnzFe0SlVlwbu/HjLtxuNgK7lvXOscjiAAo9O/ViOfJnG5w4FrMRVx2Mux0N3xG12EFiGh2FC8EOHprsmzawt/4OwlYaSR5/3MU9dmBG+26vIS7haOjP+URLDdfdc5zVGSufP0VIhu2AH4K8lNUIzrW2RUq0K6o+HzKGGLzoAOONmEJN9XUXrcAo5zvY2DDp42xRP84NXm+nxecZKyDEOr/pGYZlo9qCj5ehwLBUWd9bWUu7q+l00A1s6Ip5VqgROapNQHgEzpBlsVf3gfrBx8aq1Kgci/vZRqEB4mfac83sD7VovWMUVp27s3Q7T6wNJw+OpKKAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vVMHUfOQgALOiKL8InNQ7Yp4ndl4SN/+rjy/kAAA/iI=;
+ b=HUs6QddtEZhi2W7XjMG7/FbERhn1YBvQuRf1z/60W3ue3/7b7FKr56Vq5oajPC53FyEPfvzmuR4JxoB+Sx5MJLCO4/BrPl0xf9n2iKZzltXqmPk/k4tc/d/JWbhSHsAFLGMKlXsTZ5lFt0kttO8mJWLM5QBjp0dphCFmlNzYh69C0JJIRiufV3QEibuwq9WePRHC4aZ770GjAnddz5YZgjAvAJx74B4r16GF0Rq1l02p6tzemfU7XPIPickCtl/sIAe0k1plsrx6896pMH9xaL+ca3AzqsCndQERY5WqaZfQ0897ct9ULKdRaCjU0cieWYKZwCPogSKQBGjYI5uSnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vVMHUfOQgALOiKL8InNQ7Yp4ndl4SN/+rjy/kAAA/iI=;
+ b=b4n4Ly0Xm8PLd5P5hMlB2DnkFjzA35DTWgb1l2BybEUhLXbhjzvm4jKHVw4McWieQ6NCEY2piY3cDFsV7P8YSUV91qIdp2LivGSvZ665e4ITX/zdBoVMwXdcugIFOW683vLJ1OrkZ9Foe//1ouALOHccTjsJ4Doq+xn7+zE4MNE=
+Received: from DBBPR08MB4823.eurprd08.prod.outlook.com (10.255.78.22) by
+ DBBPR08MB4839.eurprd08.prod.outlook.com (20.179.46.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.16; Thu, 2 Apr 2020 17:50:04 +0000
+Received: from DBBPR08MB4823.eurprd08.prod.outlook.com
+ ([fe80::f46d:4b0d:d07d:949d]) by DBBPR08MB4823.eurprd08.prod.outlook.com
+ ([fe80::f46d:4b0d:d07d:949d%6]) with mapi id 15.20.2856.019; Thu, 2 Apr 2020
+ 17:50:04 +0000
+From:   Peter Smith <Peter.Smith@arm.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+CC:     Nick Desaulniers <ndesaulniers@google.com>, nd <nd@arm.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Stefan Agner <stefan@agner.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] ARM: OMAP2+: drop unnecessary adrl
+Thread-Topic: [PATCH] ARM: OMAP2+: drop unnecessary adrl
+Thread-Index: AQHWCNPf3/UDtOa4QU2PsSz3b6wtIqhlszgIgAAJCgCAAF834g==
+Date:   Thu, 2 Apr 2020 17:50:04 +0000
+Message-ID: <DBBPR08MB4823463F759E2FFFE92BF9C8F8C60@DBBPR08MB4823.eurprd08.prod.outlook.com>
+References: <5a6807f19fd69f2de6622c794639cc5d70b9563a.1585513949.git.stefan@agner.ch>
+ <CAKwvOdkyOW6RXTOCt1xMp2H+uH28ofByQOjyx776t8RDxTED2w@mail.gmail.com>
+ <CAMj1kXGYiMobkue642iDRdOjEHQK=KXpp=Urrgik9UU-eWWibQ@mail.gmail.com>
+ <DBBPR08MB4823129E272220712B470716F8C60@DBBPR08MB4823.eurprd08.prod.outlook.com>,<CAMj1kXEQ4v9e6386ogPdy+s+++9H02DMPnDpTq0WSY2e78ts+Q@mail.gmail.com>
+In-Reply-To: <CAMj1kXEQ4v9e6386ogPdy+s+++9H02DMPnDpTq0WSY2e78ts+Q@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Peter.Smith@arm.com; 
+x-originating-ip: [217.140.106.52]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8c659e06-3a25-4c46-32b1-08d7d72e4a5a
+x-ms-traffictypediagnostic: DBBPR08MB4839:|DB6PR0801MB1719:
+X-Microsoft-Antispam-PRVS: <DB6PR0801MB1719F3419FB6D3D0C91FB82CF8C60@DB6PR0801MB1719.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:10000;OLM:10000;
+x-forefront-prvs: 0361212EA8
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4823.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(396003)(136003)(346002)(39860400002)(376002)(66556008)(33656002)(54906003)(2906002)(4326008)(186003)(5660300002)(316002)(26005)(966005)(71200400001)(52536014)(478600001)(6916009)(6506007)(9686003)(66946007)(55016002)(91956017)(76116006)(86362001)(64756008)(66476007)(66446008)(7696005)(8936002)(8676002)(81166006)(81156014);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: Bvk0bPnT7Ke0d0aqT+hbRjgi0yVdvzyvH7dgBYfZwb0K05Ky1e7biVBTYTEwpfPLqZ4FLc5DqZusf1jeVd6vKe8engmCJuQYA3ELg1iwmUvCNyJJciV+viDwDZtcfufvQECHIBSczDYZFkmPIWSQ95NtxLOAFpdGQCSmu2RPoZTRtBaYpm9AakerWCvpKPC69RmdXzRtMKr0Kxy+Ej7l/RY38RMUEhYG+LTeo9+g9ilQJ8v8IGxZiZaIumgR/WnCd62ltu2gWwl/bYfZezW0XRsplAwZbZC2Kh4yLeS977eiI3TpY5mEXCxDvdhjHACTgDRFshsyjk1BH5DiZDOd4mJQ1eIWaapC33uOz0K9X3r6oma1V4ndxR/bYce7vPeduSzLQwijFuL0JZv+lL+3CYN1jh/ORXVqD0t3YR4CRxEZ+BteKCDfZNE41W2cnKCGdllgZIjXta0yDgHlvuUmg4fgwE3kxP/6e1PbMKEx8lJyU3FpDbnq6hq2YlXOjQPYmyiUHp/4L8gKjnzrfx4E3Q==
+x-ms-exchange-antispam-messagedata: vmg3ckpM42yEPLgGyDdIIpSo5pFDQPj7HjFYP0sgP+pyvey3n2q0YGQTDiu3ru6TI1XGv6hgiAqVvpu3mJZ++I0MGhFuNh1YbsKr7tQMojh9x+P3kBUptjeLgZmADNNscixLbtt8IBU1uAGlz2FVoA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1582167465-2549-1-git-send-email-sidgup@codeaurora.org>
- <1582167465-2549-7-git-send-email-sidgup@codeaurora.org> <20200227215940.GC20116@xps15>
- <1a615fcd5a5c435d1d8babe8d5c3f8c3@codeaurora.org> <20200228183832.GA23026@xps15>
- <cac45f2726a272ccd0ce82e12e46756f@codeaurora.org> <CANLsYkzUh_BRjapX_jDZZ00Lj8MMgMPM12+otYHDKqad1s-qHQ@mail.gmail.com>
- <050a8613cd00a84678b4478ef3387465@codeaurora.org> <CANLsYkyrzNPUymuJzehEOAA2FV+WDohUpgCYTNdbGCJBoat2cg@mail.gmail.com>
- <64310efc-00f3-f8d8-3058-19dfbe1aa578@codeaurora.org>
-In-Reply-To: <64310efc-00f3-f8d8-3058-19dfbe1aa578@codeaurora.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 2 Apr 2020 11:47:11 -0600
-Message-ID: <CANLsYkxHGUE3hGxnO3SY-5pq8_q-hKM-F25RUmM+9Xr94xDCJw@mail.gmail.com>
-Subject: Re: [PATCH 6/6] remoteproc: qcom: Add notification types to SSR
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, tsoni@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, psodagud@codeaurora.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-remoteproc-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4839
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Peter.Smith@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT007.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(396003)(136003)(346002)(46966005)(26826003)(47076004)(478600001)(86362001)(966005)(70206006)(54906003)(107886003)(6506007)(82740400003)(186003)(70586007)(356004)(33656002)(8936002)(336012)(7696005)(450100002)(4326008)(2906002)(55016002)(52536014)(8676002)(6862004)(26005)(5660300002)(36906005)(9686003)(81166006)(81156014)(316002);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: eae70085-fa11-402a-e384-08d7d72e4652
+X-Forefront-PRVS: 0361212EA8
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WVDUAkASdKzh6PJC2FV4hADAzPVUBurVIRGlilqO0srlWvHOpsVEcIQaViPikxU14CYkMhrx/IcyJAbfsh6K5F5qzjnwoJBS0gPQmMnGN+9i+1tsgcRYYG5fGE23yU02RWzSOfIPvlevihaIB+j1P2J2M7PmLAtIc4mZrK1S1fuZ07Net9XwRP61P1dzMz5cSq+4vAQYkjD93NFPCxhIAA/ydVMJtCEpk0qdK0h40PWYnQGj8+4sAvqtxB0Otw7MwWGscEX7eQ19q3Dw3e2Po86PRJwQ6pPCVg8xC75HPU6+5x+jJYE30I/KtefaIgnIa6hu4rbkrcVxXn/gx/Zpb9R3wXt3EiDoO4dEwIF9yxCqZUF4eppfnW0Ikh5aCRCDebHz4BehC1GDAzwDQMacZmJVvFPx8x7DvSDzHVW+XCPVDyEgz81ppr2UL2ZyDA/fMg6VZdnUaRSIUR7jLDcBynO9AY3RGsryf+FIg/oV8CtmGGupsp0fSyTL1BDNCQA03Bzq03yatjtlOu85H/zrZBaO0SUq9JK8UDQLqBZwKShR9lwwN2Eb2L+Bi6w2CY8bwIPKin/uAKwl7WFKIi/IFQ==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 17:50:11.1316
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c659e06-3a25-4c46-32b1-08d7d72e4a5a
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1719
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020 at 19:01, Siddharth Gupta <sidgup@codeaurora.org> wrote:
->
-> On 3/9/2020 10:34 AM, Mathieu Poirier wrote:
->
-> > On Tue, 3 Mar 2020 at 16:30, <rishabhb@codeaurora.org> wrote:
-> >> On 2020-03-03 10:05, Mathieu Poirier wrote:
-> >>> On Mon, 2 Mar 2020 at 13:54, <rishabhb@codeaurora.org> wrote:
-> >>>> On 2020-02-28 10:38, Mathieu Poirier wrote:
-> >>>>> On Thu, Feb 27, 2020 at 04:00:21PM -0800, rishabhb@codeaurora.org
-> >>>>> wrote:
-> >>>>>> On 2020-02-27 13:59, Mathieu Poirier wrote:
-> >>>>>>> On Wed, Feb 19, 2020 at 06:57:45PM -0800, Siddharth Gupta wrote:
-> >>>>>>>> The SSR subdevice only adds callback for the unprepare event. Add
-> >>>>>>>> callbacks
-> >>>>>>>> for unprepare, start and prepare events. The client driver for a
-> >>>>>>>> particular
-> >>>>>>>> remoteproc might be interested in knowing the status of the remoteproc
-> >>>>>>>> while undergoing SSR, not just when the remoteproc has finished
-> >>>>>>>> shutting
-> >>>>>>>> down.
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> >>>>>>>> ---
-> >>>>>>>>   drivers/remoteproc/qcom_common.c | 39
-> >>>>>>>> +++++++++++++++++++++++++++++++++++----
-> >>>>>>>>   include/linux/remoteproc.h       | 15 +++++++++++++++
-> >>>>>>>>   2 files changed, 50 insertions(+), 4 deletions(-)
-> >>>>>>>>
-> >>>>>>>> diff --git a/drivers/remoteproc/qcom_common.c
-> >>>>>>>> b/drivers/remoteproc/qcom_common.c
-> >>>>>>>> index 6714f27..6f04a5b 100644
-> >>>>>>>> --- a/drivers/remoteproc/qcom_common.c
-> >>>>>>>> +++ b/drivers/remoteproc/qcom_common.c
-> >>>>>>>> @@ -183,9 +183,9 @@ EXPORT_SYMBOL_GPL(qcom_remove_smd_subdev);
-> >>>>>>>>    *
-> >>>>>>>>    * Returns pointer to srcu notifier head on success, ERR_PTR on
-> >>>>>>>> failure.
-> >>>>>>>>    *
-> >>>>>>>> - * This registers the @notify function as handler for restart
-> >>>>>>>> notifications. As
-> >>>>>>>> - * remote processors are stopped this function will be called, with
-> >>>>>>>> the rproc
-> >>>>>>>> - * pointer passed as a parameter.
-> >>>>>>>> + * This registers the @notify function as handler for
-> >>>>>>>> powerup/shutdown
-> >>>>>>>> + * notifications. This function will be invoked inside the
-> >>>>>>>> callbacks registered
-> >>>>>>>> + * for the ssr subdevice, with the rproc pointer passed as a
-> >>>>>>>> parameter.
-> >>>>>>>>    */
-> >>>>>>>>   void *qcom_register_ssr_notifier(struct rproc *rproc, struct
-> >>>>>>>> notifier_block *nb)
-> >>>>>>>>   {
-> >>>>>>>> @@ -227,11 +227,39 @@ int qcom_unregister_ssr_notifier(void *notify,
-> >>>>>>>> struct notifier_block *nb)
-> >>>>>>>>   }
-> >>>>>>>>   EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
-> >>>>>>>>
-> >>>>>>>> +static int ssr_notify_prepare(struct rproc_subdev *subdev)
-> >>>>>>>> +{
-> >>>>>>>> +        struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> >>>>>>>> +
-> >>>>>>>> +        srcu_notifier_call_chain(ssr->rproc_notif_list,
-> >>>>>>>> +                                 RPROC_BEFORE_POWERUP, (void *)ssr->name);
-> >>>>>>>> +        return 0;
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>> +static int ssr_notify_start(struct rproc_subdev *subdev)
-> >>>>>>>> +{
-> >>>>>>>> +        struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> >>>>>>>> +
-> >>>>>>>> +        srcu_notifier_call_chain(ssr->rproc_notif_list,
-> >>>>>>>> +                                 RPROC_AFTER_POWERUP, (void *)ssr->name);
-> >>>>>>>> +        return 0;
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>> +static void ssr_notify_stop(struct rproc_subdev *subdev, bool
-> >>>>>>>> crashed)
-> >>>>>>>> +{
-> >>>>>>>> +        struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> >>>>>>>> +
-> >>>>>>>> +        srcu_notifier_call_chain(ssr->rproc_notif_list,
-> >>>>>>>> +                                 RPROC_BEFORE_SHUTDOWN, (void *)ssr->name);
-> >>>>>>>> +}
-> >>>>>>>> +
-> >>>>>>>> +
-> >>>>>>>>   static void ssr_notify_unprepare(struct rproc_subdev *subdev)
-> >>>>>>>>   {
-> >>>>>>>>           struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> >>>>>>>>
-> >>>>>>>> -        srcu_notifier_call_chain(ssr->rproc_notif_list, 0, (void
-> >>>>>>>> *)ssr->name);
-> >>>>>>>> +        srcu_notifier_call_chain(ssr->rproc_notif_list,
-> >>>>>>>> +                                 RPROC_AFTER_SHUTDOWN, (void *)ssr->name);
-> >>>>>>>>   }
-> >>>>>>>>
-> >>>>>>>>   /**
-> >>>>>>>> @@ -248,6 +276,9 @@ void qcom_add_ssr_subdev(struct rproc *rproc,
-> >>>>>>>> struct qcom_rproc_ssr *ssr,
-> >>>>>>>>   {
-> >>>>>>>>           ssr->name = ssr_name;
-> >>>>>>>>           ssr->subdev.name = kstrdup("ssr_notifs", GFP_KERNEL);
-> >>>>>>>> +        ssr->subdev.prepare = ssr_notify_prepare;
-> >>>>>>>> +        ssr->subdev.start = ssr_notify_start;
-> >>>>>>>> +        ssr->subdev.stop = ssr_notify_stop;
-> >>>>>>> Now that I have a better understanding of what this patchset is doing, I
-> >>>>>>> realise
-> >>>>>>> my comments in patch 04 won't work.  To differentiate the subdevs of an
-> >>>>>>> rproc I
-> >>>>>>> suggest to wrap them in a generic structure with a type and an enum.
-> >>>>>>> That way
-> >>>>>>> you can differenciate between subdevices without having to add to the
-> >>>>>>> core.
->
-> While creating a new revision of the patchset we tried to implement
-> this, but a similar issue comes
-> up. If at a later point we wish to utilize the functionality of some
-> common subdevice (not the case
-> right now, but potentially), we might run into a similar problem of
-> accessing illegal memory using
-> container_of. I think it might be a better idea to introduce the name in
-> the subdevice structure over
-> having a potential security bug. What do you think?
-
-I trust that you have given this an honest try but found potential
-problems that I can't foresee due to the lack of insight on your
-operating environment.  Please move forward with the addition of a new
-"name" field to the rproc_subdev structure.
-
->
-> Thanks,
-> Siddharth
->
-> >>>>>> Ok. I can try that.
-> >>>>>>> That being said, I don't understand what patches 5 and 6 are doing...
-> >>>>>>> Registering with the global ssr_notifiers allowed to gracefully shutdown
-> >>>>>>> all the
-> >>>>>>> MCUs in the system when one of them would go down.  But now that we are
-> >>>>>>> using
-> >>>>>>> the notifier on a per MCU, I really don't see why each subdev couldn't
-> >>>>>>> implement
-> >>>>>>> the right prepare/start/stop functions.
-> >>>>>>>
-> >>>>>>> Am I missing something here?
-> >>>>>> We only want kernel clients to be notified when the Remoteproc they
-> >>>>>> are
-> >>>>>> interested
-> >>>>>> in changes state. For e.g. audio kernel driver should be notified when
-> >>>>>> audio
-> >>>>>> processor goes down but it does not care about any other remoteproc.
-> >>>>>> If you are suggesting that these kernel clients be added as subdevices
-> >>>>>> then
-> >>>>>> we will end up having many subdevices registered to each remoteproc.
-> >>>>>> So we
-> >>>>>> implemented a notifier chain per Remoteproc. This keeps the SSR
-> >>>>>> notifications as
-> >>>>>> the subdevice per remoteproc, and all interested clients can register
-> >>>>>> to it.
-> >>>>> It seems like I am missing information...  Your are referring to
-> >>>>> "kernel
-> >>>>> clients" and as such I must assume some drivers that are not part of
-> >>>>> the
-> >>>>> remoteproc/rpmsg subsystems are calling qcom_register_ssr_notifier().
-> >>>>> I must
-> >>>> Yes these are not part of remoteproc framework and they will register
-> >>>> for notifications.
-> >>>>> also assume these drivers (or that functionality) are not yet upsream
-> >>>>> because
-> >>>>> all I can see calling qcom_register_ssr_notifier() is
-> >>>>> qcom_glink_ssr_probe().
-> >>>> Correct.These are not upstreamed.
-> >>> Ok, things are starting to make sense.
-> >>>
-> >>>>> Speaking of which, what is the role of the qcom_glink_ssr_driver?  Is
-> >>>>> the glink
-> >>>>> device that driver is handling the same as the glink device registed in
-> >>>>> adsp_probe() and q6v5_probe()?
-> >>>> glink ssr driver will send out notifications to remoteprocs that have
-> >>>> opened the
-> >>>> "glink_ssr" channel that some subsystem has gone down or booted up.
-> >>>> This
-> >>>> helps notify
-> >>>> neighboring subsystems about change in state of any other subsystem.
-> >>> I am still looking for an answer to my second question.
-> >> Yes its the subdevice of the glink device that is registered in
-> >> adsp_probe.
-> >> It uses the "glink_ssr" glink channel.
-> > Since this is confining events to a single MCU, I was mostly worried
-> > about opening the "glink_ssr" channel for nothing but taking a step
-> > back and thinking further on this, there might be other purposes for
-> > the channel than only receiving notifications of other MCUs in the
-> > system going down.
-> >
-> > Please spin off a new revision of this set and I will take another look.
-> >
-> > Thanks,
-> > Mathieu
-> >
-> >>>>>>>
-> >>>>>>>>           ssr->subdev.unprepare = ssr_notify_unprepare;
-> >>>>>>>>           ssr->rproc_notif_list = kzalloc(sizeof(struct srcu_notifier_head),
-> >>>>>>>>                                                                   GFP_KERNEL);
-> >>>>>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> >>>>>>>> index e2f60cc..4be4478 100644
-> >>>>>>>> --- a/include/linux/remoteproc.h
-> >>>>>>>> +++ b/include/linux/remoteproc.h
-> >>>>>>>> @@ -449,6 +449,21 @@ struct rproc_dump_segment {
-> >>>>>>>>   };
-> >>>>>>>>
-> >>>>>>>>   /**
-> >>>>>>>> + * enum rproc_notif_type - Different stages of remoteproc
-> >>>>>>>> notifications
-> >>>>>>>> + * @RPROC_BEFORE_SHUTDOWN:      unprepare stage of  remoteproc
-> >>>>>>>> + * @RPROC_AFTER_SHUTDOWN:       stop stage of  remoteproc
-> >>>>>>>> + * @RPROC_BEFORE_POWERUP:       prepare stage of  remoteproc
-> >>>>>>>> + * @RPROC_AFTER_POWERUP:        start stage of  remoteproc
-> >>>>>>>> + */
-> >>>>>>>> +enum rproc_notif_type {
-> >>>>>>>> +        RPROC_BEFORE_SHUTDOWN,
-> >>>>>>>> +        RPROC_AFTER_SHUTDOWN,
-> >>>>>>>> +        RPROC_BEFORE_POWERUP,
-> >>>>>>>> +        RPROC_AFTER_POWERUP,
-> >>>>>>>> +        RPROC_MAX
-> >>>>>>>> +};
-> >>>>>>>> +
-> >>>>>>>> +/**
-> >>>>>>>>    * struct rproc - represents a physical remote processor device
-> >>>>>>>>    * @node: list node of this rproc object
-> >>>>>>>>    * @domain: iommu domain
-> >>>>>>>> --
-> >>>>>>>> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> >>>>>>>> a Linux Foundation Collaborative Project
-> >>>>>>>>
-> >>>>>>>> _______________________________________________
-> >>>>>>>> linux-arm-kernel mailing list
-> >>>>>>>> linux-arm-kernel@lists.infradead.org
-> >>>>>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >>>> _______________________________________________
-> >>>> linux-arm-kernel mailing list
-> >>>> linux-arm-kernel@lists.infradead.org
-> >>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+=0A=
+=0A=
+=0A=
+=0A=
+> On Thu, 2 Apr 2020 at 13:50, Peter Smith <Peter.Smith@arm.com> wrote:=0A=
+> >=0A=
+> > > I take it this implies that the LLVM linker does not support the=0A=
+> > > R_ARM_ALU_PC_Gn relocations? Since otherwise, adrl could simply be=0A=
+> > > expanded to a pair of adds with the appropriate relocations, letting=
+=0A=
+> > > the linker fix up the immediates (and the ADD vs SUB bits)=0A=
+> >=0A=
+> > Not at the moment. I have a patch in review to add the G0 variants for =
+these in Arm state at reviews.llvm.org/D75349 . As far as I know LLVM MC do=
+es not have support for generating the relocations either. This could be ad=
+ded though. I agree that using the G* relocations with a pair of add/sub in=
+structions would be the ideal solution. The adrl psuedo is essentially that=
+ but implemented at assembly time. I think it would be possible to implemen=
+t in LLVM but at the time (4+ years ago) I wasn't confident in finding some=
+one that would think that adrl support was worth the disruption, for exampl=
+e the current Arm assembly backend can only produce 1 instruction as output=
+ and adrl requires two.=0A=
+> >=0A=
+> > I'd be happy to look at group relocation support in LLD, I haven't got =
+a lot of spare time so progress is likely to be slow though.=0A=
+> >=0A=
+=0A=
+> For Linux, I have proposed another approach in the past, which is to=0A=
+> define a (Linux-local) adr_l macro with unlimited range [0], which=0A=
+> basically comes down to place relative movw/movt pairs for v7+, and=0A=
+> something along the lines of=0A=
+=0A=
+>         ldr <reg>, 222f=0A=
+> 111:    add <reg>, <reg>, pc=0A=
+>         .subsection 1=0A=
+> 222:    .long <sym> - (111b + 8)=0A=
+>         .previous=0A=
+>=0A=
+> for v6 and earlier. Could you comment on whether Clang's integrated=0A=
+> assembler could support anything like this?=0A=
+=0A=
+Apologies for the delay in responding.=0A=
+=0A=
+That looks like it should work. Empirically the following works in both Cla=
+ng and GNU as. One potential problem here is that if the section is large a=
+nd the subsections are dumped at the end the ldr is at risk of going out of=
+ range.=0A=
+=0A=
+ .arm=0A=
+ .macro mylongadrl reg, sym=0A=
+ ldr \reg, 222f=0A=
+111:    add \reg, \reg, pc=0A=
+        .subsection 1=0A=
+222:    .long \sym - (111b + 8)=0A=
+ .previous=0A=
+ .endm       =0A=
+=0A=
+ .text=0A=
+foo:     bx lr=0A=
+bar:     bx lr=0A=
+ mylongadrl r0 foo=0A=
+ mylongadrl r0 bar=0A=
+=0A=
+> Thanks,=0A=
+> Ard.=0A=
+>=0A=
+>=0A=
+>=0A=
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/commit=
+/?h=3Darm-kaslr-latest&id=3Dfd440f1131553a5201ce3b94905419bd067b93b3=0A=
