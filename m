@@ -2,114 +2,166 @@ Return-Path: <SRS0=iZC5=5S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE75C10F26
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E95DC10F26
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7C0208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C75C208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 Apr 2020 08:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DbwoXh9O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387882AbgDBIxQ (ORCPT
+        id S2387898AbgDBIxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:53:16 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59751 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387526AbgDBIxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:53:16 -0400
-IronPort-SDR: rnwHdNA+Fr5C7bHgERAITFGXL0VKvn2Ucr8GT4eCffLFZJQj7Kv8yKIV+DyD1i/F5G2t9ybpXa
- 78kxA+g6yWBw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 01:53:15 -0700
-IronPort-SDR: 0d09LmQxjwdOTwQhwodxomnqmvwvXp3uLhsrsNBHN8aidh3hD0dbxAdS3Rx/o5gXv7RdtTYUV/
- 78nLAMk/cjvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,335,1580803200"; 
-   d="scan'208";a="243005477"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 02 Apr 2020 01:53:15 -0700
-Received: from [10.249.226.252] (abudanko-mobl.ccr.corp.intel.com [10.249.226.252])
-        by linux.intel.com (Postfix) with ESMTP id 6FA66580544;
-        Thu,  2 Apr 2020 01:53:08 -0700 (PDT)
-Subject: [PATCH v8 10/12] drivers/oprofile: open access for CAP_PERFMON
- privileged process
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <691f1096-b15f-9b12-50a0-c2b93918149e@linux.intel.com>
-Date:   Thu, 2 Apr 2020 11:53:07 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 04:53:24 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:37794 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387526AbgDBIxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:53:24 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200402085321euoutp02d8af14e9b059504c6caa7f251eaa2463~B9LTmgbAX1521415214euoutp025
+        for <linux-kernel@vger.kernel.org>; Thu,  2 Apr 2020 08:53:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200402085321euoutp02d8af14e9b059504c6caa7f251eaa2463~B9LTmgbAX1521415214euoutp025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585817601;
+        bh=noIPQJwUeNYKdvgAMKqlxK6zreTORgHBJZA/97U8MQ0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=DbwoXh9OlFh4WNaNyzIqSAuw3pbEKG1KPjsvimGeNR+1ByL+nLp9XaGj8Nnf1litM
+         xzcpbYMkiYlFGhx0LV0c4igG0NRTuV1SdUtqTTY+DHp+1F+sNAkytcSdWNHaS47yVp
+         pk7T89Jjyt322CybTCgBPx8gYd6eqO9lD8Uu/l6A=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200402085321eucas1p1d0f2534ca211c8fec710c75c2db8d2ab~B9LTW2Tz72690726907eucas1p1u;
+        Thu,  2 Apr 2020 08:53:21 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 69.AC.60679.108A58E5; Thu,  2
+        Apr 2020 09:53:21 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200402085320eucas1p14a2efc09d96c00c8865db89f95b8c5e2~B9LSuLlSI2691626916eucas1p1n;
+        Thu,  2 Apr 2020 08:53:20 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200402085320eusmtrp2646138768ca7a68583a05d1e36d0f0d0~B9LStgWGn1650316503eusmtrp2G;
+        Thu,  2 Apr 2020 08:53:20 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-dc-5e85a8010185
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 68.1A.08375.008A58E5; Thu,  2
+        Apr 2020 09:53:20 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200402085320eusmtip10eb97531ea5388264afc8a093e6c7864~B9LSXb5xA0077300773eusmtip1b;
+        Thu,  2 Apr 2020 08:53:20 +0000 (GMT)
+Subject: Re: [PATCH] scsi: hisi_sas: Fix build error without SATA_HOST
+To:     John Garry <john.garry@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        chenxiang66@hisilicon.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <76d749f9-5676-a36f-4d94-80d71446e118@samsung.com>
+Date:   Thu, 2 Apr 2020 10:53:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <855fee9e-ae2d-ca70-8630-df27a273e6f3@huawei.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2znbjqPJ8WjsRStpmF0gLQsZFpaQOYSoHxEhpJ3yoJKbsjNN
+        Y4aas2FUTiNzmpmpMysv00xNqLxmgghGXjAsUzRrkTeyrNnOziT/Pd9z4Xle+AiMqhN6EnFq
+        LaNR0/FykQRv6v7VvwdV6SP3TlVQiqH375CibLhJoLC8zBQqupsnBIrB1mKR4vpQs0hh7rEJ
+        FGNL0/gRQvn5Xr1YmdVpFSpzy14h5dzUKK5csGw9KYyQHIpm4uOSGY1/8DlJ7J3ZW8JEozRl
+        2axNRz8kOciFAPIA9N9sQzlIQlBkFYIHIwNiTqDIRQQlDSm8sICgsqhLvJbIyR7HecGMwPL6
+        rYh/WBG8yO9EnMudPAb6J9UO7EGGw/xcG8aZMLISwfXGbowTRGQQGK/xJikZDLah2wIO46QP
+        dBlsOIc3kWdg/mOHkPe4QW/hpIN3sfubZ4yOSRgpg9HJ+wIee8PVZ0WOMiBbxWBZtTp3H4XS
+        umIhj91htqfRyW+G1RYuzAVqEPw1zDjTzxGY820i3nUQxvp/2zFhr9gFta3+PB0CGQ8HMY4G
+        0hWGrW78CFfIaypw0lIwZFO82xfqKutEa7U5LY+wXCQ3rTvNtO4c07pzTP97SxFejWRMEquK
+        YdgANXPJj6VVbJI6xu9CgsqC7P+oz9az2Ixa/5xvRySB5BulKbFZkZSQTmZTVe0ICEzuIQ25
+        q4+kpNF06mVGkxClSYpn2HbkReBymXR/2ZezFBlDa5mLDJPIaNZUAeHimY7UFVYtS5wQGN1U
+        I16ZT7dNaM0lH2pWdGG9eYWdISu2Du8tEViXn3riU3mwzniqIXCHf29DdMCS5qt44HTTduty
+        dnjat/GojCC5IQz5tP3UhSWutjx+s7M+3TUt9EZUsofRV5Jb6x3+vS+QKUg7HqjXbbgioWWh
+        TPlhelpXYJLjbCy9bzemYel/aICDI0MDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsVy+t/xu7oMK1rjDLZPVbO4fu0Ko8WiG9uY
+        LDbtb2K1OLbjEZPF5V1z2Cy6r+9gs1h+/B+TxZ2vz1kcODwez93I7tFy5C2rx4RFBxg9Pj69
+        xeLxeZNcAGuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqR
+        vl2CXsa0V/2sBRN5K34sL2lg/MDVxcjJISFgItHVdp8FxBYSWMooceNIehcjB1BcRuL4+jKI
+        EmGJP9e62LoYuYBKXjNK3Lr4nRkkISzgJtG6ZhUjiC0i4CXx6eMeZpAiZoFljBLffnVAdRxi
+        lFiz/w9YFZuAlcTEdogOXgE7iX/XpzCB2CwCKhJHO/6BXSEqECFxeMcsqBpBiZMzn4DFOYHq
+        d7yYyA5iMwuoS/yZd4kZwhaXuPVkPhOELS/RvHU28wRGoVlI2mchaZmFpGUWkpYFjCyrGEVS
+        S4tz03OLDfWKE3OLS/PS9ZLzczcxAqNv27Gfm3cwXtoYfIhRgINRiYe3IqMlTog1say4Mhfo
+        QQ5mJRFexxmtcUK8KYmVValF+fFFpTmpxYcYTYGem8gsJZqcD0wMeSXxhqaG5haWhubG5sZm
+        FkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGJ0m715jFf7Nd4fEt6MyV0/aegsUy0wTYta8
+        33zR0Fwi9LLqGj72u4HX3fVEL6ZKNxbsEjkU9sjJqjb/+8yFX62S4xTW9KX9cnjxyvhRVuCT
+        294Z+czPZmxL+lNouKzo4h1Bo9ObZS+F8z9cdDvhysv/rwyPb571Y9FRqZcsP5XKlogoMK1V
+        OKfEUpyRaKjFXFScCAAL+YAL1AIAAA==
+X-CMS-MailID: 20200402085320eucas1p14a2efc09d96c00c8865db89f95b8c5e2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200402073107eucas1p26691d5f9309a3d09b960081bbc0925cb
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200402073107eucas1p26691d5f9309a3d09b960081bbc0925cb
+References: <20200402063021.34672-1-yuehaibing@huawei.com>
+        <CGME20200402073107eucas1p26691d5f9309a3d09b960081bbc0925cb@eucas1p2.samsung.com>
+        <855fee9e-ae2d-ca70-8630-df27a273e6f3@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Open access to monitoring for CAP_PERFMON privileged process.
-Providing the access under CAP_PERFMON capability singly, without
-the rest of CAP_SYS_ADMIN credentials, excludes chances to misuse
-the credentials and makes operation more secure.
+On 4/2/20 9:30 AM, John Garry wrote:
+> On 02/04/2020 07:30, YueHaibing wrote:
+> 
+> +
+> 
+>> If SATA_HOST is n, build fails:
+>>
+>> drivers/scsi/hisi_sas/hisi_sas_main.o: In function `hisi_sas_fill_ata_reset_cmd':
+>> hisi_sas_main.c:(.text+0x2500): undefined reference to `ata_tf_to_fis'
+>>
+>> Select SATA_HOST to fix this.
 
-CAP_PERFMON implements the principal of least privilege for performance
-monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
-principle of least privilege: A security design principle that states
-that a process or program be granted only those privileges (e.g.,
-capabilities) necessary to accomplish its legitimate function, and only
-for the time that such privileges are actually required)
+Sorry for missing hisi_sas and thanks for fixing it.
 
-For backward compatibility reasons access to the monitoring remains
-open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage
-for secure monitoring is discouraged with respect to CAP_PERFMON
-capability.
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: 7c594f0407de ("scsi: hisi_sas: add softreset function for SATA disk")
+> 
+> That's not right. SATA_HOST was only introduced recently in the ATA code. It would fix those kconfig changes.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: James Morris <jamorris@linux.microsoft.com>
----
- drivers/oprofile/event_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, this should be:
 
-diff --git a/drivers/oprofile/event_buffer.c b/drivers/oprofile/event_buffer.c
-index 12ea4a4ad607..6c9edc8bbc95 100644
---- a/drivers/oprofile/event_buffer.c
-+++ b/drivers/oprofile/event_buffer.c
-@@ -113,7 +113,7 @@ static int event_buffer_open(struct inode *inode, struct file *file)
- {
- 	int err = -EPERM;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EPERM;
- 
- 	if (test_and_set_bit_lock(0, &buffer_opened))
--- 
-2.24.1
+Fixes: bd322af15ce9 ("ata: make SATA_PMP option selectable only if any SATA host driver is enabled")
 
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>   drivers/scsi/hisi_sas/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/scsi/hisi_sas/Kconfig b/drivers/scsi/hisi_sas/Kconfig
+>> index 90a17452a50d..13ed9073fc72 100644
+>> --- a/drivers/scsi/hisi_sas/Kconfig
+>> +++ b/drivers/scsi/hisi_sas/Kconfig
+>> @@ -6,6 +6,7 @@ config SCSI_HISI_SAS
+>>       select SCSI_SAS_LIBSAS
+>>       select BLK_DEV_INTEGRITY
+>>       depends on ATA
+>> +    select SATA_HOST
+> 
+> That does not feel right.
+> 
+> SCSI_HISI_SAS depends on ATA, but SATA_HOST also depends on ATA, so it seems better to just depend on SATA_HOST (and omit explicit ATA dependency), rather than select it.
+
+SATA_HOST config option is invisible to user so it needs to be
+selected.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
