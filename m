@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0D9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FABC2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C4A206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C76A20B1F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:24:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="nqXDAcA1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="f28+6tql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390583AbgDCJYu (ORCPT
+        id S2390601AbgDCJYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:24:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40021 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390541AbgDCJYs (ORCPT
+        Fri, 3 Apr 2020 05:24:51 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37919 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390554AbgDCJYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Apr 2020 05:24:48 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s8so5511798wrt.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 02:24:46 -0700 (PDT)
+Received: by mail-wm1-f65.google.com with SMTP id f6so6897514wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 02:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Ew63BkEv/kfxHpMMNdikCR0PEHDgqdNqoqdmac2PSKA=;
-        b=nqXDAcA18svfS3jZNCR7amAzTEV4XFdGl7xmK2DqvINR+SkL1t+v8YLTMfgVloHqWn
-         E2/RWW/BQ2XYUiz4jg7loCIE4ACzMxBNacaqILqfCpg6CWfUmNCSvbwQ2nJHKIOD4EaC
-         IE1IazZ8GWvVKNxBNCCeSqwDwqBgFI5W/NGHcR1txkEN2m2pIK/JQtar5bhcNw3foAZc
-         GJ4WVmIXES9AVisyyi5zFCgUO2nfSx5d+cd6dTJ+ZW10LD7lqG3W+E38k/F2t966o4+v
-         oRFbOvLLnMqcSkC63jPYy888YjYcM+ZdkthQDRmWDXqMmIpwKo5ZM6Gd1yuGEs/rnz/r
-         /zHg==
+        bh=UaJ/lm5B5irKRGuIGTcEW0nphrhQofKG2JxuS3fPTck=;
+        b=f28+6tql43/Og7YGE8QTKNY9YPKkmPSkA+oKKSYv9PYyJk6WLaNxmW+YlH3qxlDr/Y
+         NwnNRpNUWshiEO1F2NA9HHwJlKRUO8nEh+aOlZmS+LrNiLbjIT7ufQZHrX4TvhpHfZkI
+         eM6vAJMjRTP2Yw1s7oqpT7/+9L3SokP2UXtfrN9ctVvWISHTB8D+4nQeNDu4HxTCuetr
+         t9dBAJLDPx6kxzJNAhM9musdk4HAzpV7+ks6Zk9I3tASV6va7WiUVtiVT29gQvATkI6G
+         MbVaLSngt0wG/uPQh8uWWdtqvbBBp397PfEIF8+UldkSINWALAXe/VGA9pJGvL5pD4vy
+         neAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=Ew63BkEv/kfxHpMMNdikCR0PEHDgqdNqoqdmac2PSKA=;
-        b=E+BdDsDDGlQ9U2tli9NgzDo2u+0xxgZPKxzVAOE+tffisKc3OsxD2LkRAX3cVKAG0z
-         FJH8v4vv4OCDD7JAjPbsODozMd0mCTVU8Y4ZRP8feS+o0RikJKZ/UfN8tPnsLynkJEVK
-         E7w5xSRcF1GmE2bvLFwa4LVAuDSXewbuP0yALQsBQ6sVUy4TdOxjQhz1dtt4WtQi0IR2
-         zvn+5EcWh4s4QOmZRMDUGIY0x4eF7TPJIyEnTNsRvBodEUzQwokslSB+7XxeGzEAeRT8
-         OGcEDVYJRyKoKrgaZeB457ssUs5Eo0FmNCpNiWNSdLItvw+M+JfG0LBSeay5h0FMp9yP
-         V45w==
-X-Gm-Message-State: AGi0Puav2ipiaOkyismR66TbVLBQ7pEVlWIT5bW+bBwLBoTD80/20HMa
-        wNgSB+MGeZJ3bWuhQEdtSC+Z7Q==
-X-Google-Smtp-Source: APiQypKUEmHsm1YoMsvpKAQDoaPcz47Ucobj2J3VmxgQorhw8miHjx4iVotM1xfJKqJqgSaSIvlvDA==
-X-Received: by 2002:adf:e445:: with SMTP id t5mr8138163wrm.352.1585905885230;
-        Fri, 03 Apr 2020 02:24:45 -0700 (PDT)
+        bh=UaJ/lm5B5irKRGuIGTcEW0nphrhQofKG2JxuS3fPTck=;
+        b=H3NqPIgLZW2q5Cb6pmIHMBZGsrLqTARHUaGecRdOigw1W5ES0F9t/5hMXNO0A6Iljy
+         XWDMoxK+4qukB3Cb21vFU0HkUABs03Lue37FIG7BIccsKpxosNV9bAfxQpD4Mw+2Jwwl
+         RJyx8y3iUlvaZjOslMUX2l1ACXsUMeADA44i2d0kJlZz0GGJ7cxgxar3bG4wP/VNn9/O
+         NsxK8Dkflpzmc/34SINvhWotl13Esa+fSD7YQzScV3x2zD6BFrU7uLhpIGRcTsosNTzp
+         vGl1Nnrb+hm8ApoHNRCET479v6fukClXPRjE9gBIWqLj+HRIhPHLpfYfOFDm/M0tZl68
+         CCyQ==
+X-Gm-Message-State: AGi0PuZWQwrgmrhiTzeYILJksIGwf9KQEFQ9a98p/s1zfg62RjTtfL6y
+        tGvzpMFWp3rCzHlH+3m4s2lkDw==
+X-Google-Smtp-Source: APiQypKIfR0UUqDSY/h923iNyVZubvQ21RncjnJGFJLtdFqhHyi/SNSGNn8LFm3qvKctOPC0FGERzw==
+X-Received: by 2002:a1c:c3c3:: with SMTP id t186mr8070012wmf.118.1585905886912;
+        Fri, 03 Apr 2020 02:24:46 -0700 (PDT)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id b6sm11508761wrp.59.2020.04.03.02.24.44
+        by smtp.gmail.com with ESMTPSA id z3sm10332947wma.22.2020.04.03.02.24.46
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Apr 2020 02:24:44 -0700 (PDT)
+        Fri, 03 Apr 2020 02:24:46 -0700 (PDT)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     johan@kernel.org, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org, monstr@monstr.eu,
         michal.simek@xilinx.com, git@xilinx.com
 Cc:     Jiri Slaby <jslaby@suse.com>, linux-arm-kernel@lists.infradead.org,
         linux-serial@vger.kernel.org
-Subject: [PATCH 2/7] Revert "serial: uartps: Use the same dynamic major number for all ports"
-Date:   Fri,  3 Apr 2020 11:24:31 +0200
-Message-Id: <14a565fc1e14a5ec6cc6a6710deb878ae8305f22.1585905873.git.michal.simek@xilinx.com>
+Subject: [PATCH 3/7] Revert "serial: uartps: Fix error path when alloc failed"
+Date:   Fri,  3 Apr 2020 11:24:32 +0200
+Message-Id: <46cd7f039db847c08baa6508edd7854f7c8ff80f.1585905873.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1585905873.git.michal.simek@xilinx.com>
 References: <cover.1585905873.git.michal.simek@xilinx.com>
@@ -75,7 +75,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit ab262666018de6f4e206b021386b93ed0c164316.
+This reverts commit 32cf21ac4edd6c0d5b9614368a83bcdc68acb031.
 
 As Johan says, this driver needs a lot more work and these changes are
 only going in the wrong direction:
@@ -85,45 +85,26 @@ Reported-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- drivers/tty/serial/xilinx_uartps.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/tty/serial/xilinx_uartps.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index b858fb14833d..4e3fefa70b56 100644
+index 4e3fefa70b56..412bfc51f546 100644
 --- a/drivers/tty/serial/xilinx_uartps.c
 +++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -26,13 +26,13 @@
+@@ -1542,10 +1542,8 @@ static int cdns_uart_probe(struct platform_device *pdev)
+ #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
+ 	cdns_uart_console = devm_kzalloc(&pdev->dev, sizeof(*cdns_uart_console),
+ 					 GFP_KERNEL);
+-	if (!cdns_uart_console) {
+-		rc = -ENOMEM;
+-		goto err_out_id;
+-	}
++	if (!cdns_uart_console)
++		return -ENOMEM;
  
- #define CDNS_UART_TTY_NAME	"ttyPS"
- #define CDNS_UART_NAME		"xuartps"
-+#define CDNS_UART_MAJOR		0	/* use dynamic node allocation */
- #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
- #define CDNS_UART_REGISTER_SPACE	0x1000
- #define TX_TIMEOUT		500000
- 
- /* Rx Trigger level */
- static int rx_trigger_level = 56;
--static int uartps_major;
- module_param(rx_trigger_level, uint, 0444);
- MODULE_PARM_DESC(rx_trigger_level, "Rx trigger level, 1-63 bytes");
- 
-@@ -1535,7 +1535,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 	cdns_uart_uart_driver->owner = THIS_MODULE;
- 	cdns_uart_uart_driver->driver_name = driver_name;
- 	cdns_uart_uart_driver->dev_name	= CDNS_UART_TTY_NAME;
--	cdns_uart_uart_driver->major = uartps_major;
-+	cdns_uart_uart_driver->major = CDNS_UART_MAJOR;
- 	cdns_uart_uart_driver->minor = cdns_uart_data->id;
- 	cdns_uart_uart_driver->nr = 1;
- 
-@@ -1564,7 +1564,6 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 		goto err_out_id;
- 	}
- 
--	uartps_major = cdns_uart_uart_driver->tty_driver->major;
- 	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
- 
- 	/*
+ 	strncpy(cdns_uart_console->name, CDNS_UART_TTY_NAME,
+ 		sizeof(cdns_uart_console->name));
 -- 
 2.26.0
 
