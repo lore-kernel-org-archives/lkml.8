@@ -2,104 +2,104 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6614C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E94C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981D9206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:58:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DByr5n6E"
+	by mail.kernel.org (Postfix) with ESMTP id DB2DA206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585947570;
+	bh=IC6F06iWYBrCuu+GEo9Doyj2eWJtaWfT1eP1IYhiCok=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0fLL+sH/Ka+33k7RQ+pcA7wOzfq+iCqiud3EjGAu9EAHu/D7+ypBA6yWVNZNm1qJL
+	 bLYavDo5YIjxbMALZ0qcpkbfsHGzARWyELQfEN1IcGPrzGSFfMmcJiV8oSDw6S1ZR5
+	 caJEjj1iMxYyEef5U7LdLz4dNl++xmpvJBYa9b7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgDCU6p (ORCPT
+        id S1728563AbgDCU7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 16:58:45 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35293 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgDCU6p (ORCPT
+        Fri, 3 Apr 2020 16:59:30 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41867 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727842AbgDCU73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 16:58:45 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r17so3372882lff.2;
-        Fri, 03 Apr 2020 13:58:44 -0700 (PDT)
+        Fri, 3 Apr 2020 16:59:29 -0400
+Received: by mail-lf1-f65.google.com with SMTP id z23so6950213lfh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 13:59:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8l9T+todbhyGC0Ch41GMpkg51bRDZTNStCd7TTDpixQ=;
-        b=DByr5n6EhyfXHuQJXJITYG3qU/WAnu73MxUeDoW/Wc2BqUNB9eZmvnbrjh6RLKkTD+
-         gqMIkXNk1NRFFpjQ2ZVG8vRIf0G5L4OVeBfDFQvGaudAO/tCd2WpL5JD0ybFEdJ2xcdB
-         OL/Wc5CmFFvH8CiRCjP9RXPxxysQgi3phX3Abk7NUWhFxYl8FSxs7OdH/EqjdFt3cBpN
-         rzPXNK4b/XxZ6Z4p1sRYeFqlQ4xSsAHlr8Y1VlrjOURyZEEE+mHfVGLvzbAnKp0wOlfc
-         k2elTtSJ6NPUlHzrpCd2a2lyMQhRdKjfpn5B3tAQfkRbw4sh4rHuo9fPa5VcXAmkE4cP
-         XvbQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1CPxyFZxPc0YcfVvPFYxLsM93XxYFQGYmYW5SAM+S+8=;
+        b=PwTMldcFXCyjXBv90GqkWmt5NnXcBLXrRaGeI063rXMArUMJ8dlr+c5UyGSB4Quc9t
+         BgTDfblec08zcfAN5Izm0O6uJWxWcktbZckqqwVwUBAH/xDWG52bD6nh8dEVYqKHDV3i
+         UXOdzpEza/hEDwO9OzlWJHZkEgL2qyxw5qTT4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8l9T+todbhyGC0Ch41GMpkg51bRDZTNStCd7TTDpixQ=;
-        b=eYfP1HevljecHpJtuS9jH+kAWAMFcKx4hLEtMPj/CHbASbmwhHDN/mKjQz+2yh8QGF
-         KfyI7mLWt2vzSv1m4NIvjuip92STIw78rBsvIhqAc2JoPd+J9S9sMBq3kXSdqzCINIRi
-         FXO8xe1F0oJejGMWYL/Xaootk335HRmpI6PCzoJuECeqptD7GVdP6IauMRpf1OKBg14F
-         xsIEnsQzqU6pRlGzuZ1KddX0I5a+dZJy9k871D+HpF0Tu2Qad2VQmVmn5ffl/7Vj/qsT
-         eOXrkregN8TJz5vz7SGsiTX8/P/s199QZS1yFbqHWob4uQRnwhpnOlUVMReTv+8tKZP8
-         RL+w==
-X-Gm-Message-State: AGi0PuYB+4kdFTZxOCfGby3AcTzmFe6nISZyUWqnZOlQFbVoCJI46hqg
-        mDMb/9suvLHZpWs9jRiC4k65lD4j
-X-Google-Smtp-Source: APiQypIP4feAzcNaLipaxLLCk8SMJdL0Hnq+HeHGqTrL1v1NlKcpFt9MeikawbQvt2aA4g7VM1OIpA==
-X-Received: by 2002:ac2:4116:: with SMTP id b22mr6146614lfi.172.1585947521710;
-        Fri, 03 Apr 2020 13:58:41 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j14sm6694325lfc.32.2020.04.03.13.58.40
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1CPxyFZxPc0YcfVvPFYxLsM93XxYFQGYmYW5SAM+S+8=;
+        b=mhMabswsXsbAblfZRyAOot9jVfX+jaKIJdZd8zHbHLvfD2CefmBGqujk2OjTlWHbG0
+         QqqfASH7dDgonzxiP4zc7thSA0sF9V/AOD+E+3ksgd/8aFPRuEaemHJfms9dBzbfP3Pt
+         sYUMZC5hJQLhIkVXUGgisBfSl0bvooN49ueELUP8eGljLiqe2kwG4NWy8ACvFg0Ph+mV
+         zsysjQRLzYWagrlghjlyJtXiHa/XC7gQ5AQbHRTgfTQXqhNtC1unC9DSOoJ32wx61vdE
+         h5l20s86ISYuOsmROUIoaK7Hh1Ox7GKCHrIdKsQnsGr+kfWzFUuMWlKlS3hsxBABsY+5
+         aXLQ==
+X-Gm-Message-State: AGi0Pubi7OHXQyHeuJmhkI9Y+P+twEuHaJUpCnGuxJ/8zySxkEgNpT1d
+        siknZ4S59QXmwtNpdM860TgpkqS8SOg=
+X-Google-Smtp-Source: APiQypKcsOnVUe5yThB8Qz4jC0LhRYfYB4vyYD1Ix+SQVuM1Ja0ZfHHnh0AdaODcCjCe2pXf0hP3Aw==
+X-Received: by 2002:ac2:4c9a:: with SMTP id d26mr5283981lfl.112.1585947566383;
+        Fri, 03 Apr 2020 13:59:26 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id k4sm6461112lfo.47.2020.04.03.13.59.24
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 13:58:41 -0700 (PDT)
-Subject: Re: [PATCH v3 2/7] clocksource: Add Tegra186 timers support
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200403202209.299823-1-thierry.reding@gmail.com>
- <20200403202209.299823-3-thierry.reding@gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <894dbbd4-be96-13ce-96b9-432b5d71f06b@gmail.com>
-Date:   Fri, 3 Apr 2020 23:58:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 03 Apr 2020 13:59:25 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id f20so8434398ljm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 13:59:24 -0700 (PDT)
+X-Received: by 2002:a2e:8911:: with SMTP id d17mr6047340lji.16.1585947564510;
+ Fri, 03 Apr 2020 13:59:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200403202209.299823-3-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <87blobnq02.fsf@x220.int.ebiederm.org> <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
+ <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
+ <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
+ <87lfnda3w3.fsf@x220.int.ebiederm.org> <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
+ <328f5ad3-f8b3-09b9-f2f7-b6dae0137542@redhat.com>
+In-Reply-To: <328f5ad3-f8b3-09b9-f2f7-b6dae0137542@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 3 Apr 2020 13:59:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgww8LFqUenUtNV7hzYSxAemjbOVYfZMXqOxK7DGRrZaw@mail.gmail.com>
+Message-ID: <CAHk-=wgww8LFqUenUtNV7hzYSxAemjbOVYfZMXqOxK7DGRrZaw@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Waiman Long <longman@redhat.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.04.2020 23:22, Thierry Reding пишет:
-...
-> +static int tegra186_wdt_set_timeout(struct watchdog_device *wdd,
-> +				    unsigned int timeout)
-> +{
-> +	struct tegra186_wdt *wdt = to_tegra186_wdt(wdd);
-> +
-> +	if (watchdog_active(&wdt->base))
-> +		tegra186_wdt_disable(wdt);
+On Fri, Apr 3, 2020 at 1:41 PM Waiman Long <longman@redhat.com> wrote:
+>
+> Another alternative is to add new functions like down_read_unfair() that
+> perform unfair read locking for its callers. That will require less code
+> change, but the calling functions have to make the right choice.
 
-Could this and other tegra186_wdt_enable/disable occurrences race with
-the interrupt handler?
+I'd prefer the static choice model - and I'd hide this in some
+"task_cred_read_lock()" function anyway rather than have the users do
+"mutex_lock_killable(&task->signal->cred_guard_mutex)" like they do
+now.
 
-Shouldn't IRQ be disabled/enable in a such cases to avoid the races?
+How nasty would it be to add the "upgrade" op? I took a quick look,
+but that just made me go "Waiman would know" ;)
 
-> +	wdt->base.timeout = timeout;
-> +
-> +	if (watchdog_active(&wdt->base))
-> +		tegra186_wdt_enable(wdt);
-> +
-> +	return 0;
-> +}
+             Linus
