@@ -2,146 +2,180 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF221C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B4FC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B55B206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D82206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="qoPbpNmw"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wShxCNEA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390335AbgDCIsz (ORCPT
+        id S2389876AbgDCIvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:48:55 -0400
-Received: from mail-eopbgr1410137.outbound.protection.outlook.com ([40.107.141.137]:46644
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727144AbgDCIsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:48:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lcPInuR9mQyNN80YhFvUE3kg4rccqEfsAOcNJWokcZLgFHSyCAk4mvbKwYjPZeCfV4dK0JIAAFHEv/SG/CsYfTdtSMSf9K5LK1Stl0di+dhpAKmFOXKEGxnIgm6BulPPjCrk0TBqJKwCgVbG5YYQLO1CnG1V3GLdChkcNQaozM+bT+vOZ4KVk+ovD4BX3f1z3+IQYjiT10eM1gTQarQT3VHNKfZgEntwB7OWftY0rDgcZsR1McvOmWZaLgIeAp/mJtoVBoUQTi6DOsZvJzonCCHdYXz4jNQKD5tiIcEUWUTNTnqdrahg7HpcS9/yDzYKJeDBIa8BO2JP5wuPdpIJUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oYDi0WYdl8Y9n341xK/dbmK5j+NLoQJx3pDfdWmXmKs=;
- b=MzqGylJks9Ey88hDPtffImhGqW9/LDF1eyMR7nSGsjV0xAr3uZ4uI/PiczyTnqvFQ6I43g9l9gUB5dNfAAp1d+s8+1mOgk7B6fNTrguqC0d1CPCDK+3+r/TEM0RzuGmHujZN5WeYs+qWjds/WExS92fnCBmL0BkcIgl/+lN+MYwCuTLATmvagAFpcdL6FdIA8RCaWudhExFXEXG6XwSIZ0EUfULWEVN2w6lB7pfEFNyz0c5OItzbD0Tiy218IITGCezggOFK+Bxw7vbLyDQl4OkboAzpgzAAKK4ijXebsFjtKUzWbvi9LfTdOdoOxGdkFd5MJapfz0NWSG++nKuDFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oYDi0WYdl8Y9n341xK/dbmK5j+NLoQJx3pDfdWmXmKs=;
- b=qoPbpNmwjZDKHvW2jLi6SCzRf07KmSRfGfg7jn87TDLFH6O2CwiUFnZU9qBVulM0hqDjDi9r/CdwbFM9OKy/ql9F+hSOfhfvPKJyhYg1JHrDb8BVp1Q/sDkMZDBEVWq2s3UqDFT9nqallOSwIPFpCrEz0eeINdXHqkNMXhjmJZo=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB4958.jpnprd01.prod.outlook.com (20.179.186.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Fri, 3 Apr 2020 08:48:50 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
- 08:48:50 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v6 11/11] MAINTAINERS: Add file patterns for rcar PCI
- device tree bindings
-Thread-Topic: [PATCH v6 11/11] MAINTAINERS: Add file patterns for rcar PCI
- device tree bindings
-Thread-Index: AQHWCSaHWfzlO1127kSwO6dW2/hRnqhnFrJw
-Date:   Fri, 3 Apr 2020 08:48:50 +0000
-Message-ID: <TYAPR01MB45446CB6C15F21121B4EE5F1D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1585856319-4380-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1585856319-4380-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fda6a567-7a52-4fe4-18be-08d7d7abd509
-x-ms-traffictypediagnostic: TYAPR01MB4958:|TYAPR01MB4958:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB49582E03F17A9922FE2F5F41D8C70@TYAPR01MB4958.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(55236004)(110136005)(107886003)(5660300002)(7696005)(2906002)(8676002)(186003)(9686003)(4744005)(86362001)(71200400001)(81166006)(66476007)(64756008)(76116006)(54906003)(4326008)(66446008)(6506007)(8936002)(55016002)(66556008)(81156014)(316002)(66946007)(33656002)(52536014)(7416002)(478600001)(26005)(921003)(1121003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I6kN8UnYuB8S+Dgwz+58MEGHCXiAPObrsn5/Y20SXqvVPreY2CRgaD8+2mdm4hHY5yHwvH3ey5Iy7rfkPGabrH9o5KI1CKH6HNHJnGZjfk1tDILywV5dTzRNW6GIp/IUcqcXhbsB/Cn0SYLki0IBnD1/Iif+84mfaZumWbkOP+pH0rG8551sNMQElNQE1LkNCv7/GRQtK14fxpAxj8ZAQLLwwE051jXcoKxymjRjTs7eD0A9ii7mvFzYGTrvXC48Y/5G5ajaSsX1J7TdREzaQVjZO03MbC8AOdrgXJku9fJVik7QPgLZLNsWz6BBcLP04jUP+ho1M9iHaNOPTE15PV76PcxEQ6oxBrxm8BZpCAl30dv6vHrmoI55m+Hv2HXCNsC9Sc406ObvdrWlubGZFuU4AH1RzXOr0YKWJXr00pnrt83to7gCiS8w5f53CtVDIP51qq0c2YGS3Mn5XkwRL72nJ6QkHzNiQo/D8JtirQhD5GksuCR37abYBPylaJZo
-x-ms-exchange-antispam-messagedata: 5bMSN/F8TKATq7sYKec+KWwoLX1FtZGLSihUCG2VGuWUuaizp05erKzkPHKPqxeQydZ60oNbaNLt3u5x5/ba4dF1ZoP9Epus5Us7v0lD4Q9yq8sIOtAbTOAQeodCKzcllyMRhfLbrXmExydvB46e+Q==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 3 Apr 2020 04:51:52 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54148 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbgDCIvv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:51:51 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0338phkR002696;
+        Fri, 3 Apr 2020 03:51:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585903903;
+        bh=vomyYBpE+3vWWm4YA0bh+xrKj5H16PwL6wY781/tLJs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wShxCNEAc7tZTdXJRGkLp8MSyRyn122Thq6qkifT5x+LzP1OSd5NiJK+SWyXcaPwO
+         kRjAOePSyJh2zbLkZFUEhT/XmNz6DvWZt232SyuF03qu8NsG7Hx8oI+K3t6db3kfnu
+         EWM0acwPeMTKy4AaOSoyHXAMK5iOJYZ1cotbA4aM=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0338ph3G100973
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 3 Apr 2020 03:51:43 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
+ 2020 03:51:43 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 3 Apr 2020 03:51:43 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0338pdg6073680;
+        Fri, 3 Apr 2020 03:51:40 -0500
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        <kernel@pengutronix.de>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+ <20200312042210.17344-5-lokeshvutla@ti.com>
+ <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+ <20200330141436.GG2431644@ulmo>
+ <20200330191654.waoocllctanh5nk5@pengutronix.de>
+ <20200331204559.GB2954599@ulmo>
+ <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
+ <20200401182833.GB2978178@ulmo>
+ <20200401203156.d7x5ynnnhob3jyoo@pengutronix.de>
+ <20200401213738.GA3052587@ulmo>
+ <20200402140221.bjbol77uegjma6oz@pengutronix.de>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <5dbdbc15-ff29-f577-0632-6a28378b0104@ti.com>
+Date:   Fri, 3 Apr 2020 14:21:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fda6a567-7a52-4fe4-18be-08d7d7abd509
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 08:48:50.7508
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LVNqRszSfe97JNek1fWLEYdlDGkAIfUcMmmqPsySW2i0lyQxKHsd/zrDZaOVS4DiDsKpZJsyOG/0TETH1AfGN4tnCCgqZs5Dnh3p8Wnoj3uC8ds3+YrietVZFKHzMsUB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4958
+In-Reply-To: <20200402140221.bjbol77uegjma6oz@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar-san,
 
-> From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:39 AM
->=20
-> Add file pattern entry for rcar PCI devicetree binding, so that when
-> people run ./scripts/get_maintainer.pl the rcar PCI maintainers could als=
-o
-> be listed.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thank you for the patch!
+On 02/04/20 7:32 PM, Uwe Kleine-König wrote:
+> Hello Thierry,
+> 
+> On Wed, Apr 01, 2020 at 11:37:38PM +0200, Thierry Reding wrote:
+>> On Wed, Apr 01, 2020 at 10:31:56PM +0200, Uwe Kleine-König wrote:
+>>> There are people out there that are more demanding. If you have 1000000
+>>> machines in the field and only then find out that they all fail to
+>>> operate correctly with a certain small but positive probability and you
+>>> have to send someone to each machine to fix that, that's bad.
+>>
+>> Agreed. But that's not really what we're talking about here, right? This
+>> isn't some undefined behaviour that would spontaneously trigger.
+>> We're still talking about deterministic behaviour that's going to be
+>> the same whether you do it once in a test lab or a million times in
+>> the field. A PWM-controlled backlight that you adjust the brightness
+>> of in the lab is going to work the same way as in the field. Any
+>> potential glitch would be happening in the lab as well. It would in
+>> fact, constantly happen.
+> 
+> The glitch we're talking about really doesn't happen that often that we
+> should rely on this problem popping up during testing. To change both
+> period and duty_cycle two register writes are necessary. The hickup only
+> happens if after the first register write a period ends before the
+> second register write hits the hardware. (For the omap driver it might
+> happen a bit more often, don't remember the details, but I think the
+> above is what could be reached theoretically.)
+> 
+>> For the rare cases where you can't fake it, it doesn't really matter
+>> whether the framework refuses to do something because it knows that the
+>> hardware isn't capable of doing it, or whether the driver will simply
+>> try its best to do what it was asked to do and fails to deliver. You'll
+>> notice one way or another and then you need to go back to the drawing
+>> board and redo the design.
+> 
+> I think you didn't understand up to now that the glitch depends on
+> timing between register access and the PWM period and so is really hard
+> to actually reproduce. In the hope you understood that now, I assume you
+> see that your argumentation is incomplete.
+> 
+> And I think to assume that somebody would complain about a race
+> condition in a patch that just hit next is quite optimistic.
+> 
+> Having said that I don't know how critical this really is. Given that
+> the PWM under discussion doesn't complete periods on stop, it probably
+> isn't.
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+It is a limitation with the existing driver as well. Nothing is being changed
+regarding stopping of PWM. The same is marked under the limitations in the driver.
 
-Best regards,
-Yoshihiro Shimoda
+> 
+> I spend some time thinking about when the glitch actually happens.
+> Currently the load value is written first and then the match value.
+> If no period ends between the two writes there is only a problem when in
+> the currently running period the match event didn't happen yet. Then we
+> see a cycle with
+> 
+>    .period = oldperiod + newperiod
+>    .dutycycle = oldperiod + newdutycycle
+> 
+> (if the new match value isn't hit in the current cycle) or one with
+> 
+>    .period = oldperiod
+>    .duty_cycle = newdutycycle + (oldperiod - newperiod)
+> 
+> (if the new match value is hit in the current cycle). The probability
+> that one of the two happen is: olddutycycle / oldperiod which is quite
+> probable. (With olddutycycle = oldperiod there is no problem though.)
+> 
+> If after writing the new load value and before writing the new match
+> value a period ends it might happen that we see a cycle with
+> 
+>   .period = newperiod
+>   .dutycycle = olddutycycle + (newperiod - oldperiod)
+> 
+> (if the previous match value is used) or one with
+> 
+>   .period = 2 * newperiod
+>   .dutycycle = newperiod + newdutycycle
+> 
+> (if new match value is written too late for the first cycle with the new
+> period).
 
+
+That's exactly why we have marked in the Limitations sections that the current
+period might produce a cycle with mixed settings.  Frankly, I'm a bit torn here.
+There are other PWMs inside Linux with  similar limitations and documented
+similarly. If there is an overall objection for such hardware, the entire policy
+should be changed or the framework should be updated to allow user to choose for
+dynamic updates. IMHO, this series should not be blocked for this decision.
+Please consider it for the coming merge window.
+
+Thanks and regards,
+Lokesh
