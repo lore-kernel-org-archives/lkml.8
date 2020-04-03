@@ -2,239 +2,73 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A940C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51714C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44FE6208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:45:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585928724;
-	bh=IBYHsELIwmPGsQ8px3F+5N33p/TXw+Of7Tpr97Hr03Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FoGWxTl/QOvonDme+O57X9LvYHbBKtkxA6KbhJTmKqyvwBhSO4NgDgsmNwm59LmhJ
-	 SGKzM45XyQqM2YLLJ7BbuqjmLwgNzphHNSrU/0KuEq7DCTP7Akam7w9hcLUlKqeDlo
-	 nEyfHvpeJJokhxW8+DIDkGwYcwiN5f7p69jwby6A=
+	by mail.kernel.org (Postfix) with ESMTP id 09558206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:46:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YL/XZaPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390978AbgDCPpX (ORCPT
+        id S2390855AbgDCPq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:45:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34128 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbgDCPpX (ORCPT
+        Fri, 3 Apr 2020 11:46:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48232 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbgDCPq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:45:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m2so7738703otr.1;
-        Fri, 03 Apr 2020 08:45:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0OlPmNS9dHURUW1j/GP8nWFfBJCMF/4MX3QGW5VBkAY=;
-        b=pr3XatD/u0bflYOqdv4naKRHo5cXjvZ020DJ3K6CodtyVHVfWEseNiA6YhKl8A6gJO
-         3FPOVfRN7ZPx1fy8H3gKDvtebQGYRXnOZ4WBRse1FJ4lIspLJScbR4FmTiFsgV4zStEV
-         6F2+7Zd7xgEIOcTAu8DD6lNVM9Z2KDr9CP9bFbgorL9W8sDeln6yPZl4Sby3y+K0qiM1
-         oiGY1ial5pjnxno89VTrpEngOOGBRMzf+MAraHbAUtL9fC7nQniPuhbRn/UHkG+vPYeH
-         3WXpdx8b8nj+g55BmVKC+EUdWalNj1kO3e+AXtFPpa0i+1m7iGIZhz1ZNrBbgOrf8hTt
-         DdyA==
-X-Gm-Message-State: AGi0PuZxztcTWja6s3OOyIpT7EhRtWfHdlfoyo3hpWpxJiPpUs+7INci
-        hs/rB5g/y+SxgtmY8LivjRugxfcUoi/UPlPrZZEBOw==
-X-Google-Smtp-Source: APiQypKQ9Xp8nVHgM9+0xGucPJq4E+PtvuvYZbbCag4WBSihL1keZIQUi+fwlcVCwlz+1SIf8dFIIwlkqu7iL3CyLCQ=
-X-Received: by 2002:a9d:750a:: with SMTP id r10mr6596381otk.118.1585928721634;
- Fri, 03 Apr 2020 08:45:21 -0700 (PDT)
+        Fri, 3 Apr 2020 11:46:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jumPZeY2/s1i3k4de+rl5jCcLuzdcZov7AWLXx3FDSY=; b=YL/XZaPn6ibQbSO45trkFn4k4b
+        KQAHKRXBwXSwkr9Oa1oh4p10NBFp1XMl3TTyPxH9Vb7n5e0zpffrw0MDgFS7jGf5dr9AMZjID3XXL
+        jSAxOytsZxCEU3QoMPMbXF60FTRV0+hmezAEozQ8w1mKezNfR4Spqt540nL+dRzvl/yeUusoYvm2i
+        v0tNp6a5kwKq+gQQliBmMAhycxhZJZsPubGkyot/8z9O0kjO26+ZeDTUJaSiYru67mRohoX9Jc84M
+        PcHDedxY33W+qVhNpUcjkPij0lCPyZqQ94Y1cQN3UjChHx7FoKET/OQi9H/6rPMMiRTPyfn1S+dWL
+        I/ntTCDw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKOWU-0002tW-Nk; Fri, 03 Apr 2020 15:46:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 598C73010BC;
+        Fri,  3 Apr 2020 17:46:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4AD512B12426C; Fri,  3 Apr 2020 17:46:20 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 17:46:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
+Message-ID: <20200403154620.GS20730@hirez.programming.kicks-ass.net>
+References: <20200402082220.808-1-alexandre.chartre@oracle.com>
+ <20200402082220.808-5-alexandre.chartre@oracle.com>
+ <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
+ <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
+ <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
+ <20200402154022.GG20730@hirez.programming.kicks-ass.net>
+ <bc3a31dc-9d59-5756-aad3-187533f05654@redhat.com>
+ <20200403151757.lhhia7pzqptvlqz5@treble>
 MIME-Version: 1.0
-References: <20200403140345.3828-1-cai@lca.pw>
-In-Reply-To: <20200403140345.3828-1-cai@lca.pw>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 3 Apr 2020 17:45:10 +0200
-Message-ID: <CAJZ5v0jjZzSosFwR3Yqu9mWtUNms1u9fbJbQb=tc5=CPc7r_1w@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/acpi: fix a deadlock with cpu hotplug
-To:     Qian Cai <cai@lca.pw>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403151757.lhhia7pzqptvlqz5@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 4:04 PM Qian Cai <cai@lca.pw> wrote:
->
-> Similar to the commit 0266d81e9bf5 ("acpi/processor: Prevent cpu hotplug
-> deadlock") except this is for acpi_processor_ffh_cstate_probe():
->
-> "The problem is that the work is scheduled on the current CPU from the
-> hotplug thread associated with that CPU.
->
-> It's not required to invoke these functions via the workqueue because
-> the hotplug thread runs on the target CPU already.
->
-> Check whether current is a per cpu thread pinned on the target CPU and
-> invoke the function directly to avoid the workqueue."
->
->  WARNING: possible circular locking dependency detected
->  ------------------------------------------------------
->  cpuhp/1/15 is trying to acquire lock:
->  ffffc90003447a28 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: __flush_work+0x4c6/0x630
->
->  but task is already holding lock:
->  ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
->
->  which lock already depends on the new lock.
->
->  the existing dependency chain (in reverse order) is:
->
->  -> #1 (cpu_hotplug_lock){++++}-{0:0}:
->  cpus_read_lock+0x3e/0xc0
->  irq_calc_affinity_vectors+0x5f/0x91
->  __pci_enable_msix_range+0x10f/0x9a0
->  pci_alloc_irq_vectors_affinity+0x13e/0x1f0
->  pci_alloc_irq_vectors_affinity at drivers/pci/msi.c:1208
->  pqi_ctrl_init+0x72f/0x1618 [smartpqi]
->  pqi_pci_probe.cold.63+0x882/0x892 [smartpqi]
->  local_pci_probe+0x7a/0xc0
->  work_for_cpu_fn+0x2e/0x50
->  process_one_work+0x57e/0xb90
->  worker_thread+0x363/0x5b0
->  kthread+0x1f4/0x220
->  ret_from_fork+0x27/0x50
->
->  -> #0 ((work_completion)(&wfc.work)){+.+.}-{0:0}:
->  __lock_acquire+0x2244/0x32a0
->  lock_acquire+0x1a2/0x680
->  __flush_work+0x4e6/0x630
->  work_on_cpu+0x114/0x160
->  acpi_processor_ffh_cstate_probe+0x129/0x250
->  acpi_processor_evaluate_cst+0x4c8/0x580
->  acpi_processor_get_power_info+0x86/0x740
->  acpi_processor_hotplug+0xc3/0x140
->  acpi_soft_cpu_online+0x102/0x1d0
->  cpuhp_invoke_callback+0x197/0x1120
->  cpuhp_thread_fun+0x252/0x2f0
->  smpboot_thread_fn+0x255/0x440
->  kthread+0x1f4/0x220
->  ret_from_fork+0x27/0x50
->
->  other info that might help us debug this:
->
->  Chain exists of:
->  (work_completion)(&wfc.work) --> cpuhp_state-up --> cpuidle_lock
->
->  Possible unsafe locking scenario:
->
->  CPU0                    CPU1
->  ----                    ----
->  lock(cpuidle_lock);
->                          lock(cpuhp_state-up);
->                          lock(cpuidle_lock);
->  lock((work_completion)(&wfc.work));
->
->  *** DEADLOCK ***
->
->  3 locks held by cpuhp/1/15:
->  #0: ffffffffaf51ab10 (cpu_hotplug_lock){++++}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
->  #1: ffffffffaf51ad40 (cpuhp_state-up){+.+.}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
->  #2: ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
->
->  Call Trace:
->  dump_stack+0xa0/0xea
->  print_circular_bug.cold.52+0x147/0x14c
->  check_noncircular+0x295/0x2d0
->  __lock_acquire+0x2244/0x32a0
->  lock_acquire+0x1a2/0x680
->  __flush_work+0x4e6/0x630
->  work_on_cpu+0x114/0x160
->  acpi_processor_ffh_cstate_probe+0x129/0x250
->  acpi_processor_evaluate_cst+0x4c8/0x580
->  acpi_processor_get_power_info+0x86/0x740
->  acpi_processor_hotplug+0xc3/0x140
->  acpi_soft_cpu_online+0x102/0x1d0
->  cpuhp_invoke_callback+0x197/0x1120
->  cpuhp_thread_fun+0x252/0x2f0
->  smpboot_thread_fn+0x255/0x440
->  kthread+0x1f4/0x220
->  ret_from_fork+0x27/0x50
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
+On Fri, Apr 03, 2020 at 10:17:57AM -0500, Josh Poimboeuf wrote:
+> Peter, I think my previous idea for UNWIND_HINT_ADJUST stack_add=8 would
+> work here?
 
-I can take this one unless there are objections or concerns.
-
-> ---
->
-> v3:
-> Remove #ifdef since cstate.o should rather depend on ACPI_PROCESSOR_IDLE
-> per Rafael.
->
-> v2:
-> Make call_on_cpu() a static inline function to avoid a compilation
-> error when ACPI_PROCESSOR=m thanks to lkp@intel.com.
->
->  arch/x86/kernel/acpi/cstate.c       | 3 ++-
->  drivers/acpi/processor_throttling.c | 7 -------
->  include/acpi/processor.h            | 8 ++++++++
->  3 files changed, 10 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-> index caf2edccbad2..49ae4e1ac9cd 100644
-> --- a/arch/x86/kernel/acpi/cstate.c
-> +++ b/arch/x86/kernel/acpi/cstate.c
-> @@ -161,7 +161,8 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
->
->         /* Make sure we are running on right CPU */
->
-> -       retval = work_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx);
-> +       retval = call_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx,
-> +                            false);
->         if (retval == 0) {
->                 /* Use the hint in CST */
->                 percpu_entry->states[cx->index].eax = cx->address;
-> diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
-> index 532a1ae3595a..a0bd56ece3ff 100644
-> --- a/drivers/acpi/processor_throttling.c
-> +++ b/drivers/acpi/processor_throttling.c
-> @@ -897,13 +897,6 @@ static long __acpi_processor_get_throttling(void *data)
->         return pr->throttling.acpi_processor_get_throttling(pr);
->  }
->
-> -static int call_on_cpu(int cpu, long (*fn)(void *), void *arg, bool direct)
-> -{
-> -       if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
-> -               return fn(arg);
-> -       return work_on_cpu(cpu, fn, arg);
-> -}
-> -
->  static int acpi_processor_get_throttling(struct acpi_processor *pr)
->  {
->         if (!pr)
-> diff --git a/include/acpi/processor.h b/include/acpi/processor.h
-> index 47805172e73d..683e124ad517 100644
-> --- a/include/acpi/processor.h
-> +++ b/include/acpi/processor.h
-> @@ -297,6 +297,14 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
->  }
->  #endif
->
-> +static inline int call_on_cpu(int cpu, long (*fn)(void *), void *arg,
-> +                             bool direct)
-> +{
-> +       if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
-> +               return fn(arg);
-> +       return work_on_cpu(cpu, fn, arg);
-> +}
-> +
->  /* in processor_perflib.c */
->
->  #ifdef CONFIG_CPU_FREQ
-> --
-> 2.21.0 (Apple Git-122.2)
->
+Yes, it would.
