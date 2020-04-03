@@ -2,212 +2,154 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85162C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7275EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D09C2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="GuMNLp28"
+	by mail.kernel.org (Postfix) with ESMTP id 22EEB20737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585912784;
+	bh=fPCpg83+vuadCt/U61cv0oskGOLUKlXhxRcENxSSx0Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eGrBz/tvTlFIGarWhHJI5sUixcqlb/buFGIW6Fckx0x2u+Q4gyaoxkQ063GhtO/PL
+	 SOB8AFxD5d3p3FclXZMwHOIINW1F4D5CQGbHje95i3dNVWlqZ6lANE6hK3WrwlUTR1
+	 MLmTgXdsPMGWzE5qKdM8p/Yqh1DOkNgfHJL/JRUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390769AbgDCLTE (ORCPT
+        id S2390778AbgDCLTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:19:04 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:33202 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728069AbgDCLTD (ORCPT
+        Fri, 3 Apr 2020 07:19:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38814 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbgDCLTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:19:03 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033BJ1Rj024696
-        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 04:19:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=POliylQHnadVcZ/lLIE6UlF5yDLxBLN21yBGuch3mZc=;
- b=GuMNLp28HwajDJpuV3zAPd5l01vBrgTWBnTiQzXiyShvWCNmzRBA3RoG8zBNM4WY2zUd
- o/Ryaa0CgpPfZFeKjDLr0z8L8QkEjmzPHo5qBHsZKe/QU8lktIwspFOCtf9iybPbDfbs
- tfagh8ZoOsG43jkMQcRpduRQH6XEEUcyw0k= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 304cxbxex5-8
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 04:19:02 -0700
-Received: from intmgw003.03.ash8.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:11d::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 3 Apr 2020 04:18:39 -0700
-Received: by devbig020.ftw1.facebook.com (Postfix, from userid 179119)
-        id 6C27C58C06B4; Fri,  3 Apr 2020 04:18:36 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Aslan Bakirov <aslan@fb.com>
-Smtp-Origin-Hostname: devbig020.ftw1.facebook.com
-To:     <akpm@linux-foundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <riel@surriel.com>, <guro@fb.com>,
-        <mhocko@kernel.org>, <hannes@cmpxchg.org>,
-        Aslan Bakirov <aslan@fb.com>
-Smtp-Origin-Cluster: ftw1c07
-Subject: [PATCH 1/2] mm: cma: NUMA node interface
-Date:   Fri, 3 Apr 2020 04:18:11 -0700
-Message-ID: <20200403111812.705955-1-aslan@fb.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 3 Apr 2020 07:19:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=beMmNjLaey68i4T8yERipXx8YLgggyVjmRR12qNqb6k=; b=PP2DPp4NIT2zHNY2CCfe1S4Hym
+        btBz0EIpxs9n+QsVzjoxx84RauiDdhXR5t8Bexfjs7lsVQi3DZba10YP7WGtXQ3bCbsvQbdTHL7G+
+        HQCYcV4pCt/LrX4EOc1cydfSQzUn6vEnAPE9mbY1l/a5yTrCZQWTnTogh8tXxmlT3jJ0sZ600JgQt
+        yMiKT/D2cUsTPpnIvpq3uv9fN9NPPtCJYyr14NUzfcBNwvsKD+bE9ud86yzPsBhBqQWCUNhB6mr6G
+        rwoQ9jShaGyazX7N8i3E2NpHqkAmHxTYVR7vfg2386miIlYx49En+S50Ohimu2xdsWk6tds7KLjyM
+        kKkUT4gw==;
+Received: from ip5f5ad4d8.dynamic.kabel-deutschland.de ([95.90.212.216] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKKMI-00084w-Gt; Fri, 03 Apr 2020 11:19:34 +0000
+Date:   Fri, 3 Apr 2020 13:19:26 +0200
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Perches <joe@perches.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
+ DRM fourccs
+Message-ID: <20200403131926.7caf3288@coco.lan>
+In-Reply-To: <20200403104701.GC3172@kekkonen.localdomain>
+References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
+        <20200403102449.GB4882@pendragon.ideasonboard.com>
+        <20200403104701.GC3172@kekkonen.localdomain>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_07:2020-04-02,2020-04-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- phishscore=0 suspectscore=1 mlxlogscore=999 mlxscore=0 clxscore=1015
- spamscore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004030099
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've noticed that there is no interfaces exposed by CMA which would let m=
-e
-to declare contigous memory on particular NUMA node.
+Em Fri, 3 Apr 2020 13:47:02 +0300
+Sakari Ailus <sakari.ailus@linux.intel.com> escreveu:
 
-This patchset adds the ability to try to allocate contiguous memory on
-specific node. It will fallback to other nodes if the specified one
-doesn't work.
+> > > +static noinline_for_stack
+> > > +char *fourcc_string(char *buf, char *end, const u32 *fourcc,
+> > > +		    struct printf_spec spec, const char *fmt)
+> > > +{
+> > > +#define FOURCC_STRING_BE	"-BE"
+> > > +	char s[sizeof(*fourcc) + sizeof(FOURCC_STRING_BE)] = { 0 };
+> > > +
+> > > +	if (check_pointer(&buf, end, fourcc, spec))
+> > > +		return buf;
+> > > +
+> > > +	if (fmt[1] != 'c' || fmt[2] != 'c')
+> > > +		return error_string(buf, end, "(%p4?)", spec);
+> > > +
+> > > +	put_unaligned_le32(*fourcc & ~BIT(31), s);
+> > > +
+> > > +	if (*fourcc & BIT(31))
+> > > +		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
+> > > +			sizeof(FOURCC_STRING_BE));
+> > > +
+> > > +	return string(buf, end, s, spec);  
+> > 
+> > Taking V4L2_PIX_FMT_Y16_BE as an example, this will print 'Y16 -BE'
+> > (without quotes). There are other 4CCs that contain spaces and would
+> > suffer from a similar issue. Even in little-endian format, it would
+> > result in additional spaces in the output string. Is this what we want ?
+> > Should the caller always enclose the 4CC in quotes or brackets for
+> > clarity ? Or should still be done here ?  
+> 
+> Good question. Space is indeed a valid character in a 4cc code.
+> 
+> If I omit one or more spaces, it will no longer be a 4cc, but a 3cc or even
+> a 2cc. Jokes aside, there are probably fair arguments both ways.
+> 
+> I presume there's no 4cc code where the location of a space would make a
+> difference but all of the spaces are trailing spaces.
 
-Implement a new method for declaring contigous memory on particular node
-and keep cma_declare_contiguous() as a wrapper.
+Yes. I guess it doesn't make any sense to allow a 4cc code with an
+space before or in the middle.
 
-Signed-off-by: Aslan Bakirov <aslan@fb.com>
----
- include/linux/cma.h      | 13 +++++++++++--
- include/linux/memblock.h |  3 +++
- mm/cma.c                 | 16 +++++++++-------
- mm/memblock.c            |  2 +-
- 4 files changed, 24 insertions(+), 10 deletions(-)
+Btw, on a quick search at the Internet for non-Linux definitions,
+a Fourcc code "Y8  " is actually shown at the lists as just "Y8", 
+e. g. removing the leading spaces:
 
-diff --git a/include/linux/cma.h b/include/linux/cma.h
-index 190184b5ff32..eae834c2162f 100644
---- a/include/linux/cma.h
-+++ b/include/linux/cma.h
-@@ -24,10 +24,19 @@ extern phys_addr_t cma_get_base(const struct cma *cma=
-);
- extern unsigned long cma_get_size(const struct cma *cma);
- extern const char *cma_get_name(const struct cma *cma);
-=20
--extern int __init cma_declare_contiguous(phys_addr_t base,
-+extern int __init cma_declare_contiguous_nid(phys_addr_t base,
- 			phys_addr_t size, phys_addr_t limit,
- 			phys_addr_t alignment, unsigned int order_per_bit,
--			bool fixed, const char *name, struct cma **res_cma);
-+			bool fixed, const char *name, struct cma **res_cma,
-+			int nid);
-+static inline int __init cma_declare_contiguous(phys_addr_t base,
-+			phys_addr_t size, phys_addr_t limit,
-+			phys_addr_t alignment, unsigned int order_per_bit,
-+			bool fixed, const char *name, struct cma **res_cma)
-+{
-+	return cma_declare_contiguous_nid(base, size, limit, alignment,
-+			order_per_bit, fixed, name, res_cma, NUMA_NO_NODE);
-+}
- extern int cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
- 					unsigned int order_per_bit,
- 					const char *name,
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 079d17d96410..6bc37a731d27 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -348,6 +348,9 @@ static inline int memblock_get_region_node(const stru=
-ct memblock_region *r)
-=20
- phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t alig=
-n,
- 				      phys_addr_t start, phys_addr_t end);
-+phys_addr_t memblock_alloc_range_nid(phys_addr_t size,
-+				      phys_addr_t align, phys_addr_t start,
-+				      phys_addr_t end, int nid, bool exact_nid);
- phys_addr_t memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t al=
-ign, int nid);
-=20
- static inline phys_addr_t memblock_phys_alloc(phys_addr_t size,
-diff --git a/mm/cma.c b/mm/cma.c
-index be55d1988c67..0463ad2ce06b 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -220,7 +220,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, ph=
-ys_addr_t size,
- }
-=20
- /**
-- * cma_declare_contiguous() - reserve custom contiguous area
-+ * cma_declare_contiguous_nid() - reserve custom contiguous area
-  * @base: Base address of the reserved area optional, use 0 for any
-  * @size: Size of the reserved area (in bytes),
-  * @limit: End address of the reserved memory (optional, 0 for any).
-@@ -229,6 +229,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, ph=
-ys_addr_t size,
-  * @fixed: hint about where to place the reserved area
-  * @name: The name of the area. See function cma_init_reserved_mem()
-  * @res_cma: Pointer to store the created cma region.
-+ * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
-  *
-  * This function reserves memory from early allocator. It should be
-  * called by arch specific code once the early allocator (memblock or bo=
-otmem)
-@@ -238,10 +239,11 @@ int __init cma_init_reserved_mem(phys_addr_t base, =
-phys_addr_t size,
-  * If @fixed is true, reserve contiguous area at exactly @base.  If fals=
-e,
-  * reserve in range from @base to @limit.
-  */
--int __init cma_declare_contiguous(phys_addr_t base,
-+int __init cma_declare_contiguous_nid(phys_addr_t base,
- 			phys_addr_t size, phys_addr_t limit,
- 			phys_addr_t alignment, unsigned int order_per_bit,
--			bool fixed, const char *name, struct cma **res_cma)
-+			bool fixed, const char *name, struct cma **res_cma,
-+			int nid)
- {
- 	phys_addr_t memblock_end =3D memblock_end_of_DRAM();
- 	phys_addr_t highmem_start;
-@@ -336,14 +338,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 		 * memory in case of failure.
- 		 */
- 		if (base < highmem_start && limit > highmem_start) {
--			addr =3D memblock_phys_alloc_range(size, alignment,
--							 highmem_start, limit);
-+			addr =3D memblock_alloc_range_nid(size, alignment,
-+					highmem_start, limit, nid, false);
- 			limit =3D highmem_start;
- 		}
-=20
- 		if (!addr) {
--			addr =3D memblock_phys_alloc_range(size, alignment, base,
--							 limit);
-+			addr =3D memblock_alloc_range_nid(size, alignment, base,
-+					limit, nid, false);
- 			if (!addr) {
- 				ret =3D -ENOMEM;
- 				goto err;
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 4d06bbaded0f..c79ba6f9920c 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1349,7 +1349,7 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone =
-*zone,
-  * Return:
-  * Physical address of allocated memory block on success, %0 on failure.
-  */
--static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
-+phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
- 					phys_addr_t align, phys_addr_t start,
- 					phys_addr_t end, int nid,
- 					bool exact_nid)
---=20
-2.24.1
+	https://www.fourcc.org/codecs.php
+	http://abcavi.kibi.ru/fourcc.php
+	https://softron.zendesk.com/hc/en-us/articles/207695697-List-of-FourCC-codes-for-video-codecs
+	https://www.free-codecs.com/guides/guides.php?f=fourcc
 
+One interesting detail there is that some tables show some codes 
+like "BGR(15)". While I'm not sure how this is encoded, I suspect
+that the fourcc is actually "BGR\x15".
+
+We don't do that on V4L, nor we have plans to do so. Not sure if
+DRM would accept something like that. Of so, then the logic should
+have some special handler if the code is below 32.	
+
+> It's also worth noting that the formats printed are mostly for debugging
+> purpose and thus even getting a hypothetical case wrong is not a grave
+> issue. This would also support just printing them as-is though.
+> 
+> I'm leaning slightly towards omitting any spaces if the code has them. 
+
+I would just remove trailing spaces, and then use a loop from the end
+to remove trailing spaces (and optionally handle codes ending with a
+value below 32, if are there any such case with DRM fourcc codes).
+
+On the other hand, I don't mind if you prefer to use just one for()
+loop and just trip any spaces inside it.
+
+> This is something that couldn't be done by using a macro...
+
+Well, I suspect that it might be possible to write a macro
+for doing that too, for example using preprocessor concatenation
+logic that could produce the same results. If you do something 
+like that, however, I suspect that te macro would face some 
+portability issues, as, as far as I know, not all C compilers
+would handle string concatenation the same way.
+
+Thanks,
+Mauro
