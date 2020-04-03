@@ -2,120 +2,200 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F245EC2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1B9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6CBE20737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:18:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="fUZBkk0P"
+	by mail.kernel.org (Postfix) with ESMTP id A6BE52063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgDCTS5 (ORCPT
+        id S1728674AbgDCTV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 15:18:57 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:43780 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbgDCTS5 (ORCPT
+        Fri, 3 Apr 2020 15:21:26 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43867 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbgDCTV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 15:18:57 -0400
-Received: by mail-wr1-f41.google.com with SMTP id w15so3580789wrv.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 12:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=N0ZrXQIKqbDhYM8K0a95EEPnDOREAzkDY3xwjR3QE9g=;
-        b=fUZBkk0PhNTb+ey56oINy9UW+39P1UcXUkAHpMEExuHv0oozUZ0Nu9FCVz46WwbsHY
-         f8k9KaVfKH9JIWaMMYz6eCskEHxh56tJRQw4ZGTzb/eBQf04BlaMitXapYqwSmf/TQIO
-         gSxv0fqg4+Ms1yEEIQavDNirll1KAujBFn2Q7/+6MrZYAml0f2ZO39eHK4opPOUk/WrL
-         x60gXgzRbKwLaW7PgqHy+tfGHmecpG59DFC7LhzjdwYqpSqvM4YXam1K24GVVw1Ege5f
-         5M1ypTcd3MwXyahJarMx9cTzNCg//SFZLW41HXZWutY4xpED45Wpf4t19LAfTYHlHHyf
-         gXJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=N0ZrXQIKqbDhYM8K0a95EEPnDOREAzkDY3xwjR3QE9g=;
-        b=NxR8NmblI6we8Do4yK4gPeu6a09e+2ryEuWWf7Kl3Y80h6WeXmuRjmrz1WQ2ZW8btk
-         zPViSkXXMHGcmf3h/jtAKTzM2jHKiMYtWU8iEZthbj7WsaTbzickEta5eagR/eFvUyN9
-         o7c3A4B9hXZ3YZfKcaV0zrvomwxJoqjniNO0Ib3VzBsnW/TSzj6qcL1NeqSLpHZOq3tO
-         5heLSffNF/Z39B/2h/AYTgBJCKhlUbvMAMLlQ1yeaFB7R3wg9HSIx9jNgJG/Ubfbs4TX
-         fy23pfS6/IpGdru0oKXNPEv8pemTkLWH6Z6/s/mw8fs/6FPQGvh76t6TAvLXuiScZ3vY
-         ITjA==
-X-Gm-Message-State: AGi0PuYuHT14RzAQH0uLUfqSchZHVBVZ5e9oP7zuVP+P3qyNUPdg+dfA
-        kioKAKlvnr8EcvhQHFIaDt//MA==
-X-Google-Smtp-Source: APiQypLAxu26bg9htF93iWKRV7HD6fnYqKlOaLwxLqdv49TjyzgBXtUE1jbFaf66McWWDRTLBWjVXA==
-X-Received: by 2002:adf:ee8b:: with SMTP id b11mr10390353wro.404.1585941533898;
-        Fri, 03 Apr 2020 12:18:53 -0700 (PDT)
-Received: from x1 ([2001:16b8:5cf5:3201:5571:c686:dfa8:6662])
-        by smtp.gmail.com with ESMTPSA id 25sm7539904wmf.13.2020.04.03.12.18.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 12:18:53 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 21:19:31 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     devicetree@vger.kernel.org
-Cc:     Jason Kridner <jkridner@gmail.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org,
-        Caleb Robey <c-robey@ti.com>, Jason Kridner <jdk@ti.com>
-Subject: [PATCH v4] dt-bindings: Add vendor prefix for BeagleBoard.org
-Message-ID: <20200403191931.GA31296@x1>
+        Fri, 3 Apr 2020 15:21:26 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jKRsO-00058t-IJ; Fri, 03 Apr 2020 21:21:12 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jKRsJ-0007x6-Ff; Fri, 03 Apr 2020 21:21:07 +0200
+Date:   Fri, 3 Apr 2020 21:21:07 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200403192107.gbzkdumoefuwtsln@pengutronix.de>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org>
+ <20200331151253.q6ody3erhvsabznz@pengutronix.de>
+ <CAG3jFyvBmfwoSoKxZJPh2VcJe2aCYGWRRNmkuky3wU2jOsRwBQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAG3jFyvBmfwoSoKxZJPh2VcJe2aCYGWRRNmkuky3wU2jOsRwBQ@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 21:13:24 up 140 days, 10:31, 156 users,  load average: 0.08, 0.05,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add vendor prefix for BeagleBoard.org Foundation
+Hi Robert,
 
-Signed-off-by: Jason Kridner <jdk@ti.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
-Changes in v4:
-  - rebase on robh/for-next branch
+On 20-04-02 11:57, Robert Foss wrote:
+> 'Hey Marco,
+> 
+> On Tue, 31 Mar 2020 at 17:13, Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-Changes in v3:
-  - add SoB from drew@beagleboard.org
-  - email patch from drew@beagleboard.org
+...
 
-Changes in v2:
-  - Use 'beagle' rather than 'beagleboard.org' to be shorter and avoid
-    needing to quote within a yaml regular expression.
-  - Assign 'from' to author e-mail address.
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+> > > +  assigned-clocks:
+> > > +    description:
+> > > +      Input clock for the sensor.
+> > > +
+> > > +  assigned-clock-rates:
+> > > +    description:
+> > > +      Frequency of the xvclk clock in Hertz.
+> >
+> > Also this isn't related to the chip. You need this because you are using
+> > a qcom platform which provides the clock.
+> >
+> > IMHO you only need to specify the clock. You can get the frequency with
+> > the clk_get_rate() function.
+> 
+> The way I understood this, was that clk_get_rate() would fetch the
+> clock rate as defined by the 'assigned-clock-rates'
+> Is this not the case? And if so, what rate would cllk_get_rate()
+> actually retrieve?
+> 
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 65e78b25715f..e26785f5cc38 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -143,6 +143,8 @@ patternProperties:
-     description: BIPAI KEJI LIMITED
-   "^beacon,.*":
-     description: Compass Electronics Group, LLC
-+  "^beagle,.*":
-+    description: BeagleBoard.org Foundation
-   "^bhf,.*":
-     description: Beckhoff Automation GmbH & Co. KG
-   "^bitmain,.*":
+You're right clk_get_rate() should be used to get the current clk rate
+but assigned-cock-rates only applies to your setup where the host
+supplies the clk. This is not the case ff we connect a simple external
+osc which provides a static (not adjustable) ckl.
+
+...
+
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +    #include <dt-bindings/clock/qcom,camcc-sdm845.h>
+> >
+> > IMHO we should avoid examples with hardware specific includes.
+> 
+> The HW specific include is used for the clocks property.
+> clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
+> 
+> Is there a non hw specific clock that would be better to use for examples?
+
+Yes, just use:
+
+  clocks = <&cam_osc>;
+
+The dt-validation provides dummy hooks for such phandles.
+
+Regards,
+  Marco
+
+> 
+> >
+> > > +
+> > > +    i2c {
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +
+> > > +        ov8856: camera@10 {
+> > > +            compatible = "ovti,ov8856";
+> > > +            reg = <0x10>;
+> > > +
+> > > +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
+> > > +            pinctrl-names = "default";
+> > > +            pinctrl-0 = <&clk_24m_cam>;
+> > > +
+> > > +            clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
+> > > +            clock-names = "xvclk";
+> > > +            clock-frequency = <19200000>;
+> > > +            assigned-clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
+> > > +            assigned-clock-rates = <19200000>;
+> > > +
+> > > +            avdd-supply = <&mt6358_vcama2_reg>;
+> > > +            dvdd-supply = <&mt6358_vcamd_reg>;
+> > > +            dovdd-supply = <&mt6358_vcamio_reg>;
+> > > +
+> > > +            port {
+> > > +                wcam_out: endpoint {
+> > > +                    remote-endpoint = <&mipi_in_wcam>;
+> > > +                    clock-lanes = <0>;
+> > > +                    data-lanes = <1 2 3 4>;
+> > > +                    link-frequencies = /bits/ 64 <360000000 180000000>;
+> >
+> > Should we add the link-frequencies as optional param?
+> >
+> > Regards,
+> >   Marco
+> >
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +...
+> > > \ No newline at end of file
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index a6fbdf354d34..0f99e863978a 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -12355,6 +12355,7 @@ L:    linux-media@vger.kernel.org
+> > >  T:   git git://linuxtv.org/media_tree.git
+> > >  S:   Maintained
+> > >  F:   drivers/media/i2c/ov8856.c
+> > > +F:   Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > >
+> > >  OMNIVISION OV9650 SENSOR DRIVER
+> > >  M:   Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > --
+> > > 2.25.1
+> > >
+> > >
+> >
+> > --
+> > Pengutronix e.K.                           |                             |
+> > Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> > 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+
 -- 
-2.20.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
