@@ -2,118 +2,144 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F969C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5A5C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30601206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D33206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:47:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aD9/vhMS"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="dXFL7cOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390571AbgDCIqn (ORCPT
+        id S2390478AbgDCIrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:46:43 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34716 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389876AbgDCIqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:46:42 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0338gkWC034758;
-        Fri, 3 Apr 2020 08:46:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=Y+AET8seX8nUTZtaySySO6dBKVo+n069jzDC0TqS70E=;
- b=aD9/vhMSvr1C0Kz4MwF28gntBMT7zrGIcQKq20E3JeVbvbz7MP+wNSlu/hxx8hJAe+R+
- eDAFDeehbf8zyoc5g20ogFRkfmdbBgRgA/s7Q99atUMK0CvAqY/WAYLBTwPbRXF6ofFQ
- CR4pjHq+mehouvAIUQwr3EOiClDQ1lB9zSY3Av03B76nSwoJVuFFGwgxL6N+ajnFk9kj
- KFO0MxC6WOraOzjy/FAlxKGvVDO7DGrvQmo6OKOvnZsmDgJJjMhk2UKsNmgi5Jm4wsrr
- Ic9pabNXnRc/HXR0HKgSwxAelIAwKgCjZpzfp3EwPCsbI5U4w1+ocujINAIyx5z3myMo 1Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 303aqj09u3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 08:46:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0338hAXs146992;
-        Fri, 3 Apr 2020 08:46:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 304sjs57xp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 08:46:34 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0338kWXX014173;
-        Fri, 3 Apr 2020 08:46:32 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Apr 2020 01:46:32 -0700
-Date:   Fri, 3 Apr 2020 11:46:24 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] mlxsw: spectrum_trap: fix unintention integer
- overflow on left shift
-Message-ID: <20200403084624.GA2001@kadam>
-References: <20200402144851.565983-1-colin.king@canonical.com>
+        Fri, 3 Apr 2020 04:47:21 -0400
+Received: from mail-eopbgr1400090.outbound.protection.outlook.com ([40.107.140.90]:17952
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727868AbgDCIrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:47:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XtiOsg1piuYRPBrsW8OhW2xVuVrZWUb8NVq4WjRrpO0rg2aNJnZ3p0UIDhuV4pCWbvJXC03szzDJnCZ0BlTYf6be0+n/UcOqok5wpFp6zJ80/p4nK6pIpA/RI2m2GFmBMCUYy/svAM/p7SfYD20ujHCFs6a9AzGQ2bsCiDgbfN8bCAx36Z+nlLWRt1lDTWfYhAdRx9QHcnD+ObTYuee4QKGOou9Z+NJHGBqmOgeaTci2y75gruFljj17eKFMyZF6auxrz5h+PelB35nudrb0tzYqucWCbFHXfcIr/IovbW8lF23hmDVDKBiMklEGf6FmamG37ewPvV2QBaFXC30Oyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7sZRwYyi6CB5KCPTu2VlcIBOdXJhY/X4vDQ3vWKlj/c=;
+ b=VdPYSEE/PmrUo2v/QJuCHKNVE54jRthpsq9PXYG9a4DUBWWR0yLXOLCUmqoZQGDlsuAqQPLSooytqvv7c8oFSd6CMJ8anf8/4px4yRvQwmOjkjLLtMGuGpmgeg0ywUHWIO1lZRHF5NSDZgivSLcR8i4okc6c3sDYyzK5QDhC6vHOIQcE2p/CiLVRvRdG+CQdDsCsKPEfhSTNuN9ce3Qs7WlXnsdznA1swx7uwxmoNYyJ1Vtts87rZQwgYY7PqUsYPIgMePNBCRLR7j0R5XjXWIVF1uuqNg69YjQlDke4IkaBpsVecZBV9/U0JkQafHBLoSTki+vo3jdGleMigb4W4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7sZRwYyi6CB5KCPTu2VlcIBOdXJhY/X4vDQ3vWKlj/c=;
+ b=dXFL7cOHJXZdEhtmxrWvJLkX5k1qPJ12a6AwH+625xOqS8uDJZhinyiTDsAIBmIkPWjxme9XcS/9Zw6Od2dxEXwt3KIVSNOOiCMGMWbI2W+ynEayMNxQDB9POO+1wkLwvqxZLCFDuYK4EJW3kIA9fYaeJkCLxMJyjf8h9vdkcjI=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4958.jpnprd01.prod.outlook.com (20.179.186.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Fri, 3 Apr 2020 08:47:17 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
+ 08:47:17 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v6 10/11] misc: pci_endpoint_test: Add Device ID for
+ RZ/G2E PCIe controller
+Thread-Topic: [PATCH v6 10/11] misc: pci_endpoint_test: Add Device ID for
+ RZ/G2E PCIe controller
+Thread-Index: AQHWCSaDHFuBR5APEUOnfN9AQ/j4U6hnFldQ
+Date:   Fri, 3 Apr 2020 08:47:17 +0000
+Message-ID: <TYAPR01MB4544AD255EAE19DAB03D7AF7D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1585856319-4380-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1585856319-4380-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 58a30e51-4480-40ed-5e35-08d7d7ab9d42
+x-ms-traffictypediagnostic: TYAPR01MB4958:|TYAPR01MB4958:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB4958B9373993248AD8744BA1D8C70@TYAPR01MB4958.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 0362BF9FDB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(55236004)(110136005)(107886003)(5660300002)(7696005)(2906002)(8676002)(186003)(9686003)(4744005)(86362001)(71200400001)(81166006)(66476007)(64756008)(76116006)(54906003)(4326008)(66446008)(6506007)(8936002)(55016002)(66556008)(81156014)(316002)(66946007)(33656002)(52536014)(7416002)(478600001)(26005)(921003)(1121003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RO/mK7ATHWy4D9M0zglf124i2risfIH7ssSsYfWLpO3m+5wDyENuz1VDGnOYnKh9IowMAzBdo8Jt90Sntl0l9Z5eC1DlQIUDYjs2V7H+Rxx6qtueF54mljh3Dgrz8ZZzTluzIaeA3DmOJqH0GjuGv8d0vgQQ3SSUcuDv/R7YX0298z042g+yUmjpI6v2r1pNjup69906mDNN2FVeHbt4vdRPEveUJTgyeDsZHiL1n3L44Mhke96d/3IwQW+3dOJwKtCEyb6xtgfHZEa23f5CSvwGwTT+5GHCHj6NB37j34Q4Mv3YTLQEIu4dr/WKAfTI7q+NHY2fgsVYskVFnNPoZh0RXROcVBaSVeOrpFr4jrYkYXezQ5Kyp7UOdtm6qoqkv2VI4NXvXCxHqSobvlrFbJ6QTRzOcXzeuFrmdnegqXckP279G+rEcisO6jMWrZ0J33nOpy42eNMtJgf3c3y/tE5YWZTXztllocRrDQ3BIyZDVbnWir0tv1ynySQaiLrA
+x-ms-exchange-antispam-messagedata: gfdpACcKiW+MWfCdfa8uX6AEjd3Udx9aDKtqnkylfO4Sp7KSei8Unyqf06mm0YalO5Wmv5Gr24nuB7Glv1UJpmyQ4Zyt747yy0e9jY/+w5opdWoZXHTA/tYCJjR8W8bxYu9oM1MRTRo3V/IfrFT6RA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402144851.565983-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
- malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1011
- malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030074
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58a30e51-4480-40ed-5e35-08d7d7ab9d42
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 08:47:17.1377
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZsN+qyC7975f1d+kF/AuKhWLCFzlRndqbHwTLIzfs8awkJabt9U7muewhvhCIPODNWTyya9rxxQ6nkdE8ER5Rbp7UowkuQ+9+3WSM7x+e8Lc0rmhkoP6iKtWWt+3T2Pw
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4958
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 03:48:51PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Shifting the integer value 1 is evaluated using 32-bit
-> arithmetic and then used in an expression that expects a 64-bit
-> value, so there is potentially an integer overflow. Fix this
-> by using the BIT_ULL macro to perform the shift and avoid the
-> overflow.
-> 
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Fixes: 13f2e64b94ea ("mlxsw: spectrum_trap: Add devlink-trap policer support")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/net/ethernet/mellanox/mlxsw/spectrum_trap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_trap.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_trap.c
-> index 9096ffd89e50..fbf714d027d8 100644
-> --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_trap.c
-> +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_trap.c
-> @@ -643,7 +643,7 @@ static int mlxsw_sp_trap_policer_bs(u64 burst, u8 *p_burst_size,
->  {
->  	int bs = fls64(burst) - 1;
->  
-> -	if (burst != (1 << bs)) {
-> +	if (burst != (BIT_ULL(bs))) {
+Hi Prabhakar-san,
 
-Please delete the extra parentheses.
+> From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:39 AM
+>=20
+> Add Renesas R8A774C0 in pci_device_id table so that pci-epf-test can be
+> used for testing PCIe EP on RZ/G2E.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-	if (burst != BIT_ULL(bs)) {
+Thank you for the patch!
 
-regards,
-dan carpenter
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
 
