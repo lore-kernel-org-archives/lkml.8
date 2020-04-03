@@ -2,137 +2,122 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE989C2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84D7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9BBD207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90672080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:25:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+Q5xBnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbgDCEVs (ORCPT
+        id S1729581AbgDCEZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 00:21:48 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:32998 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgDCEVs (ORCPT
+        Fri, 3 Apr 2020 00:25:12 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39665 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgDCEZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 00:21:48 -0400
-Received: by mail-il1-f194.google.com with SMTP id k29so5989726ilg.0;
-        Thu, 02 Apr 2020 21:21:46 -0700 (PDT)
+        Fri, 3 Apr 2020 00:25:12 -0400
+Received: by mail-pj1-f66.google.com with SMTP id z3so2396644pjr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 21:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AyD2kX0rtGFxJhOxxjgdsGTPUrD/FjXjSvw4eMWluYU=;
+        b=I+Q5xBnw6OlNyc1WeYEuiKJUTVH7pscJdTTt0CEbl2LzbrJ9EOwk04CgLOETAycBeQ
+         0GyVQ2DWmVk0q5GewcChYtUHbGpq2sr/KkEvTTeZjZ99GSl3oVE6JvDmWhDwOoRGvmdl
+         HwBKGy5bBPEL9ZB6jGxhb+k02kWIErPtOdWSmKDH8nRok/kagwYsZGxVIE4MS1O2VyDc
+         nyI5qdFNfX4MZMNJQnuvlHqjiol3dLFc7SDOUYIbG25OJs3onxxEG09q5xMyM6LlD0wD
+         YFsyfoxiBFCX/BaijsYn8l830uwB5L/C1MAJL0M0D7psWtuGNZwy2sBzuQFIFFPUcABL
+         4dEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iTvfVv9OMelL2tJNQhqCvCC3vbEtodW1DXRkZdSxEgM=;
-        b=MakQgKQ+OPkp1iYYauWme4unfCiANy7OA1fMZ4N3dVb4DpHxRL6VT2tsxKzO6NL6RM
-         SR+Z/SlKHaxvb30RBOjJVDMOo9qTurRsVXK5eghfGwjR+VG8LGNkjBglKyyDcnykyDgC
-         bKRfEKCWuofsPNp2SpzohDHOXiHXTPNi6O9pRWbHUotsBr0YeDFMXGnlYwlZQqsqVa3E
-         tQ+y/cqe71lMTU0za+7MRwVM2D5IAVs6Q3IKUYGypUs1i3F+2H1yhHNzEKIbeJR7rfuo
-         UPgsLhvJH8Kj1pFHFXCeVsOdwvI4VK4oWx26jirUUkEfqM8CfSRZ0H+mqELlZx9tNCqT
-         JymA==
-X-Gm-Message-State: AGi0PuaRKclfI0tcGeB6yF0/IKUpeJSoPXqVkrFuIkQkuHupaZ/fjxNY
-        rDAF2wU6fCtlR/F4GdP0JGNA+gp8Uc5u0fSRE0/cTAEC
-X-Google-Smtp-Source: APiQypJRG0q51HavwyEmN1v7MTc8CDalf3p/c5rurCJxhL41UfnUexRPVYAyxzfRSydkm//LE4mXKRTvNyq0dqidknQ=
-X-Received: by 2002:a92:c742:: with SMTP id y2mr6585035ilp.147.1585887706183;
- Thu, 02 Apr 2020 21:21:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AyD2kX0rtGFxJhOxxjgdsGTPUrD/FjXjSvw4eMWluYU=;
+        b=qOWQq6Yq2XN8Uv10ZtztMLUyq/zIrrd3at8+mCVsFIJFekrun2jUriTp992S+Dv18d
+         3+Z8jsFeusidXihjRg4CQGC/v1E5ZvmzzPn36CagUrS4/Uy5EzOVMWJeIT/Y8z0Pbcjk
+         0ki9LvavgCZyPho438v7snLdVi8pXhVnZtuTHDHQGu41NRPQO1EzwDpaVfVzqufaXrtT
+         Ybml09bpiyxHjx+IK2YaFNWrx54bSJHHy9BC1WgTd7BbW/PZ/wLAdGt0mfAEMyXFN9jT
+         k+7gQX7mfsu0hQMaSdt5DBQrPVYaKjqB8hGKomAnsyLaTyiVyPyyBwTdwebvw2xk9VEN
+         I/rQ==
+X-Gm-Message-State: AGi0PubMbb6FdHmFd1l2cHtxNVZ0Oc9kvzn9JTi6W6+0Mj89xIRlpGBb
+        atpv7yNvWLOPCy17PUlbMHQ=
+X-Google-Smtp-Source: APiQypLUFoTcgC53/RD9U2GcTptF5bIO1QeLIw/HD5iIXFZnYExMi6C3tKHE3v7Uavp2U/mKA1dw5Q==
+X-Received: by 2002:a17:902:82c5:: with SMTP id u5mr6320102plz.254.1585887911382;
+        Thu, 02 Apr 2020 21:25:11 -0700 (PDT)
+Received: from OptiPlexFedora.fios-router.home ([47.144.161.84])
+        by smtp.gmail.com with ESMTPSA id l190sm4760286pfl.212.2020.04.02.21.25.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 21:25:10 -0700 (PDT)
+From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
+To:     outreachy-kernel@googlegroups.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Subject: [PATCH v2] staging: android: ion: Align with parenthesis
+Date:   Thu,  2 Apr 2020 21:24:48 -0700
+Message-Id: <20200403042448.863689-1-jbwyatt4@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1585661608-3356-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1585661608-3356-1-git-send-email-yangtiezhu@loongson.cn>
-From:   Huacai Chen <chenhc@lemote.com>
-Date:   Fri, 3 Apr 2020 12:28:43 +0800
-Message-ID: <CAAhV-H5zKaWREreiDmmRgtAuTvOcQwEm1xvQxcCGrpdiiW7uWg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Add basic support for Loongson 7A1000 bridge chip
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a rule of naming to avoid confusing: Use Loongson-3A,
-Loongson-3B, etc. to describe processor; use LS2H, LS7A, etc. to
-describe bridge. So please don't use Loongson 7A1000.
+Align two different lines of arguments with the parenthesis
+of their respected function definitions. Fix style warnings
+of matching alignment.
 
-Thanks,
-Huacai
+Reported by checkpatch.
 
-On Tue, Mar 31, 2020 at 9:34 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> The Loongson 7A1000 bridge chip has been released for several years
-> since the second half of 2017, but it is not supported by the Linux
-> mainline kernel while it only works well with the Loongson internal
-> kernel version. When I update the latest version of Linux mainline
-> kernel on the Loongson 3A3000 CPU and 7A1000 bridge chip system,
-> the boot process failed and I feel depressed.
->
-> The 7A1000 bridge chip is used a lot with 3A3000 or 3A4000 CPU in
-> the most Loongson desktop and sever products, it is important to
-> support Loongson 7A1000 bridge chip by the Linux mainline kernel.
->
-> This patch series adds the basic support for the Loongson 7A1000
-> bridge chip, the patch about vendor ID and SATA has been merged
-> into the mainline tree, the next work is to refactor the code about
-> the interrupt controller, and then power management and some other
-> controller device drivers.
->
-> By the way, if you want the boot process is successful (just for
-> test) on the Loongson 3A3000 CPU and 7A1000 bridge chip system,
-> you should not only apply these patches, but also need the support
-> for SATA and interrupt controller in the v1 patch series.
->
-> This patch series is based on mips-next.
->
-> If you have any questions and suggestions, please let me know.
->
-> Thanks,
->
-> Tiezhu Yang
->
-> v2:
->   - The split patch series about Loongson vendor ID and SATA controller
->     has been merged into the linux-block.git by Jens Axboe [1].
->
->   - Think about using hierarchy IRQ domain in the patch of interrupt
->     controller, and this maybe depend on the patch series by Jiaxun
->     ("Modernize Loongson64 Machine"), so the patch about interrupt is
->     not included in this v2 patch series.
->
-> v3:
->   - The split patch series about Loongson vendor ID and SATA controller
->     has been merged into the mainline tree [2]
->
->   - Modify the macro definition and add comment to make it easy to read
->
->   - Move ls7a1000_pci_class_quirk() to fixup-loongson3.c
->
->   - Use PCI_VENDOR_ID_LOONGSON in pci_ids.h instead of 0x0014
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=9acb9fe18d86
->     https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=e49bd683e00b
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9acb9fe18d86
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e49bd683e00b
->
-> Tiezhu Yang (3):
->   MIPS: Loongson: Get host bridge information
->   MIPS: Loongson: Add DMA support for 7A1000
->   MIPS: Loongson: Add PCI support for 7A1000
->
->  arch/mips/include/asm/mach-loongson64/boot_param.h | 20 +++++++
->  arch/mips/loongson64/dma.c                         |  9 ++--
->  arch/mips/loongson64/env.c                         | 22 ++++++++
->  arch/mips/loongson64/init.c                        | 17 ++++++
->  arch/mips/pci/fixup-loongson3.c                    | 12 +++++
->  arch/mips/pci/ops-loongson3.c                      | 63 ++++++++++++++++++++--
->  6 files changed, 136 insertions(+), 7 deletions(-)
->
-> --
-> 2.1.0
->
+Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+---
+v2: Change comment title and summary
+    Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+
+ drivers/staging/android/ion/ion_page_pool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/android/ion/ion_page_pool.c b/drivers/staging/android/ion/ion_page_pool.c
+index f85ec5b16b65..0198b886d906 100644
+--- a/drivers/staging/android/ion/ion_page_pool.c
++++ b/drivers/staging/android/ion/ion_page_pool.c
+@@ -37,7 +37,7 @@ static void ion_page_pool_add(struct ion_page_pool *pool, struct page *page)
+ 	}
+ 
+ 	mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
+-							1 << pool->order);
++			    1 << pool->order);
+ 	mutex_unlock(&pool->mutex);
+ }
+ 
+@@ -57,7 +57,7 @@ static struct page *ion_page_pool_remove(struct ion_page_pool *pool, bool high)
+ 
+ 	list_del(&page->lru);
+ 	mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
+-							-(1 << pool->order));
++			    -(1 << pool->order));
+ 	return page;
+ }
+ 
+-- 
+2.25.1
+
