@@ -2,162 +2,139 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38AFC2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60B6C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A85B32054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4022077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="O09bE+ig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390425AbgDCC1H (ORCPT
+        id S2390303AbgDCCeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 22:27:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:49233 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388951AbgDCC1H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 22:27:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id v19so4727507ioq.16
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 19:27:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=ldIUD6GXlOztVQ20FlFoahBnQnEqE9wDJgWCVkrMhlo=;
-        b=tduIuH85OxDKorDDmSYxgjj498tZea5OZK+bSr8cst1QW0kX+4a+pPFiwY9v0OaQ1r
-         C7U0L3VpHMWlEKMhmbVijJgtqMqGCEUUlXTQ90DaeObgR2TsEbBuGupmP62HoqiLbXny
-         L3Iw5k1fgr1lu6yuVen5K62OwgtazeG0/z7k9bNa3YFsReuCFTuX2u+sCPfln1hL5hmX
-         UuJcAjKGXYSIxsBsDTIjtzy0bnkbt6EYBDqTIs5EP8kHfG+/5o2taKGEYIlOXhfbAlkE
-         W6Cv+t7lB+1ZGFKoCc8JUJ3CJ5yzKpUGZ1QigykC28BS/qqGyWaZ+iTt52qwgDnR6VxJ
-         t0MQ==
-X-Gm-Message-State: AGi0PuashknzYt8+65SUv2Tz9GOqaAOpr4WEwpm8DQWF85QooGw8VRBO
-        GG2wjKFp4MsoqeNK3goImHdBQD+4tu18tMwW4Ua4iJ45cGtx
-X-Google-Smtp-Source: APiQypK4wgeO0JlZsmZDRmKPB6/9EMhs9brN5yIWeIeGyl9FEPhb1hMfFOamL1fEzgFKq+AYua+vHc4IYPgb6rEaEaxvor7w60ik
+        Thu, 2 Apr 2020 22:34:05 -0400
+Received: from mail-eopbgr140073.outbound.protection.outlook.com ([40.107.14.73]:20496
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731842AbgDCCeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 22:34:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IuxRkF9E+u3CrlKC8bmkR8EEfzCVy5aL5JFk5xBFuSn+jFXff7Na7g3mfLeDgdnJsX220rCUVWQcnoQnEIziHVcnQ1YhBw4JcNBaqBpGaPFIXK2dHrA1USaDf6p+fg19Dm0EAOldMWnJV4b21fqda9BMmMYY4/dyQmp1B/cbilIwqqJTuDadR9xwvRo8/4BBeY+C6+q96oCWuZdpol/kjmpObPwJHruGaXMx1eME9pmo67KzdCRFhxksmM7V9mcx3ev0ZpINSN5OwUX8fH0iojRtpkWyrQ6Co3qDBXC2Bct1QkWhcyM024jB1wALxDA3ODocwqI2dEuNkZhsjcUp0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9yEACqeUwLznndEJwy9GqyUE2cDsoC1OPlNSptND6Sc=;
+ b=aTRDv/HbuO5+avDVsW/a2I9uPCDALN9YsYMm/g+eVQkB72nr/wnVQ3OOQ22lmXHv2R7X7ZuXLe9SartWPDXj5Htr949rNijEsI/S1RrN2FbGVTDLIIZ0hF/1JxEWWhERynTjcgt7gIjQOEY3+vqiq0x0zONDSbS/emht+Z6nMrBJaOybLWwr5j9FBvHg1kje/M13slfPa4J3mex5BM27PEe7FnOSf/eT3aaG7ztx3EGJ97xDe9bNwEKTsfrY997K3HotMHEZJUNbdNqx02HxVRormz/+UrLU6cmIQzA0jQgj7iC6WQ+fRTaWe9KK4e2h89V8lXatYfLMj3taQ+SK8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9yEACqeUwLznndEJwy9GqyUE2cDsoC1OPlNSptND6Sc=;
+ b=O09bE+ignXts6fBjMXvrgd+Xk+X+G9xos0zg2BRrNqn9lbTHbwgF4EhArv/Zw+bmdZ0jz4xgfOxrP44JvnMD+bfdVqv8bTbvbVoY+oUGD0DKEbZro7sGCR3CEbYlZ0kadctARPYbJfMNEA1OFGdXSqmtIBcWQYhXSG8pAoy1x68=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB5197.eurprd05.prod.outlook.com (2603:10a6:803:ae::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Fri, 3 Apr
+ 2020 02:33:58 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2878.018; Fri, 3 Apr 2020
+ 02:33:58 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        "xianfengting221@163.com" <xianfengting221@163.com>,
+        "leon@kernel.org" <leon@kernel.org>
+CC:     "cai@lca.pw" <cai@lca.pw>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "stfrench@microsoft.com" <stfrench@microsoft.com>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        "guoren@kernel.org" <guoren@kernel.org>,
+        "jeyu@kernel.org" <jeyu@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wqu@suse.com" <wqu@suse.com>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] net/mlx5: improve some comments
+Thread-Topic: [PATCH] net/mlx5: improve some comments
+Thread-Index: AQHWCCVN1YsHSTa0l0SaNpMgkl1qVqhkPooAgAJx0AA=
+Date:   Fri, 3 Apr 2020 02:33:58 +0000
+Message-ID: <1e7e26f7ef453268b7662f96ad3772ca3bbd7cd2.camel@mellanox.com>
+References: <20200401125720.20276-1-xianfengting221@163.com>
+         <16dea5e4-fb5b-d269-2dff-3349f260a13c@163.com>
+In-Reply-To: <16dea5e4-fb5b-d269-2dff-3349f260a13c@163.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 948fdeaf-482f-4853-3714-08d7d777768e
+x-ms-traffictypediagnostic: VI1PR05MB5197:
+x-microsoft-antispam-prvs: <VI1PR05MB5197D178A1346C0840DC8DC8BEC70@VI1PR05MB5197.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0362BF9FDB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(366004)(396003)(39860400002)(136003)(346002)(64756008)(76116006)(81166006)(81156014)(71200400001)(478600001)(86362001)(4326008)(91956017)(2616005)(66556008)(66476007)(6506007)(66446008)(8936002)(316002)(110136005)(53546011)(8676002)(6486002)(186003)(26005)(54906003)(7416002)(36756003)(5660300002)(66946007)(2906002)(6512007);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cdWnAkK4Xf/nDrHILh8fXX4gF/gZm2MmcmUdjb7yJyW+YWPk6qJt7B0X7GKYaKeJQZP0xsJr5oaiPolIpk8NkMfRPvN5PCb/2rTAziBtAxR9qOhtK8QrDbAGVkGIDdgGKssCGVuMewh0PCFB2PtipUQoEgwiuwv2qw775sjM+GfanmeR30nczIbaDavrBeP4CfHWVLfeuaiajcO6FO08gmAODYzsznrCTWg/ul8eZF72Ogllu3rLQRAJRuB/FnaboHT5om9NOlkJF2i/nzjMNEIApiIsfsrpHd785Dtu+dxu3bYv5r5r9CTYN9O+L7OFW3ppgU8dgrHu17L5GbViOlhoWm0YOHQXyo7LppsT6fe2tI2GA31QsP0sHsC6mkczudpgnLtFFhYePSJyOeTTYPEsoYp/7HuJvAB9f+mZHvMLztZxRvu8XqPhOIBkvItZ
+x-ms-exchange-antispam-messagedata: fpmiJok2TQT3cnhOp8UxCG+Z1qumXA5u86VwXBaxPzKEels/FWFBl8gS9P0TM5X0S0eTE/qBjb28+QX1nopYr+kPgKH0WxQB5h2pKY/jo/b74Cg2hDNfEz/rV7oZsFqimbPps6hp5EhwEyzxPP+I+Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <78BAA3F563AE8944BA5E0C78584AD7F5@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6c01:: with SMTP id a1mr5756126ioh.196.1585880825022;
- Thu, 02 Apr 2020 19:27:05 -0700 (PDT)
-Date:   Thu, 02 Apr 2020 19:27:05 -0700
-In-Reply-To: <CADG63jAUxAFXRpxeyQodbt5kPouvfd+XoaXWWawd3kVMwMWwxg@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003b4ce705a259a70f@google.com>
-Subject: Re: general protection fault in ath9k_hif_usb_rx_cb
-From:   syzbot <syzbot+40d5d2e8a4680952f042@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, anenbupt@gmail.com,
-        ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 948fdeaf-482f-4853-3714-08d7d777768e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 02:33:58.4847
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: N/IYUePTcrpTRrqYl/mTUJ+ITo/z0+7swgJr0P0se598rVa/miNq+jWKeoUPKvMLRc/XpfTH2pw1di0FHYqRPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot has tested the proposed patch but the reproducer still triggered crash:
-general protection fault in ath9k_hif_usb_rx_cb
-
-general protection fault, probably for non-canonical address 0xdffffc0000000015: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x00000000000000a8-0x00000000000000af]
-CPU: 0 PID: 3247 Comm: kworker/0:5 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:usb_get_intfdata include/linux/usb.h:265 [inline]
-RIP: 0010:ath9k_hif_usb_rx_cb+0x103/0xf70 drivers/net/wireless/ath/ath9k/hif_usb.c:643
-Code: 83 3c 24 00 48 89 c3 0f 84 19 04 00 00 e8 25 bb 6e fe 48 8d bb a8 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 27 0c 00 00 4c 8b a3 a8 00 00 00 4d 85 e4 0f 84
-RSP: 0018:ffff8881db209930 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff835ef3fc
-RDX: 0000000000000015 RSI: ffffffff82d09cfb RDI: 00000000000000a8
-RBP: ffff8881c6aa1100 R08: ffff8881bda26200 R09: ffffed103b115045
-R10: ffffed103b115044 R11: ffff8881d88a8223 R12: 00000000ffffffb9
-R13: ffff8881d4d98000 R14: ffff8881c6aa1100 R15: ffff8881c6aa1100
-FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000076c061 CR3: 00000001bdacb000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
- dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
- call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
- __do_softirq+0x21e/0x950 kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x178/0x1a0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:546 [inline]
- smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:lock_is_held_type+0x1ce/0x240 kernel/locking/lockdep.c:4526
-Code: 89 f9 48 c1 e9 03 0f b6 0c 11 48 89 fa 83 e2 07 83 c2 03 38 ca 7c 04 84 c9 75 6e c7 83 4c 08 00 00 00 00 00 00 ff 74 24 08 9d <48> 83 c4 18 5b 5d 41 5c 41 5d 41 5e 41 5f c3 31 c0 eb a8 48 83 c4
-RSP: 0018:ffff8881cc707698 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000001 RBX: ffff8881bda26200 RCX: 0000000000000000
-RDX: 0000000000000007 RSI: ffffffff871e1540 RDI: ffff8881bda26a4c
-RBP: ffff8881bda26200 R08: ffff8881bda26200 R09: fffffbfff0e3c29d
-R10: ffff8881cc707830 R11: ffffffff871e14e7 R12: ffff8881bda26a48
-R13: ffffed1037b44d49 R14: ffffffff871e1540 R15: ffff8881bda26af0
- lock_is_held include/linux/lockdep.h:361 [inline]
- kernfs_active+0xb3/0xf0 fs/kernfs/dir.c:29
- __kernfs_remove fs/kernfs/dir.c:1301 [inline]
- __kernfs_remove+0x173/0x9b0 fs/kernfs/dir.c:1282
- kernfs_remove_by_name_ns+0x51/0xb0 fs/kernfs/dir.c:1516
- kernfs_remove_by_name include/linux/kernfs.h:586 [inline]
- remove_files.isra.0+0x76/0x190 fs/sysfs/group.c:27
- sysfs_remove_group+0xb3/0x1b0 fs/sysfs/group.c:288
- sysfs_remove_groups fs/sysfs/group.c:312 [inline]
- sysfs_remove_groups+0x5c/0xa0 fs/sysfs/group.c:304
- device_remove_groups drivers/base/core.c:1602 [inline]
- device_remove_attrs+0xa9/0x150 drivers/base/core.c:1784
- device_del+0x479/0xd30 drivers/base/core.c:2676
- device_unregister+0x22/0xc0 drivers/base/core.c:2709
- usb_remove_ep_devs+0x3e/0x80 drivers/usb/core/endpoint.c:215
- remove_intf_ep_devs+0x108/0x1d0 drivers/usb/core/message.c:1113
- usb_disable_device+0x235/0x790 drivers/usb/core/message.c:1237
- usb_disconnect+0x293/0x900 drivers/usb/core/hub.c:2211
- hub_port_connect drivers/usb/core/hub.c:5046 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5335 [inline]
- port_event drivers/usb/core/hub.c:5481 [inline]
- hub_event+0x1a1d/0x4300 drivers/usb/core/hub.c:5563
- process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
- worker_thread+0x96/0xe20 kernel/workqueue.c:2412
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 37b88c5796d54927 ]---
-RIP: 0010:usb_get_intfdata include/linux/usb.h:265 [inline]
-RIP: 0010:ath9k_hif_usb_rx_cb+0x103/0xf70 drivers/net/wireless/ath/ath9k/hif_usb.c:643
-Code: 83 3c 24 00 48 89 c3 0f 84 19 04 00 00 e8 25 bb 6e fe 48 8d bb a8 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 27 0c 00 00 4c 8b a3 a8 00 00 00 4d 85 e4 0f 84
-RSP: 0018:ffff8881db209930 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff835ef3fc
-RDX: 0000000000000015 RSI: ffffffff82d09cfb RDI: 00000000000000a8
-RBP: ffff8881c6aa1100 R08: ffff8881bda26200 R09: ffffed103b115045
-R10: ffffed103b115044 R11: ffff8881d88a8223 R12: 00000000ffffffb9
-R13: ffff8881d4d98000 R14: ffff8881c6aa1100 R15: ffff8881c6aa1100
-FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000076c061 CR3: 00000001bdacb000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
-Tested on:
-
-commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=14c6c02be00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a782c087b1f425c6
-dashboard link: https://syzkaller.appspot.com/bug?extid=40d5d2e8a4680952f042
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=125bf733e00000
-
+T24gV2VkLCAyMDIwLTA0LTAxIGF0IDIxOjE0ICswODAwLCBIdSBIYW93ZW4gd3JvdGU6DQo+IE9u
+IDIwMjAvNC8xIDg6NTcgUE0sIEh1IEhhb3dlbiB3cm90ZToNCj4gPiBBZGRlZCBhIG1pc3Npbmcg
+c3BhY2UgY2hhcmFjdGVyIGFuZCByZXBsYWNlZCAiaXRzIiB3aXRoICJpdCdzIi4NCj4gDQo+IFNv
+cnJ5LCB0aGlzIHBhdGNoIGRvZXMgbm90IGluY2x1ZGUgc3BhY2UgY2hhcmFjdGVyIGFkZGluZy4g
+UGxlYXNlDQo+IGlnbm9yZSBhbmQgZGVsZXRlIHRoYXQgcGFydCBvZiB0aGUgY29tbWl0IG1lc3Nh
+Z2UuDQo+IA0KDQpIaSwgDQoNClRoYW5rcyBmb3IgdGhlIHBhdGNoIEkgd2lsbCBhcHBseSBhbmQg
+Zml4IHRoZSBjb21taXQgbWVzc2FnZS4gQlVULi4NCm5ldC1uZXh0IGlzIGNsb3NlZCBhbmQgdGhl
+IHJ1bGVzIGFwcGx5IHRvIGV2ZXJ5b25lLCBldmVuIG1seDUgYnJhbmNoLA0Kc28gcGxlYXNlIGZv
+ciBuZXh0IHRpbWUsIGxldCdzIHdhaXQgZm9yIG5ldC1uZXh0IHRvIG9wZW4uDQoNClRoYW5rcywN
+ClNhZWVkLg0KDQo+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEh1IEhhb3dlbiA8eGlhbmZlbmd0aW5n
+MjIxQDE2My5jb20+DQo+ID4gLS0tDQo+ID4gICBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5v
+eC9tbHg1L2NvcmUvZGlhZy9md190cmFjZXIuYyB8IDIgKy0NCj4gPiAgIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQNCj4g
+PiBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9kaWFnL2Z3X3RyYWNl
+ci5jDQo+ID4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZGlhZy9m
+d190cmFjZXIuYw0KPiA+IGluZGV4IGM5YzliNDc5YmRhNS4uMGE4YWRkYTA3M2MyIDEwMDY0NA0K
+PiA+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9kaWFnL2Z3
+X3RyYWNlci5jDQo+ID4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9j
+b3JlL2RpYWcvZndfdHJhY2VyLmMNCj4gPiBAQCAtNjg0LDcgKzY4NCw3IEBAIHN0YXRpYyB2b2lk
+IG1seDVfZndfdHJhY2VyX2hhbmRsZV90cmFjZXMoc3RydWN0DQo+ID4gd29ya19zdHJ1Y3QgKndv
+cmspDQo+ID4gICAJCWdldF9ibG9ja190aW1lc3RhbXAodHJhY2VyLA0KPiA+ICZ0bXBfdHJhY2Vf
+YmxvY2tbVFJBQ0VTX1BFUl9CTE9DSyAtIDFdKTsNCj4gPiAgIA0KPiA+ICAgCXdoaWxlIChibG9j
+a190aW1lc3RhbXAgPiB0cmFjZXItPmxhc3RfdGltZXN0YW1wKSB7DQo+ID4gLQkJLyogQ2hlY2sg
+YmxvY2sgb3ZlcnJpZGUgaWYgaXRzIG5vdCB0aGUgZmlyc3QgYmxvY2sgKi8NCj4gPiArCQkvKiBD
+aGVjayBibG9jayBvdmVycmlkZSBpZiBpdCdzIG5vdCB0aGUgZmlyc3QgYmxvY2sgKi8NCj4gPiAg
+IAkJaWYgKCF0cmFjZXItPmxhc3RfdGltZXN0YW1wKSB7DQo+ID4gICAJCQl1NjQgKnRzX2V2ZW50
+Ow0KPiA+ICAgCQkJLyogVG8gYXZvaWQgYmxvY2sgb3ZlcnJpZGUgYmUgdGhlIEhXIGluIGNhc2Ug
+b2YNCj4gPiBidWZmZXINCg==
