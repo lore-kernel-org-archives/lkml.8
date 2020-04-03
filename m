@@ -2,169 +2,121 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2E6C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8838BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5359F2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:59:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Yi0OTTmW"
+	by mail.kernel.org (Postfix) with ESMTP id 50D0E207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:13:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390364AbgDCC7n (ORCPT
+        id S2390227AbgDCDMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 22:59:43 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5758 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390204AbgDCC7n (ORCPT
+        Thu, 2 Apr 2020 23:12:55 -0400
+Received: from smtprelay0145.hostedemail.com ([216.40.44.145]:40854 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389171AbgDCDMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 22:59:43 -0400
-X-UUID: a01e29d398b14251b9a9d90ad2506d37-20200403
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=DJTWNCanyhjtJLd8oMpwvSiCfRyj+EyKiHaVDaZuJyA=;
-        b=Yi0OTTmWapulmmDw+dfs1fj56GM77Px+FM+B1SKsVVyyNsufAzDUbIspripSJzXjjouvLXYQQMA0V4PktIb3fBDQvkztXxkpKxlyroigcj3/2ZftrjoSS1EksTehpUt2YuevYUx7KQLbeOOWGtkyDyoHPHpREHVN0JFSDWzmStU=;
-X-UUID: a01e29d398b14251b9a9d90ad2506d37-20200403
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1364710307; Fri, 03 Apr 2020 10:59:34 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs05n2.mediatek.inc
- (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 3 Apr
- 2020 10:59:31 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 3 Apr 2020 10:59:29 +0800
-Message-ID: <1585882773.28772.7.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 1/4] drm/mediatek: Move tz_disabled from mtk_hdmi_phy
- to mtk_hdmi driver
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>, "CK Hu" <ck.hu@mediatek.com>
-Date:   Fri, 3 Apr 2020 10:59:33 +0800
-In-Reply-To: <CAAOTY_8EScidYVri=fn+sdteyD1TGSZ4AnYkp7kz2RozriSk=A@mail.gmail.com>
-References: <20200331155728.18032-1-chunkuang.hu@kernel.org>
-         <20200331155728.18032-2-chunkuang.hu@kernel.org>
-         <1585707361.28859.19.camel@mhfsdcap03>
-         <ceae861b-b5ee-1d33-67dd-0a2ff4af2816@gmail.com>
-         <CAAOTY_8EScidYVri=fn+sdteyD1TGSZ4AnYkp7kz2RozriSk=A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 2 Apr 2020 23:12:55 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 1AA50100E7B42
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Apr 2020 03:12:54 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: yard82_537bf120b152d
+X-Filterd-Recvd-Size: 3199
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA
+        for <linux-kernel@vger.kernel.org>; Fri,  3 Apr 2020 03:12:53 +0000 (UTC)
+Message-ID: <8611a73f58a162f9dd5edca5f60fdca262a17756.camel@perches.com>
+Subject: checkpatch doesn't recognize register or volatile declarations (was
+ Re: [Outreachy kernel] [PATCH] staging: ralink-gdma: Move blank line to fix
+ warning)
+From:   Joe Perches <joe@perches.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 02 Apr 2020 20:10:57 -0700
+In-Reply-To: <3492c120971177bb0b523d78565130981acd1eda.camel@gmail.com>
+References: <20200402082309.839063-1-jbwyatt4@gmail.com>
+         <alpine.DEB.2.21.2004021129490.3014@hadrien>
+         <3492c120971177bb0b523d78565130981acd1eda.camel@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA0LTAyIGF0IDIwOjQ5ICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0K
-PiBIaSwgTWF0dGhpYXM6DQo+IA0KPiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21h
-aWwuY29tPiDmlrwgMjAyMOW5tDTmnIgx5pelIOmAseS4iSDkuIvljYgxMTo1M+Wvq+mBk++8mg0K
-PiA+DQo+ID4NCj4gPg0KPiA+IE9uIDAxLzA0LzIwMjAgMDQ6MTYsIENodW5mZW5nIFl1biB3cm90
-ZToNCj4gPiA+IE9uIFR1ZSwgMjAyMC0wMy0zMSBhdCAyMzo1NyArMDgwMCwgQ2h1bi1LdWFuZyBI
-dSB3cm90ZToNCj4gPiA+PiBGcm9tOiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KPiA+ID4+
-DQo+ID4gPj4gdHpfZGlzYWJsZWQgaXMgdXNlZCB0byBjb250cm9sIG10a19oZG1pIG91dHB1dCBz
-aWduYWwsIGJ1dCB0aGlzIHZhcmlhYmxlDQo+ID4gPj4gaXMgc3RvcmVkIGluIG10a19oZG1pX3Bo
-eSBhbmQgbXRrX2hkbWlfcGh5IGRvZXMgbm90IHVzZSBpdC4gU28gbW92ZQ0KPiA+ID4+IHR6X2Rp
-c2FibGVkIHRvIG10a19oZG1pIHdoZXJlIGl0J3MgdXNlZC4NCj4gPiA+Pg0KPiA+ID4+IFNpZ25l
-ZC1vZmYtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+DQo+ID4gPj4gU2lnbmVkLW9mZi1i
-eTogQ2h1bi1LdWFuZyBIdSA8Y2h1bmt1YW5nLmh1QGtlcm5lbC5vcmc+DQo+ID4gPj4gLS0tDQo+
-ID4gPj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaS5jICAgICAgICAgICB8IDIy
-ICsrKysrKysrKysrKysrKystLS0NCj4gPiA+PiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19oZG1pX3BoeS5oICAgICAgIHwgIDEgLQ0KPiA+ID4+ICAuLi4vZ3B1L2RybS9tZWRpYXRlay9t
-dGtfbXQyNzAxX2hkbWlfcGh5LmMgICAgfCAgMSAtDQo+ID4gPj4gIDMgZmlsZXMgY2hhbmdlZCwg
-MTkgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPiA+Pg0KPiA+ID4+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfaGRtaS5jDQo+ID4gPj4gaW5kZXggNWU0YTRkYmRhNDQzLi44Nzg0MzNj
-MDljOWIgMTAwNjQ0DQo+ID4gPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19o
-ZG1pLmMNCj4gPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYw0K
-PiA+ID4+IEBAIC0xNDQsMTEgKzE0NCwxNiBAQCBzdHJ1Y3QgaGRtaV9hdWRpb19wYXJhbSB7DQo+
-ID4gPj4gICAgICBzdHJ1Y3QgaGRtaV9jb2RlY19wYXJhbXMgY29kZWNfcGFyYW1zOw0KPiA+ID4+
-ICB9Ow0KPiA+ID4+DQo+ID4gPj4gK3N0cnVjdCBtdGtfaGRtaV9jb25mIHsNCj4gPiA+PiArICAg
-IGJvb2wgdHpfZGlzYWJsZWQ7DQo+ID4gPj4gK307DQo+ID4gPj4gKw0KPiA+ID4+ICBzdHJ1Y3Qg
-bXRrX2hkbWkgew0KPiA+ID4+ICAgICAgc3RydWN0IGRybV9icmlkZ2UgYnJpZGdlOw0KPiA+ID4+
-ICAgICAgc3RydWN0IGRybV9icmlkZ2UgKm5leHRfYnJpZGdlOw0KPiA+ID4+ICAgICAgc3RydWN0
-IGRybV9jb25uZWN0b3IgY29ubjsNCj4gPiA+PiAgICAgIHN0cnVjdCBkZXZpY2UgKmRldjsNCj4g
-PiA+PiArICAgIGNvbnN0IHN0cnVjdCBtdGtfaGRtaV9jb25mICpjb25mOw0KPiA+ID4+ICAgICAg
-c3RydWN0IHBoeSAqcGh5Ow0KPiA+ID4+ICAgICAgc3RydWN0IGRldmljZSAqY2VjX2RldjsNCj4g
-PiA+PiAgICAgIHN0cnVjdCBpMmNfYWRhcHRlciAqZGRjX2FkcHQ7DQo+ID4gPj4gQEAgLTIzMCw3
-ICsyMzUsNiBAQCBzdGF0aWMgdm9pZCBtdGtfaGRtaV9od192aWRfYmxhY2soc3RydWN0IG10a19o
-ZG1pICpoZG1pLCBib29sIGJsYWNrKQ0KPiA+ID4+ICBzdGF0aWMgdm9pZCBtdGtfaGRtaV9od19t
-YWtlX3JlZ193cml0YWJsZShzdHJ1Y3QgbXRrX2hkbWkgKmhkbWksIGJvb2wgZW5hYmxlKQ0KPiA+
-ID4+ICB7DQo+ID4gPj4gICAgICBzdHJ1Y3QgYXJtX3NtY2NjX3JlcyByZXM7DQo+ID4gPj4gLSAg
-ICBzdHJ1Y3QgbXRrX2hkbWlfcGh5ICpoZG1pX3BoeSA9IHBoeV9nZXRfZHJ2ZGF0YShoZG1pLT5w
-aHkpOw0KPiA+ID4+DQo+ID4gPj4gICAgICAvKg0KPiA+ID4+ICAgICAgICogTVQ4MTczIEhETUkg
-aGFyZHdhcmUgaGFzIGFuIG91dHB1dCBjb250cm9sIGJpdCB0byBlbmFibGUvZGlzYWJsZSBIRE1J
-DQo+ID4gPj4gQEAgLTIzOCw3ICsyNDIsNyBAQCBzdGF0aWMgdm9pZCBtdGtfaGRtaV9od19tYWtl
-X3JlZ193cml0YWJsZShzdHJ1Y3QgbXRrX2hkbWkgKmhkbWksIGJvb2wgZW5hYmxlKQ0KPiA+ID4+
-ICAgICAgICogVGhlIEFSTSB0cnVzdGVkIGZpcm13YXJlIHByb3ZpZGVzIGFuIEFQSSBmb3IgdGhl
-IEhETUkgZHJpdmVyIHRvIHNldA0KPiA+ID4+ICAgICAgICogdGhpcyBjb250cm9sIGJpdCB0byBl
-bmFibGUgSERNSSBvdXRwdXQgaW4gc3VwZXJ2aXNvciBtb2RlLg0KPiA+ID4+ICAgICAgICovDQo+
-ID4gPj4gLSAgICBpZiAoaGRtaV9waHktPmNvbmYgJiYgaGRtaV9waHktPmNvbmYtPnR6X2Rpc2Fi
-bGVkKQ0KPiA+ID4+ICsgICAgaWYgKGhkbWktPmNvbmYtPnR6X2Rpc2FibGVkKQ0KPiA+DQo+ID4g
-V291bGRuJ3Qgd2UgbmVlZCB0byBjaGVjazoNCj4gPiBpZiAoaGRtaS0+Y29uZiAmJiBoZG1pLT5j
-b25mLT50el9kaXNhYmxlZCkNCj4gDQo+IE15IGRlc2lnbiBpczogaGRtaS0+Y29uZiB3b3VsZCBu
-b3QgYmUgTlVMTC4NCj4gDQo+ID4NCj4gPiA+PiAgICAgICAgICAgICAgcmVnbWFwX3VwZGF0ZV9i
-aXRzKGhkbWktPnN5c19yZWdtYXAsDQo+ID4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBoZG1pLT5zeXNfb2Zmc2V0ICsgSERNSV9TWVNfQ0ZHMjAsDQo+ID4gPj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAweDgwMDA4MDA1LCBlbmFibGUgPyAweDgwMDAwMDA1IDog
-MHg4MDAwKTsNCj4gPiA+PiBAQCAtMTY4OCw2ICsxNjkyLDcgQEAgc3RhdGljIGludCBtdGtfZHJt
-X2hkbWlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiA+PiAgICAgICAg
-ICAgICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gPj4NCj4gPiA+PiAgICAgIGhkbWktPmRldiA9IGRl
-djsNCj4gPiA+PiArICAgIGhkbWktPmNvbmYgPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoZGV2
-KTsNCj4gPiA+Pg0KPiA+ID4+ICAgICAgcmV0ID0gbXRrX2hkbWlfZHRfcGFyc2VfcGRhdGEoaGRt
-aSwgcGRldik7DQo+ID4gPj4gICAgICBpZiAocmV0KQ0KPiA+ID4+IEBAIC0xNzY1LDggKzE3NzAs
-MTkgQEAgc3RhdGljIGludCBtdGtfaGRtaV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+
-ID4+ICBzdGF0aWMgU0lNUExFX0RFVl9QTV9PUFMobXRrX2hkbWlfcG1fb3BzLA0KPiA+ID4+ICAg
-ICAgICAgICAgICAgICAgICAgICBtdGtfaGRtaV9zdXNwZW5kLCBtdGtfaGRtaV9yZXN1bWUpOw0K
-PiA+ID4+DQo+ID4gPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2hkbWlfY29uZiBtdGtfaGRt
-aV9jb25mX210MjcwMSA9IHsNCj4gPiA+PiArICAgIC50el9kaXNhYmxlZCA9IHRydWUsDQo+ID4g
-Pj4gK307DQo+ID4gPj4gKw0KPiA+ID4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG10a19oZG1pX2Nv
-bmYgbXRrX2hkbWlfY29uZl9tdDgxNzM7DQo+ID4gPj4gKw0KPiA+ID4+ICBzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCBtdGtfZHJtX2hkbWlfb2ZfaWRzW10gPSB7DQo+ID4gPj4gLSAg
-ICB7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1oZG1pIiwgfSwNCj4gPiA+PiArICAg
-IHsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWhkbWkiLA0KPiA+ID4+ICsgICAgICAu
-ZGF0YSA9ICZtdGtfaGRtaV9jb25mX210MjcwMSwNCj4gPiA+PiArICAgIH0sDQo+ID4gPj4gKyAg
-ICB7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1oZG1pIiwNCj4gPiA+PiArICAgICAg
-LmRhdGEgPSAmbXRrX2hkbWlfY29uZl9tdDgxNzMsDQo+ID4NCj4gPiBXZSBkb24ndCBoYXZlIGFu
-eSBkYXRhPyBUaGVuIHdlIHNob3VsZCBzZXQgZGF0YSB0byBOVUxMIGluc3RlYWQuDQo+IA0KPiBN
-eSBkZXNpZ24gaXMgZGF0YSB3b3VsZCBub3QgYmUgTlVMTCwgc28gSSBuZWVkIG5vdCB0byBjaGVj
-ayB3aGV0aGVyIGl0DQo+IGlzIE5VTEwgaW4gZHJpdmVyLg0KQnV0IHdlIGRvbid0IG5lZWQgLmRh
-dGEgZm9yIG10ODE3MywgaXQncyBiZXR0ZXIgdG8gc2V0IGl0IHRvIE5VTEwuDQoNCj4gDQo+IFJl
-Z2FyZHMsDQo+IENLDQo+IA0KPiA+DQo+ID4gUmVnYXJkcywNCj4gPiBNYXR0aGlhcw0KPiA+DQo+
-ID4gPj4gKyAgICB9LA0KPiA+ID4+ICAgICAge30NCj4gPiA+PiAgfTsNCj4gPiA+Pg0KPiA+ID4+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWlfcGh5LmggYi9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWlfcGh5LmgNCj4gPiA+PiBpbmRleCAyZDhi
-MzE4MjQ3MGQuLmZjMWMyZWZkMTEyOCAxMDA2NDQNCj4gPiA+PiAtLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2hkbWlfcGh5LmgNCj4gPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2hkbWlfcGh5LmgNCj4gPiA+PiBAQCAtMjAsNyArMjAsNiBAQA0KPiA+ID4+
-ICBzdHJ1Y3QgbXRrX2hkbWlfcGh5Ow0KPiA+ID4+DQo+ID4gPj4gIHN0cnVjdCBtdGtfaGRtaV9w
-aHlfY29uZiB7DQo+ID4gPj4gLSAgICBib29sIHR6X2Rpc2FibGVkOw0KPiA+ID4+ICAgICAgdW5z
-aWduZWQgbG9uZyBmbGFnczsNCj4gPiA+PiAgICAgIGNvbnN0IHN0cnVjdCBjbGtfb3BzICpoZG1p
-X3BoeV9jbGtfb3BzOw0KPiA+ID4+ICAgICAgdm9pZCAoKmhkbWlfcGh5X2VuYWJsZV90bWRzKShz
-dHJ1Y3QgbXRrX2hkbWlfcGh5ICpoZG1pX3BoeSk7DQo+ID4gPj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQyNzAxX2hkbWlfcGh5LmMgYi9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX210MjcwMV9oZG1pX3BoeS5jDQo+ID4gPj4gaW5kZXggZDNjYzQwMjJl
-OTg4Li45OWZlMDVjZDM1OTggMTAwNjQ0DQo+ID4gPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19tdDI3MDFfaGRtaV9waHkuYw0KPiA+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfbXQyNzAxX2hkbWlfcGh5LmMNCj4gPiA+PiBAQCAtMjM3LDcgKzIzNyw2
-IEBAIHN0YXRpYyB2b2lkIG10a19oZG1pX3BoeV9kaXNhYmxlX3RtZHMoc3RydWN0IG10a19oZG1p
-X3BoeSAqaGRtaV9waHkpDQo+ID4gPj4gIH0NCj4gPiA+Pg0KPiA+ID4+ICBzdHJ1Y3QgbXRrX2hk
-bWlfcGh5X2NvbmYgbXRrX2hkbWlfcGh5XzI3MDFfY29uZiA9IHsNCj4gPiA+PiAtICAgIC50el9k
-aXNhYmxlZCA9IHRydWUsDQo+ID4gPj4gICAgICAuZmxhZ3MgPSBDTEtfU0VUX1JBVEVfR0FURSwN
-Cj4gPiA+PiAgICAgIC5oZG1pX3BoeV9jbGtfb3BzID0gJm10a19oZG1pX3BoeV9wbGxfb3BzLA0K
-PiA+ID4+ICAgICAgLmhkbWlfcGh5X2VuYWJsZV90bWRzID0gbXRrX2hkbWlfcGh5X2VuYWJsZV90
-bWRzLA0KPiA+ID4NCj4gPiA+IFJldmlld2VkLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1
-bkBtZWRpYXRlay5jb20+DQo+ID4gPg0KDQo=
+(adding lkml)
+
+On Thu, 2020-04-02 at 18:21 -0700, John B. Wyatt IV wrote:
+> On Thu, 2020-04-02 at 11:31 +0200, Julia Lawall wrote:
+> > On Thu, 2 Apr 2020, John B. Wyatt IV wrote:
+> > 
+> > > Move a blank line within a struct to fix/silence a style warning.
+> > > 
+> > > Reported by checkpatch.
+> > > 
+> > > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+> > > ---
+> > > Note:
+> > > ralink-gdma does not build; even with make allyesconfig.
+> > > I did not find a menu option with make menuconfig.
+> > > 
+> > >  drivers/staging/ralink-gdma/ralink-gdma.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/staging/ralink-gdma/ralink-gdma.c
+> > > b/drivers/staging/ralink-gdma/ralink-gdma.c
+> > > index eabf1093328e..9c398048daac 100644
+> > > --- a/drivers/staging/ralink-gdma/ralink-gdma.c
+> > > +++ b/drivers/staging/ralink-gdma/ralink-gdma.c
+> > > @@ -122,9 +122,9 @@ struct gdma_dma_dev {
+> > >  	struct gdma_data *data;
+> > >  	void __iomem *base;
+> > >  	struct tasklet_struct task;
+> > > +
+> > 
+> > Adding a blank line here is not correct. checkpatch is confused. 
+> 
+> It is not, but I was unsure of how this should be addressed. Thank you
+> for letting me know.
+> 
+> The second version of the patch removes the blank line.
+> 
+> > Perhaps
+> > it lacks a pattern considering wolatile to indicate a type.
+> 
+> I have CC'ed Joe Perches on this.
+> 
+
+Well, perhaps this, but it might cause other undesired change.
+I haven't tested it much.
+
+Maybe for older c, this list should even include "auto" too.
+
+btw: the linux kernel sources do not have a single instance of
+     auto as far as I can tell with a trivial search.
+
+---
+ scripts/checkpatch.pl | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index d64c67..e906a8 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -372,6 +372,8 @@ our $InitAttribute = qr{$InitAttributeData|$InitAttributeConst|$InitAttributeIni
+ # We need \b after 'init' otherwise 'initconst' will cause a false positive in a check
+ our $Attribute	= qr{
+ 			const|
++			volatile|
++			register|
+ 			__percpu|
+ 			__nocast|
+ 			__safe|
+
 
