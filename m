@@ -2,137 +2,120 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C8FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4663C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB49206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5BDC206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:06:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eYWuFB7M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P97RgtAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgDCQGG (ORCPT
+        id S2404054AbgDCQGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:06:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:32922 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403971AbgDCQGC (ORCPT
+        Fri, 3 Apr 2020 12:06:11 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45389 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404003AbgDCQGE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:06:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033FmlXx060862;
-        Fri, 3 Apr 2020 16:05:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=UhdHklRomxNbebWWRjDfKWX0dV8tBeR4UT0S2HC9XPI=;
- b=eYWuFB7Md4C6e/b6A31sehx/Iwdjh0AK9osSQuJ3MegOVfOo36LgqkJSHvOY2zBI0OJI
- 4fXdc0YAdZu+Hp4q/Mda0F9aLyNcMpOx/3NybkyCv7GdDFWxpqCWabbmw2SlRAEzkcCo
- Wqq9ZH/qS+Koxsntmhk7zosLU0Ti5za6qU6I/FRYx7RKMyadAuCXm33nLZ7gUyGYBP+Z
- dGO3ZtkbfIg1xpk7vizt8349nyzuRhFm+yR5shUwlHiZpHDAAFCugzbJpjXtV/Uj2UX3
- yMPoIgkxybmEHctR/n5o/YRTf0JHdVfk4MopREB56/UtKZ2at8bxwJmN+HrtslrIykzq EQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 303aqj2dqg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 16:05:48 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033FmEWr175392;
-        Fri, 3 Apr 2020 16:05:48 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 302ga53hav-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 16:05:48 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033G5jXv019624;
-        Fri, 3 Apr 2020 16:05:46 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Apr 2020 09:05:45 -0700
-Date:   Fri, 3 Apr 2020 09:05:44 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Dave Chinner <david@fromorbit.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
-Message-ID: <20200403160544.GO80283@magnolia>
-References: <20200311033614.GQ1752567@magnolia>
- <20200311062952.GA11519@lst.de>
- <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
- <20200316095224.GF12783@quack2.suse.cz>
- <20200316095509.GA13788@lst.de>
- <20200401040021.GC56958@magnolia>
- <20200401102511.GC19466@quack2.suse.cz>
- <20200402085327.GA19109@lst.de>
- <20200402205518.GF3952565@iweiny-DESK2.sc.intel.com>
- <20200403072731.GA24176@lst.de>
+        Fri, 3 Apr 2020 12:06:04 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t7so9117402wrw.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 09:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oKzSBFHYve6VknNk6okjq2PNSvbSOu3F0bKJlTlq03A=;
+        b=P97RgtAt+zkUMxdQJzNanmmUk/SfwXCVTeeA/RcjgcY7yAi45mAdp7WI5ZmfD9HWc6
+         B9C+rkfhu2rQnJPhUEI0JX8A+iVN2vAMltq8qqRtCaFYAZ2wWxtpQgqa5ooiVPTIrrTf
+         YFM64Wlx2G67pQhiebSqc84J80UMeoW/eK6CVu9s1DSZTX2ZN8y53qbNcFQcihA8Eq8E
+         MChOg7hVs3KLsRxl4AmwuRbGjq7+W8lZ7gAS/rMuQc51d4SGh1uMCef+h+L+mtJrdxoB
+         X7MHJwxG5yyfCRq1V4o3H1phkz/fRxFHG1uuNW7LBPQktNDIywsHrTsEB+pV+tIqwouL
+         +Wgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oKzSBFHYve6VknNk6okjq2PNSvbSOu3F0bKJlTlq03A=;
+        b=t5ny79YXVQHlM6ctBxD5IFmsYPSEvuyQ0R/+VPwLa9b663ABCYLyRYp1fBhI9g9jEI
+         6YuCw7cvPbZAxeC9zh8tOhGhv9ScqPGFZN11fXoaZ7JxAXFc/tYub1ceNbFDkNOzs3gZ
+         eWgFCHTGQZanT7mw8jwKDK62Xs3evMp9vB5mCNaWwvFqG7C08B3uUYZXSbfBdvGm0m1B
+         GE1jltBzUHsldBTFHWF5/WRlYN8uyivW0ncbRlYodHiRbzo0NCu3i71euIRbhLy0nTnX
+         700Fx008/RthAlBLays/EN/FavhigT94Bowb8QfHhVdfxoTLKBplquzceWQaoEF9zGfu
+         EPhg==
+X-Gm-Message-State: AGi0PuYFBQS5xEnt0oCGG7I77mZQDdfa/HpqMGDR+GunCXTARR5MINVh
+        KybE5G2/DDZE2w6cbVCSvYNbIUoFOdoi
+X-Google-Smtp-Source: APiQypLUvf1tx2vZfsGhV0Xp/TYxgR7BJ/Ci7CFOSgCfLyPkqDSPscO8w1BtpBNb2LXSdFbFRdNBYw==
+X-Received: by 2002:a5d:4f08:: with SMTP id c8mr10051991wru.27.1585929962472;
+        Fri, 03 Apr 2020 09:06:02 -0700 (PDT)
+Received: from ninjahost.lan (host-92-23-85-227.as13285.net. [92.23.85.227])
+        by smtp.gmail.com with ESMTPSA id l12sm12351426wrt.73.2020.04.03.09.06.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 09:06:02 -0700 (PDT)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     boqun.feng@gmail.com, Corey Minyard <minyard@acm.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openipmi-developer@lists.sourceforge.net (moderated list:IPMI SUBSYSTEM)
+Subject: [PATCH 5/5] ipmi: Add missing annotation for ipmi_ssif_lock_cond() and ipmi_ssif_unlock_cond()
+Date:   Fri,  3 Apr 2020 17:05:05 +0100
+Message-Id: <20200403160505.2832-6-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200403160505.2832-1-jbi.octave@gmail.com>
+References: <0/5>
+ <20200403160505.2832-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403072731.GA24176@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxlogscore=935 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004030136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030136
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 09:27:31AM +0200, Christoph Hellwig wrote:
-> On Thu, Apr 02, 2020 at 01:55:19PM -0700, Ira Weiny wrote:
-> > > I'd just return an error for that case, don't play silly games like
-> > > evicting the inode.
-> > 
-> > I think I agree with Christoph here.  But I want to clarify.  I was heading in
-> > a direction of failing the ioctl completely.  But we could have the flag change
-> > with an appropriate error which could let the user know the change has been
-> > delayed.
-> > 
-> > But I don't immediately see what error code is appropriate for such an
-> > indication.  Candidates I can envision:
-> > 
-> > EAGAIN
-> > ERESTART
-> > EUSERS
-> > EINPROGRESS
-> > 
-> > None are perfect but I'm leaning toward EINPROGRESS.
-> 
-> I really, really dislike that idea.  The whole point of not forcing
-> evictions is to make it clear - no this inode is "busy" you can't
-> do that.  A reasonably smart application can try to evict itself.
-> 
-> But returning an error and doing a lazy change anyway is straight from
-> the playbook for arcane and confusing API designs.
+Sparse reports a warning at ipmi_ssif_unlock_cond()
+	and ipmi_ssif_lock_cond()
 
-Agreed.  That's why I wrote that applications can set FS_XFLAG_DAX and
-then query statx for STATX_ATTR_DAX to find out if it actually took
-effect, and that if applications require it immediately they can either
-create a file in a FS_XFLAG_DAX directory, or the admin can mount with
-dax=always.  No magic return values required or desired anywhere.
+warning: context imbalance in ipmi_ssif_lock_cond()
+	- wrong count at exit
+ warning: context imbalance in ipmi_ssif_unlock_cond()
+	- unexpected unlock
 
-I don't know what "try to evict the inode" magic means, but I'm fairly
-sure I don't want to. ;)
+The root cause is the missing annotation at ipmi_ssif_unlock_cond()
+	and ipmi_ssif_lock_cond()
 
---D
+Add the missing __acquires(&ata_scsi_rbuf_lock)
+Add the missing __releases(&ata_scsi_rbuf_lock)
+
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ drivers/char/ipmi/ipmi_ssif.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
+index 22c6a2e61236..030e7c09e44f 100644
+--- a/drivers/char/ipmi/ipmi_ssif.c
++++ b/drivers/char/ipmi/ipmi_ssif.c
+@@ -313,6 +313,7 @@ static int start_send(struct ssif_info *ssif_info,
+ 
+ static unsigned long *ipmi_ssif_lock_cond(struct ssif_info *ssif_info,
+ 					  unsigned long *flags)
++	__acquires(&ssif_info->lock)
+ {
+ 	spin_lock_irqsave(&ssif_info->lock, *flags);
+ 	return flags;
+@@ -320,6 +321,7 @@ static unsigned long *ipmi_ssif_lock_cond(struct ssif_info *ssif_info,
+ 
+ static void ipmi_ssif_unlock_cond(struct ssif_info *ssif_info,
+ 				  unsigned long *flags)
++	__releases(&ssif_info->lock)
+ {
+ 	spin_unlock_irqrestore(&ssif_info->lock, *flags);
+ }
+-- 
+2.24.1
+
