@@ -2,110 +2,101 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B85AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57E8C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A61720757
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="atNwed4V"
+	by mail.kernel.org (Postfix) with ESMTP id B7B0921556
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585908085;
+	bh=MvMvhKUfLZWHOyD15kKxWI7zF3UoWs6qfcxOpwmQ41Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YqNQIh+v/48zuQyrhdeVz3WegQhbNUEWsG53JdUZCxRprZO3mtFQPzgJFk8wxH44Q
+	 13ze5jnO7s+hA9a1wwZiW+iCYYrwTELK9AA8E5Popp/zluYzYsO5CEU9ebHJClSmXQ
+	 nP2DIa0gUj3luPBzqfoMO92Yismo4jTEjcoc8XQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390526AbgDCKBT (ORCPT
+        id S2390593AbgDCKBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:01:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48113 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727774AbgDCKBT (ORCPT
+        Fri, 3 Apr 2020 06:01:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37582 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgDCKBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:01:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585908078;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pwrHjBFKCxgVZBrkT+dwsdEetk42jbePJCFYfUV5sFo=;
-        b=atNwed4VXt2YZUe1DeWdLifwaoEUkkdLs9LrXNguEuFxvHfazVlHCLDfZovMBqDzrUF5xS
-        g/ZQ6av+uB5uXccWQb3qOMtdj3/rqEu57HA2iVpfw5+nEddmQkWwxS+eNkDD9cuBoOGGci
-        jJC3GADY8u3DoYRnkLPn7/5UP8tNgPU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-YrpEKNnFPA6cRR-iibcv-Q-1; Fri, 03 Apr 2020 06:01:16 -0400
-X-MC-Unique: YrpEKNnFPA6cRR-iibcv-Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E518D800D5F;
-        Fri,  3 Apr 2020 10:01:14 +0000 (UTC)
-Received: from krava (unknown [10.40.194.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 003CC60BF1;
-        Fri,  3 Apr 2020 10:01:13 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 12:01:11 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf script: Simplify auxiliary event printing functions
-Message-ID: <20200403100111.GI2784502@krava>
-References: <20200402141548.21283-1-adrian.hunter@intel.com>
+        Fri, 3 Apr 2020 06:01:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w10so7826600wrm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 03:01:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jYXQbnu/Oi974qhNjSFy5pRIJC0tTSSAvVWrXVkMiaM=;
+        b=f9jXWkGd/SUoZijMzwljdg3VzLw+L4WrnVp3Ca6jyRlzXvDwIucJleDzGrOnGqAywY
+         3SJiQRppazdkgIfiafD0y363gL/iRWV6Z8q+omPZsiyluehsdGNgMaikZ6rNcG06SzCc
+         DjBg2K8DEbm5CPzw1oTXSuIJBl4wnFzSGZahtBlJaGQZWJ9dW+dgzhdaVqi7jMRimYcM
+         oC6n3TqKwjHOAdaiGkTGMb3yp7JcTY0uxzawk592B1yQWENG2d2KQdGLnEol9wjmJ5qK
+         nbrz+0h5+gLJwrhzDHorgmE5zorOc2+FGUPU9+EYrzJ+falr4w2y6gf84h3gZ1/oO5wy
+         UHhQ==
+X-Gm-Message-State: AGi0PuYDPByvDgQHTN5SBqdct4VLIELin+r/QGwiNZ1fj+6QaT36KcOa
+        0EHmmad2AgYJVV61ejtYtkM=
+X-Google-Smtp-Source: APiQypLgiYupoXaD9R5zABwqMgbYZI0KQAYTivfAw3CSUMkXzEfl/iXsdKbvlVPO+gTJwGowyftDIg==
+X-Received: by 2002:adf:f401:: with SMTP id g1mr7876035wro.140.1585908082788;
+        Fri, 03 Apr 2020 03:01:22 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id z129sm10951833wmb.7.2020.04.03.03.01.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 03:01:21 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 12:01:20 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Aslan Bakirov <aslanbekirov@gmail.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Aslan Bakirov <aslan@fb.com>,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com, riel@surriel.com,
+        Roman Gushchin <guro@fb.com>, hannes@cmpxchg.org
+Subject: Re: [PATCH v3] mm: cma: NUMA node interface
+Message-ID: <20200403100120.GY22681@dhcp22.suse.cz>
+References: <20200403021254.2842224-1-aslan@fb.com>
+ <20200403050205.GI3952565@iweiny-DESK2.sc.intel.com>
+ <CAJth39gjy34swBqVUy7mOo0-Dbxzb5TZn2jUNsrcq8iHpK_ToA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402141548.21283-1-adrian.hunter@intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <CAJth39gjy34swBqVUy7mOo0-Dbxzb5TZn2jUNsrcq8iHpK_ToA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 05:15:48PM +0300, Adrian Hunter wrote:
-> This simplifies the print functions for the following perf script
-> options:
+On Fri 03-04-20 10:51:32, Aslan Bakirov wrote:
+> On Fri, Apr 3, 2020 at 6:02 AM Ira Weiny <ira.weiny@intel.com> wrote:
 > 
-> 	--show-task-events
-> 	--show-namespace-events
-> 	--show-cgroup-events
-> 	--show-mmap-events
-> 	--show-switch-events
-> 	--show-lost-events
-> 	--show-bpf-events
+> > On Thu, Apr 02, 2020 at 07:12:56PM -0700, Aslan Bakirov wrote:
+> > > I've noticed that there is no interfaces exposed by CMA which would let
+> > me
+> > > to declare contigous memory on particular NUMA node.
+> > >
+> > > This patchset adds the ability to try to allocate contiguous memory on
+> > > specific node. It will fallback to other nodes if the specified one
+> > > doesn't work.
+> > >
+> > > Implement a new method for declaring contigous memory on particular node
+> > > and keep cma_declare_contiguous() as a wrapper.
+> >
+> > Is there an additional patch which uses this new interface?
+> >
+> > Generally the patch seems reasonable but we should have a user.
 > 
-> Example:
-> 	# perf record --switch-events -a -e cycles -c 10000 sleep 1
->  Before:
-> 	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events >out-before.txt
->  After:
-> 	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events >out-after.txt
-> 	# diff -s out-before.txt out-after.txt
-> 	Files out-before.txt and out-after.tx are identical
 > 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/builtin-script.c | 304 ++++++++----------------------------
->  1 file changed, 66 insertions(+), 238 deletions(-)
+>  Thanks for the comments. Yes, actually, this is the version 3 of first
+> patch ([PATCH 1/2] mm: cma: NUMA node interface)
+>  of patchset. Second patch, which uses this interface is  "[PATCH 2/2] mm:
+> hugetlb: Use node interface of cma"
 
-awesome ;-)
-
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 186ebf827fa1..348fec9743a4 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2040,7 +2040,7 @@ static int cleanup_scripting(void)
->  
->  static bool filter_cpu(struct perf_sample *sample)
->  {
-> -	if (cpu_list)
-> +	if (cpu_list && sample->cpu != (u32)-1)
->  		return !test_bit(sample->cpu, cpu_bitmap);
-
-why is this needed? filter_cpu seems to be already called
-from all the changed functions..
-
-thanks,
-jirka
-
+It would have been much more clear to send those two patches together as
+you can see.
+-- 
+Michal Hocko
+SUSE Labs
