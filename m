@@ -2,113 +2,114 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118BEC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305EDC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA275206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mfd0P8Xl"
+	by mail.kernel.org (Postfix) with ESMTP id EA660208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585893703;
+	bh=p2IuVwkph+/SUR16YqbpBqb56Vyf1fYOzyLt2WbYoB8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yBFYGjK1ILh3YynFYE/nGyQr/75N+qvdenz9UVEawJpScAGcFJLJVV8vfveSFgQxD
+	 ztjkd83F0gM4uM+Qhd/JYxZOqJLi36m9cv7NalSes6WsVaUpGusbLB3GsZcCxRzDhy
+	 RGSOYsKvk4zoAHAcDcaDSiwMhLTFUmLg+QbUKbGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387805AbgDCGAv (ORCPT
+        id S2387854AbgDCGBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 02:00:51 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38703 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731040AbgDCGAv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 02:00:51 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w3so2300799plz.5;
-        Thu, 02 Apr 2020 23:00:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x91h2tLyTlc0iDe/5j3RCDbqB7p+b6c6m++cx7QhiU4=;
-        b=Mfd0P8XlBUeT3svQWKNFphNvd7/KN1aCiN2pYOjw1C1YhI4RksEgbj2lZlCOmuVydw
-         yDkQT79vAi12Q8YcmSqpuWpbWKgzJr7F8jFnYppWPUNmxH6tiwgYEXUC000cH4NHtOnc
-         7BSSvrVODv1MRQNDKnevxlBOTKaSBpczQPjCAl1diwHz7RxwM8NhahytzhQWz59jPG+5
-         jqsjH4bVCsuV4idpO6E8JDuGLXfWXr7Y4i9c+Q2ddSkqqHCUqcmpm8/I5qWVjvFqL2LX
-         /uv7eXMl531dJJ5E4PsW70QEntYZtv6Vj+gCSVc+OHCDaOWj1yQSgn0usqigtFNmHISh
-         a0Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x91h2tLyTlc0iDe/5j3RCDbqB7p+b6c6m++cx7QhiU4=;
-        b=Q1IH4/XE0z7w+ilJgtqZNL3g7AjWZkh2xc6+9l/GwlHMp2AI7k2/gNrEvVuNCyXDC5
-         B6odKcdd8Rl99+gMfLT8Jzk4pa2IIeJ5PG0Dyrj3hQSq3HJx65739vWq147P2zCa8P9L
-         YqFiRJ5WIZxT9B5kmwiRoYVpXD13n0HsaLkFxCWcH5DyBl2/HHmZwqRKSJ04dP6i5LiF
-         52fN2IXf7m8cNuEkHNMPvYrWXDuMPmLiJWBpj9ASvAeBywebQ5x0ul0MqdfQQw5f+gYZ
-         mxHNELGIwJSQpTQH++Yzc30EE6FdaHDXTSvRnE1TXRSyxholWD2r/PaAUAESlJAXaB4U
-         UP7w==
-X-Gm-Message-State: AGi0PuZI0c4CAeJQinc7rei9KBMMOuWwRG4FUDmo89nu+whpOUohwekV
-        NT2MmSri6ib6ha/y43nVNIM=
-X-Google-Smtp-Source: APiQypK8XbyWn3ZnQaFnbDolPcc04wWirWxbpBYroE8OL8s8uzDCEjQ/PWbPHv9R/8g/MsL6Oqt0pQ==
-X-Received: by 2002:a17:902:7404:: with SMTP id g4mr6126025pll.69.1585893650600;
-        Thu, 02 Apr 2020 23:00:50 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h2sm5048442pfr.220.2020.04.02.23.00.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 Apr 2020 23:00:49 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 23:00:48 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Evan Benn <evanbenn@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, xingyu.chen@amlogic.com,
-        jwerner@chromium.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Vinod Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] watchdog: Add new arm_smd_wdt watchdog driver
-Message-ID: <20200403060048.GA206691@roeck-us.net>
-References: <20200403052900.258855-1-evanbenn@chromium.org>
- <20200403162742.v2.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid>
+        Fri, 3 Apr 2020 02:01:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729349AbgDCGBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 02:01:41 -0400
+Received: from localhost (unknown [171.76.107.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19CB6206F6;
+        Fri,  3 Apr 2020 06:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585893700;
+        bh=p2IuVwkph+/SUR16YqbpBqb56Vyf1fYOzyLt2WbYoB8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QKav23U/eh6h/UhxXS/ncKxL41JZk1qm0n5hpfLHzXL0ONIxq+/ZuqChX9TyH49dI
+         eKvRgnzQOuoAVCmL62/441OrFBkq2FrvtPqwQ+N7TAlBRl4lJk5QUGCbPOQhfKc8JC
+         Z/x/weXzdPtovzgoqretYp6zsUfL3N1DnfrgIdCc=
+Date:   Fri, 3 Apr 2020 11:31:27 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 2/5] phy: qcom-snps: Add SNPS USB PHY driver for QCOM
+ based SOCs
+Message-ID: <20200403060127.GM72691@vkoul-mobl>
+References: <1585880634-15222-1-git-send-email-wcheng@codeaurora.org>
+ <1585880634-15222-3-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403162742.v2.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1585880634-15222-3-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 04:29:00PM +1100, Evan Benn wrote:
-> From: Julius Werner <jwerner@chromium.org>
-> 
-> This patch adds a watchdog driver that can be used on ARM systems
-> with the appropriate watchdog implemented in Secure Monitor firmware.
-> The driver communicates with firmware via a Secure Monitor Call.
-> This may be useful for platforms using TrustZone that want
-> the Secure Monitor firmware to have the final control over the watchdog.
-> 
-> This is implemented on mt8173 chromebook devices oak, elm and hana in
-> arm trusted firmware file plat/mediatek/mt8173/drivers/wdt/wdt.c.
-> 
-> Signed-off-by: Julius Werner <jwerner@chromium.org>
-> Signed-off-by: Evan Benn <evanbenn@chromium.org>
+On 02-04-20, 19:23, Wesley Cheng wrote:
+> This adds the SNPS FemtoPHY V2 driver used in QCOM SOCs.  There
+> are potentially multiple instances of this UTMI PHY on the
+> SOC, all which can utilize this driver.  The V2 driver will
+> have a different register map compared to V1.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Some nitpicks below, otherwise:
 
-Guenter
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+> +/**
+> + * struct qcom_snps_hsphy - structure holding snps hs phy attributes
+> + *
+> + * @phy: generic phy
+> + * @base: iomapped memory space for qubs2 phy
+> + *
+> + * @cfg_ahb_clk: AHB2PHY interface clock
+> + * @ref_clk: phy reference clock
+> + * @iface_clk: phy interface clock
+> + * @phy_reset: phy reset control
+> + * @vregs: regulator supplies bulk data
+> +
+
+This is missing the marker * for kernel doc
+
+> + * @phy_initialized: if PHY has been initialized correctly
+> + *
+
+This empty line is redundant
+
+> + */
+> +struct qcom_snps_hsphy {
+> +	struct phy *phy;
+> +	void __iomem *base;
+> +
+> +	struct clk *cfg_ahb_clk;
+> +	struct clk *ref_clk;
+> +	struct reset_control *phy_reset;
+> +	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
+> +
+> +	bool phy_initialized;
+> +};
+> +
+> +static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+> +				    u32 mask, u32 val)
+
+coding style mandates that second line should start at preceeding line
+opening brace :), so can you please make it:
+
+static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+                                              u32 mask, u32 val)
+
+-- 
+~Vinod
