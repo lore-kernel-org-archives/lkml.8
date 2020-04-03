@@ -2,116 +2,140 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9120C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6143C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890212077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E8820721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:40:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ptml5nxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403980AbgDCMgQ (ORCPT
+        id S1728198AbgDCMkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:36:16 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:52026 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403861AbgDCMgQ (ORCPT
+        Fri, 3 Apr 2020 08:40:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37907 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728049AbgDCMkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:36:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id m3so5865543ioj.18
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:36:15 -0700 (PDT)
+        Fri, 3 Apr 2020 08:40:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c7so8328236wrx.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4UoTuchVPcQbessFRne4dgixRRmQ3IULpwTbXSdSKjI=;
+        b=ptml5nxSRSHJqKFQi24/vBmgB1JRiVOfz6FKiC4gpmUxkWrdbIyK3uvOqzLg5W8uwh
+         yk1CyLp9obg1oU+Hr7N6V0Qazv6OJMEPqjaiFOV+KsBE1iJSqdyMfGbI2Rl+ueZPP0RD
+         q7v1i7bZgnoLW05nP9LCgF1a+3JHpfALZxf0xfNQn1SzUNgm31+sKib0d1IHusr6S6GN
+         S3M6fCUQu+ra4TFkCP3PW0+YRlA/SrhwExhXWORiYZ0CKq/Y1szY6G0V/0lW1/+ql3PT
+         vjcqmIc/VrpfqtHRjppi/1GU3b/+N4+HcwayMIoWnVrI9mhF+z3SZAPdivgHOcuQhmg3
+         M9WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=UvbA5A0WRpymYAsYKP+Bj3BYcaBTCY3Et4nTEY3sA68=;
-        b=QcypZasu1usMrPSRMozgdYNp1cDnkWQvF5XzTZYKPptOuduCrtKpU++TsS7Kki+Ih4
-         eaHd/avzH3H8G9IYPwop4k9EkoHJnXCNdlNRriIypS4KY9rKNMSrTvKybLx29VMmt6PH
-         yXL5fu110d+GJ0t5bsVzm1pEYd4ydVRjjkLikcqCSsKitHLP14afNsMj6f4PVZTirRKi
-         VaMf5Pc32SdZphfBwCIUUDSquTkYHM1bsjlS3Pjhis8eO0W98/j1tKMFE1AwczhEdvsD
-         o56vY961zuDIjaotAzNGGUE3V/T6wyLWheZ+nz5g4LNDtFgboK67gwsVwFTzGZ3HtMiT
-         7iRw==
-X-Gm-Message-State: AGi0PuYyG+IlHnKL7Awaknv1Mg4yC81stMCvp5Olyb45+6+cwN+UJi+i
-        h5uBYUWcmGCsrF68aqNeSzgXd1au5OJjQDQCI6ofK0FlMyWO
-X-Google-Smtp-Source: APiQypKOeoi0/P/oER14D0BMRYIlvEPJDDZYRsE3CVFtPY/rAhRbh3XQ0qTPgH1RkKPtTOdK7QS/ERRL6nw/T4NRjAitrkvExrTK
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4UoTuchVPcQbessFRne4dgixRRmQ3IULpwTbXSdSKjI=;
+        b=ious6ABn5EHvB+ph9EdeTxF2xGvWC8LisJwE9ah9eTn3f8Vj6FNBz3B8TfRNHK6jrW
+         pmN/dMj2CO0eUJpQS3NNQ22bZFZpZN/eZoZ1dstfJ0i8+DeAEVUBCYe981QGQiXtE537
+         h6tVCmMedmy7S8gWe8HhMiG2tiPKDZKYlRO5isGcn7iZ3aalso4ehZU/uasuNnp6Dms/
+         i/Nh5ka+hz+Pyw2C5lPNujuN/gGmpgTrzBoCP7aQcJz35Q0rZyY+VYhdIgqJbZchj6Ng
+         o4YciBj986tiAUMBnpn8mY9Hm9LK5l10FajJWNxrnEs9YJ3v8sCXFwpYk5WiW9mEdlE7
+         n4fw==
+X-Gm-Message-State: AGi0PuaatSPkafrs4fIFdwM6zgPKNewRw+fNonpWJiAJAuU4+M5VPR7K
+        YWs3Uo1Rz/MED2ntxXbPqPIWTw==
+X-Google-Smtp-Source: APiQypJxxsi5NWBorLzelVFk5jRcSOCtWuTo4mTy/DlCSSr3s65XnB3k77Ei4DFGaxZmRYKmvHULRg==
+X-Received: by 2002:a5d:44c3:: with SMTP id z3mr8800515wrr.284.1585917599670;
+        Fri, 03 Apr 2020 05:39:59 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id 91sm5994296wrf.79.2020.04.03.05.39.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 05:39:59 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 14:39:51 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: Re: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Message-ID: <20200403123951.GA1410438@myrica>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
+ <20200402135240.GE1176452@myrica>
+ <A2975661238FB949B60364EF0F2C25743A2209E3@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:778e:: with SMTP id s136mr8654364ilc.256.1585917375308;
- Fri, 03 Apr 2020 05:36:15 -0700 (PDT)
-Date:   Fri, 03 Apr 2020 05:36:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cc687e05a26229d2@google.com>
-Subject: KCSAN: data-race in fuse_lock_inode / process_init_reply
-From:   syzbot <syzbot+e9c2dec6b40030f721c6@syzkaller.appspotmail.com>
-To:     elver@google.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, miklos@szeredi.hu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A2209E3@SHSMSX104.ccr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Apr 03, 2020 at 11:56:09AM +0000, Liu, Yi L wrote:
+> > >  /**
+> > > + * VFIO_MM objects - create, release, get, put, search
+> > > + * Caller of the function should have held vfio.vfio_mm_lock.
+> > > + */
+> > > +static struct vfio_mm *vfio_create_mm(struct mm_struct *mm)
+> > > +{
+> > > +	struct vfio_mm *vmm;
+> > > +	struct vfio_mm_token *token;
+> > > +	int ret = 0;
+> > > +
+> > > +	vmm = kzalloc(sizeof(*vmm), GFP_KERNEL);
+> > > +	if (!vmm)
+> > > +		return ERR_PTR(-ENOMEM);
+> > > +
+> > > +	/* Per mm IOASID set used for quota control and group operations */
+> > > +	ret = ioasid_alloc_set((struct ioasid_set *) mm,
+> > 
+> > Hmm, either we need to change the token of ioasid_alloc_set() to "void *",
+> > or pass an actual ioasid_set struct, but this cast doesn't look good :)
+> >
+> > As I commented on the IOASID series, I think we could embed a struct
+> > ioasid_set into vfio_mm, pass that struct to all other ioasid_* functions,
+> > and get rid of ioasid_sid.
+> 
+> I think change to "void *" is better as we needs the token to ensure all
+> threads within a single VM share the same ioasid_set.
 
-syzbot found the following crash on:
+Don't they share the same vfio_mm?
 
-HEAD commit:    245a4300 Merge branch 'rcu/kcsan' into tip/locking/kcsan
-git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=12a7d9a5e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4b9db179318d21f
-dashboard link: https://syzkaller.appspot.com/bug?extid=e9c2dec6b40030f721c6
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e9c2dec6b40030f721c6@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in fuse_lock_inode / process_init_reply
-
-read to 0xffff888099cc4d2d of 1 bytes by task 14548 on cpu 1:
- fuse_lock_inode+0x4c/0x90 fs/fuse/inode.c:351
- fuse_lookup+0x3f/0x210 fs/fuse/dir.c:389
- __lookup_hash+0xcb/0x110 fs/namei.c:1544
- filename_create+0x102/0x2d0 fs/namei.c:3639
- user_path_create fs/namei.c:3696 [inline]
- do_linkat+0xff/0x640 fs/namei.c:4298
- __do_sys_link fs/namei.c:4342 [inline]
- __se_sys_link fs/namei.c:4340 [inline]
- __x64_sys_link+0x47/0x60 fs/namei.c:4340
- do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-write to 0xffff888099cc4d2d of 6 bytes by task 14532 on cpu 0:
- process_init_reply+0x7a/0xb90 fs/fuse/inode.c:891
- fuse_request_end+0x324/0x530 fs/fuse/dev.c:328
- end_requests+0x100/0x160 fs/fuse/dev.c:2056
- fuse_abort_conn+0x737/0x7d0 fs/fuse/dev.c:2151
- fuse_dev_release+0x26b/0x290 fs/fuse/dev.c:2186
- __fput+0x1e1/0x520 fs/file_table.c:280
- ____fput+0x1f/0x30 fs/file_table.c:313
- task_work_run+0xf6/0x130 kernel/task_work.c:113
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop+0x2b4/0x2c0 arch/x86/entry/common.c:164
- prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
- do_syscall_64+0x384/0x3a0 arch/x86/entry/common.c:304
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 14532 Comm: syz-executor.1 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Thanks,
+Jean
+> 
+> > > +			       VFIO_DEFAULT_PASID_QUOTA, &vmm->ioasid_sid);
+> > > +	if (ret) {
+> > > +		kfree(vmm);
+> > > +		return ERR_PTR(ret);
+> > > +	}
+> > > +
+> > > +	kref_init(&vmm->kref);
+> > > +	token = &vmm->token;
+> > > +	token->val = mm;
+> > 
+> > Why the intermediate token struct?  Could we just store the mm_struct
+> > pointer within vfio_mm?
+> 
+> Hmm, here we only want to use the pointer as a token, instead of using
+> the structure behind the pointer. If store the mm_struct directly, may
+> leave a space to further use its content, this is not good.
+> 
+> Regards,
+> Yi Liu
+> 
