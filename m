@@ -2,142 +2,105 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D8AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722FAC2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424D9217D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C0C2082F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/ujB5Gb"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="sCxEbPsB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403803AbgDCL0n (ORCPT
+        id S2390694AbgDCL3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:26:43 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34407 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403790AbgDCL0l (ORCPT
+        Fri, 3 Apr 2020 07:29:36 -0400
+Received: from mail-lj1-f178.google.com ([209.85.208.178]:42676 "EHLO
+        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbgDCL3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:26:41 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v23so446269pfm.1;
-        Fri, 03 Apr 2020 04:26:40 -0700 (PDT)
+        Fri, 3 Apr 2020 07:29:35 -0400
+Received: by mail-lj1-f178.google.com with SMTP id q19so6512128ljp.9
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 04:29:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=8EqiMbUsXYeG9yH6GqFnb0WQImnRkyrpeOIRXy5bX+0=;
-        b=n/ujB5GbtIIpbt3JflYJx+9+oBcaF5c6KIp2t3My3cerGsvea2wlvqx4T4GBWLZn/x
-         6c4lG13Ay3ceCx/YTEaoXxuHxXNcK3MkLBtPiNn9JAx78bp7rqI0tzqzT6Zc5nVkHC2M
-         QFPDCR6rLgWcaDD4LN9c47ZwPY9mNb59XBqU0e1thgST/aP8zvsIGehqq4yfOWwOX25a
-         WVyQjpuSgxtxnwWmR0sfV3n9aKR89qu3utHcN/lZhR7zD4ttXeh2safDhzIulTBaYrwH
-         kDsfUCYO33j0J2Ldrai+o1EWiBca4nyZ6Jw4E2VczAEwIopatLexrwJnUuqK590fw7Hz
-         /D8w==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UDV67uaM0olVe42g3gcRUTFOTLKxm8Yf483YPZ3Dud8=;
+        b=sCxEbPsBTakoE1xknw2RtO2rz8oxNAb6cCS8SzCviLU+wXJ5m+DFbQMKB/W7GcAtYQ
+         D/0LK1slWaUCNicIxwMSPPcXyy0SuopgawhAqBDv8LGru/h2Rz//tPVcOCiAX0SeMfie
+         Rtmac2n0Qy8TbXeXOE4KNNFMQCPwok9lSTX2O0YBd41GsuzvfaBW+oKM/+RQaey1e1CJ
+         F7HBir5eC9AV6iJ3nDVZiaM9M6YOksUJ7CwPnmOYtDbgDLtLnz60hL49JSVAixZuYBQv
+         zN9NlOYVLhwtvCwlZiirwMvkOanRxXL2qLV3wkgtzXR8972SVxScB7hqZL3eWlOC48Ye
+         rPZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=8EqiMbUsXYeG9yH6GqFnb0WQImnRkyrpeOIRXy5bX+0=;
-        b=hTYPwhirFzp+3MoRbgMA4E6nQoHZ1DRYZsUvozfLIJanteZIKemYZlqMVv2Rh55heG
-         3vTKFqLNEaPMHS6rE3Qayd/288NO/FjYaUMs6w6vpcnBKtmKOMIZ2uh0D3vvzaaeY7+b
-         KvAWOyD2ZuCwLAnFj5w3dy4JrPbqf45k9Rm0OiiS8XdhYl5nFQ6oSYAKEyo/tTxDpnPz
-         Gh59HpcO8c/axFoQDVrUzDA/phbO5MDp98PxgFPZfj7Mv/ulMUdvls16NZplx9cZBZPm
-         bdR5ba042BpJ9fwTmOQm9D1a1qo3Y5GOLP9gHz1GISrUkndSavqqb/cqp0kgW6mCe2B1
-         ELmQ==
-X-Gm-Message-State: AGi0PuadLjlE7sVIgiFSy7va/uEhyklfOCzOjXTF1g6Z95ponpE9EyLE
-        EKjzGn8hpJpe68UhRSxE4Y4=
-X-Google-Smtp-Source: APiQypJryYVP2bJFCWAGJyeYt8G4pH3FAscyrWs2nsOaa4xu2QlJUUTufWC94u9Pc9SLLWFpwhphyg==
-X-Received: by 2002:a63:5fd8:: with SMTP id t207mr7477349pgb.186.1585913199745;
-        Fri, 03 Apr 2020 04:26:39 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id l5sm5173615pgt.10.2020.04.03.04.26.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UDV67uaM0olVe42g3gcRUTFOTLKxm8Yf483YPZ3Dud8=;
+        b=mnxP2P+/YvjPdXFRfDsGn7tFfdtAMQUQwE/2p4tBXsEGJTesjSf9HCN3TC9cOYvdK9
+         et3FaS0g1v6T8rSCoxrvMBxWgj07nAzkwsPdKmJ75ZyqgAspBsg7HI0DE8/hnAkkPFdy
+         OrVRm37vQkyEr3twy9pc1t/k6bpF41/4nup6esj9PH1VInfijhd03gvx5IZJSMOBrkne
+         y3L3TpbSDa5nmp3F6y27rRpwplwfComrmYLFVK711r7hfcunhH3KseH6OB2NfNTEuIZY
+         spVnIx1jxHu8voNpErn/QZ/9pPexoVw3/AF/nrlRCDZoVsz/HgVVYBcQyWXs8MgRej0e
+         oVXA==
+X-Gm-Message-State: AGi0PuYIdTG2Mb0PN6Ek/cibk9vUtLYvnJLH+2Cne2oc/WrAY901pdlZ
+        pz2yiVoQ+7p1NarUwAuGv/Bxug==
+X-Google-Smtp-Source: APiQypKJovl0REGHDL9yO1HGUDFWiM4HR9jobJ/t8s9UpGtLW4jkkAHDaE6pZx5lnJh/RuFHjMKwQA==
+X-Received: by 2002:a2e:3203:: with SMTP id y3mr4372576ljy.54.1585913373250;
+        Fri, 03 Apr 2020 04:29:33 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id g5sm4839412ljl.106.2020.04.03.04.29.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 04:26:39 -0700 (PDT)
-Date:   Fri, 03 Apr 2020 21:26:27 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
-To:     Michal =?iso-8859-1?q?Such=E1nek?= <msuchanek@suse.de>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
-        <cover.1584620202.git.msuchanek@suse.de>
-        <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
-        <1585039473.da4762n2s0.astroid@bobo.none>
-        <20200324193833.GH25468@kitsune.suse.cz>
-        <1585896170.ohti800w9v.astroid@bobo.none>
-        <20200403105234.GX25468@kitsune.suse.cz>
-In-Reply-To: <20200403105234.GX25468@kitsune.suse.cz>
+        Fri, 03 Apr 2020 04:29:32 -0700 (PDT)
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 720FE101331; Fri,  3 Apr 2020 14:29:31 +0300 (+03)
+To:     akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 3/8] khugepaged: Drain all LRU caches before scanning pages
+Date:   Fri,  3 Apr 2020 14:29:23 +0300
+Message-Id: <20200403112928.19742-4-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
+References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1585913065.zoacp2kzsv.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Such=C3=A1nek's on April 3, 2020 8:52 pm:
-> Hello,
->=20
-> there are 3 variants of the function
->=20
-> read_user_stack_64
->=20
-> 32bit read_user_stack_32
-> 64bit read_user_Stack_32
+Having a page in LRU add cache offsets page refcount and gives
+false-negative on PageLRU(). It reduces collapse success rate.
 
-Right.
+Drain all LRU add caches before scanning. It happens relatively
+rare and should not disturb the system too much.
 
-> On Fri, Apr 03, 2020 at 05:13:25PM +1000, Nicholas Piggin wrote:
-[...]
->>  #endif /* CONFIG_PPC64 */
->> =20
->> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *r=
-et)
->> +{
->> +	return __read_user_stack(ptr, ret, sizeof(*ret));
-> Does not work for 64bit read_user_stack_32 ^ this should be 4.
->=20
-> Other than that it should preserve the existing logic just fine.
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ mm/khugepaged.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-sizeof(int) =3D=3D 4 on 64bit so it should work.
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 14d7afc90786..fdc10ffde1ca 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -2065,6 +2065,8 @@ static void khugepaged_do_scan(void)
+ 
+ 	barrier(); /* write khugepaged_pages_to_scan to local stack */
+ 
++	lru_add_drain_all();
++
+ 	while (progress < pages) {
+ 		if (!khugepaged_prealloc_page(&hpage, &wait))
+ 			break;
+-- 
+2.26.0
 
-Thanks,
-Nick
-=
