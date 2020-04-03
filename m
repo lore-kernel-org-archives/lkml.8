@@ -2,122 +2,146 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB49C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B513C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5DE20737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="AWTYy8y4"
+	by mail.kernel.org (Postfix) with ESMTP id 4AFE520721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403946AbgDCM1G (ORCPT
+        id S2390228AbgDCMaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:27:06 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:35998 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390839AbgDCM1G (ORCPT
+        Fri, 3 Apr 2020 08:30:24 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48038 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbgDCMaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:27:06 -0400
-Received: by mail-vs1-f66.google.com with SMTP id 184so4795866vsu.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:27:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wo2EZUNeB9SsWLhfGdO4NXUFfi3h/ZgSDOZGnGz/M8M=;
-        b=AWTYy8y4zaClO/E3QrKZnMlUQae7ZWH/UnD3yozTj2BZivUYWSNVsWc8JkBuB+NIwf
-         AcFYWWGWuvb5i0nj0fsftLGlbHooXGodA2QURbiI2wVxmFMdYgWV40LlgLU7RkFFbYH0
-         BBfpXYmdxE1q8oIPu2qSSY2PCA4Hg8AC7+NjwcFXnZ+uzmT1GFk0+qJsuqaZ/VLfWvDP
-         LtxO+i/cfEYCZJ0Dc291wQomb4Dr/uxJut004AZ4gePqeNQlV0MNbRWIlTi98WZwK0Nh
-         S0XOkLvPsAPN0fdRxmYIW22+eTeJ2K4lq75U2VFpcDlB5KBDN9/cg/dvLyc7F52R4M7E
-         sasg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wo2EZUNeB9SsWLhfGdO4NXUFfi3h/ZgSDOZGnGz/M8M=;
-        b=pmSTtimK67PIZ0oh80wiZvBBLnoZ9n3CNvsddiT3Yg0MpUVLT98U8kHHfOeWYET79b
-         dcLjVCWqKu00aV5P26kHE1EEfiRIrZgtDSA0dYBus/H1h2N2E7olQJlbCyPzQnyXSgoX
-         hIlnlYsMK6w9Qvva8PdaiduyYmo8W0G6Gy+HvWJPMRQoPNC0oy2577fcuOQxDWVqOk/X
-         Rbmp9seZE7kEfdEybn2SOReaze8J4n0x6b4UhXsLW3dSUQMZt85oVOf4l9nGKqdsIrdH
-         MB+sQbLSEIMSWHWB0vaa1ROmKddPA1ycfclhqVYC1A+RKkeWVVM8Mn5XM3HoheKMQkvq
-         gWNQ==
-X-Gm-Message-State: AGi0PuaQe+86R0r+aEinpjSRrkTz7Z4pMfXEF5+UEBoo5FwbX1Wq3vgi
-        Y6gh0u6h6XURNUJP/fxGwrGmwvo64JaRwJ8tyURUkA==
-X-Google-Smtp-Source: APiQypK3zlebDaHIYf3xJ0SdPkARdWrQq4THbXVO5Hj6xfMPT8VmYGqXxqVDetDL0Cu8CSgCsMIkNhk2Qk2txrZ2Wlo=
-X-Received: by 2002:a67:870f:: with SMTP id j15mr5889031vsd.95.1585916825114;
- Fri, 03 Apr 2020 05:27:05 -0700 (PDT)
+        Fri, 3 Apr 2020 08:30:24 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2E4C81C2F16; Fri,  3 Apr 2020 14:30:21 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 14:30:20 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
+        airlied@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Subject: [bisected] Re: 5.7-rc0: regression caused by drm tree, hangs while
+ attempting to run X
+Message-ID: <20200403123019.GA3539@duo.ucw.cz>
+References: <20200402213253.GA2691@duo.ucw.cz>
+ <20200402213506.GA2767@duo.ucw.cz>
+ <20200403073720.GA23229@duo.ucw.cz>
+ <20200403091430.GA3845@duo.ucw.cz>
+ <20200403092634.GA3610@duo.ucw.cz>
+ <20200403102928.GA3539@duo.ucw.cz>
 MIME-Version: 1.0
-References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 3 Apr 2020 17:56:53 +0530
-Message-ID: <CAHLCerPVuZrNiSh45w4TF6jKmZ+aD5aBZCcCK87i4Txdfh_Z2g@mail.gmail.com>
-Subject: Re: [PATCH V3 1/3] dt-bindings: thermal: imx8mm-thermal: Add support
- for i.MX8MP
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-        Fabio Estevam <festevam@gmail.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Content-Disposition: inline
+In-Reply-To: <20200403102928.GA3539@duo.ucw.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
 
-On Mon, Mar 23, 2020 at 6:05 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> Add thermal binding doc for Freescale's i.MX8MP Thermal Monitoring Unit.
->
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I realise this got merged already, but please send a patch converting
-this binding to yaml at some point.
+Hi!
 
-Regards,
-Amit
+> > > commit f365ab31efacb70bed1e821f7435626e0b2528a6
+> > > Merge: 4646de87d325 59e7a8cc2dcf
+> > > Author: Linus Torvalds <torvalds@linux-foundation.org>
+> > > Date:   Wed Apr 1 15:24:20 2020 -0700
+> > >=20
+> > >     Merge tag 'drm-next-2020-04-01' of
+> > > git://anongit.freedesktop.org/drm/drm
+>=20
+>=20
+> > Any ideas, besides the b-word?
+> >=20
+> > Would c0ca be good commit for testing?
+> >=20
+> > commit 700d6ab987f3b5e28b13b5993e5a9a975c5604e2
+> > Merge: c0ca5437c509 2bdd4c28baff
+>=20
+> c0ca is broken.
+>=20
+> commit 9001b17698d86f842e2b13e0cafe8021d43209e9
+> Merge: bda1fb0ed000 217a485c8399
+>=20
+>     Merge tag 'drm-intel-next-2020-03-13' of git://anongit.freedesktop.or=
+g/drm/d
+> rm-intel into drm-next
+>    =20
+>     UAPI Changes:
+>=20
+> So bda1fb0ed000 looks like test candidate... and that one works.
+>=20
+> I guess 217a485c8399 is reasonable next step... and that
+> 11a48a5a18c63fd7621bb050228cebf13566e4d8 should work ok.=20
 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No change.
-> ---
->  Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-> index d09ae82..3629d3c 100644
-> --- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-> @@ -1,10 +1,10 @@
->  * Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
->
->  Required properties:
-> -- compatible : Must be "fsl,imx8mm-tmu".
-> +- compatible : Must be "fsl,imx8mm-tmu" or "fsl,imx8mp-tmu".
->  - reg : Address range of TMU registers.
->  - clocks : TMU's clock source.
-> -- #thermal-sensor-cells : Should be 0. See ./thermal.txt for a description.
-> +- #thermal-sensor-cells : Should be 0 or 1. See ./thermal.txt for a description.
->
->  Example:
->  tmu: tmu@30260000 {
-> --
-> 2.7.4
->
+# bad: [217a485c8399634abacd2f138b3524d2e78e8aad] drm/i915: Update DRIVER_D=
+ATE to 20200313
+# good: [11a48a5a18c63fd7621bb050228cebf13566e4d8] Linux 5.6-rc2
+git bisect start '217a485c8399' '11a48a5a18c63fd7621bb050228cebf13566e4d8'
+# good: [837b63e6087838d0f1e612d448405419199d8033] drm/i915: Program MBUS w=
+ith rmw during initialization
+git bisect good 837b63e6087838d0f1e612d448405419199d8033
+# good: [3a1b82a19ff91cfef9b5d9d9faabb0ebcac15df0] drm/i915/tgl: Allow DC5/=
+DC6 entry while PG2 is active
+git bisect good 3a1b82a19ff91cfef9b5d9d9faabb0ebcac15df0
+# good: [ba518bbd3f3c265419fa8c3702940cb7c642c6a5] drm/i915: Force DPCD bac=
+klight mode for some Dell CML 2020 panels
+git bisect good ba518bbd3f3c265419fa8c3702940cb7c642c6a5
+# good: [73ce0969d1d0bc2cb53370017923640db72e70ec] drm/i915: Clean up integ=
+er types in color code
+git bisect good 73ce0969d1d0bc2cb53370017923640db72e70ec
+# bad: [aa64f8e1cf235f2e36615dba57c2c50d06181f84] drm/i915: Add Wa_12096446=
+11:icl,ehl
+git bisect bad aa64f8e1cf235f2e36615dba57c2c50d06181f84
+# good: [32fc2849a3d59dc10efda38ef88e8f9052f711be] drm/i915/dsb: convert to=
+ drm_device based logging macros.
+git bisect good 32fc2849a3d59dc10efda38ef88e8f9052f711be
+# good: [4aea5a9e6521c1ad484992d490f1cefa7d73d1ec] drm/i915/gem: Mark up th=
+e racy read of the mmap_singleton
+git bisect good 4aea5a9e6521c1ad484992d490f1cefa7d73d1ec
+# bad: [7dc8f1143778a35b190f9413f228b3cf28f67f8d] drm/i915/gem: Drop reloca=
+tion slowpath
+git bisect bad 7dc8f1143778a35b190f9413f228b3cf28f67f8d
+# good: [c02aac25f150d1b7215b9481f8cdd30cc607bedf] drm/i915/gem: Mark up sw=
+-fence notify function
+git bisect good c02aac25f150d1b7215b9481f8cdd30cc607bedf
+# good: [07bcfd1291de77ffa9b627b4442783aba1335229] drm/i915/gen12: Disable =
+preemption timeout
+git bisect good 07bcfd1291de77ffa9b627b4442783aba1335229
+# first bad commit: [7dc8f1143778a35b190f9413f228b3cf28f67f8d] drm/i915/gem=
+: Drop relocation slowpath
+
+Any ideas?
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXocsWwAKCRAw5/Bqldv6
+8qNdAJ9bkwEuRS3wjnjPE4AXxIIeuiDQkQCfZoT2AeeFq3CBrUDbDEIYnRVm9sk=
+=kIVi
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
