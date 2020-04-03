@@ -2,182 +2,96 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07626C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C894C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57B320737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED8020675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7VkOY2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389515AbgDCTWJ (ORCPT
+        id S2390812AbgDCTYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 15:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728624AbgDCTWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 15:22:09 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 041902063A;
-        Fri,  3 Apr 2020 19:22:07 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 15:22:06 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: [ANNOUNCE] 4.19.106-rt46
-Message-ID: <20200403152206.037cc665@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 3 Apr 2020 15:24:31 -0400
+Received: from mail-io1-f45.google.com ([209.85.166.45]:43530 "EHLO
+        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728268AbgDCTYb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 15:24:31 -0400
+Received: by mail-io1-f45.google.com with SMTP id x9so8700014iom.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 12:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jnRbA/qfAuZrNiKW7PlDbNmNmhxrDXj54QKlbM9Oqfw=;
+        b=d7VkOY2deeUHkwdplgi5lQCHavHOBxfkJAwy4crlz4R1CcXyyHPCn6Yqr+IkjBUrbJ
+         TO2upVzWHTNOm0jIIjWUV8GLcDj/k6uw7MVTA8nA9zFiyK+2bWvTddpqnFWVqHfuVGoJ
+         5mPfwbbDbR9fDOF6xGah/iC6MTzdUIHr2GMQmotSLj2zqjXvQnk5E6cYtMI8LZmBOxGD
+         p/NzW+M02I1ozJ/fxOEqtsJ3SKTk9rheEZgzLUp0HNo5+/wG8qKtfqA4h8EOGGJnz44d
+         nItwxxtRQ7rmLYJtlbKR/nGSgZoL6/5nhR/7hSEOAC5I4rqqAAxJbuRNeK065RrkFVpS
+         Zp1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jnRbA/qfAuZrNiKW7PlDbNmNmhxrDXj54QKlbM9Oqfw=;
+        b=HgJD2WiTzJKInDAboA5pG+WjJXZqsVFnlfAxCxMQsY4t7xDsXUnEz7ZjBOiC/SPzRb
+         1oqGnUlhMKi5udTQKiLrfvPfaIoVInvyl6WIewq3TKhpADcOihLaN2a4Fp2jQhKX8SZE
+         odFcpVGTneobDS2zZfpKQAEAg1g1uEhTlmWZdHwtEVcd/2VwnQ6qtLaUk8euU+S6U2vU
+         IF3hHLBA04Gk1CUYaDeUTSOjH2plniLgYe7Em3w9iClGOuzds1viJ+bE52KumVM5L90/
+         w2+z7rdNJLMGb2pOUBM0OiDJt6FoMuc9Qf9wDvT720MD3A+T75wwpjsfRkMU/8JFIidr
+         +4Ww==
+X-Gm-Message-State: AGi0PuZg17U9oCBc7Nc3l1VO4e5WCA9QxJiyUkuV97a3upNVkr5euygO
+        eUScob9gEoMoyjbMRRJPHFSBO26jT0apBTRpsxxQ2aCuCoo=
+X-Google-Smtp-Source: APiQypIsEcnt7WhgbLb1UnP0hJFxH2K4F1u/DZj8zVJQrtDFzsuGNdl3JJoa//pjVgV64FrBImP7WH6EFEs1RlthxkM=
+X-Received: by 2002:a02:b783:: with SMTP id f3mr9873509jam.4.1585941868678;
+ Fri, 03 Apr 2020 12:24:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAOkhzLWMB8rr0x4KKfqruCcTLVq4dH6nZ365auMqA1arZ57J7g@mail.gmail.com>
+ <CAOkhzLVvmoB0TgS4bioP4PnxwmnT_+h0LbCya2=KkcHu1UT_Zw@mail.gmail.com>
+ <CAKb7UvgLr2A88jbx9Zvi3SjXoKbk4iZEg7LNQ4aL3VZhKVQu3A@mail.gmail.com>
+ <CAOkhzLU+buL3J3XUbzC6JUAfbnMR-27qwS3Vm7ofrAPPCipXuw@mail.gmail.com>
+ <CAKb7UvhvBG49P7t6XD==26q70YywmhUHvP=hW=wj8mT6V0gpHA@mail.gmail.com>
+ <CAOkhzLW42a66wNL7Pz8+d+yO_oyZZJBEps=8WPHaXXFjb54dTQ@mail.gmail.com> <CAKb7Uvh=44_S_EAfma+JX9j_igaE3CSWws_TUqLWwJ50zcmA9Q@mail.gmail.com>
+In-Reply-To: <CAKb7Uvh=44_S_EAfma+JX9j_igaE3CSWws_TUqLWwJ50zcmA9Q@mail.gmail.com>
+From:   Zeno Davatz <zdavatz@gmail.com>
+Date:   Fri, 3 Apr 2020 21:24:17 +0200
+Message-ID: <CAOkhzLVGsOyKsf=Lm69UMGutWv-yZVFqZ=Yi61HDHCUCAwchoQ@mail.gmail.com>
+Subject: Re: acr: failed to load firmware with Kernel 5.6. Kernel 5.5 works
+ just fine.
+To:     Ilia Mirkin <imirkin@alum.mit.edu>
+Cc:     Ben Skeggs <bskeggs@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nouveau <nouveau@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 3, 2020 at 8:31 PM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
 
-Dear RT Folks,
+> Depends on distro specifics. Also the firmware has to be available at
+> the time that nouveau loads. The corollary to this is:
+>
+> If it's built into the kernel, then the firmware must also be included
+> in the kernel (since this happens before any FS stuff)
+> If it's loaded as a module from initrd, then initrd must contain the firmware
+>
+> If you need help including firmware in the right place, a distro
+> support channel is probably your best shot.
 
-I'm pleased to announce the 4.19.106-rt46 stable release.
+Ok, thank you. So far no luck on the end.
 
+https://wiki.gentoo.org/wiki/Linux_firmware
 
-You can get this release via the git tree at:
+Please let me know if the fallback version comes back to life.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v4.19-rt
-  Head SHA1: e56eb1424b06c72cd304190c34c2541949dfe41d
-
-
-Or to build 4.19.106-rt46 directly, the following patches should be applied:
-
-  http://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
-
-  http://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.106.xz
-
-  http://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.106-rt46.patch.xz
-
-
-
-You can also build from 4.19.106-rt45 by applying the incremental patch:
-
-  http://www.kernel.org/pub/linux/kernel/projects/rt/4.19/incr/patch-4.19.106-rt45-rt46.patch.xz
-
-
-
-Enjoy,
-
--- Steve
-
-
-Changes from v4.19.106-rt45:
-
----
-
-Steven Rostedt (VMware) (2):
-      irq_work: Fix checking of IRQ_WORK_LAZY flag set on non PREEMPT_RT
-      Linux 4.19.106-rt46
-
-Tiejun Chen (1):
-      lib/ubsan: Remove flags parameter from calls to ubsan_prologue() and ubsan_epilogue()
-
-----
- kernel/irq_work.c | 15 ++++++++-------
- lib/ubsan.c       |  5 ++---
- localversion-rt   |  2 +-
- 3 files changed, 11 insertions(+), 11 deletions(-)
----------------------------
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 2940622da5b3..b6d9d35941ac 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -70,6 +70,12 @@ static void __irq_work_queue_local(struct irq_work *work, struct llist_head *lis
- 		arch_irq_work_raise();
- }
- 
-+static inline bool use_lazy_list(struct irq_work *work)
-+{
-+	return (IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_IRQ))
-+		|| (work->flags & IRQ_WORK_LAZY);
-+}
-+
- /* Enqueue the irq work @work on the current CPU */
- bool irq_work_queue(struct irq_work *work)
- {
-@@ -81,11 +87,10 @@ bool irq_work_queue(struct irq_work *work)
- 
- 	/* Queue the entry and raise the IPI if needed. */
- 	preempt_disable();
--	if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL) && !(work->flags & IRQ_WORK_HARD_IRQ))
-+	if (use_lazy_list(work))
- 		list = this_cpu_ptr(&lazy_list);
- 	else
- 		list = this_cpu_ptr(&raised_list);
--
- 	__irq_work_queue_local(work, list);
- 	preempt_enable();
- 
-@@ -106,7 +111,6 @@ bool irq_work_queue_on(struct irq_work *work, int cpu)
- 
- #else /* CONFIG_SMP: */
- 	struct llist_head *list;
--	bool lazy_work, realtime = IS_ENABLED(CONFIG_PREEMPT_RT_FULL);
- 
- 	/* All work should have been flushed before going offline */
- 	WARN_ON_ONCE(cpu_is_offline(cpu));
-@@ -116,10 +120,7 @@ bool irq_work_queue_on(struct irq_work *work, int cpu)
- 		return false;
- 
- 	preempt_disable();
--
--	lazy_work = work->flags & IRQ_WORK_LAZY;
--
--	if (lazy_work || (realtime && !(work->flags & IRQ_WORK_HARD_IRQ)))
-+	if (use_lazy_list(work))
- 		list = &per_cpu(lazy_list, cpu);
- 	else
- 		list = &per_cpu(raised_list, cpu);
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index 5830cc9a2164..199c75e03469 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -339,18 +339,17 @@ EXPORT_SYMBOL(__ubsan_handle_type_mismatch_v1);
- void __ubsan_handle_vla_bound_not_positive(struct vla_bound_data *data,
- 					void *bound)
- {
--	unsigned long flags;
- 	char bound_str[VALUE_LENGTH];
- 
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location, &flags);
-+	ubsan_prologue(&data->location);
- 
- 	val_to_string(bound_str, sizeof(bound_str), data->type, bound);
- 	pr_err("variable length array bound value %s <= 0\n", bound_str);
- 
--	ubsan_epilogue(&flags);
-+	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_vla_bound_not_positive);
- 
-diff --git a/localversion-rt b/localversion-rt
-index 38c40b21a885..272158183778 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt45
-+-rt46
+best
+Zeno
