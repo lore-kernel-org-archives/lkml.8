@@ -2,113 +2,137 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D782C2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C8FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C85206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB49206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIYU87FC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eYWuFB7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404024AbgDCQGE (ORCPT
+        id S1728186AbgDCQGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:06:04 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39966 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403978AbgDCQGC (ORCPT
+        Fri, 3 Apr 2020 12:06:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:32922 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403971AbgDCQGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Apr 2020 12:06:02 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s8so7030222wrt.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 09:06:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Z5wsPxhq1mJxEXsc3bjOm6GGwt7zL846SQGSdLJV2/U=;
-        b=mIYU87FChto9yFjZ8upQyAg2v1264aUW55Ng0Pr1TqO6cLmLHoof4pU9gyHSeS0DLV
-         QZZhV1Tw/Zn4KGnNOlG90LtTmWlF48IASJF1nWhM1ZlP4MBWdt+yE2UGdjzABZ/PIo87
-         WPkTzTAvPZumqlxUajKalhI0niVYyOOreH0hrC1lag3/cQs6Dh7+m6KP2CzvsZ8xionJ
-         dakAxkPdHmQhhmzCFMfA6Myah2lZXL13XWYhcvMc8olC8wvNCeEXF2HEOsOU4RLeyZpY
-         gtVh5aD3t9loGG4a0reP0F96ePRo8a1VQKBa+DYhfZb7p60zksZifBCTYkADyH642h9v
-         x4Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z5wsPxhq1mJxEXsc3bjOm6GGwt7zL846SQGSdLJV2/U=;
-        b=Z8O2pGar8n1W+harj7sIRAJkpnyY37mFGT9lGu5HjPCuPeDX1Xwsf8hoaNpiQ3LuJc
-         0VOjjCyqbG9qiyhjhmRAtO6PFJX7/G01QSnTibeaRQT2uFKTxYgDO1/2+oeNewQn+3fV
-         pXb0SQLru5WAHKYf4ut2tuaa5pbl8Jn/9mmt0atoHzGWrVAqR9GrzvIcHiwWS1uxwaLe
-         1P4bmUhOXNBobRIv8P8Iqn496FCgm0FnSfmhibFv4eSWGpfhmv0fYCGI0ndhOpBD0aYP
-         pg32S4BqhS/q3Ra/wZaVb4vixV1HqcO9l2oIlwAnbfuobtE9zksqu7EI48/8ol8tHag7
-         lNBQ==
-X-Gm-Message-State: AGi0PuaeZ84r989C540/BoyTbnrrw8uT0iW3CwsCmDpigb3A0JDP5y05
-        Y9BbwJAlXNEFyOUkjBW9bB3bxuTyUsJL
-X-Google-Smtp-Source: APiQypJOKUMA+QJfGmwI0Gz9oX3d6VZZXXE08S3jjf3kizRYWvUG9R9mdHxa4az51O2xQXfcsIYrVw==
-X-Received: by 2002:adf:f401:: with SMTP id g1mr9449471wro.140.1585929960516;
-        Fri, 03 Apr 2020 09:06:00 -0700 (PDT)
-Received: from ninjahost.lan (host-92-23-85-227.as13285.net. [92.23.85.227])
-        by smtp.gmail.com with ESMTPSA id l12sm12351426wrt.73.2020.04.03.09.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 09:06:00 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     boqun.feng@gmail.com, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033FmlXx060862;
+        Fri, 3 Apr 2020 16:05:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=UhdHklRomxNbebWWRjDfKWX0dV8tBeR4UT0S2HC9XPI=;
+ b=eYWuFB7Md4C6e/b6A31sehx/Iwdjh0AK9osSQuJ3MegOVfOo36LgqkJSHvOY2zBI0OJI
+ 4fXdc0YAdZu+Hp4q/Mda0F9aLyNcMpOx/3NybkyCv7GdDFWxpqCWabbmw2SlRAEzkcCo
+ Wqq9ZH/qS+Koxsntmhk7zosLU0Ti5za6qU6I/FRYx7RKMyadAuCXm33nLZ7gUyGYBP+Z
+ dGO3ZtkbfIg1xpk7vizt8349nyzuRhFm+yR5shUwlHiZpHDAAFCugzbJpjXtV/Uj2UX3
+ yMPoIgkxybmEHctR/n5o/YRTf0JHdVfk4MopREB56/UtKZ2at8bxwJmN+HrtslrIykzq EQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 303aqj2dqg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 16:05:48 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033FmEWr175392;
+        Fri, 3 Apr 2020 16:05:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 302ga53hav-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 16:05:48 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033G5jXv019624;
+        Fri, 3 Apr 2020 16:05:46 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 09:05:45 -0700
+Date:   Fri, 3 Apr 2020 09:05:44 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Dave Chinner <david@fromorbit.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Gang He <ghe@suse.com>, Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Aditya Pakki <pakki001@umn.edu>, ChenGang <cg.chen@huawei.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        ocfs2-devel@oss.oracle.com (moderated list:ORACLE CLUSTER FILESYSTEM 2
-        (OCFS2))
-Subject: [PATCH 3/5] ocfs2: Add missing annotation for dlm_empty_lockres()
-Date:   Fri,  3 Apr 2020 17:05:03 +0100
-Message-Id: <20200403160505.2832-4-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200403160505.2832-1-jbi.octave@gmail.com>
-References: <0/5>
- <20200403160505.2832-1-jbi.octave@gmail.com>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+Message-ID: <20200403160544.GO80283@magnolia>
+References: <20200311033614.GQ1752567@magnolia>
+ <20200311062952.GA11519@lst.de>
+ <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
+ <20200316095224.GF12783@quack2.suse.cz>
+ <20200316095509.GA13788@lst.de>
+ <20200401040021.GC56958@magnolia>
+ <20200401102511.GC19466@quack2.suse.cz>
+ <20200402085327.GA19109@lst.de>
+ <20200402205518.GF3952565@iweiny-DESK2.sc.intel.com>
+ <20200403072731.GA24176@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403072731.GA24176@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=935 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at dlm_empty_lockres()
+On Fri, Apr 03, 2020 at 09:27:31AM +0200, Christoph Hellwig wrote:
+> On Thu, Apr 02, 2020 at 01:55:19PM -0700, Ira Weiny wrote:
+> > > I'd just return an error for that case, don't play silly games like
+> > > evicting the inode.
+> > 
+> > I think I agree with Christoph here.  But I want to clarify.  I was heading in
+> > a direction of failing the ioctl completely.  But we could have the flag change
+> > with an appropriate error which could let the user know the change has been
+> > delayed.
+> > 
+> > But I don't immediately see what error code is appropriate for such an
+> > indication.  Candidates I can envision:
+> > 
+> > EAGAIN
+> > ERESTART
+> > EUSERS
+> > EINPROGRESS
+> > 
+> > None are perfect but I'm leaning toward EINPROGRESS.
+> 
+> I really, really dislike that idea.  The whole point of not forcing
+> evictions is to make it clear - no this inode is "busy" you can't
+> do that.  A reasonably smart application can try to evict itself.
+> 
+> But returning an error and doing a lazy change anyway is straight from
+> the playbook for arcane and confusing API designs.
 
-warning: context imbalance in dlm_purge_lockres() - unexpected unlock
+Agreed.  That's why I wrote that applications can set FS_XFLAG_DAX and
+then query statx for STATX_ATTR_DAX to find out if it actually took
+effect, and that if applications require it immediately they can either
+create a file in a FS_XFLAG_DAX directory, or the admin can mount with
+dax=always.  No magic return values required or desired anywhere.
 
-The root cause is the missing annotation at dlm_purge_lockres()
+I don't know what "try to evict the inode" magic means, but I'm fairly
+sure I don't want to. ;)
 
-Add the missing __must_hold(&dlm->spinlock)
-
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- fs/ocfs2/dlm/dlmmaster.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/ocfs2/dlm/dlmmaster.c b/fs/ocfs2/dlm/dlmmaster.c
-index 900f7e466d11..8cbd46b3509a 100644
---- a/fs/ocfs2/dlm/dlmmaster.c
-+++ b/fs/ocfs2/dlm/dlmmaster.c
-@@ -2762,6 +2762,7 @@ static int dlm_migrate_lockres(struct dlm_ctxt *dlm,
-  * Returns: 1 if dlm->spinlock was dropped/retaken, 0 if never dropped
-  */
- int dlm_empty_lockres(struct dlm_ctxt *dlm, struct dlm_lock_resource *res)
-+	__must_hold(&dlm->spinlock)
- {
- 	int ret;
- 	int lock_dropped = 0;
--- 
-2.24.1
-
+--D
