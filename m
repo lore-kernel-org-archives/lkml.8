@@ -2,76 +2,230 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F450C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51993C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F9D206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEE320721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbgDCGTn (ORCPT
+        id S2388022AbgDCGWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 02:19:43 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:52068 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730889AbgDCGTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 02:19:43 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jKFfi-0008Jn-Lx; Fri, 03 Apr 2020 17:19:19 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 03 Apr 2020 17:19:18 +1100
-Date:   Fri, 3 Apr 2020 17:19:18 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     Baolin Wang <baolin.wang@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v4 1/2] crypto: engine - support for parallel requests
-Message-ID: <20200403061918.GA26691@gondor.apana.org.au>
-References: <1583707893-23699-1-git-send-email-iuliana.prodan@nxp.com>
- <1583707893-23699-2-git-send-email-iuliana.prodan@nxp.com>
- <20200312032553.GB19920@gondor.apana.org.au>
- <AM0PR04MB71710B3535153286D9F31F8B8CFD0@AM0PR04MB7171.eurprd04.prod.outlook.com>
- <20200317032924.GB18743@gondor.apana.org.au>
- <VI1PR0402MB3712DC09FC02FBE215006C5B8CF60@VI1PR0402MB3712.eurprd04.prod.outlook.com>
- <20200327044404.GA12318@gondor.apana.org.au>
- <AM6PR0402MB370147736BEAD099AAF061558CCC0@AM6PR0402MB3701.eurprd04.prod.outlook.com>
+        Fri, 3 Apr 2020 02:22:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26910 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729423AbgDCGWe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 02:22:34 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0335dSnM087477;
+        Fri, 3 Apr 2020 02:22:25 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 305s8309m9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 02:22:25 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0336LfaW001775;
+        Fri, 3 Apr 2020 06:22:24 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma03wdc.us.ibm.com with ESMTP id 301x776wcd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 06:22:24 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0336MOeH15008554
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 06:22:24 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B2FC124052;
+        Fri,  3 Apr 2020 06:22:24 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD7E3124054;
+        Fri,  3 Apr 2020 06:22:23 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.199.34.1])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 06:22:23 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 0FFDA2E2F59; Fri,  3 Apr 2020 11:45:36 +0530 (IST)
+Date:   Fri, 3 Apr 2020 11:45:36 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 2/6] powerpc/idle: Add accessor function to always
+ read latest idle PURR
+Message-ID: <20200403061536.GA9066@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1585308760-28792-3-git-send-email-ego@linux.vnet.ibm.com>
+ <1585734073.0qmf6bbdoa.naveen@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM6PR0402MB370147736BEAD099AAF061558CCC0@AM6PR0402MB3701.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1585734073.0qmf6bbdoa.naveen@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_03:2020-04-02,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 impostorscore=0 phishscore=0 malwarescore=0 bulkscore=0
+ clxscore=1015 priorityscore=1501 mlxscore=0 suspectscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:44:02AM +0000, Iuliana Prodan wrote:
->
-> This cannot happen right now.
-> For non-crypto API requests (like split key or rng) I cannot pass them 
-> through crypto-engine which only supports aead, skcipher, hash and 
-> akcipher requests.
+On Wed, Apr 01, 2020 at 03:12:53PM +0530, Naveen N. Rao wrote:
+> Hi Gautham,
+> 
+> Gautham R. Shenoy wrote:
+> >From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> >
+> >Currently when CPU goes idle, we take a snapshot of PURR via
+> >pseries_idle_prolog() which is used at the CPU idle exit to compute
+> >the idle PURR cycles via the function pseries_idle_epilog().  Thus,
+> >the value of idle PURR cycle thus read before pseries_idle_prolog() and
+> >after pseries_idle_epilog() is always correct.
+> >
+> >However, if we were to read the idle PURR cycles from an interrupt
+> >context between pseries_idle_prolog() and pseries_idle_epilog() (this will
+> >be done in a future patch), then, the value of the idle PURR thus read
+> >will not include the cycles spent in the most recent idle period.
+> >
+> >This patch addresses the issue by providing accessor function to read
+> >the idle PURR such such that it includes the cycles spent in the most
+> >recent idle period, if we read it between pseries_idle_prolog() and
+> >pseries_idle_epilog(). In order to achieve it, the patch saves the
+> >snapshot of PURR in pseries_idle_prolog() in a per-cpu variable,
+> >instead of on the stack, so that it can be accessed from an interrupt
+> >context.
+> >
+> >Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> >---
+> > arch/powerpc/include/asm/idle.h        | 47 +++++++++++++++++++++++++++-------
+> > arch/powerpc/platforms/pseries/setup.c |  7 +++--
+> > drivers/cpuidle/cpuidle-pseries.c      | 15 +++++------
+> > 3 files changed, 47 insertions(+), 22 deletions(-)
+> >
+> >diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
+> >index 32064a4c..d4bfb6a 100644
+> >--- a/arch/powerpc/include/asm/idle.h
+> >+++ b/arch/powerpc/include/asm/idle.h
+> >@@ -5,10 +5,27 @@
+> > #include <asm/paca.h>
+> >
+> > #ifdef CONFIG_PPC_PSERIES
+> >-static inline void pseries_idle_prolog(unsigned long *in_purr)
+> >+DECLARE_PER_CPU(u64, idle_entry_purr_snap);
+> >+
+> >+static inline void snapshot_purr_idle_entry(void)
+> >+{
+> >+	*this_cpu_ptr(&idle_entry_purr_snap) = mfspr(SPRN_PURR);
+> >+}
+> >+
+> >+static inline void update_idle_purr_accounting(void)
+> >+{
+> >+	u64 wait_cycles;
+> >+	u64 in_purr = *this_cpu_ptr(&idle_entry_purr_snap);
+> >+
+> >+	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
+> >+	wait_cycles += mfspr(SPRN_PURR) - in_purr;
+> >+	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
+> >+}
+> >+
+> >+static inline void pseries_idle_prolog(void)
+> > {
+> > 	ppc64_runlatch_off();
+> >-	*in_purr = mfspr(SPRN_PURR);
+> >+	snapshot_purr_idle_entry();
+> > 	/*
+> > 	 * Indicate to the HV that we are idle. Now would be
+> > 	 * a good time to find other work to dispatch.
+> >@@ -16,16 +33,28 @@ static inline void pseries_idle_prolog(unsigned long *in_purr)
+> > 	get_lppaca()->idle = 1;
+> > }
+> >
+> >-static inline void pseries_idle_epilog(unsigned long in_purr)
+> >+static inline void pseries_idle_epilog(void)
+> > {
+> >-	u64 wait_cycles;
+> >-
+> >-	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
+> >-	wait_cycles += mfspr(SPRN_PURR) - in_purr;
+> >-	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
+> >+	update_idle_purr_accounting();
+> > 	get_lppaca()->idle = 0;
+> >-
+> > 	ppc64_runlatch_on();
+> > }
+> >+
+> >+static inline u64 read_this_idle_purr(void)
+> >+{
+> >+	/*
+> >+	 * If we are reading from an idle context, update the
+> >+	 * idle-purr cycles corresponding to the last idle period.
+> >+	 * Since the idle context is not yet over, take a fresh
+> >+	 * snapshot of the idle-purr.
+> >+	 */
+> >+	if (unlikely(get_lppaca()->idle == 1)) {
+> >+		update_idle_purr_accounting();
+> >+		snapshot_purr_idle_entry();
+> >+	}
+> >+
+> >+	return be64_to_cpu(get_lppaca()->wait_state_cycles);
+> >+}
+> >+
+> 
+> I think this and read_this_idle_spurr() from the next patch should be moved
+> to Patch 4/6, where they are actually used.
 
-I don't see why crypto-engine can't be extended to cover that
-too, right?
+The reason I included this function in this patch was to justify why
+we were introducing snapshotting the purr values in a global per-cpu
+variable instead of on a stack variable. The reason being that someone
+might want to read the PURR value from an interrupt context which had
+woken up the CPU from idle. At this point, since epilog() function
+wasn't called, the idle PURR count corresponding to this latest idle
+period would have been accumulated in lppaca->wait_cycles. Thus, this
+helper function safely reads the value by
+   1) First updating the lppaca->wait_cycles with the latest idle_purr
+   count.
+   2) Take a fresh snapshot, since the time from now to the epilog()
+   call is also counted under idle CPU. So the PURR cycle increment
+   during this short period should also be accumulated in lppaca->wait_cycles.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+prolog()
+|	snapshot PURR
+|
+|
+|
+Idle
+|
+| <----- Interrupt . Read idle PURR ---- update idle PURR;
+|                              	         snapshot PURR;
+|                                   	 Read idle PURR.       
+|
+epilog()
+	update idle PURR
+
+
+
+> 
+> - Naveen
+> 
+
+However, if you feel that moving this function to Patch 4 where it is
+actually used makes it more readable, I can do that.
+
+--
+Thanks and Regards
+gautham.
