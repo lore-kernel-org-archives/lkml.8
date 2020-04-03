@@ -2,47 +2,47 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79515C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EC4C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2112054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FCB32054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:24:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OT6ZOr15"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QUZZLfDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390408AbgDCCYZ (ORCPT
+        id S2390418AbgDCCY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 22:24:25 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26396 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390393AbgDCCYY (ORCPT
+        Thu, 2 Apr 2020 22:24:29 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14568 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390403AbgDCCY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 22:24:24 -0400
+        Thu, 2 Apr 2020 22:24:27 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585880663; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1585880667; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=h0FSuIUefockKuhVSAXTy3J0iwWzl0qO7vd4uJJG7io=; b=OT6ZOr15NN8H/1B21p3S/VC0dVx5DYv+azFWQduLT+6Bgf+XAA5+duLOLWxgSMxMORqnGbK/
- 0pADPBsUOuHk3AhH40tW4m4kdpDlenl0vf3rbjGDsGi1v5GEZpvlUXFb66vzLcO/LwFQVgxc
- GTwhTDKUbqyS6KuHwDEyev7u81k=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ bh=CVKwdv1dL/6/p21AAAZ4seiEJbEjLRqpVCT2OHJoL4k=; b=QUZZLfDPz6r9YxAqsjDsKmXXgb2ciSVo+6kiURuq1x7nKPf/8RWnAO6mvGCSpPZF+x//kdz4
+ G/Wb1PKERe9PGvZlHS/4tQsRNx71mqSqZes/c6bpt2NJLFHblzj/ACdRwIjLzmnASB6KTi8N
+ 8BhAf9VFaD3Tt6XJ6HNmer7DaQc=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e869e47.7f2770306340-smtp-out-n04;
- Fri, 03 Apr 2020 02:24:07 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e869e4b.7f54ee157dc0-smtp-out-n03;
+ Fri, 03 Apr 2020 02:24:11 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C2BA2C4478C; Fri,  3 Apr 2020 02:24:07 +0000 (UTC)
+        id 8016AC43636; Fri,  3 Apr 2020 02:24:11 +0000 (UTC)
 Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B13D0C433BA;
-        Fri,  3 Apr 2020 02:24:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B13D0C433BA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8393C43637;
+        Fri,  3 Apr 2020 02:24:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B8393C43637
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
 From:   Wesley Cheng <wcheng@codeaurora.org>
@@ -51,9 +51,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
         mgautam@codeaurora.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v5 1/5] dt-bindings: phy: Add binding for qcom,usb-snps-femto-v2
-Date:   Thu,  2 Apr 2020 19:23:50 -0700
-Message-Id: <1585880634-15222-2-git-send-email-wcheng@codeaurora.org>
+Subject: [PATCH v5 5/5] phy: qcom-qmp: Rename UFS PCS QMP v4 registers
+Date:   Thu,  2 Apr 2020 19:23:54 -0700
+Message-Id: <1585880634-15222-6-git-send-email-wcheng@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1585880634-15222-1-git-send-email-wcheng@codeaurora.org>
 References: <1585880634-15222-1-git-send-email-wcheng@codeaurora.org>
@@ -62,100 +62,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This binding shows the descriptions and properties for the
-Synopsis Femto USB PHY V2 used on QCOM platforms.
+The UFS QMP v4 PHY has a largely different register set versus USB and
+PCIe.  Rename the register offsets to denote that the value is specific for
+the UFS PCS register.
 
 Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/phy/qcom,usb-snps-femto-v2.yaml       | 77 ++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 20 +++++++++----------
+ drivers/phy/qualcomm/phy-qcom-qmp.h | 40 ++++++++++++++++++-------------------
+ 2 files changed, 30 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
-new file mode 100644
-index 0000000..a912df0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/qcom,usb-snps-femto-v2.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Qualcomm Synopsys Femto High-Speed USB PHY V2
-+
-+maintainers:
-+  - Wesley Cheng <wcheng@codeaurora.org>
-+
-+description: |
-+  Qualcomm Hi-Speed USB PHY
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,usb-snps-hs-7nm-phy
-+      - qcom,sm8150-usb-hs-phy
-+      - qcom,usb-snps-femto-v2-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    items:
-+      - description: rpmhcc ref clock
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+
-+  resets:
-+    items:
-+      - description: PHY core reset
-+
-+  vdda-pll-supply:
-+    description: phandle to the regulator VDD supply node.
-+
-+  vdda18-supply:
-+    description: phandle to the regulator 1.8V supply node.
-+
-+  vdda33-supply:
-+    description: phandle to the regulator 3.3V supply node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - resets
-+  - vdda-pll-supply
-+  - vdda18-supply
-+  - vdda33-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/clock/qcom,gcc-sm8150.h>
-+    usb_1_hsphy: phy@88e2000 {
-+        compatible = "qcom,sm8150-usb-hs-phy";
-+        reg = <0 0x088e2000 0 0x400>;
-+        status = "disabled";
-+        #phy-cells = <0>;
-+
-+        clocks = <&rpmhcc RPMH_CXO_CLK>;
-+        clock-names = "ref";
-+
-+        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+    };
-+...
-\ No newline at end of file
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 5363a99..9400748 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -174,9 +174,9 @@ enum qphy_reg_layout {
+ };
+ 
+ static const unsigned int sm8150_ufsphy_regs_layout[] = {
+-	[QPHY_START_CTRL]		= QPHY_V4_PHY_START,
+-	[QPHY_PCS_READY_STATUS]		= QPHY_V4_PCS_READY_STATUS,
+-	[QPHY_SW_RESET]			= QPHY_V4_SW_RESET,
++	[QPHY_START_CTRL]		= QPHY_V4_PCS_UFS_PHY_START,
++	[QPHY_PCS_READY_STATUS]		= QPHY_V4_PCS_UFS_READY_STATUS,
++	[QPHY_SW_RESET]			= QPHY_V4_PCS_UFS_SW_RESET,
+ };
+ 
+ static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
+@@ -971,13 +971,13 @@ enum qphy_reg_layout {
+ };
+ 
+ static const struct qmp_phy_init_tbl sm8150_ufsphy_pcs_tbl[] = {
+-	QMP_PHY_INIT_CFG(QPHY_V4_RX_SIGDET_CTRL2, 0x6d),
+-	QMP_PHY_INIT_CFG(QPHY_V4_TX_LARGE_AMP_DRV_LVL, 0x0a),
+-	QMP_PHY_INIT_CFG(QPHY_V4_TX_SMALL_AMP_DRV_LVL, 0x02),
+-	QMP_PHY_INIT_CFG(QPHY_V4_TX_MID_TERM_CTRL1, 0x43),
+-	QMP_PHY_INIT_CFG(QPHY_V4_DEBUG_BUS_CLKSEL, 0x1f),
+-	QMP_PHY_INIT_CFG(QPHY_V4_RX_MIN_HIBERN8_TIME, 0xff),
+-	QMP_PHY_INIT_CFG(QPHY_V4_MULTI_LANE_CTRL1, 0x02),
++	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_RX_SIGDET_CTRL2, 0x6d),
++	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_LARGE_AMP_DRV_LVL, 0x0a),
++	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_SMALL_AMP_DRV_LVL, 0x02),
++	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_MID_TERM_CTRL1, 0x43),
++	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_DEBUG_BUS_CLKSEL, 0x1f),
++	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_RX_MIN_HIBERN8_TIME, 0xff),
++	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_MULTI_LANE_CTRL1, 0x02),
+ };
+ 
+ static const struct qmp_phy_init_tbl sm8150_usb3_serdes_tbl[] = {
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+index 22c9009..d78acbf 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.h
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+@@ -425,26 +425,26 @@
+ #define QSERDES_V4_RX_VTH_CODE				0x1c4
+ 
+ /* Only for QMP V4 PHY - UFS PCS registers */
+-#define QPHY_V4_PHY_START				0x000
+-#define QPHY_V4_POWER_DOWN_CONTROL			0x004
+-#define QPHY_V4_SW_RESET				0x008
+-#define QPHY_V4_TIMER_20US_CORECLK_STEPS_MSB		0x00c
+-#define QPHY_V4_TIMER_20US_CORECLK_STEPS_LSB		0x010
+-#define QPHY_V4_PLL_CNTL				0x02c
+-#define QPHY_V4_TX_LARGE_AMP_DRV_LVL			0x030
+-#define QPHY_V4_TX_SMALL_AMP_DRV_LVL			0x038
+-#define QPHY_V4_BIST_FIXED_PAT_CTRL			0x060
+-#define QPHY_V4_TX_HSGEAR_CAPABILITY			0x074
+-#define QPHY_V4_RX_HSGEAR_CAPABILITY			0x0b4
+-#define QPHY_V4_DEBUG_BUS_CLKSEL			0x124
+-#define QPHY_V4_LINECFG_DISABLE				0x148
+-#define QPHY_V4_RX_MIN_HIBERN8_TIME			0x150
+-#define QPHY_V4_RX_SIGDET_CTRL2				0x158
+-#define QPHY_V4_TX_PWM_GEAR_BAND			0x160
+-#define QPHY_V4_TX_HS_GEAR_BAND				0x168
+-#define QPHY_V4_PCS_READY_STATUS			0x180
+-#define QPHY_V4_TX_MID_TERM_CTRL1			0x1d8
+-#define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
++#define QPHY_V4_PCS_UFS_PHY_START				0x000
++#define QPHY_V4_PCS_UFS_POWER_DOWN_CONTROL			0x004
++#define QPHY_V4_PCS_UFS_SW_RESET				0x008
++#define QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_MSB		0x00c
++#define QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_LSB		0x010
++#define QPHY_V4_PCS_UFS_PLL_CNTL				0x02c
++#define QPHY_V4_PCS_UFS_TX_LARGE_AMP_DRV_LVL			0x030
++#define QPHY_V4_PCS_UFS_TX_SMALL_AMP_DRV_LVL			0x038
++#define QPHY_V4_PCS_UFS_BIST_FIXED_PAT_CTRL			0x060
++#define QPHY_V4_PCS_UFS_TX_HSGEAR_CAPABILITY			0x074
++#define QPHY_V4_PCS_UFS_RX_HSGEAR_CAPABILITY			0x0b4
++#define QPHY_V4_PCS_UFS_DEBUG_BUS_CLKSEL			0x124
++#define QPHY_V4_PCS_UFS_LINECFG_DISABLE				0x148
++#define QPHY_V4_PCS_UFS_RX_MIN_HIBERN8_TIME			0x150
++#define QPHY_V4_PCS_UFS_RX_SIGDET_CTRL2				0x158
++#define QPHY_V4_PCS_UFS_TX_PWM_GEAR_BAND			0x160
++#define QPHY_V4_PCS_UFS_TX_HS_GEAR_BAND				0x168
++#define QPHY_V4_PCS_UFS_READY_STATUS			0x180
++#define QPHY_V4_PCS_UFS_TX_MID_TERM_CTRL1			0x1d8
++#define QPHY_V4_PCS_UFS_MULTI_LANE_CTRL1			0x1e0
+ 
+ /* Only for QMP V4 PHY - USB/PCIe PCS registers */
+ #define QPHY_V4_PCS_SW_RESET				0x000
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
