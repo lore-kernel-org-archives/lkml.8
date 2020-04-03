@@ -2,244 +2,233 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4833C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B460C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B7C2078C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B692078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585915041;
+	bh=9bKt2U3i4xte6qXJU+4b06gvCIntAL/PmJnllKRPxNg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SyiWKDjhRDq9zFm9p6Q6Y5/PaQ6jEFlSgqYCnbJUqoUH2GDujTzBXyGKKfbCenoRF
+	 0TZKGWtKR35FMNuH572v+5SUBzFVqvj4uPzHY6ExyZlAdXu1NXagmu2GX5o77ehWiI
+	 teAMtEkC9gF8ohBx2e1FGeAtUYzHaAvEskOsKutg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390870AbgDCL4Q convert rfc822-to-8bit (ORCPT
+        id S2390881AbgDCL5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:56:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57454 "EHLO mga04.intel.com"
+        Fri, 3 Apr 2020 07:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbgDCL4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:56:16 -0400
-IronPort-SDR: Bp0XxvRLo+5ivD791nErX0Aa9SC+DxTHYqY/KdYcl1Pka49bZ4zu8A1oKEJ+9shlR4R9oTBBFS
- oy3T6oqIYKUw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 04:56:15 -0700
-IronPort-SDR: Pp6CaFev95o78liw4lTnYEJR0DHLihUaGmowtgmyYMORQqe2+n8CaEBN6qxKVI1C2PISbMWp+G
- Ap82RDJi296g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="268338356"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga002.jf.intel.com with ESMTP; 03 Apr 2020 04:56:14 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 04:56:13 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 3 Apr 2020 04:56:13 -0700
-Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 3 Apr 2020 04:56:13 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX152.ccr.corp.intel.com ([169.254.6.209]) with mapi id 14.03.0439.000;
- Fri, 3 Apr 2020 19:56:09 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Topic: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Index: AQHWAEUbC4GB74LMekup8jIcF6WIFqhlZUwAgAH1tzA=
-Date:   Fri, 3 Apr 2020 11:56:09 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A2209E3@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
- <20200402135240.GE1176452@myrica>
-In-Reply-To: <20200402135240.GE1176452@myrica>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S2390805AbgDCL5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 07:57:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BA7E2078C;
+        Fri,  3 Apr 2020 11:57:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585915037;
+        bh=9bKt2U3i4xte6qXJU+4b06gvCIntAL/PmJnllKRPxNg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NIzxNkv9a/8srgi3yFBPspobde0OL4JLZ2ukqxirYC4nIxQvvR7Zf0xV3A8ur8536
+         vW5uqPZ0OzJerUfoIR63fZN+v7qX5m2l07anbcM1LA+1Dz9D+l/YUDgdMYqu2SF8/p
+         1hnfVJugXOJ/yAGv9b+cBS8AgscscR0endlIH7kI=
+Date:   Fri, 3 Apr 2020 13:57:15 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Hyunki Koo <hyunki00.koo@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] tty: samsung_tty: 32-bit access for TX/RX hold
+ registers
+Message-ID: <20200403115715.GA3846995@kroah.com>
+References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+ <CGME20200403111520epcas2p42ef81138693ffaaa281499c7a24e0e48@epcas2p4.samsung.com>
+ <20200403111511.10598-1-hyunki00.koo@samsung.com>
+ <20200403114237.GA3797881@kroah.com>
+ <20200403115313.GA29484@kozik-lap>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403115313.GA29484@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
-
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Sent: Thursday, April 2, 2020 9:53 PM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+On Fri, Apr 03, 2020 at 01:53:13PM +0200, Krzysztof Kozlowski wrote:
+> On Fri, Apr 03, 2020 at 01:42:37PM +0200, Greg KH wrote:
+> > On Fri, Apr 03, 2020 at 08:15:10PM +0900, Hyunki Koo wrote:
+> > > Support 32-bit access for the TX/RX hold registers UTXH and URXH.
+> > > 
+> > > This is required for some newer SoCs.
+> > > 
+> > > Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+> > > ---
+> > > v2: 
+> > > line 954 : change rd_regl to rd_reg in for backward compatibility.
+> > > line 2031: Add init value for ourport->port.iotype  to UPIO_MEM 
+> > > v3:
+> > > line 2031: remove redundant init value  for ourport->port.iotype 
+> > > v4:
+> > > correct variable types and change misleading function name
+> > > ---
+> > >  drivers/tty/serial/samsung_tty.c | 76 +++++++++++++++++++++++++++++++++-------
+> > >  1 file changed, 64 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+> > > index 73f951d65b93..bdf1d4d12cb1 100644
+> > > --- a/drivers/tty/serial/samsung_tty.c
+> > > +++ b/drivers/tty/serial/samsung_tty.c
+> > > @@ -154,12 +154,47 @@ struct s3c24xx_uart_port {
+> > >  #define portaddrl(port, reg) \
+> > >  	((unsigned long *)(unsigned long)((port)->membase + (reg)))
+> > >  
+> > > -#define rd_regb(port, reg) (readb_relaxed(portaddr(port, reg)))
+> > > +static u32 rd_reg(struct uart_port *port, u32 reg)
+> > > +{
+> > > +	switch (port->iotype) {
+> > > +	case UPIO_MEM:
+> > > +		return readb_relaxed(portaddr(port, reg));
+> > > +	case UPIO_MEM32:
+> > > +		return readl_relaxed(portaddr(port, reg));
+> > > +	default:
+> > > +		return 0;
+> > > +	}
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  #define rd_regl(port, reg) (readl_relaxed(portaddr(port, reg)))
+> > >  
+> > > -#define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
+> > > +static void wr_reg(struct uart_port *port, u32 reg, u32 val)
+> > > +{
+> > > +	switch (port->iotype) {
+> > > +	case UPIO_MEM:
+> > > +		writeb_relaxed(val, portaddr(port, reg));
+> > > +		break;
+> > > +	case UPIO_MEM32:
+> > > +		writel_relaxed(val, portaddr(port, reg));
+> > > +		break;
+> > > +	}
+> > > +}
+> > > +
+> > >  #define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port, reg))
+> > >  
+> > > +static void wr_reg_barrier(struct uart_port *port, u32 reg, u32 val)
+> > > +{
+> > > +	switch (port->iotype) {
+> > > +	case UPIO_MEM:
+> > > +		writeb(val, portaddr(port, reg));
+> > > +		break;
+> > > +	case UPIO_MEM32:
+> > > +		writel(val, portaddr(port, reg));
+> > > +		break;
+> > > +	}
+> > > +}
+> > 
+> > why do you have a default for the read function, but not the write
+> > functions?
 > 
-> Hi Yi,
+> The default for read will never happen and it returns bogus value just
+> to satisfy the compiler. That's my understanding. What would you like to
+> do for writes()? Print error msg? No point, it should not happen because
+> of check in probe().
+
+Consistancy please, either do it for all, or none, otherwise it makes no
+sense at all.
+
+> > > +
+> > >  /* Byte-order aware bit setting/clearing functions. */
+> > >  
+> > >  static inline void s3c24xx_set_bit(struct uart_port *port, int idx,
+> > > @@ -714,7 +749,7 @@ static void s3c24xx_serial_rx_drain_fifo(struct s3c24xx_uart_port *ourport)
+> > >  		fifocnt--;
+> > >  
+> > >  		uerstat = rd_regl(port, S3C2410_UERSTAT);
+> > > -		ch = rd_regb(port, S3C2410_URXH);
+> > > +		ch = rd_reg(port, S3C2410_URXH);
+> > >  
+> > >  		if (port->flags & UPF_CONS_FLOW) {
+> > >  			int txe = s3c24xx_serial_txempty_nofifo(port);
+> > > @@ -826,7 +861,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
+> > >  	}
+> > >  
+> > >  	if (port->x_char) {
+> > > -		wr_regb(port, S3C2410_UTXH, port->x_char);
+> > > +		wr_reg(port, S3C2410_UTXH, port->x_char);
+> > >  		port->icount.tx++;
+> > >  		port->x_char = 0;
+> > >  		goto out;
+> > > @@ -852,7 +887,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
+> > >  		if (rd_regl(port, S3C2410_UFSTAT) & ourport->info->tx_fifofull)
+> > >  			break;
+> > >  
+> > > -		wr_regb(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
+> > > +		wr_reg(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
+> > >  		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+> > >  		port->icount.tx++;
+> > >  		count--;
+> > > @@ -916,7 +951,7 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
+> > >  /* no modem control lines */
+> > >  static unsigned int s3c24xx_serial_get_mctrl(struct uart_port *port)
+> > >  {
+> > > -	unsigned int umstat = rd_regb(port, S3C2410_UMSTAT);
+> > > +	unsigned int umstat = rd_reg(port, S3C2410_UMSTAT);
+> > >  
+> > >  	if (umstat & S3C2410_UMSTAT_CTS)
+> > >  		return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
+> > > @@ -1974,7 +2009,7 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
+> > >  	struct device_node *np = pdev->dev.of_node;
+> > >  	struct s3c24xx_uart_port *ourport;
+> > >  	int index = probe_index;
+> > > -	int ret;
+> > > +	int ret, prop = 0;
+> > >  
+> > >  	if (np) {
+> > >  		ret = of_alias_get_id(np, "serial");
+> > > @@ -2000,10 +2035,27 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
+> > >  			dev_get_platdata(&pdev->dev) :
+> > >  			ourport->drv_data->def_cfg;
+> > >  
+> > > -	if (np)
+> > > +	if (np) {
+> > >  		of_property_read_u32(np,
+> > >  			"samsung,uart-fifosize", &ourport->port.fifosize);
+> > >  
+> > > +		if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
+> > > +			switch (prop) {
+> > > +			case 1:
+> > > +				ourport->port.iotype = UPIO_MEM;
+> > > +				break;
+> > > +			case 4:
+> > > +				ourport->port.iotype = UPIO_MEM32;
+> > > +				break;
+> > > +			default:
+> > > +				dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
+> > > +						prop);
+> > > +				ret = -EINVAL;
+> > > +				break;
+> > > +			}
+> > > +		}
+> > > +	}
+> > 
+> > If the property is not there, the type will be uninitialized and no
+> > warning will be spit out, are you sure you want to do that?
 > 
-> On Sun, Mar 22, 2020 at 05:31:58AM -0700, Liu, Yi L wrote:
-> > From: Liu Yi L <yi.l.liu@intel.com>
-> >
-> > For a long time, devices have only one DMA address space from platform
-> > IOMMU's point of view. This is true for both bare metal and directed-
-> > access in virtualization environment. Reason is the source ID of DMA in
-> > PCIe are BDF (bus/dev/fnc ID), which results in only device granularity
-> > DMA isolation. However, this is changing with the latest advancement in
-> > I/O technology area. More and more platform vendors are utilizing the PCIe
-> > PASID TLP prefix in DMA requests, thus to give devices with multiple DMA
-> > address spaces as identified by their individual PASIDs. For example,
-> > Shared Virtual Addressing (SVA, a.k.a Shared Virtual Memory) is able to
-> > let device access multiple process virtual address space by binding the
-> > virtual address space with a PASID. Wherein the PASID is allocated in
-> > software and programmed to device per device specific manner. Devices
-> > which support PASID capability are called PASID-capable devices. If such
-> > devices are passed through to VMs, guest software are also able to bind
-> > guest process virtual address space on such devices. Therefore, the guest
-> > software could reuse the bare metal software programming model, which
-> > means guest software will also allocate PASID and program it to device
-> > directly. This is a dangerous situation since it has potential PASID
-> > conflicts and unauthorized address space access.
-> 
-> It's worth noting that this applies to Intel VT-d with scalable mode, not
-> IOMMUs that use one PASID space per VM
+> The default value from initial ourport will be used, which is UPIO_MEM.
+> This way it is backward compatible.
 
-Oh yes. will add it.
+Where is iotype set to UPIO_MEM as a default?
 
-> 
-> > It would be safer to
-> > let host intercept in the guest software's PASID allocation. Thus PASID
-> > are managed system-wide.
-> >
-> > This patch adds VFIO_IOMMU_PASID_REQUEST ioctl which aims to passdown
-> > PASID allocation/free request from the virtual IOMMU. Additionally, such
-> > requests are intended to be invoked by QEMU or other applications which
-> > are running in userspace, it is necessary to have a mechanism to prevent
-> > single application from abusing available PASIDs in system. With such
-> > consideration, this patch tracks the VFIO PASID allocation per-VM. There
-> > was a discussion to make quota to be per assigned devices. e.g. if a VM
-> > has many assigned devices, then it should have more quota. However, it
-> > is not sure how many PASIDs an assigned devices will use. e.g. it is
-> > possible that a VM with multiples assigned devices but requests less
-> > PASIDs. Therefore per-VM quota would be better.
-> >
-> > This patch uses struct mm pointer as a per-VM token. We also considered
-> > using task structure pointer and vfio_iommu structure pointer. However,
-> > task structure is per-thread, which means it cannot achieve per-VM PASID
-> > alloc tracking purpose. While for vfio_iommu structure, it is visible
-> > only within vfio. Therefore, structure mm pointer is selected. This patch
-> > adds a structure vfio_mm. A vfio_mm is created when the first vfio
-> > container is opened by a VM. On the reverse order, vfio_mm is free when
-> > the last vfio container is released. Each VM is assigned with a PASID
-> > quota, so that it is not able to request PASID beyond its quota. This
-> > patch adds a default quota of 1000. This quota could be tuned by
-> > administrator. Making PASID quota tunable will be added in another patch
-> > in this series.
-> >
-> > Previous discussions:
-> > https://patchwork.kernel.org/patch/11209429/
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Yi Sun <yi.y.sun@linux.intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/vfio/vfio.c             | 130 ++++++++++++++++++++++++++++++++++++++++
-> >  drivers/vfio/vfio_iommu_type1.c | 104 ++++++++++++++++++++++++++++++++
-> >  include/linux/vfio.h            |  20 +++++++
-> >  include/uapi/linux/vfio.h       |  41 +++++++++++++
-> >  4 files changed, 295 insertions(+)
-> >
-> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> > index c848262..d13b483 100644
-> > --- a/drivers/vfio/vfio.c
-> > +++ b/drivers/vfio/vfio.c
-> > @@ -32,6 +32,7 @@
-> >  #include <linux/vfio.h>
-> >  #include <linux/wait.h>
-> >  #include <linux/sched/signal.h>
-> > +#include <linux/sched/mm.h>
-> >
-> >  #define DRIVER_VERSION	"0.3"
-> >  #define DRIVER_AUTHOR	"Alex Williamson <alex.williamson@redhat.com>"
-> > @@ -46,6 +47,8 @@ static struct vfio {
-> >  	struct mutex			group_lock;
-> >  	struct cdev			group_cdev;
-> >  	dev_t				group_devt;
-> > +	struct list_head		vfio_mm_list;
-> > +	struct mutex			vfio_mm_lock;
-> >  	wait_queue_head_t		release_q;
-> >  } vfio;
-> >
-> > @@ -2129,6 +2132,131 @@ int vfio_unregister_notifier(struct device *dev, enum
-> vfio_notify_type type,
-> >  EXPORT_SYMBOL(vfio_unregister_notifier);
-> >
-> >  /**
-> > + * VFIO_MM objects - create, release, get, put, search
-> > + * Caller of the function should have held vfio.vfio_mm_lock.
-> > + */
-> > +static struct vfio_mm *vfio_create_mm(struct mm_struct *mm)
-> > +{
-> > +	struct vfio_mm *vmm;
-> > +	struct vfio_mm_token *token;
-> > +	int ret = 0;
-> > +
-> > +	vmm = kzalloc(sizeof(*vmm), GFP_KERNEL);
-> > +	if (!vmm)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	/* Per mm IOASID set used for quota control and group operations */
-> > +	ret = ioasid_alloc_set((struct ioasid_set *) mm,
-> 
-> Hmm, either we need to change the token of ioasid_alloc_set() to "void *",
-> or pass an actual ioasid_set struct, but this cast doesn't look good :)
->
-> As I commented on the IOASID series, I think we could embed a struct
-> ioasid_set into vfio_mm, pass that struct to all other ioasid_* functions,
-> and get rid of ioasid_sid.
+thanks,
 
-I think change to "void *" is better as we needs the token to ensure all
-threads within a single VM share the same ioasid_set.
-
-> > +			       VFIO_DEFAULT_PASID_QUOTA, &vmm->ioasid_sid);
-> > +	if (ret) {
-> > +		kfree(vmm);
-> > +		return ERR_PTR(ret);
-> > +	}
-> > +
-> > +	kref_init(&vmm->kref);
-> > +	token = &vmm->token;
-> > +	token->val = mm;
-> 
-> Why the intermediate token struct?  Could we just store the mm_struct
-> pointer within vfio_mm?
-
-Hmm, here we only want to use the pointer as a token, instead of using
-the structure behind the pointer. If store the mm_struct directly, may
-leave a space to further use its content, this is not good.
-
-Regards,
-Yi Liu
-
+greg k-h
