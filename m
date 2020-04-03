@@ -2,407 +2,294 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC0FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95C5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E1D207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86FDA207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIFeEpOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgDCVqR convert rfc822-to-8bit (ORCPT
+        id S1728430AbgDCVqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:46:17 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:42385 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727924AbgDCVqR (ORCPT
+        Fri, 3 Apr 2020 17:46:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43373 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbgDCVqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:46:17 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MkYoK-1iuRul1YPW-00m5xe for <linux-kernel@vger.kernel.org>; Fri, 03 Apr
- 2020 23:46:13 +0200
-Received: by mail-qk1-f179.google.com with SMTP id x3so9784523qki.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 14:46:13 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYpY3y7HCetrbC20RCF4y5adJlErxwWY4Kxf7mxorysM5S5NLdI
-        lVcQWHKNStzilM3a8g7KCQSTz8NsGDeQgF8HRns=
-X-Google-Smtp-Source: APiQypIBKute2f7NfXo6S8IUK3sc+v5SDBWJLbEFHO6MsCX0a/1Z6t/eS4h+wOr9M59cy5y7mMSyJxj93q4yIaTVEQk=
-X-Received: by 2002:a37:8707:: with SMTP id j7mr11169036qkd.394.1585950372180;
- Fri, 03 Apr 2020 14:46:12 -0700 (PDT)
+        Fri, 3 Apr 2020 17:46:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w15so4017936wrv.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 14:46:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=v+iGE8oCdknnpLmOrrqR6BJMhA0bX9IgV8fpeXtQ5J0=;
+        b=MIFeEpOzrtF50CYfGfCWVPnqO4KbHC2Sn9NyluzFXcVN9AXY6JcYpMTUfV+XVHje8y
+         o4sPQglPkr7+4A/cEHACtRxJKElF7det8wgP18jiG/8WFbg7s44CkizK2rtjxuHkikGL
+         rcbQrnHhYhfJ6DcrSBWx2EfnkYj618fAn5QhxDCcyM5R+yrIN9LOgqfnXPecGA1dAKWM
+         KjCwCIsyHA2/JAPAV+El0oqGixL8dfe5PvLtvJGtd0JUX+fIFV7ESKCwStaOgAPqdNX2
+         X3HMQu0s+9mzyrdipv9lcOuGvA4d7TEjBAQzhu0ikj/F0uKktjgW2JkOeOhdIAb7KaAS
+         Qogw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=v+iGE8oCdknnpLmOrrqR6BJMhA0bX9IgV8fpeXtQ5J0=;
+        b=dPUNBMWufsd29ADehCIGwy7lwn9RjZis/RXYZMimFR6TgyRV5ErAj/7Bhu6kh8Embb
+         rO+kfy3LSEGExFFmeicA2PmA8g8/2d/1VwK4D6bIeV8feigPgkieFyUUnPqekZTG5DRr
+         zz9w0oZRhdloRq8sp2+ZqZpbHdP6XaoN31E7g/htU6h7NqXVw1szjP6yV+SZlZ567HMy
+         cXmUa55fmwXwmnCpeH1DS2kTL4XcQFjs/9KAZhuTczjPab1Gliflb4ABJSolr99eg7gP
+         jqIqaQua3wNPI7nIEn8c+b+8J0RioBe0d8nnnBCyF97e0q4pe/1akgFz2RR9aGug2wKH
+         iqQA==
+X-Gm-Message-State: AGi0Pub1WMxe003YOy8aJl3+0MDIorOLcz0ReGRg+TeTY9VUcY3HDVTE
+        3yjWtYkOhq6Yn7bqjHRMZTI6bqxB1Fmr9D2VYtE=
+X-Google-Smtp-Source: APiQypIvGXoRArWnzY9VhQZKGNTTHUzl+dkL4Yr2T4iVaq5crIPD6a6+IehQ6ZrNo6MUVm2I++obaAfyLqJ+hYKBJtg=
+X-Received: by 2002:adf:e48a:: with SMTP id i10mr11745336wrm.71.1585950394605;
+ Fri, 03 Apr 2020 14:46:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAK8P3a1aO+LUu6KsW+s8aZMNWt2yz7kqe=LARY=ifMKOqT9uNQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1aO+LUu6KsW+s8aZMNWt2yz7kqe=LARY=ifMKOqT9uNQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 3 Apr 2020 23:45:56 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3iGtudeWTwufBYYM29jL5b_FRkqzU2QZiQRu0B2NhyZg@mail.gmail.com>
-Message-ID: <CAK8P3a3iGtudeWTwufBYYM29jL5b_FRkqzU2QZiQRu0B2NhyZg@mail.gmail.com>
-Subject: [GIT PULL 4/4] ARM: devicetree updates
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <CAE3Pknn88NZNqiaHahM4HVvTU82hdMcbhGWWb4AyXXYMbcGuaQ@mail.gmail.com>
+ <3ebbe879471898218f34918b1d009887@kernel.org> <CAE3PknnmUBPfCjJUxwLaTjAqU4tYXxakvH+qZTwYYyw4SS_DiA@mail.gmail.com>
+ <20200403130327.6d961882@why> <CAE3Pknkq3+B=z32ZRsQS1aM1+EqGnysMY4pitFdpOKGmv4ax8Q@mail.gmail.com>
+In-Reply-To: <CAE3Pknkq3+B=z32ZRsQS1aM1+EqGnysMY4pitFdpOKGmv4ax8Q@mail.gmail.com>
+From:   =?UTF-8?Q?Lu=C3=ADs_Matallui?= <matallui@gmail.com>
+Date:   Fri, 3 Apr 2020 15:46:23 -0600
+Message-ID: <CAE3Pkn=e5FgvKAxMXWHSPDM7GruSq-udFsb0aAsCQvXs65o8Sg@mail.gmail.com>
+Subject: Re: Help with IRQ-MSI-IRQ bridges
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:dCmuulq/aQ6cSjvc4BMEw1+phRCVHM16Q0hJd7IDil04IpafzOS
- 1bgziuk4OFoSItuST9F7pvJULTHKZHL8JDkaGLVmejOsTzq5pPFlgTFgIKh7s0TZAElFWj9
- qaYuINbumdV34Q0g/Hvg7Ns3DhtQIfqM3FcpbyaUxm8uqkfTCGsLy5TAQzO1Kxd0nKcsim3
- wfrDUNgim645Graww93bA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wcJPGWgjpDU=:YO5aDB4yYBxYZ9JEpmFAFs
- Vv09Olp4V2YxIau5sk8mqjq8ufBtApJStc54KSGmpJYya2q3aZ88q9GW0olMKwwl+F7H2A/ue
- HTM5k9MG6lrnQdzW8q8Uio27Vg5im5Bq686AzjM9JbR39j/jKx8zA2IOGL+mhm42nOxtgBb4N
- aZoTAu1WezOG0GSjJlmuC8lfOKXhMh64MsdasYzu9+03Zzz/atwwiSnDq6qzSipIICLfSd49a
- 89nqUVV2kJAPEhOSZdQ4ZoIr+fXN9hHdb7NHo2Mi0E1aiTMPdw6CdN0BWF62vBb99T73D9k7N
- b6yxgvsV7YqVW542NN/fmUUcCOJmhR7cbb9yxLPW6ZPJFiBhaNBUxi3pw5Y2G2OJVN7x/60sZ
- BU2gpYni3JPTiZP5zX8uwfvEXprKGGwXzqn3Y9hK2Kgl1bD7vgxr/hAhT8a4MO+m7goihnpkZ
- ZyANqxxqk5TzFCGAe4CQcFLPN0mOee7rX83F9EytyN6SGAdlR0PBFOiDi5fFUiu6o5BkqTORZ
- 7uWjWxUOmJHl/A1OPEJrjjvTjrb3PpVcyOHuA9jSJvXfN8QugjMllg85J6I49tYutJ7At8ADp
- fAbTnXbArlBGRxeNeZcPbTU2c/66HHeeUzgo2dIcmMw7fIGGYXf9K0rEBynDA5YIMP/RQ1zdt
- ztQUBYH3oyNcWWDwW6dJ/hso58VTjKu9z6gVw+LOYM9rWYuxKUehl6FAjrsTDxm63xSWWLPZn
- AwZzgLLo3jGH7rcDFB5r+tmlBXYEaoaaQRjhQJuE0bzqcxavF9xQ2oWYWvAVVrL6FwnlxkcR/
- UgeYbkp4qzaLI3QX/EHwUNMgR4xBs2gPniLahQ56RHKp/47M6c=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
+Hey Marc,
 
-  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+Just wanted to close this thread and thank you for the help.
+Using that handle_fasteoi_ack_irq() saved my life.
 
-are available in the Git repository at:
+I was just having trouble unrelated to this, but some poorly documented SoC=
+.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/arm-dt-5.7
+Thanks again!
+Luis
 
-for you to fetch changes up to 8bdbf169084ec00833bff61cda0014b7fbdf15ac:
-
-  Merge branch 'arm/late' into arm/dt (2020-04-03 22:45:37 +0200)
-
-----------------------------------------------------------------
-ARM: devicetree updates for v5.7
-
-Most of the commits are for additional hardware support and minor fixes
-for existing machines for all the usual platforms: qcom, amlogic, at91,
-gemini, mediatek, ti, socfpga, i.mx, layerscape, uniphier, rockchip,
-exynos, ux500, mvebu, tegra, stm32, renesas, sunxi, broadcom, omap,
-and versatile.
-
-The conversion of binding files to machine-readable yaml format
-continues, along with fixes found during the validation.
-Andre Przywara takes over maintainership for the old Calxeda Highbank
-platform and provides a number of updates.
-
-The OMAP2+ platforms see a continued move from platform data into
-dts files, for many devices that relied on a mix of auxiliary data
-in addition to the DT description
-
-A moderate number of new SoCs and machines are added, here is a full
-list:
-
-- Two new Qualcomm SoCs with their evaluation boards: Snapdragon 865
-  (SM8250) is the current high-end phone chip, and IPQ6018 is a new
-  WiFi-6 router chip.
-
-- Mediatek MT8516 application processor SoC for voice assistants, along
-  with the "pumpkin" development board
-
-- NXP i.MX8M Plus SoC, a variant of the popular i.MX8M, along with an
-  evaluation board.
-
-- Kontron "sl28" board family based on NXP LS1028A
-
-- Eleven variations of the new i.MX6 TechNexion Pico board, combining
-  the "dwarf", "hobbit", "nymph" and "pi" baseboards with i.MX6/i.MX7
-  SoM carriers
-
-- Three additional variants of the Toradex Colibri board family, all
-  based on versions of the NXP i.MX7.
-
-- The Pinebook Pro laptop based on Rockchip RK3399
-
-- Samsung S7710 Galaxy Xcover 2, a 2013 vintage Android phone based on
-  the ST-Ericsson u8500 platform
-
-- DH Electronics DHCOM SoM and PDK2 rev. 400 carrier based on
-  STMicroelectronics stm32mp157
-
-- Renesas M3ULCB starter kit for R-Car M3-W+
-
-- Hoperun HiHope development board with Renesas RZ/G2M
-
-- Pine64 PineTab tablet and PinePhone phone, both based on Allwinner A64
-
-- Linutronix Testbox v2 for the Lamobo R1 router, based on Allwinner A20
-
-- PocketBook Touch Lux 3 ebook reader, based on Allwinner A13
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-----------------------------------------------------------------
-To spare you the 80kb of git-request-pull output, here is a very
-abbreviated version
-
-Arnd Bergmann (38):
-      Merge tag 'renesas-arm-dt-for-v5.7-tag1' of
-git://git.kernel.org/.../geert/renesas-devel into arm/dt
-      Merge tag 'renesas-arm64-dt-for-v5.7-tag1' of
-git://git.kernel.org/.../geert/renesas-devel into arm/dt
-      Merge tag 'versatile-dts-v5.7-1' of
-git://git.kernel.org/.../linusw/linux-integrator into arm/dt
-      Merge tag 'omap-for-v5.7/dt-signed' of
-git://git.kernel.org/.../tmlind/linux-omap into arm/dt
-      Merge tag 'arm-soc/for-5.7/devicetree' of
-https://github.com/Broadcom/stblinux into arm/dt
-      Merge tag 'sunxi-dt-for-5.7' of
-git://git.kernel.org/.../sunxi/linux into arm/dt
-      Merge tag 'renesas-arm-dt-for-v5.7-tag2' of
-git://git.kernel.org/.../geert/renesas-devel into arm/dt
-      Merge tag 'renesas-arm64-dt-for-v5.7-tag2' of
-git://git.kernel.org/.../geert/renesas-devel into arm/dt
-      Merge tag 'renesas-dt-bindings-for-v5.7-tag1' of
-git://git.kernel.org/.../geert/renesas-devel into arm/dt
-      Merge tag 'stm32-dt-for-v5.7-1' of
-git://git.kernel.org/.../atorgue/stm32 into arm/dt
-      Merge tag 'tegra-for-5.7-dt-bindings' of
-git://git.kernel.org/.../tegra/linux into arm/dt
-      Merge tag 'tegra-for-5.7-arm-dt' of
-git://git.kernel.org/.../tegra/linux into arm/dt
-      Merge tag 'tegra-for-5.7-arm64-dt' of
-git://git.kernel.org/.../tegra/linux into arm/dt
-      Merge tag 'mvebu-dt64-5.7-1' of
-git://git.infradead.org/linux-mvebu into arm/dt
-      Merge tag 'ux500-dts-v5.7' of
-git://git.kernel.org/.../linusw/linux-stericsson into arm/dt
-      Merge tag 'samsung-dt-5.7' of
-git://git.kernel.org/.../krzk/linux into arm/dt
-      Merge tag 'v5.7-rockchip-dts32-1' of
-git://git.kernel.org/.../mmind/linux-rockchip into arm/dt
-      Merge tag 'v5.7-rockchip-dts64-1' of
-git://git.kernel.org/.../mmind/linux-rockchip into arm/dt
-      Merge tag 'amlogic-dt64' of
-git://git.kernel.org/.../khilman/linux-amlogic into arm/dt
-      Merge tag 'uniphier-dt-v5.7' of
-git://git.kernel.org/.../masahiroy/linux-uniphier into arm/dt
-      Merge tag 'uniphier-dt64-v5.7' of
-git://git.kernel.org/.../masahiroy/linux-uniphier into arm/dt
-      Merge tag 'imx-bindings-5.7' of
-git://git.kernel.org/.../shawnguo/linux into arm/dt
-      Merge tag 'imx-dt-5.7' of
-git://git.kernel.org/.../shawnguo/linux into arm/dt
-      Merge tag 'imx-dt64-5.7' of
-git://git.kernel.org/.../shawnguo/linux into arm/dt
-      Merge tag 'socfpga_dts_update_for_v5.7' of
-git://git.kernel.org/.../dinguyen/linux into arm/dt
-      Merge tag 'ti-k3-soc-for-v5.7' of
-git://git.kernel.org/.../kristo/linux into arm/dt
-      Merge tag 'v5.6-next-dts64' of
-git://git.kernel.org/.../matthias.bgg/linux into arm/dt
-      Merge tag 'v5.6-next-dts32' of
-git://git.kernel.org/.../matthias.bgg/linux into arm/dt
-      Merge tag 'gemini-dts-v5.7' of
-git://git.kernel.org/.../linusw/linux-nomadik into arm/dt
-      Merge tag 'at91-5.7-dt' of git://git.kernel.org/.../at91/linux into arm/dt
-      Merge tag 'amlogic-dt64-2' of
-git://git.kernel.org/.../khilman/linux-amlogic into arm/dt
-      Merge tag 'socfpga_dts_update_for_v5.7_part2' of
-git://git.kernel.org/.../dinguyen/linux into arm/dt
-      Merge tag 'qcom-dts-for-5.7' of
-git://git.kernel.org/.../qcom/linux into arm/dt
-      arm64: dts: Revert "specify console via command line"
-      Merge tag 'omap-for-v5.7/ti-sysc-drop-pdata-signed' of
-git://git.kernel.org/.../tmlind/linux-omap into arm/late
-      Merge tag 'omap-for-v5.7/ti-sysc-drop-pdata-ti81xx-signed' of
-git://git.kernel.org/.../tmlind/linux-omap into arm/late
-      Merge tag 'qcom-arm64-for-5.7' of
-git://git.kernel.org/.../qcom/linux into arm/late
-      Merge branch 'arm/late' into arm/dt
-
-      1 Aapo Vienamo
-      1 Adam Ford
-      1 Ahmad Fatoum
-      6 Alain Volmat
-      1 Alex Elder
-      2 Alexandre Belloni
-      1 Alexandre Courbot
-      2 Alexis Ballier
-      4 Alifer Moraes
-      4 Amelie Delaunay
-      4 Amit Kucheria
-      8 Andre Przywara
-      1 Andrey Lebedev
-      5 Andrey Smirnov
-      4 André Draszik
-      4 Andy Yan
-      7 Angus Ainslie (Purism)
-     30 Anson Huang
-     38 Arnd Bergmann
-      1 Balakrishna Godavarthi
-      2 Bastian Germann
-      5 Benjamin Gaignard
-      8 Bjorn Andersson
-      1 Carlos de Paula
-      1 Chris Brandt
-      7 Christian Hewitt
-      2 Christian Lamparter
-      1 Chunyan Zhang
-      2 Claudiu Manoil
-      1 Cristian Birsan
-      1 Dalon Westergreen
-      3 Dave Gerlach
-      1 David Dai
-      2 Dikshita Agarwal
-      6 Douglas Anderson
-      2 Emmanuel Vadot
-      1 Enric Balletbo i Serra
-      2 Eugen Hristev
-      2 Fabien Parent
-      7 Fabio Estevam
-      1 Fabrizio Castro
-     12 Florian Fainelli
-     11 Geert Uytterhoeven
-      2 Grygorii Strashko
-      1 Guido Günther
-      1 Harigovindan P
-      1 Heiko Stuebner
-      8 Horia Geantă
-      2 Hou Zhiqiang
-      1 Hsin-Yi Wang
-      3 Icenowy Zheng
-      3 Igor Opaniuk
-      3 JC Kuo
-      3 Jagan Teki
-      1 James Liao
-     10 Jernej Skrabec
-      4 Jerome Brunet
-      1 Jianxin Pan
-     33 Johan Jonker
-      5 Jon Hunter
-      2 Jonathan Marek
-      1 Joshua Watt
-      1 Joyce Ooi
-      3 Kamel Bouhara
-      1 Katsuhiro Suzuki
-      1 Kevin Hilman
-      1 Kieran Bingham
-      1 Konrad Dybcio
-      2 Kuldeep Singh
-      5 Kunihiko Hayashi
-      1 Ley Foon Tan
-     13 Linus Walleij
-      1 Loic Poulain
-      2 Lucas Stach
-      1 Lukasz Luba
-      1 Mans Rullgard
-      2 Marco Felsch
-      2 Marcus Cooper
-      8 Marek Szyprowski
-      7 Marek Vasut
-      2 Marian-Cristian Rotariu
-      2 Martin Kaiser
-      1 Martin Kepplinger
-      8 Masahiro Yamada
-      1 Mathieu Poirier
-      2 Matthias Brugger
-      1 Matthias Kaehlcke
-      4 Maxime Ripard
-      1 Michael Heimpold
-     10 Michael Walle
-      1 Michal Vokáč
-      1 Mohammad Rasim
-     11 Nagarjuna Kristam
-      7 Neil Armstrong
-      1 Nicolas Saenz Julienne
-      1 Odelu Kukatla
-      5 Oleksandr Suvorov
-      2 Oleksij Rempel
-      9 Ondrej Jirman
-      6 Peng Fan
-      1 Peter Chen
-      1 Philipp Zabel
-      1 Rabeeh Khoury
-      3 Rajendra Nayak
-      1 Rajeshwari
-      1 Ran Bi
-      3 Rob Herring
-      2 Robert Jones
-      1 Robin Murphy
-      1 Roger Quadros
-      4 Russell King
-      1 Sai Prakash Ranjan
-      1 Sam Shih
-      9 Samuel Holland
-      1 Sandeep Maheswaram
-      2 Sibi Sankar
-      1 Silvano di Ninno
-      1 Sivaprakash Murugesan
-      8 Sowjanya Komatineni
-      2 Sricharan R
-      7 Srinivas Kandagatla
-      1 Stanimir Varbanov
-      1 Stefan Agner
-      1 Stefan Wahren
-      1 Stephan Gerhold
-      2 Stephen Boyd
-      7 Suman Anna
-      2 Takeshi Kihara
-      1 Taniya Das
-      3 Thierry Reding
-      1 Tim Harvey
-      1 Tobias Schramm
-      3 Tomasz Maciej Nowak
-     62 Tony Lindgren
-      1 Vadym Kochan
-      3 Veerabhadrarao Badiganti
-      1 Venkata Narendra Kumar Gutta
-      2 Vidya Sagar
-      3 Vignesh Raghavendra
-      1 Vitor Massaru Iha
-      2 Vivek Unune
-      2 Vladimir Oltean
-      1 Xiaowei Bao
-      2 Yangbo Lu
-      1 Yangtao Li
-      3 Yann Gautier
-      2 Yuya Hamamachi
-      2 michael.kao
-      1 yong.liang
-
-   2.0% Documentation/devicetree/bindings/arm/bcm/
-   0.0% Documentation/devicetree/bindings/arm/sunxi/
-   3.1% Documentation/devicetree/bindings/arm/tegra/
-   5.1% Documentation/devicetree/bindings/arm/
-   0.0% Documentation/devicetree/bindings/bus/
-   0.0% Documentation/devicetree/bindings/crypto/
-   0.0% Documentation/devicetree/bindings/media/
-   0.0% Documentation/devicetree/bindings/pci/
-   0.1% Documentation/devicetree/bindings/phy/
-   0.0% Documentation/devicetree/bindings/spi/
-   0.6% Documentation/devicetree/bindings/usb/
-  31.1% arch/arm/boot/dts/
-   5.5% arch/arm/mach-omap2/
-   3.5% arch/arm64/boot/dts/allwinner/
-   0.0% arch/arm64/boot/dts/altera/
-   1.3% arch/arm64/boot/dts/amlogic/
-   0.0% arch/arm64/boot/dts/arm/
-  20.0% arch/arm64/boot/dts/freescale/
-   0.0% arch/arm64/boot/dts/intel/
-   0.1% arch/arm64/boot/dts/marvell/
-   7.1% arch/arm64/boot/dts/mediatek/
-   1.6% arch/arm64/boot/dts/nvidia/
-   8.8% arch/arm64/boot/dts/qcom/
-   1.1% arch/arm64/boot/dts/renesas/
-   4.3% arch/arm64/boot/dts/rockchip/
-   0.3% arch/arm64/boot/dts/socionext/
-   0.1% arch/arm64/boot/dts/ti/
-   2.9% drivers/bus/
-   0.0% drivers/clk/imx/
-   0.0% drivers/clk/ti/
-   0.1% drivers/gpu/drm/omapdrm/dss/
-   0.0% include/dt-bindings/bus/
-   0.1% include/dt-bindings/clock/
-   0.0% include/dt-bindings/soc/
-   0.0% include/linux/platform_data/
- 506 files changed, 20094 insertions(+), 4929 deletions(-)
+On Fri, 3 Apr 2020 at 07:26, Lu=C3=ADs Matallui <matallui@gmail.com> wrote:
+>
+> On Fri, 3 Apr 2020 at 06:03, Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Fri, 3 Apr 2020 05:13:35 -0600
+> > Lu=C3=ADs Matallui <matallui@gmail.com> wrote:
+> >
+> > > Hi Marc,
+> > >
+> > > On Fri, 3 Apr 2020 at 04:18, Marc Zyngier <maz@kernel.org> wrote:
+> > > >
+> > > > Hi Luis,
+> > > >
+> > > > On 2020-04-03 02:35, Lu=C3=ADs Matallui wrote:
+> > > > > Hi,
+> > > > >
+> > > > > I've got this SoC which uses IRQ-MSI and MSI-IRQ bridges in order=
+ to
+> > > > > get interrupts from devices external to the ARM subsystem.
+> > > > > I already got some pointers from Maz and have been able to create=
+ the
+> > > > > drivers with the stacked domains and can now see the mappings wor=
+king
+> > > > > fine across domains.
+> > > > >
+> > > > > Maz pointed me to the Marvell mvebu-gicp (for my MSI controller, =
+a.k.a
+> > > > > MSI-IRQ bridge) and to mvebu-icu for the MSI client (IRQ-MSI brid=
+ge).
+> > > > >
+> > > > > I now have the interrupts working, but it seems like I'm missing =
+a
+> > > > > bunch of them. And therefore my device doesn't work properly.
+> > > > > The main difference between my HW and Marvell's is that my IRQs a=
+re
+> > > > > not level-triggered and the MSIs don't support the two messages f=
+or
+> > > > > level-triggered interrupts.
+> > > >
+> > > > Which is probably a very good thing, as long as all your devices
+> > > > generate
+> > > > only edge-triggered interrupts.
+> > > >
+> > > > >
+> > > > > To illustrate my system:
+> > > > >
+> > > > > DEV --line--> IRQ-MSI Bridge (MSIC) --msi--> MSI-IRQ Bridge (GICP=
+)
+> > > > > --line--> GICv2
+> > > > >
+> > > > > For MSIC, all I can do is configure the address and data for the =
+MSI,
+> > > > > and I believe on every rising edge of the Device IRQ, an MSI is s=
+ent.
+> > > > > For GICP, all I have is a doorbell and a way to enable/disable it=
+, and
+> > > > > whenever the doorbell is enabled and has a value !=3D 0, the IRQ =
+line to
+> > > > > GICv2 gets asserted.
+> > > > >
+> > > > > The first thing I noticed is that when I get an interrupt, the IR=
+Q
+> > > > > flow goes like:
+> > > > >
+> > > > >   handle_irq();
+> > > > >   irq_eoi();
+> > > > >
+> > > > > So, I guess my first question here is, how can I guarantee that I
+> > > > > don't get another MSI whilst in handle_irq()?
+> > > >
+> > > > At the GIC level, once the interrupt is Ack'd, anything that is sig=
+ned
+> > > > after this ack is a separate interrupt. It will be made pending and=
+ will
+> > > > fire once the GIC driver EOIs the first one.
+> > >
+> > > The thing here is, there is no Ack, or at least my irqchips are not g=
+etting
+> > > the irq_ack() callback, which is where I was expecting to clear the d=
+oorbell.
+> >
+> > Not getting an irq_ack() here is expected, as the GIC uses the fast_eoi
+> > flow, which doesn't use irq_ack() at all. If you really want irq_ack()
+> > to be called, you'll need to change that flow for the specified
+> > interrupts (handle_fasteoi_ack_irq is probably of interest).
+> >
+>
+> I had tried level and trigger flow handlers and was always getting weird =
+hangs,
+> so never even attempted that, but with that handler I do get the Ack call=
+s now.
+>
+> I'm still missing the interrupts, so I'm starting to believe I'm just
+> doing something
+> else wrong.
+>
+> > >
+> > > >
+> > > > > If I do, then I will clear the doorbell on irq_eoi() (because tha=
+t's
+> > > > > my only choice) and will lose the queued IRQs.
+> > > >
+> > > > Why do you need to do anything at the doorbell level? This is just =
+a
+> > > > write,
+> > > > so there should be nothing to clear. If you do need to clear anythi=
+ng,
+> > > > then your MSI-IRQ bridge isn't stateless as it should, and you'll n=
+eed
+> > > > to
+> > > > give much more details about the HW. Do you have a pointer to the T=
+RM
+> > > > for your HW?
+> > >
+> > > The hardware is really simple. On the MSI controller (GICP) side, eac=
+h
+> > > interrupt only has 3 registers: 1 status, 1 mask and 1 clear. When an
+> > > MSI lands a write on the status register, it asserts the interrupt li=
+ne.
+> > > The interrupt stays asserted until we clear the status (using the cle=
+ar
+> > > register). The mask register is just to enable the interrupt basicall=
+y.
+> > > The MSI data is really irrelevant, as long as it's non-zero we always
+> > > obtain the same result.
+> >
+> > Does it mean it asserts a level each time it gets an edge, and you need
+> > to clear the MSI to allow another one? If so, that's a bit silly. it
+> > would have made a lot more sense to leave it flowing to the GIC where
+> > all the logic is already present.
+>
+> Yes! I totally agree this is silly, but I'm pretty sure that's how it
+> works. I will
+> try to reach out to the SoC team to double check, but from their document=
+ation,
+> they say the interrupt line will stay asserted as long as the doorbell st=
+atus
+> value is different than 0, so until we manually clear it, it stays assert=
+ed.
+>
+> > >
+> > > On the MSI client side, we only configure the MSI address and data fo=
+r
+> > > a certain device interrupt line, and for each rising edge, an MSI get=
+s issued.
+> > >
+> > > >
+> > > > > It also seems that I'm missing IRQs in the beginning after probin=
+g the
+> > > > > device, and before it was working for me when I was setting up al=
+l
+> > > > > these registers manually and simply using GICv2 as my only interr=
+upt
+> > > > > controller.
+> > > >
+> > > > Well, setting all of this in firmware is always the preferred optio=
+n
+> > > > if you don't expect things to change dynamically.
+> > >
+> > > Well, the solution I have now works perfectly for the configuration, =
+because
+> > > the MSIC gets configured by msi_compose_msg -> msi_write_msg at IRQ
+> > > allocation time and never gets touched again.
+> > >
+> > > Then when the IRQ gets activated, the GICP is unmasking the interrupt=
+ but
+> > > enabling the doorbell (setting the mask register).
+> > >
+> > > The only thing I really need is to intercept every MSI before the han=
+dler so
+> > > I can Ack it by clearing the doorbell status register.
+> >
+> > See above.
+> >
+> > > > > I do see the unmask() ops being called for all my stacked irqchip=
+s, so
+> > > > > I don't understand how I'm missing so many interrupts.
+> > > >
+> > > > unmask is just a static configuration to enable the interrupt. Ther=
+e
+> > > > shouldn't
+> > > > be that many calls to that later on unless an endpoint driver
+> > > > disables/enables
+> > > > interrupts by hand.
+> > > >
+> > > > Please give us a bit more details to understand the context, as the=
+re is
+> > > > only
+> > > > so much I can do with so little HW information.
+> > > >
+> > > > Thanks,
+> > > >
+> > > >          M.
+> > > > --
+> > > > Jazz is not dead. It just smells funny...
+> > >
+> > > Let me know if that is good enough information. There's really not mu=
+ch on
+> > > the HW side.
+> >
+> > If I'm correct above, I'd say there is a bit too much there! ;-)
+> >
+> >         M.
+> > --
+> > Jazz is not dead. It just smells funny...
+>
+> Thanks again Marc!
+> Let me try to reach out to the SoC guys and try to figure out what
+> else I'm doing
+> wrong. I will give you an update once I figure it out.
+>
+> -- Luis
