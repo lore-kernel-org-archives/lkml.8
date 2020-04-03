@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C53DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AEBC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6271E20787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF5B20675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585874435;
-	bh=32vyQkWbtmdLnzwog0XtAeKbHcfoZMUaKnuIVpw96VM=;
+	s=default; t=1585874438;
+	bh=NwF0phCbiYdOD88pZvDvdSU+V/tyYvt4lh2/SiBpYjA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=uwOiVMbik0dOC88h1hGBfVJhciMv+vglB1Y+0F068iu8qkyczKhRm7KiqaCyqxUbQ
-	 7rulBsC5gPfweL0g3AEKG1zAGLWIe1fTtn2xxEXDoME0xbAuejXPOKTjrEQYg4NlMe
-	 0TxsE4WUA6B8yAFBTf6C+Jzz54XTvaPZ4Vsj+U6w=
+	b=NdfS3ODZskazC99VCVOAcb35pS6VBSqcGeOAHhEUo7GGmIV/5q0u+6EclA76cifSH
+	 Pck9CjqlrAM6E1pI8tnmsTDbajGE4VGKZf1grvG6HREIW/14Jefo482hEoe+OWzZzk
+	 28TysXf0kVNn9fqdK1NqFAIoltNPc0KjBEBwXNus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390441AbgDCAkU (ORCPT
+        id S2390521AbgDCAki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 20:40:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39028 "EHLO mail.kernel.org"
+        Thu, 2 Apr 2020 20:40:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390427AbgDCAkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 20:40:18 -0400
-Subject: Re: [GIT PULL] sound updates for 5.7-rc1
+        id S2390431AbgDCAkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 20:40:19 -0400
+Subject: Re: [PULL REQUEST] i2c for v5.7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585874418;
-        bh=32vyQkWbtmdLnzwog0XtAeKbHcfoZMUaKnuIVpw96VM=;
+        s=default; t=1585874419;
+        bh=NwF0phCbiYdOD88pZvDvdSU+V/tyYvt4lh2/SiBpYjA=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=UPSLLeR34DCQEv9Nj7S3hv1lhIvAWpL2MReC+IsLyb9iyWp07eZgblzOyplOsv+5Q
-         yv9LSpM3BZwz6kpTGkH+KPyRu3BvbHr1OFeU62w35LXQb0QL3uVD9Bhglvy1InJxpx
-         DE1mld+fCI8PIkQfcoqd2eCh0iYczje6M+mSOMu8=
+        b=Lgsm5vTiTvzsSE/P0n44GDOelCSg42GpsBubvA8fszT2Pl1+pGBOIDQ0apiuZjpY9
+         nsUZ0em1NBmFYpQhjW7/JVzlkviGRupyVK2Hu/IS8h/FV1iLqOUZzLqUXlH5ebxNPN
+         /ZaMW1ggjDn6mNg7vsgDBrisx8EEZeh2P4qxA5ZQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <s5htv22uso8.wl-tiwai@suse.de>
-References: <s5htv22uso8.wl-tiwai@suse.de>
+In-Reply-To: <20200402095948.GA2414@ninjato>
+References: <20200402095948.GA2414@ninjato>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <s5htv22uso8.wl-tiwai@suse.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
- tags/sound-5.7-rc1
-X-PR-Tracked-Commit-Id: 5c6cd7021a05a02fcf37f360592d7c18d4d807fb
+X-PR-Tracked-Message-Id: <20200402095948.GA2414@ninjato>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.7
+X-PR-Tracked-Commit-Id: df576beee53ac97fe0a413430e623e658805891d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 848960e576dafc8ed54c691b2f70b92e1fdea9ba
-Message-Id: <158587441796.31624.16943011436861424361.pr-tracker-bot@kernel.org>
-Date:   Fri, 03 Apr 2020 00:40:17 +0000
-To:     Takashi Iwai <tiwai@suse.de>
+X-PR-Merge-Commit-Id: 5c8db3eb381745c010ba746373a279e92502bdc8
+Message-Id: <158587441905.31624.16830080488714978048.pr-tracker-bot@kernel.org>
+Date:   Fri, 03 Apr 2020 00:40:19 +0000
+To:     Wolfram Sang <wsa@the-dreams.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 02 Apr 2020 11:45:59 +0200:
+The pull request you sent on Thu, 2 Apr 2020 11:59:53 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.7-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/848960e576dafc8ed54c691b2f70b92e1fdea9ba
+https://git.kernel.org/torvalds/c/5c8db3eb381745c010ba746373a279e92502bdc8
 
 Thank you!
 
