@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29ABEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42C1C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F317B20787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7969721556
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585874424;
-	bh=uNdObiZUcMPCmKTt+tHx1I8OZubswKO9nydYm0aQq7w=;
+	s=default; t=1585874425;
+	bh=YaFclORjuPZW1dxJ3qN14gsQr29KJIcmOljdhCM2wvI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=TBvVZcXrhwFCs88ADk09iAxI52wru+NjQ3Rd1cS+aAOfHTHB6jgGTy2FgUumWJzvU
-	 SH3zq3e2xPxBWDi7O6uwlkIZNyiNhWusthWgu7FILdzP0e04qR9L0R6nJuG6adMws4
-	 yBONLiayGSWYZloPsyKB5fXJBbmULaT8KQG+XNOI=
+	b=PMlRsdrzcUmfE6tWDNoNlDZafJdYpUQDHXrW4YBPmSLMNo7sa6SodE88DlX6T+5QU
+	 7ridgzbjUBgYhV3bEcnyakJFyXsXv8aOW/P1RRF0KWIZ6eOLKL/s5RZRJdofoeK+U5
+	 9wUy/kirk7nj8585fegxgCacFMvh0tW900y93Wac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390463AbgDCAkW (ORCPT
+        id S2390479AbgDCAkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 20:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39124 "EHLO mail.kernel.org"
+        Thu, 2 Apr 2020 20:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390445AbgDCAkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 20:40:21 -0400
-Subject: Re: [GIT PULL]: dmaengine updates for v5.7-rc1
+        id S2390460AbgDCAkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 20:40:22 -0400
+Subject: Re: [GIT PULL] first round of SCSI updates for the 5.6+ merge window
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585874420;
-        bh=uNdObiZUcMPCmKTt+tHx1I8OZubswKO9nydYm0aQq7w=;
+        s=default; t=1585874422;
+        bh=YaFclORjuPZW1dxJ3qN14gsQr29KJIcmOljdhCM2wvI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=gSWSUHIOrXpfpP5p8bX7J/9CG8xzvnd+nAF9pI/XHOiqDwpj193LJrWMyFBxMYaN/
-         t+VRy8J4pKKSyxhYJjBD/m7KC9P1EoW8tHZSAnDVSPiK5dY7jJ8OUnpMT85xoInQY+
-         HJOaPsNMLedeOLK5fa4VFZNwSNTd/lESvYEduDBY=
+        b=IFgwl1rGl16z3FsJynrTtPHKHZuthqw+Mvt2qOVHMiMG5iieuewi8z1R5GljORISZ
+         V7CDMNsbkl8UDyD8ILpuT3RtLiZECGIOqpvkXG98XJK7HdbNV6ZBsEHMERLg1gJERr
+         iaUqHyrno4ZIPvLRol5Th55XtUrv7GXt2bpjJoI4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200402112500.GJ72691@vkoul-mobl>
-References: <20200402112500.GJ72691@vkoul-mobl>
+In-Reply-To: <1585843596.9534.17.camel@HansenPartnership.com>
+References: <1585843596.9534.17.camel@HansenPartnership.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200402112500.GJ72691@vkoul-mobl>
-X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
- tags/dmaengine-5.7-rc1
-X-PR-Tracked-Commit-Id: cea582b5ee5645839650b6667335cfb40ec71c19
+X-PR-Tracked-Message-Id: <1585843596.9534.17.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+X-PR-Tracked-Commit-Id: ff275db92c935858454b721f0d960fff421634d3
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e964f1e04a1ce562f0d748b29326244d3cb35ba4
-Message-Id: <158587442059.31624.5342191140301326373.pr-tracker-bot@kernel.org>
-Date:   Fri, 03 Apr 2020 00:40:20 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 79f51b7b9c4719303f758ae8406c4e5997ed6aa3
+Message-Id: <158587442215.31624.18315350369310388562.pr-tracker-bot@kernel.org>
+Date:   Fri, 03 Apr 2020 00:40:22 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 2 Apr 2020 16:55:00 +0530:
+The pull request you sent on Thu, 02 Apr 2020 09:06:36 -0700:
 
-> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.7-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e964f1e04a1ce562f0d748b29326244d3cb35ba4
+https://git.kernel.org/torvalds/c/79f51b7b9c4719303f758ae8406c4e5997ed6aa3
 
 Thank you!
 
