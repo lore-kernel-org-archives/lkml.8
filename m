@@ -2,106 +2,148 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F34C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F142C2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCBE206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585933424;
-	bh=VJ3UvXiGIFoKcvKxye79uGqBaWUJ0CUGwyrmMoBijI0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CLlH/h8tiCy4nnvk+gVPJ2+mT9Xsf1VetDaN3VGA1XmUQfgTVvbEAriMtNA0L42g/
-	 W/c7zD8MDA25xRrMM/JWR9NPLTkQ79C5Nyqi2eUJS5KPDOls41A2U7hje+gZ5ltb7d
-	 GlwY+iN4esuqhamNC2/yJu+X7iZ+l2mIXlCyTGBQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1F743206F6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391001AbgDCRDn (ORCPT
+        id S2391121AbgDCRDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:03:43 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40871 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgDCRDn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:03:43 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 19so7658996ljj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:03:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=osWnZTRFrERPRvjQV1oxqFtgAfM+t2aXm4BmItThVbY=;
-        b=Q66SAsiyB/dcp3evAiaFZOWj2Luj1W9bWfjGrupDMZ6/ZpeHIYUWl4GYPxLoDlBaVa
-         ua2tv/WvTxjS+h01PueD+2pmjE8OZUGADC79GXF6v5cp0IRMJPrP65i4xvyubqD/4Qu+
-         oigARjvJzsTo1GXsZT+XxUFtlBUArDfqOh5GQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=osWnZTRFrERPRvjQV1oxqFtgAfM+t2aXm4BmItThVbY=;
-        b=RqRen305xx//440k5RUbt+TZ++KCgLGbLh0KkaC5pCJjhWc0vXXXxHmTHgPY0xeDNw
-         7qM4hH/mVoMTu8dX95lyHdkDqfew86AdI1dhtn92mqgEL7fxWilFeKSgjdOwfHuBS5wW
-         TzvJRmPb9RdxYKBHJhBddd9zIf2HSgcLxD5a8jcNpZQzV3nuHYlcfS4TN6e4J8+DGn6L
-         A5MABnOpcntl0bRWi3ixJsL7fZl3elA3r7qLpr8n9tnoXpZgAYmU18jlqyERe1GbpMgt
-         kZNDYNyryCFYg+37UeEQB8MfO3xlTp9G7XE7XRIzo2FBYlWQN3AF35LbrHfJJIpT0R+d
-         VZDA==
-X-Gm-Message-State: AGi0PuYr4KOmvtQBorfwg1vwJYJXGzYc7TrF8LUZrxi0ZZ4YnrqLLGvT
-        Uj+PloA7EtQjwW0wZNI4lCfwWBiWQL0=
-X-Google-Smtp-Source: APiQypL75sgIoAoa5RUs4K+eseQxKJz0ggE3BJALyEFYXgwfyzxMdP2V44NxRh08f2ABaajbBF7ctg==
-X-Received: by 2002:a2e:904b:: with SMTP id n11mr5372038ljg.171.1585933419558;
-        Fri, 03 Apr 2020 10:03:39 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id l13sm5274571ljc.84.2020.04.03.10.03.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 10:03:38 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id g27so7630780ljn.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:03:38 -0700 (PDT)
-X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr5423949lji.150.1585933417930;
- Fri, 03 Apr 2020 10:03:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200331080111.GA20569@gmail.com> <CAHk-=wjpBohNkBSxyPfC7w8165usbU5TuLohdbPs+D0bUYqJhQ@mail.gmail.com>
- <CAHk-=wijWvUfEkqUZRpvo9FCaJNsioS_qZT+iNWUdqQ6eO8Ozw@mail.gmail.com>
- <87v9mioj5r.fsf@nanos.tec.linutronix.de> <CAHk-=wh3_WTKeR=TTbPpbJYjC8DOPcDPJhhoopTVs3WJimsT=A@mail.gmail.com>
- <nycvar.YEU.7.76.2004031546080.7494@gjva.wvxbf.pm>
-In-Reply-To: <nycvar.YEU.7.76.2004031546080.7494@gjva.wvxbf.pm>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 3 Apr 2020 10:03:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjF+j-sc98Oa8_c=tcfaVf7XfeLJGPgsWhBR+rwH5cjFw@mail.gmail.com>
-Message-ID: <CAHk-=wjF+j-sc98Oa8_c=tcfaVf7XfeLJGPgsWhBR+rwH5cjFw@mail.gmail.com>
-Subject: Re: [GIT PULL] x86 cleanups for v5.7
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
+        Fri, 3 Apr 2020 13:03:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45056 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728341AbgDCRDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 13:03:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9F318AA7C;
+        Fri,  3 Apr 2020 17:03:39 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id E25BC1E1235; Fri,  3 Apr 2020 19:03:38 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 19:03:38 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+Message-ID: <20200403170338.GD29920@quack2.suse.cz>
+References: <20200311062952.GA11519@lst.de>
+ <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
+ <20200316095224.GF12783@quack2.suse.cz>
+ <20200316095509.GA13788@lst.de>
+ <20200401040021.GC56958@magnolia>
+ <20200401102511.GC19466@quack2.suse.cz>
+ <20200402085327.GA19109@lst.de>
+ <20200402205518.GF3952565@iweiny-DESK2.sc.intel.com>
+ <20200403072731.GA24176@lst.de>
+ <20200403154828.GJ3952565@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403154828.GJ3952565@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 6:47 AM Jiri Kosina <jikos@kernel.org> wrote:
->
-> FWIW, I am routinely using Joerg's
->
->         https://github.com/joergroedel/asmtool
->
-> for exactly this.
+On Fri 03-04-20 08:48:29, Ira Weiny wrote:
+> On Fri, Apr 03, 2020 at 09:27:31AM +0200, Christoph Hellwig wrote:
+> > On Thu, Apr 02, 2020 at 01:55:19PM -0700, Ira Weiny wrote:
+> > > > I'd just return an error for that case, don't play silly games like
+> > > > evicting the inode.
+> > > 
+> > > I think I agree with Christoph here.  But I want to clarify.  I was heading in
+> > > a direction of failing the ioctl completely.  But we could have the flag change
+> > > with an appropriate error which could let the user know the change has been
+> > > delayed.
+> > > 
+> > > But I don't immediately see what error code is appropriate for such an
+> > > indication.  Candidates I can envision:
+> > > 
+> > > EAGAIN
+> > > ERESTART
+> > > EUSERS
+> > > EINPROGRESS
+> > > 
+> > > None are perfect but I'm leaning toward EINPROGRESS.
+> > 
+> > I really, really dislike that idea.  The whole point of not forcing
+> > evictions is to make it clear - no this inode is "busy" you can't
+> > do that.  A reasonably smart application can try to evict itself.
+> 
+> I don't understand.  What Darrick proposed would never need any
+> evictions.  If the file has blocks allocated the FS_XFLAG_DAX flag can
+> not be changed.  So I don't see what good eviction would do at all.
 
-Ahh, that seems to be on *.s files only.
+I guess there's some confusion here (may well be than on my side). Darrick
+propose that we can switch FS_XFLAG_DAX only when file has no blocks
+allocated - fine by me. But that still does not mean than we can switch
+S_DAX immediately, does it? Because that would still mean we need to switch
+aops on living inode and that's ... difficult and Christoph didn't want to
+clutter the code with it.
 
-I really prefer working on the object file basis, so that I can do a
-diff of the whole kernel if required, and (if I care about just one
-file) so that it shows the real code rather than all the odd section
-stuff we end up having for alternatives etc.
+So I've understood Darrick's proposal as: Just switch FS_XFLAG_DAX flag,
+S_DAX flag will magically switch when inode gets evicted and the inode gets
+reloaded from the disk again. Did I misunderstand anything?
 
-               Linus
+And my thinking was that this is surprising behavior for the user and so it
+will likely generate lots of bug reports along the lines of "DAX inode flag
+does not work!". So I was pondering how to make the behavior less
+confusing... The ioctl I've suggested was just a poor attempt at that.
+
+> > But returning an error and doing a lazy change anyway is straight from
+> > the playbook for arcane and confusing API designs.
+> 
+> Jan countered with a proposal that the FS_XFLAG_DAX does change with
+> blocks allocated.  But that S_DAX would change on eviction.  Adding that
+> some eviction ioctl could be added.
+
+No, I didn't mean that we can change FS_XFLAG_DAX with blocks allocated. I
+was still speaking about the case without blocks allocated.
+
+> You then proposed just returning an error for that case.  (This lead me to
+> believe that you were ok with an eviction based change of S_DAX.)
+> 
+> So I agreed that changing S_DAX could be delayed until an explicit eviction.
+> But, to aid the 'smart application', a different error code could be used to
+> indicate that the FS_XFLAG_DAX had been changed but that until that explicit
+> eviction occurs S_DAX would remain.
+> 
+> So I don't fully follow what you mean by 'lazy change'?
+> 
+> Do you still really, really dislike an explicit eviction method for changing
+> the S_DAX flag?
+> 
+> If FS_XFLAG_DAX can never be changed on a file with blocks allocated and the
+> user wants to change the mode of operations on their 'data'; they would have to
+> create a new file with the proper setting and move the data there.  For example
+> copy the file into a directory marked FS_XFLAG_DAX==true?
+> 
+> I'm ok with either interface as I think both could be clear if documented.
+
+I agree that what Darrick suggested is technically easily doable and can be
+documented. But it is not natural behavior (i.e., different than all inode
+flags we have) and we know how careful people are when reading
+documentation...
+
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
