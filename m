@@ -2,87 +2,195 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B57FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78C3C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF33320B1F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CtX2lzOg"
+	by mail.kernel.org (Postfix) with ESMTP id 8D7B120787
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390727AbgDCJlp (ORCPT
+        id S2390733AbgDCJmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:41:45 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:9336 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727792AbgDCJkp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:40:45 -0400
-X-UUID: bc295ed7dbf64c989aed5ac3bb866d23-20200403
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=7LIi7H/1aKJu6aJs2kP5tkzvs49e5IwR0+jnoVPzHLw=;
-        b=CtX2lzOgOcTBrH2shlONAH/Zl4Bhe+WFCJa3Iv6TXk1mIMZVUH1ZgMaGByosA/a74ahf/a5o0yD75Od2Tgb5yDcgFjbljmIdmyPg6/ykCTa1AfiOtiX6oegvToIn+JPwoeHUz/Vqqxm+ZDx+LpGKd/zJ96MrJTzpP10SMs0lqAQ=;
-X-UUID: bc295ed7dbf64c989aed5ac3bb866d23-20200403
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 79399704; Fri, 03 Apr 2020 17:40:41 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 3 Apr 2020 17:40:33 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 3 Apr 2020 17:40:33 +0800
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
-        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
-        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>,
-        Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH v8 02/14] media: platform: Improve queue set up flow for bug fixing
-Date:   Fri, 3 Apr 2020 17:40:21 +0800
-Message-ID: <20200403094033.8288-3-xia.jiang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200403094033.8288-1-xia.jiang@mediatek.com>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
+        Fri, 3 Apr 2020 05:42:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60698 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727912AbgDCJmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 05:42:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2491BAF19;
+        Fri,  3 Apr 2020 09:42:27 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 448091E1235; Fri,  3 Apr 2020 11:42:20 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 11:42:20 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2 - v2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK
+ instead.
+Message-ID: <20200403094220.GA29920@quack2.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name>
+ <87v9miydai.fsf@notabene.neil.brown.name>
+ <87sghmyd8v.fsf@notabene.neil.brown.name>
+ <87pncqyd7k.fsf@notabene.neil.brown.name>
+ <20200402151009.GA14130@infradead.org>
+ <87h7y1y0ra.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7y1y0ra.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGNoZWNraW5nIGNyZWF0ZWQgYnVmZmVyIHNpemUgZm9sbG93IGluIG10a19qcGVnX3F1ZXVl
-X3NldHVwKCkuDQoNClNpZ25lZC1vZmYtYnk6IFhpYSBKaWFuZyA8eGlhLmppYW5nQG1lZGlhdGVr
-LmNvbT4NCi0tLQ0Kdjg6IG5vIGNoYW5nZXMNCi0tLQ0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
-bXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jIHwgNyArKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDcg
-aW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGst
-anBlZy9tdGtfanBlZ19jb3JlLmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210
-a19qcGVnX2NvcmUuYw0KaW5kZXggY2RlNTkyNzVkNDljLi5kYTBkYWU0YjBmYzkgMTAwNjQ0DQot
-LS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KKysr
-IGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMNCkBAIC01
-NzEsNiArNTcxLDEzIEBAIHN0YXRpYyBpbnQgbXRrX2pwZWdfcXVldWVfc2V0dXAoc3RydWN0IHZi
-Ml9xdWV1ZSAqcSwNCiAJaWYgKCFxX2RhdGEpDQogCQlyZXR1cm4gLUVJTlZBTDsNCiANCisJaWYg
-KCpudW1fcGxhbmVzKSB7DQorCQlmb3IgKGkgPSAwOyBpIDwgKm51bV9wbGFuZXM7IGkrKykNCisJ
-CQlpZiAoc2l6ZXNbaV0gPCBxX2RhdGEtPnNpemVpbWFnZVtpXSkNCisJCQkJcmV0dXJuIC1FSU5W
-QUw7DQorCQlyZXR1cm4gMDsNCisJfQ0KKw0KIAkqbnVtX3BsYW5lcyA9IHFfZGF0YS0+Zm10LT5j
-b2xwbGFuZXM7DQogCWZvciAoaSA9IDA7IGkgPCBxX2RhdGEtPmZtdC0+Y29scGxhbmVzOyBpKysp
-IHsNCiAJCXNpemVzW2ldID0gcV9kYXRhLT5zaXplaW1hZ2VbaV07DQotLSANCjIuMTguMA0K
+On Fri 03-04-20 09:35:21, NeilBrown wrote:
+> 
+> After an NFS page has been written it is considered "unstable" until a
+> COMMIT request succeeds.  If the COMMIT fails, the page will be
+> re-written.
+> 
+> These "unstable" pages are currently accounted as "reclaimable", either
+> in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
+> 'reclaimable' count.  This might have made sense when sending the COMMIT
+> required a separate action by the VFS/MM (e.g.  releasepage() used to
+> send a COMMIT).  However now that all writes generated by ->writepages()
+> will automatically be followed by a COMMIT (since commit 919e3bd9a875
+> ("NFS: Ensure we commit after writeback is complete")) it makes more
+> sense to treat them as writeback pages.
+> 
+> So this patch removes NR_UNSTABLE_NFS and accounts unstable pages in
+> NR_WRITEBACK and WB_WRITEBACK.
+> 
+> A particular effect of this change is that when
+> wb_check_background_flush() calls wb_over_bg_threshold(), the latter
+> will report 'true' a lot less often as the 'unstable' pages are no
+> longer considered 'dirty' (and there is nothing that writeback can do
+> about them anyway).
+> 
+> Currently wb_check_background_flush() will trigger writeback to NFS even
+> when there are relatively few dirty pages (if there are lots of unstable
+> pages), this can result in small writes going to the server (10s of
+> Kilobytes rather than a Megabyte) which hurts throughput.
+> With this patch, there are fewer writes which are each larger on average.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+> 
+> NR_UNSTABLE_NFS completely removed as recommended by Christoph, removal
+> of an unnecessary comment, and improvements to commit message.
+> Thanks.
+> 
+>  Documentation/filesystems/proc.txt |  3 ---
+>  drivers/base/node.c                |  2 --
+>  fs/fs-writeback.c                  |  1 -
+>  fs/nfs/internal.h                  | 10 +++++++---
+>  fs/nfs/write.c                     |  4 ++--
+>  fs/proc/meminfo.c                  |  2 --
+>  include/linux/mmzone.h             |  1 -
+>  include/trace/events/writeback.h   |  5 +----
+>  mm/memcontrol.c                    |  1 -
+>  mm/page-writeback.c                | 17 ++++-------------
+>  mm/page_alloc.c                    |  5 +----
+>  mm/vmstat.c                        |  1 -
+>  12 files changed, 15 insertions(+), 37 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+> index 99ca040e3f90..690c712f5f79 100644
+> --- a/Documentation/filesystems/proc.txt
+> +++ b/Documentation/filesystems/proc.txt
+> @@ -904,7 +904,6 @@ Slab:           284364 kB
+>  SReclaimable:   159856 kB
+>  SUnreclaim:     124508 kB
+>  PageTables:      24448 kB
+> -NFS_Unstable:        0 kB
+>  Bounce:              0 kB
+>  WritebackTmp:        0 kB
+>  CommitLimit:   7669796 kB
+> @@ -975,8 +974,6 @@ SReclaimable: Part of Slab, that might be reclaimed, such as caches
+>    SUnreclaim: Part of Slab, that cannot be reclaimed on memory pressure
+>    PageTables: amount of memory dedicated to the lowest level of page
+>                tables.
+> -NFS_Unstable: NFS pages sent to the server, but not yet committed to stable
+> -	      storage
+>        Bounce: Memory used for block device "bounce buffers"
+>  WritebackTmp: Memory used by FUSE for temporary writeback buffers
+>   CommitLimit: Based on the overcommit ratio ('vm.overcommit_ratio'),
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index 98a31bafc8a2..7059021ce2af 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -416,7 +416,6 @@ static ssize_t node_read_meminfo(struct device *dev,
+>  		       "Node %d Shmem:          %8lu kB\n"
+>  		       "Node %d KernelStack:    %8lu kB\n"
+>  		       "Node %d PageTables:     %8lu kB\n"
+> -		       "Node %d NFS_Unstable:   %8lu kB\n"
+>  		       "Node %d Bounce:         %8lu kB\n"
+>  		       "Node %d WritebackTmp:   %8lu kB\n"
+>  		       "Node %d KReclaimable:   %8lu kB\n"
+> @@ -439,7 +438,6 @@ static ssize_t node_read_meminfo(struct device *dev,
+>  		       nid, K(i.sharedram),
+>  		       nid, sum_zone_node_page_state(nid, NR_KERNEL_STACK_KB),
+>  		       nid, K(sum_zone_node_page_state(nid, NR_PAGETABLE)),
+> -		       nid, K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
+>  		       nid, K(sum_zone_node_page_state(nid, NR_BOUNCE)),
+>  		       nid, K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
+>  		       nid, K(sreclaimable +
 
+So I don't think we can just remove lines from procfs files like this. That
+has a high potential of breaking some userspace app that is not careful
+enough when parsing the file. So I think that we need to leave there the
+format string and just replace K(node_page_state(pgdat, NR_UNSTABLE_NFS))
+with 0.
+
+> diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
+> index 8c1f1bb1a5ce..1378a132ff7e 100644
+> --- a/fs/proc/meminfo.c
+> +++ b/fs/proc/meminfo.c
+> @@ -106,8 +106,6 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+>  	show_val_kb(m, "PageTables:     ",
+>  		    global_zone_page_state(NR_PAGETABLE));
+>  
+> -	show_val_kb(m, "NFS_Unstable:   ",
+> -		    global_node_page_state(NR_UNSTABLE_NFS));
+>  	show_val_kb(m, "Bounce:         ",
+>  		    global_zone_page_state(NR_BOUNCE));
+>  	show_val_kb(m, "WritebackTmp:   ",
+
+Similarly here.
+
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 78d53378db99..d1291537bbb9 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1162,7 +1162,6 @@ const char * const vmstat_text[] = {
+>  	"nr_file_hugepages",
+>  	"nr_file_pmdmapped",
+>  	"nr_anon_transparent_hugepages",
+> -	"nr_unstable",
+>  	"nr_vmscan_write",
+>  	"nr_vmscan_immediate_reclaim",
+>  	"nr_dirtied",
+
+This is probably the most tricky to deal with given how /proc/vmstat is
+formatted. OTOH for this file there's good chance we'd get away with just
+deleting nr_unstable line because there are entries added to it in the
+middle (e.g. in 60fbf0ab5da1 last September) and nobody complained yet.
+
+What do mm people think? How were changes to vmstat counters handled in the
+past?
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
