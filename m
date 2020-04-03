@@ -2,110 +2,210 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5D4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C744DC2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85CAF20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84DDF206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585925730;
-	bh=X9QK3DxM8PocBDuHpjw1TreDlIixWPpzHdlQR28SBnc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b7/BrnCIbWFCpwDj6yLuPOGcwDD+wUfzrQjHa4BwK7AaVlACZHtaXA2xJZun3YW2y
-	 Lp352/2MHMbHS0rz+Cbm/0/Zi4q4TqEwa1yh8Lv0UTP+THbkloV4wyqGmsW/qcNtsq
-	 x34AVDPu3v1EaWIHyoqcNF3eAxfOcrULZXr8K7Lo=
+	s=default; t=1585925731;
+	bh=JsPp7Hzk55yQAjqlH03LLJWupVqaFbp5tI//OKXbyQo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=drBKCAdpDEgFYPUuz/8Foy3gp+Gw7WS1Ja6fg+NbviUQtWsJIEM7STZ78TokfWK1f
+	 FVvIrIIr2kLjYgSHJfqMNIDFNBANeN67FNvde+XbETiF4Jfgz8lI8QhuNbsAFwO8f/
+	 DL/gd6f3w641sWNx92X1GpXHy6/8yWJu6ig5CSsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404100AbgDCOz3 (ORCPT
+        id S2404108AbgDCOza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:55:29 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34654 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404079AbgDCOz1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:55:27 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 14so6387839qtp.1;
-        Fri, 03 Apr 2020 07:55:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=WueqobVTQhcuC12qhXxBjSlUXTsOjQxipqHLExYdXc0=;
-        b=r1b480yVF4TVvjrmu9e9b50NuC47Vk3m0YSl40WOSeQXq8lJeps/ADO+KJNjeKJzJj
-         aGGZJZfUuaq3cRlitmPYQ2IQv77nhZDHwTOFW4atm0XMsImQWiDGLolaa9PagsIpXjgb
-         EM2oNoZdvmXAhaoNA0X7jbbK3rIy8dL8zcXGxbVDVblZmNjnIRyoagBiqvD5Wg0DfMft
-         Je19HLCWupm6dDLYgsaD2ZSvaSjPdO2mdFOlfM68Q7pRDcuIodjlvnxsEyHv1ozQY4VN
-         td2ZZZmZjc3IOVeCUgGknW+DVuUoBKjpERAgu440DgNTZua5AIfvoANdbzhN23UAUpXq
-         kuTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=WueqobVTQhcuC12qhXxBjSlUXTsOjQxipqHLExYdXc0=;
-        b=WTC2VyVjGW6Bdvq3uq0HhQ47SRmgpyi/1gnYae1brmpJjJu6sZl3g3I3hb/F2E5ZeC
-         etMDHQIH2F1+wobgxul9kwd0jbDqCPvnDBAzMacKgmF3r+7kVXvG5zLMCgiBO4GIW/8j
-         sTqQlbS7tRSTQ4Cx1h1oA6Y/eChuL3fbSXwVii1dDTtfsr5I4r1dFBz9xAvABbJYHZBE
-         yYnAWHHDd8n8kGvnnY3+/cIO7EYo9hChd2BsaElLClCQpwIhuDu4V1hvU9Fk4FdweaKo
-         Syg/MxHOr4qelEze3qy5F9/z58rn5oG2ZomyOeJo8n/yQljBWhax6K9bmDkiUWuO2p5O
-         fDVA==
-X-Gm-Message-State: AGi0PuZkh6d23U1jHy707FK6BcAfWXvHZjZUk75s4QeK+Db1wDVQzqi6
-        M9mbOTUB4nsrgd8qWaBd19A=
-X-Google-Smtp-Source: APiQypIWYRFn9PmjXGuhOXLCtTNa/5UW/zyNPX9KmNkdo6y3Q3MtaY+o4pitao0ov7CK3dInjarMMg==
-X-Received: by 2002:ac8:2f15:: with SMTP id j21mr8898994qta.55.1585925726184;
-        Fri, 03 Apr 2020 07:55:26 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::842b])
-        by smtp.gmail.com with ESMTPSA id f188sm3895379qkd.101.2020.04.03.07.55.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 07:55:25 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 10:55:23 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Qian Cai <cai@lca.pw>, Prateek Sood <prsood@codeaurora.org>,
-        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: Deadlock due to "cpuset: Make cpuset hotplug synchronous"
-Message-ID: <20200403145523.GC162390@mtj.duckdns.org>
-References: <F0388D99-84D7-453B-9B6B-EEFF0E7BE4CC@lca.pw>
- <20200325191922.GM162390@mtj.duckdns.org>
- <20200326101529.xh763j5frq2r7mqv@e107158-lin>
+        Fri, 3 Apr 2020 10:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404068AbgDCOz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 10:55:28 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF0D2078C;
+        Fri,  3 Apr 2020 14:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585925728;
+        bh=JsPp7Hzk55yQAjqlH03LLJWupVqaFbp5tI//OKXbyQo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ADln7111qLeot57IzmYNVtjoOH1ZVcj1CjtBlRdLl+QhKKc/ZPo350BPsFKUcBKOc
+         BO6np1kRaqFDADhdFp6ngNoD3aCdwCl4d557Ct/ZvQQUxA3lDErU1cXfqQ7HlrGR0c
+         9uRJzrQ4v9TxgdBPsRx+sTDWIlgtnbdUP5nfxXIQ=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Zefan Li <lizefan@huawei.com>
+Subject: [PATCH 08/31] perf/core: Add PERF_SAMPLE_CGROUP feature
+Date:   Fri,  3 Apr 2020 11:54:20 -0300
+Message-Id: <20200403145443.24774-9-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200403145443.24774-1-acme@kernel.org>
+References: <20200403145443.24774-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200326101529.xh763j5frq2r7mqv@e107158-lin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 10:15:32AM +0000, Qais Yousef wrote:
-> On 03/25/20 15:19, Tejun Heo wrote:
-> > On Wed, Mar 25, 2020 at 03:16:56PM -0400, Qian Cai wrote:
-> > > The linux-next commit a49e4629b5ed (“cpuset: Make cpuset hotplug synchronous”)
-> > > introduced real deadlocks with CPU hotplug as showed in the lockdep splat, since it is
-> > > now making a relation from cpu_hotplug_lock —> cgroup_mutex.
-> > 
-> > Prateek, can you please take a look? Given that the merge window is just around
-> > the corner, we might have to revert and retry later if it can't be resolved
-> > quickly.
-> 
-> I've ran cpuset_hotplug and cpuhotplug LTP tests using next-20200325 but
-> couldn't reproduce it.
-> 
-> Hopefully that can be fixed, but if you had to revert it, do you mind picking
-> this instead to fix the LTP issue I encountered before?
-> 
-> 	https://lore.kernel.org/lkml/20200211141554.24181-1-qais.yousef@arm.com/
+From: Namhyung Kim <namhyung@kernel.org>
 
-So, I'd rather not, for now anyway. It isn't a real problem and I don't wanna
-add a wait vector there.
+The PERF_SAMPLE_CGROUP bit is to save (perf_event) cgroup information in
+the sample.  It will add a 64-bit id to identify current cgroup and it's
+the file handle in the cgroup file system.  Userspace should use this
+information with PERF_RECORD_CGROUP event to match which cgroup it
+belongs.
 
-Thanks.
+I put it before PERF_SAMPLE_AUX for simplicity since it just needs a
+64-bit word.  But if we want bigger samples, I can work on that
+direction too.
 
+Committer testing:
+
+  $ pahole perf_sample_data | grep -w cgroup -B5 -A5
+  	/* --- cacheline 4 boundary (256 bytes) was 56 bytes ago --- */
+  	struct perf_regs           regs_intr;            /*   312    16 */
+  	/* --- cacheline 5 boundary (320 bytes) was 8 bytes ago --- */
+  	u64                        stack_user_size;      /*   328     8 */
+  	u64                        phys_addr;            /*   336     8 */
+  	u64                        cgroup;               /*   344     8 */
+
+  	/* size: 384, cachelines: 6, members: 22 */
+  	/* padding: 32 */
+  };
+  $
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Zefan Li <lizefan@huawei.com>
+Link: http://lore.kernel.org/lkml/20200325124536.2800725-3-namhyung@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ include/linux/perf_event.h      |  1 +
+ include/uapi/linux/perf_event.h |  3 ++-
+ init/Kconfig                    |  3 ++-
+ kernel/events/core.c            | 22 ++++++++++++++++++++++
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 8768a39b5258..9c3e7619c929 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1020,6 +1020,7 @@ struct perf_sample_data {
+ 	u64				stack_user_size;
+ 
+ 	u64				phys_addr;
++	u64				cgroup;
+ } ____cacheline_aligned;
+ 
+ /* default value for data source */
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index de95f6c7b273..7b2d6fc9e6ed 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -142,8 +142,9 @@ enum perf_event_sample_format {
+ 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
+ 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
+ 	PERF_SAMPLE_AUX				= 1U << 20,
++	PERF_SAMPLE_CGROUP			= 1U << 21,
+ 
+-	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
++	PERF_SAMPLE_MAX = 1U << 22,		/* non-ABI */
+ 
+ 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
+ };
+diff --git a/init/Kconfig b/init/Kconfig
+index 20a6ac33761c..7766b06a0038 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1027,7 +1027,8 @@ config CGROUP_PERF
+ 	help
+ 	  This option extends the perf per-cpu mode to restrict monitoring
+ 	  to threads which belong to the cgroup specified and run on the
+-	  designated cpu.
++	  designated cpu.  Or this can be used to have cgroup ID in samples
++	  so that it can monitor performance events among cgroups.
+ 
+ 	  Say N if unsure.
+ 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 994932d5e474..1569979c8912 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1862,6 +1862,9 @@ static void __perf_event_header_size(struct perf_event *event, u64 sample_type)
+ 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
+ 		size += sizeof(data->phys_addr);
+ 
++	if (sample_type & PERF_SAMPLE_CGROUP)
++		size += sizeof(data->cgroup);
++
+ 	event->header_size = size;
+ }
+ 
+@@ -6867,6 +6870,9 @@ void perf_output_sample(struct perf_output_handle *handle,
+ 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
+ 		perf_output_put(handle, data->phys_addr);
+ 
++	if (sample_type & PERF_SAMPLE_CGROUP)
++		perf_output_put(handle, data->cgroup);
++
+ 	if (sample_type & PERF_SAMPLE_AUX) {
+ 		perf_output_put(handle, data->aux_size);
+ 
+@@ -7066,6 +7072,16 @@ void perf_prepare_sample(struct perf_event_header *header,
+ 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
+ 		data->phys_addr = perf_virt_to_phys(data->addr);
+ 
++#ifdef CONFIG_CGROUP_PERF
++	if (sample_type & PERF_SAMPLE_CGROUP) {
++		struct cgroup *cgrp;
++
++		/* protected by RCU */
++		cgrp = task_css_check(current, perf_event_cgrp_id, 1)->cgroup;
++		data->cgroup = cgroup_id(cgrp);
++	}
++#endif
++
+ 	if (sample_type & PERF_SAMPLE_AUX) {
+ 		u64 size;
+ 
+@@ -11264,6 +11280,12 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
+ 
+ 	if (attr->sample_type & PERF_SAMPLE_REGS_INTR)
+ 		ret = perf_reg_validate(attr->sample_regs_intr);
++
++#ifndef CONFIG_CGROUP_PERF
++	if (attr->sample_type & PERF_SAMPLE_CGROUP)
++		return -EINVAL;
++#endif
++
+ out:
+ 	return ret;
+ 
 -- 
-tejun
+2.21.1
+
