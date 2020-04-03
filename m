@@ -2,99 +2,102 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3DBC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7264EC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BD5207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E44E206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404423AbgDCQ1d (ORCPT
+        id S2404448AbgDCQ3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:27:33 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:57094 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404022AbgDCQ1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:27:33 -0400
-Received: from p5b127fb0.dip0.t-ipconnect.de ([91.18.127.176] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jKPAF-00065N-VY; Fri, 03 Apr 2020 18:27:27 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: Add the camera interface description of the PX30
-Date:   Fri, 03 Apr 2020 18:27:27 +0200
-Message-ID: <4068915.k80quj1ed4@phil>
-In-Reply-To: <20200403142122.297283-4-maxime.chevallier@bootlin.com>
-References: <20200403142122.297283-1-maxime.chevallier@bootlin.com> <20200403142122.297283-4-maxime.chevallier@bootlin.com>
+        Fri, 3 Apr 2020 12:29:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62140 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404064AbgDCQ3O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:29:14 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033GEL7i097251;
+        Fri, 3 Apr 2020 12:29:04 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 305emg584g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 12:29:04 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 033GT1FK008840;
+        Fri, 3 Apr 2020 16:29:04 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04dal.us.ibm.com with ESMTP id 301x77exb7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 16:29:04 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033GT32K53346572
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 16:29:03 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3F801AE060;
+        Fri,  3 Apr 2020 16:29:03 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53436AE066;
+        Fri,  3 Apr 2020 16:29:02 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.91.129])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 16:29:02 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        eajames@linux.ibm.com
+Subject: [PATCH v8 0/5] soc: aspeed: Add XDMA engine driver
+Date:   Fri,  3 Apr 2020 11:28:56 -0500
+Message-Id: <20200403162901.21106-1-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_11:2020-04-03,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=1
+ mlxlogscore=643 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ phishscore=0 malwarescore=0 bulkscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 3. April 2020, 16:21:22 CEST schrieb Maxime Chevallier:
-> The PX30 has a camera interface, supporting CSI2, BT656 and Parallel
-> modes. Add a DT description for this interface.
-> 
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> ---
->  arch/arm64/boot/dts/rockchip/px30.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-> index 3e1f51a66daf..38ed35bc9b7a 100644
-> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-> @@ -1058,6 +1058,18 @@ dsi_in_vopl: endpoint@1 {
->  		};
->  	};
->  
-> +	cif: cif@ff490000 {
+This series adds a driver to control the Aspeed XDMA engine embedded in the
+AST2500 and AST2600. The XDMA engine performs automatic DMA operations
+over PCI-E between the Aspeed SOC (acting as a BMC) and a host processor.
 
-nit: please sort by register address, so @ff490000 is definitly
-somewhere after that ff460000 of the vopb ;-)
+Changes since v7:
+ - This is really just v7, but now the series is properly based on v6, not v5
+   like v7 was... 
 
-> +		compatible = "rockchip,px30-cif";
-> +		reg = <0x0 0xff490000 0x0 0x200>;
-> +		interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru ACLK_CIF>, <&cru HCLK_CIF>, <&cru PCLK_CIF>, <&cru SCLK_CIF_OUT>;
-> +		clock-names = "aclk_cif", "hclk_cif", "pclk_cif", "cif_out";
-> +		resets = <&cru SRST_CIF_A>, <&cru SRST_CIF_H>, <&cru SRST_CIF_PCLKIN>;
-> +		reset-names = "rst_cif_a", "rst_cif_h", "rst_cif_pclkin";
-> +		power-domains = <&power PX30_PD_VI>;
+Eddie James (5):
+  dt-bindings: soc: Add Aspeed XDMA Engine
+  soc: aspeed: Add XDMA Engine Driver
+  soc: aspeed: xdma: Add user interface
+  soc: aspeed: xdma: Add reset ioctl
+  ARM: dts: Aspeed: AST2600: Add XDMA PCI-E root control reset
 
-nit: while doing the above, ideally just move the power-domains above resets
-everthing else is sorted nicely.
+ .../devicetree/bindings/soc/aspeed/xdma.txt   |   44 +
+ MAINTAINERS                                   |    8 +
+ arch/arm/boot/dts/aspeed-g6.dtsi              |    3 +-
+ drivers/soc/aspeed/Kconfig                    |    8 +
+ drivers/soc/aspeed/Makefile                   |    1 +
+ drivers/soc/aspeed/aspeed-xdma.c              | 1070 +++++++++++++++++
+ include/uapi/linux/aspeed-xdma.h              |   42 +
+ 7 files changed, 1175 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+ create mode 100644 drivers/soc/aspeed/aspeed-xdma.c
+ create mode 100644 include/uapi/linux/aspeed-xdma.h
 
-
-Thanks
-Heiko
-
-> +		status = "disabled";
-> +	};
-> +
->  	vopb: vop@ff460000 {
->  		compatible = "rockchip,px30-vop-big";
->  		reg = <0x0 0xff460000 0x0 0xefc>;
-> 
-
-
-
+-- 
+2.24.0
 
