@@ -2,117 +2,158 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549BEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E356C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEA120757
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A96620787
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:03:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="doolofrt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390689AbgDCKBb (ORCPT
+        id S2390600AbgDCKDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:01:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47847 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgDCKBa (ORCPT
+        Fri, 3 Apr 2020 06:03:18 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:59130 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgDCKDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:01:30 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jKJ8g-00027G-MO; Fri, 03 Apr 2020 10:01:26 +0000
-Subject: Re: [PATCH][V2][next] rtc: ds1307: check for failed memory allocation
- on wdt
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linux-rtc@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200402135201.548313-1-colin.king@canonical.com>
- <c6fe9db8-3e27-b6fc-fff7-131cecad3f88@roeck-us.net>
- <20200402145312.GN3683@piout.net> <20200403084504.GZ2001@kadam>
- <20200403092245.GR3683@piout.net>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <5509d4e5-a6eb-c3ff-e89b-a4470ec3920a@canonical.com>
-Date:   Fri, 3 Apr 2020 11:01:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 3 Apr 2020 06:03:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yLhCR68Xx5hXytQdHGQlISjAF/TJxI6l40ZChrHYRsU=; b=doolofrtnnwkKzrDYH1z3uTz+
+        Ga0SYykJLMFHS/skroRuv5Zpte0rMgHTC22elbzbJJkid/eQs9ERNRlQkP/Wj8QnOgEalVGFKMHYQ
+        eOtTWbNewf52qneI28UDohL2SMl2Ypnfv+U56rxIo+n3dKpT9Gw0rB4VJOLRjnl+dUr2EAqyGFi3K
+        DqcDI9N8CsDBZ64l9527i11cqv9kX3rDys+AK9QcDbwsirH7c0YJc2NuY7Knc4D6lMxEkAapq9Lh5
+        JVJbgfHr4pFfxp5QtT4eXLJwY4ImacIlHVA1EHipja65a8hmeNELjKTyp1UKzpfZH7JCcFFHu3/BB
+        PCWbI7QJA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45070)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jKJAA-0008Rg-To; Fri, 03 Apr 2020 11:03:03 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jKJA9-0002Zz-E3; Fri, 03 Apr 2020 11:02:57 +0100
+Date:   Fri, 3 Apr 2020 11:02:57 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
+        daniel@ffwll.ch, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
+ user_write_access_begin/end
+Message-ID: <20200403100257.GB25745@shell.armlinux.org.uk>
+References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+ <20200402162942.GG23230@ZenIV.linux.org.uk>
+ <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
+ <20200402175032.GH23230@ZenIV.linux.org.uk>
+ <202004021132.813F8E88@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20200403092245.GR3683@piout.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202004021132.813F8E88@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2020 10:22, Alexandre Belloni wrote:
-> On 03/04/2020 11:45:04+0300, Dan Carpenter wrote:
->> On Thu, Apr 02, 2020 at 04:53:12PM +0200, Alexandre Belloni wrote:
->>>
->>> As stated, I also prefer keeping the watchdog optional and ignore the
->>> error.
->>
->> Hopefully you aren't running out of memory on start up.  In current
->> kernels small memory allocations like this never fail so it doesn't
->> really affect runtime.  It only silences the NULL dereference static
->> checker warning.
->>
-> 
-> Yes, so the
-> 
-> if (!wdt)
->  return;
-> 
-> would be enough instead of introducing unnecessary error handling.
-> 
-OK, I'll send a V3 later today.
+On Thu, Apr 02, 2020 at 11:35:57AM -0700, Kees Cook wrote:
+> On Thu, Apr 02, 2020 at 06:50:32PM +0100, Al Viro wrote:
+> > On Thu, Apr 02, 2020 at 07:03:28PM +0200, Christophe Leroy wrote:
+> > 
+> > > user_access_begin() grants both read and write.
+> > > 
+> > > This patch adds user_read_access_begin() and user_write_access_begin() but
+> > > it doesn't remove user_access_begin()
+> > 
+> > Ouch...  So the most generic name is for the rarest case?
+> >  
+> > > > What should we do about that?  Do we prohibit such blocks outside
+> > > > of arch?
+> > > > 
+> > > > What should we do about arm and s390?  There we want a cookie passed
+> > > > from beginning of block to its end; should that be a return value?
+> > > 
+> > > That was the way I implemented it in January, see
+> > > https://patchwork.ozlabs.org/patch/1227926/
+> > > 
+> > > There was some discussion around that and most noticeable was:
+> > > 
+> > > H. Peter (hpa) said about it: "I have *deep* concern with carrying state in
+> > > a "key" variable: it's a direct attack vector for a crowbar attack,
+> > > especially since it is by definition live inside a user access region."
+> > 
+> > > This patch minimises the change by just adding user_read_access_begin() and
+> > > user_write_access_begin() keeping the same parameters as the existing
+> > > user_access_begin().
+> > 
+> > Umm...  What about the arm situation?  The same concerns would apply there,
+> > wouldn't they?  Currently we have
+> > static __always_inline unsigned int uaccess_save_and_enable(void)
+> > {
+> > #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+> >         unsigned int old_domain = get_domain();
+> > 
+> >         /* Set the current domain access to permit user accesses */
+> >         set_domain((old_domain & ~domain_mask(DOMAIN_USER)) |
+> >                    domain_val(DOMAIN_USER, DOMAIN_CLIENT));
+> > 
+> >         return old_domain;
+> > #else
+> >         return 0;
+> > #endif
+> > }
+> > and
+> > static __always_inline void uaccess_restore(unsigned int flags)
+> > {
+> > #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+> >         /* Restore the user access mask */
+> >         set_domain(flags);
+> > #endif
+> > }
+> > 
+> > How much do we need nesting on those, anyway?  rmk?
+
+It's that way because it's easy, logical, and actually *more* efficient
+to do it that way, rather than read-modify-write the domain register
+each time we want to change it.
+
+> Yup, I think it's a weakness of the ARM implementation and I'd like to
+> not extend it further. AFAIK we should never nest, but I would not be
+> surprised at all if we did.
+
+There is one known nesting, which is __clear_user() when used with
+the (IMHO horrid and I don't care about) UACCESS_WITH_MEMCPY feature.
+That's not intentional however.
+
+When I introduced this on ARM, the placement I adopted was to locate
+it _as close as sanely possible_ to the userspace access so we
+minimised the kernel accesses, so we minimise the number of accesses
+that could go stray because of the domain issue - we ideally only
+want the access done by the accessor itself to be affected, which
+we achieve for most accesses.
+
+Thinking laterally, maybe we should get rid of the whole KERNEL_DS
+stuff entirely, and come up with an alternative way of handling the
+kernel-wants-to-access-kernelspace-via-user-accessors problem.
+Such as, copying some data back to userspace memory?
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
