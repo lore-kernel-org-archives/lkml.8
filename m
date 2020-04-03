@@ -2,140 +2,108 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F2FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E29C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8062073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:05:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKJvx6WR"
+	by mail.kernel.org (Postfix) with ESMTP id A805320857
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390688AbgDCLFk (ORCPT
+        id S2390627AbgDCLIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:05:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40727 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgDCLFk (ORCPT
+        Fri, 3 Apr 2020 07:08:45 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:51808 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727911AbgDCLIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:05:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t24so3351151pgj.7;
-        Fri, 03 Apr 2020 04:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=x9Gh9Ne5hehOj6WK8fXAryOv2SRTsZsEIVDa4lvYavs=;
-        b=QKJvx6WRjaROA10YzVatzEwmmznxq1ITVAMtYv++ze5uDv6j6xOlVP/VNt6ue3kGoY
-         RBLVfU2HTNBI9fO4q81SJ38mUb+pfV1StfjzDocjBaFe4AkswiIL76gv/peKsu2JzD0W
-         0+EINrDhU3d/1Ow/OKrXq1kcha/YwfD+6mP0Bi4AiDj2RaC1OlBu3S6+62+lfuXER/0v
-         MDVzsst4lRcxBrHTk08NVs+VpRMQcSD6TB5ad+yejWecUIOk1HJ8Z77es0Cw0/8+mgRy
-         QndZDBm44syZEy6UnKyMzdFV34SZgn0K7pRuc1ueFiMSvVy0bgyCOcwNPZBctt+rJEDr
-         VUwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=x9Gh9Ne5hehOj6WK8fXAryOv2SRTsZsEIVDa4lvYavs=;
-        b=uFhUJHH2sQgi/IoqR6tvXR9BErVhKtknIzRF2vMc0htVwthSTfgdla9WGUBr6mHxGU
-         rPb4RlJfxPujkvHfdu4W7Xq/EFYch199WaLfAWV1iJMs21VPenLIiF5tgJGWDZ0GTx5J
-         lsdA1ehOWYsqpToZSd0QWm63tgT08m7FG1yIOqR1Se0VPtJ141qSsqmXsedsbm0BRXBL
-         3lH9GHdCBN6vIaWm9DWogLv9lpCo30axWqWHQ4U/cgJqv5hHyB/STgDbXqVzpXctKCC3
-         Q4AjXw0YsNC/LC42Ski4sNouyVC/J7Xf20E2ZKjxAPXs5z7LKta4/+7PvAgXobNJI+0s
-         81/Q==
-X-Gm-Message-State: AGi0PuaITMrO6G+JhOPBrNGki9+FJ5VjUbxxBM9IaqtU4+XVkOZd4Z+w
-        2aBnsztUInFtJGnE6bZ3acM=
-X-Google-Smtp-Source: APiQypITP86igCzfZB/PGqJtrjO/2PRknSxfizUBsnugT9boahO/Sg8qOx8MOCUdCQzhs+hzbU239A==
-X-Received: by 2002:a62:19d8:: with SMTP id 207mr8084940pfz.278.1585911937914;
-        Fri, 03 Apr 2020 04:05:37 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id w15sm5607378pfj.28.2020.04.03.04.05.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 04:05:36 -0700 (PDT)
-Date:   Fri, 03 Apr 2020 21:05:26 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 1/4] powerpc/64s: implement probe_kernel_read/write
- without touching AMR
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
+        Fri, 3 Apr 2020 07:08:45 -0400
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
+        by gardel.0pointer.net (Postfix) with ESMTP id 5B38AE80689;
+        Fri,  3 Apr 2020 13:08:43 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 5120A1614E3; Fri,  3 Apr 2020 13:08:42 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 13:08:42 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20200403093529.43587-1-npiggin@gmail.com>
-        <558b6131-60b4-98b7-dc40-25d8dacea05a@c-s.fr>
-In-Reply-To: <558b6131-60b4-98b7-dc40-25d8dacea05a@c-s.fr>
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+Message-ID: <20200403110842.GA34663@gardel-login>
+References: <2590640.1585757211@warthog.procyon.org.uk>
+ <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
+ <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
+ <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
+ <20200402143623.GB31529@gardel-login>
+ <CAJfpegtRi9epdxAeoVbm+7UxkZfzC6XmD4K_5dg=RKADxy_TVA@mail.gmail.com>
+ <20200402152831.GA31612@gardel-login>
+ <CAJfpegum_PsCfnar8+V2f_VO3k8CJN1LOFJV5OkHRDbQKR=EHg@mail.gmail.com>
+ <20200402155020.GA31715@gardel-login>
+ <CAJfpeguM__+S6DiD4MWFv5GCf_EUWvGFT0mzuUCCrfQwggqtDQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1585911072.njtr9qmios.astroid@bobo.none>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJfpeguM__+S6DiD4MWFv5GCf_EUWvGFT0mzuUCCrfQwggqtDQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on April 3, 2020 8:31 pm:
->=20
->=20
-> Le 03/04/2020 =C3=A0 11:35, Nicholas Piggin a =C3=A9crit=C2=A0:
->> There is no need to allow user accesses when probing kernel addresses.
->=20
-> I just discovered the following commit=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D75a1a607bb7e6d918be3aca11ec2214a275392f4
->=20
-> This commit adds probe_kernel_read_strict() and probe_kernel_write_strict=
-().
->=20
-> When reading the commit log, I understand that probe_kernel_read() may=20
-> be used to access some user memory. Which will not work anymore with=20
-> your patch.
+On Do, 02.04.20 19:20, Miklos Szeredi (miklos@szeredi.hu) wrote:
 
-Hmm, I looked at _strict but obviously not hard enough. Good catch.
+> On Thu, Apr 2, 2020 at 5:50 PM Lennart Poettering <mzxreary@0pointer.de> wrote:
+> >
+> > On Do, 02.04.20 17:35, Miklos Szeredi (miklos@szeredi.hu) wrote:
+> >
+> > > > systemd cares about all mount points in PID1's mount namespace.
+> > > >
+> > > > The fact that mount tables can grow large is why we want something
+> > > > better than constantly reparsing the whole /proc/self/mountinfo. But
+> > > > filtering subsets of that is something we don't really care about.
+> > >
+> > > I can accept that, but you haven't given a reason why that's so.
+> > >
+> > > What does it do with the fact that an automount point was crossed, for
+> > > example?  How does that affect the operation of systemd?
+> >
+> > We don't care how a mount point came to be. If it's autofs or
+> > something else, we don't care. We don't access these mount points
+> > ourselves ever, we just watch their existance.
+> >
+> > I mean, it's not just about startup it's also about shutdown. At
+> > shutdown we need to unmount everything from the leaves towards the
+> > root so that all file systems are in a clean state.
+>
+> Unfortunately that's not guaranteed by umounting all filesystems from
+> the init namespace.  A filesystem is shut down when all references to
+> it are gone.  Perhaps you instead want to lazy unmount root (yeah,
+> that may not actually be allowed, but anyway, lazy unmounting the top
+> level ones should do) and watch for super block shutdown events
+> instead.
+>
+> Does that make any sense?
 
-I don't think probe_kernel_read() should ever access user memory,
-the comment certainly says it doesn't, but that patch sort of implies
-that they do.
+When all mounts in the init mount namespace are unmounted and all
+remaining processes killed we switch root back to the initrd, so that
+even the root fs can be unmounted, and then we disassemble any backing
+complex storage if there is, i.e. lvm, luks, raid, …
 
-I think it's wrong. The non-_strict maybe could return userspace data to=20
-you if you did pass a user address? I don't see why that shouldn't just=20
-be disallowed always though.
+Because the initrd is its own little root fs independent of the actual
+root we can fully disassemble everything this way, as we do not retain
+any references to it anymore in any way.
 
-And if the _strict version is required to be safe, then it seems like a
-bug or security issue to just allow everyone that doesn't explicitly
-override it to use the default implementation.
+Lennart
 
-Also, the way the weak linkage is done in that patch, means parisc and
-um archs that were previously overriding probe_kernel_read() now get
-the default probe_kernel_read_strict(), which would be wrong for them.
-
->=20
-> Isn't it probe_kernel_read_strict() and probe_kernel_write_strict() that=20
-> you want to add ?
->=20
->>=20
->> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
->> ---
->> v2:
->> - Enable for all powerpc (suggested by Christophe)
->> - Fold helper function together (Christophe)
->> - Rename uaccess.c to maccess.c to match kernel/maccess.c.
->>=20
->>   arch/powerpc/include/asm/uaccess.h | 25 +++++++++++++++-------
->>   arch/powerpc/lib/Makefile          |  2 +-
->>   arch/powerpc/lib/maccess.c         | 34 ++++++++++++++++++++++++++++++
->=20
-> x86 does it in mm/maccess.c
-
-Yeah I'll fix that up, thanks.
-
-Thanks,
-Nick
-=
+--
+Lennart Poettering, Berlin
