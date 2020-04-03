@@ -2,103 +2,107 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E482AC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6562DC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF7C20678
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:15:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QWtXPAyi"
+	by mail.kernel.org (Postfix) with ESMTP id 3B2842077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585926940;
+	bh=RnQjE0a9EtpoS4LuXSasTHxLO5ZnjWgSgaf/Z5n3B34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2py1XALFBDUaup0PMAARwXHgvwEFMsQN3BOUZ3ajn2fNrr5ptjNHTnoN7H6EknZ+R
+	 mIn/XZwQ9l7JfVv2fTqXvVjNBususYfk0YjAJwaZYePeY9BavlhI8tNQmtIte7D5Fk
+	 Le3I2eGrai0XXRlF6k198IRi89jLlXRp/q17Q7U8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404181AbgDCPPT (ORCPT
+        id S2404188AbgDCPPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:15:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41309 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403991AbgDCPPT (ORCPT
+        Fri, 3 Apr 2020 11:15:39 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40000 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728203AbgDCPPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:15:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585926918;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SRb6CsmI17uMNzLCPreryxqmrirK+0qj0zIO/GeumII=;
-        b=QWtXPAyiSMWjzvCiw3dgOe2gmdlR09/0AhGafeMNmrpQyt7h+R04S5gq7fzbPGtUkP6bkE
-        IxxSsHJOVehKTMb8Bm+Sic88pY6piGCwNOr4sZU9kk3rlq864fnXW7lfxS8QGePevMUD7m
-        gKp5q2K7pHYDWLE2FeVP/DgbUmyQGMk=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-_Ii71nyPO9a8ZFhIX8T6ew-1; Fri, 03 Apr 2020 11:15:16 -0400
-X-MC-Unique: _Ii71nyPO9a8ZFhIX8T6ew-1
-Received: by mail-qv1-f72.google.com with SMTP id d2so6013977qve.11
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:15:16 -0700 (PDT)
+        Fri, 3 Apr 2020 11:15:39 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a81so8089510wmf.5;
+        Fri, 03 Apr 2020 08:15:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SRb6CsmI17uMNzLCPreryxqmrirK+0qj0zIO/GeumII=;
-        b=h6YGxXVGwv3hxjP9QZoA4eagArzWfjVxOnvFM7SfOt0QuQ+zSzn8DPVdeDYoGML+he
-         EQGiOQw9qeBd2LV312oaHKwYNDIGvRf7Pg+/9VdMvwx3Q3WWEMhVOq4/5keify8KR6Ks
-         q1F7cGbejzqElW6EyF+tRSOlRr2zbyUsKeru2+j4ySoh16XGpZhzzqY7DXInwPAdqLbD
-         3gKEogYLr4gX7fyepO0z3ULBIvgpHF8TrGPLEayk6BXWuhONh69bUyJ/Hv3liOoj11yy
-         QYexDrmHorlhRkoePi8yksXLLGG5UpqJFIqDVP1RhIjaCTife+HxybVarPmnen2u+vok
-         GZFg==
-X-Gm-Message-State: AGi0PubUiHAasZG9JskMMAbJCxPNFeFOZIJvGq7e3+N6xPs6uCjPzaJs
-        UQ6uXKG6z3WNDG6PWDa7no9DE4i7BssoTDTiQc/0GANWl3o7tTmN59p5xD8PKU7jAwoUKRqTz/r
-        xdkLbUlD0S4Fd9MBaBErJ3EQnWLrsSpEPIF4n/0c8
-X-Received: by 2002:a37:4852:: with SMTP id v79mr8867485qka.459.1585926916384;
-        Fri, 03 Apr 2020 08:15:16 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJUV2d7K2It0zrkL8C79HBnt1r3tN9WNQmjeddv/tPrQG2xyyWE8oxqPtbZqLWgqoyz+1oPB7uh1dY7LeRDiKI=
-X-Received: by 2002:a37:4852:: with SMTP id v79mr8867461qka.459.1585926916112;
- Fri, 03 Apr 2020 08:15:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dYdrlxthVlPe+P4Bo/WAF0UgbtJBHrL0k9DfDVII2Po=;
+        b=i5V/i5DN0+JEC32sOErElWNBGY6eza703tmknsLlgYO7+FUzTYTqdMExl9mMc8xy/P
+         8YeZfkWs091iG+mSgbyVEyQ5RSqqmFYEG5CsG+QB9LTVAMoSV+GMH0OjL0ETZzBVse25
+         UNSCC6aQmYHhOK1HXg8JMXKDHESWWz/rzKfArNjyuZi855EW7AiB9BC3fcXrlPSslWPD
+         aOww9F89L93+qb7pq5kNl/Jb+Jk0vyM07Bb+GL+DXOtgUX5QUJgdlYLSDV4uTf1xHgNW
+         JunooyFsDT28mr+1ipQfRH3J48NwU1Aa+GewuLjFrnve5zFMQZOwzNXD9jQ9cwGxXavu
+         IE4A==
+X-Gm-Message-State: AGi0PuYD/qfTK1nKs+6qMEQGnnIE6QfS/qoA0qzlufgmt+2uWmJ4sXzF
+        Ab4yiEyflHlCYuCFihchYKQ=
+X-Google-Smtp-Source: APiQypKaA3KcZEPlcMUrZKNSftTVMLDba3dS2MeXCo8avgaqUoIp3BTJpvRNOS+1foU8DFf0+2/hgg==
+X-Received: by 2002:a05:600c:2188:: with SMTP id e8mr9206977wme.121.1585926936992;
+        Fri, 03 Apr 2020 08:15:36 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id w4sm11668874wmc.18.2020.04.03.08.15.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 08:15:36 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 17:15:34 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@Netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
+Message-ID: <20200403151534.GG22681@dhcp22.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name>
+ <87v9miydai.fsf@notabene.neil.brown.name>
+ <87sghmyd8v.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <20200112235009.4074405-1-lains@archlinux.org> <nycvar.YFH.7.76.2004031531190.19713@cbobk.fhfr.pm>
-In-Reply-To: <nycvar.YFH.7.76.2004031531190.19713@cbobk.fhfr.pm>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 3 Apr 2020 17:15:04 +0200
-Message-ID: <CAO-hwJJwBUqSMj_E71YBYEfqY7hCsvgqexFvPyU5dnyCyLxtcg@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: logitech: drop outdated references to unifying receivers
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sghmyd8v.fsf@notabene.neil.brown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 3:31 PM Jiri Kosina <jikos@kernel.org> wrote:
->
-> On Sun, 12 Jan 2020, Filipe La=C3=ADns wrote:
->
-> > The hid-logitech-{dj,hidpp} were originally developed for unifying
-> > receivers but since then they have evolved and now support other types
-> > of receivers and devices. This patch adjusts the original descriptions
-> > with this in mind.
->
-> Benjamin, I guess you are fine with this change ... ?
+On Thu 02-04-20 10:53:20, Neil Brown wrote:
+> 
+> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
+> loop block driver, where a daemon needs to write to one bdi in
+> order to free up writes queued to another bdi.
+> 
+> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
+> pages, so that it can still dirty pages after other processses have been
+> throttled.
+> 
+> This approach was designed when all threads were blocked equally,
+> independently on which device they were writing to, or how fast it was.
+> Since that time the writeback algorithm has changed substantially with
+> different threads getting different allowances based on non-trivial
+> heuristics.  This means the simple "add 25%" heuristic is no longer
+> reliable.
+> 
+> This patch changes the heuristic to ignore the global limits and
+> consider only the limit relevant to the bdi being written to.  This
+> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
+> should not introduce surprises.  This has the desired result of
+> protecting the task from the consequences of large amounts of dirty data
+> queued for other devices.
 
-Yes, work for me.
-
-[Sorry for being unresponsive for a while, got a bunch of things on my
-plate right now :( ]
-
-Cheers,
-Benjamin
-
->
-> Thanks,
->
-> --
-> Jiri Kosina
-> SUSE Labs
->
-
+While I understand that you want to have per bdi throttling for those
+"special" files I am still missing how this is going to provide the
+additional room that the additnal 25% gave them previously. I might
+misremember or things have changed (what you mention as non-trivial
+heuristics) but PF_LESS_THROTTLE really needed that room to guarantee a
+forward progress. Care to expan some more on how this is handled now?
+Maybe we do not need it anymore but calling that out explicitly would be
+really helpful.
+-- 
+Michal Hocko
+SUSE Labs
