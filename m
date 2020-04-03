@@ -2,217 +2,110 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E9CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA0CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097E4206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C50206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L4HJOJg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404492AbgDCQlH (ORCPT
+        id S2404571AbgDCQlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:41:07 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:60911 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728381AbgDCQlG (ORCPT
+        Fri, 3 Apr 2020 12:41:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48650 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728381AbgDCQlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:41:06 -0400
-Received: (qmail 18471 invoked by uid 500); 3 Apr 2020 12:41:05 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 3 Apr 2020 12:41:05 -0400
-Date:   Fri, 3 Apr 2020 12:41:05 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
-In-Reply-To: <2274735.ifPVKiii8o@kreacher>
-Message-ID: <Pine.LNX.4.44L0.2004031135130.7035-100000@netrider.rowland.org>
+        Fri, 3 Apr 2020 12:41:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rCLFvCf+m9AQcUMsEViDfMMZ61HancBMIQ+B0f38hwE=; b=L4HJOJg8qdSciDfEaRb6a6iGmC
+        KwZQ7usQIKmDiS0kZarn+KftK1fRP7p/eZx4gmvp6gC1HSEUdKg5MxESOGeYmvwp3EqElS0HaA3hf
+        uhos+dW7ZXvvsb6RBembrNuBbFRGJVbhCLIhT5xQh693i9h2VAJkItU0zZ0M7o/HX5Fltdj9+GjLi
+        57bChgE3OpcyL3Ka/SfA2c5434MO12GZ5psKsoaKVD3EJMKFMJbFjAUPGBLOF8HxP7daIcg5KNC6B
+        QNZc6csT5nHuwWlaQpb3SXx/QITalXrRIqap1XND4ziU0sR+L/hd9sqVXU6Zx8K+lhaYqhlJgkel5
+        Eo1gjG8Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKPNM-0006st-6o; Fri, 03 Apr 2020 16:41:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 90E603010BC;
+        Fri,  3 Apr 2020 18:40:58 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 80B3E2B124BEE; Fri,  3 Apr 2020 18:40:58 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 18:40:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jannh@google.com, keescook@chromium.org
+Subject: Re: [patch 1/2] x86,module: Detect VMX modules and disable
+ Split-Lock-Detect
+Message-ID: <20200403164058.GX20730@hirez.programming.kicks-ass.net>
+References: <20200402123258.895628824@linutronix.de>
+ <20200402124205.242674296@linutronix.de>
+ <bc9a0c9a-7bd0-c85d-4795-ae0b4faa5e84@prevas.dk>
+ <20200403143459.GA30424@linux-8ccs>
+ <20200403152158.GR20730@hirez.programming.kicks-ass.net>
+ <20200403160156.GA2701@linux.intel.com>
+ <20200403161205.GT20730@hirez.programming.kicks-ass.net>
+ <20200403162555.GB2701@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403162555.GB2701@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020, Rafael J. Wysocki wrote:
-
-> I'll address the other points in your message separately.
+On Fri, Apr 03, 2020 at 09:25:55AM -0700, Sean Christopherson wrote:
+> On Fri, Apr 03, 2020 at 06:12:05PM +0200, Peter Zijlstra wrote:
+> > On Fri, Apr 03, 2020 at 09:01:56AM -0700, Sean Christopherson wrote:
+> > > On Fri, Apr 03, 2020 at 05:21:58PM +0200, Peter Zijlstra wrote:
+> > > > On Fri, Apr 03, 2020 at 04:35:00PM +0200, Jessica Yu wrote:
+> > 
+> > > > > I wonder if it would make sense then to limit the text scans to just
+> > > > > out-of-tree modules (i.e., missing the intree modinfo flag)?
+> > > > 
+> > > > It would; didn't know there was one.
+> > > 
+> > > Rather than scanning modules at all, what about hooking native_write_cr4()
+> > > to kill SLD if CR4.VMXE is toggled on and the caller didn't increment a
+> > > "sld safe" counter?
+> > 
+> > And then you're hoping that the module uses that and not:
+> > 
+> >   asm volatile ("mov %0, cr4" :: "r" (val));
+> > 
+> > I think I feel safer with the scanning to be fair. Also with the intree
+> > hint on, we can extend the scanning for out-of-tree modules for more
+> > dodgy crap we really don't want modules to do, like for example the
+> > above.
 > 
-> The rules for SMART_SUSPEND are as follows:
+> Ya, that's the big uknown.  But wouldn't they'd already be broken in the
+> sense that they'd corrupt the CR4 shadow?  E.g. setting VMXE without
+> updating cpu_tlbstate.cr4 would result in future in-kernel writes to CR4
+> attempting to clear CR4.VMXE post-VMXON, which would #GP.
 
-These rules are a sort of high-level overview.  They don't (for the
-most part) say exactly what will happen, in terms of which callbacks
-will be issued and under what circumstances.  I have tried to provide 
-such a description inline below.
-
-> (a) If SMART_SUSPEND is set and the device is runtime-suspended during system
->     suspend, it is not expected to be resumed by the core or the middle layer
->     (subsystem) code unless the latter has a specific reason to do that (e.g.
->     it knows that the device needs to be reconfigured which cannot be done
->     without resuming it).
-> 
->     The device can still be resumed when it is needed to suspend a dependent
->     device, but that cannot happen before the "late suspend" phase.
-
-Don't you mean it cannot happen during or after the "late suspend"  
-phase?  (More precisely, it cannot happen after the time when the core
-would issue the device's ->suspend_late callback, but it can happen
-between that time and the time when the "late suspend" phase began --
-for example, from within the dependent device's ->suspend_late
-callback.)  After all, __device_suspend_late() calls
-__pm_runtime_disable(), following which the device _cannot_ be runtime
-resumed.
-
-Putting this in operational terms, it seems to say that if
-SMART_SUSPEND is set and the device is runtime-suspended at the times
-when the core would normally issue the driver's ->suspend_late or
-->suspend_noirq callback, then the core will skip the callback (with a
-similar requirement for subsystems).  Correct?
-
-> (b) Drivers that set SMART_SUSPEND are allowed to reuse their PM-runtime
->     callbacks for system-wide suspend and resume.
-> 
->     That is, they can point either the ->suspend_late or the ->suspend_noirq
->     callback pointer to the same function as ->runtime_suspend and they can
->     point either the ->resume_noirq or ->the resume_early callback to the'
->     same function as ->runtime_resume.
-
-Well, in theory any driver or subsystem can do this whenever it wants
-to, regardless of any flag settings.  It's then up to the driver or
-subsystem to make sure the callback "does the right thing".
-
-What I'm concerned about now is: What guarantees can the core give to 
-the driver and subsystem, so that they will know what is necessary in 
-order to "do the right thing"?
-
-> (c) Drivers that set SMART_SUSPEND are alwo allowed to provide special
->     simplified callbacks for the "freeze" and "thaw" transitions during
->     hibernation (and restore) and (if they do so) special callbacks for the
->     "restore" phase.
-
-What do you mean by "simplified"?
-
-As I see it, the suspend-side callbacks are generally responsible for 
-four things:
-
-	1. Quiesce the device (finish ongoing I/O and do not allow any
-	   more to start).
-
-	2. Save the current device state.
-
-	3. Install the appropriate wakeup settings.
-
-	4. Put the device into low-power mode.
-
-(Not explicitly listed: Perform a runtime-resume if needed in order to
-carry out these four items.)
-
-During a SUSPEND transition, we usually expect all four to happen.  
-During a FREEZE transition, we only require 1.  During a POWEROFF
-transition we require 1 and 3, and possibly 4 (depending on how the
-platform handles poweroff).
-
-Similar requirements apply to the resume-side callbacks.  (But note 
-that RESTORE is not the inverse of POWEROFF; it is more like an inverse 
-of FREEZE with the added complication that the device's initial state 
-is unknown.)
-
-What changes to this analysis would SMART_SUSPEND allow?  None if the 
-device is runtime-active.  But if the device is runtime-suspended and 
-the wakeup settings don't need to be changed, then presumably none of 
-the four items are necessary.
-
-Is this what you mean?
-
-> [OK, I realize that (b) and (c) are not documented, see the notes below.]
-> 
-> Because of (a), if the device with SMART_SUSPEND set is still runtime-suspended
-> during the "late" phase of suspend, the core will not invoke the driver's
-> "late" and "noirq" suspend callbacks directly (*).  Middle layer (subsystem)
-> code is expected to behave accordingly.
-
-Okay, this agrees with what I wrote above.
-
-> Because of (b), if the "late" and "noirq" driver callbacks were skipped during
-> the "freeze" transition, the core will also avoid invoking the "noirq" and
-> "early" callbacks provided by the driver during the "thaw" transition and
-> the callbacks during the "restore" transition will be executed unconditionally
-> (**).  Middle layer code is expected to behave accordingly.
-
-All right.  To summarize: If the driver's ->freeze_late callback is
-skipped then the driver's ->thaw-early will be skipped, and similarly
-for ->freeze_noirq and ->thaw_noirq.  But RESTORE callbacks are never
-skipped.  Correct?
-
-However, the most difficult transitions are SUSPEND and RESUME.  Is it
-accurate to say that if the driver's ->suspend_late callback is skipped
-then the driver's ->resume_early will be skipped, and similarly for
-->suspend_noirq and ->resume_noirq?
-
-> Notes:
-> 
-> 1. I have considered splitting SMART_SUSPEND into two or even three flags
->    so that (a), (b) and (c) are each associated with a separate flag, but
->    then I would expect the majority of users to use all of them anyway.
-> 
-> 2. LEAVE_SUSPENDED (which may be better renamed to SKIP_RESUME) is kind of
->    expected to be used along with SMART_SUSPEND unless there is a good enough
->    reason to avoid using it.  I admit that this isn't really straightforward,
->    maybe the default behavior should be to skip the resume and there should be
->    FORCE_RESUME instead of LEAVE_SUSPENDED.
-
-One question not addressed above (in fact, the original reason for 
-getting you involved in this discussion): What about the device's 
-power.runtime_status?  Shall we say that that core will call 
-pm_runtime_set_active() at some point before issuing the ->complete 
-callback unless some combination of flags is set?  And what should that 
-combination be?
-
-After all, we expect that most drivers will want their devices to be in 
-the runtime-active state at the end of a system sleep or hibernation.  
-It makes sense for the core to do the necessary housekeeping.
-
-> 3. (*) Under the assumption that either ->suspend_late or ->suspend_noirq
->    points to the same routine as ->runtime_suspend (and the other is NULL),
->    invokig that callback for a runtime-suspended device is technically invalid.
-
-Does this invalidate anything I wrote above?
-
->    In turn, under the assumption that either ->resume_early or ->resume_noirq
->    points to the same routine as ->runtime_resume (and the other is NULL), it is
->    valid to invoke that callback if the late/noirq suspend was skipped.
-
-In other words, it's okay for the core either to issue or skip those 
-callbacks.  Presumably the decision will be made based on some flag 
-setting?
-
-> 4. (**) If the "freeze" and "thaw" callbacks are simplified, they cannot be
->    run back-to-back with ->runtime_resume and ->runtime_suspend, respectively.
->    Thus if "freeze" is skippend, "thaw" must be skipped too.  However,
->    "restore" needs to be prepared to be invoked after "freeze" or
->    ->runtime_suspend (and the state of the device may not match the
->    callback that ran previously), so it must be special.
-> 
-> 5. I agree that skipping the driver level of callbacks depending on what is
->    provided by the middle layer is inconsistent, but I wanted to take the
->    users of pm_runtime_force_suspend/resume() into account by letting those
->    things run.
-> 
->    It would be more consistent to expect middle layer code (bus types, PM
->    domains) to provide either all of the noirq/early/late callbacks, or none
->    of them and make SMART_SUSPEND and pm_runtime_force_suspend/resume()
->    mutually exclusive.
-
-I don't have a clear idea of how pm_runtime_force_suspend/resume() gets 
-used.  Are we better off ignoring it for the time being?
-
-Alan Stern
-
+Sadly the CR4 shadow is exported, so they can actually fix that up :/
