@@ -2,85 +2,78 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE32C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CB2C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60E4206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WBITsGBn"
+	by mail.kernel.org (Postfix) with ESMTP id 95680206F6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390320AbgDCBzh (ORCPT
+        id S2390347AbgDCBz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 21:55:37 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40133 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390269AbgDCBzg (ORCPT
+        Thu, 2 Apr 2020 21:55:59 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:4026 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390268AbgDCBz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 21:55:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585878935;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6UVH/bl3Y/P5P1Dx58QAUYpAkcmQtr6lMSzOobeDRtQ=;
-        b=WBITsGBnCAhkySWNpJO0a+SM5HYVv4B9pXHbclxWr83paSQMIMn2LtAFLR2s2nKFGe9HRQ
-        6SEXpYZlwT6Trd46nsE0AWh/SA0Nj0BV1I4tU6ZhoRCUwyKRckt5d639zGX3W8UBp7lQY2
-        PtO4WMDT8c4VPgKSvNL3FPZYBwNZi6Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-443-MV1UBRw7NqyIiZlPvzOJag-1; Thu, 02 Apr 2020 21:55:31 -0400
-X-MC-Unique: MV1UBRw7NqyIiZlPvzOJag-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CE885107ACC4;
-        Fri,  3 Apr 2020 01:55:29 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-30.pek2.redhat.com [10.72.8.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E981F5C290;
-        Fri,  3 Apr 2020 01:55:21 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 09:55:16 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        paolo.valente@linaro.org, sqazi@google.com,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        groeck@chromium.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] blk-mq: In blk_mq_dispatch_rq_list() "no budget"
- is a reason to kick
-Message-ID: <20200403015516.GC6987@ming.t460p>
-References: <20200402155130.8264-1-dianders@chromium.org>
- <20200402085050.v2.1.I1f95c459e51962b8d2c83e869913b6befda2255c@changeid>
+        Thu, 2 Apr 2020 21:55:59 -0400
+X-Greylist: delayed 37571 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Apr 2020 21:55:57 EDT
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee95e86979e067-67007; Fri, 03 Apr 2020 09:55:43 +0800 (CST)
+X-RM-TRANSID: 2ee95e86979e067-67007
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85e86979cea6-12f6b;
+        Fri, 03 Apr 2020 09:55:42 +0800 (CST)
+X-RM-TRANSID: 2ee85e86979cea6-12f6b
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     clabbe@baylibre.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, narmstrong@baylibre.com
+Cc:     linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] crypto:amlogic - Delete duplicate dev_err in meson_crypto_probe()
+Date:   Fri,  3 Apr 2020 09:57:10 +0800
+Message-Id: <20200403015710.2764-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402085050.v2.1.I1f95c459e51962b8d2c83e869913b6befda2255c@changeid>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 08:51:29AM -0700, Douglas Anderson wrote:
-> In blk_mq_dispatch_rq_list(), if blk_mq_sched_needs_restart() returns
-> true and the driver returns BLK_STS_RESOURCE then we'll kick the
-> queue.  However, there's another case where we might need to kick it.
-> If we were unable to get budget we can be in much the same state as
-> when the driver returns BLK_STS_RESOURCE, so we should treat it the
-> same.
+In this place, when something goes wrong, platform_get_irq() will
+print an error message, so in order to avoid the situation of repeat
+output，we should remove dev_err here.
 
-The situation is really similar, especially the restart handler may
-not see the request which may not be added to hctx->dispatch, so
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ drivers/crypto/amlogic/amlogic-gxl-core.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
+index 9d4ead2f7..411857fad 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-core.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
+@@ -253,10 +253,8 @@ static int meson_crypto_probe(struct platform_device *pdev)
+ 	mc->irqs = devm_kcalloc(mc->dev, MAXFLOW, sizeof(int), GFP_KERNEL);
+ 	for (i = 0; i < MAXFLOW; i++) {
+ 		mc->irqs[i] = platform_get_irq(pdev, i);
+-		if (mc->irqs[i] < 0) {
+-			dev_err(mc->dev, "Cannot get IRQ for flow %d\n", i);
++		if (mc->irqs[i] < 0)
+ 			return mc->irqs[i];
+-		}
+ 
+ 		err = devm_request_irq(&pdev->dev, mc->irqs[i], meson_irq_handler, 0,
+ 				       "gxl-crypto", mc);
+-- 
+2.20.1.windows.1
 
 
-Thanks, 
-Ming
 
