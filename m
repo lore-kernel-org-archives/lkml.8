@@ -2,144 +2,93 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232D3C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20514C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3402072B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+WwfWnO"
+	by mail.kernel.org (Postfix) with ESMTP id EB9E320737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585958053;
+	bh=IZmDyvmJOLUbLBV5JuNMND47WpiNR7jak95jQCtF9UQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qOWsUIVq4U1KVA7TpJ7kqHBS6W8cnjHPAzv7IrIsfmXxfHDixzuu5JRvJqNxXynv4
+	 PRbxX0v9oKNJORwtDMq63iBG9Z3eWGBAxmtrN07IvAdtrYrjXCRWzyVABZOTZXTTec
+	 i8IV/OfxkxmwKAYIaYdBV+5Dcg1Mhw3qyU7WPcYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgDCXx3 (ORCPT
+        id S1726315AbgDCXyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 19:53:29 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34896 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgDCXx3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 19:53:29 -0400
-Received: by mail-qk1-f193.google.com with SMTP id k13so10067926qki.2;
-        Fri, 03 Apr 2020 16:53:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ybaTpFfXn+LxmLPmE6oKCLBK1aHCu6fnDl0UMen+FlQ=;
-        b=c+WwfWnOklwmjmATtt9PNjWRluiTClyYp0jcstMXvu/qdAut4CGP9x02z61LxH7M3i
-         PtPUsAPcCc704lQFMf5323rEJBO1nohLgnzhGarL0ULJuYJgvR4lQB+vwHso2W3oOI6z
-         Dfyj3zM/xpBVy7Wk/0Z82xsof4atcTG9GBwRRHimkSIm6VghfgXi8N7cxdmjmuvRq7zT
-         KBGJTnu0slPw65DkF+gngJ2UIp4c4e/4sp52KI9r7r7xuHagqEXVvKD/VrBq1zloBiSS
-         0jo099Yb7hQsxPUlXKMgZbN9crlMd+29e1VsF/FuEUC5Xny9KX6+85RjkDGzkbSK22/+
-         BKkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ybaTpFfXn+LxmLPmE6oKCLBK1aHCu6fnDl0UMen+FlQ=;
-        b=P+0vpRfZR/4dkDliFZ5xcUcan+sKoA0XtDIMrVXZrQg3EiEPzssi6NoCiknz6o6fIV
-         +1B1x4MX5dedqBcAffcYO4tK6TW9Uai/teQsQarqKGzOul0r8dVYIU0SlAw+hciheJIV
-         nkaDd4dacYMDwTK+HVr9FxmwwETwKKvrlzgp4RP7+eFlIXJQ5JwIM3zxuaSlJgkkwojq
-         kBDK65gku+ezZhJjsUfk0OZFCWfhn7ykiWHpbLRX8H4pML4y5RIniseNp/945YVg0oar
-         kqSl6ecN10zYTrdtEl5ktnftPxGYeHSEDKiojPMN/mHcKgadqmQ3LbUOmAz6ulaVczxM
-         jDIg==
-X-Gm-Message-State: AGi0Pub+AHTSziPQyl7foG+hiyW5FNDXmImdkyTPLzU+rkpr1KaKu7t3
-        PsL3kGOy2Qdqv7YNaMibRAc=
-X-Google-Smtp-Source: APiQypJhlhIVUJkqW3E89aT/gcxK/cLzNXagxiAuUlk5eOo5HS1C0vdojyWJbZ65rZyK/gr/LKoA9g==
-X-Received: by 2002:a37:9dc9:: with SMTP id g192mr11860484qke.50.1585958007869;
-        Fri, 03 Apr 2020 16:53:27 -0700 (PDT)
-Received: from localhost.localdomain ([72.53.229.195])
-        by smtp.gmail.com with ESMTPSA id p186sm2143388qkb.71.2020.04.03.16.53.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 16:53:27 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] pwm: pca9685: re-enable active pwm channels on pwm period change
-Date:   Fri,  3 Apr 2020 19:53:24 -0400
-Message-Id: <20200403235324.27437-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 3 Apr 2020 19:54:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgDCXyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 19:54:11 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DE4A2072B;
+        Fri,  3 Apr 2020 23:54:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585958051;
+        bh=IZmDyvmJOLUbLBV5JuNMND47WpiNR7jak95jQCtF9UQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ujPOS2djBdNndNotY3DHLXkaA7ITJ2+FEHyc7otjt7Fc4XDcP73S/q8/KQ88aiBAj
+         kqZeRnH1SDiGJVm+k4mPoGUJnLC+tk4MDap9ay+tlQkF7Vc0J2KKSMA10yXu/BelbQ
+         ELRcBLJz7YcUbVHhPlVD1BwBoqYFixcn0bsmaFa0=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-clk@vger.kernel.org
+Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: [PATCHv5 0/5] clk: agilex: add clock driver
+Date:   Fri,  3 Apr 2020 18:53:58 -0500
+Message-Id: <20200403235403.13990-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to change the pwm period, this chip must be put in sleep
-mode. However, when coming out of sleep mode, the pwm channel
-state is not completely restored: all pwm channels are off by
-default.
+Hi,
 
-This results in a bug in this driver: when the pwm period is changed
-on a pwm channel, all other pwm channels will be deactivated.
+This is version 5 of the patchset to add a clock driver to the Agilex
+platform.
 
-Fix by clearing the RESTART bit when coming out of sleep mode - this
-will restore all pwm channels to their pre-sleep on/off state.
+The change from v4 is address comments from Rob Herring on the dt-bindings
+file.
 
-Reported-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Cc: Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-pwm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/lkml/32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com/
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
+Thanks,
 
-I no longer have access to pca9685 hardware, so I'm unable to test:
-- if this is indeed a bug
-- if this patch fixes it
 
-Made against:
-Tree-repo: git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git
-Tree-branch: for-next
-Tree-git-id: 9cc5f232a4b6a0ef6e9b57876d61b88f61bdd7c2
+Dinh Nguyen (5):
+  clk: socfpga: stratix10: use new parent data scheme
+  clk: socfpga: remove clk_ops enable/disable methods
+  clk: socfpga: add const to _ops data structures
+  dt-bindings: documentation: add clock bindings information for Agilex
+  clk: socfpga: agilex: add clock driver for the Agilex platform
 
- drivers/pwm/pwm-pca9685.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../bindings/clock/intel,agilex.yaml          |  40 ++
+ drivers/clk/Makefile                          |   3 +-
+ drivers/clk/socfpga/Makefile                  |   2 +
+ drivers/clk/socfpga/clk-agilex.c              | 454 ++++++++++++++++++
+ drivers/clk/socfpga/clk-gate-s10.c            |   5 +-
+ drivers/clk/socfpga/clk-periph-s10.c          |  10 +-
+ drivers/clk/socfpga/clk-pll-a10.c             |   4 +-
+ drivers/clk/socfpga/clk-pll-s10.c             |  78 ++-
+ drivers/clk/socfpga/clk-pll.c                 |   4 +-
+ drivers/clk/socfpga/clk-s10.c                 | 160 ++++--
+ drivers/clk/socfpga/stratix10-clk.h           |  10 +-
+ include/dt-bindings/clock/agilex-clock.h      |  70 +++
+ 12 files changed, 788 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+ create mode 100644 drivers/clk/socfpga/clk-agilex.c
+ create mode 100644 include/dt-bindings/clock/agilex-clock.h
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 76cd22bd6614..0a16f0122e0e 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -59,6 +59,7 @@
- 
- #define LED_FULL		(1 << 4)
- #define MODE1_SLEEP		(1 << 4)
-+#define MODE1_RESTART		(1 << 7)
- #define MODE2_INVRT		(1 << 4)
- #define MODE2_OUTDRV		(1 << 2)
- 
-@@ -271,6 +272,15 @@ static int pca9685_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 			/* Wake the chip up */
- 			pca9685_set_sleep_mode(pca, false);
- 
-+			/* If any pwm channels were active when the chip was put
-+			 * in sleep mode, re-activate them.
-+			 */
-+			if (!regmap_read(pca->regmap, PCA9685_MODE1, &reg) &&
-+			    reg & MODE1_RESTART)
-+				regmap_update_bits(pca->regmap, PCA9685_MODE1,
-+						   MODE1_RESTART,
-+						   MODE1_RESTART);
-+
- 			pca->period_ns = period_ns;
- 		} else {
- 			dev_err(chip->dev,
 -- 
-2.17.1
+2.25.1
 
