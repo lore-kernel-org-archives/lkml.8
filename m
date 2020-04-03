@@ -2,151 +2,310 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EF2C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6107EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73EB2208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1451B206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DpyFsdCB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGFTK8c3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388898AbgDCHJT (ORCPT
+        id S2388870AbgDCHNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 03:09:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34485 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730550AbgDCHJT (ORCPT
+        Fri, 3 Apr 2020 03:13:34 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33648 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730759AbgDCHNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 03:09:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585897758;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TUShErNk8cwU7hJf8BxmK0K5c6pEQ4hGGKwc5zmiaaw=;
-        b=DpyFsdCBBAPnnPBQEEqxC7y4nxlol9/XgIFm3seGuP41Yl6AhXF3itCz3//LHzhGzUyn9L
-        G6U3zAfTIvMCVF/9U2RTnITO60F+bLnFu05FP2xd/DyqDKDfRLRakrx0bwhSIRQD5Up+XQ
-        t0YI5ibSuTRk5UQsTusXqWKincM7Fps=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-Cvy3b_roPf66oPbJTVFQdA-1; Fri, 03 Apr 2020 03:09:13 -0400
-X-MC-Unique: Cvy3b_roPf66oPbJTVFQdA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2400818A6EC1;
-        Fri,  3 Apr 2020 07:09:09 +0000 (UTC)
-Received: from localhost (ovpn-12-42.pek2.redhat.com [10.72.12.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 115A11147D2;
-        Fri,  3 Apr 2020 07:09:07 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 15:09:04 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Hoan Tran <hoan@os.amperecomputing.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Fri, 3 Apr 2020 03:13:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c138so3079724pfc.0;
+        Fri, 03 Apr 2020 00:13:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=PomIT0vOJJubjpTKtqaxIW1z5qgbZ78B+V6vQRPg/ek=;
+        b=jGFTK8c3nbtmc18VUKXManK/oeSzFTQrHkvganlOLxTtRzpx9LhO2LBruyVYpPw9kB
+         SfjhioMy6EVnX/WHKQyoiykAsSPtiZRSSrXAOb94c0+J0T3H9X3PY7NJltUaEw5VR0u/
+         xTG0T+Tf2NHx72Skalb9+xyiOsyohvmCgNfH1nCSZMHVDaq0Xu6ACkYxrKX3zmin1t1N
+         4dWeoto0wgpZ5imi64wBqVy0pIABjiOVcNvJgjri+2ew4tqkH2iAzS2C7hPaUeEJrjX5
+         /JbitfrbVqWzHZ9uz+JdJchhhcQCkpQ7L5TTVDuse0XFI2IeaZRlef6ij/SnkCuKy5z0
+         1r2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=PomIT0vOJJubjpTKtqaxIW1z5qgbZ78B+V6vQRPg/ek=;
+        b=H1grLKCecsLAgCkDpr9gFKbP3WOBiCNnt/ahoiOqwRwxHtU3ah81kt0b23JQXQeed0
+         K4xxVrMEyoystrGxUiRX6UuHCqFz6Hio4+lsrwl+hNQBmJVDRhhzxY3j4ueOG/TheURJ
+         XXxJ8OhUi7Y6VMocfWAnO4cysU6Tpvkf87TpEtsPfags1AI23Zzrvss72kqgKfSOgDZ9
+         MyNIGiH50HDIRvRzl43Nv27HiUxqlNVUPsFnjBls86hagkSes6P4WNaXUsiWofCRdnL4
+         j6j7i9sVdnC+g+ltM15RbwpIxZuE3Wi2kV3WPITmIuABUlsyNeZKTYs/IAFmOC5cbc8a
+         9OOQ==
+X-Gm-Message-State: AGi0PuYUy5fP37Oxd2WRGBwDOB4P32Nz/NeHPiadYLt0vQu+AxQE58Pn
+        kiZAyxnaMlMq0JW0xuPJS+/xOdNe
+X-Google-Smtp-Source: APiQypIJqE4VJKubu8R9yMCR6k5nV3HrHF8fEz8TuqPWJDQVNhkIq3UVFUy/DNAWzk5PVXK4EfFEKg==
+X-Received: by 2002:aa7:9f42:: with SMTP id h2mr6731404pfr.22.1585898012953;
+        Fri, 03 Apr 2020 00:13:32 -0700 (PDT)
+Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
+        by smtp.gmail.com with ESMTPSA id t66sm5054577pjb.45.2020.04.03.00.13.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 00:13:31 -0700 (PDT)
+Date:   Fri, 03 Apr 2020 17:13:25 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
+To:     Michal =?iso-8859-1?q?Such=E1nek?= <msuchanek@suse.de>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200403070904.GO2402@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330175100.GD30942@linux.ibm.com>
- <20200330182301.GM14243@dhcp22.suse.cz>
- <20200331081423.GE30942@linux.ibm.com>
- <20200331085513.GE30449@dhcp22.suse.cz>
- <20200331140332.GA2129@MiWiFi-R3L-srv>
- <20200331142138.GL30449@dhcp22.suse.cz>
- <20200331143140.GA2402@MiWiFi-R3L-srv>
- <cc717f09-2b18-b242-e438-3ec730c5dac0@os.amperecomputing.com>
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200225173541.1549955-1-npiggin@gmail.com>
+        <cover.1584620202.git.msuchanek@suse.de>
+        <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
+        <1585039473.da4762n2s0.astroid@bobo.none>
+        <20200324193833.GH25468@kitsune.suse.cz>
+In-Reply-To: <20200324193833.GH25468@kitsune.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc717f09-2b18-b242-e438-3ec730c5dac0@os.amperecomputing.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1585896170.ohti800w9v.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/02/20 at 09:46pm, Hoan Tran wrote:
-> Hi All,
-> 
-> On 3/31/20 7:31 AM, Baoquan He wrote:
-> > On 03/31/20 at 04:21pm, Michal Hocko wrote:
-> > > On Tue 31-03-20 22:03:32, Baoquan He wrote:
-> > > > Hi Michal,
-> > > > 
-> > > > On 03/31/20 at 10:55am, Michal Hocko wrote:
-> > > > > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
-> > > > > > Maybe I mis-read the code, but I don't see how this could happen. In the
-> > > > > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
-> > > > > > calculate_node_totalpages() that ensures that node->node_zones are entirely
-> > > > > > within the node because this is checked in zone_spanned_pages_in_node().
-> > > > > 
-> > > > > zone_spanned_pages_in_node does chech the zone boundaries are within the
-> > > > > node boundaries. But that doesn't really tell anything about other
-> > > > > potential zones interleaving with the physical memory range.
-> > > > > zone->spanned_pages simply gives the physical range for the zone
-> > > > > including holes. Interleaving nodes are essentially a hole
-> > > > > (__absent_pages_in_range is going to skip those).
-> > > > > 
-> > > > > That means that when free_area_init_core simply goes over the whole
-> > > > > physical zone range including holes and that is why we need to check
-> > > > > both for physical and logical holes (aka other nodes).
-> > > > > 
-> > > > > The life would be so much easier if the whole thing would simply iterate
-> > > > > over memblocks...
-> > > > 
-> > > > The memblock iterating sounds a great idea. I tried with putting the
-> > > > memblock iterating in the upper layer, memmap_init(), which is used for
-> > > > boot mem only anyway. Do you think it's doable and OK? It yes, I can
-> > > > work out a formal patch to make this simpler as you said. The draft code
-> > > > is as below. Like this it uses the existing code and involves little change.
-> > > 
-> > > Doing this would be a step in the right direction! I haven't checked the
-> > > code very closely though. The below sounds way too simple to be truth I
-> > > am afraid. First for_each_mem_pfn_range is available only for
-> > > CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
-> > > saying that I really hate that being conditional). Also I haven't really
-> > > checked the deferred initialization path - I have a very vague
-> > > recollection that it has been converted to the memblock api but I have
-> > > happilly dropped all that memory.
-> > 
-> > Thanks for your quick response and pointing out the rest suspect aspects,
-> > I will investigate what you mentioned, see if they impact.
-> 
-> I would like to check if we still move on with my patch to remove
-> CONFIG_NODES_SPAN_OTHER_NODES and have another patch on top it?
+Michal Such=C3=A1nek's on March 25, 2020 5:38 am:
+> On Tue, Mar 24, 2020 at 06:48:20PM +1000, Nicholas Piggin wrote:
+>> Michal Suchanek's on March 19, 2020 10:19 pm:
+>> > There are two almost identical copies for 32bit and 64bit.
+>> >=20
+>> > The function is used only in 32bit code which will be split out in nex=
+t
+>> > patch so consolidate to one function.
+>> >=20
+>> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+>> > Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> > ---
+>> > v6:  new patch
+>> > v8:  move the consolidated function out of the ifdef block.
+>> > v11: rebase on top of def0bfdbd603
+>> > ---
+>> >  arch/powerpc/perf/callchain.c | 48 +++++++++++++++++-----------------=
+-
+>> >  1 file changed, 24 insertions(+), 24 deletions(-)
+>> >=20
+>> > diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callcha=
+in.c
+>> > index cbc251981209..c9a78c6e4361 100644
+>> > --- a/arch/powerpc/perf/callchain.c
+>> > +++ b/arch/powerpc/perf/callchain.c
+>> > @@ -161,18 +161,6 @@ static int read_user_stack_64(unsigned long __use=
+r *ptr, unsigned long *ret)
+>> >  	return read_user_stack_slow(ptr, ret, 8);
+>> >  }
+>> > =20
+>> > -static int read_user_stack_32(unsigned int __user *ptr, unsigned int =
+*ret)
+>> > -{
+>> > -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+>> > -	    ((unsigned long)ptr & 3))
+>> > -		return -EFAULT;
+>> > -
+>> > -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
+>> > -		return 0;
+>> > -
+>> > -	return read_user_stack_slow(ptr, ret, 4);
+>> > -}
+>> > -
+>> >  static inline int valid_user_sp(unsigned long sp, int is_64)
+>> >  {
+>> >  	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32=
+)
+>> > @@ -277,19 +265,9 @@ static void perf_callchain_user_64(struct perf_ca=
+llchain_entry_ctx *entry,
+>> >  }
+>> > =20
+>> >  #else  /* CONFIG_PPC64 */
+>> > -/*
+>> > - * On 32-bit we just access the address and let hash_page create a
+>> > - * HPTE if necessary, so there is no need to fall back to reading
+>> > - * the page tables.  Since this is called at interrupt level,
+>> > - * do_page_fault() won't treat a DSI as a page fault.
+>> > - */
+>> > -static int read_user_stack_32(unsigned int __user *ptr, unsigned int =
+*ret)
+>> > +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+>> >  {
+>> > -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+>> > -	    ((unsigned long)ptr & 3))
+>> > -		return -EFAULT;
+>> > -
+>> > -	return probe_user_read(ret, ptr, sizeof(*ret));
+>> > +	return 0;
+>> >  }
+>> > =20
+>> >  static inline void perf_callchain_user_64(struct perf_callchain_entry=
+_ctx *entry,
+>> > @@ -312,6 +290,28 @@ static inline int valid_user_sp(unsigned long sp,=
+ int is_64)
+>> > =20
+>> >  #endif /* CONFIG_PPC64 */
+>> > =20
+>> > +/*
+>> > + * On 32-bit we just access the address and let hash_page create a
+>> > + * HPTE if necessary, so there is no need to fall back to reading
+>> > + * the page tables.  Since this is called at interrupt level,
+>> > + * do_page_fault() won't treat a DSI as a page fault.
+>> > + */
+>>=20
+>> The comment is actually probably better to stay in the 32-bit
+>> read_user_stack_slow implementation. Is that function defined
+>> on 32-bit purely so that you can use IS_ENABLED()? In that case
+> It documents the IS_ENABLED() and that's where it is. The 32bit
+> definition is only a technical detail.
 
-I think we would like to replace CONFIG_NODES_SPAN_OTHER_NODES with
-CONFIG_NUMA, and just let UMA return 0 as node id, as Michal replied in
-another mail. Anyway, your patch 2~5 are still needed to sit on top of
-the change of this new plan.
+Sorry for the late reply, busy trying to fix bugs in the C rewrite
+series. I don't think it is the right place, it should be in the
+ppc32 implementation detail. ppc64 has an equivalent comment at the
+top of its read_user_stack functions.
 
+>> I would prefer to put a BUG() there which makes it self documenting.
+> Which will cause checkpatch complaints about introducing new BUG() which
+> is frowned on.
+
+It's fine in this case, that warning is about not introducing
+runtime bugs, but this wouldn't be.
+
+But... I actually don't like adding read_user_stack_slow on 32-bit
+and especially not just to make IS_ENABLED work.
+
+IMO this would be better if you really want to consolidate it
+
+---
+
+diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+index cbc251981209..ca3a599b3f54 100644
+--- a/arch/powerpc/perf/callchain.c
++++ b/arch/powerpc/perf/callchain.c
+@@ -108,7 +108,7 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *=
+entry, struct pt_regs *re
+  * interrupt context, so if the access faults, we read the page tables
+  * to find which page (if any) is mapped and access it directly.
+  */
+-static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
++static int read_user_stack_slow(const void __user *ptr, void *buf, int nb)
+ {
+ 	int ret =3D -EFAULT;
+ 	pgd_t *pgdir;
+@@ -149,28 +149,21 @@ static int read_user_stack_slow(void __user *ptr, voi=
+d *buf, int nb)
+ 	return ret;
+ }
+=20
+-static int read_user_stack_64(unsigned long __user *ptr, unsigned long *re=
+t)
++static int __read_user_stack(const void __user *ptr, void *ret, size_t siz=
+e)
+ {
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned long) ||
+-	    ((unsigned long)ptr & 7))
++	if ((unsigned long)ptr > TASK_SIZE - size ||
++	    ((unsigned long)ptr & (size - 1)))
+ 		return -EFAULT;
+=20
+-	if (!probe_user_read(ret, ptr, sizeof(*ret)))
++	if (!probe_user_read(ret, ptr, size))
+ 		return 0;
+=20
+-	return read_user_stack_slow(ptr, ret, 8);
++	return read_user_stack_slow(ptr, ret, size);
+ }
+=20
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++static int read_user_stack_64(unsigned long __user *ptr, unsigned long *re=
+t)
+ {
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
+-		return -EFAULT;
+-
+-	if (!probe_user_read(ret, ptr, sizeof(*ret)))
+-		return 0;
+-
+-	return read_user_stack_slow(ptr, ret, 4);
++	return __read_user_stack(ptr, ret, sizeof(*ret));
+ }
+=20
+ static inline int valid_user_sp(unsigned long sp, int is_64)
+@@ -283,13 +276,13 @@ static void perf_callchain_user_64(struct perf_callch=
+ain_entry_ctx *entry,
+  * the page tables.  Since this is called at interrupt level,
+  * do_page_fault() won't treat a DSI as a page fault.
+  */
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++static int __read_user_stack(const void __user *ptr, void *ret, size_t siz=
+e)
+ {
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
++	if ((unsigned long)ptr > TASK_SIZE - size ||
++	    ((unsigned long)ptr & (size - 1)))
+ 		return -EFAULT;
+=20
+-	return probe_user_read(ret, ptr, sizeof(*ret));
++	return probe_user_read(ret, ptr, size);
+ }
+=20
+ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx =
+*entry,
+@@ -312,6 +305,11 @@ static inline int valid_user_sp(unsigned long sp, int =
+is_64)
+=20
+ #endif /* CONFIG_PPC64 */
+=20
++static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++{
++	return __read_user_stack(ptr, ret, sizeof(*ret));
++}
++
+ /*
+  * Layout for non-RT signal frames
+  */
+=
