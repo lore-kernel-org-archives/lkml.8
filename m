@@ -2,324 +2,348 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98042C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA673C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA9120737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FEA206F6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZkPGwIGC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XVEi+SWR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgDCUyJ (ORCPT
+        id S1728331AbgDCUzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 16:54:09 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36626 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgDCUyJ (ORCPT
+        Fri, 3 Apr 2020 16:55:39 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:56900 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgDCUzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 16:54:09 -0400
-Received: by mail-io1-f68.google.com with SMTP id n10so9101138iom.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 13:54:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BrJ/9gIJhOFpVJoqsBlIalpurNwos6KMwpNnm2RK1HI=;
-        b=ZkPGwIGC0GzPq9rrsZY8MdCiVuyzZrIxRwNn4JIyde1057NG/Qj1E700JjOWgsM6sx
-         I2R1FRinqrhsmOaJTKujGCOkKkr2pXxE8mNPDzyCP04hrMjnSJ+THgcfmkWCB+4LrXv+
-         xBP/LzPKV6sqTIR1Y5VWxlx9WzwjXcp2qCsELVBsJqhOApb7D4psfzXbf+smzNPSS1GC
-         A+rMAlIrKNCIeZHcBDLWdORqgAT6C4EEoC51+JZGtiptcgtOGzbdDcCsPJcrNrSSgpIk
-         Q4dgrnCNZO+/5C3bHCkAXFcmBSLL3sb1JvSWoxpyIgfg6XuBuQY2ns/umdXkcLTR3I67
-         DrJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BrJ/9gIJhOFpVJoqsBlIalpurNwos6KMwpNnm2RK1HI=;
-        b=rmMrnpNxm0h3x9xKMXOf+msGz67zp6IegSc5XEnwfMCauwwafNRkW8p/BAg2HNyUxY
-         8E0opYx3S1pTbftF0WW86+Ks+BNFcKv33VpTzLTOVq8hCWbPrwdUR4kSxZqMvgH6sn74
-         pMh6urzM0yjUooJFWnGLSkRiRNxL9I1FpVd9S7RR1BJk2CD7Ikz/S1eqfEDhRlM0KJOZ
-         7/8QKEJZSvHd3RdfBWzJjl/7U0KyxBa8nVnV/t9SJmWMxVE+32Z5OQZaur6Jl9RKLIro
-         TIbgscLyd+Zd3cZDsiXXyBrmsorwyLKTbUsHQOd//3jzKfKAk8ck26rM8boT50RJhd5R
-         9sNg==
-X-Gm-Message-State: AGi0PuaBbiBz+SL0iLsFKS0W5UUn9Hlx8HTGByptTQJ0sTQ+1rwOfYyt
-        MarUdU8gICMPo0JN7AOXVvSLxGcbHKRtRkpVedR6zg==
-X-Google-Smtp-Source: APiQypKvddte5gD7Nn1ey6yRlol306CaShwUgS9BcjYhAxgQV45ClEj8Ck9uAVRuKTGS/vGSgHZUDZmDWC1W0AOnH1w=
-X-Received: by 2002:a05:6638:186:: with SMTP id a6mr9914501jaq.36.1585947246207;
- Fri, 03 Apr 2020 13:54:06 -0700 (PDT)
+        Fri, 3 Apr 2020 16:55:39 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033KhISF091448;
+        Fri, 3 Apr 2020 20:55:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=CuzkNlfbQV3GkYQd8LWFwAKjg5VuiknSmYb1iJXUVP8=;
+ b=XVEi+SWRNcVLJVwyIXEpA/maN8eab+ogjaMgTBfb4PpKqHCmPcwoQJ3ZTdjPQd9ASCRt
+ HsAHev1q5j9KPyEDXwDZ7G+Pjfg3Ry8h0SWlh+zP9ovkC8D1lRBPFFj93A6TDpl3BVPg
+ TB1WEris1dv8jx3uMeBqZ1/YCAzz/OsFErgsWvEl5CoYaoVFVS7dshFVwVsqRco/qUJn
+ lpCjcjbhPvjZ8FK8cGqfMRFGkCoLb8p5Lc2FZvbNhKN6waDxsY6Ia79dmz15QIAaCQIv
+ /VrwPAqEDkHooYkX2to3R4gosJus09g+T4uP9ZTtMhIXrPg6q/rJjn+JW+VxdlsG4rDe ow== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 303aqj3ns6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 20:55:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033Kh3xj187999;
+        Fri, 3 Apr 2020 20:55:17 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 302g2nx3vs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 20:55:17 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033KtDqg015975;
+        Fri, 3 Apr 2020 20:55:14 GMT
+Received: from vbusired-dt (/10.154.116.130)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 13:55:13 -0700
+Date:   Fri, 3 Apr 2020 15:55:07 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com,
+        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rientjes@google.com, srutherford@google.com, luto@kernel.org,
+        brijesh.singh@amd.com
+Subject: Re: [PATCH v6 09/14] KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP
+ ioctl
+Message-ID: <20200403205507.GA729294@vbusired-dt>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <388afbf3af3a10cc3101008bc9381491cc7aab2f.1585548051.git.ashish.kalra@amd.com>
+ <88185cd3-a9f4-68a8-9c34-2e72deaf3d8d@oracle.com>
 MIME-Version: 1.0
-References: <1585353412-19644-1-git-send-email-rishabhb@codeaurora.org>
- <20200401195114.GD267644@minitux> <20200402172435.GA2785@xps15> <20200403051611.GJ663905@yoga>
-In-Reply-To: <20200403051611.GJ663905@yoga>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Fri, 3 Apr 2020 14:53:55 -0600
-Message-ID: <CANLsYkzqg=ksv46ZO7=2Vd1Li8sbSwD2uzSjSPfxFj0BQgPNvA@mail.gmail.com>
-Subject: Re: [PATCH] remoteproc: core: Add a memory efficient coredump function
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, psodagud@codeaurora.org,
-        tsoni@codeaurora.org, Siddharth Gupta <sidgup@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88185cd3-a9f4-68a8-9c34-2e72deaf3d8d@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=5 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=5
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 at 23:16, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
->
-> On Thu 02 Apr 10:24 PDT 2020, Mathieu Poirier wrote:
->
-> > On Wed, Apr 01, 2020 at 12:51:14PM -0700, Bjorn Andersson wrote:
-> > > On Fri 27 Mar 16:56 PDT 2020, Rishabh Bhatnagar wrote:
-> > >
-> > > > The current coredump implementation uses vmalloc area to copy
-> > > > all the segments. But this might put a lot of strain on low memory
-> > > > targets as the firmware size sometimes is in ten's of MBs.
-> > > > The situation becomes worse if there are multiple remote processors
-> > > > undergoing recovery at the same time.
-> > > > This patch directly copies the device memory to userspace buffer
-> > > > and avoids extra memory usage. This requires recovery to be halted
-> > > > until data is read by userspace and free function is called.
-> > > >
-> > > > Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> > > > ---
-> > > >  drivers/remoteproc/remoteproc_core.c | 107 +++++++++++++++++++++++++++++------
-> > > >  include/linux/remoteproc.h           |   4 ++
-> > > >  2 files changed, 94 insertions(+), 17 deletions(-)
-> > > >
-> > > > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> > > > index 097f33e..2d881e5 100644
-> > > > --- a/drivers/remoteproc/remoteproc_core.c
-> > > > +++ b/drivers/remoteproc/remoteproc_core.c
-> > > > @@ -1516,6 +1516,86 @@ int rproc_coredump_add_segment(struct rproc *rproc, dma_addr_t da, size_t size)
-> > > >  }
-> > > >  EXPORT_SYMBOL(rproc_coredump_add_segment);
-> > > >
-> > > > +
-> > > > +void rproc_free_dump(void *data)
-> > >
-> > > static
-> > >
-> > > > +{
-> > > > + struct rproc *rproc = data;
-> > > > +
-> > > > + dev_info(&rproc->dev, "Userspace done reading rproc dump\n");
-> > >
-> > > Please drop the info prints throughout.
-> > >
-> > > > + complete(&rproc->dump_done);
-> > > > +}
-> > > > +
-> > > > +static unsigned long get_offset(loff_t user_offset, struct list_head *segments,
-> > > > +                         unsigned long *data_left)
-> > >
-> > > Please rename this rproc_coredump_resolve_segment(), or something along
-> > > those lines.
-> > >
-> > > > +{
-> > > > + struct rproc_dump_segment *segment;
-> > > > +
-> > > > + list_for_each_entry(segment, segments, node) {
-> > > > +         if (user_offset >= segment->size)
-> > > > +                 user_offset -= segment->size;
-> > > > +         else
-> > > > +                 break;
-> > > > + }
-> > > > +
-> > > > + if (&segment->node == segments) {
-> > > > +         *data_left = 0;
-> > > > +         return 0;
-> > > > + }
-> > > > +
-> > > > + *data_left = segment->size - user_offset;
-> > > > +
-> > > > + return segment->da + user_offset;
-> > > > +}
-> > > > +
-> > > > +static ssize_t rproc_read_dump(char *buffer, loff_t offset, size_t count,
-> > > > +                         void *data, size_t elfcorelen)
-> > > > +{
-> > > > + void *device_mem = NULL;
-> > > > + unsigned long data_left = 0;
-> > > > + unsigned long bytes_left = count;
-> > > > + unsigned long addr = 0;
-> > > > + size_t copy_size = 0;
-> > > > + struct rproc *rproc = data;
-> > > > +
-> > > > + if (offset < elfcorelen) {
-> > > > +         copy_size = elfcorelen - offset;
-> > > > +         copy_size = min(copy_size, bytes_left);
-> > > > +
-> > > > +         memcpy(buffer, rproc->elfcore + offset, copy_size);
-> > > > +         offset += copy_size;
-> > > > +         bytes_left -= copy_size;
-> > > > +         buffer += copy_size;
-> > > > + }
-> > > > +
-> > > > + while (bytes_left) {
-> > > > +         addr = get_offset(offset - elfcorelen, &rproc->dump_segments,
-> > > > +                         &data_left);
-> > > > + /* EOF check */
-> > >
-> > > Indentation, and "if no data left" does indicate that this is the end of
-> > > the loop already.
-> > >
-> > > > +         if (data_left == 0) {
-> > > > +                 pr_info("Ramdump complete. %lld bytes read.", offset);
-> > > > +                 return 0;
-> > >
-> > > You might have copied data to the buffer, so returning 0 here doesn't
-> > > seem right. Presumably instead you should break and return offset -
-> > > original offset or something like that.
-> > >
-> > > > +         }
-> > > > +
-> > > > +         copy_size = min_t(size_t, bytes_left, data_left);
-> > > > +
-> > > > +         device_mem = rproc->ops->da_to_va(rproc, addr, copy_size);
-> > > > +         if (!device_mem) {
-> > > > +                 pr_err("Unable to ioremap: addr %lx, size %zd\n",
-> > > > +                          addr, copy_size);
-> > > > +                 return -ENOMEM;
-> > > > +         }
-> > > > +         memcpy(buffer, device_mem, copy_size);
-> > > > +
-> > > > +         offset += copy_size;
-> > > > +         buffer += copy_size;
-> > > > +         bytes_left -= copy_size;
-> > > > +         dev_dbg(&rproc->dev, "Copied %d bytes to userspace\n",
-> > > > +                 copy_size);
-> > > > + }
-> > > > +
-> > > > + return count;
-> > >
-> > > This should be the number of bytes actually returned, so if count is
-> > > larger than the sum of the segment sizes this will be wrong.
-> > >
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * rproc_coredump_add_custom_segment() - add custom coredump segment
-> > > >   * @rproc:       handle of a remote processor
-> > > > @@ -1566,27 +1646,27 @@ static void rproc_coredump(struct rproc *rproc)
-> > > >   struct rproc_dump_segment *segment;
-> > > >   struct elf32_phdr *phdr;
-> > > >   struct elf32_hdr *ehdr;
-> > > > - size_t data_size;
-> > > > + size_t header_size;
-> > > >   size_t offset;
-> > > >   void *data;
-> > > > - void *ptr;
-> > > >   int phnum = 0;
-> > > >
-> > > >   if (list_empty(&rproc->dump_segments))
-> > > >           return;
-> > > >
-> > > > - data_size = sizeof(*ehdr);
-> > > > + header_size = sizeof(*ehdr);
-> > > >   list_for_each_entry(segment, &rproc->dump_segments, node) {
-> > > > -         data_size += sizeof(*phdr) + segment->size;
-> > > > +         header_size += sizeof(*phdr);
-> > > >
-> > > >           phnum++;
-> > > >   }
-> > > >
-> > > > - data = vmalloc(data_size);
-> > > > + data = vmalloc(header_size);
-> > > >   if (!data)
-> > > >           return;
-> > > >
-> > > >   ehdr = data;
-> > > > + rproc->elfcore = data;
-> > >
-> > > Rather than using a rproc-global variable I would prefer that you create
-> > > a new rproc_coredump_state struct that carries the header pointer and
-> > > the information needed by the read & free functions.
-> > >
-> > > >
-> > > >   memset(ehdr, 0, sizeof(*ehdr));
-> > > >   memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
-> > > > @@ -1618,23 +1698,14 @@ static void rproc_coredump(struct rproc *rproc)
-> > > >
-> > > >           if (segment->dump) {
-> > > >                   segment->dump(rproc, segment, data + offset);
-> >
-> > I'm not exactly sure why custom segments can be copied to the elf image but not
-> > generic ones... And as far as I can tell accessing "data + offset" will blow up
-> > because only the memory for the program headers has been allocated, not for the
-> > program segments.
-> >
->
-> Thanks, I missed that, but you're correct.
->
-> >
-> > > > -         } else {
-> > > > -                 ptr = rproc_da_to_va(rproc, segment->da, segment->size);
-> > > > -                 if (!ptr) {
-> > > > -                         dev_err(&rproc->dev,
-> > > > -                                 "invalid coredump segment (%pad, %zu)\n",
-> > > > -                                 &segment->da, segment->size);
-> > > > -                         memset(data + offset, 0xff, segment->size);
-> > > > -                 } else {
-> > > > -                         memcpy(data + offset, ptr, segment->size);
-> > > > -                 }
-> > > > -         }
-> > > >
-> > > >           offset += phdr->p_filesz;
-> > > >           phdr++;
-> > > >   }
-> > > > + dev_coredumpm(&rproc->dev, NULL, rproc, header_size, GFP_KERNEL,
-> > > > +                 rproc_read_dump, rproc_free_dump);
-> > > >
-> > > > - dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
-> > > > + wait_for_completion(&rproc->dump_done);
-> > >
-> > > This will mean that recovery handling will break on installations that
-> > > doesn't have your ramdump collector - as it will just sit here forever
-> > > (5 minutes) waiting for userspace to do its job.
-> >
-> > Right, that problem also came to mind.
-> >
-> > >
-> > > I think we need to device a new sysfs attribute, through which you can
-> > > enable the "inline" coredump mechanism. That way recovery would work for
-> > > all systems and in your specific case you could reconfigure it - perhaps
-> > > once the ramdump collector starts.
-> >
-> > Another option is to make rproc_coredump() customizable, as with all the other
-> > functions in remoteproc_internal.h.  That way the current rproc_coredump() is
-> > kept intact and we don't need a new sysfs entry.
-> >
->
-> Rishabh suggested this in a discussion we had earlier this week as well,
-> but we still have the problem that the same platform driver will need to
-> support both modes, depending on which user space is running. So even if
-> we push this out to the platform driver we still need some mechanism
-> for userspace to enable the "inline" mode.
+On 2020-04-03 13:18:52 -0700, Krish Sadhukhan wrote:
+> 
+> On 3/29/20 11:22 PM, Ashish Kalra wrote:
+> > From: Brijesh Singh <Brijesh.Singh@amd.com>
+> > 
+> > The ioctl can be used to retrieve page encryption bitmap for a given
+> > gfn range.
+> > 
+> > Return the correct bitmap as per the number of pages being requested
+> > by the user. Ensure that we only copy bmap->num_pages bytes in the
+> > userspace buffer, if bmap->num_pages is not byte aligned we read
+> > the trailing bits from the userspace and copy those bits as is.
+> > 
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Borislav Petkov <bp@suse.de>
+> > Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> > Cc: x86@kernel.org
+> > Cc: kvm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> > ---
+> >   Documentation/virt/kvm/api.rst  | 27 +++++++++++++
+> >   arch/x86/include/asm/kvm_host.h |  2 +
+> >   arch/x86/kvm/svm.c              | 71 +++++++++++++++++++++++++++++++++
+> >   arch/x86/kvm/x86.c              | 12 ++++++
+> >   include/uapi/linux/kvm.h        | 12 ++++++
+> >   5 files changed, 124 insertions(+)
+> > 
+> > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> > index ebd383fba939..8ad800ebb54f 100644
+> > --- a/Documentation/virt/kvm/api.rst
+> > +++ b/Documentation/virt/kvm/api.rst
+> > @@ -4648,6 +4648,33 @@ This ioctl resets VCPU registers and control structures according to
+> >   the clear cpu reset definition in the POP. However, the cpu is not put
+> >   into ESA mode. This reset is a superset of the initial reset.
+> > +4.125 KVM_GET_PAGE_ENC_BITMAP (vm ioctl)
+> > +---------------------------------------
+> > +
+> > +:Capability: basic
+> > +:Architectures: x86
+> > +:Type: vm ioctl
+> > +:Parameters: struct kvm_page_enc_bitmap (in/out)
+> > +:Returns: 0 on success, -1 on error
+> > +
+> > +/* for KVM_GET_PAGE_ENC_BITMAP */
+> > +struct kvm_page_enc_bitmap {
+> > +	__u64 start_gfn;
+> > +	__u64 num_pages;
+> > +	union {
+> > +		void __user *enc_bitmap; /* one bit per page */
+> > +		__u64 padding2;
+> > +	};
+> > +};
+> > +
+> > +The encrypted VMs have concept of private and shared pages. The private
+> > +page is encrypted with the guest-specific key, while shared page may
+> > +be encrypted with the hypervisor key. The KVM_GET_PAGE_ENC_BITMAP can
+> > +be used to get the bitmap indicating whether the guest page is private
+> > +or shared. The bitmap can be used during the guest migration, if the page
+> > +is private then userspace need to use SEV migration commands to transmit
+> > +the page.
+> > +
+> >   5. The kvm_run structure
+> >   ========================
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index 90718fa3db47..27e43e3ec9d8 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -1269,6 +1269,8 @@ struct kvm_x86_ops {
+> >   	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
+> >   	int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
+> >   				  unsigned long sz, unsigned long mode);
+> > +	int (*get_page_enc_bitmap)(struct kvm *kvm,
+> > +				struct kvm_page_enc_bitmap *bmap);
+> 
+> 
+> Looking back at the previous patch, it seems that these two are basically
+> the setter/getter action for page encryption, though one is implemented as a
+> hypercall while the other as an ioctl. If we consider the setter/getter
+> aspect, isn't it better to have some sort of symmetry in the naming of the
+> ops ? For example,
+> 
+>         set_page_enc_hc
+> 
+>         get_page_enc_ioctl
+> 
+> >   };
+> >   struct kvm_arch_async_pf {
+> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > index 1d8beaf1bceb..bae783cd396a 100644
+> > --- a/arch/x86/kvm/svm.c
+> > +++ b/arch/x86/kvm/svm.c
+> > @@ -7686,6 +7686,76 @@ static int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
+> >   	return ret;
+> >   }
+> > +static int svm_get_page_enc_bitmap(struct kvm *kvm,
+> > +				   struct kvm_page_enc_bitmap *bmap)
+> > +{
+> > +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> > +	unsigned long gfn_start, gfn_end;
+> > +	unsigned long sz, i, sz_bytes;
+> > +	unsigned long *bitmap;
+> > +	int ret, n;
+> > +
+> > +	if (!sev_guest(kvm))
+> > +		return -ENOTTY;
+> > +
+> > +	gfn_start = bmap->start_gfn;
+> 
+> 
+> What if bmap->start_gfn is junk ?
+> 
+> > +	gfn_end = gfn_start + bmap->num_pages;
+> > +
+> > +	sz = ALIGN(bmap->num_pages, BITS_PER_LONG) / BITS_PER_BYTE;
+> > +	bitmap = kmalloc(sz, GFP_KERNEL);
+> > +	if (!bitmap)
+> > +		return -ENOMEM;
+> > +
+> > +	/* by default all pages are marked encrypted */
+> > +	memset(bitmap, 0xff, sz);
+> > +
+> > +	mutex_lock(&kvm->lock);
+> > +	if (sev->page_enc_bmap) {
+> > +		i = gfn_start;
+> > +		for_each_clear_bit_from(i, sev->page_enc_bmap,
+> > +				      min(sev->page_enc_bmap_size, gfn_end))
+> > +			clear_bit(i - gfn_start, bitmap);
+> > +	}
+> > +	mutex_unlock(&kvm->lock);
+> > +
+> > +	ret = -EFAULT;
+> > +
+> > +	n = bmap->num_pages % BITS_PER_BYTE;
+> > +	sz_bytes = ALIGN(bmap->num_pages, BITS_PER_BYTE) / BITS_PER_BYTE;
+> > +
+> > +	/*
+> > +	 * Return the correct bitmap as per the number of pages being
+> > +	 * requested by the user. Ensure that we only copy bmap->num_pages
+> > +	 * bytes in the userspace buffer, if bmap->num_pages is not byte
+> > +	 * aligned we read the trailing bits from the userspace and copy
+> > +	 * those bits as is.
+> > +	 */
+> > +
+> > +	if (n) {
+> 
+> 
+> Is it better to check for 'num_pages' at the beginning of the function
+> rather than coming this far if bmap->num_pages is zero ?
+> 
+> > +		unsigned char *bitmap_kernel = (unsigned char *)bitmap;
+> 
+> 
+> Just trying to understand why you need this extra variable instead of using
+> 'bitmap' directly.
+> 
+> > +		unsigned char bitmap_user;
+> > +		unsigned long offset, mask;
+> > +
+> > +		offset = bmap->num_pages / BITS_PER_BYTE;
+> > +		if (copy_from_user(&bitmap_user, bmap->enc_bitmap + offset,
+> > +				sizeof(unsigned char)))
+> > +			goto out;
+> > +
+> > +		mask = GENMASK(n - 1, 0);
+> > +		bitmap_user &= ~mask;
+> > +		bitmap_kernel[offset] &= mask;
+> > +		bitmap_kernel[offset] |= bitmap_user;
+> > +	}
+> > +
+> > +	if (copy_to_user(bmap->enc_bitmap, bitmap, sz_bytes))
+> 
+> 
+> If 'n' is zero, we are still copying stuff back to the user. Is that what is
+> expected from userland ?
+> 
+> Another point. Since copy_from_user() was done in the caller, isn't it
+> better to move this to the caller to keep a symmetry ?
 
-So is this something that needs to be done on the fly in response to
-some system event?  Any possibility to use the DT?
+That would need the interface of .get_page_enc_bitmap to change, to pass
+back the local bitmap to the caller for use in copy_to_user() and then
+free it up. I think it is better to call copy_to_user() here and free
+the bitmap before returning.
 
-We are currently discussing the addition of a character driver [1]...
-The file_operations could be platform specific so any scenario can be
-implemented, whether it is switching on/off a remote processor in the
-open/release() callback or setting the behavior of the coredump
-functionality in an ioctl().  I think there is value in exploring
-different opportunities so that we keep the core as clean and simple
-as possible.
-
-Thanks,
-Mathieu
-
-[1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=264603
-
->
-> Regards,
-> Bjorn
+> 
+> > +		goto out;
+> > +
+> > +	ret = 0;
+> > +out:
+> > +	kfree(bitmap);
+> > +	return ret;
+> > +}
+> > +
+> >   static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+> >   {
+> >   	struct kvm_sev_cmd sev_cmd;
+> > @@ -8090,6 +8160,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+> >   	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
+> >   	.page_enc_status_hc = svm_page_enc_status_hc,
+> > +	.get_page_enc_bitmap = svm_get_page_enc_bitmap,
+> >   };
+> >   static int __init svm_init(void)
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 68428eef2dde..3c3fea4e20b5 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -5226,6 +5226,18 @@ long kvm_arch_vm_ioctl(struct file *filp,
+> >   	case KVM_SET_PMU_EVENT_FILTER:
+> >   		r = kvm_vm_ioctl_set_pmu_event_filter(kvm, argp);
+> >   		break;
+> > +	case KVM_GET_PAGE_ENC_BITMAP: {
+> > +		struct kvm_page_enc_bitmap bitmap;
+> > +
+> > +		r = -EFAULT;
+> > +		if (copy_from_user(&bitmap, argp, sizeof(bitmap)))
+> > +			goto out;
+> > +
+> > +		r = -ENOTTY;
+> > +		if (kvm_x86_ops->get_page_enc_bitmap)
+> > +			r = kvm_x86_ops->get_page_enc_bitmap(kvm, &bitmap);
+> > +		break;
+> > +	}
+> >   	default:
+> >   		r = -ENOTTY;
+> >   	}
+> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > index 4e80c57a3182..db1ebf85e177 100644
+> > --- a/include/uapi/linux/kvm.h
+> > +++ b/include/uapi/linux/kvm.h
+> > @@ -500,6 +500,16 @@ struct kvm_dirty_log {
+> >   	};
+> >   };
+> > +/* for KVM_GET_PAGE_ENC_BITMAP */
+> > +struct kvm_page_enc_bitmap {
+> > +	__u64 start_gfn;
+> > +	__u64 num_pages;
+> > +	union {
+> > +		void __user *enc_bitmap; /* one bit per page */
+> > +		__u64 padding2;
+> > +	};
+> > +};
+> > +
+> >   /* for KVM_CLEAR_DIRTY_LOG */
+> >   struct kvm_clear_dirty_log {
+> >   	__u32 slot;
+> > @@ -1478,6 +1488,8 @@ struct kvm_enc_region {
+> >   #define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
+> >   #define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
+> > +#define KVM_GET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
+> > +
+> >   /* Secure Encrypted Virtualization command */
+> >   enum sev_cmd_id {
+> >   	/* Guest initialization commands */
