@@ -2,164 +2,189 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD1EC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58392C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C7B2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D68206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WhFf4JSV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bMgkJ3Sm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404433AbgDCR2E (ORCPT
+        id S2404446AbgDCR2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:28:04 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33536 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404371AbgDCR2E (ORCPT
+        Fri, 3 Apr 2020 13:28:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29850 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2403831AbgDCR2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:28:04 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 033HRdOg115404;
-        Fri, 3 Apr 2020 12:27:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585934859;
-        bh=Jt4eGbPiA6nLbaLqUDwk0/ki7Wj5fZ7t7wGKoVBH6+4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WhFf4JSVjpyFG+5vUU8wZmmxcHBm33SxlF5cEknvg9VAorbjlw0lZAybFLp67W7xL
-         UnAMa9Oa8OYTmWXsS2SK1RnkJCuBW8zD0dTKCJZcOvcXx5TNHGijNdnEJwJyivWXPW
-         PUHQP6RBaO7GD0wTprQvSeX8I1WfgdIMHcB2WHCc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 033HRdWE056151;
-        Fri, 3 Apr 2020 12:27:39 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
- 2020 12:27:38 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Apr 2020 12:27:39 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 033HRcc0044904;
-        Fri, 3 Apr 2020 12:27:38 -0500
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add binding for sgm3140
-To:     Luca Weiss <luca@z3ntu.xyz>, <linux-leds@vger.kernel.org>
-CC:     Heiko Stuebner <heiko@sntech.de>, Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>
-References: <20200330194757.2645388-1-luca@z3ntu.xyz>
- <20200330194757.2645388-2-luca@z3ntu.xyz>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <6c43ac0d-2510-568c-bb5e-955709a9016f@ti.com>
-Date:   Fri, 3 Apr 2020 12:21:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 3 Apr 2020 13:28:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585934897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=teuy+sFz4u16kM5p1bWOo2plt8bmjSuv9csLpTGopn8=;
+        b=bMgkJ3Sm2qyymGkKpoILE1MnsW1TdoaIt3CCU0jnr5Wclh82qDnaWQX7rLQ1J58AySTilS
+        M+DKV0HrfI5pPOz+tRLiKpAAaUTRe9P6qjHAMH4nr+EdTxsRKZ6Mu3u/CwwcNj6XfNbQAu
+        4IR4H6nFyxpqjd+V6YNxWdjOgUD9jIU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-LOgI8shxPyCl2ELpbS2FPQ-1; Fri, 03 Apr 2020 13:28:14 -0400
+X-MC-Unique: LOgI8shxPyCl2ELpbS2FPQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D11151137843;
+        Fri,  3 Apr 2020 17:28:11 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB65A60BF3;
+        Fri,  3 Apr 2020 17:28:07 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 11:28:07 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
+ userspace
+Message-ID: <20200403112807.30a56c48@w520.home>
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A220662@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-4-git-send-email-yi.l.liu@intel.com>
+        <20200402120100.19e43c72@w520.home>
+        <A2975661238FB949B60364EF0F2C25743A220662@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200330194757.2645388-2-luca@z3ntu.xyz>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luca
+On Fri, 3 Apr 2020 08:17:44 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-On 3/30/20 2:47 PM, Luca Weiss wrote:
-> Add YAML devicetree binding for SGMICRO SGM3140 charge pump used for
-> camera flash LEDs.
->
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
-> Changes since v1:
-> - Add vin-supply
-> - Add led subnode (common.yaml)
->
->   .../bindings/leds/leds-sgm3140.yaml           | 61 +++++++++++++++++++
->   1 file changed, 61 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-> new file mode 100644
-> index 000000000000..24ca178e5d0a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-sgm3140.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SGMICRO SGM3140 500mA Buck/Boost Charge Pump LED Driver
-> +
-> +maintainers:
-> +  - Luca Weiss <luca@z3ntu.xyz>
-> +
-> +description: |
-> +  The SGM3140 is a current-regulated charge pump which can regulate two current
-> +  levels for Flash and Torch modes.
-> +
-> +  The data sheet can be found at:
-> +    http://www.sg-micro.com/uploads/soft/20190626/1561535688.pdf
-> +
-> +properties:
-> +  compatible:
-> +    const: sgmicro,sgm3140
-> +
-> +  enable-gpios:
-> +    maxItems: 1
-> +    description: A connection to the 'EN' pin.
-> +
-> +  flash-gpios:
-> +    maxItems: 1
-> +    description: A connection to the 'FLASH' pin.
-> +
-> +  vin-supply:
-> +    description: Regulator providing power to the 'VIN' pin.
-> +
-> +  led:
-> +    allOf:
-> +      - $ref: common.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - flash-gpios
-> +  - enable-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/leds/common.h>
-> +
-> +    sgm3140 {
-> +        compatible = "sgmicro,sgm3140";
-> +        flash-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
-> +        enable-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
-> +        vin-supply = <&reg_dcdc1>;
-> +
-> +        sgm3140_flash: led {
-> +            function = LED_FUNCTION_FLASH;
-> +            color = <LED_COLOR_ID_WHITE>;
-> +            flash-max-timeout-us = <250000>;
-> +        };
-> +    };
+> > From: Alex Williamson < alex.williamson@redhat.com >
+> > Sent: Friday, April 3, 2020 2:01 AM
+> > To: Liu, Yi L <yi.l.liu@intel.com>
+> > Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
+> > userspace
+> > 
+> > On Sun, 22 Mar 2020 05:32:00 -0700
+> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> >   
+> > > From: Liu Yi L <yi.l.liu@intel.com>
+> > >
+> > > This patch reports PASID alloc/free availability to userspace (e.g.
+> > > QEMU) thus userspace could do a pre-check before utilizing this feature.
+> > >
+> > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > > Cc: Eric Auger <eric.auger@redhat.com>
+> > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > ---
+> > >  drivers/vfio/vfio_iommu_type1.c | 28 ++++++++++++++++++++++++++++
+> > >  include/uapi/linux/vfio.h       |  8 ++++++++
+> > >  2 files changed, 36 insertions(+)
+> > >
+> > > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> > > b/drivers/vfio/vfio_iommu_type1.c index e40afc0..ddd1ffe 100644
+> > > --- a/drivers/vfio/vfio_iommu_type1.c
+> > > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > > @@ -2234,6 +2234,30 @@ static int vfio_iommu_type1_pasid_free(struct  
+> > vfio_iommu *iommu,  
+> > >  	return ret;
+> > >  }
+> > >
+> > > +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+> > > +					 struct vfio_info_cap *caps)
+> > > +{
+> > > +	struct vfio_info_cap_header *header;
+> > > +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
+> > > +
+> > > +	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+> > > +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+> > > +	if (IS_ERR(header))
+> > > +		return PTR_ERR(header);
+> > > +
+> > > +	nesting_cap = container_of(header,
+> > > +				struct vfio_iommu_type1_info_cap_nesting,
+> > > +				header);
+> > > +
+> > > +	nesting_cap->nesting_capabilities = 0;
+> > > +	if (iommu->nesting) {
+> > > +		/* nesting iommu type supports PASID requests (alloc/free) */
+> > > +		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static long vfio_iommu_type1_ioctl(void *iommu_data,
+> > >  				   unsigned int cmd, unsigned long arg)  { @@ -  
+> > 2283,6 +2307,10 @@  
+> > > static long vfio_iommu_type1_ioctl(void *iommu_data,
+> > >  		if (ret)
+> > >  			return ret;
+> > >
+> > > +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > >  		if (caps.size) {
+> > >  			info.flags |= VFIO_IOMMU_INFO_CAPS;
+> > >
+> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > > index 298ac80..8837219 100644
+> > > --- a/include/uapi/linux/vfio.h
+> > > +++ b/include/uapi/linux/vfio.h
+> > > @@ -748,6 +748,14 @@ struct vfio_iommu_type1_info_cap_iova_range {
+> > >  	struct	vfio_iova_range iova_ranges[];
+> > >  };
+> > >
+> > > +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  2
+> > > +
+> > > +struct vfio_iommu_type1_info_cap_nesting {
+> > > +	struct	vfio_info_cap_header header;
+> > > +#define VFIO_IOMMU_PASID_REQS	(1 << 0)
+> > > +	__u32	nesting_capabilities;
+> > > +};
+> > > +
+> > >  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+> > >
+> > >  /**  
+> > 
+> > I think this answers my PROBE question on patch 1/.   
+> yep.
+> > Should the quota/usage be exposed to the user here?  Thanks,  
+> 
+> Do you mean report the quota available for this user in this cap info as well?
 
+Yes.  Would it be useful?
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
+> For usage, do you mean the alloc and free or others?
+
+I mean how many of the quota are currently in allocated, or
+alternatively, how many remain.  Thanks,
+
+Alex
 
