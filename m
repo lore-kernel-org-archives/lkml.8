@@ -2,121 +2,91 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8838BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CD8C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D0E207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE67720BED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390227AbgDCDMz (ORCPT
+        id S2390356AbgDCDPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 23:12:55 -0400
-Received: from smtprelay0145.hostedemail.com ([216.40.44.145]:40854 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389171AbgDCDMz (ORCPT
+        Thu, 2 Apr 2020 23:15:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:32961 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389108AbgDCDPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 23:12:55 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 1AA50100E7B42
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Apr 2020 03:12:54 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: yard82_537bf120b152d
-X-Filterd-Recvd-Size: 3199
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Apr 2020 03:12:53 +0000 (UTC)
-Message-ID: <8611a73f58a162f9dd5edca5f60fdca262a17756.camel@perches.com>
-Subject: checkpatch doesn't recognize register or volatile declarations (was
- Re: [Outreachy kernel] [PATCH] staging: ralink-gdma: Move blank line to fix
- warning)
-From:   Joe Perches <joe@perches.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 02 Apr 2020 20:10:57 -0700
-In-Reply-To: <3492c120971177bb0b523d78565130981acd1eda.camel@gmail.com>
-References: <20200402082309.839063-1-jbwyatt4@gmail.com>
-         <alpine.DEB.2.21.2004021129490.3014@hadrien>
-         <3492c120971177bb0b523d78565130981acd1eda.camel@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 2 Apr 2020 23:15:19 -0400
+Received: from [123.118.214.4] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <aaron.ma@canonical.com>)
+        id 1jKCnb-0008Mo-1M; Fri, 03 Apr 2020 03:15:15 +0000
+Subject: Re: [Intel-wired-lan] [PATCH] e1000e: bump up timeout to wait when ME
+ un-configure ULP mode
+To:     Hans de Goede <hdegoede@redhat.com>, jeffrey.t.kirsher@intel.com,
+        davem@davemloft.net, intel-wired-lan@lists.osuosl.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sasha.neftin@intel.com
+References: <20200323191639.48826-1-aaron.ma@canonical.com>
+ <4f9f1ad0-e66a-d3c8-b152-209e9595e5d7@redhat.com>
+From:   Aaron Ma <aaron.ma@canonical.com>
+Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
+ mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
+ 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
+ BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
+ MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
+ ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
+ AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
+ AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
+ LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
+ GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
+ 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
+ V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
+ cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
+ sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
+ +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
+ 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
+ mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
+ Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
+ 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
+ VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
+ NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
+ 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
+ nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
+Message-ID: <1c0e602f-1fe7-62b1-2283-b98783782e87@canonical.com>
+Date:   Fri, 3 Apr 2020 11:15:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <4f9f1ad0-e66a-d3c8-b152-209e9595e5d7@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(adding lkml)
+Hi Jeffrey:
 
-On Thu, 2020-04-02 at 18:21 -0700, John B. Wyatt IV wrote:
-> On Thu, 2020-04-02 at 11:31 +0200, Julia Lawall wrote:
-> > On Thu, 2 Apr 2020, John B. Wyatt IV wrote:
-> > 
-> > > Move a blank line within a struct to fix/silence a style warning.
-> > > 
-> > > Reported by checkpatch.
-> > > 
-> > > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
-> > > ---
-> > > Note:
-> > > ralink-gdma does not build; even with make allyesconfig.
-> > > I did not find a menu option with make menuconfig.
-> > > 
-> > >  drivers/staging/ralink-gdma/ralink-gdma.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/staging/ralink-gdma/ralink-gdma.c
-> > > b/drivers/staging/ralink-gdma/ralink-gdma.c
-> > > index eabf1093328e..9c398048daac 100644
-> > > --- a/drivers/staging/ralink-gdma/ralink-gdma.c
-> > > +++ b/drivers/staging/ralink-gdma/ralink-gdma.c
-> > > @@ -122,9 +122,9 @@ struct gdma_dma_dev {
-> > >  	struct gdma_data *data;
-> > >  	void __iomem *base;
-> > >  	struct tasklet_struct task;
-> > > +
-> > 
-> > Adding a blank line here is not correct. checkpatch is confused. 
+I have received the email that you apply this patch to next-queue branch
+dev-queue.
+
+But after this branch is rebased to v5.6, I can't find it.
+
+Will you apply again?
+
+Thanks,
+Aaron
+
+On 4/2/20 8:31 PM, Hans de Goede wrote:
 > 
-> It is not, but I was unsure of how this should be addressed. Thank you
-> for letting me know.
-> 
-> The second version of the patch removes the blank line.
-> 
-> > Perhaps
-> > it lacks a pattern considering wolatile to indicate a type.
-> 
-> I have CC'ed Joe Perches on this.
-> 
-
-Well, perhaps this, but it might cause other undesired change.
-I haven't tested it much.
-
-Maybe for older c, this list should even include "auto" too.
-
-btw: the linux kernel sources do not have a single instance of
-     auto as far as I can tell with a trivial search.
-
----
- scripts/checkpatch.pl | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index d64c67..e906a8 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -372,6 +372,8 @@ our $InitAttribute = qr{$InitAttributeData|$InitAttributeConst|$InitAttributeIni
- # We need \b after 'init' otherwise 'initconst' will cause a false positive in a check
- our $Attribute	= qr{
- 			const|
-+			volatile|
-+			register|
- 			__percpu|
- 			__nocast|
- 			__safe|
-
-
+> This fix fixes a real problem, on a popular model laptop
+> and since it just extends a timeout it is a pretty harmless
+> (no chance of regressions) fix. As such since there seems
+> to be no other solution in sight, can we please move forward
+> with this fix for now ?
