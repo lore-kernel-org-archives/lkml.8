@@ -2,184 +2,137 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25014C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0E0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A732073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9B120787
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:40:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Fhc+srxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390523AbgDCIjP (ORCPT
+        id S2390544AbgDCIka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:39:15 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:58291 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgDCIjO (ORCPT
+        Fri, 3 Apr 2020 04:40:30 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:45856 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727868AbgDCIka (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:39:14 -0400
-IronPort-SDR: sUReqo9jcG8P5jTNOMx3UMFTZ4XTQcpt8YLMW4ftMwd3g17ic/x+PD4F3VbodYR7zR+ces2Rh1
- m3sZh73ZzGJwB2ZD4cjU2TzossrCrQMHDGgbgHDHgmF5cDtCrPdIYqpPV+tMtgyo5bUXxXrMIU
- 7PV61ZfVXDRrHJULjeFe6SjIT2kJYxS+cgTP/BauImST5vIgp7H974WdVrT1jWunXBlPF/2jUJ
- X0c4Ah4e53IgfEOz3SCiIUXNNIqaGF7zBlyfiXDUoIKw8RN7O8qPHYVnnHLj99zG6omdIIP6HF
- 7HQ=
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="47456981"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 03 Apr 2020 00:39:14 -0800
-IronPort-SDR: 4FEtBmuvQmot+a/tv6u+trgfGuVH/blxGeHdMqjgABFn33r7JFFy36vs8wtpbrmZY9AWqyC/He
- 5SSE79AE+KsQvNwTgGFRO4cHTmYp5acGWW5oIN6LkXfufxp17YD1TuqCqJGIXHNjPLZYC7Z4et
- 1/RwYuBksAaC8mbfuMp6b41K9CGiO3YbYmM+RXAXHuASEubYmsVTzEST6WtjYGOrdICXx3bp+z
- U0gFD1Y4lLBIGKm3jnNoXgPPRngxj52RgC0nlWe+0sInvd0Gf7YDWakLTTzmk3AvGYHD+BgofV
- dg8=
-Subject: Re: [PATCH v10 54/55] Input: atmel_mxt_ts: Implement synchronization
- during various operation
-To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
-        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-55-jiada_wang@mentor.com>
- <c53637ef-8e5d-3243-7236-5da360021f21@gmail.com>
- <b06c7915-562f-ec68-766a-2118cfe57a0f@mentor.com>
- <b9a8865c-7754-16f7-8f66-9cd70dc42d3c@gmail.com>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <271b1013-63e4-cd05-f859-07032c0e8a85@mentor.com>
-Date:   Fri, 3 Apr 2020 17:39:07 +0900
+        Fri, 3 Apr 2020 04:40:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585903229; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=pcPZXHP6kJuCOK+5sj4KXybMGy4D3NvpQrGs0CQsFM0=; b=Fhc+srxBi+csWr3WySzwoLHsCGed9Odt0MMaWrVxVTACCoCR3DMixCehpczINEQd2++0VHY/
+ ZCxhDViyADrH9Grwo55jdRxO9c06DnnmwceNqKUKF789x5icmKL2onrBmnK4C8bAlw4r2+1c
+ IpmLShBhw7YVjeKEI7lq+DFTaKI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e86f675.7f1f14f46d50-smtp-out-n04;
+ Fri, 03 Apr 2020 08:40:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 37B75C433BA; Fri,  3 Apr 2020 08:40:21 +0000 (UTC)
+Received: from [10.111.194.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mgautam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 58944C433D2;
+        Fri,  3 Apr 2020 08:40:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 58944C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
+Subject: Re: [PATCH 1/2] phy: qualcomm: add qcom dwc3 phy
+To:     Ansuel Smith <ansuelsmth@gmail.com>, Andy Gross <agross@kernel.org>
+Cc:     Andy Gross <agross@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200403002608.946-1-ansuelsmth@gmail.com>
+From:   Manu Gautam <mgautam@codeaurora.org>
+Message-ID: <75326e97-a6fb-3682-9973-22d46e48b58d@codeaurora.org>
+Date:   Fri, 3 Apr 2020 14:10:13 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <b9a8865c-7754-16f7-8f66-9cd70dc42d3c@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200403002608.946-1-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
+Hi,
 
-On 2020/04/02 22:24, Dmitry Osipenko wrote:
-> 02.04.2020 14:50, Wang, Jiada пишет:
->> Hi Dmitry
->>
->> On 2020/04/02 1:04, Dmitry Osipenko wrote:
->>> 31.03.2020 13:50, Jiada Wang пишет:
->>>> From: Sanjeev Chugh <sanjeev_chugh@mentor.com>
->>>>
->>>> There could be scope of race conditions when sysfs is being handled
->>>> and at the same time, device removal is occurring. For example,
->>>> we don't want the device removal to begin if the Atmel device
->>>> cfg update is going on or firmware update is going on. In such
->>>> cases, wait for device update to be completed before the removal
->>>> continues.
->>>>
->>>>       Thread                                          Thread 2:
->>>> =========================
->>>> =========================
->>>> mxt_update_fw_store()                           mxt_remove()
->>>> mutex_lock(&data->lock)                         ...
->>>> mxt_initialize()                                //Tries to acquire lock
->>>>     request_firmware_nowait()                     mutex_lock(&data->lock)
->>>> ...                                             ==>waits for lock()
->>>> ...                                             .
->>>> ...                                             .
->>>> mutex_unlock(&data->lock)                       .
->>>>                                                   //Gets lock and
->>>> proceeds
->>>>                                                  
->>>> mxt_free_input_device();
->>>>                                                   ...
->>>>                                                  
->>>> mutex_unlock(&data->lock)
->>>>                                                   //Frees atmel driver
->>>> data
->>>>                                                   kfree(data)
->>>>
->>>> If the request_firmware_nowait() completes after the driver removal,
->>>> and callback is triggered. But kernel crashes since the module is
->>>> already removed.
->>>>
->>>> This commit adds state machine to serialize such scenarios.
->>>
->>> Won't it be easier to bump driver's module use-count by __module_get()
->>> while firmware is updating? Or remove sysfs during of mxt_remove()? >
->>
->> thanks for your inspiration, I will replace state machine with module
->> use-count.
-> 
-> I'm actually now thinking that the suggestion about the module-count
-> wasn't very correct because this won't really help in regards to
-> mxt_update_fw_store() / mxt_remove() racing.
-> 
-> I see that mxt_remove() already invokes the mxt_sysfs_remove(), which
-> should block until mxt_update_fw_store() is completed, shouldn't it?
-
-Yes, you are correct,
-this commit isn't addressing the real root cause
-
-> 
-> I guess the kfree(data) isn't the real cause of the problem and
-> something like this should help:
-> 
-> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c
-> b/drivers/input/touchscreen/atmel_mxt_ts.c
-> index b2edf51e1595..4e66106feeb9 100644
-> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> @@ -4254,6 +4254,7 @@ static void mxt_sysfs_remove(struct mxt_data *data)
->   	struct i2c_client *client = data->client;
-> 
->   	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
-> +	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
->   }
-> 
->   static void mxt_reset_slots(struct mxt_data *data)
-> @@ -4649,31 +4650,19 @@ static int mxt_remove(struct i2c_client *client)
->   {
->   	struct mxt_data *data = i2c_get_clientdata(client);
-> 
-> -	mutex_lock(&data->lock);
-> -	if (data->e_state == MXT_STATE_UPDATING_CONFIG_ASYNC ||
-> -	    data->e_state == MXT_STATE_UPDATING_CONFIG) {
-> -		data->e_state = MXT_STATE_GOING_AWAY;
-> -		mutex_unlock(&data->lock);
-> -		mxt_wait_for_completion(data, &data->update_cfg_completion,
-> -					MXT_CONFIG_TIMEOUT);
-> -	} else {
-> -		data->e_state = MXT_STATE_GOING_AWAY;
-> -		mutex_unlock(&data->lock);
-> -	}
-> +	mxt_sysfs_remove(data);
-> 
-> -	disable_irq(data->irq);
-> -	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
->   	if (data->reset_gpio) {
->   		sysfs_remove_link(&client->dev.kobj, "reset");
->   		gpiod_unexport(data->reset_gpio);
->   	}
+On 4/3/2020 5:56 AM, Ansuel Smith wrote:
+> This has lost in the original push for the dwc3 qcom driver.
+> This is needed for ipq806x SoC as without this the usb ports
+> doesn't work at all.
+>
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/phy/qualcomm/Kconfig         |  12 +
+>  drivers/phy/qualcomm/Makefile        |   1 +
+>  drivers/phy/qualcomm/phy-qcom-dwc3.c | 578 +++++++++++++++++++++++++++
+>  3 files changed, 591 insertions(+)
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-dwc3.c
+>
+> diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+> index e46824da29f6..3d45a9156f85 100644
+> --- a/drivers/phy/qualcomm/Kconfig
+> +++ b/drivers/phy/qualcomm/Kconfig
+> @@ -91,3 +91,15 @@ config PHY_QCOM_USB_HSIC
+>  	select GENERIC_PHY
+>  	help
+>  	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
 > +
->   	mxt_debug_msg_remove(data);
-> -	mxt_sysfs_remove(data);
->   	mxt_free_input_device(data);
->   	mxt_free_object_table(data);
-> 
-> 	if (debug_state)
-> 		cancel_delayed_work_sync(&data->watchdog_work);
-> +	disable_irq(data->irq);
-> 
->   	return 0;
->   }
-> 
-yes, I confirmed, the root cause is because irq is disabled while 
-firmware is being updated, this cause update of firmware can't proceed.
-by move disable irq after sysfs entry removal can fix the issue
+> +config PHY_QCOM_DWC3
+Please rename to PHY_QCOM_IPQ806X_USB
+> +	tristate "QCOM DWC3 USB PHY support"
+> +	depends on ARCH_QCOM
+> +	depends on HAS_IOMEM
+> +	depends on OF
+> +	select GENERIC_PHY
+> +	help
+> +	  This option enables support for the Synopsis PHYs present inside the
+> +	  Qualcomm USB3.0 DWC3 controller.  This driver supports both HS and SS
+> +	  PHY controllers.
 
-Thanks,
-Jiada
+Please mention that driver supports only IPQ806x, as it can't  be used
+for all QCOM phy and dwc3 controllers wrappers.
+
+
+> +
+> diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+> index 283251d6a5d9..04c5a8da941a 100644
+> --- a/drivers/phy/qualcomm/Makefile
+> +++ b/drivers/phy/qualcomm/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
+>  obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
+>  obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
+>  obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
+> +obj-$(CONFIG_PHY_QCOM_DWC3)		+= phy-qcom-dwc3.o
+> diff --git a/drivers/phy/qualcomm/phy-qcom-dwc3.c b/drivers/phy/qualcomm/phy-qcom-dwc3.c
+> new file mode 100644
+> index 000000000000..f33da199ddde
+> --- /dev/null
+> +++ b/drivers/phy/qualcomm/phy-qcom-dwc3.c
+
+Rename to phy-qcom-ip806x-usb.c
+
+Please also add qcom_ipq806x_usb as prefix in the function names and structures etc.
+
+> @@ -0,0 +1,578 @@
+>
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
