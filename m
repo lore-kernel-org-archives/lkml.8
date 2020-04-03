@@ -2,115 +2,98 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4078C2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD20C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5BAB20737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D5820737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SaOHk5lP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dstpa5L1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732477AbgDCUvt (ORCPT
+        id S1728962AbgDCUwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 16:51:49 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35881 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgDCUvt (ORCPT
+        Fri, 3 Apr 2020 16:52:03 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44113 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgDCUwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 16:51:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k1so698162wrm.3;
-        Fri, 03 Apr 2020 13:51:47 -0700 (PDT)
+        Fri, 3 Apr 2020 16:52:03 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p14so8349062lji.11;
+        Fri, 03 Apr 2020 13:51:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4PywjeEUlJfhIhA45DrSAIjo99aXNCUjCyujBOC9psU=;
-        b=SaOHk5lP3Kz6iO4J8i7k0c+ke5bsyK8od63PRGN1+k8WLbAZbnI/C2uVv9omWdI7YK
-         OOaLDtNEiLsNjKZr6btwRBMaNF7pVpJhsI2TxBrafJNV8jGSrCTbzVeJLSAZmCy2fXdT
-         X5dudJTS7Trd6HVxOJpXgcuDu6cLCvjzgSxtzlKiO2gUwqqzldsQI9JhsgrqXzwYSZTh
-         MmBbq4/TgdYyMQ0ZamEN/fVzWsF0Y58gtq87/UJyxTN4NUnDQQp6gI8lJVrNrkIcBXbU
-         hNsADOogPfBcdCfOQXxlV8d+c+uarVRtIJCOV7xW4wP79NZma9cc5q8/7Ue9coK8zsLx
-         xEFA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qKOt4yBSCllXkvMmG1P7+ZC9P/wmCYf6URwjXF+xxWs=;
+        b=Dstpa5L1bZINAQiQRnj+ZrsSpB1JeHuUnX9cdpzn3iIlGfsVQq1rLfDWfUVFbMmSm6
+         0Tspp6K3Q41MViBz+qTujtpa5LGQ3KgdeechVXuKk64s//xLhuH5sSaIF2WCui8h0K0W
+         w4oHp35pd33NxUltUJULIFXBnXkU01+SXNuWSIg1UCOtuEdU8dGkIqQXn5oZZIhEEO4E
+         x70xCUR1YZXpBonbtCnd+BkX++BH6EnCYayT7fwFzNLKAnhyCQaNKOPCFpFeB9MzS70l
+         mWWHEwytBu3a2Tt4bFK7/3rMZ/7XfOtqO2V9wyYTHk0hlliVI0LKKTDvsBZtrdU06qKw
+         lcAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=4PywjeEUlJfhIhA45DrSAIjo99aXNCUjCyujBOC9psU=;
-        b=kKp+uXgZ78WFPz06mv3DC4sHalGoGbz5Z5204+g96dZYhXJQDbTwv92myUsQ887HpQ
-         +QJRrZTvXXgzXlmopaqssgPhv+/cS9YAJXnMeTOcx9lcVp6QjHQOgNbuhyXzWUelJQbC
-         +IOnjavyeeHuFuuuSvUcKzW9CI2SBuCp21l9JwQnLmW5UBHl2I3lWYAnnCaFgpzFlGGk
-         RnTb4zKdN//uLGwY+FQwAhtd0h4p1cqYTfOCMYgpPLNxhI+sL9ZtX8FFw62U58pjezCC
-         9dIrmZS/e2NigYhHPyefcLrhBgtDbq6E9EtKkapnEji9l9vx3d9tEzcauhjV3bY6G7ty
-         s0Og==
-X-Gm-Message-State: AGi0PubfJce5Cv0TKNNCs5E62og5bEvVzqTs/P9ozx3czz/RB8zSaL3l
-        hmfsazqLb38z1hm44LZgRzE=
-X-Google-Smtp-Source: APiQypK8znDXBlsXr5rob+lCHljMExi2W9qfZYxd28jH2SBn/+sltlwfPMWfacf7IgYNXuwiC85iHA==
-X-Received: by 2002:a5d:5586:: with SMTP id i6mr8111632wrv.23.1585947106737;
-        Fri, 03 Apr 2020 13:51:46 -0700 (PDT)
-Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id d13sm13437570wrv.34.2020.04.03.13.51.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 13:51:45 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, javi.merino@kernel.org,
-        edubezval@gmail.com, orjan.eide@arm.com, tzimmermann@suse.de,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] thermal: devfreq_cooling: inline all stubs for CONFIG_DEVFREQ_THERMAL=n
-Date:   Fri,  3 Apr 2020 22:51:33 +0200
-Message-Id: <20200403205133.1101808-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.0
+        bh=qKOt4yBSCllXkvMmG1P7+ZC9P/wmCYf6URwjXF+xxWs=;
+        b=CegfGX3sKUjLSf7h0r/c6Pij0MA0hQeRINzsuy6IjCyKfsxmJ0mVF61sLz2DpEhv/y
+         4TijAF1ChASS2E2pl7CEWZBRtaTWM2wEqO1/az1++NMLnL2SbQVge+jypVGxD2o0attT
+         85LZqSnlu9n96IOiHpfm44aBCufWsuk0R1+i49oHNn8k5tLR769qH3vUKQiSiYIv12El
+         lgIzb1bXHc9xsB+HXY80y9fL6nKP/fF8dxUMeC/nAYPGc4CTPS1koTN3zSqRA88hKHg3
+         MaxzrgpiVIrqGd7jGT5nixsRT5xFwg0y4qbDprzDr3AVgHeSIMuhfvQNtc4yirJVEDCd
+         6m2w==
+X-Gm-Message-State: AGi0PubPxKxh9C7dH1obfCl9GbZaI57a3vt2ORZiXAmHf0EqEDi3XKDF
+        0jbY1v9yQS3wnbrFj9/veiOInXmB
+X-Google-Smtp-Source: APiQypKKAJ3W2STdZnNykcSQuCh88YvTmB+Ene5ktA+FJ/bnLn8nL/i2KQMRk6kyX9pF+dUf2QKrHw==
+X-Received: by 2002:a2e:a176:: with SMTP id u22mr5995272ljl.84.1585947118705;
+        Fri, 03 Apr 2020 13:51:58 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id b17sm6700767lfa.15.2020.04.03.13.51.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 13:51:58 -0700 (PDT)
+Subject: Re: [PATCH v3 2/7] clocksource: Add Tegra186 timers support
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200403202209.299823-1-thierry.reding@gmail.com>
+ <20200403202209.299823-3-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <eb2a848f-9a4f-7c06-aff0-86d5087fe053@gmail.com>
+Date:   Fri, 3 Apr 2020 23:51:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200403202209.299823-3-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_DEVFREQ_THERMAL is disabled all functions except
-of_devfreq_cooling_register_power() were already inlined. Also inline
-the last function to avoid compile errors when multiple drivers call
-of_devfreq_cooling_register_power() when CONFIG_DEVFREQ_THERMAL is not
-set. Compilation failed with the following message:
-  multiple definition of `of_devfreq_cooling_register_power'
-(which then lists all usages of of_devfreq_cooling_register_power())
+03.04.2020 23:22, Thierry Reding пишет:
+...
+> +static irqreturn_t tegra186_timer_irq(int irq, void *data)
+> +{
+> +	struct tegra186_timer *tegra = data;
+> +
+> +	if (watchdog_active(&tegra->wdt->base)) {
+> +		tegra186_wdt_disable(tegra->wdt);
+> +		tegra186_wdt_enable(tegra->wdt);
+> +	}
 
-Thomas Zimmermann reported this problem [0] on a kernel config with
-CONFIG_DRM_LIMA={m,y}, CONFIG_DRM_PANFROST={m,y} and
-CONFIG_DEVFREQ_THERMAL=n after both, the lima and panfrost drivers
-gained devfreq cooling support.
+Shouldn't this return IRQ_NONE if watchdog is inactive?
 
-[0] https://www.spinics.net/lists/dri-devel/msg252825.html
-
-Fixes: a76caf55e5b356 ("thermal: Add devfreq cooling")
-Cc: stable@vger.kernel.org
-Reported-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- include/linux/devfreq_cooling.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/devfreq_cooling.h b/include/linux/devfreq_cooling.h
-index 4635f95000a4..79a6e37a1d6f 100644
---- a/include/linux/devfreq_cooling.h
-+++ b/include/linux/devfreq_cooling.h
-@@ -75,7 +75,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *dfc);
- 
- #else /* !CONFIG_DEVFREQ_THERMAL */
- 
--struct thermal_cooling_device *
-+static inline struct thermal_cooling_device *
- of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
- 				  struct devfreq_cooling_power *dfc_power)
- {
--- 
-2.26.0
+> +	return IRQ_HANDLED;
+> +}
 
