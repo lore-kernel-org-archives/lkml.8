@@ -2,98 +2,285 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A178C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2670C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E2B2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:20:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T3Upy+I8"
+	by mail.kernel.org (Postfix) with ESMTP id A96A42073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585930856;
+	bh=6ksLNVQXAUoLYmHmFagmo0/c/Aca9cLX+yR2IzNnuiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SeKwbrml/Fu3bIDLSvriWrMmkvR1mevUd1mT8n924XdIcIhJZgudKRGfW6TiGkp43
+	 Royr0DAAoSbu6EJ7Da/woATTIGzLpioT7AKCfDfWt0JqC7QMEHn8XyBs5l6wrvxEz3
+	 xwI9PwhQDKOESzojklrJwAMiSRxr04ZIErdI5Ebk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404348AbgDCQUu (ORCPT
+        id S2404427AbgDCQUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:20:50 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33590 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728020AbgDCQUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:20:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585930848;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LluwbzYPZTeVhlFwEl3Fq8+v9AvRnqXZTrSsmeMHE2I=;
-        b=T3Upy+I8SHtu52Xh4otZm/XKkqmSNJWGXsmp+sf5lZwOzuagmETuCHOcLmLbJVeoaZ9YfK
-        Jh5Kcl09Qx8AL2oQQEGnF2mP3ptAV58ok3noTFGJtMPNsZna/sU9CTvBUY1ADdBP5zssaJ
-        8SkcGYEqEXqv/xH6P3NwMXcbICNjpxw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-oxMaVJn4NUuZOhmFbeg-Xg-1; Fri, 03 Apr 2020 12:20:44 -0400
-X-MC-Unique: oxMaVJn4NUuZOhmFbeg-Xg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 3 Apr 2020 12:20:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728020AbgDCQUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:20:55 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E58B1100550D;
-        Fri,  3 Apr 2020 16:20:42 +0000 (UTC)
-Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 356CB18A85;
-        Fri,  3 Apr 2020 16:20:41 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 11:20:39 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     peterz@infradead.org,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Matt Helsley <mhelsley@vmware.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Raphael Gault <raphael.gault@arm.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] objtool: Documentation: document UACCESS warnings
-Message-ID: <20200403162039.fubfeblv3x5pmphn@treble>
-References: <20200326134701.GA118458@rlwimi.vmware.com>
- <20200326183707.238474-1-ndesaulniers@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AF0B20721;
+        Fri,  3 Apr 2020 16:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585930853;
+        bh=6ksLNVQXAUoLYmHmFagmo0/c/Aca9cLX+yR2IzNnuiA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rDDHC6DXuHt2g9x1KOZVQKzns0I6aobzWXP5Woq9MMdp8TU70em7GDleRfoC/aWUx
+         i184N4XP1kTwQdq8HwVc0DftV0OYsNqLrr2XCRFF5FH8JIQoa3zJNs9D92T+d8IgpP
+         zjvAKzyQtHzcG8sX3nNBSM/TwH+70SWG8hxWVKos=
+Date:   Fri, 3 Apr 2020 09:20:52 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] f2fs: prevent meta updates while checkpoint is in
+ progress
+Message-ID: <20200403162052.GA68460@google.com>
+References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
+ <20200331035419.GB79749@google.com>
+ <20200331090608.GZ20234@codeaurora.org>
+ <20200331184307.GA198665@google.com>
+ <a56deb76-bf7f-dd86-301f-fbe56413ab9b@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326183707.238474-1-ndesaulniers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <a56deb76-bf7f-dd86-301f-fbe56413ab9b@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 11:37:06AM -0700, Nick Desaulniers wrote:
-> Compiling with Clang and CONFIG_KASAN=y was exposing a few warnings:
->   call to memset() with UACCESS enabled
+On 04/01, Chao Yu wrote:
+> On 2020/4/1 2:43, Jaegeuk Kim wrote:
+> > On 03/31, Sahitya Tummala wrote:
+> >> On Mon, Mar 30, 2020 at 08:54:19PM -0700, Jaegeuk Kim wrote:
+> >>> On 03/26, Sahitya Tummala wrote:
+> >>>> allocate_segment_for_resize() can cause metapage updates if
+> >>>> it requires to change the current node/data segments for resizing.
+> >>>> Stop these meta updates when there is a checkpoint already
+> >>>> in progress to prevent inconsistent CP data.
+> >>>
+> >>> I'd prefer to use f2fs_lock_op() in bigger coverage.
+> >>
+> >> Do you mean to cover the entire free_segment_range() function within
+> >> f2fs_lock_op()? Please clarify.
+> > 
+> > I didn't test tho, something like this?
+> > 
+> > ---
+> >  fs/f2fs/checkpoint.c        |  6 ++++--
+> >  fs/f2fs/f2fs.h              |  2 +-
+> >  fs/f2fs/gc.c                | 28 ++++++++++++++--------------
+> >  fs/f2fs/super.c             |  1 -
+> >  include/trace/events/f2fs.h |  4 +++-
+> >  5 files changed, 22 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> > index 852890b72d6ac..531995192b714 100644
+> > --- a/fs/f2fs/checkpoint.c
+> > +++ b/fs/f2fs/checkpoint.c
+> > @@ -1553,7 +1553,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  			return 0;
+> >  		f2fs_warn(sbi, "Start checkpoint disabled!");
+> >  	}
+> > -	mutex_lock(&sbi->cp_mutex);
+> > +	if (cpc->reason != CP_RESIZE)
+> > +		mutex_lock(&sbi->cp_mutex);
+> >  
+> >  	if (!is_sbi_flag_set(sbi, SBI_IS_DIRTY) &&
+> >  		((cpc->reason & CP_FASTBOOT) || (cpc->reason & CP_SYNC) ||
+> > @@ -1622,7 +1623,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  	f2fs_update_time(sbi, CP_TIME);
+> >  	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
+> >  out:
+> > -	mutex_unlock(&sbi->cp_mutex);
+> > +	if (cpc->reason != CP_RESIZE)
+> > +		mutex_unlock(&sbi->cp_mutex);
+> >  	return err;
+> >  }
+> >  
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index c84442eefc56d..7c98dca3ec1d6 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -193,6 +193,7 @@ enum {
+> >  #define	CP_DISCARD	0x00000010
+> >  #define CP_TRIMMED	0x00000020
+> >  #define CP_PAUSE	0x00000040
+> > +#define CP_RESIZE 	0x00000080
+> >  
+> >  #define MAX_DISCARD_BLOCKS(sbi)		BLKS_PER_SEC(sbi)
+> >  #define DEF_MAX_DISCARD_REQUEST		8	/* issue 8 discards per round */
+> > @@ -1417,7 +1418,6 @@ struct f2fs_sb_info {
+> >  	unsigned int segs_per_sec;		/* segments per section */
+> >  	unsigned int secs_per_zone;		/* sections per zone */
+> >  	unsigned int total_sections;		/* total section count */
+> > -	struct mutex resize_mutex;		/* for resize exclusion */
+> >  	unsigned int total_node_count;		/* total node block count */
+> >  	unsigned int total_valid_node_count;	/* valid node block count */
+> >  	loff_t max_file_blocks;			/* max block index of file */
+> > diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> > index 26248c8936db0..1e5a06fda09d3 100644
+> > --- a/fs/f2fs/gc.c
+> > +++ b/fs/f2fs/gc.c
+> > @@ -1402,8 +1402,9 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
+> >  static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+> >  							unsigned int end)
+> >  {
+> > -	int type;
+> >  	unsigned int segno, next_inuse;
+> > +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+> > +	int type;
+> >  	int err = 0;
+> >  
+> >  	/* Move out cursegs from the target range */
+> > @@ -1417,16 +1418,14 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+> >  			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
+> >  		};
+> >  
+> > -		down_write(&sbi->gc_lock);
+> >  		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
+> > -		up_write(&sbi->gc_lock);
+> >  		put_gc_inode(&gc_list);
+> >  
+> >  		if (get_valid_blocks(sbi, segno, true))
+> >  			return -EAGAIN;
+> >  	}
+> >  
+> > -	err = f2fs_sync_fs(sbi->sb, 1);
+> > +	err = f2fs_write_checkpoint(sbi, &cpc);
+> >  	if (err)
+> >  		return err;
+> >  
+> > @@ -1502,6 +1501,7 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+> >  int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+> >  {
+> >  	__u64 old_block_count, shrunk_blocks;
+> > +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+> >  	unsigned int secs;
+> >  	int gc_mode, gc_type;
+> >  	int err = 0;
+> > @@ -1538,7 +1538,9 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > -	freeze_bdev(sbi->sb->s_bdev);
+> > +	freeze_super(sbi->sb);
 > 
-> Document how to fix these for future travelers.
+> Look at this again, I guess holding freeze lock here may cause potential
+> hang task issue, imaging that in a low-end storage, shrinking large size
+> address space, free_segment_range() needs very long time to migrate all
+> valid blocks in the tail of device, that's why previously we do block
+> migration with small gc_lock coverage.
+
+Hmm, it seems we had to do like:
+1) do GC
+2) freeze everything
+3) check it's okay to go new metadata
+4) do resize
+5) thaw
+
 > 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/876
-> Suggested-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-> Suggested-by: Matt Helsley <mhelsley@vmware.com>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Changes V1 -> V2:
-> * fix typo of listing uaccess_enable() twice rather than
->   uaccess_disable() as per Matt and Kamalesh.
-> * fix type of "should called" to "should be called" as per Randy.
-> * Mention non-obvious compiler instrumentation ie. -pg/mcount
->   -mfentry/fentry via tracing as per Peter.
-> * Add sentence "It also helps verify..."
-> * Add potential fix "1) remove explicit..."
-
-Thanks, adding this one to the queue for tip.
-
--- 
-Josh
-
+> Quoted:
+> 
+> Changelog v5 ==> v6:
+>  - In free_segment_range(), reduce granularity of gc_mutex.
+> 
+> Thanks,
+> 
+> > +	down_write(&sbi->gc_lock);
+> > +	mutex_lock(&sbi->cp_mutex);
+> >  
+> >  	shrunk_blocks = old_block_count - block_count;
+> >  	secs = div_u64(shrunk_blocks, BLKS_PER_SEC(sbi));
+> > @@ -1551,11 +1553,12 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+> >  		sbi->user_block_count -= shrunk_blocks;
+> >  	spin_unlock(&sbi->stat_lock);
+> >  	if (err) {
+> > -		thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+> > +		mutex_unlock(&sbi->cp_mutex);
+> > +		up_write(&sbi->gc_lock);
+> > +		thaw_super(sbi->sb);
+> >  		return err;
+> >  	}
+> >  
+> > -	mutex_lock(&sbi->resize_mutex);
+> >  	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> >  
+> >  	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+> > @@ -1587,17 +1590,13 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+> >  		goto out;
+> >  	}
+> >  
+> > -	mutex_lock(&sbi->cp_mutex);
+> >  	update_fs_metadata(sbi, -secs);
+> >  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> >  	set_sbi_flag(sbi, SBI_IS_DIRTY);
+> > -	mutex_unlock(&sbi->cp_mutex);
+> >  
+> > -	err = f2fs_sync_fs(sbi->sb, 1);
+> > +	err = f2fs_write_checkpoint(sbi, &cpc);
+> >  	if (err) {
+> > -		mutex_lock(&sbi->cp_mutex);
+> >  		update_fs_metadata(sbi, secs);
+> > -		mutex_unlock(&sbi->cp_mutex);
+> >  		update_sb_metadata(sbi, secs);
+> >  		f2fs_commit_super(sbi, false);
+> >  	}
+> > @@ -1612,7 +1611,8 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+> >  		spin_unlock(&sbi->stat_lock);
+> >  	}
+> >  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> > -	mutex_unlock(&sbi->resize_mutex);
+> > -	thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+> > +	mutex_unlock(&sbi->cp_mutex);
+> > +	up_write(&sbi->gc_lock);
+> > +	thaw_super(sbi->sb);
+> >  	return err;
+> >  }
+> > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> > index b83b17b54a0a6..1e7b1d21d0177 100644
+> > --- a/fs/f2fs/super.c
+> > +++ b/fs/f2fs/super.c
+> > @@ -3412,7 +3412,6 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+> >  	init_rwsem(&sbi->gc_lock);
+> >  	mutex_init(&sbi->writepages);
+> >  	mutex_init(&sbi->cp_mutex);
+> > -	mutex_init(&sbi->resize_mutex);
+> >  	init_rwsem(&sbi->node_write);
+> >  	init_rwsem(&sbi->node_change);
+> >  
+> > diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+> > index d97adfc327f03..f5eb03c54e96f 100644
+> > --- a/include/trace/events/f2fs.h
+> > +++ b/include/trace/events/f2fs.h
+> > @@ -50,6 +50,7 @@ TRACE_DEFINE_ENUM(CP_RECOVERY);
+> >  TRACE_DEFINE_ENUM(CP_DISCARD);
+> >  TRACE_DEFINE_ENUM(CP_TRIMMED);
+> >  TRACE_DEFINE_ENUM(CP_PAUSE);
+> > +TRACE_DEFINE_ENUM(CP_RESIZE);
+> >  
+> >  #define show_block_type(type)						\
+> >  	__print_symbolic(type,						\
+> > @@ -126,7 +127,8 @@ TRACE_DEFINE_ENUM(CP_PAUSE);
+> >  		{ CP_RECOVERY,	"Recovery" },				\
+> >  		{ CP_DISCARD,	"Discard" },				\
+> >  		{ CP_PAUSE,	"Pause" },				\
+> > -		{ CP_TRIMMED,	"Trimmed" })
+> > +		{ CP_TRIMMED,	"Trimmed" },				\
+> > +		{ CP_RESIZE,	"Resize" })
+> >  
+> >  #define show_fsync_cpreason(type)					\
+> >  	__print_symbolic(type,						\
+> > 
