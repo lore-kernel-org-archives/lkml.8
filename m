@@ -2,143 +2,130 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61793C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7513AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA09206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:09:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="KtO3uizp"
+	by mail.kernel.org (Postfix) with ESMTP id 3D857206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404548AbgDCSJO (ORCPT
+        id S2404212AbgDCSKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:09:14 -0400
-Received: from mx.0dd.nl ([5.2.79.48]:46238 "EHLO mx.0dd.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgDCSJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:09:13 -0400
-Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mx.0dd.nl (Postfix) with ESMTPS id 1E45F5FADE;
-        Fri,  3 Apr 2020 20:09:12 +0200 (CEST)
-Authentication-Results: mx.0dd.nl;
-        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="KtO3uizp";
-        dkim-atps=neutral
-Received: from www (www.vdorst.com [192.168.2.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.vdorst.com (Postfix) with ESMTPSA id AC18627C0E5;
-        Fri,  3 Apr 2020 20:09:11 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com AC18627C0E5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
-        s=default; t=1585937351;
-        bh=xBdua0z2R0JdSBRmoYYNQnHi6mI3NA5tona4JmFQPrw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KtO3uizphLuDc4K+36n4GW9eKfV1czQNFNwwSjsRupOFX6zh+lc1ZJofOUnx7mw74
-         ACD1d+pMmh1u+BWLL2DRtM8RDSHlfTV77qXfsqj61/DTTdEmbhf1dCe2suosyIC57j
-         WuhmNA9fKpJhZGgaNCkjiW6JJDS5V+rNLePUZNBPmIxBrwl9UM++ZXeKCFEiY5+qqS
-         N+sY8VvZG2cq76ciatzusD9V0JFxMnk1xfOQZ/gCf1lRy13iHL7/9/Uabty7dg+ejo
-         hhAzL/LXSHOM0CT4gaowSGGLe+VF0PkOoQ01NEDcWhJQrh4yTErQtmfvk/Pjq2MEtH
-         5XOrEeek0MH/w==
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
- www.vdorst.com (Horde Framework) with HTTPS; Fri, 03 Apr 2020 18:09:11 +0000
-Date:   Fri, 03 Apr 2020 18:09:11 +0000
-Message-ID: <20200403180911.Horde.9xqnJvjcRDe-ttshlJbG6WE@www.vdorst.com>
-From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     netdev@vger.kernel.org, stable@vger.kernel.org,
-        Sean Wang <sean.wang@mediatek.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in
- port5 setup
-In-Reply-To: <20200403112830.505720-1-gch981213@gmail.com>
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+        Fri, 3 Apr 2020 14:10:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17544 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728368AbgDCSKM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 14:10:12 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033I8hw1064358;
+        Fri, 3 Apr 2020 14:10:05 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 304g88suxg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 14:10:05 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 033I4lKk012897;
+        Fri, 3 Apr 2020 18:10:04 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03dal.us.ibm.com with ESMTP id 301x78fqkn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 18:10:04 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033IA4uL53281060
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 18:10:04 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC22D124073;
+        Fri,  3 Apr 2020 18:10:02 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AEF8B124072;
+        Fri,  3 Apr 2020 18:10:02 +0000 (GMT)
+Received: from localhost (unknown [9.85.134.35])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 18:10:02 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 6/6] pseries/sysfs: Minimise IPI noise while reading [idle_][s]purr
+In-Reply-To: <20200403062818.GB9066@in.ibm.com>
+References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com> <1585308760-28792-7-git-send-email-ego@linux.vnet.ibm.com> <1585734367.oqwn7dzljo.naveen@linux.ibm.com> <20200401120127.GC17237@in.ibm.com> <1585811157.uig8s95yst.naveen@linux.ibm.com> <20200403062818.GB9066@in.ibm.com>
+Date:   Fri, 03 Apr 2020 13:10:02 -0500
+Message-ID: <87o8s88mpx.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_14:2020-04-03,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ impostorscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=1 adultscore=0 mlxscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chuanhong Guo <gch981213@gmail.com>:
+Gautham R Shenoy <ego@linux.vnet.ibm.com> writes:
+> On Thu, Apr 02, 2020 at 01:04:34PM +0530, Naveen N. Rao wrote:
+>> >>
+>> >>I wonder if we should introduce a sysctl interface to control thresholding.
+>> >>It can default to 0, which disables thresholding so that the existing
+>> >>behavior continues. Applications (lparstat) can optionally set it to suit
+>> >>their use.
+>> >
+>> >We would be introducing 3 new sysfs interfaces that way instead of
+>> >two.
+>> >
+>> >/sys/devices/system/cpu/purr_spurr_staleness
+>> >/sys/devices/system/cpu/cpuX/idle_purr
+>> >/sys/devices/system/cpu/cpuX/idle_spurr
+>> >
+>> >I don't have a problem with this. Nathan, Michael, thoughts on this?
 
-Hi Chuanhong,
+No, I don't think this warrants a tunable when the issue it's intended
+to address is still a bit speculative at this point. (Also, note that
+this would be a system-wide value, but you could have multiple
+concurrent users of the interface with different needs.)
 
-> The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
-> and a phy-handle isn't always available.
-> Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
-> connected to switch port 5 and setup mt7530 according to phy address
-> of 2nd gmac node, causing null pointer dereferencing when phy-handle
-> isn't defined in dts.
 
-MT7530 tries to detect if 2nd GMAC is using a phy with phy-address 0 or 4.
-If so, switch port 5 needs to be setup so that PHY 0 or 4 is available
-via port 5 of the switch. Any MAC can talk to PHY 0/4 directly via port 5.
-This is also explained in the kernel docs mt7530.txt.
-
-May be there are better way to detect that any node is using phy 0/4 of
-the switch.
-
-Funny that I never tested this case that 2nd gmac node exits and is disabled
-without using port 5.
-
-Thanks for the fix.
-
-Tested-by: René van Dorst <opensource@vdorst.com>
-
-Greats,
-
-René
-
-> This commit fix this setup code by checking return value of
-> of_parse_phandle before using it.
+>> >The alternative is to have a procfs interface, something like
+>> >/proc/powerpc/resource_util_stats
+>> >
+>> >which gives a listing similar to /proc/stat, i.e
+>> >
+>> >      CPUX  <purr>  <idle_purr>  <spurr>  <idle_spurr>
+>> >
+>> >Even in this case, the values can be obtained in one-shot with a
+>> >single IPI and be printed in the row corresponding to the CPU.
+>> 
+>> Right -- and that would be optimal requiring a single system call, at the
+>> cost of using a legacy interface.
+>> 
+>> The other option would be to drop this patch and to just go with patches 1-5
+>> introducing the new sysfs interfaces for idle_[s]purr. It isn't entirely
+>> clear how often this would be used, or its actual impact. We can perhaps
+>> consider this optimization if and when this causes problems...
 >
-> Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
-> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-> Cc: stable@vger.kernel.org
-> ---
->
-> mt7530 is available as a standalone chip and we should not make it
-> tightly coupled with a specific type of ethernet dt binding in the
-> first place.
-> A proper fix is to replace this port detection logic with a dt
-> property under mt7530 node, but that's too much for linux-stable.
->
->  drivers/net/dsa/mt7530.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-> index 6e91fe2f4b9a..1d53a4ebcd5a 100644
-> --- a/drivers/net/dsa/mt7530.c
-> +++ b/drivers/net/dsa/mt7530.c
-> @@ -1414,6 +1414,9 @@ mt7530_setup(struct dsa_switch *ds)
->  				continue;
->
->  			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
-> +			if (!phy_node)
-> +				continue;
-> +
->  			if (phy_node->parent == priv->dev->of_node->parent) {
->  				ret = of_get_phy_mode(mac_np, &interface);
->  				if (ret && ret != -ENODEV)
-> --
-> 2.25.1
+> I am ok with that. We can revisit the problem if IPI noise becomes
+> noticable. However, if Nathan or Michael feel that this problem is
+> better solved now, than leaving it for the future, we will have to
+> take a call on what the interface is going to be.
 
+While I maintain some concern about the overhead on larger LPARs (150us
+per CPU works out to ~0.15s total to serially sample 1024 CPUs, ~0.3s
+for 2048 and so on), I am OK with the straightforward addition of the
+attributes without any batching or sampling thresholds behind the scenes
+for now. I appreciate your consideration of the issue.
 
-
+If this turns out to be too inefficient then I think we should consider
+a non-sysfs mechanism such as chardev+ioctl.
