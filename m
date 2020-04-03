@@ -2,156 +2,208 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD62C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DACC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD1C206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97ACC206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fU2mbi/J";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EJTDPuYt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rNWfSoeN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgDCWAH (ORCPT
+        id S1728484AbgDCWEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 18:00:07 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:39448 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727829AbgDCWAH (ORCPT
+        Fri, 3 Apr 2020 18:04:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33238 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727924AbgDCWEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 18:00:07 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AAD96C0096;
-        Fri,  3 Apr 2020 22:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1585951206; bh=xeoKf2NT+Dnyg0AvEw5NamxbJx7PD7Cxx/KksBf8avE=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=fU2mbi/JTMjY6t+kwQfWi7FfnUGDM8swKgOhUPxrAu5UNDQKjTRo0N+l/XYVzwQGt
-         ylj4SVIOyhUh6TYZQOV5fdcoXGySgSRQaALVH9RgWBAVbBtyPrnYSsJs8M4feO5lZU
-         /9FGHeNkcRmAP/NOUD/TO2s3meQejYolkAc0BX21v7hIGCOyFhFPyfNp/p5kth6lKk
-         kwmKeSKc9Bq7ryaPW4OL7VUue9JkX2LzP8I+9O4J0BRkxFfY34Qepd56BtEiubZFvw
-         yLL+p4rv39npI1M/CFEzKGPhXLVcZz3jrgm3TZIuV0XlM34V8S32U8wxugzLckU797
-         X1p7pxn9xoOZQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 13C81A0072;
-        Fri,  3 Apr 2020 22:00:03 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 3 Apr 2020 15:00:02 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 3 Apr 2020 15:00:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kLGDJJDiGcS60fZfxBVMd04/hSFrr93HHFCvVGK1Vj/BOlC2l9QSvdwhvk86kOyRC9U5GM1FV2VAsebIFH9YTSIO+9dOoCnYmXwlYRMbGes/5vQrQQf2Bvj2JAUP41rPtpHVMnnr4SjapSWs7b6E8i5shFjC5eAoMFLSjmsnZQ4t6T9oPFMXngPc3U8qglHMZAV5+i/OOwM82cLJgIKkcM+CtODCPT5ceIaGA59f9Uq+TRUILlYjdXAdJpUtbxV3PmG2MF7Mr/oAnivaRbSB3ejpX/urAn+tEW5ggLzAkrMEAPkrD72BWXiUxDq2PvK26C+iMrGNWez5YKazz1MS7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xeoKf2NT+Dnyg0AvEw5NamxbJx7PD7Cxx/KksBf8avE=;
- b=Bw64w1eLyJUOkWGxVDARZE6lXyhCbWZvnuo2GTrtefGyheEf4jlSk3Lg51WIC7q5sLcQz89dC5NXGflT4f7McmAmJdTPEsLjAJOJkKBjpyVjf1FNSGfB/ijLGe6aB2LE2G/ckhFr0Z64AOhftqkgm2DiVW4tub1zNrYlCh0s9CQ94NjDb72GpB0lOd30OsOTiVNFfClMrPJSoZC9FSCT5F64/xzFYR5sP5n+d3OHa0x0FDrdyKZ225RhF+TBuednfHAIWkKj79igp3nbaHkfII538e4/bO9pOtvdCZ983G8kn+sz3zx92SXu+lyttlJnpaLq1cPjA3m3z1hOaJpmtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xeoKf2NT+Dnyg0AvEw5NamxbJx7PD7Cxx/KksBf8avE=;
- b=EJTDPuYtn4bLpqFtx2uOwxOA1qvUmmRI366/kW2BZdWoeEog5JngJBHsyHp6LkrVv2A7RnU8cL9DMBBbH8T8c6LfUmOa1FktQjgk5b4dZM75PT5Jjzc3K8xY2bWdSDVsRLuoFGkTCYVWBxF/xDbg+XB1mtHenoYayuLjTlZQgNE=
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
- by BYAPR12MB3176.namprd12.prod.outlook.com (2603:10b6:a03:134::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Fri, 3 Apr
- 2020 22:00:01 +0000
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2856.019; Fri, 3 Apr 2020
- 22:00:01 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH] ARC: Fix ICCM & DCCM runtime size checks
-Thread-Topic: [PATCH] ARC: Fix ICCM & DCCM runtime size checks
-Thread-Index: AQHWCRfcKCnfYlxDV0y863/IP8FliKhn9D+A
-Date:   Fri, 3 Apr 2020 22:00:00 +0000
-Message-ID: <e6d6dcb1-9bdf-fab1-75d6-379b6d04dac8@synopsys.com>
-References: <20200402175428.18823-1-Eugeniy.Paltsev@synopsys.com>
-In-Reply-To: <20200402175428.18823-1-Eugeniy.Paltsev@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-originating-ip: [24.7.46.224]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ae1b7644-9fde-4a8a-ddb6-08d7d81a5b67
-x-ms-traffictypediagnostic: BYAPR12MB3176:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB3176A9989ACCB63CC4E6E207B6C70@BYAPR12MB3176.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3592.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(366004)(396003)(346002)(136003)(376002)(86362001)(81166006)(66946007)(478600001)(31686004)(54906003)(53546011)(6506007)(31696002)(2906002)(66476007)(66556008)(64756008)(66446008)(316002)(76116006)(107886003)(26005)(81156014)(2616005)(4326008)(110136005)(6486002)(5660300002)(6512007)(186003)(36756003)(8676002)(8936002)(71200400001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XLn5chdsbcwdxkaotHOPrGZvjZ4UAjJie2NTwEiiRH3v6COY8CZtCoKeZlUGYUFHcbgxlFrZ6IIzINIGguShCfou4RNQpIaCj5dtMBEFdIeW2KZ1Q2s5Wcu3uekV8c7+GqFU0Ndt3+a3aLozrDV6JHlciWO2KJbLeHnP1dN0dJUIUG57RcN2wz0pOY9+YDeokT5gz5fm7SYlevumlBn4kAQK1fTKcsDhVLwPu5Nypohg9wyOR2GNmL3mzV2SHsYcZyP+a04R9/FatUaGSeaNlXgmXL3LVKwP0BkO5gTm1XvYu8P9WaWpnzuxDCc8YVPaKB4lY74EdsSmCBRlsLbLW70vCf3qVN6IWLs33WBfzkU3dEZhm1etK+xpHcMu2cvH/JGeFN4Hgv2vA0Up77YEi/92kTRJfN9ztWjlEiWVVF1IA5kPDnkzvNoWCVyKY3A0
-x-ms-exchange-antispam-messagedata: UQkhZh/oB7G6oeytf1Z7YBSVuCDcs6dW6TDIC+IkdbEcFkNiXshCqLuhqvECLFecjuNQVTjuPfcwjxVWR1FCUGpYRwTCBwCoF1h1po6ZM6NfkXQhNMYoXYRJTT1tHrQHCWUY1Akkd9VSp6DftFUW7Q==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8CB6C1E884A29D4AAFD29AB46D781BA8@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 3 Apr 2020 18:04:22 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033Lrax6096174;
+        Fri, 3 Apr 2020 22:04:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=5jW1Wzm7zEMLhx2xwM/U535iraCz0A9wo/tTcX6MZuk=;
+ b=rNWfSoeND3DS/kxREHuSjzO903eYJRM0Npz9b4+RpjEwahcsY7MT0s7b3ZShAAWW3H6B
+ g86MkHTNlTlj4UGr4jv3oTYURwgYxIkahaHzjQZtY6+IXnBX4Law4X0QR0LP9Bdu3jOq
+ F+Sgu1GpP/QnZjugZV9UJfS5fTmtjNx0JEqBCM2AN7GowP9MQe9XkGpX8z3BVDDBz97F
+ HYV6AoaMHnApi8Hppa8kE3KyAPELxF2eHJH+YUN+uwCm+KaaOVAnEA9eVmFGf7ZrxRKO
+ 9lyeAJSTL3Al3QBzezSWIStW/UziFtXxWeRb7Fe0VM3cNOQ3pwg0IRtGRKNMOam9GG+O 0Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 303aqj3vn2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 22:04:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033LqRIP017160;
+        Fri, 3 Apr 2020 22:01:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 302g4y92fh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 22:01:59 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 033M1uVu006426;
+        Fri, 3 Apr 2020 22:01:57 GMT
+Received: from vbusired-dt (/10.154.116.130)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 15:01:56 -0700
+Date:   Fri, 3 Apr 2020 17:01:51 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rientjes@google.com,
+        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
+Subject: Re: [PATCH v6 12/14] KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET
+ ioctl
+Message-ID: <20200403220151.GA730828@vbusired-dt>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <9e959ee134ad77f62c9881b8c54cd27e35055072.1585548051.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae1b7644-9fde-4a8a-ddb6-08d7d81a5b67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 22:00:00.8348
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q8LldBcb366+3HQe+ewrjalU0kJ2j1YCex2/g6WURlCkjPKVhPE0u5reSICRuUUQgZ6gLlget5BX+u94951MtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3176
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9e959ee134ad77f62c9881b8c54cd27e35055072.1585548051.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=1
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030169
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8yLzIwIDEwOjU0IEFNLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6DQo+IEFzIG9mIHRvZGF5
-IHRoZSBJQ0NNIGFuZCBEQ0NNIHNpemUgY2hlY2tzIGFyZSBpbmNvcnJlY3RseSB1c2luZw0KPiBt
-aXNtYXRjaGVkIHVuaXRzIChLaUIgY2hlY2tlZCBhZ2FpbnN0IGJ5dGVzKS4gVGhlIENPTkZJR19B
-UkNfRENDTV9TWg0KPiBhbmQgQ09ORklHX0FSQ19JQ0NNX1NaIGFyZSBpbiBLaUIsIGJ1dCB0aGUg
-c2l6ZSBjYWxjdWxhdGVkIGluDQo+IHJ1bnRpbWUgYW5kIHN0b3JlZCBpbiBjcHUtPmRjY20uc3og
-YW5kIGNwdS0+aWNjbS5zeiBpcyBpbiBieXRlcy4NCj4NCj4gRml4IHRoYXQuDQo+DQo+IFJlcG9y
-dGVkLWJ5OiBQYXVsIEdyZWNvIDxwbWdyZWNvQHVzLmlibS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6
-IEV1Z2VuaXkgUGFsdHNldiA8RXVnZW5peS5QYWx0c2V2QHN5bm9wc3lzLmNvbT4NCg0KTEdUTS4g
-V2lsbCBiZSBhZGRlZCBhZnRlciBtZXJnZSB3aW5kb3cgIQ0KDQpUaHgsDQotVmluZWV0DQoNCj4g
-LS0tDQo+ICBhcmNoL2FyYy9rZXJuZWwvc2V0dXAuYyB8IDUgKysrLS0NCj4gIDEgZmlsZSBjaGFu
-Z2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9h
-cmNoL2FyYy9rZXJuZWwvc2V0dXAuYyBiL2FyY2gvYXJjL2tlcm5lbC9zZXR1cC5jDQo+IGluZGV4
-IGFhNDFhZjZlZjRhYy4uZWZkZWRmODNiOTU0IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FyYy9rZXJu
-ZWwvc2V0dXAuYw0KPiArKysgYi9hcmNoL2FyYy9rZXJuZWwvc2V0dXAuYw0KPiBAQCAtMTEsNiAr
-MTEsNyBAQA0KPiAgI2luY2x1ZGUgPGxpbnV4L2Nsb2Nrc291cmNlLmg+DQo+ICAjaW5jbHVkZSA8
-bGludXgvY29uc29sZS5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiArI2luY2x1
-ZGUgPGxpbnV4L3NpemVzLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvY3B1Lmg+DQo+ICAjaW5jbHVk
-ZSA8bGludXgvb2ZfY2xrLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvb2ZfZmR0Lmg+DQo+IEBAIC00
-MDksMTIgKzQxMCwxMiBAQCBzdGF0aWMgdm9pZCBhcmNfY2hrX2NvcmVfY29uZmlnKHZvaWQpDQo+
-ICAJaWYgKCh1bnNpZ25lZCBpbnQpX19hcmNfZGNjbV9iYXNlICE9IGNwdS0+ZGNjbS5iYXNlX2Fk
-ZHIpDQo+ICAJCXBhbmljKCJMaW51eCBidWlsdCB3aXRoIGluY29ycmVjdCBEQ0NNIEJhc2UgYWRk
-cmVzc1xuIik7DQo+ICANCj4gLQlpZiAoQ09ORklHX0FSQ19EQ0NNX1NaICE9IGNwdS0+ZGNjbS5z
-eikNCj4gKwlpZiAoQ09ORklHX0FSQ19EQ0NNX1NaICogU1pfMUsgIT0gY3B1LT5kY2NtLnN6KQ0K
-PiAgCQlwYW5pYygiTGludXggYnVpbHQgd2l0aCBpbmNvcnJlY3QgRENDTSBTaXplXG4iKTsNCj4g
-ICNlbmRpZg0KPiAgDQo+ICAjaWZkZWYgQ09ORklHX0FSQ19IQVNfSUNDTQ0KPiAtCWlmIChDT05G
-SUdfQVJDX0lDQ01fU1ogIT0gY3B1LT5pY2NtLnN6KQ0KPiArCWlmIChDT05GSUdfQVJDX0lDQ01f
-U1ogKiBTWl8xSyAhPSBjcHUtPmljY20uc3opDQo+ICAJCXBhbmljKCJMaW51eCBidWlsdCB3aXRo
-IGluY29ycmVjdCBJQ0NNIFNpemVcbiIpOw0KPiAgI2VuZGlmDQo+ICANCg0K
+On 2020-03-30 06:23:10 +0000, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> This ioctl can be used by the application to reset the page
+> encryption bitmap managed by the KVM driver. A typical usage
+> for this ioctl is on VM reboot, on reboot, we must reinitialize
+> the bitmap.
+> 
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+
+Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
+
+> ---
+>  Documentation/virt/kvm/api.rst  | 13 +++++++++++++
+>  arch/x86/include/asm/kvm_host.h |  1 +
+>  arch/x86/kvm/svm.c              | 16 ++++++++++++++++
+>  arch/x86/kvm/x86.c              |  6 ++++++
+>  include/uapi/linux/kvm.h        |  1 +
+>  5 files changed, 37 insertions(+)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 4d1004a154f6..a11326ccc51d 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -4698,6 +4698,19 @@ During the guest live migration the outgoing guest exports its page encryption
+>  bitmap, the KVM_SET_PAGE_ENC_BITMAP can be used to build the page encryption
+>  bitmap for an incoming guest.
+>  
+> +4.127 KVM_PAGE_ENC_BITMAP_RESET (vm ioctl)
+> +-----------------------------------------
+> +
+> +:Capability: basic
+> +:Architectures: x86
+> +:Type: vm ioctl
+> +:Parameters: none
+> +:Returns: 0 on success, -1 on error
+> +
+> +The KVM_PAGE_ENC_BITMAP_RESET is used to reset the guest's page encryption
+> +bitmap during guest reboot and this is only done on the guest's boot vCPU.
+> +
+> +
+>  5. The kvm_run structure
+>  ========================
+>  
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index d30f770aaaea..a96ef6338cd2 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1273,6 +1273,7 @@ struct kvm_x86_ops {
+>  				struct kvm_page_enc_bitmap *bmap);
+>  	int (*set_page_enc_bitmap)(struct kvm *kvm,
+>  				struct kvm_page_enc_bitmap *bmap);
+> +	int (*reset_page_enc_bitmap)(struct kvm *kvm);
+>  };
+>  
+>  struct kvm_arch_async_pf {
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 313343a43045..c99b0207a443 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7797,6 +7797,21 @@ static int svm_set_page_enc_bitmap(struct kvm *kvm,
+>  	return ret;
+>  }
+>  
+> +static int svm_reset_page_enc_bitmap(struct kvm *kvm)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +
+> +	if (!sev_guest(kvm))
+> +		return -ENOTTY;
+> +
+> +	mutex_lock(&kvm->lock);
+> +	/* by default all pages should be marked encrypted */
+> +	if (sev->page_enc_bmap_size)
+> +		bitmap_fill(sev->page_enc_bmap, sev->page_enc_bmap_size);
+> +	mutex_unlock(&kvm->lock);
+> +	return 0;
+> +}
+> +
+>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>  	struct kvm_sev_cmd sev_cmd;
+> @@ -8203,6 +8218,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>  	.page_enc_status_hc = svm_page_enc_status_hc,
+>  	.get_page_enc_bitmap = svm_get_page_enc_bitmap,
+>  	.set_page_enc_bitmap = svm_set_page_enc_bitmap,
+> +	.reset_page_enc_bitmap = svm_reset_page_enc_bitmap,
+>  };
+>  
+>  static int __init svm_init(void)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 05e953b2ec61..2127ed937f53 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5250,6 +5250,12 @@ long kvm_arch_vm_ioctl(struct file *filp,
+>  			r = kvm_x86_ops->set_page_enc_bitmap(kvm, &bitmap);
+>  		break;
+>  	}
+> +	case KVM_PAGE_ENC_BITMAP_RESET: {
+> +		r = -ENOTTY;
+> +		if (kvm_x86_ops->reset_page_enc_bitmap)
+> +			r = kvm_x86_ops->reset_page_enc_bitmap(kvm);
+> +		break;
+> +	}
+>  	default:
+>  		r = -ENOTTY;
+>  	}
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index b4b01d47e568..0884a581fc37 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1490,6 +1490,7 @@ struct kvm_enc_region {
+>  
+>  #define KVM_GET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
+>  #define KVM_SET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
+> +#define KVM_PAGE_ENC_BITMAP_RESET	_IO(KVMIO, 0xc7)
+>  
+>  /* Secure Encrypted Virtualization command */
+>  enum sev_cmd_id {
+> -- 
+> 2.17.1
+> 
