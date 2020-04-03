@@ -2,470 +2,115 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D14C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A978EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED8E2080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CD4206F6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:15:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p7+i05uQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389723AbgDCHNx (ORCPT
+        id S2389262AbgDCHPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 03:13:53 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34170 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730759AbgDCHNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 03:13:52 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7BF5FCFBE00A849D079A;
-        Fri,  3 Apr 2020 15:13:41 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Apr 2020
- 15:13:34 +0800
-Subject: Re: [PATCH v7 1/4] x86: kdump: move reserve_crashkernel_low() into
- crash_core.c
-To:     Dave Young <dyoung@redhat.com>
-References: <20191223152349.180172-1-chenzhou10@huawei.com>
- <20191223152349.180172-2-chenzhou10@huawei.com>
- <20191227055458.GA14893@dhcp-128-65.nay.redhat.com>
- <09d42854-461b-e85c-ba3f-0e1173dc95b5@huawei.com>
- <20191228093227.GA19720@dhcp-128-65.nay.redhat.com>
- <75429528-ba74-cfd3-b5bc-df5425ac0496@huawei.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <james.morse@arm.com>, <bhsharma@redhat.com>, <horms@verge.net.au>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-doc@vger.kernel.org>, <xiexiuqi@huawei.com>,
-        kbuild test robot <lkp@intel.com>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <38281780-5f3d-63dd-77cb-599815173c3c@huawei.com>
-Date:   Fri, 3 Apr 2020 15:13:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Fri, 3 Apr 2020 03:15:34 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52544 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732350AbgDCHPe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 03:15:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03379pbQ110328;
+        Fri, 3 Apr 2020 07:15:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=zaEbL0ZZ07LeDe0TDIlbpai3XR14+4AMw5YEsuH0EdU=;
+ b=p7+i05uQdq75mWssCJuP5556zUn5F5j45frt5RNSsqHVThw0VU0732BEyM/r4plvSuXP
+ 6DUtGbCXhrq4G+4WVlwmJXW9LtnyZFutyBig4zTyFcL7/UdMampLc3WrLzAjN1NU7gwx
+ 739USei51DW09FhtsRGacoz7pY7vM/oU+MYyjoMWMNAYNcDeHARzOKPLcgOhMqdjZR90
+ HwTQmZ5iHo/WnlWSRHhE/y3mF9P8ddOZ+ZBMjMNdE7/ngVGG8XK0fdn93mN1HFZ2DzJk
+ u6TBsUqri568sa3z0/b9aDueFDzN4yGPB+rXIlvu/KppBrwUg/RQ7JwXC/e0OdbEkuKL Ew== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 303cevfdag-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 07:15:19 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0337DAaa060381;
+        Fri, 3 Apr 2020 07:15:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 304sjrx9b3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 07:15:19 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0337FILE005881;
+        Fri, 3 Apr 2020 07:15:18 GMT
+Received: from linux-1.home (/92.157.90.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 00:15:18 -0700
+Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, tglx@linutronix.de
+References: <20200402082220.808-1-alexandre.chartre@oracle.com>
+ <20200402082220.808-5-alexandre.chartre@oracle.com>
+ <20200402152717.GE20730@hirez.programming.kicks-ass.net>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <efd2517c-3353-415a-f65c-33f6668db998@oracle.com>
+Date:   Fri, 3 Apr 2020 09:19:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <75429528-ba74-cfd3-b5bc-df5425ac0496@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20200402152717.GE20730@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=999 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030060
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
+ clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
 
-On 2019/12/31 9:39, Chen Zhou wrote:
-> Hi Dave,
+On 4/2/20 5:27 PM, Peter Zijlstra wrote:
+> On Thu, Apr 02, 2020 at 10:22:17AM +0200, Alexandre Chartre wrote:
+>> With retpoline, the return instruction is used to branch to an address
+>> stored on the stack. So, unlike a regular return instruction, when a
+>> retpoline return instruction is reached the stack has been modified
+>> compared to what we have when the function was entered.
+>>
+>> Provide the mechanism to explicitly call-out such return instruction
+>> so that objtool can correctly handle them.
 > 
-> On 2019/12/28 17:32, Dave Young wrote:
->> On 12/27/19 at 07:04pm, Chen Zhou wrote:
->>> Hi Dave
->>>
->>> On 2019/12/27 13:54, Dave Young wrote:
->>>> Hi,
->>>> On 12/23/19 at 11:23pm, Chen Zhou wrote:
->>>>> In preparation for supporting reserve_crashkernel_low in arm64 as
->>>>> x86_64 does, move reserve_crashkernel_low() into kernel/crash_core.c.
->>>>>
->>>>> Note, in arm64, we reserve low memory if and only if crashkernel=X,low
->>>>> is specified. Different with x86_64, don't set low memory automatically.
->>>>
->>>> Do you have any reason for the difference?  I'd expect we have same
->>>> logic if possible and remove some of the ifdefs.
->>>
->>> In x86_64, if we reserve crashkernel above 4G, then we call reserve_crashkernel_low()
->>> to reserve low memory.
->>>
->>> In arm64, to simplify, we call reserve_crashkernel_low() at the beginning of reserve_crashkernel()
->>> and then relax the arm64_dma32_phys_limit if reserve_crashkernel_low() allocated something.
->>> In this case, if reserve crashkernel below 4G there will be 256M low memory set automatically
->>> and this needs extra considerations.
->>
->> Sorry that I did not read the old thread details and thought that is
->> arch dependent.  But rethink about that, it would be better that we can
->> have same semantic about crashkernel parameters across arches.  If we
->> make them different then it causes confusion, especially for
->> distributions.
->>
->> OTOH, I thought if we reserve high memory then the low memory should be
->> needed.  There might be some exceptions, but I do not know the exact
->> one, can we make the behavior same, and special case those systems which
->> do not need low memory reservation.
->>
-> I thought like this and did implement with crashkernel parameters arch independent.
-> This is my v4: https://lkml.org/lkml/2019/5/6/1361, i implemented according to x86_64's
-> behavior.
+> https://lkml.kernel.org/r/20200331222703.GH2452@worktop.programming.kicks-ass.net
 > 
->>>
->>> previous discusses:
->>> 	https://lkml.org/lkml/2019/6/5/670
->>> 	https://lkml.org/lkml/2019/6/13/229
->>
->> Another concern from James:
->> "
->> With both crashk_low_res and crashk_res, we end up with two entries in /proc/iomem called
->> "Crash kernel". Because its sorted by address, and kexec-tools stops searching when it
->> find "Crash kernel", you are always going to get the kernel placed in the lower portion.
->> "
->>
->> The kexec-tools code is iterating all "Crash kernel" ranges and add them
->> in an array.  In X86 code, it uses the higher range to locate memory.
+> And also, the split out version:
 > 
-> We also discussed about this: https://lkml.org/lkml/2019/6/13/227.
-> I guess James's opinion is that kexec-tools should take forward compatibility into account.
-> "But we can't rely on people updating user-space when they update the kernel!" -- James
+>    https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/commit/?h=core/objtool&id=ec9d9549901dfd2ff411676dfc624e50219e4d5a
 > 
->>
->>>
->>>>
->>>>>
->>>>> Reported-by: kbuild test robot <lkp@intel.com>
->>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->>>>> ---
->>>>>  arch/x86/kernel/setup.c    | 62 ++++-----------------------------
->>>>>  include/linux/crash_core.h |  3 ++
->>>>>  include/linux/kexec.h      |  2 --
->>>>>  kernel/crash_core.c        | 87 ++++++++++++++++++++++++++++++++++++++++++++++
->>>>>  kernel/kexec_core.c        | 17 ---------
->>>>>  5 files changed, 96 insertions(+), 75 deletions(-)
->>>>>
->>>>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->>>>> index cedfe20..5f38942 100644
->>>>> --- a/arch/x86/kernel/setup.c
->>>>> +++ b/arch/x86/kernel/setup.c
->>>>> @@ -486,59 +486,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
->>>>>  # define CRASH_ADDR_HIGH_MAX	SZ_64T
->>>>>  #endif
->>>>>  
->>>>> -static int __init reserve_crashkernel_low(void)
->>>>> -{
->>>>> -#ifdef CONFIG_X86_64
->>>>> -	unsigned long long base, low_base = 0, low_size = 0;
->>>>> -	unsigned long total_low_mem;
->>>>> -	int ret;
->>>>> -
->>>>> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
->>>>> -
->>>>> -	/* crashkernel=Y,low */
->>>>> -	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
->>>>> -	if (ret) {
->>>>> -		/*
->>>>> -		 * two parts from kernel/dma/swiotlb.c:
->>>>> -		 * -swiotlb size: user-specified with swiotlb= or default.
->>>>> -		 *
->>>>> -		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
->>>>> -		 * to 8M for other buffers that may need to stay low too. Also
->>>>> -		 * make sure we allocate enough extra low memory so that we
->>>>> -		 * don't run out of DMA buffers for 32-bit devices.
->>>>> -		 */
->>>>> -		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
->>>>> -	} else {
->>>>> -		/* passed with crashkernel=0,low ? */
->>>>> -		if (!low_size)
->>>>> -			return 0;
->>>>> -	}
->>>>> -
->>>>> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
->>>>> -	if (!low_base) {
->>>>> -		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->>>>> -		       (unsigned long)(low_size >> 20));
->>>>> -		return -ENOMEM;
->>>>> -	}
->>>>> -
->>>>> -	ret = memblock_reserve(low_base, low_size);
->>>>> -	if (ret) {
->>>>> -		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
->>>>> -		return ret;
->>>>> -	}
->>>>> -
->>>>> -	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
->>>>> -		(unsigned long)(low_size >> 20),
->>>>> -		(unsigned long)(low_base >> 20),
->>>>> -		(unsigned long)(total_low_mem >> 20));
->>>>> -
->>>>> -	crashk_low_res.start = low_base;
->>>>> -	crashk_low_res.end   = low_base + low_size - 1;
->>>>> -	insert_resource(&iomem_resource, &crashk_low_res);
->>>>> -#endif
->>>>> -	return 0;
->>>>> -}
->>>>> -
->>>>>  static void __init reserve_crashkernel(void)
->>>>>  {
->>>>>  	unsigned long long crash_size, crash_base, total_mem;
->>>>> @@ -602,9 +549,12 @@ static void __init reserve_crashkernel(void)
->>>>>  		return;
->>>>>  	}
->>>>>  
->>>>> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
->>>>> -		memblock_free(crash_base, crash_size);
->>>>> -		return;
->>>>> +	if (crash_base >= (1ULL << 32)) {
->>>>> +		if (reserve_crashkernel_low()) {
->>>>> +			memblock_free(crash_base, crash_size);
->>>>> +			return;
->>>>> +		}
->>>>> +		insert_resource(&iomem_resource, &crashk_low_res);
->>>>
->>>> Some specific reason to move insert_resouce out of the
->>>> reserve_crashkernel_low function?
->>>
->>> No specific reason.
->>> I just exposed arm64 "Crash kernel low" in request_standard_resources() as other resources,
->>> so did this change.
->>
->> Ok.
->>
->>>
->>>>
->>>>>  	}
->>>>>  
->>>>>  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
->>>>> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
->>>>> index 525510a..4df8c0b 100644
->>>>> --- a/include/linux/crash_core.h
->>>>> +++ b/include/linux/crash_core.h
->>>>> @@ -63,6 +63,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->>>>>  extern unsigned char *vmcoreinfo_data;
->>>>>  extern size_t vmcoreinfo_size;
->>>>>  extern u32 *vmcoreinfo_note;
->>>>> +extern struct resource crashk_res;
->>>>> +extern struct resource crashk_low_res;
->>>>>  
->>>>>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->>>>>  			  void *data, size_t data_len);
->>>>> @@ -74,5 +76,6 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
->>>>>  		unsigned long long *crash_size, unsigned long long *crash_base);
->>>>>  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
->>>>>  		unsigned long long *crash_size, unsigned long long *crash_base);
->>>>> +int __init reserve_crashkernel_low(void);
->>>>>  
->>>>>  #endif /* LINUX_CRASH_CORE_H */
->>>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->>>>> index 1776eb2..5d5d963 100644
->>>>> --- a/include/linux/kexec.h
->>>>> +++ b/include/linux/kexec.h
->>>>> @@ -330,8 +330,6 @@ extern int kexec_load_disabled;
->>>>>  
->>>>>  /* Location of a reserved region to hold the crash kernel.
->>>>>   */
->>>>> -extern struct resource crashk_res;
->>>>> -extern struct resource crashk_low_res;
->>>>>  extern note_buf_t __percpu *crash_notes;
->>>>>  
->>>>>  /* flag to track if kexec reboot is in progress */
->>>>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->>>>> index 9f1557b..eb72fd6 100644
->>>>> --- a/kernel/crash_core.c
->>>>> +++ b/kernel/crash_core.c
->>>>> @@ -7,6 +7,8 @@
->>>>>  #include <linux/crash_core.h>
->>>>>  #include <linux/utsname.h>
->>>>>  #include <linux/vmalloc.h>
->>>>> +#include <linux/memblock.h>
->>>>> +#include <linux/swiotlb.h>
->>>>>  
->>>>>  #include <asm/page.h>
->>>>>  #include <asm/sections.h>
->>>>> @@ -19,6 +21,22 @@ u32 *vmcoreinfo_note;
->>>>>  /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
->>>>>  static unsigned char *vmcoreinfo_data_safecopy;
->>>>>  
->>>>> +/* Location of the reserved area for the crash kernel */
->>>>> +struct resource crashk_res = {
->>>>> +	.name  = "Crash kernel",
->>>>> +	.start = 0,
->>>>> +	.end   = 0,
->>>>> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
->>>>> +	.desc  = IORES_DESC_CRASH_KERNEL
->>>>> +};
->>>>> +struct resource crashk_low_res = {
->>>>> +	.name  = "Crash kernel",
->>>>> +	.start = 0,
->>>>> +	.end   = 0,
->>>>> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
->>>>> +	.desc  = IORES_DESC_CRASH_KERNEL
->>>>> +};
->>>>> +
->>>>>  /*
->>>>>   * parsing the "crashkernel" commandline
->>>>>   *
->>>>> @@ -292,6 +310,75 @@ int __init parse_crashkernel_low(char *cmdline,
->>>>>  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
->>>>>  }
->>>>>  
->>>>> +#if defined(CONFIG_X86_64)
->>>>> +#define CRASH_ALIGN		SZ_16M
->>>>> +#elif defined(CONFIG_ARM64)
->>>>> +#define CRASH_ALIGN		SZ_2M
->>>>> +#endif
->>>>
->>>> I think no need to have the #ifdef, although I can not think out of
->>>> reason we have 16M for X86, maybe move it to 2M as well if no other
->>>> objections.  Then it will be easier to reserve crashkernel successfully
->>>> considering nowadays we have KASLR and other stuff it becomes harder.
->>>
->>> I also don't figure out why it is 16M in x86.
->>
->> IMHO, if we do not know why and in theory it should work with 2M, can
->> you do some basic testing and move it to 2M?
->>
->> We can easily move back to 16M if someone really report something, but
->> if we do not change it will always stay there but we do not know why.
-> 
-> Ok. I will do some test later.
 
-Recently, i tested with 2M alignment in x86 and the system works well.
+Okay, so I can get rid of my retpoline_ret annotation and use UNWIND_HINT_RET_OFFSET
+instead (which is more generic). Basically I can change my RETPOLINE_RET macro to:
 
-Besides, i found memblock_find_in_range() in reserve_crashkernel()
-restrict the lower bound of the range to "CRASH_ALIGN".
-If we can make memblock_find_in_range() search from the start of memory?
-
-The code is as follows:
-
-static void __init reserve_crashkernel(void)
-{
-	...
-	if (!high)
-            crash_base = memblock_find_in_range(CRASH_ALIGN,
-                        CRASH_ADDR_LOW_MAX,
-                        crash_size, CRASH_ALIGN);
-        if (!crash_base)
-            crash_base = memblock_find_in_range(CRASH_ALIGN,
-                        CRASH_ADDR_HIGH_MAX,
-                        crash_size, CRASH_ALIGN);
+.macro RETPOLINE_RET
+	UNWIND_HINT_RET_OFFSET
+	ret
+.endm
 
 Thanks,
-Chen Zhou
-> 
->>
->>>
->>>>
->>>>> +
->>>>> +int __init reserve_crashkernel_low(void)
->>>>> +{
->>>>> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
->>>>> +	unsigned long long base, low_base = 0, low_size = 0;
->>>>> +	unsigned long total_low_mem;
->>>>> +	int ret;
->>>>> +
->>>>> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
->>>>> +
->>>>> +	/* crashkernel=Y,low */
->>>>> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size,
->>>>> +			&base);
->>>>> +	if (ret) {
->>>>> +#ifdef CONFIG_X86_64
->>>>> +		/*
->>>>> +		 * two parts from lib/swiotlb.c:
->>>>> +		 * -swiotlb size: user-specified with swiotlb= or default.
->>>>> +		 *
->>>>> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
->>>>> +		 * to 8M for other buffers that may need to stay low too. Also
->>>>> +		 * make sure we allocate enough extra low memory so that we
->>>>> +		 * don't run out of DMA buffers for 32-bit devices.
->>>>> +		 */
->>>>> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
->>>>> +				256UL << 20);
->>>>> +#else
->>>>> +		/*
->>>>> +		 * in arm64, reserve low memory if and only if crashkernel=X,low
->>>>> +		 * specified.
->>>>> +		 */
->>>>> +		return -EINVAL;
->>>>> +#endif
->>>>
->>>> As said before, can you explore about why it needs different logic, it
->>>> would be good to keep two arches same.
->>>>
->>>>> +	} else {
->>>>> +		/* passed with crashkernel=0,low ? */
->>>>> +		if (!low_size)
->>>>> +			return 0;
->>>>> +	}
->>>>> +
->>>>> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
->>>>> +	if (!low_base) {
->>>>> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->>>>> +		       (unsigned long)(low_size >> 20));
->>>>> +		return -ENOMEM;
->>>>> +	}
->>>>> +
->>>>> +	ret = memblock_reserve(low_base, low_size);
->>>>> +	if (ret) {
->>>>> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
->>>>> +				__func__);
->>>>> +		return ret;
->>>>> +	}
->>>>> +
->>>>> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
->>>>> +		(unsigned long)(low_size >> 20),
->>>>> +		(unsigned long)(low_base >> 20),
->>>>> +		(unsigned long)(total_low_mem >> 20));
->>>>> +
->>>>> +	crashk_low_res.start = low_base;
->>>>> +	crashk_low_res.end   = low_base + low_size - 1;
->>>>> +#endif
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->>>>>  			  void *data, size_t data_len)
->>>>>  {
->>>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->>>>> index 15d70a9..458d093 100644
->>>>> --- a/kernel/kexec_core.c
->>>>> +++ b/kernel/kexec_core.c
->>>>> @@ -53,23 +53,6 @@ note_buf_t __percpu *crash_notes;
->>>>>  /* Flag to indicate we are going to kexec a new kernel */
->>>>>  bool kexec_in_progress = false;
->>>>>  
->>>>> -
->>>>> -/* Location of the reserved area for the crash kernel */
->>>>> -struct resource crashk_res = {
->>>>> -	.name  = "Crash kernel",
->>>>> -	.start = 0,
->>>>> -	.end   = 0,
->>>>> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
->>>>> -	.desc  = IORES_DESC_CRASH_KERNEL
->>>>> -};
->>>>> -struct resource crashk_low_res = {
->>>>> -	.name  = "Crash kernel",
->>>>> -	.start = 0,
->>>>> -	.end   = 0,
->>>>> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
->>>>> -	.desc  = IORES_DESC_CRASH_KERNEL
->>>>> -};
->>>>> -
->>>>>  int kexec_should_crash(struct task_struct *p)
->>>>>  {
->>>>>  	/*
->>>>> -- 
->>>>> 2.7.4
->>>>>
->>>>
->>>> Thanks
->>>> Dave
->>>>
->>>>
->>>> .
->>>>
->>> Thanks,
->>> Chen Zhou
->>>
->>
->> Thanks
->> Dave
->>
->>
-> 
-> Thanks,
-> Chen Zhou
-> 
 
+alex.
