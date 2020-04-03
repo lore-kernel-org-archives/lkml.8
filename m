@@ -2,126 +2,110 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73341C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C07AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFFE206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104E620B1F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEVfaAhq"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OYmW4Y0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390472AbgDCIMC (ORCPT
+        id S2390481AbgDCIMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:12:02 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48814 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727431AbgDCIMB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:12:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585901520;
+        Fri, 3 Apr 2020 04:12:24 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34022 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727431AbgDCIMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:12:23 -0400
+Received: from zn.tnic (p200300EC2F0D8900AC3E2C93ADB62CA9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8900:ac3e:2c93:adb6:2ca9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 343E11EC0C98;
+        Fri,  3 Apr 2020 10:12:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585901542;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8PHaNpy+983QDwfaUcTgQtvDFchwmBDQqNsuXGeebd8=;
-        b=UEVfaAhqFvAduemYCfJ1yUlJhGUa/UpvV/1o/cb3lElR8Rd9aL82SzguQGggj79rLrpBaq
-        qygMxalPuRY12qodDoTrnAaPnZMsk9wwYwf0gsKtGi/8ISzFxBQti/0Uldv6dSUiuqHa+z
-        I9bXOza5fJMfWsOIOdN2qzpqQONvZa8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-498--aXC1AWENeaU6P-ES7T-Kw-1; Fri, 03 Apr 2020 04:11:59 -0400
-X-MC-Unique: -aXC1AWENeaU6P-ES7T-Kw-1
-Received: by mail-wm1-f70.google.com with SMTP id f128so1134174wmf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 01:11:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8PHaNpy+983QDwfaUcTgQtvDFchwmBDQqNsuXGeebd8=;
-        b=RlQs3w26oVG6Zb9Ty/9TLCkQgWnyrdJzPWgtFwGt0QursuWgCVtnN2AA6MIaN4n/8d
-         qNR731+QGns79tLRfxTiDoGYXVRYZWs4dO0Sv5KPMgIM6xiiRbU6N0sU6dm1CdHqpE1J
-         mkmiWd9GWM6KQ/oB3HXeDzwoqobhNQzMy/DBK2EgYngKAXVHr24ThXia5oGiv42tR5qR
-         lRbddfWy0l+hHeUZufSAmr7pyBsqtqa+umyTOa+vs6Gvj+Hy2jpUFFDKI0KXv/5mR5yJ
-         P4eTAmlpCqTpaOUVtJeh0IIRDO+VplcLFdTunlf0ANXt4t52PFyUcospcBtnRNGvTMxZ
-         CzHQ==
-X-Gm-Message-State: AGi0Pua7FRB+XoxrH0lHD1+dEV5FDiuEP45Aqd4DDLvuagmCPPr6ytjH
-        9tpT2yQXXEhlVwMLVWw72Z+NN+4PXal7Doe9uW1xmyfwoWTjHUO8yiPKq1A9IcgnBxqncA6/1pN
-        sIKlcPOrVMb+CoeVdrH0kEDYJ
-X-Received: by 2002:a1c:3b89:: with SMTP id i131mr7421838wma.35.1585901518312;
-        Fri, 03 Apr 2020 01:11:58 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLS2c3t7i5T//sRgt+XOqdSZOMSgeSIcbtsg6NJaDUMR/JgDrbvYFytbDZ80B91oF0tToS3Gw==
-X-Received: by 2002:a1c:3b89:: with SMTP id i131mr7421765wma.35.1585901517379;
-        Fri, 03 Apr 2020 01:11:57 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id a12sm9146807wmj.22.2020.04.03.01.11.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 01:11:56 -0700 (PDT)
-Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        tglx@linutronix.de
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-5-alexandre.chartre@oracle.com>
- <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
- <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
- <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
- <20200402154022.GG20730@hirez.programming.kicks-ass.net>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <bc3a31dc-9d59-5756-aad3-187533f05654@redhat.com>
-Date:   Fri, 3 Apr 2020 09:11:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=TF7RbyA03ZDQd/3oFgniRR6uVa1P565MmA4BmfaHjQc=;
+        b=OYmW4Y0qrt+6jGQQw+ykjIKfkNaYoSbEdri+AioKUZvPXswbDB06UxTq9oUZu9p1/M5ix9
+        oJ/gkH3IzbjThce/VPgt7F4udcWBS7umcLng3sp1gOiHo9pUEbbKlINUZABUYc08fQll8f
+        aq0rwYG8f67iraZKe/GuiIjly8xGYY4=
+Date:   Fri, 3 Apr 2020 10:12:17 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>, x86@kernel.org,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Subject: Re: [PATCH] x86/cpufeatures: Add enumeration for serialize
+ instruction
+Message-ID: <20200403081217.GA20218@zn.tnic>
+References: <20200403014026.19137-1-ricardo.neri-calderon@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200402154022.GG20730@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200403014026.19137-1-ricardo.neri-calderon@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 02, 2020 at 06:40:26PM -0700, Ricardo Neri wrote:
+> The serialize instruction ensures that before the next instruction is
+> fetched and executed, all the modifications to flags, registers, and memory
+> made by previous instructions are completed, draining all buffered writes
+> to memory.
+> 
+> Importantly, the serialize instruction does not modify registers,
+> arithmetic flags or memory.
+> 
+> Hence, the serialize instructions provides a better way for software
+> to serialize execution than using instructions such as cpuid, which does
+> modify registers and, in virtual machines, causes a VM exit.
+> 
+> This instruction is supported by the CPU if CPUID.7H.EDX[bit 14] is
+> set.
+> 
+> Cc: x86@kernel.org
+> Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> ---
+> This new instruction is documented in the latest version of the Intel
+> Architecture Instruction Set Extensions and Future Features Programming
+> Reference Chapter 2.1 located at
+> https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
+> ---
+>  arch/x86/include/asm/cpufeatures.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index db189945e9b0..cd9b1ec022ec 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -364,6 +364,7 @@
+>  #define X86_FEATURE_AVX512_VP2INTERSECT (18*32+ 8) /* AVX-512 Intersect for D/Q */
+>  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+>  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+> +#define X86_FEATURE_SERIALIZE		(18*32+14) /* SERIALIZE instruction */
+>  #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+>  #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+>  #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+> -- 
 
+Send this together with code which is using it, pls.
 
-On 4/2/20 4:40 PM, Peter Zijlstra wrote:
-> On Thu, Apr 02, 2020 at 04:31:05PM +0100, Julien Thierry wrote:
->> My understanding is that once you find an intra-function call, either you
->> hit a return, ending the branch, so the return should undo the modification
->> the intra-function call did (whether is it a retpoline return or not).
->> Otherwise, the intra-function call branch will need to reach an end in some
->> way (e.g. hitting a CONTEXT_SWITCH instruction, calling a
->> dead_end_function).
->>
->> Am I missing something?
-> 
-> The thing is basically doing:
-> 
-> 	mov  $n, cx
-> 1:	call 2f
-> 2:	dec  cx
-> 	jnz  1b
-> 	add  8*n, sp
-> 
-> So it does N calls to self, then subtracts N words from the stack.
-> 
-> The reason being that the CPU has a return-stack-buffer for predicting
-> returns, and call/ret being naturally paired, that works. The above
-> is a software flush of the RSB.
-> 
-
-Ah, lovely... Maybe that's where SAVE/RESTORE unwind hints could be nice 
-;) .
-
-Otherwise, I don't really have a good suggestion for this...
+Thx.
 
 -- 
-Julien Thierry
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
