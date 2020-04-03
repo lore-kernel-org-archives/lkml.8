@@ -2,130 +2,96 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFD3C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9DEC2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB84C2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 713B121744
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="MRrfXOOi"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Hf1KZ1qQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391048AbgDCOfz (ORCPT
+        id S2391063AbgDCOgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:35:55 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:33286 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728066AbgDCOfy (ORCPT
+        Fri, 3 Apr 2020 10:36:04 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34102 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgDCOgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:35:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585924552;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=xWGcb/l7SldX2juZaR8V+bjOtkYI2pMNM28oAI3XPqQ=;
-        b=MRrfXOOieZKawrtFR0unAIALIKSs47Y1EX+ozjaxrNMMmk0hlCUq4ByhKJjUQax9ro
-        23xObzVb/fgppbdD+wZYHC9xTGqc1/1YCsAGNt73D78bvPvHQ0EZ88Q7tSwo+t2tJQBZ
-        lzRCyELT9yoTlNep1LtnolKx6YXdOGCZFhLgvun2a+5CR+AX8xul5Bv7EKI3r3+yhW9F
-        VGwR4J8DAEIynobufzjB0QU78i05OqQPIKsbkPK3BTpedMgq2O4zoHWtnH8f8nW5MuX/
-        grWhnl/zQvDqgSLO+2HU6csWb3fUYh+me0MsQzUF+0Pf/AJUV8CgRVTqFuFvNPJ/nlhs
-        Op8Q==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJV8h5mUrT"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.50.177]
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id D07898w33EZZORH
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 3 Apr 2020 16:35:35 +0200 (CEST)
-Subject: Re: [PATCH] net: can: remove "WITH Linux-syscall-note" from SPDX tag
- of C files
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        linux-can@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20200403073741.18352-1-masahiroy@kernel.org>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <f45febfa-a19a-0d76-d545-6427e5f1ce1e@hartkopp.net>
-Date:   Fri, 3 Apr 2020 16:35:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 3 Apr 2020 10:36:03 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p10so7213413ljn.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 07:36:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zmPYYW3fxClIYaAQ3d5kwhebWv1mnQ+1ShHjdxdDtmU=;
+        b=Hf1KZ1qQmdj/mjtE6P1FKY3Ud/bzbLAgQS3JOTKm2ISSGkHwg51cYv/VioKxVCzdQp
+         faSw1d9n5ma/2y5jkAkLT9AM+nz5dJwa08TSRC3KmEl6tehcIshqDmgOu4EogubN1dJk
+         /JDmM5l+j5eM+9wEeOQqAugI7/x38sVvEmhQ6XBZdKTSP6ywp2e4s+5nQeCL4CAfDdVt
+         GO7eOfw+2WyrGTCC1kJdLSrvPAYoUXIMmrt9Je3F8+7XXG6sJUNz3cizBYC2Agu8Kh0e
+         wDla8AziaQ2B1yRbT2cOBRXBceBm9b1WZdFh68d9lHbQ1OtQA2donIqzy1o5DLmnjyl8
+         cacw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zmPYYW3fxClIYaAQ3d5kwhebWv1mnQ+1ShHjdxdDtmU=;
+        b=fF1yMnaK+SCMFbVPtpAGmThURHuVFftu5ABowqMp3iym2/mvf0cMzJE05FBrd9JCME
+         k82fKBWbtC3JpePKbhMyhw13Z1MY11sLG5nUPPcn2XKsP7cvRxliPqkrv/4N/dzBzofg
+         pVsCl9Tsf2zlAjUmlAMhg7txpYSzVdP83OsAsc0Z2Ax9p15GF98qWVQFbZGJVgGdJdy6
+         h9IdE3uXr88Pe1z//WMBQ4cvjBNRRHn05EoMaegOUgIPggZ6dzvM6vO72EOAdA4GtCbM
+         M1eUWBP6MlrEFiUrS90/TRwo3MyElf8ZyfBTfLhvNqFBCHOhi6N8OjI+CY/pH2rrlKdK
+         MHGg==
+X-Gm-Message-State: AGi0PuYpxNvz1Enq8VIzMgho+P8Ch0e4WLkI4rhFOmR9zHN1xdj+B8Ix
+        nCvSy6bSWT9Yz89+7Ncd/ZJ93LZwJEo=
+X-Google-Smtp-Source: APiQypIMtF298Yl8bns41YZvM//TAVUblf05xp8RS423ZldCdYW94Ak2bpOVE3gTdd9ciXzdKrrYAw==
+X-Received: by 2002:a2e:6809:: with SMTP id c9mr4915106lja.251.1585924561034;
+        Fri, 03 Apr 2020 07:36:01 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id p5sm5923335ljn.99.2020.04.03.07.35.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 07:36:00 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 94A6D10132D; Fri,  3 Apr 2020 17:35:59 +0300 (+03)
+Date:   Fri, 3 Apr 2020 17:35:59 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: thp: don't need drain lru cache when splitting and
+ mlocking THP
+Message-ID: <20200403143559.aex2w7utvkf5rr5y@box>
+References: <1585337380-97368-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20200403073741.18352-1-masahiroy@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585337380-97368-1-git-send-email-yang.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 03/04/2020 09.37, Masahiro Yamada wrote:
-> The "WITH Linux-syscall-note" exception is intended for UAPI headers.
+On Sat, Mar 28, 2020 at 03:29:40AM +0800, Yang Shi wrote:
+> Since the commit 8f182270dfec ("mm/swap.c: flush lru pvecs on compound
+> page arrival") THP would not stay in pagevec anymore.  So the
+> optimization made by commit d965432234db ("thp: increase
+> split_huge_page() success rate") doesn't make sense anymore, which tries
+> to unpin munlocked THPs from pagevec by draining pagevec.
 > 
-> See LICENSES/exceptions/Linux-syscall-note
+> And draining lru cache before isolating THP in mlock path is unnecessary
+> either.
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-Thanks Masahiro!
-
-
-> ---
-> 
->   net/can/bcm.c  | 2 +-
->   net/can/gw.c   | 2 +-
->   net/can/proc.c | 2 +-
->   net/can/raw.c  | 2 +-
->   4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/can/bcm.c b/net/can/bcm.c
-> index c96fa0f33db3..d94b20933339 100644
-> --- a/net/can/bcm.c
-> +++ b/net/can/bcm.c
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
->   /*
->    * bcm.c - Broadcast Manager to filter/send (cyclic) CAN content
->    *
-> diff --git a/net/can/gw.c b/net/can/gw.c
-> index 65d60c93af29..49b4e3d91ad6 100644
-> --- a/net/can/gw.c
-> +++ b/net/can/gw.c
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
->   /* gw.c - CAN frame Gateway/Router/Bridge with netlink interface
->    *
->    * Copyright (c) 2019 Volkswagen Group Electronic Research
-> diff --git a/net/can/proc.c b/net/can/proc.c
-> index e6881bfc3ed1..a4eb06c9eb70 100644
-> --- a/net/can/proc.c
-> +++ b/net/can/proc.c
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
->   /*
->    * proc.c - procfs support for Protocol family CAN core module
->    *
-> diff --git a/net/can/raw.c b/net/can/raw.c
-> index 59c039d73c6d..ab104cc18562 100644
-> --- a/net/can/raw.c
-> +++ b/net/can/raw.c
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
->   /* raw.c - Raw sockets for protocol family CAN
->    *
->    * Copyright (c) 2002-2007 Volkswagen Group Electronic Research
-> 
+-- 
+ Kirill A. Shutemov
