@@ -2,164 +2,226 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477BDC2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54028C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 116CC2063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B792063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h19/LNG3"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="v7qWN9oG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731507AbgDCEaQ (ORCPT
+        id S1730914AbgDCEep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 00:30:16 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40594 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgDCEaP (ORCPT
+        Fri, 3 Apr 2020 00:34:45 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:56794 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727727AbgDCEeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 00:30:15 -0400
-Received: by mail-pl1-f196.google.com with SMTP id h11so2216914plk.7;
-        Thu, 02 Apr 2020 21:30:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sja6m3Mw9LjC7BK1j0HHPXQY4FKYL2Fx6diFCtiS1PE=;
-        b=h19/LNG3aBIRLqbyGckbtmcU+95XD0pxnfS64bhodTfzfjfXtnq/TJ+KQUfwxKbkb2
-         kkgsoBc0I4Esz0idHIfXX/maFUNkfgjkxmvwWyEHF/tK7o6GzBSQKbWx15oClB8LB0YW
-         zfEkUEWqzsljCZu9yhzAomn5U5idlMHsYHL0cjeoQ0+lCpgvmUdVNuNnD1axnRaeqAih
-         +R/MIFoqiTu794LHqc04TGNEU9rTEuqOoFWKgez+AbafEHmyK/4s7DGBYfx/bfEcg/K2
-         CwSr78KY+rGtCsqe8IEmG6QvsDePGLfBLBMewml61bnXUTmCpjjqDUKsON5NLcjL/FQP
-         Ty5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=sja6m3Mw9LjC7BK1j0HHPXQY4FKYL2Fx6diFCtiS1PE=;
-        b=ijY8UUISPPM6URsJuhnwF9j3VLekN8yTJ1qAjphfQkAxLK7HDYyUAq2mARkEMHmPQK
-         z0u5hBIqrJC63IXy9hY23Bj0jHjBhUXs0lovBEBu9FKcSlaH8QVHVxyjVE8+AW3Kga5j
-         D4gGU275ydK9VznpFDqN7VU/5dVUh5s+a/HiuhWq+gzrAcunmuND5DKq2sqW1SZWlD0R
-         9nFVJq3+VS4BRzg/MW3ktkT+v9WaHlG9yohRzzSnQe3c0FDjHTZvh3BLYNU/JNPNtjsj
-         nSQGpvIAVfvkxMpr9CvlN7pc2EySgwV2zIZ1V2V9mJjJCxW5Eq7n27Hx4BkBsW7161n6
-         O2dg==
-X-Gm-Message-State: AGi0PuaJ1o2OSVqneh2UEfnLn19NS+AhFAmohO1USloxzMAkIT9bmobU
-        u9CPoOYPwIYx5ujtHz5z5YDLCVCy
-X-Google-Smtp-Source: APiQypKymBolWpSQuKDcfRDNRhf9oi/2EuBelOfhbRc/eR/CsqYbdLKKIyexzCRlujj5Uqa9h055gQ==
-X-Received: by 2002:a17:902:ac8d:: with SMTP id h13mr6193580plr.267.1585888214837;
-        Thu, 02 Apr 2020 21:30:14 -0700 (PDT)
-Received: from sultan-box.localdomain (static-198-54-129-52.cust.tzulo.com. [198.54.129.52])
-        by smtp.gmail.com with ESMTPSA id k20sm4368281pgn.62.2020.04.02.21.30.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 21:30:14 -0700 (PDT)
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-X-Google-Original-From: Sultan Alsawaf
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>, stable@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/i915: Fix use-after-free due to intel_context_pin/unpin race
-Date:   Thu,  2 Apr 2020 21:29:44 -0700
-Message-Id: <20200403042948.2533-1-sultan@kerneltoast.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200403011318.2280-1-sultan@kerneltoast.com>
-References: <20200403011318.2280-1-sultan@kerneltoast.com>
+        Fri, 3 Apr 2020 00:34:44 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0334UFof026706;
+        Thu, 2 Apr 2020 21:34:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=pfpt0818;
+ bh=TkWTj8x6cVbPGq0lNl8q94o3EtXBBghb8lVzJFHginc=;
+ b=v7qWN9oGpr0rveIprpgo3l5JhMR600Qw+5wNnZOoj5szbo9JZrwBW+aq8ZRcG+ph3WCx
+ tnWDkkiKy4ErNn8PZTuxQKrclSo9VMipcYVI0hCt5Qjgxpeb5ChjMJTaZHhFvTNHqp9+
+ 03W2hRAtqvibzMukvbyOAYtylcBnR0dRkmejHnDFi26vPJUMdKgLPSsZyJjfG2N/FYAB
+ X0Sgw0aQo0RXoZ453YUlaniVcWyA6nRIeFR26jairYAirMpNn7GTJqIWpVhpWN28aqWS
+ fpHY38vYXeeTDpqQmIwVkEIVo5nm2vk+0PVQ3HtORR6n2ZNoISJ4v4nqk1Ox37C+yFPR Jg== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 304855w1xt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 21:34:36 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Apr
+ 2020 21:34:34 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Apr
+ 2020 21:34:34 -0700
+Received: from bbhushan2.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 2 Apr 2020 21:34:30 -0700
+From:   Bharat Bhushan <bbhushan2@marvell.com>
+To:     <jean-philippe@linaro.org>, <joro@8bytes.org>, <mst@redhat.com>,
+        <jasowang@redhat.com>, <virtualization@lists.linux-foundation.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <eric.auger.pro@gmail.com>, <eric.auger@redhat.com>
+CC:     Bharat Bhushan <bbhushan2@marvell.com>
+Subject: [RFC PATCH v4] iommu/virtio: Use page size bitmap supported by endpoint
+Date:   Fri, 3 Apr 2020 10:04:29 +0530
+Message-ID: <20200403043429.28484-1-bbhushan2@marvell.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_02:2020-04-02,2020-04-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
+Different endpoint can support different page size, probe
+endpoint if it supports specific page size otherwise use
+global page sizes.
 
-The retire and active callbacks can run simultaneously, allowing
-intel_context_pin() and intel_context_unpin() to run at the same time,
-trashing the ring and page tables. In 5.4, this was more noticeable
-because intel_ring_unpin() would set ring->vaddr to NULL and cause a
-clean NULL-pointer-dereference panic, but in newer kernels the
-use-after-free goes unnoticed.
-
-The NULL-pointer-dereference looks like this:
-BUG: unable to handle page fault for address: 0000000000003448
-RIP: 0010:gen8_emit_flush_render+0x163/0x190
-Call Trace:
- execlists_request_alloc+0x25/0x40
- __i915_request_create+0x1f4/0x2c0
- i915_request_create+0x71/0xc0
- i915_gem_do_execbuffer+0xb98/0x1a80
- ? preempt_count_add+0x68/0xa0
- ? _raw_spin_lock+0x13/0x30
- ? _raw_spin_unlock+0x16/0x30
- i915_gem_execbuffer2_ioctl+0x1de/0x3c0
- ? i915_gem_busy_ioctl+0x7f/0x1d0
- ? i915_gem_execbuffer_ioctl+0x2d0/0x2d0
- drm_ioctl_kernel+0xb2/0x100
- drm_ioctl+0x209/0x360
- ? i915_gem_execbuffer_ioctl+0x2d0/0x2d0
- ksys_ioctl+0x87/0xc0
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x4e/0x150
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Protect __intel_context_retire() with active->mutex (i.e., ref->mutex)
-to complement the active callback and fix the corruption.
-
-Fixes: 12c255b5dad1 ("drm/i915: Provide an i915_active.acquire callback")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
 ---
-v2: Reduce the scope of the mutex lock to only __intel_context_retire()
-    and mark it as a function that may sleep so it doesn't run in
-    atomic context
+v3->v4:
+ - Fix whitespace error
 
- drivers/gpu/drm/i915/gt/intel_context.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+v2->v3:
+ - Fixed error return for incompatible endpoint
+ - __u64 changed to __le64 in header file
 
-diff --git a/drivers/gpu/drm/i915/gt/intel_context.c b/drivers/gpu/drm/i915/gt/intel_context.c
-index 57e8a051ddc2..9b9be8058881 100644
---- a/drivers/gpu/drm/i915/gt/intel_context.c
-+++ b/drivers/gpu/drm/i915/gt/intel_context.c
-@@ -221,6 +221,7 @@ static void __intel_context_retire(struct i915_active *active)
+ drivers/iommu/virtio-iommu.c      | 53 +++++++++++++++++++++++++++----
+ include/uapi/linux/virtio_iommu.h |  7 ++++
+ 2 files changed, 54 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
+index cce329d71fba..ab09c04b1702 100644
+--- a/drivers/iommu/virtio-iommu.c
++++ b/drivers/iommu/virtio-iommu.c
+@@ -78,6 +78,7 @@ struct viommu_endpoint {
+ 	struct viommu_dev		*viommu;
+ 	struct viommu_domain		*vdomain;
+ 	struct list_head		resv_regions;
++	u64				pgsize_bitmap;
+ };
  
- 	CE_TRACE(ce, "retire\n");
- 
-+	mutex_lock(&active->mutex);
- 	set_bit(CONTEXT_VALID_BIT, &ce->flags);
- 	if (ce->state)
- 		__context_unpin_state(ce->state);
-@@ -229,6 +230,7 @@ static void __intel_context_retire(struct i915_active *active)
- 	__ring_retire(ce->ring);
- 
- 	intel_context_put(ce);
-+	mutex_unlock(&active->mutex);
+ struct viommu_request {
+@@ -415,6 +416,19 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
+ 	return ret;
  }
  
- static int __intel_context_active(struct i915_active *active)
-@@ -288,7 +290,8 @@ intel_context_init(struct intel_context *ce,
- 	mutex_init(&ce->pin_mutex);
- 
- 	i915_active_init(&ce->active,
--			 __intel_context_active, __intel_context_retire);
-+			 __intel_context_active,
-+			 i915_active_may_sleep(__intel_context_retire));
++static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
++				    struct virtio_iommu_probe_pgsize_mask *mask,
++				    size_t len)
++{
++	u64 pgsize_bitmap = le64_to_cpu(mask->pgsize_bitmap);
++
++	if (len < sizeof(*mask))
++		return -EINVAL;
++
++	vdev->pgsize_bitmap = pgsize_bitmap;
++	return 0;
++}
++
+ static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
+ 			       struct virtio_iommu_probe_resv_mem *mem,
+ 			       size_t len)
+@@ -499,6 +513,9 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
+ 		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
+ 			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
+ 			break;
++		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
++			ret = viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
++			break;
+ 		default:
+ 			dev_err(dev, "unknown viommu prop 0x%x\n", type);
+ 		}
+@@ -607,16 +624,17 @@ static struct iommu_domain *viommu_domain_alloc(unsigned type)
+ 	return &vdomain->domain;
  }
  
- void intel_context_fini(struct intel_context *ce)
+-static int viommu_domain_finalise(struct viommu_dev *viommu,
++static int viommu_domain_finalise(struct viommu_endpoint *vdev,
+ 				  struct iommu_domain *domain)
+ {
+ 	int ret;
+ 	struct viommu_domain *vdomain = to_viommu_domain(domain);
++	struct viommu_dev *viommu = vdev->viommu;
+ 
+ 	vdomain->viommu		= viommu;
+ 	vdomain->map_flags	= viommu->map_flags;
+ 
+-	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
++	domain->pgsize_bitmap	= vdev->pgsize_bitmap;
+ 	domain->geometry	= viommu->geometry;
+ 
+ 	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
+@@ -642,6 +660,29 @@ static void viommu_domain_free(struct iommu_domain *domain)
+ 	kfree(vdomain);
+ }
+ 
++/*
++ * Check whether the endpoint's capabilities are compatible with other
++ * endpoints in the domain. Report any inconsistency.
++ */
++static bool viommu_endpoint_is_compatible(struct viommu_endpoint *vdev,
++					  struct viommu_domain *vdomain)
++{
++	struct device *dev = vdev->dev;
++
++	if (vdomain->viommu != vdev->viommu) {
++		dev_err(dev, "cannot attach to foreign vIOMMU\n");
++		return false;
++	}
++
++	if (vdomain->domain.pgsize_bitmap != vdev->pgsize_bitmap) {
++		dev_err(dev, "incompatible domain bitmap 0x%lx != 0x%llx\n",
++			vdomain->domain.pgsize_bitmap, vdev->pgsize_bitmap);
++		return false;
++	}
++
++	return true;
++}
++
+ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ {
+ 	int i;
+@@ -657,10 +698,9 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ 		 * Properly initialize the domain now that we know which viommu
+ 		 * owns it.
+ 		 */
+-		ret = viommu_domain_finalise(vdev->viommu, domain);
+-	} else if (vdomain->viommu != vdev->viommu) {
+-		dev_err(dev, "cannot attach to foreign vIOMMU\n");
+-		ret = -EXDEV;
++		ret = viommu_domain_finalise(vdev, domain);
++	} else if (!viommu_endpoint_is_compatible(vdev, vdomain)) {
++		ret = -EINVAL;
+ 	}
+ 	mutex_unlock(&vdomain->mutex);
+ 
+@@ -875,6 +915,7 @@ static int viommu_add_device(struct device *dev)
+ 
+ 	vdev->dev = dev;
+ 	vdev->viommu = viommu;
++	vdev->pgsize_bitmap = viommu->pgsize_bitmap;
+ 	INIT_LIST_HEAD(&vdev->resv_regions);
+ 	fwspec->iommu_priv = vdev;
+ 
+diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
+index 237e36a280cb..bd0a1a844081 100644
+--- a/include/uapi/linux/virtio_iommu.h
++++ b/include/uapi/linux/virtio_iommu.h
+@@ -111,6 +111,7 @@ struct virtio_iommu_req_unmap {
+ 
+ #define VIRTIO_IOMMU_PROBE_T_NONE		0
+ #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
++#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
+ 
+ #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
+ 
+@@ -119,6 +120,12 @@ struct virtio_iommu_probe_property {
+ 	__le16					length;
+ };
+ 
++struct virtio_iommu_probe_pgsize_mask {
++	struct virtio_iommu_probe_property	head;
++	__u8					reserved[4];
++	__le64					pgsize_bitmap;
++};
++
+ #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
+ #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
+ 
 -- 
-2.26.0
+2.17.1
 
