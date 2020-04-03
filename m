@@ -2,63 +2,139 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596EDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D952CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBAD2063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE327206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731918AbgDCEfd (ORCPT
+        id S1731546AbgDCEjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 00:35:33 -0400
-Received: from smtprelay0131.hostedemail.com ([216.40.44.131]:33954 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725851AbgDCEfc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 00:35:32 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id DF844182CED5B;
-        Fri,  3 Apr 2020 04:35:31 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: seed33_4d3b0b285b054
-X-Filterd-Recvd-Size: 1327
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  3 Apr 2020 04:35:30 +0000 (UTC)
-Message-ID: <d74075e94b39b23d2e3acb24baaaedacfd0cc426.camel@perches.com>
-Subject: Re: [Outreachy kernel] [PATCH] staging: emxx_udc: Remove unused code
-From:   Joe Perches <joe@perches.com>
-To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>,
-        Stefano Brivio <sbrivio@redhat.com>
-Cc:     outreachy-kernel@googlegroups.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Thu, 02 Apr 2020 21:33:34 -0700
-In-Reply-To: <4bd376a6db77ef779972f377cc2c3789d03668e7.camel@gmail.com>
-References: <20200402021706.788533-1-jbwyatt4@gmail.com>
-         <20200403015057.7a972c79@elisabeth>
-         <4bd376a6db77ef779972f377cc2c3789d03668e7.camel@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 3 Apr 2020 00:39:03 -0400
+Received: from mga09.intel.com ([134.134.136.24]:19394 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbgDCEjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 00:39:03 -0400
+IronPort-SDR: H/LQxK3d0Y3xA0ApWFa+6DRBQjdAJjbAP/3PQFZfUI66Od1mF+IgVnVaImVnpeV6ZV7EDcWrZI
+ x+sksbogFKAw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 21:39:02 -0700
+IronPort-SDR: xKrqCXM86SXhnugdFt3obxFXmfKoeWIC1M5kbMc+05JVG/0Gfn2PTYInne6x+V61j2AhVn+fUh
+ 37/DnQQipmOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,338,1580803200"; 
+   d="scan'208";a="241021226"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Apr 2020 21:39:01 -0700
+Date:   Thu, 2 Apr 2020 21:39:01 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Dave Chinner <david@fromorbit.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jan Kara <jack@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+Message-ID: <20200403043901.GH3952565@iweiny-DESK2.sc.intel.com>
+References: <20200227052442.22524-1-ira.weiny@intel.com>
+ <20200305155144.GA5598@lst.de>
+ <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
+ <20200311033614.GQ1752567@magnolia>
+ <20200311062952.GA11519@lst.de>
+ <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
+ <20200316095224.GF12783@quack2.suse.cz>
+ <20200316095509.GA13788@lst.de>
+ <20200401040021.GC56958@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401040021.GC56958@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-02 at 18:42 -0700, John B. Wyatt IV wrote:
-> DEBUG is not actually used as far as I can tell (I am still new to
-> kernel debugging systems to please correct me).
+On Wed, Apr 01, 2020 at 04:00:21AM +0000, Darrick J. Wong wrote:
+> On Mon, Mar 16, 2020 at 10:55:09AM +0100, Christoph Hellwig wrote:
+> > On Mon, Mar 16, 2020 at 10:52:24AM +0100, Jan Kara wrote:
+> > > > This sounds reasonable to me.
+> > > > 
+> > > > As for deprecating the mount option, I think at a minimum it needs to
+> > > > continue be accepted as an option even if it is ignored to not break
+> > > > existing setups.
+> > > 
+> > > Agreed. But that's how we usually deprecate mount options. Also I'd say
+> > > that statx() support for reporting DAX state and some education of
+> > > programmers using DAX is required before we deprecate the mount option
+> > > since currently applications check 'dax' mount option to determine how much
+> > > memory they need to set aside for page cache before they consume everything
+> > > else on the machine...
+> > 
+> > I don't even think we should deprecate it.  It isn't painful to maintain
+> > and actually useful for testing.  Instead we should expand it into a
+> > tristate:
+> > 
+> >   dax=off
+> >   dax=flag
+> >   dax=always
+> > 
+> > where the existing "dax" option maps to "dax=always" and nodax maps
+> > to "dax=off". and dax=flag becomes the default for DAX capable devices.
+> 
+> That works for me.  In summary:
+> 
+>  - Applications must call statx to discover the current S_DAX state.
+> 
+>  - There exists an advisory file inode flag FS_XFLAG_DAX that can be
+>    changed on files that have no blocks allocated to them.  Changing
+>    this flag does not necessarily change the S_DAX state immediately
+>    but programs can query the S_DAX state via statx.
+> 
+>    If FS_XFLAG_DAX is set and the fs is on pmem then it will always
+>    enable S_DAX at inode load time; if FS_XFLAG_DAX is not set, it will
+>    never enable S_DAX.  Unless overridden...
+> 
+>  - There exists a dax= mount option.  dax=off means "never set S_DAX,
+>    ignore FS_XFLAG_DAX"; dax=always means "always set S_DAX (at least on
+>    pmem), ignore FS_XFLAG_DAX"; and dax=iflag means "follow FS_XFLAG_DAX"
+>    and is the default.  "dax" by itself means "dax=always".  "nodax"
+>    means "dax=off".
+> 
+>  - There exists an advisory directory inode flag FS_XFLAG_DAX that can
+>    be changed at any time.  The flag state is copied into any files or
+>    subdirectories created within that directory.  If programs require
+>    that file access runs in S_DAX mode, they'll have to create those
+>    files themselves inside a directory with FS_XFLAG_DAX set, or mount
+>    the fs with dax=always.
 
-DEBUG is used by the <foo>_debug and <bar>_dbg macros
-(pr_debug, dev_dbg)
+One other thing to add here.  They _can_ set the FS_XFLAG_DAX on a file with
+data and force an eviction to get S_DAX to change.
 
+I think that is a nice reason to have a different error code returned.
 
+> 
+> Ok?  Let's please get this part finished for 5.8, then we can get back
+> to arguing about fs-rmap and reflink and dax and whatnot.
 
+I'm happy to see you motivated to get this in.
+
+I'm starting with a new xfstest to make sure we agree on the semantics prior to
+more patches.  I hope to have the xfstest patch sent tomorrow sometime.
+
+Ira
+
+> 
+> --D
