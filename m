@@ -2,170 +2,97 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCA2C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4DEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294FF2082F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:43:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wml2g6j7"
+	by mail.kernel.org (Postfix) with ESMTP id 3A39B2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585928630;
+	bh=KSPwK+lkGBae8SkRPWn1F9ipaReloBQuldYMLUPakYg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LoYdcefRNv6He0od0G/2BbyArMUsuO4ABnejEgUtxNFJoDoYgpZ1J1LeCvmLPFMIC
+	 VWh623SDqrzgeHG3rjtAN8uAVwiT4eEkjLLAGL48PCH089B75FSPLbLFyCMOukft/C
+	 uw4y+h4paZ78wHLphadIcj2tVEA0Qog9TMdkbM1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390899AbgDCPnl (ORCPT
+        id S2404317AbgDCPnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:43:41 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54573 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgDCPnk (ORCPT
+        Fri, 3 Apr 2020 11:43:49 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:46455 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390855AbgDCPnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:43:40 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c81so7606806wmd.4;
-        Fri, 03 Apr 2020 08:43:38 -0700 (PDT)
+        Fri, 3 Apr 2020 11:43:47 -0400
+Received: by mail-qv1-f65.google.com with SMTP id bu9so3758453qvb.13;
+        Fri, 03 Apr 2020 08:43:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8EdgXbs5SzoJ+SdfVQVAnWtgLhjo5feNI5qPAURWOdI=;
-        b=Wml2g6j7pNDtWoVQC9omTmBXuBRWv/HiHlW4vRZhhgmo8jrIpmBBbVCd9w1W9y27M0
-         fRtsAKjTO5kvtO2BgQ3xvfts/vXJDX7BCJw+xDPSHteleOct20B2tmZGf7smnb7l74KA
-         Zkm52rOvpUat//aL20YRhEIjYPyl1rg+8dL5uqoNCcEpcj4AtzGPnbEN5qz/2BRbuv71
-         K4KKKGmkn+glRYMTFM5HpDu73Tv9qc7l44q68NXpNCUVL2VFv3keCXPVzbnU7Bt6uTDD
-         WnTmBnm6mbwYFyNPTJtUj/BYorUJZPXDoS1roIsMhfYNuuT2TeNo09VM8JGsG4Ylm57v
-         b/5w==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vMx0MOLe0yvwgWuw4zcBKaQIRZC+xinekU6xHhikY6Y=;
+        b=lLOBh+umo7XmD7bXXEWTjIKbErh0pNJ4W1cHP9XwA6Q/F75wkb7gFTSXpXMNV294+M
+         Vwr/9u9w4YVoFzulwd8BEeyHuQ8kMIAMYrQMPKTMpXaKlFHkDZ7Hm6YJ8zGjpJfpBeWL
+         sm2CLEazw1xhEEJ1vv6N8KbYOmwQOSaJC/xpscVDIULWN8lfy96+Lbuu1iGvXIB7CrA3
+         lpiCY9kilSUJfP2kaS6kk+z8oXKGdFjTV1CKWpCAiQA1VZhzReL4UpiC1v3jI87qOqPs
+         yrxm6+S6HCShyMOPfFjuldMpPZEjW7L+qVrB9nPI28ZkTo3OsMtNIscZjXfcVE3mJEL3
+         X3zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8EdgXbs5SzoJ+SdfVQVAnWtgLhjo5feNI5qPAURWOdI=;
-        b=mJaIV5H+CnbMr5cVVh5nr+nCYkpT0blKZ8sxLFvOQjiJe5t9zKBFHtHEdxaZnl5NOk
-         cvYN0lTcK7D2eMFAmEspBark3oI//Jh1KnPqufNV/Gw6Mar/NR9t/5GrOfbqU3jCGLhL
-         edW4yEyhXuowulpLwtqLzl2hCFMyLH64cjEyQbBhC43QaXZosK51bMHOh5Hqe80BoY4Y
-         zG2tXx5dZJxTvOHS7nSHryvuK4iO0hPjiUZRPbNfnyp5XcVGWZITimf0jyXwSSc/6lmV
-         scjhIgJPl3dEe+RT7FE4D3OpCP5CHQdKRlFTm71IB/Ysf6+2QMZOzncV3ojWKRp/AjjA
-         t9xg==
-X-Gm-Message-State: AGi0PuZ84VNTpTrJq520h39RsDSpeng9TZ/cbTu3F8frNJMEF0MtOxJy
-        rGh37juXoXzlDN1CcBDWyBA=
-X-Google-Smtp-Source: APiQypIdfVM8Ohqo+FmD/zM+YA+XRK3MMfe4WRTwIojwI3dOLqqi2vSZ1GEHTaVF/ckE8eV4TVJ/tg==
-X-Received: by 2002:a1c:cc0a:: with SMTP id h10mr8883490wmb.127.1585928617818;
-        Fri, 03 Apr 2020 08:43:37 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id h2sm11701580wmb.16.2020.04.03.08.43.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Apr 2020 08:43:37 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] ARM: dts: rockchip: remove include for irq.h
-Date:   Fri,  3 Apr 2020 17:43:28 +0200
-Message-Id: <20200403154329.11256-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200403154329.11256-1-jbx6244@gmail.com>
-References: <20200403154329.11256-1-jbx6244@gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=vMx0MOLe0yvwgWuw4zcBKaQIRZC+xinekU6xHhikY6Y=;
+        b=qV/GUIKYVKfj7nlDuzySxHt+Fjm4ylXvdoe1iKIgSlDIwo+41/vhHZ6LZltg3MW8Hf
+         BspQENCuNlKgX4E0BnJC5R4v8BMySKf3DgMxf8ElIF1CR2+1fxi+2BIGJp4vEsYzI+vp
+         XLa/bJ9RwsrOWCTV2tCN2HfiJALfrZudTqD789TwZutKPkBsZfQi2+yXJ30kyGnF3h76
+         e57594aTv0NP9xsUF6B6gMcOxWktHURPnKuo3gnV991+GF3b8oSx2K8ridJazQ1gu3DX
+         xD9ZbBM7AjrXewostx/sLbLvkauBO1NO/Fisb8Ah2L0Khn4229ZbKhQheXwsWfDwbyKg
+         /WgA==
+X-Gm-Message-State: AGi0PuZKbbdYJ4J2ddiJVB4tUpXb4wqo1G6qHtxJKzY01S6+m0InDROp
+        UHtvXV+SVx/Y8i7i55g2LOE=
+X-Google-Smtp-Source: APiQypIeff9mC0Z8KwgZIq+VCvmh+aODX/pV4cZ2GmTHwocSkeR+JEjsvr4Xe264cWIuYEWkSFG7RA==
+X-Received: by 2002:a0c:8525:: with SMTP id n34mr8885540qva.224.1585928625897;
+        Fri, 03 Apr 2020 08:43:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::842b])
+        by smtp.gmail.com with ESMTPSA id d22sm7022682qte.93.2020.04.03.08.43.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 08:43:45 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 11:43:43 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sonny Rao <sonnyrao@google.com>
+Subject: Re: [PATCH v2] docs: cgroup-v1: Document the cpuset_v2_mode mount
+ option
+Message-ID: <20200403154343.GE162390@mtj.duckdns.org>
+References: <20200330140615.25549-1-longman@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330140615.25549-1-longman@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'irq.h' file is already included through 'arm-gic.h',
-so remove them from all Rockchip dtsi files.
+On Mon, Mar 30, 2020 at 10:06:15AM -0400, Waiman Long wrote:
+> The cpuset in cgroup v1 accepts a special "cpuset_v2_mode" mount
+> option that make cpuset.cpus and cpuset.mems behave more like those in
+> cgroup v2.  Document it to make other people more aware of this feature
+> that can be useful in some circumstances.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm/boot/dts/rk3036.dtsi | 3 +--
- arch/arm/boot/dts/rk322x.dtsi | 3 +--
- arch/arm/boot/dts/rk3288.dtsi | 5 ++---
- arch/arm/boot/dts/rk3xxx.dtsi | 1 -
- arch/arm/boot/dts/rv1108.dtsi | 4 ++--
- 5 files changed, 6 insertions(+), 10 deletions(-)
+Applied to cgroup/for-5.7.
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 781ac7583..55f3838b2 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -1,10 +1,9 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- 
-+#include <dt-bindings/clock/rk3036-cru.h>
- #include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
--#include <dt-bindings/clock/rk3036-cru.h>
- #include <dt-bindings/soc/rockchip,boot-mode.h>
- 
- / {
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index c14891fe8..d5a1aad17 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -1,10 +1,9 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- 
-+#include <dt-bindings/clock/rk3228-cru.h>
- #include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
--#include <dt-bindings/clock/rk3228-cru.h>
- #include <dt-bindings/thermal/thermal.h>
- 
- / {
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index f102fec69..a56b4a58f 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1,13 +1,12 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- 
-+#include <dt-bindings/clock/rk3288-cru.h>
- #include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
--#include <dt-bindings/clock/rk3288-cru.h>
- #include <dt-bindings/power/rk3288-power.h>
--#include <dt-bindings/thermal/thermal.h>
- #include <dt-bindings/soc/rockchip,boot-mode.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	#address-cells = <2>;
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index f9fcb7e96..c79d98edd 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -4,7 +4,6 @@
-  * Author: Heiko Stuebner <heiko@sntech.de>
-  */
- 
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/soc/rockchip,boot-mode.h>
- 
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index b453f8d0f..06c46bed9 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- 
-+#include <dt-bindings/clock/rv1108-cru.h>
- #include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
--#include <dt-bindings/clock/rv1108-cru.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/thermal/thermal.h>
-+
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
+Thanks.
+
 -- 
-2.11.0
-
+tejun
