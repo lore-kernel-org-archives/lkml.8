@@ -2,120 +2,149 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B82AC2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4BFC2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9AE12073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:56:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585922168;
-	bh=FhqPOSoipb7VvZfkzfCic4+Lw7QnmVk6EIaAit4qTTg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=JcMkezUCpRa60Jw9kEJZy89SrLzgCwQJbJmD/a/LwXyQHsRFgBCJMHJ95DFmBNurq
-	 CGG1UErGpzdSG1nyRKtHR2N16vzMPU+QkMr+jbmk68cuq1yNym8DnQhtbpz3Mp1KLn
-	 61jlhdU/yjOqvklrarQKFjsNmhfWe/zvdsUgTcr0=
+	by mail.kernel.org (Postfix) with ESMTP id 77EF52073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391004AbgDCN4H (ORCPT
+        id S2391009AbgDCN4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:56:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:53532 "EHLO foss.arm.com"
+        Fri, 3 Apr 2020 09:56:50 -0400
+Received: from mga12.intel.com ([192.55.52.136]:54582 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728023AbgDCN4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:56:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F316031B;
-        Fri,  3 Apr 2020 06:56:05 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5908B3F52E;
-        Fri,  3 Apr 2020 06:56:05 -0700 (PDT)
-Date:   Fri, 03 Apr 2020 14:56:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jungseung Lee <js07.lee@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-ep93xx: fix wrong SPI mode selection" to the spi tree
-In-Reply-To:  <20200402121022.9976-1-js07.lee@samsung.com>
-Message-Id:  <applied-20200402121022.9976-1-js07.lee@samsung.com>
-X-Patchwork-Hint: ignore
+        id S2390883AbgDCN4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 09:56:49 -0400
+IronPort-SDR: flEouXuH0PyoTBVneQUKeYeAB/YyK0Qos4o5kKZMbEd3486T4z0trc59S5Y9avwane7faXPgep
+ pffrscfTyYyA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 06:56:48 -0700
+IronPort-SDR: sg/BjNhR9EPaUobM7/48I3JxZw/KmrC8Aq4/WNwtGT1eUOuEuvoYSJ4igirXB08rZO+HN27WLt
+ P0imZBIZJ91w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
+   d="scan'208";a="253373358"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 03 Apr 2020 06:56:48 -0700
+Received: from [10.249.254.224] (abudanko-mobl.ccr.corp.intel.com [10.249.254.224])
+        by linux.intel.com (Postfix) with ESMTP id 8DE9E5802C8;
+        Fri,  3 Apr 2020 06:56:45 -0700 (PDT)
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+ <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
+ <20200110140234.GO2844@hirez.programming.kicks-ass.net>
+ <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
+ <20200110164531.GA2598@kernel.org>
+ <20200111084735.0ff01c758bfbfd0ae2e1f24e@kernel.org>
+ <2B79131A-3F76-47F5-AAB4-08BCA820473F@fb.com>
+ <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
+ <158a4033-f8d6-8af7-77b0-20e62ec913b0@linux.intel.com>
+ <20200114122506.3cf442dc189a649d4736f86e@kernel.org>
+ <CAADnVQLCtrvvagbbkZG4PyAKb2PWzUouxG3=nxvm8QdpgEWtGQ@mail.gmail.com>
+ <81abaa29-d1be-a888-8b2f-fdf9b7e9fde8@linux.intel.com>
+ <CAADnVQKddDCRV9Zp7N_TR51wc5rtRwFN-pSZHLiXDXe23+B_5Q@mail.gmail.com>
+ <257a949a-b7cc-5ff1-6f1a-34bc44b1efc5@linux.intel.com>
+ <CAADnVQKSb8ZEq7mG0XwGx_btLxoEU5XDTu_p6eseDGuO-G+5tw@mail.gmail.com>
+ <687dc836-4d86-c281-75b3-c4df451e7cd1@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <6dfd7ded-3294-6ec5-dcc0-92303a5cecb5@linux.intel.com>
+Date:   Fri, 3 Apr 2020 16:56:44 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <687dc836-4d86-c281-75b3-c4df451e7cd1@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   spi: spi-ep93xx: fix wrong SPI mode selection
+On 01.04.2020 23:50, Alexey Budankov wrote:
+> Hi Alexei,
+> 
+> On 15.01.2020 4:52, Alexei Starovoitov wrote:
+>> On Tue, Jan 14, 2020 at 10:50 AM Alexey Budankov
+>> <alexey.budankov@linux.intel.com> wrote:
+>>>
+>>>
+>>> On 14.01.2020 21:06, Alexei Starovoitov wrote:
+>>>> On Tue, Jan 14, 2020 at 1:47 AM Alexey Budankov
+>>>> <alexey.budankov@linux.intel.com> wrote:
+>>>>>>>
+>>>>>>> As we talked at RFC series of CAP_SYS_TRACING last year, I just expected
+>>>>>>> to open it for enabling/disabling kprobes, not for creation.
+>>>>>>>
+>>>>>>> If we can accept user who has no admin priviledge but the CAP_SYS_PERFMON,
+>>>>>>> to shoot their foot by their own risk, I'm OK to allow it. (Even though,
+>>>>>>> it should check the max number of probes to be created by something like
+>>>>>>> ulimit)
+>>>>>>> I think nowadays we have fixed all such kernel crash problems on x86,
+>>>>>>> but not sure for other archs, especially on the devices I can not reach.
+>>>>>>> I need more help to stabilize it.
+>>>>>>
+>>>>>> I don't see how enable/disable is any safer than creation.
+>>>>>> If there are kernel bugs in kprobes the kernel will crash anyway.
+>>>>>> I think such partial CAP_SYS_PERFMON would be very confusing to the users.
+>>>>>> CAP_* is about delegation of root privileges to non-root.
+>>>>>> Delegating some of it is ok, but disallowing creation makes it useless
+>>>>>> for bpf tracing, so we would need to add another CAP later.
+>>>>>> Hence I suggest to do it right away instead of breaking
+>>>>>> sys_perf_even_open() access into two CAPs.
+>>>>>>
+>>>>>
+>>>>> Alexei, Masami,
+>>>>>
+>>>>> Thanks for your meaningful input.
+>>>>> If we know in advance that it still can crash the system in some cases and on
+>>>>> some archs, even though root fully controls delegation thru CAP_SYS_PERFMON,
+>>>>> such delegation looks premature until the crashes are avoided. So it looks like
+>>>>> access to eBPF for CAP_SYS_PERFMON privileged processes is the subject for
+>>>>> a separate patch set.
+>>>>
+>>>> perf_event_open is always dangerous. sw cannot guarantee non-bugginess of hw.
+>>>
+>>> Sure, software cannot guarantee, but known software bugs could still be fixed,
+>>> that's what I meant.
+>>>
+>>>> imo adding a cap just for pmc is pointless.
+>>>> if you add a new cap it should cover all of sys_perf_event_open syscall.
+>>>> subdividing it into sw vs hw counters, kprobe create vs enable, etc will
+>>>> be the source of ongoing confusion. nack to such cap.
+>>>>
+>>>
+>>> Well, as this patch set already covers complete perf_event_open functionality,
+>>> and also eBPF related parts too, could you please review and comment on it?
+>>> Does the patches 2/9 and 5/9 already bring all required extentions?
+>>
+>> yes. the current patches 2 and 5 look good to me.
+> 
+> Could this have you explicit Reviewed-by or Acked-by tag so
+> the changes could be driven into the kernel?
+> Latest v7 is here: https://lore.kernel.org/lkml/c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com/
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Posted v8 with all acquired tags so far:
+https://lore.kernel.org/lkml/f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com/
 
 Thanks,
-Mark
-
-From 61249ce08ee9d031070281dbf36871f1c794abb8 Mon Sep 17 00:00:00 2001
-From: Jungseung Lee <js07.lee@samsung.com>
-Date: Thu, 2 Apr 2020 21:10:22 +0900
-Subject: [PATCH] spi: spi-ep93xx: fix wrong SPI mode selection
-
-The mode bits on control register 0 are in a different order compared
-to the spi mode define values. Thus, in the current code, it fails to
-set the correct SPI mode selection. Fix it.
-
-Signed-off-by: Jungseung Lee <js07.lee@samsung.com>
-Link: https://lore.kernel.org/r/20200402121022.9976-1-js07.lee@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-ep93xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-ep93xx.c b/drivers/spi/spi-ep93xx.c
-index 4e1ccd4e52b6..8c854b187b1d 100644
---- a/drivers/spi/spi-ep93xx.c
-+++ b/drivers/spi/spi-ep93xx.c
-@@ -31,7 +31,8 @@
- #include <linux/platform_data/spi-ep93xx.h>
- 
- #define SSPCR0			0x0000
--#define SSPCR0_MODE_SHIFT	6
-+#define SSPCR0_SPO		BIT(6)
-+#define SSPCR0_SPH		BIT(7)
- #define SSPCR0_SCR_SHIFT	8
- 
- #define SSPCR1			0x0004
-@@ -159,7 +160,10 @@ static int ep93xx_spi_chip_setup(struct spi_master *master,
- 		return err;
- 
- 	cr0 = div_scr << SSPCR0_SCR_SHIFT;
--	cr0 |= (spi->mode & (SPI_CPHA | SPI_CPOL)) << SSPCR0_MODE_SHIFT;
-+	if (spi->mode & SPI_CPOL)
-+		cr0 |= SSPCR0_SPO;
-+	if (spi->mode & SPI_CPHA)
-+		cr0 |= SSPCR0_SPH;
- 	cr0 |= dss;
- 
- 	dev_dbg(&master->dev, "setup: mode %d, cpsr %d, scr %d, dss %d\n",
--- 
-2.20.1
-
+Alexey
