@@ -2,138 +2,116 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64079C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9120C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3564120721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:36:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9xOnYjN"
+	by mail.kernel.org (Postfix) with ESMTP id 890212077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403857AbgDCMgN (ORCPT
+        id S2403980AbgDCMgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:36:13 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:43490 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728219AbgDCMgM (ORCPT
+        Fri, 3 Apr 2020 08:36:16 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:52026 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403861AbgDCMgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:36:12 -0400
-Received: by mail-qv1-f68.google.com with SMTP id c28so3424365qvb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:36:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/UIQ6cCz6/xPuMLPWGcywGCrwVngPK40EuPV4gXPVrg=;
-        b=G9xOnYjNwulboqxCx81yN1IIkK+Qt1i9yxPkPaBg0zRTstOZeFZPjUdhn7ibIQLAgk
-         XxxVKC9WdbOIWEGV6WDUCMUpttj2rdrk1zivYDaP90amGTclDD4ry6PBzORrnaWq0JJU
-         EOu+i//xhhpUhE+tQUDtFJaLtG3mw78bNqG0x/6Nwn/XvP/bWSXRwKOutGPvEMkClBX9
-         gSqAFTS6xtASEGigsC8wSPI+2LNaH5QiCxLr5FO89bL1SvhBqx1qYIjU4fplBboUF0Z0
-         SPraTa+dG6IEi3LOxLVm7HZklL3svPzdTRjTIWf8L6czdkrS7jmREK346b3fgG/pPEML
-         dpyw==
+        Fri, 3 Apr 2020 08:36:16 -0400
+Received: by mail-io1-f70.google.com with SMTP id m3so5865543ioj.18
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:36:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/UIQ6cCz6/xPuMLPWGcywGCrwVngPK40EuPV4gXPVrg=;
-        b=TUWR4pLYYuaCbZSML0LSJ1xpS8ZEhIpseJPsPGnzQ0t6bVGIVP9Sx/NHJpR5b8GWWm
-         tvAKyuSVlG9v2Dp5iTIjNJoVqmvctvGCjsF1Ip4qwE34qHGDe/3O9ftfM3px3K5cjNeQ
-         Wguo6GhosptsMTSoP6LWR+44ucoLNOHgnSSa0n0TYIswBXqR0/HHQ9ZSN5LP/MeihWXe
-         l2X8IvWy2pfNWTSiq+oPIjdprIdOpIjfza4z3mD6T3+XNCyi84m1q/j5PUEV1eUQGJjW
-         ZGtZxHtlFTzEQLLLdjDVSPwNBqDAFEOy9BrpAJSs2f4hf4vjyPUCbuqgFhhV8TWP93ZP
-         JM2A==
-X-Gm-Message-State: AGi0PuZzuKar/o0ta7nEJ7d62/+hKhRRL+gK2RvQD6dq53DF/WYLiq9Q
-        AunoVlm0mbCRbUO+SBqpcpw=
-X-Google-Smtp-Source: APiQypI7PsH7snM6jdOXd2HKBLWUe9bvS5FDXTaIY281QuZkO+vPIsI5Vs8/2oWe95MNI5epqMg68Q==
-X-Received: by 2002:a0c:e902:: with SMTP id a2mr8154150qvo.103.1585917369743;
-        Fri, 03 Apr 2020 05:36:09 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id e16sm4514719qtq.78.2020.04.03.05.36.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 05:36:08 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 889BB409A3; Fri,  3 Apr 2020 09:36:06 -0300 (-03)
-Date:   Fri, 3 Apr 2020 09:36:06 -0300
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
-Message-ID: <20200403123606.GC23243@kernel.org>
-References: <20200325124536.2800725-1-namhyung@kernel.org>
- <20200325124536.2800725-5-namhyung@kernel.org>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=UvbA5A0WRpymYAsYKP+Bj3BYcaBTCY3Et4nTEY3sA68=;
+        b=QcypZasu1usMrPSRMozgdYNp1cDnkWQvF5XzTZYKPptOuduCrtKpU++TsS7Kki+Ih4
+         eaHd/avzH3H8G9IYPwop4k9EkoHJnXCNdlNRriIypS4KY9rKNMSrTvKybLx29VMmt6PH
+         yXL5fu110d+GJ0t5bsVzm1pEYd4ydVRjjkLikcqCSsKitHLP14afNsMj6f4PVZTirRKi
+         VaMf5Pc32SdZphfBwCIUUDSquTkYHM1bsjlS3Pjhis8eO0W98/j1tKMFE1AwczhEdvsD
+         o56vY961zuDIjaotAzNGGUE3V/T6wyLWheZ+nz5g4LNDtFgboK67gwsVwFTzGZ3HtMiT
+         7iRw==
+X-Gm-Message-State: AGi0PuYyG+IlHnKL7Awaknv1Mg4yC81stMCvp5Olyb45+6+cwN+UJi+i
+        h5uBYUWcmGCsrF68aqNeSzgXd1au5OJjQDQCI6ofK0FlMyWO
+X-Google-Smtp-Source: APiQypKOeoi0/P/oER14D0BMRYIlvEPJDDZYRsE3CVFtPY/rAhRbh3XQ0qTPgH1RkKPtTOdK7QS/ERRL6nw/T4NRjAitrkvExrTK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325124536.2800725-5-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+X-Received: by 2002:a92:778e:: with SMTP id s136mr8654364ilc.256.1585917375308;
+ Fri, 03 Apr 2020 05:36:15 -0700 (PDT)
+Date:   Fri, 03 Apr 2020 05:36:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cc687e05a26229d2@google.com>
+Subject: KCSAN: data-race in fuse_lock_inode / process_init_reply
+From:   syzbot <syzbot+e9c2dec6b40030f721c6@syzkaller.appspotmail.com>
+To:     elver@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, miklos@szeredi.hu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Mar 25, 2020 at 09:45:31PM +0900, Namhyung Kim escreveu:
-> Each cgroup is kept in the perf_env's cgroup_tree sorted by the cgroup
-> id.  Hist entries have cgroup id can compare it directly and later it
-> can be used to find a group name using this tree.
+Hello,
 
-This one breaks the 'perf test python' test, I fixed it adding this
-patch before your series:
+syzbot found the following crash on:
+
+HEAD commit:    245a4300 Merge branch 'rcu/kcsan' into tip/locking/kcsan
+git tree:       https://github.com/google/ktsan.git kcsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=12a7d9a5e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4b9db179318d21f
+dashboard link: https://syzkaller.appspot.com/bug?extid=e9c2dec6b40030f721c6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e9c2dec6b40030f721c6@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in fuse_lock_inode / process_init_reply
+
+read to 0xffff888099cc4d2d of 1 bytes by task 14548 on cpu 1:
+ fuse_lock_inode+0x4c/0x90 fs/fuse/inode.c:351
+ fuse_lookup+0x3f/0x210 fs/fuse/dir.c:389
+ __lookup_hash+0xcb/0x110 fs/namei.c:1544
+ filename_create+0x102/0x2d0 fs/namei.c:3639
+ user_path_create fs/namei.c:3696 [inline]
+ do_linkat+0xff/0x640 fs/namei.c:4298
+ __do_sys_link fs/namei.c:4342 [inline]
+ __se_sys_link fs/namei.c:4340 [inline]
+ __x64_sys_link+0x47/0x60 fs/namei.c:4340
+ do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+write to 0xffff888099cc4d2d of 6 bytes by task 14532 on cpu 0:
+ process_init_reply+0x7a/0xb90 fs/fuse/inode.c:891
+ fuse_request_end+0x324/0x530 fs/fuse/dev.c:328
+ end_requests+0x100/0x160 fs/fuse/dev.c:2056
+ fuse_abort_conn+0x737/0x7d0 fs/fuse/dev.c:2151
+ fuse_dev_release+0x26b/0x290 fs/fuse/dev.c:2186
+ __fput+0x1e1/0x520 fs/file_table.c:280
+ ____fput+0x1f/0x30 fs/file_table.c:313
+ task_work_run+0xf6/0x130 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x2b4/0x2c0 arch/x86/entry/common.c:164
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_64+0x384/0x3a0 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 14532 Comm: syz-executor.1 Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+==================================================================
 
 
-From ea3c4ab73cb2ea2960bba6894560b1ef91e69737 Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Fri, 3 Apr 2020 09:29:52 -0300
-Subject: [PATCH 1/1] perf python: Include rwsem.c in the pythong biding
-
-We'll need it for the cgroup patches, and its better to have it in a
-separate patch in case we need to later revert the cgroup patches.
-
-I.e. without this we have:
-
-  [root@five ~]# perf test -v python
-  19: 'import perf' in python                               :
-  --- start ---
-  test child forked, pid 148447
-  Traceback (most recent call last):
-    File "<stdin>", line 1, in <module>
-  ImportError: /tmp/build/perf/python/perf.cpython-37m-x86_64-linux-gnu.so: undefined symbol: down_write
-  test child finished with -1
-  ---- end ----
-  'import perf' in python: FAILED!
-  [root@five ~]#
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/python-ext-sources | 1 +
- 1 file changed, 1 insertion(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index e7279ea6043a..a9d9c142eb7c 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -34,3 +34,4 @@ util/string.c
- util/symbol_fprintf.c
- util/units.c
- util/affinity.c
-+util/rwsem.c
--- 
-2.25.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
