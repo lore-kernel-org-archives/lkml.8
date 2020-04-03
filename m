@@ -2,160 +2,164 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCD4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EFAC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C492077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74E62077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:36:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585910217;
+	bh=kp6xbiJ44r4v7ema3LzxnDg62Zr4pbCL1fUx7ZUe3F0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lGyQqWoLsalnPtN/Qh7TWzrY2LPKNS5jbw8OZ3WRntCcSc3PTFN0W/AcIGe8qwwCO
+	 KXr56XtpJec1ecNMXyjsIrKwsQ4Im/jiQ6uKYZ3MMbyesAj4MXPLFQykmUL5MwEhue
+	 MQPX/uPt1YRJ8VbBkpQVHtoicEJ5qlHcYB4fhRgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389998AbgDCKfG convert rfc822-to-8bit (ORCPT
+        id S2390541AbgDCKgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:35:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15548 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727944AbgDCKfG (ORCPT
+        Fri, 3 Apr 2020 06:36:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33678 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgDCKgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:35:06 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033AY8xd027371
-        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 06:35:05 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 304hjc8hb0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 06:35:04 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Fri, 3 Apr 2020 11:34:43 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 Apr 2020 11:34:41 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033AXubl43581948
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Apr 2020 10:33:56 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 032B24C04A;
-        Fri,  3 Apr 2020 10:35:00 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9570F4C044;
-        Fri,  3 Apr 2020 10:34:59 +0000 (GMT)
-Received: from localhost (unknown [9.85.72.61])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Apr 2020 10:34:59 +0000 (GMT)
-Date:   Fri, 03 Apr 2020 16:04:56 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 2/6] powerpc/idle: Add accessor function to always read
- latest idle PURR
-To:     ego@linux.vnet.ibm.com
-Cc:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
-        <1585308760-28792-3-git-send-email-ego@linux.vnet.ibm.com>
-        <1585734073.0qmf6bbdoa.naveen@linux.ibm.com>
-        <20200403061536.GA9066@in.ibm.com>
-In-Reply-To: <20200403061536.GA9066@in.ibm.com>
+        Fri, 3 Apr 2020 06:36:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id a25so7970537wrd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 03:36:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T00fOEaSfVQZvteNm45+ejbBVsW27ZWpyHUWye58+sw=;
+        b=PyY5bOnZdGFztXNhY3xt7ePVdjZOFxlp7rvYXa+XQQ/vzPCd5wFkGEbwZr520LVKHH
+         5ujbAb3f+jlKH2hCKY2FZijosINQX03SPTJKfIRq9IFvr+RwWQRAOqfckA2jjXRqg2I5
+         vMyl0FaQX+YGP59jxs2QFLjNCGYd+aDjgLvYBV0rxvkOOHgILdZpmJkM3lI9Qnb/u/Vr
+         XC9EziKsgrviLiJIJAMoVuOV5KUB8Jtg0CGhKmErW6tLlpWnahZJeZeKzOl/5fkjFhXW
+         8pj6mVRrgDzWbBvKVHx8a4cNthREq1VHLVkDrGnLVDXlFEP+mr+rJa3t3TR41SF7/ipv
+         u4lA==
+X-Gm-Message-State: AGi0PuanAN6zCRgLgLDpKopoi1+7uGhS4Mb8kwbf/sVE/WrJizcg1aPO
+        +EoC4cm5vz+t6BzBNLlVTp4=
+X-Google-Smtp-Source: APiQypJZKnMBt4mLRQia4ePd2MHVn1gbcWbjMjRqb4YtFMcIN4y9RELiYh945OqrPKDgJ8gB91IcHA==
+X-Received: by 2002:adf:91c3:: with SMTP id 61mr8191556wri.384.1585910213400;
+        Fri, 03 Apr 2020 03:36:53 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id g186sm11418219wmg.36.2020.04.03.03.36.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 03:36:52 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 12:36:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Aslan Bakirov <aslan@fb.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com, riel@surriel.com,
+        guro@fb.com, hannes@cmpxchg.org
+Subject: Re: [PATCH 2/2] mm: hugetlb: Use node interface of cma
+Message-ID: <20200403103651.GA22681@dhcp22.suse.cz>
+References: <20200403101843.406634-1-aslan@fb.com>
+ <20200403101843.406634-2-aslan@fb.com>
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20040310-0020-0000-0000-000003C0CAAD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040310-0021-0000-0000-000022197A4A
-Message-Id: <1585909343.fw0f8jg7ug.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_07:2020-04-02,2020-04-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- suspectscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
- malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004030087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403101843.406634-2-aslan@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gautham R Shenoy wrote:
-> On Wed, Apr 01, 2020 at 03:12:53PM +0530, Naveen N. Rao wrote:
->> Hi Gautham,
->> 
->> Gautham R. Shenoy wrote:
->> >From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
->> >
->> >+
->> >+static inline u64 read_this_idle_purr(void)
->> >+{
->> >+	/*
->> >+	 * If we are reading from an idle context, update the
->> >+	 * idle-purr cycles corresponding to the last idle period.
->> >+	 * Since the idle context is not yet over, take a fresh
->> >+	 * snapshot of the idle-purr.
->> >+	 */
->> >+	if (unlikely(get_lppaca()->idle == 1)) {
->> >+		update_idle_purr_accounting();
->> >+		snapshot_purr_idle_entry();
->> >+	}
->> >+
->> >+	return be64_to_cpu(get_lppaca()->wait_state_cycles);
->> >+}
->> >+
->> 
->> I think this and read_this_idle_spurr() from the next patch should be moved
->> to Patch 4/6, where they are actually used.
+On Fri 03-04-20 03:18:43, Aslan Bakirov wrote:
+> With introduction of numa node interface for CMA, this patch is for using that
+> interface for allocating memory on numa nodes if NUMA is configured.
+> This will be more efficient  and cleaner because first, instead of iterating
+> mem range of each numa node, cma_declare_contigueous_nid() will do
+> its own address finding if we pass 0 for  both min_pfn and max_pfn,
+> second, it can also handle caseswhere NUMA is not configured
+> by passing NUMA_NO_NODE as an argument.
 > 
-> The reason I included this function in this patch was to justify why
-> we were introducing snapshotting the purr values in a global per-cpu
-> variable instead of on a stack variable. The reason being that someone
-> might want to read the PURR value from an interrupt context which had
-> woken up the CPU from idle. At this point, since epilog() function
-> wasn't called, the idle PURR count corresponding to this latest idle
-> period would have been accumulated in lppaca->wait_cycles. Thus, this
-> helper function safely reads the value by
->    1) First updating the lppaca->wait_cycles with the latest idle_purr
->    count.
->    2) Take a fresh snapshot, since the time from now to the epilog()
->    call is also counted under idle CPU. So the PURR cycle increment
->    during this short period should also be accumulated in lppaca->wait_cycles.
+> In addition, checking if desired size of memory is available or not,
+> is happening in cma_declare_contiguous_nid()  because base and
+> limit will be determined there, since 0(any) for  base and
+> 0(any) for limit is passed as argument to the function.
+
+I have asked to merge this one with the original patch from Roman
+several times but it seems this is not going to happen. But whatever.
+
+You have likely missed my review feedback http://lkml.kernel.org/r/20200402172404.GV22681@dhcp22.suse.cz.
+The ifdef CONFIG_NUMA for the nid definition is pointless.
+
+> Signed-off-by: Aslan Bakirov <aslan@fb.com>
+
+After fixing that, feel free to add
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/hugetlb.c | 40 +++++++++++-----------------------------
+>  1 file changed, 11 insertions(+), 29 deletions(-)
 > 
-> 
-> prolog()
-> |	snapshot PURR
-> |
-> |
-> |
-> Idle
-> |
-> | <----- Interrupt . Read idle PURR ---- update idle PURR;
-> |                              	         snapshot PURR;
-> |                                   	 Read idle PURR.       
-> |
-> epilog()
-> 	update idle PURR
-> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index b9f0c903c4cf..62989220c4ff 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -5573,42 +5573,24 @@ void __init hugetlb_cma_reserve(int order)
+>  
+>  	reserved = 0;
+>  	for_each_node_state(nid, N_ONLINE) {
+> -		unsigned long min_pfn = 0, max_pfn = 0;
+>  		int res;
+> -#ifdef CONFIG_NUMA
+> -		unsigned long start_pfn, end_pfn;
+> -		int i;
+>  
+> -		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+> -			if (!min_pfn)
+> -				min_pfn = start_pfn;
+> -			max_pfn = end_pfn;
+> -		}
+> -#else
+> -		min_pfn = min_low_pfn;
+> -		max_pfn = max_low_pfn;
+> -#endif
+>  		size = min(per_node, hugetlb_cma_size - reserved);
+>  		size = round_up(size, PAGE_SIZE << order);
+> -
+> -		if (size > ((max_pfn - min_pfn) << PAGE_SHIFT) / 2) {
+> -			pr_warn("hugetlb_cma: cma_area is too big, please try less than %lu MiB\n",
+> -				round_down(((max_pfn - min_pfn) << PAGE_SHIFT) *
+> -					   nr_online_nodes / 2 / SZ_1M,
+> -					   PAGE_SIZE << order));
+> -			break;
+> -		}
+> -
+> -		res = cma_declare_contiguous(PFN_PHYS(min_pfn), size,
+> -					     PFN_PHYS(max_pfn),
+> +		
+> +		
+> +#ifndef CONFIG_NUMA
+> +		nid = NUMA_NO_NODE
+> +#endif		
 
-Yes, I understand. It makes sense.
+> +		res = cma_declare_contiguous_nid(0, size,
+> +					     0, 
+>  					     PAGE_SIZE << order,
+>  					     0, false,
+> -					     "hugetlb", &hugetlb_cma[nid]);
+> +					     "hugetlb", &hugetlb_cma[nid], nid);		
+> +
+>  		if (res) {
+> -			phys_addr_t begpa = PFN_PHYS(min_pfn);
+> -			phys_addr_t endpa = PFN_PHYS(max_pfn);
+> -			pr_warn("%s: reservation failed: err %d, node %d, [%pap, %pap)\n",
+> -				__func__, res, nid, &begpa, &endpa);
+> +			pr_warn("%s: reservation failed: err %d, node %d\n",
+> +				__func__, res, nid);
+>  			break;
+>  		}
+>  
+> -- 
+> 2.24.1
 
-> 
-> However, if you feel that moving this function to Patch 4 where it is
-> actually used makes it more readable, I can do that.
-
-My suggestion was from a bisectability standpoint though. This is a 
-fairly simple function, but it is generally recommended to ensure that 
-newly added code gets exercized in the patch that it is introduced in:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst#n119
-
-
-Regards,
-Naveen
-
+-- 
+Michal Hocko
+SUSE Labs
