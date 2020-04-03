@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371C5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5C1C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064F3207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B92B206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="qFxUr7HZ"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="EOlslryS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgDCUUs (ORCPT
+        id S1728434AbgDCUUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 16:20:48 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:27349 "EHLO rere.qmqm.pl"
+        Fri, 3 Apr 2020 16:20:46 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:35348 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728229AbgDCUUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 16:20:38 -0400
+        id S1728164AbgDCUUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 16:20:36 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48vBBs01vjz2Bx;
-        Fri,  3 Apr 2020 22:20:36 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48vBBq2x0Sz1vh;
+        Fri,  3 Apr 2020 22:20:35 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585945237; bh=VHgW4kYLRMsSeCF70YMgq9PQuT+zZX7FzGRskoQDqfs=;
+        t=1585945235; bh=q44ic6PpS5HegVJV8bApjvL5Ua5oyJ9Mja9QqVR2KlQ=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=qFxUr7HZ0uw81VkoLx9q9BrEaSnjFBes9UzOzSOUUTAmkwSJOeQOjXJGjsLojXTmZ
-         UH1jIfLEUivZHi0FsU6ycT4VJluH59w7PJBd0Q4YXhowsfkTHBpF291xPyIDSIV2cS
-         Wj/RQC3YNGixTc7ctfumm14lJCu8cdE+1fUDRzCLaaIwBONMCOizK885uoey6UCjzW
-         0IqRmxC1nNNeSCe7pbkIU0bPp3PkmCfu5h20nZ17Kc4PICW9R88f90r8+UoketeF5V
-         yh+dsptC+ihGfSwIcHTQfQ7tqaqBJFkm25sw5/HLVLoLWp4yi7Yc2Qwc3hLivfnKDG
-         HXDf4DGtGMDYw==
+        b=EOlslryS4tsUMrgf2EBgKRtOIEpupr3plYDe1T8//jZPzFw9Dhb1ijd714LO/u+Mk
+         02bFa8FJqZT38WuWolb7fOh0Row9qUAt2mgMzALLSAZ+cE+NWGLITYO29s4Ub0CyYw
+         +tRO1qWAPB//biSshR/Xmit2aKLF771ZJBfkuN+ku+yfQTYdT0NB1r3eeiQ02EMH3m
+         h02YqQNvxPuNgHGjwnIYQ5fHJ1mvmKvg+uJAopTZhLNrj70/YniIuqZiV5/ObXiH7Q
+         0s7Vj7x4y77dcPvb12DPFyKz7+u9bmLnOH92rkCwFjhCnRwq5+g0pNWH+RL8lXwhMY
+         APfRkJUdwIG7w==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 03 Apr 2020 22:20:36 +0200
-Message-Id: <8d46214c860172b0cd8baad05fd0d3f09080e041.1585944770.git.mirq-linux@rere.qmqm.pl>
+Date:   Fri, 03 Apr 2020 22:20:34 +0200
+Message-Id: <7ac1176497a246b59316efecef9912dcf9b1e48a.1585944770.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v3 10/11] power: supply: core: add output voltage measurements
+Subject: [PATCH v3 08/11] power: supply: core: hide unused HWMON labels
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -54,108 +54,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for supply output voltage to be measured and configured.
-This might be different from the voltage on the storage element (battery).
+Currently HWMON emulation shows all labels (temp and ambient temp)
+regardless if power supply supports reading the values. Check that at
+least one property is enabled for each label.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/power/supply/power_supply_hwmon.c | 25 +++++++++++++++++++++++
- drivers/power/supply/power_supply_sysfs.c |  3 +++
- include/linux/power_supply.h              |  3 +++
- 3 files changed, 31 insertions(+)
+v3: use a tabule for type checking instead of switch() sequence
+---
+ drivers/power/supply/power_supply_hwmon.c | 42 +++++++++++++++++++++--
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-index 0fd2e7ccb767..9125854adcb0 100644
+index 5621e72a39f0..1b473deaf391 100644
 --- a/drivers/power/supply/power_supply_hwmon.c
 +++ b/drivers/power/supply/power_supply_hwmon.c
-@@ -16,6 +16,7 @@ struct power_supply_hwmon {
- static const char *const ps_input_label[] = {
- 	"battery",
- 	"external source",
-+	"load",
- };
- 
- static const char *const ps_temp_label[] = {
-@@ -51,6 +52,20 @@ static int power_supply_hwmon_in1_to_property(u32 attr)
- 	}
+@@ -103,6 +103,39 @@ static bool power_supply_hwmon_is_a_label(enum hwmon_sensor_types type,
+ 	return type == hwmon_temp && attr == hwmon_temp_label;
  }
  
-+static int power_supply_hwmon_in2_to_property(u32 attr)
++struct hwmon_type_attr_list {
++	const u32 *attrs;
++	size_t n_attrs;
++};
++
++static const u32 ps_temp_attrs[] = {
++	hwmon_temp_input,
++	hwmon_temp_min, hwmon_temp_max,
++	hwmon_temp_min_alarm, hwmon_temp_max_alarm,
++};
++
++static const struct hwmon_type_attr_list ps_type_attrs[hwmon_max] = {
++	[hwmon_temp] = { ps_temp_attrs, ARRAY_SIZE(ps_temp_attrs) },
++};
++
++static bool power_supply_hwmon_has_input(
++	const struct power_supply_hwmon *psyhw,
++	enum hwmon_sensor_types type, int channel)
 +{
-+	switch (attr) {
-+	case hwmon_in_min:
-+		return POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MIN;
-+	case hwmon_in_max:
-+		return POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MAX;
-+	case hwmon_in_input:
-+		return POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW;
-+	default:
-+		return -EINVAL;
++	const struct hwmon_type_attr_list *attr_list = &ps_type_attrs[type];
++	size_t i;
++
++	for (i = 0; i < attr_list->n_attrs; ++i) {
++		int prop = power_supply_hwmon_to_property(type,
++			attr_list->attrs[i], channel);
++
++		if (prop >= 0 && test_bit(prop, psyhw->props))
++			return true;
 +	}
++
++	return false;
 +}
 +
- static int power_supply_hwmon_in_to_property(u32 attr, int channel)
+ static bool power_supply_hwmon_is_writable(enum hwmon_sensor_types type,
+ 					   u32 attr)
  {
- 	switch (channel) {
-@@ -58,6 +73,8 @@ static int power_supply_hwmon_in_to_property(u32 attr, int channel)
- 		return power_supply_hwmon_in0_to_property(attr);
- 	case 1:
- 		return power_supply_hwmon_in1_to_property(attr);
-+	case 2:
-+		return power_supply_hwmon_in2_to_property(attr);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -393,6 +410,11 @@ static const struct hwmon_channel_info *power_supply_hwmon_info[] = {
+@@ -129,9 +162,12 @@ static umode_t power_supply_hwmon_is_visible(const void *data,
+ 	const struct power_supply_hwmon *psyhw = data;
+ 	int prop;
  
- 			   HWMON_I_LABEL   |
- 			   HWMON_I_MAX     |
-+			   HWMON_I_INPUT,
-+
-+			   HWMON_I_LABEL   |
-+			   HWMON_I_MIN     |
-+			   HWMON_I_MAX     |
- 			   HWMON_I_INPUT),
+-
+-	if (power_supply_hwmon_is_a_label(type, attr))
+-		return 0444;
++	if (power_supply_hwmon_is_a_label(type, attr)) {
++		if (power_supply_hwmon_has_input(psyhw, type, channel))
++			return 0444;
++		else
++			return 0;
++	}
  
- 	NULL
-@@ -463,6 +485,9 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
- 		case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
- 		case POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW:
- 		case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
-+		case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MIN:
-+		case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MAX:
-+		case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW:
- 			set_bit(prop, psyhw->props);
- 			break;
- 		default:
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index 1d1fb69516a8..fb6f113b52bb 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -278,6 +278,9 @@ static struct device_attribute power_supply_attrs[] = {
- 	POWER_SUPPLY_ATTR(input_voltage_now),
- 	POWER_SUPPLY_ATTR(input_voltage_limit),
- 	POWER_SUPPLY_ATTR(input_power_limit),
-+	POWER_SUPPLY_ATTR(output_voltage_now),
-+	POWER_SUPPLY_ATTR(output_voltage_min),
-+	POWER_SUPPLY_ATTR(output_voltage_max),
- 	POWER_SUPPLY_ATTR(energy_full_design),
- 	POWER_SUPPLY_ATTR(energy_empty_design),
- 	POWER_SUPPLY_ATTR(energy_full),
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 5313d1284aad..f1ff8d230488 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -132,6 +132,9 @@ enum power_supply_property {
- 	POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW,
- 	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
- 	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
-+	POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MIN,
-+	POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_MAX,
- 	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
- 	POWER_SUPPLY_PROP_ENERGY_EMPTY_DESIGN,
- 	POWER_SUPPLY_PROP_ENERGY_FULL,
+ 	prop = power_supply_hwmon_to_property(type, attr, channel);
+ 	if (prop < 0 || !test_bit(prop, psyhw->props))
 -- 
 2.20.1
 
