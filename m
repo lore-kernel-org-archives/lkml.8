@@ -4,146 +4,184 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6470C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CEDC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C4B2082F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649912077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403954AbgDCMbl (ORCPT
+        id S2403960AbgDCMby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:31:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:52636 "EHLO foss.arm.com"
+        Fri, 3 Apr 2020 08:31:54 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45126 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728099AbgDCMbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:31:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9086230E;
-        Fri,  3 Apr 2020 05:31:40 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A65F3F68F;
-        Fri,  3 Apr 2020 05:31:38 -0700 (PDT)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 2/2] Documentation/sysctl: Document uclamp sysctl knobs
-Date:   Fri,  3 Apr 2020 13:30:20 +0100
-Message-Id: <20200403123020.13897-2-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200403123020.13897-1-qais.yousef@arm.com>
-References: <20200403123020.13897-1-qais.yousef@arm.com>
+        id S1727882AbgDCMby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 08:31:54 -0400
+IronPort-SDR: 1ZiUU/T8QvcGMAzWD/6Af5WpOiQ1rqsgCFAQjgjwM75ghBeqrXFms+lN/5YX12kWSgp2gKzbRT
+ gkmVxH+P+BIA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 05:31:53 -0700
+IronPort-SDR: nI2olLeXrFo1lRBhvElCdhDMR3vtppxqaBq/NacGGUrVv6B7DI8vpIsFPJ7Rq3yQb2ITRGkori
+ D5E/TseIovkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
+   d="scan'208";a="273934294"
+Received: from unknown (HELO yhuang-dev.sh.intel.com) ([10.239.159.23])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Apr 2020 05:31:50 -0700
+From:   "Huang, Ying" <ying.huang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>, Zi Yan <ziy@nvidia.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Subject: [PATCH -V3] /proc/PID/smaps: Add PMD migration entry parsing
+Date:   Fri,  3 Apr 2020 20:30:59 +0800
+Message-Id: <20200403123059.1846960-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uclamp exposes 3 sysctl knobs:
+From: Huang Ying <ying.huang@intel.com>
 
-	* sched_util_clamp_min
-	* sched_util_clamp_max
-	* sched_rt_default_util_clamp_min
+Now, when read /proc/PID/smaps, the PMD migration entry in page table is simply
+ignored.  To improve the accuracy of /proc/PID/smaps, its parsing and processing
+is added.
 
-Document them in sysctl/kernel.rst.
+To test the patch, we run pmbench to eat 400 MB memory in background, then run
+/usr/bin/migratepages and `cat /proc/PID/smaps` every second.  The issue as
+follows can be reproduced within 60 seconds.
 
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Jonathan Corbet <corbet@lwn.net>
-CC: Juri Lelli <juri.lelli@redhat.com>
-CC: Vincent Guittot <vincent.guittot@linaro.org>
-CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
-CC: Steven Rostedt <rostedt@goodmis.org>
-CC: Ben Segall <bsegall@google.com>
-CC: Mel Gorman <mgorman@suse.de>
-CC: Luis Chamberlain <mcgrof@kernel.org>
-CC: Kees Cook <keescook@chromium.org>
-CC: Iurii Zaikin <yzaikin@google.com>
-CC: Quentin Perret <qperret@google.com>
-CC: Valentin Schneider <valentin.schneider@arm.com>
-CC: Patrick Bellasi <patrick.bellasi@matbug.net>
-CC: Pavan Kondeti <pkondeti@codeaurora.org>
-CC: linux-doc@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: linux-fsdevel@vger.kernel.org
+Before the patch, for the fully populated 400 MB anonymous VMA, some THP pages
+under migration may be lost as below.
+
+7f3f6a7e5000-7f3f837e5000 rw-p 00000000 00:00 0
+Size:             409600 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:              407552 kB
+Pss:              407552 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:    407552 kB
+Referenced:       301056 kB
+Anonymous:        407552 kB
+LazyFree:              0 kB
+AnonHugePages:    405504 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+THPeligible:		1
+VmFlags: rd wr mr mw me ac
+
+After the patch, it will be always,
+
+7f3f6a7e5000-7f3f837e5000 rw-p 00000000 00:00 0
+Size:             409600 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:              409600 kB
+Pss:              409600 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:    409600 kB
+Referenced:       294912 kB
+Anonymous:        409600 kB
+LazyFree:              0 kB
+AnonHugePages:    407552 kB
+ShmemPmdMapped:        0 kB
+FilePmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+THPeligible:		1
+VmFlags: rd wr mr mw me ac
+
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- Documentation/admin-guide/sysctl/kernel.rst | 47 +++++++++++++++++++++
- 1 file changed, 47 insertions(+)
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index def074807cee..5e974cd493b5 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -935,6 +935,53 @@ Enables/disables scheduler statistics. Enabling this feature
- incurs a small amount of overhead in the scheduler but is
- useful for debugging and performance tuning.
+v3:
+
+- Revised patch description and remove VM_WARN_ON_ONCE() per Michal's comments
+
+v2:
+
+- Use thp_migration_supported() in condition to reduce code size if THP
+  migration isn't enabled.
+
+- Replace VM_BUG_ON() with VM_WARN_ON_ONCE(), it's not necessary to nuking
+  kernel for this.
+
+---
+ fs/proc/task_mmu.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 8d382d4ec067..36dc7417c0df 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -546,10 +546,17 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
+ 	struct mem_size_stats *mss = walk->private;
+ 	struct vm_area_struct *vma = walk->vma;
+ 	bool locked = !!(vma->vm_flags & VM_LOCKED);
+-	struct page *page;
++	struct page *page = NULL;
++
++	if (pmd_present(*pmd)) {
++		/* FOLL_DUMP will return -EFAULT on huge zero page */
++		page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
++	} else if (unlikely(thp_migration_supported() && is_swap_pmd(*pmd))) {
++		swp_entry_t entry = pmd_to_swp_entry(*pmd);
  
-+sched_util_clamp_min:
-+=====================
-+
-+Max allowed *minimum* utilization.
-+
-+Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
-+value.
-+
-+It means that any requested uclamp.min value cannot be greater than
-+sched_util_clamp_min, ie: it is restricted to the range
-+[0:sched_util_clamp_min].
-+
-+sched_util_clamp_max:
-+=====================
-+
-+Max allowed *maximum* utilization.
-+
-+Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
-+value.
-+
-+It means that any requested uclamp.max value cannot be greater than
-+sched_util_clamp_max, ie: it is restricted to the range
-+[0:sched_util_clamp_max].
-+
-+sched_rt_default_util_clamp_min:
-+================================
-+
-+By default Linux is tuned for performance. Which means that RT tasks always run
-+at the highest frequency and most capable (highest capacity) CPU (in
-+hetergenous systems).
-+
-+Uclamp achieves this by setting the requested uclamp.min of all RT tasks to
-+SCHED_CAPACITY_SCALE (1024) by default. Which effectively boosts the tasks to
-+run at the highest frequency and bias them to run on the biggest CPU.
-+
-+This knob allows admins to change the default behavior when uclamp is being
-+used. In battery powered devices particularly, running at the maximum
-+capacity and frequency will increase energy consumption and shorten the battery
-+life.
-+
-+This knob is only effective for RT tasks which the user hasn't modified their
-+requested uclamp.min value via sched_setattr() syscall.
-+
-+This knob will not escape the constraint imposed by sched_util_clamp_min
-+defined above.
-+
-+Any modification is applied lazily on the next RT task wakeup.
+-	/* FOLL_DUMP will return -EFAULT on huge zero page */
+-	page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
++		if (is_migration_entry(entry))
++			page = migration_entry_to_page(entry);
++	}
+ 	if (IS_ERR_OR_NULL(page))
+ 		return;
+ 	if (PageAnon(page))
+@@ -578,8 +585,7 @@ static int smaps_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
  
- sg-big-buff:
- ============
+ 	ptl = pmd_trans_huge_lock(pmd, vma);
+ 	if (ptl) {
+-		if (pmd_present(*pmd))
+-			smaps_pmd_entry(pmd, addr, walk);
++		smaps_pmd_entry(pmd, addr, walk);
+ 		spin_unlock(ptl);
+ 		goto out;
+ 	}
 -- 
-2.17.1
+2.25.0
 
