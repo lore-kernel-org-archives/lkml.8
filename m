@@ -2,187 +2,284 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D44C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5ABC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C562073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:19:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TDXYMNKf"
+	by mail.kernel.org (Postfix) with ESMTP id A93D3206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585934385;
+	bh=KwoVdbxuLurcwZ6tzVcPQ1p256AfOix1p2+b/yvaElI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X9jxQR0F3WjwyJT+jAfYdtFION3t2qnAusInhS1JlCL6WZL/SZ0K/rI0ROEOavp7p
+	 0/CoPUST2nKw3aw7B6uGnXqmbMlPjIgukS+v5LVGgnTltr7iMCGxkGz6n0biIo/SVh
+	 tm+TINV/0Z2tguHSRLZGC6tWpKmUuFUz+jBaXYrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404241AbgDCRTj (ORCPT
+        id S2404270AbgDCRTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:19:39 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53329 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgDCRTj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:19:39 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d77so7939057wmd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lcpNoI7xIY4kNiB3ex5eUnMyPccu+6NxZPGvlIGD290=;
-        b=TDXYMNKfZiYa/EW+laebpfeH6DTOSiUF2yoOKXyQnE6H9rvq3j/1B+tkjM0ZLtMIWc
-         2W4s8N2jtLdiS4unn+cBkh8zRMy0GV3JcebEIwrQ7ZVHEQKpaAa/xS6Qk4w8KPjTu896
-         lj7wzwJZd6WUrmUpLfH3T2wmVjVV48CjIoA1G99pup3G8ZW+UITRdgECh5ypz+xxxvCB
-         0VOhec4TfoHjmc/E0GiQBE04KCO3LHKp0mlKMy46gOZsM0WtQPH5r++V9DlPYa5+btPt
-         MagtVEVvvAKuOHGtOFIgRaajkJAHc0ubBMf7xceuHqxxla7C3l1Yx5yopQkWBx6Q1DnY
-         on3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=lcpNoI7xIY4kNiB3ex5eUnMyPccu+6NxZPGvlIGD290=;
-        b=RCcbBMBxt3K/Aa65mgVXDxko3c7eooX4VDAoGIZU6NgGAcCBcDK3vlfcLb8hM/Xt63
-         Ufn9uGSpGvitT2ANbO8gaJ1LKStS6LJVN3HdZzXl2dLNqXPYZiWsogZ50j1pRMgf54w2
-         FuUDPAr52o6Dy6RQgCc/a8DNqFYfmargmMF5Zp8W5ur46A0dj+/olNCI1DlJTFDK/8hR
-         hyOfDv+No+rowANQVqNZMelbhAjkrB3vnnqNDO1rluObSt75S5NUKvru1bZnK62NiDPO
-         yCqEWXMoZUIkfFcS60iSiaUaH4QjX+5VL89QsvgjAoHBJ0iZJylPupxJUhfLccGBEgGr
-         NFAQ==
-X-Gm-Message-State: AGi0PubLCykot5MosK+IJDDPwwUReqWlO3kwn/iI5J1jyxWU8WIbibSA
-        7nRsYCkNJNjreDAkXRZjnTH6gw==
-X-Google-Smtp-Source: APiQypLOgQbj5Ks9utH7lmYdWi+N0qGdsebz0Zh8KZCLyjWZMJOBFHMnhBmL72ERIGTmEUoPMkkWJg==
-X-Received: by 2002:a1c:382:: with SMTP id 124mr8216482wmd.151.1585934376969;
-        Fri, 03 Apr 2020 10:19:36 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:cc78:8018:8980:25d8? ([2a01:e34:ed2f:f020:cc78:8018:8980:25d8])
-        by smtp.googlemail.com with ESMTPSA id s2sm12925936wru.68.2020.04.03.10.19.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 10:19:36 -0700 (PDT)
-Subject: Re: [PATCH v5 3/5] thermal: devfreq_cooling: Use PM QoS to set
- frequency limits
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Morten.Rasmussen@arm.com,
-        Dietmar.Eggemann@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org
-References: <20200318114548.19916-1-lukasz.luba@arm.com>
- <20200318114548.19916-4-lukasz.luba@arm.com>
- <d73ce772-8d0a-e5f4-097a-d89e01ff7578@linaro.org>
- <20200403171818.GO199755@google.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <82997cd2-1e4d-fb9d-8c64-6771b72456e9@linaro.org>
-Date:   Fri, 3 Apr 2020 19:19:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 3 Apr 2020 13:19:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727998AbgDCRTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 13:19:44 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B7952080C;
+        Fri,  3 Apr 2020 17:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585934383;
+        bh=KwoVdbxuLurcwZ6tzVcPQ1p256AfOix1p2+b/yvaElI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z7sUKFm/atbB3d0guNhEPm8JNRYUrzkM1COSbvzZ7X//eJFJ62EwzBG0Rr6wL4iTi
+         xYknAG7LxPixigyxtyM4gOOdvTe/XI13qnUD4p/9TRCpHlT7AzdLZYXQ980eUVtiMN
+         wFJ5mnnx95sY6IuGPDXbC0cq38yOGAPj4Jy6Zskw=
+Date:   Fri, 3 Apr 2020 10:19:43 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Sahitya Tummala <stummala@codeaurora.org>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] f2fs: fix long latency due to discard during umount
+Message-ID: <20200403171943.GC68460@google.com>
+References: <1585550730-1858-1-git-send-email-stummala@codeaurora.org>
+ <20200331184655.GB198665@google.com>
+ <20200401092201.GB20234@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200403171818.GO199755@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401092201.GB20234@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2020 19:18, Matthias Kaehlcke wrote:
-> Hi Daniel,
+On 04/01, Sahitya Tummala wrote:
+> Hi Jaegeuk,
 > 
-> On Fri, Apr 03, 2020 at 06:43:20PM +0200, Daniel Lezcano wrote:
->> On 18/03/2020 12:45, Lukasz Luba wrote:
->>> From: Matthias Kaehlcke <mka@chromium.org>
->>>
->>> Now that devfreq supports limiting the frequency range of a device
->>> through PM QoS make use of it instead of disabling OPPs that should
->>> not be used.
->>>
->>> The switch from disabling OPPs to PM QoS introduces a subtle behavioral
->>> change in case of conflicting requests (min > max): PM QoS gives
->>> precedence to the MIN_FREQUENCY request, while higher OPPs disabled
->>> with dev_pm_opp_disable() would override MIN_FREQUENCY.
->>>
->>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->>> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
->>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->>
->> This patch is standalone, right? If yes, I will apply it.
+> On Tue, Mar 31, 2020 at 11:46:55AM -0700, Jaegeuk Kim wrote:
+> > On 03/30, Sahitya Tummala wrote:
+> > > F2FS already has a default timeout of 5 secs for discards that
+> > > can be issued during umount, but it can take more than the 5 sec
+> > > timeout if the underlying UFS device queue is already full and there
+> > > are no more available free tags to be used. In that case, submit_bio()
+> > > will wait for the already queued discard requests to complete to get
+> > > a free tag, which can potentially take way more than 5 sec.
+> > > 
+> > > Fix this by submitting the discard requests with REQ_NOWAIT
+> > > flags during umount. This will return -EAGAIN for UFS queue/tag full
+> > > scenario without waiting in the context of submit_bio(). The FS can
+> > > then handle these requests by retrying again within the stipulated
+> > > discard timeout period to avoid long latencies.
+> > 
+> > Sorry, Sahitya, but, do we really need to do like this? How about just
+> > controlling # of outstanding discarding bios in __issue_discard_cmd()?
 > 
-> Yes, it is standalone, please apply
+> Do you mean something like this?
+> 
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 1a62b27..860dd43 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -1099,7 +1099,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+>         } else if (discard_type == DPOLICY_FSTRIM) {
+>                 dpolicy->io_aware = false;
+>         } else if (discard_type == DPOLICY_UMOUNT) {
+> -               dpolicy->max_requests = UINT_MAX;
+> +               dpolicy->max_requests = 30;
 
-Applied on 'testing', thanks
+Can we use max queue depth of the block device?
 
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>                 dpolicy->io_aware = false;
+>                 /* we need to issue all to keep CP_TRIMMED_FLAG */
+>                 dpolicy->granularity = 1;
+> @@ -1470,12 +1470,14 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>         struct list_head *pend_list;
+>         struct discard_cmd *dc, *tmp;
+>         struct blk_plug plug;
+> -       int i, issued = 0;
+> +       int i, issued;
+>         bool io_interrupted = false;
+> 
+>         if (dpolicy->timeout != 0)
+>                 f2fs_update_time(sbi, dpolicy->timeout);
+> 
+> +retry:
+> +       issued = 0;
+>         for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+>                 if (dpolicy->timeout != 0 &&
+>                                 f2fs_time_over(sbi, dpolicy->timeout))
+> @@ -1522,6 +1524,11 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>                         break;
+>         }
+> 
+> +       if (dpolicy->type == DPOLICY_UMOUNT && issued) {
+> +               __wait_all_discard_cmd(sbi, dpolicy);
+> +               goto retry;
+> +       }
+> +
+>         if (!issued && io_interrupted)
+>                 issued = -1;
+> 
+> Thanks,
+> 
+> > 
+> > > 
+> > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > > ---
+> > > v3:
+> > > -Handle the regression reported by Chao with v2.
+> > > -simplify the logic to split the dc with multiple bios incase any bio returns
+> > >  EAGAIN and retry those new dc within 5 sec timeout.
+> > > 
+> > >  fs/f2fs/segment.c | 65 +++++++++++++++++++++++++++++++++++++++++++------------
+> > >  1 file changed, 51 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > > index fb3e531..55d18c7 100644
+> > > --- a/fs/f2fs/segment.c
+> > > +++ b/fs/f2fs/segment.c
+> > > @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
+> > >  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
+> > >  	unsigned long flags;
+> > >  
+> > > -	dc->error = blk_status_to_errno(bio->bi_status);
+> > > -
+> > >  	spin_lock_irqsave(&dc->lock, flags);
+> > > +	if (!dc->error)
+> > > +		dc->error = blk_status_to_errno(bio->bi_status);
+> > > +
+> > >  	dc->bio_ref--;
+> > > -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
+> > > -		dc->state = D_DONE;
+> > > -		complete_all(&dc->wait);
+> > > +	if (!dc->bio_ref) {
+> > > +		if (dc->error || dc->state == D_SUBMIT) {
+> > > +			dc->state = D_DONE;
+> > > +			complete_all(&dc->wait);
+> > > +		}
+> > >  	}
+> > >  	spin_unlock_irqrestore(&dc->lock, flags);
+> > >  	bio_put(bio);
+> > > @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+> > >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+> > >  					&(dcc->fstrim_list) : &(dcc->wait_list);
+> > > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
+> > > +	int flag;
+> > >  	block_t lstart, start, len, total_len;
+> > >  	int err = 0;
+> > >  
+> > > +	flag = dpolicy->sync ? REQ_SYNC : 0;
+> > > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+> > > +
+> > >  	if (dc->state != D_PREP)
+> > >  		return 0;
+> > >  
+> > > @@ -1192,10 +1198,6 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > >  		dc->bio_ref++;
+> > >  		spin_unlock_irqrestore(&dc->lock, flags);
+> > >  
+> > > -		atomic_inc(&dcc->queued_discard);
+> > > -		dc->queued++;
+> > > -		list_move_tail(&dc->list, wait_list);
+> > > -
+> > >  		/* sanity check on discard range */
+> > >  		__check_sit_bitmap(sbi, lstart, lstart + len);
+> > >  
+> > > @@ -1203,6 +1205,29 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > >  		bio->bi_end_io = f2fs_submit_discard_endio;
+> > >  		bio->bi_opf |= flag;
+> > >  		submit_bio(bio);
+> > > +		if (flag & REQ_NOWAIT) {
+> > > +			if (dc->error == -EAGAIN) {
+> > > +				spin_lock_irqsave(&dc->lock, flags);
+> > > +				dc->len -= len;
+> > > +				if (!dc->len) {
+> > > +					dc->len = total_len;
+> > > +					dc->state = D_PREP;
+> > > +					reinit_completion(&dc->wait);
+> > > +				} else {
+> > > +					dcc->undiscard_blks -= total_len;
+> > > +					if (dc->state == D_PARTIAL)
+> > > +						dc->state = D_SUBMIT;
+> > > +				}
+> > > +				err = dc->error;
+> > > +				dc->error = 0;
+> > > +				spin_unlock_irqrestore(&dc->lock, flags);
+> > > +				break;
+> > > +			}
+> > > +		}
+> > > +
+> > > +		atomic_inc(&dcc->queued_discard);
+> > > +		dc->queued++;
+> > > +		list_move_tail(&dc->list, wait_list);
+> > >  
+> > >  		atomic_inc(&dcc->issued_discard);
+> > >  
+> > > @@ -1214,8 +1239,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> > >  		len = total_len;
+> > >  	}
+> > >  
+> > > -	if (!err && len)
+> > > -		__update_discard_tree_range(sbi, bdev, lstart, start, len);
+> > > +	if ((!err || err == -EAGAIN) && total_len && dc->start != start)
+> > > +		__update_discard_tree_range(sbi, bdev, lstart, start,
+> > > +					total_len);
+> > >  	return err;
+> > >  }
+> > >  
+> > > @@ -1470,12 +1496,15 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > >  	struct list_head *pend_list;
+> > >  	struct discard_cmd *dc, *tmp;
+> > >  	struct blk_plug plug;
+> > > -	int i, issued = 0;
+> > > +	int i, err, issued = 0;
+> > >  	bool io_interrupted = false;
+> > > +	bool retry;
+> > >  
+> > >  	if (dpolicy->timeout != 0)
+> > >  		f2fs_update_time(sbi, dpolicy->timeout);
+> > >  
+> > > +retry:
+> > > +	retry = false;
+> > >  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+> > >  		if (dpolicy->timeout != 0 &&
+> > >  				f2fs_time_over(sbi, dpolicy->timeout))
+> > > @@ -1509,7 +1538,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > >  				break;
+> > >  			}
+> > >  
+> > > -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> > > +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> > > +			if (err == -EAGAIN) {
+> > > +				congestion_wait(BLK_RW_ASYNC,
+> > > +						DEFAULT_IO_TIMEOUT);
+> > > +				retry = true;
+> > > +			}
+> > >  
+> > >  			if (issued >= dpolicy->max_requests)
+> > >  				break;
+> > > @@ -1522,6 +1556,9 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> > >  			break;
+> > >  	}
+> > >  
+> > > +	if (retry)
+> > > +		goto retry;
+> > > +
+> > >  	if (!issued && io_interrupted)
+> > >  		issued = -1;
+> > >  
+> > > -- 
+> > > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+> > > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
+> -- 
+> --
+> Sent by a consultant of the Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
