@@ -2,98 +2,79 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90761C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D55C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E282077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A9A206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KUVQPcny"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="h+VsbrHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgDCTuv (ORCPT
+        id S1728310AbgDCTvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 15:50:51 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37143 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgDCTuv (ORCPT
+        Fri, 3 Apr 2020 15:51:54 -0400
+Received: from mail-pf1-f171.google.com ([209.85.210.171]:45931 "EHLO
+        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgDCTvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 15:50:51 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w10so9972910wrm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 12:50:48 -0700 (PDT)
+        Fri, 3 Apr 2020 15:51:54 -0400
+Received: by mail-pf1-f171.google.com with SMTP id r14so4027639pfl.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 12:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZwalgJuNdjnU0AH+11/7zFoA2oqP3wkRvVgbyS9b41k=;
-        b=KUVQPcnyz2hl7SCVBDI+1XsXZwodz/A+BMq7RJInRs48OWppiuWfPyn3Z7e/O+9Ku+
-         3HlPHApGLzvMJs+0KFmGHj/6DUC23P9I2sSJDWPkk+YFZ2Q+B78IgzzUYzFLpc+dgn8r
-         PndzOOMEAbb8Kg0i01xjsBVBJ/NkY32OR8lgja1akb26BTK54snwotBHjQNvVC7GTLyh
-         T8md9A3jE00qFWhh1cLuTU9IBjwacoK0WRSxwOOpWinkGE+CQypkkEAp7Zr+vFheElVz
-         E7fXNgg+imGbrYqZWVqTnvq7MHOMaQ1+e19T7UUWL0wfWgjinehkX8CITwHPlCPscYeI
-         iVSg==
+        bh=9gQpMpP65smhU9h4fCxGG/DL26lj4XPv0cgPw/bIETY=;
+        b=h+VsbrHoeL2K991q/zwn2zBwZp9oObUS/klUUb0ba5Xz+CI8LR/NHkR/F9+NMtU/HZ
+         U87+M6hEmP1SJq4C+W4r4vex5FZTrwQEPJv/tMZU2eg63xmq/UPkn/qAVTD5e/hme0QT
+         sGri8EjFqoyim5+8h9BOT1deGwEssInCFiRU9mUr3AH9No0yrwR+xp647Z6HiKGOJG1l
+         mP983EgHZ4cQqTi29cfCcUATvYOvb6gFNAQMr04TXiHczx1J7+WCDiLQYMAoXflVjCeq
+         jsxso78SkSipZjyvutqkRlDmhM/D4FjLP/xzCsBYyIcKtJiycSwPno3XFgC6UR1yI0yJ
+         12Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ZwalgJuNdjnU0AH+11/7zFoA2oqP3wkRvVgbyS9b41k=;
-        b=eyAs/aBFNzSB8fACgQwkVANsOvGweYlqDNyXih8In6ODcRvXyqBsyERqCbce+L5FFx
-         RUvFdOcHw21YmC3Ql/2TaUrY8PpZ+vnxyV0fv+pEJ+zitSAxBNSrEN0ONGAwitZ52wIU
-         ERSJYLCiNC1Tis3/w6v1sTqReSBsYweXXtneq+UEyK4veAEQXdikshXCnqL5iF+hQO6e
-         nL0rMS52aODBFT57aBV3VZwAkvETb60pf5qRGFJh7LChGvxMIQQ25/Yh9IFbxWmlGfLW
-         nFx1Xr/MPD5+w36a5WA6TtE1I8quZPLrrgq84LYAxd+/WyxHbXGdc7G/M8NM0xdyTBd/
-         Pc7Q==
-X-Gm-Message-State: AGi0PuZz2hpbe8WnDlpipYLrBB1G9J6dI/H48VhX3VDYbpzCYzWCkMn+
-        6bukBvRSiE/sziQLaZguikdm0g==
-X-Google-Smtp-Source: APiQypJPD3CP1v4p+ZE6U2Aywvu5WeATMjzlv5PMn28lxY1pqFnQhQh7N1RgKP5cr5vCmeFo5f3YRw==
-X-Received: by 2002:adf:9e08:: with SMTP id u8mr10686337wre.155.1585943448089;
-        Fri, 03 Apr 2020 12:50:48 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id c17sm8102448wrp.28.2020.04.03.12.50.47
+        bh=9gQpMpP65smhU9h4fCxGG/DL26lj4XPv0cgPw/bIETY=;
+        b=jgL8ZQJXQcHdqx3ltRKLhKMd2O4BCqWo1VaFnHLvBvioVE+aRqLB7J2sbTkZcK3JKX
+         tMJax88QpU13nT3OEA8zPg0nQRdoXJIL+FKJwodgWXP3/KjcJ4E+FuKqkjAPQ9v8VWYd
+         0N97bu2qbpsPViWXB7yefw5THcwuEwv60iut39F3Em8zm/yu+eyS9fbkNsPqIxebE1Ck
+         QSKOFMV63ZGjdnapLdrO3Z1TTxW0RvFCNlzCCZ5ig9ukWZVOXNqFBmhibPyplcdzfGK/
+         Xh9xFh9/+WxOBuCBYm3YAIWiE00BnVKtI5rhMkJV3UNoEkHRLjb2O2hkIeEDQSZVmz1c
+         fCJQ==
+X-Gm-Message-State: AGi0PuZwrLMXaup1iWfEsK0jD18C7UPV4DNvWO/eHrd6AbDWYyMlcLbb
+        dLKhUJwBR43vrr0mKGalOrAhLQ==
+X-Google-Smtp-Source: APiQypK6eaKDH374gWinPksnmI/KFYMVfn16Q0XQhiv0hhYFhpiB0PC8os24xQIIqPfiER3Xbt5/Ag==
+X-Received: by 2002:a62:19d8:: with SMTP id 207mr10308346pfz.278.1585943510950;
+        Fri, 03 Apr 2020 12:51:50 -0700 (PDT)
+Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
+        by smtp.gmail.com with ESMTPSA id h15sm6375239pfq.10.2020.04.03.12.51.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 03 Apr 2020 12:50:47 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH 1/7] crypto: rng - add missing __crypto_rng_cast to the rng header
-Date:   Fri,  3 Apr 2020 19:50:32 +0000
-Message-Id: <1585943438-862-2-git-send-email-clabbe@baylibre.com>
+        Fri, 03 Apr 2020 12:51:50 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     kishon@ti.com
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH][next] PCI: endpoint: functions/pci-epf-test: fix memory leak of buf
+Date:   Fri,  3 Apr 2020 12:51:34 -0700
+Message-Id: <1585943494-23977-1-git-send-email-alan.mikhak@sifive.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585943438-862-1-git-send-email-clabbe@baylibre.com>
-References: <1585943438-862-1-git-send-email-clabbe@baylibre.com>
+In-Reply-To: <20200401223541.403438-1-colin.king@canonical.com>
+References: <20200401223541.403438-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add __crypto_rng_cast() to the rng header like other
-__algo_cast functions.
+Hi Colin,
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- include/crypto/rng.h | 5 +++++
- 1 file changed, 5 insertions(+)
+Please note a similar leak in pci_epf_test_write().
 
-diff --git a/include/crypto/rng.h b/include/crypto/rng.h
-index 8b4b844b4eef..0e140f132efe 100644
---- a/include/crypto/rng.h
-+++ b/include/crypto/rng.h
-@@ -198,4 +198,9 @@ static inline int crypto_rng_seedsize(struct crypto_rng *tfm)
- 	return crypto_rng_alg(tfm)->seedsize;
- }
- 
-+static inline struct crypto_rng *__crypto_rng_cast(struct crypto_tfm *tfm)
-+{
-+	return container_of(tfm, struct crypto_rng, base);
-+}
-+
- #endif
--- 
-2.24.1
+Regards,
+Alan Mikhak
 
