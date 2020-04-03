@@ -2,207 +2,308 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591CAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8F0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2755F206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3DD206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:39:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AMCyGRrG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgDCVgm (ORCPT
+        id S1728108AbgDCVjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:36:42 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:39399 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbgDCVgl (ORCPT
+        Fri, 3 Apr 2020 17:39:22 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52182 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgDCVjV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:36:41 -0400
-Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M4roN-1jIYa00sHH-002127 for <linux-kernel@vger.kernel.org>; Fri, 03 Apr
- 2020 23:36:39 +0200
-Received: by mail-qv1-f46.google.com with SMTP id bu9so4358936qvb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 14:36:39 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ+Urta0dcDhs3LvwLsLHeanN+uZlnokQhXHEoYezW0ZdqtFkhZ
-        RrHkhvDWYOpFLxkap7Y198NFgWv/wzaq31oTiQY=
-X-Google-Smtp-Source: APiQypJEJiFIbTi8fSzKFamqwrtiYtCRm/bgKdSwRNs8rNj5LPKegO4X8kEdGXNllyWPyp+7ypgNrf68jhQ+n80NIxI=
-X-Received: by 2002:a0c:a602:: with SMTP id s2mr10712987qva.222.1585949798093;
- Fri, 03 Apr 2020 14:36:38 -0700 (PDT)
+        Fri, 3 Apr 2020 17:39:21 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033LXeOK113525;
+        Fri, 3 Apr 2020 21:38:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=KRL1+mUHaY//oba79AedQOt9d/q/waQ62JIEXq5RGS8=;
+ b=AMCyGRrGxUOc3naCBWt3vBNYh+PZHLXnC11oVC/jQ4s3RlVYud+QBwUOvuDqZ08jjRHn
+ f6SlRDR64/eG3l6Pt6tbQnCex5PT2XkUHSkc5c+lCUInfX2jf1yugjtIH9IntDr96IgC
+ TXVlOiLBXLOrtI5eo7citvwxIY5+JVGkHLbrmyb7U8FaHwVe9e1v2TUAs+5eGuwSxnET
+ ybod6r9f0Wkldzl95AEy2AxxIdX96oEiCJoLbd6eKQV1PRnxvZ/y0NvVPkwIR/SNyfPt
+ vpQLyQ0I69pF4fehKXkLDpCSGjz+1q9natnCDMK0bJdiYH4pZy6BbmIX39Es3lqskbD+ uQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 303yunnweg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 21:38:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033LX4E0025955;
+        Fri, 3 Apr 2020 21:36:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 302g2p02h0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 21:36:57 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033Lashx001400;
+        Fri, 3 Apr 2020 21:36:54 GMT
+Received: from vbusired-dt (/10.154.116.130)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 14:36:53 -0700
+Date:   Fri, 3 Apr 2020 16:36:49 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rientjes@google.com,
+        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
+Subject: Re: [PATCH v6 10/14] mm: x86: Invoke hypercall when page encryption
+ status is changed
+Message-ID: <20200403213649.GA730301@vbusired-dt>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <05c9015fb13b25c07a84d5638a7cd65a8c136cf0.1585548051.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-References: <CAK8P3a1aO+LUu6KsW+s8aZMNWt2yz7kqe=LARY=ifMKOqT9uNQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1aO+LUu6KsW+s8aZMNWt2yz7kqe=LARY=ifMKOqT9uNQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 3 Apr 2020 23:36:22 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3OPgCzLxzd=7Ng=jregKB0HycLLrfA4xYd7-4Te-kHMA@mail.gmail.com>
-Message-ID: <CAK8P3a3OPgCzLxzd=7Ng=jregKB0HycLLrfA4xYd7-4Te-kHMA@mail.gmail.com>
-Subject: [GIT PULL 3/4] ARM: defconfig updates
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:8icLj8t8jTUkl+TzexUne7PvqkkhFt1ofgIcyBp6Zap3lj4FvB9
- lfiMfmqagt7LcMfNmXhvp4jVe7vH+iaZXxs0mGNCpDl7UwzcumXKKvY5idY66NDyuV4gyD8
- OZvAkDGZSddf4cB7IIB5TdAI1h637eweOl5Y11DEzSWM4hE+E1ixsaWjuG92HJ/PpdWZddU
- sllqXIv2R0EchTnjixGJA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OvWnUPge1RE=:Hy10OzuKPlsrc1VpRLlfeN
- gYPxoEhxC2JGZuhH3qWRTJlgw6VrzGjKE2eg9zUEuJtt9xeRhFhJXJWh2YKh+NpkI4wea2P9T
- ZmrgdJ3PxrROyTnQnCXhQV1gYzDcHPUji4dTgArTy5xwwfgB00gLACKgos6GZ3rRagSnBW5id
- gd/rIx1L+sVaBiaNgMMPOxrLhJ6m/eF2BZWaX1HcYc0Ow5u8yTFCbAtek+5miccscfvlddzx4
- Y/bZ9jIxrKojAwz2qdNgTp5Mnj5/XdSTbrhHJkW2lCi5i8NpN8MEgMtNBQl6xbm4SqJfRjm62
- prtW1mcGOpJIeLagZehKXBriwFq75/Zr2OmDnUMPrtuNC/g1G5snoe2QZdbNeuWmmvN2jKVpD
- LDFo7psmTJomEUJp000FUT3GAwMGc/IoOfEILbgcOtcJjH0jM3JPe16O9Frs2P0hXby/pzJ3S
- hpCDhUUK+vycbK5kbJBnPRZN5ZpT8w5970YSYjsWcRwKogqx+L7kkOLLwpzB1JV7C1FZAoX+A
- xBsse9oQWOrt+8c60CpKLV7M+cIyZ5s2PxLkebd0Smiv+26HRROYO/xFokC76r2EUh3mvOJes
- II7kVOBqrnB8pBjEGRzjdJnsuhXefyisf7qPoapdepDssZ5Cwu5ebPxUYnxD5TIQxB01xT9yX
- VXcvb8P+g95e9YVFcKFPnzgf6imgOmtRDUKG20uR7H8W8XURp0oKpQtuKC1ELbnUcCuysvSsm
- P4G6KV5+BuDwh51OTDL+NwDOE0BQy7ieCRzTh8wCzHssEIyAz0aLdopMIeVebMpGJ/3TEzxyJ
- VACAVD03ciOOfwndKhuLZ8qebtGcyI+aK01P+MueXOczKKdDgw=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <05c9015fb13b25c07a84d5638a7cd65a8c136cf0.1585548051.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=1 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030168
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=1 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
+On 2020-03-30 06:22:38 +0000, Ashish Kalra wrote:
+> From: Brijesh Singh <Brijesh.Singh@amd.com>
+> 
+> Invoke a hypercall when a memory region is changed from encrypted ->
+> decrypted and vice versa. Hypervisor need to know the page encryption
+s/need/needs/
+> status during the guest migration.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git
-tags/arm-defconfig-5.7
-
-for you to fetch changes up to a0705d3c042ad39fb9c5609612bb39ef4bedd284:
-
-  Merge tag 'at91-5.7-defconfig' of
-git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux into
-arm/config (2020-03-25 17:22:53 +0100)
-
-----------------------------------------------------------------
-ARM: defconfig updates
-
-As usual, tons of new drivers and other options got merged and
-are now enabled in the defconfig files, usually as loadable modules.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-----------------------------------------------------------------
-Anson Huang (3):
-      arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by default
-      arm64: defconfig: add i.MX system controller thermal support
-      arm64: defconfig: Enable CONFIG_IMX8MM_THERMAL as module
-
-Arnd Bergmann (10):
-      Merge tag 'renesas-arm64-defconfig-for-v5.7-tag1' of
-git://git.kernel.org/.../geert/renesas-devel into arm/config
-      Merge tag 'hisi-arm64-defconfig-for-5.7' of
-git://github.com/hisilicon/linux-hisi into arm/config
-      Merge tag 'arm-soc/for-5.7/defconfig' of
-https://github.com/Broadcom/stblinux into arm/config
-      Merge tag 'tegra-for-5.7-arm-defconfig' of
-git://git.kernel.org/.../tegra/linux into arm/config
-      Merge tag 'samsung-defconfig-5.7' of
-git://git.kernel.org/.../krzk/linux into arm/config
-      Merge tag 'qcom-arm64-defconfig-for-5.7' of
-git://git.kernel.org/.../qcom/linux into arm/config
-      Merge tag 'qcom-defconfig-for-5.7' of
-git://git.kernel.org/.../qcom/linux into arm/config
-      Merge tag 'imx-defconfig-5.7' of
-git://git.kernel.org/.../shawnguo/linux into arm/config
-      Merge tag 'omap-for-v5.7/defconfig-signed' of
-git://git.kernel.org/.../tmlind/linux-omap into arm/config
-      Merge tag 'at91-5.7-defconfig' of
-git://git.kernel.org/.../at91/linux into arm/config
-
-Bjorn Andersson (3):
-      arm64: defconfig: Enable Qualcomm SDM845 display and gpu clocks
-      arm64: defconfig: Enable Truly NT35597 WQXGA panel
-      arm64: defconfig: Enable Qualcomm SDM845 audio configs
-
-Brian Masney (1):
-      ARM: qcom_defconfig: add Broadcom bluetooth options
-
-Christian Gmeiner (1):
-      ARM: multi_v7_defconfig: enable drm imx support
-
-Dmitry Osipenko (2):
-      ARM: multi_v7_defconfig: Enable Tegra cpuidle driver
-      ARM: tegra: Enable Tegra cpuidle driver in tegra_defconfig
-
-Eugen Hristev (1):
-      ARM: configs: at91: enable sama5d4 compatible watchdog
-
-Florian Fainelli (1):
-      Merge tag 'tags/bcm2835-defconfig-next-2020-03-09' into defconfig/next
-
-Geert Uytterhoeven (1):
-      arm64: defconfig: Enable additional support for Renesas platforms
-
-Hou Zhiqiang (1):
-      arm64: defconfig: Enable CONFIG_PCIE_LAYERSCAPE_GEN4
-
-John Garry (1):
-      arm64: defconfig: Enable MEGARAID_SAS
-
-Li Yang (15):
-      arm64: defconfig: run through savedefconfig for ordering
-      arm64: defconfig: Enable NXP flexcan driver
-      arm64: defconfig: Enable QorIQ DPAA1 drivers
-      arm64: defconfig: Enable QorIQ DPAA2 drivers
-      arm64: defconfig: Enable ENETC Ethernet controller and FELIX switch
-      arm64: defconfig: Enable NXP/FSL SPI controller drivers
-      arm64: defconfig: Enable QorIQ cpufreq driver
-      arm64: defconfig: Enable ARM SBSA watchdog driver
-      arm64: defconfig: Enable QorIQ IFC NAND controller driver
-      arm64: defconfig: Enable QorIQ GPIO driver
-      arm64: defconfig: Enable ARM Mali display driver
-      arm64: defconfig: Enable flash device drivers for QorIQ boards
-      arm64: defconfig: Enable RTC devices for QorIQ boards
-      arm64: defconfig: Enable PHY devices used on QorIQ boards
-      arm64: defconfig: Enable e1000 device
-
-Luca Weiss (1):
-      ARM: qcom_defconfig: Enable QRTR
-
-Lukasz Luba (1):
-      ARM: exynos_defconfig: Enable SCHED_MC and ENERGY_MODEL
-
-Marek Szyprowski (3):
-      ARM: exynos_defconfig: Enable SquashFS and increase RAM block device size
-      ARM: exynos_defconfig: Add more drivers for GalaxyS3/Trats2
-      ARM: bcm2835_defconfig: add support for Raspberry Pi4
-
-Oleksandr Suvorov (2):
-      ARM: imx_v6_v7_defconfig: Enable TOUCHSCREEN_ATMEL_MXT
-      ARM: imx_v6_v7_defconfig: Enable TOUCHSCREEN_AD7879
-
-Sricharan R (1):
-      arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
-
-Stephan Gerhold (1):
-      arm64: defconfig: Enable Qualcomm PM8XXX vibrator support
-
-Tony Lindgren (7):
-      ARM: omap2plus_defconfig: Enable ext4 security for setcap
-      ARM: omap2plus_defconfig: Enable simple-pm-bus
-      ARM: omap2plus_defconfig: Enable zram as loadable modules
-      ARM: omap2plus_defconfig: Enable more droid4 devices as loadable modules
-      ARM: omap2plus_defconfig: Enable McPDM optional PMIC clock as modules
-      ARM: omap2plus_defconfig: Enable ina2xx_adc as a loadable module
-      ARM: omap2plus_defconfig: Update for moved and dropped options
-
- arch/arm/configs/at91_dt_defconfig   |   1 +
- arch/arm/configs/bcm2835_defconfig   |   5 ++
- arch/arm/configs/exynos_defconfig    |  11 +++-
- arch/arm/configs/imx_v6_v7_defconfig |   3 ++
- arch/arm/configs/multi_v7_defconfig  |   7 +++
- arch/arm/configs/omap2plus_defconfig |  18 +++++--
- arch/arm/configs/qcom_defconfig      |   6 +++
- arch/arm/configs/tegra_defconfig     |   1 +
- arch/arm64/configs/defconfig         | 100 +++++++++++++++++++++++++++++++----
- 9 files changed, 136 insertions(+), 16 deletions(-)
+> ---
+>  arch/x86/include/asm/paravirt.h       | 10 +++++
+>  arch/x86/include/asm/paravirt_types.h |  2 +
+>  arch/x86/kernel/paravirt.c            |  1 +
+>  arch/x86/mm/mem_encrypt.c             | 57 ++++++++++++++++++++++++++-
+>  arch/x86/mm/pat/set_memory.c          |  7 ++++
+>  5 files changed, 76 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+> index 694d8daf4983..8127b9c141bf 100644
+> --- a/arch/x86/include/asm/paravirt.h
+> +++ b/arch/x86/include/asm/paravirt.h
+> @@ -78,6 +78,12 @@ static inline void paravirt_arch_exit_mmap(struct mm_struct *mm)
+>  	PVOP_VCALL1(mmu.exit_mmap, mm);
+>  }
+>  
+> +static inline void page_encryption_changed(unsigned long vaddr, int npages,
+> +						bool enc)
+> +{
+> +	PVOP_VCALL3(mmu.page_encryption_changed, vaddr, npages, enc);
+> +}
+> +
+>  #ifdef CONFIG_PARAVIRT_XXL
+>  static inline void load_sp0(unsigned long sp0)
+>  {
+> @@ -946,6 +952,10 @@ static inline void paravirt_arch_dup_mmap(struct mm_struct *oldmm,
+>  static inline void paravirt_arch_exit_mmap(struct mm_struct *mm)
+>  {
+>  }
+> +
+> +static inline void page_encryption_changed(unsigned long vaddr, int npages, bool enc)
+> +{
+> +}
+>  #endif
+>  #endif /* __ASSEMBLY__ */
+>  #endif /* _ASM_X86_PARAVIRT_H */
+> diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+> index 732f62e04ddb..03bfd515c59c 100644
+> --- a/arch/x86/include/asm/paravirt_types.h
+> +++ b/arch/x86/include/asm/paravirt_types.h
+> @@ -215,6 +215,8 @@ struct pv_mmu_ops {
+>  
+>  	/* Hook for intercepting the destruction of an mm_struct. */
+>  	void (*exit_mmap)(struct mm_struct *mm);
+> +	void (*page_encryption_changed)(unsigned long vaddr, int npages,
+> +					bool enc);
+>  
+>  #ifdef CONFIG_PARAVIRT_XXL
+>  	struct paravirt_callee_save read_cr2;
+> diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+> index c131ba4e70ef..840c02b23aeb 100644
+> --- a/arch/x86/kernel/paravirt.c
+> +++ b/arch/x86/kernel/paravirt.c
+> @@ -367,6 +367,7 @@ struct paravirt_patch_template pv_ops = {
+>  			(void (*)(struct mmu_gather *, void *))tlb_remove_page,
+>  
+>  	.mmu.exit_mmap		= paravirt_nop,
+> +	.mmu.page_encryption_changed	= paravirt_nop,
+>  
+>  #ifdef CONFIG_PARAVIRT_XXL
+>  	.mmu.read_cr2		= __PV_IS_CALLEE_SAVE(native_read_cr2),
+> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+> index f4bd4b431ba1..c9800fa811f6 100644
+> --- a/arch/x86/mm/mem_encrypt.c
+> +++ b/arch/x86/mm/mem_encrypt.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/bitops.h>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/kvm_para.h>
+>  
+>  #include <asm/tlbflush.h>
+>  #include <asm/fixmap.h>
+> @@ -29,6 +30,7 @@
+>  #include <asm/processor-flags.h>
+>  #include <asm/msr.h>
+>  #include <asm/cmdline.h>
+> +#include <asm/kvm_para.h>
+>  
+>  #include "mm_internal.h"
+>  
+> @@ -196,6 +198,47 @@ void __init sme_early_init(void)
+>  		swiotlb_force = SWIOTLB_FORCE;
+>  }
+>  
+> +static void set_memory_enc_dec_hypercall(unsigned long vaddr, int npages,
+> +					bool enc)
+> +{
+> +	unsigned long sz = npages << PAGE_SHIFT;
+> +	unsigned long vaddr_end, vaddr_next;
+> +
+> +	vaddr_end = vaddr + sz;
+> +
+> +	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
+> +		int psize, pmask, level;
+> +		unsigned long pfn;
+> +		pte_t *kpte;
+> +
+> +		kpte = lookup_address(vaddr, &level);
+> +		if (!kpte || pte_none(*kpte))
+> +			return;
+> +
+> +		switch (level) {
+> +		case PG_LEVEL_4K:
+> +			pfn = pte_pfn(*kpte);
+> +			break;
+> +		case PG_LEVEL_2M:
+> +			pfn = pmd_pfn(*(pmd_t *)kpte);
+> +			break;
+> +		case PG_LEVEL_1G:
+> +			pfn = pud_pfn(*(pud_t *)kpte);
+> +			break;
+> +		default:
+> +			return;
+> +		}
+> +
+> +		psize = page_level_size(level);
+> +		pmask = page_level_mask(level);
+> +
+> +		kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
+> +				   pfn << PAGE_SHIFT, psize >> PAGE_SHIFT, enc);
+> +
+> +		vaddr_next = (vaddr & pmask) + psize;
+> +	}
+> +}
+> +
+>  static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
+>  {
+>  	pgprot_t old_prot, new_prot;
+> @@ -253,12 +296,13 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
+>  static int __init early_set_memory_enc_dec(unsigned long vaddr,
+>  					   unsigned long size, bool enc)
+>  {
+> -	unsigned long vaddr_end, vaddr_next;
+> +	unsigned long vaddr_end, vaddr_next, start;
+>  	unsigned long psize, pmask;
+>  	int split_page_size_mask;
+>  	int level, ret;
+>  	pte_t *kpte;
+>  
+> +	start = vaddr;
+>  	vaddr_next = vaddr;
+>  	vaddr_end = vaddr + size;
+>  
+> @@ -313,6 +357,8 @@ static int __init early_set_memory_enc_dec(unsigned long vaddr,
+>  
+>  	ret = 0;
+>  
+> +	set_memory_enc_dec_hypercall(start, PAGE_ALIGN(size) >> PAGE_SHIFT,
+> +					enc);
+>  out:
+>  	__flush_tlb_all();
+>  	return ret;
+> @@ -451,6 +497,15 @@ void __init mem_encrypt_init(void)
+>  	if (sev_active())
+>  		static_branch_enable(&sev_enable_key);
+>  
+> +#ifdef CONFIG_PARAVIRT
+> +	/*
+> +	 * With SEV, we need to make a hypercall when page encryption state is
+> +	 * changed.
+> +	 */
+> +	if (sev_active())
+> +		pv_ops.mmu.page_encryption_changed = set_memory_enc_dec_hypercall;
+> +#endif
+> +
+>  	pr_info("AMD %s active\n",
+>  		sev_active() ? "Secure Encrypted Virtualization (SEV)"
+>  			     : "Secure Memory Encryption (SME)");
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index c4aedd00c1ba..86b7804129fc 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -26,6 +26,7 @@
+>  #include <asm/proto.h>
+>  #include <asm/memtype.h>
+>  #include <asm/set_memory.h>
+> +#include <asm/paravirt.h>
+>  
+>  #include "../mm_internal.h"
+>  
+> @@ -1987,6 +1988,12 @@ static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
+>  	 */
+>  	cpa_flush(&cpa, 0);
+>  
+> +	/* Notify hypervisor that a given memory range is mapped encrypted
+> +	 * or decrypted. The hypervisor will use this information during the
+> +	 * VM migration.
+> +	 */
+> +	page_encryption_changed(addr, numpages, enc);
+> +
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
