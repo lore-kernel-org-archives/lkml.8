@@ -2,109 +2,174 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9F2C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3C8C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC60820675
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563ED2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="cyjOj5oX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZMT/N2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390302AbgDCBqL (ORCPT
+        id S2390314AbgDCBtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 21:46:11 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:17748 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389108AbgDCBqL (ORCPT
+        Thu, 2 Apr 2020 21:49:31 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:41177 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388709AbgDCBta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 21:46:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1585878372; x=1617414372;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=sXzY6X7y/HJOV8eyJ7EyKZ7Q9GvaNwIs3iD8jdW9I3A=;
-  b=cyjOj5oX8uQxeq4+VxP/Fsw1GOMZ4cVSS/EabhPVL9jzcOuKb0Qtbi8z
-   XUkmKQpvTETGXkuEllPQKGHUjCkxMXTuwrPVX5z/h4FgEYK24QUXMR4uF
-   e2AQnhC+IFt7mPeJ3zmwAuu9v1KY3wJ10+0cVSgch+w6vxGRjBIuJhqRV
-   djJrkocRJnZgoLTjErwacwVf8hQSadNNbQgZofHqLnInBu29bh+fDKvkm
-   JNVLg2vRHdXKza7zMJZcvnZpE5tVbcctqnOR+rJ+adUyd1prPwoBmMRiA
-   3+pzZCVmco/udH95aeWYSWLaewq4MVBND+4qXLWrr/REOK6ArskILWFvT
-   g==;
-IronPort-SDR: Z/huWYO4R/vhI7IfVzj5I0Nb5XiE+FTx40j1NKMG2BNOCiZKq9vnIGCC+lbSqB1jSra17xG3y0
- LmFrJq/3s+Vs2JlveRQcgGJyYe62BjMwP9E6n8eYlDWnmgwKPHbPNXSoUPJvYfFPt+gp4XAAZ6
- T87P3UBCiRlNqYHPVeZbOcxNxj81JFN4lJCiNjrrKUitK0+auCu64qrEiba7tyemmw8sbIktnK
- UkfNUen1aE6JXpi7wma0O0F5KhcikeJOtmlSqEBSyN/toKeb3jnPsMdb/XrkFs7/QHaztc5/Mw
- KiA=
-X-IronPort-AV: E=Sophos;i="5.72,337,1580745600"; 
-   d="scan'208";a="134782509"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Apr 2020 09:46:11 +0800
-IronPort-SDR: KDKavQl3zDQbbQaDL1DEzBVyiPipWeM0Z0KLjungVVbXONLsGNkpfx2mct4IlSMwSKPeajf3Jr
- Qqv9m5XbfuHpQ+6evOprhkkIGSuDzSIGaBR/7XNZYakdM7uV+SYVQvxyYJJlFxGi5fZW4uD9Qq
- BVjIa7CALMPbkD66Kzxfd5wc7lEG1Yz6/A3fo8wZWTJmJuGLAUbJFhppCq40oz+CBG0uK3FCsR
- 7pldTg6f8tQM9f3+Jg/NBEaC18huoydclI5FckyNkyZzYe7H4qAcn4bn+DpCA+mck/ZZE3n2HQ
- jkO55+Ck8IruJKiIDDmpd2tR
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 18:37:01 -0700
-IronPort-SDR: ZAP/86deKbIkcrM7fGbTYi3JBhvMWizQVQ+sVBUZ+C9VlVOhubJ5WIm8d89j3VAGd0ilAEJ70s
- g9qEgSzrNx/ZvR/3xNdL9yT4Z2jkaZxnyMGv9VkGzF2J3yS7Sii8aR6/ckOAHG10e32sqzV4zb
- +t3u6OJe5ZBIHaqO6wLNuy/GaLFQ+DhtzNzFRZFfHZyQPaeo5bDi2dWoGjyiz38k1NxbMcFQZR
- Bp1Yueq5YC1cuW83W8C4eDtvKvpUGtTcChQJZjIUGooois9pihtCB8WjR8mlczKVkSHvx49mdh
- O/8=
-WDCIronportException: Internal
-Received: from usa002249.ad.shared (HELO yoda.hgst.com) ([10.86.55.19])
-  by uls-op-cesaip02.wdc.com with ESMTP; 02 Apr 2020 18:46:10 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] irqchip/sifive-plic: Fix maximum priority threshold value
-Date:   Thu,  2 Apr 2020 18:46:09 -0700
-Message-Id: <20200403014609.71831-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 2 Apr 2020 21:49:30 -0400
+Received: by mail-vs1-f65.google.com with SMTP id a63so3947774vsa.8;
+        Thu, 02 Apr 2020 18:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A1UgCaq/sneZWs82BMpAJ1Zb7NbqtDFIsjH2B80RJuY=;
+        b=JZMT/N2r3FJM7awaf3qHWC0KGL3LgtwX7JOODWPzwsX8LUQJOLd/ABtTMJ2ZY7N7N5
+         fZUqEEtFR9rXmnCQ3va4mJuZkiv0x48vnnNXf9UTkvuFV5xoor4IoMGwo71gK7PPc/JL
+         np8QuQgZSqYPFIuAKbJdmstuWFpZuOz5I0IZq7ejFjJ2Iv+o62h0YThLa5bzqeixjCOK
+         bc7jkXGiWyThxVU9RhtcFRZyOWUunQw40STZuEaLMdWKr3WtsmlyVm89k0WYIvhSAeko
+         IFAYM+3a2MAnxBmauUVuXN4818BdrKW6P3GA/oebUq452zxHyI4aU9CIUbt2MbMpQwgs
+         sGZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A1UgCaq/sneZWs82BMpAJ1Zb7NbqtDFIsjH2B80RJuY=;
+        b=cYMoMap+WupKT5foS7tVhfvsxy2UMgXFKOjZJIO6vwHL7gAXxYfrPwFKWG0X2KYVXa
+         5/lQLR1eryAMnxA006MqmepBk1yyvKbDI/il2oAqEUYV4XSM2pHzOC1JrcDRVkKidwQf
+         I2hqJJoUU7x1YFv1PKrDek+aK9CSOtVp8oHY56R2SIPjsn81YIbbOzeuLpSJ3zKiZpbR
+         QNRizSQzNOCHCNrxuIDX7PU2m3FHrthbZm7HbklGETeE/IYpAf2Z4ZaK45m7XwhkMz32
+         NNdXmld3YfrFwlPJK66LbHUkEi1cqDLnvjh1+1o/bMlNqjM3GA9jaZlZVSvhgVxgEPQn
+         MXfg==
+X-Gm-Message-State: AGi0PuaxX9aNBrvt5LAcEb9egu/xVAKqcLv1sdmx72idOOjuXMXzNnvD
+        vD+VfuKNhUuBidtG3z18Er5xjbynKO2ZsN/xxH4=
+X-Google-Smtp-Source: APiQypKNV7+QGS3DWHrllnUuCUKW69ratEU5FHrCnXUd1BpUhBkSgECPcL5CgcJm+ZmQiXtbLh+otd4XRNg89G8xwfY=
+X-Received: by 2002:a05:6102:1b:: with SMTP id j27mr4626105vsp.150.1585878568603;
+ Thu, 02 Apr 2020 18:49:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <0000000000006ac55b05a1c05d72@google.com>
+In-Reply-To: <0000000000006ac55b05a1c05d72@google.com>
+From:   Qiujun Huang <anenbupt@gmail.com>
+Date:   Fri, 3 Apr 2020 09:49:16 +0800
+Message-ID: <CADG63jC06pj4pSrKMKQeK1pedyRnjNTWWmTzg-6rNbQh5c6=Ug@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Write in ath9k_htc_rx_msg
+To:     syzbot <syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        kvalo@codeaurora.org, LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: multipart/mixed; boundary="000000000000bdb0f205a25920d1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per the PLIC specification, maximum priority threshold value is 0x7
-not 0xF. Even though it doesn't cause any error in qemu/hifive unleashed,
-there may be some implementation which checks the upper bound resulting in
-an illegal access.
+--000000000000bdb0f205a25920d1
+Content-Type: text/plain; charset="UTF-8"
 
-Fixes: ccbe80bad571 (irqchip/sifive-plic: Enable/Disable external
-		     interrupts upon cpu online/offline)
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- drivers/irqchip/irq-sifive-plic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+#syz test: https://github.com/google/kasan.git usb-fuzzer
 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index c34fb3ae0ff8..d0a71febdadc 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -56,7 +56,7 @@
- #define     CONTEXT_THRESHOLD		0x00
- #define     CONTEXT_CLAIM		0x04
- 
--#define	PLIC_DISABLE_THRESHOLD		0xf
-+#define	PLIC_DISABLE_THRESHOLD		0x7
- #define	PLIC_ENABLE_THRESHOLD		0
- 
- struct plic_priv {
--- 
-2.25.1
+--000000000000bdb0f205a25920d1
+Content-Type: application/octet-stream; 
+	name="0001-ath9k-fix-use-after-free-read-in-htc_connect_service.patch"
+Content-Disposition: attachment; 
+	filename="0001-ath9k-fix-use-after-free-read-in-htc_connect_service.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k8jj56zv0>
+X-Attachment-Id: f_k8jj56zv0
 
+RnJvbSA2MWE3N2JiMjE3OTJiYTIzMjMyOTk4ODBhYzRhMDdjNmZlMGI5NGEwIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBRaXVqdW4gSHVhbmcgPGhxamFnYWluQGdtYWlsLmNvbT4KRGF0
+ZTogVHVlLCAzMSBNYXIgMjAyMCAyMDoxODo1NiArMDgwMApTdWJqZWN0OiBbUEFUQ0hdIGF0aDlr
+OiBmaXggdXNlLWFmdGVyLWZyZWUgcmVhZCBpbiBodGNfY29ubmVjdF9zZXJ2aWNlCgooMSlUaGUg
+c2tiIGlzIGNvbnN1bWVkIGJ5IGh0Y19zZW5kX2VwaWQuCigyKWZyZWUgd21pIGxhdGVyIGFmdGVy
+IHVyYiBoYXMgYmVlbiBraWxsZWQuCigzKWNoZWNrIHRoZSBlbmRwb2ludF9pZC4KClNpZ25lZC1v
+ZmYtYnk6IFFpdWp1biBIdWFuZyA8aHFqYWdhaW5AZ21haWwuY29tPgotLS0KIGRyaXZlcnMvbmV0
+L3dpcmVsZXNzL2F0aC9hdGg5ay9oaWZfdXNiLmMgICAgICB8ICA0ICsrKy0KIGRyaXZlcnMvbmV0
+L3dpcmVsZXNzL2F0aC9hdGg5ay9odGNfZHJ2X2luaXQuYyB8ICAyICstCiBkcml2ZXJzL25ldC93
+aXJlbGVzcy9hdGgvYXRoOWsvaHRjX2hzdC5jICAgICAgfCAgNyArKysrLS0tCiBkcml2ZXJzL25l
+dC93aXJlbGVzcy9hdGgvYXRoOWsvd21pLmMgICAgICAgICAgfCAxNSArKysrKysrKysrKysrKy0K
+IGRyaXZlcnMvbmV0L3dpcmVsZXNzL2F0aC9hdGg5ay93bWkuaCAgICAgICAgICB8ICAyICsrCiA1
+IGZpbGVzIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCgpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL2hpZl91c2IuYyBiL2RyaXZlcnMv
+bmV0L3dpcmVsZXNzL2F0aC9hdGg5ay9oaWZfdXNiLmMKaW5kZXggZGQwYzMyMzc5Mzc1Li4yNzU2
+MDdhNzQ4NDEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2F0aC9hdGg5ay9oaWZf
+dXNiLmMKKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL2hpZl91c2IuYwpAQCAt
+MTM0MSw4ICsxMzQxLDEwIEBAIHN0YXRpYyB2b2lkIGF0aDlrX2hpZl91c2JfZGlzY29ubmVjdChz
+dHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZXJmYWNlKQogCiAJaWYgKGhpZl9kZXYtPmZsYWdzICYg
+SElGX1VTQl9SRUFEWSkgewogCQlhdGg5a19odGNfaHdfZGVpbml0KGhpZl9kZXYtPmh0Y19oYW5k
+bGUsIHVucGx1Z2dlZCk7Ci0JCWF0aDlrX2h0Y19od19mcmVlKGhpZl9kZXYtPmh0Y19oYW5kbGUp
+OwogCQlhdGg5a19oaWZfdXNiX2Rldl9kZWluaXQoaGlmX2Rldik7CisJCXNtcF9tYigpOworCQlh
+dGg5a19kZXN0b3lfd21pKGhpZl9kZXYtPmh0Y19oYW5kbGUtPmRydl9wcml2KTsKKwkJYXRoOWtf
+aHRjX2h3X2ZyZWUoaGlmX2Rldi0+aHRjX2hhbmRsZSk7CiAJfQogCiAJdXNiX3NldF9pbnRmZGF0
+YShpbnRlcmZhY2UsIE5VTEwpOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvYXRo
+L2F0aDlrL2h0Y19kcnZfaW5pdC5jIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL2h0
+Y19kcnZfaW5pdC5jCmluZGV4IGQ5NjEwOTVhYjAxZi4uZDFkMGVkNmU2NTNjIDEwMDY0NAotLS0g
+YS9kcml2ZXJzL25ldC93aXJlbGVzcy9hdGgvYXRoOWsvaHRjX2Rydl9pbml0LmMKKysrIGIvZHJp
+dmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL2h0Y19kcnZfaW5pdC5jCkBAIC05ODIsNyArOTgy
+LDcgQEAgdm9pZCBhdGg5a19odGNfZGlzY29ubmVjdF9kZXZpY2Uoc3RydWN0IGh0Y190YXJnZXQg
+Kmh0Y19oYW5kbGUsIGJvb2wgaG90dW5wbHVnKQogCQkJaHRjX2hhbmRsZS0+ZHJ2X3ByaXYtPmFo
+LT5haF9mbGFncyB8PSBBSF9VTlBMVUdHRUQ7CiAKIAkJYXRoOWtfZGVpbml0X2RldmljZShodGNf
+aGFuZGxlLT5kcnZfcHJpdik7Ci0JCWF0aDlrX2RlaW5pdF93bWkoaHRjX2hhbmRsZS0+ZHJ2X3By
+aXYpOworCQlhdGg5a19zdG9wX3dtaShodGNfaGFuZGxlLT5kcnZfcHJpdik7CiAJCWllZWU4MDIx
+MV9mcmVlX2h3KGh0Y19oYW5kbGUtPmRydl9wcml2LT5odyk7CiAJfQogfQpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL2h0Y19oc3QuYyBiL2RyaXZlcnMvbmV0L3dp
+cmVsZXNzL2F0aC9hdGg5ay9odGNfaHN0LmMKaW5kZXggZDA5MWM4ZWJkY2YwLi44NmNmMTE4Yzll
+NWYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2F0aC9hdGg5ay9odGNfaHN0LmMK
+KysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL2h0Y19oc3QuYwpAQCAtMTE1LDYg
+KzExNSwxMCBAQCBzdGF0aWMgdm9pZCBodGNfcHJvY2Vzc19jb25uX3JzcChzdHJ1Y3QgaHRjX3Rh
+cmdldCAqdGFyZ2V0LAogCQllcGlkID0gc3ZjX3JzcG1zZy0+ZW5kcG9pbnRfaWQ7CiAJCXNlcnZp
+Y2VfaWQgPSBiZTE2X3RvX2NwdShzdmNfcnNwbXNnLT5zZXJ2aWNlX2lkKTsKIAkJbWF4X21zZ2xl
+biA9IGJlMTZfdG9fY3B1KHN2Y19yc3Btc2ctPm1heF9tc2dfbGVuKTsKKworCQlpZiAoZXBpZCA+
+PSBFTkRQT0lOVF9NQVgpCisJCQlyZXR1cm47CisKIAkJZW5kcG9pbnQgPSAmdGFyZ2V0LT5lbmRw
+b2ludFtlcGlkXTsKIAogCQlmb3IgKHRlcGlkID0gKEVORFBPSU5UX01BWCAtIDEpOyB0ZXBpZCA+
+IEVORFBPSU5UMDsgdGVwaWQtLSkgewpAQCAtMTcwLDcgKzE3NCw2IEBAIHN0YXRpYyBpbnQgaHRj
+X2NvbmZpZ19waXBlX2NyZWRpdHMoc3RydWN0IGh0Y190YXJnZXQgKnRhcmdldCkKIAl0aW1lX2xl
+ZnQgPSB3YWl0X2Zvcl9jb21wbGV0aW9uX3RpbWVvdXQoJnRhcmdldC0+Y21kX3dhaXQsIEhaKTsK
+IAlpZiAoIXRpbWVfbGVmdCkgewogCQlkZXZfZXJyKHRhcmdldC0+ZGV2LCAiSFRDIGNyZWRpdCBj
+b25maWcgdGltZW91dFxuIik7Ci0JCWtmcmVlX3NrYihza2IpOwogCQlyZXR1cm4gLUVUSU1FRE9V
+VDsKIAl9CiAKQEAgLTIwNiw3ICsyMDksNiBAQCBzdGF0aWMgaW50IGh0Y19zZXR1cF9jb21wbGV0
+ZShzdHJ1Y3QgaHRjX3RhcmdldCAqdGFyZ2V0KQogCXRpbWVfbGVmdCA9IHdhaXRfZm9yX2NvbXBs
+ZXRpb25fdGltZW91dCgmdGFyZ2V0LT5jbWRfd2FpdCwgSFopOwogCWlmICghdGltZV9sZWZ0KSB7
+CiAJCWRldl9lcnIodGFyZ2V0LT5kZXYsICJIVEMgc3RhcnQgdGltZW91dFxuIik7Ci0JCWtmcmVl
+X3NrYihza2IpOwogCQlyZXR1cm4gLUVUSU1FRE9VVDsKIAl9CiAKQEAgLTI3OSw3ICsyODEsNiBA
+QCBpbnQgaHRjX2Nvbm5lY3Rfc2VydmljZShzdHJ1Y3QgaHRjX3RhcmdldCAqdGFyZ2V0LAogCWlm
+ICghdGltZV9sZWZ0KSB7CiAJCWRldl9lcnIodGFyZ2V0LT5kZXYsICJTZXJ2aWNlIGNvbm5lY3Rp
+b24gdGltZW91dCBmb3I6ICVkXG4iLAogCQkJc2VydmljZV9jb25ucmVxLT5zZXJ2aWNlX2lkKTsK
+LQkJa2ZyZWVfc2tiKHNrYik7CiAJCXJldHVybiAtRVRJTUVET1VUOwogCX0KIApkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL3dtaS5jIGIvZHJpdmVycy9uZXQvd2ly
+ZWxlc3MvYXRoL2F0aDlrL3dtaS5jCmluZGV4IGNkYzE0NjA5MTE5NC4uNjE1ZTZlMzJmNjg3IDEw
+MDY0NAotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9hdGgvYXRoOWsvd21pLmMKKysrIGIvZHJp
+dmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL3dtaS5jCkBAIC0xMjMsNiArMTIzLDIwIEBAIHZv
+aWQgYXRoOWtfZGVpbml0X3dtaShzdHJ1Y3QgYXRoOWtfaHRjX3ByaXYgKnByaXYpCiAJa2ZyZWUo
+cHJpdi0+d21pKTsKIH0KIAordm9pZCBhdGg5a19zdG9wX3dtaShzdHJ1Y3QgYXRoOWtfaHRjX3By
+aXYgKnByaXYpCit7CisJc3RydWN0IHdtaSAqd21pID0gcHJpdi0+d21pOworCQorCW11dGV4X2xv
+Y2soJndtaS0+b3BfbXV0ZXgpOworCXdtaS0+c3RvcHBlZCA9IHRydWU7CisJbXV0ZXhfdW5sb2Nr
+KCZ3bWktPm9wX211dGV4KTsKK30KKwordm9pZCBhdGg5a19kZXN0b3lfd21pKHN0cnVjdCBhdGg5
+a19odGNfcHJpdiAqcHJpdikKK3sKKwlrZnJlZShwcml2LT53bWkpOworfQorCiB2b2lkIGF0aDlr
+X3dtaV9ldmVudF9kcmFpbihzdHJ1Y3QgYXRoOWtfaHRjX3ByaXYgKnByaXYpCiB7CiAJdW5zaWdu
+ZWQgbG9uZyBmbGFnczsKQEAgLTMzNiw3ICszNTAsNiBAQCBpbnQgYXRoOWtfd21pX2NtZChzdHJ1
+Y3Qgd21pICp3bWksIGVudW0gd21pX2NtZF9pZCBjbWRfaWQsCiAJCWF0aF9kYmcoY29tbW9uLCBX
+TUksICJUaW1lb3V0IHdhaXRpbmcgZm9yIFdNSSBjb21tYW5kOiAlc1xuIiwKIAkJCXdtaV9jbWRf
+dG9fbmFtZShjbWRfaWQpKTsKIAkJbXV0ZXhfdW5sb2NrKCZ3bWktPm9wX211dGV4KTsKLQkJa2Zy
+ZWVfc2tiKHNrYik7CiAJCXJldHVybiAtRVRJTUVET1VUOwogCX0KIApkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL3dtaS5oIGIvZHJpdmVycy9uZXQvd2lyZWxlc3Mv
+YXRoL2F0aDlrL3dtaS5oCmluZGV4IDM4MDE3NWQ1ZWNkNy4uYzNlMjc4Mzc3MzY1IDEwMDY0NAot
+LS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9hdGgvYXRoOWsvd21pLmgKKysrIGIvZHJpdmVycy9u
+ZXQvd2lyZWxlc3MvYXRoL2F0aDlrL3dtaS5oCkBAIC0xODksNiArMTg5LDggQEAgaW50IGF0aDlr
+X3dtaV9jbWQoc3RydWN0IHdtaSAqd21pLCBlbnVtIHdtaV9jbWRfaWQgY21kX2lkLAogdm9pZCBh
+dGg5a193bWlfZXZlbnRfdGFza2xldCh1bnNpZ25lZCBsb25nIGRhdGEpOwogdm9pZCBhdGg5a19m
+YXRhbF93b3JrKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yayk7CiB2b2lkIGF0aDlrX3dtaV9ldmVu
+dF9kcmFpbihzdHJ1Y3QgYXRoOWtfaHRjX3ByaXYgKnByaXYpOwordm9pZCBhdGg5a19zdG9wX3dt
+aShzdHJ1Y3QgYXRoOWtfaHRjX3ByaXYgKnByaXYpOwordm9pZCBhdGg5a19kZXN0b3lfd21pKHN0
+cnVjdCBhdGg5a19odGNfcHJpdiAqcHJpdik7CiAKICNkZWZpbmUgV01JX0NNRChfd21pX2NtZCkJ
+CQkJCQlcCiAJZG8gewkJCQkJCQkJXAotLSAKMi4xNy4xCgo=
+--000000000000bdb0f205a25920d1--
