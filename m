@@ -2,175 +2,144 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F98C2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC1C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B7120857
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720DB2082F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:47:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585910870;
+	bh=n19yFo16QOMqFA1WDmUG5gmfUOke7qvod9qEnZ2OpK4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2BysD1XZBopJb9PoFR6YSg+o4ZyYQV8BVPSlW/MGVDNsxho7Ur8ht5UaIVtvUW3t9
+	 cEA3bl6nP0eOrBhwzn0wxlSJTWpOK6yVcVunFKWByUld7MrJtm9dfArdJcFNNWWKLm
+	 QD9RaVHb58p4pKV8oAcutz4CHOtpxwVWFqBtO8L4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgDCKrM (ORCPT
+        id S2390514AbgDCKrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:47:12 -0400
-Received: from mga18.intel.com ([134.134.136.126]:51370 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727792AbgDCKrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:47:11 -0400
-IronPort-SDR: 7kUbTwD6ao1lMSZbezKXj2bn24mwYfEyPu6b+8p9yOfk8di16VpsDNk+KPtEcKv7pfMjo/VAsc
- RAc0IG1hUuZw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 03:47:10 -0700
-IronPort-SDR: 8ti4Qol5gbB/MXswR0sGQ9fX6aCU580MMij4U73bTkAipfBPgWDTHjcfnIYtRY7sCvhQJ6msMf
- oWSzhTIMCqlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="273909028"
-Received: from seemahan-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.249.38.56])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Apr 2020 03:47:07 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id 3EF0F21F19; Fri,  3 Apr 2020 13:47:02 +0300 (EEST)
-Date:   Fri, 3 Apr 2020 13:47:02 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
- DRM fourccs
-Message-ID: <20200403104701.GC3172@kekkonen.localdomain>
-References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
- <20200403102449.GB4882@pendragon.ideasonboard.com>
+        Fri, 3 Apr 2020 06:47:49 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34238 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgDCKrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 06:47:49 -0400
+Received: by mail-ed1-f66.google.com with SMTP id o1so8772487edv.1;
+        Fri, 03 Apr 2020 03:47:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/qsV5G+EWb+7XocHOBXyq0rD3eTdN0wEIFWjn6eqrw0=;
+        b=JOgZwphpxw5aJuGrV1e6NB8dnmsvnCZHsP0MfXj/8xPMZGAJAlnl/kheQHA8vxQenG
+         Fq+3K1dt7sYaIj3npRKD+xkDo50whWWgx8CZUgEkb7ZQNL8pZ/tlYSxrbYBxljOEJtC6
+         0YkFtBHcdExjM5iu/1bIvxIGk1/JjLaExKy002Sii9KIAqukh7AGc7FcS0KKjuzQ6UDE
+         yhCttF9Iwp0a7gSri5z26d5tdNkW+g/yKYJs2fygHpqmE8jBy0PhoH4GBH50+Ofb3EJ/
+         2H3JaAApDU2mCxDG3RSq3GsaAbWaPA+Xw0ik78lKwomUaH+0LGdQPa2ZxA/Xn2X4wQSA
+         qhAQ==
+X-Gm-Message-State: AGi0PuYVCj7Ob0HBNsf/NTZ4yhnOdqTypsCueR/jHaZwoyF1KrMeBPW/
+        4YxdEBldMgkI7nmQE4HdsTU=
+X-Google-Smtp-Source: APiQypL5vPUUwU2gK8AJePkOzrdpT7tRJ1mK4h7pF9JSf1Aki52IK/rhR4C/SGne9w6Yo0UNm1UZHA==
+X-Received: by 2002:a17:906:cc2:: with SMTP id l2mr7897646ejh.115.1585910866860;
+        Fri, 03 Apr 2020 03:47:46 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id gs12sm1565340ejb.86.2020.04.03.03.47.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Apr 2020 03:47:46 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 12:47:44 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     gregkh@linuxfoundation.org, Kukjin Kim <kgene@kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] tty: samsung_tty: 32-bit access for TX/RX hold
+ registers
+Message-ID: <20200403104744.GA29385@kozik-lap>
+References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+ <CGME20200403102049epcas2p1d1fe95160b7f37609a8b1710c196cdd8@epcas2p1.samsung.com>
+ <20200403102041.22015-1-hyunki00.koo@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200403102449.GB4882@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200403102041.22015-1-hyunki00.koo@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-
-Thanks for the comments.
-
-On Fri, Apr 03, 2020 at 01:24:49PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
+On Fri, Apr 03, 2020 at 07:20:41PM +0900, Hyunki Koo wrote:
+> Support 32-bit access for the TX/RX hold registers UTXH and URXH.
 > 
-> Thank you for the patch.
+> This is required for some newer SoCs.
 > 
-> On Fri, Apr 03, 2020 at 12:11:56PM +0300, Sakari Ailus wrote:
-> > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > the same implementation can be used.
-> > 
-> > Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> > since v1:
-> > 
-> > - Improve documentation (add -BE suffix, refer to "FourCC".
-> > 
-> > - Use '%p4cc' conversion specifier instead of '%ppf'.
-> > 
-> > - Fix 31st bit handling in printing FourCC codes.
-> > 
-> > - Use string() correctly, to allow e.g. proper field width handling.
-> > 
-> > - Remove loop, use put_unaligned_le32() instead.
-> > 
-> >  Documentation/core-api/printk-formats.rst | 12 +++++++++++
-> >  lib/vsprintf.c                            | 25 +++++++++++++++++++++++
-> >  2 files changed, 37 insertions(+)
-> > 
-> > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> > index 8ebe46b1af39..550568520ab6 100644
-> > --- a/Documentation/core-api/printk-formats.rst
-> > +++ b/Documentation/core-api/printk-formats.rst
-> > @@ -545,6 +545,18 @@ For printing netdev_features_t.
-> >  
-> >  Passed by reference.
-> >  
-> > +V4L2 and DRM FourCC code (pixel format)
-> > +---------------------------------------
-> > +
-> > +::
-> > +
-> > +	%p4cc
-> > +
-> > +Print a FourCC code used by V4L2 or DRM. The "-BE" suffix is added on big endian
-> > +formats.
-> > +
-> > +Passed by reference.
-> > +
-> >  Thanks
-> >  ======
-> >  
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index 7c488a1ce318..93eea6a320da 100644
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -1721,6 +1721,28 @@ char *netdev_bits(char *buf, char *end, const void *addr,
-> >  	return special_hex_number(buf, end, num, size);
-> >  }
-> >  
-> > +static noinline_for_stack
-> > +char *fourcc_string(char *buf, char *end, const u32 *fourcc,
-> > +		    struct printf_spec spec, const char *fmt)
-> > +{
-> > +#define FOURCC_STRING_BE	"-BE"
-> > +	char s[sizeof(*fourcc) + sizeof(FOURCC_STRING_BE)] = { 0 };
-> > +
-> > +	if (check_pointer(&buf, end, fourcc, spec))
-> > +		return buf;
-> > +
-> > +	if (fmt[1] != 'c' || fmt[2] != 'c')
-> > +		return error_string(buf, end, "(%p4?)", spec);
-> > +
-> > +	put_unaligned_le32(*fourcc & ~BIT(31), s);
-> > +
-> > +	if (*fourcc & BIT(31))
-> > +		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
-> > +			sizeof(FOURCC_STRING_BE));
-> > +
-> > +	return string(buf, end, s, spec);
+> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+> ---
+> v3: change rd_regl to rd_reg in line 954 for backward compatibility.
+
+I cannot find this change against v2.
+
+> ---
 > 
-> Taking V4L2_PIX_FMT_Y16_BE as an example, this will print 'Y16 -BE'
-> (without quotes). There are other 4CCs that contain spaces and would
-> suffer from a similar issue. Even in little-endian format, it would
-> result in additional spaces in the output string. Is this what we want ?
-> Should the caller always enclose the 4CC in quotes or brackets for
-> clarity ? Or should still be done here ?
+>  drivers/tty/serial/samsung_tty.c | 76 +++++++++++++++++++++++++++++++++-------
+>  1 file changed, 64 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+> index 73f951d65b93..a674a80163ed 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -154,12 +154,47 @@ struct s3c24xx_uart_port {
+>  #define portaddrl(port, reg) \
+>  	((unsigned long *)(unsigned long)((port)->membase + (reg)))
+>  
+> -#define rd_regb(port, reg) (readb_relaxed(portaddr(port, reg)))
+> +static unsigned int rd_reg(struct uart_port *port, int reg)
 
-Good question. Space is indeed a valid character in a 4cc code.
+You should return here u32 to be consistent with readl_relaxed.
 
-If I omit one or more spaces, it will no longer be a 4cc, but a 3cc or even
-a 2cc. Jokes aside, there are probably fair arguments both ways.
+> +{
+> +	switch (port->iotype) {
+> +	case UPIO_MEM:
+> +		return readb_relaxed(portaddr(port, reg));
+> +	case UPIO_MEM32:
+> +		return readl_relaxed(portaddr(port, reg));
+> +	default:
+> +		return 0;
+> +	}
+> +	return 0;
+> +}
+> +
+>  #define rd_regl(port, reg) (readl_relaxed(portaddr(port, reg)))
+>  
+> -#define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
+> +static void wr_reg(struct uart_port *port, int reg, int val)
 
-I presume there's no 4cc code where the location of a space would make a
-difference but all of the spaces are trailing spaces.
+val should be u32.
 
-It's also worth noting that the formats printed are mostly for debugging
-purpose and thus even getting a hypothetical case wrong is not a grave
-issue. This would also support just printing them as-is though.
+> +{
+> +	switch (port->iotype) {
+> +	case UPIO_MEM:
+> +		writeb_relaxed(val, portaddr(port, reg));
+> +		break;
+> +	case UPIO_MEM32:
+> +		writel_relaxed(val, portaddr(port, reg));
+> +		break;
+> +	}
+> +}
+> +
+>  #define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port, reg))
+>  
+> +static void write_buf(struct uart_port *port, int reg, int val)
 
-I'm leaning slightly towards omitting any spaces if the code has them. This
-is something that couldn't be done by using a macro...
+buf is misleading, you do not write here any buffer. Maybe
+"wr_reg_barrier()" or "wr_reg_order()"?
 
--- 
-Regards,
+Best regards,
+Krzysztof
 
-Sakari Ailus
