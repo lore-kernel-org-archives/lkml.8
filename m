@@ -2,124 +2,100 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C77C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A456CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CDB206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C7020678
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:03:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qoi89/YN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nnzx9I2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgDCTzH (ORCPT
+        id S1727873AbgDCUDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 15:55:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56135 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727322AbgDCTzH (ORCPT
+        Fri, 3 Apr 2020 16:03:49 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30234 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726460AbgDCUDt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 15:55:07 -0400
+        Fri, 3 Apr 2020 16:03:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585943706;
+        s=mimecast20190719; t=1585944228;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HF0Zwc1wocMpHH80a9Ld76/ETXaQKsm1NeNpR7kpIqs=;
-        b=Qoi89/YNwf9Uv93xogFkD70bO4TlGN7pFpB53xHTO5zGTYxM722KZ03pnK1sJPgu+5SHKD
-        dEKMGlilJrNcLXBlBxsXMc7C2NSdXi/Eq9B8Goqo18PTUQOYSUDWjoqSS7bQobnupUkypG
-        ASmziJ8JdwnorWiTMy5+U5xWLwbaUhM=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-tFVdUtmCPPOVpwS6u7veUg-1; Fri, 03 Apr 2020 15:55:04 -0400
-X-MC-Unique: tFVdUtmCPPOVpwS6u7veUg-1
-Received: by mail-wm1-f69.google.com with SMTP id f9so2516739wme.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 12:55:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=HF0Zwc1wocMpHH80a9Ld76/ETXaQKsm1NeNpR7kpIqs=;
-        b=WeDUlMTKkxfvnO0gNJd4hy4K4RUIuG2xJiLSq9hOvyzXHPjiAz8UXDWOkgWgGUdP1A
-         kWVpPBb21a6ZVy0aaFPvJIT97YIxdlchKCZeXGGdl9q0tw79FGpHvUn7ngYW9AtOcwpZ
-         UtDebfMSFjPV9X6gfPIoklH4W9XyHY4qpueLZuxzgFkn5dOri5awse0DcNS/ieVuKxlu
-         n1bGSvK6dIgikGKXL5c6QUHH3N28KYd0WfhCBH5AhC2XhTDLYdZzW/nf0StIB0X7pflR
-         ENYy7AvMUePnUIdS5Ru7rxcQ/DVo78psdJX+Zc8F8y1KgPQ0wMauscOqPhoI/gBXeXm+
-         C9Og==
-X-Gm-Message-State: AGi0PubGmm72lkSW2oKQxQsKwx6o/l1zutAPs4EB+PrQxl9xytQMwd/3
-        XHhE+seSjixntyw13mbpedqSLahArdUkYRbV0lbctWubOfAgpzQ3581LP1SIZLvwJPZOlIkL3EX
-        UjUAUMX7fCPzL5JvS0d0XkeKx
-X-Received: by 2002:a05:6000:51:: with SMTP id k17mr11032870wrx.148.1585943703357;
-        Fri, 03 Apr 2020 12:55:03 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIMlN52jfL13U65g+yzderJRf7TKcAdljqBnIneSxRjajZqcZuVG4ls3JkT8t9gOas3TmozzA==
-X-Received: by 2002:a05:6000:51:: with SMTP id k17mr11032855wrx.148.1585943703163;
-        Fri, 03 Apr 2020 12:55:03 -0700 (PDT)
-Received: from [192.168.3.122] (p5B0C69E0.dip0.t-ipconnect.de. [91.12.105.224])
-        by smtp.gmail.com with ESMTPSA id y1sm5470162wmd.14.2020.04.03.12.55.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 12:55:02 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=u8hLZsj2YqQxSgV0Txi9THZdrIA9G0FOv6QX9kTj3Dc=;
+        b=Nnzx9I2dA149QEL8+qUq+hzw0BKFEXpv62hwYoaB/mc4QIlJDfPfcc5Kt6LG79hPcvMnZ+
+        B+LUnX5Co1jKVGHthlUCpHgoEL52Sal170d8hL5ach/foQBCZC3SXny4EPUWYqxnH9mTeg
+        aQbqlowNSbgtBRKf9ZVwFMbo90tBrxE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-83-RaBLvtOdN-WS7Iz132o6gQ-1; Fri, 03 Apr 2020 16:03:46 -0400
+X-MC-Unique: RaBLvtOdN-WS7Iz132o6gQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6614E1005516;
+        Fri,  3 Apr 2020 20:03:44 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-117-203.rdu2.redhat.com [10.10.117.203])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CFE7C96F83;
+        Fri,  3 Apr 2020 20:03:41 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Wayne Lin <Wayne.Lin@amd.com>, Wayne Lin <waynelin@amd.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/dp_mst: Don't drop NAKs for down responses
+Date:   Fri,  3 Apr 2020 16:03:25 -0400
+Message-Id: <20200403200325.885628-1-lyude@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 1/5] KVM: s390: vsie: Fix region 1 ASCE sanity shadow address checks
-Date:   Fri, 3 Apr 2020 21:55:02 +0200
-Message-Id: <67F45F4F-33CB-455A-8CB8-7D20D9A2BF2F@redhat.com>
-References: <59b411eb-dabe-8cac-9270-7a9f0faa63d5@de.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>, stable@vger.kernel.org
-In-Reply-To: <59b411eb-dabe-8cac-9270-7a9f0faa63d5@de.ibm.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It looks like that when we introduced the ability to handle multiple
+down requests at once, we accidentally started dropping NAK replies -
+causing sideband messages which got NAK'd to seemingly timeout and cause
+all sorts of weirdness.
 
+So, fix this by making sure we don't return from
+drm_dp_mst_handle_down_rep() early, but instead treat NAKs like any
+other message.
 
-> Am 03.04.2020 um 19:56 schrieb Christian Borntraeger <borntraeger@de.ibm.c=
-om>:
->=20
-> =EF=BB=BF
->=20
->> On 03.04.20 17:30, David Hildenbrand wrote:
->> In case we have a region 1 ASCE, our shadow/g3 address can have any value=
-.
->> Unfortunately, (-1UL << 64) is undefined and triggers sometimes,
->> rejecting valid shadow addresses when trying to walk our shadow table
->> hierarchy.
->=20
-> I thin the range of the addresses do not matter.
-> Took me a while to understand maybe rephrase that:
->=20
-> In case we have a region 1 the following calculation=20
-> (31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)
-> results in 64. As shifts beyond the size are undefined the compiler is fre=
-e to use
-> instructions like sllg. sllg will only use 6 bits of the shift value (here=
- 64)
-> resulting in no shift at all. That means that ALL addresses will be reject=
-ed.
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: fbc821c4a506 ("drm/mst: Support simultaneous down replies")
+Cc: Wayne Lin <Wayne.Lin@amd.com>
+Cc: Wayne Lin <waynelin@amd.com>
+Cc: Sean Paul <seanpaul@chromium.org>
+---
+ drivers/gpu/drm/drm_dp_mst_topology.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Interestingly, it would not fail when shadowing the r2t, but only when tryin=
-g to shadow the r3t.
-
->=20
-> With that this makes sense.=20
->=20
-> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
->=20
-
-In case there are no other comments, can you fixup when applying, or do you w=
-ant me to resend?
-
-Cheers=
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
+dp_mst_topology.c
+index 10d0315af513..5449ada3e019 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -3813,7 +3813,6 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp=
+_mst_topology_mgr *mgr)
+ 			      txmsg->reply.u.nak.reason,
+ 			      drm_dp_mst_nak_reason_str(txmsg->reply.u.nak.reason),
+ 			      txmsg->reply.u.nak.nak_data);
+-		goto out_clear_reply;
+ 	}
+=20
+ 	memset(msg, 0, sizeof(struct drm_dp_sideband_msg_rx));
+--=20
+2.25.1
 
