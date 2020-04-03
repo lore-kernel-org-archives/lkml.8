@@ -2,78 +2,146 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096A9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A180DC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49C82073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B5C2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:40:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="OwERzdbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403898AbgDCOje (ORCPT
+        id S2403956AbgDCOkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:39:34 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:51653 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728066AbgDCOje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:39:34 -0400
-Received: (qmail 8390 invoked by uid 500); 3 Apr 2020 10:39:33 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 3 Apr 2020 10:39:33 -0400
-Date:   Fri, 3 Apr 2020 10:39:33 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-cc:     gregkh@linuxfoundation.org, <hariprasad.kelam@gmail.com>,
-        <colin.king@canonical.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <ldv-project@linuxtesting.org>,
-        <andrianov@ispras.ru>
-Subject: Re: [PATCH] usb: host: u132-hcd: Remove u132_static_list
-In-Reply-To: <20200402232228.22395-1-madhuparnabhowmik10@gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2004031038200.7035-100000@netrider.rowland.org>
+        Fri, 3 Apr 2020 10:40:12 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:47636 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728066AbgDCOkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 10:40:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=3375; q=dns/txt; s=axis-central1;
+  t=1585924811; x=1617460811;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=+zXmvQ71wuVL3YLxRdG+cyS3KAA4sDvpKKdNeB9bCq8=;
+  b=OwERzdbT1UdVAiUUw9vHOJcronkCh0CcT/mYA9pFYH+H2qRRP3eDnKgu
+   0ub7jffCpCq7UDCV5KXZrgEUWAYqHrd83BBS+ZgzEm4X8o0i6+a6YneD8
+   3HedzAK79FTj71GzXOB9LTeRuQ31NIeu7StTlUK03l/qZ6DiWb7kBPGCI
+   GoS3YDUshbik7Il+eTUH9vsOHL4RnLNlkwYedO9L7/qoK2h/fP6GHcDde
+   2RyO3yFcxm0KXP1PzIcc4WvfVa0QAaZIXptzIpqTNDGESgITCzn3IopxH
+   6mdGdAglVUIudvCoRZfBw50F1MnqOSdshqdb6f2HrYmrH/0DNyNdyeCzc
+   A==;
+IronPort-SDR: uB+hmrX6WHbLrkXUv7Y6CMpJNYKKlANXcwQzCh+0+yXc/ZJa/1JC4QM038i0kzKea+x2XCuzm2
+ EiD/xGz3phOKwdwH2/rCbN7AKTLDsIugW95xWBUHNN0swfRVigSFOGvJ8dcG/PqxUIHrs1/PyG
+ PgWo79hFBouSYre9+iust2LC9FB8o7+bedX41vSyz9Jr4J33GoNbGOZbsdpu0VenFiAJzGtfeI
+ FYydH+pq6hnOPE2ptPTldHGt0ePWddz4Z827iUNboNtKo7cqex2QNCM/gI1XDWjZXau6M/Pru1
+ Jpk=
+X-IronPort-AV: E=Sophos;i="5.72,340,1580770800"; 
+   d="scan'208";a="7290918"
+Date:   Fri, 3 Apr 2020 16:40:09 +0200
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] thermal: core: Send a sysfs notification on trip points
+Message-ID: <20200403144009.szjoss5ecleisg2f@axis.com>
+References: <a7e8287d-72be-7ab0-697a-9de40eb3f81f@linaro.org>
+ <20200402142116.22869-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200402142116.22869-1-daniel.lezcano@linaro.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020 madhuparnabhowmik10@gmail.com wrote:
-
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Thu, Apr 02, 2020 at 04:21:15PM +0200, Daniel Lezcano wrote:
+> Currently the userspace has no easy way to get notified when a
+> specific trip point was crossed. There are a couple of approaches:
 > 
-> u132_static_list is a global list protected by u132_module_lock.
-> It is read in the u132_hcd_exit() function without holding the lock
-> thus may lead to data race.
-> However, it turns out that this list isn't used for anything useful
-> and thus it is okay to get rid of it.
-> Thus, remove the u132_static_list from u132-hcd module.
+> - the userspace polls the sysfs temperature with usually an
+>   unacceptable delay between the trip temperature point crossing and
+>   the moment it is detected, or a high polling rate with an
+>   unacceptable number of wakeup events.
 > 
-> Found by Linux Driver Verification project (linuxtesting.org).
+> - the thermal zone is set to be managed by an userspace governor in
+>   order to receive the uevent even if the thermal zone needs to be
+>   managed by another governor.
 > 
-> Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> ---
->  drivers/usb/host/u132-hcd.c | 8 --------
->  1 file changed, 8 deletions(-)
+> These changes allow to send a sysfs notification on the
+> trip_point_*_temp when the temperature is getting higher than the trip
+> point temperature. By this way, the userspace can be notified
+> everytime when the trip point is crossed, this is useful for the
+> thermal Android HAL or for notification to be sent via d-bus.
 > 
-> diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-> index e9209e3e6248..52f70cf063ea 100644
-> --- a/drivers/usb/host/u132-hcd.c
-> +++ b/drivers/usb/host/u132-hcd.c
-> @@ -81,7 +81,6 @@ static DECLARE_WAIT_QUEUE_HEAD(u132_hcd_wait);
->  static struct mutex u132_module_lock;
->  static int u132_exiting;
->  static int u132_instances;
-> -static struct list_head u132_static_list;
->  /*
->  * end of the global variables protected by u132_module_lock
->  */
+> That allows the userspace to manage the applications based on specific
+> alerts on different thermal zones to mitigate the skin temperature,
+> letting the kernel governors handle the high temperature for hardware
+> like the CPU, the GPU or the modem.
+> 
+> The temperature can be oscillating around a trip point and the event
+> will be sent multiple times. It is up to the userspace to deal with
+> this situation.
 
-You forgot to remove the u132_list member from struct u132.
+The actual temperature value would also be interesting.  Is there a way
+for userspace to obtain it in a race-free manner when it is notified
+that the trip point has been crossed?
 
-Alan Stern
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index c06550930979..3cbdd20252ab 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -407,6 +407,19 @@ static void handle_critical_trips(struct thermal_zone_device *tz,
+>  	}
+>  }
+>  
+> +static int thermal_trip_crossed(struct thermal_zone_device *tz, int trip)
+> +{
+> +	int trip_temp;
+> +
+> +	tz->ops->get_trip_temp(tz, trip, &trip_temp);
+> +
+> +	if (tz->last_temperature == THERMAL_TEMP_INVALID)
+> +		return 0;
+> +
+> +	return ((tz->last_temperature < trip_temp)) &&
+> +		(tz->temperature >= trip_temp));
 
+ drivers/thermal/thermal_core.c: In function ‘thermal_trip_crossed’:
+ drivers/thermal/thermal_core.c:425:33: error: expected ‘;’ before ‘)’ token
+    (tz->temperature >= trip_temp));
+                                  ^
+ drivers/thermal/thermal_core.c:425:33: error: expected statement before ‘)’ token
+
+> +}
+> +
+>  static void handle_thermal_trip(struct thermal_zone_device *tz, int trip)
+>  {
+>  	enum thermal_trip_type type;
+> @@ -417,6 +430,16 @@ static void handle_thermal_trip(struct thermal_zone_device *tz, int trip)
+>  
+>  	tz->ops->get_trip_type(tz, trip, &type);
+>  
+> +	/*
+> +	 * This condition will be true everytime the temperature is
+> +	 * greater than the trip point and the previous temperature
+> +	 * was below. In this case notify the userspace via a sysfs
+> +	 * event on the trip point.
+> +	 */
+> +	if (thermal_trip_crossed(tz, trip))
+> +		sysfs_notify(&tz->device.kobj, NULL,
+> +			     tz->trip_temp_attrs[trip].attr.attr.name);
+
+Normally sysfs_notify() is used to notify userspace that the value of
+the sysfs file has changed, but in this case it's being used on a sysfs
+file whose value never changes.  I don't know if there are other drivers
+that do something similar.
