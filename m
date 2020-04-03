@@ -2,134 +2,130 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09FDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5174CC2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A40220737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J89hODt8"
+	by mail.kernel.org (Postfix) with ESMTP id 2FF872145D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404233AbgDCSfy (ORCPT
+        id S2404385AbgDCSg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:35:54 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44103 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728066AbgDCSfy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:35:54 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v134so6950070oie.11
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:35:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OjM07KqdEPzpTKDaPNTVnnzl0Bo0UX8ZWFo9wvgBwFU=;
-        b=J89hODt8wqg9P6qBqRezu4hQ8I16OgFJGhgzHhfxyNHFlubjMFYRh6zBKeiH4kEWWC
-         O7TEWT1SAV6aYJctNOy/Todhyg1W8/VdxQHXBlkDXPytZ3oontDmcMDc3028YkA9dcUa
-         bXY38+XB2ATPUZp/x5ZHW7hXhWe1r6IxfaZd4ozaTf+tWkS+jpmYwG2kWmU1yUyLN0E6
-         8+0SUVKlHuhY/dxmfvUmovuk/xDe3NosgPCOmbjITqtqVgVm8cKWB6IAytOmRkUbPnIP
-         HmyOBr3/r+2U0EEd9J9iTC1C0NJWVY6ZoJ8h33LDpd7q7OLUrd95wChPePtGXo9rgeHp
-         3hCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=OjM07KqdEPzpTKDaPNTVnnzl0Bo0UX8ZWFo9wvgBwFU=;
-        b=JuOKj+WXHEchL8du67CJkBFPHJ/PWNm+g4zuTZkzSembhGY5ulEJKJjrOsDPTuwDaq
-         xNgRzV/ZD+yFUYD4zOpPeGjRQJG8Yc4PqmS+V5+Kl7yTA93JAraRaUJnNLWmlfKUUMKs
-         OEEI/E1CoR52OIYVPi4he64pgqvNVZM3AgOpzc9vg6AdQNhuntP1/VG4m4kg3ENHhk6O
-         hvabHGoNgvCIo4NCV07LgLPJioNRndO/iuTdBlsV7a9tIJ+aJXDtk2gRmj/BvMBMMGft
-         bKhoeIiq0hH6midvrzZmCIgWY6u3FH/YIJON/I5eC4gqinVTWwAY0HtfUmEjrZu4T5Yj
-         FK2A==
-X-Gm-Message-State: AGi0PuZ9mgpQLwI//L1ApO2b4uYQrOmZshWku2HD3e3hDEnLn0ClrJSI
-        MoHkkWWHrEZUCT2kP/zX4w==
-X-Google-Smtp-Source: APiQypIB04RVPDdSclHzap2W27tNYzX1/q5hZapBNjQ1r8flFjeFuZqf8PoEL61RBJwp+rNIbCqp8w==
-X-Received: by 2002:aca:706:: with SMTP id 6mr4011142oih.115.1585938953167;
-        Fri, 03 Apr 2020 11:35:53 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.130.101])
-        by smtp.gmail.com with ESMTPSA id a3sm2307955oti.27.2020.04.03.11.35.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 11:35:52 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
-        by serve.minyard.net (Postfix) with ESMTPSA id BEF5918016D;
-        Fri,  3 Apr 2020 18:35:51 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 13:35:50 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "moderated list:IPMI SUBSYSTEM" 
-        <openipmi-developer@lists.sourceforge.net>
-Subject: Re: [PATCH 5/5] ipmi: Add missing annotation for
- ipmi_ssif_lock_cond() and ipmi_ssif_unlock_cond()
-Message-ID: <20200403183550.GS2910@minyard.net>
-Reply-To: minyard@acm.org
-References: <0/5>
- <20200403160505.2832-1-jbi.octave@gmail.com>
- <20200403160505.2832-6-jbi.octave@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403160505.2832-6-jbi.octave@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 3 Apr 2020 14:36:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:4674 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404293AbgDCSg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 14:36:28 -0400
+IronPort-SDR: hUVfV5EBrgUxsSk2rIw7FHPs1ILgDqauALL73KvcH+fvLIuxC7vuB3RcPX7f152z6ssAGS5L8u
+ dLEKmCR9yG5A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 11:36:27 -0700
+IronPort-SDR: P+PjU57kf5ZV4+2nDd+GmNLO3ZXL3lNEuDnNL15enVKjxlAHmsrxvCKbUOTEcJgMcNzHVO71VF
+ 7hF1j078GY2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,340,1580803200"; 
+   d="scan'208";a="268439814"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 03 Apr 2020 11:36:27 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Lu Baolu" <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>
+Cc:     "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v11 03/10] iommu/vt-d: Use a helper function to skip agaw for SL
+Date:   Fri,  3 Apr 2020 11:42:07 -0700
+Message-Id: <1585939334-21396-4-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 05:05:05PM +0100, Jules Irenge wrote:
-> Sparse reports a warning at ipmi_ssif_unlock_cond()
-> 	and ipmi_ssif_lock_cond()
-> 
-> warning: context imbalance in ipmi_ssif_lock_cond()
-> 	- wrong count at exit
->  warning: context imbalance in ipmi_ssif_unlock_cond()
-> 	- unexpected unlock
-> 
-> The root cause is the missing annotation at ipmi_ssif_unlock_cond()
-> 	and ipmi_ssif_lock_cond()
-> 
-> Add the missing __acquires(&ata_scsi_rbuf_lock)
-> Add the missing __releases(&ata_scsi_rbuf_lock)
+An Intel iommu domain uses 5-level page table by default. If the
+iommu that the domain tries to attach supports less page levels,
+the top level page tables should be skipped. Add a helper to do
+this so that it could be used in other places.
 
-Yeah, this is good, I've included it in my tree.
+---
+v11 Added Baolu's commit message and squashed 4 & 5 from v10.
+---
 
--corey
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/iommu/intel-pasid.c | 34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> ---
->  drivers/char/ipmi/ipmi_ssif.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-> index 22c6a2e61236..030e7c09e44f 100644
-> --- a/drivers/char/ipmi/ipmi_ssif.c
-> +++ b/drivers/char/ipmi/ipmi_ssif.c
-> @@ -313,6 +313,7 @@ static int start_send(struct ssif_info *ssif_info,
->  
->  static unsigned long *ipmi_ssif_lock_cond(struct ssif_info *ssif_info,
->  					  unsigned long *flags)
-> +	__acquires(&ssif_info->lock)
->  {
->  	spin_lock_irqsave(&ssif_info->lock, *flags);
->  	return flags;
-> @@ -320,6 +321,7 @@ static unsigned long *ipmi_ssif_lock_cond(struct ssif_info *ssif_info,
->  
->  static void ipmi_ssif_unlock_cond(struct ssif_info *ssif_info,
->  				  unsigned long *flags)
-> +	__releases(&ssif_info->lock)
->  {
->  	spin_unlock_irqrestore(&ssif_info->lock, *flags);
->  }
-> -- 
-> 2.24.1
-> 
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index 22b30f10b396..66c364719ad1 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -500,6 +500,26 @@ int intel_pasid_setup_first_level(struct intel_iommu *iommu,
+ }
+ 
+ /*
++ * Skip top levels of page tables for iommu which has less agaw
++ * than default. Unnecessary for PT mode.
++ */
++static inline int iommu_skip_agaw(struct dmar_domain *domain,
++				  struct intel_iommu *iommu,
++				  struct dma_pte **pgd)
++{
++	int agaw;
++
++	for (agaw = domain->agaw; agaw > iommu->agaw; agaw--) {
++		*pgd = phys_to_virt(dma_pte_addr(*pgd));
++		if (!dma_pte_present(*pgd)) {
++			return -EINVAL;
++		}
++	}
++
++	return agaw;
++}
++
++/*
+  * Set up the scalable mode pasid entry for second only translation type.
+  */
+ int intel_pasid_setup_second_level(struct intel_iommu *iommu,
+@@ -522,17 +542,11 @@ int intel_pasid_setup_second_level(struct intel_iommu *iommu,
+ 		return -EINVAL;
+ 	}
+ 
+-	/*
+-	 * Skip top levels of page tables for iommu which has less agaw
+-	 * than default. Unnecessary for PT mode.
+-	 */
+ 	pgd = domain->pgd;
+-	for (agaw = domain->agaw; agaw > iommu->agaw; agaw--) {
+-		pgd = phys_to_virt(dma_pte_addr(pgd));
+-		if (!dma_pte_present(pgd)) {
+-			dev_err(dev, "Invalid domain page table\n");
+-			return -EINVAL;
+-		}
++	agaw = iommu_skip_agaw(domain, iommu, &pgd);
++	if (agaw < 0) {
++		dev_err(dev, "Invalid domain page table\n");
++		return -EINVAL;
+ 	}
+ 
+ 	pgd_val = virt_to_phys(pgd);
+-- 
+2.7.4
+
