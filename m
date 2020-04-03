@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D88C2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE4C2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E2E2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BEC2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Cod8sd6U"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ha+I+lDn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404483AbgDCQXy (ORCPT
+        id S2404487AbgDCQX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:23:54 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:20928 "EHLO rere.qmqm.pl"
+        Fri, 3 Apr 2020 12:23:59 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:25765 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404382AbgDCQXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:23:34 -0400
+        id S1728293AbgDCQXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:23:33 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48v4xJ3NsszwF;
-        Fri,  3 Apr 2020 18:23:32 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48v4xH4RJBzpX;
+        Fri,  3 Apr 2020 18:23:31 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585931012; bh=ytAv1RGisXEVnnR7xx1RoYPw9sNMYqF3J9qpj0xDcU4=;
+        t=1585931011; bh=K+vbcp79f0yG60D3y6nK9BE+zeYjqGJsmkCt6t37wr0=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=Cod8sd6UiT3mgAim0MFcpfiA4927isjQZJuRXamZ6mEPh8E9OzhhWENCXp3bgEm19
-         XougCDk3g4z2sCP1qsCVXiX73x3aG7bNRnl9sZpPpUXXBK1zs8AJFnLTu9sitolo2T
-         4xycthdS/Utm2n74TjYJz2/G6p0qxKTulCmeUXmQ0R4altfOX6fje/NnkzkcqamNTl
-         HAWv+LoZsBSazHjmmWAOLtSHQsFNSqewxTEPfu7XCEbGaLga74mVgyS8sRLrUq7pea
-         56138xNn+zasecF6lgEFXI33T8+8AnZjM0+OqVdHBvi+7gO5dXAf+xdhJJgpy/SHmt
-         eBRbqFFagwwLw==
+        b=ha+I+lDn0IayMpv5TffKHTJ/ZweBKjNKFKzbvhL6uuaDiN0PLLEhPQ5PqoAe6SKkM
+         GLT3qLFt5qr2M9gSzrzoYJxue0sCC70JZohrXbyYMq3RorKPdRgiqEGihRCYEuAKXG
+         /fM3NaSPaQ7BmrIFwOY0jAUA02s/54vDjXaaDg19DklUr/K5tIdLbCCWF9p57qCR23
+         nf2o3kCtspSV0mcY1zSL7SRU4xcckg0usR8z3INYfuwVy+oKb13dkokJIdfjOOenjd
+         EeVZg8mGLz2lJJd1zt0vYwRLb4yRa9owxMsFVdpH1th8NnbwG+tmeCdSDTXABnCQwT
+         SVo6bVokhDw3Q==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 03 Apr 2020 18:23:32 +0200
-Message-Id: <ae82abf9da86542f5657a8c37106bcdae5011927.1585929579.git.mirq-linux@rere.qmqm.pl>
+Date:   Fri, 03 Apr 2020 18:23:31 +0200
+Message-Id: <edb51336ad361f8dad6d9745e47823da6a94a204.1585929579.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 4/8] power: supply: core: tabularize HWMON temperature
- labels
+Subject: [PATCH v2 2/8] power: supply: core: allow to constify property lists
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -55,56 +54,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rework power_supply_hwmon_read_string() to check it's parameters.
-This allows to extend it later with labels for other types of
-measurements.
+Since tables pointed to by power_supply_desc->properties and
+->usb_types are not expected to change after registration, mark
+the pointers accordingly
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
-v2: split from fix temperature labels
----
- drivers/power/supply/power_supply_hwmon.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ include/linux/power_supply.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-index 67b6ee60085e..48c73994732c 100644
---- a/drivers/power/supply/power_supply_hwmon.c
-+++ b/drivers/power/supply/power_supply_hwmon.c
-@@ -43,6 +43,11 @@ static int power_supply_hwmon_curr_to_property(u32 attr)
- 	}
- }
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index dcd5a71e6c67..6a34df65d4d1 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -223,9 +223,9 @@ struct power_supply_config {
+ struct power_supply_desc {
+ 	const char *name;
+ 	enum power_supply_type type;
+-	enum power_supply_usb_type *usb_types;
++	const enum power_supply_usb_type *usb_types;
+ 	size_t num_usb_types;
+-	enum power_supply_property *properties;
++	const enum power_supply_property *properties;
+ 	size_t num_properties;
  
-+static const char *const ps_temp_label[] = {
-+	"temp",
-+	"ambient temp",
-+};
-+
- static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
- {
- 	if (channel) {
-@@ -144,8 +149,20 @@ static int power_supply_hwmon_read_string(struct device *dev,
- 					  u32 attr, int channel,
- 					  const char **str)
- {
--	*str = channel ? "temp ambient" : "temp";
--	return 0;
-+	if (channel < 0)
-+		return -EINVAL;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		if (channel >= ARRAY_SIZE(ps_temp_label))
-+			return -EINVAL;
-+		*str = ps_temp_label[channel];
-+		return 0;
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
- }
- 
- static int
+ 	/*
 -- 
 2.20.1
 
