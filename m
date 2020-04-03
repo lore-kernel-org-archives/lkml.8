@@ -2,127 +2,88 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0DAC2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C042C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4356920721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWfQ3UgQ"
+	by mail.kernel.org (Postfix) with ESMTP id D062E20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404003AbgDCQPz (ORCPT
+        id S2404068AbgDCQQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:15:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35805 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgDCQPz (ORCPT
+        Fri, 3 Apr 2020 12:16:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57978 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727431AbgDCQQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:15:55 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g3so6899821wrx.2;
-        Fri, 03 Apr 2020 09:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=V3/txuxpeIo6b8N65adSIdkM6XcxSjQZZcbwdANjf6E=;
-        b=jWfQ3UgQsQocDo8fuFQDjv9pKTtf6fZUBq0wSVMLiJX9fu5+0e4hXOuY5YzDYO8H69
-         TkPatJHw7AYyOAzcurQ8ECr25QGMDSznoegpeV6XHFulUENnU9HdJKmpmVWDPaFhrrv1
-         gtX+7mWWcKxQqnYss8BZQlB82lNCWsVOiJdUe98topJBuIDCZOq6/aIliC5wcUuog+ao
-         Hfs2mqtOIlBatdyam2XNmzQgN8r7JWFSn8Xi7FxPMduxH/9Y18ly3hCLxBFZJVYK4jIm
-         ezXHmdoll/Nok0Nf9StM3EvWWQCfiHA/w8RNeQgXAU2g7d2c2qp6xDasQ7HZ+Yjo+roX
-         oAvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=V3/txuxpeIo6b8N65adSIdkM6XcxSjQZZcbwdANjf6E=;
-        b=ixVgErV6ecXnrpgzL1Wqw0oi1RiZ4R6Ci46Xc+t3tDEY5J+ox3RnwSL6bm13L67DSz
-         DGXjbyvCco3+dIjeVpLpmDXsThFIf/0Lu0Dt2iAauxBAr/9gUc1vrcfoMzBeKJqTBOvw
-         pfV4Q7U9BTRmT3ohKHR6Lz490cuPnxCTFUt4cZ3fzFOy2fwJImj49dG71xLvVM6gG3ZN
-         nMD/baRWttE/jPH9KFM5zA3/pA2eePHX9NfY89NyxUSCbBOgJAhmb5t38/Sz0wIjBVMx
-         0r6kKn0DQrwW64770WpEacfZ+AYx7RDv3XoabdnkpsfCU5gvC8UvWJaM7PBFO+7BF1HI
-         IC/g==
-X-Gm-Message-State: AGi0PuY8Wz+4zpYpi8kPzSqD40zQAz+6HSucLzXiWO0ZCKXz4Prk5jBN
-        6gSPm6Hbanf7CCg3pX+1DQ==
-X-Google-Smtp-Source: APiQypLwgm3J+kKcYX7zSt4edI66hbUcWheROC6iNkXtEmEdHZDiPDAPdN+i4tyg/roRHb+J0nBfgQ==
-X-Received: by 2002:adf:f3c5:: with SMTP id g5mr9746606wrp.230.1585930551203;
-        Fri, 03 Apr 2020 09:15:51 -0700 (PDT)
-Received: from earth.lan (host-92-23-85-227.as13285.net. [92.23.85.227])
-        by smtp.gmail.com with ESMTPSA id u6sm6761276wrm.65.2020.04.03.09.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 09:15:50 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-X-Google-Original-From: Jules Irenge <djed@earth.lan>
-Date:   Fri, 3 Apr 2020 17:15:44 +0100 (BST)
-To:     Jan Kara <jack@suse.cz>
-cc:     Jules Irenge <jbi.octave@gmail.com>, linux-kernel@vger.kernel.org,
-        boqun.feng@gmail.com, Amir Goldstein <amir73il@gmail.com>,
-        "open list:FSNOTIFY: FILESYSTEM NOTIFICATION INFRASTRUCTURE" 
-        <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 2/7] fsnotify: Add missing annotation for
- fsnotify_finish_user_wait()
-In-Reply-To: <20200401092433.GA19466@quack2.suse.cz>
-Message-ID: <alpine.LFD.2.21.2004031710120.10601@earth.lan>
-References: <0/7> <20200331204643.11262-1-jbi.octave@gmail.com> <20200331204643.11262-3-jbi.octave@gmail.com> <20200401092433.GA19466@quack2.suse.cz>
+        Fri, 3 Apr 2020 12:16:03 -0400
+Received: from floko.floko.floko (unknown [IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8C382260560;
+        Fri,  3 Apr 2020 17:15:54 +0100 (BST)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com
+Subject: [PATCH v2 1/9] media: staging: dt-bindings: rkisp1: add missing required nodes
+Date:   Fri,  3 Apr 2020 13:15:30 -0300
+Message-Id: <20200403161538.1375908-2-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200403161538.1375908-1-helen.koike@collabora.com>
+References: <20200403161538.1375908-1-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add missing required nodes in json-schema yaml file for
+Rockchip ISP1 dt-bindings.
 
+Suggested-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+---
 
-On Wed, 1 Apr 2020, Jan Kara wrote:
+Changes in v2:
+- New patch in the series
+---
+ .../devicetree/bindings/media/rockchip-isp1.yaml          | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> On Tue 31-03-20 21:46:38, Jules Irenge wrote:
->> Sparse reports a warning at fsnotify_finish_user_wait()
->>
->> warning: context imbalance in fsnotify_finish_user_wait()
->> 	- wrong count at exit
->>
->> The root cause is the missing annotation at fsnotify_finish_user_wait()
->> Add the missing __acquires(&fsnotify_mark_srcu) annotation.
->>
->> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
->
-> OK, but then fsnotify_prepare_user_wait() needs __releases annotation as
-> well if we're going to be serious about sparse warnings in this code?
->
-> 								Honza
->
->> ---
->>  fs/notify/mark.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/fs/notify/mark.c b/fs/notify/mark.c
->> index 1d96216dffd1..44fea637bb02 100644
->> --- a/fs/notify/mark.c
->> +++ b/fs/notify/mark.c
->> @@ -350,6 +350,7 @@ bool fsnotify_prepare_user_wait(struct fsnotify_iter_info *iter_info)
->>  }
->>
->>  void fsnotify_finish_user_wait(struct fsnotify_iter_info *iter_info)
->> +	__acquires(&fsnotify_mark_srcu)
->>  {
->>  	int type;
->>
->> --
->> 2.24.1
->>
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
->
+diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+index af246b71eac6b..a77b6ec500c95 100644
+--- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
++++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+@@ -94,11 +94,19 @@ properties:
+ 
+               remote-endpoint: true
+ 
++        required:
++          - reg
++          - "#address-cells"
++          - "#size-cells"
++
+     required:
++      - "#address-cells"
++      - "#size-cells"
+       - port@0
+ 
+ required:
+   - compatible
++  - reg
+   - interrupts
+   - clocks
+   - clock-names
+-- 
+2.26.0
 
-Thanks for the reply. I think adding an annotation at 
-fsnotify_prepare_user_wait() will not theoretically remove the warning. 
-That's the only reason why I skipped it .
-Best regards,
-Jules
