@@ -2,127 +2,101 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A3EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464E8C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD6920659
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7F92063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="ASnR0E3t"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pnTh+wiw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390862AbgDCMt5 (ORCPT
+        id S2390871AbgDCMzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:49:57 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34845 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgDCMt4 (ORCPT
+        Fri, 3 Apr 2020 08:55:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57000 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbgDCMzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:49:56 -0400
-Received: by mail-ed1-f67.google.com with SMTP id c7so1399529edl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:49:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qQ4GjlaBNnkqjandRnDKumnjBIkctbwHxWdo0M4wsMI=;
-        b=ASnR0E3twBUn3zFHPgwVLzGRCQDeCNzuma4SqK3MmSzZIdWWrXFg8pCBWD4epfIJ+z
-         2OUBhBph32xan2QlF1RTOih+bc/LuuXJUQlq0iN2y5fu4d+/dnczuhRU9UUVpsoDdYuZ
-         ydiEvmwy9d48th4OPl+a1yTfrR9RPceRVflsdsZkGlttu3jIYGOzb5T/GwGoBaIFpoNA
-         k0KoH4qQBH7tOQ5AH4Xq8UCixq3wVjW29B7w90J3hbU3+JeFSJQhPhGXhAMsfueibgXa
-         c6wfYcKAP/B9C1KT13N/Uqu/GulrAEMyeVQ/PVEvYV0LxhXv0DoqB1zwusHV3iCHBTiK
-         OItw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qQ4GjlaBNnkqjandRnDKumnjBIkctbwHxWdo0M4wsMI=;
-        b=X2rEx6BkXHCYOU7WKYg+fJszDTpwtow2db6Y0QWqnNNPt0SRx5L4vEd/m6c3md9hF/
-         vyMbAoNtG72e2WWK9fBR0knzcny1lSTdgEyrnqqBxkklp+EsdOziw9mlOvjKagdVKpve
-         3/nsGSEJJpqXblnY2EjiKea9w3YdOFhTVwbGHJd5V/CUdQM2axwEOnjLstPDeGIaTSWG
-         K+OMWcbb0zQwWY0rM2jBxD199NbtKOMGfrsOscLSTQCidXFE31S9+aXwRlG5cb3pgcdG
-         4HbVlCUFkSlxNz0KeMoZrrL+yA3k/GSnmSaCAFzVagSR5Lsp1Hr5lh5NGFDiBOMkfrEs
-         plfg==
-X-Gm-Message-State: AGi0PuY0n1LV5d6ARlkyR8cVYvRLWfZkiH54y0cAVFH0BifYNZd6kOVn
-        jG07DMoohQWEAwZ5AgB3FmUQ2iJ466g=
-X-Google-Smtp-Source: APiQypL5gP9d5L/YD06dpE9QuVApfFMy3N0f0Ub7xYKYv6KkNS8Zf7gkd/4JdkznDB02IeowhtMk2Q==
-X-Received: by 2002:a17:906:7045:: with SMTP id r5mr8266254ejj.29.1585918193015;
-        Fri, 03 Apr 2020 05:49:53 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id by25sm1649452ejb.16.2020.04.03.05.49.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 05:49:52 -0700 (PDT)
-Subject: Re: [PATCH] ns: Fix time_for_children symlink
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Andrei Vagin <avagin@openvz.or>, Adrian Reber <adrian@lisas.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, Dmitry Safonov <0x7f454c46@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Containers <containers@lists.linux-foundation.org>,
-        stable <stable@vger.kernel.org>
-References: <a2418c48-ed80-3afe-116e-6611cb799557@gmail.com>
- <20200403123431.tsvj6alagg3ee356@wittgenstein>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <11460527-7d03-0966-508a-b67dc2bc8459@arista.com>
-Date:   Fri, 3 Apr 2020 13:49:51 +0100
+        Fri, 3 Apr 2020 08:55:38 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 033CtXOT078628;
+        Fri, 3 Apr 2020 07:55:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585918534;
+        bh=zHg91WiJBWz2Fi4pC1UUIQ2mI/iVfDn7kpR8RVMHrdw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pnTh+wiwdnusKx/s6QDDG63eOAeCqPJeWl/5E7XuR7RX5Ozu2TtDuTeJyYUN6KK1m
+         v7v6wNjS5PJgqKOKlWP547q3VIXRiMv/78F3mvjLMaVsJgrmaJFjMKpySL3ylnD73t
+         7W6hSUX04UajaPNAZVJ6CvRLZVyDZxtcaaHpnDpM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 033CtXhs120281
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 3 Apr 2020 07:55:33 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
+ 2020 07:55:33 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 3 Apr 2020 07:55:33 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 033CtXfd095739;
+        Fri, 3 Apr 2020 07:55:33 -0500
+Subject: Re: Cleanups in "next" tree
+To:     Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+CC:     <linux-leds@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200322115906.GA10623@duo.ucw.cz>
+ <3a103317-b9fb-5d0f-6944-0114b9af1629@gmail.com> <20200402225745.GA9830@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <7cce20f9-f665-2b96-2657-e489df87dd3f@ti.com>
+Date:   Fri, 3 Apr 2020 07:49:47 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200403123431.tsvj6alagg3ee356@wittgenstein>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200402225745.GA9830@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/20 1:34 PM, Christian Brauner wrote:
-> On Fri, Apr 03, 2020 at 02:11:39PM +0200, Michael Kerrisk (man-pages) wrote:
->> Dmitry, Andrei,
->>
->> Looking at the contents of the /proc/PID/ns/time_for_children
->> symlink shows an anomaly:
->>
->> $ ls -l /proc/self/ns/* |awk '{print $9, $10, $11}'
->> ...
->> /proc/self/ns/pid -> pid:[4026531836]
->> /proc/self/ns/pid_for_children -> pid:[4026531836]
->> /proc/self/ns/time -> time:[4026531834]
->> /proc/self/ns/time_for_children -> time_for_children:[4026531834]
->> /proc/self/ns/user -> user:[4026531837]
->> ...
->>
->> The reference for 'time_for_children' should be a 'time' namespace,
->> just as the reference for 'pid_for_children' is a 'pid' namespace.
->> In other words, I think the above time_for_children link should read:
->>
->> /proc/self/ns/time_for_children -> time:[4026531834]
->>
->> If you agree with this patch, then it should be marked for
->> stable@vger.kernel.org.
->>
->> Signed-off-by: Michael Kerrisk <mtk.manpages@gmail.com>
-> 
-> Yeah, that just seems like an oversight.
-> 
-> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Pavel
 
-Thanks,
+On 4/2/20 5:57 PM, Pavel Machek wrote:
+> On Sun 2020-03-22 14:35:56, Jacek Anaszewski wrote:
+>> Hi Pavel,
+>>
+>> On 3/22/20 12:59 PM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>> I've commited some cleanups into LED tree ( git/pavel/linux-leds.git
+>>> branch for-next ), if someone wants to review them.
+>> You abused your maintainer power by bypassing the usual patch
+>> submission procedure. Please remove the patches from linux-next
+>> and submit them officially for discussion. I would have some objections
+>> to them.
+> I'm sorry I failed to meet your high expectations... But I don't
+> believe I done anything completely outside of usual kernel procedures.
 
-Reviewed-by: Dmitry Safonov <dima@arista.com>
-Fixes: 769071ac9f20 ("ns: Introduce Time Namespace")
-+Cc: stable # v5.6
+So I can push a public tree out and request reviewers to review that 
+tree and expect it to get merged once the review is complete without 
+ever posting the patches to linux-leds?
 
--- 
-          Dmitry
+This would be the precedent you are setting here as maintainer.
+
+And Jacek does not have high expectations he is just requesting that we 
+follow the process as defined in the Linux kernel document
+
+Dan
+
+
