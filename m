@@ -2,115 +2,103 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BEAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0330BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5145206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EFF206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:22:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GBHDfwYp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tzZR5jEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404169AbgDCPWV (ORCPT
+        id S2404193AbgDCPW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:22:21 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56991 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404088AbgDCPWV (ORCPT
+        Fri, 3 Apr 2020 11:22:26 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:39804 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404171AbgDCPW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:22:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585927340;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f40ZvcSFesg6WkXpe37yjNDHPlvg5D7KyMxjtTJXaso=;
-        b=GBHDfwYpOLrzn8UeMBoQ11zAISNPvjMx/iS/vIzFfbJz/IgsEUA6J/MJZIWb/wemhHY3SV
-        5QII9XLCKe3WIFlgxhZxpH1VM59H/YuCp1N0KZkctS4sM/2WNiSlu05ruMRpT78DiBzWAg
-        e27HZczmvY1jWDpmw5ks/i7bINcsoYM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-YVNTUG_5PbSd6BB-jvKTCw-1; Fri, 03 Apr 2020 11:22:19 -0400
-X-MC-Unique: YVNTUG_5PbSd6BB-jvKTCw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB67710CE7A1;
-        Fri,  3 Apr 2020 15:22:17 +0000 (UTC)
-Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BF46F10027A3;
-        Fri,  3 Apr 2020 15:22:16 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 10:22:14 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
-Message-ID: <20200403152214.3frjrlhxvodffghg@treble>
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-5-alexandre.chartre@oracle.com>
- <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
- <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
- <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
- <20200402154022.GG20730@hirez.programming.kicks-ass.net>
- <bc3a31dc-9d59-5756-aad3-187533f05654@redhat.com>
- <20200403151757.lhhia7pzqptvlqz5@treble>
+        Fri, 3 Apr 2020 11:22:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uzmJljZM/KQ/xQJa18Yo/qe+BC3A7JIGAtH95frw7pI=; b=tzZR5jEhA7wgjH8i/Ea1meQj6J
+        i1KwzmuPePDp5V9IznG6eVCK3KH4zGNk8ue4fa60OCVzz71RVCnswmDcWsaXzRnhYsLu6gjxBbOx3
+        X1HpYa+lW/l0zGtSMYbdX1o4/WaCee7btfhAFA8MKvB5lpQK1m6iUqROC4L1/18A/BmMnKZCalL7k
+        z7HY3P4ap/SwYwKGbsJ8PSuaQA+xRH0JKCLI/EaGfvqx08mjDXucm8BAXzGvS3hjavpG9cQ5b+ATa
+        5Lpp22o6ofbDTO/gSQO83p+D3skfXD0kdzSNriG/DwiX7si82MOofjh3eg0TkWf7BBIIAyzcTIE5y
+        xsKbrpDA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKO8v-0001dj-7N; Fri, 03 Apr 2020 15:22:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0EA73304DB2;
+        Fri,  3 Apr 2020 17:21:58 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DDCC52B12426C; Fri,  3 Apr 2020 17:21:58 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 17:21:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jannh@google.com, keescook@chromium.org
+Subject: Re: [patch 1/2] x86,module: Detect VMX modules and disable
+ Split-Lock-Detect
+Message-ID: <20200403152158.GR20730@hirez.programming.kicks-ass.net>
+References: <20200402123258.895628824@linutronix.de>
+ <20200402124205.242674296@linutronix.de>
+ <bc9a0c9a-7bd0-c85d-4795-ae0b4faa5e84@prevas.dk>
+ <20200403143459.GA30424@linux-8ccs>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403151757.lhhia7pzqptvlqz5@treble>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200403143459.GA30424@linux-8ccs>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 10:17:57AM -0500, Josh Poimboeuf wrote:
-> On Fri, Apr 03, 2020 at 09:11:55AM +0100, Julien Thierry wrote:
+On Fri, Apr 03, 2020 at 04:35:00PM +0200, Jessica Yu wrote:
+> +++ Rasmus Villemoes [03/04/20 01:42 +0200]:
+> > On 02/04/2020 14.32, Thomas Gleixner wrote:
+> > > From: Peter Zijlstra <peterz@infradead.org>
+> > > 
+> > > It turns out that with Split-Lock-Detect enabled (default) any VMX
+> > > hypervisor needs at least a little modification in order to not blindly
+> > > inject the #AC into the guest without the guest being ready for it.
+> > > 
+> > > Since there is no telling which module implements a hypervisor, scan the
+> > > module text and look for the VMLAUNCH instruction. If found, the module is
+> > > assumed to be a hypervisor of some sort and SLD is disabled.
 > > 
+> > How long does that scan take/add to module load time? Would it make
+> > sense to exempt in-tree modules?
 > > 
-> > On 4/2/20 4:40 PM, Peter Zijlstra wrote:
-> > > On Thu, Apr 02, 2020 at 04:31:05PM +0100, Julien Thierry wrote:
-> > > > My understanding is that once you find an intra-function call, either you
-> > > > hit a return, ending the branch, so the return should undo the modification
-> > > > the intra-function call did (whether is it a retpoline return or not).
-> > > > Otherwise, the intra-function call branch will need to reach an end in some
-> > > > way (e.g. hitting a CONTEXT_SWITCH instruction, calling a
-> > > > dead_end_function).
-> > > > 
-> > > > Am I missing something?
-> > > 
-> > > The thing is basically doing:
-> > > 
-> > > 	mov  $n, cx
-> > > 1:	call 2f
-> > > 2:	dec  cx
-> > > 	jnz  1b
-> > > 	add  8*n, sp
-> > > 
-> > > So it does N calls to self, then subtracts N words from the stack.
-> > > 
-> > > The reason being that the CPU has a return-stack-buffer for predicting
-> > > returns, and call/ret being naturally paired, that works. The above
-> > > is a software flush of the RSB.
-> > > 
-> > 
-> > Ah, lovely... Maybe that's where SAVE/RESTORE unwind hints could be nice ;)
-> > .
-> > 
-> > Otherwise, I don't really have a good suggestion for this...
+> > Rasmus
 > 
-> Peter, I think my previous idea for UNWIND_HINT_ADJUST stack_add=8 would
-> work here?
+> I second Rasmus's question. It seems rather unfortunate that we have
+> to do this text scan for every module load on x86, when it doesn't
+> apply to the majority of them, and only to a handful of out-of-tree
+> hypervisor modules (assuming kvm is taken care of already).
+> 
+> I wonder if it would make sense then to limit the text scans to just
+> out-of-tree modules (i.e., missing the intree modinfo flag)?
 
-And if we're going to need that hint anyway, maybe we could get rid of
-the nasty arch_exception_frame_size for the IRET thing and just use a
-hint there after all ;-)
-
--- 
-Josh
-
+It would; didn't know there was one.
