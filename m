@@ -2,87 +2,251 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF75C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326FCC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BF820721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9E620721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585904584;
+	bh=BoslorxPho/1PL+/7DZJ6GuL90Xwni0PCwUNzVShYYE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MhWoC5N8Pt8BKx911UiERiLened9dJd89chI5gqjUNYnlnqIuYqig+wTfhKUtW3a4
+	 STVIojrq6HJqbEsCYFBpURB74hHFF6dmR3R3pNivSGNcpHnNc7TbPKFZdVoMIwjt0a
+	 Cv6+meFERTpAVu66sRP9VYOuD0Esh0dt0AR51MiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390669AbgDCJCb (ORCPT
+        id S2390589AbgDCJDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:02:31 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:8821 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgDCJCb (ORCPT
+        Fri, 3 Apr 2020 05:03:02 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:37416 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgDCJDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:02:31 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65e86fb91319-74293; Fri, 03 Apr 2020 17:02:09 +0800 (CST)
-X-RM-TRANSID: 2ee65e86fb91319-74293
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5e86fb8e2e1-42d70;
-        Fri, 03 Apr 2020 17:02:08 +0800 (CST)
-X-RM-TRANSID: 2eea5e86fb8e2e1-42d70
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     narmstrong@baylibre.com, clabbe@baylibre.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net
-Cc:     linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH] [PATCH v3]crypto: amlogic - Delete duplicate dev_err in meson_crypto_probe()
-Date:   Fri,  3 Apr 2020 17:03:36 +0800
-Message-Id: <20200403090336.13796-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 3 Apr 2020 05:03:02 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 03392RjV003555;
+        Fri, 3 Apr 2020 18:02:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 03392RjV003555
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585904548;
+        bh=XrGcOoytGchUAxm+l/tv3vqg2YEbLgd5bxsYRFtLiG8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vnz7MfC6d7R4hdqCOlm0vQp9C0iwbaUebYk95pwPJb6mGE6mv5DxFdSGlJr/Zj/qc
+         66sLQ3MiCgDt9BNmFOJ2xxFSX2XLxgP0q8Z8IUE7kglnEkuuvuBAkZih6yVylCQPOm
+         arVzNcZzl4KaJ4ffhB+KGy/AWP4O2GOsyv9IbOn8T/mVDu4CZ4MOLdGF4jUwPUv4SS
+         Q3lVFkjl4Bd2FKAe4fHD547G1Sj1gUoJEYcOr3VS3y0gc2Er8AMjD/X1FVEUFXTKHi
+         C84wm0a91AtJJfKnf9WwNInJ3WRVMD2O6Duuwa8C8TknBAO/JuVpxMQhc9Pll9fAm2
+         nkTbn3mNFrQug==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Jeremy Cline <jcline@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: add dummy toolchains to enable all cc-option etc. in Kconfig
+Date:   Fri,  3 Apr 2020 18:02:24 +0900
+Message-Id: <20200403090224.24045-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When something goes wrong, platform_get_irq() will print an error message,
-so in order to avoid the situation of repeat output，we should remove
-dev_err here.
+Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
+options your compiler does not support. This works well if you configure
+and build the kernel on the same host machine.
 
-Changes from v2:
- - modify the theme format and content description.
- - reformat the patch, it's the wrong way to resubmit a new patch that
-   should be modified on top of the original. The original piece is:
-   https://lore.kernel.org/patchwork/patch/1219611/
+It is inconvenient if you prepare the .config that is carried to a
+different build environment (typically this happens when you package
+the kernel for distros) because using a different compiler potentially
+produces different CONFIG options than the real build environment.
+So, you probably want to make as many options visible as possible.
+In other words, you need to create a super-set of CONFIG options that
+cover any build environment. If some of the CONFIG options turned out
+to be unsupported on the build machine, they are automatically disabled
+by the nature of Kconfig.
 
-Changes from v1:
- - the title has changed, because the description is not very detailed.
- - the code has been modified, because it needs to match the theme.
+However, it is not feasible to get a full-featured compiler for every
+arch.
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+This issue was discussed here:
+
+  https://lkml.org/lkml/2019/12/9/620
+
+Other than distros, savedefconfig is also a problem. Some arch subsytems
+periodically resync defconfig files. If you use a less-capable compiler
+for savedefconfig, options that do not meet 'depends on $(cc-option,...)'
+will be forcibly disabled. So, defconfig && savedefconfig may silently
+change the behavior.
+
+This commit adds a set of dummy toolchains that pretend to support any
+feature.
+
+Most of compiler features are tested by cc-option, which simply checks
+the exit code of $(CC). The dummy tools are just a shell script that
+exits with 0 in most cases. So, $(cc-option, ...) is evaluated as 'y'.
+
+There are more complicated checks such as:
+
+  scripts/gcc-x86_{32,64}-has-stack-protector.sh
+  scripts/gcc-plugin.sh
+  scripts/tools-support-relr.sh
+
+I tried my best to implement the dummy scripts to pass all checks.
+
+From the top directory of the source tree, you can do:
+
+   $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- drivers/crypto/amlogic/amlogic-gxl-core.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
-index 37901bd81..c2fa442c5 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-core.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
-@@ -253,10 +253,8 @@ static int meson_crypto_probe(struct platform_device *pdev)
- 	mc->irqs = devm_kcalloc(mc->dev, MAXFLOW, sizeof(int), GFP_KERNEL);
- 	for (i = 0; i < MAXFLOW; i++) {
- 		mc->irqs[i] = platform_get_irq_optional(pdev, i);
--		if (mc->irqs[i] < 0) {
--			dev_err(mc->dev, "Cannot get IRQ for flow %d\n", i);
-+		if (mc->irqs[i] < 0)
- 			return mc->irqs[i];
--		}
- 
- 		err = devm_request_irq(&pdev->dev, mc->irqs[i], meson_irq_handler, 0,
- 				       "gxl-crypto", mc);
+ scripts/dummy-tools/gcc     | 91 +++++++++++++++++++++++++++++++++++++
+ scripts/dummy-tools/ld      |  4 ++
+ scripts/dummy-tools/nm      |  4 ++
+ scripts/dummy-tools/objcopy |  4 ++
+ 4 files changed, 103 insertions(+)
+ create mode 100755 scripts/dummy-tools/gcc
+ create mode 100755 scripts/dummy-tools/ld
+ create mode 100755 scripts/dummy-tools/nm
+ create mode 100755 scripts/dummy-tools/objcopy
+
+diff --git a/scripts/dummy-tools/gcc b/scripts/dummy-tools/gcc
+new file mode 100755
+index 000000000000..33487e99d83e
+--- /dev/null
++++ b/scripts/dummy-tools/gcc
+@@ -0,0 +1,91 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
++# options your compiler does not support. This works well if you configure and
++# build the kernel on the same host machine.
++#
++# It is inconvenient if you prepare the .config that is carried to a different
++# build environment (typically this happens when you package the kernel for
++# distros) because using a different compiler potentially produces different
++# CONFIG options than the real build environment. So, you probably want to make
++# as many options visible as possible. In other words, you need to create a
++# super-set of CONFIG options that cover any build environment. If some of the
++# CONFIG options turned out to be unsupported on the build machine, they are
++# automatically disabled by the nature of Kconfig.
++#
++# However, it is not feasible to get a full-featured compiler for every arch.
++# Hence these dummy toolchains to make all compiler tests pass.
++#
++# Usage:
++#
++# From the top directory of the source tree, run
++#
++#   $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
++#
++# Most of compiler features are tested by cc-option, which simply checks the
++# exit code of $(CC). This script does nothing and just exits with 0 in most
++# cases. So, $(cc-option, ...) is evaluated as 'y'.
++#
++# This scripts caters to more checks; handle --version and pre-process __GNUC__
++# etc. to pretend to be GCC, and also do right things to satisfy some scripts.
++
++# Check if the first parameter appears in the rest. Succeeds if found.
++# This helper is useful if a particular option was passed to this script.
++# Typically used like this:
++#   arg_contain <word-you-are-searching-for> "$@"
++arg_contain ()
++{
++	search="$1"
++	shift
++
++	while [ $# -gt 0 ]
++	do
++		if [ "$search" = "$1" ]; then
++			return 0
++		fi
++		shift
++	done
++
++	return 1
++}
++
++# To set CONFIG_CC_IS_GCC=y
++if arg_contain --version "$@"; then
++	echo "gcc (scripts/dummy-tools/gcc)"
++	exit 0
++fi
++
++if arg_contain -E "$@"; then
++	# For scripts/gcc-version.sh; This emulates GCC 20.0.0
++	if arg_contain - "$@"; then
++		sed 's/^__GNUC__$/20/; s/^__GNUC_MINOR__$/0/; s/^__GNUC_PATCHLEVEL__$/0/'
++		exit 0
++	else
++		echo "no input files" >&2
++		exit 1
++	fi
++fi
++
++if arg_contain -S "$@"; then
++	# For scripts/gcc-x86-*-has-stack-protector.sh
++	if arg_contain -fstack-protector "$@"; then
++		echo "%gs"
++		exit 0
++	fi
++fi
++
++# For scripts/gcc-plugin.sh
++if arg_contain -print-file-name=plugin "$@"; then
++	plugin_dir=$(mktemp -d)
++
++	sed -n 's/.*#include "\(.*\)"/\1/p' $(dirname $0)/../gcc-plugins/gcc-common.h |
++	while read header
++	do
++		mkdir -p $plugin_dir/include/$(dirname $header)
++		touch $plugin_dir/include/$header
++	done
++
++	echo $plugin_dir
++	exit 0
++fi
+diff --git a/scripts/dummy-tools/ld b/scripts/dummy-tools/ld
+new file mode 100755
+index 000000000000..3bc56ae4cc15
+--- /dev/null
++++ b/scripts/dummy-tools/ld
+@@ -0,0 +1,4 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-only
++
++# Dummy script that always succeeds
+diff --git a/scripts/dummy-tools/nm b/scripts/dummy-tools/nm
+new file mode 100755
+index 000000000000..3bc56ae4cc15
+--- /dev/null
++++ b/scripts/dummy-tools/nm
+@@ -0,0 +1,4 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-only
++
++# Dummy script that always succeeds
+diff --git a/scripts/dummy-tools/objcopy b/scripts/dummy-tools/objcopy
+new file mode 100755
+index 000000000000..3bc56ae4cc15
+--- /dev/null
++++ b/scripts/dummy-tools/objcopy
+@@ -0,0 +1,4 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-only
++
++# Dummy script that always succeeds
 -- 
-2.20.1.windows.1
-
-
+2.17.1
 
