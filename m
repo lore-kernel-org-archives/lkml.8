@@ -2,134 +2,110 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDB9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B85AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98FF206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A61720757
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="atNwed4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390695AbgDCJym (ORCPT
+        id S2390526AbgDCKBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:54:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:14660 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbgDCJym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:54:42 -0400
-IronPort-SDR: s7fiAwGSu3tCOZ4+fPyJX9xpXOK15q0HQ+nmqVKsTH6CdQ8DHXQzaWwX88il6UNjm9mBl/lb9v
- VOOL612HIxCw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 02:54:42 -0700
-IronPort-SDR: /JHJxofgBSmxS0oCUImrgYtMCzYiO4lwVOTovp1y7Ruk+Zestd60dWvsEfrDINB4oPZaB/gtCs
- 83IZA9JNL2Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="295954969"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Apr 2020 02:54:39 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jKJ29-00FOn5-8k; Fri, 03 Apr 2020 12:54:41 +0300
-Date:   Fri, 3 Apr 2020 12:54:41 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
- DRM fourccs
-Message-ID: <20200403095441.GL1922688@smile.fi.intel.com>
-References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
- <20200403093103.GI1922688@smile.fi.intel.com>
- <20200403093916.GA3172@kekkonen.localdomain>
+        Fri, 3 Apr 2020 06:01:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48113 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727774AbgDCKBT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 06:01:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585908078;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pwrHjBFKCxgVZBrkT+dwsdEetk42jbePJCFYfUV5sFo=;
+        b=atNwed4VXt2YZUe1DeWdLifwaoEUkkdLs9LrXNguEuFxvHfazVlHCLDfZovMBqDzrUF5xS
+        g/ZQ6av+uB5uXccWQb3qOMtdj3/rqEu57HA2iVpfw5+nEddmQkWwxS+eNkDD9cuBoOGGci
+        jJC3GADY8u3DoYRnkLPn7/5UP8tNgPU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-67-YrpEKNnFPA6cRR-iibcv-Q-1; Fri, 03 Apr 2020 06:01:16 -0400
+X-MC-Unique: YrpEKNnFPA6cRR-iibcv-Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E518D800D5F;
+        Fri,  3 Apr 2020 10:01:14 +0000 (UTC)
+Received: from krava (unknown [10.40.194.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 003CC60BF1;
+        Fri,  3 Apr 2020 10:01:13 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 12:01:11 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf script: Simplify auxiliary event printing functions
+Message-ID: <20200403100111.GI2784502@krava>
+References: <20200402141548.21283-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403093916.GA3172@kekkonen.localdomain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200402141548.21283-1-adrian.hunter@intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 12:39:16PM +0300, Sakari Ailus wrote:
-> On Fri, Apr 03, 2020 at 12:31:03PM +0300, Andy Shevchenko wrote:
-> > On Fri, Apr 03, 2020 at 12:11:56PM +0300, Sakari Ailus wrote:
-> > > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > > the same implementation can be used.
-> > 
-> > ...
-> > 
-> > > +static noinline_for_stack
-> > > +char *fourcc_string(char *buf, char *end, const u32 *fourcc,
-> > > +		    struct printf_spec spec, const char *fmt)
-> > > +{
-> > 
-> > > +#define FOURCC_STRING_BE	"-BE"
-> > > +	char s[sizeof(*fourcc) + sizeof(FOURCC_STRING_BE)] = { 0 };
-> > 
-> > I guess it makes it too complicated.
+On Thu, Apr 02, 2020 at 05:15:48PM +0300, Adrian Hunter wrote:
+> This simplifies the print functions for the following perf script
+> options:
 > 
-> The above also clearly binds the size to the data that is expected to
-> contain there. I'd prefer keeping it as-is. And yes, 8 would be correct,
-> too.
-
-OK.
-
-> > 	char s[8];
-> > 
-> > > +	if (check_pointer(&buf, end, fourcc, spec))
-> > > +		return buf;
-> > > +
-> > > +	if (fmt[1] != 'c' || fmt[2] != 'c')
-> > > +		return error_string(buf, end, "(%p4?)", spec);
-> > > +
-> > 
-> > > +	put_unaligned_le32(*fourcc & ~BIT(31), s);
-> > 
-> > Can you elaborate what the difference in output with this bit set over cleared?
-> > I.o.w. why don't we need to put it as BE and for LE case addd "-LE"?
+> 	--show-task-events
+> 	--show-namespace-events
+> 	--show-cgroup-events
+> 	--show-mmap-events
+> 	--show-switch-events
+> 	--show-lost-events
+> 	--show-bpf-events
 > 
-> The established practice is that big endian formats have "-BE" suffix
-> whereas the little endian ones have nothing. (At least when it comes to
-> V4L2.)
-
-What I meant by the first part of the question is ordering of the characters.
-That ordering of characters is not related to that flag, correct? So, bit
-actually defines the endianess of the data in the certain fourcc.
-
-Probably you need to put a comment to explain this.
-
-> > > +	if (*fourcc & BIT(31))
-> > > +		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
-> > > +			sizeof(FOURCC_STRING_BE));
-> > 
-> > We know the size, and we may put '\0' as well
-> > 	if (*fourcc & BIT(31))
-> > 		strscpy(&s[4], "-BE", sizeof("-BE"));
-> > 	else
-> > 		strscpy(&s[4], "", sizeof(""));
+> Example:
+> 	# perf record --switch-events -a -e cycles -c 10000 sleep 1
+>  Before:
+> 	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events >out-before.txt
+>  After:
+> 	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events >out-after.txt
+> 	# diff -s out-before.txt out-after.txt
+> 	Files out-before.txt and out-after.tx are identical
 > 
-> The rest of the struct memory has already been set to zero in variable
-> declaration.
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/builtin-script.c | 304 ++++++++----------------------------
+>  1 file changed, 66 insertions(+), 238 deletions(-)
 
-Which is bogus in my opinion. strscpy() or direct '\0' termination will put it
-more explicit.
+awesome ;-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 186ebf827fa1..348fec9743a4 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2040,7 +2040,7 @@ static int cleanup_scripting(void)
+>  
+>  static bool filter_cpu(struct perf_sample *sample)
+>  {
+> -	if (cpu_list)
+> +	if (cpu_list && sample->cpu != (u32)-1)
+>  		return !test_bit(sample->cpu, cpu_bitmap);
 
+why is this needed? filter_cpu seems to be already called
+from all the changed functions..
+
+thanks,
+jirka
 
