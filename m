@@ -2,120 +2,85 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E39C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA56C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3260320721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595922073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBPZr1m7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sd3J6Bhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404355AbgDCPcd (ORCPT
+        id S2404311AbgDCPdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:32:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37930 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404003AbgDCPcd (ORCPT
+        Fri, 3 Apr 2020 11:33:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41044 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbgDCPdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:32:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585927952;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wX+8AzXpUy9HNfAx/Y9ZR0Uh1eYbs9htUS3q1RBw3UQ=;
-        b=fBPZr1m71KWsb8iI5jX9J42qPXhWSEdJxLn+wPEurH8L/vBuE8b5vlcXp8yEWYkb4JGHi5
-        5OzZ3K0ULokGsMhn4lMCG8qJ5DSSnkuwcBNwChv3LvnCjuaq0+NeXm+FnSBZ46vpOyTcCA
-        OpBFnROaVrDvb/9/0xxcQ+dEfeIREMo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-2-NUm0cIPsSiHEn2Um8Y3A-1; Fri, 03 Apr 2020 11:32:30 -0400
-X-MC-Unique: 2-NUm0cIPsSiHEn2Um8Y3A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9FB21405;
-        Fri,  3 Apr 2020 15:32:28 +0000 (UTC)
-Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 04463100EBA6;
-        Fri,  3 Apr 2020 15:32:26 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 10:32:25 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
-Message-ID: <20200403153225.jgakhibh2mhkvc5n@treble>
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-5-alexandre.chartre@oracle.com>
- <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
- <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
- <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
- <20200402154022.GG20730@hirez.programming.kicks-ass.net>
- <bc3a31dc-9d59-5756-aad3-187533f05654@redhat.com>
- <20200403151757.lhhia7pzqptvlqz5@treble>
- <20200403152214.3frjrlhxvodffghg@treble>
+        Fri, 3 Apr 2020 11:33:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=/wD04Zs0Zu+DHCnPzKAb1MTMrDvxIvKHCbvtzes7Nlg=; b=sd3J6BhipqPEkgeH3vUec5+hY6
+        lZe3nQRUBNwd7i8CKYaBRfH9iWfoUhvKNcNeyJW1lXCFO0Vl7XOiJILg5YqVYC4UR6MkM4Pe1ocK8
+        t7inLox5cC6ZbAyk+Y/KNTZ8nl/ZhPsle9ypxkEEr/6LFYQy7ZrkdXay0xQ7ZHqgQN7ITJTicWsPL
+        f245p73cUomzZsHavbJe9JvVmyuFSa3ZXape7loSS1WEZ/8WOZNw0lJzWt/0h/itkVfdbShhDV3Yb
+        fS9wk18ySsvl0VeaA6ReT7f9MDMeuKzorCBeW75H+d5hoJzxhAZou1Em4lcHMBqrU0lmL/Nr+LaOz
+        MBdPiPPg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKOJv-0001kw-Iz; Fri, 03 Apr 2020 15:33:23 +0000
+Date:   Fri, 3 Apr 2020 08:33:23 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [RFC] Renaming page_offset() to page_pos()
+Message-ID: <20200403153323.GQ21484@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403152214.3frjrlhxvodffghg@treble>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 10:22:14AM -0500, Josh Poimboeuf wrote:
-> On Fri, Apr 03, 2020 at 10:17:57AM -0500, Josh Poimboeuf wrote:
-> > On Fri, Apr 03, 2020 at 09:11:55AM +0100, Julien Thierry wrote:
-> > > 
-> > > 
-> > > On 4/2/20 4:40 PM, Peter Zijlstra wrote:
-> > > > On Thu, Apr 02, 2020 at 04:31:05PM +0100, Julien Thierry wrote:
-> > > > > My understanding is that once you find an intra-function call, either you
-> > > > > hit a return, ending the branch, so the return should undo the modification
-> > > > > the intra-function call did (whether is it a retpoline return or not).
-> > > > > Otherwise, the intra-function call branch will need to reach an end in some
-> > > > > way (e.g. hitting a CONTEXT_SWITCH instruction, calling a
-> > > > > dead_end_function).
-> > > > > 
-> > > > > Am I missing something?
-> > > > 
-> > > > The thing is basically doing:
-> > > > 
-> > > > 	mov  $n, cx
-> > > > 1:	call 2f
-> > > > 2:	dec  cx
-> > > > 	jnz  1b
-> > > > 	add  8*n, sp
-> > > > 
-> > > > So it does N calls to self, then subtracts N words from the stack.
-> > > > 
-> > > > The reason being that the CPU has a return-stack-buffer for predicting
-> > > > returns, and call/ret being naturally paired, that works. The above
-> > > > is a software flush of the RSB.
-> > > > 
-> > > 
-> > > Ah, lovely... Maybe that's where SAVE/RESTORE unwind hints could be nice ;)
-> > > .
-> > > 
-> > > Otherwise, I don't really have a good suggestion for this...
-> > 
-> > Peter, I think my previous idea for UNWIND_HINT_ADJUST stack_add=8 would
-> > work here?
-> 
-> And if we're going to need that hint anyway, maybe we could get rid of
-> the nasty arch_exception_frame_size for the IRET thing and just use a
-> hint there after all ;-)
+Without looking at the source, can you tell me what page_offset() does?
 
-Actually, never mind -- I guess it wouldn't work because of inconsistent
-stack states and all that...
+At least one regular contributor thought it meant the pgoff_t of this
+page within the file.  It's actually the byte offset of this page into
+the file.
 
--- 
-Josh
+We have a perfectly good name for byte offset into the file --
+file->f_pos.  So I propose renaming it to page_pos().  To minimise
+disruption to other development, I'm going to send Linus a pull request
+at the end of the merge window with the results of this coccinelle script:
 
+@@ expression a; @@
+-       page_offset(a)
++       page_pos(a)
+
+I've reviewed the output and the only slight weirdness is an extra space
+in casts:
+
+                btrfs_warn(BTRFS_I(page->mapping->host)->root->fs_info,
+                           "page private not zero on page %llu",
+-                          (unsigned long long)page_offset(page));
++                          (unsigned long long) page_pos(page));
+
+Sometimes Coccinelle fixes the surrounding whitespace to be better
+than it currently is:
+
+-               ow->bv[i].bv_len = min(page_offset(ow->pages[i]) + PAGE_SIZE,
+-                   ow->off + ow->len) -
+-                   max(ow->off, page_offset(ow->pages[i]));
++               ow->bv[i].bv_len = min(page_pos(ow->pages[i]) + PAGE_SIZE,
++                                      ow->off + ow->len) -
++                   max(ow->off, page_pos(ow->pages[i]));
+
+(it's still bad, but it's an improvement)
+
+Any objections?  Anyone got a better name than page_pos()?
