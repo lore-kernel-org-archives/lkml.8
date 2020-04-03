@@ -2,114 +2,108 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FF5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A980EC2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA202078C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0692078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxS+qmPB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j0Lbeu3C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgDCVxX (ORCPT
+        id S1728308AbgDCVxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:53:23 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46182 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgDCVxX (ORCPT
+        Fri, 3 Apr 2020 17:53:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52104 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgDCVxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:53:23 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 111so8874689oth.13
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 14:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WkVgfhf1jxt3Qcf1HJwqyy0TSMOQ4/cQvIXHGEwbDuY=;
-        b=QxS+qmPBgxo5vX/QyhllnCiawfcz5y9/M9UxOwdlfMJPVpefDzmTVnrXkHrZzB5Id0
-         hZDndsAvkwX1Lwyc/IUkRPYL0PARNl9hU69JY/xa0I9IQ9Gm3J7wn1D/UUnwZn+swiXG
-         vyr1SBnSonlB1gjjcOphc7NqfG+1iDRH6H2exOcAmE7Fv6J9qdsnw9j9pq1isQ1gd5oW
-         D6S3BFDNPjtoh0lUaVoNrucu4Ppt80vlg7s0wYjjF21gSSoitxXeaISqZZAy/FFnZMZT
-         obUL9IOcaeSghSztiDkKi5QpIdwLEhS8NJUBk+YljIS16NC+LAcA7Xj1kkXrDpO/+pGM
-         SfKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WkVgfhf1jxt3Qcf1HJwqyy0TSMOQ4/cQvIXHGEwbDuY=;
-        b=dZUbsIkQLWIOQFnBhPIijv6mo0nCvf7dEnpJuqpBR3LVvVFJkOKIwmmRM71vDGyMJ4
-         glqq+9wtDp4pH7c0Is/03MLbJi2GxAmx90ebYErfev8+pMOLNrnzxnXjg1XTWSSr0DaQ
-         L8JmNdCPt8rw7GRC2neIs8xdL75p11EBs3BR92KXNqQxSNXVu352t/+JCdkknB8b0W2o
-         QvLoi+lHxO0KuBF9mRMxyx/gysf5aOt6GofcaR1Mg5hI1UXtKK7Cm+Y386zTvOe6EE8I
-         GkRuAdNZFKMMhaHQ4sjEir2T40TiNkjY/tbRIBkZ0XSdkbwXfYA/GwZDqtafCd6rPraV
-         qziQ==
-X-Gm-Message-State: AGi0PubGLawo25AA5S2/zTJuU3nSXlN6H0eXhqAZUvfxrtlMY6iPB9/G
-        sPH0Dp11hsjETk20PSdk6M8KUNQ6ORdzki9awcw=
-X-Google-Smtp-Source: APiQypJSeVyKS9Ri7WzRD18HhnNx30wQ80U7I7LjklcP7lED2dlpI6RzKyOiylq/liehLbkdChLyvCFxJCI76LNz1KE=
-X-Received: by 2002:a05:6830:2318:: with SMTP id u24mr8110267ote.106.1585950802563;
- Fri, 03 Apr 2020 14:53:22 -0700 (PDT)
+        Fri, 3 Apr 2020 17:53:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033LrQuB096116;
+        Fri, 3 Apr 2020 21:53:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ZmykI1jF/AuRxj1O+Z6blTUcn3zOPYoue5aVA5PrXXE=;
+ b=j0Lbeu3CDslkmu4HCqlTJOy1hgXQsrQiAYqWZkENnEDPSZF1rvOW/jJGbxyw6xoEG1wG
+ VqolF1XVb/NXWDrW3CctpSZUzeUA8H4WGYXRHbysFxXvrEbzxP7P1af3HOn9MTlcAUwN
+ pE/HWWhTavvkI/c6ftbi+vPH6SiSQ7hD4/It5x2BWEF4T0GUvgbUKWz13WqI+Ov3523A
+ xwAGFqig7rr3XM0IYC9vFaH+xM8kzJeit4lE0LCmpBHkbOoPF65ebxzLQoO31cut47Qn
+ eXhi7246mItUtTIqzptZ/IHlbxgdPftC5nA/6Gdy2/kI227DHTY72KWHjKGljY0ZoqeD cQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 303aqj3u9d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 21:53:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033LqSjn017230;
+        Fri, 3 Apr 2020 21:53:27 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 302g4y8mtb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 21:53:27 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033LrPUC020496;
+        Fri, 3 Apr 2020 21:53:25 GMT
+Received: from [10.39.222.119] (/10.39.222.119)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 14:53:25 -0700
+Subject: Re: [PATCH] xen/blkfront: fix memory allocation flags in
+ blkfront_setup_indirect()
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
+References: <20200403090034.8753-1-jgross@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Message-ID: <1d67be51-776d-dd53-c5db-8b3539505f40@oracle.com>
+Date:   Fri, 3 Apr 2020 17:53:14 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200401143904.423450-1-dima@arista.com> <20200401144610.GA2433317@kroah.com>
- <b0099c8c-5bab-960a-8d0d-4691e11a462f@arista.com> <20200401151222.GA2508664@kroah.com>
- <87pncqu0cv.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87pncqu0cv.fsf@mpe.ellerman.id.au>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Sat, 4 Apr 2020 07:53:10 +1000
-Message-ID: <CAPM=9tzujQOXo5Df+UZLTW5pp3JNfchSX-0KVZmOidvFQWxkCw@mail.gmail.com>
-Subject: Re: [PATCH] tty/sysrq: Export sysrq_mask()
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Safonov <dima@arista.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "kernelci.org bot" <bot@kernelci.org>, Jiri Slaby <jslaby@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200403090034.8753-1-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030169
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1011
+ malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 at 11:46, Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> > On Wed, Apr 01, 2020 at 03:49:56PM +0100, Dmitry Safonov wrote:
-> >> On 4/1/20 3:46 PM, Greg Kroah-Hartman wrote:
-> >> > On Wed, Apr 01, 2020 at 03:39:04PM +0100, Dmitry Safonov wrote:
-> >> >> Build fix for serial_core being module:
-> >> >>   ERROR: modpost: "sysrq_mask" [drivers/tty/serial/serial_core.ko] undefined!
-> >> >>
-> >> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> >> Cc: Jiri Slaby <jslaby@suse.com>
-> >> >> Reported-by: "kernelci.org bot" <bot@kernelci.org>
-> >> >> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> >> >> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> >> >> ---
-> >> >>  drivers/tty/sysrq.c | 1 +
-> >> >>  1 file changed, 1 insertion(+)
-> >> >
-> >> > Is this a new problem?  What commit does this fix?
-> >>
-> >> Right, sorry I've managed to forget adding the tag:
-> >>
-> >> Fixes: eaee41727e6d ("sysctl/sysrq: Remove __sysrq_enabled copy")
-> >>
-> >> Maybe also:
-> >>
-> >> Link:
-> >> https://lore.kernel.org/linux-fsdevel/87tv23tmy1.fsf@mpe.ellerman.id.au/
-> >
-> > Thanks, that works.  WIll queue this up after -rc1 is out.
->
-> Why wait until after rc1?
->
-> It's a build break for a bunch of folks and the fix is obviously correct
-> (famous last words).
 
-definitely seems like something that should be fixed prior to rc1,
-s390 builds in fedora are hitting it.
+On 4/3/20 5:00 AM, Juergen Gross wrote:
+> Commit 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for
+> large array allocation") didn't fix the issue it was meant to, as the
+> flags for allocating the memory are GFP_NOIO, which will lead the
+> memory allocation falling back to kmalloc().
+>
+> So instead of GFP_NOIO use GFP_KERNEL and do all the memory allocation
+> in blkfront_setup_indirect() in a memalloc_noio_{save,restore} section.=
 
-Dave.
+>
+> Fixes: 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for lar=
+ge array allocation")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
+
