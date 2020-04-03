@@ -2,342 +2,135 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155ADC2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B769EC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD85E2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585930736;
-	bh=kGvJtREm3cHkza0Hr19OaPU2B3U1OtBWeYJazFhv210=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=QnAf1xwo7pxHVkUmBu3d51L+MTyWsoRQHwjhM101yZgo4K2XSjK5wdJG59tBfZby3
-	 Il6MqtSSFzJ6OdaM2XcF6WvP/CuBcFsm6X96nVx5KkV8CL5TxguV+fUjGsJ+STXqTQ
-	 qc4WohS/GXVWFTnfRRRaTOZ3tWUU5gES0UjEMsG4=
+	by mail.kernel.org (Postfix) with ESMTP id 8A51020721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdFDFz2q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404105AbgDCQSz (ORCPT
+        id S2404196AbgDCQTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:18:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403778AbgDCQSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:18:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B6DD2073B;
-        Fri,  3 Apr 2020 16:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585930732;
-        bh=kGvJtREm3cHkza0Hr19OaPU2B3U1OtBWeYJazFhv210=;
-        h=Date:From:To:Cc:Subject:From;
-        b=N9A3hogiLnVa35ZMho/gJR1cYeArY81vbJKv2QILGrUazcZebCP6H3KGb/ymFPvDT
-         2p/W4vmWQAQ2hE9ubJAgpH9ysNtw2jyYJQrNV+GveHJkANnSxrxw8BefqLRJV0aH9e
-         EZ64yfUvIJ3mLmAANgGa4gGcR02AwrRbRcvL1UwI=
-Date:   Fri, 3 Apr 2020 18:18:48 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        linux-spdx@vger.kernel.org
-Subject: [GIT PULL] SPDX patches for 5.7-rc1
-Message-ID: <20200403161848.GA4105642@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Fri, 3 Apr 2020 12:19:05 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41323 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403834AbgDCQTF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:19:05 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so6562408oia.8;
+        Fri, 03 Apr 2020 09:19:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=vfUcEFpIecfa5phk+Cj5BK1agH676+gFMqNkyPySnNU=;
+        b=DdFDFz2q+lRpwrK421yRNEfez1sLOWU8raR7jvvY4t65RJ615jwCRUugHdjp3QECXD
+         9DA4Q0scR3LkOWuReNJy0sSDlq9CWoI18F15XqJHgA70pA1+vTdRwywrhjpQRrvnTi0W
+         IsQZLbSGEOkB3r/mu/JNCjQJwqxdRjSP3UmWlPvEsjpKiZNL4QZVA/QzaCYZlzKMoqQj
+         4/O4fPQ/pFvR9y6uWk5Fj92HR/5uCnjXe1t/LJkam4NgoHlgStWB5nFZNvr1zb3oBQHD
+         3GMW3cwIyHjpFgV3PIVkl2+JjMM+p0s5BnOQtUVxsUYiruJU44hwkraKGaiurzcYL47T
+         ljsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=vfUcEFpIecfa5phk+Cj5BK1agH676+gFMqNkyPySnNU=;
+        b=jsf2v5dBqz/zHoHC+eD4c6snEPVXGzi0YDanhI/0u91tsFHOZC0ODANjPZWl0GlBni
+         L8h+jt6/z8Sd6dohK/kDxiMFloS96/F8YemS1sEaYma0D8eStaOMBc/ev20V/sRTJZKn
+         +Dj33N97LpbchqFcbrxgKgFFY41WHnda5CLK7XBn14rM4ZxFLLL/oNooOoXEYtg6+LSM
+         GsRS2wD8e4wBx2MV8QvhPTiER6lzpwHLFkItr7xwM1Ege6Bfl7LWfBbcGB1ge1USXsG6
+         xwGdwyNlv00HmV/2uZARMILpwpPvBw+MhBAXTEYhXMtMYMzMA+xpEBjlKh7PXNy40+CH
+         RSJw==
+X-Gm-Message-State: AGi0PuZZf5fAjNec5CjxPlh+oa/t/m2E7Z8Mg55GAChR5AUW3vZqegUT
+        wVWsiPRGWofWBELPjts/bm4=
+X-Google-Smtp-Source: APiQypLdIe/bnR5Sgh9v1UByIaBo9hKSJA7hdJa7okRoa7dJKQmZWyXte4DCMLxfGDR33+o59+3cYw==
+X-Received: by 2002:aca:acc2:: with SMTP id v185mr3748001oie.27.1585930744166;
+        Fri, 03 Apr 2020 09:19:04 -0700 (PDT)
+Received: from andrews-mbp-2.attlocal.net ([2600:1700:19e0:3310:4ee:b6ec:777a:fdfb])
+        by smtp.gmail.com with ESMTPSA id i17sm2193668otc.16.2020.04.03.09.19.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Apr 2020 09:19:03 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 2/2] ARM: dts: aspeed: zaius: Add gpio line names
+From:   Andrew Geissler <geissonator@gmail.com>
+In-Reply-To: <48c9bd0e-3b5c-4f76-830f-4b0bd962148b@www.fastmail.com>
+Date:   Fri, 3 Apr 2020 11:19:02 -0500
+Cc:     Joel Stanley <joel@jms.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <270714A1-2910-4B84-86B6-46177F439A52@gmail.com>
+References: <20200306170218.79698-1-geissonator@yahoo.com>
+ <20200306170218.79698-2-geissonator@yahoo.com>
+ <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
+ <9360D2B2-8242-4BA1-BF06-8916E87EDE67@gmail.com>
+ <48c9bd0e-3b5c-4f76-830f-4b0bd962148b@www.fastmail.com>
+To:     Andrew Jeffery <andrew@aj.id.au>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
 
-  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
 
-are available in the Git repository at:
+> On Apr 2, 2020, at 7:51 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
+>=20
+>=20
+>=20
+> On Tue, 31 Mar 2020, at 04:46, Andrew Geissler wrote:
+>>=20
+>>=20
+>>> On Mar 26, 2020, at 6:20 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
+>>>=20
+>>>=20
+>>>=20
+>>> On Sat, 7 Mar 2020, at 03:32, Andrew Geissler wrote:
+>>>> Name the GPIOs to help userspace work with them. The names describe =
+the
+>>>> functionality the lines provide, not the net or ball name. This =
+makes it
+>>>> easier to share userspace code across different systems and makes =
+the
+>>>> use of the lines more obvious.
+>>>>=20
+>>>> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+>>>=20
+>>> So we're creating a bit of an ad-hoc ABI here between the DT and =
+userspace.
+>>>=20
+>>> Where are we documenting it?
+>>=20
+>> Yeah, so far it=E2=80=99s basically design by precedent. If you want =
+your OpenBMC
+>> function to work then follow the standards we're setting in other =
+dts=E2=80=99s.
+>>=20
+>> Is there a good place to document this? I could create a OpenBMC =
+design
+>> doc but that would not address non-OpenBMC areas.
+>=20
+> Don't let perfect be the enemy of good enough :) Lets document it in =
+OpenBMC
+> and then look at alternatives if we find it's necessary. I don't think =
+we will given
+> that the contract is between the kernel and OpenBMC userspace.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/spdx.git tags/spdx-5.7-rc1
+Ok, I put a doc up for review here:
+https://gerrit.openbmc-project.xyz/c/openbmc/docs/+/30988
 
-for you to fetch changes up to 71db3aa2816da62a2d150ad9fa81168537db4037:
+>=20
+> Andrew
 
-  ASoC: MT6660: make spdxcheck.py happy (2020-03-25 12:24:01 +0100)
-
-----------------------------------------------------------------
-SPDX patches for 5.7-rc1.
-
-Here are 3 SPDX patches for 5.7-rc1.
-
-One fixes up the SPDX tag for a single driver, while the other two go
-through the tree and add SPDX tags for all of the .gitignore files as
-needed.
-
-Nothing too complex, but you will get a merge conflict with your current
-tree, that should be trivial to handle (one file modified by two things,
-one file deleted.)
-
-All 3 of these have been in linux-next for a while, with no reported
-issues other than the merge conflict.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Lukas Bulwahn (1):
-      ASoC: MT6660: make spdxcheck.py happy
-
-Masahiro Yamada (2):
-      .gitignore: remove too obvious comments
-      .gitignore: add SPDX License Identifier
-
- .gitignore                                                            | 1 +
- Documentation/.gitignore                                              | 1 +
- Documentation/devicetree/bindings/.gitignore                          | 1 +
- Documentation/vm/.gitignore                                           | 1 +
- arch/.gitignore                                                       | 1 +
- arch/alpha/kernel/.gitignore                                          | 1 +
- arch/arc/boot/.gitignore                                              | 1 +
- arch/arc/kernel/.gitignore                                            | 1 +
- arch/arm/boot/.gitignore                                              | 1 +
- arch/arm/boot/compressed/.gitignore                                   | 1 +
- arch/arm/crypto/.gitignore                                            | 1 +
- arch/arm/kernel/.gitignore                                            | 1 +
- arch/arm/mach-at91/.gitignore                                         | 1 +
- arch/arm/mach-omap2/.gitignore                                        | 1 +
- arch/arm/vdso/.gitignore                                              | 1 +
- arch/arm64/boot/.gitignore                                            | 1 +
- arch/arm64/crypto/.gitignore                                          | 1 +
- arch/arm64/kernel/.gitignore                                          | 1 +
- arch/arm64/kernel/vdso/.gitignore                                     | 1 +
- arch/arm64/kernel/vdso32/.gitignore                                   | 1 +
- arch/ia64/kernel/.gitignore                                           | 1 +
- arch/m68k/kernel/.gitignore                                           | 1 +
- arch/microblaze/boot/.gitignore                                       | 1 +
- arch/microblaze/kernel/.gitignore                                     | 1 +
- arch/mips/boot/.gitignore                                             | 1 +
- arch/mips/boot/compressed/.gitignore                                  | 1 +
- arch/mips/boot/tools/.gitignore                                       | 1 +
- arch/mips/kernel/.gitignore                                           | 1 +
- arch/mips/tools/.gitignore                                            | 1 +
- arch/mips/vdso/.gitignore                                             | 1 +
- arch/nds32/kernel/.gitignore                                          | 1 +
- arch/nds32/kernel/vdso/.gitignore                                     | 1 +
- arch/nios2/boot/.gitignore                                            | 1 +
- arch/nios2/kernel/.gitignore                                          | 1 +
- arch/openrisc/kernel/.gitignore                                       | 1 +
- arch/parisc/boot/.gitignore                                           | 1 +
- arch/parisc/boot/compressed/.gitignore                                | 1 +
- arch/parisc/kernel/.gitignore                                         | 1 +
- arch/powerpc/boot/.gitignore                                          | 1 +
- arch/powerpc/kernel/.gitignore                                        | 1 +
- arch/powerpc/kernel/vdso32/.gitignore                                 | 1 +
- arch/powerpc/kernel/vdso64/.gitignore                                 | 1 +
- arch/powerpc/platforms/cell/spufs/.gitignore                          | 1 +
- arch/powerpc/purgatory/.gitignore                                     | 1 +
- arch/riscv/boot/.gitignore                                            | 1 +
- arch/riscv/kernel/.gitignore                                          | 1 +
- arch/riscv/kernel/vdso/.gitignore                                     | 1 +
- arch/s390/boot/.gitignore                                             | 1 +
- arch/s390/boot/compressed/.gitignore                                  | 1 +
- arch/s390/kernel/.gitignore                                           | 1 +
- arch/s390/kernel/vdso64/.gitignore                                    | 1 +
- arch/s390/purgatory/.gitignore                                        | 1 +
- arch/s390/tools/.gitignore                                            | 1 +
- arch/sh/boot/.gitignore                                               | 1 +
- arch/sh/boot/compressed/.gitignore                                    | 1 +
- arch/sh/kernel/.gitignore                                             | 1 +
- arch/sh/kernel/vsyscall/.gitignore                                    | 1 +
- arch/sparc/boot/.gitignore                                            | 1 +
- arch/sparc/kernel/.gitignore                                          | 1 +
- arch/sparc/vdso/.gitignore                                            | 1 +
- arch/sparc/vdso/vdso32/.gitignore                                     | 1 +
- arch/um/.gitignore                                                    | 1 +
- arch/unicore32/.gitignore                                             | 1 +
- arch/x86/.gitignore                                                   | 1 +
- arch/x86/boot/.gitignore                                              | 1 +
- arch/x86/boot/compressed/.gitignore                                   | 1 +
- arch/x86/boot/tools/.gitignore                                        | 1 +
- arch/x86/crypto/.gitignore                                            | 1 +
- arch/x86/entry/vdso/.gitignore                                        | 1 +
- arch/x86/entry/vdso/vdso32/.gitignore                                 | 1 +
- arch/x86/kernel/.gitignore                                            | 1 +
- arch/x86/kernel/cpu/.gitignore                                        | 1 +
- arch/x86/lib/.gitignore                                               | 1 +
- arch/x86/realmode/rm/.gitignore                                       | 1 +
- arch/x86/tools/.gitignore                                             | 1 +
- arch/x86/um/vdso/.gitignore                                           | 1 +
- arch/xtensa/boot/.gitignore                                           | 1 +
- arch/xtensa/boot/boot-elf/.gitignore                                  | 1 +
- arch/xtensa/boot/lib/.gitignore                                       | 1 +
- arch/xtensa/kernel/.gitignore                                         | 1 +
- certs/.gitignore                                                      | 4 +---
- drivers/atm/.gitignore                                                | 2 +-
- drivers/crypto/vmx/.gitignore                                         | 1 +
- drivers/eisa/.gitignore                                               | 1 +
- drivers/gpu/drm/i915/.gitignore                                       | 1 +
- drivers/gpu/drm/radeon/.gitignore                                     | 1 +
- drivers/memory/.gitignore                                             | 1 +
- drivers/net/wan/.gitignore                                            | 1 +
- drivers/scsi/.gitignore                                               | 1 +
- drivers/scsi/aic7xxx/.gitignore                                       | 1 +
- drivers/staging/comedi/drivers/ni_routing/tools/.gitignore            | 1 +
- drivers/staging/greybus/tools/.gitignore                              | 1 +
- drivers/video/logo/.gitignore                                         | 4 +---
- drivers/zorro/.gitignore                                              | 1 +
- fs/unicode/.gitignore                                                 | 1 +
- kernel/.gitignore                                                     | 4 +---
- kernel/debug/kdb/.gitignore                                           | 1 +
- lib/.gitignore                                                        | 4 +---
- lib/raid6/.gitignore                                                  | 1 +
- net/bpfilter/.gitignore                                               | 1 +
- net/wireless/.gitignore                                               | 1 +
- samples/auxdisplay/.gitignore                                         | 1 +
- samples/bpf/.gitignore                                                | 1 +
- samples/connector/.gitignore                                          | 1 +
- samples/hidraw/.gitignore                                             | 1 +
- samples/mei/.gitignore                                                | 1 +
- samples/mic/mpssd/.gitignore                                          | 1 +
- samples/pidfd/.gitignore                                              | 1 +
- samples/seccomp/.gitignore                                            | 1 +
- samples/timers/.gitignore                                             | 1 +
- samples/vfs/.gitignore                                                | 1 +
- samples/watchdog/.gitignore                                           | 1 +
- scripts/.gitignore                                                    | 4 +---
- scripts/basic/.gitignore                                              | 1 +
- scripts/dtc/.gitignore                                                | 1 +
- scripts/gcc-plugins/.gitignore                                        | 1 +
- scripts/gdb/linux/.gitignore                                          | 1 +
- scripts/genksyms/.gitignore                                           | 1 +
- scripts/kconfig/.gitignore                                            | 4 +---
- scripts/mod/.gitignore                                                | 1 +
- scripts/selinux/genheaders/.gitignore                                 | 1 +
- scripts/selinux/mdp/.gitignore                                        | 2 +-
- security/apparmor/.gitignore                                          | 4 +---
- security/selinux/.gitignore                                           | 1 +
- security/tomoyo/.gitignore                                            | 1 +
- sound/oss/.gitignore                                                  | 2 +-
- sound/soc/codecs/mt6660.c                                             | 2 +-
- tools/accounting/.gitignore                                           | 1 +
- tools/bootconfig/.gitignore                                           | 1 +
- tools/bpf/.gitignore                                                  | 1 +
- tools/bpf/bpftool/.gitignore                                          | 1 +
- tools/bpf/runqslower/.gitignore                                       | 1 +
- tools/build/.gitignore                                                | 1 +
- tools/build/feature/.gitignore                                        | 1 +
- tools/cgroup/.gitignore                                               | 1 +
- tools/gpio/.gitignore                                                 | 1 +
- tools/iio/.gitignore                                                  | 1 +
- tools/laptop/dslm/.gitignore                                          | 1 +
- tools/leds/.gitignore                                                 | 1 +
- tools/lib/bpf/.gitignore                                              | 1 +
- tools/lib/lockdep/.gitignore                                          | 1 +
- tools/lib/traceevent/.gitignore                                       | 1 +
- tools/memory-model/.gitignore                                         | 1 +
- tools/memory-model/litmus-tests/.gitignore                            | 1 +
- tools/objtool/.gitignore                                              | 1 +
- tools/pcmcia/.gitignore                                               | 1 +
- tools/perf/.gitignore                                                 | 1 +
- tools/perf/tests/.gitignore                                           | 1 +
- tools/power/acpi/.gitignore                                           | 1 +
- tools/power/cpupower/.gitignore                                       | 1 +
- tools/power/x86/intel-speed-select/.gitignore                         | 1 +
- tools/power/x86/turbostat/.gitignore                                  | 1 +
- tools/spi/.gitignore                                                  | 1 +
- tools/testing/kunit/.gitignore                                        | 1 +
- tools/testing/radix-tree/.gitignore                                   | 1 +
- tools/testing/selftests/.gitignore                                    | 1 +
- tools/testing/selftests/android/ion/.gitignore                        | 1 +
- tools/testing/selftests/arm64/signal/.gitignore                       | 1 +
- tools/testing/selftests/arm64/tags/.gitignore                         | 1 +
- tools/testing/selftests/bpf/.gitignore                                | 1 +
- tools/testing/selftests/bpf/map_tests/.gitignore                      | 1 +
- tools/testing/selftests/bpf/prog_tests/.gitignore                     | 1 +
- tools/testing/selftests/bpf/verifier/.gitignore                       | 1 +
- tools/testing/selftests/breakpoints/.gitignore                        | 1 +
- tools/testing/selftests/capabilities/.gitignore                       | 1 +
- tools/testing/selftests/cgroup/.gitignore                             | 1 +
- tools/testing/selftests/clone3/.gitignore                             | 1 +
- tools/testing/selftests/drivers/.gitignore                            | 1 +
- tools/testing/selftests/efivarfs/.gitignore                           | 1 +
- tools/testing/selftests/exec/.gitignore                               | 1 +
- tools/testing/selftests/filesystems/.gitignore                        | 1 +
- tools/testing/selftests/filesystems/binderfs/.gitignore               | 1 +
- tools/testing/selftests/filesystems/epoll/.gitignore                  | 1 +
- tools/testing/selftests/ftrace/.gitignore                             | 1 +
- tools/testing/selftests/futex/functional/.gitignore                   | 1 +
- tools/testing/selftests/gpio/.gitignore                               | 1 +
- tools/testing/selftests/ia64/.gitignore                               | 1 +
- tools/testing/selftests/intel_pstate/.gitignore                       | 1 +
- tools/testing/selftests/ipc/.gitignore                                | 1 +
- tools/testing/selftests/ir/.gitignore                                 | 1 +
- tools/testing/selftests/kcmp/.gitignore                               | 1 +
- tools/testing/selftests/kvm/.gitignore                                | 1 +
- tools/testing/selftests/media_tests/.gitignore                        | 1 +
- tools/testing/selftests/membarrier/.gitignore                         | 1 +
- tools/testing/selftests/memfd/.gitignore                              | 1 +
- tools/testing/selftests/mount/.gitignore                              | 1 +
- tools/testing/selftests/mqueue/.gitignore                             | 1 +
- tools/testing/selftests/net/.gitignore                                | 1 +
- tools/testing/selftests/net/forwarding/.gitignore                     | 1 +
- tools/testing/selftests/net/mptcp/.gitignore                          | 1 +
- tools/testing/selftests/networking/timestamping/.gitignore            | 1 +
- tools/testing/selftests/nsfs/.gitignore                               | 1 +
- tools/testing/selftests/openat2/.gitignore                            | 1 +
- tools/testing/selftests/pidfd/.gitignore                              | 1 +
- tools/testing/selftests/powerpc/alignment/.gitignore                  | 1 +
- tools/testing/selftests/powerpc/benchmarks/.gitignore                 | 1 +
- tools/testing/selftests/powerpc/cache_shape/.gitignore                | 1 +
- tools/testing/selftests/powerpc/copyloops/.gitignore                  | 1 +
- tools/testing/selftests/powerpc/dscr/.gitignore                       | 1 +
- tools/testing/selftests/powerpc/math/.gitignore                       | 1 +
- tools/testing/selftests/powerpc/mm/.gitignore                         | 1 +
- tools/testing/selftests/powerpc/pmu/.gitignore                        | 1 +
- tools/testing/selftests/powerpc/pmu/ebb/.gitignore                    | 1 +
- tools/testing/selftests/powerpc/primitives/.gitignore                 | 1 +
- tools/testing/selftests/powerpc/ptrace/.gitignore                     | 1 +
- tools/testing/selftests/powerpc/security/.gitignore                   | 1 +
- tools/testing/selftests/powerpc/signal/.gitignore                     | 1 +
- tools/testing/selftests/powerpc/stringloops/.gitignore                | 1 +
- tools/testing/selftests/powerpc/switch_endian/.gitignore              | 1 +
- tools/testing/selftests/powerpc/syscalls/.gitignore                   | 1 +
- tools/testing/selftests/powerpc/tm/.gitignore                         | 1 +
- tools/testing/selftests/powerpc/vphn/.gitignore                       | 1 +
- tools/testing/selftests/prctl/.gitignore                              | 1 +
- tools/testing/selftests/proc/.gitignore                               | 1 +
- tools/testing/selftests/pstore/.gitignore                             | 1 +
- tools/testing/selftests/ptp/.gitignore                                | 1 +
- tools/testing/selftests/ptrace/.gitignore                             | 1 +
- tools/testing/selftests/rcutorture/.gitignore                         | 1 +
- tools/testing/selftests/rcutorture/formal/srcu-cbmc/.gitignore        | 1 +
- .../selftests/rcutorture/formal/srcu-cbmc/include/linux/.gitignore    | 1 +
- .../rcutorture/formal/srcu-cbmc/tests/store_buffering/.gitignore      | 1 +
- tools/testing/selftests/rseq/.gitignore                               | 1 +
- tools/testing/selftests/rtc/.gitignore                                | 1 +
- tools/testing/selftests/safesetid/.gitignore                          | 1 +
- tools/testing/selftests/seccomp/.gitignore                            | 1 +
- tools/testing/selftests/sigaltstack/.gitignore                        | 1 +
- tools/testing/selftests/size/.gitignore                               | 1 +
- tools/testing/selftests/sparc64/drivers/.gitignore                    | 1 +
- tools/testing/selftests/splice/.gitignore                             | 1 +
- tools/testing/selftests/sync/.gitignore                               | 1 +
- tools/testing/selftests/tc-testing/.gitignore                         | 1 +
- tools/testing/selftests/timens/.gitignore                             | 1 +
- tools/testing/selftests/timers/.gitignore                             | 1 +
- tools/testing/selftests/tmpfs/.gitignore                              | 1 +
- tools/testing/selftests/vDSO/.gitignore                               | 1 +
- tools/testing/selftests/vm/.gitignore                                 | 1 +
- tools/testing/selftests/watchdog/.gitignore                           | 1 +
- tools/testing/selftests/wireguard/qemu/.gitignore                     | 1 +
- tools/testing/selftests/x86/.gitignore                                | 1 +
- tools/testing/vsock/.gitignore                                        | 1 +
- tools/thermal/tmon/.gitignore                                         | 1 +
- tools/usb/.gitignore                                                  | 1 +
- tools/usb/usbip/.gitignore                                            | 1 +
- tools/virtio/.gitignore                                               | 1 +
- tools/vm/.gitignore                                                   | 1 +
- usr/.gitignore                                                        | 1 +
- usr/include/.gitignore                                                | 1 +
- 247 files changed, 247 insertions(+), 25 deletions(-)
