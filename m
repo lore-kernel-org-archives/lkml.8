@@ -2,142 +2,220 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E76C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E70DC2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F492077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CD420675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcNzEg9v"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="WiorhD9n";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="O854i+9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390213AbgDCBms (ORCPT
+        id S2390301AbgDCBoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 21:42:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37078 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389108AbgDCBmr (ORCPT
+        Thu, 2 Apr 2020 21:44:14 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51669 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389108AbgDCBoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 21:42:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g23so5719573otq.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 18:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=4tU1ijP1oUMss+gZHdPAOpYayM4wwWRsIDBObxKGiVc=;
-        b=jcNzEg9v7lRqKPNG1zObRdcQjh+gk/bUr/tEisbEtBl1s86IubloinTf3XxKH1pJ48
-         MjFvtnWUc4FVghMd0K9IIenpvKmY9xJRkA2egW8LZ+LUUY9tckpWwmoo04mhVO8gHDhV
-         SUzUrFy6U0Mn7jHtBlYogC+rMizjsYnn5t1IaCgnhBSJ6fMfoeBs/iY7UEcpa6hr707z
-         UtNoR4N/9LmswlUU+NqsLQwPd+MphCGsdz+ezQPXx6Qxej1ggf5ZYg3H5U8848PxyTmQ
-         vza2rb0NNr2iNeTGReJyDtVvixNzXmqiCsRyLI+k8tQmVi4zeskFKPMFFRswTaGL8fZa
-         03/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=4tU1ijP1oUMss+gZHdPAOpYayM4wwWRsIDBObxKGiVc=;
-        b=q7tK1KzHmYtFCAku31wJZ+Py87J7whgCI35YPW3/6jiFw6JU3dlidSFIY99Yzk2MYT
-         tDQ3BXk8bJTXIozZ+XYopIC8s4YV7jyhDDd/doSKcYZyHZWpNDq/dcNxqmlPxHDKPPk/
-         /y+S7xl12wB5LAmGoiX5niKZhhN2/9UUGdLquuiffoT6hKjBD4IXzCZ6wQ4YZ2MMSrYW
-         A3I4JXf6bSzCYEtPE971w2jw7TGx/QKEIIOVJCwpiSiXAY8QwzYBvet1EKz4xjkh65a3
-         WpSNiusr6MR6HbL6ms/iNsE7+kVOdyugecNLwYxC9IEM6wYY0kdyw/HMthZirige05LH
-         /Rfg==
-X-Gm-Message-State: AGi0PuYRczxk4lvXrmwk16UPvbSSw/LbmJ1zAoWnhXerC8Aai+PSQPVp
-        SnMJmKPtxpRMONUYna4HSIE=
-X-Google-Smtp-Source: APiQypIjc/3Kcx764w5UPeyBdHuFZB5UHNoMG0fMVVZwIaKCuUDWOWnh/81/cNN7S7CRo41v7K/A5g==
-X-Received: by 2002:a4a:92cd:: with SMTP id j13mr5039878ooh.96.1585878166813;
-        Thu, 02 Apr 2020 18:42:46 -0700 (PDT)
-Received: from OptiPlexFedora ([47.144.161.84])
-        by smtp.gmail.com with ESMTPSA id t19sm1809875oih.52.2020.04.02.18.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 18:42:46 -0700 (PDT)
-Message-ID: <4bd376a6db77ef779972f377cc2c3789d03668e7.camel@gmail.com>
-Subject: Re: [Outreachy kernel] [PATCH] staging: emxx_udc: Remove unused code
-From:   "John B. Wyatt IV" <jbwyatt4@gmail.com>
-To:     Stefano Brivio <sbrivio@redhat.com>
-Cc:     outreachy-kernel@googlegroups.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Thu, 02 Apr 2020 18:42:44 -0700
-In-Reply-To: <20200403015057.7a972c79@elisabeth>
-References: <20200402021706.788533-1-jbwyatt4@gmail.com>
-         <20200403015057.7a972c79@elisabeth>
+        Thu, 2 Apr 2020 21:44:14 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id DFB5958024C;
+        Thu,  2 Apr 2020 21:44:11 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Thu, 02 Apr 2020 21:44:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        KyvhXjB5DdFettsz9BCOqHLXK5wPN6w15uaxcR0jueY=; b=WiorhD9nz+ySgT04
+        SlNTC1Oo8MVXYRcS83g1m8PfBwjQq0WtZOY+ve90s7jrQhNHK/rGJcMtj3Fj/4oM
+        mB+lQ7RNXJnKaR7B5EIK/QThJCwpB/wNxenqGKo9EU7b2IhziOM2RwONboe8FpaM
+        6HcnaBkeXuqMJVEoTjuXRG3JS/a7nDrufJPK+eyf/g5SkCFn391tmJU7OkikIWhE
+        rIjfzU/o6DkRzw2Db0lqyZe0vOUCuS+WieH7WE0ttAlkc27Wok7tFbGWQ/ItG4ZS
+        vzdhK6Ea6r+RIlQOrxYxDZl8du4CLT/Mqy5ZHll7p+xydP6kThbZbDMEU/jDHbRM
+        wSVI7w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=KyvhXjB5DdFettsz9BCOqHLXK5wPN6w15uaxcR0ju
+        eY=; b=O854i+9yi0NoUPthyXezXO261AjR/d6v7HnPjiHRJdw/Jx3AA84b6upw0
+        RFM86AqDYX+XAivrs4F1Jftl4CBoF152UfNZC2y95Sl6p8/RBO0ZTimFPolkgFcg
+        J0mdkKWrgVpT5b6SADDMyxG4cb27h/0EwU24UmQYH4q2kOe+/RJyaHwUR6xmeCej
+        JrzdkdTKV5hbyjX0F5/wyYbgI2cFyoaj/xTS7nQMPjN9UE1P5perydJTl131XXKf
+        qo5j4bRdfK/EAQVaLBVjwMobHqG9+mQaSPXPSv5rnHOss48o/WjuBC4tCQasVPwH
+        FXd87Df2/F++wZnShVZ3eVsHr2zbQ==
+X-ME-Sender: <xms:6pSGXkdHxUvI6wlmnAbrK1IhF4RG_jpiEwxWWlIYz4vFQvMKLdnMrg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdehgdegkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftgfoggfgsehtjeertdertdejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
+    duieeirddvfedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
+X-ME-Proxy: <xmx:6pSGXnwfhJE9N0v1qesQ14JQMfUdxALscI2X0tTbRm_x9mGm6FudxQ>
+    <xmx:6pSGXr22pq9nSguKU9WXSf6z6T8RAxP-KcQWIzw_azBWppVaSkjMUg>
+    <xmx:6pSGXlzVC2JgYjpSWiUJF1qr6HHJ2FUWJxxDMVCEktQZmsruDI_grw>
+    <xmx:65SGXhje8TwcSnI3ENAKN-q0A7TP3GpKJnBHff2RR7XgGd8RC_5abQ>
+Received: from centos8 (unknown [118.209.166.232])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AA752306CEE4;
+        Thu,  2 Apr 2020 21:44:05 -0400 (EDT)
+Message-ID: <27994c53034c8f769ea063a54169317c3ee62c04.camel@themaw.net>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Date:   Fri, 03 Apr 2020 09:44:01 +0800
+In-Reply-To: <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
+References: <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
+         <1445647.1585576702@warthog.procyon.org.uk>
+         <2418286.1585691572@warthog.procyon.org.uk>
+         <20200401144109.GA29945@gardel-login>
+         <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
+         <2590640.1585757211@warthog.procyon.org.uk>
+         <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
+         <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
+         <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
+X-Mailer: Evolution 3.28.5 (3.28.5-9.el8) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-04-03 at 01:50 +0200, Stefano Brivio wrote:
-> On Wed,  1 Apr 2020 19:17:06 -0700
-> "John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
-> 
-> > Remove unused code surrounded by an #if 0 block.
+On Thu, 2020-04-02 at 15:52 +0200, Miklos Szeredi wrote:
+> On Thu, Apr 2, 2020 at 4:52 AM Ian Kent <raven@themaw.net> wrote:
+> > On Wed, 2020-04-01 at 18:40 +0200, Miklos Szeredi wrote:
+> > > On Wed, Apr 1, 2020 at 6:07 PM David Howells <dhowells@redhat.com
+> > > >
+> > > wrote:
+> > > > Miklos Szeredi <miklos@szeredi.hu> wrote:
+> > > > 
+> > > > > I've still not heard a convincing argument in favor of a
+> > > > > syscall.
+> > > > 
+> > > > From your own results, scanning 10000 mounts through mountfs
+> > > > and
+> > > > reading just
+> > > > two values from each is an order of magnitude slower without
+> > > > the
+> > > > effect of the
+> > > > dentry/inode caches.  It gets faster on the second run because
+> > > > the
+> > > > mountfs
+> > > > dentries and inodes are cached - but at a cost of >205MiB of
+> > > > RAM.  And it's
+> > > > *still* slower than fsinfo().
+> > > 
+> > > Already told you that we can just delete the dentry on
+> > > dput_final, so
+> > > the memory argument is immaterial.
+> > > 
+> > > And the speed argument also, because there's no use case where
+> > > that
+> > > would make a difference.  You keep bringing up the notification
+> > > queue
+> > > overrun when watching a subtree, but that's going to be painful
+> > > with
+> > > fsinfo(2) as well.   If that's a relevant use case (not saying
+> > > it's
+> > > true), might as well add a /mnt/MNT_ID/subtree_info (trivial
+> > > again)
+> > > that contains all information for the subtree.  Have fun
+> > > implementing
+> > > that with fsinfo(2).
 > > 
-> > Code has not been altered since 2014 as reported by git blame.
+> > Forgive me for not trawling through your patch to work this out
+> > but how does a poll on a path get what's needed to get mount info.
 > > 
-> > Reported by checkpatch.
+> > Or, more specifically, how does one get what's needed to go
+> > directly
+> > to the place to get mount info. when something in the tree under
+> > the
+> > polled path changes (mount/umount). IIUC poll alone won't do
+> > subtree
+> > change monitoring?
+> 
+> The mechanisms are basically the same as with fsinfo(2).   You can
+> get
+> to the mountfs entry through the mount ID or through a proc/fd/ type
+> symlink.  So if you have a path, there are two options:
+> 
+>  - find out the mount ID belonging to that path and go to
+> /mountfs/$mntid/
+>  - open the path with fd = open(path, O_PATH) and the go to
+> /proc/self/fdmount/$fd/
+> 
+> Currently the only way to find the mount id from a path is by parsing
+> /proc/self/fdinfo/$fd.  It is trivial, however, to extend statx(2) to
+> return it directly from a path.   Also the mount notification queue
+> that David implemented contains the mount ID of the changed mount.
+
+I'm aware the mount id comes through David's notifications, I was
+wondering how to get that via your recommendation, thanks.
+
+In your scheme it sounds like the mount id doesn't hold the
+importance it deserves, it's central to the whole idea of getting
+information about these mounts. But it sounds like you need to
+open fds to paths you might not know to find it ...
+
+Your explanation wasn't clear on how one gets notifications of
+events within a tree under a mount you've opened an fd on to
+get events?
+
+> 
+> > Don't get me wrong, neither the proc nor the fsinfo implementations
+> > deal with the notification storms that cause much of the problem we
+> > see now.
 > > 
-> > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
-> > ---
-> >  drivers/staging/emxx_udc/emxx_udc.h | 6 ------
-> >  1 file changed, 6 deletions(-)
-> > 
-> > diff --git a/drivers/staging/emxx_udc/emxx_udc.h
-> > b/drivers/staging/emxx_udc/emxx_udc.h
-> > index 9c2671cb32f7..bbfebe331033 100644
-> > --- a/drivers/staging/emxx_udc/emxx_udc.h
-> > +++ b/drivers/staging/emxx_udc/emxx_udc.h
-> > @@ -9,12 +9,6 @@
-> >  #define _LINUX_EMXX_H
-> >  
-> >  /*--------------------------------------------------------------
-> > -------------*/
-> > -/*----------------- Default undef */
-> > -#if 0
-> > -#define DEBUG
-> > -#define UDC_DEBUG_DUMP
-> > -#endif
-> > -
-> >  /*----------------- Default define */
-> >  #define	USE_DMA	1
-> >  #define USE_SUSPEND_WAIT	1
+> > IMHO that's a separate and very difficult problem in itself that
+> > can't even be considered until getting the information efficiently
+> > is resolved.
 > 
-> Formally, this is fine. But... think about it: this driver might be
-> rather buggy, so the first thing one might want to do with it is to
-> "enable" those two defines.
+> This mount notification storm issue got me thinking.   If I
+> understand
+> correctly, systemd wants mount notifications so that it can do the
+> desktop pop-up thing.   Is that correct?
 > 
-> In general, that stuff has to disappear, and proper debugging
-> facilities have to be used, but with a driver in this state, as long
-> as
-> proper debugging facilities aren't there, you might be doing more
-> harm
-> than good.
+> But that doesn't apply to automounts at all.  A new mount performed
+> by
+> automount is uninteresting to to desktops, since it's triggered by
+> crossing the automount point (i.e. a normal path lookup), not an
+> external event like inserting a usb stick, etc...
+> 
+> Am I missing something?
 
-DEBUG is not actually used as far as I can tell (I am still new to
-kernel debugging systems to please correct me). There is only a pair of
-.c and .h files for this small driver.
+Yeah, you're not missing anything.
 
-UDC_DEBUG_DUMP is only used twice in the entire kernel-both for if
-statements.
-
-Should we just set it to:
-
-#define UDC_DEBUG_DUMP 0
-
-And leave the other 3 lines out? Please let me know for a v2.
+Unfortunately, in a recent discussion on the autofs mailing list,
+an investigation showed that systemd does want/get events for
+autofs mounts and proceeds to issue around a 100 or so events on
+the d-bus for every one.
 
 > 
-> -- 
-> Stefano
-> 
+> Maybe the solution is to just allow filtering out such notifications
+> at the source, so automount triggers don't generate events for
+> systemd.
+
+Except that autofs automounts might be expected to be seen on a
+desktop, that's not out of the question I guess.
+
+Ian
 
