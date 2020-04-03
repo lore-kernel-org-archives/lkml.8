@@ -2,110 +2,118 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C07AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6713EC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104E620B1F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F162173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OYmW4Y0q"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="MLIeXrP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390481AbgDCIMY (ORCPT
+        id S2390492AbgDCIM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:12:24 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34022 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbgDCIMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:12:23 -0400
-Received: from zn.tnic (p200300EC2F0D8900AC3E2C93ADB62CA9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8900:ac3e:2c93:adb6:2ca9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 343E11EC0C98;
-        Fri,  3 Apr 2020 10:12:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585901542;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=TF7RbyA03ZDQd/3oFgniRR6uVa1P565MmA4BmfaHjQc=;
-        b=OYmW4Y0qrt+6jGQQw+ykjIKfkNaYoSbEdri+AioKUZvPXswbDB06UxTq9oUZu9p1/M5ix9
-        oJ/gkH3IzbjThce/VPgt7F4udcWBS7umcLng3sp1gOiHo9pUEbbKlINUZABUYc08fQll8f
-        aq0rwYG8f67iraZKe/GuiIjly8xGYY4=
-Date:   Fri, 3 Apr 2020 10:12:17 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>, x86@kernel.org,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH] x86/cpufeatures: Add enumeration for serialize
- instruction
-Message-ID: <20200403081217.GA20218@zn.tnic>
-References: <20200403014026.19137-1-ricardo.neri-calderon@linux.intel.com>
+        Fri, 3 Apr 2020 04:12:28 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35882 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727431AbgDCIM1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:12:27 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k18so5414657oib.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 01:12:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3ymTJVtUxBUPQPt/DjBQudCk2SDBLtq2q0vAVeHEhjU=;
+        b=MLIeXrP5vfs5pP0srG+5v4SHJhfyQO53bs//r28tSH5Z9+XMQzqZKd5isNZPnGtaVA
+         3cZRtIeOcaLBJRSQYypEbgbwY7mwZoRbBLKquFYBAGV9toZtODL6tslmFISYdlp5rKTK
+         DOJ5dJQ6DrOlklAY8LMbdgHc8DfcHyurH1bqY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3ymTJVtUxBUPQPt/DjBQudCk2SDBLtq2q0vAVeHEhjU=;
+        b=btmzA30uaouQmto6vQDGjy53Lg/XrIgLYs7F3w/cluWh6ot6xw/ZOu7QJhuLVLCaUA
+         ozBdTjN+2GGkUibFIgK7pXMxIg0WwCgwZNPBmLUZsIsPCZATWRaGD7IC1fRrkUNjF13q
+         RSXGm9hk8e62SlVzGuccYld+/CTofB7rgq0Sks4AL96yWK+Aoj68DIpa5LTV3sS5oK/A
+         odeHsIL1BReLZm1hVIesiRRy0v+KqRQAzt3WCOy5hlBbmZ/XsNknOwVR1OSPf103q+az
+         dIcrYCU2ewI/ecS3sGcOhDBhBMOaTuhmKI3Vk22cKjaHg4MFRu/ohgs04w/iyjcR8hKw
+         N2rg==
+X-Gm-Message-State: AGi0PuZYrE1yHrfhJIWxex2M8KzcnN1d5e9WmrticSYk0LfIqbhu3mQE
+        WEgfb5GC1A5ZUk9+voZJF3Cpd+OTGv/0e0nrbn4mnA==
+X-Google-Smtp-Source: APiQypLRxxLFI6qTSkiV0Pf6uGsAY0VtZxtzNnd9fFv8py//ecV5Oqx7DayfYPDR5/wP+uzeQY0CO8aRmlpOvO9fB58=
+X-Received: by 2002:aca:aac1:: with SMTP id t184mr2170657oie.14.1585901546393;
+ Fri, 03 Apr 2020 01:12:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200403014026.19137-1-ricardo.neri-calderon@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAPM=9twza_DeycOEhT+u6Erh0yFTAUe447J6bxWCLq5+QW8ZaA@mail.gmail.com>
+ <20200402203317.GA34560@ubuntu-m2-xlarge-x86> <CAHk-=wjHEOHCf7kAOJOY9bOr9O0CRzxds+8YcXVVGbMZ+7kyXg@mail.gmail.com>
+In-Reply-To: <CAHk-=wjHEOHCf7kAOJOY9bOr9O0CRzxds+8YcXVVGbMZ+7kyXg@mail.gmail.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Fri, 3 Apr 2020 10:12:15 +0200
+Message-ID: <CAKMK7uH+vX=eh17-m9mL17QQ1uxjfDEcdj-tno-fAYA4Z1+Jag@mail.gmail.com>
+Subject: Re: [git pull] drm for 5.7-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Dave Airlie <airlied@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 06:40:26PM -0700, Ricardo Neri wrote:
-> The serialize instruction ensures that before the next instruction is
-> fetched and executed, all the modifications to flags, registers, and memory
-> made by previous instructions are completed, draining all buffered writes
-> to memory.
-> 
-> Importantly, the serialize instruction does not modify registers,
-> arithmetic flags or memory.
-> 
-> Hence, the serialize instructions provides a better way for software
-> to serialize execution than using instructions such as cpuid, which does
-> modify registers and, in virtual machines, causes a VM exit.
-> 
-> This instruction is supported by the CPU if CPUID.7H.EDX[bit 14] is
-> set.
-> 
-> Cc: x86@kernel.org
-> Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> ---
-> This new instruction is documented in the latest version of the Intel
-> Architecture Instruction Set Extensions and Future Features Programming
-> Reference Chapter 2.1 located at
-> https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
-> ---
->  arch/x86/include/asm/cpufeatures.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index db189945e9b0..cd9b1ec022ec 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -364,6 +364,7 @@
->  #define X86_FEATURE_AVX512_VP2INTERSECT (18*32+ 8) /* AVX-512 Intersect for D/Q */
->  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
->  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
-> +#define X86_FEATURE_SERIALIZE		(18*32+14) /* SERIALIZE instruction */
->  #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
->  #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
->  #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
-> -- 
+On Thu, Apr 2, 2020 at 10:43 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, Apr 2, 2020 at 1:33 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > This fixes it but I am not sure if it is proper or not (could be
+> > problematic if CONFIG_PHYS_ADDR_T_64BIT is set but
+> > CONFIG_ARCH_DMA_ADDR_T_64BIT is not, not sure if that is possible) so I
+> > figured I'd report it and let you guys deal with it.
+>
+> Yeah, no, that patch can't be right.
+>
+> From your build failure, your configuration has dma_addr_t being a
+> 'long long unsigned int', and map->offset being a resource_size_t is
+> for just a 'unsigned int'. Casting 'unsigned int *' to 'unsigned long
+> long *' is not valid.
+>
+> You'd have to do something like
+>
+>         dma_addr_t temp;
+>
+> and pass the address of *that* in, and then assign that to map->offset
+> (and verify that it fits), I think.
+>
+> That's kind of what the old code did.
+>
+> Or alternatively, the 'offset' field should just be of type
+> 'dma_addr_t' instead (see include/drm/drm_legacy.h). But I didn't
+> check if something else wants it to be a resource_size_t.
 
-Send this together with code which is using it, pls.
+This is all exclusive in legacy code back from the days when drm
+drivers where shared with *bsd. None of that code ever learned that
+there's maybe a difference between dma/phys/virtual address sizes, and
+that's about the least of the problems it has.
 
-Thx.
+Revert seems to be clean, I'd vote for that. And maybe we instead try
+to push these horrors more under the CONFIG_DRM_LEGACY. I'll try to
+remember to do that, afaics the only thing outside are the
+drm_pci_alloc/free multi-layered wrappers in drm_pci.c.
 
+Linus, can you pls push the revert yourself, to avoid build bot
+breakage for longer than necessary?
+
+Thanks, Daniel
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
