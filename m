@@ -2,158 +2,102 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E356C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CFDC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A96620787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:03:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="doolofrt"
+	by mail.kernel.org (Postfix) with ESMTP id DE86720787
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585908345;
+	bh=k0PQmd3iXUTMGiYkwUr2y9dxKec9kgHgmU4r74w6+UY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=baNywZQWV7A6IVk+Aany2kXnJ/bTnzTD8gDQBqORgvVHuS8GHayJjfCkifhmTh3bD
+	 55WH6e/6RuruEoNh3xn7dm0VZWfPQb/qrxiI5fZTi7L0thOidtTUaspBjtzy+JurEX
+	 QesdfPgMZ0VbkvzJH69KVMw4RInK+En7UBnTYzXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390600AbgDCKDS (ORCPT
+        id S1728086AbgDCKFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:03:18 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:59130 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgDCKDS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:03:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yLhCR68Xx5hXytQdHGQlISjAF/TJxI6l40ZChrHYRsU=; b=doolofrtnnwkKzrDYH1z3uTz+
-        Ga0SYykJLMFHS/skroRuv5Zpte0rMgHTC22elbzbJJkid/eQs9ERNRlQkP/Wj8QnOgEalVGFKMHYQ
-        eOtTWbNewf52qneI28UDohL2SMl2Ypnfv+U56rxIo+n3dKpT9Gw0rB4VJOLRjnl+dUr2EAqyGFi3K
-        DqcDI9N8CsDBZ64l9527i11cqv9kX3rDys+AK9QcDbwsirH7c0YJc2NuY7Knc4D6lMxEkAapq9Lh5
-        JVJbgfHr4pFfxp5QtT4eXLJwY4ImacIlHVA1EHipja65a8hmeNELjKTyp1UKzpfZH7JCcFFHu3/BB
-        PCWbI7QJA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45070)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jKJAA-0008Rg-To; Fri, 03 Apr 2020 11:03:03 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jKJA9-0002Zz-E3; Fri, 03 Apr 2020 11:02:57 +0100
-Date:   Fri, 3 Apr 2020 11:02:57 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
-        daniel@ffwll.ch, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
- user_write_access_begin/end
-Message-ID: <20200403100257.GB25745@shell.armlinux.org.uk>
-References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
- <20200402162942.GG23230@ZenIV.linux.org.uk>
- <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
- <20200402175032.GH23230@ZenIV.linux.org.uk>
- <202004021132.813F8E88@keescook>
+        Fri, 3 Apr 2020 06:05:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727774AbgDCKFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 06:05:43 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2D2220757;
+        Fri,  3 Apr 2020 10:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585908342;
+        bh=k0PQmd3iXUTMGiYkwUr2y9dxKec9kgHgmU4r74w6+UY=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=U8V9XB1UfP4VvZKwx/hKUXXy0kcP8fSEGWQZyTKg7eFIqKmziuyf0bJ6NXn3OqjX8
+         BD72I1XCacH6vineVuG2YmzC69yGAjur2a9BvVPa1xRYgfEG7CbVZZZ0whG5wLBjZc
+         kevOzZC365aO6IEO2h8+KKQ1qCNPj12qCdsr31WE=
+Date:   Fri, 3 Apr 2020 12:05:27 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?ISO-8859-2?Q?Samuel_=C8avoj?= <sammko@sammserver.com>
+Subject: Re: [GIT PULL] HID for 5.7
+In-Reply-To: <CAHk-=wgy8AM+BOt4jhnoQ+wa=YVyXT4ARg=qEYC=S-OW4ZjZzw@mail.gmail.com>
+Message-ID: <nycvar.YFH.7.76.2004031158280.19713@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.2004011353080.19500@cbobk.fhfr.pm> <CAHk-=wgy8AM+BOt4jhnoQ+wa=YVyXT4ARg=qEYC=S-OW4ZjZzw@mail.gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202004021132.813F8E88@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 11:35:57AM -0700, Kees Cook wrote:
-> On Thu, Apr 02, 2020 at 06:50:32PM +0100, Al Viro wrote:
-> > On Thu, Apr 02, 2020 at 07:03:28PM +0200, Christophe Leroy wrote:
-> > 
-> > > user_access_begin() grants both read and write.
-> > > 
-> > > This patch adds user_read_access_begin() and user_write_access_begin() but
-> > > it doesn't remove user_access_begin()
-> > 
-> > Ouch...  So the most generic name is for the rarest case?
-> >  
-> > > > What should we do about that?  Do we prohibit such blocks outside
-> > > > of arch?
-> > > > 
-> > > > What should we do about arm and s390?  There we want a cookie passed
-> > > > from beginning of block to its end; should that be a return value?
-> > > 
-> > > That was the way I implemented it in January, see
-> > > https://patchwork.ozlabs.org/patch/1227926/
-> > > 
-> > > There was some discussion around that and most noticeable was:
-> > > 
-> > > H. Peter (hpa) said about it: "I have *deep* concern with carrying state in
-> > > a "key" variable: it's a direct attack vector for a crowbar attack,
-> > > especially since it is by definition live inside a user access region."
-> > 
-> > > This patch minimises the change by just adding user_read_access_begin() and
-> > > user_write_access_begin() keeping the same parameters as the existing
-> > > user_access_begin().
-> > 
-> > Umm...  What about the arm situation?  The same concerns would apply there,
-> > wouldn't they?  Currently we have
-> > static __always_inline unsigned int uaccess_save_and_enable(void)
-> > {
-> > #ifdef CONFIG_CPU_SW_DOMAIN_PAN
-> >         unsigned int old_domain = get_domain();
-> > 
-> >         /* Set the current domain access to permit user accesses */
-> >         set_domain((old_domain & ~domain_mask(DOMAIN_USER)) |
-> >                    domain_val(DOMAIN_USER, DOMAIN_CLIENT));
-> > 
-> >         return old_domain;
-> > #else
-> >         return 0;
-> > #endif
-> > }
-> > and
-> > static __always_inline void uaccess_restore(unsigned int flags)
-> > {
-> > #ifdef CONFIG_CPU_SW_DOMAIN_PAN
-> >         /* Restore the user access mask */
-> >         set_domain(flags);
-> > #endif
-> > }
-> > 
-> > How much do we need nesting on those, anyway?  rmk?
+On Wed, 1 Apr 2020, Linus Torvalds wrote:
 
-It's that way because it's easy, logical, and actually *more* efficient
-to do it that way, rather than read-modify-write the domain register
-each time we want to change it.
+> > Samuel Čavoj (1):
+> >       HID: Add driver fixing Glorious PC Gaming Race mouse report descriptor
+> 
+> What a glorious name for a piece of hardware. Even if it's apparently
+> buggy and needs help to work right.
 
-> Yup, I think it's a weakness of the ARM implementation and I'd like to
-> not extend it further. AFAIK we should never nest, but I would not be
-> surprised at all if we did.
+Yeah, the vendor apparently was not of the humble kind :)
 
-There is one known nesting, which is __clear_user() when used with
-the (IMHO horrid and I don't care about) UACCESS_WITH_MEMCPY feature.
-That's not intentional however.
+> I felt bad saying I don't need that glorious driver when doing my 
+> oldconfig.
 
-When I introduced this on ARM, the placement I adopted was to locate
-it _as close as sanely possible_ to the userspace access so we
-minimised the kernel accesses, so we minimise the number of accesses
-that could go stray because of the domain issue - we ideally only
-want the access done by the accessor itself to be affected, which
-we achieve for most accesses.
+:))
 
-Thinking laterally, maybe we should get rid of the whole KERNEL_DS
-stuff entirely, and come up with an alternative way of handling the
-kernel-wants-to-access-kernelspace-via-user-accessors problem.
-Such as, copying some data back to userspace memory?
+> Anyway, because I noticed this due to the name, it does strike me that 
+> clearly Windows must be ignoring - or otherwise reacting differently to 
+> - the HID_MAIN_ITEM_CONSTANT flag. Because presumably those mice work 
+> under Windows without special drivers?
+> 
+> In fact, reading that driver, it looks like they report being *both* 
+> constant *and* variable in their report descriptors. Which sounds odd. 
+> Maybe we should do whatever Windows does, and not need a special driver 
+> for this maybe-bot-so-glorious-after-all mouse hardware?
+
+Adding Samuel to CC.
+
+From what I understood is that in order to access the buttons reported in 
+report #2 (the one marked with HID_MAIN_ITEM_CONSTANT), you actually *do* 
+need a special software on windows anyway.
+
+What we do is that we ignore any changes in reports with 
+HID_MAIN_ITEM_CONSTANT in the HID core.
+
+It would still be possible to access the report via hidraw, and maybe 
+that's analogy of what the Windows driver/special Glorious software :) 
+does, I don't know. It's hard to believe that Windows would be actually 
+willing to report any changes coming through HID_MAIN_ITEM_CONSTANT 
+reports, but who knows.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Jiri Kosina
+SUSE Labs
+
