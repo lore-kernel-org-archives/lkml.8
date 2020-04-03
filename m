@@ -2,223 +2,582 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B26C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BB6C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771AA20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30F62078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:43:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nu9QaEDc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390964AbgDCNmB (ORCPT
+        id S2390969AbgDCNnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:42:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3438 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390808AbgDCNmB (ORCPT
+        Fri, 3 Apr 2020 09:43:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52065 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbgDCNni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:42:01 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033Db498027142
-        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 09:41:59 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 304gsugefg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 09:41:59 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Fri, 3 Apr 2020 14:41:55 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 Apr 2020 14:41:51 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033Dfqfp45875236
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Apr 2020 13:41:52 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E88C3AE056;
-        Fri,  3 Apr 2020 13:41:51 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70E57AE045;
-        Fri,  3 Apr 2020 13:41:51 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.156.196])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Apr 2020 13:41:51 +0000 (GMT)
-Subject: Re: [PATCH v1 1/5] KVM: s390: vsie: Fix region 1 ASCE sanity shadow
- address checks
-To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        stable@vger.kernel.org
-References: <20200402184819.34215-1-david@redhat.com>
- <20200402184819.34215-2-david@redhat.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Fri, 3 Apr 2020 15:41:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200402184819.34215-2-david@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="VuYuhIihgc8kXyA392z7lxVZk0JYHRnZj"
-X-TM-AS-GCONF: 00
-x-cbid: 20040313-0028-0000-0000-000003F1522F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040313-0029-0000-0000-000024B6E00A
-Message-Id: <58888143-f27c-58e6-715e-41ff89ab6160@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_10:2020-04-03,2020-04-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- malwarescore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
- phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004030115
+        Fri, 3 Apr 2020 09:43:38 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z7so7181771wmk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 06:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=iREvdTpBgHupinhqYUTLOv6ABiy7AtkLXzmxvowBtBE=;
+        b=nu9QaEDcOhxZdK9WG26yHUFGE0BgroDpEr4ATxUF9giovwRqwj2fNt4rFK9gI4vN7Z
+         vlPmaSys+EG8n61Upb7MOt4lLFxbOaTlPy+kznq3zDp8AeKYUJCNyUAQ4omPvOO9cHln
+         ZHqqsAdIMhw70yXMPyr9Ek+aBgszciPvMz0rM0YqJaIfFK+0qtBKSv0oAte6w7Q+eaHe
+         MpZ09Bpba5ZHk5CDkobMgMSxJjyBd/lZbrfc6wUIr9B9iI1pjEFTKlY+xVLibntwIgnd
+         bKv25VqZwPR7B7C1abaqecf9h8gKcskzsVEwBwZoeXOAJM9jK5GyELx6XQigtHL3A4nN
+         R2ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iREvdTpBgHupinhqYUTLOv6ABiy7AtkLXzmxvowBtBE=;
+        b=Pp5SF5kekJZ1Jr8Ht6nkLOsJSOfqCUcaxUB6QfrX/0UI5oDawvQY2Y95D8GLURt9A5
+         mOB6/wVjH9A32J9qxteKf7WqDaszj2mXcJMDhhMMZNJ+7VRnuEI+HnPpVBxbQhavg25u
+         oY7U9Zhp/V5cjj9Qsgf1EvBVkZZ0J7hbpVge9Gi+Z3dAr6P3sq3WlmDe0yO8pMSghcm2
+         PNT7jWh5lcaUqDuf10gDGsrocIp+WNaHQEfqFmLM7hIaHRurPaJYWf5DuH2P/uoogJOH
+         QkzqNnHP3t0cm91BVfOVXgkROx134rR/lZtraw46wA6h+P+fxUS0pQdjZbvR6JkH8HKy
+         xkmA==
+X-Gm-Message-State: AGi0PuasP2UzKstX284n9TnFWM6El/MUr1d5QNRnqC59WDfWz0A5r9Ac
+        QWbeVy1yY/Y3jJ8VbxKdxmU=
+X-Google-Smtp-Source: APiQypKWzVPjN7S2haq1L64Gdn1F6ztfJ7pkU8ludbPsoSB3vAXmzY1BLzKHgao7kIV7xH/gixizxA==
+X-Received: by 2002:a1c:41d6:: with SMTP id o205mr8676909wma.122.1585921415227;
+        Fri, 03 Apr 2020 06:43:35 -0700 (PDT)
+Received: from debian.lan (host-84-13-17-86.opaltelecom.net. [84.13.17.86])
+        by smtp.gmail.com with ESMTPSA id f12sm12081232wrm.94.2020.04.03.06.43.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Apr 2020 06:43:34 -0700 (PDT)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH 01/11] parport: fix if-statement empty body warnings
+Date:   Fri,  3 Apr 2020 14:43:15 +0100
+Message-Id: <20200403134325.11523-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---VuYuhIihgc8kXyA392z7lxVZk0JYHRnZj
-Content-Type: multipart/mixed; boundary="Vk5zZruvRNvPPgLPZS6eZqzObLnkFIpxv"
+From: Joe Perches <joe@perches.com>
 
---Vk5zZruvRNvPPgLPZS6eZqzObLnkFIpxv
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Eliminate warnings by using pr_debug which is the more typical
+kernel debugging style and also enable dynamic_debug on these
+outputs.
 
-On 4/2/20 8:48 PM, David Hildenbrand wrote:
-> In case we have a region 1 ASCE, our shadow/g3 address can have any val=
-ue.
-> Unfortunately, (-1UL << 64) is undefined and triggers sometimes,
-> rejecting valid shadow addresses when trying to walk our shadow table
-> hierarchy.
->=20
-> The result is that the prefix cannot get mapped and will loop basically=
+Miscellaneous:
 
-> forever trying to map it (-EAGAIN loop).
->=20
-> After all, the broken check is only a sanity check, our table shadowing=
+o A few messages were logged at KERN_INFO when enabled, now KERN_DEBUG
+o Convert %d/%d to %zd/%zu to avoid compilation warnings
 
-> code in kvm_s390_shadow_tables() already checks these conditions, injec=
-ting
-> proper translation exceptions. Turn it into a WARN_ON_ONCE().
->=20
-> Fixes: 4be130a08420 ("s390/mm: add shadow gmap support")
-> Cc: <stable@vger.kernel.org> # v4.8+
-> Reported-by: Janosch Frank <frankja@linux.ibm.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Original-patch-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Joe Perches <joe@perches.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ drivers/parport/ieee1284.c     | 90 ++++++++++++++++--------------------------
+ drivers/parport/ieee1284_ops.c | 67 +++++++++++--------------------
+ 2 files changed, 57 insertions(+), 100 deletions(-)
 
-With the WARN_ON_ONCE fix applied I don't run into stalls or warnings
-anymore, so:
-Tested-by: Janosch Frank <frankja@linux.ibm.com>
-
-> ---
->  arch/s390/mm/gmap.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-> index 2fbece47ef6f..f3dbc5bdde50 100644
-> --- a/arch/s390/mm/gmap.c
-> +++ b/arch/s390/mm/gmap.c
-> @@ -787,14 +787,18 @@ static void gmap_call_notifier(struct gmap *gmap,=
- unsigned long start,
->  static inline unsigned long *gmap_table_walk(struct gmap *gmap,
->  					     unsigned long gaddr, int level)
->  {
-> +	const int asce_type =3D gmap->asce & _ASCE_TYPE_MASK;
->  	unsigned long *table;
-> =20
->  	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
->  		return NULL;
->  	if (gmap_is_shadow(gmap) && gmap->removed)
->  		return NULL;
-> -	if (gaddr & (-1UL << (31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11))=
-)
-> +
-> +	if (WARN_ON_ONCE(asce_type !=3D _ASCE_TYPE_REGION1) &&
-> +			 gaddr & (-1UL << (31 + (asce_type >> 2) * 11)))
->  		return NULL;
-> +
->  	table =3D gmap->table;
->  	switch (gmap->asce & _ASCE_TYPE_MASK) {
->  	case _ASCE_TYPE_REGION1:
->=20
-
-
-
---Vk5zZruvRNvPPgLPZS6eZqzObLnkFIpxv--
-
---VuYuhIihgc8kXyA392z7lxVZk0JYHRnZj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl6HPR8ACgkQ41TmuOI4
-ufgb+RAAsxZfc7kuWec9oOuipxBnN6zTyl3YsseJhgREuvN4gfSxNKUBszxkzDe+
-AkHIrRmYTssGVaixZUec+N/x/rxOh7jIdWwTpHnQGWZNZoCHKTcFtbWGqgBQbnRY
-QSUhg8i+Xw+OYtvnt+54Qo2AUThNlUxF8xUVfz//Rj3Vc55DZ/T/4StxLg8aAVg3
-10YXv9/uuH2wBhQ2xZUwR6OTCcArA7ewTJx+ntjjawxY0BovxpWPdSc3AkErgXed
-lYB22XVCpe4SsbTLLvJLb0Tvr9lhuuPQZ6qU5iN+4Huh3ioZsMYEsC7Td/U+yCUG
-FGVKKdToeglKVV7A5vA8iHBzQRQ7Tx10jeSR8hBWSQcYNNG3MWEFy5YxAvwAAOTZ
-6SdXqz7lAcYhok44oexhpGV3Ccdq/orALKfeAZlqY1NLNyDqg+/9vVzSufF9ghfo
-PbRtHyjgw2hJUXGPLvP/cz22pIZ4wM2g7/0SP2QskUBqy4EZALeVXHeXEW0CEgK0
-V6rVojM/leoYaRqoxCD7VIv73xda3Zp6PMVAj3UNUfj8wQXh24VYEDnEe7ePJ6HX
-NW6nLxJnGYCRbAqpHP68VIYIy/BbS3YcgewMhcCH4Kpt19z1W5bAFFDGjXovBP1E
-m5AOfXT4s/E0nh6wtpGud43sjagTxQIoiUL77KS0V7+LkaqnLT4=
-=wb7M
------END PGP SIGNATURE-----
-
---VuYuhIihgc8kXyA392z7lxVZk0JYHRnZj--
+diff --git a/drivers/parport/ieee1284.c b/drivers/parport/ieee1284.c
+index 90fb73575495..ba562bcd4b80 100644
+--- a/drivers/parport/ieee1284.c
++++ b/drivers/parport/ieee1284.c
+@@ -31,12 +31,6 @@
+ #undef DEBUG /* Don't want a garbled console */
+ #endif
+ 
+-#ifdef DEBUG
+-#define DPRINTK(stuff...) printk (stuff)
+-#else
+-#define DPRINTK(stuff...)
+-#endif
+-
+ /* Make parport_wait_peripheral wake up.
+  * It will be useful to call this from an interrupt handler. */
+ static void parport_ieee1284_wakeup (struct parport *port)
+@@ -258,12 +252,11 @@ static void parport_ieee1284_terminate (struct parport *port)
+ 						     PARPORT_STATUS_PAPEROUT,
+ 						     PARPORT_STATUS_PAPEROUT);
+ 			if (r)
+-				DPRINTK (KERN_INFO "%s: Timeout at event 49\n",
++				pr_debug("%s: Timeout at event 49\n",
+ 					 port->name);
+ 
+ 			parport_data_forward (port);
+-			DPRINTK (KERN_DEBUG "%s: ECP direction: forward\n",
+-				 port->name);
++			pr_debug("%s: ECP direction: forward\n", port->name);
+ 			port->ieee1284.phase = IEEE1284_PH_FWD_IDLE;
+ 		}
+ 
+@@ -281,8 +274,7 @@ static void parport_ieee1284_terminate (struct parport *port)
+ 		/* Event 24: nAck goes low */
+ 		r = parport_wait_peripheral (port, PARPORT_STATUS_ACK, 0);
+ 		if (r)
+-			DPRINTK (KERN_INFO "%s: Timeout at event 24\n",
+-				 port->name);
++			pr_debug("%s: Timeout at event 24\n", port->name);
+ 
+ 		/* Event 25: Set nAutoFd low */
+ 		parport_frob_control (port,
+@@ -294,8 +286,7 @@ static void parport_ieee1284_terminate (struct parport *port)
+ 					     PARPORT_STATUS_ACK, 
+ 					     PARPORT_STATUS_ACK);
+ 		if (r)
+-			DPRINTK (KERN_INFO "%s: Timeout at event 27\n",
+-				 port->name);
++			pr_debug("%s: Timeout at event 27\n", port->name);
+ 
+ 		/* Event 29: Set nAutoFd high */
+ 		parport_frob_control (port, PARPORT_CONTROL_AUTOFD, 0);
+@@ -304,8 +295,7 @@ static void parport_ieee1284_terminate (struct parport *port)
+ 	port->ieee1284.mode = IEEE1284_MODE_COMPAT;
+ 	port->ieee1284.phase = IEEE1284_PH_FWD_IDLE;
+ 
+-	DPRINTK (KERN_DEBUG "%s: In compatibility (forward idle) mode\n",
+-		 port->name);
++	pr_debug("%s: In compatibility (forward idle) mode\n", port->name);
+ }		
+ #endif /* IEEE1284 support */
+ 
+@@ -406,8 +396,7 @@ int parport_negotiate (struct parport *port, int mode)
+ 				      PARPORT_CONTROL_SELECT
+ 				      | PARPORT_CONTROL_AUTOFD,
+ 				      PARPORT_CONTROL_SELECT);
+-		DPRINTK (KERN_DEBUG
+-			 "%s: Peripheral not IEEE1284 compliant (0x%02X)\n",
++		pr_debug("%s: Peripheral not IEEE1284 compliant (0x%02X)\n",
+ 			 port->name, parport_read_status (port));
+ 		port->ieee1284.phase = IEEE1284_PH_FWD_IDLE;
+ 		return -1; /* Not IEEE1284 compliant */
+@@ -430,8 +419,7 @@ int parport_negotiate (struct parport *port, int mode)
+ 				     PARPORT_STATUS_ACK,
+ 				     PARPORT_STATUS_ACK)) {
+ 		/* This shouldn't really happen with a compliant device. */
+-		DPRINTK (KERN_DEBUG
+-			 "%s: Mode 0x%02x not supported? (0x%02x)\n",
++		pr_debug("%s: Mode 0x%02x not supported? (0x%02x)\n",
+ 			 port->name, mode, port->ops->read_status (port));
+ 		parport_ieee1284_terminate (port);
+ 		return 1;
+@@ -442,7 +430,7 @@ int parport_negotiate (struct parport *port, int mode)
+ 	/* xflag should be high for all modes other than nibble (0). */
+ 	if (mode && !xflag) {
+ 		/* Mode not supported. */
+-		DPRINTK (KERN_DEBUG "%s: Mode 0x%02x rejected by peripheral\n",
++		pr_debug("%s: Mode 0x%02x rejected by peripheral\n",
+ 			 port->name, mode);
+ 		parport_ieee1284_terminate (port);
+ 		return 1;
+@@ -463,9 +451,7 @@ int parport_negotiate (struct parport *port, int mode)
+ 		/* Event 52: nAck goes low */
+ 		if (parport_wait_peripheral (port, PARPORT_STATUS_ACK, 0)) {
+ 			/* This peripheral is _very_ slow. */
+-			DPRINTK (KERN_DEBUG
+-				 "%s: Event 52 didn't happen\n",
+-				 port->name);
++			pr_debug("%s: Event 52 didn't happen\n", port->name);
+ 			parport_ieee1284_terminate (port);
+ 			return 1;
+ 		}
+@@ -481,10 +467,9 @@ int parport_negotiate (struct parport *port, int mode)
+ 					     PARPORT_STATUS_ACK)) {
+ 			/* This shouldn't really happen with a compliant
+ 			 * device. */
+-			DPRINTK (KERN_DEBUG
+-				 "%s: Mode 0x%02x not supported? (0x%02x)\n",
++			pr_debug("%s: Mode 0x%02x not supported? (0x%02x)\n",
+ 				 port->name, mode,
+-				 port->ops->read_status (port));
++				 port->ops->read_status(port));
+ 			parport_ieee1284_terminate (port);
+ 			return 1;
+ 		}
+@@ -495,8 +480,8 @@ int parport_negotiate (struct parport *port, int mode)
+ 		/* xflag should be high. */
+ 		if (!xflag) {
+ 			/* Extended mode not supported. */
+-			DPRINTK (KERN_DEBUG "%s: Extended mode 0x%02x not "
+-				 "supported\n", port->name, mode);
++			pr_debug("%s: Extended mode 0x%02x not supported\n",
++				 port->name, mode);
+ 			parport_ieee1284_terminate (port);
+ 			return 1;
+ 		}
+@@ -505,7 +490,7 @@ int parport_negotiate (struct parport *port, int mode)
+ 	}
+ 
+ 	/* Mode is supported */
+-	DPRINTK (KERN_DEBUG "%s: In mode 0x%02x\n", port->name, mode);
++	pr_debug("%s: In mode 0x%02x\n", port->name, mode);
+ 	port->ieee1284.mode = mode;
+ 
+ 	/* But ECP is special */
+@@ -522,13 +507,11 @@ int parport_negotiate (struct parport *port, int mode)
+ 					     PARPORT_STATUS_PAPEROUT,
+ 					     PARPORT_STATUS_PAPEROUT);
+ 		if (r) {
+-			DPRINTK (KERN_INFO "%s: Timeout at event 31\n",
+-				port->name);
++			pr_debug("%s: Timeout at event 31\n", port->name);
+ 		}
+ 
+ 		port->ieee1284.phase = IEEE1284_PH_FWD_IDLE;
+-		DPRINTK (KERN_DEBUG "%s: ECP direction: forward\n",
+-			 port->name);
++		pr_debug("%s: ECP direction: forward\n", port->name);
+ 	} else switch (mode) {
+ 	case IEEE1284_MODE_NIBBLE:
+ 	case IEEE1284_MODE_BYTE:
+@@ -573,7 +556,7 @@ void parport_ieee1284_interrupt (void *handle)
+ 	if (port->ieee1284.phase == IEEE1284_PH_REV_IDLE) {
+ 		/* An interrupt in this phase means that data
+ 		 * is now available. */
+-		DPRINTK (KERN_DEBUG "%s: Data available\n", port->name);
++		pr_debug("%s: Data available\n", port->name);
+ 		parport_ieee1284_ack_data_avail (port);
+ 	}
+ #endif /* IEEE1284 support */
+@@ -617,13 +600,12 @@ ssize_t parport_write (struct parport *port, const void *buffer, size_t len)
+ 		parport_negotiate (port, IEEE1284_MODE_COMPAT);
+ 		/* fall through */
+ 	case IEEE1284_MODE_COMPAT:
+-		DPRINTK (KERN_DEBUG "%s: Using compatibility mode\n",
+-			 port->name);
++		pr_debug("%s: Using compatibility mode\n", port->name);
+ 		fn = port->ops->compat_write_data;
+ 		break;
+ 
+ 	case IEEE1284_MODE_EPP:
+-		DPRINTK (KERN_DEBUG "%s: Using EPP mode\n", port->name);
++		pr_debug("%s: Using EPP mode\n", port->name);
+ 		if (addr) {
+ 			fn = port->ops->epp_write_addr;
+ 		} else {
+@@ -631,8 +613,7 @@ ssize_t parport_write (struct parport *port, const void *buffer, size_t len)
+ 		}
+ 		break;
+ 	case IEEE1284_MODE_EPPSWE:
+-		DPRINTK (KERN_DEBUG "%s: Using software-emulated EPP mode\n",
+-			port->name);
++		pr_debug("%s: Using software-emulated EPP mode\n", port->name);
+ 		if (addr) {
+ 			fn = parport_ieee1284_epp_write_addr;
+ 		} else {
+@@ -641,7 +622,7 @@ ssize_t parport_write (struct parport *port, const void *buffer, size_t len)
+ 		break;
+ 	case IEEE1284_MODE_ECP:
+ 	case IEEE1284_MODE_ECPRLE:
+-		DPRINTK (KERN_DEBUG "%s: Using ECP mode\n", port->name);
++		pr_debug("%s: Using ECP mode\n", port->name);
+ 		if (addr) {
+ 			fn = port->ops->ecp_write_addr;
+ 		} else {
+@@ -650,8 +631,7 @@ ssize_t parport_write (struct parport *port, const void *buffer, size_t len)
+ 		break;
+ 
+ 	case IEEE1284_MODE_ECPSWE:
+-		DPRINTK (KERN_DEBUG "%s: Using software-emulated ECP mode\n",
+-			 port->name);
++		pr_debug("%s: Using software-emulated ECP mode\n", port->name);
+ 		/* The caller has specified that it must be emulated,
+ 		 * even if we have ECP hardware! */
+ 		if (addr) {
+@@ -662,13 +642,13 @@ ssize_t parport_write (struct parport *port, const void *buffer, size_t len)
+ 		break;
+ 
+ 	default:
+-		DPRINTK (KERN_DEBUG "%s: Unknown mode 0x%02x\n", port->name,
+-			port->ieee1284.mode);
++		pr_debug("%s: Unknown mode 0x%02x\n",
++			 port->name, port->ieee1284.mode);
+ 		return -ENOSYS;
+ 	}
+ 
+ 	retval = (*fn) (port, buffer, len, 0);
+-	DPRINTK (KERN_DEBUG "%s: wrote %d/%d bytes\n", port->name, retval, len);
++	pr_debug("%s: wrote %zd/%zu bytes\n", port->name, retval, len);
+ 	return retval;
+ #endif /* IEEE1284 support */
+ }
+@@ -715,7 +695,7 @@ ssize_t parport_read (struct parport *port, void *buffer, size_t len)
+ 		if ((port->physport->modes & PARPORT_MODE_TRISTATE) &&
+ 		    !parport_negotiate (port, IEEE1284_MODE_BYTE)) {
+ 			/* got into BYTE mode OK */
+-			DPRINTK (KERN_DEBUG "%s: Using byte mode\n", port->name);
++			pr_debug("%s: Using byte mode\n", port->name);
+ 			fn = port->ops->byte_read_data;
+ 			break;
+ 		}
+@@ -724,17 +704,17 @@ ssize_t parport_read (struct parport *port, void *buffer, size_t len)
+ 		}
+ 		/* fall through - to NIBBLE */
+ 	case IEEE1284_MODE_NIBBLE:
+-		DPRINTK (KERN_DEBUG "%s: Using nibble mode\n", port->name);
++		pr_debug("%s: Using nibble mode\n", port->name);
+ 		fn = port->ops->nibble_read_data;
+ 		break;
+ 
+ 	case IEEE1284_MODE_BYTE:
+-		DPRINTK (KERN_DEBUG "%s: Using byte mode\n", port->name);
++		pr_debug("%s: Using byte mode\n", port->name);
+ 		fn = port->ops->byte_read_data;
+ 		break;
+ 
+ 	case IEEE1284_MODE_EPP:
+-		DPRINTK (KERN_DEBUG "%s: Using EPP mode\n", port->name);
++		pr_debug("%s: Using EPP mode\n", port->name);
+ 		if (addr) {
+ 			fn = port->ops->epp_read_addr;
+ 		} else {
+@@ -742,8 +722,7 @@ ssize_t parport_read (struct parport *port, void *buffer, size_t len)
+ 		}
+ 		break;
+ 	case IEEE1284_MODE_EPPSWE:
+-		DPRINTK (KERN_DEBUG "%s: Using software-emulated EPP mode\n",
+-			port->name);
++		pr_debug("%s: Using software-emulated EPP mode\n", port->name);
+ 		if (addr) {
+ 			fn = parport_ieee1284_epp_read_addr;
+ 		} else {
+@@ -752,19 +731,18 @@ ssize_t parport_read (struct parport *port, void *buffer, size_t len)
+ 		break;
+ 	case IEEE1284_MODE_ECP:
+ 	case IEEE1284_MODE_ECPRLE:
+-		DPRINTK (KERN_DEBUG "%s: Using ECP mode\n", port->name);
++		pr_debug("%s: Using ECP mode\n", port->name);
+ 		fn = port->ops->ecp_read_data;
+ 		break;
+ 
+ 	case IEEE1284_MODE_ECPSWE:
+-		DPRINTK (KERN_DEBUG "%s: Using software-emulated ECP mode\n",
+-			 port->name);
++		pr_debug("%s: Using software-emulated ECP mode\n", port->name);
+ 		fn = parport_ieee1284_ecp_read_data;
+ 		break;
+ 
+ 	default:
+-		DPRINTK (KERN_DEBUG "%s: Unknown mode 0x%02x\n", port->name,
+-			 port->physport->ieee1284.mode);
++		pr_debug("%s: Unknown mode 0x%02x\n",
++			 port->name, port->physport->ieee1284.mode);
+ 		return -ENOSYS;
+ 	}
+ 
+diff --git a/drivers/parport/ieee1284_ops.c b/drivers/parport/ieee1284_ops.c
+index 5d41dda6da4e..b1c9f513167b 100644
+--- a/drivers/parport/ieee1284_ops.c
++++ b/drivers/parport/ieee1284_ops.c
+@@ -27,12 +27,6 @@
+ #undef DEBUG /* Don't want a garbled console */
+ #endif
+ 
+-#ifdef DEBUG
+-#define DPRINTK(stuff...) printk (stuff)
+-#else
+-#define DPRINTK(stuff...)
+-#endif
+-
+ /***                                *
+  * One-way data transfer functions. *
+  *                                ***/
+@@ -115,7 +109,7 @@ size_t parport_ieee1284_write_compat (struct parport *port,
+ 		if (signal_pending (current))
+ 			break;
+ 
+-		DPRINTK (KERN_DEBUG "%s: Timed out\n", port->name);
++		pr_debug("%s: Timed out\n", port->name);
+ 		break;
+ 
+ 	ready:
+@@ -178,9 +172,8 @@ size_t parport_ieee1284_read_nibble (struct parport *port,
+ 		if (parport_wait_peripheral (port,
+ 					     PARPORT_STATUS_ACK, 0)) {
+ 			/* Timeout -- no more data? */
+-			DPRINTK (KERN_DEBUG
+-				 "%s: Nibble timeout at event 9 (%d bytes)\n",
+-				 port->name, i/2);
++			pr_debug("%s: Nibble timeout at event 9 (%d bytes)\n",
++				 port->name, i / 2);
+ 			parport_frob_control (port, PARPORT_CONTROL_AUTOFD, 0);
+ 			break;
+ 		}
+@@ -201,8 +194,7 @@ size_t parport_ieee1284_read_nibble (struct parport *port,
+ 					     PARPORT_STATUS_ACK,
+ 					     PARPORT_STATUS_ACK)) {
+ 			/* Timeout -- no more data? */
+-			DPRINTK (KERN_DEBUG
+-				 "%s: Nibble timeout at event 11\n",
++			pr_debug("%s: Nibble timeout at event 11\n",
+ 				 port->name);
+ 			break;
+ 		}
+@@ -219,9 +211,8 @@ size_t parport_ieee1284_read_nibble (struct parport *port,
+ 		/* Read the last nibble without checking data avail. */
+ 		if (parport_read_status (port) & PARPORT_STATUS_ERROR) {
+ 		end_of_data:
+-			DPRINTK (KERN_DEBUG
+-				"%s: No more nibble data (%d bytes)\n",
+-				port->name, i/2);
++			pr_debug("%s: No more nibble data (%d bytes)\n",
++				 port->name, i / 2);
+ 
+ 			/* Go to reverse idle phase. */
+ 			parport_frob_control (port,
+@@ -272,8 +263,7 @@ size_t parport_ieee1284_read_byte (struct parport *port,
+ 			/* Timeout -- no more data? */
+ 			parport_frob_control (port, PARPORT_CONTROL_AUTOFD,
+ 						 0);
+-			DPRINTK (KERN_DEBUG "%s: Byte timeout at event 9\n",
+-				 port->name);
++			pr_debug("%s: Byte timeout at event 9\n", port->name);
+ 			break;
+ 		}
+ 
+@@ -288,8 +278,7 @@ size_t parport_ieee1284_read_byte (struct parport *port,
+ 					     PARPORT_STATUS_ACK,
+ 					     PARPORT_STATUS_ACK)) {
+ 			/* Timeout -- no more data? */
+-			DPRINTK (KERN_DEBUG "%s: Byte timeout at event 11\n",
+-				 port->name);
++			pr_debug("%s: Byte timeout at event 11\n", port->name);
+ 			break;
+ 		}
+ 
+@@ -307,8 +296,7 @@ size_t parport_ieee1284_read_byte (struct parport *port,
+ 		/* Read the last byte without checking data avail. */
+ 		if (parport_read_status (port) & PARPORT_STATUS_ERROR) {
+ 		end_of_data:
+-			DPRINTK (KERN_DEBUG
+-				 "%s: No more byte data (%zd bytes)\n",
++			pr_debug("%s: No more byte data (%zd bytes)\n",
+ 				 port->name, count);
+ 
+ 			/* Go to reverse idle phase. */
+@@ -353,12 +341,10 @@ int ecp_forward_to_reverse (struct parport *port)
+ 					  PARPORT_STATUS_PAPEROUT, 0);
+ 
+ 	if (!retval) {
+-		DPRINTK (KERN_DEBUG "%s: ECP direction: reverse\n",
+-			 port->name);
++		pr_debug("%s: ECP direction: reverse\n", port->name);
+ 		port->ieee1284.phase = IEEE1284_PH_REV_IDLE;
+ 	} else {
+-		DPRINTK (KERN_DEBUG "%s: ECP direction: failed to reverse\n",
+-			 port->name);
++		pr_debug("%s: ECP direction: failed to reverse\n", port->name);
+ 		port->ieee1284.phase = IEEE1284_PH_ECP_DIR_UNKNOWN;
+ 	}
+ 
+@@ -384,12 +370,10 @@ int ecp_reverse_to_forward (struct parport *port)
+ 
+ 	if (!retval) {
+ 		parport_data_forward (port);
+-		DPRINTK (KERN_DEBUG "%s: ECP direction: forward\n",
+-			 port->name);
++		pr_debug("%s: ECP direction: forward\n", port->name);
+ 		port->ieee1284.phase = IEEE1284_PH_FWD_IDLE;
+ 	} else {
+-		DPRINTK (KERN_DEBUG
+-			 "%s: ECP direction: failed to switch forward\n",
++		pr_debug("%s: ECP direction: failed to switch forward\n",
+ 			 port->name);
+ 		port->ieee1284.phase = IEEE1284_PH_ECP_DIR_UNKNOWN;
+ 	}
+@@ -450,7 +434,7 @@ size_t parport_ieee1284_ecp_write_data (struct parport *port,
+ 		}
+ 
+ 		/* Time for Host Transfer Recovery (page 41 of IEEE1284) */
+-		DPRINTK (KERN_DEBUG "%s: ECP transfer stalled!\n", port->name);
++		pr_debug("%s: ECP transfer stalled!\n", port->name);
+ 
+ 		parport_frob_control (port, PARPORT_CONTROL_INIT,
+ 				      PARPORT_CONTROL_INIT);
+@@ -466,8 +450,7 @@ size_t parport_ieee1284_ecp_write_data (struct parport *port,
+ 		if (!(parport_read_status (port) & PARPORT_STATUS_PAPEROUT))
+ 			break;
+ 
+-		DPRINTK (KERN_DEBUG "%s: Host transfer recovered\n",
+-			 port->name);
++		pr_debug("%s: Host transfer recovered\n", port->name);
+ 
+ 		if (time_after_eq (jiffies, expire)) break;
+ 		goto try_again;
+@@ -565,23 +548,20 @@ size_t parport_ieee1284_ecp_read_data (struct parport *port,
+                    command or a normal data byte, don't accept it. */
+ 		if (command) {
+ 			if (byte & 0x80) {
+-				DPRINTK (KERN_DEBUG "%s: stopping short at "
+-					 "channel command (%02x)\n",
++				pr_debug("%s: stopping short at channel command (%02x)\n",
+ 					 port->name, byte);
+ 				goto out;
+ 			}
+ 			else if (port->ieee1284.mode != IEEE1284_MODE_ECPRLE)
+-				DPRINTK (KERN_DEBUG "%s: device illegally "
+-					 "using RLE; accepting anyway\n",
++				pr_debug("%s: device illegally using RLE; accepting anyway\n",
+ 					 port->name);
+ 
+ 			rle_count = byte + 1;
+ 
+ 			/* Are we allowed to read that many bytes? */
+ 			if (rle_count > (len - count)) {
+-				DPRINTK (KERN_DEBUG "%s: leaving %d RLE bytes "
+-					 "for next time\n", port->name,
+-					 rle_count);
++				pr_debug("%s: leaving %d RLE bytes for next time\n",
++					 port->name, rle_count);
+ 				break;
+ 			}
+ 
+@@ -596,7 +576,7 @@ size_t parport_ieee1284_ecp_read_data (struct parport *port,
+ 					     PARPORT_STATUS_ACK)) {
+ 			/* It's gone wrong.  Return what data we have
+                            to the caller. */
+-			DPRINTK (KERN_DEBUG "ECP read timed out at 45\n");
++			pr_debug("ECP read timed out at 45\n");
+ 
+ 			if (command)
+ 				printk (KERN_WARNING
+@@ -620,7 +600,7 @@ size_t parport_ieee1284_ecp_read_data (struct parport *port,
+ 			memset (buf, byte, rle_count);
+ 			buf += rle_count;
+ 			count += rle_count;
+-			DPRINTK (KERN_DEBUG "%s: decompressed to %d bytes\n",
++			pr_debug("%s: decompressed to %d bytes\n",
+ 				 port->name, rle_count);
+ 		} else {
+ 			/* Normal data byte. */
+@@ -686,7 +666,7 @@ size_t parport_ieee1284_ecp_write_addr (struct parport *port,
+ 		}
+ 
+ 		/* Time for Host Transfer Recovery (page 41 of IEEE1284) */
+-		DPRINTK (KERN_DEBUG "%s: ECP transfer stalled!\n", port->name);
++		pr_debug("%s: ECP transfer stalled!\n", port->name);
+ 
+ 		parport_frob_control (port, PARPORT_CONTROL_INIT,
+ 				      PARPORT_CONTROL_INIT);
+@@ -702,8 +682,7 @@ size_t parport_ieee1284_ecp_write_addr (struct parport *port,
+ 		if (!(parport_read_status (port) & PARPORT_STATUS_PAPEROUT))
+ 			break;
+ 
+-		DPRINTK (KERN_DEBUG "%s: Host transfer recovered\n",
+-			 port->name);
++		pr_debug("%s: Host transfer recovered\n", port->name);
+ 
+ 		if (time_after_eq (jiffies, expire)) break;
+ 		goto try_again;
+-- 
+2.11.0
 
