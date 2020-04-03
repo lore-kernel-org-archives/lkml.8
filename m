@@ -2,115 +2,75 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA796C2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD780C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19182074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585958069;
-	bh=xWPdo0pwiFgLstbmepM+ex6HV+SBWJzrXRUBo9IaM5U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oWdjd9QL31fVDlP4jhajv3H7Ok6qCXTxb/AlI25WOfwplGFoirDncOZ+YJnz1cg0J
-	 7lBsKZNsGYLDWLNsM1L+/M9P8oDF2KlKowUE8uT6c1Qorv7F8iyfwVvyO/OIILqkA+
-	 uO2fOFkHUJdCuR4BRJ3+X/k6X2FwIx1zs0XodOiE=
+	by mail.kernel.org (Postfix) with ESMTP id A20F62072B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgDCXyP (ORCPT
+        id S1726332AbgDCX5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 19:54:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgDCXyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 19:54:13 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFE3220BED;
-        Fri,  3 Apr 2020 23:54:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585958053;
-        bh=xWPdo0pwiFgLstbmepM+ex6HV+SBWJzrXRUBo9IaM5U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i3XQUGcVTwdpLrp8ZNJTusHAFDbmgPYG2icGi+z6qy8+BLTcGXMIpehNMfYds1eUM
-         UTunA12QA6brWp5g14l+8RTmGGIwFIREeLiYq9uZRYe/epoEg6jDqHyCYHTVbp/zeU
-         +eQYM3fwnJzIwuF85yppbSzQENDks2F8v+N1dCXE=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-clk@vger.kernel.org
-Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: [PATCHv5 2/5] clk: socfpga: remove clk_ops enable/disable methods
-Date:   Fri,  3 Apr 2020 18:54:00 -0500
-Message-Id: <20200403235403.13990-3-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200403235403.13990-1-dinguyen@kernel.org>
-References: <20200403235403.13990-1-dinguyen@kernel.org>
+        Fri, 3 Apr 2020 19:57:24 -0400
+Received: from smtprelay0173.hostedemail.com ([216.40.44.173]:43072 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726060AbgDCX5Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 19:57:24 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 874B2837F24C;
+        Fri,  3 Apr 2020 23:57:23 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: book21_232a483c7e13a
+X-Filterd-Recvd-Size: 1743
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  3 Apr 2020 23:57:21 +0000 (UTC)
+Message-ID: <cabfb02bf36b50463ebfe850ba642025ebeb88b2.camel@perches.com>
+Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
+ DRM fourccs
+From:   Joe Perches <joe@perches.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Date:   Fri, 03 Apr 2020 16:55:24 -0700
+In-Reply-To: <20200403233647.GA4394@kekkonen.localdomain>
+References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
+         <20200403102449.GB4882@pendragon.ideasonboard.com>
+         <20200403104701.GC3172@kekkonen.localdomain>
+         <e44e41317719727ea12aee4ff1e210dea796dd2f.camel@perches.com>
+         <20200403233647.GA4394@kekkonen.localdomain>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The enable/disable clock ops are already defined in the standard clock
-ops, so we don't need to assign them.
+On Sat, 2020-04-04 at 02:36 +0300, Sakari Ailus wrote:
+> Hi Joe,
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v5: no changes
-v4: no changes
-v3: no changes
-v2: created
----
- drivers/clk/socfpga/clk-pll-a10.c | 2 --
- drivers/clk/socfpga/clk-pll-s10.c | 2 --
- drivers/clk/socfpga/clk-pll.c     | 2 --
- 3 files changed, 6 deletions(-)
+Hi Sakari.
 
-diff --git a/drivers/clk/socfpga/clk-pll-a10.c b/drivers/clk/socfpga/clk-pll-a10.c
-index 3816fc04b274..6d9395106c0c 100644
---- a/drivers/clk/socfpga/clk-pll-a10.c
-+++ b/drivers/clk/socfpga/clk-pll-a10.c
-@@ -102,8 +102,6 @@ static struct clk * __init __socfpga_pll_init(struct device_node *node,
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
--	clk_pll_ops.enable = clk_gate_ops.enable;
--	clk_pll_ops.disable = clk_gate_ops.disable;
- 
- 	clk = clk_register(NULL, &pll_clk->hw.hw);
- 	if (WARN_ON(IS_ERR(clk))) {
-diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
-index bcd3f14e9145..9faa80ff3b53 100644
---- a/drivers/clk/socfpga/clk-pll-s10.c
-+++ b/drivers/clk/socfpga/clk-pll-s10.c
-@@ -138,8 +138,6 @@ struct clk *s10_register_pll(const struct stratix10_pll_clock *clks,
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_POWER;
--	clk_pll_ops.enable = clk_gate_ops.enable;
--	clk_pll_ops.disable = clk_gate_ops.disable;
- 
- 	clk = clk_register(NULL, &pll_clk->hw.hw);
- 	if (WARN_ON(IS_ERR(clk))) {
-diff --git a/drivers/clk/socfpga/clk-pll.c b/drivers/clk/socfpga/clk-pll.c
-index dc65cc0fd3bd..a001641b2f42 100644
---- a/drivers/clk/socfpga/clk-pll.c
-+++ b/drivers/clk/socfpga/clk-pll.c
-@@ -105,8 +105,6 @@ static __init struct clk *__socfpga_pll_init(struct device_node *node,
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
--	clk_pll_ops.enable = clk_gate_ops.enable;
--	clk_pll_ops.disable = clk_gate_ops.disable;
- 
- 	clk = clk_register(NULL, &pll_clk->hw.hw);
- 	if (WARN_ON(IS_ERR(clk))) {
--- 
-2.25.1
+> How would these be different in functionality? fmt[2] won't be accessed if
+> fmt[1] is not 'c' (including '\0'), just like on the line above. I find the
+> original easier to read.
+
+Oops. You are right of course.
+
+cheers, Joe
 
