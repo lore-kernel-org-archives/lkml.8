@@ -2,119 +2,187 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6F4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D001C2BA18
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FF42082F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03545208FE
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="mP38Zims"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hW10NssB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390890AbgDCL5y (ORCPT
+        id S2390903AbgDCL6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:57:54 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35438 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390800AbgDCL5x (ORCPT
+        Fri, 3 Apr 2020 07:58:42 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47052 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390891AbgDCL6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:57:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g3so5893080wrx.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 04:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m9uB8CXOauOvkixvQHaupaJsW5GE1b/+9MUTIoEBWtw=;
-        b=mP38ZimsazJj47mkB31YHkndHlq8nfBVb0VJ4dOpLB1q02Anbk8BAxgjDFiejLpnHc
-         rwrkB8j9Ri1rZpdgetcOhGIrErQrE8HS53Tc8hrHbMxCFkFdzjDNitVYbsfim78ihOaZ
-         u4JXfGcv+zQ6ADmmgT6EM3TsniIsxAe8eIq3s6BHW36VkRoeZi/BnDeDpbJR0wA6T9nM
-         wjHXfO42JkRWkcSVAoutvrdb0l7R6+wwlv9p8XJLiMrt6UfCYL6EgjNlnxtAOyKXoVcD
-         yl6PhQA4ps0zd3OTsyunfNULVHwRJJeNSQH1Kp0DOLP5LLjllmUh4sxz6+8dau9mK36g
-         FmiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m9uB8CXOauOvkixvQHaupaJsW5GE1b/+9MUTIoEBWtw=;
-        b=PzH/zDLako3y/uhtn73+TMgANm/OZIS/ygyF45MreLwF2DRRNRK8i88hzZ+UigDKY1
-         mBf+JUH+CctVoD+psYHYUbGnLo3+yFvaK5tS5POkALTmsEojJxJ6vJGKBSEDvCD3yRrw
-         6t29bDZGlG24Q4CJFQRYtsMYHzIwU0XTfMPg4Q3R/g1wC5tte5H8VITqCDWlAHYrMknw
-         tNDJmX3tLVeedk22dQ+zpM5KYo8JPYjg7uVu7cksYHmgNpWvUmIATrpwiZvMMJS9tR0R
-         Z5ZTDcylHwNy2UO9ecQ7hJhgWfC8elPvnV5CQ14OV3Sv4kbSIveVdRAKBaziY2bYp7Du
-         p8pg==
-X-Gm-Message-State: AGi0PuYjs0ljxRr5k0F4ht6CsKnC/O0FvMcqTU9Yftf97vrHgSUbTwiJ
-        39tBwUWBakuByTW92Jtyzh3wP92ciqRlLw==
-X-Google-Smtp-Source: APiQypKPqO12YqzsS7Yog6MXPvcZfc7I526z0zAxC3kpVH3jFAjLrqtwuG8Dx+nbJb1IWqQgbkC7Aw==
-X-Received: by 2002:adf:82a6:: with SMTP id 35mr8735769wrc.307.1585915070364;
-        Fri, 03 Apr 2020 04:57:50 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([79.132.236.184])
-        by smtp.gmail.com with ESMTPSA id h26sm10928350wmb.19.2020.04.03.04.57.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 04:57:49 -0700 (PDT)
-Subject: Re: [PATCH v2] mptcp: add some missing pr_fmt defines
-To:     Geliang Tang <geliangtang@gmail.com>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, mptcp@lists.01.org,
-        linux-kernel@vger.kernel.org
-References: <f66ab0b7dfcc895d901e6e85b30f2a21842d2b2c.1585904950.git.geliangtang@gmail.com>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <53e4271f-c881-c52d-c6e1-4930a4f6898a@tessares.net>
-Date:   Fri, 3 Apr 2020 13:57:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 3 Apr 2020 07:58:41 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033BqkTx062593;
+        Fri, 3 Apr 2020 11:58:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=EY7GLrgtSs1FHcvLOyhhBbPOTYU0IWoLz9crxErYRF4=;
+ b=hW10NssBiNmiZRzAxjLDjm1HtFA8pzJyYZiZeplWQ+FW56J4Xl7T8UeKeG/1ZT98VS8s
+ ZnKk3CNH4qHDGAkPY93s72v+wE1L1I5mK/91zv/iY3qs4SsQSuK7mB+/zg7hrz47FQQ3
+ /5DT9ev0Zpx7arSACpo2wn331XfRm7OUS/369C/yxHsxNqxFZdDwaH8wj7RJGIQpG87j
+ BTGin9mvu2e3ZD6I8q1dIcyro/jIoCrD3NkBZ4i3ncQJ8Gn+94XiMs4jpyEbWXXDJGmC
+ hC76jwArUKRRCZ4RO9wtTE8HjHbXdnbsrZNn4f5mrZtvxEkhZIFHDq+FhDcl7ClHifoB Uw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 303aqj13wy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 11:58:32 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033BwDCJ119036;
+        Fri, 3 Apr 2020 11:58:32 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 302ga4gagp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 11:58:31 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033BwTrc000999;
+        Fri, 3 Apr 2020 11:58:29 GMT
+Received: from localhost.localdomain (/95.45.14.174)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 04:58:28 -0700
+Date:   Fri, 3 Apr 2020 12:58:21 +0100 (BST)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@localhost
+To:     Greg KH <gregkh@linuxfoundation.org>
+cc:     Alan Maguire <alan.maguire@oracle.com>, shuah <shuah@kernel.org>,
+        brendanhiggins@google.com, frowand.list@gmail.com,
+        linux-kselftest@vger.kernel.org, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v8 kunit-next 1/4] kunit: add debugfs
+ /sys/kernel/debug/kunit/<suite>/results display
+In-Reply-To: <20200402183839.GB3234477@kroah.com>
+Message-ID: <alpine.LRH.2.21.2004031255450.5001@localhost>
+References: <1585232710-322-1-git-send-email-alan.maguire@oracle.com> <1585232710-322-2-git-send-email-alan.maguire@oracle.com> <0d310181-a172-dec9-19aa-337ece9d7380@kernel.org> <alpine.LRH.2.21.2004021624400.21551@localhost>
+ <20200402183839.GB3234477@kroah.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <f66ab0b7dfcc895d901e6e85b30f2a21842d2b2c.1585904950.git.geliangtang@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geliang,
+On Thu, 2 Apr 2020, Greg KH wrote:
 
-On 03/04/2020 11:14, Geliang Tang wrote:
-> Some of the mptcp logs didn't print out the format string:
+> On Thu, Apr 02, 2020 at 04:27:35PM +0100, Alan Maguire wrote:
+> > On Wed, 1 Apr 2020, shuah wrote:
+> > 
+> > > Hi Alan,
+> > > 
+> > > On 3/26/20 8:25 AM, Alan Maguire wrote:
+> > > > add debugfs support for displaying kunit test suite results; this is
+> > > > especially useful for module-loaded tests to allow disentangling of
+> > > > test result display from other dmesg events.  debugfs support is
+> > > > provided if CONFIG_KUNIT_DEBUGFS=y.
+> > > > 
+> > > > As well as printk()ing messages, we append them to a per-test log.
+> > > > 
+> > > > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> > > > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> > > > Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+> > > > ---
+> > > >   include/kunit/test.h   |  54 +++++++++++++++---
+> > > >   lib/kunit/Kconfig      |   8 +++
+> > > 
+> > > Missing defaults for config options?
+> > > 
+> > > >   lib/kunit/Makefile     |   4 ++
+> > > >   lib/kunit/debugfs.c    | 116 ++++++++++++++++++++++++++++++++++++++
+> > > >   lib/kunit/debugfs.h    |  30 ++++++++++
+> > > >   lib/kunit/kunit-test.c |   4 +-
+> > > >   lib/kunit/test.c       | 147
+> > > >   ++++++++++++++++++++++++++++++++++++++-----------
+> > > >   7 files changed, 322 insertions(+), 41 deletions(-)
+> > > >   create mode 100644 lib/kunit/debugfs.c
+> > > >   create mode 100644 lib/kunit/debugfs.h
+> > > > 
+> > > 
+> > > snip
+> > > 
+> > > > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+> > > > index 065aa16..95d12e3 100644
+> > > > --- a/lib/kunit/Kconfig
+> > > > +++ b/lib/kunit/Kconfig
+> > > > @@ -14,6 +14,14 @@ menuconfig KUNIT
+> > > >   
+> > > >   if KUNIT
+> > > >   
+> > > > +config KUNIT_DEBUGFS
+> > > > +	bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation"
+> > > > +	help
+> > > > +	  Enable debugfs representation for kunit.  Currently this consists
+> > > > +	  of /sys/kernel/debug/kunit/<test_suite>/results files for each
+> > > > +	  test suite, which allow users to see results of the last test suite
+> > > > +	  run that occurred.
+> > > > +
+> > > 
+> > > Any reason why there is default for this option?
+> > > 
+> > > Same for all other options. I am sending pull request for now without
+> > > defaults. Would like to see this fixed for rc2.
+> > >
+> > 
+> > Sure, I'll send a patch shortly. Just wanted to get opinions
+> > on what those defaults should be; my working assumption is
+> > 
+> > - CONFIG_KUNIT should be default n; 
 > 
-> [  185.651493] DSS
-> [  185.651494] data_fin=0 dsn64=0 use_map=0 ack64=1 use_ack=1
-> [  185.651494] data_ack=13792750332298763796
-> [  185.651495] MPTCP: msk=00000000c4b81cfc ssk=000000009743af53 data_avail=0 skb=0000000063dc595d
-> [  185.651495] MPTCP: msk=00000000c4b81cfc ssk=000000009743af53 status=0
-> [  185.651495] MPTCP: msk ack_seq=9bbc894565aa2f9a subflow ack_seq=9bbc894565aa2f9a
-> [  185.651496] MPTCP: msk=00000000c4b81cfc ssk=000000009743af53 data_avail=1 skb=0000000012e809e1
+> No default means 'n', so there's no need to say that at all.
 > 
-> So this patch added these missing pr_fmt defines. Then we can get the same
-> format string "MPTCP" in all mptcp logs like this:
-> 
-> [  142.795829] MPTCP: DSS
-> [  142.795829] MPTCP: data_fin=0 dsn64=0 use_map=0 ack64=1 use_ack=1
-> [  142.795829] MPTCP: data_ack=8089704603109242421
-> [  142.795830] MPTCP: msk=00000000133a24e0 ssk=000000002e508c64 data_avail=0 skb=00000000d5f230df
-> [  142.795830] MPTCP: msk=00000000133a24e0 ssk=000000002e508c64 status=0
-> [  142.795831] MPTCP: msk ack_seq=66790290f1199d9b subflow ack_seq=66790290f1199d9b
-> [  142.795831] MPTCP: msk=00000000133a24e0 ssk=000000002e508c64 data_avail=1 skb=00000000de5aca2e
-> 
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-> 
-> ---
-> Changes in v2:
->   - add pr_fmt to C files, not headers.
 
-Thank you for this v2 (sorry, it was in my spam folder).
+Great!
 
-I thought checkpatch.pl would have forced you to add a new blank line in 
-net/mptcp/pm.c after the copyright comment and before the beginning of 
-the code but it seems not. And there was no blank line before so I guess 
-it's OK like that!
+> > - CONFIG_KUNIT_DEBUGFS should be default y (enabled by default
+> >   if CONFIG_KUNIT is set);
+> 
+> Why?  If it's is 'y', then don't even make it an option at all, just
+> always have it :)
+> 
+> 'y' is almost always reserved for "your machine will not function
+> properly without this enabled".
+>
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Okay, so in this case not having a default makes sense I think
+(we added the option as saying 'n' avoids allocating per-test
+loggging memory which might cause problems on low-memory systems).
+
+> > - CONFIG_KUNIT_TEST, CONFIG_KUNIT_EXAMPLE_TEST should be default n
+> 
+> So no need to specify anything, 'n' is the default.
+>
+
+Excellent! So based on the above seems like we don't need
+to add any defaults here I think.  Shuah/Brendan, let me know
+if I'm missing anything here. Thanks!
+
+Alan
+
+> thanks,
+> 
+> greg k-h
+> 
