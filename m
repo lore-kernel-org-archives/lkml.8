@@ -2,112 +2,114 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B17AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E99C2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D189A206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:13:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BHzwZZov"
+	by mail.kernel.org (Postfix) with ESMTP id 4FFBE206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585934098;
+	bh=AHo71D/TDksqsz7KNMAPhy0z4Peft0dY9ezXefwhfnQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UojQMaG5t6NF02u2ODUy9mKcfc7JIXTtUp897/A/mdDr/3COGSAk3rJyeFkBLWtQc
+	 QqFYnYIUtQQoIH6cWabJpLwiAq0/HLs44Dm9dHZVStuAyLLOnHKMH9jzOvEKhjUTMh
+	 jhLTSWXosU8CzErpG15Qun88N+xnTtLj2EqxdB7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390939AbgDCRNI (ORCPT
+        id S2391112AbgDCRO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:13:08 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49922 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgDCRNI (ORCPT
+        Fri, 3 Apr 2020 13:14:57 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39272 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgDCRO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:13:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=jv9Yf7cQCjMobtLa9/No1kE+P61DSmIa48Wq8z5iHcI=; b=BHzwZZovpp1Jkmqku0nupezxv5
-        IgyOcoOt6ZwXcDyaavQROpQU6N9/O/KIC91FiiaaKEAtkyQPzeWvh/+Va3qoUK8Tk6iK2DYiOSR2l
-        QsCCEvPl11kbipf0xEqUmNCn24YAqgQiTinb3gkG3xnb0O0X4Qc3oeo1a7SyJhRy9up+2oavIeyBF
-        tH9MQLug1ROCSisewPft92IoZj/Vp1sNPrrB3tvWvhOjxpmdCS5KHiK9m97aX1tkY3Nn63VOmkOrZ
-        8iyNHZ0s+ZNliRrey8DpfrAaLhZmFQvdZsRyEQl7KSrysGlPnpKXHpsxuhu0d+UUeaJaBoKr6oj55
-        otM7PcFA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jKPsO-0003oN-Ct; Fri, 03 Apr 2020 17:13:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 394F53060FD;
-        Fri,  3 Apr 2020 19:13:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 250C12B125211; Fri,  3 Apr 2020 19:13:03 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 19:13:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     jeyu@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        keescook@chromium.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH v2] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200403171303.GK20760@hirez.programming.kicks-ass.net>
+        Fri, 3 Apr 2020 13:14:57 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h6so6433448lfp.6
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:14:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=grpj0ioyBlxfvZVIhSHFEGbyw0eKO0PYVgnSLJ1Zi5U=;
+        b=USJaYqvnjKaYaTBS/r/rCBpDSvrybarlYMXWDZ4smu5ERFEX76FwO8PSUnqIvXBDHe
+         fxU4v99KZWfszXYDthM2Yxwm11W54+ODFUUnSQdz/wdNZcFZpMrve1HEMLaUSB3rdylF
+         gxpS2dTMAeiwybUkwx/+2QdK0J9IwYNihRNs4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=grpj0ioyBlxfvZVIhSHFEGbyw0eKO0PYVgnSLJ1Zi5U=;
+        b=SZAimZ6a/fXCtfOLMgAPIslSEWwHd9GSVMSoYBQJt6Y02AyEj5FHz435ZRdjYdDOlh
+         VWOYblJbc0K0MJuhTzi26Y4gPUB1PBiUNo62uBQzd1J6xlmL6fSJkGmp9f4OsOBr6JiB
+         SXfoo1q/9Nrisvg4VRSdeJFeoXGrcj6pn+6XcVhuFJAxQbXIYnSH+ZpJFTCitQHMi92w
+         U37f+PpblQU5VwXAJq3pnXoqbrjR1UM0AW5RgoS257Eg5EEbFLsh+masFX1hex4QNv71
+         T0YM9/XmEVKHTExo2VYWufaMzEhxaGOYudFR8HtOup1x0GIgnRG55Gy0Bn0pRpbiBVjr
+         1eCQ==
+X-Gm-Message-State: AGi0PuZ5RHpQjJvMvCsjMMyxAkWnn7YFHicd3Jq9XXTRkRUDaxGHljYj
+        8VsOtc31d0ePgoUF1QtbOmsXZHztqJg=
+X-Google-Smtp-Source: APiQypKwIuNsGJZRK/Vi0Z0prN2zXDT4PG9Y1conyF84gflw2V3mWwz1m/GDPqrOng4qUpO0IOl82w==
+X-Received: by 2002:ac2:46ed:: with SMTP id q13mr6176560lfo.176.1585934092413;
+        Fri, 03 Apr 2020 10:14:52 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id b16sm6357424lfq.34.2020.04.03.10.14.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 10:14:51 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id w145so6431703lff.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:14:50 -0700 (PDT)
+X-Received: by 2002:a19:7706:: with SMTP id s6mr2379958lfc.31.1585934090257;
+ Fri, 03 Apr 2020 10:14:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200402203317.GA34560@ubuntu-m2-xlarge-x86> <20200402215926.30714-1-chris@chris-wilson.co.uk>
+ <20200403013420.GA11516@ubuntu-m2-xlarge-x86> <CAKMK7uE9pv23edViQBC=Jy5fQV=-NQTNdk1qi91Z8shpeuL7FA@mail.gmail.com>
+In-Reply-To: <CAKMK7uE9pv23edViQBC=Jy5fQV=-NQTNdk1qi91Z8shpeuL7FA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 3 Apr 2020 10:14:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whMhCTdx0fDRnNT4doKGYw1BBBei0KcXDZcmtVpk_GvEw@mail.gmail.com>
+Message-ID: <CAHk-=whMhCTdx0fDRnNT4doKGYw1BBBei0KcXDZcmtVpk_GvEw@mail.gmail.com>
+Subject: Re: [PATCH] drm/legacy: Fix type for drm_local_map.offset
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 3, 2020 at 1:29 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> > Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
+>
+> This works too, missed it when replying to Linus
+>
+> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+>
+> Linus I guess this one is better, but like I explained it really
+> doesn't matter what we do with drm legacy code, it's a horror show
+> that should be disabled on all modern distros anyway. We just keep it
+> because of "never break old uapi".
 
-We're very close to enforcing W^X memory, refuse to load modules that
-violate this principle per construction.
+Ok, That patch from Chris looks fine to me too.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/module.c |   25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+dma_addr_t and resource_size_t aren't the same, but at least
+dma_addr_t should always be the bigger one.
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2044,9 +2044,29 @@ static void module_enable_x(const struct
- 	frob_text(&mod->core_layout, set_memory_x);
- 	frob_text(&mod->init_layout, set_memory_x);
- }
-+
-+static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
-+				       char *secstrings, struct module *mod)
-+{
-+	const unsigned long shf_wx = SHF_WRITE|SHF_EXECINSTR;
-+	int i;
-+
-+	for (i = 0; i < hdr->e_shnum; i++) {
-+		if ((sechdrs[i].sh_flags & shf_wx) == shf_wx)
-+			return -ENOEXEC;
-+	}
-+
-+	return 0;
-+}
-+
- #else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
- static void module_enable_nx(const struct module *mod) { }
- static void module_enable_x(const struct module *mod) { }
-+static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
-+				       char *secstrings, struct module *mod)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
- 
- 
-@@ -3378,6 +3398,11 @@ static struct module *layout_and_allocat
- 	if (err < 0)
- 		return ERR_PTR(err);
- 
-+	err = module_enforce_rwx_sections(info->hdr, info->sechdrs,
-+					  info->secstrings, info->mod);
-+	if (err < 0)
-+		return ERR_PTR(err);
-+
- 	/* We will do a special allocation for per-cpu sections later. */
- 	info->sechdrs[info->index.pcpu].sh_flags &= ~(unsigned long)SHF_ALLOC;
- 
+And it does look like nothing else ever takes the address of this
+field, so the ones that might want just the resource_size_t part will
+at least have enough bits.
+
+So I think Chris' patch is the way to go. I'm assuming I'll get it
+through the normal drm tree channels, this doesn't sound _so_ urgent
+that I'd need to expedite that patch into my tree and apply it
+directly.
+
+Thanks,
+
+               Linus
