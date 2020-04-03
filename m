@@ -2,107 +2,118 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D80C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22642C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0A82063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC721208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585888928;
+	bh=KRNe9q7FDPUa62rf/7Q/Lg8JFNzSxpCm816ZYQQwJEU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qBzwY6YyCXoBvEuafsvRUCqr0yPREokZijciWFyKzNdft+1hV3f7N+aM5Zz5kH8rj
+	 Pm2biALTOhNcSy20Z6HmKTPyORpEeSxN7N+KM0h4+RABNh851KeuPteUsHdBAuUyc6
+	 3z9jjPPRAye/vIqsI+1K5r9bIdmnEXZcwlQaNZkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbgDCElt (ORCPT
+        id S1732161AbgDCEmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 00:41:49 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:54562 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgDCEls (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 00:41:48 -0400
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 9CA6E2001B8;
-        Fri,  3 Apr 2020 04:41:47 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 8C84020735; Fri,  3 Apr 2020 06:41:08 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 06:41:08 +0200
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Hu Haowen <xianfengting221@163.com>
-Cc:     jeyu@kernel.org, maennich@google.com, axboe@kernel.dk,
-        nborisov@suse.com, josef@toxicpanda.com, stfrench@microsoft.com,
-        chris@chris-wilson.co.uk, wqu@suse.com, xiubli@redhat.com,
-        airlied@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pcmcia: remove some unused space characters
-Message-ID: <20200403044108.GA306056@light.dominikbrodowski.net>
-References: <20200330020024.8174-1-xianfengting221@163.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330020024.8174-1-xianfengting221@163.com>
+        Fri, 3 Apr 2020 00:42:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728856AbgDCEmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 00:42:06 -0400
+Received: from localhost.localdomain (unknown [223.93.147.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 557DC2063A;
+        Fri,  3 Apr 2020 04:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585888925;
+        bh=KRNe9q7FDPUa62rf/7Q/Lg8JFNzSxpCm816ZYQQwJEU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pTVooEFZ8FT+bny5X7MEEMizyl5NqtVVlc6ADiKHVeljOyH3P1aqEqTryj2LDQyrB
+         Si6dGpbE6hOwd1JvFkvv9DzRURgY8EVioJOq4Y6vALntcEJcFyKXwW9/FToSwvKWlO
+         vyXXPxzVFeKXOlpqs4Ppb6vZ2fxE27R+V/V3UbrU=
+From:   guoren@kernel.org
+To:     arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+        Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH 01/11] csky: Fixup init_fpu compile warning with __init
+Date:   Fri,  3 Apr 2020 12:41:40 +0800
+Message-Id: <20200403044150.20562-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:00:24AM +0800, Hu Haowen wrote:
-> There are a few space characters I found by chance. I think they are
-> redundant, so I removed them.
-> 
-> Signed-off-by: Hu Haowen <xianfengting221@163.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-Applied to pcmcia-next.
+WARNING: vmlinux.o(.text+0x2366): Section mismatch in reference from the
+function csky_start_secondary() to the function .init.text:init_fpu()
 
-Thanks,
-	Dominik
+The function csky_start_secondary() references
+the function __init init_fpu().
+This is often because csky_start_secondary lacks a __init
+annotation or the annotation of init_fpu is wrong.
 
-> ---
->  drivers/pcmcia/sa1100_simpad.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pcmcia/sa1100_simpad.c b/drivers/pcmcia/sa1100_simpad.c
-> index e2e8729afd9d..784ada5b8c4f 100644
-> --- a/drivers/pcmcia/sa1100_simpad.c
-> +++ b/drivers/pcmcia/sa1100_simpad.c
-> @@ -14,7 +14,7 @@
->  #include <asm/mach-types.h>
->  #include <mach/simpad.h>
->  #include "sa1100_generic.h"
-> - 
-> +
->  static int simpad_pcmcia_hw_init(struct soc_pcmcia_socket *skt)
->  {
->  
-> @@ -66,7 +66,7 @@ simpad_pcmcia_configure_socket(struct soc_pcmcia_socket *skt,
->  		simpad_clear_cs3_bit(VCC_3V_EN|VCC_5V_EN|EN0|EN1);
->  		break;
->  
-> -	case 33:  
-> +	case 33:
->  		simpad_clear_cs3_bit(VCC_3V_EN|EN1);
->  		simpad_set_cs3_bit(VCC_5V_EN|EN0);
->  		break;
-> @@ -95,7 +95,7 @@ static void simpad_pcmcia_socket_suspend(struct soc_pcmcia_socket *skt)
->  	simpad_set_cs3_bit(PCMCIA_RESET);
->  }
->  
-> -static struct pcmcia_low_level simpad_pcmcia_ops = { 
-> +static struct pcmcia_low_level simpad_pcmcia_ops = {
->  	.owner			= THIS_MODULE,
->  	.hw_init		= simpad_pcmcia_hw_init,
->  	.hw_shutdown		= simpad_pcmcia_hw_shutdown,
-> -- 
-> 2.20.1
-> 
-> 
+Reported-by: Lu Chongzhi <chongzhi.lcz@alibaba-inc.com>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+---
+ arch/csky/abiv2/fpu.c         | 5 -----
+ arch/csky/abiv2/inc/abi/fpu.h | 3 ++-
+ arch/csky/kernel/smp.c        | 3 +++
+ 3 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/arch/csky/abiv2/fpu.c b/arch/csky/abiv2/fpu.c
+index 86d187d4e5af..5acc5c2e544e 100644
+--- a/arch/csky/abiv2/fpu.c
++++ b/arch/csky/abiv2/fpu.c
+@@ -10,11 +10,6 @@
+ #define MTCR_DIST	0xC0006420
+ #define MFCR_DIST	0xC0006020
+ 
+-void __init init_fpu(void)
+-{
+-	mtcr("cr<1, 2>", 0);
+-}
+-
+ /*
+  * fpu_libc_helper() is to help libc to excute:
+  *  - mfcr %a, cr<1, 2>
+diff --git a/arch/csky/abiv2/inc/abi/fpu.h b/arch/csky/abiv2/inc/abi/fpu.h
+index 22ca3cf2794a..09e2700a3693 100644
+--- a/arch/csky/abiv2/inc/abi/fpu.h
++++ b/arch/csky/abiv2/inc/abi/fpu.h
+@@ -9,7 +9,8 @@
+ 
+ int fpu_libc_helper(struct pt_regs *regs);
+ void fpu_fpe(struct pt_regs *regs);
+-void __init init_fpu(void);
++
++static inline void init_fpu(void) { mtcr("cr<1, 2>", 0); }
+ 
+ void save_to_user_fp(struct user_fp *user_fp);
+ void restore_from_user_fp(struct user_fp *user_fp);
+diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
+index 0bb0954d5570..df2e2174dbd0 100644
+--- a/arch/csky/kernel/smp.c
++++ b/arch/csky/kernel/smp.c
+@@ -22,6 +22,9 @@
+ #include <asm/sections.h>
+ #include <asm/mmu_context.h>
+ #include <asm/pgalloc.h>
++#ifdef CONFIG_CPU_HAS_FPU
++#include <abi/fpu.h>
++#endif
+ 
+ struct ipi_data_struct {
+ 	unsigned long bits ____cacheline_aligned;
+-- 
+2.17.0
+
