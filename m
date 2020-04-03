@@ -2,129 +2,123 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE17C2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF98FC2BA18
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A04CB20659
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842EE207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Qm3sw3WX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PZepwGBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgDCWTW (ORCPT
+        id S1728381AbgDCWWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 18:19:22 -0400
-Received: from ozlabs.org ([203.11.71.1]:49457 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727842AbgDCWTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 18:19:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 3 Apr 2020 18:22:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51746 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727947AbgDCWWs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 18:22:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585952566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=s4frkIsjfdUlJtqzclZG3qUK/GnNSIuQZIcCJzVIQcI=;
+        b=PZepwGBxGiVZO2EmgMLywISLJeyfENQ3E2dvJr0eLrJOrVLF714JihNAc0kmxNfh27pRcS
+        AKr6PSCuf3INKQXwfpGAiph8rCynXGd3guX4Vw+JdcMniwwV1KpXZ9LwQYfAdRxIhkHM40
+        sL3JDQm2xyDadVQWSAUMEGY7q9Ez6PU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-i3sFbb7LNTGRZIWfJgx-SQ-1; Fri, 03 Apr 2020 18:22:44 -0400
+X-MC-Unique: i3sFbb7LNTGRZIWfJgx-SQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48vDqn6z3dz9sQt;
-        Sat,  4 Apr 2020 09:19:17 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585952360;
-        bh=bpnSIVGUOGvlQ9OKsv+LUvTdUTlg77hbCbEp5DBwlR8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Qm3sw3WX2RavWZVqPkTzX5jlmdH0ayRN/4oCLm4hYhXHwIRkLTxkJN9WcN+36F3RB
-         RxVZTo2rlow9DyadwjR8FrYnQzfKq4mOh8FtWNagfSdEExpIRfosYxYByl0U2aScIm
-         euyLhIxJQfjoGhbfA/uAGPeHe960FgIujUP5N4767YOJgobjokjhmDWZoarZnG5bGD
-         iUt2Uv0vL7yBfSaVckkruXaxC6zeM61L/iwXyUNhleEW8bHkNehqFXOXG3pR4UCulS
-         jFPP9f+prbgdY7bbaVHln+bXYHu5ovuAxoMAiXAVByaNsKF5lhJWBorpAyIk0vuWrV
-         bxp5tKnDic0gA==
-Date:   Sat, 4 Apr 2020 09:19:16 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warnings in Linus' tree
-Message-ID: <20200404091916.6f00a24d@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA63E18CA240;
+        Fri,  3 Apr 2020 22:22:43 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BB37114810;
+        Fri,  3 Apr 2020 22:22:43 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 16:22:42 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: [GIT PULL] VFIO updates for v5.7-rc1
+Message-ID: <20200403162242.5e4f9afa@w520.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/N15WC4V=V+Xcj.TK9WcaFkn";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/N15WC4V=V+Xcj.TK9WcaFkn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Linus,
 
-Hi all,
+The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
 
-Today's linux-next build of Linus' tree (arm multi_v7_defconfig) produced
-these warnings:
+  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
 
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
-arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /s=
-oc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells =
-(2) differs from /soc (1)
+are available in the Git repository at:
 
-I have no idea what caused this :-(
+  git://github.com/awilliam/linux-vfio.git tags/vfio-v5.7-rc1
 
---=20
-Cheers,
-Stephen Rothwell
+for you to fetch changes up to f44efca0493ddc1e8731047c234ec8e475943077:
 
---Sig_/N15WC4V=V+Xcj.TK9WcaFkn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+  vfio: Ignore -ENODEV when getting MSI cookie (2020-04-01 13:51:51 -0600)
 
------BEGIN PGP SIGNATURE-----
+----------------------------------------------------------------
+VFIO updates for v5.7-rc1
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6HtmQACgkQAVBC80lX
-0GyuEAf+JJuWfL67B12foXMFHBP2YTF96Tm6mFz46aVbbspK90yGzunYyiHnBx2a
-bzFvKKvY5xiFauxbZUCmkwWl9v++SgfG+5dulRYf2NbyRfy+T07uYBAUkS7K4Yri
-iscP8oZhcBgosoyfWJf8liKFexZRHAk+1Fp93inMNxqmKTUiN7WoFX8egacCi7H+
-KdeB1kewDVbe8VIWQBRXFHIa10gW3PbGJBY68vmEhTgXKzB/acs18ZYGMStyVM3j
-BoNZqU2VAgggvdZaDJJPOL+QCdxA44XGwsQZhntJBG2oInY7wN+zume1ZWiyWcQ3
-IzFzZoO1mT7kygOqHD5ttJrUTAXOoQ==
-=TqoX
------END PGP SIGNATURE-----
+ - vfio-pci SR-IOV support (Alex Williamson)
 
---Sig_/N15WC4V=V+Xcj.TK9WcaFkn--
+ - vfio DMA read/write interface (Yan Zhao)
+
+ - Fix vfio-platform erroneous IRQ error log (Eric Auger)
+
+ - Fix shared ATSD support for NVLink on POWER (Sam Bobroff)
+
+ - Fix init error without CONFIG_IOMMU_DMA (Andre Przywara)
+
+----------------------------------------------------------------
+Alex Williamson (8):
+      vfio: Include optional device match in vfio_device_ops callbacks
+      vfio/pci: Implement match ops
+      vfio/pci: Introduce VF token
+      vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
+      vfio/pci: Add sriov_configure support
+      vfio/pci: Remove dev_fmt definition
+      vfio/pci: Cleanup .probe() exit paths
+      Merge branches 'v5.7/vfio/alex-sriov-v3' and 'v5.7/vfio/yan-dma-rw-v4' into v5.7/vfio/next
+
+Andre Przywara (1):
+      vfio: Ignore -ENODEV when getting MSI cookie
+
+Eric Auger (1):
+      vfio: platform: Switch to platform_get_irq_optional()
+
+Sam Bobroff (1):
+      vfio-pci/nvlink2: Allow fallback to ibm,mmio-atsd[0]
+
+Yan Zhao (3):
+      vfio: allow external user to get vfio group from device
+      vfio: introduce vfio_dma_rw to read/write a range of IOVAs
+      vfio: avoid inefficient operations on VFIO group in vfio_pin/unpin_pages
+
+ drivers/vfio/pci/vfio_pci.c           | 390 +++++++++++++++++++++++++++++++---
+ drivers/vfio/pci/vfio_pci_nvlink2.c   |  10 +-
+ drivers/vfio/pci/vfio_pci_private.h   |  10 +
+ drivers/vfio/platform/vfio_platform.c |   2 +-
+ drivers/vfio/vfio.c                   | 198 ++++++++++++++++-
+ drivers/vfio/vfio_iommu_type1.c       |  78 ++++++-
+ include/linux/vfio.h                  |  17 ++
+ include/uapi/linux/vfio.h             |  37 ++++
+ 8 files changed, 710 insertions(+), 32 deletions(-)
+
