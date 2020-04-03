@@ -2,118 +2,239 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A4EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DC9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4BC4206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C1F206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:06:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWypiIdB"
+	dkim=pass (2048-bit key) header.d=ugedal.com header.i=@ugedal.com header.b="SupQKYxp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403869AbgDCSDi (ORCPT
+        id S2404161AbgDCSGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:03:38 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48648 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728219AbgDCSDi (ORCPT
+        Fri, 3 Apr 2020 14:06:00 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36073 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728219AbgDCSGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:03:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585937016;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CgXbM5tM4nWTswrQ/RgYu+O+1APq3VPj1+jTCpISTXI=;
-        b=XWypiIdBePENrnQSCoyRvvT7nBdjpwFCt8FKNbSsipN0Kt+SREpvOzX/F9qiao3FdtWkvZ
-        6NRESfLZRW17gIxFNopDtONPQd/mGaPPtcIjLFXxo0cwLcJqoFoqJxc0ZjIXfF/IllnFlS
-        xyNapmD8KTEqpvVw825r+cHBqjZr2tQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-V9u6mrzrMACNC1HS3NOGKQ-1; Fri, 03 Apr 2020 14:03:33 -0400
-X-MC-Unique: V9u6mrzrMACNC1HS3NOGKQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42DA88017F6;
-        Fri,  3 Apr 2020 18:03:31 +0000 (UTC)
-Received: from redhat.com (ovpn-114-27.phx2.redhat.com [10.3.114.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 58F7510002CD;
-        Fri,  3 Apr 2020 18:03:30 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 14:03:28 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [POC 22/23] livepatch/module: Remove obsolete copy_module_elf()
-Message-ID: <20200403180328.GC30284@redhat.com>
-References: <20200117150323.21801-1-pmladek@suse.com>
- <20200117150323.21801-23-pmladek@suse.com>
+        Fri, 3 Apr 2020 14:06:00 -0400
+Received: by mail-qk1-f193.google.com with SMTP id l25so928601qkk.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:05:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ugedal.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=jI4MPZ+407qBrB7BW/I/HGZvR1WIFnXi1aza4Y9SsFQ=;
+        b=SupQKYxpE8gbDBDzCN/4G4PY85zzwbFB6pvsxwwYjUE+bQuhCMGZfLo8PdRWW8nbvV
+         X8YKJZEM7fxcewpW+alGiHKPP53DI+QITQfrJgltJKWWxfDAbYGDk/Bn8mfR73Y22iGL
+         ySnlVvyWajEOedCXbUfMpPnHkb5CLdeVAVEbNOU6dp0dMOoxRfTq6O5QnEpskTeI8oUX
+         M88ne1NwPeVE4X46eyfjwj7kix2HMM4JlRAKtly8XIXxv6xLKxvK1O8ROHbrU2lINJj7
+         DFBw8q/1tRyHNC9//JeAV07JIQQ/haP1og9Jv7oUmXCX/+HmI8C3WyB/fzUzuQueLc9S
+         kH+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=jI4MPZ+407qBrB7BW/I/HGZvR1WIFnXi1aza4Y9SsFQ=;
+        b=n1Li83KLE9glfCUYSFnT2z/E2rGzrZ0bejz+xNbnMX1SqHGiaM5fZM9yzsGPurc80s
+         uJNqrRFcpw+JOS1GAawls5hD+K22ok/3I7dkP1/NcpfMoBpiuvPKAEnp70yZ4KXv4PE9
+         XpsylMOlMvXkKdn+UYfmhQjgjRgbGwM1ymZ/7MRgH14y7JiYUD1YaDnW1gU6eZPCntCk
+         uJMmDIBpUonv5ESPukzJZytD2E9buLqjGKUAPOSpyfOiCMZoOtLKScZcEynQ502DGvwh
+         fH/iBsesl/eZeAwC+1lS4rxOGYjgh/SFgJa0/xcSzhTEEW6X/uyDI5v0tNDd38AstES1
+         FOKQ==
+X-Gm-Message-State: AGi0Pubo08LI2emgahABSRmeTsIa0bK/PWwuedDEe66uI1sIq6TcHMjp
+        oV4Qfy962vNVvRu3jlP6+VpYSqQdtlOz6ChGOc7+LA==
+X-Google-Smtp-Source: APiQypL+/GQqyo3E20GV5a17Pp1eqwBVd/nfJQB2qgX43W1nA7BCnYEqFNdYZfXNQVCw6d9nKs+tN6rZpOEVxDxE90I=
+X-Received: by 2002:a37:4fd0:: with SMTP id d199mr10143025qkb.121.1585937158639;
+ Fri, 03 Apr 2020 11:05:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117150323.21801-23-pmladek@suse.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200403175528.225990-1-odin@ugedal.com>
+In-Reply-To: <20200403175528.225990-1-odin@ugedal.com>
+From:   Odin Ugedal <odin@ugedal.com>
+Date:   Fri, 3 Apr 2020 20:05:46 +0200
+Message-ID: <CAFpoUr11o6m5oS7Dtt9FM02JmPg4oJFaUQcD+R+7ckoR=QETqg@mail.gmail.com>
+Subject: Re: [PATCH] device_cgroup: Cleanup cgroup eBPF device filter code
+To:     bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Harish.Kasiviswanathan@amd.com,
+        guro@fb.com, amd-gfx@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:03:22PM +0100, Petr Mladek wrote:
-> The split livepatch modules can be relocated immedidately when they
-> are loaded. There is no longer needed to preserve the elf sections.
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+Hi (patch author here),
+
+This is my first "real" patch, so looking forward to some feedback! I
+am not sure if this behavior is the "best one", or if we should
+require CONFIG_CGROUP_DEVICE to be set to yes. In that case we can
+just abandon this patch and replace the original "#if
+defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)" with a
+simple "#ifdef CONFIG_CGROUP_DEVICE" and update the docs and the
+config.
+
+It is also another alternative to keep the code in this patch and move
+some of it into a separate file in order to avoid all the ifdefs, and
+to make the split between cgroup v1 and cgroup v2 code cleaner.
+
+As a reference, only Fedora is currently shipping with cgroup v2 as
+default (afaik.) and their kernel is compiled (5.3.7-301.fc31.x86_64)
+with CONFIG_CGROUP_DEVICE=y and CONFIG_CGROUP_BPF=y, so this will not
+affect them.
+
+Odin Ugedal
+
+
+fre. 3. apr. 2020 kl. 19:55 skrev Odin Ugedal <odin@ugedal.com>:
+>
+> Original cgroup v2 eBPF code for filtering device access made it
+> possible to compile with CONFIG_CGROUP_DEVICE=n and still use the eBPF
+> filtering. Change
+> commit 4b7d4d453fc4 ("device_cgroup: Export devcgroup_check_permission")
+> reverted this, making it required to set it to y.
+>
+> Since the device filtering (and all the docs) for cgroup v2 is no longer
+> a "device controller" like it was in v1, someone might compile their
+> kernel with CONFIG_CGROUP_DEVICE=n. Then (for linux 5.5+) the eBPF
+> filter will not be invoked, and all processes will be allowed access
+> to all devices, no matter what the eBPF filter says.
+>
+> Signed-off-by: Odin Ugedal <odin@ugedal.com>
 > ---
->  Documentation/livepatch/module-elf-format.rst | 18 ++++++
->  include/linux/module.h                        |  3 -
->  kernel/module.c                               | 87 ---------------------------
->  3 files changed, 18 insertions(+), 90 deletions(-)
-> 
-> diff --git a/Documentation/livepatch/module-elf-format.rst b/Documentation/livepatch/module-elf-format.rst
-> index 9f0c997d4940..8c6b894c4661 100644
-> --- a/Documentation/livepatch/module-elf-format.rst
-> +++ b/Documentation/livepatch/module-elf-format.rst
-> @@ -14,6 +14,7 @@ This document outlines the Elf format requirements that livepatch modules must f
->     4. Livepatch symbols
->        4.1 A livepatch module's symbol table
->        4.2 Livepatch symbol format
-> +   5. Symbol table and Elf section access
->  
->  1. Background and motivation
->  ============================
-> @@ -295,3 +296,20 @@ See include/uapi/linux/elf.h for the actual definitions.
->  [*]
->    Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH (0xff20).
->    "OS" means OS-specific.
+>  drivers/gpu/drm/amd/amdkfd/kfd_priv.h |  2 +-
+>  include/linux/device_cgroup.h         | 14 +++++---------
+>  security/Makefile                     |  2 +-
+>  security/device_cgroup.c              | 19 ++++++++++++++++---
+>  4 files changed, 23 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
+> index 4a3049841086..c24cad3c64ed 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
+> @@ -1050,7 +1050,7 @@ void kfd_dec_compute_active(struct kfd_dev *dev);
+>  /* Check with device cgroup if @kfd device is accessible */
+>  static inline int kfd_devcgroup_check_permission(struct kfd_dev *kfd)
+>  {
+> -#if defined(CONFIG_CGROUP_DEVICE)
+> +#if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
+>         struct drm_device *ddev = kfd->ddev;
+>
+>         return devcgroup_check_permission(DEVCG_DEV_CHAR, ddev->driver->major,
+> diff --git a/include/linux/device_cgroup.h b/include/linux/device_cgroup.h
+> index fa35b52e0002..9a72214496e5 100644
+> --- a/include/linux/device_cgroup.h
+> +++ b/include/linux/device_cgroup.h
+> @@ -1,6 +1,5 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  #include <linux/fs.h>
+> -#include <linux/bpf-cgroup.h>
+>
+>  #define DEVCG_ACC_MKNOD 1
+>  #define DEVCG_ACC_READ  2
+> @@ -11,16 +10,10 @@
+>  #define DEVCG_DEV_CHAR  2
+>  #define DEVCG_DEV_ALL   4  /* this represents all devices */
+>
+> -#ifdef CONFIG_CGROUP_DEVICE
+> -int devcgroup_check_permission(short type, u32 major, u32 minor,
+> -                              short access);
+> -#else
+> -static inline int devcgroup_check_permission(short type, u32 major, u32 minor,
+> -                                            short access)
+> -{ return 0; }
+> -#endif
+>
+>  #if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
+> +int devcgroup_check_permission(short type, u32 major, u32 minor,
+> +                              short access);
+>  static inline int devcgroup_inode_permission(struct inode *inode, int mask)
+>  {
+>         short type, access = 0;
+> @@ -61,6 +54,9 @@ static inline int devcgroup_inode_mknod(int mode, dev_t dev)
+>  }
+>
+>  #else
+> +static inline int devcgroup_check_permission(short type, u32 major, u32 minor,
+> +                              short access)
+> +{ return 0; }
+>  static inline int devcgroup_inode_permission(struct inode *inode, int mask)
+>  { return 0; }
+>  static inline int devcgroup_inode_mknod(int mode, dev_t dev)
+> diff --git a/security/Makefile b/security/Makefile
+> index 22e73a3482bd..3baf435de541 100644
+> --- a/security/Makefile
+> +++ b/security/Makefile
+> @@ -30,7 +30,7 @@ obj-$(CONFIG_SECURITY_YAMA)           += yama/
+>  obj-$(CONFIG_SECURITY_LOADPIN)         += loadpin/
+>  obj-$(CONFIG_SECURITY_SAFESETID)       += safesetid/
+>  obj-$(CONFIG_SECURITY_LOCKDOWN_LSM)    += lockdown/
+> -obj-$(CONFIG_CGROUP_DEVICE)            += device_cgroup.o
+> +obj-$(CONFIG_CGROUPS)                  += device_cgroup.o
+>  obj-$(CONFIG_BPF_LSM)                  += bpf/
+>
+>  # Object integrity file lists
+> diff --git a/security/device_cgroup.c b/security/device_cgroup.c
+> index 7d0f8f7431ff..43ab0ad45c1b 100644
+> --- a/security/device_cgroup.c
+> +++ b/security/device_cgroup.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/rcupdate.h>
+>  #include <linux/mutex.h>
+>
+> +#ifdef CONFIG_CGROUP_DEVICE
 > +
-> +5. Symbol table and Elf section access
-> +======================================
-> +A livepatch module's symbol table is accessible through module->symtab.
+>  static DEFINE_MUTEX(devcgroup_mutex);
+>
+>  enum devcg_behavior {
+> @@ -792,7 +794,7 @@ struct cgroup_subsys devices_cgrp_subsys = {
+>  };
+>
+>  /**
+> - * __devcgroup_check_permission - checks if an inode operation is permitted
+> + * devcgroup_legacy_check_permission - checks if an inode operation is permitted
+>   * @dev_cgroup: the dev cgroup to be tested against
+>   * @type: device type
+>   * @major: device major number
+> @@ -801,7 +803,7 @@ struct cgroup_subsys devices_cgrp_subsys = {
+>   *
+>   * returns 0 on success, -EPERM case the operation is not permitted
+>   */
+> -static int __devcgroup_check_permission(short type, u32 major, u32 minor,
+> +static int devcgroup_legacy_check_permission(short type, u32 major, u32 minor,
+>                                         short access)
+>  {
+>         struct dev_cgroup *dev_cgroup;
+> @@ -825,6 +827,10 @@ static int __devcgroup_check_permission(short type, u32 major, u32 minor,
+>         return 0;
+>  }
+>
+> +#endif /* CONFIG_CGROUP_DEVICE */
 > +
-> +Since apply_relocate_add() requires access to a module's section headers,
-> +symbol table, and relocation section indices, Elf information is preserved for
-> +livepatch modules and is made accessible by the module loader through
-> +module->klp_info, which is a klp_modinfo struct. When a livepatch module loads,
-> +this struct is filled in by the module loader. Its fields are documented below::
+> +#if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
 > +
-> +	struct klp_modinfo {
-> +		Elf_Ehdr hdr; /* Elf header */
-> +		Elf_Shdr *sechdrs; /* Section header table */
-> +		char *secstrings; /* String table for the section headers */
-> +		unsigned int symndx; /* The symbol table section index */
-> +	};
-
-I think this file was inadvertently reverted, or at least the Symbol
-table and Elf section access section was supposed to stay gone, right?
-
--- Joe
-
+>  int devcgroup_check_permission(short type, u32 major, u32 minor, short access)
+>  {
+>         int rc = BPF_CGROUP_RUN_PROG_DEVICE_CGROUP(type, major, minor, access);
+> @@ -832,6 +838,13 @@ int devcgroup_check_permission(short type, u32 major, u32 minor, short access)
+>         if (rc)
+>                 return -EPERM;
+>
+> -       return __devcgroup_check_permission(type, major, minor, access);
+> +       #ifdef CONFIG_CGROUP_DEVICE
+> +       return devcgroup_legacy_check_permission(type, major, minor, access);
+> +
+> +       #else /* CONFIG_CGROUP_DEVICE */
+> +       return 0;
+> +
+> +       #endif /* CONFIG_CGROUP_DEVICE */
+>  }
+>  EXPORT_SYMBOL(devcgroup_check_permission);
+> +#endif /* defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF) */
+> --
+> 2.26.0
+>
