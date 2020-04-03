@@ -2,104 +2,125 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9BEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D45C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF3A20721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:17:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NZGNNLO/"
+	by mail.kernel.org (Postfix) with ESMTP id 4215F20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585919926;
+	bh=WqfXIrmWWvxJbbjVxq8Ax+aX7FyrSzMmutGDKxcL97g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XrZrlYB3GoWmmulKCt5zAFG7RqpcVqQLyUfvdC82VJH4fwe38xRZCed4cR31wPhD0
+	 bGXeAcMBLxJvMoONcXHTJdlHXm/kLTp93PGv8t6ZLJuyr/vv8XDVFQFaKEAXwRIG6S
+	 KWXgLuTAsgS3eqEAPnJcvNGNru4KdQwKXW6saAek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403993AbgDCNRi (ORCPT
+        id S2403965AbgDCNSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:17:38 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50194 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728044AbgDCNRi (ORCPT
+        Fri, 3 Apr 2020 09:18:45 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:39294 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728133AbgDCNSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:17:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585919857;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ArqORMrJA2OqQPY2t/1A7/OKoVfVWVKes8TY2CWI73M=;
-        b=NZGNNLO/TxWo0oQ7DhvsBSV0OCGijfzIJ0Vlv2ULJy98JxfxnzU/bhn0LIES9qBdALS7+C
-        1gX5gNPBCw9VABLHOLew190jmafrlq9bTR1cURBUNjkThE5br/Iq6wgCPWHtu05DAswRxK
-        U9oCGUJb8Il134hVCs/3vTJG2jAta5k=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-dVnzUjVvOSWicbIa5YfI0w-1; Fri, 03 Apr 2020 09:17:36 -0400
-X-MC-Unique: dVnzUjVvOSWicbIa5YfI0w-1
-Received: by mail-wm1-f71.google.com with SMTP id y1so2770082wmj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 06:17:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ArqORMrJA2OqQPY2t/1A7/OKoVfVWVKes8TY2CWI73M=;
-        b=RQJms5ZprhR8uQfTx1OLAJLqQAJj3suDFwoVuynUFbev1Yl2LZTwRl5zjBeMBuBCtC
-         JmYhAGSG+AII8jNqJpVnz2EMD4rQuGJXRt99Y9l2QDKusTEIvIFJpFaDLNFT/7+m7eWC
-         fyNDRcEYG1g/Zc6En+JmiZJcbDqn1aT+LlEm87rdEOCIeIwEuFUtkdX1LLClvZjDGWuP
-         flwyMMz4fDM6CLA2pfTD2NCsz5w9GDQXf8dM1JQUD5JQbpvOT2CQ9Ikw0yUYgws0caXx
-         qC2DgVs5EsyaLBrklihHYyLTTL9oGywDe3B3SA+e+jZCPDG2YX/T+ctfWwWnAb7TE6Mv
-         QOBA==
-X-Gm-Message-State: AGi0PuYRGJuQ4qG9ObX7HYzMYWTK0Gam9QDO2bRa0awQK9GWPVv+E47B
-        RhzKDfgulf9jnwF6nfimGB5sfhmFtv2W9dxWWZukAa6qiulxp9PlaE7nw4yjNwNXEcBbuFkx3sJ
-        ePZxsUbmUBM4PaZLM7ShXgTZ6
-X-Received: by 2002:a1c:bad5:: with SMTP id k204mr8540084wmf.162.1585919854426;
-        Fri, 03 Apr 2020 06:17:34 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLeKuZWTOoGObgblVmU1XlPfLncIoodjwAYn/v1dYHKOG7SEuhVlGH+GOLYChQjO8q56nyz/w==
-X-Received: by 2002:a1c:bad5:: with SMTP id k204mr8540065wmf.162.1585919854180;
-        Fri, 03 Apr 2020 06:17:34 -0700 (PDT)
-Received: from redfedo.redhat.com ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id e23sm774957wra.43.2020.04.03.06.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 06:17:33 -0700 (PDT)
-From:   Julien Thierry <jthierry@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
-        Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH] objtool: Fix off-by-one in symbol_by_offset()
-Date:   Fri,  3 Apr 2020 14:17:30 +0100
-Message-Id: <20200403131730.32618-1-jthierry@redhat.com>
-X-Mailer: git-send-email 2.21.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 3 Apr 2020 09:18:45 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 033DH9t9027909;
+        Fri, 3 Apr 2020 22:17:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 033DH9t9027909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585919830;
+        bh=6SNvN4uZsUHdhQ28mSp8KyStQBpxyYCWP8kC6l/eSfI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uhYpip08oTMfdfXf8KHL6QegqkNA6gfAiFvhui0ahYMcbzpxCL2l+0kBcYQ/mrruC
+         lHlvf61boJqmhqeXKM3t6CD4m6rQKDVyYi/7WNYY74AK/KCNYdm9w85nR0Sbx6cJfg
+         8M6Zg39W3WGHxd2K+3YYXbg3G5qo24s9ZBJo3eSLQUKFVK5tDG9sgSFD8S9rxL7Jzg
+         89AGfwjYIB3TSWE0HADxvPqIe7jKFrQqDLQO/AiV5xCb3kim7DrCfghjmgGPImLw2k
+         pgONRMfdu6j3FQ/PIUKsWrAYWGi8CJOXcMtMNCFQxxUzk5UAN2ShA0EEyeG16nu0x6
+         9PgHAHnK3q3Aw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        linux-usb@vger.kernel.org
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        David Howells <dhowells@redhat.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: gadget: legacy: fix redundant initialization warnings from cppcheck
+Date:   Fri,  3 Apr 2020 22:16:51 +0900
+Message-Id: <20200403131652.8183-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes, WARN_FUNC() and other users of symbol_by_offset() will
-associate the first instruction of a symbol with the symbol preceding
-it.
-This is because symbol->offset + symbol->len is already outside of the
-symbol's range.
+Fix the following cppcheck warnings:
 
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
+drivers/usb/gadget/legacy/inode.c:1364:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1331:15: note: value is initialized
+ int    value = -EOPNOTSUPP;
+              ^
+drivers/usb/gadget/legacy/inode.c:1364:8: note: value is overwritten
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1817:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EINVAL;
+       ^
+drivers/usb/gadget/legacy/inode.c:1787:18: note: value is initialized
+ ssize_t   value = len, length = len;
+                 ^
+drivers/usb/gadget/legacy/inode.c:1817:8: note: value is overwritten
+ value = -EINVAL;
+       ^
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- tools/objtool/elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 09ddc8f1def3..c4857fa3f1d1 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -105,7 +105,7 @@ static int symbol_by_offset(const void *key, const struct rb_node *node)
+I do not think this is my fault because the addressed commit did not
+touch this file, but the kbuild test robot sent me this report somehow:
+
+  https://lkml.org/lkml/2020/4/3/395
+
+Anyway, the warnings are real, so I removed the redundant assignments.
+I re-ran cppcheck and confirmed the warnings have been fixed.
+
+
+ drivers/usb/gadget/legacy/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+index aa0de9e35afa..3afddd3bea6e 100644
+--- a/drivers/usb/gadget/legacy/inode.c
++++ b/drivers/usb/gadget/legacy/inode.c
+@@ -1361,7 +1361,6 @@ gadgetfs_setup (struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
  
- 	if (*o < s->offset)
- 		return -1;
--	if (*o > s->offset + s->len)
-+	if (*o >= s->offset + s->len)
- 		return 1;
+ 	req->buf = dev->rbuf;
+ 	req->context = NULL;
+-	value = -EOPNOTSUPP;
+ 	switch (ctrl->bRequest) {
  
- 	return 0;
+ 	case USB_REQ_GET_DESCRIPTOR:
+@@ -1784,7 +1783,7 @@ static ssize_t
+ dev_config (struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
+ {
+ 	struct dev_data		*dev = fd->private_data;
+-	ssize_t			value = len, length = len;
++	ssize_t			value, length = len;
+ 	unsigned		total;
+ 	u32			tag;
+ 	char			*kbuf;
 -- 
-2.21.1
+2.17.1
 
