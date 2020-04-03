@@ -2,308 +2,121 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8F0C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EA5C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3DD206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:39:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AMCyGRrG"
+	by mail.kernel.org (Postfix) with ESMTP id D051E2078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgDCVjW (ORCPT
+        id S1728284AbgDCVk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:39:22 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52182 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgDCVjV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:39:21 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033LXeOK113525;
-        Fri, 3 Apr 2020 21:38:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=KRL1+mUHaY//oba79AedQOt9d/q/waQ62JIEXq5RGS8=;
- b=AMCyGRrGxUOc3naCBWt3vBNYh+PZHLXnC11oVC/jQ4s3RlVYud+QBwUOvuDqZ08jjRHn
- f6SlRDR64/eG3l6Pt6tbQnCex5PT2XkUHSkc5c+lCUInfX2jf1yugjtIH9IntDr96IgC
- TXVlOiLBXLOrtI5eo7citvwxIY5+JVGkHLbrmyb7U8FaHwVe9e1v2TUAs+5eGuwSxnET
- ybod6r9f0Wkldzl95AEy2AxxIdX96oEiCJoLbd6eKQV1PRnxvZ/y0NvVPkwIR/SNyfPt
- vpQLyQ0I69pF4fehKXkLDpCSGjz+1q9natnCDMK0bJdiYH4pZy6BbmIX39Es3lqskbD+ uQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 303yunnweg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 21:38:58 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033LX4E0025955;
-        Fri, 3 Apr 2020 21:36:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 302g2p02h0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 21:36:57 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033Lashx001400;
-        Fri, 3 Apr 2020 21:36:54 GMT
-Received: from vbusired-dt (/10.154.116.130)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Apr 2020 14:36:53 -0700
-Date:   Fri, 3 Apr 2020 16:36:49 -0500
-From:   Venu Busireddy <venu.busireddy@oracle.com>
-To:     Ashish Kalra <Ashish.Kalra@amd.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
-        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com,
-        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
-Subject: Re: [PATCH v6 10/14] mm: x86: Invoke hypercall when page encryption
- status is changed
-Message-ID: <20200403213649.GA730301@vbusired-dt>
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <05c9015fb13b25c07a84d5638a7cd65a8c136cf0.1585548051.git.ashish.kalra@amd.com>
+        Fri, 3 Apr 2020 17:40:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47792 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726460AbgDCVk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 17:40:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 511B1ACED;
+        Fri,  3 Apr 2020 21:40:25 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Date:   Sat, 04 Apr 2020 08:40:17 +1100
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
+In-Reply-To: <20200403151534.GG22681@dhcp22.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87sghmyd8v.fsf@notabene.neil.brown.name> <20200403151534.GG22681@dhcp22.suse.cz>
+Message-ID: <878sjcxn7i.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <05c9015fb13b25c07a84d5638a7cd65a8c136cf0.1585548051.git.ashish.kalra@amd.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=1 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030168
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- suspectscore=1 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030168
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-30 06:22:38 +0000, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
-> 
-> Invoke a hypercall when a memory region is changed from encrypted ->
-> decrypted and vice versa. Hypervisor need to know the page encryption
-s/need/needs/
-> status during the guest migration.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
+On Fri, Apr 03 2020, Michal Hocko wrote:
 
-> ---
->  arch/x86/include/asm/paravirt.h       | 10 +++++
->  arch/x86/include/asm/paravirt_types.h |  2 +
->  arch/x86/kernel/paravirt.c            |  1 +
->  arch/x86/mm/mem_encrypt.c             | 57 ++++++++++++++++++++++++++-
->  arch/x86/mm/pat/set_memory.c          |  7 ++++
->  5 files changed, 76 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-> index 694d8daf4983..8127b9c141bf 100644
-> --- a/arch/x86/include/asm/paravirt.h
-> +++ b/arch/x86/include/asm/paravirt.h
-> @@ -78,6 +78,12 @@ static inline void paravirt_arch_exit_mmap(struct mm_struct *mm)
->  	PVOP_VCALL1(mmu.exit_mmap, mm);
->  }
->  
-> +static inline void page_encryption_changed(unsigned long vaddr, int npages,
-> +						bool enc)
-> +{
-> +	PVOP_VCALL3(mmu.page_encryption_changed, vaddr, npages, enc);
-> +}
-> +
->  #ifdef CONFIG_PARAVIRT_XXL
->  static inline void load_sp0(unsigned long sp0)
->  {
-> @@ -946,6 +952,10 @@ static inline void paravirt_arch_dup_mmap(struct mm_struct *oldmm,
->  static inline void paravirt_arch_exit_mmap(struct mm_struct *mm)
->  {
->  }
-> +
-> +static inline void page_encryption_changed(unsigned long vaddr, int npages, bool enc)
-> +{
-> +}
->  #endif
->  #endif /* __ASSEMBLY__ */
->  #endif /* _ASM_X86_PARAVIRT_H */
-> diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-> index 732f62e04ddb..03bfd515c59c 100644
-> --- a/arch/x86/include/asm/paravirt_types.h
-> +++ b/arch/x86/include/asm/paravirt_types.h
-> @@ -215,6 +215,8 @@ struct pv_mmu_ops {
->  
->  	/* Hook for intercepting the destruction of an mm_struct. */
->  	void (*exit_mmap)(struct mm_struct *mm);
-> +	void (*page_encryption_changed)(unsigned long vaddr, int npages,
-> +					bool enc);
->  
->  #ifdef CONFIG_PARAVIRT_XXL
->  	struct paravirt_callee_save read_cr2;
-> diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-> index c131ba4e70ef..840c02b23aeb 100644
-> --- a/arch/x86/kernel/paravirt.c
-> +++ b/arch/x86/kernel/paravirt.c
-> @@ -367,6 +367,7 @@ struct paravirt_patch_template pv_ops = {
->  			(void (*)(struct mmu_gather *, void *))tlb_remove_page,
->  
->  	.mmu.exit_mmap		= paravirt_nop,
-> +	.mmu.page_encryption_changed	= paravirt_nop,
->  
->  #ifdef CONFIG_PARAVIRT_XXL
->  	.mmu.read_cr2		= __PV_IS_CALLEE_SAVE(native_read_cr2),
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index f4bd4b431ba1..c9800fa811f6 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -19,6 +19,7 @@
->  #include <linux/kernel.h>
->  #include <linux/bitops.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/kvm_para.h>
->  
->  #include <asm/tlbflush.h>
->  #include <asm/fixmap.h>
-> @@ -29,6 +30,7 @@
->  #include <asm/processor-flags.h>
->  #include <asm/msr.h>
->  #include <asm/cmdline.h>
-> +#include <asm/kvm_para.h>
->  
->  #include "mm_internal.h"
->  
-> @@ -196,6 +198,47 @@ void __init sme_early_init(void)
->  		swiotlb_force = SWIOTLB_FORCE;
->  }
->  
-> +static void set_memory_enc_dec_hypercall(unsigned long vaddr, int npages,
-> +					bool enc)
-> +{
-> +	unsigned long sz = npages << PAGE_SHIFT;
-> +	unsigned long vaddr_end, vaddr_next;
-> +
-> +	vaddr_end = vaddr + sz;
-> +
-> +	for (; vaddr < vaddr_end; vaddr = vaddr_next) {
-> +		int psize, pmask, level;
-> +		unsigned long pfn;
-> +		pte_t *kpte;
-> +
-> +		kpte = lookup_address(vaddr, &level);
-> +		if (!kpte || pte_none(*kpte))
-> +			return;
-> +
-> +		switch (level) {
-> +		case PG_LEVEL_4K:
-> +			pfn = pte_pfn(*kpte);
-> +			break;
-> +		case PG_LEVEL_2M:
-> +			pfn = pmd_pfn(*(pmd_t *)kpte);
-> +			break;
-> +		case PG_LEVEL_1G:
-> +			pfn = pud_pfn(*(pud_t *)kpte);
-> +			break;
-> +		default:
-> +			return;
-> +		}
-> +
-> +		psize = page_level_size(level);
-> +		pmask = page_level_mask(level);
-> +
-> +		kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
-> +				   pfn << PAGE_SHIFT, psize >> PAGE_SHIFT, enc);
-> +
-> +		vaddr_next = (vaddr & pmask) + psize;
-> +	}
-> +}
-> +
->  static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
->  {
->  	pgprot_t old_prot, new_prot;
-> @@ -253,12 +296,13 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
->  static int __init early_set_memory_enc_dec(unsigned long vaddr,
->  					   unsigned long size, bool enc)
->  {
-> -	unsigned long vaddr_end, vaddr_next;
-> +	unsigned long vaddr_end, vaddr_next, start;
->  	unsigned long psize, pmask;
->  	int split_page_size_mask;
->  	int level, ret;
->  	pte_t *kpte;
->  
-> +	start = vaddr;
->  	vaddr_next = vaddr;
->  	vaddr_end = vaddr + size;
->  
-> @@ -313,6 +357,8 @@ static int __init early_set_memory_enc_dec(unsigned long vaddr,
->  
->  	ret = 0;
->  
-> +	set_memory_enc_dec_hypercall(start, PAGE_ALIGN(size) >> PAGE_SHIFT,
-> +					enc);
->  out:
->  	__flush_tlb_all();
->  	return ret;
-> @@ -451,6 +497,15 @@ void __init mem_encrypt_init(void)
->  	if (sev_active())
->  		static_branch_enable(&sev_enable_key);
->  
-> +#ifdef CONFIG_PARAVIRT
-> +	/*
-> +	 * With SEV, we need to make a hypercall when page encryption state is
-> +	 * changed.
-> +	 */
-> +	if (sev_active())
-> +		pv_ops.mmu.page_encryption_changed = set_memory_enc_dec_hypercall;
-> +#endif
-> +
->  	pr_info("AMD %s active\n",
->  		sev_active() ? "Secure Encrypted Virtualization (SEV)"
->  			     : "Secure Memory Encryption (SME)");
-> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> index c4aedd00c1ba..86b7804129fc 100644
-> --- a/arch/x86/mm/pat/set_memory.c
-> +++ b/arch/x86/mm/pat/set_memory.c
-> @@ -26,6 +26,7 @@
->  #include <asm/proto.h>
->  #include <asm/memtype.h>
->  #include <asm/set_memory.h>
-> +#include <asm/paravirt.h>
->  
->  #include "../mm_internal.h"
->  
-> @@ -1987,6 +1988,12 @@ static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
->  	 */
->  	cpa_flush(&cpa, 0);
->  
-> +	/* Notify hypervisor that a given memory range is mapped encrypted
-> +	 * or decrypted. The hypervisor will use this information during the
-> +	 * VM migration.
-> +	 */
-> +	page_encryption_changed(addr, numpages, enc);
-> +
->  	return ret;
->  }
->  
-> -- 
-> 2.17.1
-> 
+> On Thu 02-04-20 10:53:20, Neil Brown wrote:
+>>=20
+>> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
+>> loop block driver, where a daemon needs to write to one bdi in
+>> order to free up writes queued to another bdi.
+>>=20
+>> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
+>> pages, so that it can still dirty pages after other processses have been
+>> throttled.
+>>=20
+>> This approach was designed when all threads were blocked equally,
+>> independently on which device they were writing to, or how fast it was.
+>> Since that time the writeback algorithm has changed substantially with
+>> different threads getting different allowances based on non-trivial
+>> heuristics.  This means the simple "add 25%" heuristic is no longer
+>> reliable.
+>>=20
+>> This patch changes the heuristic to ignore the global limits and
+>> consider only the limit relevant to the bdi being written to.  This
+>> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
+>> should not introduce surprises.  This has the desired result of
+>> protecting the task from the consequences of large amounts of dirty data
+>> queued for other devices.
+>
+> While I understand that you want to have per bdi throttling for those
+> "special" files I am still missing how this is going to provide the
+> additional room that the additnal 25% gave them previously. I might
+> misremember or things have changed (what you mention as non-trivial
+> heuristics) but PF_LESS_THROTTLE really needed that room to guarantee a
+> forward progress. Care to expan some more on how this is handled now?
+> Maybe we do not need it anymore but calling that out explicitly would be
+> really helpful.
+
+The 25% was a means to an end, not an end in itself.
+
+The problem is that the NFS server needs to be able to write to the
+backing filesystem when the dirty memory limits have been reached by
+being totally consumed by dirty pages on the NFS filesystem.
+
+The 25% was just a way of giving an allowance of dirty pages to nfsd
+that could not be consumed by processes writing to an NFS filesystem.
+i.e. it doesn't need 25% MORE, it needs 25% PRIVATELY.  Actually it only
+really needs 1 page privately, but a few pages give better throughput
+and 25% seemed like a good idea at the time.
+
+per-bdi throttling focuses on the "PRIVATELY" (the important bit) and
+de-emphasises the 25% (the irrelevant detail).
+
+Thanks,
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6HrUIACgkQOeye3VZi
+gbmw9RAAqwZBhuc0mji+8z77xXmpuIRdxZtz5yjKjpurelYayyVuKTquw4+aO+ib
+7ragLhHuVIc9JV15Zu4vrbajDiy7uQhJdISTNE4b+JZ9FblQ9+2bqBYJwu8GZ+sn
+an6XpC3bWHKroN5m+eJSeArrhsT8uXbMUYqx7MJVGXzOAwfxzxOKXRQnGsRlgUZp
+DLs4OtI0cPbkQ5+3FBNkhznS29o33dRVLiuiVhBflHek5eHAFctq5zeOx9cDlGvt
+d7Dk/XmXHqR4952XLCCCxCk37FxiXqiiQd4xs/ZbTbkRhd4RBLFBahirTHAbbFEu
+Ntrso2lvM3fnan7JmuO+vanChCCZ+Ggactvkrdz4CvmGouJ1Ln5XO1h1iX00NBvM
+5GxDvL9DSBlINl4cdN6xaVjQOhWSNoRejOG19VF4pn2opWJjB9KXEDtzc5qDwtK7
+Eq1FlzEQ8EwJB7wK5Hyv3VmrICQU96h+eh+jBqnpaxq3Fz3Trojdgh3VcY25P1T8
+RXOfD7wGdvYk2FZhjxBOQHcikAw3jl5LGyI77VAQf3eiROphl0+Q1kLp9Ugniaso
+0tna59vfaEdFeZogPtQ7piy91l1bvtj1SoP7BODnI/PQ8hEyCGaA9IFKg0dpsTVW
+k/7TZMXpTi866D9ct+/sLG2Lc6u7QKwhclHSAh2Waw/6m7d0wlg=
+=XeBp
+-----END PGP SIGNATURE-----
+--=-=-=--
