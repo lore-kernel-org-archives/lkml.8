@@ -2,138 +2,214 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826B3C2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DF5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5153A206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AFF206F6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:45:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="iNICajo+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1EHZ+cl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404313AbgDCRps (ORCPT
+        id S2404395AbgDCRpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:45:48 -0400
-Received: from mout.web.de ([212.227.15.14]:47105 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728296AbgDCRpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:45:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1585935919;
-        bh=LvQFEUP2P8FDxYUu5yT7cRrTHnGhQPCprZqje+0q9aE=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=iNICajo+41gSXPFlOmtZUr+pnTJa60jZFuAgSrrTCvaxRJUKytJkR8a9C+00Xp7Fu
-         CgUHMcio0m8ugruNJh6COq2cR03hZO/03zhOEE35R9RIcW0QHfhHojQYvN1tlI3g9Z
-         MQdEAflFrYgXoLoTQjjKS2wUYbrU/e+PENBd+b48=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.135.25.116]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lk8Ow-1in1Mr0wNG-00cAWp; Fri, 03
- Apr 2020 19:45:19 +0200
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: Re: [PATCH v2] iommu/qcom: Fix local_base status check
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <7ab96d6a-93ee-4d22-7e51-6a9ad4268d5d@web.de>
-Date:   Fri, 3 Apr 2020 19:45:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 3 Apr 2020 13:45:52 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:32998 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404237AbgDCRpu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 13:45:50 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f20so7868905ljm.0;
+        Fri, 03 Apr 2020 10:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3OG8lFAEpJ09PZ/amzynXTCfwlvvxyjDXOX5w5FKr+E=;
+        b=c1EHZ+clPAWskLmSC3jpCk5UIX7b/XtexdwIcUD9HOrR8CtL/iTql9iWeBCfi256iD
+         RllSfX0R8t+mX/Hw8j/25w3jsjKOdSerTOjRBQcUawF/q0GrY8h11x+Nt3d4xmAR34Rk
+         0jReMQ0cq+XT0z5phNMO94+HLRB1kkH8ihdMCMSTGqBeEgAQ0TNbK4sObsaGMH04m8hq
+         q5sU26F0NNBgpomrExzJGOF36nXHk479xi3z2mIuyA58AEB33efE7blAP7vIXx0KtZEx
+         m+HYZ65UvXnzGg9JiauEUEgbDANbPvBvrQgJNgGtmwtHhv5P1nIWHSeW+drzSdOZT7Mp
+         DI6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3OG8lFAEpJ09PZ/amzynXTCfwlvvxyjDXOX5w5FKr+E=;
+        b=H8/fNFOHDS9vWdQkI/+1KMJ92FBJdaD6jq53qZAvk7iKPgbPdDjolO55pibQlbFhvD
+         A3hLDC0PzrJzv2ZQVsWEsm+9dHhYdh6jsV/IxxafnvM5B2b1v/ijrAg97UuCvyFaLttW
+         bgj/DE3ZOve7B3ef2qecy3NoKglapTc2vvtQNBLh9mCQfnkmXPiwxBtroRrti/oZnGeb
+         WyGSQtZoHZKJa9KeeU6PGUgRCa1chX7TUWxSr+XYLkSIH9+dZANILv6qHuBUqhNYD0s0
+         53pkycCh24MXqDHI14jJFO8bl///srxW+tfK/z9ez5fYWVc9d0lVify68XecegkNyPbT
+         Rqtg==
+X-Gm-Message-State: AGi0PuZeH2sLpDXphET0KjZNwld96c8kQeR/ko1RFEZX4l/u9i4fRrUP
+        1fzEYEQmg+B4/CCu4ZqRaVuqvgX8baFK0IA/SQ==
+X-Google-Smtp-Source: APiQypKswfo9xNyj+/d6s59JkX9q1IJnDbYyFvHL6THRjzlPxz7q8rMYLs+JQ+FvfBscxHdQ7ZPTUdheclnNj16dBb0=
+X-Received: by 2002:a2e:94cb:: with SMTP id r11mr5456019ljh.276.1585935946971;
+ Fri, 03 Apr 2020 10:45:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+References: <1585696903-96794-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1585696903-96794-1-git-send-email-longli@linuxonhyperv.com>
+From:   Pavel Shilovsky <piastryyy@gmail.com>
+Date:   Fri, 3 Apr 2020 10:45:35 -0700
+Message-ID: <CAKywueRg8kJ+0aOehM-QKGuRwbDSb2TA5vNje8eSCdMqBT+EdQ@mail.gmail.com>
+Subject: Re: [PATCH] cifs: Allocate crypto structures on the fly for
+ calculating signatures of incoming packets
+To:     Long Li <longli@microsoft.com>
+Cc:     Steve French <sfrench@samba.org>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RDsIcVUj3rnoAk6AtOinl6//UfKFbvoCj+ZACu7/BztMlrGKqn0
- 8ttuvGTyF5B7/WOyEyGecLZAKq1gRbFRCKbp4mtt01e2/nKyt+x5/oGxUwwklTBQYBLc1o7
- eQuLfmkdttlgdJkE8moMVKrWB5vrZOo45ioNQCEm0psnaNP8kvU14ZdI4fkVO8xuZfXNQux
- mfgeKatpx29JVxdXCTeVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:i7ko+qJWk98=:p3g17sJW+Gr6sPAuEa425y
- BlsjenyHgPEjhbr0bOjswM2KxAuTIlE6+5bft0VGdQ7mYgCanq74afo8p7AwKnc/I9zoNc+mH
- ADukExNVzjjVxPrBw5iqZJ/22Cmr7wAuUm3fThudNp+NbVyuTtMGN7c276TqLmv/NTB6t+6Gt
- RLbmXfM7yj94ebzPPG0gtST1kIksqGcMeYlepJdq4XkfoaJqqrxkCisqKS+d6o1xhGjtDpanH
- CZkJzIRCJHBHMV20CyWPS0MAN07Rb0ZNC57n5A1cKiQzcutu08jcv2435BQ81SsYQr8Hs8Z/Z
- bR4NuoTV2q0NQndkqgnKJlQpXsj6UdirSKO+4ElBykxTYXbjRQpXbyj+oC9xVwE4Hs2IMkwS7
- MCDALA1NdWB1Phzx7iQxQsFep4pob/JBJiXQzXlflJaQdwZ/WhIODl91yxOIg2iMeIt7yVwRw
- gMIqqN5h571yVAzV2Y0UBaD4id9lwKnv70LXHEtHBnhYqbS8uRL/o8N/FSy4kwBwmLoV6zyK9
- dgT3rotahCj/dSubymjhYDPgBX3lNoOXQCmNlPsEqM/IDf/KTUzmerAFtZ6vXzNYzD/vicnTK
- 8n62LFArYDkMBf6ldJGgau/UKxnPDZ0Z6mLLJ5RSy/Jq/83T1eMYtyhaYr+gdwK1Z18rxtIT8
- E7qeUTOy/WgQB2pxg6p5elYK2DoqH6OsmYGXNdq3qN+YU/7C1LdGbAxQ9vEN3oVHCeepo4myj
- 9zSxrgpKxg1o8xxFggjo7RPvTPAVV3GOQt14I8eUiqL3ELuXw4v6WZS+xAdP9FXAIlA6EFCC3
- 8QB1dynJ4DcOF8ELdAb+MfeY9Y/M49H/JJoImZbrUpRiuR1EnuM8JiKsViRYOg6pKIc4M7fXm
- kXV7fwQKP/oOMVa2DTeJTerZnqt4yYgnHZS44YPCRocRA0MwajRsdziT2OaZvEoKcEXCw3YOH
- x+JYitEPP6WEqVpuSdwZ8w8JPsxyszOQPapoQ8dXF6qkRXwXCSzb52dnQjdT4e30StSGC67j+
- UOqhz0YpUdCRVHlcRjpiVrBcOAp+TKvz0UEE+G9rHKX59Hv7vEajM6oD+J/DCR0op9fiqddgq
- /MlMAu8IR0VhUFy+FGEl2k23NwfBbzmAuPvUK/OCaD2cNXYbEs0jWQrrr0sPjPV2YdiCWafkq
- RhjugkT/vNjMhVN8z11vtttOBfNiKv2PPyKGciumVAQz6vOa75vBmIVInxyrMNqB7BUPPkuIG
- nZNYT0qBj75taaPA7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > ------v2-----------------
-> > As requested, add some {} around this chunk.
-> >
-> > ------v1-----------------
+=D0=B2=D1=82, 31 =D0=BC=D0=B0=D1=80. 2020 =D0=B3. =D0=B2 16:22, <longli@lin=
+uxonhyperv.com>:
 >
-> The changelog typically goes after the ---, as it doesn't add value to
-> the resulting git log. So please drop the above 4 lines from the commit
-> message. And please use ./scripts/get_maintainer.pl to find your
-> recipient list.
+> From: Long Li <longli@microsoft.com>
 >
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> CIFS uses pre-allocated crypto structures to calculate signatures for bot=
+h
+> incoming and outgoing packets. In this way it doesn't need to allocate cr=
+ypto
+> structures for every packet, but it requires a lock to prevent concurrent
+> access to crypto structures.
+>
+> Remove the lock by allocating crypto structures on the fly for
+> incoming packets. At the same time, we can still use pre-allocated crypto
+> structures for outgoing packets, as they are already protected by transpo=
+rt
+> lock srv_mutex.
+>
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  fs/cifs/cifsglob.h      |  3 +-
+>  fs/cifs/smb2proto.h     |  6 ++-
+>  fs/cifs/smb2transport.c | 87 +++++++++++++++++++++++++----------------
+>  3 files changed, 60 insertions(+), 36 deletions(-)
+>
+> diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
+> index 0d956360e984..7448e7202e7a 100644
+> --- a/fs/cifs/cifsglob.h
+> +++ b/fs/cifs/cifsglob.h
+> @@ -426,7 +426,8 @@ struct smb_version_operations {
+>         /* generate new lease key */
+>         void (*new_lease_key)(struct cifs_fid *);
+>         int (*generate_signingkey)(struct cifs_ses *);
+> -       int (*calc_signature)(struct smb_rqst *, struct TCP_Server_Info *=
+);
+> +       int (*calc_signature)(struct smb_rqst *, struct TCP_Server_Info *=
+,
+> +                               bool allocate_crypto);
+>         int (*set_integrity)(const unsigned int, struct cifs_tcon *tcon,
+>                              struct cifsFileInfo *src_file);
+>         int (*enum_snapshots)(const unsigned int xid, struct cifs_tcon *t=
+con,
+> diff --git a/fs/cifs/smb2proto.h b/fs/cifs/smb2proto.h
+> index 4d1ff7b66fdc..087d5f14320b 100644
+> --- a/fs/cifs/smb2proto.h
+> +++ b/fs/cifs/smb2proto.h
+> @@ -55,9 +55,11 @@ extern struct cifs_ses *smb2_find_smb_ses(struct TCP_S=
+erver_Info *server,
+>  extern struct cifs_tcon *smb2_find_smb_tcon(struct TCP_Server_Info *serv=
+er,
+>                                                 __u64 ses_id, __u32  tid)=
+;
+>  extern int smb2_calc_signature(struct smb_rqst *rqst,
+> -                               struct TCP_Server_Info *server);
+> +                               struct TCP_Server_Info *server,
+> +                               bool allocate_crypto);
+>  extern int smb3_calc_signature(struct smb_rqst *rqst,
+> -                               struct TCP_Server_Info *server);
+> +                               struct TCP_Server_Info *server,
+> +                               bool allocate_crypto);
+>  extern void smb2_echo_request(struct work_struct *work);
+>  extern __le32 smb2_get_lease_state(struct cifsInodeInfo *cinode);
+>  extern bool smb2_is_valid_oplock_break(char *buffer,
+> diff --git a/fs/cifs/smb2transport.c b/fs/cifs/smb2transport.c
+> index 08b703b7a15e..c01e19a3b112 100644
+> --- a/fs/cifs/smb2transport.c
+> +++ b/fs/cifs/smb2transport.c
+> @@ -40,14 +40,6 @@
+>  #include "smb2status.h"
+>  #include "smb2glob.h"
+>
+> -static int
+> -smb2_crypto_shash_allocate(struct TCP_Server_Info *server)
+> -{
+> -       return cifs_alloc_hash("hmac(sha256)",
+> -                              &server->secmech.hmacsha256,
+> -                              &server->secmech.sdeschmacsha256);
+> -}
+> -
+>  static int
+>  smb3_crypto_shash_allocate(struct TCP_Server_Info *server)
+>  {
+> @@ -219,7 +211,8 @@ smb2_find_smb_tcon(struct TCP_Server_Info *server, __=
+u64 ses_id, __u32  tid)
+>  }
+>
+>  int
+> -smb2_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info *serve=
+r)
+> +smb2_calc_signature(struct smb_rqst *rqst, struct TCP_Server_Info *serve=
+r,
+> +                       bool allocate_crypto)
+>  {
+>         int rc;
+>         unsigned char smb2_signature[SMB2_HMACSHA256_SIZE];
+> @@ -228,6 +221,8 @@ smb2_calc_signature(struct smb_rqst *rqst, struct TCP=
+_Server_Info *server)
+>         struct smb2_sync_hdr *shdr =3D (struct smb2_sync_hdr *)iov[0].iov=
+_base;
+>         struct cifs_ses *ses;
+>         struct shash_desc *shash;
+> +       struct crypto_shash *hash;
+> +       struct sdesc *sdesc =3D NULL;
+>         struct smb_rqst drqst;
+>
+>         ses =3D smb2_find_smb_ses(server, shdr->SessionId);
+> @@ -239,24 +234,32 @@ smb2_calc_signature(struct smb_rqst *rqst, struct T=
+CP_Server_Info *server)
+>         memset(smb2_signature, 0x0, SMB2_HMACSHA256_SIZE);
+>         memset(shdr->Signature, 0x0, SMB2_SIGNATURE_SIZE);
+>
+> -       rc =3D smb2_crypto_shash_allocate(server);
+> -       if (rc) {
+> -               cifs_server_dbg(VFS, "%s: sha256 alloc failed\n", __func_=
+_);
+> -               return rc;
+> +       if (allocate_crypto) {
+> +               rc =3D cifs_alloc_hash("hmac(sha256)", &hash, &sdesc);
+> +               if (rc) {
+> +                       cifs_server_dbg(VFS,
+> +                                       "%s: sha256 alloc failed\n", __fu=
+nc__);
+> +                       return rc;
+> +               }
+> +               shash =3D &sdesc->shash;
+> +       } else {
+> +               hash =3D server->secmech.hmacsha256;
+> +               shash =3D &server->secmech.sdeschmacsha256->shash;
+>         }
 
-How does this tag fit to the requested changes?
+smb2_crypto_shash_allocate() unconditionally allocated
+server->secmech.hmacsha256 and server->secmech.sdeschmacsha256->shash.
+Now the code doesn't allocate those variables at all. Unlike SMB3
+where structures are allocated in during key generation, for SMB2 we
+do it on demand in smb2_calc_signature(). So, the code above should be
+changed to call smb2_crypto_shash_allocate() in "else" block.
 
-Regards,
-Markus
+--
+Best regards,
+Pavel Shilovsky
