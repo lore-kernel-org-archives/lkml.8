@@ -2,305 +2,105 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D804C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F17C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1476E206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585925736;
-	bh=O9zmHtXDsVIDhiiv7680He3JLjdSgkyAK+ej9aYwnO4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qtyC8PtbyU4GuTkvbm91NkI5fT9KlCp+5cbmdmPc2JKMxtAJX2xNqs/PCrn9Wh4vq
-	 fBa+BBaQvM/UkriZ2Oca58fkYKZXZ3svARMnlHCyM2LJMb7cYQ8yXLcHuB8J/o5USe
-	 X4GyQNIwXYAkmmvam1EjMd3qJHxWiUIcZ14pPd8U=
+	by mail.kernel.org (Postfix) with ESMTP id 98F1120719
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:56:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzhPhWDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404078AbgDCOz2 (ORCPT
+        id S2404119AbgDCO4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404068AbgDCOzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:55:24 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E17E12082F;
-        Fri,  3 Apr 2020 14:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585925724;
-        bh=O9zmHtXDsVIDhiiv7680He3JLjdSgkyAK+ej9aYwnO4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mK8KOhn9nKA1nrJ7+jwAr9uc+qPEK9kK2k4AE20Qu2dkdV/0Zo+F9Em7ZThslKAk9
-         AsDJgew4rVJ5BiU1zl1IjpnsdAMEfPR9Sm261XNMqXl9rMcey9wfvWK/LWqbsDO9xa
-         lZBgtnhcvn4u6BMhSkfv0H2ka+5gMY/ylxc7lj0s=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Zefan Li <lizefan@huawei.com>
-Subject: [PATCH 07/31] perf/core: Add PERF_RECORD_CGROUP event
-Date:   Fri,  3 Apr 2020 11:54:19 -0300
-Message-Id: <20200403145443.24774-8-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200403145443.24774-1-acme@kernel.org>
-References: <20200403145443.24774-1-acme@kernel.org>
+        Fri, 3 Apr 2020 10:56:03 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35649 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404013AbgDCO4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 10:56:03 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i19so8067778wmb.0;
+        Fri, 03 Apr 2020 07:56:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xd2wdVuetpDXEk2PfqeNvx9TKWdzd+iderl1V/no1rk=;
+        b=gzhPhWDMUJiPbQzetxHKg3B2DLbg58B5GmFYjdUT1AIlXXm+gz6k3AVtTsahrIkxsH
+         8DO0zClHNS0Ave2j7H0mz7PSjGcWmi9BWILTWjRXCzaqn+zCLvyFe8kzQqOrTAUKbepE
+         MeCeGhiu31wH9lx7fko++SK8dflLLQDr0af30yP3WNCwXXCblWM6N6vgIhkmzUTbZtNz
+         f3p+kKFbA9YU9W4ZY0IU9K9LbvXJrNPMTxTK35TgeMCQRFx7nb8Qezu+gp3u+UtEBlsn
+         kHus1bTOS2iFB0SgoRACqmmqe0Fx8KLZm6lhj8KpQIBtPkfEjtwCsKrejSD9asSqPX2b
+         IDxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xd2wdVuetpDXEk2PfqeNvx9TKWdzd+iderl1V/no1rk=;
+        b=r0xwKTufvT4pisvLb9P2aJYkXSZNtJ2yTZfphb2hdI7GHzga7BAE49pB8FGtDB2zUx
+         s2lwvNZuk65p7sOrKupPqiqpKdSkXCNwCVfnHCvYOHEjN0dntJxdhwg+fqPm1mRJ28ZV
+         OnoCSqICbPy1gzk/7F1gHP8DllIug03X+dDEM/wM+OLvdUJFgM2dT+g8R8rnk7WMQdjm
+         yv1lWLG/cqrw6QZlC9PgXKwiqG5WouABOT5tRSK2nEjA+fpHCoC4/OTZJSphHfr7Fu3E
+         SdpQXh/i6Jbr9+1uUipnBrRtfoHjVgEwWW9u4ItCuOyP5bFBBTdi1SKw/HlYMXVJwH+L
+         8v+g==
+X-Gm-Message-State: AGi0PuaaAUNC/ayI6WaJdRtWNciwvCHbervGc7+YRk9uB8OJv62K9SWN
+        6wYcwMeK1G8iTe68Xeeltz4=
+X-Google-Smtp-Source: APiQypJudNVwFVtHeBX1+GEmZvJQyHXnuQqrcZUGVYDG3MPtBlvdos8jOclywHtAUNKANWwsEzU9zA==
+X-Received: by 2002:a1c:7301:: with SMTP id d1mr9532306wmb.26.1585925760669;
+        Fri, 03 Apr 2020 07:56:00 -0700 (PDT)
+Received: from andrea ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id a15sm11562914wme.17.2020.04.03.07.55.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 07:56:00 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 16:55:53 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [RFC PATCH 10/11] Drivers: hv: vmbus: Introduce the
+ CHANNELMSG_MODIFYCHANNEL message type
+Message-ID: <20200403145533.GA26675@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com>
+ <20200325225505.23998-11-parri.andrea@gmail.com>
+ <87v9mr41j4.fsf@vitty.brq.redhat.com>
+ <20200328184821.GA12184@andrea>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200328184821.GA12184@andrea>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Namhyung Kim <namhyung@kernel.org>
+> > I can only think of a 'lazy' approach to setting channel CPU affinity:
+> > we actually re-assign it to the target CPU when we receive first
+> > interrupt there - but it's not very different from re-assigning it there
+> > but still handling interrupts on the old CPU like you do.
+> 
+> Interesting!  I'm wondering whether it'd make sense to use a similar
+> approach to (lazily) "unblock" the "old" CPUs; let me think more...
 
-To support cgroup tracking, add CGROUP event to save a link between
-cgroup path and id number.  This is needed since cgroups can go away
-when userspace tries to read the cgroup info (from the id) later.
+So, I spent some more time thinking about this...  AFAICT, one main
+issue with this approach (besides the fact that we'd need to "save"
+the "old" CPUs...) is that we might be blocking that CPU for "too
+long" (depending on the channel/device usage); also, this approach
+seemed to make the handling of target_cpu a bit more involved, and
+this is a concern considered that (as mentioned before) we'd like to
+keep the target_cpu of *all* channels in the system balanced.
 
-The attr.cgroup bit was also added to enable cgroup tracking from
-userspace.
+I'm sticking to the approach implemented here for now: I'm planning
+to send a new version of the series with minor changes soon.
 
-This event will be generated when a new cgroup becomes active.
-Userspace might need to synthesize those events for existing cgroups.
-
-Committer testing:
-
-From the resulting kernel, using /sys/kernel/btf/vmlinux:
-
-  $ pahole perf_event_attr | grep -w cgroup -B5 -A1
-  	__u64                      write_backward:1;     /*    40:27  8 */
-  	__u64                      namespaces:1;         /*    40:28  8 */
-  	__u64                      ksymbol:1;            /*    40:29  8 */
-  	__u64                      bpf_event:1;          /*    40:30  8 */
-  	__u64                      aux_output:1;         /*    40:31  8 */
-  	__u64                      cgroup:1;             /*    40:32  8 */
-  	__u64                      __reserved_1:31;      /*    40:33  8 */
-  $
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-[staticize perf_event_cgroup function]
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Zefan Li <lizefan@huawei.com>
-Link: http://lore.kernel.org/lkml/20200325124536.2800725-2-namhyung@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- include/uapi/linux/perf_event.h |  13 +++-
- kernel/events/core.c            | 111 ++++++++++++++++++++++++++++++++
- 2 files changed, 123 insertions(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 397cfd65b3fe..de95f6c7b273 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -381,7 +381,8 @@ struct perf_event_attr {
- 				ksymbol        :  1, /* include ksymbol events */
- 				bpf_event      :  1, /* include bpf events */
- 				aux_output     :  1, /* generate AUX records instead of events */
--				__reserved_1   : 32;
-+				cgroup         :  1, /* include cgroup events */
-+				__reserved_1   : 31;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-@@ -1012,6 +1013,16 @@ enum perf_event_type {
- 	 */
- 	PERF_RECORD_BPF_EVENT			= 18,
- 
-+	/*
-+	 * struct {
-+	 *	struct perf_event_header	header;
-+	 *	u64				id;
-+	 *	char				path[];
-+	 *	struct sample_id		sample_id;
-+	 * };
-+	 */
-+	PERF_RECORD_CGROUP			= 19,
-+
- 	PERF_RECORD_MAX,			/* non-ABI */
- };
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index d22e4ba59dfa..994932d5e474 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -387,6 +387,7 @@ static atomic_t nr_freq_events __read_mostly;
- static atomic_t nr_switch_events __read_mostly;
- static atomic_t nr_ksymbol_events __read_mostly;
- static atomic_t nr_bpf_events __read_mostly;
-+static atomic_t nr_cgroup_events __read_mostly;
- 
- static LIST_HEAD(pmus);
- static DEFINE_MUTEX(pmus_lock);
-@@ -4608,6 +4609,8 @@ static void unaccount_event(struct perf_event *event)
- 		atomic_dec(&nr_comm_events);
- 	if (event->attr.namespaces)
- 		atomic_dec(&nr_namespaces_events);
-+	if (event->attr.cgroup)
-+		atomic_dec(&nr_cgroup_events);
- 	if (event->attr.task)
- 		atomic_dec(&nr_task_events);
- 	if (event->attr.freq)
-@@ -7735,6 +7738,105 @@ void perf_event_namespaces(struct task_struct *task)
- 			NULL);
- }
- 
-+/*
-+ * cgroup tracking
-+ */
-+#ifdef CONFIG_CGROUP_PERF
-+
-+struct perf_cgroup_event {
-+	char				*path;
-+	int				path_size;
-+	struct {
-+		struct perf_event_header	header;
-+		u64				id;
-+		char				path[];
-+	} event_id;
-+};
-+
-+static int perf_event_cgroup_match(struct perf_event *event)
-+{
-+	return event->attr.cgroup;
-+}
-+
-+static void perf_event_cgroup_output(struct perf_event *event, void *data)
-+{
-+	struct perf_cgroup_event *cgroup_event = data;
-+	struct perf_output_handle handle;
-+	struct perf_sample_data sample;
-+	u16 header_size = cgroup_event->event_id.header.size;
-+	int ret;
-+
-+	if (!perf_event_cgroup_match(event))
-+		return;
-+
-+	perf_event_header__init_id(&cgroup_event->event_id.header,
-+				   &sample, event);
-+	ret = perf_output_begin(&handle, event,
-+				cgroup_event->event_id.header.size);
-+	if (ret)
-+		goto out;
-+
-+	perf_output_put(&handle, cgroup_event->event_id);
-+	__output_copy(&handle, cgroup_event->path, cgroup_event->path_size);
-+
-+	perf_event__output_id_sample(event, &handle, &sample);
-+
-+	perf_output_end(&handle);
-+out:
-+	cgroup_event->event_id.header.size = header_size;
-+}
-+
-+static void perf_event_cgroup(struct cgroup *cgrp)
-+{
-+	struct perf_cgroup_event cgroup_event;
-+	char path_enomem[16] = "//enomem";
-+	char *pathname;
-+	size_t size;
-+
-+	if (!atomic_read(&nr_cgroup_events))
-+		return;
-+
-+	cgroup_event = (struct perf_cgroup_event){
-+		.event_id  = {
-+			.header = {
-+				.type = PERF_RECORD_CGROUP,
-+				.misc = 0,
-+				.size = sizeof(cgroup_event.event_id),
-+			},
-+			.id = cgroup_id(cgrp),
-+		},
-+	};
-+
-+	pathname = kmalloc(PATH_MAX, GFP_KERNEL);
-+	if (pathname == NULL) {
-+		cgroup_event.path = path_enomem;
-+	} else {
-+		/* just to be sure to have enough space for alignment */
-+		cgroup_path(cgrp, pathname, PATH_MAX - sizeof(u64));
-+		cgroup_event.path = pathname;
-+	}
-+
-+	/*
-+	 * Since our buffer works in 8 byte units we need to align our string
-+	 * size to a multiple of 8. However, we must guarantee the tail end is
-+	 * zero'd out to avoid leaking random bits to userspace.
-+	 */
-+	size = strlen(cgroup_event.path) + 1;
-+	while (!IS_ALIGNED(size, sizeof(u64)))
-+		cgroup_event.path[size++] = '\0';
-+
-+	cgroup_event.event_id.header.size += size;
-+	cgroup_event.path_size = size;
-+
-+	perf_iterate_sb(perf_event_cgroup_output,
-+			&cgroup_event,
-+			NULL);
-+
-+	kfree(pathname);
-+}
-+
-+#endif
-+
- /*
-  * mmap tracking
-  */
-@@ -10781,6 +10883,8 @@ static void account_event(struct perf_event *event)
- 		atomic_inc(&nr_comm_events);
- 	if (event->attr.namespaces)
- 		atomic_inc(&nr_namespaces_events);
-+	if (event->attr.cgroup)
-+		atomic_inc(&nr_cgroup_events);
- 	if (event->attr.task)
- 		atomic_inc(&nr_task_events);
- 	if (event->attr.freq)
-@@ -12757,6 +12861,12 @@ static void perf_cgroup_css_free(struct cgroup_subsys_state *css)
- 	kfree(jc);
- }
- 
-+static int perf_cgroup_css_online(struct cgroup_subsys_state *css)
-+{
-+	perf_event_cgroup(css->cgroup);
-+	return 0;
-+}
-+
- static int __perf_cgroup_move(void *info)
- {
- 	struct task_struct *task = info;
-@@ -12778,6 +12888,7 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
- struct cgroup_subsys perf_event_cgrp_subsys = {
- 	.css_alloc	= perf_cgroup_css_alloc,
- 	.css_free	= perf_cgroup_css_free,
-+	.css_online	= perf_cgroup_css_online,
- 	.attach		= perf_cgroup_attach,
- 	/*
- 	 * Implicitly enable on dfl hierarchy so that perf events can
--- 
-2.21.1
-
+Thanks,
+  Andrea
