@@ -2,226 +2,261 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54028C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD07AC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B792063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44C4206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="v7qWN9oG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bR20vyTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbgDCEep (ORCPT
+        id S1731505AbgDCEe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 00:34:45 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:56794 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727727AbgDCEeo (ORCPT
+        Fri, 3 Apr 2020 00:34:58 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40211 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgDCEe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 00:34:44 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0334UFof026706;
-        Thu, 2 Apr 2020 21:34:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=pfpt0818;
- bh=TkWTj8x6cVbPGq0lNl8q94o3EtXBBghb8lVzJFHginc=;
- b=v7qWN9oGpr0rveIprpgo3l5JhMR600Qw+5wNnZOoj5szbo9JZrwBW+aq8ZRcG+ph3WCx
- tnWDkkiKy4ErNn8PZTuxQKrclSo9VMipcYVI0hCt5Qjgxpeb5ChjMJTaZHhFvTNHqp9+
- 03W2hRAtqvibzMukvbyOAYtylcBnR0dRkmejHnDFi26vPJUMdKgLPSsZyJjfG2N/FYAB
- X0Sgw0aQo0RXoZ453YUlaniVcWyA6nRIeFR26jairYAirMpNn7GTJqIWpVhpWN28aqWS
- fpHY38vYXeeTDpqQmIwVkEIVo5nm2vk+0PVQ3HtORR6n2ZNoISJ4v4nqk1Ox37C+yFPR Jg== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 304855w1xt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 21:34:36 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Apr
- 2020 21:34:34 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Apr
- 2020 21:34:34 -0700
-Received: from bbhushan2.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 2 Apr 2020 21:34:30 -0700
-From:   Bharat Bhushan <bbhushan2@marvell.com>
-To:     <jean-philippe@linaro.org>, <joro@8bytes.org>, <mst@redhat.com>,
-        <jasowang@redhat.com>, <virtualization@lists.linux-foundation.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <eric.auger.pro@gmail.com>, <eric.auger@redhat.com>
-CC:     Bharat Bhushan <bbhushan2@marvell.com>
-Subject: [RFC PATCH v4] iommu/virtio: Use page size bitmap supported by endpoint
-Date:   Fri, 3 Apr 2020 10:04:29 +0530
-Message-ID: <20200403043429.28484-1-bbhushan2@marvell.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 3 Apr 2020 00:34:58 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z15so558570qki.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 21:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WjLB9th1Eu1d/RS4/4J3ZU+AKzJ958RwVN86+I3SOag=;
+        b=bR20vyToiPAzSf2jF9AhhO/6hGq/n+mG1eHn4mk/Tqu+THl8K4OpLx/MBTkuEly0jF
+         YxWZ9TvV0z1BiGIWFgjy11Wu2uzo87tQLxmuGxglBJwCaSwUyvcz3FT1rhTq4u+IZsfN
+         mrfX5kAOzuZt3XDxYzqYf0CAbAgWxVlvBghhx04g2/rrEz4peAnlosK6DP796JKQMpBJ
+         0YchIvSyBW+a0Zc7C6FMntGZfL/+H4Lw8okjCko/XLBflZ7RYuxbO/hq7LNbS1Xyx3kF
+         Tm5Bka6++z9dh5Ul30yg5zDUPpHKP9DgjwAg92OUUS6VsVwpRqSi65TUvhlKbiJhagbl
+         +3BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WjLB9th1Eu1d/RS4/4J3ZU+AKzJ958RwVN86+I3SOag=;
+        b=JhDXAWZGSYWGlZG8MkOSJqfIYM7LHX2GDYP8uyX3u48cSqrejKaZoxy5UINuQDmFQM
+         2EyGxGbz6rwMysuwt8jjKE97u6JQM9rnbWZ3ld8JJQSVWGVARcdHNhlT4qHAED13dMPR
+         PL8Fqrcex+Cahm1scF88dEow47TJKmr5EpSpVt+rYctxFbUQhOKyJXQZEVvnhkk6j63q
+         RcQ6asOAoyKS08GEVXMYqDIqqTa2l1djh9XLadItBfSs+pDk1NQoHdQJceoAjnPF3ENO
+         vRHAxiLKkoRvDwX7S8ETLY8vSnDtzM3zX1rXxMBjw2i7BPVAlqcZokE81rjKeC78/x14
+         uIlQ==
+X-Gm-Message-State: AGi0PuZ+iCnljgyxS0NG1//lyP1zNPtnOSlPI2c+hekU3DnY0D8Mm2qw
+        VV0GbGBGBzOsoJLD9zfvbyrLLOgOOEt8nxWHh6umiwTb
+X-Google-Smtp-Source: APiQypJX5PLqIEm2aSweoKUvuu6FkMfa73c7b+xeL/CPPAx4nzkjE8uhxV9AM30sADCWD9BfLLp/BqAUGtVHRpdLcWQ=
+X-Received: by 2002:a05:620a:1311:: with SMTP id o17mr1804275qkj.343.1585888496570;
+ Thu, 02 Apr 2020 21:34:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_02:2020-04-02,2020-04-02 signatures=0
+References: <20200306150102.3e77354b@imladris.surriel.com> <8e67d88f-3ec8-4795-35dc-47e3735e530e@suse.cz>
+ <20200311173526.GH96999@carbon.dhcp.thefacebook.com> <CAAmzW4PRCGdZXGceSCfzpesUXNd8GU-zLt-m+t762=WH-BjmoA@mail.gmail.com>
+ <20200401191322.a5c99b408aa8601f999a794a@linux-foundation.org>
+ <20200402025335.GB69473@carbon.DHCP.thefacebook.com> <CAAmzW4PF1AXcZnQpWmqWgTShu+5v7B=nv8waRv+vk-0Bd78cZw@mail.gmail.com>
+ <20200402194233.GA171919@carbon.DHCP.thefacebook.com>
+In-Reply-To: <20200402194233.GA171919@carbon.DHCP.thefacebook.com>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 3 Apr 2020 13:34:45 +0900
+Message-ID: <CAAmzW4M7cGmvssfmT5kmeZNOiQfbZP6N71TRHBq0BDtWqi78=g@mail.gmail.com>
+Subject: Re: [PATCH] mm,page_alloc,cma: conditionally prefer cma pageblocks
+ for movable allocations
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Rik van Riel <riel@surriel.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
+        Qian Cai <cai@lca.pw>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Different endpoint can support different page size, probe
-endpoint if it supports specific page size otherwise use
-global page sizes.
+2020=EB=85=84 4=EC=9B=94 3=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 4:42, Ro=
+man Gushchin <guro@fb.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+> > In fact, I've tested this patch and your fixes for migration problem
+> > and found that there is
+> > still migration problem and failure rate is increased by this patch.
+>
+> Do you mind sharing any details? What kind of pages are those?
 
-Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
----
-v3->v4:
- - Fix whitespace error
+I don't investigate more since I had not enough time to do. If I
+remember correctly,
+it's the page used by journaling. I attach my test script below to
+help you reproduce it.
+My test setup is:
+- virtual machine, 8 cpus and 1024 MB mem (256 MB cma mem)
+- ubuntu 16.04 with custom kernel
+- filesystem is ext4
 
-v2->v3:
- - Fixed error return for incompatible endpoint
- - __u64 changed to __le64 in header file
+> I'm using the following patch to dump failed pages:
+>
+> @@ -1455,6 +1455,9 @@ int migrate_pages(struct list_head *from, new_page_=
+t get_new_page,
+>                                                 private, page, pass > 2, =
+mode,
+>                                                 reason);
+>
+> +                       if (rc && reason =3D=3D MR_CONTIG_RANGE)
+> +                               dump_page(page, "unmap_and_move");
+> +
+>                         switch(rc) {
+>                         case -ENOMEM:
+>                                 /*
+>
+>
+> > However, given that
+> > there is no progress on this area for a long time, I think that
+> > applying the change aggressively
+> > is required to break the current situation.
+>
+> I totally agree!
+>
+> Btw, I've found that cma_release() grabs the cma->lock mutex,
+> so it can't be called from the atomic context (I've got a lockdep warning=
+).
+>
+> Of course, I can change the calling side, but I think it's better to chan=
+ge
+> the cma code to make cma_release() more accepting. What do you think
+> about the following patch?
 
- drivers/iommu/virtio-iommu.c      | 53 +++++++++++++++++++++++++++----
- include/uapi/linux/virtio_iommu.h |  7 ++++
- 2 files changed, 54 insertions(+), 6 deletions(-)
+For 2GB CMA area, we need to check 8192(?) bytes in worst case scenario and
+I don't think it's small enough for spinlock. Even, there is no limit
+on the size of
+the cma area. If cma area is bigger, it takes more. So, I think that
+spinlock() isn't
+good here.
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index cce329d71fba..ab09c04b1702 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -78,6 +78,7 @@ struct viommu_endpoint {
- 	struct viommu_dev		*viommu;
- 	struct viommu_domain		*vdomain;
- 	struct list_head		resv_regions;
-+	u64				pgsize_bitmap;
- };
- 
- struct viommu_request {
-@@ -415,6 +416,19 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
- 	return ret;
- }
- 
-+static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
-+				    struct virtio_iommu_probe_pgsize_mask *mask,
-+				    size_t len)
-+{
-+	u64 pgsize_bitmap = le64_to_cpu(mask->pgsize_bitmap);
-+
-+	if (len < sizeof(*mask))
-+		return -EINVAL;
-+
-+	vdev->pgsize_bitmap = pgsize_bitmap;
-+	return 0;
-+}
-+
- static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
- 			       struct virtio_iommu_probe_resv_mem *mem,
- 			       size_t len)
-@@ -499,6 +513,9 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
- 		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
- 			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
- 			break;
-+		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
-+			ret = viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
-+			break;
- 		default:
- 			dev_err(dev, "unknown viommu prop 0x%x\n", type);
- 		}
-@@ -607,16 +624,17 @@ static struct iommu_domain *viommu_domain_alloc(unsigned type)
- 	return &vdomain->domain;
- }
- 
--static int viommu_domain_finalise(struct viommu_dev *viommu,
-+static int viommu_domain_finalise(struct viommu_endpoint *vdev,
- 				  struct iommu_domain *domain)
- {
- 	int ret;
- 	struct viommu_domain *vdomain = to_viommu_domain(domain);
-+	struct viommu_dev *viommu = vdev->viommu;
- 
- 	vdomain->viommu		= viommu;
- 	vdomain->map_flags	= viommu->map_flags;
- 
--	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
-+	domain->pgsize_bitmap	= vdev->pgsize_bitmap;
- 	domain->geometry	= viommu->geometry;
- 
- 	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
-@@ -642,6 +660,29 @@ static void viommu_domain_free(struct iommu_domain *domain)
- 	kfree(vdomain);
- }
- 
-+/*
-+ * Check whether the endpoint's capabilities are compatible with other
-+ * endpoints in the domain. Report any inconsistency.
-+ */
-+static bool viommu_endpoint_is_compatible(struct viommu_endpoint *vdev,
-+					  struct viommu_domain *vdomain)
-+{
-+	struct device *dev = vdev->dev;
-+
-+	if (vdomain->viommu != vdev->viommu) {
-+		dev_err(dev, "cannot attach to foreign vIOMMU\n");
-+		return false;
-+	}
-+
-+	if (vdomain->domain.pgsize_bitmap != vdev->pgsize_bitmap) {
-+		dev_err(dev, "incompatible domain bitmap 0x%lx != 0x%llx\n",
-+			vdomain->domain.pgsize_bitmap, vdev->pgsize_bitmap);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
- {
- 	int i;
-@@ -657,10 +698,9 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		 * Properly initialize the domain now that we know which viommu
- 		 * owns it.
- 		 */
--		ret = viommu_domain_finalise(vdev->viommu, domain);
--	} else if (vdomain->viommu != vdev->viommu) {
--		dev_err(dev, "cannot attach to foreign vIOMMU\n");
--		ret = -EXDEV;
-+		ret = viommu_domain_finalise(vdev, domain);
-+	} else if (!viommu_endpoint_is_compatible(vdev, vdomain)) {
-+		ret = -EINVAL;
- 	}
- 	mutex_unlock(&vdomain->mutex);
- 
-@@ -875,6 +915,7 @@ static int viommu_add_device(struct device *dev)
- 
- 	vdev->dev = dev;
- 	vdev->viommu = viommu;
-+	vdev->pgsize_bitmap = viommu->pgsize_bitmap;
- 	INIT_LIST_HEAD(&vdev->resv_regions);
- 	fwspec->iommu_priv = vdev;
- 
-diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-index 237e36a280cb..bd0a1a844081 100644
---- a/include/uapi/linux/virtio_iommu.h
-+++ b/include/uapi/linux/virtio_iommu.h
-@@ -111,6 +111,7 @@ struct virtio_iommu_req_unmap {
- 
- #define VIRTIO_IOMMU_PROBE_T_NONE		0
- #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-+#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
- 
- #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
- 
-@@ -119,6 +120,12 @@ struct virtio_iommu_probe_property {
- 	__le16					length;
- };
- 
-+struct virtio_iommu_probe_pgsize_mask {
-+	struct virtio_iommu_probe_property	head;
-+	__u8					reserved[4];
-+	__le64					pgsize_bitmap;
-+};
-+
- #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
- #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
- 
--- 
-2.17.1
+Anyway, below is the test script that I used.
 
+Thanks.
+
+-------------------------->8------------------------------------
+RUNS=3D1
+MAKE_CPUS=3D10
+KERNEL_DIR=3D~~~~~~~~~~~~~~~
+WORKING_DIR=3D`pwd`
+RESULT_OUTPUT=3D$WORKING_DIR/log-cma-alloc.txt
+BUILD_KERNEL=3D1
+BUILD_KERNEL_PID=3D0
+SHOW_CONSOLE=3D1
+SHOW_LATENCY=3D1
+
+CMA_AREA_NAME=3Dcma_reserve
+CMA_DEBUGFS_ROOT_DIR=3D/sys/kernel/debug/cma
+CMA_DEBUGFS_AREA_DIR=3D$CMA_DEBUGFS_ROOT_DIR/cma-$CMA_AREA_NAME
+
+CMA_AREA_COUNT=3D`sudo cat $CMA_DEBUGFS_AREA_DIR/count`
+CMA_AREA_ORDERPERBIT=3D`sudo cat $CMA_DEBUGFS_AREA_DIR/order_per_bit`
+CMA_AREA_PAGES=3D$(($CMA_AREA_COUNT * 2 ** $CMA_AREA_ORDERPERBIT))
+
+CMA_ALLOC_DELAY=3D5
+CMA_ALLOC_SPLIT=3D32
+CMA_ALLOC_PAGES=3D$(($CMA_AREA_PAGES / $CMA_ALLOC_SPLIT))
+
+function show_cma_info()
+{
+cat /proc/meminfo | grep -i cma
+sudo cat $CMA_DEBUGFS_AREA_DIR/{count,used}
+}
+
+function time_begin()
+{
+echo $(date +%s.%N)
+}
+
+function time_elapsed()
+{
+tmp=3D$(date +%s.%N)
+echo $tmp - $1 | bc -l
+}
+
+function time_sum()
+{
+echo $1 + $2 | bc -l
+}
+
+function time_avg()
+{
+echo $1 / $2 | bc -l
+}
+
+if [ "$1" =3D=3D "show" ]; then
+show_cma_info
+exit 0
+fi
+
+if [ "$SHOW_CONSOLE" !=3D "1" ]; then
+exec 3>&1 4>&2 >$RESULT_OUTPUT 2>&1
+fi
+
+if [ "$BUILD_KERNEL" =3D=3D "1" ]; then
+pushd -
+cd $KERNEL_DIR
+make clean &> /dev/null;
+make -j$MAKE_CPUS &> /dev/null &
+BUILD_KERNEL_PID=3D$!
+popd
+echo "waiting until build kernel runs actively"
+sleep 10
+fi
+
+echo "BUILD_KERNEL: $BUILD_KERNEL"
+echo "BUILD_KERNEL_PID: $BUILD_KERNEL_PID"
+echo "CMA_AREA_NAME: $CMA_AREA_NAME"
+echo "CMA_AREA_PAGES: $CMA_AREA_PAGES"
+echo "CMA_ALLOC_SPLIT: $CMA_ALLOC_SPLIT"
+echo "CMA_ALLOC_PAGES: $CMA_ALLOC_PAGES"
+
+for i in `seq $RUNS`;
+do
+echo "begin: $i"
+
+show_cma_info
+
+CMA_ALLOC_SUCC=3D0
+T_BEGIN=3D`time_begin`
+for j in `seq $CMA_ALLOC_SPLIT`;
+do
+sudo bash -c "echo $CMA_ALLOC_PAGES > $CMA_DEBUGFS_AREA_DIR/alloc" &> /dev/=
+null
+if [ "$?" =3D=3D "0" ]; then
+CMA_ALLOC_SUCC=3D$(($CMA_ALLOC_SUCC+1))
+fi
+done
+T_ELAPSED=3D`time_elapsed $T_BEGIN`
+
+sleep 5
+echo "alloced: $CMA_ALLOC_SUCC"
+show_cma_info
+
+for j in `seq $CMA_ALLOC_SUCC`;
+do
+sudo bash -c "echo $CMA_ALLOC_PAGES > $CMA_DEBUGFS_AREA_DIR/free"
+done
+
+if [ "$SHOW_LATENCY" =3D=3D "1" ]; then
+T_AVG=3D`time_avg $T_ELAPSED $CMA_ALLOC_SPLIT`
+echo "T_AVG: $T_AVG"
+fi
+
+sleep $CMA_ALLOC_DELAY
+done
+
+if [ "$BUILD_KERNEL_PID" !=3D "0" ]; then
+kill $BUILD_KERNEL_PID
+fi
+
+if [ "$SHOW_CONSOLE" !=3D "1" ]; then
+exec 1>&3 2>&4
+fi
