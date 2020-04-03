@@ -2,49 +2,49 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AD6C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D7CC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856562077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5608920721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:20:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IV6OHVgI"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="sQq/8rDk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404404AbgDCQUD (ORCPT
+        id S2404413AbgDCQUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:20:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49292 "EHLO mail.skyhub.de"
+        Fri, 3 Apr 2020 12:20:09 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49310 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404381AbgDCQT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:19:56 -0400
+        id S2404365AbgDCQTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:19:54 -0400
 Received: from zn.tnic (p200300EC2F0D8900BDBBB37D18611998.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8900:bdbb:b37d:1861:1998])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3524F1EC036E;
-        Fri,  3 Apr 2020 18:19:55 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 80A7A1EC0CEE;
+        Fri,  3 Apr 2020 18:19:53 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585930795;
+        t=1585930793;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bRm7hk26peOhWOB+SdnZcHkF8PzVWnhOl4oWCAUbcyo=;
-        b=IV6OHVgIRfv5wrDPT9QSAfAIEOZE7WyMN4WFf13EQqiDSrti80XFykRKE0V0dqCEjnZITq
-        48DjU1/N8JoG55vIzXoxD87Pa3ZJoC08nUWuUCPmTlzaHVxM7MhrPHIfbaaa/mRqu9dcEz
-        ayBThW0f/tKIStWYZY+HGhqyDiVQtLE=
+        bh=WxfUHWPsjSfvG/d93sW/gdjDn/TEWXVobucmlT3oP+E=;
+        b=sQq/8rDkKktjonzP4XOCDPk0aAqWHZGrz0cIYhe92k8Klp6bryCgwhYv/d3Eb1rrxvW/G7
+        J2ccoc88mGzhB02oPY+RkVog8yzg/dEymx9PNLrSpHIpu3zXmmhfrGrNF6rJ4P+8E/lVu7
+        X7hD+Y+YKmTXQ4RWKviHS4TsS2UjPUk=
 From:   Borislav Petkov <bp@alien8.de>
 To:     X86 ML <x86@kernel.org>
 Cc:     Yazen Ghannam <Yazen.Ghannam@amd.com>,
         linux-edac <linux-edac@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 7/7] x86/mce/amd: Make threshold bank setting hotplug robust
-Date:   Fri,  3 Apr 2020 18:19:43 +0200
-Message-Id: <20200403161943.1458-8-bp@alien8.de>
+Subject: [PATCH 5/7] x86/mce/amd: Straighten CPU hotplug path
+Date:   Fri,  3 Apr 2020 18:19:41 +0200
+Message-Id: <20200403161943.1458-6-bp@alien8.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200403161943.1458-1-bp@alien8.de>
 References: <20200403161943.1458-1-bp@alien8.de>
@@ -57,63 +57,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-Handle the cases when the CPU goes offline before the bank
-setting/reading happens.
+mce_threshold_create_device() hotplug callback runs on the plugged in
+CPU so:
 
- [ bp: Write commit message. ]
+ - use this_cpu_read() which is faster
+ - pass in struct threshold_bank **bp to threshold_create_bank() and
+   instead of doing per-CPU accesses
+ - Use rdmsr_safe() instead of rdmsr_safe_on_cpu() which avoids an IPI.
+
+No functional changes.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 ---
- arch/x86/kernel/cpu/mce/amd.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/mce/amd.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 16e7aea86ab1..15c87b87b901 100644
+index d3c416b6052a..a33d9a1caf36 100644
 --- a/arch/x86/kernel/cpu/mce/amd.c
 +++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -386,6 +386,10 @@ static void threshold_restart_bank(void *_tr)
- 	struct thresh_restart *tr = _tr;
- 	u32 hi, lo;
+@@ -1223,10 +1223,10 @@ static int allocate_threshold_blocks(unsigned int cpu, struct threshold_bank *tb
+ 	u32 low, high;
+ 	int err;
  
-+	/* sysfs write might race against an offline operation */
-+	if (this_cpu_read(threshold_banks))
-+		return;
-+
- 	rdmsr(tr->b->address, lo, hi);
+-	if ((bank >= per_cpu(mce_num_banks, cpu)) || (block >= NR_BLOCKS))
++	if ((bank >= this_cpu_read(mce_num_banks)) || (block >= NR_BLOCKS))
+ 		return 0;
  
- 	if (tr->b->threshold_limit < (hi & THRESHOLD_MAX))
-@@ -1085,7 +1089,8 @@ store_interrupt_enable(struct threshold_block *b, const char *buf, size_t size)
- 	memset(&tr, 0, sizeof(tr));
- 	tr.b		= b;
+-	if (rdmsr_safe_on_cpu(cpu, address, &low, &high))
++	if (rdmsr_safe(address, &low, &high))
+ 		return 0;
  
--	smp_call_function_single(b->cpu, threshold_restart_bank, &tr, 1);
-+	if (smp_call_function_single(b->cpu, threshold_restart_bank, &tr, 1))
-+		return -ENODEV;
- 
- 	return size;
+ 	if (!(high & MASK_VALID_HI)) {
+@@ -1316,9 +1316,10 @@ static int __threshold_add_blocks(struct threshold_bank *b)
+ 	return err;
  }
-@@ -1109,7 +1114,8 @@ store_threshold_limit(struct threshold_block *b, const char *buf, size_t size)
- 	b->threshold_limit = new;
- 	tr.b = b;
  
--	smp_call_function_single(b->cpu, threshold_restart_bank, &tr, 1);
-+	if (smp_call_function_single(b->cpu, threshold_restart_bank, &tr, 1))
-+		return -ENODEV;
- 
- 	return size;
- }
-@@ -1118,7 +1124,9 @@ static ssize_t show_error_count(struct threshold_block *b, char *buf)
+-static int threshold_create_bank(unsigned int cpu, unsigned int bank)
++static int threshold_create_bank(struct threshold_bank **bp, unsigned int cpu,
++				 unsigned int bank)
  {
- 	u32 lo, hi;
+-	struct device *dev = per_cpu(mce_device, cpu);
++	struct device *dev = this_cpu_read(mce_device);
+ 	struct amd_northbridge *nb = NULL;
+ 	struct threshold_bank *b = NULL;
+ 	const char *name = get_name(bank, NULL);
+@@ -1338,7 +1339,7 @@ static int threshold_create_bank(unsigned int cpu, unsigned int bank)
+ 			if (err)
+ 				goto out;
  
--	rdmsr_on_cpu(b->cpu, b->address, &lo, &hi);
-+	/* CPU might be offline by now */
-+	if (rdmsr_on_cpu(b->cpu, b->address, &lo, &hi))
-+		return -ENODEV;
+-			per_cpu(threshold_banks, cpu)[bank] = b;
++			bp[bank] = b;
+ 			refcount_inc(&b->cpus);
  
- 	return sprintf(buf, "%u\n", ((hi & THRESHOLD_MAX) -
- 				     (THRESHOLD_MAX - b->threshold_limit)));
+ 			err = __threshold_add_blocks(b);
+@@ -1374,8 +1375,7 @@ static int threshold_create_bank(unsigned int cpu, unsigned int bank)
+ 	if (err)
+ 		goto out_kobj;
+ 
+-	per_cpu(threshold_banks, cpu)[bank] = b;
+-
++	bp[bank] = b;
+ 	return 0;
+ 
+ out_kobj:
+@@ -1487,35 +1487,33 @@ int mce_threshold_remove_device(unsigned int cpu)
+  */
+ int mce_threshold_create_device(unsigned int cpu)
+ {
+-	unsigned int bank;
++	unsigned int numbanks, bank;
+ 	struct threshold_bank **bp;
+ 	int err;
+ 
+ 	if (!mce_flags.amd_threshold)
+ 		return 0;
+ 
+-	bp = per_cpu(threshold_banks, cpu);
++	bp = this_cpu_read(threshold_banks);
+ 	if (bp)
+ 		return 0;
+ 
+-	bp = kcalloc(per_cpu(mce_num_banks, cpu), sizeof(struct threshold_bank *),
+-		     GFP_KERNEL);
++	numbanks = this_cpu_read(mce_num_banks);
++	bp = kcalloc(numbanks, sizeof(*bp), GFP_KERNEL);
+ 	if (!bp)
+ 		return -ENOMEM;
+ 
+-	per_cpu(threshold_banks, cpu) = bp;
+-
+-	for (bank = 0; bank < per_cpu(mce_num_banks, cpu); ++bank) {
+-		if (!(per_cpu(bank_map, cpu) & (1 << bank)))
++	for (bank = 0; bank < numbanks; ++bank) {
++		if (!(this_cpu_read(bank_map) & (1 << bank)))
+ 			continue;
+-		err = threshold_create_bank(cpu, bank);
++		err = threshold_create_bank(bp, cpu, bank);
+ 		if (err)
+ 			goto out_err;
+ 	}
++	this_cpu_write(threshold_banks, bp);
+ 
+ 	if (thresholding_irq_en)
+ 		mce_threshold_vector = amd_threshold_interrupt;
+-
+ 	return 0;
+ out_err:
+ 	mce_threshold_remove_device(cpu);
 -- 
 2.21.0
 
