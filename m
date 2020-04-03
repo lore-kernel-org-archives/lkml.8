@@ -2,153 +2,126 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF7DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EE1C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1ED206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E6B206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:45:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFvhkqM3"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="JiJCxQcx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgDCTo3 (ORCPT
+        id S1727966AbgDCTpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 15:44:29 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35597 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgDCTo3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 15:44:29 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g3so7608103wrx.2;
-        Fri, 03 Apr 2020 12:44:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dL35/KDrO9kk5GYoU2spCW4xpugUQC8ErbDAX9x0Gu8=;
-        b=RFvhkqM38AZ3tO6/eGOW8EMuB+S366v2bxcxzLwsQYxD7wEd8Ms4deyxkM2EBHnDHu
-         JwVbeSiTaiq1NY9DY8pPNfCJkP1ovZ4hGxPMVYuSWh2fnstb45fzjJtv3wFfbGDZRIdP
-         bgQ9ctj+/5iTU/uyyPIlzpvOOb/jmsaUracBI5gQgTpQbkhjsZAJFufcVSG9fWs1TERr
-         Tr/aORQOoiWvisaFOXrym7FdY8SwT0zsEH2q47IrUA5HWiHDgTSt3HsHxZUAnD0f21kH
-         nT4oZJBR7izhY8SGuofAneMYBs0ziBefPPss2Z+GoLgrsVYBUYyCHeZOqXGOloVprwKQ
-         nrXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dL35/KDrO9kk5GYoU2spCW4xpugUQC8ErbDAX9x0Gu8=;
-        b=oViFHfLTpDSgnro09+wAePwsIm3sMiflPztB7BhnyPQPwyTgvOAzHDWK4jV9r3gk59
-         BK1tRD1toTQG++D48dd/nAH1J1affhBF9AYD6O3Psnl/B/xPe0y/wdTFbURPB5+JJXha
-         sT4DNorBetX9sppQubOQvtVW5f7eggxphz+n5cHWK1vX3zoRxmBSk44T5iQAo8BZFNjf
-         30SmJd7Vh7/ZHlsXED66uo8LfTAn4IBSQ+ujx/XSx//1GL6w1Kqxlo6dIPl9LQiqLY6G
-         OYw+tUKH29pidy3v5N8Lp9uiG0PqwIkexfcX4U/MNe4Im+8YIUBbtCjiEQ3C3gVqk1R3
-         EDjQ==
-X-Gm-Message-State: AGi0PuYBJtkeFL6pd+BPpE2/RhI326bp8hwxTu9I/Z1MFCd28Prt8IbQ
-        aroeadGSRfvzwrV/xt2C/QFR7l3P
-X-Google-Smtp-Source: APiQypKfgGDNRj3izQQLQWikN/RhUd4+v/qBrrpt5JZ57QOnefvRSSPnCsnq9O4REf5pm0agQOzCew==
-X-Received: by 2002:a5d:500d:: with SMTP id e13mr1566557wrt.362.1585943067756;
-        Fri, 03 Apr 2020 12:44:27 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id m11sm12835978wmf.9.2020.04.03.12.44.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 12:44:26 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 21:44:25 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 REBASED] pwm: pca9685: fix pwm/gpio inter-operation
-Message-ID: <20200403194425.GC201060@ulmo>
-References: <20200401170106.134037-1-clemens.gruber@pqgruber.com>
+        Fri, 3 Apr 2020 15:45:46 -0400
+Received: from mout.web.de ([212.227.15.4]:53685 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727809AbgDCTpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 15:45:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1585943122;
+        bh=2wiZ4lVoxw2YhxjCeGelueT0FHG1EuPNuwT+OrG1VuE=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=JiJCxQcxSpvQPGJ/h/EQaU4UwjwLaPM85xAdBNtRRhHr3AUHgoReSMf52haeEYczA
+         EBePvQS49lhYV30kk7wgtirI8vK+anFp7EF5TDy1dqwHRhzTmRu1c2G5xnpgBwwwWx
+         0Ioq2fB7eOeppw6AFgEiEsfW6GNSx0Y0QCrTmwbY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.135.25.116]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MMWA2-1jPOjU06fO-008FXz; Fri, 03
+ Apr 2020 21:45:22 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] mailbox: armada-37xx-rwtm: Remove duplicate error
+ messages in armada_37xx_mbox_probe()
+To:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <2f136a63-72d5-43ef-2a73-67d6984b848d@web.de>
+Date:   Fri, 3 Apr 2020 21:45:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lCAWRPmW1mITcIfM"
-Content-Disposition: inline
-In-Reply-To: <20200401170106.134037-1-clemens.gruber@pqgruber.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:M8gCHDrL+Xfttf6SVR6+2/6PcwK8pdosInIdsoG8PzBegbhr6pd
+ FipkvbRprHcA2UwzvB+d3SUbH+lHzH9Z3kb0AAWf8GFffUu2xAPlN/fWfF6+zaos3nU6JHO
+ FBXIB7bI5qf4Bjuz7HBEUHQAEarNVd3/V1vqgyvhntcEmt3qsbtXuYV67N0Z784ovsX5Qk1
+ 6rloNWdL/lIismXcQh7Lg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bYPNv362bp8=:SfSkLnZTpuehoi0syk8PGx
+ 1Z+fMMk5FtWC53pq1QC+UobgCJbAO7SSu2z3a/SOYeTOP60scDomIRPIJ4q6WqNXT2nTwg9xZ
+ iZE5lnBvbGGKb0EOfEGO/uKgxwx8U2hHHbjlx6obsSQ8lMY0ZbzkLl5sw9j6QNJL25gMcoDHi
+ oa2x3XpPBJTlekT4BSj9412JzzYUbv7NLEc5zRIUUTaE2VxuVTqFQxGJ0Pn+oUNvZnB/m5QsU
+ EVHZw8o9RGO7ux3jdA+tDPsWso781GBz+av/B8XLAy+kZBz1EHk4BxxgQVYmDw4YFWUeRg52z
+ pq748ViH1LtHP+Jy4Zip36Pz7WRq06LRsOjf/4LABkrfhf4zI53ZdIWbwHr/xZ2ArOkKrhZB3
+ wMXwmV3qDoni+VLxcGuIIuzPaweAKV+lzL6oXK6r5N5Bh99PTQ1S9KJUa7XLng4INfcWYJ7u/
+ AFlED+mTspiV0yvGSu3OAOXvXbkJWAjzdKlIKyEYygeGju8kNpOvQ+MAc8s/DiWoQvQtjYfIa
+ o7/dJFS+dslNLegbzPllClTUQBCJ4Hx/EpPuZl0cGGWEgxwBSYETifkXYIBT5U+D+WzFX3Wr3
+ 1XfwxiHDkBVEmGUKe+4BeOSlaMMEbl/mm0mIbqNK8gluX+J7peZNlEH25NFbc48SsSx/6kVQF
+ 2CdGRm+nBWJPu+/mil2nFj5UQtA8B7PMZOigKvRpYn+Tpr7/KW7RUrvZwioeZp5cLKK15tfI/
+ Pdm/Xflqudyx/ye0HxbQ7Qztgk/cGMU2ZtLjd9jQe/dg48ylBBuYJ9/LMq9mWtfxqxHIr6WvZ
+ 8RYUtSfxXK494m5js2D9OfFowBSidBpCl2hNh3YOyoVLJHDY/D4shNmF+f0DSFvoZq/vOH609
+ tF7ff+cPQQYr3ILnlULvZr+WcKfAA3VTqpnS6156uEC/Zwqymx5q96vO60Itx4kPNoaro2QZ9
+ ajz2C9DkIcOezQYxzifr7+GeAq/35pZnPfvECVLU2xONuKEZKkJwxBgoP6PMKRqKiWj7Og2xp
+ pKTEguUbaGQlKpKQW0E0PhT33x5WqiwFD3DEH+CYYZtNT0KV7ecm01NFIB5ESvxwQi7WLYYbZ
+ rYoARYb5DiHV30THSsIPdyR2KjJnsVOT92YmAIhYyEW1Z1V4uiYxD962WvUF4QccMQYCRdkVA
+ KWhY83AlY+n26n86eBD+PScATX/fQBDJqpjDnjgPSARreQ0dnN1PceFTMCw4yiaRkJHVASU9u
+ vY6b3b56NveKeMTdk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> In this function,we don't need dev_err() message because when something
+> goes wrong,platform_get_irq() and devm_platform_ioremap_resource() have
+> print an error message itself, so we should remove duplicate dev_err().
 
---lCAWRPmW1mITcIfM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I suggest further fine-tuning also for this commit message.
 
-On Wed, Apr 01, 2020 at 07:01:06PM +0200, Clemens Gruber wrote:
-> From: Sven Van Asbroeck <TheSven73@gmail.com>
->=20
-> This driver allows pwms to be requested as gpios via gpiolib.
-> Obviously, it should not be allowed to request a gpio when its
-> corresponding pwm is already requested (and vice versa).
-> So it requires some exclusion code.
->=20
-> Given that the pwm and gpio cores are not synchronized with
-> respect to each other, this exclusion code will also require
-> proper synchronization.
->=20
-> Such a mechanism was in place, but was inadvertently removed
-> by Uwe's clean-up patch.
->=20
-> Upon revisiting the synchronization mechanism, we found that
-> theoretically, it could allow two threads to successfully
-> request conflicting pwms / gpios.
->=20
-> Replace with a bitmap which tracks pwm in-use, plus a mutex.
-> As long as pwm and gpio's respective request/free functions
-> modify the in-use bitmap while holding the mutex, proper
-> synchronization will be guaranteed.
->=20
-> Reported-by: YueHaibing <yuehaibing@huawei.com>
-> Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> Cc: YueHaibing <yuehaibing@huawei.com>
-> Link: https://lkml.org/lkml/2019/5/31/963
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-> [cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
->=20
-> ---
->  drivers/pwm/pwm-pca9685.c | 85 ++++++++++++++++++++++-----------------
->  1 file changed, 48 insertions(+), 37 deletions(-)
-
-Applied, thanks.
-
-Thierry
-
---lCAWRPmW1mITcIfM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6HkhkACgkQ3SOs138+
-s6EpLw/7B2wgmKpQYAy0SEAUiVfRJqbh5qpUT26I6qKNgXMtkhPjhtinfPd7MCta
-YYmIWZxEPUZ2iO1pmWKItkQpCsyomanvTLZX7g/4+8zd8I6bVgREdtckx+8gAQ6W
-L2IBR0QcPOyRVJYJB09IcCoX0A5EfWp3qL3s8dm66nTnk+WwsrTma6IpaMUkHS3y
-ezvztdPJ6l6q6M/ZgiXrRj/+oSrzvj/x0Fa3jqT13i0+DWUldk4SuY2Bt0GmFByu
-FaSKeonlma4tCIkczxge2Zg3niVYN5VylsnZoIV2K6l3x3YM4w4nX5Wu6kVDz+bd
-caNzwGhJyrlrlWt7vGPph+MAP/wzY+anaO8v5HnN3a0QDq4P39swCgffGQsLGdeE
-7f5ivDPUHwhzWoIyNAdWMBekPA2Y0QaFAaC2/WBd3Eoh70YOfgLS4VQRchljE49e
-eLt4kZq0jkEdPXtrNTZ4oeF4uY9u2vGkR802+AJ2QCC7PqWQfJTVg7cX28pP5fj0
-sPVdNXbxilZ+9lNZq4OAO2BoYFBR/rSIc36xxri/+jIAqA8X044NJqlPcR0T54nV
-SFNpRx4EVTGxTi14Cq/zVPuai7OxM/nug5lFx63qYvGp2+a7M3D+lZJ6WSimuoK/
-KpRAsgNGeHZCeGllgIh548dbc8VRT2XPrIqGRJBcHzO2rwWt9bY=
-=miJb
------END PGP SIGNATURE-----
-
---lCAWRPmW1mITcIfM--
+Regards,
+Markus
