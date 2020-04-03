@@ -4,145 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37AEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CD5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732B420787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDD320737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390619AbgDCJMA (ORCPT
+        id S2390620AbgDCJMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:12:00 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:49912 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388221AbgDCJL7 (ORCPT
+        Fri, 3 Apr 2020 05:12:21 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:4027 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732595AbgDCJMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:11:59 -0400
-Received: from lanttu.localdomain (lanttu.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::c1:2])
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTP id E54F6634C8B;
-        Fri,  3 Apr 2020 12:11:07 +0300 (EEST)
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and DRM fourccs
-Date:   Fri,  3 Apr 2020 12:11:56 +0300
-Message-Id: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 3 Apr 2020 05:12:20 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee95e86fde4945-748e9; Fri, 03 Apr 2020 17:12:04 +0800 (CST)
+X-RM-TRANSID: 2ee95e86fde4945-748e9
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45e86fde287d-479a0;
+        Fri, 03 Apr 2020 17:12:04 +0800 (CST)
+X-RM-TRANSID: 2ee45e86fde287d-479a0
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     narmstrong@baylibre.com, clabbe@baylibre.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net
+Cc:     linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH v4]crypto: amlogic - Delete duplicate dev_err in meson_crypto_probe()
+Date:   Fri,  3 Apr 2020 17:13:32 +0800
+Message-Id: <20200403091332.12100-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-the same implementation can be used.
+When something goes wrong, platform_get_irq() will print an error message,
+so in order to avoid the situation of repeat output，we should remove
+dev_err here.
 
-Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Changes form v3:
+ - fix the theme writing error.
+
+Changes from v2:
+ - modify the theme format and content description.
+ - reformat the patch, it's the wrong way to resubmit a new patch that
+   should be modified on top of the original. The original piece is:
+   https://lore.kernel.org/patchwork/patch/1219611/
+
+Changes from v1:
+ - the title has changed, because the description is not very detailed.
+ - the code has been modified, because it needs to match the theme.
+
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 ---
-since v1:
+ drivers/crypto/amlogic/amlogic-gxl-core.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-- Improve documentation (add -BE suffix, refer to "FourCC".
-
-- Use '%p4cc' conversion specifier instead of '%ppf'.
-
-- Fix 31st bit handling in printing FourCC codes.
-
-- Use string() correctly, to allow e.g. proper field width handling.
-
-- Remove loop, use put_unaligned_le32() instead.
-
- Documentation/core-api/printk-formats.rst | 12 +++++++++++
- lib/vsprintf.c                            | 25 +++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
-
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index 8ebe46b1af39..550568520ab6 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -545,6 +545,18 @@ For printing netdev_features_t.
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
+index 37901bd81..c2fa442c5 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-core.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
+@@ -253,10 +253,8 @@ static int meson_crypto_probe(struct platform_device *pdev)
+ 	mc->irqs = devm_kcalloc(mc->dev, MAXFLOW, sizeof(int), GFP_KERNEL);
+ 	for (i = 0; i < MAXFLOW; i++) {
+ 		mc->irqs[i] = platform_get_irq_optional(pdev, i);
+-		if (mc->irqs[i] < 0) {
+-			dev_err(mc->dev, "Cannot get IRQ for flow %d\n", i);
++		if (mc->irqs[i] < 0)
+ 			return mc->irqs[i];
+-		}
  
- Passed by reference.
- 
-+V4L2 and DRM FourCC code (pixel format)
-+---------------------------------------
-+
-+::
-+
-+	%p4cc
-+
-+Print a FourCC code used by V4L2 or DRM. The "-BE" suffix is added on big endian
-+formats.
-+
-+Passed by reference.
-+
- Thanks
- ======
- 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 7c488a1ce318..93eea6a320da 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -1721,6 +1721,28 @@ char *netdev_bits(char *buf, char *end, const void *addr,
- 	return special_hex_number(buf, end, num, size);
- }
- 
-+static noinline_for_stack
-+char *fourcc_string(char *buf, char *end, const u32 *fourcc,
-+		    struct printf_spec spec, const char *fmt)
-+{
-+#define FOURCC_STRING_BE	"-BE"
-+	char s[sizeof(*fourcc) + sizeof(FOURCC_STRING_BE)] = { 0 };
-+
-+	if (check_pointer(&buf, end, fourcc, spec))
-+		return buf;
-+
-+	if (fmt[1] != 'c' || fmt[2] != 'c')
-+		return error_string(buf, end, "(%p4?)", spec);
-+
-+	put_unaligned_le32(*fourcc & ~BIT(31), s);
-+
-+	if (*fourcc & BIT(31))
-+		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
-+			sizeof(FOURCC_STRING_BE));
-+
-+	return string(buf, end, s, spec);
-+}
-+
- static noinline_for_stack
- char *address_val(char *buf, char *end, const void *addr,
- 		  struct printf_spec spec, const char *fmt)
-@@ -2131,6 +2153,7 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
-  *       correctness of the format string and va_list arguments.
-  * - 'K' For a kernel pointer that should be hidden from unprivileged users
-  * - 'NF' For a netdev_features_t
-+ * - '4cc' V4L2 or DRM FourCC code, with "-BE" suffix on big endian formats.
-  * - 'h[CDN]' For a variable-length buffer, it prints it as a hex string with
-  *            a certain separator (' ' by default):
-  *              C colon
-@@ -2223,6 +2246,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
- 		return restricted_pointer(buf, end, ptr, spec);
- 	case 'N':
- 		return netdev_bits(buf, end, ptr, spec, fmt);
-+	case '4':
-+		return fourcc_string(buf, end, ptr, spec, fmt);
- 	case 'a':
- 		return address_val(buf, end, ptr, spec, fmt);
- 	case 'd':
+ 		err = devm_request_irq(&pdev->dev, mc->irqs[i], meson_irq_handler, 0,
+ 				       "gxl-crypto", mc);
 -- 
-2.20.1
+2.20.1.windows.1
+
+
 
