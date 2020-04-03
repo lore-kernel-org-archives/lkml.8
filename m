@@ -2,172 +2,92 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D51C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D028C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF4A2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A642073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585924335;
+	bh=p1zZdLKmMkDglIqL6fGiljiNRePvne0e6Tvw1WMZVqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ei23EULqod7JWg9IqVtvtxdpitclkvDMe95LHU64pRXx3iybQPpz92NPS+eSKIGAp
+	 FRUWOiQF46yUO3yWZvvRX0bjkj12+xWr0qizc8efk3GoQOCRRbweVXGiBVq0A2Ar7S
+	 ciUNj+9qEaZ6wuZf86g5lEQOPYW95/Q3ZbwHZCy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403878AbgDCO3I (ORCPT
+        id S2391015AbgDCOcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:29:08 -0400
-Received: from mga03.intel.com ([134.134.136.65]:15121 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbgDCO3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:29:07 -0400
-IronPort-SDR: lxkOUMurYjhN0Y7l5fVYl8hVuGT7Tv2y6Nn6e4HkS3v4sbjKM6Ci8b80w1fz1QH1XtBSKc0NP4
- oGfjxiJUY8qw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 07:29:03 -0700
-IronPort-SDR: QYYCSMTHxnMmHUYdTN6qK8Da/qeXWJtpW9hr4z2CR28Woc6Zx24PddrIMX5hFpFjSByE1cBk6A
- Lpx/dB5rmG0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,340,1580803200"; 
-   d="scan'208";a="329180493"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 03 Apr 2020 07:29:03 -0700
-Received: from [10.249.254.224] (abudanko-mobl.ccr.corp.intel.com [10.249.254.224])
-        by linux.intel.com (Postfix) with ESMTP id C813E58077B;
-        Fri,  3 Apr 2020 07:29:00 -0700 (PDT)
-Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
- privileged process
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
- <20200108160713.GI2844@hirez.programming.kicks-ass.net>
- <4e528ce4-a937-358b-47b6-7d7085ab4eaa@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <930384c0-e852-a7bf-cd61-829cb9993234@linux.intel.com>
-Date:   Fri, 3 Apr 2020 17:28:59 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 3 Apr 2020 10:32:14 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36904 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390812AbgDCOcN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 10:32:13 -0400
+Received: by mail-qk1-f194.google.com with SMTP id x3so8147609qki.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 07:32:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vf2o3eqZVXDAISA8ZTok99Oirgt/9Dqown4xMU1s148=;
+        b=SfvPVynLH4dNuMZcXn0TAYxaLFX2sMK49SRRXlHiosykRM1hj5gp5OYmSfNq5aw3Od
+         7rjOod6+IGo3ct+0TAnGt6yLDDutvsVpCIBoXouJ/e/kCAl7tk4sswfnqaPtnfQ7LWA9
+         MQ2tmuokGl91Sm0XYbiSjSkMclnyJatBMHgg2KdvwRN9AEMyPNUZaGRNGMg2+zvSgNMH
+         ttFv+96d8bGCFRfHeukjiPKqkNmJ9c5uaibwc0tfqa0jpjT1tF55CxGAMCil56tOA2YH
+         YcjNPSMI8gP4Lwas39cDTddBcIXcYqn7POE1QIfjGz2V4MT14gDhd1sZUCoIP6ENPhz0
+         FDmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=vf2o3eqZVXDAISA8ZTok99Oirgt/9Dqown4xMU1s148=;
+        b=sVkhJsb/3qSpuSusedhmYeNnceGI3u8uHayj5TYxixTMRCaNDGnmnHEWEW8g3fZWJj
+         NqaldYo8F5XvLZ0aP8k4nDEWgRJj25INtlr70nm+MCXIghRtYxR5Ujo+kqim/mF1c+Du
+         0AfxTkYkGDBPPORa7I0K6pv9Dr8djFK5rQGr2CGP+47ahCgtjnkNOnz2OXNirW5KHGTe
+         CC/lFprPwI3q8ffNO4UQ6wr/z4WcJxDBBCApzEVq6I2ItwdBpDGrKhi2tOw02S1+mBj6
+         bnj3S82Q6AKnELWwU9yuTZmQQZ+NbvfIGLsmJ/uQiUZOknS5ihdjvpYKnGoqcJ5/cNUV
+         U2dQ==
+X-Gm-Message-State: AGi0PuY4QvLKcHSAztDFpG1c+4f+sI4WcwRPxdVndklJHXajJaM+4quF
+        +BPRaHFmK7GZgCn5VY4/oabNVrS7vPw=
+X-Google-Smtp-Source: APiQypKMIgQ2ud4+vU4utnqtMbmhq9+AjDkaofDe4BjqaPXRIe78zze/3yskU7ha/voq5+v2ZaHxpw==
+X-Received: by 2002:a37:591:: with SMTP id 139mr8944797qkf.281.1585924332467;
+        Fri, 03 Apr 2020 07:32:12 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::842b])
+        by smtp.gmail.com with ESMTPSA id q1sm6023711qtn.69.2020.04.03.07.32.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 07:32:11 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 10:32:09 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernfs: Change kernfs_node lockdep name to "kn->active"
+Message-ID: <20200403143209.GY162390@mtj.duckdns.org>
+References: <20200402171056.27871-1-longman@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <4e528ce4-a937-358b-47b6-7d7085ab4eaa@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402171056.27871-1-longman@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 01.04.2020 23:49, Alexey Budankov wrote:
-> Hi Peter,
+On Thu, Apr 02, 2020 at 01:10:56PM -0400, Waiman Long wrote:
+> The kernfs_node lockdep tracking is being done on kn->active, the
+> active reference count. The other reference count (kn->count) is not
+> tracked by lockdep. So change the lockdep name to reflect what it is
+> tracking.
 > 
-> On 08.01.2020 19:07, Peter Zijlstra wrote:
->> On Wed, Dec 18, 2019 at 12:25:35PM +0300, Alexey Budankov wrote:
->>>
->>> Open access to perf_events monitoring for CAP_SYS_PERFMON privileged
->>> processes. For backward compatibility reasons access to perf_events
->>> subsystem remains open for CAP_SYS_ADMIN privileged processes but
->>> CAP_SYS_ADMIN usage for secure perf_events monitoring is discouraged
->>> with respect to CAP_SYS_PERFMON capability.
->>>
->>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>> ---
->>>  include/linux/perf_event.h | 6 +++---
->>>  kernel/events/core.c       | 6 +++---
->>>  2 files changed, 6 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->>> index 34c7c6910026..f46acd69425f 100644
->>> --- a/include/linux/perf_event.h
->>> +++ b/include/linux/perf_event.h
->>> @@ -1285,7 +1285,7 @@ static inline int perf_is_paranoid(void)
->>>  
->>>  static inline int perf_allow_kernel(struct perf_event_attr *attr)
->>>  {
->>> -	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
->>> +	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
->>>  		return -EACCES;
->>>  
->>>  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
->>> @@ -1293,7 +1293,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
->>>  
->>>  static inline int perf_allow_cpu(struct perf_event_attr *attr)
->>>  {
->>> -	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
->>> +	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
->>>  		return -EACCES;
->>>  
->>>  	return security_perf_event_open(attr, PERF_SECURITY_CPU);
->>> @@ -1301,7 +1301,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
->>>  
->>>  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
->>>  {
->>> -	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
->>> +	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
->>>  		return -EPERM;
->>>  
->>>  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
->>
->> These are OK I suppose.
->>
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index 059ee7116008..d9db414f2197 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -9056,7 +9056,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
->>>  	if (event->attr.type != perf_kprobe.type)
->>>  		return -ENOENT;
->>>  
->>> -	if (!capable(CAP_SYS_ADMIN))
->>> +	if (!perfmon_capable())
->>>  		return -EACCES;
->>>  
->>>  	/*
->>
->> This one only allows attaching to already extant kprobes, right? It does
->> not allow creation of kprobes.
->>
->>> @@ -9116,7 +9116,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
->>>  	if (event->attr.type != perf_uprobe.type)
->>>  		return -ENOENT;
->>>  
->>> -	if (!capable(CAP_SYS_ADMIN))
->>> +	if (!perfmon_capable())
->>>  		return -EACCES;
->>>  
->>>  	/*
->>
->> Idem, I presume.
->>
->>> @@ -11157,7 +11157,7 @@ SYSCALL_DEFINE5(perf_event_open,
->>>  	}
->>>  
->>>  	if (attr.namespaces) {
->>> -		if (!capable(CAP_SYS_ADMIN))
->>> +		if (!perfmon_capable())
->>>  			return -EACCES;
->>>  	}
->>
->> And given we basically make the entire kernel observable with this CAP,
->> busting namespaces shoulnd't be a problem either.
->>
->> So yeah, I suppose that works.
-> 
-> Could this have you explicit Reviewed-by or Acked-by tag
-> so the changes could be driven into the kernel?
-> Latest v7 is here:
-> https://lore.kernel.org/lkml/c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com/
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Posted v8 with all acquired tags so far:
-https://lore.kernel.org/lkml/f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com/
+Acked-by: Tejun Heo <tj@kernel.org>
 
-Thanks,
-Alexey
+Thanks.
+
+-- 
+tejun
