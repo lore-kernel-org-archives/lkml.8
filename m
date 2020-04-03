@@ -2,388 +2,145 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3CEC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C855C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6C420721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4342720721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:23:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Sayg3Kkm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sS+v7CNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390534AbgDCIXH (ORCPT
+        id S2390546AbgDCIXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:23:07 -0400
-Received: from mail-eopbgr1400118.outbound.protection.outlook.com ([40.107.140.118]:15004
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390500AbgDCIXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:23:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ChfcYv78eevv4PZmlPOXsOtYTrer59LB/9zzARi88W3wSIT5xTyTeN3Utu/FklO9ktnDxOIq6T7COEOb6/jrUTcedq2OsuIxiMbZ5wRMMopf4wXPmk5pNYleZ82sF96T+2krFvKi4SR/0aq8x/5b+0mRZoQCSHCzD+j483k9whit0hY97AEIYIWn3qFvxeEHi7uiMfUFO4jw4G2Rsud07N1CaksAHIZ1UqXvrmEbkDacHECOEGoXV04sisdwShAjvvSYX5uEmgaAVdCQdZcpNGMymLnmojwlPQwgxgytfERmwRLMlJnhW6hROwVwWyZtVamVZbIZx3QH0wfYTfz6Ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pGvyEbhqf0qyOFT/7/TP4FzUlZi+KYl/sQd7h7dKTwg=;
- b=MhTSXuWz92PHvQpNKjTvoAKmsyGqX68nkFY7trQc5ikR99FYHJwqVFMLaptM3yfxAUQ9O9xpEQuic4Jo+wLv4C2XoDq7adXkZtbF8s6eZnnpPQrBY5A4lZSLgASihPcjuoOmd9mOLdMr/jiXLpOVVwMrhkEoGzeXihqEgj7dYAOgdfVoKwM763Xo11uXV31k6gPpQlfFuWuLZdg6P43+N1XKem8w4Uh0hQka6KdbjALQHbzmsr+1RMpvxQvvHzGSEFHbwh2caVTh9ty4blj8InJaJQz0jRZal2lLG00g1UnU7RcnnUopBTbqNPMspTyDbYGXNJU5/0MeraeDgf2lXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Fri, 3 Apr 2020 04:23:15 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38658 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390535AbgDCIXO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:23:14 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f6so6703893wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 01:23:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pGvyEbhqf0qyOFT/7/TP4FzUlZi+KYl/sQd7h7dKTwg=;
- b=Sayg3KkmjRbawCTFwIS+qJg0cSs57CHxgeXT1EqBmVWCCD6CowCAfUSap1977YH6SUVBxXX9Bz9Qgv4I4wVUpZKAvr5NXc+0Bf9Wbh9T0MBbVoXye0TPjIRUGlGc8O2Favv3oG9thqAmomQhc/p7PYr0yR0CrEVnxd2Iz0qBV6Y=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB5484.jpnprd01.prod.outlook.com (20.180.229.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.15; Fri, 3 Apr 2020 08:23:02 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
- 08:23:02 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=U598O76U1plvyjaapeO4Tf0HbIirnZODFv/NpOBhzfU=;
+        b=sS+v7CNSHWE4356b1WV3iEELGpmmrK+V8Z9u/2DN2ksjjpwVQ0i70e/y9PrqolZTvR
+         YgWGO5Z9s9oRyQ2O0oVNsV/IyvUKbUJxrvv6V/ITs0YV9P/0pLpm2PRplRyP2Bqt5z3B
+         D8Y4bDSIXNqWHJHKtTtvteUgo5s3BhtamspGDsGtxlS0wKdGT15tCOZ1F6kpCZshKX34
+         iuNHKvFVBXCnURhwDeh/Vv4p8xgOveUyiJJURsvP1oWALPnLGusrqaDt0Zs11FAyUrHm
+         f/msg2cCxBvecHpZxSQUibB5xrMts67F1WVonZhQUcmlQkKR12fTa/KWY+WwA1Iug4Md
+         IrTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=U598O76U1plvyjaapeO4Tf0HbIirnZODFv/NpOBhzfU=;
+        b=Lp0DPk1xs1+ZuDZ+XgW0BbNH/XLG684DVXemEK717rYrNYeVLroK4QfGSFxI/dHsWw
+         zkxYy8CO9e/wnZSVaFkzPY6Lod5b2hZTgVOE5UeyStqeSjO7bSiL3yhyTSw5kBzUTDIn
+         lXL/sB2bDPr3tgftlsWlF1+g2bJKN3sWp2PgCbZxLLtx3dtYoaAQYkXT0oiI+4Tl5d7X
+         7RklU5G0yZEld6VRZfLP+IgF6o45S8AtODu3gblCH5m9Ozt49ElUe6jesOsfb1awHwGS
+         Gfg/slWiPXw/Lzf14+oZgVqN9QO3DghBxbxSSlipZwSN/q4aWKAQBdMgs9rbqKJwlTGi
+         y0/g==
+X-Gm-Message-State: AGi0PuYNHy7utzQkCdiYjf3vZYV4rmUKgrMr2golpsiuya52tGOHw2Hi
+        urv6V3k9YUNNKim5FPWLlkJa7Q==
+X-Google-Smtp-Source: APiQypJFlMG5cTB5/W9HLf5ZU0jVXEpq09c6jxtlvF0HcbDaR76403IdBh5WlxRSt57X9GXZ1B+fIw==
+X-Received: by 2002:a1c:4486:: with SMTP id r128mr7726787wma.32.1585902192918;
+        Fri, 03 Apr 2020 01:23:12 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id e8sm3163413wrw.40.2020.04.03.01.23.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 01:23:12 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 10:23:05 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v6 06/11] PCI: endpoint: Add support to handle multiple
- base for mapping outbound memory
-Thread-Topic: [PATCH v6 06/11] PCI: endpoint: Add support to handle multiple
- base for mapping outbound memory
-Thread-Index: AQHWCSZxsnMUaMwx50Sb61CF2skZ+6hnC2TA
-Date:   Fri, 3 Apr 2020 08:23:02 +0000
-Message-ID: <TYAPR01MB45442959B9FD7299D2CB8D73D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1585856319-4380-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1585856319-4380-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8f2a7999-066b-46c5-5365-08d7d7a83a44
-x-ms-traffictypediagnostic: TYAPR01MB5484:|TYAPR01MB5484:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB5484113B8E990871C9B527F9D8C70@TYAPR01MB5484.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(64756008)(66946007)(66476007)(66446008)(6506007)(2906002)(76116006)(8676002)(55236004)(71200400001)(7696005)(66556008)(54906003)(110136005)(9686003)(81166006)(81156014)(86362001)(26005)(186003)(55016002)(478600001)(4326008)(33656002)(52536014)(7416002)(316002)(8936002)(5660300002)(107886003)(921003)(1121003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IcPBzgJ/JYU42AePfmb8DD4OWFUwR5NPn/dXHoQ3B86kuwH1m0m+blBxsPfNTBIEVB1XPossB6K+0wrjrGIi9L4hetCkM2gikmTc1SdHP8PhF+MkFylYU9Bmdf88owaSorcuD18pm00KZTHbxIJCmIxGvd6H9+xVaph3plbYdoO61NDRm0yZxKuKDh6yDcKjWew6DvSEsf8BTusLqUL0OhhbP9gpQ9lbu0f6nrI3WPSSDhh9VRNvw7IF8Ws4xwRcK+WjMlxvUWaZPjpVvxYcripIQJbWKvh8N7y6sgiYGEk8yjWNLIq59kfR8KT1gsBav7WEDy8R8ynU0z/hbd9rNiAOnRyUnXEEpbWG5PQu3xLjAFq2t0f9f6+gn+UhJnKD7etJUy9lDdSGp2+S00AiJqBo0fvRknnbCevGu4kZUSp8u+70nPD19oxod5r920XN6rXcUQpYXlImME0knB0EmyMoPL8w8LDUUsgSD1gYsHjgYh3gm4EZR6+JVEHpOFJk
-x-ms-exchange-antispam-messagedata: unVehdxk5f6RyEL7GkNCaxU9DNmVK9aBFZ8YP8/r3zhBIL2WH74VNaLzbzbDK0lBWr3hubeoPinw0YEIBaGaj+UVEcXdzITha5syV3KLq5AG1DCI7uZwAjyhz4TXuKBZZSW+i2cpZ/vVv9M6couYIg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: Re: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Message-ID: <20200403082305.GA1269501@myrica>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+ <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
+ <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
+ <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f2a7999-066b-46c5-5365-08d7d7a83a44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 08:23:02.6239
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ytYDVHqRIeJc44AAupBX0nWvvtAuIQENHQTGa8LLPFB45jgzDaOupkput9nStgY2iQlstLIUgjxYZiL/G8qrUhGioNz9USbpm0+rlkWXkOAzhA5WaH6iLR27z8LHbQzZ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5484
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar-san,
+On Wed, Apr 01, 2020 at 03:01:12PM +0200, Auger Eric wrote:
+> >>>  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+> >>>  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+> >>> @@ -2254,6 +2309,7 @@ static int vfio_iommu_info_add_nesting_cap(struct
+> >> vfio_iommu *iommu,
+> >>>  		/* nesting iommu type supports PASID requests (alloc/free) */
+> >>>  		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
+> >> What is the meaning for ARM?
+> > 
+> > I think it's just a software capability exposed to userspace, on
+> > userspace side, it has a choice to use it or not. :-) The reason
+> > define it and report it in cap nesting is that I'd like to make
+> > the pasid alloc/free be available just for IOMMU with type
+> > VFIO_IOMMU_TYPE1_NESTING. Please feel free tell me if it is not
+> > good for ARM. We can find a proper way to report the availability.
+> 
+> Well it is more a question for jean-Philippe. Do we have a system wide
+> PASID allocation on ARM?
 
-Thank you for the patch!
+We don't, the PASID spaces are per-VM on Arm, so this function should
+consult the IOMMU driver before setting flags. As you said on patch 3,
+nested doesn't necessarily imply PASID support. The SMMUv2 does not
+support PASID but does support nesting stages 1 and 2 for the IOVA space.
+SMMUv3 support of PASID depends on HW capabilities. So I think this needs
+to be finer grained:
 
-> From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:39 AM
->=20
-> R-Car PCIe controller has support to map multiple memory regions for
-> mapping the outbound memory in local system also the controller limits
-> single allocation for each region (that is, once a chunk is used from the
-> region it cannot be used to allocate a new one). This features inspires t=
-o
-> add support for handling multiple memory bases in endpoint framework.
->=20
-> With this patch pci_epc_mem_init() initializes address space for endpoint
-> controller which support single window and whereas __pci_epc_mem_init()
-> now accepts pointer to multiple windows supported by endpoint controller.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> @@ -38,61 +38,95 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *=
-mem, size_t size)
->  /**
->   * __pci_epc_mem_init() - initialize the pci_epc_mem structure
->   * @epc: the EPC device that invoked pci_epc_mem_init
-> - * @phys_base: the physical address of the base
-> - * @size: the size of the address space
-> - * @page_size: size of each page
-> + * @windows: pointer to windows supported by the device
-> + * @num_windows: number of windows device supports
->   *
->   * Invoke to initialize the pci_epc_mem structure used by the
->   * endpoint functions to allocate mapped PCI address.
->   */
-> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_=
-t size,
-> -		       size_t page_size)
-> +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *w=
-indows,
-> +		       unsigned int num_windows)
->  {
-> -	int ret;
-> -	struct pci_epc_mem *mem;
-> -	unsigned long *bitmap;
-> +	struct pci_epc_mem *mem =3D NULL;
-> +	unsigned long *bitmap =3D NULL;
->  	unsigned int page_shift;
-> -	int pages;
-> +	size_t page_size;
->  	int bitmap_size;
-> +	int pages;
-> +	int ret;
-> +	int i;
->=20
-> -	if (page_size < PAGE_SIZE)
-> -		page_size =3D PAGE_SIZE;
-> +	epc->num_windows =3D 0;
->=20
-> -	page_shift =3D ilog2(page_size);
-> -	pages =3D size >> page_shift;
-> -	bitmap_size =3D BITS_TO_LONGS(pages) * sizeof(long);
-> +	if (!windows || !num_windows)
-> +		return -EINVAL;
->=20
-> -	mem =3D kzalloc(sizeof(*mem), GFP_KERNEL);
-> -	if (!mem) {
-> -		ret =3D -ENOMEM;
-> -		goto err;
-> -	}
-> +	epc->windows =3D kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
-> +	if (!epc->windows)
-> +		return -ENOMEM;
->=20
-> -	bitmap =3D kzalloc(bitmap_size, GFP_KERNEL);
-> -	if (!bitmap) {
-> -		ret =3D -ENOMEM;
-> -		goto err_mem;
-> -	}
-> +	for (i =3D 0; i < num_windows; i++) {
-> +		page_size =3D windows[i].page_size;
-> +		if (page_size < PAGE_SIZE)
-> +			page_size =3D PAGE_SIZE;
-> +		page_shift =3D ilog2(page_size);
-> +		pages =3D windows[i].size >> page_shift;
-> +		bitmap_size =3D BITS_TO_LONGS(pages) * sizeof(long);
-> +
-> +		mem =3D kzalloc(sizeof(*mem), GFP_KERNEL);
-> +		if (!mem) {
-> +			ret =3D -ENOMEM;
-> +			i -=3D 1;
+Does the container support:
+* VFIO_IOMMU_PASID_REQUEST?
+  -> Yes for VT-d 3
+  -> No for Arm SMMU
+* VFIO_IOMMU_{,UN}BIND_GUEST_PGTBL?
+  -> Yes for VT-d 3
+  -> Sometimes for SMMUv2
+  -> No for SMMUv3 (if we go with BIND_PASID_TABLE, which is simpler due to
+     PASID tables being in GPA space.)
+* VFIO_IOMMU_BIND_PASID_TABLE?
+  -> No for VT-d
+  -> Sometimes for SMMUv3
 
-nit: We can use i--;
+Any bind support implies VFIO_IOMMU_CACHE_INVALIDATE support.
 
-> +			goto err_mem;
-> +		}
-> +
-> +		bitmap =3D kzalloc(bitmap_size, GFP_KERNEL);
-> +		if (!bitmap) {
-> +			ret =3D -ENOMEM;
-> +			kfree(mem);
-> +			i -=3D 1;
 
-nit: We can use i--;
+> >>> +	nesting_cap->stage1_formats = formats;
+> >> as spotted by Kevin, since a single format is supported, rename
+> > 
+> > ok, I was believing it may be possible on ARM or so. :-) will
+> > rename it.
 
-<snip>
-> @@ -122,31 +167,56 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->  				     phys_addr_t *phys_addr, size_t size)
->  {
-> -	int pageno;
->  	void __iomem *virt_addr =3D NULL;
-> -	struct pci_epc_mem *mem =3D epc->mem;
-> -	unsigned int page_shift =3D ilog2(mem->page_size);
-> +	struct pci_epc_mem *mem;
-> +	unsigned int page_shift;
-> +	int pageno =3D -EINVAL;
->  	int order;
-> +	int i;
->=20
-> -	size =3D ALIGN(size, mem->page_size);
-> -	order =3D pci_epc_mem_get_order(mem, size);
-> -
-> -	mutex_lock(&mem->lock);
-> -	pageno =3D bitmap_find_free_region(mem->bitmap, mem->pages, order);
-> -	if (pageno < 0)
-> -		goto ret;
-> +	for (i =3D 0; i < epc->num_windows; i++) {
-> +		mem =3D epc->windows[i];
-> +		mutex_lock(&mem->lock);
+Yes I don't think an u32 is going to cut it for Arm :( We need to describe
+all sorts of capabilities for page and PASID tables (granules, GPA size,
+ASID/PASID size, HW access/dirty, etc etc.) Just saying "Arm stage-1
+format" wouldn't mean much. I guess we could have a secondary vendor
+capability for these?
 
-This is my feeling though, calling mutex_lock() in the loop seems
-to cause overhead. And, if we call mutex_lock() at out-of the loop,
-I think we can write single mutex_unlock() calling.
-
-> +		size =3D ALIGN(size, mem->window.page_size);
-
-I'm sorry I should have realized this in the previous review,
-but overwriting this size is possible to cause an issue at second time or m=
-ore loops.
-So, the first argument of ALIGN should be kept for the loop.
-
-> +		order =3D pci_epc_mem_get_order(mem, size);
->=20
-> -	*phys_addr =3D mem->phys_base + ((phys_addr_t)pageno << page_shift);
-> -	virt_addr =3D ioremap(*phys_addr, size);
-> -	if (!virt_addr)
-> -		bitmap_release_region(mem->bitmap, pageno, order);
-> +		pageno =3D bitmap_find_free_region(mem->bitmap, mem->pages,
-> +						 order);
-> +		if (pageno >=3D 0) {
-> +			page_shift =3D ilog2(mem->window.page_size);
-> +			*phys_addr =3D mem->window.phys_base +
-> +				((phys_addr_t)pageno << page_shift);
-> +			virt_addr =3D ioremap(*phys_addr, size);
-> +			if (!virt_addr)
-> +				bitmap_release_region(mem->bitmap,
-> +						      pageno, order);
-> +			mutex_unlock(&mem->lock);
-> +			return virt_addr;
-
-As I mentioned above, if mutex_lock() is called at out-of-loop,
-we can use "goto ret;" here like the original code,
-
-> +		}
-> +		mutex_unlock(&mem->lock);
-
-and we can remove this.
-
-> +	}
->=20
-> -ret:
-> -	mutex_unlock(&mem->lock);
->  	return virt_addr;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
->=20
-> +struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
-> +						phys_addr_t phys_addr)
-> +{
-> +	struct pci_epc_mem *mem;
-> +	int i;
-> +
-> +	for (i =3D 0; i < epc->num_windows; i++) {
-> +		mem =3D epc->windows[i];
-> +
-> +		if (phys_addr >=3D mem->window.phys_base &&
-> +		    phys_addr < (mem->window.phys_base + mem->window.size))
-> +			return mem;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  /**
->   * pci_epc_mem_free_addr() - free the allocated memory address
->   * @epc: the EPC device on which memory was allocated
-> @@ -159,14 +229,23 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
->  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
->  			   void __iomem *virt_addr, size_t size)
->  {
-> +	struct pci_epc_mem *mem;
-> +	unsigned int page_shift;
-> +	size_t page_size;
->  	int pageno;
-> -	struct pci_epc_mem *mem =3D epc->mem;
-> -	unsigned int page_shift =3D ilog2(mem->page_size);
->  	int order;
->=20
-> +	mem =3D pci_epc_get_matching_window(epc, phys_addr);
-> +	if (!mem) {
-> +		pr_err("failed to get matching window\n");
-> +		return;
-> +	}
-> +
-> +	page_size =3D mem->window.page_size;
-> +	page_shift =3D ilog2(page_size);
->  	iounmap(virt_addr);
-> -	pageno =3D (phys_addr - mem->phys_base) >> page_shift;
-> -	size =3D ALIGN(size, mem->page_size);
-> +	pageno =3D (phys_addr - mem->window.phys_base) >> page_shift;
-> +	size =3D ALIGN(size, page_size);
->  	order =3D pci_epc_mem_get_order(mem, size);
->  	mutex_lock(&mem->lock);
->  	bitmap_release_region(mem->bitmap, pageno, order);
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index e0ed9d01f6e5..d5da11cf0f2a 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -65,20 +65,28 @@ struct pci_epc_ops {
->  	struct module *owner;
->  };
->=20
-> +/**
-> + * struct pci_epc_mem_window - address window of the endpoint controller
-> + * @phys_base: physical base address of the PCI address window
-> + * @size: the size of the PCI address window
-> + * @page_size: size of each page
-> + */
-> +struct pci_epc_mem_window {
-> +	phys_addr_t	phys_base;
-> +	size_t		size;
-> +	size_t		page_size;
-> +};
-> +
->  /**
->   * struct pci_epc_mem - address space of the endpoint controller
-> - * @phys_base: physical base address of the PCI address space
-> - * @size: the size of the PCI address space
-> + * @window: address window of the endpoint controller
->   * @bitmap: bitmap to manage the PCI address space
-> - * @pages: number of bits representing the address region
-> - * @page_size: size of each page
->   * @lock: mutex to protect bitmap
-> + * @pages: number of bits representing the address region
-
-Perhaps, we should not change the "@pages" line.
-
-Best regards,
-Yoshihiro Shimoda
-
+Thanks,
+Jean
