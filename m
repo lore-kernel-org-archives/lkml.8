@@ -2,219 +2,290 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	URI_WP_DIRINDEX autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F16C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230C8C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21AD206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D345A2078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXCwDGeS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390948AbgDCNjb convert rfc822-to-8bit (ORCPT
+        id S2390956AbgDCNlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:39:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:36619 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728175AbgDCNjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:39:31 -0400
-IronPort-SDR: W7XAZGV9hPoJJcQU78XW7S08SS+/U9gLbS6m8Fg+F2lvuZRBV2QzMxU+jjmYWxNd3izKyZBum3
- Du8+KDs6etjg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 06:39:30 -0700
-IronPort-SDR: 8GigXOadN4Q1oxFpOj79P+I8YV4QiER2FMPqfIQPp/S4zJTejr2TmdkwG9/FItHsUKUdrfzqzW
- Apt8v/rBmVtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="238885929"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga007.jf.intel.com with ESMTP; 03 Apr 2020 06:39:29 -0700
-Received: from fmsmsx126.amr.corp.intel.com (10.18.125.43) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 06:39:29 -0700
-Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
- FMSMSX126.amr.corp.intel.com (10.18.125.43) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 06:39:29 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
- Fri, 3 Apr 2020 21:39:27 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
- mdevs
-Thread-Topic: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
- mdevs
-Thread-Index: AQHWAEUdm3FJ38v7KEeZ+HXvm2TTUKhl1VgAgAGinHA=
-Date:   Fri, 3 Apr 2020 13:39:26 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A220BCF@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-9-git-send-email-yi.l.liu@intel.com>
- <20200402143342.1e10c498@w520.home>
-In-Reply-To: <20200402143342.1e10c498@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 3 Apr 2020 09:41:18 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42669 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390808AbgDCNlS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 09:41:18 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so8565026wrx.9;
+        Fri, 03 Apr 2020 06:41:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4fvuq9jvQpolHwINYS7m16hx6vPGefpqo63LpJAzMQE=;
+        b=VXCwDGeScZ5cia7bGxh1ajfJpB92PhPjiRo+3BJBQ5iRvntXjU1ZYVin8FqLBcfSAU
+         Bq0kB3qW5oQA57PjgvCuqdnAFH9lrMdSVyE9W0fJOCPU0tNItCDNRTUbg5hv7n0B2GHk
+         e43Nv8zXoB/4HD0p6IqAZnYyhMJo8ZrM+v+DrcuifsuJ9H/yUfpW2KwapUU4PiqvkXy3
+         99An1tglq84I4My447dokOyZ76SqfDXW0FyxP5VDYk6l0b2rb9fraXEqt8Y7hPsmrKVe
+         9YNXPPMJ+VH5w1KbQIWzziLNxu0VyQQB9d9NYMvzzVJu/K9GBzx7Ua+hT22EBacyahYD
+         Zepg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4fvuq9jvQpolHwINYS7m16hx6vPGefpqo63LpJAzMQE=;
+        b=UyHyWospLtDJHOKjsxWT/X7mT9CXg5i6dbXCAfygnpyr19bD9K/ODpwF3br3hU1nsY
+         WKB7cKWzckjzw2N5KSrUMOuYPb+gsCh3CLdWrjxfs/OPnI6sSmmboRzRbaT1UOG4gRwC
+         8lpqWxUgUVaPTsiUUhhsVER+NswEirbok9SNtFrK/dPRv6bGXi0/JoYhRisKW9FqPdpf
+         LCCLdVfqcAXdl1Jg9ocHwDkA7QnNRLxyy/LpqgoK37moeqGRxn8BkFm+oMdr1mdhvi2h
+         4wwnRbMYj5UaXIlTvdXXhPkmtlFAsCg2Ix9X/MO2IlXF25T5TTOtVKhslrpXgb+iNdtl
+         tZUg==
+X-Gm-Message-State: AGi0PuZE0g6PpPFDC6hTUiqmECzZXA9UQoF1Dz8WNGuAdDVDN5LGG/qi
+        dTq9b5L/jbAfu5VoOyK9q9s=
+X-Google-Smtp-Source: APiQypItGAM0KwDWFvjWsZQxmVAXVDd+SbecmELBm7AL3FJ2PWFNdifNkRc6TvVXLXrXJe8QB99Q0w==
+X-Received: by 2002:adf:e588:: with SMTP id l8mr8786918wrm.186.1585921273604;
+        Fri, 03 Apr 2020 06:41:13 -0700 (PDT)
+Received: from andrea ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id t81sm11317133wmb.15.2020.04.03.06.41.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 06:41:13 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 15:41:07 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [RFC PATCH 11/11] scsi: storvsc: Re-init stor_chns when a
+ channel interrupt is re-assigned
+Message-ID: <20200403134107.GA25800@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com>
+ <20200325225505.23998-12-parri.andrea@gmail.com>
+ <MW2PR2101MB105208138683A6DE0564745AD7CB0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <20200330185513.GA26823@andrea>
+ <DM5PR2101MB104720061795F26D892D5373D7CB0@DM5PR2101MB1047.namprd21.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR2101MB104720061795F26D892D5373D7CB0@DM5PR2101MB1047.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Mon, Mar 30, 2020 at 07:49:00PM +0000, Michael Kelley wrote:
+> From: Andrea Parri <parri.andrea@gmail.com> Sent: Monday, March 30, 2020 11:55 AM
+> > 
+> > > > @@ -1721,6 +1721,10 @@ static ssize_t target_cpu_store(struct vmbus_channel
+> > *channel,
+> > > >  	 * in on a CPU that is different from the channel target_cpu value.
+> > > >  	 */
+> > > >
+> > > > +	if (channel->change_target_cpu_callback)
+> > > > +		(*channel->change_target_cpu_callback)(channel,
+> > > > +				channel->target_cpu, target_cpu);
+> > > > +
+> > > >  	channel->target_cpu = target_cpu;
+> > > >  	channel->target_vp = hv_cpu_number_to_vp_number(target_cpu);
+> > > >  	channel->numa_node = cpu_to_node(target_cpu);
+> > >
+> > > I think there's an ordering problem here.  The change_target_cpu_callback
+> > > will allow storvsc to flush the cache that it is keeping, but there's a window
+> > > after the storvsc callback releases the spin lock and before this function
+> > > changes channel->target_cpu to the new value.  In that window, the cache
+> > > could get refilled based on the old value of channel->target_cpu, which is
+> > > exactly what we don't want.  Generally with caches, you have to set the new
+> > > value first, then flush the cache, and I think that works in this case.  The
+> > > callback function doesn't depend on the value of channel->target_cpu,
+> > > and any cache filling that might happen after channel->target_cpu is set
+> > > to the new value but before the callback function runs is OK.   But please
+> > > double-check my thinking. :-)
+> > 
+> > Sorry, I don't see the problem.  AFAICT, the "cache" gets refilled based
+> > on the values of alloced_cpus and on the current state of the cache but
+> > not based on the value of channel->target_cpu.  The callback invocation
+> > uses the value of the "old" target_cpu; I think I ended up placing the
+> > callback call where it is for not having to introduce a local variable
+> > "old_cpu".  ;-)
+> >
+> 
+> You are right.   My comment is bogus.
+> 
+> > 
+> > > > @@ -621,6 +621,63 @@ static inline struct storvsc_device *get_in_stor_device(
+> > > >
+> > > >  }
+> > > >
+> > > > +void storvsc_change_target_cpu(struct vmbus_channel *channel, u32 old, u32 new)
+> > > > +{
+> > > > +	struct storvsc_device *stor_device;
+> > > > +	struct vmbus_channel *cur_chn;
+> > > > +	bool old_is_alloced = false;
+> > > > +	struct hv_device *device;
+> > > > +	unsigned long flags;
+> > > > +	int cpu;
+> > > > +
+> > > > +	device = channel->primary_channel ?
+> > > > +			channel->primary_channel->device_obj
+> > > > +				: channel->device_obj;
+> > > > +	stor_device = get_out_stor_device(device);
+> > > > +	if (!stor_device)
+> > > > +		return;
+> > > > +
+> > > > +	/* See storvsc_do_io() -> get_og_chn(). */
+> > > > +	spin_lock_irqsave(&device->channel->lock, flags);
+> > > > +
+> > > > +	/*
+> > > > +	 * Determines if the storvsc device has other channels assigned to
+> > > > +	 * the "old" CPU to update the alloced_cpus mask and the stor_chns
+> > > > +	 * array.
+> > > > +	 */
+> > > > +	if (device->channel != channel && device->channel->target_cpu == old) {
+> > > > +		cur_chn = device->channel;
+> > > > +		old_is_alloced = true;
+> > > > +		goto old_is_alloced;
+> > > > +	}
+> > > > +	list_for_each_entry(cur_chn, &device->channel->sc_list, sc_list) {
+> > > > +		if (cur_chn == channel)
+> > > > +			continue;
+> > > > +		if (cur_chn->target_cpu == old) {
+> > > > +			old_is_alloced = true;
+> > > > +			goto old_is_alloced;
+> > > > +		}
+> > > > +	}
+> > > > +
+> > > > +old_is_alloced:
+> > > > +	if (old_is_alloced)
+> > > > +		WRITE_ONCE(stor_device->stor_chns[old], cur_chn);
+> > > > +	else
+> > > > +		cpumask_clear_cpu(old, &stor_device->alloced_cpus);
+> > >
+> > > I think target_cpu_store() can get called in parallel on multiple CPUs for different
+> > > channels on the same storvsc device, but multiple changes to a single channel are
+> > > serialized by higher levels of sysfs.  So this function could run after multiple
+> > > channels have been changed, in which case there's not just a single "old" value,
+> > > and the above algorithm might not work, especially if channel->target_cpu is
+> > > updated before calling this function per my earlier comment.   I can see a
+> > > couple of possible ways to deal with this.  One is to put the update of
+> > > channel->target_cpu in this function, within the spin lock boundaries so
+> > > that the cache flush and target_cpu update are atomic.  Another idea is to
+> > > process multiple changes in this function, by building a temp copy of
+> > > alloced_cpus by walking the channel list, use XOR to create a cpumask
+> > > with changes, and then process all the changes in a loop instead of
+> > > just handling a single change as with the current code at the old_is_alloced
+> > > label.  But I haven't completely thought through this idea.
+> > 
+> > Same here: the invocations of target_cpu_store() are serialized on the
+> > per-connection channel_mutex...
+> 
+> Agreed.  My comment is not valid.
+> 
+> > 
+> > 
+> > > > @@ -1268,8 +1330,10 @@ static struct vmbus_channel *get_og_chn(struct
+> > storvsc_device
+> > > > *stor_device,
+> > > >  		if (cpumask_test_cpu(tgt_cpu, node_mask))
+> > > >  			num_channels++;
+> > > >  	}
+> > > > -	if (num_channels == 0)
+> > > > +	if (num_channels == 0) {
+> > > > +		stor_device->stor_chns[q_num] = stor_device->device->channel;
+> > >
+> > > Is the above added line just fixing a bug in the existing code?  I'm not seeing how
+> > > it would derive from the other changes in this patch.
+> > 
+> > It was rather intended as an optimization:  Each time I/O for a device
+> > is initiated on a CPU that have "num_channels == 0" channel, the current
+> > code ends up calling get_og_chn() (in the attempt to fill the cache) and
+> > returns the device's primary channel.  In the current code, the cost of
+> > this operations is basically the cost of parsing alloced_cpus, but with
+> > the changes introduced here this also involves acquiring (and releasing)
+> > the primary channel's lock.  I should probably put my hands forward and
+> > say that I haven't observed any measurable effects due this addition in
+> > my experiments; OTOH, caching the returned/"found" value made sense...
+> 
+> OK.  That's what I thought.  The existing code does not produce an incorrect
+> result, but the cache isn't working as intended.  This fixes it.
+> 
+> > 
+> > 
+> > > > @@ -1324,7 +1390,10 @@ static int storvsc_do_io(struct hv_device *device,
+> > > >  					continue;
+> > > >  				if (tgt_cpu == q_num)
+> > > >  					continue;
+> > > > -				channel = stor_device->stor_chns[tgt_cpu];
+> > > > +				channel = READ_ONCE(
+> > > > +					stor_device->stor_chns[tgt_cpu]);
+> > > > +				if (channel == NULL)
+> > > > +					continue;
+> > >
+> > > The channel == NULL case is new because a cache flush could be happening
+> > > in parallel on another CPU.  I'm wondering about the tradeoffs of
+> > > continuing in the loop (as you have coded in this patch) vs. a "goto" back to
+> > > the top level "if" statement.   With the "continue" you might finish the
+> > > loop without finding any matches, and fall through to the next approach.
+> > > But it's only a single I/O operation, and if it comes up with a less than
+> > > optimal channel choice, it's no big deal.  So I guess it's really a wash.
+> > 
+> > Yes, I considered both approaches; they both "worked" here.  I was a
+> > bit concerned about the number of "possible" gotos (again, mainly a
+> > theoretical issue, since I can imagine that the cash flushes will be
+> > relatively "rare" events in most cases and, in any case, they happen
+> > to be serialized); the "continue" looked like a suitable and simpler
+> > approach/compromise, at least for the time being.
+> 
+> Yes, I'm OK with your patch "as is".  I was just thinking about the
+> alternative, and evidently you did too.
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Friday, April 3, 2020 4:34 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
-> mdevs
-> 
-> On Sun, 22 Mar 2020 05:32:05 -0700
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > From: Liu Yi L <yi.l.liu@intel.com>
-> >
-> > Recent years, mediated device pass-through framework (e.g. vfio-mdev)
-> > are used to achieve flexible device sharing across domains (e.g. VMs).
-> > Also there are hardware assisted mediated pass-through solutions from
-> > platform vendors. e.g. Intel VT-d scalable mode which supports Intel
-> > Scalable I/O Virtualization technology. Such mdevs are called IOMMU-
-> > backed mdevs as there are IOMMU enforced DMA isolation for such mdevs.
-> > In kernel, IOMMU-backed mdevs are exposed to IOMMU layer by aux-domain
-> > concept, which means mdevs are protected by an iommu domain which is
-> > aux-domain of its physical device. Details can be found in the KVM
-> > presentation from Kevin Tian. IOMMU-backed equals to IOMMU-capable.
-> >
-> > https://events19.linuxfoundation.org/wp-content/uploads/2017/12/\
-> > Hardware-Assisted-Mediated-Pass-Through-with-VFIO-Kevin-Tian-Intel.pdf
-> >
-> > This patch supports NESTING IOMMU for IOMMU-backed mdevs by figuring
-> > out the physical device of an IOMMU-backed mdev and then invoking IOMMU
-> > requests to IOMMU layer with the physical device and the mdev's aux
-> > domain info.
-> >
-> > With this patch, vSVA (Virtual Shared Virtual Addressing) can be used
-> > on IOMMU-backed mdevs.
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > CC: Jun Tian <jun.j.tian@intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> >  drivers/vfio/vfio_iommu_type1.c | 23 ++++++++++++++++++++---
-> >  1 file changed, 20 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > index 937ec3f..d473665 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -132,6 +132,7 @@ struct vfio_regions {
-> >
-> >  struct domain_capsule {
-> >  	struct iommu_domain *domain;
-> > +	struct vfio_group *group;
-> >  	void *data;
-> >  };
-> >
-> > @@ -148,6 +149,7 @@ static int vfio_iommu_for_each_dev(struct vfio_iommu
-> *iommu,
-> >  	list_for_each_entry(d, &iommu->domain_list, next) {
-> >  		dc.domain = d->domain;
-> >  		list_for_each_entry(g, &d->group_list, next) {
-> > +			dc.group = g;
-> >  			ret = iommu_group_for_each_dev(g->iommu_group,
-> >  						       &dc, fn);
-> >  			if (ret)
-> > @@ -2347,7 +2349,12 @@ static int vfio_bind_gpasid_fn(struct device *dev, void
-> *data)
-> >  	struct iommu_gpasid_bind_data *gbind_data =
-> >  		(struct iommu_gpasid_bind_data *) dc->data;
-> >
-> > -	return iommu_sva_bind_gpasid(dc->domain, dev, gbind_data);
-> > +	if (dc->group->mdev_group)
-> > +		return iommu_sva_bind_gpasid(dc->domain,
-> > +			vfio_mdev_get_iommu_device(dev), gbind_data);
-> 
-> But we can't assume an mdev device is iommu backed, so this can call
-> with NULL dev, which appears will pretty quickly segfault
-> intel_svm_bind_gpasid.
+Thank you for the confirmation.  I'm wondering: could take this as a
+Reviewed-by: for this patch?  ;-)
 
-I don't think the non-iommu backed mdev will not be in the
-iommu->domain_list. right? But, yeah, from this function p.o.v
-, it is still necessary to do a check. How about adding a check
-on the return of vfio_mdev_get_iommu_device(dev)? If iommu_device
-is fetch, the mdev should be iommu-backed. does it make sense?
+Thanks,
+  Andrea
 
-Regards,
-Yi Liu
 
 > 
-> > +	else
-> > +		return iommu_sva_bind_gpasid(dc->domain,
-> > +						dev, gbind_data);
-> >  }
-> >
-> >  static int vfio_unbind_gpasid_fn(struct device *dev, void *data)
-> > @@ -2356,8 +2363,13 @@ static int vfio_unbind_gpasid_fn(struct device *dev,
-> void *data)
-> >  	struct iommu_gpasid_bind_data *gbind_data =
-> >  		(struct iommu_gpasid_bind_data *) dc->data;
-> >
-> > -	return iommu_sva_unbind_gpasid(dc->domain, dev,
-> > +	if (dc->group->mdev_group)
-> > +		return iommu_sva_unbind_gpasid(dc->domain,
-> > +					vfio_mdev_get_iommu_device(dev),
-> >  					gbind_data->hpasid);
+> > 
+> > 
+> > >
+> > > >  				if (hv_get_avail_to_write_percent(
+> > > >  							&channel->outbound)
+> > > >  						> ring_avail_percent_lowater) {
+> > > > @@ -1350,7 +1419,10 @@ static int storvsc_do_io(struct hv_device *device,
+> > > >  			for_each_cpu(tgt_cpu, &stor_device->alloced_cpus) {
+> > > >  				if (cpumask_test_cpu(tgt_cpu, node_mask))
+> > > >  					continue;
+> > > > -				channel = stor_device->stor_chns[tgt_cpu];
+> > > > +				channel = READ_ONCE(
+> > > > +					stor_device->stor_chns[tgt_cpu]);
+> > > > +				if (channel == NULL)
+> > > > +					continue;
+> > >
+> > > Same comment here.
+> > 
+> > Similarly here.
 > 
-> Same
+> Agreed.
 > 
-> > +	else
-> > +		return iommu_sva_unbind_gpasid(dc->domain, dev,
-> > +						gbind_data->hpasid);
-> >  }
-> >
-> >  /**
-> > @@ -2429,7 +2441,12 @@ static int vfio_cache_inv_fn(struct device *dev, void
-> *data)
-> >  	struct iommu_cache_invalidate_info *cache_inv_info =
-> >  		(struct iommu_cache_invalidate_info *) dc->data;
-> >
-> > -	return iommu_cache_invalidate(dc->domain, dev, cache_inv_info);
-> > +	if (dc->group->mdev_group)
-> > +		return iommu_cache_invalidate(dc->domain,
-> > +			vfio_mdev_get_iommu_device(dev), cache_inv_info);
-> 
-> And again
-> 
-> > +	else
-> > +		return iommu_cache_invalidate(dc->domain,
-> > +						dev, cache_inv_info);
-> >  }
-> >
-> >  static long vfio_iommu_type1_ioctl(void *iommu_data,
-
+> > 
+> > Thoughts?
+> > 
+> > Thanks,
+> >   Andrea
