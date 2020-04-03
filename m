@@ -2,92 +2,115 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30BDC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BEAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 994C3206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5145206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="BPMLO0Tm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GBHDfwYp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404127AbgDCPUU (ORCPT
+        id S2404169AbgDCPWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:20:20 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38386 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403991AbgDCPUU (ORCPT
+        Fri, 3 Apr 2020 11:22:21 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56991 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404088AbgDCPWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:20:20 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z12so6723221qtq.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pcySYvcjsOIXyHu4jeus+Gw8MtcUshidVKxTeJv8K+g=;
-        b=BPMLO0TmyHJ12cXzSNYL9F5s7rDKsc+quN7feDOTATPnaoZZ1WuPeHjqFkh771hN8I
-         5ClXJXIdndynCbHw1/KwNjdgz3L5zj7TWXo7HC90T3YUk1pKG/dDbNtjTgZL3b8ekPmX
-         qG0pWrfP/jMZpl+0sihgIj54o1czyUj9EtHKTbFmNxL8ojwsKIKNxgiiWtyfRAYHI2u/
-         CuwnXaudaY80eigJJzUl1R4WVZLpYQdHcbLWpD9GJ7+PzO3E0aXv8PSLTp9LDkf09Vg1
-         HDb93LncSH0MmoyQTMT7Gwe9hSJqe+QMKgqQD8SxGJMi8QPZWXmJEfmBkGgcMNavsSBp
-         gxNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pcySYvcjsOIXyHu4jeus+Gw8MtcUshidVKxTeJv8K+g=;
-        b=BijYKQlii6oCOt9/BFcuvZ/ECimIKOrYirpVWTLRvhgYBRZqWLBj2sR9SyIO6G2IDs
-         yVOYgnXyoglET0MlNw5hc70TfA5VpEoqLrkuY4v3n8J4ZFYsCCkTWZtnQItTH6Rb2qtD
-         jQYwo/PWMe6SobBGFqkLog2DbdIkcsYiLiJ/D1xKwHiqPtlPJ+yaTLIb+9hPWwD3vi0P
-         6Sny1wMX2dtjDfolOQS6ZQ/ZUET++peEp8M4GQXUmcGs3vUoLcgCxH+hnl26pntxUX+4
-         iFNQp51DD9KpiiEa4RNRko9fjeCWXAFEhQrhiPj0VWPUS3jfCY/u6EpIFgOfDq95Oi5V
-         nf4g==
-X-Gm-Message-State: AGi0PuYLUCCnuwWmuSOE5qayLqAvmihtJscMlL54gSnhiiujasO7lBK1
-        n/yfW5ycFN0pkCeQQjHGkJVk2A4xd9k=
-X-Google-Smtp-Source: APiQypLbTERbvPmsxDL1wybDZrIftPcrRBiydzX1x4UkOvNQX1XdN+On/LZJmWYaA9eDavn1M07RuQ==
-X-Received: by 2002:ac8:7385:: with SMTP id t5mr8787026qtp.222.1585927218874;
-        Fri, 03 Apr 2020 08:20:18 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::da28])
-        by smtp.gmail.com with ESMTPSA id f1sm6106148qkl.72.2020.04.03.08.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 08:20:18 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 11:20:16 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     peterz@infradead.org, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH] psi: fix randomized calculation in record_times()
-Message-ID: <20200403152016.GA69203@cmpxchg.org>
-References: <1585904125-2819-1-git-send-email-laoar.shao@gmail.com>
+        Fri, 3 Apr 2020 11:22:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585927340;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f40ZvcSFesg6WkXpe37yjNDHPlvg5D7KyMxjtTJXaso=;
+        b=GBHDfwYpOLrzn8UeMBoQ11zAISNPvjMx/iS/vIzFfbJz/IgsEUA6J/MJZIWb/wemhHY3SV
+        5QII9XLCKe3WIFlgxhZxpH1VM59H/YuCp1N0KZkctS4sM/2WNiSlu05ruMRpT78DiBzWAg
+        e27HZczmvY1jWDpmw5ks/i7bINcsoYM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-YVNTUG_5PbSd6BB-jvKTCw-1; Fri, 03 Apr 2020 11:22:19 -0400
+X-MC-Unique: YVNTUG_5PbSd6BB-jvKTCw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB67710CE7A1;
+        Fri,  3 Apr 2020 15:22:17 +0000 (UTC)
+Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BF46F10027A3;
+        Fri,  3 Apr 2020 15:22:16 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 10:22:14 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
+Message-ID: <20200403152214.3frjrlhxvodffghg@treble>
+References: <20200402082220.808-1-alexandre.chartre@oracle.com>
+ <20200402082220.808-5-alexandre.chartre@oracle.com>
+ <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
+ <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
+ <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
+ <20200402154022.GG20730@hirez.programming.kicks-ass.net>
+ <bc3a31dc-9d59-5756-aad3-187533f05654@redhat.com>
+ <20200403151757.lhhia7pzqptvlqz5@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1585904125-2819-1-git-send-email-laoar.shao@gmail.com>
+In-Reply-To: <20200403151757.lhhia7pzqptvlqz5@treble>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 04:55:25AM -0400, Yafang Shao wrote:
-> @@ -690,7 +690,10 @@ static void psi_group_change(struct psi_group *group, int cpu,
->  	 */
->  	write_seqcount_begin(&groupc->seq);
->  
-> -	record_times(groupc, cpu, false);
-> +	if (groupc->total_tasks)
-> +		record_times(groupc, cpu, false);
-> +	else
-> +		groupc->state_start = cpu_clock(cpu);
+On Fri, Apr 03, 2020 at 10:17:57AM -0500, Josh Poimboeuf wrote:
+> On Fri, Apr 03, 2020 at 09:11:55AM +0100, Julien Thierry wrote:
+> > 
+> > 
+> > On 4/2/20 4:40 PM, Peter Zijlstra wrote:
+> > > On Thu, Apr 02, 2020 at 04:31:05PM +0100, Julien Thierry wrote:
+> > > > My understanding is that once you find an intra-function call, either you
+> > > > hit a return, ending the branch, so the return should undo the modification
+> > > > the intra-function call did (whether is it a retpoline return or not).
+> > > > Otherwise, the intra-function call branch will need to reach an end in some
+> > > > way (e.g. hitting a CONTEXT_SWITCH instruction, calling a
+> > > > dead_end_function).
+> > > > 
+> > > > Am I missing something?
+> > > 
+> > > The thing is basically doing:
+> > > 
+> > > 	mov  $n, cx
+> > > 1:	call 2f
+> > > 2:	dec  cx
+> > > 	jnz  1b
+> > > 	add  8*n, sp
+> > > 
+> > > So it does N calls to self, then subtracts N words from the stack.
+> > > 
+> > > The reason being that the CPU has a return-stack-buffer for predicting
+> > > returns, and call/ret being naturally paired, that works. The above
+> > > is a software flush of the RSB.
+> > > 
+> > 
+> > Ah, lovely... Maybe that's where SAVE/RESTORE unwind hints could be nice ;)
+> > .
+> > 
+> > Otherwise, I don't really have a good suggestion for this...
+> 
+> Peter, I think my previous idea for UNWIND_HINT_ADJUST stack_add=8 would
+> work here?
 
-This change appears is a no-op. If there are no tasks,
-groupc->state_mask is 0, and the only thing record_times() does is
+And if we're going to need that hint anyway, maybe we could get rid of
+the nasty arch_exception_frame_size for the IRET thing and just use a
+hint there after all ;-)
 
-	groupc->state_start = cpu_clock(cpu);
+-- 
+Josh
 
-Did you encounter actual problems, or are you just reading the code?
