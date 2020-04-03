@@ -2,141 +2,118 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426BEC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F497C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1929320787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dyRE1GZp"
+	by mail.kernel.org (Postfix) with ESMTP id 1403E2063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbgDCFME (ORCPT
+        id S1732366AbgDCFPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 01:12:04 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56558 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgDCFMD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 01:12:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0335BmNs071109;
-        Fri, 3 Apr 2020 00:11:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585890708;
-        bh=jofktekZwJmynwAp+73dh/VN6DTrbyAH++7Gc/JbF2c=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dyRE1GZpuDhhxymx4cHTF/J5WNzncrW1a9rh/0gJcmwGMKWXhQvXZ056vLZNYiOBh
-         IU1hnyhT/djvFb7+LGb07eqkOx++BJ99CokPud4r3arsgzE8zKeOU5aTFBPWMsCTBR
-         6moFnRAwIx61s/1mT2YeJVkp24XPxaxpUAfmIxMY=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0335Bm4u097176
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Apr 2020 00:11:48 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
- 2020 00:11:48 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Apr 2020 00:11:48 -0500
-Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0335Bg4R055217;
-        Fri, 3 Apr 2020 00:11:43 -0500
-Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
- support for k3 am65x/j721e soc
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-CC:     Will Deacon <will@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>, <devicetree@vger.kernel.org>,
-        <kishon@ti.com>, Jakub Kicinski <kuba@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, <m-karicheri2@ti.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>, <olteanv@gmail.com>,
-        <peter.ujfalusi@ti.com>, Rob Herring <robh@kernel.org>,
-        <rogerq@ti.com>, <t-kristo@ti.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-References: <20200401.113627.1377328159361906184.davem@davemloft.net>
- <20200401223500.224253-1-ndesaulniers@google.com>
- <20200402094239.GA3770@willie-the-truck>
- <adc2aa08-60e2-cdc3-6b5b-6d96f8805c44@ti.com>
- <CAKwvOdk4H052Y=t4_XXy=rMV=CUYPNhb5CN6x8-dBTNaTt3aPA@mail.gmail.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <818261f1-0075-94ee-f73b-3f72a058999f@ti.com>
-Date:   Fri, 3 Apr 2020 10:41:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 3 Apr 2020 01:15:05 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57378 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726343AbgDCFPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 01:15:04 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B7A21FC5A06C31E14932;
+        Fri,  3 Apr 2020 13:14:32 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Apr 2020
+ 13:14:23 +0800
+Subject: Re: [RFC PATCH v5 4/8] mm: tlb: Pass struct mmu_gather to
+ flush_pmd_tlb_range
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <mark.rutland@arm.com>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
+        <rostedt@goodmis.org>, <maz@kernel.org>, <suzuki.poulose@arm.com>,
+        <tglx@linutronix.de>, <yuzhao@google.com>, <Dave.Martin@arm.com>,
+        <steven.price@arm.com>, <broonie@kernel.org>,
+        <guohanjun@huawei.com>, <corbet@lwn.net>, <vgupta@synopsys.com>,
+        <tony.luck@intel.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+References: <20200331142927.1237-1-yezhenyu2@huawei.com>
+ <20200331142927.1237-5-yezhenyu2@huawei.com>
+ <20200331151331.GS20730@hirez.programming.kicks-ass.net>
+ <fe12101e-8efe-22ad-0258-e6aeafc798cc@huawei.com>
+ <20200401122004.GE20713@hirez.programming.kicks-ass.net>
+ <53675fb9-21c7-5309-07b8-1bbc1e775f9b@huawei.com>
+ <20200402163849.GM20713@hirez.programming.kicks-ass.net>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <d512b28f-99d3-5a26-d189-2ebac7a412c7@huawei.com>
+Date:   Fri, 3 Apr 2020 13:14:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdk4H052Y=t4_XXy=rMV=CUYPNhb5CN6x8-dBTNaTt3aPA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20200402163849.GM20713@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/20 10:57 PM, Nick Desaulniers wrote:
-> On Thu, Apr 2, 2020 at 4:05 AM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
+Hi Peter,
+
+On 2020/4/3 0:38, Peter Zijlstra wrote:
+> On Thu, Apr 02, 2020 at 07:24:04PM +0800, Zhenyu Ye wrote:
+>> Thanks for your detailed explanation.  I notice that you used
+>> `tlb_end_vma` replace `flush_tlb_range`, which will call `tlb_flush`,
+>> then finally call `flush_tlb_range` in generic code.  However, some
+>> architectures define tlb_end_vma|tlb_flush|flush_tlb_range themselves,
+>> so this may cause problems.
 >>
+>> For example, in s390, it defines:
 >>
+>> #define tlb_end_vma(tlb, vma)			do { } while (0)
 >>
->> On 02/04/2020 12:42, Will Deacon wrote:
->>> On Wed, Apr 01, 2020 at 03:35:00PM -0700, Nick Desaulniers wrote:
->>>>>> I think the ARM64 build is now also broken on Linus' master branch,
->>>>>> after the net-next merge? I am not quite sure if the device tree
->>>>>> patches were supposed to land in mainline the way they did.
->>>>>
->>>>> There's a fix in my net tree and it will go to Linus soon.
->>>>>
->>>>> There is no clear policy for dt change integration, and honestly
->>>>> I try to deal with the situation on a case by case basis.
->>>>
->>>> Yep, mainline aarch64-linux-gnu- builds are totally hosed.  DTC fails the build
->>>> very early on:
->>>> https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/jobs/311246218
->>>> https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/jobs/311246270
->>>> There was no failure in -next, not sure how we skipped our canary in the coal
->>>> mine.
->>>
->>> Yes, one of the things linux-next does a really good job at catching is
->>> build breakage so it would've been nice to have seen this there rather
->>> than end up with breakage in Linus' tree :(
->>>
->>> Was the timing just bad, or are we missing DT coverage or something else?
+>> And it doesn't define it's own flush_pmd_tlb_range().  So there will be
+>> a mistake if we changed flush_pmd_tlb_range() using tlb_end_vma().
 >>
->> It seems issue was not caught in -next because the patch that fixes the issue was already in -next
->> before this series was pushed.
->>
->> Sorry for the mess again.
+>> Is this really a problem or something I understand wrong ?
 > 
-> No worries, it's just worthwhile to study failures.  So IIUC, in this case:
-> mainline was 5.6
-> the broken patch was merged in 5.7 merge window
-> a fix was already in -next, but not slated for the new merge window.
-> (Maybe scheduled for 5.8?)
+> If tlb_end_vma() is a no-op, then tlb_finish_mmu() will do:
+> tlb_flush_mmu() -> tlb_flush_mmu_tlbonly() -> tlb_flush()
+> 
+> And s390 has tlb_flush().
+> 
+> If tlb_end_vma() is not a no-op and it calls tlb_flush_mmu_tlbonly(),
+> then tlb_finish_mmu()'s invocation of tlb_flush_mmu_tlbonly() will
+> terniate early due o no flags set.
+> 
+> IOW, it should all just work.
+> 
+> 
+> FYI the whole tlb_{start,end}_vma() thing is a only needed when the
+> architecture doesn't implement tlb_flush() and instead default to using
+> flush_tlb_range(), at which point we need to provide a 'fake' vma.
+> 
+> At the time I audited all architectures and they only look at VM_EXEC
+> (to do $I invalidation) and VM_HUGETLB (for pmd level invalidations),
+> but I forgot which architectures that were.
 
-No, the "fix" is scheduled to go into v5.7 kernel as well. It is here:
+Many architectures, such as alpha, arc, arm and so on.
+I really understand why you hate making vma->vm_flags more important for
+tlbi :).
 
-git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux tags/ti-k3-soc-for-v5.7
+> But that is all legacy code; eventually we'll get all archs a native
+> tlb_flush() and this can go away.
+> 
 
-This is already part of ARM SoC tree, and slated for v5.7
-
-https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=arm/dt
-
-Arnd, Olof,
-
-Can you please help by either queuing the arm/dt entirely or just the K3 SoC 
-parts to Linus sooner than later?
+Thanks for your reply.  Currently, to enable the TTL feature, extending
+the flush_*tlb_range() may be more convenient.
+I will send a formal PATCH soon.
 
 Thanks,
-Sekhar
+Zhenyu
+
