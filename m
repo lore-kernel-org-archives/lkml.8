@@ -7,134 +7,118 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74151C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B73BC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C282137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B21B20719
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585925702;
-	bh=BA61YB28xh/UbDMrdtnfk381nk1HxAELz4FIea73A+c=;
+	s=default; t=1585925705;
+	bh=lXK/9BcJVOj+M6ehn1nTLTD+KuTm5WBkF6JHvnAHLOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xEDly7jR3kUPeZonx8ePX+l/cp1/RyoxyQ/RrAnzjUuq9HMRNaxtmfgIgpuvlCCYx
-	 niPeyCscCoSj6S+BB2wsmKBw6APYOuilrYFaaMcHU0szR9IIIM+J/4rX9zhTS4QIKe
-	 oSYNwKZQeyrnUv+3yMRBh5jruELHFh3tAaSpBoRM=
+	b=rorQHs2hFN67IUAAhObu+/ioCorx5NAwQM3bErlrpRsMs5WDcBfaFAWqtpZtksEE6
+	 P1Pc9XpzHlzYS96R7BBDxB6I0BRCF7Pv8ZefyjUQqnFujas7DGMM30whaYq8CYJ9DZ
+	 xXwgBLPKI7GHOjBOEYYZAWIyyusoGJWo/Yy/dEXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403942AbgDCOzB (ORCPT
+        id S2404029AbgDCOzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:55:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59796 "EHLO mail.kernel.org"
+        Fri, 3 Apr 2020 10:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbgDCOy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:54:57 -0400
+        id S1727431AbgDCOzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 10:55:02 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B15D420CC7;
-        Fri,  3 Apr 2020 14:54:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83150208FE;
+        Fri,  3 Apr 2020 14:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585925697;
-        bh=BA61YB28xh/UbDMrdtnfk381nk1HxAELz4FIea73A+c=;
+        s=default; t=1585925701;
+        bh=lXK/9BcJVOj+M6ehn1nTLTD+KuTm5WBkF6JHvnAHLOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wEMkFfzhvPS06IKvKt2Na0YIy2LfkYy4qJ2JAOjczs+1GtAlT5V3hXfrggDzlb3dP
-         uVyJEuH6Ndl6zR7BuBrYXUTAdJtnheQK1xglQwulqvw8orhOS2mS8ela0KlFnX8474
-         NEm6/fpcQBw9a+nRJxYkyn6/7lZ8l4zlgC8sAWDw=
+        b=tKgTPn5+zPTvwPjT1jXUXkiZcJ5tZ/uWGDWuIYBvH9efmF5aSWjUvr6uhKr24oIPv
+         G7YPf/Xh8VR1Mi4OnU/Um3a3hpW+sO/0Hmo+qVZc32K+jyY7AEjBIvCzhsYBns0ZKD
+         uRyMg+mhEpQdWvtNorjVLIiRYgnTSfzfM4Q9Jq70=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Tony Jones <tonyj@suse.de>,
+        Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        clang-built-linux@googlegroups.com,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 01/31] perf callchain: Update docs regarding kernel/user space unwinding
-Date:   Fri,  3 Apr 2020 11:54:13 -0300
-Message-Id: <20200403145443.24774-2-acme@kernel.org>
+Subject: [PATCH 02/31] perf parse-events: Add defensive NULL check
+Date:   Fri,  3 Apr 2020 11:54:14 -0300
+Message-Id: <20200403145443.24774-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200403145443.24774-1-acme@kernel.org>
 References: <20200403145443.24774-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Jones <tonyj@suse.de>
+From: Ian Rogers <irogers@google.com>
 
-The method of unwinding for kernel space is defined by the kernel
-config, not by the value of --call-graph.   Improve the documentation to
-reflect this.
+Terms may have a NULL config in which case a strcmp will SEGV. This can
+be reproduced with:
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Link: http://lore.kernel.org/lkml/20200325164053.10177-1-tonyj@suse.de
+  perf stat -e '*/event=?,nr/' sleep 1
+
+Add a NULL check to avoid this. This was caught by LLVM's libfuzzer.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200325164022.41385-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt | 14 ++++++++------
- tools/perf/Documentation/perf-record.txt | 18 ++++++++++++------
- 2 files changed, 20 insertions(+), 12 deletions(-)
+ tools/perf/util/pmu.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 8ead55593984..f16d8a71d3f5 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -405,14 +405,16 @@ ui.*::
- 		This option is only applied to TUI.
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 616fbda7c3fc..ef6a63f3d386 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -984,12 +984,11 @@ static int pmu_resolve_param_term(struct parse_events_term *term,
+ 	struct parse_events_term *t;
  
- call-graph.*::
--	When sub-commands 'top' and 'report' work with -g/—-children
--	there're options in control of call-graph.
-+	The following controls the handling of call-graphs (obtained via the
-+	-g/--call-graph options).
+ 	list_for_each_entry(t, head_terms, list) {
+-		if (t->type_val == PARSE_EVENTS__TERM_TYPE_NUM) {
+-			if (!strcmp(t->config, term->config)) {
+-				t->used = true;
+-				*value = t->val.num;
+-				return 0;
+-			}
++		if (t->type_val == PARSE_EVENTS__TERM_TYPE_NUM &&
++		    t->config && !strcmp(t->config, term->config)) {
++			t->used = true;
++			*value = t->val.num;
++			return 0;
+ 		}
+ 	}
  
- 	call-graph.record-mode::
--		The record-mode can be 'fp' (frame pointer), 'dwarf' and 'lbr'.
--		The value of 'dwarf' is effective only if perf detect needed library
--		(libunwind or a recent version of libdw).
--		'lbr' only work for cpus that support it.
-+		The mode for user space can be 'fp' (frame pointer), 'dwarf'
-+		and 'lbr'.  The value 'dwarf' is effective only if libunwind
-+		(or a recent version of libdw) is present on the system;
-+		the value 'lbr' only works for certain cpus. The method for
-+		kernel space is controlled not by this option but by the
-+		kernel config (CONFIG_UNWINDER_*).
- 
- 	call-graph.dump-size::
- 		The size of stack to dump in order to do post-unwinding. Default is 8192 (byte).
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 7f4db7592467..b25e028458e2 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -237,16 +237,22 @@ OPTIONS
- 	option and remains only for backward compatibility.  See --event.
- 
- -g::
--	Enables call-graph (stack chain/backtrace) recording.
-+	Enables call-graph (stack chain/backtrace) recording for both
-+	kernel space and user space.
- 
- --call-graph::
- 	Setup and enable call-graph (stack chain/backtrace) recording,
--	implies -g.  Default is "fp".
-+	implies -g.  Default is "fp" (for user space).
- 
--	Allows specifying "fp" (frame pointer) or "dwarf"
--	(DWARF's CFI - Call Frame Information) or "lbr"
--	(Hardware Last Branch Record facility) as the method to collect
--	the information used to show the call graphs.
-+	The unwinding method used for kernel space is dependent on the
-+	unwinder used by the active kernel configuration, i.e
-+	CONFIG_UNWINDER_FRAME_POINTER (fp) or CONFIG_UNWINDER_ORC (orc)
-+
-+	Any option specified here controls the method used for user space.
-+
-+	Valid options are "fp" (frame pointer), "dwarf" (DWARF's CFI -
-+	Call Frame Information) or "lbr" (Hardware Last Branch Record
-+	facility).
- 
- 	In some systems, where binaries are build with gcc
- 	--fomit-frame-pointer, using the "fp" method will produce bogus
 -- 
 2.21.1
 
