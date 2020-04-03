@@ -2,278 +2,216 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906B4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864FCC2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6367220721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661D020737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390427AbgDCJ1f (ORCPT
+        id S2390440AbgDCJ3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:27:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20170 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727774AbgDCJ1f (ORCPT
+        Fri, 3 Apr 2020 05:29:36 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59525 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgDCJ3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:27:35 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03393atN172042
-        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 05:27:33 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 302072cskx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:27:33 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Fri, 3 Apr 2020 10:27:14 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 Apr 2020 10:27:12 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0339RSJP66257150
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Apr 2020 09:27:28 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E47FA4C050;
-        Fri,  3 Apr 2020 09:27:27 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67C9B4C044;
-        Fri,  3 Apr 2020 09:27:26 +0000 (GMT)
-Received: from ltc-wspoon6.aus.stglabs.ibm.com (unknown [9.40.193.95])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Apr 2020 09:27:26 +0000 (GMT)
-From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     npiggin@gmail.com, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
-        mpe@ellerman.id.au, oohall@gmail.com, mikey@neuling.org,
-        psampat@linux.ibm.com, Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Subject: [RFC] cpuidle/powernv : Support for pre-entry and post exit of stop state in firmware
-Date:   Fri,  3 Apr 2020 04:27:01 -0500
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 20040309-4275-0000-0000-000003B8C402
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040309-4276-0000-0000-000038CE1CAB
-Message-Id: <20200403092701.39751-1-huntbag@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_05:2020-04-02,2020-04-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=866 suspectscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030073
+        Fri, 3 Apr 2020 05:29:36 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id fe1fc386055b1018; Fri, 3 Apr 2020 11:29:32 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Qian Cai <cai@lca.pw>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        lenb@kernel.org, peterz@infradead.org, linux-acpi@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/acpi: fix a deadlock with cpu hotplug
+Date:   Fri, 03 Apr 2020 11:29:32 +0200
+Message-ID: <2025426.V7fFeAKXnt@kreacher>
+In-Reply-To: <20200329142109.1501-1-cai@lca.pw>
+References: <20200329142109.1501-1-cai@lca.pw>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch provides kernel framework fro opal support of save restore
-of sprs in idle stop loop. Opal support for stop states is needed to
-selectively enable stop states or to introduce a quirk quickly in case
-a buggy stop state is present.
+On Sunday, March 29, 2020 4:21:09 PM CEST Qian Cai wrote:
+> Similar to the commit 0266d81e9bf5 ("acpi/processor: Prevent cpu hotplug
+> deadlock") except this is for acpi_processor_ffh_cstate_probe():
+> 
+> "The problem is that the work is scheduled on the current CPU from the
+> hotplug thread associated with that CPU.
+> 
+> It's not required to invoke these functions via the workqueue because
+> the hotplug thread runs on the target CPU already.
+> 
+> Check whether current is a per cpu thread pinned on the target CPU and
+> invoke the function directly to avoid the workqueue."
+> 
+> Since CONFIG_ACPI_PROCESSOR (for cstate.c) selects
+> CONFIG_ACPI_CPU_FREQ_PSS (for processor_throttling.c) on x86, just
+> make call_on_cpu() a static inline function from processor_throttling.c
+> and use it in cstate.c.
+> 
+>  WARNING: possible circular locking dependency detected
+>  ------------------------------------------------------
+>  cpuhp/1/15 is trying to acquire lock:
+>  ffffc90003447a28 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: __flush_work+0x4c6/0x630
+> 
+>  but task is already holding lock:
+>  ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
+> 
+>  which lock already depends on the new lock.
+> 
+>  the existing dependency chain (in reverse order) is:
+> 
+>  -> #1 (cpu_hotplug_lock){++++}-{0:0}:
+>  cpus_read_lock+0x3e/0xc0
+>  irq_calc_affinity_vectors+0x5f/0x91
+>  __pci_enable_msix_range+0x10f/0x9a0
+>  pci_alloc_irq_vectors_affinity+0x13e/0x1f0
+>  pci_alloc_irq_vectors_affinity at drivers/pci/msi.c:1208
+>  pqi_ctrl_init+0x72f/0x1618 [smartpqi]
+>  pqi_pci_probe.cold.63+0x882/0x892 [smartpqi]
+>  local_pci_probe+0x7a/0xc0
+>  work_for_cpu_fn+0x2e/0x50
+>  process_one_work+0x57e/0xb90
+>  worker_thread+0x363/0x5b0
+>  kthread+0x1f4/0x220
+>  ret_from_fork+0x27/0x50
+> 
+>  -> #0 ((work_completion)(&wfc.work)){+.+.}-{0:0}:
+>  __lock_acquire+0x2244/0x32a0
+>  lock_acquire+0x1a2/0x680
+>  __flush_work+0x4e6/0x630
+>  work_on_cpu+0x114/0x160
+>  acpi_processor_ffh_cstate_probe+0x129/0x250
+>  acpi_processor_evaluate_cst+0x4c8/0x580
+>  acpi_processor_get_power_info+0x86/0x740
+>  acpi_processor_hotplug+0xc3/0x140
+>  acpi_soft_cpu_online+0x102/0x1d0
+>  cpuhp_invoke_callback+0x197/0x1120
+>  cpuhp_thread_fun+0x252/0x2f0
+>  smpboot_thread_fn+0x255/0x440
+>  kthread+0x1f4/0x220
+>  ret_from_fork+0x27/0x50
+> 
+>  other info that might help us debug this:
+> 
+>  Chain exists of:
+>  (work_completion)(&wfc.work) --> cpuhp_state-up --> cpuidle_lock
+> 
+>  Possible unsafe locking scenario:
+> 
+>  CPU0                    CPU1
+>  ----                    ----
+>  lock(cpuidle_lock);
+>                          lock(cpuhp_state-up);
+>                          lock(cpuidle_lock);
+>  lock((work_completion)(&wfc.work));
+> 
+>  *** DEADLOCK ***
+> 
+>  3 locks held by cpuhp/1/15:
+>  #0: ffffffffaf51ab10 (cpu_hotplug_lock){++++}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
+>  #1: ffffffffaf51ad40 (cpuhp_state-up){+.+.}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
+>  #2: ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
+> 
+>  Call Trace:
+>  dump_stack+0xa0/0xea
+>  print_circular_bug.cold.52+0x147/0x14c
+>  check_noncircular+0x295/0x2d0
+>  __lock_acquire+0x2244/0x32a0
+>  lock_acquire+0x1a2/0x680
+>  __flush_work+0x4e6/0x630
+>  work_on_cpu+0x114/0x160
+>  acpi_processor_ffh_cstate_probe+0x129/0x250
+>  acpi_processor_evaluate_cst+0x4c8/0x580
+>  acpi_processor_get_power_info+0x86/0x740
+>  acpi_processor_hotplug+0xc3/0x140
+>  acpi_soft_cpu_online+0x102/0x1d0
+>  cpuhp_invoke_callback+0x197/0x1120
+>  cpuhp_thread_fun+0x252/0x2f0
+>  smpboot_thread_fn+0x255/0x440
+>  kthread+0x1f4/0x220
+>  ret_from_fork+0x27/0x50
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2:
+> Make call_on_cpu() a static inline function to avoid a compilation
+> error when ACPI_PROCESSOR=m thanks to lkp@intel.com.
+> 
+>  arch/x86/kernel/acpi/cstate.c       |  3 ++-
+>  drivers/acpi/processor_throttling.c |  7 -------
+>  include/acpi/processor.h            | 10 ++++++++++
+>  3 files changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
+> index caf2edccbad2..49ae4e1ac9cd 100644
+> --- a/arch/x86/kernel/acpi/cstate.c
+> +++ b/arch/x86/kernel/acpi/cstate.c
+> @@ -161,7 +161,8 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
+>  
+>  	/* Make sure we are running on right CPU */
+>  
+> -	retval = work_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx);
+> +	retval = call_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx,
+> +			     false);
+>  	if (retval == 0) {
+>  		/* Use the hint in CST */
+>  		percpu_entry->states[cx->index].eax = cx->address;
+> diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
+> index 532a1ae3595a..a0bd56ece3ff 100644
+> --- a/drivers/acpi/processor_throttling.c
+> +++ b/drivers/acpi/processor_throttling.c
+> @@ -897,13 +897,6 @@ static long __acpi_processor_get_throttling(void *data)
+>  	return pr->throttling.acpi_processor_get_throttling(pr);
+>  }
+>  
+> -static int call_on_cpu(int cpu, long (*fn)(void *), void *arg, bool direct)
+> -{
+> -	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
+> -		return fn(arg);
+> -	return work_on_cpu(cpu, fn, arg);
+> -}
+> -
+>  static int acpi_processor_get_throttling(struct acpi_processor *pr)
+>  {
+>  	if (!pr)
+> diff --git a/include/acpi/processor.h b/include/acpi/processor.h
+> index 47805172e73d..770d226b22f2 100644
+> --- a/include/acpi/processor.h
+> +++ b/include/acpi/processor.h
+> @@ -297,6 +297,16 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_ACPI_CPU_FREQ_PSS
 
-We make a opal call from kernel if firmware-stop-support for stop
-states is present and enabled. All the quirks for pre-entry of stop
-state is handled inside opal. A call from opal is made into kernel
-where we execute stop afer saving of NVGPRs.
-After waking up from 0x100 vector in kernel, we enter back into opal.
-All the quirks in post exit path, if any, are then handled in opal,
-from where we return successfully back to kernel.
-For deep stop states in which additional SPRs are lost, saving and
-restoration will be done in OPAL.
+Why does this depend on CONFIG_ACPI_CPU_FREQ_PSS?
 
-This idea was first proposed by Nick here:
-https://patchwork.ozlabs.org/patch/1208159/
+> +static inline int call_on_cpu(int cpu, long (*fn)(void *), void *arg,
+> +			      bool direct)
+> +{
+> +	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
+> +		return fn(arg);
+> +	return work_on_cpu(cpu, fn, arg);
+> +}
+> +#endif
+> +
+>  /* in processor_perflib.c */
+>  
+>  #ifdef CONFIG_CPU_FREQ
+> 
 
-The corresponding skiboot patch for this kernel patch is here:
-https://patchwork.ozlabs.org/patch/1265959/
 
-When we callback from OPAL into kernel, r13 is clobbered. So, to
-access PACA we need to restore it from HSPRGO. In future we can
-handle this into OPAL as in here:
-https://patchwork.ozlabs.org/patch/1245275/
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- arch/powerpc/include/asm/opal-api.h        |  8 ++++-
- arch/powerpc/include/asm/opal.h            |  3 ++
- arch/powerpc/kernel/idle_book3s.S          |  5 +++
- arch/powerpc/platforms/powernv/idle.c      | 37 ++++++++++++++++++++++
- arch/powerpc/platforms/powernv/opal-call.c |  2 ++
- 5 files changed, 54 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-index c1f25a760eb1..a2c782c99c9e 100644
---- a/arch/powerpc/include/asm/opal-api.h
-+++ b/arch/powerpc/include/asm/opal-api.h
-@@ -214,7 +214,9 @@
- #define OPAL_SECVAR_GET				176
- #define OPAL_SECVAR_GET_NEXT			177
- #define OPAL_SECVAR_ENQUEUE_UPDATE		178
--#define OPAL_LAST				178
-+#define OPAL_REGISTER_OS_OPS			181
-+#define OPAL_CPU_IDLE				182
-+#define OPAL_LAST				182
- 
- #define QUIESCE_HOLD			1 /* Spin all calls at entry */
- #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-@@ -1181,6 +1183,10 @@ struct opal_mpipl_fadump {
- 	struct	opal_mpipl_region region[];
- } __packed;
- 
-+struct opal_os_ops {
-+	__be64 os_idle_stop;
-+};
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* __OPAL_API_H */
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 9986ac34b8e2..3c340bc4df8e 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -400,6 +400,9 @@ void opal_powercap_init(void);
- void opal_psr_init(void);
- void opal_sensor_groups_init(void);
- 
-+extern int64_t opal_register_os_ops(struct opal_os_ops *os_ops);
-+extern int64_t opal_cpu_idle(__be64 srr1_addr, uint64_t psscr);
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _ASM_POWERPC_OPAL_H */
-diff --git a/arch/powerpc/kernel/idle_book3s.S b/arch/powerpc/kernel/idle_book3s.S
-index 22f249b6f58d..8d287d1d06c0 100644
---- a/arch/powerpc/kernel/idle_book3s.S
-+++ b/arch/powerpc/kernel/idle_book3s.S
-@@ -49,6 +49,8 @@ _GLOBAL(isa300_idle_stop_noloss)
-  */
- _GLOBAL(isa300_idle_stop_mayloss)
- 	mtspr 	SPRN_PSSCR,r3
-+	mr	r6, r13
-+	mfspr	r13, SPRN_HSPRG0
- 	std	r1,PACAR1(r13)
- 	mflr	r4
- 	mfcr	r5
-@@ -74,6 +76,7 @@ _GLOBAL(isa300_idle_stop_mayloss)
- 	std	r31,-8*18(r1)
- 	std	r4,-8*19(r1)
- 	std	r5,-8*20(r1)
-+	std	r6,-8*21(r1)
- 	/* 168 bytes */
- 	PPC_STOP
- 	b	.	/* catch bugs */
-@@ -91,8 +94,10 @@ _GLOBAL(idle_return_gpr_loss)
- 	ld	r1,PACAR1(r13)
- 	ld	r4,-8*19(r1)
- 	ld	r5,-8*20(r1)
-+	ld	r6,-8*21(r1)
- 	mtlr	r4
- 	mtcr	r5
-+	mr	r13,r6
- 	/*
- 	 * KVM nap requires r2 to be saved, rather than just restoring it
- 	 * from PACATOC. This could be avoided for that less common case
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index 78599bca66c2..1841027b25c5 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -35,6 +35,7 @@
- static u32 supported_cpuidle_states;
- struct pnv_idle_states_t *pnv_idle_states;
- int nr_pnv_idle_states;
-+static bool firmware_stop_supported;
- 
- /*
-  * The default stop state that will be used by ppc_md.power_save
-@@ -602,6 +603,25 @@ struct p9_sprs {
- 	u64 uamor;
- };
- 
-+/*
-+ * This function is called from OPAL if firmware support for stop
-+ * states is present and enabled. It provides a fallback for idle
-+ * stop states via OPAL.
-+ */
-+static uint64_t os_idle_stop(uint64_t psscr, bool save_gprs)
-+{
-+	/*
-+	 * For lite state which does not lose even GPRS we call
-+	 * idle_stop_noloss while for all other states we call
-+	 * idle_stop_mayloss. Saving and restoration of other additional
-+	 * SPRs if required is handled in OPAL. All the quirks are also
-+	 * handled in OPAL.
-+	 */
-+	if (!save_gprs)
-+		return isa300_idle_stop_noloss(psscr);
-+	return isa300_idle_stop_mayloss(psscr);
-+}
-+
- static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- {
- 	int cpu = raw_smp_processor_id();
-@@ -613,6 +633,16 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 	unsigned long mmcr0 = 0;
- 	struct p9_sprs sprs = {}; /* avoid false used-uninitialised */
- 	bool sprs_saved = false;
-+	int rc = 0;
-+
-+	/*
-+	 * Kernel takes decision whether to make OPAL call or not. This logic
-+	 * will be combined with the logic for BE opal to take decision.
-+	 */
-+	if (firmware_stop_supported) {
-+		rc = opal_cpu_idle(cpu_to_be64(__pa(&srr1)), (uint64_t) psscr);
-+		goto out;
-+	}
- 
- 	if (!(psscr & (PSSCR_EC|PSSCR_ESL))) {
- 		/* EC=ESL=0 case */
-@@ -1232,6 +1262,10 @@ static int pnv_parse_cpuidle_dt(void)
- 		pr_warn("opal: PowerMgmt Node not found\n");
- 		return -ENODEV;
- 	}
-+
-+	if (of_device_is_compatible(np, "firmware-stop-supported"))
-+		firmware_stop_supported = true;
-+
- 	nr_idle_states = of_property_count_u32_elems(np,
- 						"ibm,cpu-idle-state-flags");
- 
-@@ -1326,6 +1360,7 @@ static int pnv_parse_cpuidle_dt(void)
- 
- static int __init pnv_init_idle_states(void)
- {
-+	struct opal_os_ops os_ops;
- 	int cpu;
- 	int rc = 0;
- 
-@@ -1349,6 +1384,8 @@ static int __init pnv_init_idle_states(void)
- 		}
- 	}
- 
-+	os_ops.os_idle_stop = be64_to_cpu(os_idle_stop);
-+	rc = opal_register_os_ops((struct opal_os_ops *)(&os_ops));
- 	/* In case we error out nr_pnv_idle_states will be zero */
- 	nr_pnv_idle_states = 0;
- 	supported_cpuidle_states = 0;
-diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-index 5cd0f52d258f..c885e607ba62 100644
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -293,3 +293,5 @@ OPAL_CALL(opal_mpipl_query_tag,			OPAL_MPIPL_QUERY_TAG);
- OPAL_CALL(opal_secvar_get,			OPAL_SECVAR_GET);
- OPAL_CALL(opal_secvar_get_next,			OPAL_SECVAR_GET_NEXT);
- OPAL_CALL(opal_secvar_enqueue_update,		OPAL_SECVAR_ENQUEUE_UPDATE);
-+OPAL_CALL(opal_register_os_ops,			OPAL_REGISTER_OS_OPS);
-+OPAL_CALL(opal_cpu_idle,			OPAL_CPU_IDLE);
--- 
-2.17.1
 
