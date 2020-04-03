@@ -2,170 +2,169 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9289CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF29CC2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5908E20721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF2F2078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JSw+lUNa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ci8KXxcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390932AbgDCNhq (ORCPT
+        id S2390942AbgDCNif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:37:46 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33468 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgDCNhp (ORCPT
+        Fri, 3 Apr 2020 09:38:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42290 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390770AbgDCNif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:37:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6qRe0n0i/brQrN4i1lC0j4Ww/Thvi8ApntxMb75aYXw=; b=JSw+lUNa0DxywVe7R1CwsfF6W
-        duHA2+TE7R9d3Mj5F003DngVbNKxSVj07IsPCJdXcbDKfi4XCbV4ygEyQ2r2xLVcJuRgwSX6jGZEJ
-        BWcGCNe02Cw9VmMdvYYMF4C34vxXgWcgw7Bx5E1id8eF7VZpzt7tlf3usJx4e0EkXqCg5VYwrh3BV
-        1gMqh70gTjdoMbbsN4ZUl5v7c1LUD4OfmKjo9YmE5xnoZLDAJ58VKWHjvenyjPU25Ft//Dno1kd6q
-        Wr3yAFl58sfrBLMgsgA1VKz/ieI0PWh+2PQVGTBtYblzZLcF+QtFZHCOMZ89yU6AYVMJjTAc1L9zq
-        56cCCltuQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:33460)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jKMVh-00010t-Gw; Fri, 03 Apr 2020 14:37:25 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jKMVb-0002hX-Tl; Fri, 03 Apr 2020 14:37:19 +0100
-Date:   Fri, 3 Apr 2020 14:37:19 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
-        daniel@ffwll.ch, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
- user_write_access_begin/end
-Message-ID: <20200403133719.GC25745@shell.armlinux.org.uk>
-References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
- <20200402162942.GG23230@ZenIV.linux.org.uk>
- <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
- <20200402175032.GH23230@ZenIV.linux.org.uk>
- <202004021132.813F8E88@keescook>
- <20200403005831.GI23230@ZenIV.linux.org.uk>
- <20200403112609.GB26633@mbp>
+        Fri, 3 Apr 2020 09:38:35 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h15so8553510wrx.9;
+        Fri, 03 Apr 2020 06:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ngUgjvZBWhVhOxFEXIDkx6xzsKtQ5zuVaNcA064tn4Q=;
+        b=ci8KXxcRJrNNYah2UU5gFhowpYCli5deBpIuCq29PgGWbVIrzvr9Jp9fLNC9N11zp/
+         Sekfzn4vN4zcV54Id7tDFZT9462/7sdKQrn90ctsv3n+87yO65ywf5UYEPbs465wjrCk
+         4mBIXFyPmFF5/48Rd8JynP6WF9zVNdQBKS8eFm5QEE4WbmO2nZDqspCs7kWI0RxZdGD9
+         kNJokcnssdL+AMtROKC2m75bOhN8gq5BjzKgUJrh3AG3uZST1crrTGfSXBkpeZ3hSbKv
+         6LuRe4Zgn4qBqHx7hKS9oNU788MTPyDcBUxJJ+ZbNf6gN5qSuZnrvLjhMt2iXd9AqHyR
+         RUcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ngUgjvZBWhVhOxFEXIDkx6xzsKtQ5zuVaNcA064tn4Q=;
+        b=ZUD3T5jgBPphT7Ni8adY+oJPj8tPFlkp5i0LBVq652M405eMX1vPdbxYVz0eW/VuvH
+         sQvF1sogQiNZILw23upTQgtcdm/QiLxGQp9gm4Hwf2dMDLAdHI3hSZcRsx9rSms1WSIY
+         rd2AxM5VHclfSmXrj6Kgrsq0CQJx+lMCA1BuR9RoWmqClu3l9ZnJx8TA4tnUwXZC5jvA
+         fEzVvMt5Ac6aCZ/4N1NBpsvN2VdWGrQaGJ1lKVS2DkVBDUd22sWRmWqzv4/CKlVd21Mt
+         LPIG+JpKh9AgkAmDX71W0v/urGVqHL0Tjr3WCnZv9SHHMSTxUscr1uJcz4JRPKjW/iEF
+         u9HQ==
+X-Gm-Message-State: AGi0PuYXSFJvEbqhlFQKY3aMQ2QDnQQxMJuRNe9b9GcTtcvBdjOuJJPI
+        g70lR0qxSqn1ZJqzFn7RZuM=
+X-Google-Smtp-Source: APiQypKlE8pDWi7VTwPr/NlgbiNOyuGhYIfDBVKNVEc0vFBtC9rRsjhB2dwwteMQ+izNzqMhj4vV8w==
+X-Received: by 2002:adf:bc4a:: with SMTP id a10mr9036370wrh.7.1585921112598;
+        Fri, 03 Apr 2020 06:38:32 -0700 (PDT)
+Received: from andrea ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id s11sm11837516wrw.58.2020.04.03.06.38.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 06:38:32 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 15:38:26 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU
+ channel lists with a global array of channels
+Message-ID: <20200403133826.GA25401@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com>
+ <20200325225505.23998-4-parri.andrea@gmail.com>
+ <87y2rn4287.fsf@vitty.brq.redhat.com>
+ <20200326170518.GA14314@andrea>
+ <87pncz3tcn.fsf@vitty.brq.redhat.com>
+ <20200328182148.GA11210@andrea>
+ <87imim2epp.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403112609.GB26633@mbp>
+In-Reply-To: <87imim2epp.fsf@vitty.brq.redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 12:26:10PM +0100, Catalin Marinas wrote:
-> On Fri, Apr 03, 2020 at 01:58:31AM +0100, Al Viro wrote:
-> > On Thu, Apr 02, 2020 at 11:35:57AM -0700, Kees Cook wrote:
-> > > Yup, I think it's a weakness of the ARM implementation and I'd like to
-> > > not extend it further. AFAIK we should never nest, but I would not be
-> > > surprised at all if we did.
-> > > 
-> > > If we were looking at a design goal for all architectures, I'd like
-> > > to be doing what the public PaX patchset did for their memory access
-> > > switching, which is to alarm if calling into "enable" found the access
-> > > already enabled, etc. Such a condition would show an unexpected nesting
-> > > (like we've seen with similar constructs with set_fs() not getting reset
-> > > during an exception handler, etc etc).
-> > 
-> > FWIW, maybe I'm misreading the ARM uaccess logics, but... it smells like
-> > KERNEL_DS is somewhat more dangerous there than on e.g. x86.
-> > 
-> > Look: with CONFIG_CPU_DOMAINS, set_fs(KERNEL_DS) tells MMU to ignore
-> > per-page permission bits in DOMAIN_KERNEL (i.e. for kernel address
-> > ranges), allowing them even if they would normally be denied.  We need
-> > that for actual uaccess loads/stores, since those use insns that pretend
-> > to be done in user mode and we want them to access the kernel pages.
-> > But that affects the normal loads/stores as well; unless I'm misreading
-> > that code, it will ignore (supervisor) r/o on a page.  And that's not
-> > just for the code inside the uaccess blocks; *everything* done under
-> > KERNEL_DS is subject to that.
+On Mon, Mar 30, 2020 at 02:45:54PM +0200, Vitaly Kuznetsov wrote:
+> Andrea Parri <parri.andrea@gmail.com> writes:
 > 
-> That's correct. Luckily this only affects ARMv5 and earlier. From ARMv6
-> onwards, CONFIG_CPU_USE_DOMAINS is no longer selected and the uaccess
-> instructions are just plain ldr/str.
+> >> Correct me if I'm wrong, but currently vmbus_chan_sched() accesses
+> >> per-cpu list of channels on the same CPU so we don't need a spinlock to
+> >> guarantee that during an interrupt we'll be able to see the update if it
+> >> happened before the interrupt (in chronological order). With a global
+> >> list of relids, who guarantees that an interrupt handler on another CPU
+> >> will actually see the modified list? 
+> >
+> > Thanks for pointing this out!
+> >
+> > The offer/resume path presents implicit full memory barriers, program
+> > -order after the array store which should guarantee the visibility of
+> > the store to *all* CPUs before the offer/resume can complete (c.f.,
+> >
+> >   tools/memory-model/Documentation/explanation.txt, Sect. #13
+> >
+> > and assuming that the offer/resume for a channel must complete before
+> > the corresponding handler, which seems to be the case considered that
+> > some essential channel fields are initialized only later...)
+> >
+> > IIUC, the spin lock approach you suggested will work and be "simpler";
+> > an obvious side effect would be, well, a global synchronization point
+> > in vmbus_chan_sched()...
+> >
+> > Thoughts?
 > 
-> Russell should know the details on whether there was much choice. Since
-> the kernel was living in the linear map with full rwx permissions, the
-> KERNEL_DS overriding was probably not a concern and the ldrt/strt for
-> uaccess deemed more secure. We also have weird permission setting
-> pre-ARMv6 (or rather v6k) where RO user pages are writable from the
-> kernel with standard str instructions (breaking CoW). I don't recall
-> whether it was a choice made by the kernel or something the architecture
-> enforced. The vectors page has to be kernel writable (and user RO) to
-> store the TLS value in the absence of a TLS register but maybe we could
-> do this via the linear alias together with the appropriate cache
-> maintenance.
+> This is, of course, very theoretical as if we're seeing an interrupt for
+> a channel at the same time we're writing its relid we're already in
+> trouble. I can, however, try to suggest one tiny improvement:
+
+Indeed.  I think the idea (still quite informal) is that:
+
+  1) the mapping of the channel relid is propagated to (visible from)
+     all CPUs before add_channel_work is queued (full barrier in
+     queue_work()),
+
+  2) add_channel_work is queued before the channel is opened (aka,
+     before the channel ring buffer is allocate/initalized and the
+     OPENCHANNEL msg is sent and acked from Hyper-V, cf. OPEN_STATE),
+
+  3) the channel is opened before Hyper-V can start sending interrupts
+     for the channel, and hence before vmbus_chan_sched() can find the
+     channel relid in recv_int_page set,
+
+  4) vmbus_chan_sched() finds the channel's relid in recv_int_page
+     set before it search/load from the channel array (full barrier
+     in sync_test_and_clear_bit()).
+
+This is for the "normal"/not resuming from hibernation case; for the
+latter, notice that:
+
+  a) vmbus_isr() (and vmbus_chan_sched()) can not run until when
+     vmbus_bus_resume() has finished (@resume_noirq callback),
+
+  b) vmbus_bus_resume() can not complete before nr_chan_fixup_on_resume
+     equals 0 in check_ready_for_resume_event().
+     
+(and check_ready_for_resume_event() does also provides a full barrier).
+
+If makes sense to you, I'll try to add some of the above in comments.
+
+Thanks,
+  Andrea
+
+
 > 
-> From ARMv6, the domain overriding had the side-effect of ignoring the XN
-> bit and causing random instruction fetches from ioremap() areas. So we
-> had to remove the domain switching. We also gained a dedicated TLS
-> register.
-
-Indeed.  On pre-ARMv6, we have the following choices for protection
-attributes:
-
-Page tables	Control Reg	Privileged	User
-AP		S,R		permission	permission
-00		0,0		No access	No access
-00		1,0		Read-only	No access
-00		0,1		Read-only	Read-only
-00		1,1		Unpredictable	Unpredictable
-01		X,X		Read/Write	No access
-10		X,X		Read/Write	Read-only
-11		X,X		Read/Write	Read/Write
-
-We use S,R=1,0 under Linux because this allows us to read-protect
-kernel pages without making them visible to userspace.  If we
-changed to S,R=0,1, then we could have our read-only permissions
-for both kernel and userspace, drop domain switching, and use the
-plain LDR/STR instructions, but we then lose the ability to
-write-protect module executable code and other parts of kernel
-space without making them visible to userspace.
-
-So, it essentially boils down to making a choice - which set of
-security features we think are the most important.
-
-> I think uaccess_enable() could indeed switch the kernel domain if
-> KERNEL_DS is set and move this out of set_fs(). It would reduce the
-> window the kernel domain permissions are overridden. Anyway,
-> uaccess_enable() appeared much later on arm when Russell introduced PAN
-> (SMAP) like support by switching the user domain.
-
-Yes, that would be a possibility.  Another possibility would be to
-eliminate as much usage of KERNEL_DS as possible - I've just found
-one instance in sys_oabi-compat.c that can be eliminated (epoll_ctl)
-but there's several there that can't with the current code structure,
-and re-coding the contents of some fs/* functions to work around that
-is a very bad idea.  If there's some scope for rejigging some of the
-fs/* code, it may be possible to elimate some other cases in there.
-
-I notice that the fs/* code seems like some of the last remaining
-users of KERNEL_DS, although I suspect that some aren't possible to
-eliminate. :(
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+> vmbus_chan_sched() now clean the bit in the event page and then searches
+> for a channel with this relid; in case we allow the search to
+> (temporary) fail we can reverse the logic: search for the channel and
+> clean the bit only if we succeed. In case we fail, next time (next IRQ)
+> we'll try again and likely succeed. The only purpose is to make sure no
+> interrupts are ever lost.  This may be an overkill, we may want to try
+> to count how many times (if ever) this happens. 
+> 
+> Just a thought though.
+> 
+> -- 
+> Vitaly
+> 
