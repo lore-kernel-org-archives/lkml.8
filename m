@@ -2,85 +2,107 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC09FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276ADC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8572077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F063320737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UEzW/FmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391127AbgDCSka (ORCPT
+        id S1728424AbgDCSnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:40:30 -0400
-Received: from smtprelay0024.hostedemail.com ([216.40.44.24]:43886 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728337AbgDCSka (ORCPT
+        Fri, 3 Apr 2020 14:43:13 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37516 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgDCSnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:40:30 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 232EE837F27B;
-        Fri,  3 Apr 2020 18:40:29 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: head59_210c0a7bd8631
-X-Filterd-Recvd-Size: 2165
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  3 Apr 2020 18:40:26 +0000 (UTC)
-Message-ID: <e44e41317719727ea12aee4ff1e210dea796dd2f.camel@perches.com>
-Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
- DRM fourccs
-From:   Joe Perches <joe@perches.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Date:   Fri, 03 Apr 2020 11:38:29 -0700
-In-Reply-To: <20200403104701.GC3172@kekkonen.localdomain>
-References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
-         <20200403102449.GB4882@pendragon.ideasonboard.com>
-         <20200403104701.GC3172@kekkonen.localdomain>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 3 Apr 2020 14:43:12 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w10so9754696wrm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+GPTHnyl90NKm5LFkBR8XEvQYiiIQK4VWKFTWEH8l7Q=;
+        b=UEzW/FmUc6Y87LrNXHBdZVEXYR9PNYI3Hz7s5zu+DhV2oo6ILIw97n1TNuAaO8OO3V
+         cVuNsH0w8wMGwAmKWEYsnPD9jn3IfogOHz4yvf56FxctDpvYcn0oR5Hq2HbhH4rIEeQw
+         yaFUS+mxjBOHfBxSSg4RrJOrDHmYTb+dfyx/RFSmXQtL5HifxD07iIGZ1lfE5E2yin/L
+         CCJTFx8x5Yb5Cy2V0EwGswwtJoccb1jzeyeVangH/XLUsHJ0Ro0cVqBW4hjJwBYNTkUv
+         xSrcyWxjhz8KbemjeEimnC5rpu1qDamE8Etjcm9zhj4KnrEmMMj0XtPbfgQ3GyslLyre
+         yj0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+GPTHnyl90NKm5LFkBR8XEvQYiiIQK4VWKFTWEH8l7Q=;
+        b=VTfQVs0WkDdkIrhlHew/LrWyQvr6lpOCpOfzLBsJ1mZElpom/kSs7Q+VFH/N+TKsVi
+         uIkLVL1kQ6barTLWVT3aZNZtDPv5EO1YeRm7o3qGdp6gRG8gtlSk55TCVJPStuNP2/pv
+         ncZFLq/qO2gQExs211OOS8PyY8DzdRmteCsQLR8asv9SiTG9eT6Uqbu631VZng9YxOiD
+         AEzyhLgh0kh/dVKuQLtdLurOrg/ToUJdYjME+P9AP+MIxHW5EBG+dD6AGjcQnvZGMrbs
+         QaEIYfwBqPayg/cTcLQY2p7YXB+BoCAHKtzTQiAr3wzLpgrznQ1yT9GiCYcsLJJYlzjK
+         aAFA==
+X-Gm-Message-State: AGi0PuauF5x4ijmjbV9IdA8IceKhnRWYQqTGr6ZExAKLbVjyR+SfpnTz
+        bUPR1ZePmbxHB0SdSGVOqylIQQ==
+X-Google-Smtp-Source: APiQypKiItekYd3SJpDys2lSSUlpMDrJD00tTpiCHgh4jCy85JaOxsj6rWEUzvyolaiXMgOAyByoYg==
+X-Received: by 2002:a5d:4d8c:: with SMTP id b12mr10236625wru.35.1585939390612;
+        Fri, 03 Apr 2020 11:43:10 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id p5sm13681907wrg.49.2020.04.03.11.43.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 11:43:09 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 20:43:07 +0200
+From:   LABBE Corentin <clabbe@baylibre.com>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     narmstrong@baylibre.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, linux-crypto@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5]crypto: amlogic - Delete duplicate dev_err in
+ meson_crypto_probe()
+Message-ID: <20200403184307.GB15205@Red>
+References: <20200403111429.11876-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200403111429.11876-1-tangbin@cmss.chinamobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-04-03 at 13:47 +0300, Sakari Ailus wrote:
-> On Fri, Apr 03, 2020 at 01:24:49PM +0300, Laurent Pinchart wrote:
-> > On Fri, Apr 03, 2020 at 12:11:56PM +0300, Sakari Ailus wrote:
-> > > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > > the same implementation can be used.
-[]
-> > > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-[]
-> > > +static noinline_for_stack
-> > > +char *fourcc_string(char *buf, char *end, const u32 *fourcc,
-> > > +		    struct printf_spec spec, const char *fmt)
-[]
-> > > +	if (fmt[1] != 'c' || fmt[2] != 'c')
+On Fri, Apr 03, 2020 at 07:14:29PM +0800, Tang Bin wrote:
+> When something goes wrong, platform_get_irq() will print an error message,
+> so in order to avoid the situation of repeat output，we should remove
+> dev_err here.
+> 
+> Changes from v4:
+>  - rewrite the code, because the code in v4 is wrong, sorry.
+> 
+> Changes form v3:
+>  - fix the theme writing error.
+> 
+> Changes from v2:
+>  - modify the theme format and content description.
+>  - reformat the patch, it's the wrong way to resubmit a new patch that
+>    should be modified on top of the original. The original piece is:
+>    https://lore.kernel.org/patchwork/patch/1219611/
+> 
+> Changes from v1:
+>  - the title has changed, because the description is not very detailed.
+>  - the code has been modified, because it needs to match the theme.
+> 
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
 
-This could check outside a format string if
-the %p4 is at the end of the format string.
+Hello
 
-	printk("%p4", fourcc)
+The changelog should not be in the commit message.
+You should set them after the "---" line
 
-So this should verify
-
-	if (!(fmt[1] == 'c' && fmt[2] == 'c'))
-
-
+Thanks
