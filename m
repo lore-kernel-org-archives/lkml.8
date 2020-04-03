@@ -2,128 +2,113 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B3DC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D995C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 136E52078C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:51:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="usWegjiD"
+	by mail.kernel.org (Postfix) with ESMTP id 58B612078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390838AbgDCLvQ (ORCPT
+        id S2403794AbgDCLve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:51:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41272 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgDCLvP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:51:15 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a24so3366887pfc.8;
-        Fri, 03 Apr 2020 04:51:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8Le05iGqq6bc/g4wGimHz6enik2yvmwi6fzSxUNSxjk=;
-        b=usWegjiDDEKz+JmXZefUYVDwOQMddImVLfn/ykTysx36sNEbA/cQzdBN9nJXUH9H7v
-         ss1mYkW69YIXiT0CZgm/8bwQo71xgBDUsk10+Cak3Z83tSXgmJH6sqd/ra8mf/vdDsYn
-         3vRGBSDY9uUoYgDpfvAXN4UCdpimqRVaSceHUDg2IlHgmHXtoY3sx9AQeGJrLtmPy5QW
-         BJc73uY6W2xbBl5sEAvFpWs64rNxp04x2/UFVQrXO0HD+7cphCzWROdMnAyWGnOA74BB
-         Ys7g5iXQPmbJgwMTbbA65sJ839/iHLdKSoAHw4Se2/Lqn+X24CZBqqiFlmU2LNZt4Uk4
-         avyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Le05iGqq6bc/g4wGimHz6enik2yvmwi6fzSxUNSxjk=;
-        b=APfah2p50JdGFumUzJ8oOIXdkSwkxUZG3CygPFeoLOhceu4kgX+FZRdgsq531UGLes
-         g+eBb//oggeHzVqdDo8wOSRlN0F/OCVjbpgy4xe/EAFt+H6ORaoQilZY7XhxIJqVKpnw
-         r/8iemkhqTBpmKnU7wBi813jD5cInWjT884Kp1RElUelIJzNM8t0aSn/HDRn3qE977kY
-         xaoSH5MY2zDLHDcIi6UGSThfkyfZ96J5xOfgRs+Rh+4ct+4P+Z15GOEQrLf0Ej2xkHPJ
-         5i6sa0PI83x1wGR/s+uCUkf/Gc1YPfY8xSG3H0SpZohnWk3hhWmiu7CQGjLIqRVEzL1u
-         FYTA==
-X-Gm-Message-State: AGi0PuaIGzOswm9K2MS35fWdNUbeDajNjgDhazxGuc/aqmK2BlXewPB7
-        6h5DP9Ih5iSHpBj0yv9/SRU/erIN
-X-Google-Smtp-Source: APiQypLtz8ZlhkbSPJQhw6xzzu7Sl0grZTmkoKmq7v1/GzJa20URzGz5zchw1EEDu08OLtEvSFRdww==
-X-Received: by 2002:aa7:9a45:: with SMTP id x5mr8280691pfj.248.1585914674075;
-        Fri, 03 Apr 2020 04:51:14 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id u8sm2172821pgl.19.2020.04.03.04.51.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Apr 2020 04:51:13 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 19:49:01 +0800
-From:   Geliang Tang <geliangtang@gmail.com>
-To:     Matthieu Baerts <matthieu.baerts@tessares.net>
-Cc:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Fri, 3 Apr 2020 07:51:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37400 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbgDCLve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 07:51:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D2341AC50;
+        Fri,  3 Apr 2020 11:51:29 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 13:51:27 +0200
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mptcp: move pr_fmt defining to protocol.h
-Message-ID: <20200403114901.GB10201@OptiPlex>
-References: <34c83a5fe561739c7b85a3c4959eb44c3155d075.1585899578.git.geliangtang@gmail.com>
- <9674b6ce-3888-557e-8f32-230671363903@tessares.net>
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
+Message-ID: <20200403115127.GY25468@kitsune.suse.cz>
+References: <20200225173541.1549955-1-npiggin@gmail.com>
+ <cover.1584620202.git.msuchanek@suse.de>
+ <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
+ <1585039473.da4762n2s0.astroid@bobo.none>
+ <20200324193833.GH25468@kitsune.suse.cz>
+ <1585896170.ohti800w9v.astroid@bobo.none>
+ <20200403105234.GX25468@kitsune.suse.cz>
+ <1585913065.zoacp2kzsv.astroid@bobo.none>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <9674b6ce-3888-557e-8f32-230671363903@tessares.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1585913065.zoacp2kzsv.astroid@bobo.none>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 12:29:27PM +0200, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 03/04/2020 09:57, Geliang Tang wrote:
-> > Some of the mptcp logs didn't print out the format string "MPTCP":
+On Fri, Apr 03, 2020 at 09:26:27PM +1000, Nicholas Piggin wrote:
+> Michal Suchánek's on April 3, 2020 8:52 pm:
+> > Hello,
 > > 
-> > [  129.185774] DSS
-> > [  129.185774] data_fin=0 dsn64=1 use_map=1 ack64=1 use_ack=1
-> > [  129.185774] data_ack=5481534886531492085
-> > [  129.185775] data_seq=15725204003114694615 subflow_seq=1425409 data_len=5216
-> > [  129.185776] subflow=0000000093526a92 fully established=1 seq=0:0 remaining=28
-> > [  129.185776] MPTCP: msk=00000000d5a704a6 ssk=00000000b5aabc31 data_avail=0 skb=0000000088f05424
-> > [  129.185777] MPTCP: seq=15725204003114694615 is64=1 ssn=1425409 data_len=5216 data_fin=0
-> > [  129.185777] MPTCP: msk=00000000d5a704a6 ssk=00000000b5aabc31 status=0
-> > [  129.185778] MPTCP: msk ack_seq=da3b25b9a233c2c7 subflow ack_seq=da3b25b9a233c2c7
-> > [  129.185778] MPTCP: msk=00000000d5a704a6 ssk=00000000b5aabc31 data_avail=1 skb=000000000caed2cc
-> > [  129.185779] subflow=0000000093526a92 fully established=1 seq=0:0 remaining=28
+> > there are 3 variants of the function
 > > 
-> > So this patch moves the pr_fmt defining from protocol.c to protocol.h, which
-> > is included by all the C files. Then we can get the same format string
-> > "MPTCP" in all mptcp logs like this:
+> > read_user_stack_64
 > > 
-> > [  141.854787] MPTCP: DSS
-> > [  141.854788] MPTCP: data_fin=0 dsn64=1 use_map=1 ack64=1 use_ack=1
-> > [  141.854788] MPTCP: data_ack=18028325517710311871
-> > [  141.854788] MPTCP: data_seq=6163976859259356786 subflow_seq=3309569 data_len=8192
-> > [  141.854789] MPTCP: msk=000000005847a66a ssk=0000000022469903 data_avail=0 skb=00000000dd95efc3
-> > [  141.854789] MPTCP: seq=6163976859259356786 is64=1 ssn=3309569 data_len=8192 data_fin=0
-> > [  141.854790] MPTCP: msk=000000005847a66a ssk=0000000022469903 status=0
-> > [  141.854790] MPTCP: msk ack_seq=558ad84b9be1d162 subflow ack_seq=558ad84b9be1d162
-> > [  141.854791] MPTCP: msk=000000005847a66a ssk=0000000022469903 data_avail=1 skb=000000000b8926f6
-> > [  141.854791] MPTCP: subflow=00000000e4e4579c fully established=1 seq=0:0 remaining=28
-> > [  141.854792] MPTCP: subflow=00000000e4e4579c fully established=1 seq=0:dcdf2f3b remaining=28
+> > 32bit read_user_stack_32
+> > 64bit read_user_Stack_32
 > 
-> Good idea to uniform that.
-> I think it can be useful for MPTCP devs to add a different prefix in each
-> MPTCP .c files but this small improvement can be done later.
+> Right.
 > 
-> LGTM, thanks Geliang!
+> > On Fri, Apr 03, 2020 at 05:13:25PM +1000, Nicholas Piggin wrote:
+> [...]
+> >>  #endif /* CONFIG_PPC64 */
+> >>  
+> >> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+> >> +{
+> >> +	return __read_user_stack(ptr, ret, sizeof(*ret));
+> > Does not work for 64bit read_user_stack_32 ^ this should be 4.
+> > 
+> > Other than that it should preserve the existing logic just fine.
 > 
-> Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+> sizeof(int) == 4 on 64bit so it should work.
+> 
+Right, the type is different for the 32bit and 64bit version.
 
-Hi Matthieu,
+Thanks
 
-Thanks for your reply.
-
-I have already resend this patch to you, patch v2, a better version, add
-pr_fmt defines in each .c files.
-
--Geliang
+Michal
