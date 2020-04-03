@@ -2,116 +2,315 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632B2C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2CBC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335F4206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57BA206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="l5k7RPdv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hSiP+tbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390962AbgDCSXM (ORCPT
+        id S2403900AbgDCSYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:23:12 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55765 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728368AbgDCSXH (ORCPT
+        Fri, 3 Apr 2020 14:24:12 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40867 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbgDCSYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:23:07 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r16so8096650wmg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:23:05 -0700 (PDT)
+        Fri, 3 Apr 2020 14:24:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id h11so3024280plk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:24:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=MwGha92408pxCYDxxspuAmHh54GTghbfJZy7VaH8q+U=;
-        b=l5k7RPdvkJF+lxF7qzR+pXrsPckzYVQI+jdm925UI67HmNyhou2mP6kb3mHc6z7Tsd
-         GuKHul7AwOV27kbgCEMGb62b79TxlGYREPMW8LF0nU+WsIIiuit4UeYU2rR6RTXCRoYQ
-         RpQwlvPrqwmPsgIrDlCOXcrDej4rwVNk9KPXxOR5taQtXEt9IdKU9ItXnmuNMbNBEvJv
-         MMrTZ9GsAXg2ELBDY4LOHPIZuxzAoYcdUDgy1hDCkzm1fV3oYRTyE+CToW3qfsJ9hwu1
-         zCxfRRuMSdaGjlRNCc5pzsABAZZrtFeK5OO/Act1qAgVxr/2IqbHnTG1UBoTeRH4ZbsG
-         tgVA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F6nEi34wGHl5ptuJvEUUsZZ8ppzvgbFtnHK/ANYoAz4=;
+        b=hSiP+tbh1HMst9CJTr4abEA9o8la3VX16GcMbJ1GhprFlwJ3asEkpsMOUMAEACpP6s
+         QnesiQRf5CySslF5VEN4MiVG5d1vZzMQkMCfPCFbZ0C8lRbzr8NY6dYciX9/45/gB6Ah
+         dnqNvKaze1eI4iEpUYIRLRLdfhjnfAG1dnSF90d24Eq3YCORbhhAhp7+okqa5nl3mA6Y
+         Lnh35gwuyGr/99OYrJmQ4VXLoTDzL6HkI76WhWDwytrs/GzDan+XrVhCRNEAeK6Imo2H
+         8v97yoerUxvCPRm/ha/NVfoI6JitZRjHkiEwlGvS27XUDO6L8I7ZCDa3fzxETlvQE2QD
+         8DmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=MwGha92408pxCYDxxspuAmHh54GTghbfJZy7VaH8q+U=;
-        b=ip6XT4TtC9lZAIYk44IfqKbuBsIomu8Z9rukJkKbl8MIQdNhfKwEDTqFtjFqeY3wu2
-         J0Z0wHkR+rQmYSU3T57scGBd9m0KzQOFbw0M6U5ERh1XthrT+oOugB88iw5mwKZ1KDo2
-         6kSAR8RJbw/VIk296E9eGF5c84Hhg1HuP/WF+GmAIQ7/0aZEN5tBfe0T0K8Ze39MeZdN
-         63fP6hBGQ9yGdgTmcKiFG3fY1KXYLI+sEHBTkn6jzwCXa07Cv4vs8GeP9KWRw5f5Se1j
-         5k7nyGDPBdmjgDl2R2598IHtkujxJ1M4/EEF4Z+dSoPCs/XVkq6/SFFcm4Ev5ac5S4F5
-         F02g==
-X-Gm-Message-State: AGi0Pub5tVo6OMBrL8I8/CnkAj0bGCA5gFHCqlcBfenZlNjJnsYwglU4
-        8bb74JuiT9GWXjG/wzenGD9A0Q==
-X-Google-Smtp-Source: APiQypJritoWrsVYI2JU3TJzbEoC1DtW/I+hYQewcf/pDlmR+Oc2Sv4axyiXtp+KWKO5WWJLRoac5w==
-X-Received: by 2002:a1c:f302:: with SMTP id q2mr5047552wmq.185.1585938185031;
-        Fri, 03 Apr 2020 11:23:05 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id b199sm13630456wme.23.2020.04.03.11.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 11:23:04 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 20:23:42 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     devicetree@vger.kernel.org
-Cc:     Jason Kridner <jkridner@gmail.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org,
-        Caleb Robey <c-robey@ti.com>, Jason Kridner <jdk@ti.com>
-Subject: [PATCH v3] dt-bindings: Add vendor prefix for BeagleBoard.org
-Message-ID: <20200403182342.GA27383@x1>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F6nEi34wGHl5ptuJvEUUsZZ8ppzvgbFtnHK/ANYoAz4=;
+        b=Czc9+HQGa7WHC488+EnCd2TxlWghusnDwAXbytmImgORU00b5r89EwcUITbXs6AUf4
+         wVll0YjzJ2RUqFrq2b0jAVfMWN46m9FViNTJvzskttUKR/DLeq/haQgCTCzmRbnzibSA
+         3gkx4xq/PBM9XKYNmmdzoKS/6cXiJlK9pEfLA4e4UXIW4+NhYmx/MjzqMcKD0du+4B2t
+         4Wt6YHahUq7jCcpRHbpPXYt7CoRxqfMIilzpexb+2+C3dyupnDHZGZjvZXSCe3AAafTH
+         pxEiA+YduOMlkVY8HgBpj51pNoPEXlTEj/kU2ZdOyKhDjZygAg8vgft2HJZAMSBGn8CY
+         YR+A==
+X-Gm-Message-State: AGi0PubF2vPHFqpkbnQXKALTX3PwZW5gHdUupAX+GnhfUvaHolMRe1J8
+        lCnxdK6l4cL3bcM2zUrPvVVeBDl091WDqGwZK+dNYA==
+X-Google-Smtp-Source: APiQypLpRmtfIY3nrhe76N1I9CbEK0fUm3aPCBNyzCk8ft5ztwvBQBHkgBefdOI0rk/4y+wgjwgDf2weipZMz/4UC0o=
+X-Received: by 2002:a17:90a:c08c:: with SMTP id o12mr11521946pjs.27.1585938249318;
+ Fri, 03 Apr 2020 11:24:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200403051709.22407-1-masahiroy@kernel.org>
+In-Reply-To: <20200403051709.22407-1-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 3 Apr 2020 11:23:57 -0700
+Message-ID: <CAKwvOdnaZ6qDVxaPY-GEH8pdUkzH6eqm16ok9_wzRSVRG-1kiQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Matthias_M=C3=A4nnich?= <maennich@google.com>,
+        Sandeep Patil <sspatil@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add vendor prefix for BeagleBoard.org Foundation
+On Thu, Apr 2, 2020 at 10:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> As Documentation/kbuild/llvm.rst implies, building the kernel with a
+> full set of LLVM tools gets very verbose and unwieldy.
+>
+> Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
+> GCC and Binutils. You can pass LLVM=1 from the command line or as an
+> environment variable. Then, Kbuild will use LLVM toolchains in your
+> PATH environment.
+>
+> Please note LLVM=1 does not turn on the LLVM integrated assembler.
+> You need to explicitly pass AS=clang to use it. When the upstream
+> kernel is ready for the integrated assembler, I think we can make
+> it default.
 
-Signed-off-by: Jason Kridner <jdk@ti.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
-Changes in v3:
-  - add SoB from drew@beagleboard.org
-  - email patch from drew@beagleboard.org
+Having this behavior change over time may be surprising.  I'd rather
+that if you want to not use the integrated assembler, you explicitly
+negate it, or just don't use the LLVM=1 syntax, ie. `make CC=clang
+LD=ld.lld ...`.
 
-Changes in v2:
-  - Use 'beagle' rather than 'beagleboard.org' to be shorter and avoid
-    needing to quote within a yaml regular expression.
-  - Assign 'from' to author e-mail address.
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+We could modify how `-no-integrated-as` is chosen when LLVM=1.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 967e78c5ec0a..1cce6641b21b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -139,6 +139,8 @@ patternProperties:
-     description: Shenzhen AZW Technology Co., Ltd.
-   "^bananapi,.*":
-     description: BIPAI KEJI LIMITED
-+  "^beagle,.*":
-+    description: BeagleBoard.org Foundation
-   "^bhf,.*":
-     description: Beckhoff Automation GmbH & Co. KG
-   "^bitmain,.*":
+make LLVM=1 LLVMIA=0 ... # add `-no-integrated-as`
+# what the flag is doesn't really matter to me, something shorter might be nice.
+make LLVM=1 # use all LLVM tools
+
+Since we got rid of $(AS), it would be appropriate to remove/change it
+there, since no one really relies on AS=clang right now. (We do have 1
+of our 60+ CI targets using it, but we can also change that trivially.
+So I think we have a lot of freedom to change how `-no-integrated-as`
+is set.
+
+This could even be independent of this patch.
+
+>
+> We discussed what we need, and we agreed to go with a simple boolean
+> switch (https://lkml.org/lkml/2020/3/28/494).
+>
+> Some items in the discussion:
+>
+> - LLVM_DIR
+>
+>   When multiple versions of LLVM are installed, I just thought supporting
+>   LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
+>
+>   CC      = $(LLVM_DIR)clang
+>   LD      = $(LLVM_DIR)ld.lld
+>     ...
+>
+>   However, we can handle this by modifying PATH. So, we decided to not do
+>   this.
+>
+> - LLVM_SUFFIX
+>
+>   Some distributions (e.g. Debian) package specific versions of LLVM with
+>   naming conventions that use the version as a suffix.
+>
+>   CC      = clang$(LLVM_SUFFIX)
+>   LD      = ld.lld(LLVM_SUFFIX)
+>     ...
+>
+>   will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
+>   but the suffixed versions in /usr/bin/ are symlinks to binaries in
+>   /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
+>
+> - HOSTCC, HOSTCXX, etc.
+>
+>   We can switch the host compilers in the same way:
+>
+>   ifneq ($(LLVM),)
+>   HOSTCC       = clang
+>   HOSTCXX      = clang++
+>   else
+>   HOSTCC       = gcc
+>   HOSTCXX      = g++
+>   endif
+>
+>   This may the right thing to do, but I could not make up my mind.
+>   Because we do not frequently switch the host compiler, a counter
+>   solution I had in my mind was to leave it to the default of the
+>   system.
+>
+>   HOSTCC       = cc
+>   HOSTCXX      = c++
+>
+>   Many distributions support update-alternatives to switch the default
+>   to GCC, Clang, or whatever, but reviewers were opposed to this
+>   approach. So, this commit does not touch the host tools.
+
+update-alternatives assumes you've installed Clang via a package manager?
+$ update-alternatives --list cc
+/usr/bin/gcc
+On my system even though clang and friends are in my PATH.
+
+And previously, there was feedback that maybe folks don't want to
+change `cc` on their systems just for Clang kernel builds.
+https://lkml.org/lkml/2020/3/30/836
+https://lkml.org/lkml/2020/3/30/838
+
+A goal for ClangBuiltLinux is to build a kernel image with no GCC or
+binutils installed on the host.  Let the record reflect that.  And
+there's been multiple complaints that the existing syntax is too long
+for specifying all of the tools.
+
+LLVM=1 is meant to be one flag.  Not `make LLVM=1 HOSTCC=clang
+HOSTCXX=clang`.  If folks want fine grain flexibility, use the
+existing command line interface, which this patch does not change.
+LLVM=1 is opinionated, and inflexible, because it makes a strong
+choice to enable LLVM for everything.
+
+Another reason why I don't want to change these over time, and why I
+want them all to be in sync is that there are 4 different CI systems
+for the kernel, and they are currently fragmented in terms of who is
+using what tools:
+
+KernelCI: CC=clang only
+Kbuild test robot aka 0day bot: CC=clang LD=ld.lld
+Linaro TCWG: CC=clang only
+our CI: a complete mix due to combinatorial explosion, but more
+coverage of LLVM than everyone else.
+
+That is a mess that we must solve.  Having 1 flag that works
+consistently across systems is one solution.  Now if those were all
+using LLVM=1, but some were enabling Clang's integrated assembler, and
+some weren't because we changed the default over time, then we'd be
+right back to this mismatch between systems.  I'd much rather draw the
+line in the sand, and say "this is how this flag will work, since day
+1."  Maybe it's too rigid, but it's important to me that if we create
+something new to solve multiple objectives (1. simplifies existing
+interface. 2. turns on everything.) that it does so.  It is a partial
+solution, if it eliminates some of the flags while leaving others. I
+want a full solution.
+
+If folks want the flexibility to mix and match tools, the existing
+interface is capable.  But for us to track who is using what, we need
+1 flag that we know is not different depending on the cc of the
+system.  Once clang's integrated assembler is good to go, we will
+begin recommending LLVM=1 to everyone.  And we want feedback if we
+regress building the host utilities during a kernel build, even if
+there are not many.
+
+I'm on the fence about having all of the above satisfied by one patch,
+or taking this patch as is and following up on the above two points
+(related to disabling `-no-integrated-as` and setting HOSTCC).  I
+trust your judgement and respect your decisions, so I'll defer to you
+Masahiro, but I need to make explicit the design goals.  Maybe with
+this additional context it can help inform the design.
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  Documentation/kbuild/kbuild.rst |  5 +++++
+>  Documentation/kbuild/llvm.rst   |  5 +++++
+>  Makefile                        | 20 ++++++++++++++++----
+>  3 files changed, 26 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
+> index 510f38d7e78a..2d1fc03d346e 100644
+> --- a/Documentation/kbuild/kbuild.rst
+> +++ b/Documentation/kbuild/kbuild.rst
+> @@ -262,3 +262,8 @@ KBUILD_BUILD_USER, KBUILD_BUILD_HOST
+>  These two variables allow to override the user@host string displayed during
+>  boot and in /proc/version. The default value is the output of the commands
+>  whoami and host, respectively.
+> +
+> +LLVM
+> +----
+> +If this variable is set to 1, Kbuild will use Clang and LLVM utilities instead
+> +of GCC and GNU binutils to build the kernel.
+> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> index d6c79eb4e23e..4602369f6a4f 100644
+> --- a/Documentation/kbuild/llvm.rst
+> +++ b/Documentation/kbuild/llvm.rst
+> @@ -55,6 +55,11 @@ additional parameters to `make`.
+>           READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
+>           HOSTLD=ld.lld
+>
+> +You can use a single switch `LLVM=1` to use LLVM utilities by default (except
+> +for building host programs).
+> +
+> +       make LLVM=1 HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar HOSTLD=ld.lld
+> +
+
+I would like this to be the preferred method of building to LLVM, so
+it should go first, followed by a footnote that says something along
+the lines of "if you need something more flexible, the tools can be
+specified in a more fine grain manner via the traditional syntax
+below:"
+
+>  Getting Help
+>  ------------
+>
+> diff --git a/Makefile b/Makefile
+> index c91342953d9e..6db89ecdd942 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -409,16 +409,28 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
+>  KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+>
+>  # Make variables (CC, etc...)
+> -LD             = $(CROSS_COMPILE)ld
+> -CC             = $(CROSS_COMPILE)gcc
+>  CPP            = $(CC) -E
+> +ifneq ($(LLVM),)
+> +CC             = clang
+> +LD             = ld.lld
+> +AR             = llvm-ar
+> +NM             = llvm-nm
+> +OBJCOPY                = llvm-objcopy
+> +OBJDUMP                = llvm-objdump
+> +READELF                = llvm-readelf
+> +OBJSIZE                = llvm-size
+> +STRIP          = llvm-strip
+> +else
+> +CC             = $(CROSS_COMPILE)gcc
+> +LD             = $(CROSS_COMPILE)ld
+>  AR             = $(CROSS_COMPILE)ar
+>  NM             = $(CROSS_COMPILE)nm
+> -STRIP          = $(CROSS_COMPILE)strip
+>  OBJCOPY                = $(CROSS_COMPILE)objcopy
+>  OBJDUMP                = $(CROSS_COMPILE)objdump
+> -OBJSIZE                = $(CROSS_COMPILE)size
+>  READELF                = $(CROSS_COMPILE)readelf
+> +OBJSIZE                = $(CROSS_COMPILE)size
+> +STRIP          = $(CROSS_COMPILE)strip
+> +endif
+>  PAHOLE         = pahole
+>  LEX            = flex
+>  YACC           = bison
+> --
+> 2.17.1
+>
+
+
 -- 
-2.17.1
+Thanks,
+~Nick Desaulniers
