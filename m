@@ -2,90 +2,79 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B01C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECBFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176A220787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A3D2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:32:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="obY0/wpI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vZd1D3Y7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390532AbgDCIbl (ORCPT
+        id S2390424AbgDCIco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:31:41 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54928 "EHLO
+        Fri, 3 Apr 2020 04:32:44 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56112 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389781AbgDCIbl (ORCPT
+        with ESMTP id S2388482AbgDCIcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:31:41 -0400
+        Fri, 3 Apr 2020 04:32:43 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0338OGmp055614;
-        Fri, 3 Apr 2020 08:30:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=+eYpj3cHN7M9X5gjvpZpB28S2rfw41z8Hx4eWOPQmqc=;
- b=obY0/wpIduQrTs47sSo/eluXnEofW8KcMUwyYVc+JNZ8h06vI2YAxjQZDANz0qjW4Jzm
- tg3w+rvrKG8Fx5Y0nYfSe4eODjuWrQ5ZBKzaMCrl+YlVL17II4mgc1sFxd7cTNE/TabD
- 2fDQd4ggtzsk75a0JDt4+MgVBJrbT4hiAINiRiP7b+UIhdddZKtu12RRhh2j/xHOuuGA
- j3eUizifKl16HobLqjbscQPvS/mBQYS2rvHPasb0SK3XSGQn3HuaMLDLjpeOuIFndNhK
- l0Wp1fcBSs/2q9f5YGroyPougj4toKBsXLESH1HNn892AcnrVkT6luDxZU/dp33g7LFT Yg== 
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0338OFmP055609;
+        Fri, 3 Apr 2020 08:32:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=ss086libaRnicgxivCFTmSK24emVikB4VIk29pxOOEY=;
+ b=vZd1D3Y7F64qs8Q8Cy649TJgKeHskxw5L8yLqRWz7J6FaoQOUJ9ODdwVZ2wK6Y24L2Aj
+ OsLkQIcY+rYGXDB27HMp0FCNqP9zb+OUfqMk3lvoP+03eywzxU0+7qDzWYYJQhF2iwWs
+ eBbuBJuiG/P7z6wUwX0ftzg+L4YKOSgGaw4Cq7ox8FAEo0zi1edAAqyNN4HNN3ww1UMS
+ ceSRdPmgcn4pMcuOv8uFTAR02+SJ+xk/IAtmzhVHVmisEeL0wtd0E6W+cNO/cnvp57zl
+ 9IJMlVvVJOc382Vrqiqa7cCf8HgvQIK5mZQERaCjaBP6y6g5CicrLgXkAecISe8jdknu tw== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 303yunj9k3-1
+        by aserp2120.oracle.com with ESMTP id 303yunj9wt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 08:30:44 +0000
+        Fri, 03 Apr 2020 08:32:35 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0338MNp8180292;
-        Fri, 3 Apr 2020 08:30:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 302g4x1xj9-1
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0338WNeM052226;
+        Fri, 3 Apr 2020 08:32:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 302g4x20dw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 08:30:43 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0338UeKT004493;
-        Fri, 3 Apr 2020 08:30:40 GMT
-Received: from linux-1.home (/92.157.90.160)
+        Fri, 03 Apr 2020 08:32:35 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0338WXuW020986;
+        Fri, 3 Apr 2020 08:32:33 GMT
+Received: from kadam (/41.57.98.10)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Apr 2020 01:30:39 -0700
-Subject: Re: [RESEND][patch V3 05/23] tracing: Provide lockdep less
- trace_hardirqs_on/off() variants
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Paul McKenney <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-References: <20200320175956.033706968@linutronix.de>
- <20200320180032.895128936@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <322ac9e0-9567-8e7c-e2af-e9e1107717bf@oracle.com>
-Date:   Fri, 3 Apr 2020 10:34:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        with ESMTP ; Fri, 03 Apr 2020 01:32:33 -0700
+Date:   Fri, 3 Apr 2020 11:32:25 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com,
+        Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>,
+        Ben Chan <benchan@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] staging: gasket: Fix 4 over 80 char warnings
+Message-ID: <20200403083225.GX2001@kadam>
+References: <20200402053617.826678-1-jbwyatt4@gmail.com>
+ <20200402053617.826678-2-jbwyatt4@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200320180032.895128936@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402053617.826678-2-jbwyatt4@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
  mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030071
+ definitions=main-2004030072
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
  malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
@@ -97,90 +86,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/20/20 7:00 PM, Thomas Gleixner wrote:
-> trace_hardirqs_on/off() is only partially safe vs. RCU idle. The tracer
-> core itself is safe, but the resulting tracepoints can be utilized by
-> e.g. BPF which is unsafe.
+On Wed, Apr 01, 2020 at 10:36:16PM -0700, John B. Wyatt IV wrote:
+> Fix 4 over 80 char warnings by caching long enum values into local
+> variables.
 > 
-> Provide variants which do not contain the lockdep invocation so the lockdep
-> and tracer invocations can be split at the call site and placed properly.
+> All enums are only used once inside each function (and once inside
+> the entire file).
 > 
-> The new variants also do not use rcuidle as they are going to be called
-> from entry code after/before context tracking.
+> Reported by checkpatch.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
 > ---
-> V2: New patch
-> ---
->   include/linux/irqflags.h        |    4 ++++
->   kernel/trace/trace_preemptirq.c |   23 +++++++++++++++++++++++
->   2 files changed, 27 insertions(+)
+>  drivers/staging/gasket/apex_driver.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 > 
-> --- a/include/linux/irqflags.h
-> +++ b/include/linux/irqflags.h
-> @@ -29,6 +29,8 @@
->   #endif
->   
->   #ifdef CONFIG_TRACE_IRQFLAGS
-> +  extern void __trace_hardirqs_on(void);
-> +  extern void __trace_hardirqs_off(void);
->     extern void trace_hardirqs_on(void);
->     extern void trace_hardirqs_off(void);
->   # define trace_hardirq_context(p)	((p)->hardirq_context)
-> @@ -52,6 +54,8 @@ do {						\
->   	current->softirq_context--;		\
->   } while (0)
->   #else
-> +# define __trace_hardirqs_on()		do { } while (0)
-> +# define __trace_hardirqs_off()		do { } while (0)
->   # define trace_hardirqs_on()		do { } while (0)
->   # define trace_hardirqs_off()		do { } while (0)
->   # define trace_hardirq_context(p)	0
-> --- a/kernel/trace/trace_preemptirq.c
-> +++ b/kernel/trace/trace_preemptirq.c
-> @@ -19,6 +19,17 @@
->   /* Per-cpu variable to prevent redundant calls when IRQs already off */
->   static DEFINE_PER_CPU(int, tracing_irq_cpu);
->   
-> +void __trace_hardirqs_on(void)
-> +{
-> +	if (this_cpu_read(tracing_irq_cpu)) {
-> +		if (!in_nmi())
-> +			trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
-> +		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
-> +		this_cpu_write(tracing_irq_cpu, 0);
-> +	}
-> +}
-> +NOKPROBE_SYMBOL(__trace_hardirqs_on);
+> diff --git a/drivers/staging/gasket/apex_driver.c b/drivers/staging/gasket/apex_driver.c
+> index 46199c8ca441..f48209ec7d24 100644
+> --- a/drivers/staging/gasket/apex_driver.c
+> +++ b/drivers/staging/gasket/apex_driver.c
+> @@ -253,6 +253,8 @@ static int apex_get_status(struct gasket_dev *gasket_dev)
+>  /* Enter GCB reset state. */
+>  static int apex_enter_reset(struct gasket_dev *gasket_dev)
+>  {
+> +	int idle_gen_reg = APEX_BAR2_REG_IDLEGENERATOR_IDLEGEN_IDLEREGISTER;
 > +
 
-It would be good to have a comment which highlights the difference between
-__trace_hardirqs_on/off and trace_hardirqs_on/off because the code difference
-is not obvious and the function names are so similar.
+Sorry, but I also hate these where we have a one time use temporary
+variable to get around the 80 character rule.  Generally, avoid pointless
+indirection.  The original code is better.
 
-alex.
+regards,
+dan carpenter
 
->   void trace_hardirqs_on(void)
->   {
->   	if (this_cpu_read(tracing_irq_cpu)) {
-> @@ -33,6 +44,18 @@ void trace_hardirqs_on(void)
->   EXPORT_SYMBOL(trace_hardirqs_on);
->   NOKPROBE_SYMBOL(trace_hardirqs_on);
->   
-> +void __trace_hardirqs_off(void)
-> +{
-> +	if (!this_cpu_read(tracing_irq_cpu)) {
-> +		this_cpu_write(tracing_irq_cpu, 1);
-> +		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
-> +		if (!in_nmi())
-> +			trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
-> +	}
-> +
-> +}
-> +NOKPROBE_SYMBOL(__trace_hardirqs_off);
-> +
->   void trace_hardirqs_off(void)
->   {
->   	if (!this_cpu_read(tracing_irq_cpu)) {
-> 
