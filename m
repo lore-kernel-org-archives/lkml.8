@@ -2,150 +2,118 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1718CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD9FC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE66E2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:59:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwhpdihP"
+	by mail.kernel.org (Postfix) with ESMTP id A61172073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390866AbgDCM7y (ORCPT
+        id S2390887AbgDCM77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:59:54 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34511 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgDCM7y (ORCPT
+        Fri, 3 Apr 2020 08:59:59 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:36454 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbgDCM75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:59:54 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m2so7161001otr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:59:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y7Q3Hqa9cJeyKOoOZW6QJxbkxoMfDJiYc9Ly72DE2g4=;
-        b=XwhpdihPCZ6MrVtFFfzmhgdHBl+sdd4Zne7WLMu+c7HgRSMKQN25AQWkkgikDXyWIA
-         l0iUrkPDulUMAkRCH9OZDtjV0Yib4lr//eigw+nZejSXPuAQxuiwpjoku4iaNwqEUf2e
-         43dN0YGHm+xTk0SB2zXqtF9P9DWhI02qMSsIFxF6k/jsjbIRgGA2ECicMgLbiDdEUrlL
-         j2GnNGikZMuK8F1N7qKtc/eXoOiJAA5YtedUk+EGt2sITT7hHax9yH/MfZCqWrdLRItK
-         bKkHKcfsi0QOdHgJSEcpqGU8MxtUwBGHCCzv2KkSAOPn3ftphDGw5sGjYIecSUNbo/Yj
-         50DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=y7Q3Hqa9cJeyKOoOZW6QJxbkxoMfDJiYc9Ly72DE2g4=;
-        b=cxt5O3847VvMuKGQOPEF1GiMg/FtmQe5LVa5ZuW+W6yievHtTLteNkiJgPASBWxWOj
-         U3DcAQrkP7MDgu6SkAMYANxPwp6Ff6V6zT51IwXpBfNkHq+i2LzuMJzZ1RCS9KSzz7u8
-         PKCj+XiUbNO4hiVxezaVpC2VevtB5tcmXBp7rGRg3CMECg41N42WHAIhAi4GIa5wuL9r
-         7XU/5Ixe+2R4YwySId+zGPoWLcCH11fbVo+ImmmgJVsMRY+lY4SIW6kQJLqwuLUH0VSL
-         EcO4BqRkbV2HbKYfZCLEHdtm5uX0IqA0T5k1xr2tftvanku2AL6fF7AOvjB8zhZX4AeI
-         7Qig==
-X-Gm-Message-State: AGi0PuYUVIR/uoRYDX/1LtpsQcWurq5nqTGFJiTXwdao0AEyrWBiYby/
-        HXRLK4d+Oq2ror3/mSEmTQ==
-X-Google-Smtp-Source: APiQypJ5m92OvpyH+hoXOHYy6zPzNoMs3OJ7jGgrL+XJRaqcC1fvNp/Qy1Rjn9o6gELS2SAO1tesKg==
-X-Received: by 2002:a9d:600b:: with SMTP id h11mr5948889otj.210.1585918793563;
-        Fri, 03 Apr 2020 05:59:53 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.130.101])
-        by smtp.gmail.com with ESMTPSA id 69sm2080161otv.8.2020.04.03.05.59.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 05:59:53 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
-        by serve.minyard.net (Postfix) with ESMTPSA id 2A7AB18016D;
-        Fri,  3 Apr 2020 12:59:52 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 07:59:50 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Wen Yang <wenyang@linux.alibaba.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ipmi: fix hung processes in __get_guid()
-Message-ID: <20200403125950.GQ2910@minyard.net>
-Reply-To: minyard@acm.org
-References: <20200403090408.58745-1-wenyang@linux.alibaba.com>
+        Fri, 3 Apr 2020 08:59:57 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jKLvL-0003Ro-SW; Fri, 03 Apr 2020 06:59:51 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jKLvK-0004vx-B3; Fri, 03 Apr 2020 06:59:51 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        syzbot <syzbot+f675f964019f884dbd0f@syzkaller.appspotmail.com>,
+        adobriyan@gmail.com, akpm@linux-foundation.org,
+        allison@lohutok.net, areber@redhat.com, aubrey.li@linux.intel.com,
+        avagin@gmail.com, bfields@fieldses.org, christian@brauner.io,
+        cyphar@cyphar.com, gregkh@linuxfoundation.org, guro@fb.com,
+        jlayton@kernel.org, joel@joelfernandes.org, keescook@chromium.org,
+        linmiaohe@huawei.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
+        peterz@infradead.org, sargun@sargun.me,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk
+References: <00000000000011d66805a25cd73f@google.com>
+        <20200403091135.GA3645@redhat.com>
+        <20200403093612.mtd7edubsng24uuh@wittgenstein>
+Date:   Fri, 03 Apr 2020 07:57:04 -0500
+In-Reply-To: <20200403093612.mtd7edubsng24uuh@wittgenstein> (Christian
+        Brauner's message of "Fri, 3 Apr 2020 11:36:12 +0200")
+Message-ID: <87y2rc7mn3.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403090408.58745-1-wenyang@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-XM-SPF: eid=1jKLvK-0004vx-B3;;;mid=<87y2rc7mn3.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19N3Q2vee0CO2AL8kND4TBE4La6X4qmAFM=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: possible deadlock in send_sigurg
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 05:04:08PM +0800, Wen Yang wrote:
-> The wait_event() function is used to detect command completion.
-> When send_guid_cmd() returns an error, smi_send() has not been
-> called to send data. Therefore, wait_event() should not be used
-> on the error path, otherwise it will cause the following warning:
+Christian Brauner <christian.brauner@ubuntu.com> writes:
 
-Oops, yeah, that's a problem.  Thanks for the patch, I've put it into my
-next tree.
+> On Fri, Apr 03, 2020 at 11:11:35AM +0200, Oleg Nesterov wrote:
+>> On 04/02, syzbot wrote:
+>> >
+>> >                       lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
+>> >                       __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+>> >                       _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+>> >                       spin_lock include/linux/spinlock.h:353 [inline]
+>> >                       proc_pid_make_inode+0x1f9/0x3c0 fs/proc/base.c:1880
+>> 
+>> Yes, spin_lock(wait_pidfd.lock) is not safe...
+>> 
+>> Eric, at first glance the fix is simple.
+>> 
+>> Oleg.
+>> 
+>> 
+>> diff --git a/fs/proc/base.c b/fs/proc/base.c
+>
+> Um, when did this lock get added to proc/base.c in the first place and
+> why has it been abused for this?
 
-I've requested a stable backport.
+Because struct pid is too bloated already.
 
--corey
+> People just recently complained loudly about this in the
+> cred_guard_mutex thread that abusing locks for things they weren't
+> intended for is a bad idea...
 
-> 
-> [ 1361.588808] systemd-udevd   D    0  1501   1436 0x00000004
-> [ 1361.588813]  ffff883f4b1298c0 0000000000000000 ffff883f4b188000 ffff887f7e3d9f40
-> [ 1361.677952]  ffff887f64bd4280 ffffc90037297a68 ffffffff8173ca3b ffffc90000000010
-> [ 1361.767077]  00ffc90037297ad0 ffff887f7e3d9f40 0000000000000286 ffff883f4b188000
-> [ 1361.856199] Call Trace:
-> [ 1361.885578]  [<ffffffff8173ca3b>] ? __schedule+0x23b/0x780
-> [ 1361.951406]  [<ffffffff8173cfb6>] schedule+0x36/0x80
-> [ 1362.010979]  [<ffffffffa071f178>] get_guid+0x118/0x150 [ipmi_msghandler]
-> [ 1362.091281]  [<ffffffff810d5350>] ? prepare_to_wait_event+0x100/0x100
-> [ 1362.168533]  [<ffffffffa071f755>] ipmi_register_smi+0x405/0x940 [ipmi_msghandler]
-> [ 1362.258337]  [<ffffffffa0230ae9>] try_smi_init+0x529/0x950 [ipmi_si]
-> [ 1362.334521]  [<ffffffffa022f350>] ? std_irq_setup+0xd0/0xd0 [ipmi_si]
-> [ 1362.411701]  [<ffffffffa0232bd2>] init_ipmi_si+0x492/0x9e0 [ipmi_si]
-> [ 1362.487917]  [<ffffffffa0232740>] ? ipmi_pci_probe+0x280/0x280 [ipmi_si]
-> [ 1362.568219]  [<ffffffff810021a0>] do_one_initcall+0x50/0x180
-> [ 1362.636109]  [<ffffffff812231b2>] ? kmem_cache_alloc_trace+0x142/0x190
-> [ 1362.714330]  [<ffffffff811b2ae1>] do_init_module+0x5f/0x200
-> [ 1362.781208]  [<ffffffff81123ca8>] load_module+0x1898/0x1de0
-> [ 1362.848069]  [<ffffffff811202e0>] ? __symbol_put+0x60/0x60
-> [ 1362.913886]  [<ffffffff8130696b>] ? security_kernel_post_read_file+0x6b/0x80
-> [ 1362.998514]  [<ffffffff81124465>] SYSC_finit_module+0xe5/0x120
-> [ 1363.068463]  [<ffffffff81124465>] ? SYSC_finit_module+0xe5/0x120
-> [ 1363.140513]  [<ffffffff811244be>] SyS_finit_module+0xe/0x10
-> [ 1363.207364]  [<ffffffff81003c04>] do_syscall_64+0x74/0x180
-> 
-> Fixes: 50c812b2b951 ("[PATCH] ipmi: add full sysfs support")
-> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-> Cc: Corey Minyard <minyard@acm.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: openipmi-developer@lists.sourceforge.net
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/char/ipmi/ipmi_msghandler.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> index 64ba16dcb681..c48d8f086382 100644
-> --- a/drivers/char/ipmi/ipmi_msghandler.c
-> +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> @@ -3193,8 +3193,8 @@ static void __get_guid(struct ipmi_smi *intf)
->  	if (rv)
->  		/* Send failed, no GUID available. */
->  		bmc->dyn_guid_set = 0;
-> -
-> -	wait_event(intf->waitq, bmc->dyn_guid_set != 2);
-> +	else
-> +		wait_event(intf->waitq, bmc->dyn_guid_set != 2);
->  
->  	/* dyn_guid_set makes the guid data available. */
->  	smp_rmb();
-> -- 
-> 2.23.0
-> 
+The problem there is/was holding locks over places they shouldn't.
+It looks like I made an equally dump mistake with struct pid.
+
+That said can you take a look at calling putting do_notify_pidfd
+someplace sane.  I can't see how it makes sense to call that in
+the same set of circumstances where we notify the parent.
+
+Reparenting should not be a concern, nor should ptracing.  Which I think
+means that do_notify_pid can potentially get called many times more
+than it needs to be.
+
+Not to mention it is being called a bit too soon when called from
+do_notify_parent.  Which I saw earlier is causing problems.  Signal
+sending can call do_notify_parent early because everything just queues
+up and no action is taken.  Wake-ups on the other hand trigger more
+immediate action.
+
+There is no connection to the current bug except this discussion
+just remimded me about do_notify_pidfd and I figured I should say
+something before I forget again.
+
+Eric
