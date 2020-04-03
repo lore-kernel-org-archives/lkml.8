@@ -2,92 +2,277 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA12C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528D8C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9993C20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254862063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388268AbgDCG4E convert rfc822-to-8bit (ORCPT
+        id S2388174AbgDCHAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 02:56:04 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:37584 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729423AbgDCG4E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 02:56:04 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 7F820CECF9;
-        Fri,  3 Apr 2020 09:05:35 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v3 1/1] Bluetooth: Prioritize SCO traffic
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200323124503.v3.1.I17e2220fd0c0822c76a15ef89b882fb4cfe3fe89@changeid>
-Date:   Fri, 3 Apr 2020 08:56:01 +0200
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <7FD50BDC-A4B5-4ED9-8DAB-887039735800@holtmann.org>
-References: <20200323194507.90944-1-abhishekpandit@chromium.org>
- <20200323124503.v3.1.I17e2220fd0c0822c76a15ef89b882fb4cfe3fe89@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 3 Apr 2020 03:00:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56654 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730759AbgDCHAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 03:00:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D9D00ADC1;
+        Fri,  3 Apr 2020 07:00:22 +0000 (UTC)
+Subject: Re: [PATCH 2/4] drm/hisilicon: Code cleanup for hibmc_drv_vdac
+To:     Xinliang Liu <xinliang.liu@linaro.org>,
+        Tian Tao <tiantao6@hisilicon.com>
+Cc:     David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>, linuxarm@huawei.com,
+        kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de
+References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
+ <1583466184-7060-5-git-send-email-tiantao6@hisilicon.com>
+ <CAKoKPbwgiFdvfLHXoD9wPJvJ5yzMMrxNEEJUArSEvNdx46+m9Q@mail.gmail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <07040b3e-9137-10ef-9a18-381b0316fef9@suse.de>
+Date:   Fri, 3 Apr 2020 09:00:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAKoKPbwgiFdvfLHXoD9wPJvJ5yzMMrxNEEJUArSEvNdx46+m9Q@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="ZpAQgr4rgKRsm2Dtw09BFyu364lHgxHz7"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--ZpAQgr4rgKRsm2Dtw09BFyu364lHgxHz7
+Content-Type: multipart/mixed; boundary="KvchZNwh6Mib540wOsZ1oZ0hUXcq6lXYi";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>
+Cc: David Airlie <airlied@linux.ie>, Chen Feng <puck.chen@hisilicon.com>,
+ lkml <linux-kernel@vger.kernel.org>,
+ dri-devel <dri-devel@lists.freedesktop.org>, linuxarm@huawei.com,
+ kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de
+Message-ID: <07040b3e-9137-10ef-9a18-381b0316fef9@suse.de>
+Subject: Re: [PATCH 2/4] drm/hisilicon: Code cleanup for hibmc_drv_vdac
+References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
+ <1583466184-7060-5-git-send-email-tiantao6@hisilicon.com>
+ <CAKoKPbwgiFdvfLHXoD9wPJvJ5yzMMrxNEEJUArSEvNdx46+m9Q@mail.gmail.com>
+In-Reply-To: <CAKoKPbwgiFdvfLHXoD9wPJvJ5yzMMrxNEEJUArSEvNdx46+m9Q@mail.gmail.com>
 
-> When scheduling TX packets, send all SCO/eSCO packets first, check for
-> pending SCO/eSCO packets after every ACL/LE packet and send them if any
-> are pending.  This is done to make sure that we can meet SCO deadlines
-> on slow interfaces like UART.
-> 
-> If we were to queue up multiple ACL packets without checking for a SCO
-> packet, we might miss the SCO timing. For example:
-> 
-> The time it takes to send a maximum size ACL packet (1024 bytes):
-> t = 10/8 * 1024 bytes * 8 bits/byte * 1 packet / baudrate
->        where 10/8 is uart overhead due to start/stop bits per byte
-> 
-> Replace t = 3.75ms (SCO deadline), which gives us a baudrate of 2730666.
-> 
-> At a baudrate of 3000000, if we didn't check for SCO packets within 1024
-> bytes, we would miss the 3.75ms timing window.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> Changes in v3:
-> * Removed hci_sched_sync
-> 
-> Changes in v2:
-> * Refactor to check for SCO/eSCO after each ACL/LE packet sent
-> * Enabled SCO priority all the time and removed the sched_limit variable
-> 
-> net/bluetooth/hci_core.c | 106 +++++++++++++++++++++------------------
-> 1 file changed, 57 insertions(+), 49 deletions(-)
+--KvchZNwh6Mib540wOsZ1oZ0hUXcq6lXYi
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-patch has been applied to bluetooth-next tree.
+Hi
 
-However I have been a bit reluctant to apply this right away. I think when this code was originally written, we only had ACL and SCO packets. The world was pretty simple. And right now we also only have two packets types (ignoring ISO packets for now), but we added LE and eSCO as separate scheduling and thus “fake” packet types.
+Am 03.04.20 um 04:26 schrieb Xinliang Liu:
+> Hi Tao,
+>=20
+> On Fri, 6 Mar 2020 at 11:44, Tian Tao <tiantao6@hisilicon.com> wrote:
+>>
+>> code cleanup for hibmc_drv_vdac.c, no actual function changes.
+>>
+>> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+>> Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
+>> ---
+>>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 49 ++++++++-------=
+---------
+>>  1 file changed, 16 insertions(+), 33 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/driver=
+s/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+>> index 678ac2e..f0e6bb8 100644
+>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+>> @@ -52,32 +52,6 @@ static const struct drm_connector_funcs hibmc_conne=
+ctor_funcs =3D {
+>>         .atomic_destroy_state =3D drm_atomic_helper_connector_destroy_=
+state,
+>>  };
+>>
+>> -static struct drm_connector *
+>> -hibmc_connector_init(struct hibmc_drm_private *priv)
+>> -{
+>> -       struct drm_device *dev =3D priv->dev;
+>> -       struct drm_connector *connector;
+>> -       int ret;
+>> -
+>> -       connector =3D devm_kzalloc(dev->dev, sizeof(*connector), GFP_K=
+ERNEL);
+>> -       if (!connector) {
+>> -               DRM_ERROR("failed to alloc memory when init connector\=
+n");
+>> -               return ERR_PTR(-ENOMEM);
+>> -       }
+>> -
+>> -       ret =3D drm_connector_init(dev, connector,
+>> -                                &hibmc_connector_funcs,
+>> -                                DRM_MODE_CONNECTOR_VGA);
+>> -       if (ret) {
+>> -               DRM_ERROR("failed to init connector: %d\n", ret);
+>> -               return ERR_PTR(ret);
+>> -       }
+>> -       drm_connector_helper_add(connector,
+>> -                                &hibmc_connector_helper_funcs);
+>> -
+>> -       return connector;
+>> -}
+>> -
+>>  static void hibmc_encoder_mode_set(struct drm_encoder *encoder,
+>>                                    struct drm_display_mode *mode,
+>>                                    struct drm_display_mode *adj_mode)
+>> @@ -109,13 +83,6 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv=
+)
+>>         struct drm_connector *connector;
+>>         int ret;
+>>
+>> -       connector =3D hibmc_connector_init(priv);
+>> -       if (IS_ERR(connector)) {
+>> -               DRM_ERROR("failed to create connector: %ld\n",
+>> -                         PTR_ERR(connector));
+>> -               return PTR_ERR(connector);
+>> -       }
+>> -
+>>         encoder =3D devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNE=
+L);
+>>         if (!encoder) {
+>>                 DRM_ERROR("failed to alloc memory when init encoder\n"=
+);
+>> @@ -131,6 +98,22 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv=
+)
+>>         }
+>>
+>>         drm_encoder_helper_add(encoder, &hibmc_encoder_helper_funcs);
+>> +       connector =3D devm_kzalloc(dev->dev, sizeof(*connector), GFP_K=
+ERNEL);
+>> +       if (!connector) {
+>> +               DRM_ERROR("failed to alloc memory when init connector\=
+n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       ret =3D drm_connector_init(dev, connector,
+>> +                                &hibmc_connector_funcs,
+>> +                                DRM_MODE_CONNECTOR_VGA);
+>> +       if (ret) {
+>> +               DRM_ERROR("failed to init connector: %d\n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       drm_connector_helper_add(connector, &hibmc_connector_helper_fu=
+ncs);
+>> +       drm_connector_register(connector);
+>=20
+> You don't need to register a non-hotplug connector as it will be
+> registered at drm_dev_register automatically.
+>=20
+> See function definition:
+>=20
+>  488 /**
+>  489  * drm_connector_register - register a connector
+>  490  * @connector: the connector to register
+>  491  *
+>  492  * Register userspace interfaces for a connector. Only call this
+> for connectors
+>  493  * which can be hotplugged after drm_dev_register() has been
+> called already,
+>  494  * e.g. DP MST connectors. All other connectors will be
+> registered automatically
+>  495  * when calling drm_dev_register().
+>  496  *
+>  497  * Returns:
+>  498  * Zero on success, error code on failure.
+>  499  */
+>  500 int drm_connector_register(struct drm_connector *connector)
+>  501 {
+>=20
+>=20
+> Besides, I don't think this patch cleans much things.
 
-I have the feeling that this serialized packet processing will get us into trouble since we prioritize BR/EDR packets over LE packets and SCO over eSCO. I think we should have looked at all packets based on SO_PRIORITY and with ISO packets we have to most likely re-design this. Anyway, just something to think about.
+True. Although the auto-kfree of devm_kzalloc() does not work correctly
+with DRM and should be replaced.
 
-Regards
+I'd like to suggest to either allocate the connector as part of struct
+hibmc_drm_private, or implement drmm_connector_create() on top of DRM's
+new auto-cleanup functionality.
 
-Marcel
+Best regards
+Thomas
 
+>=20
+> -Xinliang
+>=20
+>>         drm_connector_attach_encoder(connector, encoder);
+>>
+>>         return 0;
+>> --
+>> 2.7.4
+>>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--KvchZNwh6Mib540wOsZ1oZ0hUXcq6lXYi--
+
+--ZpAQgr4rgKRsm2Dtw09BFyu364lHgxHz7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl6G3wUACgkQaA3BHVML
+eiNy5wf+KuQNqGhClWLXXkwbsBxccUKZ2CknoocZyuQJoB2VzYt2xA5fG/arWnP4
+rJSYX6gD7O+cPvRSrv4Lr8mmI5fe1iWhoRYYV4V5EBnUJA/QfD/dXc+U4RaKh6wx
+4PKWLLBR8j8HonHcbHgHtOOlk+1nS6MS7Ly0kcvHXaShs09zbHsGKHflbISXYoPn
+j1HD/hk956fjbZBEFulrmJ4EXs4mLGA4frwV1l9HAgFvn4HiRS8sv2HnUUwslOGk
+MDawolF853coMHFiqtvrUPYeYWtuGfWehtmfzEYsHjnoUi9RnxvRbbKiT/k8ZF9j
+8XqLslQdh4MA0tCXTQYRyu5MYN3YLg==
+=i+iM
+-----END PGP SIGNATURE-----
+
+--ZpAQgr4rgKRsm2Dtw09BFyu364lHgxHz7--
