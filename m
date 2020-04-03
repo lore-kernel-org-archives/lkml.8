@@ -2,118 +2,311 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F497C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F277C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1403E2063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7252063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jJXD1BRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732366AbgDCFPF (ORCPT
+        id S1732486AbgDCFQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 01:15:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57378 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726343AbgDCFPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 01:15:04 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B7A21FC5A06C31E14932;
-        Fri,  3 Apr 2020 13:14:32 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Apr 2020
- 13:14:23 +0800
-Subject: Re: [RFC PATCH v5 4/8] mm: tlb: Pass struct mmu_gather to
- flush_pmd_tlb_range
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <mark.rutland@arm.com>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
-        <rostedt@goodmis.org>, <maz@kernel.org>, <suzuki.poulose@arm.com>,
-        <tglx@linutronix.de>, <yuzhao@google.com>, <Dave.Martin@arm.com>,
-        <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>, <corbet@lwn.net>, <vgupta@synopsys.com>,
-        <tony.luck@intel.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200331142927.1237-1-yezhenyu2@huawei.com>
- <20200331142927.1237-5-yezhenyu2@huawei.com>
- <20200331151331.GS20730@hirez.programming.kicks-ass.net>
- <fe12101e-8efe-22ad-0258-e6aeafc798cc@huawei.com>
- <20200401122004.GE20713@hirez.programming.kicks-ass.net>
- <53675fb9-21c7-5309-07b8-1bbc1e775f9b@huawei.com>
- <20200402163849.GM20713@hirez.programming.kicks-ass.net>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <d512b28f-99d3-5a26-d189-2ebac7a412c7@huawei.com>
-Date:   Fri, 3 Apr 2020 13:14:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 3 Apr 2020 01:16:18 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33330 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgDCFQR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 01:16:17 -0400
+Received: by mail-pj1-f68.google.com with SMTP id cp9so440182pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 22:16:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gFAB+43FxugF6mGRABTZlwZq4uHrL3H7KI11kCNsEeY=;
+        b=jJXD1BRqz6Kbn091BHOVQedEUveFyGy+oCi3/Qj1MtjDikt7eOKi4Grp6z5kpzEYyu
+         9CMKQUThZFpP2x97gFyKbUrxmtM/AGMTVnW/sP4m2XWBosFrDNm5gcnzmEBlx7aPok7n
+         3PuLX06VZM9z3a9gfK1lHGX+hj5qbPzlccMeMAoGMW+2x2gUGzB7Mi9ACBG8iwuBSxD9
+         IHD4pei3VnJpsJHDIs4mUSnegHlhicyFnip93XoSHXp/a+ILTVho4mGnCC8v+xCGkylL
+         YlRQppD7bzAT7KOefImz9gKxtZBNk3yz9LRJ4rfUdzINv6FXLLP6XKcAz89T9GmOsbFY
+         w1Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gFAB+43FxugF6mGRABTZlwZq4uHrL3H7KI11kCNsEeY=;
+        b=GGrOLlAlksb4blEozVoKfaWl3M62Kl8uNsbA+FcPBFDHua1yLGIBowbm+lLg1JVoRo
+         r3fX8XbwM+VRj4FBdkmyAgEmeCmmcDp1QHmhAI6vX97M+zqJN1C777cKGJdccEJLs4BX
+         5AhQbY/XeBKWqLRwqglqVkOW5fe6ZT2NIqcGx/cVOdStE+3G9IXZhUHBbhdca3Xlxh2i
+         UWgEdc81yFdozOPQz30QCYCiH9NaBzvHGxm1arD1MxMImRIRtgQ0G1WTvxWQAaAU31Ii
+         TC0+DpY35hkYVJEif6r6vC4AsGDJy83dDs/HzuZ5XsEsbcp8Qp8TRiSmFmvr1gEPA8Gl
+         IeTA==
+X-Gm-Message-State: AGi0PuZ7kylAEcYZ87hoDhP/naj687L1uhQCFHeRYxrM96lOKIjwn/gT
+        LrgOO66wVdNK4PaqWFZG86gUVg==
+X-Google-Smtp-Source: APiQypIdUXp9qL1JIRm9kyqJs9P20HXi/B6cJ1P6TjpxRWfwuePsLw4oqJEq8o/GYue1yJPUd7estA==
+X-Received: by 2002:a17:90b:8c:: with SMTP id bb12mr7444857pjb.59.1585890974770;
+        Thu, 02 Apr 2020 22:16:14 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l18sm4473883pgc.26.2020.04.02.22.16.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 22:16:14 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 22:16:11 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        ohad@wizery.com, psodagud@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org
+Subject: Re: [PATCH] remoteproc: core: Add a memory efficient coredump
+ function
+Message-ID: <20200403051611.GJ663905@yoga>
+References: <1585353412-19644-1-git-send-email-rishabhb@codeaurora.org>
+ <20200401195114.GD267644@minitux>
+ <20200402172435.GA2785@xps15>
 MIME-Version: 1.0
-In-Reply-To: <20200402163849.GM20713@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402172435.GA2785@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Thu 02 Apr 10:24 PDT 2020, Mathieu Poirier wrote:
 
-On 2020/4/3 0:38, Peter Zijlstra wrote:
-> On Thu, Apr 02, 2020 at 07:24:04PM +0800, Zhenyu Ye wrote:
->> Thanks for your detailed explanation.  I notice that you used
->> `tlb_end_vma` replace `flush_tlb_range`, which will call `tlb_flush`,
->> then finally call `flush_tlb_range` in generic code.  However, some
->> architectures define tlb_end_vma|tlb_flush|flush_tlb_range themselves,
->> so this may cause problems.
->>
->> For example, in s390, it defines:
->>
->> #define tlb_end_vma(tlb, vma)			do { } while (0)
->>
->> And it doesn't define it's own flush_pmd_tlb_range().  So there will be
->> a mistake if we changed flush_pmd_tlb_range() using tlb_end_vma().
->>
->> Is this really a problem or something I understand wrong ?
+> On Wed, Apr 01, 2020 at 12:51:14PM -0700, Bjorn Andersson wrote:
+> > On Fri 27 Mar 16:56 PDT 2020, Rishabh Bhatnagar wrote:
+> > 
+> > > The current coredump implementation uses vmalloc area to copy
+> > > all the segments. But this might put a lot of strain on low memory
+> > > targets as the firmware size sometimes is in ten's of MBs.
+> > > The situation becomes worse if there are multiple remote processors
+> > > undergoing recovery at the same time.
+> > > This patch directly copies the device memory to userspace buffer
+> > > and avoids extra memory usage. This requires recovery to be halted
+> > > until data is read by userspace and free function is called.
+> > > 
+> > > Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> > > ---
+> > >  drivers/remoteproc/remoteproc_core.c | 107 +++++++++++++++++++++++++++++------
+> > >  include/linux/remoteproc.h           |   4 ++
+> > >  2 files changed, 94 insertions(+), 17 deletions(-)
+> > > 
+> > > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> > > index 097f33e..2d881e5 100644
+> > > --- a/drivers/remoteproc/remoteproc_core.c
+> > > +++ b/drivers/remoteproc/remoteproc_core.c
+> > > @@ -1516,6 +1516,86 @@ int rproc_coredump_add_segment(struct rproc *rproc, dma_addr_t da, size_t size)
+> > >  }
+> > >  EXPORT_SYMBOL(rproc_coredump_add_segment);
+> > >  
+> > > +
+> > > +void rproc_free_dump(void *data)
+> > 
+> > static
+> > 
+> > > +{
+> > > +	struct rproc *rproc = data;
+> > > +
+> > > +	dev_info(&rproc->dev, "Userspace done reading rproc dump\n");
+> > 
+> > Please drop the info prints throughout.
+> > 
+> > > +	complete(&rproc->dump_done);
+> > > +}
+> > > +
+> > > +static unsigned long get_offset(loff_t user_offset, struct list_head *segments,
+> > > +				unsigned long *data_left)
+> > 
+> > Please rename this rproc_coredump_resolve_segment(), or something along
+> > those lines.
+> > 
+> > > +{
+> > > +	struct rproc_dump_segment *segment;
+> > > +
+> > > +	list_for_each_entry(segment, segments, node) {
+> > > +		if (user_offset >= segment->size)
+> > > +			user_offset -= segment->size;
+> > > +		else
+> > > +			break;
+> > > +	}
+> > > +
+> > > +	if (&segment->node == segments) {
+> > > +		*data_left = 0;
+> > > +		return 0;
+> > > +	}
+> > > +
+> > > +	*data_left = segment->size - user_offset;
+> > > +
+> > > +	return segment->da + user_offset;
+> > > +}
+> > > +
+> > > +static ssize_t rproc_read_dump(char *buffer, loff_t offset, size_t count,
+> > > +				void *data, size_t elfcorelen)
+> > > +{
+> > > +	void *device_mem = NULL;
+> > > +	unsigned long data_left = 0;
+> > > +	unsigned long bytes_left = count;
+> > > +	unsigned long addr = 0;
+> > > +	size_t copy_size = 0;
+> > > +	struct rproc *rproc = data;
+> > > +
+> > > +	if (offset < elfcorelen) {
+> > > +		copy_size = elfcorelen - offset;
+> > > +		copy_size = min(copy_size, bytes_left);
+> > > +
+> > > +		memcpy(buffer, rproc->elfcore + offset, copy_size);
+> > > +		offset += copy_size;
+> > > +		bytes_left -= copy_size;
+> > > +		buffer += copy_size;
+> > > +	}
+> > > +
+> > > +	while (bytes_left) {
+> > > +		addr = get_offset(offset - elfcorelen, &rproc->dump_segments,
+> > > +				&data_left);
+> > > +	/* EOF check */
+> > 
+> > Indentation, and "if no data left" does indicate that this is the end of
+> > the loop already.
+> > 
+> > > +		if (data_left == 0) {
+> > > +			pr_info("Ramdump complete. %lld bytes read.", offset);
+> > > +			return 0;
+> > 
+> > You might have copied data to the buffer, so returning 0 here doesn't
+> > seem right. Presumably instead you should break and return offset -
+> > original offset or something like that.
+> > 
+> > > +		}
+> > > +
+> > > +		copy_size = min_t(size_t, bytes_left, data_left);
+> > > +
+> > > +		device_mem = rproc->ops->da_to_va(rproc, addr, copy_size);
+> > > +		if (!device_mem) {
+> > > +			pr_err("Unable to ioremap: addr %lx, size %zd\n",
+> > > +				 addr, copy_size);
+> > > +			return -ENOMEM;
+> > > +		}
+> > > +		memcpy(buffer, device_mem, copy_size);
+> > > +
+> > > +		offset += copy_size;
+> > > +		buffer += copy_size;
+> > > +		bytes_left -= copy_size;
+> > > +		dev_dbg(&rproc->dev, "Copied %d bytes to userspace\n",
+> > > +			copy_size);
+> > > +	}
+> > > +
+> > > +	return count;
+> > 
+> > This should be the number of bytes actually returned, so if count is
+> > larger than the sum of the segment sizes this will be wrong.
+> > 
+> > > +}
+> > > +
+> > >  /**
+> > >   * rproc_coredump_add_custom_segment() - add custom coredump segment
+> > >   * @rproc:	handle of a remote processor
+> > > @@ -1566,27 +1646,27 @@ static void rproc_coredump(struct rproc *rproc)
+> > >  	struct rproc_dump_segment *segment;
+> > >  	struct elf32_phdr *phdr;
+> > >  	struct elf32_hdr *ehdr;
+> > > -	size_t data_size;
+> > > +	size_t header_size;
+> > >  	size_t offset;
+> > >  	void *data;
+> > > -	void *ptr;
+> > >  	int phnum = 0;
+> > >  
+> > >  	if (list_empty(&rproc->dump_segments))
+> > >  		return;
+> > >  
+> > > -	data_size = sizeof(*ehdr);
+> > > +	header_size = sizeof(*ehdr);
+> > >  	list_for_each_entry(segment, &rproc->dump_segments, node) {
+> > > -		data_size += sizeof(*phdr) + segment->size;
+> > > +		header_size += sizeof(*phdr);
+> > >  
+> > >  		phnum++;
+> > >  	}
+> > >  
+> > > -	data = vmalloc(data_size);
+> > > +	data = vmalloc(header_size);
+> > >  	if (!data)
+> > >  		return;
+> > >  
+> > >  	ehdr = data;
+> > > +	rproc->elfcore = data;
+> > 
+> > Rather than using a rproc-global variable I would prefer that you create
+> > a new rproc_coredump_state struct that carries the header pointer and
+> > the information needed by the read & free functions.
+> > 
+> > >  
+> > >  	memset(ehdr, 0, sizeof(*ehdr));
+> > >  	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
+> > > @@ -1618,23 +1698,14 @@ static void rproc_coredump(struct rproc *rproc)
+> > >  
+> > >  		if (segment->dump) {
+> > >  			segment->dump(rproc, segment, data + offset);
 > 
-> If tlb_end_vma() is a no-op, then tlb_finish_mmu() will do:
-> tlb_flush_mmu() -> tlb_flush_mmu_tlbonly() -> tlb_flush()
+> I'm not exactly sure why custom segments can be copied to the elf image but not
+> generic ones... And as far as I can tell accessing "data + offset" will blow up
+> because only the memory for the program headers has been allocated, not for the
+> program segments. 
 > 
-> And s390 has tlb_flush().
-> 
-> If tlb_end_vma() is not a no-op and it calls tlb_flush_mmu_tlbonly(),
-> then tlb_finish_mmu()'s invocation of tlb_flush_mmu_tlbonly() will
-> terniate early due o no flags set.
-> 
-> IOW, it should all just work.
-> 
-> 
-> FYI the whole tlb_{start,end}_vma() thing is a only needed when the
-> architecture doesn't implement tlb_flush() and instead default to using
-> flush_tlb_range(), at which point we need to provide a 'fake' vma.
-> 
-> At the time I audited all architectures and they only look at VM_EXEC
-> (to do $I invalidation) and VM_HUGETLB (for pmd level invalidations),
-> but I forgot which architectures that were.
 
-Many architectures, such as alpha, arc, arm and so on.
-I really understand why you hate making vma->vm_flags more important for
-tlbi :).
+Thanks, I missed that, but you're correct.
 
-> But that is all legacy code; eventually we'll get all archs a native
-> tlb_flush() and this can go away.
+> 
+> > > -		} else {
+> > > -			ptr = rproc_da_to_va(rproc, segment->da, segment->size);
+> > > -			if (!ptr) {
+> > > -				dev_err(&rproc->dev,
+> > > -					"invalid coredump segment (%pad, %zu)\n",
+> > > -					&segment->da, segment->size);
+> > > -				memset(data + offset, 0xff, segment->size);
+> > > -			} else {
+> > > -				memcpy(data + offset, ptr, segment->size);
+> > > -			}
+> > > -		}
+> > >  
+> > >  		offset += phdr->p_filesz;
+> > >  		phdr++;
+> > >  	}
+> > > +	dev_coredumpm(&rproc->dev, NULL, rproc, header_size, GFP_KERNEL,
+> > > +			rproc_read_dump, rproc_free_dump);
+> > >  
+> > > -	dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
+> > > +	wait_for_completion(&rproc->dump_done);
+> > 
+> > This will mean that recovery handling will break on installations that
+> > doesn't have your ramdump collector - as it will just sit here forever
+> > (5 minutes) waiting for userspace to do its job.
+> 
+> Right, that problem also came to mind.
+> 
+> > 
+> > I think we need to device a new sysfs attribute, through which you can
+> > enable the "inline" coredump mechanism. That way recovery would work for
+> > all systems and in your specific case you could reconfigure it - perhaps
+> > once the ramdump collector starts.
+> 
+> Another option is to make rproc_coredump() customizable, as with all the other
+> functions in remoteproc_internal.h.  That way the current rproc_coredump() is
+> kept intact and we don't need a new sysfs entry.
 > 
 
-Thanks for your reply.  Currently, to enable the TTL feature, extending
-the flush_*tlb_range() may be more convenient.
-I will send a formal PATCH soon.
+Rishabh suggested this in a discussion we had earlier this week as well,
+but we still have the problem that the same platform driver will need to
+support both modes, depending on which user space is running. So even if
+we push this out to the platform driver we still need some mechanism
+for userspace to enable the "inline" mode.
 
-Thanks,
-Zhenyu
-
+Regards,
+Bjorn
