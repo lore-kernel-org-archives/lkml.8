@@ -2,158 +2,116 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8496C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D65AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1E520757
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585907413;
-	bh=ky+jQGXhzWTYdPxZD6htegiPMw2jR2FnKbH2bhuv+lg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OqQxW+g1JpczzSfAn5c4VYqnF21o9LKJX5FUaYu0y6KWh+jxAsraiVpWHK1B/Wakj
-	 MpA63tco23eSPPijPE27HGUcZ1IvJljVD+23pdZ5QY/nzd8rOS5YWhJlCx++9XGmc+
-	 aQDhX8mTjuWcHmtiSlMHNp7MWAOi5HZ6E6ZEQNBI=
+	by mail.kernel.org (Postfix) with ESMTP id 4D8E920757
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:50:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="E5eRBn79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390738AbgDCJuM (ORCPT
+        id S1727999AbgDCJuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:50:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727882AbgDCJuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:50:11 -0400
-Received: from earth.universe (dyndsl-037-138-188-127.ewe-ip-backbone.de [37.138.188.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F9FF20737;
-        Fri,  3 Apr 2020 09:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585907410;
-        bh=ky+jQGXhzWTYdPxZD6htegiPMw2jR2FnKbH2bhuv+lg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V/79siigr1vMz9WoqoD+zGh0NuGO6VoCie4Miwm07rqE38VLSTvyldzzG9r931hdw
-         Uro/GC4T69DxJXEUZLpxLkMd3tgMLd1dCQ/7e725r4qxxihJKXwCoe3n6bU2UT9zsR
-         Zx2QXlFinXZ9TvFD8Al3XoYIjS65t7N35PC79314=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 2D4E13C0C98; Fri,  3 Apr 2020 11:50:06 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 11:50:06 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200403095006.naztbhspp6vcv5hl@earth.universe>
-References: <20200326135258.2764f0de@canb.auug.org.au>
- <20200401121431.6a996244@canb.auug.org.au>
- <CADBw62qar4qPJmjZj1+9tb6sgqUcCrjei6G62wPaH=YVf48=zA@mail.gmail.com>
+        Fri, 3 Apr 2020 05:50:10 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:58898 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbgDCJuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 05:50:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mERVbWXgGi4i/wuevc+zUCb4nOivC5xbEXqj6SvWGr4=; b=E5eRBn79mJ7fTgiP2teaXafDb
+        RAKv538vZCZLteLw30abHzEH/yft7gf9K7ZSeh24jcoAzEUbCQokp9j9QFMeyGdkwroVEzCBsgmVY
+        ijU1BqeC+tndqnnU+7WWBPOCLJbe3E9xWd3sk6yrsW3/BJ/GPLw8sI05luByMW+mDMa+Z8v+oRnut
+        RAn016iE6nkR0wXWfNK393fJU1zAP2LmIYauI6rQSQs+QQv32xNseuDKdqybpbsCl7zXt6tBK8vud
+        ijpc8R1vt1W7/8J3ApF3F2yjJc3n89bRD7aWnUlAQBRWfHyX44+X+AbIX/JkTInol19yUP+hs0z/E
+        BQzd4T6vA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:33414)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jKIxO-0008N6-8A; Fri, 03 Apr 2020 10:49:46 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jKIxI-0002Zq-D6; Fri, 03 Apr 2020 10:49:40 +0100
+Date:   Fri, 3 Apr 2020 10:49:40 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
+        daniel@ffwll.ch, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
+ user_write_access_begin/end
+Message-ID: <20200403094940.GA25745@shell.armlinux.org.uk>
+References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+ <20200402162942.GG23230@ZenIV.linux.org.uk>
+ <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
+ <20200402175032.GH23230@ZenIV.linux.org.uk>
+ <202004021132.813F8E88@keescook>
+ <20200403005831.GI23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="i5yah2e7albqxil4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADBw62qar4qPJmjZj1+9tb6sgqUcCrjei6G62wPaH=YVf48=zA@mail.gmail.com>
+In-Reply-To: <20200403005831.GI23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 03, 2020 at 01:58:31AM +0100, Al Viro wrote:
+> On Thu, Apr 02, 2020 at 11:35:57AM -0700, Kees Cook wrote:
+> 
+> > Yup, I think it's a weakness of the ARM implementation and I'd like to
+> > not extend it further. AFAIK we should never nest, but I would not be
+> > surprised at all if we did.
+> > 
+> > If we were looking at a design goal for all architectures, I'd like
+> > to be doing what the public PaX patchset did for their memory access
+> > switching, which is to alarm if calling into "enable" found the access
+> > already enabled, etc. Such a condition would show an unexpected nesting
+> > (like we've seen with similar constructs with set_fs() not getting reset
+> > during an exception handler, etc etc).
+> 
+> FWIW, maybe I'm misreading the ARM uaccess logics, but... it smells like
+> KERNEL_DS is somewhat more dangerous there than on e.g. x86.
+> 
+> Look: with CONFIG_CPU_DOMAINS, set_fs(KERNEL_DS) tells MMU to ignore
+> per-page permission bits in DOMAIN_KERNEL (i.e. for kernel address
+> ranges), allowing them even if they would normally be denied.  We need
+> that for actual uaccess loads/stores, since those use insns that pretend
+> to be done in user mode and we want them to access the kernel pages.
+> But that affects the normal loads/stores as well; unless I'm misreading
+> that code, it will ignore (supervisor) r/o on a page.  And that's not
+> just for the code inside the uaccess blocks; *everything* done under
+> KERNEL_DS is subject to that.
+> 
+> Why do we do that (modify_domain(), that is) inside set_fs() and not
+> in uaccess_enable() et.al.?
 
---i5yah2e7albqxil4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+First, CONFIG_CPU_DOMAINS is used on older ARMs, not ARMv7. Second,
+the kernel image itself is not RO-protected on any ARM32 platform.
 
-Hi,
+If we get rid of CONFIG_CPU_DOMAINS, we will use the ARMv7 method of
+user access, which is to use normal load/stores for the user accessors
+and every access must check against the address limit, even the
+__-accessors.
 
-On Fri, Apr 03, 2020 at 04:15:11PM +0800, Baolin Wang wrote:
-> On Wed, Apr 1, 2020 at 9:14 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > On Thu, 26 Mar 2020 13:52:58 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > Hi all,
-> > >
-> > > After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
-> > > failed like this:
-> > >
-> > > drivers/power/reset/sc27xx-poweroff.c: In function 'sc27xx_poweroff_shutdown':
-> > > drivers/power/reset/sc27xx-poweroff.c:38:4: error: implicit declaration of function 'cpu_down' [-Werror=implicit-function-declaration]
-> > >    38 |    cpu_down(cpu);
-> > >       |    ^~~~~~~~
-> > >
-> > > Caused by commit
-> > >
-> > >   33c3736ec888 ("cpu/hotplug: Hide cpu_up/down()")
-> > >
-> > > interacting with commit
-> > >
-> > >   274afbc3ad33 ("power: reset: sc27xx: Change to use cpu_down()")
-> > >
-> > > from the battery tree.
-> > >
-> > > I have added the following merge fix patch:
-> > >
-> > > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > Date: Thu, 26 Mar 2020 13:42:00 +1100
-> > > Subject: [PATCH] power: reset: sc27xx: use remove_cpu instead of cpu_down
-> > >
-> > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > ---
-> > >  drivers/power/reset/sc27xx-poweroff.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/power/reset/sc27xx-poweroff.c b/drivers/power/reset/sc27xx-poweroff.c
-> > > index 69863074daf6..90287c31992c 100644
-> > > --- a/drivers/power/reset/sc27xx-poweroff.c
-> > > +++ b/drivers/power/reset/sc27xx-poweroff.c
-> > > @@ -35,7 +35,7 @@ static void sc27xx_poweroff_shutdown(void)
-> > >
-> > >       for_each_online_cpu(cpu) {
-> > >               if (cpu != smp_processor_id())
-> > > -                     cpu_down(cpu);
-> > > +                     remove_cpu(cpu);
-> > >       }
-> > >  #endif
-> > >  }
-> > > --
-> > > 2.25.0
-> >
-> > This fixup is now needed when the battery tree is merged into Linus' tree.
-
-Thanks for the reminder.
-
-> Thanks Stephen.
->
-> Sebastian, could you pick up this patch to avoid the compiling issue? Thanks.
-
-I will point Linus to this patch when I send my pull request.
-
--- Sebastian
-
---i5yah2e7albqxil4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6HBsIACgkQ2O7X88g7
-+ppzuA/9EawF4CCezOXd0X6nTWA7BYgnr691iy6p6HssXAqJaryld64vUEDxugeh
-cOrQfz8L5VMViTGWpPYsjad2YEAJGzLAUB+2Mrf1cICjC1qUztK8fa6j1zK0T2bu
-eT7KQVQ8rSAYfhqh9NTPSTMj9xDowtEyXJBasNbFef3HTcpHlxOz5DY19tEjDGFD
-+rJAMBBCNiysAg59JySA9rADGTAE0lEbNRIlM7MN3+Wuywth0N++Vl+CxVYclpR9
-y8NzBIyghYPbuViP5rbwDE6erSvc5i8x/dgJ4rSgaTLnFg+z5C1chvZOUisQ9MCr
-h7z91rpp7+ikMlU/1R5lg2OwtT88gFShfLc9B603uQl0uNpgqyVg1NpdhiYwDgdy
-rELgk6zXPrBHqY/4HCfEAix09j9Oz3cx7ND6f839qHBE8R2ZwLEFBvJ7b5wRV+n8
-TzHUloPBC9tNvOUObqDjbSSxvlYt/2ig32kbAMJ2OJGgdAUJBK8NhzxCNmWAcQn0
-yEiv+aC438Hhhxx5vYspjmJRAVYu8ViRAgx0Lm3XSMCh5exUM8Sga7fVNmCEESdU
-nU3y6Vv7gDDynpLHIf0SPULBjrvnSk0coKfqw+ky6KPCEzUVWZjcY4+ZTr+kb1P7
-aaX8TWrzXimdNlBOAqCJFOylO4xMA67axX+D0sTn89Bhgc+PD1Q=
-=vUvp
------END PGP SIGNATURE-----
-
---i5yah2e7albqxil4--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
