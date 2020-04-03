@@ -2,92 +2,110 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1119BC2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48720C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4AE92073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EECB20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:14:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tgrMngR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403872AbgDCNNX (ORCPT
+        id S2403897AbgDCNOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:13:23 -0400
-Received: from smtprelay0139.hostedemail.com ([216.40.44.139]:51020 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726087AbgDCNNW (ORCPT
+        Fri, 3 Apr 2020 09:14:53 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:48431 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728044AbgDCNOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:13:22 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 955A4182CED34;
-        Fri,  3 Apr 2020 13:13:21 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: lake39_5738fffbee928
-X-Filterd-Recvd-Size: 2320
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  3 Apr 2020 13:13:19 +0000 (UTC)
-Message-ID: <a5d0029edb7328691f1a08009d564c576924a3eb.camel@perches.com>
-Subject: Re: [PATCH 1/1] lib/vsprintf: Add support for printing V4L2 and DRM
- fourccs
-From:   Joe Perches <joe@perches.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     mchehab@kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        hverkuil@xs4all.nl,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        laurent.pinchart@ideasonboard.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>
-Date:   Fri, 03 Apr 2020 06:11:22 -0700
-In-Reply-To: <87zhbtkrc5.fsf@intel.com>
-References: <20200401140522.966-1-sakari.ailus@linux.intel.com>
-         <87eet6mgk7.fsf@intel.com>
-         <04bb934e551f43540d1daacd2759beacc0b3116a.camel@perches.com>
-         <87zhbtkrc5.fsf@intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 3 Apr 2020 09:14:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1585919692; x=1617455692;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BUl5OPIQBO+nrNeP6bJCMTo0vE/9FRdmAQik2DEkayw=;
+  b=tgrMngR6pzQ01atnhAhDbj2i4riCmFcYYgbD0WHg4X4xGjXD/f67xVd2
+   y31GyQz1DvkiXdNIpjhby3dH8fX3J+645Gi6L9ka+3N8KnAry4dNObs80
+   nPoGQpnxR9iy7BpP54Qyepq85E90X2OPNvZtw5t8w/d/fXVgh7sTDBFuu
+   ZCaB0v1kJ3e94XPBsJOpF/+fBoAqDXARTJ+HlmRH3g7JbjyAxfOxgS1UQ
+   6oGtbW1alvTPIcVeAgDo38wkl5QdCZuAOIMAbE/Ag9jfGA8xLPOOot/3c
+   axIOQZsQgKjuHHYnnVja6VAO//gz0oSBE5wJUK+a/Y4MRQmi5dkqyWm1q
+   w==;
+IronPort-SDR: fp0Uozpef3CLf5W/bXxKymuxuwx9c5MwNPOiYwlw4FwV7l/pQYDdYtz2c1FkGVuZH29Qdr724A
+ KwrNpZf6559mPj1sCF6FMbQDMhpMKlZuncxJCV91W29mvubFpUgfZx5MjtQKK/NOxtbsla/VFy
+ GqpFGw0M7ba3HrcZMMwacQLwWqBD6CSyE7uzq/b0jpCBLP9bJF/aVc4iXu7WtfFIKFTu/x20R5
+ GJB23TMVkacy5a3TR5yQQTN4Qz5xAezhNm6Zk97cbKIp3JS+fYuY3t2owlleqs2/MAOOaUZPOk
+ YbA=
+X-IronPort-AV: E=Sophos;i="5.72,339,1580799600"; 
+   d="scan'208";a="71345554"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Apr 2020 06:14:51 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 3 Apr 2020 06:14:50 -0700
+Received: from mchp-main.com (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 3 Apr 2020 06:14:47 -0700
+From:   <nicolas.ferre@microchip.com>
+To:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        "Claudiu Beznea" <claudiu.beznea@microchip.com>,
+        <harini.katakam@xilinx.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <rafalo@cadence.com>, <sergio.prado@e-labworks.com>,
+        <antoine.tenart@bootlin.com>, <f.fainelli@gmail.com>,
+        <linux@armlinux.org.uk>, <andrew@lunn.ch>,
+        <michal.simek@xilinx.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [RFC PATCH 0/3] net: macb: Wake-on-Lan magic packet fixes
+Date:   Fri, 3 Apr 2020 15:14:41 +0200
+Message-ID: <cover.1585917191.git.nicolas.ferre@microchip.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-04-03 at 09:37 +0300, Jani Nikula wrote:
-> On Thu, 02 Apr 2020, Joe Perches <joe@perches.com> wrote:
-> > On Thu, 2020-04-02 at 11:34 +0300, Jani Nikula wrote:
-> > > Or could we conceive of a way to make this locally extensible yet safe,
-> > > letting callers use something like %{foo}, as well as providing a
-> > > locally relevant function to do the conversion?
-> > 
-> > No.  printf validation would be broken.
-> 
-> I tossed the idea on a whim, and thinking further I could probably come
-> up with a number of challenges, but care to elaborate on what you see as
-> the problem in validation?
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-I understand you to want to add something like
+Hi,
+Here are some of my early patches in order to fix WoL magic-packet on the
+current macb driver.
+Addition of this feature to GEM types of IPs is yet to come. I would like to
+have your feedback on these little patches first so that I can continue
+investigating the addition of GEM WoL magic-packet.
 
-	%<m> where m is a non-standard format specifier
+Harini, I know that you have patches for GEM in order to integrate WoL ARP
+mode [1]. I'll try to integrate some of your work but would need that this feature
+is better integrated in current code. For instance, the choice of "magic
+packet" or "ARP" should be done by ethtool options and DT properties. For
+matching with mainline users, MACB and GEM code must co-exist.
+The use of dumb buffers for RX seems also fairly platform specific and we would
+need to think more about it.
 
-so using using gcc's extension of
+[1]:
+https://github.com/Xilinx/linux-xlnx/commit/e9648006e8d9132db2594e50e700af362b3c9226#diff-41909d180431659ccc1229aa30fd4e5a
+https://github.com/Xilinx/linux-xlnx/commit/60a21c686f7e4e50489ae04b9bb1980b145e52ef
 
-__attribute__((__format__(printf, string_index, first_to_check))
+Nicolas Ferre (3):
+  net: macb: fix wakeup test in runtime suspend/resume routines
+  net: macb: mark device wake capable when "magic-packet" property
+    present
+  net: macb: fix macb_get/set_wol() when moving to phylink
 
-could not validate the argument type against use of the %<m>
-in the format string.
+ drivers/net/ethernet/cadence/macb_main.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-	printk("%a\n", a);
-
-Compiler bleats.
+-- 
+2.20.1
 
