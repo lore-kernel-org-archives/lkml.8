@@ -2,139 +2,86 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D952CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D218DC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE327206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A772C206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:41:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lZKfrtq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbgDCEjD (ORCPT
+        id S1731629AbgDCElb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 00:39:03 -0400
-Received: from mga09.intel.com ([134.134.136.24]:19394 "EHLO mga09.intel.com"
+        Fri, 3 Apr 2020 00:41:31 -0400
+Received: from m12-17.163.com ([220.181.12.17]:54183 "EHLO m12-17.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgDCEjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 00:39:03 -0400
-IronPort-SDR: H/LQxK3d0Y3xA0ApWFa+6DRBQjdAJjbAP/3PQFZfUI66Od1mF+IgVnVaImVnpeV6ZV7EDcWrZI
- x+sksbogFKAw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 21:39:02 -0700
-IronPort-SDR: xKrqCXM86SXhnugdFt3obxFXmfKoeWIC1M5kbMc+05JVG/0Gfn2PTYInne6x+V61j2AhVn+fUh
- 37/DnQQipmOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,338,1580803200"; 
-   d="scan'208";a="241021226"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Apr 2020 21:39:01 -0700
-Date:   Thu, 2 Apr 2020 21:39:01 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Dave Chinner <david@fromorbit.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jan Kara <jack@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
-Message-ID: <20200403043901.GH3952565@iweiny-DESK2.sc.intel.com>
-References: <20200227052442.22524-1-ira.weiny@intel.com>
- <20200305155144.GA5598@lst.de>
- <20200309170437.GA271052@iweiny-DESK2.sc.intel.com>
- <20200311033614.GQ1752567@magnolia>
- <20200311062952.GA11519@lst.de>
- <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
- <20200316095224.GF12783@quack2.suse.cz>
- <20200316095509.GA13788@lst.de>
- <20200401040021.GC56958@magnolia>
+        id S1725851AbgDCElb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 00:41:31 -0400
+X-Greylist: delayed 932 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Apr 2020 00:41:27 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Wbeh/
+        XXcF9p0H3UV40lvWAHy5eGKJ2dZMK1faGpA0Mk=; b=lZKfrtq4VPhBnTsUSbGIX
+        iQy/EXDnhCeyIreOXuLN7PUTXqpqhYuWq69bgVyYEZ1QboneYk1an9JVxTCB89rV
+        WoE+jpFOnr7Mw+mHf8w/IMQxdK1zpHfPW9SRwi6yJnlem8O3LeeQZlVV9wOrafOG
+        rj96huHOzeyV6v68Hx2p0o=
+Received: from localhost.localdomain (unknown [125.82.11.124])
+        by smtp13 (Coremail) with SMTP id EcCowACXzbI+uoZevzrGCg--.22384S4;
+        Fri, 03 Apr 2020 12:23:28 +0800 (CST)
+From:   Hu Haowen <xianfengting221@163.com>
+To:     saeedm@mellanox.com, leon@kernel.org, davem@davemloft.net
+Cc:     moshe@mellanox.com, lsahlber@redhat.com, kw@linux.com,
+        wqu@suse.com, xiubli@redhat.com, xianfengting221@163.com,
+        chris@chris-wilson.co.uk, stfrench@microsoft.com,
+        airlied@redhat.com, yamada.masahiro@socionext.com, cai@lca.pw,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [v2] net/mlx5: add the missing space character
+Date:   Fri,  3 Apr 2020 12:23:12 +0800
+Message-Id: <20200403042312.9036-1-xianfengting221@163.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401040021.GC56958@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: EcCowACXzbI+uoZevzrGCg--.22384S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7GryfGr4fCr1UZrWUWw17ZFb_yoW8Jr45pF
+        s8JFZrurs7tw45Xa18ZFW8Z3s5GwsYkay09F4fC393Xrn5tr48Crn3tryYkr10kr13J3sx
+        tF9rArW7Awn8W37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jU73kUUUUU=
+X-Originating-IP: [125.82.11.124]
+X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiMgD6AFWBoITXkAAAs-
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 04:00:21AM +0000, Darrick J. Wong wrote:
-> On Mon, Mar 16, 2020 at 10:55:09AM +0100, Christoph Hellwig wrote:
-> > On Mon, Mar 16, 2020 at 10:52:24AM +0100, Jan Kara wrote:
-> > > > This sounds reasonable to me.
-> > > > 
-> > > > As for deprecating the mount option, I think at a minimum it needs to
-> > > > continue be accepted as an option even if it is ignored to not break
-> > > > existing setups.
-> > > 
-> > > Agreed. But that's how we usually deprecate mount options. Also I'd say
-> > > that statx() support for reporting DAX state and some education of
-> > > programmers using DAX is required before we deprecate the mount option
-> > > since currently applications check 'dax' mount option to determine how much
-> > > memory they need to set aside for page cache before they consume everything
-> > > else on the machine...
-> > 
-> > I don't even think we should deprecate it.  It isn't painful to maintain
-> > and actually useful for testing.  Instead we should expand it into a
-> > tristate:
-> > 
-> >   dax=off
-> >   dax=flag
-> >   dax=always
-> > 
-> > where the existing "dax" option maps to "dax=always" and nodax maps
-> > to "dax=off". and dax=flag becomes the default for DAX capable devices.
-> 
-> That works for me.  In summary:
-> 
->  - Applications must call statx to discover the current S_DAX state.
-> 
->  - There exists an advisory file inode flag FS_XFLAG_DAX that can be
->    changed on files that have no blocks allocated to them.  Changing
->    this flag does not necessarily change the S_DAX state immediately
->    but programs can query the S_DAX state via statx.
-> 
->    If FS_XFLAG_DAX is set and the fs is on pmem then it will always
->    enable S_DAX at inode load time; if FS_XFLAG_DAX is not set, it will
->    never enable S_DAX.  Unless overridden...
-> 
->  - There exists a dax= mount option.  dax=off means "never set S_DAX,
->    ignore FS_XFLAG_DAX"; dax=always means "always set S_DAX (at least on
->    pmem), ignore FS_XFLAG_DAX"; and dax=iflag means "follow FS_XFLAG_DAX"
->    and is the default.  "dax" by itself means "dax=always".  "nodax"
->    means "dax=off".
-> 
->  - There exists an advisory directory inode flag FS_XFLAG_DAX that can
->    be changed at any time.  The flag state is copied into any files or
->    subdirectories created within that directory.  If programs require
->    that file access runs in S_DAX mode, they'll have to create those
->    files themselves inside a directory with FS_XFLAG_DAX set, or mount
->    the fs with dax=always.
+Commit 91b56d8462a9 ("net/mlx5: improve some comments") did not add
+that missing space character and this commit is used to fix it up.
 
-One other thing to add here.  They _can_ set the FS_XFLAG_DAX on a file with
-data and force an eviction to get S_DAX to change.
+Fixes: 91b56d8462a9 ("net/mlx5: improve some comments")
+Signed-off-by: Hu Haowen <xianfengting221@163.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think that is a nice reason to have a different error code returned.
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+index c9c9b479bda5..31bddb48e5c3 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+@@ -676,7 +676,7 @@ static void mlx5_fw_tracer_handle_traces(struct work_struct *work)
+ 	block_count = tracer->buff.size / TRACER_BLOCK_SIZE_BYTE;
+ 	start_offset = tracer->buff.consumer_index * TRACER_BLOCK_SIZE_BYTE;
+ 
+-	/* Copy the block to local buffer to avoid HW override while being processed*/
++	/* Copy the block to local buffer to avoid HW override while being processed */
+ 	memcpy(tmp_trace_block, tracer->buff.log_buf + start_offset,
+ 	       TRACER_BLOCK_SIZE_BYTE);
+ 
+-- 
+2.20.1
 
-> 
-> Ok?  Let's please get this part finished for 5.8, then we can get back
-> to arguing about fs-rmap and reflink and dax and whatnot.
 
-I'm happy to see you motivated to get this in.
-
-I'm starting with a new xfstest to make sure we agree on the semantics prior to
-more patches.  I hope to have the xfstest patch sent tomorrow sometime.
-
-Ira
-
-> 
-> --D
