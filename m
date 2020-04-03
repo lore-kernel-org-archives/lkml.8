@@ -2,69 +2,96 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82F6C2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9F9C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB2362080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585951518;
-	bh=oNx9ba2rXfHlsxoKf41mOoZva2B3xmQuMYxiPkXFIrw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Vm2LSJ70CAcR+eh4SK0xj13dIBlsxTz1lJ3jwmePIlxG7BoDMv7/8cDV4iC1LQB38
-	 XtuCOeKovihLMeTo79GvRKg5F5Pw89jTOAlvvuNmt+4TZEWUSeo2eNJXBRaq0ExcIT
-	 Ixg4POGJsPLwvJ/odoxR8o5mG5xmekDSBP4aLvmY=
+	by mail.kernel.org (Postfix) with ESMTP id A301A2078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:06:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgDCWFR (ORCPT
+        id S1728417AbgDCWGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 18:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727879AbgDCWFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 18:05:17 -0400
-Subject: Re: [GIT PULL] PCI changes for v5.7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585951517;
-        bh=oNx9ba2rXfHlsxoKf41mOoZva2B3xmQuMYxiPkXFIrw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=WdiCeCe2stD6fg21iv+SmYC7ahzcjhd4eb8qQzgjsb3IzkoeSwp9lA+hdhpewAeuj
-         StzaAJAi1s+BGnBs20+7PjmBf419IzjLsDGblIBfRUuKTh8I8kzfNo2ibEr54s/D6R
-         GofQzCSsAdsHC89EnhYaSHJ9RayY8lQ4fquZRMGo=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200403154841.GA241702@google.com>
-References: <20200403154841.GA241702@google.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200403154841.GA241702@google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
- tags/pci-v5.7-changes
-X-PR-Tracked-Commit-Id: 86ce3c90c910110540ac25cae5d9b90b268542bd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 86f26a77cb0cf532a92be18d2c065f5158e1a545
-Message-Id: <158595151699.22871.11795513248478547542.pr-tracker-bot@kernel.org>
-Date:   Fri, 03 Apr 2020 22:05:16 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+        Fri, 3 Apr 2020 18:06:48 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:3381 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgDCWGs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 18:06:48 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app02-12002 (RichMail) with SMTP id 2ee25e87b3617b4-7d944; Sat, 04 Apr 2020 06:06:25 +0800 (CST)
+X-RM-TRANSID: 2ee25e87b3617b4-7d944
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.3.208.73])
+        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45e87b35f24a-49938;
+        Sat, 04 Apr 2020 06:06:25 +0800 (CST)
+X-RM-TRANSID: 2ee45e87b35f24a-49938
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     narmstrong@baylibre.com, clabbe@baylibre.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net
+Cc:     linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH v6]crypto: amlogic - Delete duplicate dev_err in meson_crypto_probe()
+Date:   Sat,  4 Apr 2020 06:07:54 +0800
+Message-Id: <20200403220754.7856-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 3 Apr 2020 10:48:41 -0500:
+When something goes wrong, platform_get_irq() will print an error message,
+so in order to avoid the situation of repeat output，we should remove
+dev_err here.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.7-changes
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+Changes from v5
+ - modify the commit message.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/86f26a77cb0cf532a92be18d2c065f5158e1a545
+Changes from v4:
+ - rewrite the code, because the code in v4 is wrong, sorry.
 
-Thank you!
+Changes form v3:
+ - fix the theme writing error.
 
+Changes from v2:
+ - modify the theme format and content description.
+ - reformat the patch, it's the wrong way to resubmit a new patch that
+   should be modified on top of the original. The original piece is:
+   https://lore.kernel.org/patchwork/patch/1219611/
+
+Changes from v1:
+ - the title has changed, because the description is not very detailed.
+ - the code has been modified, because it needs to match the theme.
+
+ drivers/crypto/amlogic/amlogic-gxl-core.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
+index 9d4ead2f7..411857fad 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-core.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
+@@ -253,10 +253,8 @@ static int meson_crypto_probe(struct platform_device *pdev)
+ 	mc->irqs = devm_kcalloc(mc->dev, MAXFLOW, sizeof(int), GFP_KERNEL);
+ 	for (i = 0; i < MAXFLOW; i++) {
+ 		mc->irqs[i] = platform_get_irq(pdev, i);
+-		if (mc->irqs[i] < 0) {
+-			dev_err(mc->dev, "Cannot get IRQ for flow %d\n", i);
++		if (mc->irqs[i] < 0)
+ 			return mc->irqs[i];
+-		}
+ 
+ 		err = devm_request_irq(&pdev->dev, mc->irqs[i], meson_irq_handler, 0,
+ 				       "gxl-crypto", mc);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1.windows.1
+
+
+
