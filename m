@@ -2,124 +2,132 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9A7C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9A9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B373206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317BF206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OxNu8hBJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NYx+sHPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404587AbgDCSL4 (ORCPT
+        id S2404509AbgDCSQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:11:56 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41288 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403929AbgDCSLz (ORCPT
+        Fri, 3 Apr 2020 14:16:36 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36036 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbgDCSQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:11:55 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a24so3872292pfc.8;
-        Fri, 03 Apr 2020 11:11:53 -0700 (PDT)
+        Fri, 3 Apr 2020 14:16:35 -0400
+Received: by mail-pj1-f65.google.com with SMTP id nu11so3300944pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:16:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=InL1nM5nwgThlKsD/4bkNX1qcE/bZXvGbtLxWiEV5Yo=;
-        b=OxNu8hBJrUoQp2Lb2LIE/UM5hirqfD6c5uMcQCXC2u8pOw3HMfXarstJO/SPvZ/x8i
-         BQe2iL6TEiAjxfoflrg9GDgbZmUFSh8CImE/isyKwE0HXK0NWjFvdWBlnJefkopigLAs
-         hswZZMDAxa/GfH6bYsDLzLxtJem2o7n9R6JZ3ZIhMYuDfce8GXD2CFQ/kkR9k7vy9tz1
-         bcDg9TYQ7l/V1htX4BFoA9GsDTYnA55u7mM7/DLaInC/lJxe6JhWwKupkIZ3LAXot4u2
-         8Yd4v8YR5YukTm+WSgPlssyQAGFnGGIvWAmFENAQOFoIss7KRNDnFSg2+QaFJFGKI5qT
-         3mWg==
+        bh=l9OtO5bBjU4ri0ecYRkCgiryeyjL/1OJpZNChQ7ItYI=;
+        b=NYx+sHPEuWXImveqC5saq7LPSHEW29HyBJwPIy0Wsv4qxJp8hwJZwCQLBGUxkDoz5n
+         NRTdcePZ89Ihj3Nr1q4SSWTYE9L6ixXMinliK5sCArFNnBmm0cTAjVAVEUR491pc7zx+
+         7TWCe9R7nyZui0z+kqVrFdlu5SedTFb/AKFV4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=InL1nM5nwgThlKsD/4bkNX1qcE/bZXvGbtLxWiEV5Yo=;
-        b=jyReMOwJbcd861kDszhjskoNMq0P/FH5zkmmJkos1mVsJBfZUmm9dnax7XVZ3vpzHi
-         C9Lm1ue409UEMCL/YQYpjLNKlaW9sJnJs86EwiKZkyCHMB+Zl19LezbPOzGEd49JOwRW
-         DROV/KGMsIfLFA0nmeabUu1WgQbc22Gt7D6hKix55PdgwnUAWGJxdTEQasWTTEm9CV9d
-         gQHVEMLVJ2ZiguQmtJVsPVAHbyrlGWI/Pw2PhkvTxI/bF4IC2c0859Ks6oeSQ2DpTWOn
-         DkzXu9Y1SVbJNa5BLWW2n2OzeL62fFhck1nwpAdj7qcfgtxVgN4TQbo+iE3Vhiqcrqxq
-         c7fw==
-X-Gm-Message-State: AGi0PubyibA0B+XHTVGRHapp+BjOhrco0DUgi7Q2JoliaoiLWx6bwTF/
-        EfsNQl9BNOFL8PUtTPtoAQ==
-X-Google-Smtp-Source: APiQypKjRNoAgzx/5wb/M/owzZxHRM/lRGtcZ2rOjqj2maD9tPRdTD1mkbejOsaR2Xm24xtV7NYdUA==
-X-Received: by 2002:a62:87cc:: with SMTP id i195mr9725165pfe.75.1585937512702;
-        Fri, 03 Apr 2020 11:11:52 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2402:3a80:d32:bec6:f832:439c:9244:ba33])
-        by smtp.gmail.com with ESMTPSA id y28sm6275223pfp.128.2020.04.03.11.11.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Apr 2020 11:11:51 -0700 (PDT)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Fri, 3 Apr 2020 23:41:45 +0530
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        gregkh@linuxfoundation.org, hariprasad.kelam@gmail.com,
-        colin.king@canonical.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org,
-        andrianov@ispras.ru
-Subject: Re: [PATCH] usb: host: u132-hcd: Remove u132_static_list
-Message-ID: <20200403181145.GA7574@madhuparna-HP-Notebook>
-References: <20200402232228.22395-1-madhuparnabhowmik10@gmail.com>
- <Pine.LNX.4.44L0.2004031038200.7035-100000@netrider.rowland.org>
+        bh=l9OtO5bBjU4ri0ecYRkCgiryeyjL/1OJpZNChQ7ItYI=;
+        b=XuJhJLCGRBY727yu0knSPelOwMlsbFbO1w1kByIjDG499cKZWXkBuAQtZyiQNm4zch
+         DlPLwID+lGKhRYdl/jL0X/WnoShi0eo5WD9oRsi5Kzt76ZvWeCA+rL4dTkcnbi5Me3Lx
+         een9ImmYhXgMrNuIDVhjqiZZvqmGdJTDzncsqrwlNbwWNJffl0zGNu6rryFA2PxzLJhI
+         8B+ak3MnvBDTGiTh3bQfwgs7etFWCKNo1wyliFY/RNvyYA4A26D1mcpULl6OWnTKFlH8
+         EFFxOukEfB8CMikmEV00bAAwJHQQRYHfF2Uke/8O5FUULVpPct4GQBd9NKRVajqhLX5a
+         Tb+Q==
+X-Gm-Message-State: AGi0Pua70UVZa8O/OC2SugO9fOIQkeVAoc1iyhjzhdovmcBAvW7XzZCh
+        n7hahlmzlg3l3a76Sefw7HqVlQ==
+X-Google-Smtp-Source: APiQypIGHcLKfA4BC6dhIJebo6CEcV70oa/S4T2XWdYpRNyxtEt21rnfykH5/137XQhZwQNCpuZxdQ==
+X-Received: by 2002:a17:902:d3cb:: with SMTP id w11mr8949903plb.257.1585937792655;
+        Fri, 03 Apr 2020 11:16:32 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id x3sm6250986pfp.167.2020.04.03.11.16.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 11:16:30 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 11:16:29 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     "Rajeshwari Ravindra Kamble (Temp)" <rkambl@codeaurora.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        sivaa@codeaurora.org, Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Changed polling-delay in
+ Thermal-zones node
+Message-ID: <20200403181629.GP199755@google.com>
+References: <1584430804-8343-1-git-send-email-rkambl@codeaurora.org>
+ <CAD=FV=VLZ4RQQuji=1kKE5EnqrpY0M=U_G8XigAWAaZ8mxc=eg@mail.gmail.com>
+ <fc7f250e-aa85-0835-8bc4-8274235c74d0@codeaurora.org>
+ <CAHLCerMCrNdKUmRww4EFctU8cojh6Fqhs7gpux3SNCSwYUBOvQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2004031038200.7035-100000@netrider.rowland.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHLCerMCrNdKUmRww4EFctU8cojh6Fqhs7gpux3SNCSwYUBOvQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 10:39:33AM -0400, Alan Stern wrote:
-> On Fri, 3 Apr 2020 madhuparnabhowmik10@gmail.com wrote:
-> 
-> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > 
-> > u132_static_list is a global list protected by u132_module_lock.
-> > It is read in the u132_hcd_exit() function without holding the lock
-> > thus may lead to data race.
-> > However, it turns out that this list isn't used for anything useful
-> > and thus it is okay to get rid of it.
-> > Thus, remove the u132_static_list from u132-hcd module.
-> > 
-> > Found by Linux Driver Verification project (linuxtesting.org).
-> > 
-> > Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Hi Rajeshwari,
+
+do you plan to send v2 with an updated commit message?
+
+Thanks
+
+Matthias
+
+On Wed, Mar 18, 2020 at 02:40:47PM +0530, Amit Kucheria wrote:
+> On Wed, Mar 18, 2020 at 11:49 AM Rajeshwari Ravindra Kamble (Temp)
+> <rkambl@codeaurora.org> wrote:
+> >
+> >
+> > On 3/17/2020 10:20 PM, Doug Anderson wrote:
+> >
+> > Hi,
+> >
+> > On Tue, Mar 17, 2020 at 12:42 AM Rajeshwari <rkambl@codeaurora.org> wrote:
+> >
+> > Changed polling-delay and polling-delay-passive to zero as per
+> > the requirement.
+> >
+> > Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
 > > ---
-> >  drivers/usb/host/u132-hcd.c | 8 --------
-> >  1 file changed, 8 deletions(-)
-> > 
-> > diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-> > index e9209e3e6248..52f70cf063ea 100644
-> > --- a/drivers/usb/host/u132-hcd.c
-> > +++ b/drivers/usb/host/u132-hcd.c
-> > @@ -81,7 +81,6 @@ static DECLARE_WAIT_QUEUE_HEAD(u132_hcd_wait);
-> >  static struct mutex u132_module_lock;
-> >  static int u132_exiting;
-> >  static int u132_instances;
-> > -static struct list_head u132_static_list;
-> >  /*
-> >  * end of the global variables protected by u132_module_lock
-> >  */
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 100 +++++++++++++++++------------------
+> >  1 file changed, 50 insertions(+), 50 deletions(-)
+> >
+> > It probably wouldn't hurt to mention in the commit message that this
+> > is because the thermal sensor interrupts are all hooked up and thus
+> > the polling is not a useful thing to do.  ...but other than that:
+> >
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> >
+> >
+> > Hi Douglas
+> >
+> > I didn't  get your comment.
+> >
+> > Thanks,
+> > Rajeshwari
 > 
-> You forgot to remove the u132_list member from struct u132.
->
-Thank you for letting me know, I will send the patch again with this
-change.
-
-Regards,
-Madhuparna
-
-> Alan Stern
+> I think he means that you haven't mentioned WHY this patch is needed
+> in the message. The reason you should mention is "to disable polling
+> mode of the framework since interrupts for tsens are already
+> configured."
 > 
+> Regards,
+> Amit
