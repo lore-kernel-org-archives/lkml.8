@@ -3,154 +3,206 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45197C2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 359DCC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1147A20737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4AB20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="CShNSqGX"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="cGHwfv2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390561AbgDCJEm (ORCPT
+        id S2390569AbgDCJFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:04:42 -0400
-Received: from mail-eopbgr1400110.outbound.protection.outlook.com ([40.107.140.110]:36704
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727792AbgDCJEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:04:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j0n3puH/GVwvduVGu5FT+K7XQVQxgoeGw0EHWLe2LXiUcQZaAKkL5eDTTOu60l3OfmfvQLfz2VN0zrHWuBVflF9wIxO4pTqzU3P431eEbDgVY6fJLevwlNGMufNIz/9ySsMf0KdB19U0p9hVHrk9sRiIuNSs9kTM+tj2fKizOi/1/XZGSKrrTCqrM4kUOghmYiz/dJDRQkZhaUc0d77wsnLv63jh/eoOcBpP6t/fbRoiLa1m7IQ+BNnXTL0tJh81o5CNAcBULiCpMHWgThj7Hy8suHhxTGltYKsF3W93h2DrBke6UOhW8Fau8Mko6yCFe6k70Mf5PP8FVu7OuU8lzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ifLh57Z6sOZphu+sZr0zvImBA+VoFBmuIfXY7gz6Mo=;
- b=YIpsqXxq4afCBxUaep/hm6qLKNckw5N/GhoV4CLwW6TJIIyuOKKe6Lm/goyPc55LFx7/ffmS5aBiqbKXOUF/XjSNy1PIyhTjJ4enKdAYSfILul/M6HZl6DwkjP+b05p5j0jPB0yvHBiV2YVODAaot90NRaQtI3uXiU6qaVGD9NOmJfTjl0g1Ol0LeHiLiLwAvq/RHqQiGZHgU3+rMK7Om9xsd7dvtlo+yPJZyBJSVyoIYmXXaYPK/X2T1L+m7PArPlak9gyZ2TJ1Fx1LRsjf8pDr5504FZ99ATMzYC/eCL/W6t10RarHuZVoj7GijstchzcMGr1W4KStbQ+XX3d/jQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Fri, 3 Apr 2020 05:05:03 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44871 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727635AbgDCJFC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 05:05:02 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v134so5458246oie.11
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 02:05:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ifLh57Z6sOZphu+sZr0zvImBA+VoFBmuIfXY7gz6Mo=;
- b=CShNSqGXYeIxVlm6fqCZkL/rwzDMCZtEXV2dT2mNdXh8e70nrLxU8nwN2RWR8iYmMSiaa5JzsmzaKpIyrFJbVaodrxutZdVy6GK6rXNfX//BDrdGwugkC48BvMBvLG+0TAREEvRz7qQxsHm2iq6czDy6Ct4JWoqUlxisowssuMw=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB3935.jpnprd01.prod.outlook.com (20.178.138.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.16; Fri, 3 Apr 2020 09:04:36 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
- 09:04:36 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-CC:     Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: RE: [PATCH v6 02/11] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
-Thread-Topic: [PATCH v6 02/11] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
-Thread-Index: AQHWCSZhTMobSnptQkuFlRDlbRGMO6hnB2iggAAJ7ICAAAiQUA==
-Date:   Fri, 3 Apr 2020 09:04:35 +0000
-Message-ID: <TYAPR01MB4544B6B749588A7390323D28D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1585856319-4380-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <TYAPR01MB454403D69A74036B74CC8220D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <CAMuHMdVWn=U82k5RJnBaRUgRHh3bRfdncOupmX67-u-nbwsG9w@mail.gmail.com>
-In-Reply-To: <CAMuHMdVWn=U82k5RJnBaRUgRHh3bRfdncOupmX67-u-nbwsG9w@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9f82b092-c362-4abf-ad12-08d7d7ae0874
-x-ms-traffictypediagnostic: TYAPR01MB3935:|TYAPR01MB3935:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB393569785400BEBB42F9278FD8C70@TYAPR01MB3935.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(396003)(376002)(346002)(54906003)(66446008)(478600001)(66946007)(7696005)(55236004)(76116006)(81156014)(6506007)(52536014)(81166006)(8936002)(8676002)(5660300002)(33656002)(7416002)(64756008)(110136005)(66476007)(66556008)(26005)(316002)(2906002)(86362001)(71200400001)(4326008)(55016002)(186003)(9686003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vL7tDxgRsZwkt8tfT4prhfnRjbQcGbfmQGvY7epBO5xoBNjhEsuw4mUYvrU74TN2CaXWVxBPZk/Kozs56Q0T7CDUKSNj/M9nJRb5TOeKKioehdLfzpJEq8DA1ZEPGfl9WKLK+e/n43friFAzcYQVzD8cKkdLpGzIfIO1nLVd7i9Ro9ro9YLk/JdqfZfJJJvvBU2TQyXW2KOVHRGvPszVq0kCIdyP/eLKO1JlRJxtnlyjmkc6O9iApmHHzGUrWVojrMBuyf9vMMIk0boK28bpYFavvmF/B7NwJLYK3afNAoqShypPLbrTLbP5+/gkcL6rrK+3pV/EHEZjYMHgegxPqRwhNPWaV3j80lw7R39fiX8yXTqUPka6Tjhw+v4MC4URIlaw4Gu/AxQG6eDRVzVSQMu0JkyDMrrq+4LIPXyNJAK2cMsn5KCBK9kxlB8Axete
-x-ms-exchange-antispam-messagedata: Bei40bURwk4ntSHAOXcI92gT3Tq+P7fWE+P2wamilfiMNZni7pD9yKkWvNdP9Qyl2OcwB4PgZZvdSw/0gInW2WYkZDNE4OYze7IvCQsw82cD1hKkSCPJ0KsHPvCxwgb3JWWAofSd5YN7XppHqoNc6Q==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k3k/FHfRrWrYtfi+UJknDJkxs4/RbdowOhFZ8Z2iWdM=;
+        b=cGHwfv2DRr36j1c2rTxyvR/MF3X2vakyJoCIVMx8L1kaZ4RlB6abpoa7W57bNztggz
+         lgHpay/LPc54nWXoD03Wa2l3QIxm0xDS7zrWfRLnKCB8r5aj3/4HRam8GxCxnP6cIdzD
+         HVkXi84hVEERv7nK7ttIFp/xLCTRWbfg0c7z3gdqMyb8r1Wa9yCMp8JyXLDZsMsflUJr
+         urBA40BCxuFoQn9IAEwYrt7AWUpb78QdyoYTGri24sF0lRBmNajO2+4DFiGhfs1GjeNz
+         tl6CqDDFNs9mdIF3RIvg7+qax2xWXiZV2tIj5gneVVEdI9xLMw4LRA1Mw/YlDy0A4SPT
+         hAhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k3k/FHfRrWrYtfi+UJknDJkxs4/RbdowOhFZ8Z2iWdM=;
+        b=S7wvT01W6XTYnVDxZehHT6T9xITgPqkhQtcxSW7o0ySl4bOBWvqGVlb5t0Oq3ZUxu3
+         STFyuB15x58eSJcgexGPc9Zz7kyLWKSN9gj7ATikRMPbP+sXibh4IdrthXvj6gEP1+uA
+         /sCRe3lQes2k1zWxm8CaczkvpKQ26aGWfTeIQmGPJBboF+Q2vH8vJ+0pR/2KkIGcDm09
+         tNw/mBTW31DdOOF/7UwavKDuOtS+JysxeiSyrTSzILfj8yvJ1rCtOXlcGIQHqiP4t6pS
+         pN2LyoyDOusREsRRmiIK+absEwsbm3u+Jt0tpZL2O/cQ833rNLSebEMm9KGIvcHSHDIm
+         HWtg==
+X-Gm-Message-State: AGi0PuZiLIcZe93EsTB6zej03v8rMBrJfzg1p9DLiyj2JYhBq/Q8tAjq
+        F+Ye8w0hSFcByVYRXmKTfNZ9ewpsg+PsqjvWO+bz5Q==
+X-Google-Smtp-Source: APiQypLJkK1zH27grwowlEcFnZKIjtrS5UOymajuwVuRhdv8zbBnEYOztvC6rsjZ5gT1NfB3qFwWbdVa5VF0A8thQ9w=
+X-Received: by 2002:a05:6808:56:: with SMTP id v22mr2110639oic.116.1585904701421;
+ Fri, 03 Apr 2020 02:05:01 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f82b092-c362-4abf-ad12-08d7d7ae0874
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 09:04:36.0061
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Zs9OsfD+bzy5u38XCPW8G92/sr7Hy3sp7dphMlYW25j5wHkGhkc2X11rSWuclGZDtGqEE5Q2+KUvyPlIqmItDiib+CRS/2JgBOo9Ksf6wRgTty8DqwhCvX+KwXEag+SA
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3935
+References: <cover.1583772574.git.zong.li@sifive.com> <d27d9e68491e1df67dbee6c22df6a72ff95bab18.1583772574.git.zong.li@sifive.com>
+ <20200401003233.17fe4b6f7075e5b8f0ed5114@kernel.org> <CANXhq0ra3o+mgenbYLq_q0eZY2KiXNpWmo2V0amD0cFDqCQkXw@mail.gmail.com>
+ <20200402101733.1ef240faeaeada6e4d38ae80@kernel.org>
+In-Reply-To: <20200402101733.1ef240faeaeada6e4d38ae80@kernel.org>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Fri, 3 Apr 2020 17:04:51 +0800
+Message-ID: <CANXhq0rMbkNxQ3_qqYEKe8DSbL-vfQku6V9a81Hy9cxW4LaW9g@mail.gmail.com>
+Subject: Re: [PATCH v3 8/9] riscv: introduce interfaces to patch kernel code
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgY29tbWVudHMhDQoNCj4gRnJvbTog
-R2VlcnQgVXl0dGVyaG9ldmVuLCBTZW50OiBGcmlkYXksIEFwcmlsIDMsIDIwMjAgNToyOCBQTQ0K
-PHNuaXA+DQo+ID4gQnV0LCBJJ20gdGhpbmtpbmcgdGhpcyBwYXRjaCAoYW5kIHBhdGNoIDAzLzEx
-KSBzaG91bGQgYmUgc2VwYXJhdGVkDQo+ID4gZnJvbSB0aGlzIHBhdGNoIHNlcmllcyBmb3IgYXJt
-NjQgc3Vic3lzdGVtIHRvIGVhc2UgbWFpbnRlbmFuY2UuDQo+ID4gTXkgc2NlbmFyaW8gaXM6DQo+
-ID4gIDEpIHBhdGNoIHNlcmllcyAxOiBSLUNhciBQQ0llIGVuZHBvaW50IHN1cHBvcnQuDQo+ID4g
-IC0tIFRoaXMgbWVhbnM6IHBhdGNoIDEsIDQgLSA5LCAxMQ0KPiA+DQo+ID4gIDIpIEFmdGVyIHRo
-ZSBwYXRjaCBzZXJpZXMgMSBpcyBtZXJnZWQsIHN1Ym1pdCB0aGlzIHBhdGNoIDIvMTEgdG8gYXJt
-IHN1YnN5c3RlbQ0KPiA+ICAgIGFuZCBzdWJtaXQgdGhlIHBhdGNoIDEwLzExIHRvIG1pc2Mgc3Vi
-c3lzdGVtLg0KPiA+DQo+ID4gIDMpIEF0IGxhc3QsIHN1Ym1pdCBwYXRjaCAzLzExIGFmdGVyIHRo
-ZSBwYXRjaCAyLzExIGlzIG1lcmdlZC4NCj4gPg0KPiA+IEdlZXJ0LXNhbiwgd2hhdCBkbyB5b3Ug
-dGhpbms/DQo+IA0KPiBUaGFua3MsIEkgYWdyZWUgd2l0aCB5b3VyIHN1bW1hcnkuDQo+IA0KPiBJ
-IGNhbiB0YWtlIHBhdGNoIDIvMTEgdGhyb3VnaCByZW5lc2FzLWRldmVsLg0KPiBQcm9iYWJseSBp
-dCdzIGJlc3QgaWYgSSBzdWJtaXQgaXQgdG8gYXJtLXNvYyBhcyBhIGZpeCBmb3IgdjUuOCwgYWZ0
-ZXINCj4gdGhlIGRyaXZlciBwYXJ0DQo+IGhhcyBiZWVuIG1lcmdlZCBpbnRvIHY1LjgtcmMxLCBz
-byAzLzExIGNhbiBiZSBzdWJtaXR0ZWQgZm9yIHY1LjkuDQoNClRoYW5rIHlvdSEgSSBnb3QgaXQu
-DQoNCj4gQlRXLCBJJ20gd29uZGVyaW5nIGFib3V0ICJbUEFUQ0ggdjYgMDUvMTFdIFBDSTogcmNh
-cjogRml4IGNhbGN1bGF0aW5nDQo+IG1hc2sgZm9yIFBDSUVQQU1SIHJlZ2lzdGVyIi4gQ2FuIHRo
-ZSBpc3N1ZSBmaXhlZCBieSB0aGlzIHBhdGNoIGhhcHBlbiB3aXRoDQo+IHRoZSBjdXJyZW50IGRy
-aXZlciBpbiBob3N0IG1vZGUsIG9yIGlzIHRoYXQgbGltaXRlZCB0byBlcCBtb2RlPw0KPiBJbiBj
-YXNlIG9mIHRoZSBmb3JtZXIsIHBsZWFzZSBzdWJtaXQgaXQgdG8gdGhlIFBDSSBtYWludGFpbmVy
-IGFzIGEgc2VwYXJhdGUNCj4gZml4Lg0KDQpUaGFuayB5b3UgZm9yIHBvaW50ZWQgaXQgb3V0LiBJ
-IHRoaW5rIHRoaXMgaXMgdGhlIGNhc2Ugb2YgdGhlIGZvcm1lci4NCklJVUMsIGlmIHN1Y2ggYSBz
-bWFsbCB3aW5kb3cgUENJZSBkZXZpY2UgZXhpc3RzLCB0aGUgaXNzdWUgaGFwcGVucy4NCg0KUHJh
-Ymhha2FyLXNhbiwgaXMgbXkgdW5kZXJzdGFuZGluZyBjb3JyZWN0Pw0KDQpCZXN0IHJlZ2FyZHMs
-DQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo=
+On Thu, Apr 2, 2020 at 9:17 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> Hi,
+>
+> On Wed, 1 Apr 2020 15:42:30 +0800
+> Zong Li <zong.li@sifive.com> wrote:
+>
+> > > > +
+> > > > +static int __kprobes riscv_insn_write(void *addr, const void *insn, size_t len)
+> > >
+> > > Why would you add "riscv_" prefix for those functions? It seems a bit odd.
+> >
+> > There is no particular reason, I just was used to adding a prefix for
+> > arch-related stuff. I have no preference here, it's OK to me to remove
+> > the prefix of these functions, do you think we need to remove them?
+>
+> Yeah, it will be better, unless it can mixed up with arch-independent
+> functions.
+
+OK. I'll remove it and use NOKPROBE_SYMBOL() instead of __kprobes annotation.
+
+>
+> > > > +{
+> > > > +     void *waddr = addr;
+> > > > +     bool across_pages = (((uintptr_t) addr & ~PAGE_MASK) + len) > PAGE_SIZE;
+> > > > +     unsigned long flags = 0;
+> > > > +     int ret;
+> > > > +
+> > > > +     raw_spin_lock_irqsave(&patch_lock, flags);
+> > >
+> > > This looks a bit odd since stop_machine() is protected by its own mutex,
+> > > and also the irq is already disabled here.
+> >
+> > We need it because we don't always enter the riscv_patch_text_nosync()
+> > through stop_machine mechanism. If we call the
+> > riscv_patch_text_nosync() directly, we need a lock to protect the
+> > page.
+>
+> Oh, OK, but it leads another question. Is that safe to patch the
+> text without sync? Would you use it for UP system?
+> I think it is better to clarify "in what case user can call _nosync()"
+> and add a comment on it.
+
+The ftrace is one of the cases, as documentation of ftrace said, when
+dynamic ftrace is initialized, it calls kstop_machine to make the
+machine act like a uniprocessor so that it can freely modify code
+without worrying about other processors executing that same code. So
+the ftrace called the _nosync interface here directly.
+
+>
+> Thank you,
+>
+> >
+> > >
+> > > Thank you,
+> > >
+> > > > +
+> > > > +     if (across_pages)
+> > > > +             patch_map(addr + len, FIX_TEXT_POKE1);
+> > > > +
+> > > > +     waddr = patch_map(addr, FIX_TEXT_POKE0);
+> > > > +
+> > > > +     ret = probe_kernel_write(waddr, insn, len);
+> > > > +
+> > > > +     patch_unmap(FIX_TEXT_POKE0);
+> > > > +
+> > > > +     if (across_pages)
+> > > > +             patch_unmap(FIX_TEXT_POKE1);
+> > > > +
+> > > > +     raw_spin_unlock_irqrestore(&patch_lock, flags);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +#else
+> > > > +static int __kprobes riscv_insn_write(void *addr, const void *insn, size_t len)
+> > > > +{
+> > > > +     return probe_kernel_write(addr, insn, len);
+> > > > +}
+> > > > +#endif /* CONFIG_MMU */
+> > > > +
+> > > > +int __kprobes riscv_patch_text_nosync(void *addr, const void *insns, size_t len)
+> > > > +{
+> > > > +     u32 *tp = addr;
+> > > > +     int ret;
+> > > > +
+> > > > +     ret = riscv_insn_write(tp, insns, len);
+> > > > +
+> > > > +     if (!ret)
+> > > > +             flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +static int __kprobes riscv_patch_text_cb(void *data)
+> > > > +{
+> > > > +     struct riscv_insn_patch *patch = data;
+> > > > +     int ret = 0;
+> > > > +
+> > > > +     if (atomic_inc_return(&patch->cpu_count) == 1) {
+> > > > +             ret =
+> > > > +                 riscv_patch_text_nosync(patch->addr, &patch->insn,
+> > > > +                                         GET_INSN_LENGTH(patch->insn));
+> > > > +             atomic_inc(&patch->cpu_count);
+> > > > +     } else {
+> > > > +             while (atomic_read(&patch->cpu_count) <= num_online_cpus())
+> > > > +                     cpu_relax();
+> > > > +             smp_mb();
+> > > > +     }
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +int __kprobes riscv_patch_text(void *addr, u32 insn)
+> > > > +{
+> > > > +     struct riscv_insn_patch patch = {
+> > > > +             .addr = addr,
+> > > > +             .insn = insn,
+> > > > +             .cpu_count = ATOMIC_INIT(0),
+> > > > +     };
+> > > > +
+> > > > +     return stop_machine_cpuslocked(riscv_patch_text_cb,
+> > > > +                                    &patch, cpu_online_mask);
+> > > > +}
+> > > > --
+> > > > 2.25.1
+> > > >
+> > >
+> > >
+> > > --
+> > > Masami Hiramatsu <mhiramat@kernel.org>
+>
+>
+> --
+> Masami Hiramatsu <mhiramat@kernel.org>
