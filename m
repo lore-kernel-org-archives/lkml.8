@@ -2,172 +2,306 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB83C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A02C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF722073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E75BC2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lJSOcP4z"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="LgA8VW7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390752AbgDCLRI (ORCPT
+        id S2390757AbgDCLSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:17:08 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:16553 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390570AbgDCLRI (ORCPT
+        Fri, 3 Apr 2020 07:18:11 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38505 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728099AbgDCLSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:17:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585912627; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=iC7DvDz7ZOsg7VR5uWSawihWsFxlESev/pDn/QoPcn0=;
- b=lJSOcP4zzkG+e0HpC9FXa0F/MAHQeNaUnlBRabx0HGYNfqNq67+Kws7XLTxdQ1q0WIiJfY7a
- 8NxbBQFmDrU/HbI/iV4JkEWu/AW5egFbs7CruBdf3fKKCjdYsTIOJ5p+33nF5NTCs10SWIJl
- 6x2gNRC6/utfEMXwU5mIaJ4r1RA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e871b33.7fef925f5ea0-smtp-out-n02;
- Fri, 03 Apr 2020 11:17:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C251CC44791; Fri,  3 Apr 2020 11:17:05 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CEA5EC433BA;
-        Fri,  3 Apr 2020 11:17:04 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 03 Apr 2020 16:47:04 +0530
-From:   kgunda@codeaurora.org
-To:     Rob Herring <robh@kernel.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V4 3/4] backlight: qcom-wled: Add WLED5 bindings
-In-Reply-To: <20200331175619.GA25466@bogus>
-References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
- <1584985618-25689-4-git-send-email-kgunda@codeaurora.org>
- <20200331175619.GA25466@bogus>
-Message-ID: <2aae3ad9267b73c25c8f0a7a0788960b@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Fri, 3 Apr 2020 07:18:11 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z12so6070129qtq.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 04:18:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ISVzqUmQ866jYmYCkDXX5w/QpTIHn/we7n1ERZB+Kuw=;
+        b=LgA8VW7YC5BY0sYCtnyBUf/lF8zI0Bs2aodjntYad6Sfxftp1gThUrQcNP1PPzNnF+
+         PRFW2uEWaFgCXah6EYMDaNfX69h2ELki+CZcY9V61mw4i5ULXA+47XfHUzcb4yv0CYGQ
+         ar5Gd99PP2KDmnKvcEZ7mm48biCkm+yz5Asjv2qUP5aHDe4ZYkNPQ3KS5uncPRdCk2Wo
+         5/deUOGZEk3ZUyK4I2MMf5+CyuLeJPM5dMPP/yrg5oTQA8oFUXyDmPmzEe15R9py3Jhw
+         MBnCC+e6RbXWQuCA7YQ7So1M1+2Xs+RiBmiXvOADrRdRzy1Zvvq8vuvjI1lOiL1qq28L
+         vAQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ISVzqUmQ866jYmYCkDXX5w/QpTIHn/we7n1ERZB+Kuw=;
+        b=ndeIi6EcymYr7g5GIv1qMs6vM+qkjLDIFkJL97xITB3qdkwY5AZJqEICCrnMOD8heu
+         In0xynl40lySzvy6yBdE/fgsYvjxMQqF1pDGyBilcuWwmmwDY+RxWF3pY8lLBugcZ5SK
+         WmpH1u5C4Kq4NCt1XxCkd/0jEIMIA8ROjggFd5OVxUYtg80xzgU5bw7qo3ia9DOfTTUD
+         lbyyJdE7Iog2as3ki7b9VbC2MXmQ5wfHRde9EZivjRTcS4syIjkAc16/Yjg+mPbtNmlG
+         Mz+eHlATSnbCcPA6nsbuEVjgrOu/ixBsmA24TlMi9/hbbYlUJucQv+TbE4KhJj4Qfp09
+         zpPw==
+X-Gm-Message-State: AGi0PubA+/IIStIR3iLdie5IdtcnBfO5phAaANAB2mEBtpX4meeGVrDY
+        iq6/WrCa6aWn9OU9YrfGwaIL/w==
+X-Google-Smtp-Source: APiQypLvGXNMvqI/FVEwTZrddFqz3bIu8b+b8fR7fTn0dhbLYQAUfx/gNqPPZZlTt3YqF8wdOiL+oA==
+X-Received: by 2002:ac8:6f63:: with SMTP id u3mr7573143qtv.365.1585912689344;
+        Fri, 03 Apr 2020 04:18:09 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id s188sm6096679qkh.67.2020.04.03.04.18.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Apr 2020 04:18:08 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2] x86/acpi: fix a deadlock with cpu hotplug
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <2025426.V7fFeAKXnt@kreacher>
+Date:   Fri, 3 Apr 2020 07:18:07 -0400
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        lenb@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        linux-acpi@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0277E081-1807-4393-BB8D-8E851D3ED1C7@lca.pw>
+References: <20200329142109.1501-1-cai@lca.pw> <2025426.V7fFeAKXnt@kreacher>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-31 23:26, Rob Herring wrote:
-> On Mon, Mar 23, 2020 at 11:16:57PM +0530, Kiran Gunda wrote:
->> Add WLED5 specific bindings.
->> 
-> 
-> More of the same comments here...
-> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+
+
+> On Apr 3, 2020, at 5:29 AM, Rafael J. Wysocki <rjw@rjwysocki.net> =
+wrote:
+>=20
+> On Sunday, March 29, 2020 4:21:09 PM CEST Qian Cai wrote:
+>> Similar to the commit 0266d81e9bf5 ("acpi/processor: Prevent cpu =
+hotplug
+>> deadlock") except this is for acpi_processor_ffh_cstate_probe():
+>>=20
+>> "The problem is that the work is scheduled on the current CPU from =
+the
+>> hotplug thread associated with that CPU.
+>>=20
+>> It's not required to invoke these functions via the workqueue because
+>> the hotplug thread runs on the target CPU already.
+>>=20
+>> Check whether current is a per cpu thread pinned on the target CPU =
+and
+>> invoke the function directly to avoid the workqueue."
+>>=20
+>> Since CONFIG_ACPI_PROCESSOR (for cstate.c) selects
+>> CONFIG_ACPI_CPU_FREQ_PSS (for processor_throttling.c) on x86, just
+>> make call_on_cpu() a static inline function from =
+processor_throttling.c
+>> and use it in cstate.c.
+>>=20
+>> WARNING: possible circular locking dependency detected
+>> ------------------------------------------------------
+>> cpuhp/1/15 is trying to acquire lock:
+>> ffffc90003447a28 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: =
+__flush_work+0x4c6/0x630
+>>=20
+>> but task is already holding lock:
+>> ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: =
+cpuidle_pause_and_lock+0x17/0x20
+>>=20
+>> which lock already depends on the new lock.
+>>=20
+>> the existing dependency chain (in reverse order) is:
+>>=20
+>> -> #1 (cpu_hotplug_lock){++++}-{0:0}:
+>> cpus_read_lock+0x3e/0xc0
+>> irq_calc_affinity_vectors+0x5f/0x91
+>> __pci_enable_msix_range+0x10f/0x9a0
+>> pci_alloc_irq_vectors_affinity+0x13e/0x1f0
+>> pci_alloc_irq_vectors_affinity at drivers/pci/msi.c:1208
+>> pqi_ctrl_init+0x72f/0x1618 [smartpqi]
+>> pqi_pci_probe.cold.63+0x882/0x892 [smartpqi]
+>> local_pci_probe+0x7a/0xc0
+>> work_for_cpu_fn+0x2e/0x50
+>> process_one_work+0x57e/0xb90
+>> worker_thread+0x363/0x5b0
+>> kthread+0x1f4/0x220
+>> ret_from_fork+0x27/0x50
+>>=20
+>> -> #0 ((work_completion)(&wfc.work)){+.+.}-{0:0}:
+>> __lock_acquire+0x2244/0x32a0
+>> lock_acquire+0x1a2/0x680
+>> __flush_work+0x4e6/0x630
+>> work_on_cpu+0x114/0x160
+>> acpi_processor_ffh_cstate_probe+0x129/0x250
+>> acpi_processor_evaluate_cst+0x4c8/0x580
+>> acpi_processor_get_power_info+0x86/0x740
+>> acpi_processor_hotplug+0xc3/0x140
+>> acpi_soft_cpu_online+0x102/0x1d0
+>> cpuhp_invoke_callback+0x197/0x1120
+>> cpuhp_thread_fun+0x252/0x2f0
+>> smpboot_thread_fn+0x255/0x440
+>> kthread+0x1f4/0x220
+>> ret_from_fork+0x27/0x50
+>>=20
+>> other info that might help us debug this:
+>>=20
+>> Chain exists of:
+>> (work_completion)(&wfc.work) --> cpuhp_state-up --> cpuidle_lock
+>>=20
+>> Possible unsafe locking scenario:
+>>=20
+>> CPU0                    CPU1
+>> ----                    ----
+>> lock(cpuidle_lock);
+>>                         lock(cpuhp_state-up);
+>>                         lock(cpuidle_lock);
+>> lock((work_completion)(&wfc.work));
+>>=20
+>> *** DEADLOCK ***
+>>=20
+>> 3 locks held by cpuhp/1/15:
+>> #0: ffffffffaf51ab10 (cpu_hotplug_lock){++++}-{0:0}, at: =
+cpuhp_thread_fun+0x69/0x2f0
+>> #1: ffffffffaf51ad40 (cpuhp_state-up){+.+.}-{0:0}, at: =
+cpuhp_thread_fun+0x69/0x2f0
+>> #2: ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: =
+cpuidle_pause_and_lock+0x17/0x20
+>>=20
+>> Call Trace:
+>> dump_stack+0xa0/0xea
+>> print_circular_bug.cold.52+0x147/0x14c
+>> check_noncircular+0x295/0x2d0
+>> __lock_acquire+0x2244/0x32a0
+>> lock_acquire+0x1a2/0x680
+>> __flush_work+0x4e6/0x630
+>> work_on_cpu+0x114/0x160
+>> acpi_processor_ffh_cstate_probe+0x129/0x250
+>> acpi_processor_evaluate_cst+0x4c8/0x580
+>> acpi_processor_get_power_info+0x86/0x740
+>> acpi_processor_hotplug+0xc3/0x140
+>> acpi_soft_cpu_online+0x102/0x1d0
+>> cpuhp_invoke_callback+0x197/0x1120
+>> cpuhp_thread_fun+0x252/0x2f0
+>> smpboot_thread_fn+0x255/0x440
+>> kthread+0x1f4/0x220
+>> ret_from_fork+0x27/0x50
+>>=20
+>> Signed-off-by: Qian Cai <cai@lca.pw>
 >> ---
->>  .../bindings/leds/backlight/qcom-wled.yaml         | 39 
->> ++++++++++++++++++++++
->>  1 file changed, 39 insertions(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml 
->> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> index 8a388bf..159115f 100644
->> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> @@ -20,6 +20,7 @@ properties:
->>         - qcom,pm8941-wled
->>         - qcom,pmi8998-wled
->>         - qcom,pm660l-wled
->> +       - qcom,pm8150l-wled
->> 
->>    reg:
->>      maxItems: 1
->> @@ -28,10 +29,23 @@ properties:
->>      maxItems: 1
->>      description:
->>        brightness value on boot, value from 0-4095.
->> +      For pm8150l this value vary from 0-4095 or 0-32767
->> +      depending on the brightness control mode. If CABC is
->> +      enabled 0-4095 range is used.
-> 
-> Constraints.
-> 
-Will address it in next post.
->>      allOf:
->>        - $ref: /schemas/types.yaml#/definitions/uint32
->>          default: 2048
->> 
->> +  max-brightness:
->> +    maxItems: 1
->> +    description:
->> +      Maximum brightness level. Allowed values are,
->> +      for pmi8998 it is  0-4095.
->> +      For pm8150l, this can be either 4095 or 32767.
-> 
-> Constraints!
-> 
-Will address it in next post.
->> +      If CABC is enabled, this is capped to 4095.
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> Standard property. Assume it has a type definition.'
-> 
-Will address it in next post.
+>>=20
+>> v2:
+>> Make call_on_cpu() a static inline function to avoid a compilation
+>> error when ACPI_PROCESSOR=3Dm thanks to lkp@intel.com.
+>>=20
+>> arch/x86/kernel/acpi/cstate.c       |  3 ++-
+>> drivers/acpi/processor_throttling.c |  7 -------
+>> include/acpi/processor.h            | 10 ++++++++++
+>> 3 files changed, 12 insertions(+), 8 deletions(-)
+>>=20
+>> diff --git a/arch/x86/kernel/acpi/cstate.c =
+b/arch/x86/kernel/acpi/cstate.c
+>> index caf2edccbad2..49ae4e1ac9cd 100644
+>> --- a/arch/x86/kernel/acpi/cstate.c
+>> +++ b/arch/x86/kernel/acpi/cstate.c
+>> @@ -161,7 +161,8 @@ int acpi_processor_ffh_cstate_probe(unsigned int =
+cpu,
+>>=20
+>> 	/* Make sure we are running on right CPU */
+>>=20
+>> -	retval =3D work_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, =
+cx);
+>> +	retval =3D call_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, =
+cx,
+>> +			     false);
+>> 	if (retval =3D=3D 0) {
+>> 		/* Use the hint in CST */
+>> 		percpu_entry->states[cx->index].eax =3D cx->address;
+>> diff --git a/drivers/acpi/processor_throttling.c =
+b/drivers/acpi/processor_throttling.c
+>> index 532a1ae3595a..a0bd56ece3ff 100644
+>> --- a/drivers/acpi/processor_throttling.c
+>> +++ b/drivers/acpi/processor_throttling.c
+>> @@ -897,13 +897,6 @@ static long __acpi_processor_get_throttling(void =
+*data)
+>> 	return pr->throttling.acpi_processor_get_throttling(pr);
+>> }
+>>=20
+>> -static int call_on_cpu(int cpu, long (*fn)(void *), void *arg, bool =
+direct)
+>> -{
+>> -	if (direct || (is_percpu_thread() && cpu =3D=3D =
+smp_processor_id()))
+>> -		return fn(arg);
+>> -	return work_on_cpu(cpu, fn, arg);
+>> -}
+>> -
+>> static int acpi_processor_get_throttling(struct acpi_processor *pr)
+>> {
+>> 	if (!pr)
+>> diff --git a/include/acpi/processor.h b/include/acpi/processor.h
+>> index 47805172e73d..770d226b22f2 100644
+>> --- a/include/acpi/processor.h
+>> +++ b/include/acpi/processor.h
+>> @@ -297,6 +297,16 @@ static inline void =
+acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
+>> }
+>> #endif
+>>=20
+>> +#ifdef CONFIG_ACPI_CPU_FREQ_PSS
+>=20
+> Why does this depend on CONFIG_ACPI_CPU_FREQ_PSS?
+
+call_on_cpu() was only used in processor_throttling.c which has,
+
+processor-$(CONFIG_ACPI_CPU_FREQ_PSS)   +=3D processor_throttling.o
+
+after this patch, it will also be used in cstate.c which has,
+
+ifneq ($(CONFIG_ACPI_PROCESSOR),)
+obj-y                           +=3D cstate.o
+endif
+
+i.e.,
+
+config ACPI_PROCESSOR
+        tristate "Processor"
+        depends on X86 || IA64 || ARM64
+        select ACPI_PROCESSOR_IDLE
+        select ACPI_CPU_FREQ_PSS if X86 || IA64
+
+Therefore, call_on_cpu() is only used when CONFIG_ACPI_CPU_FREQ_PSS=3Dy.
+
+The #ifdef is rather a safe net that in the future, if we decided to =
+make call_on_cpu()
+a  non-inline function, it will prevent triggering an compilation =
+warning for unused
+function when CONFIG_ACPI_CPU_FREQ_PSS=3Dn.
+
+It may also serve as a documentation purpose to indicate that function =
+is only used
+with  CONFIG_ACPI_CPU_FREQ_PSS=3Dy.
+
+>=20
+>> +static inline int call_on_cpu(int cpu, long (*fn)(void *), void =
+*arg,
+>> +			      bool direct)
+>> +{
+>> +	if (direct || (is_percpu_thread() && cpu =3D=3D =
+smp_processor_id()))
+>> +		return fn(arg);
+>> +	return work_on_cpu(cpu, fn, arg);
+>> +}
+>> +#endif
 >> +
->>    label:
->>      maxItems: 1
->>      description:
->> @@ -124,6 +138,31 @@ properties:
->>        value for PM8941 from 1 to 3. Default 2
->>        For PMI8998 from 1 to 4.
->> 
->> +  qcom,modulator-sel:
->> +    maxItems: 1
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      Selects the modulator used for brightness modulation.
->> +      Allowed values are,
->> +               0 - Modulator A
->> +               1 - Modulator B
->> +      If not specified, then modulator A will be used by default.
->> +      This property is applicable only to WLED5 peripheral.
->> +
->> +  qcom,cabc-sel:
->> +    maxItems: 1
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      Selects the CABC pin signal used for brightness modulation.
->> +      Allowed values are,
->> +              0 - CABC disabled
->> +              1 - CABC 1
->> +              2 - CABC 2
->> +              3 - External signal (e.g. LPG) is used for dimming
->> +      This property is applicable only to WLED5 peripheral.
->> +
->>    interrupts:
->>      maxItems: 2
->>      description:
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->>  a Linux Foundation Collaborative Project
->> 
+>> /* in processor_perflib.c */
+>>=20
+>> #ifdef CONFIG_CPU_FREQ
+
