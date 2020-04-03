@@ -2,95 +2,110 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3956CC2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5D4C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D2620CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkM5y40/"
+	by mail.kernel.org (Postfix) with ESMTP id 85CAF20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585925730;
+	bh=X9QK3DxM8PocBDuHpjw1TreDlIixWPpzHdlQR28SBnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b7/BrnCIbWFCpwDj6yLuPOGcwDD+wUfzrQjHa4BwK7AaVlACZHtaXA2xJZun3YW2y
+	 Lp352/2MHMbHS0rz+Cbm/0/Zi4q4TqEwa1yh8Lv0UTP+THbkloV4wyqGmsW/qcNtsq
+	 x34AVDPu3v1EaWIHyoqcNF3eAxfOcrULZXr8K7Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404063AbgDCOzX (ORCPT
+        id S2404100AbgDCOz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:55:23 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33677 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404068AbgDCOzW (ORCPT
+        Fri, 3 Apr 2020 10:55:29 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34654 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404079AbgDCOz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:55:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585925721;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3R5aqOAa6cJV3ccGmaNvYRE09DuIFl70G2nLJBN8x94=;
-        b=CkM5y40/zmn+d3qJ2YjJB2xuBfOT1S6fL8lTZqWFCEL63Db3BqWtFcT72GZOTPRav+VDm6
-        IXPS0Wivj1WPJWkKq5TCHWXFYTK7wBK4oaNV4IcxETWA+xdKaRMzHn9eINgHC1/Cd3Iwqh
-        jk12QuzSN6nLiW/vNI8fkS2xv0kRtX0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-72-Kbxj0pLlMJePshtVQGBF3w-1; Fri, 03 Apr 2020 10:55:19 -0400
-X-MC-Unique: Kbxj0pLlMJePshtVQGBF3w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B94B0107ACCC;
-        Fri,  3 Apr 2020 14:55:18 +0000 (UTC)
-Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F7685C1BE;
-        Fri,  3 Apr 2020 14:55:17 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 09:55:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        raphael.gault@arm.com
-Subject: Re: [PATCH v2 10/10] objtool: Support multiple stack_op per
- instruction
-Message-ID: <20200403145515.ywubrfbg44a22orf@treble>
-References: <20200327152847.15294-1-jthierry@redhat.com>
- <20200327152847.15294-11-jthierry@redhat.com>
- <20200402175426.77houvk46xhcxxmn@treble>
- <3b3f07b3-172b-0560-96c7-d9386e3cab23@redhat.com>
+        Fri, 3 Apr 2020 10:55:27 -0400
+Received: by mail-qt1-f195.google.com with SMTP id 14so6387839qtp.1;
+        Fri, 03 Apr 2020 07:55:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=WueqobVTQhcuC12qhXxBjSlUXTsOjQxipqHLExYdXc0=;
+        b=r1b480yVF4TVvjrmu9e9b50NuC47Vk3m0YSl40WOSeQXq8lJeps/ADO+KJNjeKJzJj
+         aGGZJZfUuaq3cRlitmPYQ2IQv77nhZDHwTOFW4atm0XMsImQWiDGLolaa9PagsIpXjgb
+         EM2oNoZdvmXAhaoNA0X7jbbK3rIy8dL8zcXGxbVDVblZmNjnIRyoagBiqvD5Wg0DfMft
+         Je19HLCWupm6dDLYgsaD2ZSvaSjPdO2mdFOlfM68Q7pRDcuIodjlvnxsEyHv1ozQY4VN
+         td2ZZZmZjc3IOVeCUgGknW+DVuUoBKjpERAgu440DgNTZua5AIfvoANdbzhN23UAUpXq
+         kuTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=WueqobVTQhcuC12qhXxBjSlUXTsOjQxipqHLExYdXc0=;
+        b=WTC2VyVjGW6Bdvq3uq0HhQ47SRmgpyi/1gnYae1brmpJjJu6sZl3g3I3hb/F2E5ZeC
+         etMDHQIH2F1+wobgxul9kwd0jbDqCPvnDBAzMacKgmF3r+7kVXvG5zLMCgiBO4GIW/8j
+         sTqQlbS7tRSTQ4Cx1h1oA6Y/eChuL3fbSXwVii1dDTtfsr5I4r1dFBz9xAvABbJYHZBE
+         yYnAWHHDd8n8kGvnnY3+/cIO7EYo9hChd2BsaElLClCQpwIhuDu4V1hvU9Fk4FdweaKo
+         Syg/MxHOr4qelEze3qy5F9/z58rn5oG2ZomyOeJo8n/yQljBWhax6K9bmDkiUWuO2p5O
+         fDVA==
+X-Gm-Message-State: AGi0PuZkh6d23U1jHy707FK6BcAfWXvHZjZUk75s4QeK+Db1wDVQzqi6
+        M9mbOTUB4nsrgd8qWaBd19A=
+X-Google-Smtp-Source: APiQypIWYRFn9PmjXGuhOXLCtTNa/5UW/zyNPX9KmNkdo6y3Q3MtaY+o4pitao0ov7CK3dInjarMMg==
+X-Received: by 2002:ac8:2f15:: with SMTP id j21mr8898994qta.55.1585925726184;
+        Fri, 03 Apr 2020 07:55:26 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::842b])
+        by smtp.gmail.com with ESMTPSA id f188sm3895379qkd.101.2020.04.03.07.55.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 07:55:25 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 10:55:23 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Qian Cai <cai@lca.pw>, Prateek Sood <prsood@codeaurora.org>,
+        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: Deadlock due to "cpuset: Make cpuset hotplug synchronous"
+Message-ID: <20200403145523.GC162390@mtj.duckdns.org>
+References: <F0388D99-84D7-453B-9B6B-EEFF0E7BE4CC@lca.pw>
+ <20200325191922.GM162390@mtj.duckdns.org>
+ <20200326101529.xh763j5frq2r7mqv@e107158-lin>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3b3f07b3-172b-0560-96c7-d9386e3cab23@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200326101529.xh763j5frq2r7mqv@e107158-lin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 09:01:46AM +0100, Julien Thierry wrote:
-> 
-> 
-> On 4/2/20 6:54 PM, Josh Poimboeuf wrote:
-> > On Fri, Mar 27, 2020 at 03:28:47PM +0000, Julien Thierry wrote:
-> > > @@ -127,6 +129,10 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
-> > >   	if (insn.sib.nbytes)
-> > >   		sib = insn.sib.bytes[0];
-> > > +	op = calloc(1, sizeof(*op));
-> > > +	if (!op)
-> > > +		return -1;
-> > > +
+On Thu, Mar 26, 2020 at 10:15:32AM +0000, Qais Yousef wrote:
+> On 03/25/20 15:19, Tejun Heo wrote:
+> > On Wed, Mar 25, 2020 at 03:16:56PM -0400, Qian Cai wrote:
+> > > The linux-next commit a49e4629b5ed (“cpuset: Make cpuset hotplug synchronous”)
+> > > introduced real deadlocks with CPU hotplug as showed in the lockdep splat, since it is
+> > > now making a relation from cpu_hotplug_lock —> cgroup_mutex.
 > > 
-> > Why not malloc()?
-> > 
+> > Prateek, can you please take a look? Given that the merge window is just around
+> > the corner, we might have to revert and retry later if it can't be resolved
+> > quickly.
 > 
-> It's just that previsously, stack_op was part of the instruction structure
-> and was initialized to all 0 in decode_instructions(). Now that it's created
-> here, I assumed it would be better to have the same thing here and
-> initialized the new stack_op to all 0.
+> I've ran cpuset_hotplug and cpuhotplug LTP tests using next-20200325 but
+> couldn't reproduce it.
 > 
-> Do you prefer to have an explicit malloc() + memset()?
+> Hopefully that can be fixed, but if you had to revert it, do you mind picking
+> this instead to fix the LTP issue I encountered before?
+> 
+> 	https://lore.kernel.org/lkml/20200211141554.24181-1-qais.yousef@arm.com/
 
-Maybe just add a comment that calloc() is equivalent to malloc() +
-memset() zero, for us user-space neophytes :-)
+So, I'd rather not, for now anyway. It isn't a real problem and I don't wanna
+add a wait vector there.
+
+Thanks.
 
 -- 
-Josh
-
+tejun
