@@ -2,189 +2,396 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F95C2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CF7C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E874B2078B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772002078B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:09:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jflbWB9+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXmoWwij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbgDCEHb (ORCPT
+        id S1729582AbgDCEJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 00:07:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40525 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgDCEHb (ORCPT
+        Fri, 3 Apr 2020 00:09:03 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:40579 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgDCEJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 00:07:31 -0400
-Received: by mail-pl1-f196.google.com with SMTP id h11so2197307plk.7;
-        Thu, 02 Apr 2020 21:07:30 -0700 (PDT)
+        Fri, 3 Apr 2020 00:09:03 -0400
+Received: by mail-yb1-f193.google.com with SMTP id a5so3470765ybo.7;
+        Thu, 02 Apr 2020 21:09:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZBjkJKJ5u2z+Q+We6EYzbdq7wJVe06yWFlZX4pTzXxY=;
-        b=jflbWB9+gGGoOHmCUaEOBLFj34cg+V30/HZBeTFc0vAeC/Nqp+9m6We53b/ifWfEje
-         Fgcpei59mxXVlBJfg1rjJcoc5Wwun3dEvEKFB1/1taH7XiNBb36ZIkAye6dNZ71VFKy4
-         506rjnzjOQe4YdmlrG18YE4K7e7c+FgzRlhdRR0aqD+68DvBcuPhTE9dKCXuTKgLSvAB
-         eDx8FJeOocNOgjO2BNDETJYJKeUqtdxOPEWuSjT4YY5Kf1uoDjexLpe6fbTPtv13MkXw
-         RQsAbwtv60si+Gpih6Glh3SIWU+H+x2QjKdYdCaIMyFc1qJAB4t1ikyeclB1RiUAXgHT
-         WRwA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q1lGZLtAVp0ikdzduWg7g0exArEeycCttEnfOwTMjic=;
+        b=UXmoWwij87S6+hAIpwMK1Kz9wySYELYkKMor2TF3CwSK5tPHI0dDsXSTVJnmte3j+P
+         NFG26eG219ppNy9ob3rsv79jzjh9ahwd6u6RIDKJIfiDqKZTr8l/URs8DMtzutyMSytl
+         iyUfRe7o3mHhSSRrwIZcJhOWqadiATBGnIjLhEUwTrbP7ZeNl42zgI+PScaQyAqFOH1K
+         ETgYB/ARhIjnHT1nEXjVocD4cyTFTSI0kJYzcOrpCmLKVm6j5NZRtSsbVPhAhDHJVWxh
+         uUB4cHWXhSd8OhQZaj4gqQNCX8JBN49OIYBL8kd8bK73xRIUT8WGRL1/wHtssWs/RQPM
+         TS4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZBjkJKJ5u2z+Q+We6EYzbdq7wJVe06yWFlZX4pTzXxY=;
-        b=fZuaSGWY5DSfSYDGY9C8MAXl1Cyf6SblYLTstDypamK7KnG0/KjYv5+CP7a/zumtP1
-         8duxBvRSLwxkYDq6GzUjh2j2ycnroxPHZmx80Jjc7qCYTLftM0YeeCD8UbX1CR8oEhNp
-         3ffTbAbpO5LTwzNSV0QZYke03ZC/4m6XTtTZNSTywThHJlwuIPFa6W+rvii5V38i5Wf6
-         PaxyfCNyNUeWYS2qRNC0nsEohc+gA41P+vvlh5y3ZDB8f/AumTD0YBkLm/s5eCNFlpzS
-         RyySpQ+E0dHw+JfqXoMrSo5abmHsnAp7D9NEznXjKhUdVlIXLgWm5X34g01fXlVkTlJT
-         V7QQ==
-X-Gm-Message-State: AGi0PuacoVkbAE6Hr97gNPaQJCiPgyAcZbqHavFK6YI4d8VMfODC4Qh9
-        5zg7oX7hAoQkRoghvIY2xG53CkxZ
-X-Google-Smtp-Source: APiQypJshgb3GVfOMqeQAkG1bLCvRzepMFb/Gc8KNNpf+fqtUcos0fQtGxiycuKE6lQrBRAvw8W1zA==
-X-Received: by 2002:a17:902:9348:: with SMTP id g8mr6155341plp.112.1585886850044;
-        Thu, 02 Apr 2020 21:07:30 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v42sm4416221pgn.6.2020.04.02.21.07.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 21:07:29 -0700 (PDT)
-Subject: Re: [PATCH] watchdog: clarify that stop() is optional
-To:     Bumsik Kim <kbumsik@gmail.com>, wim@linux-watchdog.org,
-        corbet@lwn.net
-Cc:     linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Bumsik Kim <k.bumsik@gmail.com>
-References: <20200403031507.63487-1-k.bumsik@gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <1fe9be6e-7da1-e738-c825-beddef31fd54@roeck-us.net>
-Date:   Thu, 2 Apr 2020 21:07:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q1lGZLtAVp0ikdzduWg7g0exArEeycCttEnfOwTMjic=;
+        b=Yam/LinvqyZz+mW/aJuP5q6UM3FjdQoKnB0bFrY7UexLYx4zsU+FmmvPHJmo7wHNBk
+         4SNobZ0J/R6/TPGmat4c5OqjfHyInUiqkuzkJ5HnneKzWDVwfFZHlAN9paAZctobkTC1
+         S0se7VBu1wcy34lILlAhq/hRETwrsit79+ODL7cQFDbcYAVufGe0B3QJq2+YXn01YRpF
+         UGWQPnyOLRbfVDQxa5LF//YvrEFLGP9MXkroNY3tMGvGCSQUd8VKUivuiX3Q3E/lW0N4
+         srsi/6TdPep/rjD70ivAZnWKQopkU17eqmGJRNw8/WrTXWk9H6q7H59bkoLQt13TrNGE
+         WA6Q==
+X-Gm-Message-State: AGi0PuYe9dOqQyTaTgQXyE1Vu0PX17UArEPWVyrDZ/pNr5ueL0N38Pln
+        BV7fZ0ePTEPh4jEL2rg2wzIvvgFh5KZgJBbooxE=
+X-Google-Smtp-Source: APiQypIoA/R7kD9NN1kKkZoIcj5IdtIHjgoWpjvyhmZiluI1W226SY7aP7iLHFneGpvN1Iyhw+nb0DPZESkDz2mwAbI=
+X-Received: by 2002:a25:5e44:: with SMTP id s65mr7031955ybb.183.1585886941339;
+ Thu, 02 Apr 2020 21:09:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200403031507.63487-1-k.bumsik@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1585861008-74004-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1585861008-74004-1-git-send-email-longli@linuxonhyperv.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Thu, 2 Apr 2020 23:08:50 -0500
+Message-ID: <CAH2r5mtdy=EWJiv+qvKC46P50kCoEZCyhVkrTkCoACpRBjEBWg@mail.gmail.com>
+Subject: Re: [PATCH v2] cifs: smbd: Properly process errors on ib_post_send
+To:     Long Li <longli@microsoft.com>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>, longli@linuxonhyperv.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/20 8:15 PM, Bumsik Kim wrote:
-> The commit d0684c8a9354 ("watchdog: Make stop function optional")
-> made stop function not mandatory, but the comments
-> and the doc weren't reflected. Fix it to clarify.
-> 
-> Signed-off-by: Bumsik Kim <k.bumsik@gmail.com>
+tentatively merged into cifs-2.6.git for-next pending more testing
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
+On Thu, Apr 2, 2020 at 3:57 PM longli--- via samba-technical
+<samba-technical@lists.samba.org> wrote:
+>
+> From: Long Li <longli@microsoft.com>
+>
+> When processing errors from ib_post_send(), the transport state needs to be
+> rolled back to the condition before the error.
+>
+> Refactor the old code to make it easy to roll back on IB errors, and fix this.
+>
+> Signed-off-by: Long Li <longli@microsoft.com>
 > ---
->  Documentation/watchdog/convert_drivers_to_kernel_api.rst | 2 +-
->  Documentation/watchdog/watchdog-kernel-api.rst           | 2 +-
->  include/linux/watchdog.h                                 | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/watchdog/convert_drivers_to_kernel_api.rst b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
-> index dd934cc08e40..51b999b5551a 100644
-> --- a/Documentation/watchdog/convert_drivers_to_kernel_api.rst
-> +++ b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
-> @@ -115,7 +115,7 @@ Add the watchdog operations
->  ---------------------------
->  
->  All possible callbacks are defined in 'struct watchdog_ops'. You can find it
-> -explained in 'watchdog-kernel-api.txt' in this directory. start(), stop() and
-> +explained in 'watchdog-kernel-api.txt' in this directory. start() and
->  owner must be set, the rest are optional. You will easily find corresponding
->  functions in the old driver. Note that you will now get a pointer to the
->  watchdog_device as a parameter to these functions, so you probably have to
-> diff --git a/Documentation/watchdog/watchdog-kernel-api.rst b/Documentation/watchdog/watchdog-kernel-api.rst
-> index 864edbe932c1..068a55ee0d4a 100644
-> --- a/Documentation/watchdog/watchdog-kernel-api.rst
-> +++ b/Documentation/watchdog/watchdog-kernel-api.rst
-> @@ -123,8 +123,8 @@ The list of watchdog operations is defined as::
->  	struct module *owner;
->  	/* mandatory operations */
->  	int (*start)(struct watchdog_device *);
-> -	int (*stop)(struct watchdog_device *);
->  	/* optional operations */
-> +	int (*stop)(struct watchdog_device *);
->  	int (*ping)(struct watchdog_device *);
->  	unsigned int (*status)(struct watchdog_device *);
->  	int (*set_timeout)(struct watchdog_device *, unsigned int);
-> diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-> index 417d9f37077a..1464ce6ffa31 100644
-> --- a/include/linux/watchdog.h
-> +++ b/include/linux/watchdog.h
-> @@ -37,15 +37,15 @@ struct watchdog_governor;
->   *
->   * The watchdog_ops structure contains a list of low-level operations
->   * that control a watchdog device. It also contains the module that owns
-> - * these operations. The start and stop function are mandatory, all other
-> + * these operations. The start function is mandatory, all other
->   * functions are optional.
->   */
->  struct watchdog_ops {
->  	struct module *owner;
->  	/* mandatory operations */
->  	int (*start)(struct watchdog_device *);
-> -	int (*stop)(struct watchdog_device *);
->  	/* optional operations */
-> +	int (*stop)(struct watchdog_device *);
->  	int (*ping)(struct watchdog_device *);
->  	unsigned int (*status)(struct watchdog_device *);
->  	int (*set_timeout)(struct watchdog_device *, unsigned int);
-> 
+>
+> change in v2: rebased
+>
+>  fs/cifs/smbdirect.c | 220 +++++++++++++++++++-------------------------
+>  1 file changed, 97 insertions(+), 123 deletions(-)
+>
+> diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
+> index fa52bf3e0236..dd3e119da296 100644
+> --- a/fs/cifs/smbdirect.c
+> +++ b/fs/cifs/smbdirect.c
+> @@ -800,41 +800,91 @@ static int manage_keep_alive_before_sending(struct smbd_connection *info)
+>         return 0;
+>  }
+>
+> -/*
+> - * Build and prepare the SMBD packet header
+> - * This function waits for avaialbe send credits and build a SMBD packet
+> - * header. The caller then optional append payload to the packet after
+> - * the header
+> - * intput values
+> - * size: the size of the payload
+> - * remaining_data_length: remaining data to send if this is part of a
+> - * fragmented packet
+> - * output values
+> - * request_out: the request allocated from this function
+> - * return values: 0 on success, otherwise actual error code returned
+> - */
+> -static int smbd_create_header(struct smbd_connection *info,
+> -               int size, int remaining_data_length,
+> -               struct smbd_request **request_out)
+> +/* Post the send request */
+> +static int smbd_post_send(struct smbd_connection *info,
+> +               struct smbd_request *request)
+> +{
+> +       struct ib_send_wr send_wr;
+> +       int rc, i;
+> +
+> +       for (i = 0; i < request->num_sge; i++) {
+> +               log_rdma_send(INFO,
+> +                       "rdma_request sge[%d] addr=%llu length=%u\n",
+> +                       i, request->sge[i].addr, request->sge[i].length);
+> +               ib_dma_sync_single_for_device(
+> +                       info->id->device,
+> +                       request->sge[i].addr,
+> +                       request->sge[i].length,
+> +                       DMA_TO_DEVICE);
+> +       }
+> +
+> +       request->cqe.done = send_done;
+> +
+> +       send_wr.next = NULL;
+> +       send_wr.wr_cqe = &request->cqe;
+> +       send_wr.sg_list = request->sge;
+> +       send_wr.num_sge = request->num_sge;
+> +       send_wr.opcode = IB_WR_SEND;
+> +       send_wr.send_flags = IB_SEND_SIGNALED;
+> +
+> +       rc = ib_post_send(info->id->qp, &send_wr, NULL);
+> +       if (rc) {
+> +               log_rdma_send(ERR, "ib_post_send failed rc=%d\n", rc);
+> +               smbd_disconnect_rdma_connection(info);
+> +               rc = -EAGAIN;
+> +       } else
+> +               /* Reset timer for idle connection after packet is sent */
+> +               mod_delayed_work(info->workqueue, &info->idle_timer_work,
+> +                       info->keep_alive_interval*HZ);
+> +
+> +       return rc;
+> +}
+> +
+> +static int smbd_post_send_sgl(struct smbd_connection *info,
+> +       struct scatterlist *sgl, int data_length, int remaining_data_length)
+>  {
+> +       int num_sgs;
+> +       int i, rc;
+> +       int header_length;
+>         struct smbd_request *request;
+>         struct smbd_data_transfer *packet;
+> -       int header_length;
+>         int new_credits;
+> -       int rc;
+> +       struct scatterlist *sg;
+>
+> +wait_credit:
+>         /* Wait for send credits. A SMBD packet needs one credit */
+>         rc = wait_event_interruptible(info->wait_send_queue,
+>                 atomic_read(&info->send_credits) > 0 ||
+>                 info->transport_status != SMBD_CONNECTED);
+>         if (rc)
+> -               return rc;
+> +               goto err_wait_credit;
+>
+>         if (info->transport_status != SMBD_CONNECTED) {
+> -               log_outgoing(ERR, "disconnected not sending\n");
+> -               return -EAGAIN;
+> +               log_outgoing(ERR, "disconnected not sending on wait_credit\n");
+> +               rc = -EAGAIN;
+> +               goto err_wait_credit;
+> +       }
+> +       if (unlikely(atomic_dec_return(&info->send_credits) < 0)) {
+> +               atomic_inc(&info->send_credits);
+> +               goto wait_credit;
+> +       }
+> +
+> +wait_send_queue:
+> +       wait_event(info->wait_post_send,
+> +               atomic_read(&info->send_pending) < info->send_credit_target ||
+> +               info->transport_status != SMBD_CONNECTED);
+> +
+> +       if (info->transport_status != SMBD_CONNECTED) {
+> +               log_outgoing(ERR, "disconnected not sending on wait_send_queue\n");
+> +               rc = -EAGAIN;
+> +               goto err_wait_send_queue;
+> +       }
+> +
+> +       if (unlikely(atomic_inc_return(&info->send_pending) >
+> +                               info->send_credit_target)) {
+> +               atomic_dec(&info->send_pending);
+> +               goto wait_send_queue;
+>         }
+> -       atomic_dec(&info->send_credits);
+>
+>         request = mempool_alloc(info->request_mempool, GFP_KERNEL);
+>         if (!request) {
+> @@ -859,11 +909,11 @@ static int smbd_create_header(struct smbd_connection *info,
+>                 packet->flags |= cpu_to_le16(SMB_DIRECT_RESPONSE_REQUESTED);
+>
+>         packet->reserved = 0;
+> -       if (!size)
+> +       if (!data_length)
+>                 packet->data_offset = 0;
+>         else
+>                 packet->data_offset = cpu_to_le32(24);
+> -       packet->data_length = cpu_to_le32(size);
+> +       packet->data_length = cpu_to_le32(data_length);
+>         packet->remaining_data_length = cpu_to_le32(remaining_data_length);
+>         packet->padding = 0;
+>
+> @@ -878,7 +928,7 @@ static int smbd_create_header(struct smbd_connection *info,
+>         /* Map the packet to DMA */
+>         header_length = sizeof(struct smbd_data_transfer);
+>         /* If this is a packet without payload, don't send padding */
+> -       if (!size)
+> +       if (!data_length)
+>                 header_length = offsetof(struct smbd_data_transfer, padding);
+>
+>         request->num_sge = 1;
+> @@ -887,107 +937,15 @@ static int smbd_create_header(struct smbd_connection *info,
+>                                                  header_length,
+>                                                  DMA_TO_DEVICE);
+>         if (ib_dma_mapping_error(info->id->device, request->sge[0].addr)) {
+> -               mempool_free(request, info->request_mempool);
+>                 rc = -EIO;
+> +               request->sge[0].addr = 0;
+>                 goto err_dma;
+>         }
+>
+>         request->sge[0].length = header_length;
+>         request->sge[0].lkey = info->pd->local_dma_lkey;
+>
+> -       *request_out = request;
+> -       return 0;
+> -
+> -err_dma:
+> -       /* roll back receive credits */
+> -       spin_lock(&info->lock_new_credits_offered);
+> -       info->new_credits_offered += new_credits;
+> -       spin_unlock(&info->lock_new_credits_offered);
+> -       atomic_sub(new_credits, &info->receive_credits);
+> -
+> -err_alloc:
+> -       /* roll back send credits */
+> -       atomic_inc(&info->send_credits);
+> -
+> -       return rc;
+> -}
+> -
+> -static void smbd_destroy_header(struct smbd_connection *info,
+> -               struct smbd_request *request)
+> -{
+> -
+> -       ib_dma_unmap_single(info->id->device,
+> -                           request->sge[0].addr,
+> -                           request->sge[0].length,
+> -                           DMA_TO_DEVICE);
+> -       mempool_free(request, info->request_mempool);
+> -       atomic_inc(&info->send_credits);
+> -}
+> -
+> -/* Post the send request */
+> -static int smbd_post_send(struct smbd_connection *info,
+> -               struct smbd_request *request)
+> -{
+> -       struct ib_send_wr send_wr;
+> -       int rc, i;
+> -
+> -       for (i = 0; i < request->num_sge; i++) {
+> -               log_rdma_send(INFO,
+> -                       "rdma_request sge[%d] addr=%llu length=%u\n",
+> -                       i, request->sge[i].addr, request->sge[i].length);
+> -               ib_dma_sync_single_for_device(
+> -                       info->id->device,
+> -                       request->sge[i].addr,
+> -                       request->sge[i].length,
+> -                       DMA_TO_DEVICE);
+> -       }
+> -
+> -       request->cqe.done = send_done;
+> -
+> -       send_wr.next = NULL;
+> -       send_wr.wr_cqe = &request->cqe;
+> -       send_wr.sg_list = request->sge;
+> -       send_wr.num_sge = request->num_sge;
+> -       send_wr.opcode = IB_WR_SEND;
+> -       send_wr.send_flags = IB_SEND_SIGNALED;
+> -
+> -wait_sq:
+> -       wait_event(info->wait_post_send,
+> -               atomic_read(&info->send_pending) < info->send_credit_target);
+> -       if (unlikely(atomic_inc_return(&info->send_pending) >
+> -                               info->send_credit_target)) {
+> -               atomic_dec(&info->send_pending);
+> -               goto wait_sq;
+> -       }
+> -
+> -       rc = ib_post_send(info->id->qp, &send_wr, NULL);
+> -       if (rc) {
+> -               log_rdma_send(ERR, "ib_post_send failed rc=%d\n", rc);
+> -               if (atomic_dec_and_test(&info->send_pending))
+> -                       wake_up(&info->wait_send_pending);
+> -               smbd_disconnect_rdma_connection(info);
+> -               rc = -EAGAIN;
+> -       } else
+> -               /* Reset timer for idle connection after packet is sent */
+> -               mod_delayed_work(info->workqueue, &info->idle_timer_work,
+> -                       info->keep_alive_interval*HZ);
+> -
+> -       return rc;
+> -}
+> -
+> -static int smbd_post_send_sgl(struct smbd_connection *info,
+> -       struct scatterlist *sgl, int data_length, int remaining_data_length)
+> -{
+> -       int num_sgs;
+> -       int i, rc;
+> -       struct smbd_request *request;
+> -       struct scatterlist *sg;
+> -
+> -       rc = smbd_create_header(
+> -               info, data_length, remaining_data_length, &request);
+> -       if (rc)
+> -               return rc;
+> -
+> +       /* Fill in the packet data payload */
+>         num_sgs = sgl ? sg_nents(sgl) : 0;
+>         for_each_sg(sgl, sg, num_sgs, i) {
+>                 request->sge[i+1].addr =
+> @@ -997,7 +955,7 @@ static int smbd_post_send_sgl(struct smbd_connection *info,
+>                                 info->id->device, request->sge[i+1].addr)) {
+>                         rc = -EIO;
+>                         request->sge[i+1].addr = 0;
+> -                       goto dma_mapping_failure;
+> +                       goto err_dma;
+>                 }
+>                 request->sge[i+1].length = sg->length;
+>                 request->sge[i+1].lkey = info->pd->local_dma_lkey;
+> @@ -1008,14 +966,30 @@ static int smbd_post_send_sgl(struct smbd_connection *info,
+>         if (!rc)
+>                 return 0;
+>
+> -dma_mapping_failure:
+> -       for (i = 1; i < request->num_sge; i++)
+> +err_dma:
+> +       for (i = 0; i < request->num_sge; i++)
+>                 if (request->sge[i].addr)
+>                         ib_dma_unmap_single(info->id->device,
+>                                             request->sge[i].addr,
+>                                             request->sge[i].length,
+>                                             DMA_TO_DEVICE);
+> -       smbd_destroy_header(info, request);
+> +       mempool_free(request, info->request_mempool);
+> +
+> +       /* roll back receive credits and credits to be offered */
+> +       spin_lock(&info->lock_new_credits_offered);
+> +       info->new_credits_offered += new_credits;
+> +       spin_unlock(&info->lock_new_credits_offered);
+> +       atomic_sub(new_credits, &info->receive_credits);
+> +
+> +err_alloc:
+> +       if (atomic_dec_and_test(&info->send_pending))
+> +               wake_up(&info->wait_send_pending);
+> +
+> +err_wait_send_queue:
+> +       /* roll back send credits and pending */
+> +       atomic_inc(&info->send_credits);
+> +
+> +err_wait_credit:
+>         return rc;
+>  }
+>
+> --
+> 2.17.1
+>
+>
 
+
+-- 
+Thanks,
+
+Steve
