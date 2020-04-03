@@ -2,180 +2,83 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B4FC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9650C2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D82206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDBE20678
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:55:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wShxCNEA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oFMlkBqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389876AbgDCIvw (ORCPT
+        id S2390286AbgDCIzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:51:52 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54148 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbgDCIvv (ORCPT
+        Fri, 3 Apr 2020 04:55:09 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:62884 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727868AbgDCIzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:51:51 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0338phkR002696;
-        Fri, 3 Apr 2020 03:51:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585903903;
-        bh=vomyYBpE+3vWWm4YA0bh+xrKj5H16PwL6wY781/tLJs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wShxCNEAc7tZTdXJRGkLp8MSyRyn122Thq6qkifT5x+LzP1OSd5NiJK+SWyXcaPwO
-         kRjAOePSyJh2zbLkZFUEhT/XmNz6DvWZt232SyuF03qu8NsG7Hx8oI+K3t6db3kfnu
-         EWM0acwPeMTKy4AaOSoyHXAMK5iOJYZ1cotbA4aM=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0338ph3G100973
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Apr 2020 03:51:43 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
- 2020 03:51:43 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Apr 2020 03:51:43 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0338pdg6073680;
-        Fri, 3 Apr 2020 03:51:40 -0500
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        <kernel@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
- <20200330191654.waoocllctanh5nk5@pengutronix.de>
- <20200331204559.GB2954599@ulmo>
- <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
- <20200401182833.GB2978178@ulmo>
- <20200401203156.d7x5ynnnhob3jyoo@pengutronix.de>
- <20200401213738.GA3052587@ulmo>
- <20200402140221.bjbol77uegjma6oz@pengutronix.de>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <5dbdbc15-ff29-f577-0632-6a28378b0104@ti.com>
-Date:   Fri, 3 Apr 2020 14:21:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 3 Apr 2020 04:55:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585904108; h=Message-ID: Subject: Cc: To: From: Date:
+ Content-Transfer-Encoding: Content-Type: MIME-Version: Sender;
+ bh=2BB4XDt82weA6QO3EKEICdWU8jbHAn3rmAUZkFbsLWY=; b=oFMlkBqv6SXXTK1HTRmZKGwbvTAMj3zTL+cMTDmncI+rT+j6mlIL2jUAXa3dN5Y49ooYtd+K
+ hSCmE0wfv9cICaT1Zs/dl17r0FBTLXkSN2G47xZJE6OXD0M2wzhObhE3qrVG7Mlqf2Td2QgT
+ 4YZH8yXH4/ZZvULRIa5ta32a5YY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e86f9eb.7f11ace800a0-smtp-out-n03;
+ Fri, 03 Apr 2020 08:55:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 334FEC433BA; Fri,  3 Apr 2020 08:55:07 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D0C2FC433D2;
+        Fri,  3 Apr 2020 08:55:06 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200402140221.bjbol77uegjma6oz@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 03 Apr 2020 14:25:06 +0530
+From:   bgodavar@codeaurora.org
+List-Id: <linux-firmware.lore.kernel.org>
+To:     linux-firmware@kernel.org
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, gubbaven@codeaurora.org
+Subject: Update fw file to enable transparent WBS
+Message-ID: <4ac4959d44823e7a23618b970f68293e@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following changes since commit 
+edf390c23a4e185ff36daded36575f669f5059f7:
 
+   Merge branch 'v12573.77' of https://github.com/erinlo/linux_fw_scp 
+(2020-03-20 07:39:19 -0400)
 
-On 02/04/20 7:32 PM, Uwe Kleine-König wrote:
-> Hello Thierry,
-> 
-> On Wed, Apr 01, 2020 at 11:37:38PM +0200, Thierry Reding wrote:
->> On Wed, Apr 01, 2020 at 10:31:56PM +0200, Uwe Kleine-König wrote:
->>> There are people out there that are more demanding. If you have 1000000
->>> machines in the field and only then find out that they all fail to
->>> operate correctly with a certain small but positive probability and you
->>> have to send someone to each machine to fix that, that's bad.
->>
->> Agreed. But that's not really what we're talking about here, right? This
->> isn't some undefined behaviour that would spontaneously trigger.
->> We're still talking about deterministic behaviour that's going to be
->> the same whether you do it once in a test lab or a million times in
->> the field. A PWM-controlled backlight that you adjust the brightness
->> of in the lab is going to work the same way as in the field. Any
->> potential glitch would be happening in the lab as well. It would in
->> fact, constantly happen.
-> 
-> The glitch we're talking about really doesn't happen that often that we
-> should rely on this problem popping up during testing. To change both
-> period and duty_cycle two register writes are necessary. The hickup only
-> happens if after the first register write a period ends before the
-> second register write hits the hardware. (For the omap driver it might
-> happen a bit more often, don't remember the details, but I think the
-> above is what could be reached theoretically.)
-> 
->> For the rare cases where you can't fake it, it doesn't really matter
->> whether the framework refuses to do something because it knows that the
->> hardware isn't capable of doing it, or whether the driver will simply
->> try its best to do what it was asked to do and fails to deliver. You'll
->> notice one way or another and then you need to go back to the drawing
->> board and redo the design.
-> 
-> I think you didn't understand up to now that the glitch depends on
-> timing between register access and the PWM period and so is really hard
-> to actually reproduce. In the hope you understood that now, I assume you
-> see that your argumentation is incomplete.
-> 
-> And I think to assume that somebody would complain about a race
-> condition in a patch that just hit next is quite optimistic.
-> 
-> Having said that I don't know how critical this really is. Given that
-> the PWM under discussion doesn't complete periods on stop, it probably
-> isn't.
+are available in the git repository at:
 
-It is a limitation with the existing driver as well. Nothing is being changed
-regarding stopping of PWM. The same is marked under the limitations in the driver.
+   https://github.com/bgodavar/qca_bt_fw
 
-> 
-> I spend some time thinking about when the glitch actually happens.
-> Currently the load value is written first and then the match value.
-> If no period ends between the two writes there is only a problem when in
-> the currently running period the match event didn't happen yet. Then we
-> see a cycle with
-> 
->    .period = oldperiod + newperiod
->    .dutycycle = oldperiod + newdutycycle
-> 
-> (if the new match value isn't hit in the current cycle) or one with
-> 
->    .period = oldperiod
->    .duty_cycle = newdutycycle + (oldperiod - newperiod)
-> 
-> (if the new match value is hit in the current cycle). The probability
-> that one of the two happen is: olddutycycle / oldperiod which is quite
-> probable. (With olddutycycle = oldperiod there is no problem though.)
-> 
-> If after writing the new load value and before writing the new match
-> value a period ends it might happen that we see a cycle with
-> 
->   .period = newperiod
->   .dutycycle = olddutycycle + (newperiod - oldperiod)
-> 
-> (if the previous match value is used) or one with
-> 
->   .period = 2 * newperiod
->   .dutycycle = newperiod + newdutycycle
-> 
-> (if new match value is written too late for the first cycle with the new
-> period).
+for you to fetch changes up to 1a8b0dc00f77ec8bbc8aece2d1fc19222326efe5:
 
+   qca: Enable transparent WBS for WCN3991 (2020-04-03 14:15:42 +0530)
 
-That's exactly why we have marked in the Limitations sections that the current
-period might produce a cycle with mixed settings.  Frankly, I'm a bit torn here.
-There are other PWMs inside Linux with  similar limitations and documented
-similarly. If there is an overall objection for such hardware, the entire policy
-should be changed or the framework should be updated to allow user to choose for
-dynamic updates. IMHO, this series should not be blocked for this decision.
-Please consider it for the coming merge window.
+----------------------------------------------------------------
+Balakrishna Godavarthi (1):
+       qca: Enable transparent WBS for WCN3991
 
-Thanks and regards,
-Lokesh
+  qca/crnv32.bin | Bin 5388 -> 5388 bytes
+  1 file changed, 0 insertions(+), 0 deletions(-)
