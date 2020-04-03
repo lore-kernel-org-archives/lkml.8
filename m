@@ -2,102 +2,149 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CFDC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC51FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE86720787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585908345;
-	bh=k0PQmd3iXUTMGiYkwUr2y9dxKec9kgHgmU4r74w6+UY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=baNywZQWV7A6IVk+Aany2kXnJ/bTnzTD8gDQBqORgvVHuS8GHayJjfCkifhmTh3bD
-	 55WH6e/6RuruEoNh3xn7dm0VZWfPQb/qrxiI5fZTi7L0thOidtTUaspBjtzy+JurEX
-	 QesdfPgMZ0VbkvzJH69KVMw4RInK+En7UBnTYzXc=
+	by mail.kernel.org (Postfix) with ESMTP id A2C5920757
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgDCKFn (ORCPT
+        id S1732595AbgDCKKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:05:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54014 "EHLO mail.kernel.org"
+        Fri, 3 Apr 2020 06:10:54 -0400
+Received: from mga09.intel.com ([134.134.136.24]:37376 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbgDCKFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:05:43 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D2220757;
-        Fri,  3 Apr 2020 10:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585908342;
-        bh=k0PQmd3iXUTMGiYkwUr2y9dxKec9kgHgmU4r74w6+UY=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=U8V9XB1UfP4VvZKwx/hKUXXy0kcP8fSEGWQZyTKg7eFIqKmziuyf0bJ6NXn3OqjX8
-         BD72I1XCacH6vineVuG2YmzC69yGAjur2a9BvVPa1xRYgfEG7CbVZZZ0whG5wLBjZc
-         kevOzZC365aO6IEO2h8+KKQ1qCNPj12qCdsr31WE=
-Date:   Fri, 3 Apr 2020 12:05:27 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?ISO-8859-2?Q?Samuel_=C8avoj?= <sammko@sammserver.com>
-Subject: Re: [GIT PULL] HID for 5.7
-In-Reply-To: <CAHk-=wgy8AM+BOt4jhnoQ+wa=YVyXT4ARg=qEYC=S-OW4ZjZzw@mail.gmail.com>
-Message-ID: <nycvar.YFH.7.76.2004031158280.19713@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.2004011353080.19500@cbobk.fhfr.pm> <CAHk-=wgy8AM+BOt4jhnoQ+wa=YVyXT4ARg=qEYC=S-OW4ZjZzw@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1727774AbgDCKKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 06:10:54 -0400
+IronPort-SDR: wLTYWutqpSAd29nMiU6y5czzmdUYxfgBDKmCu4WQlYQ/vlg8j35D7gvyK00zQn4b1FErDOhoGr
+ BxekqrdT4GXQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 03:10:53 -0700
+IronPort-SDR: RLJWpt646RyKY/OSNz2Gat7Mpl2MdZ7EA6KgwekJuJcvg/e/wyx0LuJ8Ugb52FajA20eXAY89s
+ 2qgbPwPw2X8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
+   d="scan'208";a="396686285"
+Received: from seemahan-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.249.38.56])
+  by orsmga004.jf.intel.com with ESMTP; 03 Apr 2020 03:10:49 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 6913D21F19; Fri,  3 Apr 2020 13:10:44 +0300 (EEST)
+Date:   Fri, 3 Apr 2020 13:10:44 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Perches <joe@perches.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
+ DRM fourccs
+Message-ID: <20200403101043.GB3172@kekkonen.localdomain>
+References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
+ <20200403093103.GI1922688@smile.fi.intel.com>
+ <20200403093916.GA3172@kekkonen.localdomain>
+ <20200403095441.GL1922688@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403095441.GL1922688@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020, Linus Torvalds wrote:
+Hi Andy,
 
-> > Samuel Čavoj (1):
-> >       HID: Add driver fixing Glorious PC Gaming Race mouse report descriptor
+On Fri, Apr 03, 2020 at 12:54:41PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 03, 2020 at 12:39:16PM +0300, Sakari Ailus wrote:
+> > On Fri, Apr 03, 2020 at 12:31:03PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Apr 03, 2020 at 12:11:56PM +0300, Sakari Ailus wrote:
+> > > > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
+> > > > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
+> > > > the same implementation can be used.
+> > > 
+> > > ...
+> > > 
+> > > > +static noinline_for_stack
+> > > > +char *fourcc_string(char *buf, char *end, const u32 *fourcc,
+> > > > +		    struct printf_spec spec, const char *fmt)
+> > > > +{
+> > > 
+> > > > +#define FOURCC_STRING_BE	"-BE"
+> > > > +	char s[sizeof(*fourcc) + sizeof(FOURCC_STRING_BE)] = { 0 };
+> > > 
+> > > I guess it makes it too complicated.
+> > 
+> > The above also clearly binds the size to the data that is expected to
+> > contain there. I'd prefer keeping it as-is. And yes, 8 would be correct,
+> > too.
 > 
-> What a glorious name for a piece of hardware. Even if it's apparently
-> buggy and needs help to work right.
-
-Yeah, the vendor apparently was not of the humble kind :)
-
-> I felt bad saying I don't need that glorious driver when doing my 
-> oldconfig.
-
-:))
-
-> Anyway, because I noticed this due to the name, it does strike me that 
-> clearly Windows must be ignoring - or otherwise reacting differently to 
-> - the HID_MAIN_ITEM_CONSTANT flag. Because presumably those mice work 
-> under Windows without special drivers?
+> OK.
 > 
-> In fact, reading that driver, it looks like they report being *both* 
-> constant *and* variable in their report descriptors. Which sounds odd. 
-> Maybe we should do whatever Windows does, and not need a special driver 
-> for this maybe-bot-so-glorious-after-all mouse hardware?
+> > > 	char s[8];
+> > > 
+> > > > +	if (check_pointer(&buf, end, fourcc, spec))
+> > > > +		return buf;
+> > > > +
+> > > > +	if (fmt[1] != 'c' || fmt[2] != 'c')
+> > > > +		return error_string(buf, end, "(%p4?)", spec);
+> > > > +
+> > > 
+> > > > +	put_unaligned_le32(*fourcc & ~BIT(31), s);
+> > > 
+> > > Can you elaborate what the difference in output with this bit set over cleared?
+> > > I.o.w. why don't we need to put it as BE and for LE case addd "-LE"?
+> > 
+> > The established practice is that big endian formats have "-BE" suffix
+> > whereas the little endian ones have nothing. (At least when it comes to
+> > V4L2.)
+> 
+> What I meant by the first part of the question is ordering of the characters.
+> That ordering of characters is not related to that flag, correct? So, bit
+> actually defines the endianess of the data in the certain fourcc.
+> 
+> Probably you need to put a comment to explain this.
 
-Adding Samuel to CC.
+How about:
 
-From what I understood is that in order to access the buttons reported in 
-report #2 (the one marked with HID_MAIN_ITEM_CONSTANT), you actually *do* 
-need a special software on windows anyway.
+The 31st bit defines the endianness of the data, so save its printing to
+the big endian suffix.
 
-What we do is that we ignore any changes in reports with 
-HID_MAIN_ITEM_CONSTANT in the HID core.
+> 
+> > > > +	if (*fourcc & BIT(31))
+> > > > +		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
+> > > > +			sizeof(FOURCC_STRING_BE));
+> > > 
+> > > We know the size, and we may put '\0' as well
+> > > 	if (*fourcc & BIT(31))
+> > > 		strscpy(&s[4], "-BE", sizeof("-BE"));
+> > > 	else
+> > > 		strscpy(&s[4], "", sizeof(""));
+> > 
+> > The rest of the struct memory has already been set to zero in variable
+> > declaration.
+> 
+> Which is bogus in my opinion. strscpy() or direct '\0' termination will put it
+> more explicit.
 
-It would still be possible to access the report via hidraw, and maybe 
-that's analogy of what the Windows driver/special Glorious software :) 
-does, I don't know. It's hard to believe that Windows would be actually 
-willing to report any changes coming through HID_MAIN_ITEM_CONSTANT 
-reports, but who knows.
+There's no need to assign nul a simple character using strscpy(). In that
+case I'd just do
+
+	s[sizeof(*fourcc)] = '\0';
+
+and remove the initial assignment to zero.
 
 -- 
-Jiri Kosina
-SUSE Labs
+Regards,
 
+Sakari Ailus
