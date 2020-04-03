@@ -2,415 +2,302 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBDAC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139FFC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F492073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:25:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQkna8LB"
+	by mail.kernel.org (Postfix) with ESMTP id D0F4720787
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388209AbgDCGZO (ORCPT
+        id S2388441AbgDCGZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 02:25:14 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34967 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729423AbgDCGZN (ORCPT
+        Fri, 3 Apr 2020 02:25:18 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:52622 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729423AbgDCGZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 02:25:13 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a13so3019779pfa.2;
-        Thu, 02 Apr 2020 23:25:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vi47+JcTrwsCS8utvyF9+t5soTSiBmPKkp7DzEyMUzA=;
-        b=vQkna8LB1mx4qYwnPmNskAv/brGz0rbTLl1+mHeSo+sbsY4joS6CyvhoocDGo0s3df
-         +Fu++Gc5PaXJ/fgLr8K++paGb3pBWpLsHpwRn9YA7RsY1gSW7sqjPzasfThkpwwfBsAU
-         ZlkXrxNSoTkR6UMlzrsFPKqGCudjkthlDHlLDyM70CH8uB/50v93/e7o3RjSYdcVOpzO
-         uzxo0eWRX3jutGDNXzujGKQ6O1eDy1Uns/BLyzGKtTcc2iSFfz3CtABc5L+fwGInC6eU
-         Tk5F4zu/ojxbYxASUuCXXWmnfMO7oC2nsdwYBZGD4xnr/6TELdEaCxW85fopaRQY9Aqe
-         RdZQ==
+        Fri, 3 Apr 2020 02:25:15 -0400
+Received: by mail-il1-f197.google.com with SMTP id a79so5898597ill.19
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 23:25:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vi47+JcTrwsCS8utvyF9+t5soTSiBmPKkp7DzEyMUzA=;
-        b=eCeSJv1xzXC65brPbHcaNEPpYC2+9o0zFuRz1R7WrRSwkfvsgjgic1sIAw6aDH5+cI
-         Nbbrdy+8s049noNzLSgqJC7EUz5nh/hnt8+jPCv+OENF3rc+lQK1i3RORcaTZxoeJiUv
-         ShCkdWniJ5/F4bRnNKZBhl6nCIrEz2lmCd2tRF6J7kqOjQ76G3UyfXA8DBX0EcoQYtxz
-         KtX+mmaufU0uMGvjjoEwKxDfLnewT3hUWvXYbORrqPBZKxCcG0jydouVPrdhmlA7gXI1
-         QI0JmyRQIX3HjzOr7dRa/FIo3UrEwcMLl3TXkpA4sgP4QnERsQz1Ib2os3LKlvDe+aQq
-         pKJQ==
-X-Gm-Message-State: AGi0PuaOfobNQwWae4opVbpPwnlMpQp2lgJANUSVMks8j7Liv7eZxuHX
-        zh11kIskj8rZOaqtr0XDay8=
-X-Google-Smtp-Source: APiQypLpr017bgyWOSDXzSoxGJzl6ChJozJ+0P/OQM1Yu1pkLWcBfZ/VyoAa/AbmmJNivzahvbLvug==
-X-Received: by 2002:a62:1909:: with SMTP id 9mr6834132pfz.196.1585895110296;
-        Thu, 02 Apr 2020 23:25:10 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 13sm5103254pfn.131.2020.04.02.23.25.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 Apr 2020 23:25:09 -0700 (PDT)
-Date:   Thu, 2 Apr 2020 23:25:08 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 08/16] watchdog: add support for sl28cpld watchdog
-Message-ID: <20200403062508.GA206903@roeck-us.net>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-9-michael@walle.cc>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=VwbrFL8wGaAe9hRy1TCDS93XTLoFhjiFt9l/CG1QVzE=;
+        b=C7YVXwalPKmj0tj9TcHANk85KVzgp740Oy4v38HtYhT8OLQsi7gD6gMIW0kiyR0FOz
+         BfsgsiZH+ZpHTPacfyHC4jinJokiD1uj/w+I42Mps814QBZXzRrWODckCvtzDaYnMZMq
+         GGy1EDOMvEqoKhTuUbN2pjEo+uwE4YFCjnRYpu05/2FpW3hf9LMcZzB09h54tc/XdI8s
+         3CxBFIB2aGlItQ+mWb4egQFOE7NWWrP6Z/yPDEt54TidWV4+sTYxD56JaZpP8LncvQvB
+         tjSTQqBrNJpEwfXJQJ1OBmPcsK5b6ZtmGZoNqbJhlH1OnuXFTQAHXLYwCEyyScQvLTN5
+         jOoQ==
+X-Gm-Message-State: AGi0PuZQjAwgGceiYNlrLVAWSFvUaQ7DnCeHiwDb4MzaHSG5iUPGVJf3
+        oBTWxSmtC6eIjfIBPPO2hffeSDTeetD8TEzwwmSjJPfStDdG
+X-Google-Smtp-Source: APiQypKcYd9bjP/FR2qLbpaE6v5GmohQy/D5tGp8wbPC1KuKxMhoBy85F2TNnSRY7oIPhJAK3RhXeIc8xq84G7T+lTsSJD2YSmm8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402203656.27047-9-michael@walle.cc>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a5d:9648:: with SMTP id d8mr6256766ios.115.1585895114384;
+ Thu, 02 Apr 2020 23:25:14 -0700 (PDT)
+Date:   Thu, 02 Apr 2020 23:25:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f1aa0d05a25cfab6@google.com>
+Subject: possible deadlock in free_ioctx_users (2)
+From:   syzbot <syzbot+832aabf700bc3ec920b9@syzkaller.appspotmail.com>
+To:     bcrl@kvack.org, linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 10:36:48PM +0200, Michael Walle wrote:
-> This adds support for the watchdog of the sl28cpld board management
-> controller. This is part of a multi-function device driver.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/watchdog/Kconfig        |  11 ++
->  drivers/watchdog/Makefile       |   1 +
->  drivers/watchdog/sl28cpld_wdt.c | 242 ++++++++++++++++++++++++++++++++
->  3 files changed, 254 insertions(+)
->  create mode 100644 drivers/watchdog/sl28cpld_wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 0663c604bd64..6c53c1d0f348 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -340,6 +340,17 @@ config MLX_WDT
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called mlx-wdt.
->  
-> +config SL28CPLD_WATCHDOG
-> +	tristate "Kontron sl28 watchdog"
-> +	depends on MFD_SL28CPLD
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Say Y here to include support for the watchdog timer
-> +	  on the Kontron sl28 CPLD.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called sl28cpld_wdt.
-> +
->  # ALPHA Architecture
->  
->  # ARM Architecture
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 6de2e4ceef19..b9ecdf2d7347 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -224,3 +224,4 @@ obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
->  obj-$(CONFIG_MENZ069_WATCHDOG) += menz69_wdt.o
->  obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
->  obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
-> +obj-$(CONFIG_SL28CPLD_WATCHDOG) += sl28cpld_wdt.o
-> diff --git a/drivers/watchdog/sl28cpld_wdt.c b/drivers/watchdog/sl28cpld_wdt.c
-> new file mode 100644
-> index 000000000000..79a7e36217a6
-> --- /dev/null
-> +++ b/drivers/watchdog/sl28cpld_wdt.c
-> @@ -0,0 +1,242 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * sl28cpld watchdog driver.
-> + *
-> + * Copyright 2019 Kontron Europe GmbH
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/watchdog.h>
-> +
-> +/*
-> + * Watchdog timer block registers.
-> + */
-> +#define WDT_CTRL			0x00
-> +#define  WDT_CTRL_EN			BIT(0)
-> +#define  WDT_CTRL_LOCK			BIT(2)
-> +#define  WDT_CTRL_ASSERT_SYS_RESET	BIT(6)
-> +#define  WDT_CTRL_ASSERT_WDT_TIMEOUT	BIT(7)
-> +#define WDT_TIMEOUT			0x01
-> +#define WDT_KICK			0x02
-> +#define  WDT_KICK_VALUE			0x6b
-> +#define WDT_COUNT			0x03
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-> +				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +static int timeout;
-> +module_param(timeout, int, 0);
-> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
-> +
-> +struct sl28cpld_wdt {
-> +	struct watchdog_device wdd;
-> +	struct regmap *regmap;
-> +	u32 offset;
-> +	bool assert_wdt_timeout;
-> +};
-> +
-> +static int sl28cpld_wdt_ping(struct watchdog_device *wdd)
-> +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_write(wdt->regmap, wdt->offset + WDT_KICK,
-> +			    WDT_KICK_VALUE);
-> +}
-> +
-> +static int sl28cpld_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +	unsigned int val;
-> +
-> +	val = WDT_CTRL_EN | WDT_CTRL_ASSERT_SYS_RESET;
-> +	if (wdt->assert_wdt_timeout)
-> +		val |= WDT_CTRL_ASSERT_WDT_TIMEOUT;
-> +	if (nowayout)
-> +		val |= WDT_CTRL_LOCK;
-> +
-> +	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
-> +				  val, val);
-> +}
-> +
-> +static int sl28cpld_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
-> +				  WDT_CTRL_EN, 0);
-> +}
-> +
-> +static unsigned int sl28cpld_wdt_status(struct watchdog_device *wdd)
-> +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +	unsigned int status;
-> +	int ret;
-> +
-> +	ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, &status);
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	/* is the watchdog timer running? */
-> +	return (status & WDT_CTRL_EN) << WDOG_ACTIVE;
+Hello,
 
-This is really bad coding style. It uses the fact that WDT_CTRL_EN is
-at bit position 0 and sets WDOG_ACTIVE accordingly.
+syzbot found the following crash on:
 
-But that it is wrong, not even considering the coding style problem.
-The status function is supposed to return WDIOF_ bits. What it returns
-if the watchdog is running is WDOG_ACTIVE, or BIT(0), which is then
-reported to userspace as WDIOF_OVERHEAT.
+HEAD commit:    7be97138 Merge tag 'xfs-5.7-merge-8' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16df6cc7e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ec722f9d4eb221d2
+dashboard link: https://syzkaller.appspot.com/bug?extid=832aabf700bc3ec920b9
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f37663e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16feb91fe00000
 
-> +}
-> +
-> +static unsigned int sl28cpld_wdt_get_timeleft(struct watchdog_device *wdd)
-> +{
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
-> +	int ret;
-> +	unsigned int val;
-> +
-> +	ret = regmap_read(wdt->regmap, wdt->offset + WDT_COUNT, &val);
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	return val;
-> +}
-> +
-> +static int sl28cpld_wdt_set_timeout(struct watchdog_device *wdd,
-> +				  unsigned int timeout)
-> +{
-> +	int ret;
-> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+832aabf700bc3ec920b9@syzkaller.appspotmail.com
 
-Nit: Reverse christmas tree order looks a bit nicer.
+========================================================
+WARNING: possible irq lock inversion dependency detected
+5.6.0-syzkaller #0 Not tainted
+--------------------------------------------------------
+swapper/1/0 just changed the state of lock:
+ffff88808f38bcd8 (&ctx->ctx_lock){..-.}-{2:2}, at: spin_lock_irq include/linux/spinlock.h:378 [inline]
+ffff88808f38bcd8 (&ctx->ctx_lock){..-.}-{2:2}, at: free_ioctx_users+0x30/0x1c0 fs/aio.c:618
+but this lock took another, SOFTIRQ-unsafe lock in the past:
+ (&pid->wait_pidfd){+.+.}-{2:2}
 
-> +
-> +	ret = regmap_write(wdt->regmap, wdt->offset + WDT_TIMEOUT, timeout);
-> +	if (ret == 0)
 
-Please run checkpatch --strict and fix this and the reported alignment
-problem.
+and interrupts could create inverse lock ordering between them.
 
-> +		wdd->timeout = timeout;
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct watchdog_info sl28cpld_wdt_info = {
-> +	.options = WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-> +	.identity = "SMARC-sAL28 CPLD watchdog",
-> +};
-> +
-> +static struct watchdog_ops sl28cpld_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = sl28cpld_wdt_start,
-> +	.stop = sl28cpld_wdt_stop,
-> +	.status = sl28cpld_wdt_status,
-> +	.ping = sl28cpld_wdt_ping,
-> +	.set_timeout = sl28cpld_wdt_set_timeout,
-> +	.get_timeleft = sl28cpld_wdt_get_timeleft,
-> +};
-> +
-> +static int sl28cpld_wdt_locked(struct sl28cpld_wdt *wdt)
-> +{
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return val & WDT_CTRL_LOCK;
-> +}
-> +
-> +static int sl28cpld_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct sl28cpld_wdt *wdt;
-> +	struct watchdog_device *wdd;
-> +	struct resource *res;
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	if (!pdev->dev.parent)
-> +		return -ENODEV;
-> +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	wdt->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!wdt->regmap)
-> +		return -ENODEV;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> +	if (res == NULL)
-> +		return -EINVAL;
-> +	wdt->offset = res->start;
-> +
-> +	if (device_property_read_bool(&pdev->dev,
-> +				      "kontron,assert-wdt-timeout-pin"))
-> +		wdt->assert_wdt_timeout = true;
 
-This might be simpler written as
-	wdt->assert_wdt_timeout = device_property_read_bool(...);
+other info that might help us debug this:
+ Possible interrupt unsafe locking scenario:
 
-> +
-> +	/* initialize struct watchdog_device */
-> +	wdd = &wdt->wdd;
-> +	wdd->parent = &pdev->dev;
-> +	wdd->info = &sl28cpld_wdt_info;
-> +	wdd->ops = &sl28cpld_wdt_ops;
-> +	wdd->min_timeout = 1;
-> +	wdd->max_timeout = 255;
-> +
-> +	watchdog_set_drvdata(wdd, wdt);
-> +
-> +	/* if the watchdog is locked, we set nowayout to true */
-> +	ret = sl28cpld_wdt_locked(wdt);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret)
-> +		nowayout = true;
-> +	watchdog_set_nowayout(wdd, nowayout);
-> +
-> +	/*
-> +	 * Initial timeout value, can either be set by kernel parameter or by
-> +	 * the device tree. If both are not given the current value is used.
-> +	 */
-> +	watchdog_init_timeout(wdd, timeout, &pdev->dev);
-> +	if (wdd->timeout) {
-> +		sl28cpld_wdt_set_timeout(wdd, wdd->timeout);
-> +	} else {
-> +		ret = regmap_read(wdt->regmap, wdt->offset + WDT_TIMEOUT,
-> +				  &val);
-> +		if (ret < 0)
-> +			return ret;
-> +		wdd->timeout = val;
+       CPU0                    CPU1
+       ----                    ----
+  lock(&pid->wait_pidfd);
+                               local_irq_disable();
+                               lock(&ctx->ctx_lock);
+                               lock(&pid->wait_pidfd);
+  <Interrupt>
+    lock(&ctx->ctx_lock);
 
-Oddly enough that can result in a timeout of 0 if that is what the chip
-reports. Are you sure that is acceptable ?
+ *** DEADLOCK ***
 
-> +	}
-> +
-> +	watchdog_stop_on_reboot(wdd);
-> +	ret = devm_watchdog_register_device(&pdev->dev, wdd);
+2 locks held by swapper/1/0:
+ #0: ffffffff892e67a0 (rcu_callback){....}-{0:0}, at: rcu_lock_acquire+0x0/0x30 lib/xarray.c:75
+ #1: ffffffff892e6750 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire+0x5/0x30 include/linux/rcupdate.h:207
 
-This does not inform the watchdog core if the watchdog is already active,
-even though that is clearly supported. You might want to consider setting
-WDOG_HW_RUNNING in that case.
+the shortest dependencies between 2nd lock and 1st lock:
+ -> (&pid->wait_pidfd){+.+.}-{2:2} {
+    HARDIRQ-ON-W at:
+                      lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+                      __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+                      _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+                      spin_lock include/linux/spinlock.h:353 [inline]
+                      proc_pid_make_inode+0x187/0x2d0 fs/proc/base.c:1880
+                      proc_pid_instantiate+0x4b/0x1a0 fs/proc/base.c:3285
+                      proc_pid_lookup+0x218/0x2f0 fs/proc/base.c:3320
+                      proc_root_lookup+0x1b/0x50 fs/proc/root.c:243
+                      __lookup_slow+0x240/0x370 fs/namei.c:1530
+                      lookup_slow fs/namei.c:1547 [inline]
+                      walk_component+0x442/0x680 fs/namei.c:1846
+                      link_path_walk+0x66d/0xba0 fs/namei.c:2165
+                      path_openat+0x21d/0x38b0 fs/namei.c:3342
+                      do_filp_open+0x2b4/0x3a0 fs/namei.c:3375
+                      do_sys_openat2+0x463/0x6f0 fs/open.c:1148
+                      do_sys_open fs/open.c:1164 [inline]
+                      ksys_open include/linux/syscalls.h:1386 [inline]
+                      __do_sys_open fs/open.c:1170 [inline]
+                      __se_sys_open fs/open.c:1168 [inline]
+                      __x64_sys_open+0x1af/0x1e0 fs/open.c:1168
+                      do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+                      entry_SYSCALL_64_after_hwframe+0x49/0xb3
+    SOFTIRQ-ON-W at:
+                      lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+                      __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+                      _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+                      spin_lock include/linux/spinlock.h:353 [inline]
+                      proc_pid_make_inode+0x187/0x2d0 fs/proc/base.c:1880
+                      proc_pid_instantiate+0x4b/0x1a0 fs/proc/base.c:3285
+                      proc_pid_lookup+0x218/0x2f0 fs/proc/base.c:3320
+                      proc_root_lookup+0x1b/0x50 fs/proc/root.c:243
+                      __lookup_slow+0x240/0x370 fs/namei.c:1530
+                      lookup_slow fs/namei.c:1547 [inline]
+                      walk_component+0x442/0x680 fs/namei.c:1846
+                      link_path_walk+0x66d/0xba0 fs/namei.c:2165
+                      path_openat+0x21d/0x38b0 fs/namei.c:3342
+                      do_filp_open+0x2b4/0x3a0 fs/namei.c:3375
+                      do_sys_openat2+0x463/0x6f0 fs/open.c:1148
+                      do_sys_open fs/open.c:1164 [inline]
+                      ksys_open include/linux/syscalls.h:1386 [inline]
+                      __do_sys_open fs/open.c:1170 [inline]
+                      __se_sys_open fs/open.c:1168 [inline]
+                      __x64_sys_open+0x1af/0x1e0 fs/open.c:1168
+                      do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+                      entry_SYSCALL_64_after_hwframe+0x49/0xb3
+    INITIAL USE at:
+                     lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+                     __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+                     _raw_spin_lock_irqsave+0x9e/0xc0 kernel/locking/spinlock.c:159
+                     __wake_up_common_lock kernel/sched/wait.c:122 [inline]
+                     __wake_up+0xb8/0x150 kernel/sched/wait.c:142
+                     do_notify_pidfd kernel/signal.c:1900 [inline]
+                     do_notify_parent+0x167/0xce0 kernel/signal.c:1927
+                     exit_notify kernel/exit.c:660 [inline]
+                     do_exit+0x12c5/0x1f80 kernel/exit.c:816
+                     call_usermodehelper_exec_async+0x47c/0x480 kernel/umh.c:125
+                     ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+  }
+  ... key      at: [<ffffffff8aae6790>] alloc_pid.__key+0x0/0x10
+  ... acquired at:
+   lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+   _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+   spin_lock include/linux/spinlock.h:353 [inline]
+   aio_poll fs/aio.c:1767 [inline]
+   __io_submit_one fs/aio.c:1841 [inline]
+   io_submit_one+0x10f5/0x1a80 fs/aio.c:1878
+   __do_sys_io_submit fs/aio.c:1937 [inline]
+   __se_sys_io_submit+0x117/0x220 fs/aio.c:1907
+   do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+   entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to register watchdog device\n");
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, wdt);
-> +
+-> (&ctx->ctx_lock){..-.}-{2:2} {
+   IN-SOFTIRQ-W at:
+                    lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+                    __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
+                    _raw_spin_lock_irq+0x67/0x80 kernel/locking/spinlock.c:167
+                    spin_lock_irq include/linux/spinlock.h:378 [inline]
+                    free_ioctx_users+0x30/0x1c0 fs/aio.c:618
+                    percpu_ref_put_many include/linux/percpu-refcount.h:309 [inline]
+                    percpu_ref_put+0x18d/0x1a0 include/linux/percpu-refcount.h:325
+                    rcu_do_batch kernel/rcu/tree.c:2206 [inline]
+                    rcu_core+0x816/0x1120 kernel/rcu/tree.c:2433
+                    __do_softirq+0x268/0x80c kernel/softirq.c:292
+                    invoke_softirq kernel/softirq.c:373 [inline]
+                    irq_exit+0x223/0x230 kernel/softirq.c:413
+                    exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+                    smp_apic_timer_interrupt+0x113/0x280 arch/x86/kernel/apic/apic.c:1140
+                    apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+                    native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
+                    arch_safe_halt arch/x86/include/asm/paravirt.h:144 [inline]
+                    default_idle+0x4c/0x70 arch/x86/kernel/process.c:697
+                    cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+                    do_idle+0x1ee/0x650 kernel/sched/idle.c:269
+                    cpu_startup_entry+0x15/0x20 kernel/sched/idle.c:361
+                    start_secondary+0x386/0x410 arch/x86/kernel/smpboot.c:268
+                    secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
+   INITIAL USE at:
+                   lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+                   __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
+                   _raw_spin_lock_irq+0x67/0x80 kernel/locking/spinlock.c:167
+                   spin_lock_irq include/linux/spinlock.h:378 [inline]
+                   aio_poll fs/aio.c:1765 [inline]
+                   __io_submit_one fs/aio.c:1841 [inline]
+                   io_submit_one+0x10cb/0x1a80 fs/aio.c:1878
+                   __do_sys_io_submit fs/aio.c:1937 [inline]
+                   __se_sys_io_submit+0x117/0x220 fs/aio.c:1907
+                   do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+                   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ }
+ ... key      at: [<ffffffff8b596090>] ioctx_alloc.__key+0x0/0x10
+ ... acquired at:
+   mark_lock_irq kernel/locking/lockdep.c:3585 [inline]
+   mark_lock+0x529/0x1b00 kernel/locking/lockdep.c:3935
+   mark_usage kernel/locking/lockdep.c:3834 [inline]
+   __lock_acquire+0xaa7/0x2b90 kernel/locking/lockdep.c:4298
+   lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+   __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
+   _raw_spin_lock_irq+0x67/0x80 kernel/locking/spinlock.c:167
+   spin_lock_irq include/linux/spinlock.h:378 [inline]
+   free_ioctx_users+0x30/0x1c0 fs/aio.c:618
+   percpu_ref_put_many include/linux/percpu-refcount.h:309 [inline]
+   percpu_ref_put+0x18d/0x1a0 include/linux/percpu-refcount.h:325
+   rcu_do_batch kernel/rcu/tree.c:2206 [inline]
+   rcu_core+0x816/0x1120 kernel/rcu/tree.c:2433
+   __do_softirq+0x268/0x80c kernel/softirq.c:292
+   invoke_softirq kernel/softirq.c:373 [inline]
+   irq_exit+0x223/0x230 kernel/softirq.c:413
+   exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+   smp_apic_timer_interrupt+0x113/0x280 arch/x86/kernel/apic/apic.c:1140
+   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+   native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
+   arch_safe_halt arch/x86/include/asm/paravirt.h:144 [inline]
+   default_idle+0x4c/0x70 arch/x86/kernel/process.c:697
+   cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+   do_idle+0x1ee/0x650 kernel/sched/idle.c:269
+   cpu_startup_entry+0x15/0x20 kernel/sched/idle.c:361
+   start_secondary+0x386/0x410 arch/x86/kernel/smpboot.c:268
+   secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
 
-I don't see where this is used.
 
-> +	dev_info(&pdev->dev, "CPLD watchdog: initial timeout %d sec%s\n",
-> +		wdd->timeout, nowayout ? ", nowayout" : "");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sl28cpld_wdt_of_match[] = {
-> +	{ .compatible = "kontron,sl28cpld-wdt" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sl28cpld_wdt_of_match);
-> +
-> +static const struct platform_device_id sl28cpld_wdt_id_table[] = {
-> +	{ "sl28cpld-wdt" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(platform, sl28cpld_wdt_id_table);
-> +
-> +static struct platform_driver sl28cpld_wdt_driver = {
-> +	.probe = sl28cpld_wdt_probe,
-> +	.id_table = sl28cpld_wdt_id_table,
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +		.of_match_table = sl28cpld_wdt_of_match,
-> +	},
-> +};
-> +module_platform_driver(sl28cpld_wdt_driver);
-> +
-> +MODULE_DESCRIPTION("sl28cpld Watchdog Driver");
-> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> +MODULE_LICENSE("GPL");
+stack backtrace:
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ print_irq_inversion_bug+0xb67/0xe90 kernel/locking/lockdep.c:3447
+ check_usage_forwards+0x13f/0x240 kernel/locking/lockdep.c:3472
+ mark_lock_irq kernel/locking/lockdep.c:3585 [inline]
+ mark_lock+0x529/0x1b00 kernel/locking/lockdep.c:3935
+ mark_usage kernel/locking/lockdep.c:3834 [inline]
+ __lock_acquire+0xaa7/0x2b90 kernel/locking/lockdep.c:4298
+ lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4923
+ __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
+ _raw_spin_lock_irq+0x67/0x80 kernel/locking/spinlock.c:167
+ spin_lock_irq include/linux/spinlock.h:378 [inline]
+ free_ioctx_users+0x30/0x1c0 fs/aio.c:618
+ percpu_ref_put_many include/linux/percpu-refcount.h:309 [inline]
+ percpu_ref_put+0x18d/0x1a0 include/linux/percpu-refcount.h:325
+ rcu_do_batch kernel/rcu/tree.c:2206 [inline]
+ rcu_core+0x816/0x1120 kernel/rcu/tree.c:2433
+ __do_softirq+0x268/0x80c kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x223/0x230 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x113/0x280 arch/x86/kernel/apic/apic.c:1140
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: 80 e1 07 80 c1 03 38 c1 7c bc 48 89 df e8 8a fc ab f9 eb b2 cc cc cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d d6 a2 5c 00 fb f4 <c3> 90 e9 07 00 00 00 0f 00 2d c6 a2 5c 00 f4 c3 cc cc 41 56 53 65
+RSP: 0018:ffffc90000d3fe60 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+RAX: 1ffffffff12573b1 RBX: ffff8880a9a3c340 RCX: dffffc0000000000
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffff8880a9a3cba4
+RBP: ffffffff896b61e0 R08: ffffffff817a6f90 R09: ffffed1015347869
+R10: ffffed1015347869 R11: 0000000000000000 R12: 1ffff11015347868
+R13: dffffc0000000000 R14: 1ffffffff12573af R15: 0000000000000001
+ arch_safe_halt arch/x86/include/asm/paravirt.h:144 [inline]
+ default_idle+0x4c/0x70 arch/x86/kernel/process.c:697
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1ee/0x650 kernel/sched/idle.c:269
+ cpu_startup_entry+0x15/0x20 kernel/sched/idle.c:361
+ start_secondary+0x386/0x410 arch/x86/kernel/smpboot.c:268
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
