@@ -2,58 +2,109 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49234C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D138FC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F71620719
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B98E20719
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:12:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="aZNKkf1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgDCTJ7 (ORCPT
+        id S1728520AbgDCTMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 15:09:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40879 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728288AbgDCTJ6 (ORCPT
+        Fri, 3 Apr 2020 15:12:48 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:44082 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728066AbgDCTMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 15:09:58 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jKRhR-0002rX-6z; Fri, 03 Apr 2020 21:09:53 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 9FA9C103A01; Fri,  3 Apr 2020 21:09:52 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Christoph Hellwig <hch@infradead.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Question on "uaccess: Add strict non-pagefault kernel-space read function"
-In-Reply-To: <87lfncl76i.fsf@nanos.tec.linutronix.de>
-References: <20200403133533.GA3424@infradead.org> <87lfncl76i.fsf@nanos.tec.linutronix.de>
-Date:   Fri, 03 Apr 2020 21:09:52 +0200
-Message-ID: <87imigl727.fsf@nanos.tec.linutronix.de>
+        Fri, 3 Apr 2020 15:12:47 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 342ED2E1555;
+        Fri,  3 Apr 2020 22:12:44 +0300 (MSK)
+Received: from sas1-9998cec34266.qloud-c.yandex.net (sas1-9998cec34266.qloud-c.yandex.net [2a02:6b8:c14:3a0e:0:640:9998:cec3])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id y5PtIN9u6I-ChZ4i8S5;
+        Fri, 03 Apr 2020 22:12:44 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1585941164; bh=yErTpK2nek3FYXUaVjUvzfjtEJ5xZKzHKIulJz8EEmU=;
+        h=Message-ID:Date:Subject:To:From:Cc;
+        b=aZNKkf1PAT2uMTYThr+HhGWR2Ixsnd9gj61BogSQED7jnDHa/66BQpSimYqvVn8tH
+         lV7HV5ICqeAzhd2KbCj1gZiBRJOU8CPDWXQPzT0eHKaKStUMqYvUl/DdalJaLdl6VY
+         UqFxVgHtINW/lOx0e2ntgqIyoWnHLDaYSGs4llZs=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:0:506:f4ac:c870:e5e5:4233])
+        by sas1-9998cec34266.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id g0mID34J1t-ChX81rkp;
+        Fri, 03 Apr 2020 22:12:43 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Sergey Vidishev <sergeyv@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org
+Cc:     Sergey Vidishev <sergeyv@yandex-team.ru>, trivial@kernel.org,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: [PATCH] Documentation: cpu-idle-cooling: fix diagram for 33% duty cycle
+Date:   Fri, 03 Apr 2020 22:12:42 +0300
+Message-ID: <2374188.AZIXMmL6Zy@sergeyv-box>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
+Signed-off-by: Sergey Vidishev <sergeyv@yandex-team.ru>
+---
+ Documentation/driver-api/thermal/cpu-idle-cooling.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Christoph Hellwig <hch@infradead.org> writes:
->> I just stumbled over your above commit, and it really confuses me.
->
-> Where is that commit?
+diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/
+Documentation/driver-api/thermal/cpu-idle-cooling.rst
+index 9f0016ee4cfb..a1c3edecae00 100644
+--- a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
++++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+@@ -95,28 +95,28 @@ and this variation will modulate the cooling effect.
+ 
+ ::
+ 
+      ^
+      |
+      |
+      |-------                 -------
+      |_______|_______________|_______|___________
+ 
+      <------>
+        idle  <-------------->
+                 running
+ 
+-      <----------------------------->
+-              duty cycle 33%
++      <--------------------->
++          duty cycle 33%
+ 
+ 
+      ^
+      |
+      |
+      |-------         -------
+      |_______|_______|_______|___________
+ 
+      <------>
+        idle  <------>
+               running
+ 
+       <------------->
+-- 
+2.17.1
 
-Nevermind.
+
+
+
