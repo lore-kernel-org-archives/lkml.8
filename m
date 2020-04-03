@@ -2,110 +2,103 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E5AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83500C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE202073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E655207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:42:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F7s6ITqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391020AbgDCOmu (ORCPT
+        id S2391051AbgDCOmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:42:50 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:53843 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728066AbgDCOmu (ORCPT
+        Fri, 3 Apr 2020 10:42:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33962 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbgDCOmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:42:50 -0400
-Received: (qmail 8726 invoked by uid 500); 3 Apr 2020 10:42:48 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 3 Apr 2020 10:42:48 -0400
-Date:   Fri, 3 Apr 2020 10:42:48 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Masahiro Yamada <masahiroy@kernel.org>
-cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        <linux-usb@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        David Howells <dhowells@redhat.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: gadget: legacy: fix redundant initialization warnings
- from cppcheck
-In-Reply-To: <20200403131652.8183-1-masahiroy@kernel.org>
-Message-ID: <Pine.LNX.4.44L0.2004031042290.7035-100000@netrider.rowland.org>
+        Fri, 3 Apr 2020 10:42:52 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033EdkGe080956;
+        Fri, 3 Apr 2020 14:41:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=8eB0Qd/qSpv4suW6hmEbSPGr2zS14DHLjEQLihL5FII=;
+ b=F7s6ITqDEGwCwkoP4gQrmD2rjt61Qh61UUkTPSstfgD+GphjGzKCbWsdOMU/0vv53JJ0
+ 8bbQlQGagNefPhDfsrovTnd53hpWZy+ILwtbJIiUK095qbeMt8weizhFHt0QISUTHGZo
+ V1I2XzXS4dIaI0Fef1DcrIOTjQhOLIm1YV8oJcezT3CZjyaQUm9G1jqU2YW9DutdoUp+
+ Ek+IK2KE3RVMudvT+bAn4EBdia1RSZrAyJRU/O47kzThnN05vpy6C5uKHLBbdJAGl58i
+ Tex7Cn5Mb5ouZbfHr0wsbsJx5/iYTCrVieiUd++bhcKcQZ8jieO4ahyDyG0X10bomGyY 4Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 303cevheuj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 14:41:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033EcVxG187246;
+        Fri, 3 Apr 2020 14:41:50 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 302g4xkkn3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 14:41:49 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 033EfjPT022150;
+        Fri, 3 Apr 2020 14:41:45 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 07:41:44 -0700
+Date:   Fri, 3 Apr 2020 17:41:29 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     kbuild@lists.01.org, Shiju Jose <shiju.jose@huawei.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        bp@alien8.de, james.morse@arm.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
+        tglx@linutronix.de, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        yangyicong@hisilicon.com
+Subject: Re: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
+ controller errors
+Message-ID: <20200403144129.GH2066@kadam>
+References: <20200403102313.GD2066@kadam>
+ <20200403133303.GA213756@google.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403133303.GA213756@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
+ clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020, Masahiro Yamada wrote:
+On Fri, Apr 03, 2020 at 08:33:03AM -0500, Bjorn Helgaas wrote:
+>
+> Adding tags for every reviewer or bot comment seems like overkill.
 
-> Fix the following cppcheck warnings:
-> 
-> drivers/usb/gadget/legacy/inode.c:1364:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
->  value = -EOPNOTSUPP;
->        ^
-> drivers/usb/gadget/legacy/inode.c:1331:15: note: value is initialized
->  int    value = -EOPNOTSUPP;
->               ^
-> drivers/usb/gadget/legacy/inode.c:1364:8: note: value is overwritten
->  value = -EOPNOTSUPP;
->        ^
-> drivers/usb/gadget/legacy/inode.c:1817:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
->  value = -EINVAL;
->        ^
-> drivers/usb/gadget/legacy/inode.c:1787:18: note: value is initialized
->  ssize_t   value = len, length = len;
->                  ^
-> drivers/usb/gadget/legacy/inode.c:1817:8: note: value is overwritten
->  value = -EINVAL;
->        ^
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
-> I do not think this is my fault because the addressed commit did not
-> touch this file, but the kbuild test robot sent me this report somehow:
-> 
->   https://lkml.org/lkml/2020/4/3/395
-> 
-> Anyway, the warnings are real, so I removed the redundant assignments.
-> I re-ran cppcheck and confirmed the warnings have been fixed.
-> 
-> 
->  drivers/usb/gadget/legacy/inode.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
-> index aa0de9e35afa..3afddd3bea6e 100644
-> --- a/drivers/usb/gadget/legacy/inode.c
-> +++ b/drivers/usb/gadget/legacy/inode.c
-> @@ -1361,7 +1361,6 @@ gadgetfs_setup (struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
->  
->  	req->buf = dev->rbuf;
->  	req->context = NULL;
-> -	value = -EOPNOTSUPP;
->  	switch (ctrl->bRequest) {
->  
->  	case USB_REQ_GET_DESCRIPTOR:
-> @@ -1784,7 +1783,7 @@ static ssize_t
->  dev_config (struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
->  {
->  	struct dev_data		*dev = fd->private_data;
-> -	ssize_t			value = len, length = len;
-> +	ssize_t			value, length = len;
->  	unsigned		total;
->  	u32			tag;
->  	char			*kbuf;
+I think style comments are their own reward but people should get credit
+for bug fixes.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+I also think Reviewed-by is pretty useless.  We could get rid of it, and
+only count reviews which fix bugs.  ;)
+
+regards,
+dan carpenter
 
