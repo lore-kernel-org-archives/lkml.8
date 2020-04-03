@@ -2,93 +2,120 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24755C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B4BC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9D92073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F182078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585926810;
+	bh=I/Lij4c63/t1fugS8FYJeh/QU8MNx0FELG2JmOJkUBM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ubfdCPcDmHVldx4PkEnH+mklJYaeWKo9vMqteMxUOcuJhVzq/Zr3Cc7q1mCkmDFdK
+	 zfww6u8wQGUnLljKuRjdQwI9lhIpLZIuG5y/BHvclKE/yI+L8YvmSrl4DJJS0X29nY
+	 /OvvbJFbL11bN7M5OEnJ33sEVxEJCn5tL/K87y8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404152AbgDCPMZ (ORCPT
+        id S2404155AbgDCPN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:12:25 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:52008 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbgDCPMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:12:25 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
-        by gardel.0pointer.net (Postfix) with ESMTP id C2DCCE807B5;
-        Fri,  3 Apr 2020 17:12:23 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 6B84C1614E3; Fri,  3 Apr 2020 17:12:23 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 17:12:23 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-Message-ID: <20200403151223.GB34800@gardel-login>
-References: <2418286.1585691572@warthog.procyon.org.uk>
- <20200401144109.GA29945@gardel-login>
- <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
- <2590640.1585757211@warthog.procyon.org.uk>
- <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
- <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
- <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
- <27994c53034c8f769ea063a54169317c3ee62c04.camel@themaw.net>
- <20200403111144.GB34663@gardel-login>
- <CAJfpeguQAw+Mgc8QBNd+h3KV8=Y-SOGT7TB_N_54wa8MCoOSzg@mail.gmail.com>
+        Fri, 3 Apr 2020 11:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728213AbgDCPN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 11:13:28 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 294EF2073B;
+        Fri,  3 Apr 2020 15:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585926807;
+        bh=I/Lij4c63/t1fugS8FYJeh/QU8MNx0FELG2JmOJkUBM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kozVUiqbzzOC27RXU2Gn4uoI/0YIM2nu4c0ig/txr/XTvAIKhfAqjzkfliXj9bNvS
+         iu1CoUTc1kgSjD+EpJT7qF5ykr4UqoaLcjmD2PtQqP0PmflPS8JbyPYTny1xaOithC
+         v4ZouSAp1urCKzuniCO1Y8+PqGLP1Yy1zRcDg3YU=
+From:   Will Deacon <will@kernel.org>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        kernel-team@android.com, Will Deacon <will@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH] tun: Don't put_page() for all negative return values from XDP program
+Date:   Fri,  3 Apr 2020 16:13:21 +0100
+Message-Id: <20200403151321.20166-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpeguQAw+Mgc8QBNd+h3KV8=Y-SOGT7TB_N_54wa8MCoOSzg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fr, 03.04.20 13:38, Miklos Szeredi (miklos@szeredi.hu) wrote:
+When an XDP program is installed, tun_build_skb() grabs a reference to
+the current page fragment page if the program returns XDP_REDIRECT or
+XDP_TX. However, since tun_xdp_act() passes through negative return
+values from the XDP program, it is possible to trigger the error path by
+mistake and accidentally drop a reference to the fragments page without
+taking one, leading to a spurious free. This is believed to be the cause
+of some KASAN use-after-free reports from syzbot [1], although without a
+reproducer it is not possible to confirm whether this patch fixes the
+problem.
 
-> On Fri, Apr 3, 2020 at 1:11 PM Lennart Poettering <mzxreary@0pointer.de> wrote:
-> >
-> > On Fr, 03.04.20 09:44, Ian Kent (raven@themaw.net) wrote:
-> >
-> > > > Currently the only way to find the mount id from a path is by parsing
-> > > > /proc/self/fdinfo/$fd.  It is trivial, however, to extend statx(2) to
-> > > > return it directly from a path.   Also the mount notification queue
-> > > > that David implemented contains the mount ID of the changed mount.
-> >
-> > I would love to have the mount ID exposed via statx().
->
-> Here's a patch.
+Ensure that we only drop a reference to the fragments page if the XDP
+transmit or redirect operations actually fail.
 
-Oh, this is excellent. I love it, thanks!
+[1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
 
-BTW, while we are at it: one more thing I'd love to see exposed by
-statx() is a simple flag whether the inode is a mount point. There's
-plenty code that implements a test like this all over the place, and
-it usually isn't very safe. There's one implementation in util-linux
-for example (in the /usr/bin/mountpoint binary), and another one in
-systemd. Would be awesome to just have a statx() return flag for that,
-that would make things *so* much easier and more robust. because in
-fact most code isn't very good that implements this, as much of it
-just compares st_dev of the specified file and its parent. Better code
-compares the mount ID, but as mentioned that's not as pretty as it
-could be so far...
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+CC: Eric Dumazet <edumazet@google.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
+Signed-off-by: Will Deacon <will@kernel.org>
+---
 
-Lennart
+RFC -> V1: Added Fixes tag and Jason's Ack.
 
---
-Lennart Poettering, Berlin
+ drivers/net/tun.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index 650c937ed56b..9de9b7d8aedd 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 			alloc_frag->offset += buflen;
+ 		}
+ 		err = tun_xdp_act(tun, xdp_prog, &xdp, act);
+-		if (err < 0)
+-			goto err_xdp;
++		if (err < 0) {
++			if (act == XDP_REDIRECT || act == XDP_TX)
++				put_page(alloc_frag->page);
++			goto out;
++		}
++
+ 		if (err == XDP_REDIRECT)
+ 			xdp_do_flush();
+ 		if (err != XDP_PASS)
+@@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 
+ 	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
+ 
+-err_xdp:
+-	put_page(alloc_frag->page);
+ out:
+ 	rcu_read_unlock();
+ 	local_bh_enable();
+-- 
+2.26.0.292.g33ef6b2f38-goog
+
