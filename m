@@ -2,218 +2,136 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40E8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B23BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8806B20721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C7020721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:15:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ves+3435"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390488AbgDCIPK convert rfc822-to-8bit (ORCPT
+        id S2390506AbgDCIP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:15:10 -0400
-Received: from mga05.intel.com ([192.55.52.43]:8816 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbgDCIPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:15:09 -0400
-IronPort-SDR: BbZyCd09IciS7GbOn69Ia49eZWuZDzckUXR7V7eivnev4F1LKIjODVd5mRFHISYmjbP4Sa9zQN
- EFjZZNCObhJg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 01:15:08 -0700
-IronPort-SDR: HsdVkeowDfWXQccLSa0G2B6f3OYgoxOUVpkduskzeCFDpjU4wTPOSyCchqgYvKXgmRyVcozmpA
- +KcLc1WWlBOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="268288335"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga002.jf.intel.com with ESMTP; 03 Apr 2020 01:15:08 -0700
-Received: from FMSMSX109.amr.corp.intel.com (10.18.116.9) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 01:15:07 -0700
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- fmsmsx109.amr.corp.intel.com (10.18.116.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 01:15:07 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
- Fri, 3 Apr 2020 16:15:03 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
- quota tuning
-Thread-Topic: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
- quota tuning
-Thread-Index: AQHWAEUbHl/tnnhWl0eaKvrwJMb1AqhgVzOAgACGb+D//4RdgIAAh3wg//+g6QCABR+ZgIABdR7Q
-Date:   Fri, 3 Apr 2020 08:15:02 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A22062E@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-3-git-send-email-yi.l.liu@intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF3C5@SHSMSX104.ccr.corp.intel.com>
-        <A2975661238FB949B60364EF0F2C25743A217C68@SHSMSX104.ccr.corp.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF46F@SHSMSX104.ccr.corp.intel.com>
-        <A2975661238FB949B60364EF0F2C25743A217D97@SHSMSX104.ccr.corp.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF888@SHSMSX104.ccr.corp.intel.com>
- <20200402115831.22e31611@w520.home>
-In-Reply-To: <20200402115831.22e31611@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 3 Apr 2020 04:15:27 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46445 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390493AbgDCIP1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:15:27 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r7so5983780ljg.13;
+        Fri, 03 Apr 2020 01:15:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xULmbnigaj/k48l6kNwyFcGwHPYsq90A4ICZ4qM/NnA=;
+        b=Ves+3435IKbJxDL7FRv9swcqnzkV4kRiqpXzMND9PHZfJr07xy/BSPJ9N8mMrPF7Py
+         GpcqqWz5qMmtk17989l45cMJhU+6t8wnOy2ezo3l3IiY2DZ8OxFeTg1aYwyY6L9gEjc/
+         kVFsq9qZHGDHfEw57r2lbFcYxXvsbgviJ53aAi0bJFje6k8RiVw+oUNTk/b17TRVIvJI
+         ItQLgB4p//nq4JUJL4Ts3xaBrrwTmLJYIZtvOGJOQwetnaEsTY8V+Apa9HwBf+2S37mR
+         XVImlUuZ1CfuLVlPNgD4VunZZu3KoXhrsrIiEQaxbzrsHAfFMgV+ujSQmxjH87wnUtRV
+         HulA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xULmbnigaj/k48l6kNwyFcGwHPYsq90A4ICZ4qM/NnA=;
+        b=q9uYVY8D8Rq+XVRn8ISYdod5wmRgGBXG/k6eRlJ/GTpk7tCIdJnLG0lW/Mib+dB/Ad
+         oDsH3h8aBZFY6XiUqjXoxuj4FuJmjEZY779J5F45CG66+qU4+OrEpxXfiI+O4IcXHTze
+         4+CfjNfTsq35QaaXnsNonFroDSXed6aAH0dW1WmP/ObR2W6ylW3Joraj3xu8tVFYgdn8
+         w3mlMdHhp8t2yZMtw1oJ9NmY2C5w0xVrLownzDgl25NzsTx9G8OPmjMGHymQfOFyu/x5
+         4Q02FtwAsY026arldPOWAnkBcsDC2gOY7lrR7OeMVlJDIMDoJIkfCUwEz9SUcYHW7cTg
+         vdrg==
+X-Gm-Message-State: AGi0PuZk9IlAsRU/fhy08MY4YzFyXgmhjVzB4F57q9uuhlw9uTKvIS8H
+        /N6ZPCl6p8L1POQ4ptiDmp5yeeHvSgzHZgswCt0=
+X-Google-Smtp-Source: APiQypIFN3V/gBbR2aRhH32fQnbna2itH9wMXLg0XTnMezep0xFxf8nb1vibli9SR0XIwTtyBKw8J/OWkox62p7hygs=
+X-Received: by 2002:a2e:9b07:: with SMTP id u7mr4094550lji.110.1585901722773;
+ Fri, 03 Apr 2020 01:15:22 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200326135258.2764f0de@canb.auug.org.au> <20200401121431.6a996244@canb.auug.org.au>
+In-Reply-To: <20200401121431.6a996244@canb.auug.org.au>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Fri, 3 Apr 2020 16:15:11 +0800
+Message-ID: <CADBw62qar4qPJmjZj1+9tb6sgqUcCrjei6G62wPaH=YVf48=zA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the tip tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Friday, April 3, 2020 1:59 AM
-> To: Tian, Kevin <kevin.tian@intel.com>
-> Subject: Re: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for quota
-> tuning
-> 
-> On Mon, 30 Mar 2020 11:44:08 +0000
-> "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> 
-> > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > Sent: Monday, March 30, 2020 5:27 PM
-> > >
-> > > > From: Tian, Kevin <kevin.tian@intel.com>
-> > > > Sent: Monday, March 30, 2020 5:20 PM
-> > > > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
-> > > > Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter
-> > > for quota
-> > > > tuning
-> > > >
-> > > > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > > > Sent: Monday, March 30, 2020 4:53 PM
-> > > > >
-> > > > > > From: Tian, Kevin <kevin.tian@intel.com>
-> > > > > > Sent: Monday, March 30, 2020 4:41 PM
-> > > > > > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
-> > > > > > Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1
-> > > > > > parameter
-> > > > > for quota
-> > > > > > tuning
-> > > > > >
-> > > > > > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > > > > > Sent: Sunday, March 22, 2020 8:32 PM
-> > > > > > >
-> > > > > > > From: Liu Yi L <yi.l.liu@intel.com>
-> > > > > > >
-> > > > > > > This patch adds a module option to make the PASID quota tunable by
-> > > > > > > administrator.
-> > > > > > >
-> > > > > > > TODO: needs to think more on how to  make the tuning to be per-
-> > > process.
-> > > > > > >
-> > > > > > > Previous discussions:
-> > > > > > > https://patchwork.kernel.org/patch/11209429/
-> > > > > > >
-> > > > > > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > > > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > > > > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > > > > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > > > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > > > > > ---
-> > > > > > >  drivers/vfio/vfio.c             | 8 +++++++-
-> > > > > > >  drivers/vfio/vfio_iommu_type1.c | 7 ++++++-
-> > > > > > >  include/linux/vfio.h            | 3 ++-
-> > > > > > >  3 files changed, 15 insertions(+), 3 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c index
-> > > > > > > d13b483..020a792 100644
-> > > > > > > --- a/drivers/vfio/vfio.c
-> > > > > > > +++ b/drivers/vfio/vfio.c
-> > > > > > > @@ -2217,13 +2217,19 @@ struct vfio_mm
-> > > > > *vfio_mm_get_from_task(struct
-> > > > > > > task_struct *task)
-> > > > > > >  }
-> > > > > > >  EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
-> > > > > > >
-> > > > > > > -int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int min, int max)
-> > > > > > > +int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int quota, int min,
-> > > > > > > +int
-> > > > > max)
-> > > > > > >  {
-> > > > > > >  	ioasid_t pasid;
-> > > > > > >  	int ret = -ENOSPC;
-> > > > > > >
-> > > > > > >  	mutex_lock(&vmm->pasid_lock);
-> > > > > > >
-> > > > > > > +	/* update quota as it is tunable by admin */
-> > > > > > > +	if (vmm->pasid_quota != quota) {
-> > > > > > > +		vmm->pasid_quota = quota;
-> > > > > > > +		ioasid_adjust_set(vmm->ioasid_sid, quota);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > >
-> > > > > > It's a bit weird to have quota adjusted in the alloc path, since the
-> > > > > > latter
-> > > > > might
-> > > > > > be initiated by non-privileged users. Why not doing the simple math
-> > > > > > in
-> > > > > vfio_
-> > > > > > create_mm to set the quota when the ioasid set is created? even in
-> > > > > > the
-> > > > > future
-> > > > > > you may allow per-process quota setting, that should come from
-> > > > > > separate privileged path instead of thru alloc..
-> > > > >
-> > > > > The reason is the kernel parameter modification has no event which can
-> > > > > be used to adjust the quota. So I chose to adjust it in pasid_alloc
-> > > > > path. If it's not good, how about adding one more IOCTL to let user-
-> > > > > space trigger a quota adjustment event? Then even non-privileged user
-> > > > > could trigger quota adjustment, the quota is actually controlled by
-> > > > > privileged user. How about your opinion?
-> > > > >
-> > > >
-> > > > why do you need an event to adjust? As I said, you can set the quota when
-> > > the set is
-> > > > created in vfio_create_mm...
-> > >
-> > > oh, it's to support runtime adjustments. I guess it may be helpful to let
-> > > per-VM quota tunable even the VM is running. If just set the quota in
-> > > vfio_create_mm(), it is not able to adjust at runtime.
-> > >
+On Wed, Apr 1, 2020 at 9:14 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> On Thu, 26 Mar 2020 13:52:58 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 > >
-> > ok, I didn't note the module parameter was granted with a write permission.
-> > However there is a further problem. We cannot support PASID reclaim now.
-> > What about the admin sets a quota smaller than previous value while some
-> > IOASID sets already exceed the new quota? I'm not sure how to fail a runtime
-> > module parameter change due to that situation. possibly a normal sysfs
-> > node better suites the runtime change requirement...
-> 
-> Yep, making this runtime adjustable seems a bit unpredictable and racy,
-> and it's not clear to me how a user is going to jump in at just the
-> right time for a user and adjust the limit.  I'd probably go for a
-> simple non-runtime adjustable module option.  It's a safety net at this
-> point anyway afaict.  Thanks,
+> > Hi all,
+> >
+> > After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+> > failed like this:
+> >
+> > drivers/power/reset/sc27xx-poweroff.c: In function 'sc27xx_poweroff_shutdown':
+> > drivers/power/reset/sc27xx-poweroff.c:38:4: error: implicit declaration of function 'cpu_down' [-Werror=implicit-function-declaration]
+> >    38 |    cpu_down(cpu);
+> >       |    ^~~~~~~~
+> >
+> > Caused by commit
+> >
+> >   33c3736ec888 ("cpu/hotplug: Hide cpu_up/down()")
+> >
+> > interacting with commit
+> >
+> >   274afbc3ad33 ("power: reset: sc27xx: Change to use cpu_down()")
+> >
+> > from the battery tree.
+> >
+> > I have added the following merge fix patch:
+> >
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Thu, 26 Mar 2020 13:42:00 +1100
+> > Subject: [PATCH] power: reset: sc27xx: use remove_cpu instead of cpu_down
+> >
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/power/reset/sc27xx-poweroff.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/power/reset/sc27xx-poweroff.c b/drivers/power/reset/sc27xx-poweroff.c
+> > index 69863074daf6..90287c31992c 100644
+> > --- a/drivers/power/reset/sc27xx-poweroff.c
+> > +++ b/drivers/power/reset/sc27xx-poweroff.c
+> > @@ -35,7 +35,7 @@ static void sc27xx_poweroff_shutdown(void)
+> >
+> >       for_each_online_cpu(cpu) {
+> >               if (cpu != smp_processor_id())
+> > -                     cpu_down(cpu);
+> > +                     remove_cpu(cpu);
+> >       }
+> >  #endif
+> >  }
+> > --
+> > 2.25.0
+>
+> This fixup is now needed when the battery tree is merged into Linus' tree.
 
-thanks, I can do the changes.
+Thanks Stephen.
 
-Regards,
-Yi Liu
+Sebastian, could you pick up this patch to avoid the compiling issue? Thanks.
+
+-- 
+Baolin Wang
