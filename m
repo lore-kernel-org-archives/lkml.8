@@ -2,87 +2,117 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80386C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215B9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4043A20737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:22:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LX/saJbS"
+	by mail.kernel.org (Postfix) with ESMTP id ED02D20737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390764AbgDCLWm (ORCPT
+        id S2390765AbgDCL0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:22:42 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47916 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbgDCLWl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:22:41 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 033BMTlS054465;
-        Fri, 3 Apr 2020 06:22:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585912949;
-        bh=PM+AhtxYL8OtN6RVrUe4Aud0OCilJ08Spz+//NcGSSo=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=LX/saJbSiPlMMK0+U8H28CJ8jhgysYcPvqDDpuOgpnjJQGeDY+6dVxiFfS/5xNd3S
-         pb/bdwI1IFzHTLoL8WGy2z5yElxgkip+omt00uUkszMGzTi0HVVRQOoJPHUOJ3hIM5
-         Ol9E02MDuCckiLtU5CIHCT/VFcIcVr/0XlcgbdWc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 033BMT5R060972
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Apr 2020 06:22:29 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
- 2020 06:22:29 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Apr 2020 06:22:29 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 033BMRHj024794;
-        Fri, 3 Apr 2020 06:22:28 -0500
-Subject: Re: [v5.4.28-rt19] ARM64: nfs boot issues
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <linux-rt-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Nori, Sekhar" <nsekhar@ti.com>
-References: <0d05e716-5575-d4bd-64be-187c85244c12@ti.com>
-Message-ID: <08852afc-16f4-d2c3-7f52-37181d341232@ti.com>
-Date:   Fri, 3 Apr 2020 14:22:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 3 Apr 2020 07:26:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:51928 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728022AbgDCL0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 07:26:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6D737FA;
+        Fri,  3 Apr 2020 04:26:14 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 916893F68F;
+        Fri,  3 Apr 2020 04:26:12 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 12:26:10 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
+        daniel@ffwll.ch, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
+ user_write_access_begin/end
+Message-ID: <20200403112609.GB26633@mbp>
+References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+ <20200402162942.GG23230@ZenIV.linux.org.uk>
+ <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
+ <20200402175032.GH23230@ZenIV.linux.org.uk>
+ <202004021132.813F8E88@keescook>
+ <20200403005831.GI23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <0d05e716-5575-d4bd-64be-187c85244c12@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403005831.GI23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 01/04/2020 18:06, Grygorii Strashko wrote:
-> Hi All,
+On Fri, Apr 03, 2020 at 01:58:31AM +0100, Al Viro wrote:
+> On Thu, Apr 02, 2020 at 11:35:57AM -0700, Kees Cook wrote:
+> > Yup, I think it's a weakness of the ARM implementation and I'd like to
+> > not extend it further. AFAIK we should never nest, but I would not be
+> > surprised at all if we did.
+> > 
+> > If we were looking at a design goal for all architectures, I'd like
+> > to be doing what the public PaX patchset did for their memory access
+> > switching, which is to alarm if calling into "enable" found the access
+> > already enabled, etc. Such a condition would show an unexpected nesting
+> > (like we've seen with similar constructs with set_fs() not getting reset
+> > during an exception handler, etc etc).
 > 
-> We now observe NFS boot issues with TI RT Kernel (last merged tag v5.4.28-rt19) on TI (ARM64) AM654x/J721E platforms.
-> It's just stack (100%) silently right after Kernel init (log1) or in the middle of the boot (log2).
+> FWIW, maybe I'm misreading the ARM uaccess logics, but... it smells like
+> KERNEL_DS is somewhat more dangerous there than on e.g. x86.
 > 
-> I'm trying to investigate an issue and I'd like to ask if anybody else observed the same?
-> 
+> Look: with CONFIG_CPU_DOMAINS, set_fs(KERNEL_DS) tells MMU to ignore
+> per-page permission bits in DOMAIN_KERNEL (i.e. for kernel address
+> ranges), allowing them even if they would normally be denied.  We need
+> that for actual uaccess loads/stores, since those use insns that pretend
+> to be done in user mode and we want them to access the kernel pages.
+> But that affects the normal loads/stores as well; unless I'm misreading
+> that code, it will ignore (supervisor) r/o on a page.  And that's not
+> just for the code inside the uaccess blocks; *everything* done under
+> KERNEL_DS is subject to that.
 
-Sorry for disturbing you it was IRQ driver issue.
+That's correct. Luckily this only affects ARMv5 and earlier. From ARMv6
+onwards, CONFIG_CPU_USE_DOMAINS is no longer selected and the uaccess
+instructions are just plain ldr/str.
+
+Russell should know the details on whether there was much choice. Since
+the kernel was living in the linear map with full rwx permissions, the
+KERNEL_DS overriding was probably not a concern and the ldrt/strt for
+uaccess deemed more secure. We also have weird permission setting
+pre-ARMv6 (or rather v6k) where RO user pages are writable from the
+kernel with standard str instructions (breaking CoW). I don't recall
+whether it was a choice made by the kernel or something the architecture
+enforced. The vectors page has to be kernel writable (and user RO) to
+store the TLS value in the absence of a TLS register but maybe we could
+do this via the linear alias together with the appropriate cache
+maintenance.
+
+From ARMv6, the domain overriding had the side-effect of ignoring the XN
+bit and causing random instruction fetches from ioremap() areas. So we
+had to remove the domain switching. We also gained a dedicated TLS
+register.
+
+> Why do we do that (modify_domain(), that is) inside set_fs() and not
+> in uaccess_enable() et.al.?
+
+I think uaccess_enable() could indeed switch the kernel domain if
+KERNEL_DS is set and move this out of set_fs(). It would reduce the
+window the kernel domain permissions are overridden. Anyway,
+uaccess_enable() appeared much later on arm when Russell introduced PAN
+(SMAP) like support by switching the user domain.
 
 -- 
-Best regards,
-grygorii
+Catalin
