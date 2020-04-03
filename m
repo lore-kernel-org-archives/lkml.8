@@ -2,92 +2,102 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D028C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4446CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A642073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585924335;
-	bh=p1zZdLKmMkDglIqL6fGiljiNRePvne0e6Tvw1WMZVqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ei23EULqod7JWg9IqVtvtxdpitclkvDMe95LHU64pRXx3iybQPpz92NPS+eSKIGAp
-	 FRUWOiQF46yUO3yWZvvRX0bjkj12+xWr0qizc8efk3GoQOCRRbweVXGiBVq0A2Ar7S
-	 ciUNj+9qEaZ6wuZf86g5lEQOPYW95/Q3ZbwHZCy0=
+	by mail.kernel.org (Postfix) with ESMTP id 10E922073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="je50tGed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391015AbgDCOcO (ORCPT
+        id S2390888AbgDCOd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:32:14 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36904 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390812AbgDCOcN (ORCPT
+        Fri, 3 Apr 2020 10:33:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36720 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgDCOd5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:32:13 -0400
-Received: by mail-qk1-f194.google.com with SMTP id x3so8147609qki.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 07:32:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vf2o3eqZVXDAISA8ZTok99Oirgt/9Dqown4xMU1s148=;
-        b=SfvPVynLH4dNuMZcXn0TAYxaLFX2sMK49SRRXlHiosykRM1hj5gp5OYmSfNq5aw3Od
-         7rjOod6+IGo3ct+0TAnGt6yLDDutvsVpCIBoXouJ/e/kCAl7tk4sswfnqaPtnfQ7LWA9
-         MQ2tmuokGl91Sm0XYbiSjSkMclnyJatBMHgg2KdvwRN9AEMyPNUZaGRNGMg2+zvSgNMH
-         ttFv+96d8bGCFRfHeukjiPKqkNmJ9c5uaibwc0tfqa0jpjT1tF55CxGAMCil56tOA2YH
-         YcjNPSMI8gP4Lwas39cDTddBcIXcYqn7POE1QIfjGz2V4MT14gDhd1sZUCoIP6ENPhz0
-         FDmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=vf2o3eqZVXDAISA8ZTok99Oirgt/9Dqown4xMU1s148=;
-        b=sVkhJsb/3qSpuSusedhmYeNnceGI3u8uHayj5TYxixTMRCaNDGnmnHEWEW8g3fZWJj
-         NqaldYo8F5XvLZ0aP8k4nDEWgRJj25INtlr70nm+MCXIghRtYxR5Ujo+kqim/mF1c+Du
-         0AfxTkYkGDBPPORa7I0K6pv9Dr8djFK5rQGr2CGP+47ahCgtjnkNOnz2OXNirW5KHGTe
-         CC/lFprPwI3q8ffNO4UQ6wr/z4WcJxDBBCApzEVq6I2ItwdBpDGrKhi2tOw02S1+mBj6
-         bnj3S82Q6AKnELWwU9yuTZmQQZ+NbvfIGLsmJ/uQiUZOknS5ihdjvpYKnGoqcJ5/cNUV
-         U2dQ==
-X-Gm-Message-State: AGi0PuY4QvLKcHSAztDFpG1c+4f+sI4WcwRPxdVndklJHXajJaM+4quF
-        +BPRaHFmK7GZgCn5VY4/oabNVrS7vPw=
-X-Google-Smtp-Source: APiQypKMIgQ2ud4+vU4utnqtMbmhq9+AjDkaofDe4BjqaPXRIe78zze/3yskU7ha/voq5+v2ZaHxpw==
-X-Received: by 2002:a37:591:: with SMTP id 139mr8944797qkf.281.1585924332467;
-        Fri, 03 Apr 2020 07:32:12 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::842b])
-        by smtp.gmail.com with ESMTPSA id q1sm6023711qtn.69.2020.04.03.07.32.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 07:32:11 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 10:32:09 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernfs: Change kernfs_node lockdep name to "kn->active"
-Message-ID: <20200403143209.GY162390@mtj.duckdns.org>
-References: <20200402171056.27871-1-longman@redhat.com>
+        Fri, 3 Apr 2020 10:33:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ms4LVOzhF0vPDOhEHsaxnyIsKzU/f/4CTRFC4kv8zA8=; b=je50tGed4E17GOQUyIWT5kd1j6
+        Ua/PVXId51dLBBxiVIp0jW7hZL+Y0ckijQLCYtaTZ3jNFgO9w23AMgiRdUzpmTwQFd8jU4FMB6yjl
+        ef55cQFBo3XeFlsP/4a2j3ZpdKdsWdqSTDYwpSHLE1RewSabrUDhWNgkX6ApM39L2MKQxjhYH5+LR
+        xApplv/IrRCUyrEoKLoF+icmr30f4cnvmyPvaLJq2I66LD/Ey+fn2Y8LxKRMCAtCW/a/14AVqJti5
+        66cHcmz1tSZbT4E5wMSrvgAbUm9G0MDALCw6lwSUW2Tj9RbPHgj2Hrl413hapDVwmUR9NlwJjYM9t
+        4iu3n7jA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKNOG-0000li-0M; Fri, 03 Apr 2020 14:33:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD8593056DE;
+        Fri,  3 Apr 2020 16:33:44 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C5B5B2B12210A; Fri,  3 Apr 2020 16:33:44 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 16:33:44 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [patch v2 1/2] x86,module: Detect VMX modules and disable
+ Split-Lock-Detect
+Message-ID: <20200403143344.GP20730@hirez.programming.kicks-ass.net>
+References: <20200402123258.895628824@linutronix.de>
+ <20200402124205.242674296@linutronix.de>
+ <20200402152340.GL20713@hirez.programming.kicks-ass.net>
+ <9b95fe9e81c14370859e19f081cc23e4@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402171056.27871-1-longman@redhat.com>
+In-Reply-To: <9b95fe9e81c14370859e19f081cc23e4@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 01:10:56PM -0400, Waiman Long wrote:
-> The kernfs_node lockdep tracking is being done on kn->active, the
-> active reference count. The other reference count (kn->count) is not
-> tracked by lockdep. So change the lockdep name to reflect what it is
-> tracking.
+On Fri, Apr 03, 2020 at 08:09:03AM +0000, David Laight wrote:
+> From: Peter Zijlstra
+> > Sent: 02 April 2020 16:24
+> > 
+> > I picked VMXOFF (which also appears in vmmon.ko) instead of VMXON
+> > because that latter takes an argument is therefore more difficult to
+> > decode.
+> ...
+> > +	while (text < text_end) {
+> > +		kernel_insn_init(&insn, text, text_end - text);
+> > +		insn_get_length(&insn);
+> > +
+> > +		if (WARN_ON_ONCE(!insn_complete(&insn)))
+> > +			break;
+> > +
+> > +		if (insn.length == 3 &&
+> > +		    (!memcmp(text, vmlaunch, sizeof(vmlaunch)) ||
+> > +		     !memcmp(text, vmxoff, sizeof(vmxoff))))
+> > +				goto bad_module;
+> > +
+> > +		text += insn.length;
+> > +	}
 > 
-> Signed-off-by: Waiman Long <longman@redhat.com>
+> How long is that going to take on a module with (say) 400k of text?
 
-Acked-by: Tejun Heo <tj@kernel.org>
-
-Thanks.
-
--- 
-tejun
+It's module load, why would you care? I suspect it's really fast, but
+even if it wasn't I couldn't be arsed.
