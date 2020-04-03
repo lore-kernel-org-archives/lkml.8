@@ -2,91 +2,137 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CD8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20915C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE67720BED
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9877207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:16:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szVOgU7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390356AbgDCDPU (ORCPT
+        id S2390375AbgDCDP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 23:15:20 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:32961 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389108AbgDCDPT (ORCPT
+        Thu, 2 Apr 2020 23:15:27 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42104 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389108AbgDCDP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 23:15:19 -0400
-Received: from [123.118.214.4] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1jKCnb-0008Mo-1M; Fri, 03 Apr 2020 03:15:15 +0000
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: bump up timeout to wait when ME
- un-configure ULP mode
-To:     Hans de Goede <hdegoede@redhat.com>, jeffrey.t.kirsher@intel.com,
-        davem@davemloft.net, intel-wired-lan@lists.osuosl.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sasha.neftin@intel.com
-References: <20200323191639.48826-1-aaron.ma@canonical.com>
- <4f9f1ad0-e66a-d3c8-b152-209e9595e5d7@redhat.com>
-From:   Aaron Ma <aaron.ma@canonical.com>
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <1c0e602f-1fe7-62b1-2283-b98783782e87@canonical.com>
-Date:   Fri, 3 Apr 2020 11:15:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 23:15:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id g6so885655pgs.9;
+        Thu, 02 Apr 2020 20:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IltRVvoEayvKnGQ7Rvg+SGl6Ghv0uHLFOtdxZ3fkhes=;
+        b=szVOgU7Ij4bSfc5vyUiBZrP7e8JPps3osaheiOwDv3b75Tf8c7S5eOrDm3X4aj1pUs
+         5XE9aR8GPtTUN7LY6z75qdznZg6T55luMJOgOjptgGFPwRN4AYzSRHj2ynHB0K16EPRF
+         3wZ715ZheMCdDSHJXoVymeFcIquijvxPiMwJBtZCReJUO+dHmV1DmtOWkYsMBkgyiwsa
+         P6jcVFj0nZSz1F8ZsEtqAPH62fmFLMPPDFBQ6blfoGruJODSXJ0xZsVayhH0a6n+2z2w
+         GcGQ4rxj+AxCAqpAm+aJvsJoiPl7e9WKmAJQkJ0LsJxZFLZ76I+hsW+2eaBvPFaCMqQX
+         uaTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IltRVvoEayvKnGQ7Rvg+SGl6Ghv0uHLFOtdxZ3fkhes=;
+        b=eXCpYV5rucNiWq/97dPJb7Ee/A5s4w/FY0AeMxmVxnpqhRnt9QxkXDSnWGKfYI2ons
+         sMm2gG3Ez0/By+ab+KOfXHT0am/SH2VcnHgnhRQZsxqD6sSXEiuOLdcP/6q5SiZDK+N0
+         1Bbv0G4B1rtQiEqv5Duidb263rMRzxLyEwdlbwtcKxzVN8SLDM+KEWg7F7aon+ShpAAO
+         SnkUfU+KG93qnLK0ueXOlTQTW3NhpwQSRmqhAAebmT/l6Xl5glNkGf0QP9eIyuRZFXZq
+         MmaRIGfIniskr86TpVhKMVPsRdCXny5CD9mWjtCmI51i5y/QRmIhAtmW4dj9rUGfc02X
+         +DEw==
+X-Gm-Message-State: AGi0PuZdMiOa5+TUw0ZytJhwf4VIakaJBXiPmfScSAaQ5mk7TqFUOGRA
+        sb//kM1Oqv2N1RmDOzDD7Mk=
+X-Google-Smtp-Source: APiQypIVQRcm0aBnBr00r95OdVOthcz4CyGfJdX4V8++0u4zxQyVA7xcKvvnkM0rhmRRZJtQZIpSuA==
+X-Received: by 2002:aa7:8f3a:: with SMTP id y26mr6219658pfr.180.1585883725969;
+        Thu, 02 Apr 2020 20:15:25 -0700 (PDT)
+Received: from localhost.localdomain ([211.250.214.198])
+        by smtp.gmail.com with ESMTPSA id t1sm4325811pgh.88.2020.04.02.20.15.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 20:15:25 -0700 (PDT)
+From:   Bumsik Kim <kbumsik@gmail.com>
+X-Google-Original-From: Bumsik Kim <k.bumsik@gmail.com>
+To:     wim@linux-watchdog.org, linux@roeck-us.net, corbet@lwn.net
+Cc:     linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Bumsik Kim <k.bumsik@gmail.com>
+Subject: [PATCH] watchdog: clarify that stop() is optional
+Date:   Fri,  3 Apr 2020 12:15:07 +0900
+Message-Id: <20200403031507.63487-1-k.bumsik@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <4f9f1ad0-e66a-d3c8-b152-209e9595e5d7@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey:
+The commit d0684c8a9354 ("watchdog: Make stop function optional")
+made stop function not mandatory, but the comments
+and the doc weren't reflected. Fix it to clarify.
 
-I have received the email that you apply this patch to next-queue branch
-dev-queue.
+Signed-off-by: Bumsik Kim <k.bumsik@gmail.com>
+---
+ Documentation/watchdog/convert_drivers_to_kernel_api.rst | 2 +-
+ Documentation/watchdog/watchdog-kernel-api.rst           | 2 +-
+ include/linux/watchdog.h                                 | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-But after this branch is rebased to v5.6, I can't find it.
+diff --git a/Documentation/watchdog/convert_drivers_to_kernel_api.rst b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
+index dd934cc08e40..51b999b5551a 100644
+--- a/Documentation/watchdog/convert_drivers_to_kernel_api.rst
++++ b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
+@@ -115,7 +115,7 @@ Add the watchdog operations
+ ---------------------------
+ 
+ All possible callbacks are defined in 'struct watchdog_ops'. You can find it
+-explained in 'watchdog-kernel-api.txt' in this directory. start(), stop() and
++explained in 'watchdog-kernel-api.txt' in this directory. start() and
+ owner must be set, the rest are optional. You will easily find corresponding
+ functions in the old driver. Note that you will now get a pointer to the
+ watchdog_device as a parameter to these functions, so you probably have to
+diff --git a/Documentation/watchdog/watchdog-kernel-api.rst b/Documentation/watchdog/watchdog-kernel-api.rst
+index 864edbe932c1..068a55ee0d4a 100644
+--- a/Documentation/watchdog/watchdog-kernel-api.rst
++++ b/Documentation/watchdog/watchdog-kernel-api.rst
+@@ -123,8 +123,8 @@ The list of watchdog operations is defined as::
+ 	struct module *owner;
+ 	/* mandatory operations */
+ 	int (*start)(struct watchdog_device *);
+-	int (*stop)(struct watchdog_device *);
+ 	/* optional operations */
++	int (*stop)(struct watchdog_device *);
+ 	int (*ping)(struct watchdog_device *);
+ 	unsigned int (*status)(struct watchdog_device *);
+ 	int (*set_timeout)(struct watchdog_device *, unsigned int);
+diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+index 417d9f37077a..1464ce6ffa31 100644
+--- a/include/linux/watchdog.h
++++ b/include/linux/watchdog.h
+@@ -37,15 +37,15 @@ struct watchdog_governor;
+  *
+  * The watchdog_ops structure contains a list of low-level operations
+  * that control a watchdog device. It also contains the module that owns
+- * these operations. The start and stop function are mandatory, all other
++ * these operations. The start function is mandatory, all other
+  * functions are optional.
+  */
+ struct watchdog_ops {
+ 	struct module *owner;
+ 	/* mandatory operations */
+ 	int (*start)(struct watchdog_device *);
+-	int (*stop)(struct watchdog_device *);
+ 	/* optional operations */
++	int (*stop)(struct watchdog_device *);
+ 	int (*ping)(struct watchdog_device *);
+ 	unsigned int (*status)(struct watchdog_device *);
+ 	int (*set_timeout)(struct watchdog_device *, unsigned int);
+-- 
+2.26.0
 
-Will you apply again?
-
-Thanks,
-Aaron
-
-On 4/2/20 8:31 PM, Hans de Goede wrote:
-> 
-> This fix fixes a real problem, on a popular model laptop
-> and since it just extends a timeout it is a pretty harmless
-> (no chance of regressions) fix. As such since there seems
-> to be no other solution in sight, can we please move forward
-> with this fix for now ?
