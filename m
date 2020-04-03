@@ -2,313 +2,170 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CFAC2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9289CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E4F20721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5908E20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfWfM9Mx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JSw+lUNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390931AbgDCNgr (ORCPT
+        id S2390932AbgDCNhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:36:47 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35608 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390892AbgDCNgp (ORCPT
+        Fri, 3 Apr 2020 09:37:46 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:33468 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728023AbgDCNhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:36:45 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i19so7762610wmb.0;
-        Fri, 03 Apr 2020 06:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=V495F/LWz4DvLP06Qim1MuItKKlrnJlu4+4yHQQXN3g=;
-        b=nfWfM9MxWzYxib7CCdOhh1sz088O06aWnkrNfYybv1cChjuel6N+MlMUZK+kravUOb
-         zmEYj8LLYMq5DwhpWpdzgqEK2OyiIz5deuMd48f6GJtb4FG4Da0lUD2/M0E98g6cTZ1E
-         7ece6rJUpQq7T+1uRuNrYSUkfPMPyl8cLFWwGbFhZG+pgPHHIwJkrhlWIjOVB/EIVNYK
-         QO/1rOwNCCUetIeI765+tV5Cz8iFcYqd8pcvKxShzWTuwhTb07YVmKV/Ly1Hp7jkgPid
-         uKFHoVKsyrFBg7l7GIB+ZmovNf5DroJQE1CUZT+oDKsxoOlbN5tnMv1ZuymiL4W5KA7o
-         agww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=V495F/LWz4DvLP06Qim1MuItKKlrnJlu4+4yHQQXN3g=;
-        b=MG7nya1AV84PQ6OVDp7wQfTlMac56GuaWNZVRBaAvnQN/uGK+bzrSL8vchdMP4+Y5o
-         dBk047MwB38gdGiaqpALNhHA1U2zbyOJ4rRSuM3YJY3XZTipCYHikPthi3KKnPVr+R6d
-         9k68zAQyx0fzsrjshp0c7WuA4PtEHRLFVIyFIyFBcr/+j+rH8Ip6AVi2Pyd5VoS0iEP2
-         kHDvLFMSrKpz6RSWNSYuEp8ap7l6MliwZuvV6tEGGeI8W8HPPXPiu40Dac+EXXqJU0lr
-         OYNTGuYF67FYmuGK+MvDDT+lWj28pFJZ2i8785QJuRGxSzweXb7zFHljXcbs2O3nAY+3
-         QCRQ==
-X-Gm-Message-State: AGi0PuZ3OvPYzyqvrpy6qYkLTFAMIsLMTGN4tXb1iexq5xIr/3hl/V4m
-        S8+HlmXxidPgoPr3UfVlYNo=
-X-Google-Smtp-Source: APiQypIVKv/R7Hs97n0mr3aADn8sArWU07D3Vlz8dk6qnR8PcirGlBx8cyH2W7SgaAGeSZ6z9BCpqg==
-X-Received: by 2002:a05:600c:54d:: with SMTP id k13mr8587182wmc.81.1585921002311;
-        Fri, 03 Apr 2020 06:36:42 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id r11sm12523729wrn.24.2020.04.03.06.36.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Apr 2020 06:36:41 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: display: convert rockchip rk3066 hdmi bindings to yaml
-Date:   Fri,  3 Apr 2020 15:36:30 +0200
-Message-Id: <20200403133630.7377-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 3 Apr 2020 09:37:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6qRe0n0i/brQrN4i1lC0j4Ww/Thvi8ApntxMb75aYXw=; b=JSw+lUNa0DxywVe7R1CwsfF6W
+        duHA2+TE7R9d3Mj5F003DngVbNKxSVj07IsPCJdXcbDKfi4XCbV4ygEyQ2r2xLVcJuRgwSX6jGZEJ
+        BWcGCNe02Cw9VmMdvYYMF4C34vxXgWcgw7Bx5E1id8eF7VZpzt7tlf3usJx4e0EkXqCg5VYwrh3BV
+        1gMqh70gTjdoMbbsN4ZUl5v7c1LUD4OfmKjo9YmE5xnoZLDAJ58VKWHjvenyjPU25Ft//Dno1kd6q
+        Wr3yAFl58sfrBLMgsgA1VKz/ieI0PWh+2PQVGTBtYblzZLcF+QtFZHCOMZ89yU6AYVMJjTAc1L9zq
+        56cCCltuQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:33460)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jKMVh-00010t-Gw; Fri, 03 Apr 2020 14:37:25 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jKMVb-0002hX-Tl; Fri, 03 Apr 2020 14:37:19 +0100
+Date:   Fri, 3 Apr 2020 14:37:19 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, airlied@linux.ie,
+        daniel@ffwll.ch, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH RESEND 1/4] uaccess: Add user_read_access_begin/end and
+ user_write_access_begin/end
+Message-ID: <20200403133719.GC25745@shell.armlinux.org.uk>
+References: <27106d62fdbd4ffb47796236050e418131cb837f.1585811416.git.christophe.leroy@c-s.fr>
+ <20200402162942.GG23230@ZenIV.linux.org.uk>
+ <67e21b65-0e2d-7ca5-7518-cec1b7abc46c@c-s.fr>
+ <20200402175032.GH23230@ZenIV.linux.org.uk>
+ <202004021132.813F8E88@keescook>
+ <20200403005831.GI23230@ZenIV.linux.org.uk>
+ <20200403112609.GB26633@mbp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403112609.GB26633@mbp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files with 'hdmi' nodes for rk3066 are manually verified.
-In order to automate this process rockchip,rk3066-hdmi.txt
-has to be converted to yaml.
+On Fri, Apr 03, 2020 at 12:26:10PM +0100, Catalin Marinas wrote:
+> On Fri, Apr 03, 2020 at 01:58:31AM +0100, Al Viro wrote:
+> > On Thu, Apr 02, 2020 at 11:35:57AM -0700, Kees Cook wrote:
+> > > Yup, I think it's a weakness of the ARM implementation and I'd like to
+> > > not extend it further. AFAIK we should never nest, but I would not be
+> > > surprised at all if we did.
+> > > 
+> > > If we were looking at a design goal for all architectures, I'd like
+> > > to be doing what the public PaX patchset did for their memory access
+> > > switching, which is to alarm if calling into "enable" found the access
+> > > already enabled, etc. Such a condition would show an unexpected nesting
+> > > (like we've seen with similar constructs with set_fs() not getting reset
+> > > during an exception handler, etc etc).
+> > 
+> > FWIW, maybe I'm misreading the ARM uaccess logics, but... it smells like
+> > KERNEL_DS is somewhat more dangerous there than on e.g. x86.
+> > 
+> > Look: with CONFIG_CPU_DOMAINS, set_fs(KERNEL_DS) tells MMU to ignore
+> > per-page permission bits in DOMAIN_KERNEL (i.e. for kernel address
+> > ranges), allowing them even if they would normally be denied.  We need
+> > that for actual uaccess loads/stores, since those use insns that pretend
+> > to be done in user mode and we want them to access the kernel pages.
+> > But that affects the normal loads/stores as well; unless I'm misreading
+> > that code, it will ignore (supervisor) r/o on a page.  And that's not
+> > just for the code inside the uaccess blocks; *everything* done under
+> > KERNEL_DS is subject to that.
+> 
+> That's correct. Luckily this only affects ARMv5 and earlier. From ARMv6
+> onwards, CONFIG_CPU_USE_DOMAINS is no longer selected and the uaccess
+> instructions are just plain ldr/str.
+> 
+> Russell should know the details on whether there was much choice. Since
+> the kernel was living in the linear map with full rwx permissions, the
+> KERNEL_DS overriding was probably not a concern and the ldrt/strt for
+> uaccess deemed more secure. We also have weird permission setting
+> pre-ARMv6 (or rather v6k) where RO user pages are writable from the
+> kernel with standard str instructions (breaking CoW). I don't recall
+> whether it was a choice made by the kernel or something the architecture
+> enforced. The vectors page has to be kernel writable (and user RO) to
+> store the TLS value in the absence of a TLS register but maybe we could
+> do this via the linear alias together with the appropriate cache
+> maintenance.
+> 
+> From ARMv6, the domain overriding had the side-effect of ignoring the XN
+> bit and causing random instruction fetches from ioremap() areas. So we
+> had to remove the domain switching. We also gained a dedicated TLS
+> register.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-Changes v2:
-  Fix irq.h already included in arm-gic.h
----
- .../display/rockchip/rockchip,rk3066-hdmi.txt      |  72 -----------
- .../display/rockchip/rockchip,rk3066-hdmi.yaml     | 140 +++++++++++++++++++++
- 2 files changed, 140 insertions(+), 72 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
+Indeed.  On pre-ARMv6, we have the following choices for protection
+attributes:
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
-deleted file mode 100644
-index d1ad31bca..000000000
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
-+++ /dev/null
-@@ -1,72 +0,0 @@
--Rockchip specific extensions for rk3066 HDMI
--============================================
--
--Required properties:
--- compatible:
--	"rockchip,rk3066-hdmi";
--- reg:
--	Physical base address and length of the controller's registers.
--- clocks, clock-names:
--	Phandle to HDMI controller clock, name should be "hclk".
--- interrupts:
--	HDMI interrupt number.
--- power-domains:
--	Phandle to the RK3066_PD_VIO power domain.
--- rockchip,grf:
--	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
--- ports:
--	Contains one port node with two endpoints, numbered 0 and 1,
--	connected respectively to vop0 and vop1.
--	Contains one port node with one endpoint
--	connected to a hdmi-connector node.
--- pinctrl-0, pinctrl-name:
--	Switch the iomux for the HPD/I2C pins to HDMI function.
--
--Example:
--	hdmi: hdmi@10116000 {
--		compatible = "rockchip,rk3066-hdmi";
--		reg = <0x10116000 0x2000>;
--		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru HCLK_HDMI>;
--		clock-names = "hclk";
--		power-domains = <&power RK3066_PD_VIO>;
--		rockchip,grf = <&grf>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			hdmi_in: port@0 {
--				reg = <0>;
--				#address-cells = <1>;
--				#size-cells = <0>;
--				hdmi_in_vop0: endpoint@0 {
--					reg = <0>;
--					remote-endpoint = <&vop0_out_hdmi>;
--				};
--				hdmi_in_vop1: endpoint@1 {
--					reg = <1>;
--					remote-endpoint = <&vop1_out_hdmi>;
--				};
--			};
--			hdmi_out: port@1 {
--				reg = <1>;
--				hdmi_out_con: endpoint {
--					remote-endpoint = <&hdmi_con_in>;
--				};
--			};
--		};
--	};
--
--&pinctrl {
--		hdmi {
--			hdmi_hpd: hdmi-hpd {
--				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
--			};
--			hdmii2c_xfer: hdmii2c-xfer {
--				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
--						<0 RK_PA2 1 &pcfg_pull_none>;
--			};
--		};
--};
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
-new file mode 100644
-index 000000000..4110d003c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
-@@ -0,0 +1,140 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3066-hdmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip rk3066 HDMI controller
-+
-+maintainers:
-+  - Sandy Huang <hjc@rock-chips.com>
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    const: rockchip,rk3066-hdmi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: hclk
-+
-+  pinctrl-0:
-+    maxItems: 2
-+
-+  pinctrl-names:
-+    const: default
-+    description:
-+      Switch the iomux for the HPD/I2C pins to HDMI function.
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
-+
-+  ports:
-+    type: object
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        description:
-+          Port node with two endpoints, numbered 0 and 1,
-+          connected respectively to vop0 and vop1.
-+
-+      port@1:
-+        type: object
-+        description:
-+          Port node with one endpoint connected to a hdmi-connector node.
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - port@0
-+      - port@1
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - pinctrl-0
-+  - pinctrl-names
-+  - power-domains
-+  - rockchip,grf
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3066a-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/pinctrl/rockchip.h>
-+    #include <dt-bindings/power/rk3066-power.h>
-+    hdmi: hdmi@10116000 {
-+      compatible = "rockchip,rk3066-hdmi";
-+      reg = <0x10116000 0x2000>;
-+      interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru HCLK_HDMI>;
-+      clock-names = "hclk";
-+      pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
-+      pinctrl-names = "default";
-+      power-domains = <&power RK3066_PD_VIO>;
-+      rockchip,grf = <&grf>;
-+
-+      ports {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        hdmi_in: port@0 {
-+          reg = <0>;
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+          hdmi_in_vop0: endpoint@0 {
-+            reg = <0>;
-+            remote-endpoint = <&vop0_out_hdmi>;
-+          };
-+          hdmi_in_vop1: endpoint@1 {
-+            reg = <1>;
-+            remote-endpoint = <&vop1_out_hdmi>;
-+          };
-+        };
-+        hdmi_out: port@1 {
-+          reg = <1>;
-+          hdmi_out_con: endpoint {
-+            remote-endpoint = <&hdmi_con_in>;
-+          };
-+        };
-+      };
-+    };
-+
-+    pinctrl {
-+      hdmi {
-+        hdmi_hpd: hdmi-hpd {
-+          rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
-+        };
-+        hdmii2c_xfer: hdmii2c-xfer {
-+          rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
-+                          <0 RK_PA2 1 &pcfg_pull_none>;
-+        };
-+      };
-+    };
+Page tables	Control Reg	Privileged	User
+AP		S,R		permission	permission
+00		0,0		No access	No access
+00		1,0		Read-only	No access
+00		0,1		Read-only	Read-only
+00		1,1		Unpredictable	Unpredictable
+01		X,X		Read/Write	No access
+10		X,X		Read/Write	Read-only
+11		X,X		Read/Write	Read/Write
+
+We use S,R=1,0 under Linux because this allows us to read-protect
+kernel pages without making them visible to userspace.  If we
+changed to S,R=0,1, then we could have our read-only permissions
+for both kernel and userspace, drop domain switching, and use the
+plain LDR/STR instructions, but we then lose the ability to
+write-protect module executable code and other parts of kernel
+space without making them visible to userspace.
+
+So, it essentially boils down to making a choice - which set of
+security features we think are the most important.
+
+> I think uaccess_enable() could indeed switch the kernel domain if
+> KERNEL_DS is set and move this out of set_fs(). It would reduce the
+> window the kernel domain permissions are overridden. Anyway,
+> uaccess_enable() appeared much later on arm when Russell introduced PAN
+> (SMAP) like support by switching the user domain.
+
+Yes, that would be a possibility.  Another possibility would be to
+eliminate as much usage of KERNEL_DS as possible - I've just found
+one instance in sys_oabi-compat.c that can be eliminated (epoll_ctl)
+but there's several there that can't with the current code structure,
+and re-coding the contents of some fs/* functions to work around that
+is a very bad idea.  If there's some scope for rejigging some of the
+fs/* code, it may be possible to elimate some other cases in there.
+
+I notice that the fs/* code seems like some of the last remaining
+users of KERNEL_DS, although I suspect that some aren't possible to
+eliminate. :(
+
 -- 
-2.11.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
