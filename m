@@ -2,146 +2,220 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D462C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7EFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79E7207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358FD2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:55:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q+J4VQzh"
+	dkim=pass (2048-bit key) header.d=ugedal.com header.i=@ugedal.com header.b="JYtJwflt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403930AbgDCRyg (ORCPT
+        id S2404176AbgDCRzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:54:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41479 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727167AbgDCRyf (ORCPT
+        Fri, 3 Apr 2020 13:55:42 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42025 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbgDCRzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:54:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585936474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=m/sN5U1KWfQeBEyLLOyOkjJBPzSeLq7M2YpI/ghADG0=;
-        b=Q+J4VQzhqICfIfmchwBrb3wU7Igj6UGpL36ss4Gl6Qaizn/mVC3tQbt1sA9FzA0dkEGwLy
-        nUczet5p4tOb0ypDu9AQ6FuB3FzVDbXQV/TzpUDz49I0HNnEfQzwscz/hh1Vz1gsGy1KZy
-        RFlvHDOV1z9V/AIbe2FrejjX8IUUONc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-495-dYKjhh3uNNiiE1b8mvym5A-1; Fri, 03 Apr 2020 13:54:32 -0400
-X-MC-Unique: dYKjhh3uNNiiE1b8mvym5A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C834D1005F6D;
-        Fri,  3 Apr 2020 17:54:30 +0000 (UTC)
-Received: from redhat.com (ovpn-114-27.phx2.redhat.com [10.3.114.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E15D360BF3;
-        Fri,  3 Apr 2020 17:54:29 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 13:54:28 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [POC 04/23] livepatch: Prevent loading livepatch sub-module
- unintentionally.
-Message-ID: <20200403175428.GA30284@redhat.com>
-References: <20200117150323.21801-1-pmladek@suse.com>
- <20200117150323.21801-5-pmladek@suse.com>
+        Fri, 3 Apr 2020 13:55:42 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q19so7804189ljp.9
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ugedal.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FPIH9Cepkvfx+qnRWFWOtOody6sfKssdMr1NGqEz4tY=;
+        b=JYtJwfltQr8Gy7OcS6GPL1nxZiPr6yZsZVksURjdfhhaIOMAvowZok4L/vE6sJ1+KT
+         ux3maGBK7iXLCNElB/EPonnQYhUDwD1FjJ86tQSvKoVL98kTwWToj4VlflIvYTKUKd/L
+         f3tuRC18LMu25zYYrYN1dU84yP41jsHanLBa/5k/P9nxOV/rM/vPmEgo0IulFCcHhwWG
+         /rN4xbDZ2Wk7p6qik4ctf/3NBqy4Z0ee5iUPBwltKmFKYIh8ZCvsOszFGnWyv8aamKTU
+         kXD0uwh5+NQCLnwXLupvvY/Ed3v+zQlkBHRVCntRbvdtBCpmaoe7nAtUh1AwNqKr8WZx
+         UQFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FPIH9Cepkvfx+qnRWFWOtOody6sfKssdMr1NGqEz4tY=;
+        b=GMz5qTNVDGw7HjDKG7nZ8V/Z5N8fbfQiEUwau3vmLCI8xCrB8vYomSa9aBHDZX/gWA
+         eXe5N8BGT0T7LRKpiJrrBJoCO/xWTW5GYlgpIThaWqGxPKSWCu3K7NBTsIHh6HPbc7Qw
+         LWRcQHbBHHnHKDdC8/JwlNSQKn1CLlWfLe5yi3wdBMz82h/u8csZ/Jl6l2tntu6Py7Vk
+         5FsHzIvFtWshpgWq3uaSYlXfU9CcJw68BZ3HGBsLWjVEQ6UFFZXvEFNpI/ahDrq+QMpO
+         zMq1Ty3PGIEvf0Es63Od3tOH4NWrai09DW4f7TjmFZ1Jc37b9rmsyODFpHRF+5iZP26F
+         y1LQ==
+X-Gm-Message-State: AGi0Pua/+cLU+qzVs1narfYhnjGadj5IArlX0ygauKpH3c+i1ZqEQg0B
+        vygCCJALgwbL4wVYYvNy/HrClw==
+X-Google-Smtp-Source: APiQypLCS+GwPGR8/cw+HpaBaDNdQMQ2twj7URTyHCsJPzGMMY5IVfeNWB6r16JXEq/68SuRQcA+bA==
+X-Received: by 2002:a2e:8612:: with SMTP id a18mr5165463lji.250.1585936538737;
+        Fri, 03 Apr 2020 10:55:38 -0700 (PDT)
+Received: from xps13.lan (238.89-10-169.nextgentel.com. [89.10.169.238])
+        by smtp.gmail.com with ESMTPSA id q20sm5267600ljj.66.2020.04.03.10.55.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 10:55:37 -0700 (PDT)
+From:   Odin Ugedal <odin@ugedal.com>
+To:     bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tj@kernel.org,
+        Harish.Kasiviswanathan@amd.com, guro@fb.com,
+        amd-gfx@lists.freedesktop.org
+Cc:     Odin Ugedal <odin@ugedal.com>
+Subject: [PATCH] device_cgroup: Cleanup cgroup eBPF device filter code
+Date:   Fri,  3 Apr 2020 19:55:28 +0200
+Message-Id: <20200403175528.225990-1-odin@ugedal.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117150323.21801-5-pmladek@suse.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:03:04PM +0100, Petr Mladek wrote:
-> Livepatch is split into several modules. The main module is for livepatching
-> vmlinux. The rest is for livepatching other modules.
-> 
-> Only the livepatch module for vmlinux can be loaded by users. Others are
-> loaded automatically when the related module is or gets loaded.
-> 
-> Users might try to load any livepatch module. It must be allowed
-> only when the related livepatch module for vmlinux and the livepatched
-> module are loaded.
-> 
-> Also it is important to check that obj->name is listed in patch->obj_names.
-> Otherwise this module would not be loaded automatically. And it would
-> lead into inconsistent behavier. Anyway, the missing name means a mistake
-> somewhere and must be reported.
-> 
-> klp_add_object() is taking over the job done by klp_module_coming().
-> The error message is taken from there so that selftests do not need
-> to get updated.
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  kernel/livepatch/core.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 77 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index ec7ffc7db3a7..e2c7dc6c2d5f 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> 
-> [ ... snip ... ]
-> 
->  int klp_add_object(struct klp_object *obj)
->  {
-> +	struct klp_patch *patch;
->  	int ret;
->  
->  	ret = klp_check_object(obj, true);
->  	if (ret)
->  		return ret;
->  
-> +	mutex_lock(&klp_mutex);
-> +
-> +	patch = klp_find_patch(obj->patch_name);
-> +	if (!patch) {
-> +		pr_err("Can't load livepatch (%s) for module when the livepatch (%s) for vmcore is not loaded\n",
-> +		       obj->mod->name, obj->patch_name);
+Original cgroup v2 eBPF code for filtering device access made it
+possible to compile with CONFIG_CGROUP_DEVICE=n and still use the eBPF
+filtering. Change 
+commit 4b7d4d453fc4 ("device_cgroup: Export devcgroup_check_permission")
+reverted this, making it required to set it to y.
 
-nit: s/vmcore/vmlinux in the error message?
+Since the device filtering (and all the docs) for cgroup v2 is no longer
+a "device controller" like it was in v1, someone might compile their
+kernel with CONFIG_CGROUP_DEVICE=n. Then (for linux 5.5+) the eBPF
+filter will not be invoked, and all processes will be allowed access
+to all devices, no matter what the eBPF filter says.
 
-> +		ret = -EINVAL;
-> +		goto err;
+Signed-off-by: Odin Ugedal <odin@ugedal.com>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_priv.h |  2 +-
+ include/linux/device_cgroup.h         | 14 +++++---------
+ security/Makefile                     |  2 +-
+ security/device_cgroup.c              | 19 ++++++++++++++++---
+ 4 files changed, 23 insertions(+), 14 deletions(-)
 
-Minor code snafu: !patch for this exit path means ...
-
-> +	}
-> +
-> +	if (!klp_is_object_compatible(patch, obj)) {
-> +		ret = -EINVAL;
-> +		goto err;
-> +	}
-> +
-> +	mutex_unlock(&klp_mutex);
->  	return 0;
-> +
-> +err:
-> +	/*
-> +	 * If a patch is unsuccessfully applied, return
-> +	 * error to the module loader.
-> +	 */
-> +	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
-> +		patch->obj->patch_name, obj->name, obj->name);
-
-... we can't access patch->obj->patch_name here.
-
--- Joe
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
+index 4a3049841086..c24cad3c64ed 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
+@@ -1050,7 +1050,7 @@ void kfd_dec_compute_active(struct kfd_dev *dev);
+ /* Check with device cgroup if @kfd device is accessible */
+ static inline int kfd_devcgroup_check_permission(struct kfd_dev *kfd)
+ {
+-#if defined(CONFIG_CGROUP_DEVICE)
++#if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
+ 	struct drm_device *ddev = kfd->ddev;
+ 
+ 	return devcgroup_check_permission(DEVCG_DEV_CHAR, ddev->driver->major,
+diff --git a/include/linux/device_cgroup.h b/include/linux/device_cgroup.h
+index fa35b52e0002..9a72214496e5 100644
+--- a/include/linux/device_cgroup.h
++++ b/include/linux/device_cgroup.h
+@@ -1,6 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #include <linux/fs.h>
+-#include <linux/bpf-cgroup.h>
+ 
+ #define DEVCG_ACC_MKNOD 1
+ #define DEVCG_ACC_READ  2
+@@ -11,16 +10,10 @@
+ #define DEVCG_DEV_CHAR  2
+ #define DEVCG_DEV_ALL   4  /* this represents all devices */
+ 
+-#ifdef CONFIG_CGROUP_DEVICE
+-int devcgroup_check_permission(short type, u32 major, u32 minor,
+-			       short access);
+-#else
+-static inline int devcgroup_check_permission(short type, u32 major, u32 minor,
+-					     short access)
+-{ return 0; }
+-#endif
+ 
+ #if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
++int devcgroup_check_permission(short type, u32 major, u32 minor,
++			       short access);
+ static inline int devcgroup_inode_permission(struct inode *inode, int mask)
+ {
+ 	short type, access = 0;
+@@ -61,6 +54,9 @@ static inline int devcgroup_inode_mknod(int mode, dev_t dev)
+ }
+ 
+ #else
++static inline int devcgroup_check_permission(short type, u32 major, u32 minor,
++			       short access)
++{ return 0; }
+ static inline int devcgroup_inode_permission(struct inode *inode, int mask)
+ { return 0; }
+ static inline int devcgroup_inode_mknod(int mode, dev_t dev)
+diff --git a/security/Makefile b/security/Makefile
+index 22e73a3482bd..3baf435de541 100644
+--- a/security/Makefile
++++ b/security/Makefile
+@@ -30,7 +30,7 @@ obj-$(CONFIG_SECURITY_YAMA)		+= yama/
+ obj-$(CONFIG_SECURITY_LOADPIN)		+= loadpin/
+ obj-$(CONFIG_SECURITY_SAFESETID)       += safesetid/
+ obj-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+= lockdown/
+-obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
++obj-$(CONFIG_CGROUPS)			+= device_cgroup.o
+ obj-$(CONFIG_BPF_LSM)			+= bpf/
+ 
+ # Object integrity file lists
+diff --git a/security/device_cgroup.c b/security/device_cgroup.c
+index 7d0f8f7431ff..43ab0ad45c1b 100644
+--- a/security/device_cgroup.c
++++ b/security/device_cgroup.c
+@@ -15,6 +15,8 @@
+ #include <linux/rcupdate.h>
+ #include <linux/mutex.h>
+ 
++#ifdef CONFIG_CGROUP_DEVICE
++
+ static DEFINE_MUTEX(devcgroup_mutex);
+ 
+ enum devcg_behavior {
+@@ -792,7 +794,7 @@ struct cgroup_subsys devices_cgrp_subsys = {
+ };
+ 
+ /**
+- * __devcgroup_check_permission - checks if an inode operation is permitted
++ * devcgroup_legacy_check_permission - checks if an inode operation is permitted
+  * @dev_cgroup: the dev cgroup to be tested against
+  * @type: device type
+  * @major: device major number
+@@ -801,7 +803,7 @@ struct cgroup_subsys devices_cgrp_subsys = {
+  *
+  * returns 0 on success, -EPERM case the operation is not permitted
+  */
+-static int __devcgroup_check_permission(short type, u32 major, u32 minor,
++static int devcgroup_legacy_check_permission(short type, u32 major, u32 minor,
+ 					short access)
+ {
+ 	struct dev_cgroup *dev_cgroup;
+@@ -825,6 +827,10 @@ static int __devcgroup_check_permission(short type, u32 major, u32 minor,
+ 	return 0;
+ }
+ 
++#endif /* CONFIG_CGROUP_DEVICE */
++
++#if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
++
+ int devcgroup_check_permission(short type, u32 major, u32 minor, short access)
+ {
+ 	int rc = BPF_CGROUP_RUN_PROG_DEVICE_CGROUP(type, major, minor, access);
+@@ -832,6 +838,13 @@ int devcgroup_check_permission(short type, u32 major, u32 minor, short access)
+ 	if (rc)
+ 		return -EPERM;
+ 
+-	return __devcgroup_check_permission(type, major, minor, access);
++	#ifdef CONFIG_CGROUP_DEVICE
++	return devcgroup_legacy_check_permission(type, major, minor, access);
++
++	#else /* CONFIG_CGROUP_DEVICE */
++	return 0;
++
++	#endif /* CONFIG_CGROUP_DEVICE */
+ }
+ EXPORT_SYMBOL(devcgroup_check_permission);
++#endif /* defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF) */
+-- 
+2.26.0
 
