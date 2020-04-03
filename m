@@ -2,326 +2,266 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96620C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C62CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E50820719
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A59206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:26:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IuI4IA95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404240AbgDCPZ6 (ORCPT
+        id S2404249AbgDCP0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:25:58 -0400
-Received: from mga12.intel.com ([192.55.52.136]:61051 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404011AbgDCPZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:25:57 -0400
-IronPort-SDR: d1VUqaIwfHLBsc0115thncTDgdYDwdfluM+xMBX6Nn+Kvm719cZZQ3jN1Hcoicb9X0EXQYFVI2
- i8CTYfXljFCQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 08:25:57 -0700
-IronPort-SDR: Kz9Xn8SJxTKmlvLgOVwgF5jI27PjXyHYua/KTyfsaNgp7UaJwTPpO4T6SpIItCjULt3DA9tXZf
- t4KOiEnnNfAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,340,1580803200"; 
-   d="scan'208";a="423560866"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 03 Apr 2020 08:25:56 -0700
-Date:   Fri, 3 Apr 2020 08:31:45 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-Message-ID: <20200403083145.5097d346@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
-        <20200402142428.2901432e@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 3 Apr 2020 11:26:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37967 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404225AbgDCP0o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 11:26:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c7so8985089wrx.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dPsD1P55G+S5RL8TgvwOFMHia5JH83kaO5H6bTOs9Ew=;
+        b=IuI4IA95P0M86H0txL7j4mmWPiOBafK8GpR0q1XCTmuM4QneVHPm0C0olucZfE/gCU
+         lEaottxJ+YuwPYayhNGfLYrp3Ss1oorSuarJG2njfaLLusj5MZNAppPuoAyePmCWBjHM
+         KbRmK6cUTgSDSgn/+LC/AOnNquVF/uwqFmkOZJffC0bJaHx23Ob5z9TcAybugMzHYkeg
+         clbcKqxsVEHGUIiOYEs/GG/NtTrYIyYqpDWqv42e/+rxoJc9KQ0X8SImQEqFXlBReiu3
+         8QaKWHRhbs9xJqEo3DFkTzBJawi7nKFfvC7VIw6n8w1rZ86VPMVaaNI9hikMQ5EMo0sE
+         KEEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dPsD1P55G+S5RL8TgvwOFMHia5JH83kaO5H6bTOs9Ew=;
+        b=YlIE9vLsJhpY584NpY7doLEUYoj+5bQX2df4nIojLEcl3FWIAwxQJsI2uNA3OJFR3e
+         I0khO6kdETVQmSQhgtPzJavs/0ZUcifnx9MeLcDiR7fpJEi09ua1SFxKtRXvuqulZ88I
+         qdz2qteU4limP7Sl2ZFFsvq4pgGqf+d0VV7doqF/BVSm3SPL4St6Ff6QuqtQFlosLYao
+         hP6uNThGrHVVX36+M29wcUcQ+mthGRWhGMuklVgcxZBjdwCWXinw9AaSV8kWRHqTUgDR
+         VnqCqZUxlSRvO5L6ORTirzgY3flbciI74hvnkBDREh1r8p9hHqQmt48a6mNGoHPfNj+s
+         sTSA==
+X-Gm-Message-State: AGi0PuZ5Kt97D01RtSy6zOvFU28gMcshMUxcMnGDLbE75VbHCK7nkTFV
+        6UeVp0BE2ffTCplyAvHJOMEfgr7z9Co=
+X-Google-Smtp-Source: APiQypJRGQ2u7Q9GMA++cCC4/ShVkAWZtF1y/pb0xhjpRHu3OKVOnvsXsR0h8KS8bE1EFR4JLEPgQw==
+X-Received: by 2002:a5d:50d1:: with SMTP id f17mr10094536wrt.150.1585927600740;
+        Fri, 03 Apr 2020 08:26:40 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:cc78:8018:8980:25d8? ([2a01:e34:ed2f:f020:cc78:8018:8980:25d8])
+        by smtp.googlemail.com with ESMTPSA id g3sm12595749wrm.66.2020.04.03.08.26.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 08:26:40 -0700 (PDT)
+Subject: Re: [PATCH] thermal: core: Send a sysfs notification on trip points
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <a7e8287d-72be-7ab0-697a-9de40eb3f81f@linaro.org>
+ <20200402142116.22869-1-daniel.lezcano@linaro.org>
+ <20200403144009.szjoss5ecleisg2f@axis.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e0c819ce-31f4-cee1-c7cc-7ecb73d374a3@linaro.org>
+Date:   Fri, 3 Apr 2020 17:26:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200403144009.szjoss5ecleisg2f@axis.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020 06:39:22 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+On 03/04/2020 16:40, Vincent Whitchurch wrote:
+> On Thu, Apr 02, 2020 at 04:21:15PM +0200, Daniel Lezcano wrote:
+>> Currently the userspace has no easy way to get notified when a
+>> specific trip point was crossed. There are a couple of
+>> approaches:
+>>
+>> - the userspace polls the sysfs temperature with usually an
+>> unacceptable delay between the trip temperature point crossing
+>> and the moment it is detected, or a high polling rate with an
+>> unacceptable number of wakeup events.
+>>
+>> - the thermal zone is set to be managed by an userspace governor
+>> in order to receive the uevent even if the thermal zone needs to
+>> be managed by another governor.
+>>
+>> These changes allow to send a sysfs notification on the
+>> trip_point_*_temp when the temperature is getting higher than the
+>> trip point temperature. By this way, the userspace can be
+>> notified everytime when the trip point is crossed, this is useful
+>> for the thermal Android HAL or for notification to be sent via
+>> d-bus.
+>>
+>> That allows the userspace to manage the applications based on
+>> specific alerts on different thermal zones to mitigate the skin
+>> temperature, letting the kernel governors handle the high
+>> temperature for hardware like the CPU, the GPU or the modem.
+>>
+>> The temperature can be oscillating around a trip point and the
+>> event will be sent multiple times. It is up to the userspace to
+>> deal with this situation.
+>
+> The actual temperature value would also be interesting.  Is there a
+> way for userspace to obtain it in a race-free manner when it is
+> notified that the trip point has been crossed?
 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Friday, April 3, 2020 4:24 AM
-> > 
-> > On Sun, 22 Mar 2020 05:32:04 -0700
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >   
-> > > From: Liu Yi L <yi.l.liu@linux.intel.com>
-> > >
-> > > For VFIO IOMMUs with the type VFIO_TYPE1_NESTING_IOMMU, guest  
-> > "owns" the  
-> > > first-level/stage-1 translation structures, the host IOMMU driver
-> > > has no knowledge of first-level/stage-1 structure cache updates
-> > > unless the guest invalidation requests are trapped and propagated
-> > > to the host.
-> > >
-> > > This patch adds a new IOCTL VFIO_IOMMU_CACHE_INVALIDATE to  
-> > propagate guest  
-> > > first-level/stage-1 IOMMU cache invalidations to host to ensure
-> > > IOMMU  
-> > cache  
-> > > correctness.
-> > >
-> > > With this patch, vSVA (Virtual Shared Virtual Addressing) can be
-> > > used safely as the host IOMMU iotlb correctness are ensured.
-> > >
-> > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > Signed-off-by: Liu Yi L <yi.l.liu@linux.intel.com>
-> > > Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > ---
-> > >  drivers/vfio/vfio_iommu_type1.c | 49  
-> > +++++++++++++++++++++++++++++++++++++++++  
-> > >  include/uapi/linux/vfio.h       | 22 ++++++++++++++++++
-> > >  2 files changed, 71 insertions(+)
-> > >
-> > > diff --git a/drivers/vfio/vfio_iommu_type1.c  
-> > b/drivers/vfio/vfio_iommu_type1.c  
-> > > index a877747..937ec3f 100644
-> > > --- a/drivers/vfio/vfio_iommu_type1.c
-> > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > @@ -2423,6 +2423,15 @@ static long  
-> > vfio_iommu_type1_unbind_gpasid(struct vfio_iommu *iommu,  
-> > >  	return ret;
-> > >  }
-> > >
-> > > +static int vfio_cache_inv_fn(struct device *dev, void *data)
-> > > +{
-> > > +	struct domain_capsule *dc = (struct domain_capsule
-> > > *)data;
-> > > +	struct iommu_cache_invalidate_info *cache_inv_info =
-> > > +		(struct iommu_cache_invalidate_info *) dc->data;
-> > > +
-> > > +	return iommu_cache_invalidate(dc->domain, dev,
-> > > cache_inv_info); +}
-> > > +
-> > >  static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > >  				   unsigned int cmd, unsigned
-> > > long arg) {
-> > > @@ -2629,6 +2638,46 @@ static long vfio_iommu_type1_ioctl(void  
-> > *iommu_data,  
-> > >  		}
-> > >  		kfree(gbind_data);
-> > >  		return ret;
-> > > +	} else if (cmd == VFIO_IOMMU_CACHE_INVALIDATE) {
-> > > +		struct vfio_iommu_type1_cache_invalidate
-> > > cache_inv;
-> > > +		u32 version;
-> > > +		int info_size;
-> > > +		void *cache_info;
-> > > +		int ret;
-> > > +
-> > > +		minsz = offsetofend(struct  
-> > vfio_iommu_type1_cache_invalidate,  
-> > > +				    flags);  
-> > 
-> > This breaks backward compatibility as soon as struct
-> > iommu_cache_invalidate_info changes size by its defined versioning
-> > scheme.  ie. a field gets added, the version is bumped, all existing
-> > userspace breaks.  Our minsz is offsetofend to the version field,
-> > interpret the version to size, then reevaluate argsz.  
-> 
-> btw the version scheme is challenged by Christoph Hellwig. After
-> some discussions, we need your guidance how to move forward.
-> Jacob summarized available options below:
-> 	https://lkml.org/lkml/2020/4/2/876
-> 
-For this particular case, I don't quite get the difference between
-minsz=flags and minsz=version. Our IOMMU version scheme will only
-change size at the end where the variable union is used for vendor
-specific extensions. Version bump does not change size (only re-purpose
-padding) from the start of the UAPI structure to the union, i.e. version
-will __always__ be after struct vfio_iommu_type1_cache_invalidate.flags.
+No and IMO that would not make sense because even if there is a
+guarantee you have the temperature with the notification, one micro
+second later it could be less than the trip point. The content of the
+trip point file is the temperature you can rely on as a start of the
+sampling.
+
+The trip point notification must be the trigger to start reading the
+temperatures and the polling sampling gives the accuracy of the results.
+
+The hysteresis value can reduce the oscillation with the notifications
+but the userspace must ensure in any case it is able to deal with
+multiple notifications.
+
+There are some plans to create a new mechanism to notify and pass data
+from kernel space to user space via a kfifo but that is fairly new
+framework with a lot of cleanup before in the thermal core.
 
 
-> >   
-> > > +
-> > > +		if (copy_from_user(&cache_inv, (void __user
-> > > *)arg, minsz))
-> > > +			return -EFAULT;
-> > > +
-> > > +		if (cache_inv.argsz < minsz || cache_inv.flags)
-> > > +			return -EINVAL;
-> > > +
-> > > +		/* Get the version of struct
-> > > iommu_cache_invalidate_info */
-> > > +		if (copy_from_user(&version,
-> > > +			(void __user *) (arg + minsz),
-> > > sizeof(version)))
-> > > +			return -EFAULT;
-> > > +
-> > > +		info_size = iommu_uapi_get_data_size(
-> > > +					IOMMU_UAPI_CACHE_INVAL,  
-> > version);  
-> > > +
-> > > +		cache_info = kzalloc(info_size, GFP_KERNEL);
-> > > +		if (!cache_info)
-> > > +			return -ENOMEM;
-> > > +
-> > > +		if (copy_from_user(cache_info,
-> > > +			(void __user *) (arg + minsz),
-> > > info_size)) {
-> > > +			kfree(cache_info);
-> > > +			return -EFAULT;
-> > > +		}
-> > > +
-> > > +		mutex_lock(&iommu->lock);
-> > > +		ret = vfio_iommu_for_each_dev(iommu,
-> > > vfio_cache_inv_fn,
-> > > +					    cache_info);  
-> > 
-> > How does a user respond when their cache invalidate fails?  Isn't
-> > this also another case where our for_each_dev can fail at an
-> > arbitrary point leaving us with no idea whether each device even
-> > had the opportunity to perform the invalidation request.  I don't
-> > see how we have any chance to maintain coherency after this
-> > faults.  
-> 
-> Then can we make it simple to support singleton group only? 
-> 
-> >   
-> > > +		mutex_unlock(&iommu->lock);
-> > > +		kfree(cache_info);
-> > > +		return ret;
-> > >  	}
-> > >
-> > >  	return -ENOTTY;
-> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > index 2235bc6..62ca791 100644
-> > > --- a/include/uapi/linux/vfio.h
-> > > +++ b/include/uapi/linux/vfio.h
-> > > @@ -899,6 +899,28 @@ struct vfio_iommu_type1_bind {
-> > >   */
-> > >  #define VFIO_IOMMU_BIND		_IO(VFIO_TYPE, VFIO_BASE
-> > > + 23)
-> > >
-> > > +/**
-> > > + * VFIO_IOMMU_CACHE_INVALIDATE - _IOW(VFIO_TYPE, VFIO_BASE + 24,
-> > > + *			struct
-> > > vfio_iommu_type1_cache_invalidate)
-> > > + *
-> > > + * Propagate guest IOMMU cache invalidation to the host. The
-> > > cache
-> > > + * invalidation information is conveyed by @cache_info, the
-> > > content
-> > > + * format would be structures defined in uapi/linux/iommu.h. User
-> > > + * should be aware of that the struct
-> > > iommu_cache_invalidate_info
-> > > + * has a @version field, vfio needs to parse this field before
-> > > getting
-> > > + * data from userspace.
-> > > + *
-> > > + * Availability of this IOCTL is after VFIO_SET_IOMMU.  
-> > 
-> > Is this a necessary qualifier?  A user can try to call this ioctl at
-> > any point, it only makes sense in certain configurations, but it
-> > should always "do the right thing" relative to the container iommu
-> > config.
-> > 
-> > Also, I don't see anything in these last few patches testing the
-> > operating IOMMU model, what happens when a user calls them when not
-> > using the nesting IOMMU?
-> > 
-> > Is this ioctl and the previous BIND ioctl only valid when configured
-> > for the nesting IOMMU type?  
-> 
-> I think so. We should add the nesting check in those new ioctls.
-> 
-I also added nesting domain attribute check in IOMMU driver, so bind
-guest PASID will fail if nesting mode is not supported. There will be
-no invalidation w/o bind.
+>> diff --git a/drivers/thermal/thermal_core.c
+>> b/drivers/thermal/thermal_core.c index c06550930979..3cbdd20252ab
+>> 100644 --- a/drivers/thermal/thermal_core.c +++
+>> b/drivers/thermal/thermal_core.c @@ -407,6 +407,19 @@ static void
+>> handle_critical_trips(struct thermal_zone_device *tz, } }
+>>
+>> +static int thermal_trip_crossed(struct thermal_zone_device *tz,
+>> int trip) +{ +	int trip_temp; + +	tz->ops->get_trip_temp(tz,
+>> trip, &trip_temp); + +	if (tz->last_temperature ==
+>> THERMAL_TEMP_INVALID) +		return 0; + +	return
+>> ((tz->last_temperature < trip_temp)) && +		(tz->temperature >=
+>> trip_temp));
+>
+> drivers/thermal/thermal_core.c: In function
+> ‘thermal_trip_crossed’: drivers/thermal/thermal_core.c:425:33:
+> error: expected ‘;’ before ‘)’ token (tz->temperature >=
+> trip_temp)); ^ drivers/thermal/thermal_core.c:425:33: error:
+> expected statement before ‘)’ token
 
-> >   
-> > > + *
-> > > + * returns: 0 on success, -errno on failure.
-> > > + */
-> > > +struct vfio_iommu_type1_cache_invalidate {
-> > > +	__u32   argsz;
-> > > +	__u32   flags;
-> > > +	struct	iommu_cache_invalidate_info cache_info;
-> > > +};
-> > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE,
-> > > VFIO_BASE  
-> > + 24)
-> > 
-> > The future extension capabilities of this ioctl worry me, I wonder
-> > if we should do another data[] with flag defining that data as
-> > CACHE_INFO.  
-> 
-> Can you elaborate? Does it mean with this way we don't rely on iommu
-> driver to provide version_to_size conversion and instead we just pass
-> data[] to iommu driver for further audit?
-> 
-I guess Alex meant we do something similar to:
-struct vfio_irq_set {
-	__u32	argsz;
-	__u32	flags;
-#define VFIO_IRQ_SET_DATA_NONE		(1 << 0) /* Data not present */
-#define VFIO_IRQ_SET_DATA_BOOL		(1 << 1) /* Data is bool (u8) */
-#define VFIO_IRQ_SET_DATA_EVENTFD	(1 << 2) /* Data is eventfd (s32) */
-#define VFIO_IRQ_SET_ACTION_MASK	(1 << 3) /* Mask interrupt */
-#define VFIO_IRQ_SET_ACTION_UNMASK	(1 << 4) /* Unmask interrupt */
-#define VFIO_IRQ_SET_ACTION_TRIGGER	(1 << 5) /* Trigger interrupt */
-	__u32	index;
-	__u32	start;
-	__u32	count;
-	__u8	data[];
-};
+Yep, I will fix that.
 
-So we could do:
-struct vfio_iommu_type1_cache_invalidate {
-	__u32   argsz;
-#define VFIO_INVL_DATA_NONE
-#define VFIO_INVL_DATA_CACHE_INFO		(1 << 1)
-	__u32   flags;
-	__u8	data[];
-}
+Thanks for reporting.
 
-We still need version_to_size version, but under
-if (flag & VFIO_INVL_DATA_CACHE_INFO)
-	get_size_from_version();
+>> +} + static void handle_thermal_trip(struct thermal_zone_device
+>> *tz, int trip) { enum thermal_trip_type type; @@ -417,6 +430,16
+>> @@ static void handle_thermal_trip(struct thermal_zone_device
+>> *tz, int trip)
+>>
+>> tz->ops->get_trip_type(tz, trip, &type);
+>>
+>> +	/* +	 * This condition will be true everytime the temperature
+>> is +	 * greater than the trip point and the previous temperature
+>> +	 * was below. In this case notify the userspace via a sysfs +
+>> * event on the trip point. +	 */ +	if (thermal_trip_crossed(tz,
+>> trip)) +		sysfs_notify(&tz->device.kobj, NULL, +
+>> tz->trip_temp_attrs[trip].attr.attr.name);
+>
+> Normally sysfs_notify() is used to notify userspace that the value
+> of the sysfs file has changed, but in this case it's being used on
+> a sysfs file whose value never changes.  I don't know if there are
+> other drivers that do something similar.
 
-> >   
-> > > +
-> > >  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU
-> > > --------  
-> > */  
-> > >
-> > >  /*  
-> 
-> Thanks
-> Kevin
+I think so:
 
-[Jacob Pan]
+eg.
+
+drivers/hwmon/adt7x10.c:
+	sysfs_notify(&dev->kobj, NULL, "temp1_max_alarm");
+drivers/hwmon/adt7x10.c:
+	sysfs_notify(&dev->kobj, NULL, "temp1_min_alarm");
+drivers/hwmon/adt7x10.c:
+	sysfs_notify(&dev->kobj, NULL, "temp1_crit_alarm");
+
+drivers/hwmon/abx500.c:
+	sysfs_notify(&data->pdev->dev.kobj, NULL, alarm_node);
+drivers/hwmon/abx500.c:
+	sysfs_notify(&data->pdev->dev.kobj, NULL, alarm_node);
+
+drivers/hwmon/stts751.c:
+	sysfs_notify(&priv->dev->kobj, NULL, "temp1_max_alarm");
+drivers/hwmon/stts751.c:
+	sysfs_notify(&priv->dev->kobj, NULL, "temp1_min_alarm");
+
+There are also some other places I believe they are doing the same like:
+
+drivers/md/md.c:
+	sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+drivers/md/md.c:
+	sysfs_notify(&mddev->kobj, NULL, "degraded");
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
