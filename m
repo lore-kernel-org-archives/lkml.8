@@ -2,290 +2,223 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 230C8C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B26C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D345A2078C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:41:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXCwDGeS"
+	by mail.kernel.org (Postfix) with ESMTP id 771AA20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390956AbgDCNlS (ORCPT
+        id S2390964AbgDCNmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:41:18 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42669 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390808AbgDCNlS (ORCPT
+        Fri, 3 Apr 2020 09:42:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3438 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390808AbgDCNmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:41:18 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h15so8565026wrx.9;
-        Fri, 03 Apr 2020 06:41:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4fvuq9jvQpolHwINYS7m16hx6vPGefpqo63LpJAzMQE=;
-        b=VXCwDGeScZ5cia7bGxh1ajfJpB92PhPjiRo+3BJBQ5iRvntXjU1ZYVin8FqLBcfSAU
-         Bq0kB3qW5oQA57PjgvCuqdnAFH9lrMdSVyE9W0fJOCPU0tNItCDNRTUbg5hv7n0B2GHk
-         e43Nv8zXoB/4HD0p6IqAZnYyhMJo8ZrM+v+DrcuifsuJ9H/yUfpW2KwapUU4PiqvkXy3
-         99An1tglq84I4My447dokOyZ76SqfDXW0FyxP5VDYk6l0b2rb9fraXEqt8Y7hPsmrKVe
-         9YNXPPMJ+VH5w1KbQIWzziLNxu0VyQQB9d9NYMvzzVJu/K9GBzx7Ua+hT22EBacyahYD
-         Zepg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4fvuq9jvQpolHwINYS7m16hx6vPGefpqo63LpJAzMQE=;
-        b=UyHyWospLtDJHOKjsxWT/X7mT9CXg5i6dbXCAfygnpyr19bD9K/ODpwF3br3hU1nsY
-         WKB7cKWzckjzw2N5KSrUMOuYPb+gsCh3CLdWrjxfs/OPnI6sSmmboRzRbaT1UOG4gRwC
-         8lpqWxUgUVaPTsiUUhhsVER+NswEirbok9SNtFrK/dPRv6bGXi0/JoYhRisKW9FqPdpf
-         LCCLdVfqcAXdl1Jg9ocHwDkA7QnNRLxyy/LpqgoK37moeqGRxn8BkFm+oMdr1mdhvi2h
-         4wwnRbMYj5UaXIlTvdXXhPkmtlFAsCg2Ix9X/MO2IlXF25T5TTOtVKhslrpXgb+iNdtl
-         tZUg==
-X-Gm-Message-State: AGi0PuZE0g6PpPFDC6hTUiqmECzZXA9UQoF1Dz8WNGuAdDVDN5LGG/qi
-        dTq9b5L/jbAfu5VoOyK9q9s=
-X-Google-Smtp-Source: APiQypItGAM0KwDWFvjWsZQxmVAXVDd+SbecmELBm7AL3FJ2PWFNdifNkRc6TvVXLXrXJe8QB99Q0w==
-X-Received: by 2002:adf:e588:: with SMTP id l8mr8786918wrm.186.1585921273604;
-        Fri, 03 Apr 2020 06:41:13 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id t81sm11317133wmb.15.2020.04.03.06.41.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 06:41:13 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 15:41:07 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [RFC PATCH 11/11] scsi: storvsc: Re-init stor_chns when a
- channel interrupt is re-assigned
-Message-ID: <20200403134107.GA25800@andrea>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
- <20200325225505.23998-12-parri.andrea@gmail.com>
- <MW2PR2101MB105208138683A6DE0564745AD7CB0@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <20200330185513.GA26823@andrea>
- <DM5PR2101MB104720061795F26D892D5373D7CB0@DM5PR2101MB1047.namprd21.prod.outlook.com>
+        Fri, 3 Apr 2020 09:42:01 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033Db498027142
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 09:41:59 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 304gsugefg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 09:41:59 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Fri, 3 Apr 2020 14:41:55 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 Apr 2020 14:41:51 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033Dfqfp45875236
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 13:41:52 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E88C3AE056;
+        Fri,  3 Apr 2020 13:41:51 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70E57AE045;
+        Fri,  3 Apr 2020 13:41:51 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.156.196])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 13:41:51 +0000 (GMT)
+Subject: Re: [PATCH v1 1/5] KVM: s390: vsie: Fix region 1 ASCE sanity shadow
+ address checks
+To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        stable@vger.kernel.org
+References: <20200402184819.34215-1-david@redhat.com>
+ <20200402184819.34215-2-david@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Fri, 3 Apr 2020 15:41:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR2101MB104720061795F26D892D5373D7CB0@DM5PR2101MB1047.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200402184819.34215-2-david@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="VuYuhIihgc8kXyA392z7lxVZk0JYHRnZj"
+X-TM-AS-GCONF: 00
+x-cbid: 20040313-0028-0000-0000-000003F1522F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040313-0029-0000-0000-000024B6E00A
+Message-Id: <58888143-f27c-58e6-715e-41ff89ab6160@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_10:2020-04-03,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 07:49:00PM +0000, Michael Kelley wrote:
-> From: Andrea Parri <parri.andrea@gmail.com> Sent: Monday, March 30, 2020 11:55 AM
-> > 
-> > > > @@ -1721,6 +1721,10 @@ static ssize_t target_cpu_store(struct vmbus_channel
-> > *channel,
-> > > >  	 * in on a CPU that is different from the channel target_cpu value.
-> > > >  	 */
-> > > >
-> > > > +	if (channel->change_target_cpu_callback)
-> > > > +		(*channel->change_target_cpu_callback)(channel,
-> > > > +				channel->target_cpu, target_cpu);
-> > > > +
-> > > >  	channel->target_cpu = target_cpu;
-> > > >  	channel->target_vp = hv_cpu_number_to_vp_number(target_cpu);
-> > > >  	channel->numa_node = cpu_to_node(target_cpu);
-> > >
-> > > I think there's an ordering problem here.  The change_target_cpu_callback
-> > > will allow storvsc to flush the cache that it is keeping, but there's a window
-> > > after the storvsc callback releases the spin lock and before this function
-> > > changes channel->target_cpu to the new value.  In that window, the cache
-> > > could get refilled based on the old value of channel->target_cpu, which is
-> > > exactly what we don't want.  Generally with caches, you have to set the new
-> > > value first, then flush the cache, and I think that works in this case.  The
-> > > callback function doesn't depend on the value of channel->target_cpu,
-> > > and any cache filling that might happen after channel->target_cpu is set
-> > > to the new value but before the callback function runs is OK.   But please
-> > > double-check my thinking. :-)
-> > 
-> > Sorry, I don't see the problem.  AFAICT, the "cache" gets refilled based
-> > on the values of alloced_cpus and on the current state of the cache but
-> > not based on the value of channel->target_cpu.  The callback invocation
-> > uses the value of the "old" target_cpu; I think I ended up placing the
-> > callback call where it is for not having to introduce a local variable
-> > "old_cpu".  ;-)
-> >
-> 
-> You are right.   My comment is bogus.
-> 
-> > 
-> > > > @@ -621,6 +621,63 @@ static inline struct storvsc_device *get_in_stor_device(
-> > > >
-> > > >  }
-> > > >
-> > > > +void storvsc_change_target_cpu(struct vmbus_channel *channel, u32 old, u32 new)
-> > > > +{
-> > > > +	struct storvsc_device *stor_device;
-> > > > +	struct vmbus_channel *cur_chn;
-> > > > +	bool old_is_alloced = false;
-> > > > +	struct hv_device *device;
-> > > > +	unsigned long flags;
-> > > > +	int cpu;
-> > > > +
-> > > > +	device = channel->primary_channel ?
-> > > > +			channel->primary_channel->device_obj
-> > > > +				: channel->device_obj;
-> > > > +	stor_device = get_out_stor_device(device);
-> > > > +	if (!stor_device)
-> > > > +		return;
-> > > > +
-> > > > +	/* See storvsc_do_io() -> get_og_chn(). */
-> > > > +	spin_lock_irqsave(&device->channel->lock, flags);
-> > > > +
-> > > > +	/*
-> > > > +	 * Determines if the storvsc device has other channels assigned to
-> > > > +	 * the "old" CPU to update the alloced_cpus mask and the stor_chns
-> > > > +	 * array.
-> > > > +	 */
-> > > > +	if (device->channel != channel && device->channel->target_cpu == old) {
-> > > > +		cur_chn = device->channel;
-> > > > +		old_is_alloced = true;
-> > > > +		goto old_is_alloced;
-> > > > +	}
-> > > > +	list_for_each_entry(cur_chn, &device->channel->sc_list, sc_list) {
-> > > > +		if (cur_chn == channel)
-> > > > +			continue;
-> > > > +		if (cur_chn->target_cpu == old) {
-> > > > +			old_is_alloced = true;
-> > > > +			goto old_is_alloced;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +old_is_alloced:
-> > > > +	if (old_is_alloced)
-> > > > +		WRITE_ONCE(stor_device->stor_chns[old], cur_chn);
-> > > > +	else
-> > > > +		cpumask_clear_cpu(old, &stor_device->alloced_cpus);
-> > >
-> > > I think target_cpu_store() can get called in parallel on multiple CPUs for different
-> > > channels on the same storvsc device, but multiple changes to a single channel are
-> > > serialized by higher levels of sysfs.  So this function could run after multiple
-> > > channels have been changed, in which case there's not just a single "old" value,
-> > > and the above algorithm might not work, especially if channel->target_cpu is
-> > > updated before calling this function per my earlier comment.   I can see a
-> > > couple of possible ways to deal with this.  One is to put the update of
-> > > channel->target_cpu in this function, within the spin lock boundaries so
-> > > that the cache flush and target_cpu update are atomic.  Another idea is to
-> > > process multiple changes in this function, by building a temp copy of
-> > > alloced_cpus by walking the channel list, use XOR to create a cpumask
-> > > with changes, and then process all the changes in a loop instead of
-> > > just handling a single change as with the current code at the old_is_alloced
-> > > label.  But I haven't completely thought through this idea.
-> > 
-> > Same here: the invocations of target_cpu_store() are serialized on the
-> > per-connection channel_mutex...
-> 
-> Agreed.  My comment is not valid.
-> 
-> > 
-> > 
-> > > > @@ -1268,8 +1330,10 @@ static struct vmbus_channel *get_og_chn(struct
-> > storvsc_device
-> > > > *stor_device,
-> > > >  		if (cpumask_test_cpu(tgt_cpu, node_mask))
-> > > >  			num_channels++;
-> > > >  	}
-> > > > -	if (num_channels == 0)
-> > > > +	if (num_channels == 0) {
-> > > > +		stor_device->stor_chns[q_num] = stor_device->device->channel;
-> > >
-> > > Is the above added line just fixing a bug in the existing code?  I'm not seeing how
-> > > it would derive from the other changes in this patch.
-> > 
-> > It was rather intended as an optimization:  Each time I/O for a device
-> > is initiated on a CPU that have "num_channels == 0" channel, the current
-> > code ends up calling get_og_chn() (in the attempt to fill the cache) and
-> > returns the device's primary channel.  In the current code, the cost of
-> > this operations is basically the cost of parsing alloced_cpus, but with
-> > the changes introduced here this also involves acquiring (and releasing)
-> > the primary channel's lock.  I should probably put my hands forward and
-> > say that I haven't observed any measurable effects due this addition in
-> > my experiments; OTOH, caching the returned/"found" value made sense...
-> 
-> OK.  That's what I thought.  The existing code does not produce an incorrect
-> result, but the cache isn't working as intended.  This fixes it.
-> 
-> > 
-> > 
-> > > > @@ -1324,7 +1390,10 @@ static int storvsc_do_io(struct hv_device *device,
-> > > >  					continue;
-> > > >  				if (tgt_cpu == q_num)
-> > > >  					continue;
-> > > > -				channel = stor_device->stor_chns[tgt_cpu];
-> > > > +				channel = READ_ONCE(
-> > > > +					stor_device->stor_chns[tgt_cpu]);
-> > > > +				if (channel == NULL)
-> > > > +					continue;
-> > >
-> > > The channel == NULL case is new because a cache flush could be happening
-> > > in parallel on another CPU.  I'm wondering about the tradeoffs of
-> > > continuing in the loop (as you have coded in this patch) vs. a "goto" back to
-> > > the top level "if" statement.   With the "continue" you might finish the
-> > > loop without finding any matches, and fall through to the next approach.
-> > > But it's only a single I/O operation, and if it comes up with a less than
-> > > optimal channel choice, it's no big deal.  So I guess it's really a wash.
-> > 
-> > Yes, I considered both approaches; they both "worked" here.  I was a
-> > bit concerned about the number of "possible" gotos (again, mainly a
-> > theoretical issue, since I can imagine that the cash flushes will be
-> > relatively "rare" events in most cases and, in any case, they happen
-> > to be serialized); the "continue" looked like a suitable and simpler
-> > approach/compromise, at least for the time being.
-> 
-> Yes, I'm OK with your patch "as is".  I was just thinking about the
-> alternative, and evidently you did too.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--VuYuhIihgc8kXyA392z7lxVZk0JYHRnZj
+Content-Type: multipart/mixed; boundary="Vk5zZruvRNvPPgLPZS6eZqzObLnkFIpxv"
 
-Thank you for the confirmation.  I'm wondering: could take this as a
-Reviewed-by: for this patch?  ;-)
+--Vk5zZruvRNvPPgLPZS6eZqzObLnkFIpxv
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-  Andrea
+On 4/2/20 8:48 PM, David Hildenbrand wrote:
+> In case we have a region 1 ASCE, our shadow/g3 address can have any val=
+ue.
+> Unfortunately, (-1UL << 64) is undefined and triggers sometimes,
+> rejecting valid shadow addresses when trying to walk our shadow table
+> hierarchy.
+>=20
+> The result is that the prefix cannot get mapped and will loop basically=
+
+> forever trying to map it (-EAGAIN loop).
+>=20
+> After all, the broken check is only a sanity check, our table shadowing=
+
+> code in kvm_s390_shadow_tables() already checks these conditions, injec=
+ting
+> proper translation exceptions. Turn it into a WARN_ON_ONCE().
+>=20
+> Fixes: 4be130a08420 ("s390/mm: add shadow gmap support")
+> Cc: <stable@vger.kernel.org> # v4.8+
+> Reported-by: Janosch Frank <frankja@linux.ibm.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+With the WARN_ON_ONCE fix applied I don't run into stalls or warnings
+anymore, so:
+Tested-by: Janosch Frank <frankja@linux.ibm.com>
+
+> ---
+>  arch/s390/mm/gmap.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+> index 2fbece47ef6f..f3dbc5bdde50 100644
+> --- a/arch/s390/mm/gmap.c
+> +++ b/arch/s390/mm/gmap.c
+> @@ -787,14 +787,18 @@ static void gmap_call_notifier(struct gmap *gmap,=
+ unsigned long start,
+>  static inline unsigned long *gmap_table_walk(struct gmap *gmap,
+>  					     unsigned long gaddr, int level)
+>  {
+> +	const int asce_type =3D gmap->asce & _ASCE_TYPE_MASK;
+>  	unsigned long *table;
+> =20
+>  	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
+>  		return NULL;
+>  	if (gmap_is_shadow(gmap) && gmap->removed)
+>  		return NULL;
+> -	if (gaddr & (-1UL << (31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11))=
+)
+> +
+> +	if (WARN_ON_ONCE(asce_type !=3D _ASCE_TYPE_REGION1) &&
+> +			 gaddr & (-1UL << (31 + (asce_type >> 2) * 11)))
+>  		return NULL;
+> +
+>  	table =3D gmap->table;
+>  	switch (gmap->asce & _ASCE_TYPE_MASK) {
+>  	case _ASCE_TYPE_REGION1:
+>=20
 
 
-> 
-> > 
-> > 
-> > >
-> > > >  				if (hv_get_avail_to_write_percent(
-> > > >  							&channel->outbound)
-> > > >  						> ring_avail_percent_lowater) {
-> > > > @@ -1350,7 +1419,10 @@ static int storvsc_do_io(struct hv_device *device,
-> > > >  			for_each_cpu(tgt_cpu, &stor_device->alloced_cpus) {
-> > > >  				if (cpumask_test_cpu(tgt_cpu, node_mask))
-> > > >  					continue;
-> > > > -				channel = stor_device->stor_chns[tgt_cpu];
-> > > > +				channel = READ_ONCE(
-> > > > +					stor_device->stor_chns[tgt_cpu]);
-> > > > +				if (channel == NULL)
-> > > > +					continue;
-> > >
-> > > Same comment here.
-> > 
-> > Similarly here.
-> 
-> Agreed.
-> 
-> > 
-> > Thoughts?
-> > 
-> > Thanks,
-> >   Andrea
+
+--Vk5zZruvRNvPPgLPZS6eZqzObLnkFIpxv--
+
+--VuYuhIihgc8kXyA392z7lxVZk0JYHRnZj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl6HPR8ACgkQ41TmuOI4
+ufgb+RAAsxZfc7kuWec9oOuipxBnN6zTyl3YsseJhgREuvN4gfSxNKUBszxkzDe+
+AkHIrRmYTssGVaixZUec+N/x/rxOh7jIdWwTpHnQGWZNZoCHKTcFtbWGqgBQbnRY
+QSUhg8i+Xw+OYtvnt+54Qo2AUThNlUxF8xUVfz//Rj3Vc55DZ/T/4StxLg8aAVg3
+10YXv9/uuH2wBhQ2xZUwR6OTCcArA7ewTJx+ntjjawxY0BovxpWPdSc3AkErgXed
+lYB22XVCpe4SsbTLLvJLb0Tvr9lhuuPQZ6qU5iN+4Huh3ioZsMYEsC7Td/U+yCUG
+FGVKKdToeglKVV7A5vA8iHBzQRQ7Tx10jeSR8hBWSQcYNNG3MWEFy5YxAvwAAOTZ
+6SdXqz7lAcYhok44oexhpGV3Ccdq/orALKfeAZlqY1NLNyDqg+/9vVzSufF9ghfo
+PbRtHyjgw2hJUXGPLvP/cz22pIZ4wM2g7/0SP2QskUBqy4EZALeVXHeXEW0CEgK0
+V6rVojM/leoYaRqoxCD7VIv73xda3Zp6PMVAj3UNUfj8wQXh24VYEDnEe7ePJ6HX
+NW6nLxJnGYCRbAqpHP68VIYIy/BbS3YcgewMhcCH4Kpt19z1W5bAFFDGjXovBP1E
+m5AOfXT4s/E0nh6wtpGud43sjagTxQIoiUL77KS0V7+LkaqnLT4=
+=wb7M
+-----END PGP SIGNATURE-----
+
+--VuYuhIihgc8kXyA392z7lxVZk0JYHRnZj--
+
