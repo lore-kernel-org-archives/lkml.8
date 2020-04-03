@@ -2,119 +2,118 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879F8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BC6C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588C9206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585936892;
-	bh=7zmbXy9Ngm7ydugKdrnEPuKqypDBIdC9kEsYoVRFRUg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ylyZImI8f+qg9wPnU7MibCN1Botc5PUDL8SyWa6U9VzIpEgQWaGYayi00XUz6KgpS
-	 /yNYaZHDk8gJz904uxX83c2uwVhca+eDHBhDcZi0KLBa27VP4sOkZkZ7oQxD0U2FZ5
-	 H9PKwdssTJZTSzAJMZlqhisFM4MO8YP+kpd0MG4w=
+	by mail.kernel.org (Postfix) with ESMTP id B66432077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404394AbgDCSBb (ORCPT
+        id S2404424AbgDCSBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:01:31 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35201 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728513AbgDCSBa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:01:30 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k21so7922872ljh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:01:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GJVFgRSGYKBnNbBPTVD/IukQXQa7rwPwND5Kh+NTBuo=;
-        b=Ys0nLdOPaMPZHWrNpQG57PugKN6mkPGdJSUx/TQDpwY2GQmZdYkhxJaiTGDykgi3DV
-         b9peyP0pK7wyoIA4rX92GpUwZxOJ1gL4WdkK8qsym8w0OHPBQz5LC8Pgsely+7R6EED/
-         Y1qrLKu/XLubSi3S/jM7cWoFX4dK0Vuw/7IEk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GJVFgRSGYKBnNbBPTVD/IukQXQa7rwPwND5Kh+NTBuo=;
-        b=CmKZ2S2rbDc0+gjPkl96Lhp+i+E5QLRYCuHdztUAYY1B4Ep702/MJjfyryq9M2T/bn
-         G2RbE/tBo4oiK4MgXAnMUFDl9fMBf7+TyCi37nvcMCU/PBaCey1b/x6Ix0nWn+IakETG
-         okXn4xbQlAwJrJIbVKdGPWD/MAXcbQa0fGZudEJFPXFeB7fL00pcZsol+l2u4lvk2B6H
-         DrZ2Gzh1TbDUK5xfbiv3lE+oWk18LPqrxlWpTgBF8mZpUlurR7ulOBZK1d4p3PP21olV
-         2VToR1VqwRQMKT69CWH3u5MWufOx3NXZ/MYApz2DIMqK3bxAjozdHQMi9riGJA2MnfxU
-         5MCA==
-X-Gm-Message-State: AGi0PuZEF2iWgEonyJ+6neT5B+aMNE9SJynATQLdB0SLHt0Ud/PqbNLe
-        /Ha548CP40Ulil0a/dD1WYz5OMOPwuM=
-X-Google-Smtp-Source: APiQypKnGS8j5JnvV6+AX+j4b7TukVykzor1tDBx+LJFEIJKj61JI0V5cgNNZqe7iqpITgbm+SOWTw==
-X-Received: by 2002:a2e:91cc:: with SMTP id u12mr5875418ljg.244.1585936888402;
-        Fri, 03 Apr 2020 11:01:28 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id c203sm4602756lfd.38.2020.04.03.11.01.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 11:01:27 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id t17so7848792ljc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:01:27 -0700 (PDT)
-X-Received: by 2002:a2e:8652:: with SMTP id i18mr5777613ljj.265.1585936886747;
- Fri, 03 Apr 2020 11:01:26 -0700 (PDT)
+        Fri, 3 Apr 2020 14:01:50 -0400
+Received: from mga03.intel.com ([134.134.136.65]:28139 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728513AbgDCSBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 14:01:50 -0400
+IronPort-SDR: 82Bzw5O0eHrsmSfUoyIOj06jUZVy2fuXdVE+sbop+qXeC0btyz2F3VQ2Ynk1LhAwCKvMvu3NFU
+ Jl9R/oJrEz9g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 11:01:50 -0700
+IronPort-SDR: 2b7OEGq4QfLhhmmmByN1BmTBmmSsQ3lrxnE3BBHCpEHTulud/fRarfBEFeLNuMXkSExIT8K7sF
+ ZS/pgVvA2WAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,340,1580803200"; 
+   d="scan'208";a="242869295"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Apr 2020 11:01:49 -0700
+Date:   Fri, 3 Apr 2020 11:01:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Benjamin Lamowski <benjamin.lamowski@kernkonzept.com>
+Cc:     xiaoyao.li@intel.com, philipp.eppelt@kernkonzept.com, bp@alien8.de,
+        fenghua.yu@intel.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, nivedita@alum.mit.edu,
+        pbonzini@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        tony.luck@intel.com, x86@kernel.org
+Subject: Re: [PATCH 1/1] x86/split_lock: check split lock feature on
+ initialization
+Message-ID: <20200403180149.GH2701@linux.intel.com>
+References: <20200325030924.132881-1-xiaoyao.li@intel.com>
+ <20200403174403.306363-1-benjamin.lamowski@kernkonzept.com>
+ <20200403174403.306363-2-benjamin.lamowski@kernkonzept.com>
 MIME-Version: 1.0
-References: <36e43241c7f043a24b5069e78c6a7edd11043be5.1585898438.git.christophe.leroy@c-s.fr>
- <42da416106d5c1cf92bda1e058434fe240b35f44.1585898438.git.christophe.leroy@c-s.fr>
-In-Reply-To: <42da416106d5c1cf92bda1e058434fe240b35f44.1585898438.git.christophe.leroy@c-s.fr>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 3 Apr 2020 11:01:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh_DY_dysMX0NuvJmMFr3+QDKOZPZqWKwLkkjgZTuyQ+A@mail.gmail.com>
-Message-ID: <CAHk-=wh_DY_dysMX0NuvJmMFr3+QDKOZPZqWKwLkkjgZTuyQ+A@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] uaccess: Rename user_access_begin/end() to user_full_access_begin/end()
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>, Peter Anvin <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403174403.306363-2-benjamin.lamowski@kernkonzept.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 12:21 AM Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
->
-> Now we have user_read_access_begin() and user_write_access_begin()
-> in addition to user_access_begin().
+On Fri, Apr 03, 2020 at 07:44:03PM +0200, Benjamin Lamowski wrote:
+> While the setup code probes for the availability of the TEST_CTRL MSR,
+> the current initialization code unconditionally probes it even on
+> systems where this architectural MSR is not available.
+> 
+> This commit changes the code to check for the availability of the split
+> lock detect feature before initializing it.
+> 
+> Fixes: dbaba47085b0c ("x86/split_lock: Rework the initialization flow of split lock detection")
+> Signed-off-by: Benjamin Lamowski <benjamin.lamowski@kernkonzept.com>
+> ---
+>  arch/x86/kernel/cpu/intel.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index 9a26e972cdea..70d338ff4807 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -586,7 +586,7 @@ static void init_intel_misc_features(struct cpuinfo_x86 *c)
+>  	wrmsrl(MSR_MISC_FEATURES_ENABLES, msr);
+>  }
+>  
+> -static void split_lock_init(void);
+> +static void split_lock_init(struct cpuinfo_x86 *c);
+>  
+>  static void init_intel(struct cpuinfo_x86 *c)
+>  {
+> @@ -703,7 +703,7 @@ static void init_intel(struct cpuinfo_x86 *c)
+>  	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
+>  		tsx_disable();
+>  
+> -	split_lock_init();
+> +	split_lock_init(c);
+>  }
+>  
+>  #ifdef CONFIG_X86_32
+> @@ -1061,9 +1061,10 @@ static void sld_update_msr(bool on)
+>  	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>  }
+>  
+> -static void split_lock_init(void)
+> +static void split_lock_init(struct cpuinfo_x86 *c)
+>  {
+> -	split_lock_verify_msr(sld_state != sld_off);
+> +	if (cpu_has(c, X86_FEATURE_SPLIT_LOCK_DETECT))
+> +		split_lock_verify_msr(sld_state != sld_off);
 
-I realize Al asked for this, but I don't think it really adds anything
-to the series.
+Calling split_lock_verify_msr() with X86_FEATURE_SPLIT_LOCK_DETECT=0 is
+intentional, the idea is to ensure SLD is disabled on all CPUs, e.g. in the
+unlikely scenario that BIOS enabled SLD.
 
-The "full" makes the names longer, but not really any more legible.
+The first rdmsrl_safe() should short circuit split_lock_verify_msr() if
+the RDMSR faults, i.e. it might fault, but it shouldn't WARN.  Are you
+seeing issues or was this found via code inspection?
 
-So I like 1-4, but am unconvinced about 5 and would prefer that to be
-dropped. Sorry for the bikeshedding.
-
-And I like this series much better without the cookie that was
-discussed, and just making the hard rule be that they can't nest.
-
-Some architecture may obviously use a cookie internally if they have
-some nesting behavior of their own, but it doesn't look like we have
-any major reason to expose that as the actual interface.
-
-The only other question is how to synchronize this? I'm ok with it
-going through the ppc tree, for example, and just let others build on
-that.  Maybe using a shared immutable branch with 5.6 as a base?
-
-                   Linus
+>  }
+>  
+>  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+> -- 
+> 2.25.1
+> 
