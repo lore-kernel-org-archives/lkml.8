@@ -2,126 +2,143 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3734C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61793C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A702077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA09206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:09:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EAdVcQMf"
+	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="KtO3uizp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404627AbgDCSIP (ORCPT
+        id S2404548AbgDCSJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:08:15 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:46280 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404617AbgDCSIO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:08:14 -0400
-Received: by mail-qk1-f202.google.com with SMTP id y5so7127790qky.13
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=vKSRcwOgSxpovOTlIQ2GGXc7undTikgLR4vPeODvBEg=;
-        b=EAdVcQMfqNQMWp+4WRmfe91idIJgxgyEfZOUxbBy5g7FhdJ3iwUVewvmIgdlkqwKKB
-         4XGNVvOFr0KM7VoBQjEDBe0GhQv0F0yrLTTCdeyAERNGWx+iroMIx7J1123VuaGXl0IO
-         air1JUnAgGTLBNudw8Qwiya3n+dbaxmbd8WNxz8kiz4SyqBE/T8dEJFunVE6ma9t0jdH
-         PhbYjrpBSqVmzygopF4G9frAkLgylR1+3Az5YUa5yXseLNV0X1siNiGUoJ6m5aOckuDO
-         N6jdBJBvMihi9JSqZM7CDvBukST8mvAXKx01SSJAoJaN68Pa4McVpwJXITE1bezXTBv/
-         P4Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=vKSRcwOgSxpovOTlIQ2GGXc7undTikgLR4vPeODvBEg=;
-        b=JjVqiCN6aa9PNpQ/2Q5K/PTB/JO2hqmnSCt84mBFj2lI+iA13trJHdC9RcOTo+JPo/
-         /fFjirA9Kw9WWDtaPTECtGOLy9vXDsBkfkzRkq7JkH3kAGeith960u2b9RoyioLbm2vg
-         kjXUE8Mq+MZswAZOVhncRdQJp/Mgnpo8DwHe4Skqmxh/HVlXGuRd/DYV4wdE5dxXPg3S
-         FrDQizejyWALjKfEGPHlDx9Ww7f2MzFtbx4dNk/igU/P8kD9DdsAvOZ15y5rQ7QFxiOt
-         jQpVhxJ75FCqRu7L5YRnNFkNZc7GocbF559zspiboQdjg7/4VX2eX5NcvPFJz25PU0sM
-         B1jg==
-X-Gm-Message-State: AGi0PuZxlu+RwObE7JzdxrqVTrhKDgpa+M3GPd6zKgX34RvaUEQxZMEP
-        VlBCi1inIAOlTzk0LBIJVF14lY1p
-X-Google-Smtp-Source: APiQypJWimwWNrbHSFo3IzrjsTj5VaB+oSMTVhhwvL+zxZmNdg193dSzzY6KHEEtRKYIPFlNYX8ohl5u
-X-Received: by 2002:ac8:1aed:: with SMTP id h42mr9705788qtk.43.1585937293082;
- Fri, 03 Apr 2020 11:08:13 -0700 (PDT)
-Date:   Fri,  3 Apr 2020 14:08:01 -0400
-Message-Id: <20200403180801.209970-1-brho@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-Subject: perf/cgroup: use the cgroup_id() helper
-From:   Barret Rhoden <brho@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 3 Apr 2020 14:09:14 -0400
+Received: from mx.0dd.nl ([5.2.79.48]:46238 "EHLO mx.0dd.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728368AbgDCSJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 14:09:13 -0400
+Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mx.0dd.nl (Postfix) with ESMTPS id 1E45F5FADE;
+        Fri,  3 Apr 2020 20:09:12 +0200 (CEST)
+Authentication-Results: mx.0dd.nl;
+        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="KtO3uizp";
+        dkim-atps=neutral
+Received: from www (www.vdorst.com [192.168.2.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.vdorst.com (Postfix) with ESMTPSA id AC18627C0E5;
+        Fri,  3 Apr 2020 20:09:11 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com AC18627C0E5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
+        s=default; t=1585937351;
+        bh=xBdua0z2R0JdSBRmoYYNQnHi6mI3NA5tona4JmFQPrw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KtO3uizphLuDc4K+36n4GW9eKfV1czQNFNwwSjsRupOFX6zh+lc1ZJofOUnx7mw74
+         ACD1d+pMmh1u+BWLL2DRtM8RDSHlfTV77qXfsqj61/DTTdEmbhf1dCe2suosyIC57j
+         WuhmNA9fKpJhZGgaNCkjiW6JJDS5V+rNLePUZNBPmIxBrwl9UM++ZXeKCFEiY5+qqS
+         N+sY8VvZG2cq76ciatzusD9V0JFxMnk1xfOQZ/gCf1lRy13iHL7/9/Uabty7dg+ejo
+         hhAzL/LXSHOM0CT4gaowSGGLe+VF0PkOoQ01NEDcWhJQrh4yTErQtmfvk/Pjq2MEtH
+         5XOrEeek0MH/w==
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
+ www.vdorst.com (Horde Framework) with HTTPS; Fri, 03 Apr 2020 18:09:11 +0000
+Date:   Fri, 03 Apr 2020 18:09:11 +0000
+Message-ID: <20200403180911.Horde.9xqnJvjcRDe-ttshlJbG6WE@www.vdorst.com>
+From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     netdev@vger.kernel.org, stable@vger.kernel.org,
+        Sean Wang <sean.wang@mediatek.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in
+ port5 setup
+In-Reply-To: <20200403112830.505720-1-gch981213@gmail.com>
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We had a few places that still used cgrp->kn->id instead of cgroup_id().
+Quoting Chuanhong Guo <gch981213@gmail.com>:
 
-Signed-off-by: Barret Rhoden <brho@google.com>
----
- kernel/events/core.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Hi Chuanhong,
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 318435c5bf0b..e5deab0e7185 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1594,7 +1594,8 @@ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
- 			return false;
- 		}
- 		/* Two dissimilar cgroups, order by id. */
--		if (left->cgrp->css.cgroup->kn->id < right->cgrp->css.cgroup->kn->id)
-+		if (cgroup_id(left->cgrp->css.cgroup) <
-+		    cgroup_id(right->cgrp->css.cgroup))
- 			return true;
- 
- 		return false;
-@@ -1692,7 +1693,7 @@ perf_event_groups_first(struct perf_event_groups *groups, int cpu,
- 	u64 node_cgrp_id, cgrp_id = 0;
- 
- 	if (cgrp)
--		cgrp_id = cgrp->kn->id;
-+		cgrp_id = cgroup_id(cgrp);
- #endif
- 
- 	while (node) {
-@@ -1709,7 +1710,7 @@ perf_event_groups_first(struct perf_event_groups *groups, int cpu,
- #ifdef CONFIG_CGROUP_PERF
- 		node_cgrp_id = 0;
- 		if (node_event->cgrp && node_event->cgrp->css.cgroup)
--			node_cgrp_id = node_event->cgrp->css.cgroup->kn->id;
-+			node_cgrp_id = cgroup_id(node_event->cgrp->css.cgroup);
- 
- 		if (cgrp_id < node_cgrp_id) {
- 			node = node->rb_left;
-@@ -1745,10 +1746,10 @@ perf_event_groups_next(struct perf_event *event)
- 
- #ifdef CONFIG_CGROUP_PERF
- 	if (event->cgrp && event->cgrp->css.cgroup)
--		curr_cgrp_id = event->cgrp->css.cgroup->kn->id;
-+		curr_cgrp_id = cgroup_id(event->cgrp->css.cgroup);
- 
- 	if (next->cgrp && next->cgrp->css.cgroup)
--		next_cgrp_id = next->cgrp->css.cgroup->kn->id;
-+		next_cgrp_id = cgroup_id(next->cgrp->css.cgroup);
- 
- 	if (curr_cgrp_id != next_cgrp_id)
- 		return NULL;
--- 
-2.26.0.292.g33ef6b2f38-goog
+> The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
+> and a phy-handle isn't always available.
+> Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
+> connected to switch port 5 and setup mt7530 according to phy address
+> of 2nd gmac node, causing null pointer dereferencing when phy-handle
+> isn't defined in dts.
+
+MT7530 tries to detect if 2nd GMAC is using a phy with phy-address 0 or 4.
+If so, switch port 5 needs to be setup so that PHY 0 or 4 is available
+via port 5 of the switch. Any MAC can talk to PHY 0/4 directly via port 5.
+This is also explained in the kernel docs mt7530.txt.
+
+May be there are better way to detect that any node is using phy 0/4 of
+the switch.
+
+Funny that I never tested this case that 2nd gmac node exits and is disabled
+without using port 5.
+
+Thanks for the fix.
+
+Tested-by: René van Dorst <opensource@vdorst.com>
+
+Greats,
+
+René
+
+> This commit fix this setup code by checking return value of
+> of_parse_phandle before using it.
+>
+> Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> Cc: stable@vger.kernel.org
+> ---
+>
+> mt7530 is available as a standalone chip and we should not make it
+> tightly coupled with a specific type of ethernet dt binding in the
+> first place.
+> A proper fix is to replace this port detection logic with a dt
+> property under mt7530 node, but that's too much for linux-stable.
+>
+>  drivers/net/dsa/mt7530.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+> index 6e91fe2f4b9a..1d53a4ebcd5a 100644
+> --- a/drivers/net/dsa/mt7530.c
+> +++ b/drivers/net/dsa/mt7530.c
+> @@ -1414,6 +1414,9 @@ mt7530_setup(struct dsa_switch *ds)
+>  				continue;
+>
+>  			phy_node = of_parse_phandle(mac_np, "phy-handle", 0);
+> +			if (!phy_node)
+> +				continue;
+> +
+>  			if (phy_node->parent == priv->dev->of_node->parent) {
+>  				ret = of_get_phy_mode(mac_np, &interface);
+>  				if (ret && ret != -ENODEV)
+> --
+> 2.25.1
+
+
 
