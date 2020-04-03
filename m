@@ -2,132 +2,109 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	PDS_TONAME_EQ_TOLOCAL_SHORT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CAFC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010E0C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25FD206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA554206F6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bEpJdU0p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+e9j9fS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390353AbgDCB40 (ORCPT
+        id S2390294AbgDCB5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 21:56:26 -0400
-Received: from mail-eopbgr750095.outbound.protection.outlook.com ([40.107.75.95]:9444
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388709AbgDCB40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 21:56:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hNVuLRcOiDslAeY1Wm1TNKFhSue/bG2WlHgu0Xx/JglwIcHXevgocbNZ4PEn6/dIPNccUbdPiCcVrkdgsDDswyoY25kr5hZkRJqI1vYmpXkilcC0P+bsoXfDd9QZ006TUxqZdThq89r0gbL9kmd+ZTSqWC8D976t4/Q5JDkZzun/PWbXEytGffUWBj8v/yCAcr0kZMx1DuTXAprLQKrOXNUMQlnk2H2aOanUx5Z1Py/uSAaG9fAjGu5BFUVk4lKrhEYqTxGYLHq4ddD4twgDgAHSMpxGqS3IWphTTYr1PYrZiqZjmjeF17ixpPsdjht7ey4s+5qJsSCjmGUg4PKt6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MzztQwNwJKQr/aLnkVjxzlsXej5Ah3AIKJCUkhJhz3U=;
- b=eGWRJ62Ne/NbXIOa0UCsFaQyyoKoEZOfXW67OQGHOHRE9ei2RAfeeorxsYANWgKR5bUqOsjzSn8c948jgGnV2wuwtLrXTD0fNmW7ndIHcRYquQK9foZYEHGCGnbpuUg/YTgNnJttjcAe7jhMh/FrSAEPJU6N8RbUdL3XhJCSVIxClVXgAoY+/I6l+sf4eEbv8NdFiw762DyGkuwYBDA3PsR0Qgy9KVXp3qb5aIfdvwH8xK1otw0T5onGBu/90iqSUVyCsyW7REMKQPl7f5AJHk7oVj2HTgRlrF6fUH2FDF6dgfXMTXuNxJEGg+d1wvr9DG39JDjsDFA+8eEt6nNMVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MzztQwNwJKQr/aLnkVjxzlsXej5Ah3AIKJCUkhJhz3U=;
- b=bEpJdU0pp6ooYuopS8yP1IT3ncxAVg2a4KzEZMT/ojT9eCzjQhQ1ts1Bx2w8tbVO3NaRiDjQXhUrV38uXo6vK5NsiptlS+el0mf1WfwpxjUesodqHpsTec7lhlTC4Suy6UTVNQaVS6FTUg5Y0DAtiv+cNJ+jtIhhrh43DLp76yI=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0938.namprd21.prod.outlook.com (2603:10b6:302:4::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.2; Fri, 3 Apr
- 2020 01:56:20 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.002; Fri, 3 Apr 2020
- 01:56:20 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: RE: [PATCH 4/5] Drivers: hv: make sure that 'struct
- vmbus_channel_message_header' compiles correctly
-Thread-Topic: [PATCH 4/5] Drivers: hv: make sure that 'struct
- vmbus_channel_message_header' compiles correctly
-Thread-Index: AQHWCBGqfv/Ouhs2ikWLncMIhXoP36hmpceg
-Date:   Fri, 3 Apr 2020 01:56:20 +0000
-Message-ID: <MW2PR2101MB1052AB02CB74E0D165409344D7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200401103638.1406431-1-vkuznets@redhat.com>
- <20200401103816.1406642-1-vkuznets@redhat.com>
-In-Reply-To: <20200401103816.1406642-1-vkuznets@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-03T01:56:19.1734243Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ab8c8a82-54f4-48ac-9795-40da4e86bd87;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7873dc08-a486-486f-e1c5-08d7d77234cd
-x-ms-traffictypediagnostic: MW2PR2101MB0938:|MW2PR2101MB0938:|MW2PR2101MB0938:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB0938E76C6BBFA7C5209614F0D7C70@MW2PR2101MB0938.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:541;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(39860400002)(376002)(366004)(136003)(396003)(6506007)(10290500003)(110136005)(54906003)(82960400001)(33656002)(7696005)(316002)(478600001)(8936002)(82950400001)(81156014)(55016002)(8676002)(81166006)(66946007)(186003)(9686003)(4326008)(4744005)(66556008)(66476007)(64756008)(71200400001)(8990500004)(76116006)(26005)(86362001)(2906002)(52536014)(5660300002)(66446008);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xLvLhOcuwIXIjnwK+kReiDLoc+oz9VtE8TcE7qvLb/6RageNu6Ks7t7hpXe/GXhmQpJJSnPhffkKZBq+bPjYxVBZV8OjETKzMpJ7PXyktQfKKN0+q5FmVsxireXZI6fbKKoF9EbNnYk24XzT/tM65h04SV4j5HoMIlXjxxo9/rcGuASbuQHM4tSFlhkxLh8e/rrrYg7VtjTm5Aqb8zLdAmUKK9uXqbJUaYYlp/ZRzUAUUjEUtois7rQzRCEVsSU1jP0FIaDY2BLPtm261Ud2sh8Z1DVcEQCFS0IHt/Ftso2JLd5DsWXMRYnulKkkSHXfpdZgkPj/U4TYaaCuSlDeHLjuQ0kghpiyOiWTTJ/ReZMtCON4M/UoWimlIhs+wmvkpkQG7svhag3qFllHEik4NIZdZCk0j6pUpeoQ1+OBUJqndtvITVMGvHOzDvGZ1ouk
-x-ms-exchange-antispam-messagedata: ioq6ASdij49zp9WAuGg5nQZ+yKBYFuoOXLCWtBCP2X+eT6NZ42enKrejeC8f3EXNaMtP4nxJuAnS2G34dWtPKbVw7a1HS42UA7y6HrOz+fwArbz3o2hI6Fs+r2/8e8EaM95+nPPeUA4UlbYnLNGENw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 Apr 2020 21:57:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54003 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388709AbgDCB5T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 21:57:19 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d77so5615263wmd.3;
+        Thu, 02 Apr 2020 18:57:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IM3PKdJzNHK1Q5ycu1+rnlpnfn6cknjyyldEYszSZOo=;
+        b=a+e9j9fSz7AbZHNKex7YNRjwT4uBSpxeAMRP53RKJadBT+dXgc2zLA4tmS21UZfQjM
+         hhauuyi4sgRhc1LVmZSWitM++AIwbaFs9PULb/39zKVxMGF7RvpZhRYFa2Go4vozTdJL
+         6/20XASfoUrtX5/tjunrRE7dPwojOVMoE6NZeZ+vpgP9GAsUqG76qzahJHYJp28o+dph
+         Wx46ceMsAXnqsInQ08sVE5l0rK+53aw2lUODic4jW3AMaqgVHnk5nChXLMvAmi3zRKmF
+         +hTs6wsNVukpG/YRrKXqAcJLZWET9+AI84eWLtxkbFigDrrCPlQns4GmxYgZ8UgA3+94
+         u8eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IM3PKdJzNHK1Q5ycu1+rnlpnfn6cknjyyldEYszSZOo=;
+        b=mX1i9pbPxQG5igJwQoc66pUl//MayFNDXZJn2GUlpnF5KVXJmF6zfIuNmdnUCrex8J
+         LHDmgeWeRr2Mbsg00rAayFxIVChLzcm3HCAZOV/l1jpsURABBDPqxVnr3K0fzTcG811z
+         NkyKJxjMXVLs0i1QohsQjzlILhTqcyihXxIy5blRLe2v2FW9Kid6V4PvW1qPtBH1e5TT
+         3sO9RJtuYtW6NqHgZ0fVXDuNoI5Ovl9KyBKgOsz+fxniVImLRay9V0vLQP9wkmZcybAA
+         L7SzFzUDf6Iwz/rxEPpV8xUbQ/r1SXCb7RFEabAQnm0HBeWOhFzu/Bp949YD9aDGhOt7
+         NcgQ==
+X-Gm-Message-State: AGi0Pubd+xyizoXmtHd/ECjYghtb2i83PR6m7hzGPki6JcbvijH2cdPD
+        8u03DcE1zWzPZzXrWhUp/JIhmop35B1toMR2pdY=
+X-Google-Smtp-Source: APiQypKQLjGMnznkTFu6yCPwzo2cD2A672D/LY1DyWimVDpCieb0sohBX8Opad5ypdMMixmhl9cEXtgKb3eWs3RFOzU=
+X-Received: by 2002:a05:600c:2297:: with SMTP id 23mr5830115wmf.166.1585879037215;
+ Thu, 02 Apr 2020 18:57:17 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7873dc08-a486-486f-e1c5-08d7d77234cd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 01:56:20.6816
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AJ/zLiYngrJCFDRER6H2oHjST6JdZgUhcOx2W1W+itBNZzxnmzTx8eLFci4jxqu75/lN7zqnGfVziES6qw7qCm2xfPv05MSv5zfCCaoSZwg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0938
+References: <20200331104532.12698-1-chunyan.zhang@unisoc.com>
+In-Reply-To: <20200331104532.12698-1-chunyan.zhang@unisoc.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Fri, 3 Apr 2020 09:56:41 +0800
+Message-ID: <CAAfSe-vYe2LiAhYMuqJpt07VcXO_phuY8zUv5151JjHxxViB5w@mail.gmail.com>
+Subject: Re: [PATCH] clk: sprd: don't gate uart console clock
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Wednesday, April 1, 2020=
- 3:38 AM
->=20
-> Strictly speaking, compiler is free to use something different from 'u32'
-> for 'enum vmbus_channel_message_type' (e.g. char) but it doesn't happen i=
-n
-> real life, just add a BUILD_BUG_ON() guardian.
->=20
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  drivers/hv/vmbus_drv.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
+Hi Stephen,
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+This is also a fix, could you please take it into clk-next as well?
+
+Thanks,
+Chunyan
+
+On Tue, 31 Mar 2020 at 18:45, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> Don't gate uart1_eb which provides console clock, gating that clock would
+> make serial stop working if serial driver didn't enable that explicitly.
+>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+>  drivers/clk/sprd/sc9863a-clk.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/sprd/sc9863a-clk.c b/drivers/clk/sprd/sc9863a-clk.c
+> index 24f064262814..6c6ac158ef61 100644
+> --- a/drivers/clk/sprd/sc9863a-clk.c
+> +++ b/drivers/clk/sprd/sc9863a-clk.c
+> @@ -1671,8 +1671,9 @@ static SPRD_SC_GATE_CLK_FW_NAME(i2c4_eb,  "i2c4-eb",      "ext-26m", 0x0,
+>                                 0x1000, BIT(12), 0, 0);
+>  static SPRD_SC_GATE_CLK_FW_NAME(uart0_eb,      "uart0-eb",     "ext-26m", 0x0,
+>                                 0x1000, BIT(13), 0, 0);
+> +/* uart1_eb is for console, don't gate even if unused */
+>  static SPRD_SC_GATE_CLK_FW_NAME(uart1_eb,      "uart1-eb",     "ext-26m", 0x0,
+> -                               0x1000, BIT(14), 0, 0);
+> +                               0x1000, BIT(14), CLK_IGNORE_UNUSED, 0);
+>  static SPRD_SC_GATE_CLK_FW_NAME(uart2_eb,      "uart2-eb",     "ext-26m", 0x0,
+>                                 0x1000, BIT(15), 0, 0);
+>  static SPRD_SC_GATE_CLK_FW_NAME(uart3_eb,      "uart3-eb",     "ext-26m", 0x0,
+> --
+> 2.20.1
+>
