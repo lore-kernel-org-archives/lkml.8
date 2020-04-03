@@ -2,296 +2,131 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9205AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CF9C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D35B206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:05:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NQXWDNA+"
+	by mail.kernel.org (Postfix) with ESMTP id 0918020721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585922767;
+	bh=uoJpB8eSfiU/CWF7qbNmRzvrvapcuZJif4Ho8MXA2qc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1FwGCTIb16Y57lyI8yLVk9+9/PAqg6VfsB1o+RSmdAO1coDn4yb4Z1yhi90OltPT6
+	 WMLh/kP13kqygQegNrfbZy4AouJy4i11NVkgOllNs1CcIGfYfKiwDY37/aj8NsHl8v
+	 lziWtTWh9yf2sEfvX6LoBwyNWoJoiIh6vRK16uog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391054AbgDCOFO (ORCPT
+        id S2391059AbgDCOGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:05:14 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:18404 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726087AbgDCOFO (ORCPT
+        Fri, 3 Apr 2020 10:06:06 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38362 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390889AbgDCOGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:05:14 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033E3FWJ030927;
-        Fri, 3 Apr 2020 16:04:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=43ojTxK/2ndKmW5gPukirPt8/ZqQPQjjKYKjgZ6+KJs=;
- b=NQXWDNA+6V6kY0r4mWWLdXLiqLAE5VLUPYIMRyVFibCGKl8ZxJFvqwOMEq5D+U+zd14o
- Q1ZDxjIrfe0r9vnLAc/SDDxiOlktWkMCRorHWxvAT9aTnPcePF71Cqg0YwhcD6gEjjDk
- 2DeTE+ccPfvn1vQMMDjZFLPrtghtdDX4YCeRODqMO2+f8q5deIsJantgCW9gKTL9ScpB
- dj/7xvbQvNRORIAOSxAz6ka+Y0gfgbjqlPfFW4OcKF5npLMswMaK9vIByUPBv5EjRxR1
- VINDgUmONM2CP4hqfP/bdQDoacnhEjLyk5xHyBb4lZ/+z2YoLe0lfaLuHOLuWj47yxM4 2Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 302y54bpp3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Apr 2020 16:04:52 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 780D210002A;
-        Fri,  3 Apr 2020 16:04:47 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 684652B3A7E;
-        Fri,  3 Apr 2020 16:04:47 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Apr 2020 16:04:45
- +0200
-From:   Christophe Roullier <christophe.roullier@st.com>
-To:     <davem@davemloft.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <mripard@kernel.org>,
-        <martin.blumenstingl@googlemail.com>,
-        <alexandru.ardelean@analog.com>, <narmstrong@baylibre.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <christophe.roullier@st.com>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH V2 2/2] dt-bindings: net: dwmac: Convert stm32 dwmac to DT schema
-Date:   Fri, 3 Apr 2020 16:04:15 +0200
-Message-ID: <20200403140415.29641-3-christophe.roullier@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200403140415.29641-1-christophe.roullier@st.com>
-References: <20200403140415.29641-1-christophe.roullier@st.com>
+        Fri, 3 Apr 2020 10:06:05 -0400
+Received: by mail-pj1-f67.google.com with SMTP id m15so2982777pje.3;
+        Fri, 03 Apr 2020 07:06:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a8g22/FwxwkjiRhQiEAJOv2w5JLkw7NJLiR2WpXy++A=;
+        b=H3wAHDEwOwW7durYx2PoslkSZulfjwlqrLe/8GCXTEJHGiCXd9JMoDZOcDqawQNSwH
+         c+4MF/bD8q7dHKmpKjPPmGTRtlXAvWXdR3jFgFj5KayhCJ4n/Ld9IkU9H0xy9bFIBe0J
+         euaTj5fYSQFsBR3xlcgFmC3NLnA9yzN7m42rYn21AsF56U3CyjzmMplTSTCoHMKb4Q4S
+         pcoONXrR4hMfpkZ7IfpnTJqunaup55iDICPlF2Hhd7Z6qeq7GhENtkOHedtrkfuinyT1
+         eJ3Is05/aCxBSGSyPw8GlP6pKOqG2EX3PX5Czh6dundhvvlMmImfTaTJvMSfInoyoFMN
+         ZlTg==
+X-Gm-Message-State: AGi0Puau6YiVG3YZVWQRCUkEmJtaSOuPX0kiK+fnZ7x6vnGCPpVzB1K2
+        dGEJiag4FbDdtf8VFv2v3Yg=
+X-Google-Smtp-Source: APiQypKpERbmgBhQxVd+/uOx5FaWLUkTGZQy3n5jE9fzkYMhWnKNWlUp9kUqvjNDKLGSXYvSgcHF2Q==
+X-Received: by 2002:a17:90a:c256:: with SMTP id d22mr10116186pjx.78.1585922764126;
+        Fri, 03 Apr 2020 07:06:04 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id z63sm5877782pfb.20.2020.04.03.07.06.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 07:06:02 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id DDC8640297; Fri,  3 Apr 2020 14:06:01 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 14:06:01 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Ming Lei <ming.lei@redhat.com>, yu kuai <yukuai3@huawei.com>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, nstange@suse.de, mhocko@suse.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai3@huawei.com
+Subject: Re: [RFC 0/3] block: address blktrace use-after-free
+Message-ID: <20200403140601.GP11244@42.do-not-panic.com>
+References: <20200402000002.7442-1-mcgrof@kernel.org>
+ <20200403081929.GC6887@ming.t460p>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_11:2020-04-03,2020-04-03 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403081929.GC6887@ming.t460p>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert stm32 dwmac to DT schema.
+On Fri, Apr 03, 2020 at 04:19:29PM +0800, Ming Lei wrote:
+> On Wed, Apr 01, 2020 at 11:59:59PM +0000, Luis Chamberlain wrote:
+> > Upstream kernel.org korg#205713 contends that there is a UAF in
+> > the core debugfs debugfs_remove() function, and has gone through
+> > pushing for a CVE for this, CVE-2019-19770.
+> > 
+> > If correct then parent dentries are not positive, and this would
+> > have implications far beyond this bug report. Thankfully, upon review
+> > with Nicolai, he wasn't buying it. His suspicions that this was just
+> > a blktrace issue were spot on, and this patch series demonstrates
+> > that, provides a reproducer, and provides a solution to the issue.
+> > 
+> > We there would like to contend CVE-2019-19770 as invalid. The
+> > implications suggested are not correct, and this issue is only
+> > triggerable with root, by shooting yourself on the foot by misuing
+> > blktrace.
+> > 
+> > If you want this on a git tree, you can get it from linux-next
+> > 20200401-blktrace-fix-uaf branch [2].
+> > 
+> > Wider review, testing, and rants are appreciated.
+> > 
+> > [0] https://bugzilla.kernel.org/show_bug.cgi?id=205713
+> > [1] https://nvd.nist.gov/vuln/detail/CVE-2019-19770
+> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20200401-blktrace-fix-uaf
+> > 
+> > Luis Chamberlain (3):
+> >   block: move main block debugfs initialization to its own file
+> >   blktrace: fix debugfs use after free
+> >   block: avoid deferral of blk_release_queue() work
+> > 
+> >  block/Makefile               |  1 +
+> >  block/blk-core.c             |  9 +--------
+> >  block/blk-debugfs.c          | 27 +++++++++++++++++++++++++++
+> >  block/blk-mq-debugfs.c       |  5 -----
+> >  block/blk-sysfs.c            | 21 ++++++++-------------
+> >  block/blk.h                  | 17 +++++++++++++++++
+> >  include/linux/blktrace_api.h |  1 -
+> >  kernel/trace/blktrace.c      | 19 ++++++++-----------
+> >  8 files changed, 62 insertions(+), 38 deletions(-)
+> >  create mode 100644 block/blk-debugfs.c
+> 
+> BTW, Yu Kuai posted one patch for this issue, looks that approach
+> is simpler:
+> 
+> https://lore.kernel.org/linux-block/20200324132315.22133-1-yukuai3@huawei.com/
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
----
- .../devicetree/bindings/net/stm32-dwmac.txt   |  44 -----
- .../devicetree/bindings/net/stm32-dwmac.yaml  | 150 ++++++++++++++++++
- 2 files changed, 150 insertions(+), 44 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
- create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+I cannot see how renaming the possible target directory to a temporary
+directory instead of unifying it for both SQ and MQ could be any
+simpler. IMHO this keeps the mess and fragile nature of the issue.
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-deleted file mode 100644
-index a90eef11dc46..000000000000
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-+++ /dev/null
-@@ -1,44 +0,0 @@
--STMicroelectronics STM32 / MCU DWMAC glue layer controller
--
--This file documents platform glue layer for stmmac.
--Please see stmmac.txt for the other unchanged properties.
--
--The device node has following properties.
--
--Required properties:
--- compatible:  For MCU family should be "st,stm32-dwmac" to select glue, and
--	       "snps,dwmac-3.50a" to select IP version.
--	       For MPU family should be "st,stm32mp1-dwmac" to select
--	       glue, and "snps,dwmac-4.20a" to select IP version.
--- clocks: Must contain a phandle for each entry in clock-names.
--- clock-names: Should be "stmmaceth" for the host clock.
--	       Should be "mac-clk-tx" for the MAC TX clock.
--	       Should be "mac-clk-rx" for the MAC RX clock.
--	       For MPU family need to add also "ethstp" for power mode clock
--- interrupt-names: Should contain a list of interrupt names corresponding to
--           the interrupts in the interrupts property, if available.
--		   Should be "macirq" for the main MAC IRQ
--		   Should be "eth_wake_irq" for the IT which wake up system
--- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
--	       encompases the glue register, and the offset of the control register.
--
--Optional properties:
--- clock-names:     For MPU family "eth-ck" for PHY without quartz
--- st,eth-clk-sel (boolean) : set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
--- st,eth-ref-clk-sel (boolean) :  set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
--
--Example:
--
--	ethernet@40028000 {
--		compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
--		reg = <0x40028000 0x8000>;
--		reg-names = "stmmaceth";
--		interrupts = <0 61 0>, <0 62 0>;
--		interrupt-names = "macirq", "eth_wake_irq";
--		clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
--		clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
--		st,syscon = <&syscfg 0x4>;
--		snps,pbl = <8>;
--		snps,mixed-burst;
--		dma-ranges;
--	};
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-new file mode 100644
-index 000000000000..f559293dbab5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-@@ -0,0 +1,150 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 BayLibre, SAS
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/net/stm32-dwmac.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: STMicroelectronics STM32 / MCU DWMAC glue layer controller
-+
-+maintainers:
-+  - Alexandre Torgue <alexandre.torgue@st.com>
-+  - Christophe Roullier <christophe.roullier@st.com>
-+
-+description:
-+  This file documents platform glue layer for stmmac.
-+
-+# We need a select here so we don't match all nodes with 'snps,dwmac'
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - st,stm32-dwmac
-+          - st,stm32mp1-dwmac
-+  required:
-+    - compatible
-+
-+allOf:
-+  - $ref: "snps,dwmac.yaml#"
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - st,stm32mp1-dwmac
-+          - const: snps,dwmac-4.20a
-+      - items:
-+          - enum:
-+              - st,stm32-dwmac
-+          - const: snps,dwmac-4.10a
-+      - items:
-+          - enum:
-+              - st,stm32-dwmac
-+          - const: snps,dwmac-3.50a
-+
-+  clocks:
-+    minItems: 3
-+    maxItems: 5
-+    items:
-+        - description: GMAC main clock
-+        - description: MAC TX clock
-+        - description: MAC RX clock
-+        - description: For MPU family, used for power mode
-+        - description: For MPU family, used for PHY without quartz
-+
-+  clock-names:
-+    minItems: 3
-+    maxItems: 5
-+    contains:
-+      enum:
-+        - stmmaceth
-+        - mac-clk-tx
-+        - mac-clk-rx
-+        - ethstp
-+        - eth-ck
-+
-+  st,syscon:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description:
-+      Should be phandle/offset pair. The phandle to the syscon node which
-+      encompases the glue register, and the offset of the control register
-+
-+  st,eth-clk-sel:
-+    description:
-+      set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-+    type: boolean
-+
-+  st,eth-ref-clk-sel:
-+    description:
-+      set this property in RMII mode when you have PHY without crystal 50MHz and want to
-+      select RCC clock instead of ETH_REF_CLK.
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - clocks
-+  - clock-names
-+  - st,syscon
-+
-+examples:
-+ - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    #include <dt-bindings/mfd/stm32h7-rcc.h>
-+    //Example 1
-+     ethernet0: ethernet@5800a000 {
-+           compatible = "st,stm32mp1-dwmac", "snps,dwmac-4.20a";
-+           reg = <0x5800a000 0x2000>;
-+           reg-names = "stmmaceth";
-+           interrupts = <&intc GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+           interrupt-names = "macirq";
-+           clock-names = "stmmaceth",
-+                     "mac-clk-tx",
-+                     "mac-clk-rx",
-+                     "ethstp",
-+                     "eth-ck";
-+           clocks = <&rcc ETHMAC>,
-+                <&rcc ETHTX>,
-+                <&rcc ETHRX>,
-+                <&rcc ETHSTP>,
-+                <&rcc ETHCK_K>;
-+           st,syscon = <&syscfg 0x4>;
-+           snps,pbl = <2>;
-+           snps,axi-config = <&stmmac_axi_config_0>;
-+           snps,tso;
-+           phy-mode = "rgmii";
-+       };
-+
-+    //Example 2 (MCU example)
-+     ethernet1: ethernet@40028000 {
-+           compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-+           reg = <0x40028000 0x8000>;
-+           reg-names = "stmmaceth";
-+           interrupts = <0 61 0>, <0 62 0>;
-+           interrupt-names = "macirq", "eth_wake_irq";
-+           clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-+           clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-+           st,syscon = <&syscfg 0x4>;
-+           snps,pbl = <8>;
-+           snps,mixed-burst;
-+           dma-ranges;
-+           phy-mode = "mii";
-+       };
-+
-+    //Example 3
-+     ethernet2: ethernet@40027000 {
-+           compatible = "st,stm32-dwmac", "snps,dwmac-4.10a";
-+           reg = <0x40028000 0x8000>;
-+           reg-names = "stmmaceth";
-+           interrupts = <61>;
-+           interrupt-names = "macirq";
-+           clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-+           clocks = <&rcc 62>, <&rcc 61>, <&rcc 60>;
-+           st,syscon = <&syscfg 0x4>;
-+           snps,pbl = <8>;
-+           phy-mode = "mii";
-+       };
--- 
-2.17.1
+The approach taken here unifies the directory we should use for both SQ
+and MQ and makes the deferral issue a completely separate issue
+addressed in the last patch.
 
+  Luis
