@@ -2,330 +2,268 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B539C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F55C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2069A206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF7C206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vUuFEUqH"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Q3fC9aUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404118AbgDCR7M (ORCPT
+        id S2404164AbgDCSAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:59:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42786 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbgDCR7K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:59:10 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h15so9549404wrx.9
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2EJTMwd5yAFnu/Tn5slB2aVKxhhWasEuV9Nvp1nHtms=;
-        b=vUuFEUqHUgr5ANyLeOl+LO/mjA+LzITj2SxcpnJtLNebhU7LwGJsGU0g0Qggb1U9vl
-         RqHuK6goVE4isHMsgShYtfSacsi8fWuAuCJxfSX8EkCW8VhOcgOu40673bd4Q6nE+AWP
-         GASXazvH9Ng30nFzYGBu497VuNwflQ2PLNxFnNcvyVTQOLAmwoxPBWV5O0kc6ORzZ8Yc
-         TmJkRn7Nhe5mSexPNAOKaXiFSE3seS+CZ5ZVp/Wd/e7jw1At9NyCcr9VA4p5vWiTmeeM
-         0B2lJ2z27xG5HnOfuWH0HXMDwSBtMytGItKDMRE6EucDmi5JoHhFL3sEyJygZ2Y5NbcX
-         aGaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2EJTMwd5yAFnu/Tn5slB2aVKxhhWasEuV9Nvp1nHtms=;
-        b=s7ARIJG4IUpFmeJy04p/da0kmF2IYmSW9/hgHdAKTJ3R3HCeLvhHf3ENw0h6+Ds8Cl
-         xN8f/ILBADZC8mRQuUZZO+69wlzUyqY6gWqRY5Dy0TfDU6QcceKd8yicMljw0Kx+XCvn
-         HluENDLITyhMniY2rIRuFfL49PEDsErxuAZO9BQuDtsNVOIwGfbWYshHJi3Cnu4nCCVQ
-         eRZA2teapDzcWmOax4V0CiqwA51JVnk13q/BPKlzuRFHkev2JxiVh7xkWq9iDqEIppDF
-         LD5wQXnK4LPxeweNOuXyYn5tqK4p4fbqWls/P+2DurDxvUFHIMBnFOEKCTJHhUH/N605
-         DbaA==
-X-Gm-Message-State: AGi0PuaRAZd9mTvhoARydPNQLXbZvCoXIwQgqCm1kd2ifxXeI3FIub20
-        CwLwx3w9ThOiWgbWgJKSL0I=
-X-Google-Smtp-Source: APiQypJXwI2YLMLTSzAGoS7S0I9+R99VL5pFUBK43/9LwFHMg9qKO4IOl5UW1seICMuN/0QeYcCMlg==
-X-Received: by 2002:adf:e44a:: with SMTP id t10mr10132322wrm.322.1585936748526;
-        Fri, 03 Apr 2020 10:59:08 -0700 (PDT)
-Received: from 5f9ad775e7f6 ([213.137.85.32])
-        by smtp.gmail.com with ESMTPSA id a13sm12766764wrh.80.2020.04.03.10.59.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Apr 2020 10:59:07 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 17:59:04 +0000
-From:   Daniel Shaulov <daniel.shaulov@gmail.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Daniel Shaulov <daniel.shaulov@granulate.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 3 Apr 2020 14:00:41 -0400
+Received: from mout.gmx.net ([212.227.15.19]:37839 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727989AbgDCSAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 14:00:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1585936813;
+        bh=Qh1WoO+bnQ7lf0YM3L8zg/8Ho61UP33iXUhGywCH7is=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Q3fC9aUuWkTXSTGWM/UUG/kB4UkBTqmKhxGZJwfTIwjaZCbPBcdUXujlHxe3gATvA
+         GtgklUucqYiNqCn8i6x+Z6aJ9B6IpsDpHwy5rwcoavTwe+vLpegP/pt1z/xttaOZe/
+         92ctiNvIACD/PJ6zTXXfLE1nLD94Xgrvdfqb5FXQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MJE2D-1jdKH13eW3-00Kh4u; Fri, 03 Apr 2020 20:00:13 +0200
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+To:     alex.dewar@gmx.co.uk
+Cc:     Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>, hmadhani@marvell.com,
+        Richard Fontana <rfontana@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: Add support for DW_OP_call_frame_cfa vars
-Message-ID: <20200403175902.GA18789@5f9ad775e7f6>
-References: <20200401161954.44640-1-daniel.shaulov@granulate.io>
- <20200402184943.GB23243@kernel.org>
- <20200402202523.GA55594@5f9ad775e7f6>
- <20200403130251.GB18559@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        MPT-FusionLinux.pdl@broadcom.com
+Subject: [PATCH] scsi: Remove unnecessary calls to memset after dma_alloc_coherent
+Date:   Fri,  3 Apr 2020 18:58:31 +0100
+Message-Id: <20200403175833.75531-1-alex.dewar@gmx.co.uk>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403130251.GB18559@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4e0hss2WvUtGvqI6hihTHQD31nPnYyhd89b8wK7pKoryL/adcEt
+ 6pdz8+sBlgHz9nSKLFo0Ab0ta5asxTfZOS9bWSi3Az4mFykjCHOp+CaIBCYAvi/LV041ebg
+ AtXqqLoNevsfl1b+Ij/Nk8mc744/EaKXE1qgxyksZ92gvlOYLNnhIjOKx5Eky0w67C7sq7a
+ DP/CA4gD+ZgdjSuY+pCLg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TLR6dvnJRsE=:lH4axejOc/j/AftKiGcj2t
+ OMVwogUgzlkx3fy5cFFgqt6hMWaeqIZquYz4Nnac9baA+f8ILi4piZf9h+lbloReG0sGMXgk0
+ mVoQydCpt8OD1eZibURPufYdKF7e2fbepOF0wpkZvV0cb3mc1zx7qPONnLIaU36wJyIvHdIXD
+ WEWbGG3lJtEZoljI7ImnYj43pbQYAJZzvSNao378kHYsfp+I4ST2qb29o3O9s++CzOPSmOU/y
+ Q1rflX6iAwpLI/RDlTmY7LdBz8Xtc0suyrKlnfLu5u07bTdyIzPPJqLhN9lb7fuGeMidDvXeg
+ +NkdTRYIaQWJIAuZEd4eZlLvs4N4Tp/I64ptTKBP//HGCa/ud3ncDm/EFCc4IiErarV2kG+wj
+ Am9zNQiexMTbxQIFPJhP3DHBrsK6j8o363AqZj5lV7nO3cNChgYtc3okTnTgJTJ46//Xs1E/+
+ vM3RMALBXjq2phSyX+bg46V68UVpirTm0Yf5/W7NJloaniSBM5YVmMMCcgdV0XzkS1ELXhp23
+ liyr7mcYnH4KJ6qT1yccUUbjOjNkOFvkbCB4n1DMYj3OD8k9MsuWAaBDHWlPHJ/dUUQQnWVIS
+ /oTCceqFwkuglS2Apzz9brTLli+pWmC8tzPxApJ44U6XPYJJsIzR3XVfQzjsAdMt4eGgNOAxR
+ /wqAnYSLiM9D0kitvd6VGAwSdzoiGY3kD0YsOZFE/pNTThI9rfsoifz7piDIxas3rxaWZHMwU
+ NFH8C+XQADr6W+JA/bI9PfPXbydLOJ70j6gL9/F9qfST4G22f/sWrcYweQg9TDpq3St3ChiKu
+ 0KXH9Is9EbYOPjhSll6XstSm/9wSHSBT5CZCmc72H1BRainYxhYVQyVKfJAJIc1SpvfvcqrRG
+ Gn2dM7F7AzeXhw46qp0gMtppPFhPh87tjJioaw+Zc0EiOlwmj56hhT1h1tJM4o3tiZ+cDUuh6
+ gsBfXcCgRy/aKV4+vArvUgfWniUEEmu+MAuDyNkcXYXwqRO+7np0XLcU0HTt0Q1MRdV7upZNI
+ 9yP7OzSTVWT6ifKoB+YJ/MkUqI7IeTIWQpMniPj5yJPdYs6UiuTPLWBUL4Ydyr03Ih/vYEGhj
+ gN4THGGksOi/KcH48Xi7ixzRvZ7WDTpbtSriCkL8mFly+E7G1sBqtyUHZKPpoBKqyz1JWPrzP
+ ZL4qlKL6SijbQeKLPNIlX9SXFR6gz4kRD9SlUkmmQSa5GNSs8PzQI01UGvNbuT3KFiGQ408GA
+ mSE8KLAtVHYmGsoOJ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 10:02:51AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Apr 02, 2020 at 08:25:24PM +0000, Daniel Shaulov escreveu:
-> > On Thu, Apr 02, 2020 at 03:49:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Daniel, next time please consider providing precise steps to show what
-> > > wasn't working and then how the patch solves the problem, i.e. get some
-> > > go program, show the command lines used to build, probe, etc.
-> > >
-> > > - Arnaldo
-> > 
-> > Sure thing:
-> > 
-> > ---- contents of example.go ----
-> > package main
-> > 
-> > import "fmt"
-> > 
-> > func example(param1 int, param2 int) {
-> > 	fmt.Println(param1, param2)
-> > }
-> > 
-> > func main() {
-> > 	example(111, 222)
-> > }
-> > ---- end contents of example.go ----
-> > 
-> > Build with:
-> > $ go build example.go
-> > 
-> > Note that the output file is named after the directory.
-> > 
-> > Then try to probe it with:
-> > $ perf probe -x ./example 'main.example param1 param2'
-> > 
-> > The result is:
-> > > Target program is compiled without optimization. Skipping prologue.
-> > > Probe on address 0x4820f0 to force probing at the function entry.
-> > >
-> > > Sorry, we don't support this variable location yet.
-> > >   Error: Failed to add events.
-> > 
-> > With my changes the event is added successfuly.
-> > The reason for the change can be observed in the output of:
-> > $ readelf --debug-dump=info ./example
-> > 
-> > Where we have the following for the main.example function (with go >= 1.10):
-> >  <1><63dd2>: Abbrev Number: 2 (DW_TAG_subprogram)
-> >     <63dd3>   DW_AT_name        : main.example
-> >     <63de0>   DW_AT_low_pc      : 0x4820f0
-> >     <63de8>   DW_AT_high_pc     : 0x4821c2
-> >     <63df0>   DW_AT_frame_base  : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
-> >     <63df2>   DW_AT_decl_file   : 0x1
-> >     <63df6>   DW_AT_external    : 1
-> >  <2><63df7>: Abbrev Number: 14 (DW_TAG_formal_parameter)
-> >     <63df8>   DW_AT_name        : param1
-> >     <63dff>   DW_AT_variable_parameter: 0
-> >     <63e00>   DW_AT_decl_line   : 5
-> >     <63e01>   DW_AT_type        : <0x220f>
-> >     <63e05>   DW_AT_location    : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
-> >  <2><63e07>: Abbrev Number: 14 (DW_TAG_formal_parameter)
-> >     <63e08>   DW_AT_name        : param2
-> >     <63e0f>   DW_AT_variable_parameter: 0
-> >     <63e10>   DW_AT_decl_line   : 5
-> >     <63e11>   DW_AT_type        : <0x220f>
-> >     <63e15>   DW_AT_location    : 2 byte block: 91 8 	(DW_OP_fbreg: 8)
-> >  <2><63e18>: Abbrev Number: 0
->  
-> > The go compiler (after 1.10) uses DW_OP_call_frame_cfa for the first parameter and DW_OP_fbreg for the rest.
-> > On go versions lower than 1.10, it used DW_OP_call_frame_cfa for all parameters.
-> > Here is example output of the readelf on main.example, compiled with go1.9.7:
-> >  <1><2634d>: Abbrev Number: 2 (DW_TAG_subprogram)
-> >     <2634e>   DW_AT_name        : main.example
-> >     <2635b>   DW_AT_low_pc      : 0x487db0
-> >     <26363>   DW_AT_high_pc     : 0x487e99
-> >     <2636b>   DW_AT_frame_base  : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
-> >     <2636d>   DW_AT_external    : 1
-> >  <2><2636e>: Abbrev Number: 5 (DW_TAG_formal_parameter)
-> >     <2636f>   DW_AT_name        : param1
-> >     <26376>   DW_AT_location    : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
-> >     <26378>   DW_AT_type        : <0x27f1c>
-> >  <2><2637c>: Abbrev Number: 5 (DW_TAG_formal_parameter)
-> >     <2637d>   DW_AT_name        : param2
-> >     <26384>   DW_AT_location    : 4 byte block: 9c 11 8 22 	(DW_OP_call_frame_cfa; DW_OP_consts: 8; DW_OP_plus)
-> >     <26389>   DW_AT_type        : <0x27f1c>
-> >  <2><2638d>: Abbrev Number: 0
-> > 
-> > Hope this makes things easier to understand.
-> 
-> Right, but I tried following your instructions here and got up to this:
-> 
->  <0><76ded>: Abbrev Number: 1 (DW_TAG_compile_unit)
->     <76dee>   DW_AT_name        : main
->     <76df3>   DW_AT_language    : 22    (Go)
->     <76df4>   DW_AT_stmt_list   : 0x27a7d
->     <76df8>   DW_AT_low_pc      : 0x48cd90
->     <76e00>   DW_AT_ranges      : 0x2e0
->     <76e04>   DW_AT_comp_dir    : .
->     <76e06>   DW_AT_producer    : Go cmd/compile go1.13.6
->     <76e1e>   Unknown AT value: 2905: main
->  <1><76e23>: Abbrev Number: 4 (DW_TAG_subprogram)
->     <76e24>   DW_AT_name        : main.example
->     <76e31>   DW_AT_inline      : 1     (inlined)
->     <76e32>   DW_AT_external    : 1
->  <2><76e33>: Abbrev Number: 17 (DW_TAG_formal_parameter)
->     <76e34>   DW_AT_name        : param1
->     <76e3b>   DW_AT_variable_parameter: 0
->     <76e3c>   DW_AT_type        : <0x37430>
->  <2><76e40>: Abbrev Number: 17 (DW_TAG_formal_parameter)
->     <76e41>   DW_AT_name        : param2
->     <76e48>   DW_AT_variable_parameter: 0
->     <76e49>   DW_AT_type        : <0x37430>
->  <2><76e4d>: Abbrev Number: 0
-> 
-> 
-> Which, with or without your patch ends with:
-> 
-> [acme@five daniel.shaulov@gmail.com]$ perf probe -x ./example 'main.example param1 param2'
-> Failed to find 'param1' in this function.
-> Probe point 'main.example' not found.
->   Error: Failed to add events.
-> [acme@five daniel.shaulov@gmail.com]$
-> 
-> [acme@five perf]$ rpm -q golang-bin
-> golang-bin-1.13.6-1.fc31.x86_64
-> [acme@five perf]$ cat /etc/fedora-release
-> Fedora release 31 (Thirty One)
-> [acme@five perf]$
-> 
-> Has the behaviour changed again in 1.13? Or is this some optimization
-> level that fedora sets that ends up auto-inlining that main.example
-> routine?
-> 
-> [acme@five daniel.shaulov@gmail.com]$ readelf --debug-dump=info ./example | grep main\.example -B10 -A13
->  <0><76ded>: Abbrev Number: 1 (DW_TAG_compile_unit)
->     <76dee>   DW_AT_name        : main
->     <76df3>   DW_AT_language    : 22	(Go)
->     <76df4>   DW_AT_stmt_list   : 0x27a7d
->     <76df8>   DW_AT_low_pc      : 0x48cd90
->     <76e00>   DW_AT_ranges      : 0x2e0
->     <76e04>   DW_AT_comp_dir    : .
->     <76e06>   DW_AT_producer    : Go cmd/compile go1.13.6
->     <76e1e>   Unknown AT value: 2905: main
->  <1><76e23>: Abbrev Number: 4 (DW_TAG_subprogram)
->     <76e24>   DW_AT_name        : main.example
->     <76e31>   DW_AT_inline      : 1	(inlined)
->     <76e32>   DW_AT_external    : 1
->  <2><76e33>: Abbrev Number: 17 (DW_TAG_formal_parameter)
->     <76e34>   DW_AT_name        : param1
->     <76e3b>   DW_AT_variable_parameter: 0
->     <76e3c>   DW_AT_type        : <0x37430>
->  <2><76e40>: Abbrev Number: 17 (DW_TAG_formal_parameter)
->     <76e41>   DW_AT_name        : param2
->     <76e48>   DW_AT_variable_parameter: 0
->     <76e49>   DW_AT_type        : <0x37430>
->  <2><76e4d>: Abbrev Number: 0
->  <1><76e4e>: Abbrev Number: 4 (DW_TAG_subprogram)
->     <76e4f>   DW_AT_name        : fmt.Println
-> [acme@five daniel.shaulov@gmail.com]$
-> 
-> - Arnaldo
+dma_alloc_coherent() now zeroes memory after allocation, so additional
+calls to memset() afterwards are unnecessary. Remove them.
 
-Ok, so I looked into it a little bit.
-I was using go1.10.4 (that's the one in Ubuntu 18.04 repo)
+Issue identified with Coccinelle.
 
-Apperantly they improved inlining in go1.12
-https://golang.org/doc/go1.12#compiler
-> More functions are now eligible for inlining by default,
-> including functions that do nothing but call another function.
+Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
+=2D--
+ drivers/scsi/dpt_i2o.c              | 8 ++------
+ drivers/scsi/mpt3sas/mpt3sas_base.c | 3 +--
+ drivers/scsi/mvsas/mv_init.c        | 8 +-------
+ drivers/scsi/pmcraid.c              | 1 -
+ drivers/scsi/qla2xxx/qla_isr.c      | 3 +--
+ drivers/scsi/qla2xxx/qla_mbx.c      | 4 +---
+ 6 files changed, 6 insertions(+), 21 deletions(-)
 
-I added "//go:noinline" to the example function and it works in go1.12 and go1.13.6
----- contents of example.go ----
-package main
+diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
+index 02dff3a684e0..3daf274f85c3 100644
+=2D-- a/drivers/scsi/dpt_i2o.c
++++ b/drivers/scsi/dpt_i2o.c
+@@ -1331,7 +1331,6 @@ static s32 adpt_i2o_reset_hba(adpt_hba* pHba)
+ 		printk(KERN_ERR"IOP reset failed - no free memory.\n");
+ 		return -ENOMEM;
+ 	}
+-	memset(status,0,4);
 
-import "fmt"
+ 	msg[0]=3DEIGHT_WORD_MSG_SIZE|SGL_OFFSET_0;
+ 	msg[1]=3DI2O_CMD_ADAPTER_RESET<<24|HOST_TID<<12|ADAPTER_TID;
+@@ -2784,7 +2783,6 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
+ 			pHba->name);
+ 		return -ENOMEM;
+ 	}
+-	memset(status, 0, 4);
 
-//go:noinline
-func example(param1 int, param2 int) {
-	fmt.Println(param1, param2)
-}
+ 	writel(EIGHT_WORD_MSG_SIZE| SGL_OFFSET_6, &msg[0]);
+ 	writel(I2O_CMD_OUTBOUND_INIT<<24 | HOST_TID<<12 | ADAPTER_TID, &msg[1]);
+@@ -2838,7 +2836,6 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
+ 		printk(KERN_ERR "%s: Could not allocate reply pool\n", pHba->name);
+ 		return -ENOMEM;
+ 	}
+-	memset(pHba->reply_pool, 0 , pHba->reply_fifo_size * REPLY_FRAME_SIZE * =
+4);
 
-func main() {
-	example(111, 222)
-}
----- end contents of example.go ----
+ 	for(i =3D 0; i < pHba->reply_fifo_size; i++) {
+ 		writel(pHba->reply_pool_pa + (i * REPLY_FRAME_SIZE * 4),
+@@ -3067,13 +3064,12 @@ static int adpt_i2o_build_sys_table(void)
+ 	sys_tbl_len =3D sizeof(struct i2o_sys_tbl) +	// Header + IOPs
+ 				(hba_count) * sizeof(struct i2o_sys_tbl_entry);
 
-There were some other changes to the dwarf output and in 1.13.6 with "//go:noinline" it looks like this:
-$ readelf --debug-dump=info ./example | grep main\.example -A17
- <1><76e8f>: Abbrev Number: 3 (DW_TAG_subprogram)
-    <76e90>   DW_AT_name        : main.example
-    <76e9d>   DW_AT_low_pc      : 0x48ce90
-    <76ea5>   DW_AT_high_pc     : 0x48cf58
-    <76ead>   DW_AT_frame_base  : 1 byte block: 9c      (DW_OP_call_frame_cfa)
-    <76eaf>   DW_AT_decl_file   : 0x1
-    <76eb3>   DW_AT_external    : 1
- <2><76eb4>: Abbrev Number: 16 (DW_TAG_formal_parameter)
-    <76eb5>   DW_AT_name        : param1
-    <76ebc>   DW_AT_variable_parameter: 0
-    <76ebd>   DW_AT_decl_line   : 6
-    <76ebe>   DW_AT_type        : <0x37472>
-    <76ec2>   DW_AT_location    : 0x7cd57 (location list)
- <2><76ec6>: Abbrev Number: 16 (DW_TAG_formal_parameter)
-    <76ec7>   DW_AT_name        : param2
-    <76ece>   DW_AT_variable_parameter: 0
-    <76ecf>   DW_AT_decl_line   : 6
-    <76ed0>   DW_AT_type        : <0x37472>
-    <76ed4>   DW_AT_location    : 0x7cd8a (location list)
+-	sys_tbl =3D dma_alloc_coherent(&pHba->pDev->dev,
+-				sys_tbl_len, &sys_tbl_pa, GFP_KERNEL);
++	sys_tbl =3D dma_alloc_coherent(&pHba->pDev->dev, sys_tbl_len,
++				     &sys_tbl_pa, GFP_KERNEL);
+ 	if (!sys_tbl) {
+ 		printk(KERN_WARNING "SysTab Set failed. Out of memory.\n");
+ 		return -ENOMEM;
+ 	}
+-	memset(sys_tbl, 0, sys_tbl_len);
 
-The "0x7cd57 (location list)" can be read with another readelf:
-$ readelf --debug-dump=loc ./example | grep 7cd57 -A5
-    0007cd57 ffffffffffffffff 000000000048ce90 (base address)
-    0007cd67 000000000048ce90 000000000048cf58 (DW_OP_call_frame_cfa)
-    0007cd7a <End of list>
-    0007cd8a ffffffffffffffff 000000000048ce90 (base address)
-    0007cd9a 000000000048ce90 000000000048cf58 (DW_OP_fbreg: 8)
-    0007cdae <End of list>
+ 	sys_tbl->num_entries =3D hba_count;
+ 	sys_tbl->version =3D I2OVERSION;
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mp=
+t3sas_base.c
+index 663782bb790d..6144c0910b90 100644
+=2D-- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -5203,7 +5203,7 @@ _base_allocate_memory_pools(struct MPT3SAS_ADAPTER *=
+ioc)
 
-So it is basically the same as what I was getting with go1.10, but with a deref in the way.
-I guess dwarf_getlocation_addr abstracts the difference away since my code still works.
+ 	ioc->request_dma_sz =3D sz;
+ 	ioc->request =3D dma_alloc_coherent(&ioc->pdev->dev, sz,
+-			&ioc->request_dma, GFP_KERNEL);
++					  &ioc->request_dma, GFP_KERNEL);
+ 	if (!ioc->request) {
+ 		ioc_err(ioc, "request pool: dma_alloc_coherent failed: hba_depth(%d), c=
+hains_per_io(%d), frame_sz(%d), total(%d kB)\n",
+ 			ioc->hba_queue_depth, ioc->chains_needed_per_io,
+@@ -5215,7 +5215,6 @@ _base_allocate_memory_pools(struct MPT3SAS_ADAPTER *=
+ioc)
+ 		_base_release_memory_pools(ioc);
+ 		goto retry_allocation;
+ 	}
+-	memset(ioc->request, 0, sz);
 
-Note - in go1.11, I think there was some bug, because it shows up like this in readelf:
- <1><72a95>: Abbrev Number: 2 (DW_TAG_subprogram)
-    <72a96>   DW_AT_name        : main.example
-    <72aa3>   DW_AT_low_pc      : 0x4850b0
-    <72aab>   DW_AT_high_pc     : 0x48516e
-    <72ab3>   DW_AT_frame_base  : 1 byte block: 9c      (DW_OP_call_frame_cfa)
-    <72ab5>   DW_AT_decl_file   : 0x1
-    <72ab9>   DW_AT_external    : 1
- <2><72aba>: Abbrev Number: 14 (DW_TAG_formal_parameter)
-    <72abb>   DW_AT_name        : param1
-    <72ac2>   DW_AT_variable_parameter: 0
-    <72ac3>   DW_AT_decl_line   : 6
-    <72ac4>   DW_AT_type        : <0x3118>
-    <72ac8>   DW_AT_location    : 0 byte block:         ()
- <2><72ac9>: Abbrev Number: 14 (DW_TAG_formal_parameter)
-    <72aca>   DW_AT_name        : param2
-    <72ad1>   DW_AT_variable_parameter: 0
-    <72ad2>   DW_AT_decl_line   : 6
-    <72ad3>   DW_AT_type        : <0x3118>
-    <72ad7>   DW_AT_location    : 0 byte block:         ()
- <2><72ad8>: Abbrev Number: 0
+ 	if (retry_sz)
+ 		ioc_err(ioc, "request pool: dma_alloc_coherent succeed: hba_depth(%d), =
+chains_per_io(%d), frame_sz(%d), total(%d kb)\n",
+diff --git a/drivers/scsi/mvsas/mv_init.c b/drivers/scsi/mvsas/mv_init.c
+index 7af9173c4925..75c9fc37a388 100644
+=2D-- a/drivers/scsi/mvsas/mv_init.c
++++ b/drivers/scsi/mvsas/mv_init.c
+@@ -244,28 +244,22 @@ static int mvs_alloc(struct mvs_info *mvi, struct Sc=
+si_Host *shost)
+ 				     &mvi->tx_dma, GFP_KERNEL);
+ 	if (!mvi->tx)
+ 		goto err_out;
+-	memset(mvi->tx, 0, sizeof(*mvi->tx) * MVS_CHIP_SLOT_SZ);
+ 	mvi->rx_fis =3D dma_alloc_coherent(mvi->dev, MVS_RX_FISL_SZ,
+ 					 &mvi->rx_fis_dma, GFP_KERNEL);
+ 	if (!mvi->rx_fis)
+ 		goto err_out;
+-	memset(mvi->rx_fis, 0, MVS_RX_FISL_SZ);
+-
+ 	mvi->rx =3D dma_alloc_coherent(mvi->dev,
+ 				     sizeof(*mvi->rx) * (MVS_RX_RING_SZ + 1),
+ 				     &mvi->rx_dma, GFP_KERNEL);
+ 	if (!mvi->rx)
+ 		goto err_out;
+-	memset(mvi->rx, 0, sizeof(*mvi->rx) * (MVS_RX_RING_SZ + 1));
+ 	mvi->rx[0] =3D cpu_to_le32(0xfff);
+ 	mvi->rx_cons =3D 0xfff;
 
-And perf has no way to find the parameters (DW_AT_location is empty).
+-	mvi->slot =3D dma_alloc_coherent(mvi->dev,
+-				       sizeof(*mvi->slot) * slot_nr,
++	mvi->slot =3D dma_alloc_coherent(mvi->dev, sizeof(*mvi->slot) * slot_nr,
+ 				       &mvi->slot_dma, GFP_KERNEL);
+ 	if (!mvi->slot)
+ 		goto err_out;
+-	memset(mvi->slot, 0, sizeof(*mvi->slot) * slot_nr);
+
+ 	mvi->bulk_buffer =3D dma_alloc_coherent(mvi->dev,
+ 				       TRASH_BUCKET_SIZE,
+diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
+index 7eb88fe1eb0b..6976013cf4c7 100644
+=2D-- a/drivers/scsi/pmcraid.c
++++ b/drivers/scsi/pmcraid.c
+@@ -4718,7 +4718,6 @@ static int pmcraid_allocate_host_rrqs(struct pmcraid=
+_instance *pinstance)
+ 			return -ENOMEM;
+ 		}
+
+-		memset(pinstance->hrrq_start[i], 0, buffer_size);
+ 		pinstance->hrrq_curr[i] =3D pinstance->hrrq_start[i];
+ 		pinstance->hrrq_end[i] =3D
+ 			pinstance->hrrq_start[i] + PMCRAID_MAX_CMD - 1;
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr=
+.c
+index 8d7a905f6247..632fd56cb626 100644
+=2D-- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -79,7 +79,7 @@ qla24xx_process_abts(struct scsi_qla_host *vha, void *pk=
+t)
+ 	    (uint8_t *)abts, sizeof(*abts));
+
+ 	rsp_els =3D dma_alloc_coherent(&ha->pdev->dev, sizeof(*rsp_els), &dma,
+-	    GFP_KERNEL);
++				     GFP_KERNEL);
+ 	if (!rsp_els) {
+ 		ql_log(ql_log_warn, vha, 0x0287,
+ 		    "Failed allocate dma buffer ABTS/ELS RSP.\n");
+@@ -87,7 +87,6 @@ qla24xx_process_abts(struct scsi_qla_host *vha, void *pk=
+t)
+ 	}
+
+ 	/* terminate exchange */
+-	memset(rsp_els, 0, sizeof(*rsp_els));
+ 	rsp_els->entry_type =3D ELS_IOCB_TYPE;
+ 	rsp_els->entry_count =3D 1;
+ 	rsp_els->nport_handle =3D ~0;
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx=
+.c
+index 9fd83d1bffe0..6d8573b870bc 100644
+=2D-- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -4887,15 +4887,13 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t *vh=
+a)
+ 	    "Entered %s.\n", __func__);
+
+ 	els_cmd_map =3D dma_alloc_coherent(&ha->pdev->dev, ELS_CMD_MAP_SIZE,
+-	    &els_cmd_map_dma, GFP_KERNEL);
++					 &els_cmd_map_dma, GFP_KERNEL);
+ 	if (!els_cmd_map) {
+ 		ql_log(ql_log_warn, vha, 0x7101,
+ 		    "Failed to allocate RDP els command param.\n");
+ 		return QLA_MEMORY_ALLOC_FAILED;
+ 	}
+
+-	memset(els_cmd_map, 0, ELS_CMD_MAP_SIZE);
+-
+ 	els_cmd_map[index] |=3D 1 << bit;
+
+ 	mcp->mb[0] =3D MBC_SET_RNID_PARAMS;
+=2D-
+2.26.0
 
