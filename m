@@ -2,205 +2,111 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50216C2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519D3C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A0F2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BE32078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:08:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fmq9EUdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403889AbgDCNI0 (ORCPT
+        id S2403903AbgDCNIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:08:26 -0400
-Received: from mga05.intel.com ([192.55.52.43]:24643 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728001AbgDCNIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:08:25 -0400
-IronPort-SDR: 5jBA5CXyyVaTeLdtl8N4Ty8c2GLxNh95x6P1IMrPwDA6uJftsIf8E6OiOcU+ysUbVTncm+/8Ls
- pGseaCdHKYew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 06:08:24 -0700
-IronPort-SDR: eRbNnU/rrDVFmfPF1paXBtVE7T+boFiNmimnvsynFAx7AqUKmKsq45Gu0Hyf0/gNHc14/OXMM+
- ZhahdNoYwqYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="273943090"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Apr 2020 06:08:23 -0700
-Received: from [10.249.254.224] (abudanko-mobl.ccr.corp.intel.com [10.249.254.224])
-        by linux.intel.com (Postfix) with ESMTP id 3E6E958077B;
-        Fri,  3 Apr 2020 06:08:17 -0700 (PDT)
-Subject: Re: [PATCH v8 04/12] perf tool: extend Perf tool with CAP_PERFMON
- capability support
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <a66d5648-2b8e-577e-e1f2-1d56c017ab5e@linux.intel.com>
- <20200403110828.GL2784502@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <56648455-3650-1fa2-6364-659d92d5dc14@linux.intel.com>
-Date:   Fri, 3 Apr 2020 16:08:16 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 3 Apr 2020 09:08:45 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33146 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728001AbgDCNIp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 09:08:45 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 22so7211674otf.0;
+        Fri, 03 Apr 2020 06:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tU19EWZx8u2e2uV3dXR0FXwxIY/5U2XJW8CrROjNUIg=;
+        b=fmq9EUdhdn++eKwVsAKvmtE6dEOtCu87AzVYsS8RdLDIW9lhNi2aEJOROLq/8YC0cp
+         0NtDqpQaHOt02earYciLZFbMHdvr0oO3V04QvdXy8xdw5jfNZwJ5rCWYTGYEinHScC0b
+         QB8YAgWxNnOWYx7UZw1/Vcp2HZ7xe8MlU3mY4egH5fsefs7+83mEZoF+87uWHAG8PASB
+         6HPQCf64opNRU+9Pm7PJ1ulZVviDAVR2DvSb/2hB+xM2pqJ2/0yRYbQALF2JO9kd/UH+
+         e+Qo4mr05Nu4mst9MWQVjXl94DWlXTSQ/5MNFErnwh7ht2gB6EKnTFdrMEvc9HFjVSrR
+         O+2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=tU19EWZx8u2e2uV3dXR0FXwxIY/5U2XJW8CrROjNUIg=;
+        b=cMaXcEhCsaVfO0ia1QsaILYGvhOnOU8XmXPWh77R8dYssuhsXNTZ3ot7DVI8s5fq/O
+         U9dZQSVmxGIEpWFg9oohBACPYLNSBCcKsqMm0G/lRMtTdT4Eco+SVo0TJPBJ+6vnYLho
+         nJpSyZf3id85F3xkmBCp2a3N4+jhi9Ugn/nFacX/R9GI87ifMfqLIdOSWjp1+6k/F/Un
+         GCmwbPxJbQUL3z6IaQ7PMPZUBr5SD93nSXe1sBUepNRc6ycna01yHlnZgaHgAG3mgUAQ
+         c6Dq3HFm1BHMB0XFMRAZYsHFETmCS8nwIp8DoRzQ93g+c/NRIR6qJl5zdX4wKgfCOZ/g
+         N34g==
+X-Gm-Message-State: AGi0PuZ4Xm96hr01WQ+xA7Indew5R9dVnR5gkBGxH/TojNpwDZxhSKv3
+        Z043F4C0TStPsNN+Xa3WOw==
+X-Google-Smtp-Source: APiQypJOH5J7K90OLTvE4up+WlGYwk/WIHDu36NWekh7qDcyAQo4WCvI75rBiKzmy/uvySr5/C0L0A==
+X-Received: by 2002:a9d:644:: with SMTP id 62mr5581256otn.177.1585919323801;
+        Fri, 03 Apr 2020 06:08:43 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id 12sm2192250oii.54.2020.04.03.06.08.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 06:08:42 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
+        by serve.minyard.net (Postfix) with ESMTPSA id 0586B18016D;
+        Fri,  3 Apr 2020 13:08:42 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 08:08:40 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     openipmi-developer@lists.sourceforge.net, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Haiyue Wang <haiyue.wang@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/3] ipmi: kcs-bmc: Rework bindings to clean up DT
+ warnings
+Message-ID: <20200403130840.GR2910@minyard.net>
+Reply-To: minyard@acm.org
+References: <cover.fe20dfec1a7c91771c6bb574814ffb4bb49e2136.1576462051.git-series.andrew@aj.id.au>
+ <7734002a-181e-4baf-b9a3-af66894acc16@www.fastmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200403110828.GL2784502@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7734002a-181e-4baf-b9a3-af66894acc16@www.fastmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 03.04.2020 14:08, Jiri Olsa wrote:
-> On Thu, Apr 02, 2020 at 11:47:35AM +0300, Alexey Budankov wrote:
->>
->> Extend error messages to mention CAP_PERFMON capability as an option
->> to substitute CAP_SYS_ADMIN capability for secure system performance
->> monitoring and observability operations. Make perf_event_paranoid_check()
->> and __cmd_ftrace() to be aware of CAP_PERFMON capability.
->>
->> CAP_PERFMON implements the principal of least privilege for performance
->> monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
->> principle of least privilege: A security design principle that states
->> that a process or program be granted only those privileges (e.g.,
->> capabilities) necessary to accomplish its legitimate function, and only
->> for the time that such privileges are actually required)
->>
->> For backward compatibility reasons access to perf_events subsystem remains
->> open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
->> secure perf_events monitoring is discouraged with respect to CAP_PERFMON
->> capability.
->>
->> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->> Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+On Fri, Apr 03, 2020 at 02:20:21PM +1030, Andrew Jeffery wrote:
 > 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-Thanks! I appreciate you support.
-
-~Alexey
-
 > 
-> thanks,
-> jirka
+> On Mon, 16 Dec 2019, at 12:57, Andrew Jeffery wrote:
+> > Hello,
+> > 
+> > This is a short series reworking the devicetree binding and driver for the
+> > ASPEED BMC KCS devices. With the number of supported ASPEED BMC devicetrees the
+> > changes enable removal of more than 100 lines of warning output from dtc.
+> > 
+> > v1 can be found here:
+> > 
+> > https://lore.kernel.org/lkml/cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au/
+> > 
+> > v2 cleans up the commit message of 2/3 and changes the name of the property
+> > governing the LPC IO address for the KCS devices.
 > 
->> ---
->>  tools/perf/builtin-ftrace.c |  5 +++--
->>  tools/perf/design.txt       |  3 ++-
->>  tools/perf/util/cap.h       |  4 ++++
->>  tools/perf/util/evsel.c     | 10 +++++-----
->>  tools/perf/util/util.c      |  1 +
->>  5 files changed, 15 insertions(+), 8 deletions(-)
->>
->> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
->> index d5adc417a4ca..55eda54240fb 100644
->> --- a/tools/perf/builtin-ftrace.c
->> +++ b/tools/perf/builtin-ftrace.c
->> @@ -284,10 +284,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
->>  		.events = POLLIN,
->>  	};
->>  
->> -	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
->> +	if (!(perf_cap__capable(CAP_PERFMON) ||
->> +	      perf_cap__capable(CAP_SYS_ADMIN))) {
->>  		pr_err("ftrace only works for %s!\n",
->>  #ifdef HAVE_LIBCAP_SUPPORT
->> -		"users with the SYS_ADMIN capability"
->> +		"users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
->>  #else
->>  		"root"
->>  #endif
->> diff --git a/tools/perf/design.txt b/tools/perf/design.txt
->> index 0453ba26cdbd..a42fab308ff6 100644
->> --- a/tools/perf/design.txt
->> +++ b/tools/perf/design.txt
->> @@ -258,7 +258,8 @@ gets schedule to. Per task counters can be created by any user, for
->>  their own tasks.
->>  
->>  A 'pid == -1' and 'cpu == x' counter is a per CPU counter that counts
->> -all events on CPU-x. Per CPU counters need CAP_SYS_ADMIN privilege.
->> +all events on CPU-x. Per CPU counters need CAP_PERFMON or CAP_SYS_ADMIN
->> +privilege.
->>  
->>  The 'flags' parameter is currently unused and must be zero.
->>  
->> diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
->> index 051dc590ceee..ae52878c0b2e 100644
->> --- a/tools/perf/util/cap.h
->> +++ b/tools/perf/util/cap.h
->> @@ -29,4 +29,8 @@ static inline bool perf_cap__capable(int cap __maybe_unused)
->>  #define CAP_SYSLOG	34
->>  #endif
->>  
->> +#ifndef CAP_PERFMON
->> +#define CAP_PERFMON	38
->> +#endif
->> +
->>  #endif /* __PERF_CAP_H */
->> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->> index 816d930d774e..2696922f06bc 100644
->> --- a/tools/perf/util/evsel.c
->> +++ b/tools/perf/util/evsel.c
->> @@ -2507,14 +2507,14 @@ int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
->>  		 "You may not have permission to collect %sstats.\n\n"
->>  		 "Consider tweaking /proc/sys/kernel/perf_event_paranoid,\n"
->>  		 "which controls use of the performance events system by\n"
->> -		 "unprivileged users (without CAP_SYS_ADMIN).\n\n"
->> +		 "unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).\n\n"
->>  		 "The current value is %d:\n\n"
->>  		 "  -1: Allow use of (almost) all events by all users\n"
->>  		 "      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK\n"
->> -		 ">= 0: Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN\n"
->> -		 "      Disallow raw tracepoint access by users without CAP_SYS_ADMIN\n"
->> -		 ">= 1: Disallow CPU event access by users without CAP_SYS_ADMIN\n"
->> -		 ">= 2: Disallow kernel profiling by users without CAP_SYS_ADMIN\n\n"
->> +		 ">= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
->> +		 "      Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN\n"
->> +		 ">= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
->> +		 ">= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN\n\n"
->>  		 "To make this setting permanent, edit /etc/sysctl.conf too, e.g.:\n\n"
->>  		 "	kernel.perf_event_paranoid = -1\n" ,
->>  				 target->system_wide ? "system-wide " : "",
->> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
->> index d707c9624dd9..37a9492edb3e 100644
->> --- a/tools/perf/util/util.c
->> +++ b/tools/perf/util/util.c
->> @@ -290,6 +290,7 @@ int perf_event_paranoid(void)
->>  bool perf_event_paranoid_check(int max_level)
->>  {
->>  	return perf_cap__capable(CAP_SYS_ADMIN) ||
->> +			perf_cap__capable(CAP_PERFMON) ||
->>  			perf_event_paranoid() <= max_level;
->>  }
->>  
->> -- 
->> 2.24.1
->>
-> 
+> Ping?
+
+Sorry, I've been busy.  I've looked this over and it seems ok, and it's
+in my next tree.
+
+Thanks,
+
+-corey
