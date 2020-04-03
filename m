@@ -2,98 +2,146 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D808C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D199C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B712082F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9BD2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404334AbgDCPfv (ORCPT
+        id S2404363AbgDCPfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:35:51 -0400
-Received: from mga12.intel.com ([192.55.52.136]:61909 "EHLO mga12.intel.com"
+        Fri, 3 Apr 2020 11:35:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404171AbgDCPfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:35:51 -0400
-IronPort-SDR: 999bLMYgJypysDSYO6K+LdzvS27N2nR5fBb+2nZv71FqPv8R0XImzTqhWMNi09MHZmzIt0MSSS
- qc84Qcbj0hYA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 08:35:50 -0700
-IronPort-SDR: /8Kx6Fr3AFBUEFndItwYFkDShMvhjJOcyYzK0tosICU3Z1Mr3oLvqfzhg0ol3bpphYKwxrJrQj
- K05dBsTZ94nA==
-X-IronPort-AV: E=Sophos;i="5.72,340,1580803200"; 
-   d="scan'208";a="329197211"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.28.58]) ([10.251.28.58])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 08:35:50 -0700
-Subject: Re: [PATCH 2/2] x86/resctrl: Use appropriate API for strings
- terminated by newline
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>, kuo-lang.tseng@intel.com,
-        Ingo Molnar <mingo@redhat.com>, babu.moger@amd.com,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <cover.1585765499.git.reinette.chatre@intel.com>
- <2a51c327497738ad7012e4f185046c530dba4594.1585765499.git.reinette.chatre@intel.com>
- <20200402130625.GA1922688@smile.fi.intel.com>
- <720ab442-3e2e-bd6d-d35c-5cc5de1d9824@intel.com>
- <CAHp75VdoVxDaBYtiH8D_0DLKcwP7AAS2M7XoyrDj7LAv8cOoDA@mail.gmail.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <13499ebf-dd5f-1940-3d01-366f038d5a66@intel.com>
-Date:   Fri, 3 Apr 2020 08:35:49 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S2404171AbgDCPfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 11:35:52 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DD412077D;
+        Fri,  3 Apr 2020 15:35:51 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 11:35:49 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v2][for-next] tracing: Do not allocate buffer in
+ trace_find_next_entry() in atomic
+Message-ID: <20200403113549.7c95dcf5@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VdoVxDaBYtiH8D_0DLKcwP7AAS2M7XoyrDj7LAv8cOoDA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
 
-On 4/3/2020 12:27 AM, Andy Shevchenko wrote:
-> On Fri, Apr 3, 2020 at 12:54 AM Reinette Chatre
-> <reinette.chatre@intel.com> wrote:
->> On 4/2/2020 6:06 AM, Andy Shevchenko wrote:
->>> On Wed, Apr 01, 2020 at 11:30:48AM -0700, Reinette Chatre wrote:
+Changes since v1:
 
-...
+  I don't usually rebase my for-next branch, but its only a single patch,
+  and Masami pointed out a silly mistake in the first one. That
+  ftrace_dump() never initialized the temp_size value, and which caused the
+  WARN_ON_ONCE() added to also trigger.
 
->>>>      /* Valid input requires a trailing newline */
->>>>      if (nbytes == 0 || buf[nbytes - 1] != '\n')
->>>>              return -EINVAL;
->>>> -    buf[nbytes - 1] = '\0';
->>>
->>> The above test is not needed and comment now is misleading.
->>> WRT nbytes I believe that kernel fs code checks for that.
-> 
-> This module provides it's own kernfs_ops...
-> 
->> If nbytes is 0 it is still passed to this function. You are correct that
->> those tests are not needed though (if nbytes is 0 then
->> sysfs_match_string() will not find a match and return EINVAL via that path).
->>
->> Thank you for catching this. I'll remove those unnecessary checks.
-> 
-> ...which means that nbytes == 0 is a valid check. Please keep it
-> there. It will protect from unnecessary locking and loading CPU for
-> nothing.
-> 
+-- Steve
 
-Will do. Thank you.
 
-Reinette
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+for-next
+
+Head SHA1: 8e99cf91b99bb30e16727f10ad6828741c0e992f
+
+
+Steven Rostedt (VMware) (1):
+      tracing: Do not allocate buffer in trace_find_next_entry() in atomic
+
+----
+ kernel/trace/trace.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+---------------------------
+commit 8e99cf91b99bb30e16727f10ad6828741c0e992f
+Author: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Date:   Wed Apr 1 22:44:46 2020 -0400
+
+    tracing: Do not allocate buffer in trace_find_next_entry() in atomic
+    
+    When dumping out the trace data in latency format, a check is made to peek
+    at the next event to compare its timestamp to the current one, and if the
+    delta is of a greater size, it will add a marker showing so. But to do this,
+    it needs to save the current event otherwise peeking at the next event will
+    remove the current event. To save the event, a temp buffer is used, and if
+    the event is bigger than the temp buffer, the temp buffer is freed and a
+    bigger buffer is allocated.
+    
+    This allocation is a problem when called in atomic context. The only way
+    this gets called via atomic context is via ftrace_dump(). Thus, use a static
+    buffer of 128 bytes (which covers most events), and if the event is bigger
+    than that, simply return NULL. The callers of trace_find_next_entry() need
+    to handle a NULL case, as that's what would happen if the allocation failed.
+    
+    Link: https://lore.kernel.org/r/20200326091256.GR11705@shao2-debian
+    
+    Fixes: ff895103a84ab ("tracing: Save off entry when peeking at next entry")
+    Reported-by: kernel test robot <rong.a.chen@intel.com>
+    Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6519b7afc499..8d2b98812625 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3472,6 +3472,9 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
+ 	return next;
+ }
+ 
++#define STATIC_TEMP_BUF_SIZE	128
++static char static_temp_buf[STATIC_TEMP_BUF_SIZE];
++
+ /* Find the next real entry, without updating the iterator itself */
+ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+ 					  int *ent_cpu, u64 *ent_ts)
+@@ -3480,13 +3483,26 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+ 	int ent_size = iter->ent_size;
+ 	struct trace_entry *entry;
+ 
++	/*
++	 * If called from ftrace_dump(), then the iter->temp buffer
++	 * will be the static_temp_buf and not created from kmalloc.
++	 * If the entry size is greater than the buffer, we can
++	 * not save it. Just return NULL in that case. This is only
++	 * used to add markers when two consecutive events' time
++	 * stamps have a large delta. See trace_print_lat_context()
++	 */
++	if (iter->temp == static_temp_buf &&
++	    STATIC_TEMP_BUF_SIZE < ent_size)
++		return NULL;
++
+ 	/*
+ 	 * The __find_next_entry() may call peek_next_entry(), which may
+ 	 * call ring_buffer_peek() that may make the contents of iter->ent
+ 	 * undefined. Need to copy iter->ent now.
+ 	 */
+ 	if (iter->ent && iter->ent != iter->temp) {
+-		if (!iter->temp || iter->temp_size < iter->ent_size) {
++		if ((!iter->temp || iter->temp_size < iter->ent_size) &&
++		    !WARN_ON_ONCE(iter->temp == static_temp_buf)) {
+ 			kfree(iter->temp);
+ 			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
+ 			if (!iter->temp)
+@@ -9203,6 +9219,9 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
+ 
+ 	/* Simulate the iterator */
+ 	trace_init_global_iter(&iter);
++	/* Can not use kmalloc for iter.temp */
++	iter.temp = static_temp_buf;
++	iter.temp_size = STATIC_TEMP_BUF_SIZE;
+ 
+ 	for_each_tracing_cpu(cpu) {
+ 		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
