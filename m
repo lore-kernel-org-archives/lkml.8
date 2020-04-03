@@ -2,145 +2,103 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A0DC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665CDC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1307820737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="DvDrzamu"
+	by mail.kernel.org (Postfix) with ESMTP id 3EE902073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390937AbgDCMVy (ORCPT
+        id S2403938AbgDCMWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:21:54 -0400
-Received: from mail-bn8nam12on2124.outbound.protection.outlook.com ([40.107.237.124]:39041
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728140AbgDCMVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:21:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KX5E3bo+ZSNCxi/WSIK25DuGmd2jk62LmGNdueegLK3u8WjafQjkh22aDDGFObnwKYjGq3M4yi+2CpRbW8A5Z9w0wTznS4aWOxdzN+BRqdX8Wf7HjyxnLAVWokMsaXq2KMcRlQ9+7ZYR144uylHmlry8gImE+2BBikc/BAWKFEmRrNez2IW6VBDfT/gFNeujas4eP6ESleA75ShEI/9BdOntbM3aUQ3p0H25wIshEKabDexGeIy++Eng3Qi+7LbX442q8aqiv9vCpGYO1XK67Udrda6gIhUtTrJSTfFKs1rNKEAHbx5Q+Y5ndSsIlLXzDEJLQb042QZwIKgBeaQFug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LnU9SZ7p/LUsAewRE/akMglyvqmV5W7DpOIi/770cWM=;
- b=RP8R1dNhTyBKeTLIALPOlaTtlGDgfgkb3mo06nCiWvSQCdGk4/FTAuqX2R+eCjO9zN2AMoQNqzwQ3GgLh7lupCZjtUnBqb1WQ/Ju1CZYAo4x3TV2G69e6hcF4l0oZdS5aATU7XTfHdVIYRljpMwXjLQ+ilddyefPHqeok7ap0j9gCmergae3EUq2oH03KLfUq7gx20n4ShiWj4PXRIxTE3ACYipytXQ9gjhHz8GcMrt5XmRRdhITiF/CIf0/qu0m8P9INXEU6yUTPkMvOo7Rdka3U5jw2Em8pYMmfpEsmEW+HyXMKy7+70jyWUdObUnb6XUTaVdcV2CLlen2q22YUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LnU9SZ7p/LUsAewRE/akMglyvqmV5W7DpOIi/770cWM=;
- b=DvDrzamu3VdOQnMADdsckkkEQB/MiDsA08hki/Kl33yOUEXmojaiHC1w0aT+7MoHrjJ2Ec7X1e677wIFQmgxddleYbLG8i0QmjlZgeE/xR7Xv1fGrwW3dBzxibQBavSddvfWsTIkwBjY8dbKgoqcIETv3n4Ry2cB3dEo+rQCgcg=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0924.namprd21.prod.outlook.com (2603:10b6:302:10::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.4; Fri, 3 Apr
- 2020 12:21:47 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.002; Fri, 3 Apr 2020
- 12:21:47 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     YueHaibing <yuehaibing@huawei.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next] hv_debugfs: Make hv_debug_root static
-Thread-Topic: [PATCH -next] hv_debugfs: Make hv_debug_root static
-Thread-Index: AQHWCZIjVQU/P4vQBEiV/n4KA05cSKhnUWGg
-Date:   Fri, 3 Apr 2020 12:21:47 +0000
-Message-ID: <MW2PR2101MB105222D949FB4944EE647F2FD7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200403082845.22740-1-yuehaibing@huawei.com>
-In-Reply-To: <20200403082845.22740-1-yuehaibing@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-03T12:21:45.3772385Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=700a9e34-20b5-4557-beda-d128ec16fa16;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 78662916-1c05-4bf8-826a-08d7d7c99443
-x-ms-traffictypediagnostic: MW2PR2101MB0924:|MW2PR2101MB0924:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB0924A66FEA2ABCE62C397A8AD7C70@MW2PR2101MB0924.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:287;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(396003)(39860400002)(346002)(376002)(136003)(26005)(5660300002)(2906002)(4744005)(186003)(9686003)(71200400001)(316002)(7696005)(81166006)(82950400001)(8676002)(86362001)(82960400001)(66556008)(55016002)(54906003)(66476007)(478600001)(4326008)(6506007)(110136005)(81156014)(66946007)(66446008)(8936002)(64756008)(52536014)(10290500003)(8990500004)(33656002)(76116006);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LFJw2eJ4yowwt/iniOIMTqxaVoMIGvUUxLg6eBZ3SSJfRCqIluj7+5t+SdrMdWEN9Fxm3u8naKQjmS86InMBS9Fquu8PwrUFrLDIUU5MRDR9yFN0k5+Nef8ebUyArPtCSVIY+hE61uNlujs3saJKzKYG8SmXREg3N3ClS7hOWtmWwqbdXsRlJWeuPjTMrMX3XV4UxCt1cDzDBfQsUQu/vCuOOSOJaHA+PHInXYN7Hdc2+UgTh67tZqXVASjzMPk6nGGcyJ64lYEGLk+dVTcvGFn/YlD/gk+ZDF4BKioTA8IzBrhfBb3jnEnLe5ZW1TPec1umsMBrvqQbdYllBSZ7qXUuADHJ78jvpn8/oXAsbnq7nfTZJ8FWldW82I7C+5Cl0WVs/XzYXJunv4UfdECOBdt6OEj57/T56IhCyDEkGDzF2vAsPjYyGodfGe3DFDkY
-x-ms-exchange-antispam-messagedata: Ofz+rywIRxQOsHRXjGON5CeRNdlybvPUprYAi3eDgl9/V7OnT0gXesJVsDFvIL1MdfP3eJsTh5hQ4zkzZK81i4/IiH/VXuWCQxF0WZo/CxCeWMwAGwjO9KFMcMFEbm743zaXGg57tkYxF/BRObBiOg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 3 Apr 2020 08:22:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55678 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbgDCMV7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 08:21:59 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 953162984BA
+Message-ID: <a36a825bc048821b4b7088feea71bd31e9e17211.camel@collabora.com>
+Subject: Re: [PATCH] cedrus: Drop unneeded CONFIG_OF dependency
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, Hans Verkuil <hverkuil@xs4all.nl>,
+        Maxime Ripard <mripard@kernel.org>
+Date:   Fri, 03 Apr 2020 09:21:49 -0300
+In-Reply-To: <20200403082206.GA626942@aptenodytes>
+References: <20200402194653.13535-1-ezequiel@collabora.com>
+         <20200403082206.GA626942@aptenodytes>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78662916-1c05-4bf8-826a-08d7d7c99443
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 12:21:47.1355
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M7wjdFRqZN0k6IhQADFsY1eyCyiRKqHWBA4Is1Bk44vHDez2HzNeM7kCyl0Y/GpCa6yAjxA9NmTJnHxKJdQLQ0fHm3bmThqi6GkJAZsPKdU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0924
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com> Sent: Friday, April 3, 2020 1:29 A=
-M
->=20
-> Fix sparse warning:
->=20
-> drivers/hv/hv_debugfs.c:14:15: warning: symbol 'hv_debug_root' was not de=
-clared. Should
-> it be static?
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/hv/hv_debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/hv_debugfs.c b/drivers/hv/hv_debugfs.c
-> index 8a2878573582..ccf752b6659a 100644
-> --- a/drivers/hv/hv_debugfs.c
-> +++ b/drivers/hv/hv_debugfs.c
-> @@ -11,7 +11,7 @@
->=20
->  #include "hyperv_vmbus.h"
->=20
-> -struct dentry *hv_debug_root;
-> +static struct dentry *hv_debug_root;
->=20
->  static int hv_debugfs_delay_get(void *data, u64 *val)
->  {
-> --
-> 2.17.1
->=20
+On Fri, 2020-04-03 at 10:22 +0200, Paul Kocialkowski wrote:
+> Hi Ezequiel,
+> 
+> On Thu 02 Apr 20, 16:46, Ezequiel Garcia wrote:
+> > The driver is perfectly capable of being built without CONFIG_OF.
+> > Remove this dependency, which is useful for compile-only tests.
+> 
+> Thanks for the patch!
+> 
+> Alas, the driver won't do anything useful without OF enabled, so it seems
+> useful to keep that dependency.
+> 
 
-Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+I'm not convinced about this argument, I like to have
+dependencies on things the driver needs to compile
+(except the machine option, see below).
+
+> I would suggest making this a: depends on OF || COMPILE_TEST
+> instead. What do you think?
+> 
+
+Although there are a handful, I don't see many drivers doing that.
+To be honest, I don't like this much.
+
+Also, if you want to make sure this driver can only be selected
+where it makes sense, you consider having a ARCH_SUNXI || COMPILE_TEST.
+
+IMO, the dependency on OF should be dropped as well.
+
+Cheers,
+Eze
+
+> Cheers,
+> 
+> Paul
+> 
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  drivers/staging/media/sunxi/cedrus/Kconfig | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/Kconfig b/drivers/staging/media/sunxi/cedrus/Kconfig
+> > index 17733e9a088f..59b8d1b29865 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/Kconfig
+> > +++ b/drivers/staging/media/sunxi/cedrus/Kconfig
+> > @@ -3,7 +3,6 @@ config VIDEO_SUNXI_CEDRUS
+> >  	tristate "Allwinner Cedrus VPU driver"
+> >  	depends on VIDEO_DEV && VIDEO_V4L2 && MEDIA_CONTROLLER
+> >  	depends on HAS_DMA
+> > -	depends on OF
+> >  	depends on MEDIA_CONTROLLER_REQUEST_API
+> >  	select SUNXI_SRAM
+> >  	select VIDEOBUF2_DMA_CONTIG
+> > -- 
+> > 2.26.0.rc2
+> > 
+
 
