@@ -2,155 +2,353 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E77C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367C5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3E8206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:07:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="DjhDXCzb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xLEZttoh"
+	by mail.kernel.org (Postfix) with ESMTP id ADF41206F6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403870AbgDCRHZ (ORCPT
+        id S2403971AbgDCRIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:07:25 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:34715 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728069AbgDCRHZ (ORCPT
+        Fri, 3 Apr 2020 13:08:24 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:65177 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390900AbgDCRIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:07:25 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 3AD535C0348;
-        Fri,  3 Apr 2020 13:07:24 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Fri, 03 Apr 2020 13:07:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=BuSbOOS98bnGguD48Whxfaqib+
-        qZKhz5N9W1r3wN3ek=; b=DjhDXCzb10cj8sS7/Wv/JKmySCvnMfA4RgKJ08i5IR
-        qwcswnqet44YWw53IrsYTizO6tXvwG55aw+YVPEwjw4SwO4N7qeM3G5Rx7WkhYLj
-        deA5fbb/RrKhxkvDoJ7Y8gVzciYQziyNa3JVbqWsDM7OSgS9RJvUtJ+2Zo+bjlA8
-        RhRy3/CLj4VQ8bB71oPl3PDbBl5Lp4j+qorslROT63zbMxxnZaMfzFsmT16nQ+6f
-        grLs8EO0YigV7bcexERmBMtX3IJOg/oh2V78mpokMOwMP3ZuMOtHC/YIPa5Jx27r
-        hIeWFkz14+1h5+zPXg0G/QWPXNqVvrKj8eqbkTYWuPGQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=BuSbOOS98bnGguD48
-        Whxfaqib+qZKhz5N9W1r3wN3ek=; b=xLEZttohdp0dOostB8EKiInhZIz+pV5kF
-        G1n5GEVnPfFpxWp9TzrUrwD/qxe0DoMjsrpkXvxH1Sflcf32TZ4ExCkLLKERe4rk
-        RgTwws/dKxcm3Kk8VE0Lb4+vAp+RDG2LqceFz/8/VYBI4ipJO+ya2jkJM+lJxsie
-        gua086nrmW0Dt7I006NTNu+ErZGxLZF80aBUFzghOr4fh4beJ3IFEUhLQ1f9REGH
-        TwMDn23Z+VN1LDiFtPy+ugFqsYGuL/8v94j9R+9nXBcvRZTDBcAEZgJYWhPZI0xU
-        z45WpP5YXFV2HlDf+dlClZ6ATz5EOZ1kWpZXgjblzGHuvEW36D93g==
-X-ME-Sender: <xms:S22HXm1dWnp15H82qHHtoTvZtFcLX9ak3I5voJI3aZa_JcARWMUCiA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdeigddutdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetlhihshhsrgcu
-    tfhoshhsuceohhhisegrlhihshhsrgdrihhsqeenucfkphepkeegrddukeegrddvfeegrd
-    dukedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    qhihlhhishhsseigvddvtddrqhihlhhishhsrdhnvght
-X-ME-Proxy: <xmx:S22HXmmY02gzhTOdsowfKaVdNLOrJrRWnFLFPiYVsKm0kXsnhziBjw>
-    <xmx:S22HXhgumOmRIeGKL0xC5h7FQ2lSkBswa7zqMCyW2-iveTTtaoF6Qg>
-    <xmx:S22HXtR9zEQivseN4eIVBpY8980ZdjbPlAs5QXTuj34nrsSxU-JzYw>
-    <xmx:TG2HXsGXDrbQJPSrRUd8Nnm9e8d0isPKC1dIfQugp7PmW983Yh6UFA>
-Received: from x220.qyliss.net (p54b8eab6.dip0.t-ipconnect.de [84.184.234.182])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 73FBB306CF5E;
-        Fri,  3 Apr 2020 13:07:23 -0400 (EDT)
-Received: by x220.qyliss.net (Postfix, from userid 1000)
-        id 8D3D04D4; Fri,  3 Apr 2020 17:07:21 +0000 (UTC)
-From:   Alyssa Ross <hi@alyssa.is>
-To:     linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alyssa Ross <hi@alyssa.is>
-Subject: [PATCH] Documentation: sysrq: fix RST formatting
-Date:   Fri,  3 Apr 2020 17:07:01 +0000
-Message-Id: <20200403170701.10852-1-hi@alyssa.is>
-X-Mailer: git-send-email 2.24.1
+        Fri, 3 Apr 2020 13:08:24 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 1cd5acd4f04fa9d9; Fri, 3 Apr 2020 19:08:21 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+Date:   Fri, 03 Apr 2020 19:08:20 +0200
+Message-ID: <5548779.hf7hnL9GhR@kreacher>
+In-Reply-To: <Pine.LNX.4.44L0.2003291129360.3311-100000@netrider.rowland.org>
+References: <Pine.LNX.4.44L0.2003291129360.3311-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"On x86" and "On SPARC" are now definition list terms, like
-"On PowerPC", "On other", and "On all".
+On Sunday, March 29, 2020 6:27:38 PM CEST Alan Stern wrote:
+> On Sun, 29 Mar 2020, Rafael J. Wysocki wrote:
+> 
+> > On Sat, Mar 28, 2020 at 8:58 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> 
+> > > > > A large part of the problem is related to an inconsistency between the
+> > > > > documentation and the code.  include/linux/pm.h says that
+> > > > > DPM_FLAG_SMART_SUSPEND tells bus types and PM domains about what the
+> > > > > driver wants.  This strongly implies that the PM core will ignore
+> > > > > SMART_SUSPEND.  But in fact the core does check that flag and takes its
+> > > > > own actions if the device has no subsystem-level callbacks!
+> > > >
+> > > > Right, which is because in those cases there is no "middle layer" between
+> > > > the driver and the core and if you want the driver to work both with
+> > > > something like genpd or the ACPI PM domain and without anything like that,
+> > > > the core needs to take those actions for consistency.
+> > >
+> > > Sure, the core is acting as a proxy for the missing subsystem
+> > > callbacks.  Still, it should be documented properly.
+> > >
+> > > Also, couldn't we simplify the behavior?  Right now the core checks
+> > > that there are no subsystem-level callbacks for any of _early, _late,
+> > > and _noirq variants before skipping a callback.  Couldn't we forget
+> > > about all that checking and simply skip the device-level callbacks?
+> > > (Yes, I realize this could lead to inconsistent behavior if the
+> > > subsystem has some callbacks defined but not others -- but subsystems
+> > > should never do that, at least, not if it would lead to trouble.)
+> > 
+> > In quite a few cases the middle layer has nothing specific to do in a
+> > given phase of suspend/resume, but the driver may.
+> > 
+> > Subsystems haven't been required to provide callbacks for all phases
+> > so far, so this change would require some modifications in there.
+> > 
+> > I actually prefer the core to do more, even if that means more
+> > complexity in it, to avoid possible subtle differences in behavior
+> > between subsystems.
+> 
+> What I meant was that it might be reasonable to get rid of the
+> no_subsys_cb checks.  For example, change __device_suspend_noirq() as
+> follows:
+> 
+> -	no_subsys_cb = !dpm_subsys_suspend_late_cb(dev, state, NULL);
+> -
+> -	if (dev_pm_smart_suspend_and_suspended(dev) && no_subsys_cb)
+> +	if (dev_pm_smart_suspend_and_suspended(dev))
+> 		goto Skip;
+> 
+> with similar changes to the _suspend_late, _resume_noirq, and
+> _resume_early.  In each stage, we would bypass the driver's callback
+> if SMART_SUSPEND was set and there was no subsystem-level callback for
+> _that_ stage -- rather than there being no subsystem-level callbacks
+> for _any_ of the stages.
 
-The Credits list is now a bulleted list, like lots of Credits lists in
-other files.  This prevents the list from becoming a single long,
-unpunctuated sentence in the generated documentation.
+I understand that.
 
-I also did a couple of other tiny readability improvements to the
-"How do I use the magic SysRq key?" section while I was there.
+As mentioned in the other message, I attempted to allow
+pm_runtime_force_suspend/resume() to be used along with setting SMART_SUSPEND,
+but that looks like a mistake now.
 
-Signed-off-by: Alyssa Ross <hi@alyssa.is>
----
- Documentation/admin-guide/sysrq.rst | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+I agree that skipping the driver-level callbacks regardless of what is provided
+by the subsystem would be more consistent.
 
-diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
-index 72b2cfb066f4..a46209f4636c 100644
---- a/Documentation/admin-guide/sysrq.rst
-+++ b/Documentation/admin-guide/sysrq.rst
-@@ -48,9 +48,10 @@ always allowed (by a user with admin privileges).
- How do I use the magic SysRq key?
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
--On x86   - You press the key combo :kbd:`ALT-SysRq-<command key>`.
-+On x86
-+	You press the key combo :kbd:`ALT-SysRq-<command key>`.
- 
--.. note::
-+	.. note::
- 	   Some
-            keyboards may not have a key labeled 'SysRq'. The 'SysRq' key is
-            also known as the 'Print Screen' key. Also some keyboards cannot
-@@ -58,14 +59,15 @@ On x86   - You press the key combo :kbd:`ALT-SysRq-<command key>`.
- 	   have better luck with press :kbd:`Alt`, press :kbd:`SysRq`,
- 	   release :kbd:`SysRq`, press :kbd:`<command key>`, release everything.
- 
--On SPARC - You press :kbd:`ALT-STOP-<command key>`, I believe.
-+On SPARC
-+	You press :kbd:`ALT-STOP-<command key>`, I believe.
- 
- On the serial console (PC style standard serial ports only)
-         You send a ``BREAK``, then within 5 seconds a command key. Sending
-         ``BREAK`` twice is interpreted as a normal BREAK.
- 
- On PowerPC
--	Press :kbd:`ALT - Print Screen` (or :kbd:`F13`) - :kbd:`<command key>`,
-+	Press :kbd:`ALT - Print Screen` (or :kbd:`F13`) - :kbd:`<command key>`.
-         :kbd:`Print Screen` (or :kbd:`F13`) - :kbd:`<command key>` may suffice.
- 
- On other
-@@ -73,7 +75,7 @@ On other
-         let me know so I can add them to this section.
- 
- On all
--	write a character to /proc/sysrq-trigger.  e.g.::
-+	Write a character to /proc/sysrq-trigger.  e.g.::
- 
- 		echo t > /proc/sysrq-trigger
- 
-@@ -282,7 +284,7 @@ Just ask them on the linux-kernel mailing list:
- Credits
- ~~~~~~~
- 
--Written by Mydraal <vulpyne@vulpyne.net>
--Updated by Adam Sulmicki <adam@cfar.umd.edu>
--Updated by Jeremy M. Dolan <jmd@turbogeek.org> 2001/01/28 10:15:59
--Added to by Crutcher Dunnavant <crutcher+kernel@datastacks.com>
-+- Written by Mydraal <vulpyne@vulpyne.net>
-+- Updated by Adam Sulmicki <adam@cfar.umd.edu>
-+- Updated by Jeremy M. Dolan <jmd@turbogeek.org> 2001/01/28 10:15:59
-+- Added to by Crutcher Dunnavant <crutcher+kernel@datastacks.com>
--- 
-2.24.1
+> > > > > Furthermore, the PM core's actions don't seem to make sense.  If the
+> > > > > flag is set and the device is runtime-suspended when the system sleep
+> > > > > begins, the core will skip issuing the suspend_late and suspend_noirq
+> > > > > callbacks to the driver.  But it doesn't skip issuing the suspend
+> > > > > callback!  I can't figure that out.
+> > > >
+> > > > That's because if the core gets to executing ->suspend_late, PM-runtime has
+> > > > been disabled for the device and if the device is runtime-suspended at that
+> > > > point, so (at least if SMART_SUSPEND is set for the device) there is no reason
+> > > > to do anything more to it.
+> > >
+> > > But if SMART_SUSPEND is set and the device is runtime-suspended, why
+> > > issue the ->suspend callback?
+> > 
+> > The driver itself or the middle-layer may want to resume the device.
+> > 
+> > Arguably, it may do that in ->prepare() too, but see below.
+> > 
+> > > Why not just do pm_runtime_disable()
+> > > then (to prevent the device from resuming) and skip the callback?
+> > 
+> > Because another driver may want to runtime-resume that device in order
+> > to use it for something before ->suspend_late().  Of course, you may
+> > argue that this means a missing device link or similar, so it is not
+> > clear-cut.
+> > 
+> > The general rule is that "synchronous" PM-runtime can be expected to
+> > work before ->suspend_late(), so ->suspend() callbacks should be able
+> > to use it safely in all cases in principle.
+> 
+> (With one exception: Since the PM core does pm_runtime_get_noresume()  
+> during the prepare stage, going _into_ runtime suspend is impossible
+> during ->prepare and ->suspend.  Of course, drivers can always call 
+> their runtime_suspend routines directly, but that wouldn't affect the 
+> power.runtime_status value.)
+> 
+> > That expectation goes against direct_complete in some cases, so
+> > drivers need to set NEVER_SKIP (or whatever it will be called in the
+> > future) to avoid that problem.
+> 
+> Ah, okay.  Very well, let's spell this out explicitly in the
+> documentation; it's an important difference.
+> 
+> > > > > Furthermore, the decisions about
+> > > > > whether to skip the resume_noirq, resume_early, and resume callbacks
+> > > > > are based on different criteria from the decisions on the suspend side.
+> > > >
+> > > > Right, because there are drivers that don't want devices to stay in suspend
+> > > > after system resume even though they have been left in suspend by it.
+> > >
+> > > This suggests that sometimes we may want to issue non-matching
+> > > callbacks.  For example, ->resume_noirq, ->resume_early, and ->resume
+> > > but not ->suspend, ->suspend_late, or ->suspend_noirq.  Is that what
+> > > you are saying?
+> > 
+> > Yes.
+> > 
+> > As per devices.rst:
+> > 
+> > "the driver must be prepared to
+> > cope with the invocation of its system-wide resume callbacks back-to-back with
+> > its ``->runtime_suspend`` one (without the intervening ``->runtime_resume`` and
+> > so on) and the final state of the device must reflect the "active" runtime PM
+> > status in that case."
+> 
+> Here would also be a good place to mention the difference between "keep
+> the device in runtime suspend" and "not issue the various resume
+> callbacks".  In theory, a subsystem and a driver could collaborate to
+> make their resume-side callbacks keep the device runtime-suspended, so
+> these two concepts are not identical.
+> 
+> Alternatively, we could specify that this sort of thing is never 
+> allowed: When the ->resume callback returns, the device _must_ be 
+> powered-up and runtime-active.  If we do this, then the _only_ way to 
+> avoid powering up the device (and to let it remain in runtime suspend) 
+> is for the core to skip issuing the resume-side callbacks.  Or at 
+> least, skip issuing the ->resume callback.
+
+Basically, all devices with SMART_SUSPEND set whose late/noirq suspend callbacks
+were skipped can be left in suspend during system-wide resume by skipping their
+callbacks, so that they can be resumed by PM-runtime (that becomes kind of like
+direct-complete at that point), but some drivers may not want that for earlier
+device response after system-wide resume (if it is resumed by the system-wide
+code, it will be immediately ready when user space is unfrozen).
+
+It is expected that LEAVE_SUSPENDED will be used along with SMART_SUSPEND unless
+the above is the case.
+
+> > > > > SMART_SUSPEND seems to have two different meanings.  (1) If the device
+> > > > > is already in runtime suspend when a system sleep starts, skip the
+> > > > > suspend_late and suspend_noirq callbacks.  (2) Under certain (similar)
+> > > > > circumstances, skip the resume callbacks.  The documentation only
+> > > > > mentions (1) but the code also handles (2).
+> > > >
+> > > > That's because (2) is the THAW case and I was distracted before I got
+> > > > to documenting it properly.  Sorry.
+> > > >
+> > > > The problem is that if you leave the device in runtime suspend, calling
+> > > > ->freeze_late() or ->freeze_noirq() on it is not useful and if you have
+> > > > skipped those, running the corresponding "thaw" callbacks is not useful
+> > > > either (what would they do, specifically?).
+> > > >
+> > > > There is a whole problem of whether or not devices should be left in
+> > > > runtime suspend during hibernation and I have not had a chance to get
+> > > > to the bottom of that yet.
+> > >
+> > > Not only that.  The distinction between SMART_SUSPEND and
+> > > direct_complete is rather subtle, and it doesn't seem to be carefully
+> > > explained anywhere.  In fact, I'm not sure I understand it myself.  :-)
+> > > For example, the direct_complete mechanism is very careful about not
+> > > leaving a device in runtime suspend if a descendant (or other dependent
+> > > device) will remain active.  Does SMART_SUSPEND behave similarly?  If
+> > > so, it isn't documented.
+> > 
+> > The difference is that SMART_SUSPEND allows the ->suspend callback to
+> > be invoked which may decide to resume the device (or reconfigure it
+> > for system wakeup if that doesn't require resuming it).  IOW, this
+> > means "I can cope with a runtime-suspended device going forward".
+> > [But if the device is still runtime-suspended during ->suspend_late(),
+> > its configuration is regarded as "final".]
+> > 
+> > In turn, direct_complete means something like "if this device is
+> > runtime-suspended, leave it as is and don't touch it during the whole
+> > suspend-resume cycle".
+> 
+> Right; let's spell this out in the documentation too.
+> 
+> > > > > At a couple of points in the code, THAW and RESTORE events are each
+> > > > > treatedly specially, with no explanation.
+> > > >
+> > > > Right, which is related to the kind of work in progress situation regarding
+> > > > the flags and hibernation mentioned above.  Again, sorry about that.
+> > >
+> > > I haven't thought about those issues as much as you have.  Still, it
+> > > seems obvious that the FREEZE/THAW phases should be very happy to leave
+> > > devices in runtime suspend throughout (without even worrying about
+> > > wakeup settings), and the RESTORE phase should always bring everything
+> > > back out of runtime suspend.
+> > 
+> > These were exactly my original thoughts, but then when I started to
+> > consider possible interactions the restore kernel (which also carries
+> > out the "freeze" transition before jumping into the image kernel), it
+> > became less clear.
+> > 
+> > The concerns is basically whether or not attempting to power on
+> > devices that are already powered on can always be guaranteed to work.
+> 
+> This doesn't affect THAW, because during THAW the driver knows what
+> state the device is in.  It only affects RESTORE.  But during RESTORE
+> the driver really doesn't know anything about the device state, even
+> with the current code.  The restore kernel doesn't even know whether
+> the boot kernel put the device through a FREEZE transition, because
+> it's possible that the driver was in a module that hadn't been loaded
+> yet when the resume-from-hibernation started.
+> 
+> Thus, drivers face this problem already.  I don't think we need to
+> worry about it.
+
+OK
+
+> > > What to do during the POWEROFF phase isn't so clear, because it depends
+> > > on how the platform handles the poweroff transition.
+> > 
+> > POWEROFF is exactly analogous to SUSPEND AFAICS.
+> 
+> The difference is that on many platforms (such as desktop PCs) the
+> POWEROFF callbacks don't have to power-down the device, because the
+> firmware will power _everything_ off (except the devices needed for
+> wakeup, of course).  But on other platforms this isn't true, so on them
+> POWEROFF does need to behave like SUSPEND.
+
+And there are platforms where the firmware turns off everything (except for
+wakeup devices) at the end of system-wide suspend too.
+
+There really isn't that much of a difference in general.
+
+> > > Okay, let's start with direct_complete.  The direct_complete mechanism
+> > > is applied to the SUSPEND and RESUME phases under the following
+> > > conditions:
+> > >
+> > >         DPM_FLAG_NEVER_SKIP (or better, DPM_FLAG_NO_DIRECT_COMPLETE)
+> > >         is clear;  [Incidentally, since a driver can set this flag
+> > >         whenever its ->prepare routine returns 0, why do we need
+> > >         DPM_FLAG_SMART_PREPARE?]
+> > 
+> > Because the former allows the driver to avoid providing a ->prepare
+> > callback always returning 1.
+> 
+> Do you mean NEVER_SKIP allows the driver to avoid providing a ->prepare 
+> callback which always returns _0_?  If that's not what you meant, I 
+> don't understand.
+
+Yes, I thought 0 and wrote 1, sorry.
+
+> > >         Either the device has no system-PM callbacks at all or else the
+> > >         ->prepare callback returns a positive value;
+> > 
+> > Why so?
+> 
+> Isn't that exactly what __device_prepare() does?  After your latest 
+> patch, we have:
+> 
+> 	dev->power.direct_complete = state.event == PM_EVENT_SUSPEND &&
+> 		(ret > 0 || dev->power.no_pm_callbacks) &&
+> 		!dev_pm_test_driver_flags(dev, DPM_FLAG_NEVER_SKIP);
+> 
+> which is exactly what I said, isn't it?
+
+I misread what you wrote, so agreed.
+
+> > >         All of the device's descendants and dependents also want to use
+> > >         direct_complete;
+> > 
+> > Yes.
+> > 
+> > >         Neither the device nor any of its descendants/dependents is
+> > >         enabled for wakeup;
+> > 
+> > Yes.
+> > 
+> > >         The device is runtime suspended just before the ->suspend
+> > >         callback would normally be issued.
+> > 
+> > Yes.
+> > 
+> > > When the mechanism applies, none of the suspend or resume callbacks (in
+> > > any of their normal, _early, _late, or _noirq variants) are issued,
+> > > only ->complete.  Consequently the device remains in runtime suspend
+> > > throughout the system sleep.
+> > >
+> > > Currently, direct_complete is never applied during any of the system
+> > > hibernation phases (FREEZE, THAW, POWEROFF, RESTORE).  This may change
+> > > in the future.
+> > >
+> > > Is this description correct and complete?
+> > 
+> > It is mostly. :-)
+> 
+> I forgot to mention that if power.syscore is set then none of these
+> mechanisms apply because none of the callbacks are issued.  Does
+> anything else need to be changed?
+
+No, I don't think so.
+
+
 
