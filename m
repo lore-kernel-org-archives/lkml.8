@@ -2,107 +2,211 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0B8C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76509C2BA18
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DEC208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43081206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p9IKbbWm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ozAcod74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388450AbgDCFll (ORCPT
+        id S1732939AbgDCFmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 01:41:41 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34584 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729349AbgDCFlj (ORCPT
+        Fri, 3 Apr 2020 01:42:36 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39150 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730025AbgDCFmg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 01:41:39 -0400
-Received: by mail-pj1-f67.google.com with SMTP id q16so594033pje.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 22:41:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mG2V4EKWwLpm65cedW0xiBMYuTKohTKduGAcO+0CPJM=;
-        b=p9IKbbWmo+8ay7jVcXtAJ6529VfEyJiUqf737Pl6QykFrIYG3kbMKiyH/JfBVGIdEu
-         xoS4Ij+yPz0Z7pP/3/xvyLjOPcHSABr7l1J+voalSVUTcRrjdAwWjAiiGP2stspITrL3
-         m/sUXF9YBDiqg5CY1wHuOl2v/8vKyEjFgQGzG6LaD/jJtJJy2P+PAOWaWiBcKuzqNGN9
-         twj9KQkpDOAti15kOgHbolqV+ZbPli8B0GfHpUdt4uxhDWnXDvMnNuMlJVKy2Yr2csdh
-         7Hl+kUMZSX7PGTcmelYMFstVLpjw7AYh5O9HiI/1KtEZLQ1nJEVyPCTVl7Dci09lAT5B
-         +oJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mG2V4EKWwLpm65cedW0xiBMYuTKohTKduGAcO+0CPJM=;
-        b=DBYSYA6yBvQ+yojkSI1rbnGk7scAeaoJ/0Je6Lh31VMwgeF4YTFKlAnZIPLxebgTYx
-         5sEF7gvLT5qdnjdm4+6AR2kmRT/DlNhRk2uaiBylgPXmqT6gJJgdh5TS3Sd65dx7yGbg
-         l9ROF9N9zlLoiJXRZfN+gmxB/bZnRRM1Fy80iAotOiNlucziq/G/Nrmk9ZRsIfc9fq3J
-         D1AkqKeOqzvkv8d2eum8My45uqSGaOJQQAklz9mJVRvhJjcaV7a87CRHuuF4q1DvDDBj
-         IggxzGrUrg2ls6sb8SU9kb8VQtxBoa0DtQzLhwFh38l87csvFwqTUb2Ok6nIeyMwedQO
-         k1Nw==
-X-Gm-Message-State: AGi0PuZEZkytKwDRmtUJ/g6jRZ/lbFEl5vBr+s/BSYrsnpypMObLVIvo
-        WL9x75JKy02VtwekSMyzu0g=
-X-Google-Smtp-Source: APiQypIBtThaBXq8TI/cXNf01mMd+DoVHNDKsIXJoa871gdbLpCj4JU6yTLpoe94AdFtrBmoC3OItw==
-X-Received: by 2002:a17:902:dc83:: with SMTP id n3mr6251826pld.133.1585892497213;
-        Thu, 02 Apr 2020 22:41:37 -0700 (PDT)
-Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id e6sm4568295pgu.44.2020.04.02.22.41.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 Apr 2020 22:41:36 -0700 (PDT)
-From:   js1304@gmail.com
-X-Google-Original-From: iamjoonsoo.kim@lge.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v5 09/10] mm/vmscan: restore active/inactive ratio for anonymous LRU
-Date:   Fri,  3 Apr 2020 14:40:47 +0900
-Message-Id: <1585892447-32059-10-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com>
+        Fri, 3 Apr 2020 01:42:36 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0335gHSZ092029;
+        Fri, 3 Apr 2020 00:42:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585892537;
+        bh=PsXDTOOzoT7ydugMXsKdAa+n/Q+otIwW27YnyqGnikw=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=ozAcod74AYc2bG8/fzGyWns1nQzKsgAeXeReuahYeXiGKd0afaaI0hIYibx8nDDuP
+         4vockyOcE3wnlFdXnVNmiAwyphfw7vnxwc9+LtXKXmEwtf81EhYWtwgnseihDCPqiG
+         M/jcwTQn0ADmxH3BRfonTzScHQAZVWtGq5m8eaSw=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0335gHAT043949
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 3 Apr 2020 00:42:17 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
+ 2020 00:42:17 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 3 Apr 2020 00:42:17 -0500
+Received: from [10.250.133.232] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0335gEfU090615;
+        Fri, 3 Apr 2020 00:42:14 -0500
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate inbound/outbound
+ specific bindings
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200327104727.4708-1-kishon@ti.com>
+ <20200327104727.4708-2-kishon@ti.com> <20200330160142.GA6259@bogus>
+ <2a18a228-9248-24a8-c9cd-a041c62aa381@ti.com> <20200331164529.GA32149@bogus>
+ <2985575e-e079-2a8d-bf3e-b7efb7291fc3@ti.com>
+Message-ID: <f335a8be-d292-8e74-0657-d37e7ae55fdc@ti.com>
+Date:   Fri, 3 Apr 2020 11:12:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <2985575e-e079-2a8d-bf3e-b7efb7291fc3@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Hi Rob,
 
-Now, workingset detection is implemented for anonymous LRU.
-We don't have to worry about the misfound for workingset due to
-the ratio of active/inactive. Let's restore the ratio.
+On 4/1/2020 8:38 AM, Kishon Vijay Abraham I wrote:
+> Hi Rob,
+> 
+> On 3/31/2020 10:15 PM, Rob Herring wrote:
+>> On Tue, Mar 31, 2020 at 09:08:12AM +0530, Kishon Vijay Abraham I wrote:
+>>> Hi Rob,
+>>>
+>>> On 3/30/2020 9:31 PM, Rob Herring wrote:
+>>>> On Fri, Mar 27, 2020 at 04:17:25PM +0530, Kishon Vijay Abraham I wrote:
+>>>>> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
+>>>>> host mode as both these could be derived from "ranges" and "dma-ranges"
+>>>>> property. "cdns,max-outbound-regions" property would still be required
+>>>>> for EP mode.
+>>>>>
+>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>> ---
+>>>>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
+>>>>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
+>>>>>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
+>>>>>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
+>>>>>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
+>>>>>  5 files changed, 37 insertions(+), 11 deletions(-)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>>>> index 2996f8d4777c..50ce5d79d2c7 100644
+>>>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>>>> @@ -10,7 +10,7 @@ maintainers:
+>>>>>    - Tom Joseph <tjoseph@cadence.com>
+>>>>>  
+>>>>>  allOf:
+>>>>> -  - $ref: "cdns-pcie.yaml#"
+>>>>> +  - $ref: "cdns-pcie-ep.yaml#"
+>>>>>    - $ref: "pci-ep.yaml#"
+>>>>>  
+>>>>>  properties:
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>>>> index cabbe46ff578..84a8f095d031 100644
+>>>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>>>> @@ -45,8 +45,6 @@ examples:
+>>>>>              #size-cells = <2>;
+>>>>>              bus-range = <0x0 0xff>;
+>>>>>              linux,pci-domain = <0>;
+>>>>> -            cdns,max-outbound-regions = <16>;
+>>>>> -            cdns,no-bar-match-nbits = <32>;
+>>>>>              vendor-id = <0x17cd>;
+>>>>>              device-id = <0x0200>;
+>>>>>  
+>>>>> @@ -57,6 +55,7 @@ examples:
+>>>>>  
+>>>>>              ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
+>>>>>                       <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
+>>>>> +            dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x1 0x00000000>;
+>>>>>  
+>>>>>              #interrupt-cells = <0x1>;
+>>>>>  
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..6150a7a7bdbf
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+>>>>> @@ -0,0 +1,25 @@
+>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>>> +%YAML 1.2
+>>>>> +---
+>>>>> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
+>>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>>>> +
+>>>>> +title: Cadence PCIe Device
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Tom Joseph <tjoseph@cadence.com>
+>>>>> +
+>>>>> +allOf:
+>>>>> +  - $ref: "cdns-pcie.yaml#"
+>>>>> +
+>>>>> +properties:
+>>>>> +  cdns,max-outbound-regions:
+>>>>> +    description: maximum number of outbound regions
+>>>>> +    allOf:
+>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>>>>> +    minimum: 1
+>>>>> +    maximum: 32
+>>>>> +    default: 32
+>>>>
+>>>> I have a feeling that as the PCI endpoint binding evolves this won't be 
+>>>> necessary. I can see a common need to define the number of BARs for an 
+>>>> endpoint and then this will again just be error checking.
+>>>
+>>> For every buffer given by the host, we have to create a new outbound
+>>> translation. If there are no outbound regions, we have to report the error to
+>>> the endpoint function driver. At-least for reporting the error, we'd need to
+>>> have this binding no?
+>>
+>> But isn't the endpoint defined to have some number of BARs? The PCI host 
+>> doesn't decide that.
+> 
+> cdns,max-outbound-regions defined here doesn't configure the BARs. BARs provide
+> an interface for the host to access the endpoints memory. IOW for BARs we
+> configure the inbound address translation unit.
+> 
+> cdns,max-outbound-regions is used while configuring the outbound address
+> translation unit. Outbound regions are used while the endpoint access host
+> memory and in that path endpoint BARs doesn't come.
+>>
+>>>>
+>>>> What's the result if you write to a non-existent region in register 
+>>>> CDNS_PCIE_AT_OB_REGION_PCI_ADDR0/1? If the register is non-existent and 
+>>>> doesn't abort, you could detect this instead.
+>>>
+>>> I'm not sure if we should ever try to write to a non-existent register though
+>>> the behavior could be different in different platforms. IMHO maximum number of
+>>> outbound regions is a HW property and is best described in device tree.
+>>
+>> AIUI, PCI defines non-existent (config space) registers to return all 
+>> 1s. Not sure if this register is in PCI config space or the host SoC bus 
+>> (e.g. AXI). It seems PCI bridges get done both ways from what I've seen.
+> 
+> All of that is correct for the Host or RC. However here
+> cdns,max-outbound-regions is an endpoint specific property (defined only in
+> cdns-pcie-ep.yaml) and is useful while configuring OB address translation unit
+> for the endpoint to access host memory.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- mm/vmscan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Do you still have concerns regarding this? If you don't have any further
+comments on this, can you give your Acked-by please?
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index d8aa42a..9c5d20c 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2204,7 +2204,7 @@ static bool inactive_is_low(struct lruvec *lruvec, enum lru_list inactive_lru)
- 	active = lruvec_page_state(lruvec, NR_LRU_BASE + active_lru);
- 
- 	gb = (inactive + active) >> (30 - PAGE_SHIFT);
--	if (gb && is_file_lru(inactive_lru))
-+	if (gb)
- 		inactive_ratio = int_sqrt(10 * gb);
- 	else
- 		inactive_ratio = 1;
--- 
-2.7.4
-
+Thanks
+Kishon
