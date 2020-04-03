@@ -2,437 +2,171 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7AEC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7BBC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81BC9207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11C42082F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:43:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LHgVRVKs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHdHNUhx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404430AbgDCRh5 (ORCPT
+        id S2403967AbgDCRnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:37:57 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:34494 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727923AbgDCRh5 (ORCPT
+        Fri, 3 Apr 2020 13:43:33 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50458 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgDCRnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:37:57 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 033HbifV117930;
-        Fri, 3 Apr 2020 12:37:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585935464;
-        bh=IFFxpXiVXLZc2qdhczDR7D9a9oSa0u9xD7uIEB8/v8s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LHgVRVKs+2Yw3EMpFPwc5jXhmuvD6wl9t4Qj7Ojf2sJEbtTSEYjThBarCO9s3O6iE
-         ia3KEFTbGSGMjQP7m/7710MOvzdExmuPDOLFwMwUREBOGXJKltoDKcsJ+nuYNY8lHB
-         qqGcN9baI5AHSMjtu9FbstfIYYO9wK65LFv3+v9I=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 033Hbigk114605
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Apr 2020 12:37:44 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
- 2020 12:37:44 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Apr 2020 12:37:44 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 033Hbh1Q066898;
-        Fri, 3 Apr 2020 12:37:43 -0500
-Subject: Re: [PATCH v2 2/2] leds: add sgm3140 driver
-To:     Luca Weiss <luca@z3ntu.xyz>, <linux-leds@vger.kernel.org>
-CC:     Heiko Stuebner <heiko@sntech.de>, Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>
-References: <20200330194757.2645388-1-luca@z3ntu.xyz>
- <20200330194757.2645388-3-luca@z3ntu.xyz>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e29c3fee-068d-c3d7-a0e6-6877a616b3fa@ti.com>
-Date:   Fri, 3 Apr 2020 12:31:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 3 Apr 2020 13:43:32 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t128so8021841wma.0;
+        Fri, 03 Apr 2020 10:43:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Du2+hnNdbthRnRoIngeBlF4ByiwDcQEYqBUSHuyCTmw=;
+        b=rHdHNUhx+PQfZ9Kjg157uCuxe+edcdZ2fLg/hhiQ/n1hM7elIvrbGAjRUzfEoOv8Kx
+         /Gtafh3O2Dhc1Ifpd61d9oEyLuagFXsaO7hcJ+B1xf+nu5xq02jyQsZQ4akGxTeqLojC
+         SN1oUjGkcOlEioyEibWg4LWGxvUCJUQYaeSm4GF/9HuJ8llP32xLcnoO8zMTVuZYOwm/
+         g2bLkduiYrEwjPpPzB8tFOGfMKnrcFAmvdxgV2/TwI373a8Did/Z5622BXC+P4UAxx8P
+         YRFqE+y2apvvB9Q4kjV/eASU5xETVmoQ1vgqjvSCuiohIRqPp3m2JwhQXa4ksMLHQWPj
+         E2BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Du2+hnNdbthRnRoIngeBlF4ByiwDcQEYqBUSHuyCTmw=;
+        b=U0WRYXw4a0Wu2Wc6HpgU6ZFkeCjp7/5P5bL6Ba61JHdsBBLRKtSA3X+uQiekatMpdr
+         iQYXqU7RwMkhetqybEMrE4uzeZLpLah50MR4RFfGH3cToXSHrV5zawD7YXTuZVb9mygg
+         cgXoWZyI0kv8lCHPbubEH9ngdg1n973EXWxuEKO1C8fSd3li1Z7apq0Tq0V2GwKdt9NH
+         KkWd6D3YZG8Gfz4yAv7/Ydb8K5SUKJu4xFh6wBzYk/2ByKE42pl0iTF7xy0V71+ymb+m
+         eo4cE+fRil6zDxQ+pWH6zum7FyDSAPjI/qwZEnPgjnc9Bbpril6WObwuLKBCy7/a9hAl
+         1/gA==
+X-Gm-Message-State: AGi0Pua6g/jLithcsKszXUMDFiOV0nft7d+9PpjdnL/hYPtQHp9/MVkC
+        1L8GlHrF0vN+tVgpCbNVFshR7T0I
+X-Google-Smtp-Source: APiQypKr+ir43LEkQ5V94E8gvF1rmxJspQH1fpugAN+v8QIfnfLDvPg0KejLCLof16jEinLQvT0C0g==
+X-Received: by 2002:a1c:e442:: with SMTP id b63mr10107703wmh.174.1585935807925;
+        Fri, 03 Apr 2020 10:43:27 -0700 (PDT)
+Received: from [10.230.186.223] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h10sm13328485wrq.33.2020.04.03.10.43.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 10:43:26 -0700 (PDT)
+Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in port5
+ setup
+To:     Chuanhong Guo <gch981213@gmail.com>, netdev@vger.kernel.org
+Cc:     stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?Q?Ren=c3=a9_van_Dorst?= <opensource@vdorst.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200403112830.505720-1-gch981213@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <f4e1a06d-75d1-14e3-3075-822e44454bcc@gmail.com>
+Date:   Fri, 3 Apr 2020 10:43:22 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200330194757.2645388-3-luca@z3ntu.xyz>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200403112830.505720-1-gch981213@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luca
 
-On 3/30/20 2:47 PM, Luca Weiss wrote:
-> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
->
-> This device is controlled by two GPIO pins, one for enabling and the
-> second one for switching between torch and flash mode.
->
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+
+On 4/3/2020 4:28 AM, Chuanhong Guo wrote:
+> The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
+> and a phy-handle isn't always available.
+> Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
+> connected to switch port 5 and setup mt7530 according to phy address
+> of 2nd gmac node, causing null pointer dereferencing when phy-handle
+> isn't defined in dts.
+> This commit fix this setup code by checking return value of
+> of_parse_phandle before using it.
+> 
+> Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> Cc: stable@vger.kernel.org
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
 > ---
-> Changes since v1:
-> - Add vin-supply (keep track of 'enabled' state for that)
-> - Wrap lines
-> - static const -ify some structs and methods
-> - use strscpy instead of strlcpy
-> - remove u32 cast by adding 'U' suffix to constants
-> - rebase on linux-next
->
->   drivers/leds/Kconfig        |   9 +
->   drivers/leds/Makefile       |   1 +
->   drivers/leds/leds-sgm3140.c | 317 ++++++++++++++++++++++++++++++++++++
->   3 files changed, 327 insertions(+)
->   create mode 100644 drivers/leds/leds-sgm3140.c
->
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 7599dbee8de1..f5beeff16bdd 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -871,6 +871,15 @@ config LEDS_IP30
->   	  To compile this driver as a module, choose M here: the module
->   	  will be called leds-ip30.
->   
-> +config LEDS_SGM3140
-> +	tristate "LED support for the SGM3140"
-> +	depends on LEDS_CLASS_FLASH
-> +	depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
-> +	depends on OF
-> +	help
-> +	  This option enables support for the SGM3140 500mA Buck/Boost Charge
-> +	  Pump LED Driver.
-> +
->   comment "LED Triggers"
->   source "drivers/leds/trigger/Kconfig"
->   
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index fd61421f7d40..f60ed0c09d4c 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -77,6 +77,7 @@ obj-$(CONFIG_LEDS_PWM)			+= leds-pwm.o
->   obj-$(CONFIG_LEDS_REGULATOR)		+= leds-regulator.o
->   obj-$(CONFIG_LEDS_S3C24XX)		+= leds-s3c24xx.o
->   obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
-> +obj-$(CONFIG_LEDS_SGM3140)		+= leds-sgm3140.o
->   obj-$(CONFIG_LEDS_SUNFIRE)		+= leds-sunfire.o
->   obj-$(CONFIG_LEDS_SYSCON)		+= leds-syscon.o
->   obj-$(CONFIG_LEDS_TCA6507)		+= leds-tca6507.o
-> diff --git a/drivers/leds/leds-sgm3140.c b/drivers/leds/leds-sgm3140.c
-> new file mode 100644
-> index 000000000000..28fe5e34f931
-> --- /dev/null
-> +++ b/drivers/leds/leds-sgm3140.c
-> @@ -0,0 +1,317 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2020 Luca Weiss <luca@z3ntu.xyz>
-> +
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/led-class-flash.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include <media/v4l2-flash-led-class.h>
-> +
-> +#define FLASH_TIMEOUT_DEFAULT		250000U /* 250ms */
-> +#define FLASH_MAX_TIMEOUT_DEFAULT	300000U /* 300ms */
-> +
-> +struct sgm3140 {
-> +	bool enabled;
-> +	struct gpio_desc *flash_gpio;
-> +	struct gpio_desc *enable_gpio;
-> +	struct regulator *vin_regulator;
-> +
-> +	/* current timeout in us */
-> +	u32 timeout;
-> +	/* maximum timeout in us */
-> +	u32 max_timeout;
-> +
-> +	struct led_classdev_flash fled_cdev;
-> +	struct v4l2_flash *v4l2_flash;
-> +
-> +	struct timer_list powerdown_timer;
-> +};
-> +
-> +static struct sgm3140 *flcdev_to_sgm3140(struct led_classdev_flash *flcdev)
-> +{
-> +	return container_of(flcdev, struct sgm3140, fled_cdev);
-> +}
-> +
-> +static int sgm3140_strobe_set(struct led_classdev_flash *fled_cdev, bool state)
-> +{
-> +	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-> +	int ret;
-> +
-> +	if (priv->enabled == state)
-> +		return 0;
-> +
-> +	if (state) {
-> +		ret = regulator_enable(priv->vin_regulator);
-> +		if (ret) {
-> +			dev_err(fled_cdev->led_cdev.dev,
-> +				"failed to enable regulator: %d\n", ret);
-> +			return ret;
-> +		}
-> +		gpiod_set_value_cansleep(priv->flash_gpio, 1);
-> +		gpiod_set_value_cansleep(priv->enable_gpio, 1);
-> +		mod_timer(&priv->powerdown_timer,
-> +			  jiffies + usecs_to_jiffies(priv->timeout));
-> +	} else {
-> +		del_timer_sync(&priv->powerdown_timer);
-> +		gpiod_set_value_cansleep(priv->enable_gpio, 0);
-> +		gpiod_set_value_cansleep(priv->flash_gpio, 0);
-> +		ret = regulator_disable(priv->vin_regulator);
-> +		if (ret) {
-> +			dev_err(fled_cdev->led_cdev.dev,
-> +				"failed to disable regulator: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	priv->enabled = state;
-> +
-> +	return 0;
-> +}
-> +
-> +static int sgm3140_strobe_get(struct led_classdev_flash *fled_cdev, bool *state)
-> +{
-> +	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-> +
-> +	*state = timer_pending(&priv->powerdown_timer);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sgm3140_timeout_set(struct led_classdev_flash *fled_cdev,
-> +			       u32 timeout)
-> +{
-> +	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-> +
-> +	priv->timeout = timeout;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct led_flash_ops sgm3140_flash_ops = {
-> +	.strobe_set = sgm3140_strobe_set,
-> +	.strobe_get = sgm3140_strobe_get,
-> +	.timeout_set = sgm3140_timeout_set,
-> +};
-> +
-> +static int sgm3140_brightness_set(struct led_classdev *led_cdev,
-> +				  enum led_brightness brightness)
-> +{
-> +	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-> +	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-> +	bool enable = brightness == LED_ON;
-> +	int ret;
-> +
-> +	if (priv->enabled == enable)
-> +		return 0;
-> +
-> +	if (enable) {
-> +		ret = regulator_enable(priv->vin_regulator);
-> +		if (ret) {
-> +			dev_err(led_cdev->dev,
-> +				"failed to enable regulator: %d\n", ret);
-> +			return ret;
-> +		}
-> +		gpiod_set_value_cansleep(priv->enable_gpio, 1);
-> +	} else {
-> +		gpiod_set_value_cansleep(priv->enable_gpio, 0);
-> +		ret = regulator_disable(priv->vin_regulator);
-> +		if (ret) {
-> +			dev_err(led_cdev->dev,
-> +				"failed to disable regulator: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	priv->enabled = enable;
-> +
-> +	return 0;
-> +}
-> +
-> +static void sgm3140_powerdown_timer(struct timer_list *t)
-> +{
-> +	struct sgm3140 *priv = from_timer(priv, t, powerdown_timer);
-> +
-> +	gpiod_set_value(priv->enable_gpio, 0);
-> +	gpiod_set_value(priv->flash_gpio, 0);
-> +	regulator_disable(priv->vin_regulator);
-> +
-> +	priv->enabled = false;
-> +}
-> +
-> +static void sgm3140_init_flash_timeout(struct sgm3140 *priv)
-> +{
-> +	struct led_classdev_flash *fled_cdev = &priv->fled_cdev;
-> +	struct led_flash_setting *s;
-> +
-> +	/* Init flash timeout setting */
-> +	s = &fled_cdev->timeout;
-> +	s->min = 1;
-> +	s->max = priv->max_timeout;
-> +	s->step = 1;
-> +	s->val = FLASH_TIMEOUT_DEFAULT;
-> +}
-> +
-> +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-> +					struct v4l2_flash_config *v4l2_sd_cfg)
-> +{
-> +	struct led_classdev *led_cdev = &priv->fled_cdev.led_cdev;
-> +	struct led_flash_setting *s;
-> +
-> +	strscpy(v4l2_sd_cfg->dev_name, led_cdev->dev->kobj.name,
-> +		sizeof(v4l2_sd_cfg->dev_name));
-> +
-> +	/* Init flash intensity setting */
-> +	s = &v4l2_sd_cfg->intensity;
-> +	s->min = 0;
-> +	s->max = 1;
-> +	s->step = 1;
-> +	s->val = 1;
-> +}
-> +
-> +#else
-> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-> +					struct v4l2_flash_config *v4l2_sd_cfg)
-> +{
-> +}
-> +#endif
-> +
-> +static int sgm3140_probe(struct platform_device *pdev)
-> +{
-> +	struct sgm3140 *priv;
-> +	struct led_classdev *led_cdev;
-> +	struct led_classdev_flash *fled_cdev;
-> +	struct led_init_data init_data = {};
-> +	struct device_node *child_node;
-> +	struct v4l2_flash_config v4l2_sd_cfg = {};
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->flash_gpio = devm_gpiod_get(&pdev->dev, "flash", GPIOD_OUT_LOW);
-> +	ret = PTR_ERR_OR_ZERO(priv->flash_gpio);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev,
-> +				"Failed to request flash gpio: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	priv->enable_gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-> +	ret = PTR_ERR_OR_ZERO(priv->enable_gpio);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev,
-> +				"Failed to request enable gpio: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	priv->vin_regulator = devm_regulator_get(&pdev->dev, "vin");
-> +	ret = PTR_ERR_OR_ZERO(priv->vin_regulator);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev,
-> +				"Failed to request regulator: %d\n", ret);
-> +		return ret;
-This regulator is optional so why would you return here?  You should 
-only return if -EPROBE_DEFER.
-> +	}
-> +
-> +	child_node = of_get_next_available_child(pdev->dev.of_node, NULL);
+> 
+> mt7530 is available as a standalone chip and we should not make it
+> tightly coupled with a specific type of ethernet dt binding in the
+> first place.
+> A proper fix is to replace this port detection logic with a dt
+> property under mt7530 node, but that's too much for linux-stable.
 
-Maybe this should be the first check before doing all the processing to 
-make sure that the DT is not
-
-malformed.
-
-> +	if (!child_node) {
-> +		dev_err(&pdev->dev,
-> +			"No DT child node found for connected LED.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = of_property_read_u32(child_node, "flash-max-timeout-us",
-> +				   &priv->max_timeout);
-> +	if (ret) {
-> +		priv->max_timeout = FLASH_MAX_TIMEOUT_DEFAULT;
-> +		dev_warn(&pdev->dev,
-> +			 "flash-max-timeout-us DT property missing\n");
-> +	}
-> +
-> +	/*
-> +	 * Set default timeout to FLASH_DEFAULT_TIMEOUT except if max_timeout
-> +	 * from DT is lower.
-> +	 */
-> +	priv->timeout = min(priv->max_timeout, FLASH_TIMEOUT_DEFAULT);
-> +
-> +	timer_setup(&priv->powerdown_timer, sgm3140_powerdown_timer, 0);
-> +
-> +	fled_cdev = &priv->fled_cdev;
-> +	led_cdev = &fled_cdev->led_cdev;
-> +
-> +	fled_cdev->ops = &sgm3140_flash_ops;
-> +
-> +	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
-> +	led_cdev->max_brightness = LED_ON;
-> +	led_cdev->flags |= LED_DEV_CAP_FLASH;
-> +
-> +	sgm3140_init_flash_timeout(priv);
-> +
-> +	init_data.fwnode = of_fwnode_handle(child_node);
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	/* Register in the LED subsystem */
-> +	ret = devm_led_classdev_flash_register_ext(&pdev->dev,
-> +						   fled_cdev, &init_data);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register flash device: %d\n",
-> +			ret);
-> +		goto err;
-> +	}
-> +
-> +	sgm3140_init_v4l2_flash_config(priv, &v4l2_sd_cfg);
-> +
-> +	/* Create V4L2 Flash subdev */
-> +	priv->v4l2_flash = v4l2_flash_init(&pdev->dev,
-> +					   of_fwnode_handle(child_node),
-> +					   fled_cdev, NULL,
-> +					   &v4l2_sd_cfg);
-> +	if (IS_ERR(priv->v4l2_flash)) {
-> +		ret = PTR_ERR(priv->v4l2_flash);
-> +		goto err;
-Not sure why this is here you are not in a for loop and this will fall 
-through anyway to the err label.
-> +	}
-> +
-> +err:
-> +	of_node_put(child_node);
-> +	return ret;
-> +}
-> +
-Dan
+Agree, one would also wonder why the driver needs to parse parts of the
+Device Tree which should be done by the core DSA layer.
+-- 
+Florian
