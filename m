@@ -2,74 +2,88 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE5EC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51656C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57DB720721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Bxa1h7A6"
+	by mail.kernel.org (Postfix) with ESMTP id 22CB620721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403880AbgDCQP0 (ORCPT
+        id S2404034AbgDCQPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:15:26 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:64884 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728126AbgDCQP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:15:26 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48v4lv0bP8z89;
-        Fri,  3 Apr 2020 18:15:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585930524; bh=6g7iJNczJ+RujVMMOls/tTDBKftqdAux6ZbhdBsuAqc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bxa1h7A6L5OKDbYxVL2Nb8rbQ9d0wGbMiOjnSrtrP8SesOAF5FJFQnuxNbDCSgb2A
-         GG625Y5XsMMGqEK8E2ABBEG+F1l5ssbc8grvFyzpbn4pRJDWZRoUznsl1MZ7SoVOvz
-         FDDjJbxUjMraBihHwVKfPU56dvEYNyhHag6JWvtGRBUVkNpu7mK39rjFhtphEGDjV4
-         IQLZ2I7J44oOLSUQKbLOP0gvUXiDnoc+ILLLk5Cws9hixgWmd6/Hho0ic2b9aaXNe7
-         9gbiBpanUb6Hl6urJpy4HS/4XKJVCEnY6PphUm0cOMXF8sTRO8fdgua2LOxy6oyCrA
-         Iqr8Nia5s9HJA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 3 Apr 2020 18:15:21 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Kevin Liu <kliu5@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Suneel Garapati <suneel.garapati@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 5/7] mmc: sdhci: simplify clock frequency calculation
-Message-ID: <20200403161521.GA15061@qmqm.qmqm.pl>
-References: <1a7f7f0941314da66acda3c60f44b3d2417133e6.1585827904.git.mirq-linux@rere.qmqm.pl>
- <202004032014.Gm57FzHK%lkp@intel.com>
+        Fri, 3 Apr 2020 12:15:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57964 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728351AbgDCQPz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:15:55 -0400
+Received: from floko.floko.floko (unknown [IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A4716297D6D;
+        Fri,  3 Apr 2020 17:15:47 +0100 (BST)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com
+Subject: [PATCH v2 0/9] move Rockchip ISP bindings out of staging / add ISP DT nodes for RK3399
+Date:   Fri,  3 Apr 2020 13:15:29 -0300
+Message-Id: <20200403161538.1375908-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202004032014.Gm57FzHK%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 09:02:35PM +0800, kbuild test robot wrote:
-[...]
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
-> >> drivers/mmc/host/sdhci.o: warning: objtool: sdhci_calc_clk() falls through to next function sdhci_set_clock()
+Move the bindings out of drivers/staging and place them in
+Documentation/devicetree/bindings instead.
 
-This looks like false positive, as there is 'return clk;' at the
-function's end untouched by the patches.
+Also, add DT nodes for RK3399 and verify with make ARCH=arm64 dtbs_check
+and make ARCH=arm64 dt_binding_check.
 
-Best Regards,
-Micha³ Miros³aw
+Tested by verifying images streamed from RockPi 4 board with imx219
+module.
+
+Changes in v2:
+Add patches modifying bindings, as sugested by Johan Jonker in v1,
+before moving them out of staging.
+
+Johan, I added a Suggested-by tag in the commits, please let me know if
+you prefer not having the tag there.
+
+Helen Koike (7):
+  media: staging: dt-bindings: rkisp1: add missing required nodes
+  media: staging: dt-bindings: rkisp1: add required items in i2c example
+  media: staging: dt-bindings: rkisp1: re-order properties
+  media: staging: dt-bindings: phy-rockchip-dphy-rx0: remove non-used
+    reg property
+  dt-bindings: phy: phy-rockchip-dphy-rx0: move rockchip dphy rx0
+    bindings out of staging
+  dt-bindings: media: rkisp1: move rockchip-isp1 bindings out of staging
+  media: MAINTAINERS: rkisp1: add path to dt-bindings
+
+Shunqian Zheng (2):
+  arm64: dts: rockchip: add rx0 mipi-phy for rk3399
+  arm64: dts: rockchip: add isp0 node for rk3399
+
+ .../bindings/media/rockchip-isp1.yaml         | 45 ++++++++++++-------
+ .../bindings/phy/rockchip-mipi-dphy-rx0.yaml  |  3 --
+ MAINTAINERS                                   |  1 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      | 38 ++++++++++++++++
+ 4 files changed, 68 insertions(+), 19 deletions(-)
+ rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (91%)
+ rename {drivers/staging/media/phy-rockchip-dphy-rx0/Documentation => Documentation}/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml (98%)
+
+-- 
+2.26.0
+
