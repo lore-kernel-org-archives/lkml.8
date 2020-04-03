@@ -2,180 +2,189 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88FEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0DFC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1A3206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8F4206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SNCFkrIf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qKbox1bS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404576AbgDCQrb (ORCPT
+        id S2404599AbgDCQro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:47:31 -0400
-Received: from mout.gmx.net ([212.227.15.15]:47233 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403971AbgDCQra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:47:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1585932436;
-        bh=qJteazr5M6rwWKSsYgV4eOwWceCPewIZnI3tMHV1Y2I=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=SNCFkrIfIPOKdBTGy463Mce00xt08x4XosNguyLfOuH4tEKBw4R0TR+wrU+++L4tD
-         EM1m61pKA5ox4h01dU0rkFgxpLNuZQJkHngSj7+RK9xb01skBMBioJhNczQpAyMg3h
-         0FqiGkqwu78EfNXzEKaucp6sp1v6wN9vKAbZ+MGc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1My36T-1j7ZPv0LdP-00zYMG; Fri, 03 Apr 2020 18:47:16 +0200
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     alex.dewar@gmx.co.uk
-Cc:     Hannes Reinecke <hare@suse.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: aic7xxx: Remove unnecessary NULL checks before kfree
-Date:   Fri,  3 Apr 2020 17:47:11 +0100
-Message-Id: <20200403164712.49579-1-alex.dewar@gmx.co.uk>
-X-Mailer: git-send-email 2.26.0
+        Fri, 3 Apr 2020 12:47:44 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52858 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728095AbgDCQrn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:47:43 -0400
+Received: by mail-pj1-f65.google.com with SMTP id ng8so3231028pjb.2;
+        Fri, 03 Apr 2020 09:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6wJZJH5Znk8qmc84gheG1lqLkLKUTVbMbhIJ9Z1qyEo=;
+        b=qKbox1bS/J0QnFQTIXcYnI4Uy1k42tego2yASVnX6R/etobrQtZj4DStH36odAWasn
+         dVVsT4cbGsQ9Q5w6NgWsbcUbcWrgWlvxjcy37HChgvY+WBR2TO1qbQgZdYwwBeBo+/iV
+         KXio4pIu7wZpToYPy8yegk0XGr9ad2+K3eE+Lxlshp8aT+SGFZ1xKoQChZKBBLYKtLbr
+         E/BqysLWYJl2EIVrio3gVuLrpp4/5P4gcxZE+FoIzofechJrTPbrvMEr1KQmAiGm3idA
+         JVrKvAYQCkgI01OnPw7RknZyCsdIAdHjrJBbGXSKnU9+l6l5a4PxrvDb78Kb6tHOmkol
+         q3nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6wJZJH5Znk8qmc84gheG1lqLkLKUTVbMbhIJ9Z1qyEo=;
+        b=OYZ3ZXWdR2NNW40iM74NpdgpvLQAVNhV0GzlxAGCsqwCUVkPGr37c4OqwgwcigIAKX
+         GYIlHDUjTwKEqge5ACP8XNLTO7TcygMQZ3l6ITYULHBBAvHFvLD3Jp/4oZHIZuZYyjft
+         LzhIjgFOUcUqZP3x5W8o/jGXVLfp6Zo0eB8QwBijILEnoQw24/65IekISaSjqsSUMPU+
+         lUax4JXnAm8CepFTdzPfQeW4MELdLzjKV6ibu4XW1cAHNqSXu2UjV0wi0k5bt6MaGQf2
+         oqquY4W78JeSz2SVvoCMes+A7PQx3/1CE2fCjqoyhP7EDNmqMusViPucSeESUSP0jSxm
+         Zaxw==
+X-Gm-Message-State: AGi0PuZyZEbePZJJbDLIfNFawpcXBgva4slMpmXYF3e2ps21GBvYnxyB
+        aXw4uZuWMEvZsyzDeoReIEWEVffX
+X-Google-Smtp-Source: APiQypI0HnJWjuQs+8IhDHpLCVF/PefF0IC5kT0pAI8rJhlaXv0tBbaTWW34DOHQX8TykQmhVQwEFw==
+X-Received: by 2002:a17:90a:cb18:: with SMTP id z24mr10690031pjt.67.1585932462212;
+        Fri, 03 Apr 2020 09:47:42 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c201sm6100863pfc.73.2020.04.03.09.47.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 09:47:41 -0700 (PDT)
+Subject: Re: [PATCH v2 4/8] power: supply: core: tabularize HWMON temperature
+ labels
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
+ <ae82abf9da86542f5657a8c37106bcdae5011927.1585929579.git.mirq-linux@rere.qmqm.pl>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <dad5d544-7f6d-5c0d-6c6e-9d23cb0a6055@roeck-us.net>
+Date:   Fri, 3 Apr 2020 09:47:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fnsZtus8vNbCBY2l68QzfmvYtczTkefNM+aGSl3RyTk2e+DXBXk
- wEDRz6OgFRCXEdrv+NpkHLVjRaws1mylcq9DNiGDqApMnkLPDY9Xe1XFC3C0EqOqp1Sq0Yn
- c9Y9MpdbNlPbl0iViUnwHMAmHxgiR53ZguiJ754BSO6bKjeuH2DOvJ3pSnSsP+HjNAMmI4m
- ZIeh6YgE37FR9L2n0NwMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ek0cCF4NXEU=:OcYrwIpjcMVElXigWXJWip
- 2LmcqvXH2HTV18sVTxm+bUojVhC/yMR786lpck4U3mwgoLRaavWHssi6SQNiRGNrk2hzNmyfP
- SCGMQHM3oUTJ4LgIeELHNe87NJ5VPYWrwW33yj2XaxEtPqpnujLNb4qjEv9FQS7K92Wustngx
- DUUkyCAXwcF2SooL+LhnjUkBgrme2WqvgOn+Ntsr/NF/BSJVRp8TkMHkZALah9kq2dMs3SRfk
- +uYseCckrbaukq/cRVSegMeYKbXyu/aYoB/2L5dQSZN6V31/c4LZjz6u1z/OPpA6a/J9PsYSr
- wBQpDTVEapNve6oDzXZYVabAjmoBwZDYlhu0heRjuf9JMdemUpNFBpEV7lOUQPNoIZEL6jcSB
- D7hpsHLBxtMHymYwhZFqk/iUXLHMy79ce9BqkHKIZDM3IRnOnIhYn1QEKNo5GH1uuHju0yGtp
- MBRuslXnoRcLMHqn3ezPBoyeRH9WVA8f5FgqEHnqn52b78MHTLSDpm0BIOe0zPCfJLHKwjoyh
- L4qIfIKht9faa0PPdbiGxVGQDRnrH8y+V8ZZ8eQuudMxLEAStQkepNAvgKJa1hhGJVxgxm1dO
- Q3kZfVHx8pVakqxUv2sNLXCqy76w/fbq7zROR9RFbKwWnUPvh74f/yvEWXVCQJ/ayU5pCApBG
- 2ohv2yPIH5EruD+SnGqsIOXiyTpOpZBHJFdQ2JKOjmBVdU+JZ5R3pahqjmGnUXSRW26DcMS5W
- hEL+TEtA2+RnatpiwaKoOA1Gxy2vvUEex4R0T94FtpPWp36D1KV8ozZP9yhEDlXmLwMa7nQ8u
- jq6K6vVunjBk+Y5Y/pDeGvoWPIT6p+TQ2j06ElZXM9Ps2o0PgMW59/I5ehPl+NiuBDslIXSbn
- ijEZVAJ+3ladYgmVHtlokZM24G3DOs4u0owzJIS8+XzF7xOSW8z5V9aQBQ4XaOWvP7ErTaehj
- Qyfv6C2ZP2EMmyxoQK+v2haoqT0t3KfDHvT5DYIkzRhmGBJlaIIxGXG1TuIft5oBVDzslDxJ1
- xfHFuuLS1+CtyFZB4VTmTuZR4Dq5m6riROkjO1W0z/bn8qIfkiyVApkJOb4B/wiesXmvvUhcT
- lv1E3Wmyl1+VGQbtUEI91bYbiLBPUAKKHlh6qWX6VSEW27A0ZvXOky0mDdnr3WqKbd08y4s69
- ffQL36CJ5eUvBMhiKV2R/cLOQTbWM0d5ZmM6/z/mt9FohgBpg51AnX3PzKaO1nZZUCdGuxREM
- FDTg/vPs1/7GsYeJ1
+In-Reply-To: <ae82abf9da86542f5657a8c37106bcdae5011927.1585929579.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a number of places in the aic7xxx driver where a NULL check is
-performed before a kfree(). However, kfree() already performs NULL checks
-so this is unnecessary. Remove the checks.
+On 4/3/20 9:23 AM, Michał Mirosław wrote:
+> Rework power_supply_hwmon_read_string() to check it's parameters.
+> This allows to extend it later with labels for other types of
+> measurements.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+> v2: split from fix temperature labels
+> ---
+>  drivers/power/supply/power_supply_hwmon.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
+> index 67b6ee60085e..48c73994732c 100644
+> --- a/drivers/power/supply/power_supply_hwmon.c
+> +++ b/drivers/power/supply/power_supply_hwmon.c
+> @@ -43,6 +43,11 @@ static int power_supply_hwmon_curr_to_property(u32 attr)
+>  	}
+>  }
+>  
+> +static const char *const ps_temp_label[] = {
+> +	"temp",
+> +	"ambient temp",
+> +};
+> +
+>  static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
+>  {
+>  	if (channel) {
+> @@ -144,8 +149,20 @@ static int power_supply_hwmon_read_string(struct device *dev,
+>  					  u32 attr, int channel,
+>  					  const char **str)
+>  {
+> -	*str = channel ? "temp ambient" : "temp";
+> -	return 0;
+> +	if (channel < 0)
+> +		return -EINVAL;
+> +
 
-Issue identified with Coccinelle.
+This is unnecessary.
 
-Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
-=2D--
- drivers/scsi/aic7xxx/aic79xx_core.c | 15 +++++----------
- drivers/scsi/aic7xxx/aic7xxx_core.c | 15 +++++----------
- 2 files changed, 10 insertions(+), 20 deletions(-)
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (channel >= ARRAY_SIZE(ps_temp_label))
+> +			return -EINVAL;
 
-diff --git a/drivers/scsi/aic7xxx/aic79xx_core.c b/drivers/scsi/aic7xxx/ai=
-c79xx_core.c
-index a336a458c978..72eaad4aef9c 100644
-=2D-- a/drivers/scsi/aic7xxx/aic79xx_core.c
-+++ b/drivers/scsi/aic7xxx/aic79xx_core.c
-@@ -3662,8 +3662,7 @@ ahd_free_tstate(struct ahd_softc *ahd, u_int scsi_id=
-, char channel, int force)
- 		return;
+As is this. We don't usually check boundaries like this for
+in-kernel APIs, and I personally would not want to have it
+introduced in the kernel more than necessary. This just increases
+kernel image size with zero benefit.
 
- 	tstate =3D ahd->enabled_targets[scsi_id];
--	if (tstate !=3D NULL)
--		kfree(tstate);
-+	kfree(tstate);
- 	ahd->enabled_targets[scsi_id] =3D NULL;
- }
- #endif
-@@ -6120,8 +6119,7 @@ ahd_set_unit(struct ahd_softc *ahd, int unit)
- void
- ahd_set_name(struct ahd_softc *ahd, char *name)
- {
--	if (ahd->name !=3D NULL)
--		kfree(ahd->name);
-+	kfree(ahd->name);
- 	ahd->name =3D name;
- }
+Guenter
 
-@@ -6182,12 +6180,9 @@ ahd_free(struct ahd_softc *ahd)
- 		kfree(ahd->black_hole);
- 	}
- #endif
--	if (ahd->name !=3D NULL)
--		kfree(ahd->name);
--	if (ahd->seep_config !=3D NULL)
--		kfree(ahd->seep_config);
--	if (ahd->saved_stack !=3D NULL)
--		kfree(ahd->saved_stack);
-+	kfree(ahd->name);
-+	kfree(ahd->seep_config);
-+	kfree(ahd->saved_stack);
- 	kfree(ahd);
- 	return;
- }
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/ai=
-c7xxx_core.c
-index 84fc499cb1e6..5a10feea17fe 100644
-=2D-- a/drivers/scsi/aic7xxx/aic7xxx_core.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
-@@ -2178,8 +2178,7 @@ ahc_free_tstate(struct ahc_softc *ahc, u_int scsi_id=
-, char channel, int force)
- 	if (channel =3D=3D 'B')
- 		scsi_id +=3D 8;
- 	tstate =3D ahc->enabled_targets[scsi_id];
--	if (tstate !=3D NULL)
--		kfree(tstate);
-+	kfree(tstate);
- 	ahc->enabled_targets[scsi_id] =3D NULL;
- }
- #endif
-@@ -4453,8 +4452,7 @@ ahc_set_unit(struct ahc_softc *ahc, int unit)
- void
- ahc_set_name(struct ahc_softc *ahc, char *name)
- {
--	if (ahc->name !=3D NULL)
--		kfree(ahc->name);
-+	kfree(ahc->name);
- 	ahc->name =3D name;
- }
-
-@@ -4515,10 +4513,8 @@ ahc_free(struct ahc_softc *ahc)
- 		kfree(ahc->black_hole);
- 	}
- #endif
--	if (ahc->name !=3D NULL)
--		kfree(ahc->name);
--	if (ahc->seep_config !=3D NULL)
--		kfree(ahc->seep_config);
-+	kfree(ahc->name);
-+	kfree(ahc->seep_config);
- 	kfree(ahc);
- 	return;
- }
-@@ -4927,8 +4923,7 @@ ahc_fini_scbdata(struct ahc_softc *ahc)
- 	case 0:
- 		break;
- 	}
--	if (scb_data->scbarray !=3D NULL)
--		kfree(scb_data->scbarray);
-+	kfree(scb_data->scbarray);
- }
-
- static void
-=2D-
-2.26.0
+> +		*str = ps_temp_label[channel];
+> +		return 0;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EINVAL;
+>  }
+>  
+>  static int
+> 
 
