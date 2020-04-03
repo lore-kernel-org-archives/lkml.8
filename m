@@ -2,123 +2,107 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE8AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD58BC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E813121473
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC7721655
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OcL2SsDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403890AbgDCJl3 (ORCPT
+        id S2403901AbgDCJle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:41:29 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:58474 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403809AbgDCJl1 (ORCPT
+        Fri, 3 Apr 2020 05:41:34 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:51482 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2403818AbgDCJlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:41:27 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id AF6AF1C346D; Fri,  3 Apr 2020 11:41:25 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 11:41:10 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
-        airlied@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Subject: 5.7-rc0: regression caused by drm tree, hangs while attempting to
- run X
-Message-ID: <20200403092634.GA3610@duo.ucw.cz>
-References: <20200402213253.GA2691@duo.ucw.cz>
- <20200402213506.GA2767@duo.ucw.cz>
- <20200403073720.GA23229@duo.ucw.cz>
- <20200403091430.GA3845@duo.ucw.cz>
+        Fri, 3 Apr 2020 05:41:08 -0400
+X-UUID: 3c3145dbd02345a0887e58ea125de1ab-20200403
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=C7gYmaCUU4cSRDwLJUXyiRJoVdUsllJH8boXNnM767E=;
+        b=OcL2SsDylc4nM3OpzC4JH7U1bSiOnHjlxFhe1jGtgOGu0oBFZxqdTI9OMun1sax1Njz4a+TP1cFYzqjPS9cG5sTPxH5uDlHI/9nZaxf1631pncVAe3p/N+J4fgtf0bewnzbA+hqxBSwrPG0Jh8fFpISziJNIlBoXHl6wOvPy3/s=;
+X-UUID: 3c3145dbd02345a0887e58ea125de1ab-20200403
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 349254074; Fri, 03 Apr 2020 17:41:01 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 3 Apr 2020 17:40:41 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 3 Apr 2020 17:40:40 +0800
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
+        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
+        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>,
+        Xia Jiang <xia.jiang@mediatek.com>
+Subject: [PATCH v8 08/14] media: platform: Change case for improving code quality
+Date:   Fri, 3 Apr 2020 17:40:27 +0800
+Message-ID: <20200403094033.8288-9-xia.jiang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200403094033.8288-1-xia.jiang@mediatek.com>
+References: <20200403094033.8288-1-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
-Content-Disposition: inline
-In-Reply-To: <20200403091430.GA3845@duo.ucw.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Q2hhbmdlIHJlZ2lzdGVyIG9mZnNldCBoZXggbnVtYmVyYWxzIGZyb20gdXBlcmNhc2UgdG8gbG93
+ZXJjYXNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBYaWEgSmlhbmcgPHhpYS5qaWFuZ0BtZWRpYXRlay5j
+b20+DQotLS0NCnY4OiBubyBjaGFuZ2VzDQotLS0NCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210
+ay1qcGVnL210a19qcGVnX3JlZy5oIHwgMTggKysrKysrKysrLS0tLS0tLS0tDQogMSBmaWxlIGNo
+YW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfcmVnLmggYi9kcml2ZXJzL21l
+ZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX3JlZy5oDQppbmRleCA5NGRiMDRlOWNkYjYu
+LjI5NDVkYTg0MmRmYSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpw
+ZWcvbXRrX2pwZWdfcmVnLmgNCisrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcv
+bXRrX2pwZWdfcmVnLmgNCkBAIC0yMCwyOSArMjAsMjkgQEANCiAjZGVmaW5lIEJJVF9JTlFTVF9N
+QVNLX0FMTElSUQkJMHgzNw0KIA0KICNkZWZpbmUgSlBHREVDX1JFR19SRVNFVAkJMHgwMDkwDQot
+I2RlZmluZSBKUEdERUNfUkVHX0JSWl9GQUNUT1IJCTB4MDBGOA0KLSNkZWZpbmUgSlBHREVDX1JF
+R19EVV9OVU0JCTB4MDBGQw0KKyNkZWZpbmUgSlBHREVDX1JFR19CUlpfRkFDVE9SCQkweDAwZjgN
+CisjZGVmaW5lIEpQR0RFQ19SRUdfRFVfTlVNCQkweDAwZmMNCiAjZGVmaW5lIEpQR0RFQ19SRUdf
+REVTVF9BRERSMF9ZCQkweDAxNDANCiAjZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERSMF9VCQkw
+eDAxNDQNCiAjZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERSMF9WCQkweDAxNDgNCi0jZGVmaW5l
+IEpQR0RFQ19SRUdfREVTVF9BRERSMV9ZCQkweDAxNEMNCisjZGVmaW5lIEpQR0RFQ19SRUdfREVT
+VF9BRERSMV9ZCQkweDAxNGMNCiAjZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERSMV9VCQkweDAx
+NTANCiAjZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERSMV9WCQkweDAxNTQNCiAjZGVmaW5lIEpQ
+R0RFQ19SRUdfU1RSSURFX1kJCTB4MDE1OA0KLSNkZWZpbmUgSlBHREVDX1JFR19TVFJJREVfVVYJ
+CTB4MDE1Qw0KKyNkZWZpbmUgSlBHREVDX1JFR19TVFJJREVfVVYJCTB4MDE1Yw0KICNkZWZpbmUg
+SlBHREVDX1JFR19JTUdfU1RSSURFX1kJCTB4MDE2MA0KICNkZWZpbmUgSlBHREVDX1JFR19JTUdf
+U1RSSURFX1VWCTB4MDE2NA0KLSNkZWZpbmUgSlBHREVDX1JFR19XRE1BX0NUUkwJCTB4MDE2Qw0K
+KyNkZWZpbmUgSlBHREVDX1JFR19XRE1BX0NUUkwJCTB4MDE2Yw0KICNkZWZpbmUgSlBHREVDX1JF
+R19QQVVTRV9NQ1VfTlVNCTB4MDE3MA0KLSNkZWZpbmUgSlBHREVDX1JFR19PUEVSQVRJT05fTU9E
+RQkweDAxN0MNCisjZGVmaW5lIEpQR0RFQ19SRUdfT1BFUkFUSU9OX01PREUJMHgwMTdjDQogI2Rl
+ZmluZSBKUEdERUNfUkVHX0ZJTEVfQUREUgkJMHgwMjAwDQotI2RlZmluZSBKUEdERUNfUkVHX0NP
+TVBfSUQJCTB4MDIwQw0KKyNkZWZpbmUgSlBHREVDX1JFR19DT01QX0lECQkweDAyMGMNCiAjZGVm
+aW5lIEpQR0RFQ19SRUdfVE9UQUxfTUNVX05VTQkweDAyMTANCiAjZGVmaW5lIEpQR0RFQ19SRUdf
+Q09NUDBfREFUQV9VTklUX05VTQkweDAyMjQNCi0jZGVmaW5lIEpQR0RFQ19SRUdfRFVfQ1RSTAkJ
+MHgwMjNDDQorI2RlZmluZSBKUEdERUNfUkVHX0RVX0NUUkwJCTB4MDIzYw0KICNkZWZpbmUgSlBH
+REVDX1JFR19UUklHCQkJMHgwMjQwDQogI2RlZmluZSBKUEdERUNfUkVHX0ZJTEVfQlJQCQkweDAy
+NDgNCi0jZGVmaW5lIEpQR0RFQ19SRUdfRklMRV9UT1RBTF9TSVpFCTB4MDI0Qw0KKyNkZWZpbmUg
+SlBHREVDX1JFR19GSUxFX1RPVEFMX1NJWkUJMHgwMjRjDQogI2RlZmluZSBKUEdERUNfUkVHX1FU
+X0lECQkweDAyNzANCiAjZGVmaW5lIEpQR0RFQ19SRUdfSU5URVJSVVBUX1NUQVRVUwkweDAyNzQN
+CiAjZGVmaW5lIEpQR0RFQ19SRUdfU1RBVFVTCQkweDAyNzgNCi0tIA0KMi4xOC4wDQo=
 
---VS++wcV0S1rZb1Fb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > > > Hardware is thinkpad x220. I had this crash few days ago. And today=
- I
-> > > > have similar-looking one, with slightly newer kernel. (Will post
-> > > > as a follow-up).
-> >=20
-> > As part of quest for working system, I tried 5.7-rc0, based on
-> >=20
-> > Merge: 50a5de895dbe b4d8ddf8356d
-> > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > Date:   Wed Apr 1 18:18:18 2020 -0700
-> >=20
-> > It hangs in userspace, at a time when X should be starting, and I'm
-> > looking at blinking cursor.
-> >=20
-> > 5.6-rcs worked, I'll test 5.6-final.
->=20
-> 5.6-final works.
->=20
-> Hmm...
->=20
-> commit f365ab31efacb70bed1e821f7435626e0b2528a6
-> Merge: 4646de87d325 59e7a8cc2dcf
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Wed Apr 1 15:24:20 2020 -0700
->=20
->     Merge tag 'drm-next-2020-04-01' of git://anongit.freedesktop.org/drm/=
-drm
->=20
-> Let me test 4646de87d32526ee87b46c2e0130413367fb5362...that one works.
->=20
-> Ok, so obviously... I should
-> test... f365ab31efacb70bed1e821f7435626e0b2528a6
-
-f365ab31efacb70bed1e821f7435626e0b2528a6 is broken, and it is the
-first broken merge. next-0403 is also broken.
-
-Any ideas, besides the b-word?
-
-Would c0ca be good commit for testing?=20
-
-commit 700d6ab987f3b5e28b13b5993e5a9a975c5604e2
-Merge: c0ca5437c509 2bdd4c28baff
-Author: Dave Airlie <airlied@redhat.com>
-Date:   Mon Mar 30 15:56:03 2020 +1000
-
-    Merge tag 'drm-intel-next-fixes-2020-03-27' of git://anongit.freedeskto=
-p.org
-/drm/drm-intel into drm-next
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---VS++wcV0S1rZb1Fb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXocEtgAKCRAw5/Bqldv6
-8jG5AJ0cQm8gqYJQh8MLB/fR5qx2O5lbMgCfd1NG0flmEpWzpcAJRTG8x3BJl4Q=
-=fz/o
------END PGP SIGNATURE-----
-
---VS++wcV0S1rZb1Fb--
