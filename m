@@ -2,122 +2,138 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B31C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64079C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7040020721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3564120721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:36:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9xOnYjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403977AbgDCMfQ (ORCPT
+        id S2403857AbgDCMgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:35:16 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:35684 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403965AbgDCMfO (ORCPT
+        Fri, 3 Apr 2020 08:36:13 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:43490 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728219AbgDCMgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:35:14 -0400
-Received: by mail-io1-f72.google.com with SMTP id c10so5907968ioc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:35:13 -0700 (PDT)
+        Fri, 3 Apr 2020 08:36:12 -0400
+Received: by mail-qv1-f68.google.com with SMTP id c28so3424365qvb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/UIQ6cCz6/xPuMLPWGcywGCrwVngPK40EuPV4gXPVrg=;
+        b=G9xOnYjNwulboqxCx81yN1IIkK+Qt1i9yxPkPaBg0zRTstOZeFZPjUdhn7ibIQLAgk
+         XxxVKC9WdbOIWEGV6WDUCMUpttj2rdrk1zivYDaP90amGTclDD4ry6PBzORrnaWq0JJU
+         EOu+i//xhhpUhE+tQUDtFJaLtG3mw78bNqG0x/6Nwn/XvP/bWSXRwKOutGPvEMkClBX9
+         gSqAFTS6xtASEGigsC8wSPI+2LNaH5QiCxLr5FO89bL1SvhBqx1qYIjU4fplBboUF0Z0
+         SPraTa+dG6IEi3LOxLVm7HZklL3svPzdTRjTIWf8L6czdkrS7jmREK346b3fgG/pPEML
+         dpyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=9i6KFf8WUAlZJA8NaxnAVF5EgcrymN6UAh6zvSpVWlU=;
-        b=VlLULW3+MNtgQ+xQQEuGYWFGrQyPuLOm/gzkvqPi+4Z7pFj5eF/YxyYGjGM2Ka+5bO
-         n76lto/WKiCC3c5QWNzcMwjV9dBlSCQLg2lwniHnLFR9Z++J2YphGzdeR9nthOSt9o4k
-         aw15hd5vatsxOsNWPJIrwe1cjYgxWVb9EnvDx0VOWzgaHYXTA0OaCp3YZ7yYqAiCI6lR
-         zgkZc3CkTwG3DLvSA2Iu9NknJ2kzosLNv4+c9oMiHMace7hiwZ3jr8rh8U5V4gZEOwdJ
-         8BKPu3yGRxyCE2FYMWGD94dsEWXFtTHPm5K3w9HaCiofRFPRtolix57QK0ClEx8jM3Dh
-         1zVw==
-X-Gm-Message-State: AGi0PuY5OTyji57+GTOElQgs0erxrAaTe2mV6ExhrYkpAKlKutYzNfbD
-        sdYU6vRd4kw4sphFh43jpIh5xBivyPAkWZSQRWkBsuZbDVc3
-X-Google-Smtp-Source: APiQypKXPAosbIPldoa5yp5n5oDNa/0NJcZ/JuFc+bCwocwk/C4fvhskYbi+ZTbJyJC4peWtusiAOlVC9sGWh8CnEB7ZfZ5M1JRF
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/UIQ6cCz6/xPuMLPWGcywGCrwVngPK40EuPV4gXPVrg=;
+        b=TUWR4pLYYuaCbZSML0LSJ1xpS8ZEhIpseJPsPGnzQ0t6bVGIVP9Sx/NHJpR5b8GWWm
+         tvAKyuSVlG9v2Dp5iTIjNJoVqmvctvGCjsF1Ip4qwE34qHGDe/3O9ftfM3px3K5cjNeQ
+         Wguo6GhosptsMTSoP6LWR+44ucoLNOHgnSSa0n0TYIswBXqR0/HHQ9ZSN5LP/MeihWXe
+         l2X8IvWy2pfNWTSiq+oPIjdprIdOpIjfza4z3mD6T3+XNCyi84m1q/j5PUEV1eUQGJjW
+         ZGtZxHtlFTzEQLLLdjDVSPwNBqDAFEOy9BrpAJSs2f4hf4vjyPUCbuqgFhhV8TWP93ZP
+         JM2A==
+X-Gm-Message-State: AGi0PuZzuKar/o0ta7nEJ7d62/+hKhRRL+gK2RvQD6dq53DF/WYLiq9Q
+        AunoVlm0mbCRbUO+SBqpcpw=
+X-Google-Smtp-Source: APiQypI7PsH7snM6jdOXd2HKBLWUe9bvS5FDXTaIY281QuZkO+vPIsI5Vs8/2oWe95MNI5epqMg68Q==
+X-Received: by 2002:a0c:e902:: with SMTP id a2mr8154150qvo.103.1585917369743;
+        Fri, 03 Apr 2020 05:36:09 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id e16sm4514719qtq.78.2020.04.03.05.36.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 05:36:08 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 889BB409A3; Fri,  3 Apr 2020 09:36:06 -0300 (-03)
+Date:   Fri, 3 Apr 2020 09:36:06 -0300
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
+Message-ID: <20200403123606.GC23243@kernel.org>
+References: <20200325124536.2800725-1-namhyung@kernel.org>
+ <20200325124536.2800725-5-namhyung@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8a4d:: with SMTP id o13mr7561447iom.31.1585917312640;
- Fri, 03 Apr 2020 05:35:12 -0700 (PDT)
-Date:   Fri, 03 Apr 2020 05:35:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000102ba005a2622624@google.com>
-Subject: KCSAN: data-race in binder_dec_node_nilocked / binder_state_show
-From:   syzbot <syzbot+71f39766a98dddab97b5@syzkaller.appspotmail.com>
-To:     arve@android.com, christian@brauner.io, devel@driverdev.osuosl.org,
-        elver@google.com, gregkh@linuxfoundation.org,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        maco@android.com, syzkaller-bugs@googlegroups.com,
-        tkjos@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325124536.2800725-5-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Em Wed, Mar 25, 2020 at 09:45:31PM +0900, Namhyung Kim escreveu:
+> Each cgroup is kept in the perf_env's cgroup_tree sorted by the cgroup
+> id.  Hist entries have cgroup id can compare it directly and later it
+> can be used to find a group name using this tree.
 
-syzbot found the following crash on:
-
-HEAD commit:    245a4300 Merge branch 'rcu/kcsan' into tip/locking/kcsan
-git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=106b67f1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4b9db179318d21f
-dashboard link: https://syzkaller.appspot.com/bug?extid=71f39766a98dddab97b5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+71f39766a98dddab97b5@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in binder_dec_node_nilocked / binder_state_show
-
-write to 0xffff88809f276954 of 4 bytes by task 1408 on cpu 0:
- binder_state_show+0xd8/0x260 drivers/android/binder.c:5938
- seq_read+0x350/0x9d0 fs/seq_file.c:229
- full_proxy_read+0xbd/0x100 fs/debugfs/file.c:220
- do_loop_readv_writev fs/read_write.c:714 [inline]
- do_loop_readv_writev fs/read_write.c:701 [inline]
- do_iter_read+0x357/0x3d0 fs/read_write.c:935
- vfs_readv+0x9c/0xf0 fs/read_write.c:997
- do_preadv+0x131/0x1d0 fs/read_write.c:1089
- __do_sys_preadv fs/read_write.c:1139 [inline]
- __se_sys_preadv fs/read_write.c:1134 [inline]
- __x64_sys_preadv+0x61/0x80 fs/read_write.c:1134
- do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-read to 0xffff88809f276954 of 4 bytes by task 1416 on cpu 1:
- binder_dec_node_nilocked+0x382/0x610 drivers/android/binder.c:1261
- binder_dec_node_tmpref+0xa3/0x120 drivers/android/binder.c:1379
- binder_put_node drivers/android/binder.c:1387 [inline]
- binder_state_show+0x1aa/0x260 drivers/android/binder.c:5950
- seq_read+0x350/0x9d0 fs/seq_file.c:229
- full_proxy_read+0xbd/0x100 fs/debugfs/file.c:220
- do_loop_readv_writev fs/read_write.c:714 [inline]
- do_loop_readv_writev fs/read_write.c:701 [inline]
- do_iter_read+0x357/0x3d0 fs/read_write.c:935
- vfs_readv+0x9c/0xf0 fs/read_write.c:997
- do_preadv+0x131/0x1d0 fs/read_write.c:1089
- __do_sys_preadv fs/read_write.c:1139 [inline]
- __se_sys_preadv fs/read_write.c:1134 [inline]
- __x64_sys_preadv+0x61/0x80 fs/read_write.c:1134
- do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 1416 Comm: syz-executor.1 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-==================================================================
+This one breaks the 'perf test python' test, I fixed it adding this
+patch before your series:
 
 
+From ea3c4ab73cb2ea2960bba6894560b1ef91e69737 Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Fri, 3 Apr 2020 09:29:52 -0300
+Subject: [PATCH 1/1] perf python: Include rwsem.c in the pythong biding
+
+We'll need it for the cgroup patches, and its better to have it in a
+separate patch in case we need to later revert the cgroup patches.
+
+I.e. without this we have:
+
+  [root@five ~]# perf test -v python
+  19: 'import perf' in python                               :
+  --- start ---
+  test child forked, pid 148447
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  ImportError: /tmp/build/perf/python/perf.cpython-37m-x86_64-linux-gnu.so: undefined symbol: down_write
+  test child finished with -1
+  ---- end ----
+  'import perf' in python: FAILED!
+  [root@five ~]#
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ tools/perf/util/python-ext-sources | 1 +
+ 1 file changed, 1 insertion(+)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index e7279ea6043a..a9d9c142eb7c 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -34,3 +34,4 @@ util/string.c
+ util/symbol_fprintf.c
+ util/units.c
+ util/affinity.c
++util/rwsem.c
+-- 
+2.25.1
+
