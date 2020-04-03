@@ -2,159 +2,263 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C17C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34812C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E399A2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E514F2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NVUuYx+Z";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="LuTVTuVG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IkCqFgbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404123AbgDCPKM (ORCPT
+        id S2404134AbgDCPLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:10:12 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:43352 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403795AbgDCPKL (ORCPT
+        Fri, 3 Apr 2020 11:11:02 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:35358 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403795AbgDCPLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:10:11 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 033EqRMN031461;
-        Fri, 3 Apr 2020 08:10:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=61rf7vfO3xR+W5M+Fk+I1BWiUbEX79Ru2YsSRH+BWwA=;
- b=NVUuYx+Zp+lzp9ieFbtfHQ7mY/lDjhPt5WUCw0bWozrFFMqVUtH8HOCWvQ+89xNWgC7B
- efpkeJmr4kNHCohCHnrE5QBK3s4eGE8HRe6kKUAZ5Hy1CacPpODTmwAFdZ7AMAUOD9fK
- grHvdR10XBkWhu8TLLDj4p28V3rkcIxLmyk= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 304wbbkcpb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 03 Apr 2020 08:10:01 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 3 Apr 2020 08:10:00 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AM0LmYHL5JrONrKi1EDK6zcBXx/+9bakzqOTxQ74LB0cojrAOBSKkd7q56jGxX5vSDsrQE06qCOFfYWDQ8eGKZ8X4vvRjN0Lu3RqTHrH1szUTiZLmtOUYseyGlATVnZkimjRsqFkmFYFGwHVkyGh1bObZ28/J5xwjhkyX/ul4oZSAJI6g0AC+seLP5QyrROW8jupF/EfvYd+oBBSEIKOEYISHPet/83GnYt5EbyzgmD5uV7veaYJQjD6qBen2l7oju8wZ0CUY40yDjww3fTHcyYBrBoi83NTnnn4lGvGLPi0K7Z+Gje5xm9KOwJS8RTzUWbkhGpLMlCesJ/g0wDrPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=61rf7vfO3xR+W5M+Fk+I1BWiUbEX79Ru2YsSRH+BWwA=;
- b=lnsKRI3musqnZJwdxUJmltKJZwdIrtpq10jIClKSF6IehExGmjYpWtGiaK1H8axPENO3aMPS0GwyimVO8ziR+8377DCnStKcaZg2OEACDd4MXlxPuPinCj/UKZeKvCj4bF1e0Lm3xSnP5gVrZHiVcUswwf3RctsaoAX7g77NisEbhMHC9zNiy5YnImv/xFrgGOlP3Y7gwosGIz3FKY81mc0Ufo6jkbrBY7mAQ9o7wzAC5820KuWKt51mgXvUtO57fo2fpibSyKhv1FDQbY8Dp4BhOJj4P7MZIfOp7PCxD2I8bhf4bUVP8T/due/xM1aD1c6r2JEc3VDlqD2M2PrDJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=61rf7vfO3xR+W5M+Fk+I1BWiUbEX79Ru2YsSRH+BWwA=;
- b=LuTVTuVGgcSKMJWWI+fyV8Uv2ttOq3nAebyzULwfJ0HBAe6Qqn5voP0CRAR4Yy5Jj1X0piOVLE97tZKSJ8lDabLkvVuKTsLKZrUS+658wX1BHXsQOyfXZO52xJLEkKaid/3XWImDh15wGJAp775nI+yQYpGs8+bj2RRtz2909A4=
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2421.namprd15.prod.outlook.com (2603:10b6:a02:8a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Fri, 3 Apr
- 2020 15:09:58 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2856.019; Fri, 3 Apr 2020
- 15:09:58 +0000
-Date:   Fri, 3 Apr 2020 08:09:53 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-CC:     Aslan Bakirov <aslan@fb.com>, <akpm@linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <riel@surriel.com>, <mhocko@kernel.org>,
-        <hannes@cmpxchg.org>
-Subject: Re: [PATCH 1/2] mm: cma: NUMA node interface
-Message-ID: <20200403030424.GA220160@carbon.lan>
-References: <20200326212718.3798742-1-aslan@fb.com>
- <65164fdb-38b0-e239-84cc-ab22b92214c5@suse.cz>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65164fdb-38b0-e239-84cc-ab22b92214c5@suse.cz>
-X-ClientProxiedBy: MWHPR08CA0037.namprd08.prod.outlook.com
- (2603:10b6:300:c0::11) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Fri, 3 Apr 2020 11:11:02 -0400
+Received: by mail-vs1-f65.google.com with SMTP id u11so5146312vsg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:11:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s3B7TP3PryQrSMDQHVPJCTFtzd/ywd5l72std87udlQ=;
+        b=IkCqFgbE8sOnVH23Bfho3RoIfyYvdmlWc/wIjurrNtsT+gexEJaUgZwBOJ0C/jJdD1
+         PgAWRVuRJSjJV0P1Qc0uJR+gA1+MciQJ438syn4YTV4DdihnuugJxVQIWYWTTZXQXDTZ
+         vD6xDLcZVIpxcuhFAZ5BbzrIYJfcFfcGZ1KwY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s3B7TP3PryQrSMDQHVPJCTFtzd/ywd5l72std87udlQ=;
+        b=dVOC6ZKOimF2SY1ObPm9bndYuUeywBfKlF9WpOAC/+A7VXWOK1x87+Cqq6tN9NRU2z
+         AR6WfEm01wk4LL56ZkKD6DfBLcUhvRZGv4vZsTsw1Q2ch9KOFMTKhryGMByR6/5gXVFM
+         9foJoe9+gZOkUkGKKJvzlt29EgCgQYbTprZVWPB8yjsYOP6yxBKzeYWf+QIM0t9dkbwT
+         DnJMEgkb9wuQbuDGZyyFpT5xN23YkeoJ6cGb8SUhP1c+2sy2eQsLP4LWcltyeFTgPt6l
+         Ig1GFElDn5ospJA0WlUwtHesKTudGcJXBbBwVi5UPCHhyTQkDcxmT6uS9xvuR1egdQr7
+         J4FQ==
+X-Gm-Message-State: AGi0Puas2AV2pTyb1BSYokpl2eTR2H1vYC0VeEnQltHn71UeJZznX59Y
+        vtTkqh+znEwa7H8HZXo9w1dPXUwF5Vk=
+X-Google-Smtp-Source: APiQypLHi2mrSoWE3WQ2tiBTeKsEzHhwhk0WBXgOmPL5eENw//7YiTHZa1Wfdn3pHMj4vuvrl9VdcA==
+X-Received: by 2002:a67:6896:: with SMTP id d144mr6279420vsc.104.1585926660188;
+        Fri, 03 Apr 2020 08:11:00 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id p66sm1229425vke.13.2020.04.03.08.10.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 08:10:59 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id y17so2813802uap.13
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:10:58 -0700 (PDT)
+X-Received: by 2002:ab0:7406:: with SMTP id r6mr6622996uap.22.1585926657542;
+ Fri, 03 Apr 2020 08:10:57 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.lan (2620:10d:c090:400::5:5756) by MWHPR08CA0037.namprd08.prod.outlook.com (2603:10b6:300:c0::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend Transport; Fri, 3 Apr 2020 15:09:57 +0000
-X-Originating-IP: [2620:10d:c090:400::5:5756]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f7a67373-0ae0-4a9e-6215-08d7d7e112d2
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2421:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB24218E2A7C69194E3F46DDAABEC70@BYAPR15MB2421.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0362BF9FDB
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(366004)(66946007)(1076003)(55016002)(66556008)(498600001)(8936002)(7696005)(9686003)(8886007)(16526019)(6666004)(186003)(6916009)(52116002)(66476007)(86362001)(2906002)(8676002)(81166006)(81156014)(53546011)(36756003)(4326008)(5660300002)(33656002)(6506007)(27376004);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4ch9em6hVsPkRhiF6IFqBXCWx8hjzG0EZlWDcZ5Jq/94CFB+Woz01TEERiFJBFSNB3qZI/c/zbcy9Ns7xeEllqvYqREjXEZtlUO5Njx+om1l14tcXA1cetbPj+t9LsmDFpPWgO63JG+14maHW2HzRW0NdsW0OA0ZyvyuYW3dhUtjn92uyDFYtq6RwYFf983nkIn58G575Q5+mkgYMVFbrM9BLzGjlXEFXIouAyH0AVhFjBSb1wGnBarTOugobQVHWEzIIrvQjsP9M+JH+fPwTNNvnUeK7XhWq1OYoxnE+hEK4YRT5gYJtUyHlXhcVbSgWC689KTSNz1m2oLn3r3yLE39jJ8oA/zfQzLRoeGxkzr7XrAWH+V8SGENif5MqxCIRmvADt0wwcoA9b94CTEfyvfcQCRcu4hRvBbgAl9ihu3nyE/czE1VqIESivSezgLRgDkLZ4NbR/+p26yUmKV9ZgFnNF2u1jjF71DJxiJconSnU2xomcrkbzxEYUp76e9C
-X-MS-Exchange-AntiSpam-MessageData: DYVsmWD0nx3HzCRdZoOASnVWpO0dH9nyqEmGES1HdmmKO6G+01fEPOwTYwGrrig5xQcGnaIVQ+BVW/44rawvkEjZCLY4stxwaoTjZ6G45VMLIFbprZgq8AOpXxY5gvDN4dY/xL/7Wusuln/uugMXmHFQFSdGKdJi/TvLCgJ+QBxE+vtq6T4Gav5jMb8KOv2T
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7a67373-0ae0-4a9e-6215-08d7d7e112d2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2020 15:09:58.3063
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fl2DDb2kS6ttk1djhKNzNrI60eqn/bluPr8BatWlT0iW4NXetaF8Z+eBY7Nz8zaz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2421
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_11:2020-04-03,2020-04-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- mlxlogscore=999 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 bulkscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004030133
-X-FB-Internal: deliver
+References: <20200402155130.8264-1-dianders@chromium.org> <20200402085050.v2.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
+ <20200403013356.GA6987@ming.t460p>
+In-Reply-To: <20200403013356.GA6987@ming.t460p>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 3 Apr 2020 08:10:45 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
+Message-ID: <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] blk-mq: Rerun dispatching in the case of budget contention
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Salman Qazi <sqazi@google.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
+        Ajay Joshi <ajay.joshi@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Hou Tao <houtao1@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 05:48:00PM +0200, Vlastimil Babka wrote:
-> On 3/26/20 10:27 PM, Aslan Bakirov wrote:
-> > I've noticed that there is no interfaces exposed by CMA which would let me
-> > to declare contigous memory on particular NUMA node.
-> > 
-> > This patchset adds the ability to try to allocate contiguous memory on
-> > specific node.
+Hi,
 
-Hello, Vlastimil!
+On Thu, Apr 2, 2020 at 6:34 PM Ming Lei <ming.lei@redhat.com> wrote:
+>
+> On Thu, Apr 02, 2020 at 08:51:30AM -0700, Douglas Anderson wrote:
+> > It is possible for two threads to be running
+> > blk_mq_do_dispatch_sched() at the same time with the same "hctx".
+> > This is because there can be more than one caller to
+> > __blk_mq_run_hw_queue() with the same "hctx" and hctx_lock() doesn't
+> > prevent more than one thread from entering.
+> >
+> > If more than one thread is running blk_mq_do_dispatch_sched() at the
+> > same time with the same "hctx", they may have contention acquiring
+> > budget.  The blk_mq_get_dispatch_budget() can eventually translate
+> > into scsi_mq_get_budget().  If the device's "queue_depth" is 1 (not
+> > uncommon) then only one of the two threads will be the one to
+> > increment "device_busy" to 1 and get the budget.
+> >
+> > The losing thread will break out of blk_mq_do_dispatch_sched() and
+> > will stop dispatching requests.  The assumption is that when more
+> > budget is available later (when existing transactions finish) the
+> > queue will be kicked again, perhaps in scsi_end_request().
+> >
+> > The winning thread now has budget and can go on to call
+> > dispatch_request().  If dispatch_request() returns NULL here then we
+> > have a potential problem.  Specifically we'll now call
+>
+> As I mentioned before, it is a BFQ specific issue, it tells blk-mq
+> that it has work to do, and now the budget is assigned to the only
+> winning thread, however, dispatch_request() still returns NULL.
 
-> 
-> I would say more explicitly that 'try' here means it will fallback to other
-> nodes if the specific one doesn't work. At least AFAICS that's what it does by
-> calling memblock_alloc_range_nid() with exact_nid=false.
+Correct that it only happens with BFQ, but whether it's a BFQ bug or
+not just depends on how you define the has_work() API.  If has_work()
+is allowed to be in-exact then it's either a blk-mq bug or a SCSI bug
+depending on how you cut it.  If has_work() must be exact then it is
+certainly a BFQ bug.  If has_work() doesn't need to be exact then it's
+not a BFQ bug.  I believe that a sane API could be defined either way.
+Either has_work() can be defined as a lightweight hint to trigger
+heavier code or it can be defined as something exact.  It's really up
+to blk-mq to say how they define it.
 
-Hm, maybe we need exact_nid=true for this case? The whole point here is to
-have a per-node cma zone, so if it's not possible to allocate one on the
-specific node, maybe it's better to just skip it?
+From his response on the SCSI patch [1], it sounded like Jens was OK
+with has_work() being a lightweight hint as long as BFQ ensures that
+the queues run later.  ...but, as my investigation found, I believe
+that BFQ _does_ try to ensure that the queue is run at a later time by
+calling blk_mq_run_hw_queues().  The irony is that due to the race
+we're talking about here, blk_mq_run_hw_queues() isn't guaranteed to
+be reliable if has_work() is inexact.  :(  One way to address this is
+to make blk_mq_run_hw_queues() reliable even if has_work() is inexact.
 
-> 
-> > Implement a new method for declaring contigous memory on particular node
-> > and keep cma_declare_contiguous() as a wrapper.
-> 
-> Should there be also support for using this node spcification in the cma=X boot
-> param?
-
-I'd wait for a first real usecase. It's fairly easy to add one, and very hard to remove,
-so I'd be conservative here.
-
-Also, in the future we might want to allocate it automatically and shrink on demand.
-
-Btw, thank you very much for gathering all patches for Michal.
+...so Jens: care to clarify how you'd like has_work() to be defined?
 
 
-Thanks!
+> > - Because this problem only trips with inexact has_work() it's
+> >   believed that blk_mq_do_dispatch_ctx() does not need a similar
+> >   change.
+>
+> Right, I prefer to fix it in BFQ, given it isn't a generic issue,
+> not worth of generic solution.
+
+Just to confirm: it sounds like you are saying that BFQ is not a first
+class citizen here because not everyone uses BFQ.  Is that really the
+best policy?  Couldn't I say that SCSI shouldn't be a first class
+citizen because not everyone uses SCSI?  In such a case I could argue
+that we should speed up the blk-mq layer by removing all the budget
+code since SCSI is the only user.  I'm not actually suggesting it,
+only pointing out that sometimes we need to make allowances in the
+code.
+
+
+> > @@ -97,12 +97,34 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+> >               if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+> >                       break;
+> >
+> > -             if (!blk_mq_get_dispatch_budget(hctx))
+> > -                     break;
+> > +
+> > +             if (!blk_mq_get_dispatch_budget(hctx)) {
+> > +                     /*
+> > +                      * We didn't get budget so set contention.  If
+> > +                      * someone else had the budget but didn't dispatch
+> > +                      * they'll kick everything.  NOTE: we check one
+> > +                      * extra time _after_ setting contention to fully
+> > +                      * close the race.  If we don't actually dispatch
+> > +                      * we'll detext faux contention (with ourselves)
+> > +                      * but that should be rare.
+> > +                      */
+> > +                     atomic_set(&q->budget_contention, 1);
+> > +
+> > +                     if (!blk_mq_get_dispatch_budget(hctx))
+>
+> scsi_mq_get_budget() implies a smp_mb(), so the barrier can order
+> between blk_mq_get_dispatch_budget() and atomic_set(&q->budget_contention, 0|1).
+
+I always struggle when working with memory barriers.  I think you are
+saying that this section of code is OK, though, presumably because the
+SCSI code does "atomic_inc_return" which implies this barrier.
+
+Do you happen to know if it's documented that anyone who implements
+get_budget() for "struct blk_mq_ops" will have a memory barrier here?
+I know SCSI is the only existing user, but we'd want to keep it
+generic.
+
+
+> > +                             break;
+> > +             }
+> >
+> >               rq = e->type->ops.dispatch_request(hctx);
+> >               if (!rq) {
+> >                       blk_mq_put_dispatch_budget(hctx);
+> > +
+> > +                     /*
+> > +                      * We've released the budget but us holding it might
+> > +                      * have prevented someone else from dispatching.
+> > +                      * Detect that case and run all queues again.
+> > +                      */
+> > +                     if (atomic_read(&q->budget_contention))
+>
+> scsi_mq_put_budget() doesn't imply smp_mb(), so one smp_mb__after_atomic()
+> is needed between the above two op.
+
+OK, thanks.  I will add that we decide to move forward with this
+patch.  Again I'd wonder if this type of thing should be documented.
+
+
+> > +                             blk_mq_run_hw_queues(q, true);
+> >                       break;
+> >               }
+> >
+> > diff --git a/block/blk-mq.c b/block/blk-mq.c
+> > index 2cd8d2b49ff4..6163c43ceca5 100644
+> > --- a/block/blk-mq.c
+> > +++ b/block/blk-mq.c
+> > @@ -1528,6 +1528,9 @@ void blk_mq_run_hw_queues(struct request_queue *q, bool async)
+> >       struct blk_mq_hw_ctx *hctx;
+> >       int i;
+> >
+> > +     /* We're running the queues, so clear the contention detector */
+> > +     atomic_set(&q->budget_contention, 0);
+> > +
+>
+> You add extra cost in fast path.
+
+Yes, but it is a fairly minor cost added.  It's called once in a place
+where we're unlikely to be looping and where we're about to do a lot
+heavier operations (perhaps in a loop).  This doesn't feel like a
+dealbreaker.
+
+
+> >       queue_for_each_hw_ctx(q, hctx, i) {
+> >               if (blk_mq_hctx_stopped(hctx))
+> >                       continue;
+> > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> > index f629d40c645c..07f21e45d993 100644
+> > --- a/include/linux/blkdev.h
+> > +++ b/include/linux/blkdev.h
+> > @@ -583,6 +583,8 @@ struct request_queue {
+> >
+> >  #define BLK_MAX_WRITE_HINTS  5
+> >       u64                     write_hints[BLK_MAX_WRITE_HINTS];
+> > +
+> > +     atomic_t                budget_contention;
+>
+> It needn't to be a atomic variable, and simple 'unsigned'
+> int should be fine, what matters is that the order between
+> R/W this flag and get/put budget.
+
+Apparently I'm the only one who feels atomic_t is more documenting
+here.  I will cede to the will of the majority here and change to
+'unsigned int' if we decide to move forward with this patch.
+
+-Doug
+
+[1] https://lore.kernel.org/r/d6af2344-11f7-5862-daed-e21cbd496d92@kernel.dk
