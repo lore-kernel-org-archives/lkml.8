@@ -2,116 +2,131 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225B8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BC5C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A702073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A5F2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="RN9Kg8Bh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="exY1mdH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391043AbgDCQ4r (ORCPT
+        id S2391080AbgDCQ4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:56:47 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:36600 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbgDCQ4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:56:45 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48v5gZ3jQRz89;
-        Fri,  3 Apr 2020 18:56:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585933002; bh=AKiZe9v9Y0LBmwVIkVjc7YkrXM9XLJKMJUSVn3jCmO0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RN9Kg8Bh/VOAImlkFnNMcOXp3WXSAtBBZrJ0Pfd64BT8ZIVORDToaZltZ0nD4H3ee
-         UFzA8m03JQT4oEDSQgerdStSiL66V1HAZsbsHhqAuFg7Mdh4adBD63fSjUyt1RX4U1
-         6Za+tRZtwsjFQcbMyN54s8ejuWV2JGtcg2juZD3457Q7qLVBdJLy1IukiEkla71den
-         v1layTbWEsbBnzgFfssxdmrNY+gxNqXcnaYdYL1h/j49OF+TloBMA1zwPOvVetp+2f
-         Sveg5bm44U8mf9rEnL4SG7zNYk79iGei9dsny3ixmofwvHoMnV+SKeRacyvkRKjiWt
-         pmee4yYZOUHUA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 3 Apr 2020 18:56:39 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 4/8] power: supply: core: tabularize HWMON temperature
- labels
-Message-ID: <20200403165639.GA1966@qmqm.qmqm.pl>
-References: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
- <ae82abf9da86542f5657a8c37106bcdae5011927.1585929579.git.mirq-linux@rere.qmqm.pl>
- <dad5d544-7f6d-5c0d-6c6e-9d23cb0a6055@roeck-us.net>
+        Fri, 3 Apr 2020 12:56:53 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:17956 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391021AbgDCQ4u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:56:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585933009; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=9GAbZWuPcTKjEXz3EeVxBNWDn+mYvVxInvRy5MFxrck=; b=exY1mdH5usVAVNjV1pjSINXxmhIkZn2PrpNoO3Ia8XC1gVI+avMdfPCnAwA24rSTCeENORyb
+ OUsJD1rxvm1r7l3Jzvq/NZyJX1gi/pw/CaC6E77oVTNKjeK1L5iQBtUd+BHRPEytYd8FDacd
+ OF++izEHc3I5NeilEzoxtPDPVmk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e876ac7.7fc470598378-smtp-out-n01;
+ Fri, 03 Apr 2020 16:56:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 658F5C44791; Fri,  3 Apr 2020 16:56:39 +0000 (UTC)
+Received: from [10.110.122.98] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 171CCC433D2;
+        Fri,  3 Apr 2020 16:56:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 171CCC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v5 2/5] phy: qcom-snps: Add SNPS USB PHY driver for QCOM
+ based SOCs
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <1585880634-15222-1-git-send-email-wcheng@codeaurora.org>
+ <1585880634-15222-3-git-send-email-wcheng@codeaurora.org>
+ <20200403060127.GM72691@vkoul-mobl>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <91262538-6b1e-afd3-97f8-614bb4a54b5a@codeaurora.org>
+Date:   Fri, 3 Apr 2020 09:56:37 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dad5d544-7f6d-5c0d-6c6e-9d23cb0a6055@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200403060127.GM72691@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 09:47:40AM -0700, Guenter Roeck wrote:
-> On 4/3/20 9:23 AM, Micha³ Miros³aw wrote:
-> > Rework power_supply_hwmon_read_string() to check it's parameters.
-> > This allows to extend it later with labels for other types of
-> > measurements.
-> > 
-> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
-> > ---
-> > v2: split from fix temperature labels
-> > ---
-> >  drivers/power/supply/power_supply_hwmon.c | 21 +++++++++++++++++++--
-> >  1 file changed, 19 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-> > index 67b6ee60085e..48c73994732c 100644
-> > --- a/drivers/power/supply/power_supply_hwmon.c
-> > +++ b/drivers/power/supply/power_supply_hwmon.c
-> > @@ -43,6 +43,11 @@ static int power_supply_hwmon_curr_to_property(u32 attr)
-> >  	}
-> >  }
-> >  
-> > +static const char *const ps_temp_label[] = {
-> > +	"temp",
-> > +	"ambient temp",
-> > +};
-> > +
-> >  static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
-> >  {
-> >  	if (channel) {
-> > @@ -144,8 +149,20 @@ static int power_supply_hwmon_read_string(struct device *dev,
-> >  					  u32 attr, int channel,
-> >  					  const char **str)
-> >  {
-> > -	*str = channel ? "temp ambient" : "temp";
-> > -	return 0;
-> > +	if (channel < 0)
-> > +		return -EINVAL;
-> > +
-> 
-> This is unnecessary.
-> 
-> > +	switch (type) {
-> > +	case hwmon_temp:
-> > +		if (channel >= ARRAY_SIZE(ps_temp_label))
-> > +			return -EINVAL;
-> 
-> As is this. We don't usually check boundaries like this for
-> in-kernel APIs, and I personally would not want to have it
-> introduced in the kernel more than necessary. This just increases
-> kernel image size with zero benefit.
+Hi Vinod,
 
-I'll amend other patches in the same spirit, then. I like the code size
-argument.
+Thanks for the review, I'll address these in the next version.
 
-Best Regards,
-Micha³ Miros³aw
+On 4/2/2020 11:01 PM, Vinod Koul wrote:
+> On 02-04-20, 19:23, Wesley Cheng wrote:
+>> This adds the SNPS FemtoPHY V2 driver used in QCOM SOCs.  There
+>> are potentially multiple instances of this UTMI PHY on the
+>> SOC, all which can utilize this driver.  The V2 driver will
+>> have a different register map compared to V1.
+> 
+> Some nitpicks below, otherwise:
+> 
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> 
+>> +/**
+>> + * struct qcom_snps_hsphy - structure holding snps hs phy attributes
+>> + *
+>> + * @phy: generic phy
+>> + * @base: iomapped memory space for qubs2 phy
+>> + *
+>> + * @cfg_ahb_clk: AHB2PHY interface clock
+>> + * @ref_clk: phy reference clock
+>> + * @iface_clk: phy interface clock
+>> + * @phy_reset: phy reset control
+>> + * @vregs: regulator supplies bulk data
+>> +
+> 
+> This is missing the marker * for kernel doc
+> 
+>> + * @phy_initialized: if PHY has been initialized correctly
+>> + *
+> 
+> This empty line is redundant
+> 
+>> + */
+>> +struct qcom_snps_hsphy {
+>> +	struct phy *phy;
+>> +	void __iomem *base;
+>> +
+>> +	struct clk *cfg_ahb_clk;
+>> +	struct clk *ref_clk;
+>> +	struct reset_control *phy_reset;
+>> +	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
+>> +
+>> +	bool phy_initialized;
+>> +};
+>> +
+>> +static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+>> +				    u32 mask, u32 val)
+> 
+> coding style mandates that second line should start at preceeding line
+> opening brace :), so can you please make it:
+> 
+> static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+>                                               u32 mask, u32 val)
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
