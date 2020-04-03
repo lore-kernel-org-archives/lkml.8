@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE320C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CDDC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7911020721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACDF20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WE5TVmWF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwqJEDsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404283AbgDCPbG (ORCPT
+        id S2404305AbgDCPbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:31:06 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27691 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404269AbgDCPbF (ORCPT
+        Fri, 3 Apr 2020 11:31:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24259 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404293AbgDCPbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:31:05 -0400
+        Fri, 3 Apr 2020 11:31:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585927865;
+        s=mimecast20190719; t=1585927867;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=KOB528RQaBcIIxwNxgwnDzZl9thgTK4yeE9O3dHXbMk=;
-        b=WE5TVmWFEVinsif276lRNhAR6Yw3MkR1+AlW+l85t0gDkJzwR87b1NZs9KwVrPN2nHqyKX
-        SYexVrF/k3tlojmj5XdIR0YEVR42Gw1IsQ5KRuMNGTpKZA5kFNcDWHJ2nDP5V/emCpbAeh
-        JISZtdr8AZVOXNo9GXFiT6hgt3pPHog=
+        bh=CD7baw1Qg+npMYnPmj7hxrzhNyYIW5i9m/6usTzXTDc=;
+        b=cwqJEDsXUcuIEETxvUreLUlMinpydsnzhUIw3k+NvDOiaIi10P/WqGEQv/JD7qo9SuvjZ+
+        cK2ZALLY98lGdQFxqJq0nEM5miLn4wUh+B89X6HFmUN9yWR5DK+tNXuTv5xbFo6gHS6JCR
+        BPSh1+hy6k7N9Yw+QWmMHvIT7UniVkU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-PkOhlhWAOjGlSOe86hgh-A-1; Fri, 03 Apr 2020 11:31:01 -0400
-X-MC-Unique: PkOhlhWAOjGlSOe86hgh-A-1
+ us-mta-279-E-MBlT1wM_yzRbhycaQEoQ-1; Fri, 03 Apr 2020 11:31:05 -0400
+X-MC-Unique: E-MBlT1wM_yzRbhycaQEoQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2F351005513;
-        Fri,  3 Apr 2020 15:30:59 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51C9B1005516;
+        Fri,  3 Apr 2020 15:31:04 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-112-213.ams2.redhat.com [10.36.112.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A79C326DC4;
-        Fri,  3 Apr 2020 15:30:57 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 66B0D26DC4;
+        Fri,  3 Apr 2020 15:31:02 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -53,10 +53,10 @@ Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         Cornelia Huck <cohuck@redhat.com>,
         Janosch Frank <frankja@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>, stable@vger.kernel.org
-Subject: [PATCH v2 1/5] KVM: s390: vsie: Fix region 1 ASCE sanity shadow address checks
-Date:   Fri,  3 Apr 2020 17:30:46 +0200
-Message-Id: <20200403153050.20569-2-david@redhat.com>
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v2 3/5] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
+Date:   Fri,  3 Apr 2020 17:30:48 +0200
+Message-Id: <20200403153050.20569-4-david@redhat.com>
 In-Reply-To: <20200403153050.20569-1-david@redhat.com>
 References: <20200403153050.20569-1-david@redhat.com>
 MIME-Version: 1.0
@@ -67,54 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case we have a region 1 ASCE, our shadow/g3 address can have any value=
-.
-Unfortunately, (-1UL << 64) is undefined and triggers sometimes,
-rejecting valid shadow addresses when trying to walk our shadow table
-hierarchy.
+We have to properly retry again by returning -EINVAL immediately in case
+somebody else instantiated the table concurrently. We missed to add the
+goto in this function only. The code now matches the other, similar
+shadowing functions.
 
-The result is that the prefix cannot get mapped and will loop basically
-forever trying to map it (-EAGAIN loop).
+We are overwriting an existing region 2 table entry. All allocated pages
+are added to the crst_list to be freed later, so they are not lost
+forever. However, when unshadowing the region 2 table, we wouldn't trigge=
+r
+unshadowing of the original shadowed region 3 table that we replaced. It
+would get unshadowed when the original region 3 table is modified. As it'=
+s
+not connected to the page table hierarchy anymore, it's not going to get
+used anymore. However, for a limited time, this page table will stick
+around, so it's in some sense a temporary memory leak.
 
-After all, the broken check is only a sanity check, our table shadowing
-code in kvm_s390_shadow_tables() already checks these conditions, injecti=
-ng
-proper translation exceptions. Turn it into a WARN_ON_ONCE().
+Identified by manual code inspection. I don't think this classifies as
+stable material.
 
-Fixes: 4be130a08420 ("s390/mm: add shadow gmap support")
-Tested-by: Janosch Frank <frankja@linux.ibm.com>
-Reported-by: Janosch Frank <frankja@linux.ibm.com>
-Cc: <stable@vger.kernel.org> # v4.8+
+Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table s=
+hadowing")
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/s390/mm/gmap.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/s390/mm/gmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 2fbece47ef6f..b93dd54b234a 100644
+index b93dd54b234a..24ef30fb0833 100644
 --- a/arch/s390/mm/gmap.c
 +++ b/arch/s390/mm/gmap.c
-@@ -787,14 +787,18 @@ static void gmap_call_notifier(struct gmap *gmap, u=
-nsigned long start,
- static inline unsigned long *gmap_table_walk(struct gmap *gmap,
- 					     unsigned long gaddr, int level)
- {
-+	const int asce_type =3D gmap->asce & _ASCE_TYPE_MASK;
- 	unsigned long *table;
-=20
- 	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
- 		return NULL;
- 	if (gmap_is_shadow(gmap) && gmap->removed)
- 		return NULL;
--	if (gaddr & (-1UL << (31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)))
-+
-+	if (WARN_ON_ONCE(asce_type !=3D _ASCE_TYPE_REGION1 &&
-+			 gaddr & (-1UL << (31 + (asce_type >> 2) * 11))))
- 		return NULL;
-+
- 	table =3D gmap->table;
- 	switch (gmap->asce & _ASCE_TYPE_MASK) {
- 	case _ASCE_TYPE_REGION1:
+@@ -1844,6 +1844,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long =
+saddr, unsigned long r3t,
+ 		goto out_free;
+ 	} else if (*table & _REGION_ENTRY_ORIGIN) {
+ 		rc =3D -EAGAIN;		/* Race with shadow */
++		goto out_free;
+ 	}
+ 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
+ 	/* mark as invalid as long as the parent table is not protected */
 --=20
 2.25.1
 
