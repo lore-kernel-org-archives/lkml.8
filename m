@@ -2,216 +2,156 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864FCC2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F870C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661D020737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04C42073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390440AbgDCJ3g (ORCPT
+        id S2390582AbgDCJaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:29:36 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:59525 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgDCJ3g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:29:36 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id fe1fc386055b1018; Fri, 3 Apr 2020 11:29:32 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Qian Cai <cai@lca.pw>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        lenb@kernel.org, peterz@infradead.org, linux-acpi@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86/acpi: fix a deadlock with cpu hotplug
-Date:   Fri, 03 Apr 2020 11:29:32 +0200
-Message-ID: <2025426.V7fFeAKXnt@kreacher>
-In-Reply-To: <20200329142109.1501-1-cai@lca.pw>
-References: <20200329142109.1501-1-cai@lca.pw>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 3 Apr 2020 05:30:07 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:42908 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727431AbgDCJaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 05:30:06 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX2gQAodeHGAjAA--.150S3;
+        Fri, 03 Apr 2020 17:29:58 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v4 1/3] MIPS: Loongson: Get host bridge information
+Date:   Fri,  3 Apr 2020 17:29:49 +0800
+Message-Id: <1585906191-26037-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1585906191-26037-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1585906191-26037-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9DxX2gQAodeHGAjAA--.150S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCryDAr1DCF4UZw1UZw43Wrg_yoW5ZFW3pa
+        9Fyw15Grs5Wr13ur4fArWj9r13Aan5tFW3WFW2gw1Y9r9xXw1YqFsYkF18Zr17AF45Ga48
+        Xasagr48GF17Cw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9m14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+        8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+        IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2
+        IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+        6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+        AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
+        s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU39NfUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday, March 29, 2020 4:21:09 PM CEST Qian Cai wrote:
-> Similar to the commit 0266d81e9bf5 ("acpi/processor: Prevent cpu hotplug
-> deadlock") except this is for acpi_processor_ffh_cstate_probe():
-> 
-> "The problem is that the work is scheduled on the current CPU from the
-> hotplug thread associated with that CPU.
-> 
-> It's not required to invoke these functions via the workqueue because
-> the hotplug thread runs on the target CPU already.
-> 
-> Check whether current is a per cpu thread pinned on the target CPU and
-> invoke the function directly to avoid the workqueue."
-> 
-> Since CONFIG_ACPI_PROCESSOR (for cstate.c) selects
-> CONFIG_ACPI_CPU_FREQ_PSS (for processor_throttling.c) on x86, just
-> make call_on_cpu() a static inline function from processor_throttling.c
-> and use it in cstate.c.
-> 
->  WARNING: possible circular locking dependency detected
->  ------------------------------------------------------
->  cpuhp/1/15 is trying to acquire lock:
->  ffffc90003447a28 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: __flush_work+0x4c6/0x630
-> 
->  but task is already holding lock:
->  ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
-> 
->  which lock already depends on the new lock.
-> 
->  the existing dependency chain (in reverse order) is:
-> 
->  -> #1 (cpu_hotplug_lock){++++}-{0:0}:
->  cpus_read_lock+0x3e/0xc0
->  irq_calc_affinity_vectors+0x5f/0x91
->  __pci_enable_msix_range+0x10f/0x9a0
->  pci_alloc_irq_vectors_affinity+0x13e/0x1f0
->  pci_alloc_irq_vectors_affinity at drivers/pci/msi.c:1208
->  pqi_ctrl_init+0x72f/0x1618 [smartpqi]
->  pqi_pci_probe.cold.63+0x882/0x892 [smartpqi]
->  local_pci_probe+0x7a/0xc0
->  work_for_cpu_fn+0x2e/0x50
->  process_one_work+0x57e/0xb90
->  worker_thread+0x363/0x5b0
->  kthread+0x1f4/0x220
->  ret_from_fork+0x27/0x50
-> 
->  -> #0 ((work_completion)(&wfc.work)){+.+.}-{0:0}:
->  __lock_acquire+0x2244/0x32a0
->  lock_acquire+0x1a2/0x680
->  __flush_work+0x4e6/0x630
->  work_on_cpu+0x114/0x160
->  acpi_processor_ffh_cstate_probe+0x129/0x250
->  acpi_processor_evaluate_cst+0x4c8/0x580
->  acpi_processor_get_power_info+0x86/0x740
->  acpi_processor_hotplug+0xc3/0x140
->  acpi_soft_cpu_online+0x102/0x1d0
->  cpuhp_invoke_callback+0x197/0x1120
->  cpuhp_thread_fun+0x252/0x2f0
->  smpboot_thread_fn+0x255/0x440
->  kthread+0x1f4/0x220
->  ret_from_fork+0x27/0x50
-> 
->  other info that might help us debug this:
-> 
->  Chain exists of:
->  (work_completion)(&wfc.work) --> cpuhp_state-up --> cpuidle_lock
-> 
->  Possible unsafe locking scenario:
-> 
->  CPU0                    CPU1
->  ----                    ----
->  lock(cpuidle_lock);
->                          lock(cpuhp_state-up);
->                          lock(cpuidle_lock);
->  lock((work_completion)(&wfc.work));
-> 
->  *** DEADLOCK ***
-> 
->  3 locks held by cpuhp/1/15:
->  #0: ffffffffaf51ab10 (cpu_hotplug_lock){++++}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
->  #1: ffffffffaf51ad40 (cpuhp_state-up){+.+.}-{0:0}, at: cpuhp_thread_fun+0x69/0x2f0
->  #2: ffffffffafa1c0e8 (cpuidle_lock){+.+.}-{3:3}, at: cpuidle_pause_and_lock+0x17/0x20
-> 
->  Call Trace:
->  dump_stack+0xa0/0xea
->  print_circular_bug.cold.52+0x147/0x14c
->  check_noncircular+0x295/0x2d0
->  __lock_acquire+0x2244/0x32a0
->  lock_acquire+0x1a2/0x680
->  __flush_work+0x4e6/0x630
->  work_on_cpu+0x114/0x160
->  acpi_processor_ffh_cstate_probe+0x129/0x250
->  acpi_processor_evaluate_cst+0x4c8/0x580
->  acpi_processor_get_power_info+0x86/0x740
->  acpi_processor_hotplug+0xc3/0x140
->  acpi_soft_cpu_online+0x102/0x1d0
->  cpuhp_invoke_callback+0x197/0x1120
->  cpuhp_thread_fun+0x252/0x2f0
->  smpboot_thread_fn+0x255/0x440
->  kthread+0x1f4/0x220
->  ret_from_fork+0x27/0x50
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
-> 
-> v2:
-> Make call_on_cpu() a static inline function to avoid a compilation
-> error when ACPI_PROCESSOR=m thanks to lkp@intel.com.
-> 
->  arch/x86/kernel/acpi/cstate.c       |  3 ++-
->  drivers/acpi/processor_throttling.c |  7 -------
->  include/acpi/processor.h            | 10 ++++++++++
->  3 files changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-> index caf2edccbad2..49ae4e1ac9cd 100644
-> --- a/arch/x86/kernel/acpi/cstate.c
-> +++ b/arch/x86/kernel/acpi/cstate.c
-> @@ -161,7 +161,8 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
->  
->  	/* Make sure we are running on right CPU */
->  
-> -	retval = work_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx);
-> +	retval = call_on_cpu(cpu, acpi_processor_ffh_cstate_probe_cpu, cx,
-> +			     false);
->  	if (retval == 0) {
->  		/* Use the hint in CST */
->  		percpu_entry->states[cx->index].eax = cx->address;
-> diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
-> index 532a1ae3595a..a0bd56ece3ff 100644
-> --- a/drivers/acpi/processor_throttling.c
-> +++ b/drivers/acpi/processor_throttling.c
-> @@ -897,13 +897,6 @@ static long __acpi_processor_get_throttling(void *data)
->  	return pr->throttling.acpi_processor_get_throttling(pr);
->  }
->  
-> -static int call_on_cpu(int cpu, long (*fn)(void *), void *arg, bool direct)
-> -{
-> -	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
-> -		return fn(arg);
-> -	return work_on_cpu(cpu, fn, arg);
-> -}
-> -
->  static int acpi_processor_get_throttling(struct acpi_processor *pr)
->  {
->  	if (!pr)
-> diff --git a/include/acpi/processor.h b/include/acpi/processor.h
-> index 47805172e73d..770d226b22f2 100644
-> --- a/include/acpi/processor.h
-> +++ b/include/acpi/processor.h
-> @@ -297,6 +297,16 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
->  }
->  #endif
->  
-> +#ifdef CONFIG_ACPI_CPU_FREQ_PSS
+Read the address of host bridge configuration space to get the vendor ID
+and device ID of host bridge, and then we can distinguish various types
+of host bridge such as LS7A or RS780E.
 
-Why does this depend on CONFIG_ACPI_CPU_FREQ_PSS?
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-> +static inline int call_on_cpu(int cpu, long (*fn)(void *), void *arg,
-> +			      bool direct)
-> +{
-> +	if (direct || (is_percpu_thread() && cpu == smp_processor_id()))
-> +		return fn(arg);
-> +	return work_on_cpu(cpu, fn, arg);
-> +}
-> +#endif
-> +
->  /* in processor_perflib.c */
->  
->  #ifdef CONFIG_CPU_FREQ
-> 
+v3:
+  - Modify the macro definition HOST_BRIDGE_CONFIG_ADDR and
+    add comment to make it easy to read.
+  - Use PCI_VENDOR_ID_LOONGSON in pci_ids.h instead of 0x0014
 
+  PCI_VENDOR_ID_LOONGSON depends on the mainline tree's commit:
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9acb9fe18d86
 
+v4:
+  - Use LS7A instead of Loongson 7A1000 in the description
+  - Use LS7A or ls7a instead of LS7A1000 or ls7a1000 in the code
 
+ arch/mips/include/asm/mach-loongson64/boot_param.h |  6 ++++++
+ arch/mips/loongson64/env.c                         | 18 ++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
+index 2ed483e..fc9f14b 100644
+--- a/arch/mips/include/asm/mach-loongson64/boot_param.h
++++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+@@ -192,6 +192,11 @@ struct boot_params {
+ 	struct efi_reset_system_t reset_system;
+ };
+ 
++enum loongson_bridge_type {
++	RS780E = 1,
++	LS7A = 2
++};
++
+ struct loongson_system_configuration {
+ 	u32 nr_cpus;
+ 	u32 nr_nodes;
+@@ -200,6 +205,7 @@ struct loongson_system_configuration {
+ 	u16 boot_cpu_id;
+ 	u16 reserved_cpus_mask;
+ 	enum loongson_cpu_type cputype;
++	enum loongson_bridge_type bridgetype;
+ 	u64 ht_control_base;
+ 	u64 pci_mem_start_addr;
+ 	u64 pci_mem_end_addr;
+diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+index 2554ef1..71f4aaf 100644
+--- a/arch/mips/loongson64/env.c
++++ b/arch/mips/loongson64/env.c
+@@ -14,12 +14,15 @@
+  * Author: Wu Zhangjin, wuzhangjin@gmail.com
+  */
+ #include <linux/export.h>
++#include <linux/pci_ids.h>
+ #include <asm/bootinfo.h>
+ #include <loongson.h>
+ #include <boot_param.h>
+ #include <builtin_dtbs.h>
+ #include <workarounds.h>
+ 
++#define HOST_BRIDGE_CONFIG_ADDR	((void __iomem *)TO_UNCAC(0x1a000000))
++
+ u32 cpu_clock_freq;
+ EXPORT_SYMBOL(cpu_clock_freq);
+ struct efi_memory_map_loongson *loongson_memmap;
+@@ -43,6 +46,8 @@ void __init prom_init_env(void)
+ 	struct system_loongson *esys;
+ 	struct efi_cpuinfo_loongson *ecpu;
+ 	struct irq_source_routing_table *eirq_source;
++	u32 id;
++	u16 vendor, device;
+ 
+ 	/* firmware arguments are initialized in head.S */
+ 	boot_p = (struct boot_params *)fw_arg2;
+@@ -178,4 +183,17 @@ void __init prom_init_env(void)
+ 		memcpy(loongson_sysconf.sensors, esys->sensors,
+ 			sizeof(struct sensor_device) * loongson_sysconf.nr_sensors);
+ 	pr_info("CpuClock = %u\n", cpu_clock_freq);
++
++	/* Read the ID of PCI host bridge to detect bridge type */
++	id = readl(HOST_BRIDGE_CONFIG_ADDR);
++	vendor = id & 0xffff;
++	device = (id >> 16) & 0xffff;
++
++	if (vendor == PCI_VENDOR_ID_LOONGSON && device == 0x7a00) {
++		pr_info("The bridge chip is LS7A\n");
++		loongson_sysconf.bridgetype = LS7A;
++	} else {
++		pr_info("The bridge chip is RS780E or SR5690\n");
++		loongson_sysconf.bridgetype = RS780E;
++	}
+ }
+-- 
+2.1.0
 
