@@ -2,270 +2,260 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE966C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF15C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCBF2078C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCC32082F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:52:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Os0T5k3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgDCKwl (ORCPT
+        id S2390650AbgDCKwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:52:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40390 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727792AbgDCKwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:52:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 69219AC92;
-        Fri,  3 Apr 2020 10:52:37 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 12:52:34 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
-Message-ID: <20200403105234.GX25468@kitsune.suse.cz>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
- <cover.1584620202.git.msuchanek@suse.de>
- <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
- <1585039473.da4762n2s0.astroid@bobo.none>
- <20200324193833.GH25468@kitsune.suse.cz>
- <1585896170.ohti800w9v.astroid@bobo.none>
+        Fri, 3 Apr 2020 06:52:46 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56901 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728023AbgDCKwp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 06:52:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585911163;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=olVuvBVuqtbArJqsZUieEDGSYEZC+fC14H306YQY/o0=;
+        b=Os0T5k3JTre8xzzkoGnCLjiANjsEozzvymaboqwEwS2fSeo65ASkB/gDo4Tf61j6t3JvL7
+        iBy+qG9X3ROn6W5keI7rFAQxXE2K4mTczeD+wY7Vai/ue+1HKnDKNVKqXp/XseSX+8nPrj
+        WhSH18eBwBuo31UbOR8Xo8rBJVrbMFw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-247-BIffDLB2PsGQXwDGhNdzNQ-1; Fri, 03 Apr 2020 06:52:42 -0400
+X-MC-Unique: BIffDLB2PsGQXwDGhNdzNQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8ABF919357A9;
+        Fri,  3 Apr 2020 10:52:39 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-115-123.ams2.redhat.com [10.36.115.123])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B52BC0D89;
+        Fri,  3 Apr 2020 10:52:36 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "5 . 4+" <stable@vger.kernel.org>
+Subject: [PATCH v2 1/2] ACPI: PM: Add acpi_[un]register_wakeup_handler()
+Date:   Fri,  3 Apr 2020 12:52:34 +0200
+Message-Id: <20200403105235.105187-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1585896170.ohti800w9v.astroid@bobo.none>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+waking up the system") the SCI triggering without there being a wakeup
+cause recognized by the ACPI sleep code will no longer wakeup the system.
 
-there are 3 variants of the function
+This works as intended, but this is a problem for devices where the SCI
+is shared with another device which is also a wakeup source.
 
-read_user_stack_64
+In the past these, from the pov of the ACPI sleep code, spurious SCIs
+would still cause a wakeup so the wakeup from the device sharing the
+interrupt would actually wakeup the system. This now no longer works.
 
-32bit read_user_stack_32
-64bit read_user_Stack_32
+This is a problem on e.g. Bay Trail-T and Cherry Trail devices where
+some peripherals (typically the XHCI controller) can signal a
+Power Management Event (PME) to the Power Management Controller (PMC)
+to wakeup the system, this uses the same interrupt as the SCI.
+These wakeups are handled through a special INT0002 ACPI device which
+checks for events in the GPE0a_STS for this and takes care of acking
+the PME so that the shared interrupt stops triggering.
 
-On Fri, Apr 03, 2020 at 05:13:25PM +1000, Nicholas Piggin wrote:
-> Michal Suchánek's on March 25, 2020 5:38 am:
-> > On Tue, Mar 24, 2020 at 06:48:20PM +1000, Nicholas Piggin wrote:
-> >> Michal Suchanek's on March 19, 2020 10:19 pm:
-> >> > There are two almost identical copies for 32bit and 64bit.
-> >> > 
-> >> > The function is used only in 32bit code which will be split out in next
-> >> > patch so consolidate to one function.
-> >> > 
-> >> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> >> > Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> >> > ---
-> >> > v6:  new patch
-> >> > v8:  move the consolidated function out of the ifdef block.
-> >> > v11: rebase on top of def0bfdbd603
-> >> > ---
-> >> >  arch/powerpc/perf/callchain.c | 48 +++++++++++++++++------------------
-> >> >  1 file changed, 24 insertions(+), 24 deletions(-)
-> >> > 
-> >> > diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> >> > index cbc251981209..c9a78c6e4361 100644
-> >> > --- a/arch/powerpc/perf/callchain.c
-> >> > +++ b/arch/powerpc/perf/callchain.c
-> >> > @@ -161,18 +161,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
-> >> >  	return read_user_stack_slow(ptr, ret, 8);
-> >> >  }
-> >> >  
-> >> > -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> >> > -{
-> >> > -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> >> > -	    ((unsigned long)ptr & 3))
-> >> > -		return -EFAULT;
-> >> > -
-> >> > -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
-> >> > -		return 0;
-> >> > -
-> >> > -	return read_user_stack_slow(ptr, ret, 4);
-> >> > -}
-> >> > -
-> >> >  static inline int valid_user_sp(unsigned long sp, int is_64)
-> >> >  {
-> >> >  	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
-> >> > @@ -277,19 +265,9 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-> >> >  }
-> >> >  
-> >> >  #else  /* CONFIG_PPC64 */
-> >> > -/*
-> >> > - * On 32-bit we just access the address and let hash_page create a
-> >> > - * HPTE if necessary, so there is no need to fall back to reading
-> >> > - * the page tables.  Since this is called at interrupt level,
-> >> > - * do_page_fault() won't treat a DSI as a page fault.
-> >> > - */
-> >> > -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> >> > +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
-> >> >  {
-> >> > -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> >> > -	    ((unsigned long)ptr & 3))
-> >> > -		return -EFAULT;
-> >> > -
-> >> > -	return probe_user_read(ret, ptr, sizeof(*ret));
-> >> > +	return 0;
-> >> >  }
-> >> >  
-> >> >  static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-> >> > @@ -312,6 +290,28 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
-> >> >  
-> >> >  #endif /* CONFIG_PPC64 */
-> >> >  
-> >> > +/*
-> >> > + * On 32-bit we just access the address and let hash_page create a
-> >> > + * HPTE if necessary, so there is no need to fall back to reading
-> >> > + * the page tables.  Since this is called at interrupt level,
-> >> > + * do_page_fault() won't treat a DSI as a page fault.
-> >> > + */
-> >> 
-> >> The comment is actually probably better to stay in the 32-bit
-> >> read_user_stack_slow implementation. Is that function defined
-> >> on 32-bit purely so that you can use IS_ENABLED()? In that case
-> > It documents the IS_ENABLED() and that's where it is. The 32bit
-> > definition is only a technical detail.
-> 
-> Sorry for the late reply, busy trying to fix bugs in the C rewrite
-> series. I don't think it is the right place, it should be in the
-> ppc32 implementation detail. ppc64 has an equivalent comment at the
-> top of its read_user_stack functions.
-> 
-> >> I would prefer to put a BUG() there which makes it self documenting.
-> > Which will cause checkpatch complaints about introducing new BUG() which
-> > is frowned on.
-> 
-> It's fine in this case, that warning is about not introducing
-> runtime bugs, but this wouldn't be.
-> 
-> But... I actually don't like adding read_user_stack_slow on 32-bit
-> and especially not just to make IS_ENABLED work.
-> 
-> IMO this would be better if you really want to consolidate it
-> 
-> ---
-> 
-> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> index cbc251981209..ca3a599b3f54 100644
-> --- a/arch/powerpc/perf/callchain.c
-> +++ b/arch/powerpc/perf/callchain.c
-> @@ -108,7 +108,7 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
->   * interrupt context, so if the access faults, we read the page tables
->   * to find which page (if any) is mapped and access it directly.
->   */
-> -static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
-> +static int read_user_stack_slow(const void __user *ptr, void *buf, int nb)
->  {
->  	int ret = -EFAULT;
->  	pgd_t *pgdir;
-> @@ -149,28 +149,21 @@ static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
->  	return ret;
->  }
->  
-> -static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
-> +static int __read_user_stack(const void __user *ptr, void *ret, size_t size)
->  {
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned long) ||
-> -	    ((unsigned long)ptr & 7))
-> +	if ((unsigned long)ptr > TASK_SIZE - size ||
-> +	    ((unsigned long)ptr & (size - 1)))
->  		return -EFAULT;
->  
-> -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
-> +	if (!probe_user_read(ret, ptr, size))
->  		return 0;
->  
-> -	return read_user_stack_slow(ptr, ret, 8);
-> +	return read_user_stack_slow(ptr, ret, size);
->  }
->  
-> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> +static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
->  {
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> -	    ((unsigned long)ptr & 3))
-> -		return -EFAULT;
-> -
-> -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
-> -		return 0;
-> -
-> -	return read_user_stack_slow(ptr, ret, 4);
-> +	return __read_user_stack(ptr, ret, sizeof(*ret));
->  }
->  
->  static inline int valid_user_sp(unsigned long sp, int is_64)
-> @@ -283,13 +276,13 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
->   * the page tables.  Since this is called at interrupt level,
->   * do_page_fault() won't treat a DSI as a page fault.
->   */
-> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> +static int __read_user_stack(const void __user *ptr, void *ret, size_t size)
->  {
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> -	    ((unsigned long)ptr & 3))
-> +	if ((unsigned long)ptr > TASK_SIZE - size ||
-> +	    ((unsigned long)ptr & (size - 1)))
->  		return -EFAULT;
->  
-> -	return probe_user_read(ret, ptr, sizeof(*ret));
-> +	return probe_user_read(ret, ptr, size);
->  }
->  
->  static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-> @@ -312,6 +305,11 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
->  
->  #endif /* CONFIG_PPC64 */
->  
-> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> +{
-> +	return __read_user_stack(ptr, ret, sizeof(*ret));
-Does not work for 64bit read_user_stack_32 ^ this should be 4.
+The change to the ACPI sleep code to ignore the spurious SCI, causes
+the system to no longer wakeup on these PME events. To make things
+worse this means that the INT0002 device driver interrupt handler will
+no longer run, causing the PME to not get cleared and resulting in the
+system hanging. Trying to wakeup the system after such a PME through e.g.
+the power button no longer works.
 
-Other than that it should preserve the existing logic just fine.
+Add an acpi_register_wakeup_handler() function which registers
+a handler to be called from acpi_s2idle_wake() and when the handler
+returns true, return true from acpi_s2idle_wake().
 
-Thanks
+The INT0002 driver will use this mechanism to check the GPE0a_STS
+register from acpi_s2idle_wake() and to tell the system to wakeup
+if a PME is signaled in the register.
 
-Michal
+Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking=
+ up the system")
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+- Move the new helpers to drivers/acpi/wakeup.c
+- Rename the helpers to acpi_[un]register_wakeup_handler(), also give som=
+e
+  types/variables better names
+---
+ drivers/acpi/sleep.c  |  4 +++
+ drivers/acpi/sleep.h  |  1 +
+ drivers/acpi/wakeup.c | 82 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/acpi.h  |  5 +++
+ 4 files changed, 92 insertions(+)
+
+diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+index e5f95922bc21..dc8c71c47285 100644
+--- a/drivers/acpi/sleep.c
++++ b/drivers/acpi/sleep.c
+@@ -1025,6 +1025,10 @@ static bool acpi_s2idle_wake(void)
+ 		if (acpi_any_gpe_status_set() && !acpi_ec_dispatch_gpe())
+ 			return true;
+=20
++		/* Check wakeups from drivers sharing the SCI. */
++		if (acpi_check_wakeup_handlers())
++			return true;
++
+ 		/*
+ 		 * Cancel the wakeup and process all pending events in case
+ 		 * there are any wakeup ones in there.
+diff --git a/drivers/acpi/sleep.h b/drivers/acpi/sleep.h
+index 41675d24a9bc..3d90480ce1b1 100644
+--- a/drivers/acpi/sleep.h
++++ b/drivers/acpi/sleep.h
+@@ -2,6 +2,7 @@
+=20
+ extern void acpi_enable_wakeup_devices(u8 sleep_state);
+ extern void acpi_disable_wakeup_devices(u8 sleep_state);
++extern bool acpi_check_wakeup_handlers(void);
+=20
+ extern struct list_head acpi_wakeup_device_list;
+ extern struct mutex acpi_device_lock;
+diff --git a/drivers/acpi/wakeup.c b/drivers/acpi/wakeup.c
+index 9614126bf56e..de0f8e626c1c 100644
+--- a/drivers/acpi/wakeup.c
++++ b/drivers/acpi/wakeup.c
+@@ -12,6 +12,15 @@
+ #include "internal.h"
+ #include "sleep.h"
+=20
++struct acpi_wakeup_handler {
++	struct list_head list_node;
++	bool (*wakeup)(void *context);
++	void *context;
++};
++
++static LIST_HEAD(acpi_wakeup_handler_head);
++static DEFINE_MUTEX(acpi_wakeup_handler_mutex);
++
+ /*
+  * We didn't lock acpi_device_lock in the file, because it invokes oops =
+in
+  * suspend/resume and isn't really required as this is called in S-state=
+. At
+@@ -96,3 +105,76 @@ int __init acpi_wakeup_device_init(void)
+ 	mutex_unlock(&acpi_device_lock);
+ 	return 0;
+ }
++
++/**
++ * acpi_register_wakeup_handler - Register wakeup handler
++ * @wake_irq: The IRQ through which the device may receive wakeups
++ * @wakeup:   Wakeup-handler to call when the SCI has triggered a wakeup
++ * @context:  Context to pass to the handler when calling it
++ *
++ * Drivers which may share an IRQ with the SCI can use this to register
++ * a handler which returns true when the device they are managing wants
++ * to trigger a wakeup.
++ */
++int acpi_register_wakeup_handler(
++	int wake_irq, bool (*wakeup)(void *context), void *context)
++{
++	struct acpi_wakeup_handler *handler;
++
++	/*
++	 * If the device is not sharing its IRQ with the SCI, there is no
++	 * need to register the handler.
++	 */
++	if (!acpi_sci_irq_valid() || wake_irq !=3D acpi_sci_irq)
++		return 0;
++
++	handler =3D kmalloc(sizeof(*handler), GFP_KERNEL);
++	if (!handler)
++		return -ENOMEM;
++
++	handler->wakeup =3D wakeup;
++	handler->context =3D context;
++
++	mutex_lock(&acpi_wakeup_handler_mutex);
++	list_add(&handler->list_node, &acpi_wakeup_handler_head);
++	mutex_unlock(&acpi_wakeup_handler_mutex);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(acpi_register_wakeup_handler);
++
++/**
++ * acpi_unregister_wakeup_handler - Unregister wakeup handler
++ * @wakeup:   Wakeup-handler passed to acpi_register_wakeup_handler()
++ * @context:  Context passed to acpi_register_wakeup_handler()
++ */
++void acpi_unregister_wakeup_handler(
++	bool (*wakeup)(void *context), void *context)
++{
++	struct acpi_wakeup_handler *handler;
++
++	mutex_lock(&acpi_wakeup_handler_mutex);
++	list_for_each_entry(handler, &acpi_wakeup_handler_head, list_node) {
++		if (handler->wakeup =3D=3D wakeup &&
++		    handler->context =3D=3D context) {
++			list_del(&handler->list_node);
++			kfree(handler);
++			break;
++		}
++	}
++	mutex_unlock(&acpi_wakeup_handler_mutex);
++}
++EXPORT_SYMBOL_GPL(acpi_unregister_wakeup_handler);
++
++bool acpi_check_wakeup_handlers(void)
++{
++	struct acpi_wakeup_handler *handler;
++
++	/* No need to lock, nothing else is running when we're called. */
++	list_for_each_entry(handler, &acpi_wakeup_handler_head, list_node) {
++		if (handler->wakeup(handler->context))
++			return true;
++	}
++
++	return false;
++}
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 0f24d701fbdc..efac0f9c01a2 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -488,6 +488,11 @@ void __init acpi_nvs_nosave_s3(void);
+ void __init acpi_sleep_no_blacklist(void);
+ #endif /* CONFIG_PM_SLEEP */
+=20
++int acpi_register_wakeup_handler(
++	int wake_irq, bool (*wakeup)(void *context), void *context);
++void acpi_unregister_wakeup_handler(
++	bool (*wakeup)(void *context), void *context);
++
+ struct acpi_osc_context {
+ 	char *uuid_str;			/* UUID string */
+ 	int rev;
+--=20
+2.26.0
+
