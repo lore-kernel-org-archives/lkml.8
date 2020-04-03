@@ -2,73 +2,176 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45480C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCD3C2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2187220721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84AB920B1F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:01:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="PT1YeIlP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390562AbgDCJAn (ORCPT
+        id S2390576AbgDCJBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:00:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12612 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390533AbgDCJAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:00:41 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5E980234BFB7F53E05DE;
-        Fri,  3 Apr 2020 17:00:36 +0800 (CST)
-Received: from [127.0.0.1] (10.173.223.234) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Apr 2020
- 17:00:33 +0800
-Subject: Re: linux-next: Tree for Apr 3
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20200403162926.3ff57e99@canb.auug.org.au>
- <62438df4-3546-bfea-6e7f-825faaacfaff@huawei.com>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <mpe@ellerman.id.au>,
-        <paulus@samba.org>, <benh@kernel.crashing.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <97daf9ff-fff9-0fd2-6121-73eba88a50f4@huawei.com>
-Date:   Fri, 3 Apr 2020 17:00:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Fri, 3 Apr 2020 05:01:08 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:49533 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727860AbgDCJBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 05:01:08 -0400
+Received: from [192.168.1.4] (212-5-158-241.ip.btc-net.bg [212.5.158.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id A4673CFB0;
+        Fri,  3 Apr 2020 12:01:04 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1585904465; bh=XlPPAmhstG/r8uQst4kUmOIq26pF12Vho8l1S5UqRUI=;
+        h=Subject:To:Cc:From:Date:From;
+        b=PT1YeIlPmjcT/MMFYSXxhK6MEa0u/rHW/38RL00YVsdt+xXtK90TAdpVTunjfB3YG
+         U+iQan+H/8+Ug8PuXKx5fLRu57nZtPhQ6d5RAxzjNksxihD0OZXUsypaMqHRboWQe2
+         V/w8qCSg4sTLJsEOLLgoGg2lrnot5ycLJNJiOOW8npQyBEYYdyzy6npThl0euzP6HK
+         ccmaJ1mPZb1KzhiARYV/JdV8pXjPw/A8M4uGkBIbMxYeqj5/Wz1I4h2e8cxRuJvrkh
+         uB0Ed4OW5w24xPwCaMEwFaHOu4UY+6yATvMpHzgMfVI8mOpAF5QFjgezvwmcFrQxXg
+         g+IQ9J7R5oj0A==
+Subject: Re: [PATCH v2 10/10] PCIe: qcom: add Force GEN1 support
+To:     Ansuel Smith <ansuelsmth@gmail.com>, Andy Gross <agross@kernel.org>
+Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200402121148.1767-1-ansuelsmth@gmail.com>
+ <20200402121148.1767-11-ansuelsmth@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <8e0ada17-c858-59d2-8d5c-5129e7625f33@mm-sol.com>
+Date:   Fri, 3 Apr 2020 12:01:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <62438df4-3546-bfea-6e7f-825faaacfaff@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200402121148.1767-11-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+cc linuxppc-dev@lists.ozlabs.org
+Hi Ansuel,
 
-On 2020/4/3 16:54, Yuehaibing wrote:
+On 4/2/20 3:11 PM, Ansuel Smith wrote:
+> From: Sham Muthayyan <smuthayy@codeaurora.org>
 > 
+> Add Force GEN1 support needed in some ipq806x board
+> that needs to limit some pcie line to gen1 for some
+> hardware limitation.
+> This is set by the max-link-speed dts entry and needed
+> by some soc based on ipq806x. (for example Netgear R7800
+> router)
 > 
-> On 2020/4/3 13:29, Stephen Rothwell wrote:
->> Hi all,
->>
->> The merge window has opened, so please do not add any material for the
->> next release into your linux-next included trees/branches until after
->> the merge window closes.
->>
->> Changes since 20200402:
->>
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> On PPC32, randcondfig warning this:
-> 
-> WARNING: unmet direct dependencies detected for HOTPLUG_CPU
->   Depends on [n]: SMP [=y] && (PPC_PSERIES [=n] || PPC_PMAC [=n] || PPC_POWERNV [=n] || FSL_SOC_BOOKE [=n])
->   Selected by [y]:
->   - PM_SLEEP_SMP [=y] && SMP [=y] && (ARCH_SUSPEND_POSSIBLE [=y] || ARCH_HIBERNATION_POSSIBLE [=y]) && PM_SLEEP [=y]
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 8047ac7dc8c7..2212e9498b91 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  
+> +#include "../../pci.h"
+
+This looks suspiciously (even ugly), but I saw that the other users of
+of_pci_get_max_link_speed is doing the same.
+
+Bjorn H. : do you know why the prototype is there? Perhaps it must be in
+linux/of_pci.h.
+
+>  #include "pcie-designware.h"
+>  
+>  #define PCIE20_PARF_SYS_CTRL			0x00
+> @@ -99,6 +100,8 @@
+>  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+>  #define SLV_ADDR_SPACE_SZ			0x10000000
+>  
+> +#define PCIE20_LNK_CONTROL2_LINK_STATUS2        0xA0
+
+tabs instead of spaces and hex numbers should be lower-case
+
+> +
+>  #define DEVICE_TYPE_RC				0x4
+>  
+>  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
+> @@ -199,6 +202,7 @@ struct qcom_pcie {
+>  	struct phy *phy;
+>  	struct gpio_desc *reset;
+>  	const struct qcom_pcie_ops *ops;
+> +	bool force_gen1;
+
+could you rename this and make it int:
+
+	int gen;
+
+>  };
+>  
+>  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> @@ -441,6 +445,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  
+>  	/* wait for clock acquisition */
+>  	usleep_range(1000, 1500);
+
+add a blank line here
+
+> +	if (pcie->force_gen1) {
+
+	if (pcie->gen == 1) {
+
+> +		writel_relaxed((readl_relaxed(
+> +		  pcie->pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2) | 1),
+> +		  pcie->pci->dbi_base + PCIE20_LNK_CONTROL2_LINK_STATUS2);
+> +	}
+
+why you are using writel/readl_relaxed ?
+
+Also could you split the line to two:
+
+	val = read()
+	write(val | 1, address)
+
+>  
+>  
+>  	/* Set the Max TLP size to 2K, instead of using default of 4K */
+> @@ -1440,6 +1449,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  		goto err_pm_runtime_put;
+>  	}
+>  
+> +	ret = of_pci_get_max_link_speed(pdev->dev.of_node);> +	if (ret == 1)
+> +		pcie->force_gen1 = true;
+
+drop this, handle ret < 0 and default to generation 2
+
+	pcie->gen = of_pci_get_max_link_speed(pdev->dev.of_node);
+	if (pcie->gen < 0)
+		pcie->gen = 2;
+
+> +
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
+>  	pcie->parf = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(pcie->parf)) {
 > 
 
+-- 
+regards,
+Stan
