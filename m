@@ -2,111 +2,145 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799EDC2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A0DC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C2220737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1307820737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:21:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpzIRYGF"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="DvDrzamu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390923AbgDCMVd (ORCPT
+        id S2390937AbgDCMVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:21:33 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55700 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728140AbgDCMVd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:21:33 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r16so6934852wmg.5;
-        Fri, 03 Apr 2020 05:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=pz+2GbVjb9KdHFME6XAUsd5c1DpKsAH1YaZeJS1MvmE=;
-        b=hpzIRYGFb++lZENCrUbvHFdiroOdYsY9mV4gRGIhnHBXsFiXIBopSpyGuljTC3PQmc
-         CohhuNuA5Yg9BxpJwyxIcjbtcO9mSJEhFBUhrmDaLppb8UMer6TqCk39Aaz7uG+swy8D
-         FQSH2P9l/EoiVmXCAGzZ8VWl8HlE8WVGgqIjfdOVYfpFIgma6FktX6Slr8NO8i2ZLIUF
-         gs7NBlT4qvJHXV0TFK21kkeEX9byroOfE+EF/aYpdjDW9Ux+QxzlJmiKFpINIzCXvvb6
-         QRY8d4mvCLVnlP9RQt867r1Z/Ocl7fCRFZ062ksZ5h/wyRZ+Ne5cGO+y40zel1cnRiZW
-         O//g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=pz+2GbVjb9KdHFME6XAUsd5c1DpKsAH1YaZeJS1MvmE=;
-        b=evcsp9+Vz/ZfbJNaHNu83d9UNadsxdCjcH1kurj6vuVi1R3R21MOKI7LUvfc53n51a
-         g66PkfKmcvrlY8KCf+QrtbDmWX/Ze2TPBHuVaMMfrn/+zz5PXMuIehwOl9PG9NjDyqqd
-         DZ9H3Bu5ROzOfcwjgpVPoDx/lWECAieFDz2cSCVln2UBL7JWvkJwKFvkuuIMIYoKWG7g
-         KgX9Nc02lG26xQC8lsLw2IrSih9zBVvNZoXaSOqhmSP3jxLf3/UtYf01AXCvXrNYffWl
-         /6Dl3OggWXQWEC3p/DH/myDzJzScJ/dQ+TMMKylTZX7jqxj6fwPnxzt1N0yQmC6PzYVx
-         +mKA==
-X-Gm-Message-State: AGi0PuY4727/s5/K8BpnFDVCcv1iU06ztgJ+cXnsT7UX4Vu3pXULUy+C
-        bG/uemDVVIt+nPU3/dJbKMg=
-X-Google-Smtp-Source: APiQypIr2dLhrgznSXeHhpOkDGwdwZcjxnqRiFB+cDbV6IxyngpslNTJOji6xwZ5m2oBgs3m5WYaoA==
-X-Received: by 2002:a7b:c002:: with SMTP id c2mr8390754wmb.123.1585916491070;
-        Fri, 03 Apr 2020 05:21:31 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id b5sm1656985wrs.16.2020.04.03.05.21.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 05:21:30 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>
-To:     Andrey Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Subject: /proc/sys/user/max_time_namespaces?
-Message-ID: <0fbcb669-33a8-9730-f7fa-639707532611@gmail.com>
-Date:   Fri, 3 Apr 2020 14:21:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Fri, 3 Apr 2020 08:21:54 -0400
+Received: from mail-bn8nam12on2124.outbound.protection.outlook.com ([40.107.237.124]:39041
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728140AbgDCMVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 08:21:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KX5E3bo+ZSNCxi/WSIK25DuGmd2jk62LmGNdueegLK3u8WjafQjkh22aDDGFObnwKYjGq3M4yi+2CpRbW8A5Z9w0wTznS4aWOxdzN+BRqdX8Wf7HjyxnLAVWokMsaXq2KMcRlQ9+7ZYR144uylHmlry8gImE+2BBikc/BAWKFEmRrNez2IW6VBDfT/gFNeujas4eP6ESleA75ShEI/9BdOntbM3aUQ3p0H25wIshEKabDexGeIy++Eng3Qi+7LbX442q8aqiv9vCpGYO1XK67Udrda6gIhUtTrJSTfFKs1rNKEAHbx5Q+Y5ndSsIlLXzDEJLQb042QZwIKgBeaQFug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LnU9SZ7p/LUsAewRE/akMglyvqmV5W7DpOIi/770cWM=;
+ b=RP8R1dNhTyBKeTLIALPOlaTtlGDgfgkb3mo06nCiWvSQCdGk4/FTAuqX2R+eCjO9zN2AMoQNqzwQ3GgLh7lupCZjtUnBqb1WQ/Ju1CZYAo4x3TV2G69e6hcF4l0oZdS5aATU7XTfHdVIYRljpMwXjLQ+ilddyefPHqeok7ap0j9gCmergae3EUq2oH03KLfUq7gx20n4ShiWj4PXRIxTE3ACYipytXQ9gjhHz8GcMrt5XmRRdhITiF/CIf0/qu0m8P9INXEU6yUTPkMvOo7Rdka3U5jw2Em8pYMmfpEsmEW+HyXMKy7+70jyWUdObUnb6XUTaVdcV2CLlen2q22YUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LnU9SZ7p/LUsAewRE/akMglyvqmV5W7DpOIi/770cWM=;
+ b=DvDrzamu3VdOQnMADdsckkkEQB/MiDsA08hki/Kl33yOUEXmojaiHC1w0aT+7MoHrjJ2Ec7X1e677wIFQmgxddleYbLG8i0QmjlZgeE/xR7Xv1fGrwW3dBzxibQBavSddvfWsTIkwBjY8dbKgoqcIETv3n4Ry2cB3dEo+rQCgcg=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB0924.namprd21.prod.outlook.com (2603:10b6:302:10::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.4; Fri, 3 Apr
+ 2020 12:21:47 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.002; Fri, 3 Apr 2020
+ 12:21:47 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH -next] hv_debugfs: Make hv_debug_root static
+Thread-Topic: [PATCH -next] hv_debugfs: Make hv_debug_root static
+Thread-Index: AQHWCZIjVQU/P4vQBEiV/n4KA05cSKhnUWGg
+Date:   Fri, 3 Apr 2020 12:21:47 +0000
+Message-ID: <MW2PR2101MB105222D949FB4944EE647F2FD7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200403082845.22740-1-yuehaibing@huawei.com>
+In-Reply-To: <20200403082845.22740-1-yuehaibing@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-03T12:21:45.3772385Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=700a9e34-20b5-4557-beda-d128ec16fa16;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 78662916-1c05-4bf8-826a-08d7d7c99443
+x-ms-traffictypediagnostic: MW2PR2101MB0924:|MW2PR2101MB0924:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB0924A66FEA2ABCE62C397A8AD7C70@MW2PR2101MB0924.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:287;
+x-forefront-prvs: 0362BF9FDB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(396003)(39860400002)(346002)(376002)(136003)(26005)(5660300002)(2906002)(4744005)(186003)(9686003)(71200400001)(316002)(7696005)(81166006)(82950400001)(8676002)(86362001)(82960400001)(66556008)(55016002)(54906003)(66476007)(478600001)(4326008)(6506007)(110136005)(81156014)(66946007)(66446008)(8936002)(64756008)(52536014)(10290500003)(8990500004)(33656002)(76116006);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LFJw2eJ4yowwt/iniOIMTqxaVoMIGvUUxLg6eBZ3SSJfRCqIluj7+5t+SdrMdWEN9Fxm3u8naKQjmS86InMBS9Fquu8PwrUFrLDIUU5MRDR9yFN0k5+Nef8ebUyArPtCSVIY+hE61uNlujs3saJKzKYG8SmXREg3N3ClS7hOWtmWwqbdXsRlJWeuPjTMrMX3XV4UxCt1cDzDBfQsUQu/vCuOOSOJaHA+PHInXYN7Hdc2+UgTh67tZqXVASjzMPk6nGGcyJ64lYEGLk+dVTcvGFn/YlD/gk+ZDF4BKioTA8IzBrhfBb3jnEnLe5ZW1TPec1umsMBrvqQbdYllBSZ7qXUuADHJ78jvpn8/oXAsbnq7nfTZJ8FWldW82I7C+5Cl0WVs/XzYXJunv4UfdECOBdt6OEj57/T56IhCyDEkGDzF2vAsPjYyGodfGe3DFDkY
+x-ms-exchange-antispam-messagedata: Ofz+rywIRxQOsHRXjGON5CeRNdlybvPUprYAi3eDgl9/V7OnT0gXesJVsDFvIL1MdfP3eJsTh5hQ4zkzZK81i4/IiH/VXuWCQxF0WZo/CxCeWMwAGwjO9KFMcMFEbm743zaXGg57tkYxF/BRObBiOg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78662916-1c05-4bf8-826a-08d7d7c99443
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 12:21:47.1355
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M7wjdFRqZN0k6IhQADFsY1eyCyiRKqHWBA4Is1Bk44vHDez2HzNeM7kCyl0Y/GpCa6yAjxA9NmTJnHxKJdQLQ0fHm3bmThqi6GkJAZsPKdU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0924
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry, Andrei
+From: YueHaibing <yuehaibing@huawei.com> Sent: Friday, April 3, 2020 1:29 A=
+M
+>=20
+> Fix sparse warning:
+>=20
+> drivers/hv/hv_debugfs.c:14:15: warning: symbol 'hv_debug_root' was not de=
+clared. Should
+> it be static?
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/hv/hv_debugfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/hv/hv_debugfs.c b/drivers/hv/hv_debugfs.c
+> index 8a2878573582..ccf752b6659a 100644
+> --- a/drivers/hv/hv_debugfs.c
+> +++ b/drivers/hv/hv_debugfs.c
+> @@ -11,7 +11,7 @@
+>=20
+>  #include "hyperv_vmbus.h"
+>=20
+> -struct dentry *hv_debug_root;
+> +static struct dentry *hv_debug_root;
+>=20
+>  static int hv_debugfs_delay_get(void *data, u64 *val)
+>  {
+> --
+> 2.17.1
+>=20
 
-[Andrei, I mistyped your openvz address in an email of a few minutes
-ago ("[PATCH] ns: Fix time_for_children symlink"). You were CCed
-on your gmail address though.]
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
 
-In the namespaces(7) manual page there is documentation for 
-these files:
-
-$ ls -1 /proc/sys/user/*namespaces
-/proc/sys/user/max_cgroup_namespaces
-/proc/sys/user/max_ipc_namespaces
-/proc/sys/user/max_mnt_namespaces
-/proc/sys/user/max_net_namespaces
-/proc/sys/user/max_pid_namespaces
-/proc/sys/user/max_user_namespaces
-/proc/sys/user/max_uts_namespaces
-
-These files allow one to limit on the number of namespaces
-of each type.
-
-However, there is no /proc/sys/user/max_time_namespaces file.
-Was this deliberate, or an oversight?
-
-Thanks,
-
-Michael
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
