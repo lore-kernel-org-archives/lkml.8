@@ -2,349 +2,80 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4D9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9ABFC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94EB6206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81833206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TMTpZx1p"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Rp/xDo2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgDCUTe (ORCPT
+        id S1728081AbgDCUUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 16:19:34 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34194 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727627AbgDCUTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 16:19:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033KIoXn145229;
-        Fri, 3 Apr 2020 20:19:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=H1MFWVbIC03ZFSknvs2utXkdC9XHEbiTuP1pFMBY0Eg=;
- b=TMTpZx1pOQ2SEOM8zF5ZRh+2UPZOxefki3MMf8LdSvDFtMnlAy39jKNSxj4u4HBHqOOw
- MdAf1YydtSywSuBZLXJ/giOkFx4QMh+PFf5cj1xZAPpcUcdU+4MM8NFZtzwPA3OGqg85
- llelFTTsTv/o8lfld69d+hPK1GsnjWTlAWokHCp4650KMUTt1lFdkYH2Yryb2+HtCssG
- a8fizs2n+SsSBMuY8SyCRuOOak5djGYHb/n8HZIsKGvf2yPtJL9KjURwVFEOLzy2jrMr
- QGNtiRzOEMMosQmTRA9NVPVNfZYTrk69ug2cqVtH/2zDquZbgUk23EM8RovzgrtFEhRy TQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 303cevk1qm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 20:19:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033KH4gg046398;
-        Fri, 3 Apr 2020 20:19:05 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 302g2nv1mq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 20:19:05 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 033KJ3Z4022527;
-        Fri, 3 Apr 2020 20:19:03 GMT
-Received: from localhost.localdomain (/10.159.159.117)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Apr 2020 13:19:03 -0700
-Subject: Re: [PATCH v6 09/14] KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP
- ioctl
-To:     Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rientjes@google.com, srutherford@google.com, luto@kernel.org,
-        brijesh.singh@amd.com
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <388afbf3af3a10cc3101008bc9381491cc7aab2f.1585548051.git.ashish.kalra@amd.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <88185cd3-a9f4-68a8-9c34-2e72deaf3d8d@oracle.com>
-Date:   Fri, 3 Apr 2020 13:18:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 3 Apr 2020 16:20:33 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:41777 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727792AbgDCUUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 16:20:33 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48vBBk6XyxzGl;
+        Fri,  3 Apr 2020 22:20:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1585945231; bh=PxKU8o7BoNDyLrnKFV+GeC6g2YaP/coZt/imF8aw61k=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=Rp/xDo2NMn12KWOwZ97Q+rGvA9PFSNCj0UJ70qKRIcVBTdR0x4kB4/OFSyAsTXkqC
+         cdPfiiZp6rOkmPZ3iWJ8I1yMbddICzP54BTtK0AgbkZzibHM9QnR46s7B9F0f5sY5O
+         KcscNokGsWF34mqVcKjSWTP1lRJi0OCDKFNVDalnS29LbOD1qNhciiY3xFrO19wzAY
+         +w/PClpyJFYBzyoJc/dz+vaASEZRV0t0vFitKn+IqFtiO9EhqOOkX6TEl4eMV+kwcu
+         /ocuroFjabcxyV46D4iJLzelb14/quZxuhXIUBRHiRkBB5YyE7XbiEgJFxabYDXlNg
+         QylkDPUIXOt6w==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Fri, 03 Apr 2020 22:20:30 +0200
+Message-Id: <c911486f7d8727c5264f3cb4142c26b6765eadec.1585944770.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v3 01/11] power: charger-manager: remove duplicate assignment
 MIME-Version: 1.0
-In-Reply-To: <388afbf3af3a10cc3101008bc9381491cc7aab2f.1585548051.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030161
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+num_properties is already copied earlier using memcpy().
+Remove the duplicate.
 
-On 3/29/20 11:22 PM, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
->
-> The ioctl can be used to retrieve page encryption bitmap for a given
-> gfn range.
->
-> Return the correct bitmap as per the number of pages being requested
-> by the user. Ensure that we only copy bmap->num_pages bytes in the
-> userspace buffer, if bmap->num_pages is not byte aligned we read
-> the trailing bits from the userspace and copy those bits as is.
->
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->   Documentation/virt/kvm/api.rst  | 27 +++++++++++++
->   arch/x86/include/asm/kvm_host.h |  2 +
->   arch/x86/kvm/svm.c              | 71 +++++++++++++++++++++++++++++++++
->   arch/x86/kvm/x86.c              | 12 ++++++
->   include/uapi/linux/kvm.h        | 12 ++++++
->   5 files changed, 124 insertions(+)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index ebd383fba939..8ad800ebb54f 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -4648,6 +4648,33 @@ This ioctl resets VCPU registers and control structures according to
->   the clear cpu reset definition in the POP. However, the cpu is not put
->   into ESA mode. This reset is a superset of the initial reset.
->   
-> +4.125 KVM_GET_PAGE_ENC_BITMAP (vm ioctl)
-> +---------------------------------------
-> +
-> +:Capability: basic
-> +:Architectures: x86
-> +:Type: vm ioctl
-> +:Parameters: struct kvm_page_enc_bitmap (in/out)
-> +:Returns: 0 on success, -1 on error
-> +
-> +/* for KVM_GET_PAGE_ENC_BITMAP */
-> +struct kvm_page_enc_bitmap {
-> +	__u64 start_gfn;
-> +	__u64 num_pages;
-> +	union {
-> +		void __user *enc_bitmap; /* one bit per page */
-> +		__u64 padding2;
-> +	};
-> +};
-> +
-> +The encrypted VMs have concept of private and shared pages. The private
-> +page is encrypted with the guest-specific key, while shared page may
-> +be encrypted with the hypervisor key. The KVM_GET_PAGE_ENC_BITMAP can
-> +be used to get the bitmap indicating whether the guest page is private
-> +or shared. The bitmap can be used during the guest migration, if the page
-> +is private then userspace need to use SEV migration commands to transmit
-> +the page.
-> +
->   
->   5. The kvm_run structure
->   ========================
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 90718fa3db47..27e43e3ec9d8 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1269,6 +1269,8 @@ struct kvm_x86_ops {
->   	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
->   	int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
->   				  unsigned long sz, unsigned long mode);
-> +	int (*get_page_enc_bitmap)(struct kvm *kvm,
-> +				struct kvm_page_enc_bitmap *bmap);
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+v3: initial version
+---
+ drivers/power/supply/charger-manager.c | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
+index a21e1a2673f8..887f5bb879e5 100644
+--- a/drivers/power/supply/charger-manager.c
++++ b/drivers/power/supply/charger-manager.c
+@@ -1728,7 +1728,6 @@ static int charger_manager_probe(struct platform_device *pdev)
+ 	memcpy(cm->charger_psy_desc.properties, default_charger_props,
+ 		sizeof(enum power_supply_property) *
+ 		ARRAY_SIZE(default_charger_props));
+-	cm->charger_psy_desc.num_properties = psy_default.num_properties;
+ 
+ 	/* Find which optional psy-properties are available */
+ 	fuel_gauge = power_supply_get_by_name(desc->psy_fuel_gauge);
+-- 
+2.20.1
 
-Looking back at the previous patch, it seems that these two are 
-basically the setter/getter action for page encryption, though one is 
-implemented as a hypercall while the other as an ioctl. If we consider 
-the setter/getter aspect, isn't it better to have some sort of symmetry 
-in the naming of the ops ? For example,
-
-         set_page_enc_hc
-
-         get_page_enc_ioctl
-
->   };
->   
->   struct kvm_arch_async_pf {
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 1d8beaf1bceb..bae783cd396a 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -7686,6 +7686,76 @@ static int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
->   	return ret;
->   }
->   
-> +static int svm_get_page_enc_bitmap(struct kvm *kvm,
-> +				   struct kvm_page_enc_bitmap *bmap)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	unsigned long gfn_start, gfn_end;
-> +	unsigned long sz, i, sz_bytes;
-> +	unsigned long *bitmap;
-> +	int ret, n;
-> +
-> +	if (!sev_guest(kvm))
-> +		return -ENOTTY;
-> +
-> +	gfn_start = bmap->start_gfn;
-
-
-What if bmap->start_gfn is junk ?
-
-> +	gfn_end = gfn_start + bmap->num_pages;
-> +
-> +	sz = ALIGN(bmap->num_pages, BITS_PER_LONG) / BITS_PER_BYTE;
-> +	bitmap = kmalloc(sz, GFP_KERNEL);
-> +	if (!bitmap)
-> +		return -ENOMEM;
-> +
-> +	/* by default all pages are marked encrypted */
-> +	memset(bitmap, 0xff, sz);
-> +
-> +	mutex_lock(&kvm->lock);
-> +	if (sev->page_enc_bmap) {
-> +		i = gfn_start;
-> +		for_each_clear_bit_from(i, sev->page_enc_bmap,
-> +				      min(sev->page_enc_bmap_size, gfn_end))
-> +			clear_bit(i - gfn_start, bitmap);
-> +	}
-> +	mutex_unlock(&kvm->lock);
-> +
-> +	ret = -EFAULT;
-> +
-> +	n = bmap->num_pages % BITS_PER_BYTE;
-> +	sz_bytes = ALIGN(bmap->num_pages, BITS_PER_BYTE) / BITS_PER_BYTE;
-> +
-> +	/*
-> +	 * Return the correct bitmap as per the number of pages being
-> +	 * requested by the user. Ensure that we only copy bmap->num_pages
-> +	 * bytes in the userspace buffer, if bmap->num_pages is not byte
-> +	 * aligned we read the trailing bits from the userspace and copy
-> +	 * those bits as is.
-> +	 */
-> +
-> +	if (n) {
-
-
-Is it better to check for 'num_pages' at the beginning of the function 
-rather than coming this far if bmap->num_pages is zero ?
-
-> +		unsigned char *bitmap_kernel = (unsigned char *)bitmap;
-
-
-Just trying to understand why you need this extra variable instead of 
-using 'bitmap' directly.
-
-> +		unsigned char bitmap_user;
-> +		unsigned long offset, mask;
-> +
-> +		offset = bmap->num_pages / BITS_PER_BYTE;
-> +		if (copy_from_user(&bitmap_user, bmap->enc_bitmap + offset,
-> +				sizeof(unsigned char)))
-> +			goto out;
-> +
-> +		mask = GENMASK(n - 1, 0);
-> +		bitmap_user &= ~mask;
-> +		bitmap_kernel[offset] &= mask;
-> +		bitmap_kernel[offset] |= bitmap_user;
-> +	}
-> +
-> +	if (copy_to_user(bmap->enc_bitmap, bitmap, sz_bytes))
-
-
-If 'n' is zero, we are still copying stuff back to the user. Is that 
-what is expected from userland ?
-
-Another point. Since copy_from_user() was done in the caller, isn't it 
-better to move this to the caller to keep a symmetry ?
-
-> +		goto out;
-> +
-> +	ret = 0;
-> +out:
-> +	kfree(bitmap);
-> +	return ret;
-> +}
-> +
->   static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->   {
->   	struct kvm_sev_cmd sev_cmd;
-> @@ -8090,6 +8160,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
->   	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
->   
->   	.page_enc_status_hc = svm_page_enc_status_hc,
-> +	.get_page_enc_bitmap = svm_get_page_enc_bitmap,
->   };
->   
->   static int __init svm_init(void)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 68428eef2dde..3c3fea4e20b5 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -5226,6 +5226,18 @@ long kvm_arch_vm_ioctl(struct file *filp,
->   	case KVM_SET_PMU_EVENT_FILTER:
->   		r = kvm_vm_ioctl_set_pmu_event_filter(kvm, argp);
->   		break;
-> +	case KVM_GET_PAGE_ENC_BITMAP: {
-> +		struct kvm_page_enc_bitmap bitmap;
-> +
-> +		r = -EFAULT;
-> +		if (copy_from_user(&bitmap, argp, sizeof(bitmap)))
-> +			goto out;
-> +
-> +		r = -ENOTTY;
-> +		if (kvm_x86_ops->get_page_enc_bitmap)
-> +			r = kvm_x86_ops->get_page_enc_bitmap(kvm, &bitmap);
-> +		break;
-> +	}
->   	default:
->   		r = -ENOTTY;
->   	}
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 4e80c57a3182..db1ebf85e177 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -500,6 +500,16 @@ struct kvm_dirty_log {
->   	};
->   };
->   
-> +/* for KVM_GET_PAGE_ENC_BITMAP */
-> +struct kvm_page_enc_bitmap {
-> +	__u64 start_gfn;
-> +	__u64 num_pages;
-> +	union {
-> +		void __user *enc_bitmap; /* one bit per page */
-> +		__u64 padding2;
-> +	};
-> +};
-> +
->   /* for KVM_CLEAR_DIRTY_LOG */
->   struct kvm_clear_dirty_log {
->   	__u32 slot;
-> @@ -1478,6 +1488,8 @@ struct kvm_enc_region {
->   #define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
->   #define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
->   
-> +#define KVM_GET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
-> +
->   /* Secure Encrypted Virtualization command */
->   enum sev_cmd_id {
->   	/* Guest initialization commands */
