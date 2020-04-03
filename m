@@ -2,168 +2,127 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430BEC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C7AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B09206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585929168;
-	bh=Ail9cbVIWJKaAdQNGg562dCC5Z5n7fm+++URHFuUF/k=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kil/HOei2HvMZ7e/Pv6RgHjvsS+yOzbokWKgomQRDv5Iyye0pvd70mrkYaKfI970a
-	 chmCJd4iaIRo/NWKEebwVbJvr9pK5hq4EVechrGznIk3wxUXFpi3FT6xxR9xTOqxZg
-	 aRRaUUxDJuw2Du4Mh5a+KT+VOzhYvzBxSlo+BCkM=
+	by mail.kernel.org (Postfix) with ESMTP id 6604020721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:53:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="CUidE9OM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgDCPwr (ORCPT
+        id S1728286AbgDCPxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:52:47 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35004 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgDCPwq (ORCPT
+        Fri, 3 Apr 2020 11:53:16 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35834 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgDCPxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:52:46 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k13so8485254qki.2;
-        Fri, 03 Apr 2020 08:52:46 -0700 (PDT)
+        Fri, 3 Apr 2020 11:53:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c12so2841298plz.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:53:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=Za/htZk64WGRnsEWR8r2929pAGBMjmkKLkKsEbUZhBs=;
-        b=D/f3vfZFF1SiLQnrJ7rrb/lAykV3v6OqChYhbcgVee38gxZWZfqb0GD7NQUHUUEVnP
-         CotxEZoNUSzeFNJzkp3sTAhsrGhzfdahKtgmqAYQTlFKsUg2QTt6klbDdtCNxX3UKD+A
-         HL1AE7mC8xc5PbraXwCj0VYCmbNcFq91kAurjBJOjxbt2m3UDImWk0FWUOlqFeP//Pmp
-         OckC5PpYrSEXC7t7QwWuEbz2HOMGVVjhbqZqOPa6opx3L0ghYVH/Ure9CjImZ+4T5LLZ
-         ReOeb1smxypWR2ST/UZJICBAKdLT4UkpAUQrx5wlUL+Wl7R7JPmLHY/Vfo7d4V9vMCre
-         Ml+A==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=owgGAHZSGNRil4KZ/mw3izwPWS/tP0UsXJUitXCRVu8=;
+        b=CUidE9OMULKs/p+pZoJ2W3cCMfdlp1mq2Ce4gohC0F8wlVWB3a2pfxjRPX6bwvyA3Y
+         /XTWjfyag+RP6/6ZNEqe1Q8TAQU5L7t/bRb1o7QxtRgeokfWSSziQSYnRZOgbJ+Zyk1p
+         Z8s1CZWxzZxkCu1f2pMoVq2po2eaivsyY4OalQMiMGlCBH0E8DOTNIR1vBaN5fCiOJbU
+         KDuIttH0EQu31c4YTJL6Rr7VTt0uUF54Ic7fwfO4wULP4dUBB3WUwAYgE37gtHNj+e1g
+         MNvLKo3LECSkxcCu+jvfPhiJrbvbwXdwl3yMPovkPnSTG2nzzAcAkS8a7hGW279SogEx
+         Defg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=Za/htZk64WGRnsEWR8r2929pAGBMjmkKLkKsEbUZhBs=;
-        b=gi0hXyrCI28JOrHQ/fc8haIeBM05bpeSFgka+Dq0AIgEmzKB1tSZwt3YcCY+2FWKu5
-         mgGdNYyASpdsnA6+KpZ3/Tq0HtyD542VpQy9t/uxalUZ73t49Gr3YHlIH1TlYTT7lYbl
-         FRDCLxbrdcE0kJhpxdjxrQvq57Pz9XOKnTDHFCCSxz83/FersvpCfOKPhU+GQnDeT+WZ
-         e8z2TTV2Esua9awlqtIdugQY/+fgZUS8EbL41cjiiyJKWL4SpciYUgDyDjfsteX1BiMY
-         L6S5iQa+//QNMQjxnRPyMVnVg+93YLOaffWy/lgm4yA6lHv+7Y6nKzJbRYkECarpUg79
-         6/dA==
-X-Gm-Message-State: AGi0Pubg/joyBBIsvSxsPqujuPLixicBKAFUfm05fVxezus5QnbVH3kg
-        75x939DglYIRr9xAUWt9tDeTOB74s8A=
-X-Google-Smtp-Source: APiQypLzguTcFK111DFmQiS//JU4ZPE6fQa4NUxfxmvPxl+oS3xFFLVGNYZI9KZnc7oa3liVXZf9oQ==
-X-Received: by 2002:a37:2e44:: with SMTP id u65mr2850086qkh.42.1585929165516;
-        Fri, 03 Apr 2020 08:52:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::842b])
-        by smtp.gmail.com with ESMTPSA id 4sm6669594qkl.51.2020.04.03.08.52.44
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=owgGAHZSGNRil4KZ/mw3izwPWS/tP0UsXJUitXCRVu8=;
+        b=i2eA+Bvf10QYP0HR6clfwElPBhMqZHtAD20j/IL4l4w/OgZ8c13j6tB3k9iibDwZ8N
+         +C6St7acoJzY0DcypnRtRQhUxmnTeiYOfV7uQMCK7txzn1ZCfwcEBQgQnETYwOOx14mw
+         05pQwzr96/mFY/cYsRecOah5HPPWXnvJ+w+uVc6gTZlVppnww6y90F05Vdgn7BwL/vUt
+         Q5VpF1jmd+FG4HecITLk+KVLN1RNjnPVYIKc4AD2I2WidkvTE09NZy7SgWFeUVVZZyqJ
+         OwaVB0QW4sk3KoowN1kr4LBMzYyjW+w28IbmZFM96Oz6e1Reg0l1bTuaDI+gcEgowKn7
+         rE/Q==
+X-Gm-Message-State: AGi0PuaVKCtlp8SjisVtlv7BpPrxPgJxw6FZDtZYqGEd7012jg03PjFN
+        O/Tvhn7yky8ZlanOTmT230Y4/A==
+X-Google-Smtp-Source: APiQypK44jSapqDp3oWFKb6JkHAV3VcWl7yt6FWLfum23xqW7y9mP7dvZQhTjJgPOzhHm88fn1mHNQ==
+X-Received: by 2002:a17:90b:3610:: with SMTP id ml16mr10796623pjb.106.1585929192570;
+        Fri, 03 Apr 2020 08:53:12 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id w9sm6122572pfd.94.2020.04.03.08.53.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 08:52:44 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 11:52:43 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>
-Subject: [GIT PULL] cgroup changes for v5.7-rc1
-Message-ID: <20200403155243.GF162390@mtj.duckdns.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+        Fri, 03 Apr 2020 08:53:11 -0700 (PDT)
+Date:   Fri, 03 Apr 2020 08:53:11 -0700 (PDT)
+X-Google-Original-Date: Fri, 03 Apr 2020 08:21:21 PDT (-0700)
+Subject:     Re: [RFC PATCH 3/7] riscv: Simplify MAXPHYSMEM config
+In-Reply-To: <20200322110028.18279-4-alex@ghiti.fr>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, zong.li@sifive.com,
+        anup@brainfault.org, Christoph Hellwig <hch@lst.de>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        alex@ghiti.fr
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     alex@ghiti.fr
+Message-ID: <mhng-f28ea5f1-ad10-4216-8612-f92863d20cca@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Linus.
+On Sun, 22 Mar 2020 04:00:24 PDT (-0700), alex@ghiti.fr wrote:
+> Either the user specifies maximum physical memory size of 2GB or the
+> user lives with the system constraint which is 128GB in 64BIT for now.
+>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> ---
+>  arch/riscv/Kconfig | 20 ++++++--------------
+>  1 file changed, 6 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 8e4b1cbcf2c2..a475c78e66bc 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -104,7 +104,7 @@ config PAGE_OFFSET
+>  	default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
+>  	default 0x80000000 if 64BIT && !MMU
+>  	default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
+> -	default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
+> +	default 0xffffffe000000000 if 64BIT && !MAXPHYSMEM_2GB
+>
+>  config ARCH_FLATMEM_ENABLE
+>  	def_bool y
+> @@ -216,19 +216,11 @@ config MODULE_SECTIONS
+>  	bool
+>  	select HAVE_MOD_ARCH_SPECIFIC
+>
+> -choice
+> -	prompt "Maximum Physical Memory"
+> -	default MAXPHYSMEM_2GB if 32BIT
+> -	default MAXPHYSMEM_2GB if 64BIT && CMODEL_MEDLOW
+> -	default MAXPHYSMEM_128GB if 64BIT && CMODEL_MEDANY
+> -
+> -	config MAXPHYSMEM_2GB
+> -		bool "2GiB"
+> -	config MAXPHYSMEM_128GB
+> -		depends on 64BIT && CMODEL_MEDANY
+> -		bool "128GiB"
+> -endchoice
+> -
+> +config MAXPHYSMEM_2GB
+> +	bool "Maximum Physical Memory 2GiB"
+> +	default y if 32BIT
+> +	default y if 64BIT && CMODEL_MEDLOW
+> +	default n
+>
+>  config SMP
+>  	bool "Symmetric Multi-Processing"
 
-* Christian extended clone3 so that processes can be spawned into cgroups
-  directly. This is not only neat in terms of semantics but also avoids grabbing
-  the global cgroup_threadgroup_rwsem for migration.
-
-* Daniel added !root xattr support to cgroupfs. Userland already uses xattrs on
-  cgroupfs for bookkeeping. This will allow delegated cgroups to support such
-  usages.
-
-* Prateek tried to make cpuset hotplug handling synchronous but that led to
-  possible deadlock scenarios. Reverted.
-
-* Other minor changes including release_agent_path handling cleanup.
-
-Thanks.
-
-The following changes since commit 2e5383d7904e60529136727e49629a82058a5607:
-
-  cgroup1: don't call release_agent when it is "" (2020-03-04 11:53:33 -0500)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.7
-
-for you to fetch changes up to 0c05b9bdbfe52ad9b391a28dd26f047715627e0c:
-
-  docs: cgroup-v1: Document the cpuset_v2_mode mount option (2020-04-03 11:42:56 -0400)
-
-----------------------------------------------------------------
-Christian Brauner (6):
-      cgroup: unify attach permission checking
-      cgroup: add cgroup_get_from_file() helper
-      cgroup: refactor fork helpers
-      cgroup: add cgroup_may_write() helper
-      clone3: allow spawning processes into cgroups
-      selftests/cgroup: add tests for cloning into cgroups
-
-Daniel Xu (4):
-      kernfs: kvmalloc xattr value instead of kmalloc
-      kernfs: Add removed_size out param for simple_xattr_set
-      kernfs: Add option to enable user xattrs
-      cgroupfs: Support user xattrs
-
-Madhuparna Bhowmik (1):
-      cgroup.c: Use built-in RCU list checking
-
-Michal Koutný (1):
-      cgroup: Clean up css_set task traversal
-
-Prateek Sood (1):
-      cpuset: Make cpuset hotplug synchronous
-
-Suren Baghdasaryan (1):
-      kselftest/cgroup: add cgroup destruction test
-
-Tejun Heo (3):
-      Merge branch 'for-5.6-fixes' into for-5.7
-      cgroup: Restructure release_agent_path handling
-      Revert "cpuset: Make cpuset hotplug synchronous"
-
-Waiman Long (1):
-      docs: cgroup-v1: Document the cpuset_v2_mode mount option
-
- Documentation/admin-guide/cgroup-v1/cpusets.rst   |  11 +
- fs/kernfs/inode.c                                 |  91 +++++-
- fs/kernfs/kernfs-internal.h                       |   2 +
- fs/xattr.c                                        |  17 +-
- include/linux/cgroup-defs.h                       |   5 +-
- include/linux/cgroup.h                            |  23 +-
- include/linux/kernfs.h                            |  11 +-
- include/linux/sched/task.h                        |   4 +
- include/linux/xattr.h                             |   3 +-
- include/uapi/linux/sched.h                        |   5 +
- kernel/cgroup/cgroup-v1.c                         |  34 +-
- kernel/cgroup/cgroup.c                            | 361 ++++++++++++++++------
- kernel/cgroup/cpuset.c                            |   8 +-
- kernel/cgroup/pids.c                              |  15 +-
- kernel/fork.c                                     |  19 +-
- mm/shmem.c                                        |   2 +-
- tools/testing/selftests/cgroup/Makefile           |   6 +-
- tools/testing/selftests/cgroup/cgroup_util.c      | 126 ++++++++
- tools/testing/selftests/cgroup/cgroup_util.h      |   4 +
- tools/testing/selftests/cgroup/test_core.c        | 177 +++++++++++
- tools/testing/selftests/clone3/clone3_selftests.h |  19 +-
- 21 files changed, 795 insertions(+), 148 deletions(-)
-
--- 
-tejun
+I'm not sure this actually helps with anything, but if it's all going away then it's
+fine.  Originally the 2G/128G stuff was there to allow for larger VA spaces in
+the future.
