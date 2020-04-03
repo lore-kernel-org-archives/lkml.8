@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35187C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0B8C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F0D20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64DEC208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:41:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JR09QoXS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p9IKbbWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388210AbgDCFld (ORCPT
+        id S2388450AbgDCFll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 01:41:33 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36086 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729349AbgDCFlb (ORCPT
+        Fri, 3 Apr 2020 01:41:41 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:34584 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729349AbgDCFlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 01:41:31 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c23so3002078pgj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 22:41:30 -0700 (PDT)
+        Fri, 3 Apr 2020 01:41:39 -0400
+Received: by mail-pj1-f67.google.com with SMTP id q16so594033pje.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 22:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PGmzb8UxKP2obZ2hRRmNukkpDvHaqG21Hk67bEIKtgs=;
-        b=JR09QoXSNbBg28nXbmYJlqlma5NOT/BgLD7wvGBTcGFvGFAgYtLCu9nwNnjHYHQbOr
-         ckoEOrXwaHenjnuBQpp76655Fa9RoUQBOIh2xtKt0s51R+krtPiiB4JXvkDqIRttqHac
-         D07zPODRsve+ZnUojsGvjnBE5Ae4ZjtpAzb20e5/FBsedcY+05C00GR14mJWEi7rMKmW
-         nk1QQoUuK6iuxsqdWhUaGiG4EjCCUSpVLrbfLtdP9EoA8KrfdyXTPRQiwq8FniJKd1MY
-         9xF1BUt7WX4khFtCnUjj1WHB1jQMlg3R6M9eYNprhtBGUAyw9eoda8F04p394gFIg5lE
-         yazw==
+        bh=mG2V4EKWwLpm65cedW0xiBMYuTKohTKduGAcO+0CPJM=;
+        b=p9IKbbWmo+8ay7jVcXtAJ6529VfEyJiUqf737Pl6QykFrIYG3kbMKiyH/JfBVGIdEu
+         xoS4Ij+yPz0Z7pP/3/xvyLjOPcHSABr7l1J+voalSVUTcRrjdAwWjAiiGP2stspITrL3
+         m/sUXF9YBDiqg5CY1wHuOl2v/8vKyEjFgQGzG6LaD/jJtJJy2P+PAOWaWiBcKuzqNGN9
+         twj9KQkpDOAti15kOgHbolqV+ZbPli8B0GfHpUdt4uxhDWnXDvMnNuMlJVKy2Yr2csdh
+         7Hl+kUMZSX7PGTcmelYMFstVLpjw7AYh5O9HiI/1KtEZLQ1nJEVyPCTVl7Dci09lAT5B
+         +oJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=PGmzb8UxKP2obZ2hRRmNukkpDvHaqG21Hk67bEIKtgs=;
-        b=mhhaICbD/joDUeBc7c3TXClmSjCKCKnnRapMt9hNwE4vaHHjgQqhNnCWFtdlk3yPsW
-         5m32VcQs5xAUABZmrUoQ42diSmeEABgSqKNlFPqaLg86fm0C+whGsqlY0ohKr96zeD87
-         qsVWUguTsYcwv/7IQmlPSDWZzXzzEdzHPKzawcBvgg93lx0BVpS0thdOYRA1mLULWQ/T
-         MQc9jbhVnBryPpzUSAvcihaG5k4owJQbvD1/X363b3KXqaoniRafNDPNfNRG1yumE412
-         rwNiorqQi87tuZzauNlUICfU1BlUgD8CaqlIbOwGDRCDM7+aCLDtht2vko08TDrpoBiZ
-         kK0A==
-X-Gm-Message-State: AGi0PuapXggmG9qTorNrCzi02yhwC9RewtkEzcTTr/oafzE27vklt2Ds
-        xY6RsuwnMReBVMRyWXzyD/c=
-X-Google-Smtp-Source: APiQypJVYeiNLUHoSnC+GoIJQaU/PRi7OFSvzEsO+JLkwBbacDZJjhcy/+34LUl0RfMG2wUiSaD02Q==
-X-Received: by 2002:aa7:8f29:: with SMTP id y9mr5726738pfr.19.1585892490028;
-        Thu, 02 Apr 2020 22:41:30 -0700 (PDT)
+        bh=mG2V4EKWwLpm65cedW0xiBMYuTKohTKduGAcO+0CPJM=;
+        b=DBYSYA6yBvQ+yojkSI1rbnGk7scAeaoJ/0Je6Lh31VMwgeF4YTFKlAnZIPLxebgTYx
+         5sEF7gvLT5qdnjdm4+6AR2kmRT/DlNhRk2uaiBylgPXmqT6gJJgdh5TS3Sd65dx7yGbg
+         l9ROF9N9zlLoiJXRZfN+gmxB/bZnRRM1Fy80iAotOiNlucziq/G/Nrmk9ZRsIfc9fq3J
+         D1AkqKeOqzvkv8d2eum8My45uqSGaOJQQAklz9mJVRvhJjcaV7a87CRHuuF4q1DvDDBj
+         IggxzGrUrg2ls6sb8SU9kb8VQtxBoa0DtQzLhwFh38l87csvFwqTUb2Ok6nIeyMwedQO
+         k1Nw==
+X-Gm-Message-State: AGi0PuZEZkytKwDRmtUJ/g6jRZ/lbFEl5vBr+s/BSYrsnpypMObLVIvo
+        WL9x75JKy02VtwekSMyzu0g=
+X-Google-Smtp-Source: APiQypIBtThaBXq8TI/cXNf01mMd+DoVHNDKsIXJoa871gdbLpCj4JU6yTLpoe94AdFtrBmoC3OItw==
+X-Received: by 2002:a17:902:dc83:: with SMTP id n3mr6251826pld.133.1585892497213;
+        Thu, 02 Apr 2020 22:41:37 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id e6sm4568295pgu.44.2020.04.02.22.41.26
+        by smtp.gmail.com with ESMTPSA id e6sm4568295pgu.44.2020.04.02.22.41.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 Apr 2020 22:41:29 -0700 (PDT)
+        Thu, 02 Apr 2020 22:41:36 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -67,9 +67,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Vlastimil Babka <vbabka@suse.cz>,
         Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v5 07/10] mm/workingset: support to remember the previous owner of the page
-Date:   Fri,  3 Apr 2020 14:40:45 +0900
-Message-Id: <1585892447-32059-8-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH v5 09/10] mm/vmscan: restore active/inactive ratio for anonymous LRU
+Date:   Fri,  3 Apr 2020 14:40:47 +0900
+Message-Id: <1585892447-32059-10-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -80,133 +80,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-This patch supports to remember the previous owner of the page.
-Since there is not enough spare bits in shadow entry for this information,
-only a few bits of the memcg id of the page is stored. Although this
-information is insufficient, it would provide enough level of the ability
-to check the previous owner.
+Now, workingset detection is implemented for anonymous LRU.
+We don't have to worry about the misfound for workingset due to
+the ratio of active/inactive. Let's restore the ratio.
 
-This patch is for the preparation of the following patch, "mm/swap:
-do not readahead if the previous owner of the swap entry isn't me".
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- mm/workingset.c | 41 +++++++++++++++++++++++++++++++----------
- 1 file changed, 31 insertions(+), 10 deletions(-)
+ mm/vmscan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/workingset.c b/mm/workingset.c
-index 59415e0..871b867 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -168,8 +168,20 @@
-  * refault distance will immediately activate the refaulting page.
-  */
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index d8aa42a..9c5d20c 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2204,7 +2204,7 @@ static bool inactive_is_low(struct lruvec *lruvec, enum lru_list inactive_lru)
+ 	active = lruvec_page_state(lruvec, NR_LRU_BASE + active_lru);
  
-+/*
-+ * memcg_tag will be used to check the previous owner of the page.
-+ * Since we don't have enough spare bits in shadow entry, just a few
-+ * bits are used to approximate the previous owner.
-+ */
-+#if BITS_PER_LONG == 32
-+#define PAGE_MEMCG_TAG_SHIFT 4
-+#else
-+#define PAGE_MEMCG_TAG_SHIFT 8
-+#endif
-+
- #define EVICTION_SHIFT	((BITS_PER_LONG - BITS_PER_XA_VALUE) +	\
--			 1 + NODES_SHIFT + MEM_CGROUP_ID_SHIFT)
-+			 1 + NODES_SHIFT + MEM_CGROUP_ID_SHIFT + \
-+			 PAGE_MEMCG_TAG_SHIFT)
- #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
- 
- /*
-@@ -182,11 +194,12 @@
-  */
- static unsigned int bucket_order __read_mostly;
- 
--static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction,
--			 bool workingset)
-+static void *pack_shadow(int memcgid, int page_memcg_tag, pg_data_t *pgdat,
-+			unsigned long eviction, bool workingset)
- {
- 	eviction >>= bucket_order;
- 	eviction &= EVICTION_MASK;
-+	eviction = (eviction << PAGE_MEMCG_TAG_SHIFT) | page_memcg_tag;
- 	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
- 	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
- 	eviction = (eviction << 1) | workingset;
-@@ -194,11 +207,12 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction,
- 	return xa_mk_value(eviction);
- }
- 
--static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
--			  unsigned long *evictionp, bool *workingsetp)
-+static void unpack_shadow(void *shadow, int *memcgidp, int *page_memcg_tagp,
-+			pg_data_t **pgdat, unsigned long *evictionp,
-+			bool *workingsetp)
- {
- 	unsigned long entry = xa_to_value(shadow);
--	int memcgid, nid;
-+	int memcgid, page_memcg_tag, nid;
- 	bool workingset;
- 
- 	workingset = entry & 1;
-@@ -207,8 +221,11 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
- 	entry >>= NODES_SHIFT;
- 	memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
- 	entry >>= MEM_CGROUP_ID_SHIFT;
-+	page_memcg_tag = entry & ((1UL << PAGE_MEMCG_TAG_SHIFT) - 1);
-+	entry >>= PAGE_MEMCG_TAG_SHIFT;
- 
- 	*memcgidp = memcgid;
-+	*page_memcg_tagp = page_memcg_tag;
- 	*pgdat = NODE_DATA(nid);
- 	*evictionp = entry << bucket_order;
- 	*workingsetp = workingset;
-@@ -248,9 +265,9 @@ void *workingset_eviction(struct page *page, struct mem_cgroup *target_memcg)
- {
- 	struct pglist_data *pgdat = page_pgdat(page);
- 	bool file = page_is_file_cache(page);
-+	int memcgid, page_memcg_tag;
- 	unsigned long eviction;
- 	struct lruvec *lruvec;
--	int memcgid;
- 
- 	/* Page is fully exclusive and pins page->mem_cgroup */
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
-@@ -262,8 +279,11 @@ void *workingset_eviction(struct page *page, struct mem_cgroup *target_memcg)
- 	lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
- 	/* XXX: target_memcg can be NULL, go through lruvec */
- 	memcgid = mem_cgroup_id(lruvec_memcg(lruvec));
-+	page_memcg_tag = mem_cgroup_id(page_memcg(page));
-+	page_memcg_tag &= (1UL << PAGE_MEMCG_TAG_SHIFT) - 1;
- 	eviction = atomic_long_read(&lruvec->inactive_age[file]);
--	return pack_shadow(memcgid, pgdat, eviction, PageWorkingset(page));
-+	return pack_shadow(memcgid, page_memcg_tag, pgdat, eviction,
-+			PageWorkingset(page));
- }
- 
- /**
-@@ -281,6 +301,7 @@ void workingset_refault(struct page *page, void *shadow)
- 	struct mem_cgroup *eviction_memcg;
- 	struct lruvec *eviction_lruvec;
- 	unsigned long refault_distance;
-+	int memcgid, page_memcg_tag;
- 	struct pglist_data *pgdat;
- 	struct mem_cgroup *memcg;
- 	unsigned long eviction;
-@@ -288,9 +309,9 @@ void workingset_refault(struct page *page, void *shadow)
- 	unsigned long refault;
- 	unsigned long active;
- 	bool workingset;
--	int memcgid;
- 
--	unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &workingset);
-+	unpack_shadow(shadow, &memcgid, &page_memcg_tag,
-+			&pgdat, &eviction, &workingset);
- 
- 	rcu_read_lock();
- 	/*
+ 	gb = (inactive + active) >> (30 - PAGE_SHIFT);
+-	if (gb && is_file_lru(inactive_lru))
++	if (gb)
+ 		inactive_ratio = int_sqrt(10 * gb);
+ 	else
+ 		inactive_ratio = 1;
 -- 
 2.7.4
 
