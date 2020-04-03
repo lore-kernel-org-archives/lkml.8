@@ -2,327 +2,103 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C097C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C39C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21028207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:00:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ntC1dBAn"
+	by mail.kernel.org (Postfix) with ESMTP id AB4AC207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390327AbgDCAAz (ORCPT
+        id S2390326AbgDCAFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 20:00:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51756 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390235AbgDCAAy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 20:00:54 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032NvZwk091736;
-        Fri, 3 Apr 2020 00:00:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=x53Ml8cyQklcI9PJUMJawCXgLBW3DQoGqYUbTzujAw0=;
- b=ntC1dBAnVnvlVwTk+NkzqnMnm51HAT/qShIH2UOoZF4zLCbVyqJZni5MCqSKhtpw1IsX
- 83n/w0USEM8QZ+2/gT/ElqJWTbf8V0K8Padk++ELbxbn3DfyP6BW5be/wxAH8XKHSknN
- bItgimVtZx4AounPGx/k1QbBlqRSzpCymOac6mbu5zTmXLefqSKUT97X5ILEJM/jBuKa
- ICo4sUg7B3Rgva/aTMAlT3kpTloCq05/chG0vpDnJOucSrJherPkQOLW0QX7bKiQ6ZX+
- RcoDlP2NYm2vdb1M+F7ZAnl4l/SoyeCh37Cw2FCLuGsKxBLO+FtvvRep2TRutEEwIPDt 4A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 303ceved45-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 00:00:31 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 032NwLOq144927;
-        Fri, 3 Apr 2020 00:00:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 302g4wd72k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 00:00:30 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03300S9i010672;
-        Fri, 3 Apr 2020 00:00:28 GMT
-Received: from vbusired-dt (/10.154.166.66)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 02 Apr 2020 17:00:28 -0700
-Date:   Thu, 2 Apr 2020 19:00:23 -0500
-From:   Venu Busireddy <venu.busireddy@oracle.com>
-To:     Ashish Kalra <Ashish.Kalra@amd.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
-        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com,
-        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
-Subject: Re: [PATCH v6 08/14] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS
- hypercall
-Message-ID: <20200403000023.GA660621@vbusired-dt>
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <265ef8a0ab75f01bc673cce6ddcf7988c7623943.1585548051.git.ashish.kalra@amd.com>
+        Thu, 2 Apr 2020 20:05:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:16264 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390294AbgDCAFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 20:05:45 -0400
+IronPort-SDR: hYSD8JtMOMCN3hYdg1ElcR55zAqDeSHR/hv13HX8k6I0hmcsiH14s5rsnfeLDAsqqGz5Frht7C
+ eb78SdWKr/Jg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 17:05:44 -0700
+IronPort-SDR: GWn4OjVy3o8Dsgvo+tif0vznlxkC+i7g0zdLzzJQDEOoJ3namMfgV143OgLItGWAlNUP+H014w
+ vA2lXs9pE5Dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,337,1580803200"; 
+   d="scan'208";a="423336550"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga005.jf.intel.com with ESMTP; 02 Apr 2020 17:05:44 -0700
+Date:   Thu, 2 Apr 2020 17:05:27 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>
+Cc:     tglx@linutronix.de, bp@alien8.de, tony.luck@intel.com,
+        kuo-lang.tseng@intel.com, mingo@redhat.com, babu.moger@amd.com,
+        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/resctrl: Support CPUID enumeration of MBM
+ counter width
+Message-ID: <20200403000527.GI188393@romley-ivt3.sc.intel.com>
+References: <cover.1585763047.git.reinette.chatre@intel.com>
+ <76dc65631c373e0c1c9f3e8aaa768f022a2c989c.1585763047.git.reinette.chatre@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <265ef8a0ab75f01bc673cce6ddcf7988c7623943.1585548051.git.ashish.kalra@amd.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=5
- mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020177
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=5 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004020177
+In-Reply-To: <76dc65631c373e0c1c9f3e8aaa768f022a2c989c.1585763047.git.reinette.chatre@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-30 06:22:07 +0000, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
+On Wed, Apr 01, 2020 at 10:51:02AM -0700, Reinette Chatre wrote:
+> The original Memory Bandwidth Monitoring (MBM) architectural
+> definition defines counters of up to 62 bits in the
+> IA32_QM_CTR MSR while the first-generation MBM implementation
+> uses statically defined 24 bit counters.
 > 
-> This hypercall is used by the SEV guest to notify a change in the page
-> encryption status to the hypervisor. The hypercall should be invoked
-> only when the encryption attribute is changed from encrypted -> decrypted
-> and vice versa. By default all guest pages are considered encrypted.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-
-Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
-
-> ---
->  Documentation/virt/kvm/hypercalls.rst | 15 +++++
->  arch/x86/include/asm/kvm_host.h       |  2 +
->  arch/x86/kvm/svm.c                    | 95 +++++++++++++++++++++++++++
->  arch/x86/kvm/vmx/vmx.c                |  1 +
->  arch/x86/kvm/x86.c                    |  6 ++
->  include/uapi/linux/kvm_para.h         |  1 +
->  6 files changed, 120 insertions(+)
-> 
-> diff --git a/Documentation/virt/kvm/hypercalls.rst b/Documentation/virt/kvm/hypercalls.rst
-> index dbaf207e560d..ff5287e68e81 100644
-> --- a/Documentation/virt/kvm/hypercalls.rst
-> +++ b/Documentation/virt/kvm/hypercalls.rst
-> @@ -169,3 +169,18 @@ a0: destination APIC ID
+> @@ -856,6 +856,8 @@ static void init_speculation_control(struct cpuinfo_x86 *c)
 >  
->  :Usage example: When sending a call-function IPI-many to vCPUs, yield if
->  	        any of the IPI target vCPUs was preempted.
-> +
-> +
-> +8. KVM_HC_PAGE_ENC_STATUS
-> +-------------------------
-> +:Architecture: x86
-> +:Status: active
-> +:Purpose: Notify the encryption status changes in guest page table (SEV guest)
-> +
-> +a0: the guest physical address of the start page
-> +a1: the number of pages
-> +a2: encryption attribute
-> +
-> +   Where:
-> +	* 1: Encryption attribute is set
-> +	* 0: Encryption attribute is cleared
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 98959e8cd448..90718fa3db47 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1267,6 +1267,8 @@ struct kvm_x86_ops {
->  
->  	bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
->  	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
-> +	int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
-> +				  unsigned long sz, unsigned long mode);
->  };
->  
->  struct kvm_arch_async_pf {
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 7c2721e18b06..1d8beaf1bceb 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -136,6 +136,8 @@ struct kvm_sev_info {
->  	int fd;			/* SEV device fd */
->  	unsigned long pages_locked; /* Number of pages locked */
->  	struct list_head regions_list;  /* List of registered regions */
-> +	unsigned long *page_enc_bmap;
-> +	unsigned long page_enc_bmap_size;
->  };
->  
->  struct kvm_svm {
-> @@ -1991,6 +1993,9 @@ static void sev_vm_destroy(struct kvm *kvm)
->  
->  	sev_unbind_asid(kvm, sev->handle);
->  	sev_asid_free(sev->asid);
-> +
-> +	kvfree(sev->page_enc_bmap);
-> +	sev->page_enc_bmap = NULL;
->  }
->  
->  static void avic_vm_destroy(struct kvm *kvm)
-> @@ -7593,6 +7598,94 @@ static int sev_receive_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
->  	return ret;
->  }
->  
-> +static int sev_resize_page_enc_bitmap(struct kvm *kvm, unsigned long new_size)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	unsigned long *map;
-> +	unsigned long sz;
-> +
-> +	if (sev->page_enc_bmap_size >= new_size)
-> +		return 0;
-> +
-> +	sz = ALIGN(new_size, BITS_PER_LONG) / 8;
-> +
-> +	map = vmalloc(sz);
-> +	if (!map) {
-> +		pr_err_once("Failed to allocate encrypted bitmap size %lx\n",
-> +				sz);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* mark the page encrypted (by default) */
-> +	memset(map, 0xff, sz);
-> +
-> +	bitmap_copy(map, sev->page_enc_bmap, sev->page_enc_bmap_size);
-> +	kvfree(sev->page_enc_bmap);
-> +
-> +	sev->page_enc_bmap = map;
-> +	sev->page_enc_bmap_size = new_size;
-> +
-> +	return 0;
-> +}
-> +
-> +static int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
-> +				  unsigned long npages, unsigned long enc)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	kvm_pfn_t pfn_start, pfn_end;
-> +	gfn_t gfn_start, gfn_end;
-> +	int ret;
-> +
-> +	if (!sev_guest(kvm))
-> +		return -EINVAL;
-> +
-> +	if (!npages)
-> +		return 0;
-> +
-> +	gfn_start = gpa_to_gfn(gpa);
-> +	gfn_end = gfn_start + npages;
-> +
-> +	/* out of bound access error check */
-> +	if (gfn_end <= gfn_start)
-> +		return -EINVAL;
-> +
-> +	/* lets make sure that gpa exist in our memslot */
-> +	pfn_start = gfn_to_pfn(kvm, gfn_start);
-> +	pfn_end = gfn_to_pfn(kvm, gfn_end);
-> +
-> +	if (is_error_noslot_pfn(pfn_start) && !is_noslot_pfn(pfn_start)) {
-> +		/*
-> +		 * Allow guest MMIO range(s) to be added
-> +		 * to the page encryption bitmap.
-> +		 */
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (is_error_noslot_pfn(pfn_end) && !is_noslot_pfn(pfn_end)) {
-> +		/*
-> +		 * Allow guest MMIO range(s) to be added
-> +		 * to the page encryption bitmap.
-> +		 */
-> +		return -EINVAL;
-> +	}
-> +
-> +	mutex_lock(&kvm->lock);
-> +	ret = sev_resize_page_enc_bitmap(kvm, gfn_end);
-> +	if (ret)
-> +		goto unlock;
-> +
-> +	if (enc)
-> +		__bitmap_set(sev->page_enc_bmap, gfn_start,
-> +				gfn_end - gfn_start);
-> +	else
-> +		__bitmap_clear(sev->page_enc_bmap, gfn_start,
-> +				gfn_end - gfn_start);
-> +
-> +unlock:
-> +	mutex_unlock(&kvm->lock);
-> +	return ret;
-> +}
-> +
->  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  static void init_cqm(struct cpuinfo_x86 *c)
 >  {
->  	struct kvm_sev_cmd sev_cmd;
-> @@ -7995,6 +8088,8 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
->  	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
->  
->  	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
+> +	c->x86_cache_mbm_width_offset = -1;
 > +
-> +	.page_enc_status_hc = svm_page_enc_status_hc,
->  };
+>  	if (!cpu_has(c, X86_FEATURE_CQM_LLC)) {
+>  		c->x86_cache_max_rmid  = -1;
+>  		c->x86_cache_occ_scale = -1;
+> @@ -875,6 +877,9 @@ static void init_cqm(struct cpuinfo_x86 *c)
 >  
->  static int __init svm_init(void)
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 079d9fbf278e..f68e76ee7f9c 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -8001,6 +8001,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
->  	.nested_get_evmcs_version = NULL,
->  	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
->  	.apic_init_signal_blocked = vmx_apic_init_signal_blocked,
-> +	.page_enc_status_hc = NULL,
->  };
+>  		c->x86_cache_max_rmid  = ecx;
+>  		c->x86_cache_occ_scale = ebx;
+> +		/* EAX contents is only defined for Intel CPUs */
+> +		if (c->x86_vendor == X86_VENDOR_INTEL)
+> +			c->x86_cache_mbm_width_offset = eax & 0xff;
+
+Is it reliable to read eax which is reserved on older platforms that
+don't support the feature?
+
+Seems the code assumes the reserved eax is 0 on those platforms. Is it
+reliable?
+
+>  int rdt_get_mon_l3_config(struct rdt_resource *r)
+>  {
+> +	unsigned int mbm_offset = boot_cpu_data.x86_cache_mbm_width_offset;
+>  	unsigned int cl_size = boot_cpu_data.x86_cache_size;
+>  	int ret;
 >  
->  static void vmx_cleanup_l1d_flush(void)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index cf95c36cb4f4..68428eef2dde 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7564,6 +7564,12 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
->  		kvm_sched_yield(vcpu->kvm, a0);
->  		ret = 0;
->  		break;
-> +	case KVM_HC_PAGE_ENC_STATUS:
-> +		ret = -KVM_ENOSYS;
-> +		if (kvm_x86_ops->page_enc_status_hc)
-> +			ret = kvm_x86_ops->page_enc_status_hc(vcpu->kvm,
-> +					a0, a1, a2);
-> +		break;
->  	default:
->  		ret = -KVM_ENOSYS;
->  		break;
-> diff --git a/include/uapi/linux/kvm_para.h b/include/uapi/linux/kvm_para.h
-> index 8b86609849b9..847b83b75dc8 100644
-> --- a/include/uapi/linux/kvm_para.h
-> +++ b/include/uapi/linux/kvm_para.h
-> @@ -29,6 +29,7 @@
->  #define KVM_HC_CLOCK_PAIRING		9
->  #define KVM_HC_SEND_IPI		10
->  #define KVM_HC_SCHED_YIELD		11
-> +#define KVM_HC_PAGE_ENC_STATUS		12
+>  	r->mon_scale = boot_cpu_data.x86_cache_occ_scale;
+>  	r->num_rmid = boot_cpu_data.x86_cache_max_rmid + 1;
+> -	r->mbm_width = MBM_CNTR_WIDTH;
+> +	r->mbm_width = MBM_CNTR_WIDTH_BASE;
+> +
+> +	if (mbm_offset > 0 && mbm_offset <= MBM_CNTR_WIDTH_OFFSET_MAX)
+> +		r->mbm_width += mbm_offset;
+> +	else if (mbm_offset > MBM_CNTR_WIDTH_OFFSET_MAX)
+> +		pr_warn("Ignoring impossible MBM counter offset\n");
 >  
->  /*
->   * hypercalls use architecture specific
-> -- 
-> 2.17.1
-> 
+
+Thanks.
+
+-Fenghua
