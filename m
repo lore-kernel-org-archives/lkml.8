@@ -2,122 +2,72 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F836C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913BCC2BA18
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3202077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684A320659
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:46:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585917963;
+	bh=8Vbyn6IHc/xaPmxjThTQilgsoTSBkIvn8J7KjZ6GjOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p6ik5Uy365yM5Cvs7XefWOxawlO0FHL0Tl23bFzi1Bm3OPV4AF8bjI9t2L7Qvi+9S
+	 uJ3FlHP+huwyxoV6ryaMqSwnpLT7kIUpQKi7I+OZ9AtXR+DCYaUhiW+W7CTbuv680i
+	 GbaAQk2VnpDL8uBaAAOTQv/EzySgcevzmCpSefJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390835AbgDCMo5 convert rfc822-to-8bit (ORCPT
+        id S2390856AbgDCMqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:44:57 -0400
-Received: from mga11.intel.com ([192.55.52.93]:34643 "EHLO mga11.intel.com"
+        Fri, 3 Apr 2020 08:46:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727965AbgDCMo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:44:56 -0400
-IronPort-SDR: RLPhhYI1UXHqWbFud3UOcrlUK/ErWkiqrAU2MJWpezrRXqLlxO2X1SvUlVJrXSwOtEVvgPqr1s
- ImQS9V1DdSzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 05:44:56 -0700
-IronPort-SDR: FIByPhSWdOnN913/D0S6XqXWgpwqP9R8Y5o3SECqUjmkpTTNF6mFEYXqyZxYOkHQre5oHzJlEz
- TAdvK2BZqRGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="241115423"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Apr 2020 05:44:56 -0700
-Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 05:44:55 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- FMSMSX157.amr.corp.intel.com (10.18.116.73) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 05:44:55 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
- Fri, 3 Apr 2020 20:44:51 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Topic: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Index: AQHWAEUbC4GB74LMekup8jIcF6WIFqhlZUwAgAH1tzD//4hGgIAAhuqA
-Date:   Fri, 3 Apr 2020 12:44:51 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A220AE4@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
- <20200402135240.GE1176452@myrica>
- <A2975661238FB949B60364EF0F2C25743A2209E3@SHSMSX104.ccr.corp.intel.com>
- <20200403123951.GA1410438@myrica>
-In-Reply-To: <20200403123951.GA1410438@myrica>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1728012AbgDCMqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 08:46:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 545D92077D;
+        Fri,  3 Apr 2020 12:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585917961;
+        bh=8Vbyn6IHc/xaPmxjThTQilgsoTSBkIvn8J7KjZ6GjOs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FqgXgRzNUBD0KaJt38FHSN8DoQOj/vMsKFuUfyzxb8B1ZTBD0JSHqXBrogUppGvF+
+         TerqmrOTdo/fo2iYnBRpQIxUR6WLbElIMCOMOIQjX2KHH6/39rf4Gkt1+MW2f12YWI
+         FtrDHoXdbqZnCBtthQYhvjt2jGbEu6ZsYAnqZye0=
+Date:   Fri, 3 Apr 2020 14:45:57 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, g.nault@alphalink.fr
+Subject: Re: [PATCH 0/8] [backports] l2tp use-after-free fixes for 4.4 stable
+Message-ID: <20200403124557.GA3984782@kroah.com>
+References: <20200402173250.7858-1-will@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402173250.7858-1-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Sent: Friday, April 3, 2020 8:40 PM
-> Subject: Re: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+On Thu, Apr 02, 2020 at 06:32:42PM +0100, Will Deacon wrote:
+> Hi Greg,
 > 
-> On Fri, Apr 03, 2020 at 11:56:09AM +0000, Liu, Yi L wrote:
-> > > >  /**
-> > > > + * VFIO_MM objects - create, release, get, put, search
-> > > > + * Caller of the function should have held vfio.vfio_mm_lock.
-> > > > + */
-> > > > +static struct vfio_mm *vfio_create_mm(struct mm_struct *mm) {
-> > > > +	struct vfio_mm *vmm;
-> > > > +	struct vfio_mm_token *token;
-> > > > +	int ret = 0;
-> > > > +
-> > > > +	vmm = kzalloc(sizeof(*vmm), GFP_KERNEL);
-> > > > +	if (!vmm)
-> > > > +		return ERR_PTR(-ENOMEM);
-> > > > +
-> > > > +	/* Per mm IOASID set used for quota control and group operations */
-> > > > +	ret = ioasid_alloc_set((struct ioasid_set *) mm,
-> > >
-> > > Hmm, either we need to change the token of ioasid_alloc_set() to
-> > > "void *", or pass an actual ioasid_set struct, but this cast doesn't
-> > > look good :)
-> > >
-> > > As I commented on the IOASID series, I think we could embed a struct
-> > > ioasid_set into vfio_mm, pass that struct to all other ioasid_*
-> > > functions, and get rid of ioasid_sid.
-> >
-> > I think change to "void *" is better as we needs the token to ensure
-> > all threads within a single VM share the same ioasid_set.
+> Syzbot has been complaining about KASAN splats due to use-after-free
+> issues in the l2tp code on 4.4 Android kernels (although I reproduced
+> with latest 4.4 stable on my laptop):
 > 
-> Don't they share the same vfio_mm?
+> https://syzkaller.appspot.com/bug?id=de316389db0fa0cd7ced6e564601ea8e56625ebc
+> 
+> These have been fixed upstream, but for some reason didn't get picked up
+> for stable. This series applies to 4.4.y and I've sent patches for 4.9
+> separately.
 
-that's right. then both works well for me.
+All now queued up, thanks.
 
-Regards,
-Yi Liu
+greg k-h
