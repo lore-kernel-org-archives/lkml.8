@@ -5,63 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65185C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A89CC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A233206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70758206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:08:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XZEvw5aQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2WSo8DK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgDCUIV (ORCPT
+        id S1728054AbgDCUIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 16:08:21 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36644 "EHLO
+        Fri, 3 Apr 2020 16:08:19 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26993 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727977AbgDCUIR (ORCPT
+        by vger.kernel.org with ESMTP id S1727958AbgDCUIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Apr 2020 16:08:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585944497;
+        s=mimecast20190719; t=1585944496;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OEsV9eSdWDRaAMBOSt6FSG+jWV6hZRXoz4QAhzcz7j8=;
-        b=XZEvw5aQ8CtGPkHRLkDSGbqIqPIAN4mY0q02fFnpVp8q3c7UvXIXoNJPeyIniNZAIHNSbV
-        NbgJIV56YoPp8yJy+3Eaxl7xxGTUULxpfpEjAtR1nNQ84CiVv6qduAMSdSeanGpC8NsMq3
-        Ytc0kJaN3V2INngTd1qwWBo/f4DFRkA=
+        bh=kKsSricBHipqeqS0u1MchokqfR4S8U9l6GCrFWtjiM4=;
+        b=F2WSo8DKZDYnuAWIbiYKD4HpWrtyUfKiqkZwpGETq7LpeN2FrwMzCv87H5LbQbMOhQJ3g/
+        bAi7+1tCkyieV9nUqmdc0HxFV8HX0iAt9UEeSNf1qb096ul/OHILEW/h6B9Ypk0zdrKXQN
+        k3kH0Qb45lA1gJPX5/H065xZr0bLvpw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-zuo8q5npPduGTdfIw3fzfg-1; Fri, 03 Apr 2020 16:08:13 -0400
-X-MC-Unique: zuo8q5npPduGTdfIw3fzfg-1
+ us-mta-489-vyb4GsmyMQaIUUh3H_ynEA-1; Fri, 03 Apr 2020 16:08:14 -0400
+X-MC-Unique: vyb4GsmyMQaIUUh3H_ynEA-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0909100550D;
-        Fri,  3 Apr 2020 20:08:11 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1752E8017CE;
+        Fri,  3 Apr 2020 20:08:13 +0000 (UTC)
 Received: from Ruby.redhat.com (ovpn-117-203.rdu2.redhat.com [10.10.117.203])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 09D515C541;
-        Fri,  3 Apr 2020 20:08:09 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2AC615C541;
+        Fri,  3 Apr 2020 20:08:12 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org
-Cc:     Sean Paul <sean@poorly.run>, stable@vger.kernel.org,
+Cc:     Sean Paul <sean@poorly.run>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Todd Previte <tprevite@gmail.com>,
-        Dave Airlie <airlied@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] drm/dp_mst: Increase ACT retry timeout to 3s
-Date:   Fri,  3 Apr 2020 16:07:55 -0400
-Message-Id: <20200403200757.886443-4-lyude@redhat.com>
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] drm/dp_mst: Print errors on ACT timeouts
+Date:   Fri,  3 Apr 2020 16:07:56 -0400
+Message-Id: <20200403200757.886443-5-lyude@redhat.com>
 In-Reply-To: <20200403200757.886443-1-lyude@redhat.com>
 References: <20200403200757.886443-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,94 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we only poll for an ACT up to 30 times, with a busy-wait delay
-of 100=C2=B5s between each attempt - giving us a timeout of 2900=C2=B5s. =
-While
-this might seem sensible, it would appear that in certain scenarios it
-can take dramatically longer then that for us to receive an ACT. On one
-of the EVGA MST hubs that I have available, I observed said hub
-sometimes taking longer then a second before signalling the ACT. These
-delays mostly seem to occur when previous sideband messages we've sent
-are NAKd by the hub, however it wouldn't be particularly surprising if
-it's possible to reproduce times like this simply by introducing branch
-devices with large LCTs since payload allocations have to take effect on
-every downstream device up to the payload's target.
-
-So, instead of just retrying 30 times we poll for the ACT for up to 3ms,
-and additionally use usleep_range() to avoid a very long and rude
-busy-wait. Note that the previous retry count of 30 appears to have been
-arbitrarily chosen, as I can't find any mention of a recommended timeout
-or retry count for ACTs in the DisplayPort 2.0 specification. This also
-goes for the range we were previously using for udelay(), although I
-suspect that was just copied from the recommended delay for link
-training on SST devices.
+Although it's not unexpected for drm_dp_check_act_status() to fail due
+to DPCD read failures (as the hub may have just been unplugged
+suddenly), timeouts are a bit more worrying as they either mean we need
+a longer timeout value, or we aren't setting up payload allocations
+properly. So, let's start printing errors on timeouts.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0=
-.6)")
 Cc: Sean Paul <sean@poorly.run>
-Cc: <stable@vger.kernel.org> # v3.17+
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
 dp_mst_topology.c
-index 7aaf184a2e5f..f313407374ed 100644
+index f313407374ed..3d0d373f6f91 100644
 --- a/drivers/gpu/drm/drm_dp_mst_topology.c
 +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -4466,17 +4466,30 @@ static int drm_dp_dpcd_write_payload(struct drm_d=
-p_mst_topology_mgr *mgr,
-  * @mgr: manager to use
-  *
-  * Tries waiting for the MST hub to finish updating it's payload table b=
-y
-- * polling for the ACT handled bit.
-+ * polling for the ACT handled bit for up to 3 seconds (yes-some hubs re=
-ally
-+ * take that long).
-  *
-  * Returns:
-  * 0 if the ACT was handled in time, negative error code on failure.
-  */
- int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
- {
--	int count =3D 0, ret;
-+	/*
-+	 * There doesn't seem to be any recommended retry count or timeout in
-+	 * the MST specification. Since some hubs have been observed to take
-+	 * over 1 second to update their payload allocations under certain
-+	 * conditions, we use a rather large timeout value.
-+	 */
-+	const int timeout_ms =3D 3000;
-+	unsigned long timeout =3D jiffies + msecs_to_jiffies(timeout_ms);
-+	int ret;
-+	bool retrying =3D false;
- 	u8 status;
-=20
- 	do {
-+		if (retrying)
-+			usleep_range(100, 1000);
-+
- 		ret =3D drm_dp_dpcd_readb(mgr->aux,
+@@ -4494,6 +4494,10 @@ int drm_dp_check_act_status(struct drm_dp_mst_topo=
+logy_mgr *mgr)
  					DP_PAYLOAD_TABLE_UPDATE_STATUS,
  					&status);
-@@ -4488,13 +4501,12 @@ int drm_dp_check_act_status(struct drm_dp_mst_top=
-ology_mgr *mgr)
-=20
- 		if (status & DP_PAYLOAD_ACT_HANDLED)
- 			break;
--		count++;
--		udelay(100);
--	} while (count < 30);
-+		retrying =3D true;
-+	} while (jiffies < timeout);
+ 		if (ret < 0) {
++			/*
++			 * Failure here isn't unexpected - the hub may have
++			 * just been unplugged
++			 */
+ 			DRM_DEBUG_KMS("failed to read payload table status %d\n",
+ 				      ret);
+ 			return ret;
+@@ -4505,8 +4509,8 @@ int drm_dp_check_act_status(struct drm_dp_mst_topol=
+ogy_mgr *mgr)
+ 	} while (jiffies < timeout);
 =20
  	if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
--		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n",
--			      status, count);
-+		DRM_DEBUG_KMS("failed to get ACT bit %d after %dms\n",
-+			      status, timeout_ms);
+-		DRM_DEBUG_KMS("failed to get ACT bit %d after %dms\n",
+-			      status, timeout_ms);
++		DRM_ERROR("Failed to get ACT after %dms, last status: %02x\n",
++			  timeout_ms, status);
  		return -EINVAL;
  	}
  	return 0;
