@@ -2,224 +2,117 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF30C2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DDAC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4137320721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D8520721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:19:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TQWVPG5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390524AbgDCIST (ORCPT
+        id S2390501AbgDCIT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:18:19 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60991 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390480AbgDCISS (ORCPT
+        Fri, 3 Apr 2020 04:19:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60401 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727835AbgDCIT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:18:18 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jKHWo-0002IG-Qi; Fri, 03 Apr 2020 10:18:14 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jKHWn-0005DA-RG; Fri, 03 Apr 2020 10:18:13 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v1] net: phy: micrel: add phy-mode support for the KSZ9031 PHY
-Date:   Fri,  3 Apr 2020 10:18:12 +0200
-Message-Id: <20200403081812.19717-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.0.rc2
+        Fri, 3 Apr 2020 04:19:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585901994;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BZ+Xgs03guAOyReZNCF6ZrrqdxLw5dFuzU2P8g5iCuY=;
+        b=TQWVPG5spGPJTV284hF/i6/CJQcLPB1/hCr1ByAiVvDD2GHjEvioNJQxAUyKulDHfpf1g4
+        PgHAthkv8QbnepOg+79OjEJwkq5JyTg0kHSBdqt+n2Jq4wXGJPUhL4Go5lQzSnEz+xsm5S
+        uvlRZpwkLEnw5KdCq05ZDlt3DmO8SOw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-253-kbyr9x7vPNKH_44OGorzBA-1; Fri, 03 Apr 2020 04:19:46 -0400
+X-MC-Unique: kbyr9x7vPNKH_44OGorzBA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0BC49DB62;
+        Fri,  3 Apr 2020 08:19:44 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-40.pek2.redhat.com [10.72.8.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E44715C3FA;
+        Fri,  3 Apr 2020 08:19:34 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 16:19:29 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, nstange@suse.de, mhocko@suse.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai3@huawei.com
+Subject: Re: [RFC 0/3] block: address blktrace use-after-free
+Message-ID: <20200403081929.GC6887@ming.t460p>
+References: <20200402000002.7442-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402000002.7442-1-mcgrof@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for following phy-modes: rgmii, rgmii-id, rgmii-txid, rgmii-rxid.
+On Wed, Apr 01, 2020 at 11:59:59PM +0000, Luis Chamberlain wrote:
+> Upstream kernel.org korg#205713 contends that there is a UAF in
+> the core debugfs debugfs_remove() function, and has gone through
+> pushing for a CVE for this, CVE-2019-19770.
+> 
+> If correct then parent dentries are not positive, and this would
+> have implications far beyond this bug report. Thankfully, upon review
+> with Nicolai, he wasn't buying it. His suspicions that this was just
+> a blktrace issue were spot on, and this patch series demonstrates
+> that, provides a reproducer, and provides a solution to the issue.
+> 
+> We there would like to contend CVE-2019-19770 as invalid. The
+> implications suggested are not correct, and this issue is only
+> triggerable with root, by shooting yourself on the foot by misuing
+> blktrace.
+> 
+> If you want this on a git tree, you can get it from linux-next
+> 20200401-blktrace-fix-uaf branch [2].
+> 
+> Wider review, testing, and rants are appreciated.
+> 
+> [0] https://bugzilla.kernel.org/show_bug.cgi?id=205713
+> [1] https://nvd.nist.gov/vuln/detail/CVE-2019-19770
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20200401-blktrace-fix-uaf
+> 
+> Luis Chamberlain (3):
+>   block: move main block debugfs initialization to its own file
+>   blktrace: fix debugfs use after free
+>   block: avoid deferral of blk_release_queue() work
+> 
+>  block/Makefile               |  1 +
+>  block/blk-core.c             |  9 +--------
+>  block/blk-debugfs.c          | 27 +++++++++++++++++++++++++++
+>  block/blk-mq-debugfs.c       |  5 -----
+>  block/blk-sysfs.c            | 21 ++++++++-------------
+>  block/blk.h                  | 17 +++++++++++++++++
+>  include/linux/blktrace_api.h |  1 -
+>  kernel/trace/blktrace.c      | 19 ++++++++-----------
+>  8 files changed, 62 insertions(+), 38 deletions(-)
+>  create mode 100644 block/blk-debugfs.c
 
-This PHY has an internal RX delay of 1.2ns and no delay for TX.
+BTW, Yu Kuai posted one patch for this issue, looks that approach
+is simpler:
 
-The pad skew registers allow to set the total TX delay to max 1.38ns and
-the total RX delay to max of 2.58ns (configurable 1.38ns + build in
-1.2ns) and a minimal delay of 0ns.
+https://lore.kernel.org/linux-block/20200324132315.22133-1-yukuai3@huawei.com/
 
-According to the RGMII v2 specification the delay provided by PCB traces
-should be between 1.5ns and 2.0ns. As this PHY can provide max delay of
-only 1.38ns on the TX line, in RGMII-ID mode a symmetric delay of 1.38ns
-for both the RX and TX lines is chosen, even if the RX line could be
-configured with the 1.5ns according to the standard.
 
-The phy-modes can still be fine tuned/overwritten by *-skew-ps
-device tree properties described in:
-Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/phy/micrel.c | 109 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
-
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 2ec19e5540bff..4fe5a814f586d 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -19,6 +19,7 @@
-  *			 ksz9477
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/phy.h>
-@@ -489,9 +490,50 @@ static int ksz9021_config_init(struct phy_device *phydev)
- 
- /* MMD Address 0x2 */
- #define MII_KSZ9031RN_CONTROL_PAD_SKEW	4
-+#define MII_KSZ9031RN_RX_CTL_M		GENMASK(7, 4)
-+#define MII_KSZ9031RN_TX_CTL_M		GENMASK(3, 0)
-+
- #define MII_KSZ9031RN_RX_DATA_PAD_SKEW	5
-+#define MII_KSZ9031RN_RXD3		GENMASK(15, 12)
-+#define MII_KSZ9031RN_RXD2		GENMASK(11, 8)
-+#define MII_KSZ9031RN_RXD1		GENMASK(7, 4)
-+#define MII_KSZ9031RN_RXD0		GENMASK(3, 0)
-+
- #define MII_KSZ9031RN_TX_DATA_PAD_SKEW	6
-+#define MII_KSZ9031RN_TXD3		GENMASK(15, 12)
-+#define MII_KSZ9031RN_TXD2		GENMASK(11, 8)
-+#define MII_KSZ9031RN_TXD1		GENMASK(7, 4)
-+#define MII_KSZ9031RN_TXD0		GENMASK(3, 0)
-+
- #define MII_KSZ9031RN_CLK_PAD_SKEW	8
-+#define MII_KSZ9031RN_GTX_CLK		GENMASK(9, 5)
-+#define MII_KSZ9031RN_RX_CLK		GENMASK(4, 0)
-+
-+/* KSZ9031 has internal RGMII_IDRX = 1.2ns and RGMII_IDTX = 0ns. To
-+ * provide different RGMII options we need to configure delay offset
-+ * for each pad relative to build in delay.
-+ */
-+/* set rx to +0.18ns and rx_clk to "No delay adjustment" value to get delays of
-+ * 1.38ns
-+ */
-+#define RX_ID				0x1a
-+#define RX_CLK_ID			0xf
-+
-+/* set rx to +0.30ns and rx_clk to -0.90ns to compensate the
-+ * internal 1.2ns delay.
-+ */
-+#define RX_ND				0xc
-+#define RX_CLK_ND			0x0
-+
-+/* set tx to -0.42ns and tx_clk to +0.96ns to get 1.38ns delay */
-+#define TX_ID				0x0
-+#define TX_CLK_ID			0x1f
-+
-+/* set tx and tx_clk to "No delay adjustment" to keep 0ns
-+ * dealy
-+ */
-+#define TX_ND				0x7
-+#define TX_CLK_ND			0xf
- 
- /* MMD Address 0x1C */
- #define MII_KSZ9031RN_EDPD		0x23
-@@ -564,6 +606,67 @@ static int ksz9031_enable_edpd(struct phy_device *phydev)
- 			     reg | MII_KSZ9031RN_EDPD_ENABLE);
- }
- 
-+static int ksz9031_config_rgmii_delay(struct phy_device *phydev)
-+{
-+	u16 rx, tx, rx_clk, tx_clk;
-+	int ret;
-+
-+	switch (phydev->interface) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+		tx = TX_ND;
-+		tx_clk = TX_CLK_ND;
-+		rx = RX_ND;
-+		rx_clk = RX_CLK_ND;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+		tx = TX_ID;
-+		tx_clk = TX_CLK_ID;
-+		rx = RX_ID;
-+		rx_clk = RX_CLK_ID;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+		tx = TX_ND;
-+		tx_clk = TX_CLK_ND;
-+		rx = RX_ID;
-+		rx_clk = RX_CLK_ID;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		tx = TX_ID;
-+		tx_clk = TX_CLK_ID;
-+		rx = RX_ND;
-+		rx_clk = RX_CLK_ND;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_CONTROL_PAD_SKEW,
-+			    FIELD_PREP(MII_KSZ9031RN_RX_CTL_M, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TX_CTL_M, tx));
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_RX_DATA_PAD_SKEW,
-+			    FIELD_PREP(MII_KSZ9031RN_RXD3, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_RXD2, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_RXD1, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_RXD0, rx));
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_TX_DATA_PAD_SKEW,
-+			    FIELD_PREP(MII_KSZ9031RN_TXD3, tx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TXD2, tx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TXD1, tx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TXD0, tx));
-+	if (ret < 0)
-+		return ret;
-+
-+	return phy_write_mmd(phydev, 2, MII_KSZ9031RN_CLK_PAD_SKEW,
-+			     FIELD_PREP(MII_KSZ9031RN_GTX_CLK, tx_clk) |
-+			     FIELD_PREP(MII_KSZ9031RN_RX_CLK, rx_clk));
-+}
-+
- static int ksz9031_config_init(struct phy_device *phydev)
- {
- 	const struct device *dev = &phydev->mdio.dev;
-@@ -596,6 +699,12 @@ static int ksz9031_config_init(struct phy_device *phydev)
- 	} while (!of_node && dev_walker);
- 
- 	if (of_node) {
-+		if (phy_interface_is_rgmii(phydev)) {
-+			result = ksz9031_config_rgmii_delay(phydev);
-+			if (result < 0)
-+				return result;
-+		}
-+
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_CLK_PAD_SKEW, 5,
- 				clk_skews, 2);
--- 
-2.26.0.rc2
+Thanks,
+Ming
 
