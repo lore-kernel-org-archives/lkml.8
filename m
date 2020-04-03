@@ -2,126 +2,119 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F13C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A247AC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC61206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784A9206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:56:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="icv0VWTh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgDCSyL (ORCPT
+        id S1728363AbgDCS4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:54:11 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40852 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgDCSyL (ORCPT
+        Fri, 3 Apr 2020 14:56:48 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44180 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbgDCS4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:54:11 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jKRRp-0002dL-MO; Fri, 03 Apr 2020 20:53:45 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id EEDC6103A01; Fri,  3 Apr 2020 20:53:44 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>, Jessica Yu <jeyu@kernel.org>
-Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jannh@google.com, keescook@chromium.org, vbox-dev@virtualbox.org
-Subject: Re: [patch 1/2] x86,module: Detect VMX modules and disable Split-Lock-Detect
-In-Reply-To: <20200403152158.GR20730@hirez.programming.kicks-ass.net>
-References: <20200402123258.895628824@linutronix.de> <20200402124205.242674296@linutronix.de> <bc9a0c9a-7bd0-c85d-4795-ae0b4faa5e84@prevas.dk> <20200403143459.GA30424@linux-8ccs> <20200403152158.GR20730@hirez.programming.kicks-ass.net>
-Date:   Fri, 03 Apr 2020 20:53:44 +0200
-Message-ID: <87o8s8l7t3.fsf@nanos.tec.linutronix.de>
+        Fri, 3 Apr 2020 14:56:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m17so9704775wrw.11;
+        Fri, 03 Apr 2020 11:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a3M8YItqIhClkhbG5WGG9uWZ2umFIqJq2XRnrb76fdo=;
+        b=icv0VWThmaZ4yxF2ZlKpjQzJg5heW2K2ZelgdLBMJ+9wabsygipHJcTDyqzCJeLzad
+         VBTST+WVJuEOGJgyj56SHZTRpAlYl1IHCvbvO6Cx/huzLrnWwjhVJKTBgtmg+Bak70QF
+         8dXCgbHqPWlQ6U9gVffbimv/HxrpjtjlIfP3+OJCugmwsqm1JtkLWXzjyCEKDWevqakX
+         3qJQORLsVKVXx+Rts2TWR61peHXUetQWwxYxmu49zDMLDVkQA0aq1T9CiHoSR2Q0ls/9
+         oeJlvEesvBJ1rPYGQesa9g6Y1HEC0J+9yQlW0QeqmdcundVo9MVP2ZKgB7OmTONL3sCr
+         OCTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a3M8YItqIhClkhbG5WGG9uWZ2umFIqJq2XRnrb76fdo=;
+        b=jq1TWtCoA5Rt3EQTmDLkpq3tcSU0SNSvKydaz7fjKz4vHeG4jtUBw7s9ADEwa5Enrr
+         ejRqtwTJSNfh/N0GXD2sIs9OyxWox/oPzffUuEV+tKTRCuMZN3AKTEpE8hJse/MAjBFa
+         SgCJ0ljujbpMeJ6wHrr7rYxOdqhMa6miB4PTjX8WFLL1LjysLjxaGawgpIBu0NyJPtWZ
+         C1EYr6l6HSmlAzpEOa66nQfOTYk4kkyizplA45rXWiBCgbeZxnSlwtwVGiIP9Irq96Qw
+         L0LSbVU6AwkddaAhiHUzFVzW11wHqpk6enJLGENpwsgvokrqayCFkHDyiyGUwd+aS87t
+         xTaA==
+X-Gm-Message-State: AGi0PuZCvwJ0kgfviuVX3/YFsTtuqWvdAVfqk/NsZwK/rXnOxhDxgpe8
+        ldkTvPDeYkBI4DkpIIbg/eI=
+X-Google-Smtp-Source: APiQypLzflinO7J9tLxuiq1cZATE9oqKo9oYMbRO/FpAhkj6uMAzWCTr7JnXZHcQzXgs3ZI0wZacNw==
+X-Received: by 2002:adf:b258:: with SMTP id y24mr10338372wra.318.1585940206078;
+        Fri, 03 Apr 2020 11:56:46 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id i2sm13119594wrx.22.2020.04.03.11.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 11:56:45 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] of: reserved-memory: Various improvements
+Date:   Fri,  3 Apr 2020 20:56:36 +0200
+Message-Id: <20200403185640.118569-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Fri, Apr 03, 2020 at 04:35:00PM +0200, Jessica Yu wrote:
->> +++ Rasmus Villemoes [03/04/20 01:42 +0200]:
->> > On 02/04/2020 14.32, Thomas Gleixner wrote:
->> > > From: Peter Zijlstra <peterz@infradead.org>
->> > > 
->> > > It turns out that with Split-Lock-Detect enabled (default) any VMX
->> > > hypervisor needs at least a little modification in order to not blindly
->> > > inject the #AC into the guest without the guest being ready for it.
->> > > 
->> > > Since there is no telling which module implements a hypervisor, scan the
->> > > module text and look for the VMLAUNCH instruction. If found, the module is
->> > > assumed to be a hypervisor of some sort and SLD is disabled.
->> > 
->> > How long does that scan take/add to module load time? Would it make
->> > sense to exempt in-tree modules?
->> > 
->> > Rasmus
->> 
->> I second Rasmus's question. It seems rather unfortunate that we have
->> to do this text scan for every module load on x86, when it doesn't
->> apply to the majority of them, and only to a handful of out-of-tree
->> hypervisor modules (assuming kvm is taken care of already).
->> 
->> I wonder if it would make sense then to limit the text scans to just
->> out-of-tree modules (i.e., missing the intree modinfo flag)?
->
-> It would; didn't know there was one.
+From: Thierry Reding <treding@nvidia.com>
 
-But that still would not make it complete.
+Hi Rob, all,
 
-I was staring at virtualbox today after Jann pointed out that this
-sucker does complete backwards things.
+this is a set of patches that I've been working on to allow me to use
+reserved memory regions more flexibly. One of the use-cases that I have
+is an external memory controller driver that gets passed one or two
+tables from firmware containing a set of EMC frequencies and the
+corresponding register values to program for these frequencies.
 
-  The kernel driver does not contain any VM* instructions at all.
+One of these tables is the "nominal" table and an optional second table
+is "derated" and is used when the DRAM chips are overheating. I want to
+be able to pass these tables as separate memory-region entries.
 
-The actual hypervisor code is built as a separate binary and somehow
-loaded into the kernel with their own magic fixup of relocations and
-function linking. This "design" probably comes from the original
-virtualbox implementation which circumvented GPL that way.
+So what this small patchset does is make the reserved-memory code adapt
+to this situation better. On one hand, while the DT bindings currently
+support multiple regions per device tree node, it's slightly unintuitive
+to specify them. The first patch adds a memory-region-names property
+that allows the DT to specify a "consumer" name for these regions much
+like we do for things like clocks, resets or the reg property. At the
+same time, a new alias for memory-region, named memory-regions, is
+introduced to make this more consistent with other bindings.
 
-TBH, I don't care if we wreckage virtualbox simply because that thing is
-already a complete and utter trainwreck violating taste and common sense
-in any possible way. Just for illustration:
+Patches 2 and 3 add support in the core OF reserved-memory code for
+these binding changes, with a fallback to the memory-region property if
+no memory-regions property exists.
 
-  - It installs preempt notifiers and the first thing in the callback
-    function is to issue 'stac()'!
+Patch 4 implements support for releasing multiple regions assigned to a
+single device rather than just the first.
 
-  - There is quite some other horrible code in there which fiddles in
-    the guts of the kernel just because it can.
+Thierry
 
-  - Conditionals in release code which check stuff like
-    VBOX_WITH_TEXT_MODMEM_HACK, VBOX_WITH_EFLAGS_AC_SET_IN_VBOXDRV,
-    VBOX_WITH_NON_PROD_HACK_FOR_PERF_STACKS along with the most absurd
-    hacks ever.
+Thierry Reding (4):
+  dt-bindings: reserved-memory: Introduce memory-region{s,-names}
+  of: reserved-memory: Support memory-regions property
+  of: reserved-memory: Support lookup of regions by name
+  of: reserved-memory: Support multiple regions per device
 
-If you feel the need to look yourself, please use your eyecancer
-protection gear.
+ .../reserved-memory/reserved-memory.txt       | 12 +++--
+ drivers/of/of_reserved_mem.c                  | 52 +++++++++++++------
+ include/linux/of_reserved_mem.h               | 11 ++++
+ 3 files changed, 55 insertions(+), 20 deletions(-)
 
-Can someone at Oracle please make sure, that this monstrosity gets shred
-in pieces?
+-- 
+2.24.1
 
-Enough vented, but that still does not solve the SLD problem in any
-sensible way.
-
-Thanks,
-
-        tglx
