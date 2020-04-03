@@ -2,212 +2,96 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86B3C2BA17
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0F6C2BA18
 	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D002073B
+	by mail.kernel.org (Postfix) with ESMTP id B4D4A20787
 	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cBpmgtTF"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ebAvHLEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390255AbgDCKTS (ORCPT
+        id S2390591AbgDCKTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:19:18 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:41850 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727882AbgDCKTR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:19:17 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033AJC1C012373
-        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 03:19:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=cDoB0ichWZYA+VpWqPf6KR4QQ008FhSwewof75iV/qU=;
- b=cBpmgtTFjhxzG4lSunIl1V5dpuxX/Jo14yMJHcaL11nAT7DgvU3Q56xWA7TJBopq0RZk
- i0r8OKMR8pCo0kICyIbpb5wM1pwMg4PsYrD2A8UYKN6XBLXPJWl2I5eXtpm5N4Tu0jz1
- krmiPPm9svU6onoGHQx2t3nCO7XIbs7V/sk= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 305a6fprgu-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 03:19:16 -0700
-Received: from intmgw001.03.ash8.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:11d::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 3 Apr 2020 03:19:11 -0700
-Received: by devbig020.ftw1.facebook.com (Postfix, from userid 179119)
-        id C0F7358C2D29; Fri,  3 Apr 2020 03:19:08 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Aslan Bakirov <aslan@fb.com>
-Smtp-Origin-Hostname: devbig020.ftw1.facebook.com
-To:     <akpm@linux-foundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <riel@surriel.com>, <guro@fb.com>,
-        <mhocko@kernel.org>, <hannes@cmpxchg.org>,
-        Aslan Bakirov <aslan@fb.com>
-Smtp-Origin-Cluster: ftw1c07
-Subject: [PATCH 1/2] mm: cma: NUMA node interface
-Date:   Fri, 3 Apr 2020 03:18:42 -0700
-Message-ID: <20200403101843.406634-1-aslan@fb.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 3 Apr 2020 06:19:34 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53496 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727835AbgDCKTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 06:19:33 -0400
+Received: from zn.tnic (p200300EC2F0D8900185F9BE223BA1C94.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8900:185f:9be2:23ba:1c94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5AE661EC0C84;
+        Fri,  3 Apr 2020 12:19:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585909172;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4gTxr2tMtcHZvA+vMMjjeuIyzVHlsntBq8xEiI0nftM=;
+        b=ebAvHLEmjItjXy3diROes48QoOr+3V7Mabl957HF8ZUmg01Zs+dudqR+068+JvUD5k6JfG
+        mAMsGMxxsOyOnlEUMSoOI3VUWUJh9XwaHmNnfmGRpzLIltI0GM5Iz+85gp9RHAFFd2Bhai
+        /pKE+LLfkN8Fla9geFNQbWuL9S8uYj8=
+Date:   Fri, 3 Apr 2020 12:19:29 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     Nick Terrell <nickrterrell@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>,
+        Michael van der Westhuizen <rmikey@fb.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: Re: [PATCH v4 6/8] x86: bump ZO_z_extra_bytes margin for zstd
+Message-ID: <20200403101929.GC20218@zn.tnic>
+References: <20200401053913.216783-1-nickrterrell@gmail.com>
+ <20200401053913.216783-7-nickrterrell@gmail.com>
+ <20200401093310.GA13748@zn.tnic>
+ <D45F637D-6BB0-4F08-BEBE-FAB9B56F36F6@fb.com>
+ <20200402155810.GD9352@zn.tnic>
+ <2370741E-FE5A-44C1-8BF3-24A03E321F4E@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_07:2020-04-02,2020-04-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 spamscore=0
- impostorscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
- phishscore=0 suspectscore=1 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004030090
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2370741E-FE5A-44C1-8BF3-24A03E321F4E@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've noticed that there is no interfaces exposed by CMA which would let m=
-e
-to declare contigous memory on particular NUMA node.
+On Thu, Apr 02, 2020 at 08:25:49PM +0000, Nick Terrell wrote:
+> So it is possible that there is a use case for kernel compression that
+> I’m not aware of where RAM is extremely tight and within 64 KB of
+> the current limits.
 
-This patchset adds the ability to try to allocate contiguous memory on
-specific node. It will fallback to other nodes if the specified one
-doesn't work.
+That's exactly my concern, albeit a very minor one.
 
-Implement a new method for declaring contigous memory on particular node
-and keep cma_declare_contiguous() as a wrapper.
+> It seems to me that adding 64KB to the memory requirement for kernel
+> decompression is not going to break anyone. If it did the kernel image
+> is taking up nearly all available RAM, which doesn’t seem likely.
+> But, I don’t know all use cases. If it does break someone, we can
+> put up a separate patch that switches all the compression methods over
+> a per-method ZO_z_extra_bytes.
 
-Signed-off-by: Aslan Bakirov <aslan@fb.com>
----
- include/linux/cma.h      | 13 +++++++++++--
- include/linux/memblock.h |  3 +++
- mm/cma.c                 | 16 +++++++++-------
- mm/memblock.c            |  2 +-
- 4 files changed, 24 insertions(+), 10 deletions(-)
+Ok.
 
-diff --git a/include/linux/cma.h b/include/linux/cma.h
-index 190184b5ff32..eae834c2162f 100644
---- a/include/linux/cma.h
-+++ b/include/linux/cma.h
-@@ -24,10 +24,19 @@ extern phys_addr_t cma_get_base(const struct cma *cma=
-);
- extern unsigned long cma_get_size(const struct cma *cma);
- extern const char *cma_get_name(const struct cma *cma);
-=20
--extern int __init cma_declare_contiguous(phys_addr_t base,
-+extern int __init cma_declare_contiguous_nid(phys_addr_t base,
- 			phys_addr_t size, phys_addr_t limit,
- 			phys_addr_t alignment, unsigned int order_per_bit,
--			bool fixed, const char *name, struct cma **res_cma);
-+			bool fixed, const char *name, struct cma **res_cma,
-+			int nid);
-+static inline int __init cma_declare_contiguous(phys_addr_t base,
-+			phys_addr_t size, phys_addr_t limit,
-+			phys_addr_t alignment, unsigned int order_per_bit,
-+			bool fixed, const char *name, struct cma **res_cma)
-+{
-+	return cma_declare_contiguous_nid(base, size, limit, alignment,
-+			order_per_bit, fixed, name, res_cma, NUMA_NO_NODE);
-+}
- extern int cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
- 					unsigned int order_per_bit,
- 					const char *name,
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 079d17d96410..6bc37a731d27 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -348,6 +348,9 @@ static inline int memblock_get_region_node(const stru=
-ct memblock_region *r)
-=20
- phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t alig=
-n,
- 				      phys_addr_t start, phys_addr_t end);
-+phys_addr_t memblock_alloc_range_nid(phys_addr_t size,
-+				      phys_addr_t align, phys_addr_t start,
-+				      phys_addr_t end, int nid, bool exact_nid);
- phys_addr_t memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t al=
-ign, int nid);
-=20
- static inline phys_addr_t memblock_phys_alloc(phys_addr_t size,
-diff --git a/mm/cma.c b/mm/cma.c
-index be55d1988c67..6405af3dc118 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -220,7 +220,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, ph=
-ys_addr_t size,
- }
-=20
- /**
-- * cma_declare_contiguous() - reserve custom contiguous area
-+ * cma_declare_contiguous_nid() - reserve custom contiguous area
-  * @base: Base address of the reserved area optional, use 0 for any
-  * @size: Size of the reserved area (in bytes),
-  * @limit: End address of the reserved memory (optional, 0 for any).
-@@ -229,6 +229,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, ph=
-ys_addr_t size,
-  * @fixed: hint about where to place the reserved area
-  * @name: The name of the area. See function cma_init_reserved_mem()
-  * @res_cma: Pointer to store the created cma region.
-+ * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
-  *
-  * This function reserves memory from early allocator. It should be
-  * called by arch specific code once the early allocator (memblock or bo=
-otmem)
-@@ -238,10 +239,11 @@ int __init cma_init_reserved_mem(phys_addr_t base, =
-phys_addr_t size,
-  * If @fixed is true, reserve contiguous area at exactly @base.  If fals=
-e,
-  * reserve in range from @base to @limit.
-  */
--int __init cma_declare_contiguous(phys_addr_t base,
-+int __init cma_declare_contiguous_nid(phys_addr_t base,
- 			phys_addr_t size, phys_addr_t limit,
- 			phys_addr_t alignment, unsigned int order_per_bit,
--			bool fixed, const char *name, struct cma **res_cma)
-+			bool fixed, const char *name, struct cma **res_cma,
-+			int nid)
- {
- 	phys_addr_t memblock_end =3D memblock_end_of_DRAM();
- 	phys_addr_t highmem_start;
-@@ -336,14 +338,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 		 * memory in case of failure.
- 		 */
- 		if (base < highmem_start && limit > highmem_start) {
--			addr =3D memblock_phys_alloc_range(size, alignment,
--							 highmem_start, limit);
-+			addr =3D memblock_alloc_range_nid(size, alignment,
-+					highmem_start, limit, nid, false);
- 			limit =3D highmem_start;
- 		}
-=20
- 		if (!addr) {
--			addr =3D memblock_phys_alloc_range(size, alignment, base,
--							 limit);
-+			addr =3D memblock_alloc_range_nid(size, alignment, base,
-+					alimit, nid, false);
- 			if (!addr) {
- 				ret =3D -ENOMEM;
- 				goto err;
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 4d06bbaded0f..c79ba6f9920c 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1349,7 +1349,7 @@ __next_mem_pfn_range_in_zone(u64 *idx, struct zone =
-*zone,
-  * Return:
-  * Physical address of allocated memory block on success, %0 on failure.
-  */
--static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
-+phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
- 					phys_addr_t align, phys_addr_t start,
- 					phys_addr_t end, int nid,
- 					bool exact_nid)
---=20
-2.24.1
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
