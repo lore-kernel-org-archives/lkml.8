@@ -2,162 +2,313 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F44C2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7DEC2BA18
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACAE206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 993F32076E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GLM1PJED"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikbMnwyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388569AbgDCWf1 (ORCPT
+        id S2388707AbgDCWf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 18:35:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56406 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388538AbgDCWfZ (ORCPT
+        Fri, 3 Apr 2020 18:35:57 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51068 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388671AbgDCWf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 18:35:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585953324;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=L9gTAgQvkcuTKrZ/zg3IMmKkiFJtMXRY4VRyptxXDt0=;
-        b=GLM1PJEDjOQEV3o6XjjeP73PP4VytjSbyO9uDqQkrfOcBzhKbDBZw/ChX6bXMkmPUyvE8M
-        h28PuaN8+omIEZQFfb0eHW0sVEF7L5GoJcZLXrHsLARlVhWe6DPlBOI6kK2jDp5XE4tV28
-        YwwHEn0TpBrd/WdhwhFaEdn4mLl3o4s=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-G25tKQ4JN3-7AG5W1sA9xw-1; Fri, 03 Apr 2020 18:35:22 -0400
-X-MC-Unique: G25tKQ4JN3-7AG5W1sA9xw-1
-Received: by mail-wm1-f72.google.com with SMTP id f8so3432102wmh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 15:35:22 -0700 (PDT)
+        Fri, 3 Apr 2020 18:35:57 -0400
+Received: by mail-pj1-f67.google.com with SMTP id v13so3679866pjb.0;
+        Fri, 03 Apr 2020 15:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dR+Oy8zkwr65n1hWzP0tj7ddjB1+ZTKp2sEmv1JW1cc=;
+        b=ikbMnwyPC2eJ2PcujNmDXEkMTBOPmuA8gg57R4r3Lr4OBmLrOqkIwFNfM/Jsbjuopz
+         pt7cUzx3waSJSuNDndtPDooj063+cvRpnmP3s2PHjDCBei0KzpY4HyebYblSjfH5bnor
+         AI12+0bawm/gUVGEHnVLcSUrPoX7iPYUw/0TjLLD0rVRviD5SXFnxymVwcUHyZENC/eq
+         t/q5CoxpBVV8qHx8b6uvM6AoLJteQumxvTuKx+q0b4v9luySnZVoOrO8vg7GN0L+7gPY
+         T6TWQgFYrvci1G+VFIgdXBanl8FKyBI6AF/0UfSgCGIMqodAi0X3jOA7Ua8Pln/SPVsO
+         UCxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L9gTAgQvkcuTKrZ/zg3IMmKkiFJtMXRY4VRyptxXDt0=;
-        b=agbKn0pIQDiEAHageDTFDO1mhWFt5bfw6rM5yws9MMRGKPUSNn1y5vIEoBzOTF8HAw
-         OFROccS1lnS69jyCWHJmCXmIMBiFREshvnFBMnOpje1j7nNnhphg4EMJJv08SJw0Z7Ji
-         zoqyaLwxl13YX2j7jLyP1Apx7106OJmfzZcx9bYJCoRixsAwbEQGoCIbSkt/L9YB8GEu
-         2dEkC98cHuPwSB6v0yGyrEF/p2T+BFYAIhPwk+Ibl4pxhp/KCV2ak8ZlF5ffbafG4UQ5
-         Ze/bQzCYL9dGQQveNBbvdlpTpbqrRypIrqymHCIB/D+6iK4l8XOZH1B8GXw/XoI8theU
-         rhMQ==
-X-Gm-Message-State: AGi0PuZhI+Tx1hPCNFS3BpwrHY9NaJkv3qFMOYm/LpAPEsDpazgtX32t
-        r617WKP/S2nJK9KQyEOC+UhRj4J/qixbWCx8BlWuOEV/97j0o86+vm84Wi9DJL6NjrJNylO+095
-        Zf5+xCjEv2mzErnO03OBKyVTL
-X-Received: by 2002:a7b:cb59:: with SMTP id v25mr11381309wmj.13.1585953321575;
-        Fri, 03 Apr 2020 15:35:21 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJ9SBLZWXF+ffoephI8dFGNfKXSMkeFHtg+tAuSUpkNicFkIwtdvNoAC0B7kMnQqHYTXhg/dw==
-X-Received: by 2002:a7b:cb59:: with SMTP id v25mr11381295wmj.13.1585953321388;
-        Fri, 03 Apr 2020 15:35:21 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::3])
-        by smtp.gmail.com with ESMTPSA id n11sm15173121wrg.72.2020.04.03.15.35.19
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=dR+Oy8zkwr65n1hWzP0tj7ddjB1+ZTKp2sEmv1JW1cc=;
+        b=KPCcHj3hh/YRXat3RzTWq07niNQfMiBrSzIKG2LM8muZqLns5AsB6bVMitjyEEWZtS
+         9tR9kPpisbZQgLqzWWeFTdIhAXTy7X7UDC3QYWpHxbk1uqnrgshAQI3IoDqEp6nU1k9c
+         r5SOSPrTS3JvaWGK1yTs4b65Z0ZccBt1jFbF9HebtxBRf1F4m6Z8C/qYDwf9fxCeO0FC
+         /ItevJUEoeRa0kis1qNbxIz+6EP1O0VP8tpGLAiC7yyukY9f3lIBZNNKD4XPklSGzHYM
+         d5hzmIWQ9v6KDpLw2kjs45VWdLN3529I77xZ4CzpeIHbqwaBssDxux46w6rXeVlhsdbb
+         IlCA==
+X-Gm-Message-State: AGi0PuajUSANMtPFCB+ZiYZ+gFXtX1sK1OPtsTQ0MErLusD79O3EBTVu
+        dVclds1dZfh7Bk+39gbt8PQ=
+X-Google-Smtp-Source: APiQypLoJAimf5LOpbzmjKJWbT8xvOWwP44Z5T0b5L4AKtJ5W00IDnuUP+/UnyHPB3pUbYf0R1QF/g==
+X-Received: by 2002:a17:90b:3849:: with SMTP id nl9mr11995082pjb.86.1585953355350;
+        Fri, 03 Apr 2020 15:35:55 -0700 (PDT)
+Received: from sultan-box.localdomain (static-198-54-129-52.cust.tzulo.com. [198.54.129.52])
+        by smtp.gmail.com with ESMTPSA id z17sm6512354pff.12.2020.04.03.15.35.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 15:35:20 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterx@redhat.com, Ming Lei <ming.lei@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v3] sched/isolation: Allow "isolcpus=" to skip unknown sub-parameters
-Date:   Fri,  3 Apr 2020 18:35:17 -0400
-Message-Id: <20200403223517.406353-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 03 Apr 2020 15:35:54 -0700 (PDT)
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+X-Google-Original-From: Sultan Alsawaf
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>, stable@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] drm/i915: Synchronize active and retire callbacks
+Date:   Fri,  3 Apr 2020 15:35:15 -0700
+Message-Id: <20200403223528.2570-1-sultan@kerneltoast.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200403042948.2533-1-sultan@kerneltoast.com>
+References: <20200403042948.2533-1-sultan@kerneltoast.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "isolcpus=" parameter allows sub-parameters to exist before the
-cpulist is specified, and if it sees unknown sub-parameters the whole
-parameter will be ignored.  This design is incompatible with itself
-when we add more sub-parameters to "isolcpus=", because the old
-kernels will not recognize the new "isolcpus=" sub-parameters, then it
-will invalidate the whole parameter so the CPU isolation will not
-really take effect if we start to use the new sub-parameters while
-later we reboot into an old kernel. Instead we will see this when
-booting the old kernel:
+From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-    isolcpus: Error, unknown flag
+Active and retire callbacks can run simultaneously, causing panics and
+mayhem. The most notable case is with the intel_context_pin/unpin race
+that causes ring and page table corruption. In 5.4, this race is more
+noticeable because intel_ring_unpin() sets ring->vaddr to NULL and
+causes a clean NULL-pointer-dereference panic, but in newer kernels this
+race goes unnoticed.
 
-The better and compatible way is to allow "isolcpus=" to skip unknown
-sub-parameters, so that even if we add new sub-parameters to it the
-old kernel will still be able to behave as usual even if with the new
-sub-parameter is specified.
+Here is an example of a crash caused by this race on 5.4:
+BUG: unable to handle page fault for address: 0000000000003448
+RIP: 0010:gen8_emit_flush_render+0x163/0x190
+Call Trace:
+ execlists_request_alloc+0x25/0x40
+ __i915_request_create+0x1f4/0x2c0
+ i915_request_create+0x71/0xc0
+ i915_gem_do_execbuffer+0xb98/0x1a80
+ ? preempt_count_add+0x68/0xa0
+ ? _raw_spin_lock+0x13/0x30
+ ? _raw_spin_unlock+0x16/0x30
+ i915_gem_execbuffer2_ioctl+0x1de/0x3c0
+ ? i915_gem_busy_ioctl+0x7f/0x1d0
+ ? i915_gem_execbuffer_ioctl+0x2d0/0x2d0
+ drm_ioctl_kernel+0xb2/0x100
+ drm_ioctl+0x209/0x360
+ ? i915_gem_execbuffer_ioctl+0x2d0/0x2d0
+ ksys_ioctl+0x87/0xc0
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x4e/0x150
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Ideally this patch should be there when we introduce the first
-sub-parameter for "isolcpus=", so it's already a bit late.  However
-late is better than nothing.
+Protect the active and retire callbacks with their own mutex to prevent
+them from running at the same time as one another. This change makes
+the i915_active_may_sleep() functionality a redundant for its only user,
+so clean that out as well since it's no longer needed.
 
-CC: Ming Lei <ming.lei@redhat.com>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Juri Lelli <juri.lelli@redhat.com>
-CC: Luiz Capitulino <lcapitulino@redhat.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Xu <peterx@redhat.com>
+Fixes: 12c255b5dad1 ("drm/i915: Provide an i915_active.acquire callback")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
 ---
-v3:
-- add brackets for for loop
-- move "illegal" a bit higher, which may look tiny bit nicer
-- also allow '_'
-v2:
-- only allow isalpha() for sub-parameters [tglx]
----
- kernel/sched/isolation.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+v3: Protecting only intel_context_pin/unpin is insufficient because all
+    the callbacks race with each other, not just those ones. Now, all
+    callbacks are protected from racing with their counterparts with a
+    new mutex lock for reduced scope. This isn't as pretty, but it is
+    unavoidable.
 
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 008d6ac2342b..808244f3ddd9 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -149,6 +149,9 @@ __setup("nohz_full=", housekeeping_nohz_full_setup);
- static int __init housekeeping_isolcpus_setup(char *str)
+ .../gpu/drm/i915/display/intel_frontbuffer.c  |  4 +--
+ drivers/gpu/drm/i915/gem/i915_gem_context.c   |  1 -
+ drivers/gpu/drm/i915/gt/intel_context.c       |  1 -
+ drivers/gpu/drm/i915/gt/intel_engine_pool.c   |  1 -
+ drivers/gpu/drm/i915/gt/intel_timeline.c      |  1 -
+ drivers/gpu/drm/i915/i915_active.c            | 30 ++++++++++++++-----
+ drivers/gpu/drm/i915/i915_active_types.h      |  6 +---
+ drivers/gpu/drm/i915/i915_vma.c               |  1 -
+ 8 files changed, 24 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_frontbuffer.c b/drivers/gpu/drm/i915/display/intel_frontbuffer.c
+index 6cb02c912acc..766325948b5b 100644
+--- a/drivers/gpu/drm/i915/display/intel_frontbuffer.c
++++ b/drivers/gpu/drm/i915/display/intel_frontbuffer.c
+@@ -206,7 +206,6 @@ static int frontbuffer_active(struct i915_active *ref)
+ 	return 0;
+ }
+ 
+-__i915_active_call
+ static void frontbuffer_retire(struct i915_active *ref)
  {
- 	unsigned int flags = 0;
-+	bool illegal = false;
-+	char *par;
-+	int len;
+ 	struct intel_frontbuffer *front =
+@@ -254,8 +253,7 @@ intel_frontbuffer_get(struct drm_i915_gem_object *obj)
+ 	kref_init(&front->ref);
+ 	atomic_set(&front->bits, 0);
+ 	i915_active_init(&front->write,
+-			 frontbuffer_active,
+-			 i915_active_may_sleep(frontbuffer_retire));
++			 frontbuffer_active, frontbuffer_retire);
  
- 	while (isalpha(*str)) {
- 		if (!strncmp(str, "nohz,", 5)) {
-@@ -169,8 +172,22 @@ static int __init housekeeping_isolcpus_setup(char *str)
- 			continue;
- 		}
+ 	spin_lock(&i915->fb_tracking.lock);
+ 	if (rcu_access_pointer(obj->frontbuffer)) {
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_context.c b/drivers/gpu/drm/i915/gem/i915_gem_context.c
+index 68326ad3b2e0..31791b4ae086 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_context.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_context.c
+@@ -1057,7 +1057,6 @@ struct context_barrier_task {
+ 	void *data;
+ };
  
--		pr_warn("isolcpus: Error, unknown flag\n");
--		return 0;
-+		/*
-+		 * Skip unknown sub-parameter and validate that it is not
-+		 * containing an invalid character.
-+		 */
-+		for (par = str, len = 0; *str && *str != ','; str++, len++) {
-+			if (!isalpha(*str) && *str != '_')
-+				illegal = true;
+-__i915_active_call
+ static void cb_retire(struct i915_active *base)
+ {
+ 	struct context_barrier_task *cb = container_of(base, typeof(*cb), base);
+diff --git a/drivers/gpu/drm/i915/gt/intel_context.c b/drivers/gpu/drm/i915/gt/intel_context.c
+index aea992e46c42..964e32cf5856 100644
+--- a/drivers/gpu/drm/i915/gt/intel_context.c
++++ b/drivers/gpu/drm/i915/gt/intel_context.c
+@@ -222,7 +222,6 @@ static void __ring_retire(struct intel_ring *ring)
+ 	i915_active_release(&ring->vma->active);
+ }
+ 
+-__i915_active_call
+ static void __intel_context_retire(struct i915_active *active)
+ {
+ 	struct intel_context *ce = container_of(active, typeof(*ce), active);
+diff --git a/drivers/gpu/drm/i915/gt/intel_engine_pool.c b/drivers/gpu/drm/i915/gt/intel_engine_pool.c
+index 397186818305..60dde6978511 100644
+--- a/drivers/gpu/drm/i915/gt/intel_engine_pool.c
++++ b/drivers/gpu/drm/i915/gt/intel_engine_pool.c
+@@ -61,7 +61,6 @@ static int pool_active(struct i915_active *ref)
+ 	return 0;
+ }
+ 
+-__i915_active_call
+ static void pool_retire(struct i915_active *ref)
+ {
+ 	struct intel_engine_pool_node *node =
+diff --git a/drivers/gpu/drm/i915/gt/intel_timeline.c b/drivers/gpu/drm/i915/gt/intel_timeline.c
+index 91debbc97c9a..ecd120e1cf2a 100644
+--- a/drivers/gpu/drm/i915/gt/intel_timeline.c
++++ b/drivers/gpu/drm/i915/gt/intel_timeline.c
+@@ -131,7 +131,6 @@ static void __idle_cacheline_free(struct intel_timeline_cacheline *cl)
+ 	kfree_rcu(cl, rcu);
+ }
+ 
+-__i915_active_call
+ static void __cacheline_retire(struct i915_active *active)
+ {
+ 	struct intel_timeline_cacheline *cl =
+diff --git a/drivers/gpu/drm/i915/i915_active.c b/drivers/gpu/drm/i915/i915_active.c
+index c4048628188a..165216aee122 100644
+--- a/drivers/gpu/drm/i915/i915_active.c
++++ b/drivers/gpu/drm/i915/i915_active.c
+@@ -148,8 +148,15 @@ __active_retire(struct i915_active *ref)
+ 	spin_unlock_irqrestore(&ref->tree_lock, flags);
+ 
+ 	/* After the final retire, the entire struct may be freed */
+-	if (ref->retire)
+-		ref->retire(ref);
++	if (ref->retire) {
++		if (ref->active) {
++			mutex_lock(&ref->callback_lock);
++			ref->retire(ref);
++			mutex_unlock(&ref->callback_lock);
++		} else {
++			ref->retire(ref);
 +		}
-+
-+		if (illegal) {
-+			pr_warn("isolcpus: Invalid flag %.*s\n", len, par);
-+			return 0;
-+		}
-+
-+		pr_info("isolcpus: Skipped unknown flag %.*s\n", len, par);
-+		str++;
- 	}
++	}
  
- 	/* Default behaviour for isolcpus without flags */
+ 	/* ... except if you wait on it, you must manage your own references! */
+ 	wake_up_var(ref);
+@@ -281,15 +288,15 @@ void __i915_active_init(struct i915_active *ref,
+ 			struct lock_class_key *mkey,
+ 			struct lock_class_key *wkey)
+ {
+-	unsigned long bits;
+-
+ 	debug_active_init(ref);
+ 
+ 	ref->flags = 0;
+ 	ref->active = active;
+-	ref->retire = ptr_unpack_bits(retire, &bits, 2);
+-	if (bits & I915_ACTIVE_MAY_SLEEP)
++	ref->retire = retire;
++	if (ref->active && ref->retire) {
++		mutex_init(&ref->callback_lock);
+ 		ref->flags |= I915_ACTIVE_RETIRE_SLEEPS;
++	}
+ 
+ 	spin_lock_init(&ref->tree_lock);
+ 	ref->tree = RB_ROOT;
+@@ -428,8 +435,15 @@ int i915_active_acquire(struct i915_active *ref)
+ 		return err;
+ 
+ 	if (likely(!i915_active_acquire_if_busy(ref))) {
+-		if (ref->active)
+-			err = ref->active(ref);
++		if (ref->active) {
++			if (ref->retire) {
++				mutex_lock(&ref->callback_lock);
++				err = ref->active(ref);
++				mutex_unlock(&ref->callback_lock);
++			} else {
++				err = ref->active(ref);
++			}
++		}
+ 		if (!err) {
+ 			spin_lock_irq(&ref->tree_lock); /* __active_retire() */
+ 			debug_active_activate(ref);
+diff --git a/drivers/gpu/drm/i915/i915_active_types.h b/drivers/gpu/drm/i915/i915_active_types.h
+index 6360c3e4b765..19b06c64c017 100644
+--- a/drivers/gpu/drm/i915/i915_active_types.h
++++ b/drivers/gpu/drm/i915/i915_active_types.h
+@@ -24,11 +24,6 @@ struct i915_active_fence {
+ 
+ struct active_node;
+ 
+-#define I915_ACTIVE_MAY_SLEEP BIT(0)
+-
+-#define __i915_active_call __aligned(4)
+-#define i915_active_may_sleep(fn) ptr_pack_bits(&(fn), I915_ACTIVE_MAY_SLEEP, 2)
+-
+ struct i915_active {
+ 	atomic_t count;
+ 	struct mutex mutex;
+@@ -45,6 +40,7 @@ struct i915_active {
+ 
+ 	int (*active)(struct i915_active *ref);
+ 	void (*retire)(struct i915_active *ref);
++	struct mutex callback_lock;
+ 
+ 	struct work_struct work;
+ 
+diff --git a/drivers/gpu/drm/i915/i915_vma.c b/drivers/gpu/drm/i915/i915_vma.c
+index 08699fa069aa..0f73beb586ab 100644
+--- a/drivers/gpu/drm/i915/i915_vma.c
++++ b/drivers/gpu/drm/i915/i915_vma.c
+@@ -93,7 +93,6 @@ static int __i915_vma_active(struct i915_active *ref)
+ 	return i915_vma_tryget(active_to_vma(ref)) ? 0 : -ENOENT;
+ }
+ 
+-__i915_active_call
+ static void __i915_vma_retire(struct i915_active *ref)
+ {
+ 	i915_vma_put(active_to_vma(ref));
 -- 
-2.24.1
+2.26.0
 
