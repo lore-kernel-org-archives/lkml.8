@@ -2,114 +2,126 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DCFC2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F13C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AB8206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aB/oSUg/"
+	by mail.kernel.org (Postfix) with ESMTP id 5EC61206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgDCSxL (ORCPT
+        id S1728384AbgDCSyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:53:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58728 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbgDCSxL (ORCPT
+        Fri, 3 Apr 2020 14:54:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40852 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbgDCSyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:53:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VqvVhPvHFq4lBIHfv0NJ8OXLyWZIl0c+q0r5PoMjHew=; b=aB/oSUg/BG9dAe19FX/m3mnB7F
-        vXYmVWdoSHIr4uDgi+qE+BkoSyQY6gLVwu+zVsw1BiZYnUklnWcJAfY0eNq+B1wB2+eGzsA/ozmMm
-        IZ63gA2/ylClwDhYdjDCiYD3Nj8pmmY6eDzx3an6YkCNQly0aCxIOUpsUJ8y8NtNco1ULgNbpcF1e
-        qRte2mA/3gDRCg0+PZUKb22MzR2ZU3KO05oG1LYt4e3aGw0G3NOnMJw7GRIEX1G44zwxbNdEMACG7
-        OIW0cuB1346hEQrSQKGcvtWmOgWwnC9tx3JqRO1dJ4QcNY/zVfdLtntqnNbGG5KYWSkt0m3Pm24Al
-        27I8oXYA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jKRR9-0005W2-Ob; Fri, 03 Apr 2020 18:53:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2026E3010BC;
-        Fri,  3 Apr 2020 20:53:01 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 014AB2B124C7F; Fri,  3 Apr 2020 20:53:00 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 20:53:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jroedel@suse.de,
-        vbabka@suse.cz, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] mm/vmalloc: Sanitize __get_vm_area() arguments
-Message-ID: <20200403185300.GD20730@hirez.programming.kicks-ass.net>
-References: <20200403163253.GU20730@hirez.programming.kicks-ass.net>
- <20200403181818.GA5538@pc636>
+        Fri, 3 Apr 2020 14:54:11 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jKRRp-0002dL-MO; Fri, 03 Apr 2020 20:53:45 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id EEDC6103A01; Fri,  3 Apr 2020 20:53:44 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>, Jessica Yu <jeyu@kernel.org>
+Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jannh@google.com, keescook@chromium.org, vbox-dev@virtualbox.org
+Subject: Re: [patch 1/2] x86,module: Detect VMX modules and disable Split-Lock-Detect
+In-Reply-To: <20200403152158.GR20730@hirez.programming.kicks-ass.net>
+References: <20200402123258.895628824@linutronix.de> <20200402124205.242674296@linutronix.de> <bc9a0c9a-7bd0-c85d-4795-ae0b4faa5e84@prevas.dk> <20200403143459.GA30424@linux-8ccs> <20200403152158.GR20730@hirez.programming.kicks-ass.net>
+Date:   Fri, 03 Apr 2020 20:53:44 +0200
+Message-ID: <87o8s8l7t3.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403181818.GA5538@pc636>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 08:18:18PM +0200, Uladzislau Rezki wrote:
-> On Fri, Apr 03, 2020 at 06:32:53PM +0200, Peter Zijlstra wrote:
-> > 
-> > __get_vm_area() is an exported symbol, make sure the callers stay in
-> > the expected memory range. When calling this function with memory
-> > ranges outside of the VMALLOC range *bad* things can happen.
-> > 
-> > (I noticed this when I managed to corrupt the kernel text by accident)
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  mm/vmalloc.c |    7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -2130,6 +2130,13 @@ static struct vm_struct *__get_vm_area_n
-> >  struct vm_struct *__get_vm_area(unsigned long size, unsigned long flags,
-> >  				unsigned long start, unsigned long end)
-> >  {
-> > +	/*
-> > +	 * Ensure callers stay in the vmalloc range.
-> > +	 */
-> > +	if (WARN_ON(start < VMALLOC_START || start > VMALLOC_END ||
-> > +		    end < VMALLOC_START || end > VMALLOC_END))
-> > +		return NULL;
-> > +
-> >  	return __get_vm_area_node(size, 1, flags, start, end, NUMA_NO_NODE,
-> >  				  GFP_KERNEL, __builtin_return_address(0));
-> >  }
-> Peter, could you please clarify what kind of issues you had and how you
-> tested?
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Fri, Apr 03, 2020 at 04:35:00PM +0200, Jessica Yu wrote:
+>> +++ Rasmus Villemoes [03/04/20 01:42 +0200]:
+>> > On 02/04/2020 14.32, Thomas Gleixner wrote:
+>> > > From: Peter Zijlstra <peterz@infradead.org>
+>> > > 
+>> > > It turns out that with Split-Lock-Detect enabled (default) any VMX
+>> > > hypervisor needs at least a little modification in order to not blindly
+>> > > inject the #AC into the guest without the guest being ready for it.
+>> > > 
+>> > > Since there is no telling which module implements a hypervisor, scan the
+>> > > module text and look for the VMLAUNCH instruction. If found, the module is
+>> > > assumed to be a hypervisor of some sort and SLD is disabled.
+>> > 
+>> > How long does that scan take/add to module load time? Would it make
+>> > sense to exempt in-tree modules?
+>> > 
+>> > Rasmus
+>> 
+>> I second Rasmus's question. It seems rather unfortunate that we have
+>> to do this text scan for every module load on x86, when it doesn't
+>> apply to the majority of them, and only to a handful of out-of-tree
+>> hypervisor modules (assuming kvm is taken care of already).
+>> 
+>> I wonder if it would make sense then to limit the text scans to just
+>> out-of-tree modules (i.e., missing the intree modinfo flag)?
+>
+> It would; didn't know there was one.
 
-Well, I had a bug and corrupted text; but then I tested:
+But that still would not make it complete.
 
-	__get_vm_area(PAGE_SIZE, VM_ALLOC, __START_KERNEL_map,
-		      __START_KERNEL_map + KERNEL_IMAGE_SIZE);
+I was staring at virtualbox today after Jann pointed out that this
+sucker does complete backwards things.
 
-and that *works*.
+  The kernel driver does not contain any VM* instructions at all.
 
-> __get_vm_area() is not limited by allocating only with vmalloc space,
-> it can use whole virtual address space/range, i.e. 1 - ULONG_MAX.
+The actual hypervisor code is built as a separate binary and somehow
+loaded into the kernel with their own magic fixup of relocations and
+function linking. This "design" probably comes from the original
+virtualbox implementation which circumvented GPL that way.
 
-Yeah, I know, I'm saying it perhaps should be, because not limiting it
-while exposing it to modules seems risky at best, downright dangerous if
-you consider map_vm_area() is also exported.
+TBH, I don't care if we wreckage virtualbox simply because that thing is
+already a complete and utter trainwreck violating taste and common sense
+in any possible way. Just for illustration:
 
-And while I know the machinery works for the complete virtual address
-space, architectures do set aside explicit VA ranges for specific
-purposes, we had better respect that, esp. for modules.
+  - It installs preempt notifiers and the first thing in the callback
+    function is to issue 'stac()'!
 
+  - There is quite some other horrible code in there which fiddles in
+    the guts of the kernel just because it can.
 
+  - Conditionals in release code which check stuff like
+    VBOX_WITH_TEXT_MODMEM_HACK, VBOX_WITH_EFLAGS_AC_SET_IN_VBOXDRV,
+    VBOX_WITH_NON_PROD_HACK_FOR_PERF_STACKS along with the most absurd
+    hacks ever.
+
+If you feel the need to look yourself, please use your eyecancer
+protection gear.
+
+Can someone at Oracle please make sure, that this monstrosity gets shred
+in pieces?
+
+Enough vented, but that still does not solve the SLD problem in any
+sensible way.
+
+Thanks,
+
+        tglx
