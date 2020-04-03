@@ -2,138 +2,85 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898BAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE75C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692B42077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1BE2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="cvWoAx8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390996AbgDCN7p (ORCPT
+        id S2390762AbgDCODg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:59:45 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60539 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbgDCN7o (ORCPT
+        Fri, 3 Apr 2020 10:03:36 -0400
+Received: from mail-ed1-f53.google.com ([209.85.208.53]:32937 "EHLO
+        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbgDCODf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:59:44 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jKMrE-0005V1-3h; Fri, 03 Apr 2020 15:59:40 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jKMrD-000573-17; Fri, 03 Apr 2020 15:59:39 +0200
-Date:   Fri, 3 Apr 2020 15:59:38 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200403135938.qmrvhclm6evfibqj@pengutronix.de>
-References: <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
- <20200330191654.waoocllctanh5nk5@pengutronix.de>
- <20200331204559.GB2954599@ulmo>
- <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
- <20200401182833.GB2978178@ulmo>
- <20200401203156.d7x5ynnnhob3jyoo@pengutronix.de>
- <20200401213738.GA3052587@ulmo>
- <20200402140221.bjbol77uegjma6oz@pengutronix.de>
- <5dbdbc15-ff29-f577-0632-6a28378b0104@ti.com>
+        Fri, 3 Apr 2020 10:03:35 -0400
+Received: by mail-ed1-f53.google.com with SMTP id z65so9433321ede.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 07:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V/2/QnZrdfNzMUl7V0Zc2Muz5P3vIO5snfNmGYbh3nU=;
+        b=cvWoAx8DIGxqk2ohI3cG9gBv4PW2fm2j9s1Ie5nEs+t+rfv4Jr2fL02E8a7QMdqMED
+         2jaj0tPh0VrTxG6HLMOeySAEoj23W6PVcN9kngcGZ2IBWuzowL5cfhVwAN30vTx4kJIC
+         FG49YOebDsuFw4HN/DP/8HlFi6s77WYc6dqr6v01ZXwaigPIs5alMKdgYvi2sN2iuYR4
+         91fLA7Hnk23dQBPWUuwkSgUITL5wiDZnM8rDt+fVqpLcWF/V2sVFRT+4eTO5lQhkB8jV
+         QTehIuJICbkk3AbMfzZ+RURXeEQ1dGPw3AcB84Mpdfpww1l1JyFi+3xXAK+nnqDm3qCo
+         3V7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V/2/QnZrdfNzMUl7V0Zc2Muz5P3vIO5snfNmGYbh3nU=;
+        b=qmp/tn2JnqvX9hprlRiEDdmGc6eOKZ0o7ZrRQkCzg1ehOvDbul8ICraw2kG9VPo5oK
+         yMQ3+thrZfYXTH/ILIGYykRufLHWo7fBUel63FRvdMla9t3n7ZYJsjkSyImHyrZsjS04
+         4H07UPp2kH1bkxE6R9H8O901mdxzIitRW/hUrHTtX4XY3AirNVEJFlZnqxvh9Crlckwo
+         IPjV+aXrp8cX1MfWqBF7iDPvZUfa1jLuABFPi+mXtwzRpzYLo9j7S1pELFEUBOS9Zj6v
+         rgg7nogOCziatZkwztnFMBXJB42cjr24Hmpz59rtxT0f/WGjPDocSGOLQST8XMw/5R8K
+         ygdA==
+X-Gm-Message-State: AGi0PuZuSruML/ZPF1emwMf3GFN0OKdwOGvuTvtVZmkdFEyCMyJ3PYhY
+        tTZZHfthYf2BIbgDx7Lk+cv2yk3YKF1Ak7jw9Y1mxQ==
+X-Google-Smtp-Source: APiQypIF92A9lz0LkN0P3yMzNLaE8dz28LXcse7vIzHNDR2ihHENs0X8Yg6tXBNEVCEDP1dDBCKgJLxHRBY9zYCJ79g=
+X-Received: by 2002:a50:f0d5:: with SMTP id a21mr1214123edm.85.1585922613877;
+ Fri, 03 Apr 2020 07:03:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5dbdbc15-ff29-f577-0632-6a28378b0104@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200403133549.14338-1-pasha.tatashin@soleen.com>
+ <20200403133549.14338-4-pasha.tatashin@soleen.com> <20200403134439.li6i635dnur5jdha@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20200403134439.li6i635dnur5jdha@ca-dmjordan1.us.oracle.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 3 Apr 2020 10:03:23 -0400
+Message-ID: <CA+CK2bDkh4ZzvsoaFAi=NZs4sxtfZgHFoWJ-uiw+BRKkNN6BHA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] mm: call cond_resched() from deferred_init_memmap()
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        David Hildenbrand <david@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> I think you meant cond_resched()?
+>
+> With that,
+> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-On Fri, Apr 03, 2020 at 02:21:38PM +0530, Lokesh Vutla wrote:
-> On 02/04/20 7:32 PM, Uwe Kleine-König wrote:
-> > Having said that I don't know how critical this really is. Given that
-> > the PWM under discussion doesn't complete periods on stop, it probably
-> > isn't.
-> 
-> It is a limitation with the existing driver as well. Nothing is being changed
-> regarding stopping of PWM. The same is marked under the limitations in the driver.
+Thank you Of course, I will re-submit quickly!
 
-What I wrote was ambiguous and I think you understood the meaning I
-didn't intend. What I wanted to say is: Given that the PWM stops
-abruptly there is only little (if any at all) advantage of
-"stop-to-update" over "racy-atomic-update" as we see broken cycles no
-matter which alternative we pick.
-
-> > I spend some time thinking about when the glitch actually happens.
-> > Currently the load value is written first and then the match value.
-> > If no period ends between the two writes there is only a problem when in
-> > the currently running period the match event didn't happen yet. Then we
-> > see a cycle with
-> > 
-> >    .period = oldperiod + newperiod
-> >    .dutycycle = oldperiod + newdutycycle
-> > 
-> > (if the new match value isn't hit in the current cycle) or one with
-> > 
-> >    .period = oldperiod
-> >    .duty_cycle = newdutycycle + (oldperiod - newperiod)
-> > 
-> > (if the new match value is hit in the current cycle). The probability
-> > that one of the two happen is: olddutycycle / oldperiod which is quite
-> > probable. (With olddutycycle = oldperiod there is no problem though.)
-> > 
-> > If after writing the new load value and before writing the new match
-> > value a period ends it might happen that we see a cycle with
-> > 
-> >   .period = newperiod
-> >   .dutycycle = olddutycycle + (newperiod - oldperiod)
-> > 
-> > (if the previous match value is used) or one with
-> > 
-> >   .period = 2 * newperiod
-> >   .dutycycle = newperiod + newdutycycle
-> > 
-> > (if new match value is written too late for the first cycle with the new
-> > period).
-> 
-> That's exactly why we have marked in the Limitations sections that the current
-> period might produce a cycle with mixed settings.  Frankly, I'm a bit torn here.
-> There are other PWMs inside Linux with  similar limitations and documented
-> similarly. If there is an overall objection for such hardware, the entire policy
-> should be changed or the framework should be updated to allow user to choose for
-> dynamic updates. IMHO, this series should not be blocked for this decision.
-
-Yes, there are other drivers that have similar "problems" and the status
-quo is that depending on the driver author one or the other workaround
-is chosen. I think the PWM framework would benefit if there were a
-common guideline which path to choose in such a situation.
-
-> Please consider it for the coming merge window.
-
-It's already in next, so I assume it will be merged.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Pasha
