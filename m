@@ -2,285 +2,260 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FBAC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777E9C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A517B2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:25:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="F+NlUIiv"
+	by mail.kernel.org (Postfix) with ESMTP id 42436206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585906021;
+	bh=FmUVFQY4lObJIxbyyXlWQ7CK7GKBTr9kAi65AwQTX5Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DTKgTI/H2WwelApxlsap5bVzuMgTZxTBr/thDgdZ5KapppPhSps7zX7CsHLwwWb97
+	 RY6rzYgwZfRVk8oeHKLEWCEIWg/852MRKy0DY0fTqT4/4e1TJ/ezz0LbYB/cWJrQYb
+	 EcSezUDoxA4k15OVQHmJC81Fco3ktIYEfgkVdYJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390653AbgDCJZD (ORCPT
+        id S2389510AbgDCJ1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:25:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55483 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390622AbgDCJY5 (ORCPT
+        Fri, 3 Apr 2020 05:27:00 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:42026 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgDCJ07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:24:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r16so6404801wmg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 02:24:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IhWqEH+ifcQR6EnThkSLLdxyOoCGOTp66XJ4WIDsRQM=;
-        b=F+NlUIiv/8c5llpYNJLrPG1jwFWfs+1Ib4zLJd5JPX7VpAxwt2HuxrGLbf4mQSIfoI
-         L9KAmYuJ5uTbLc6Cbpq89buRnEhSIakOjMahQj5WRHPGpzyfyXhEBvEvSYzCBtjha9Hs
-         uPcn46Z2UqAuy+REiJTA5W/qX1B0l9N0QWz+YzgRHH1gnWf4fCT3ONkwyzPQJ42pm1lQ
-         oL6vyLbDOiLMYyKWfziAKG1Vqc0QUSQSyg6k5QkxgG7a6n7k0b63bn33ccdSb2dc+Nro
-         QB5xOgjuG6gLaN3K99VRQ8uWGdZTXBQMuSsipLMbQ16296SokAiG98gleOXbfzvKfqNx
-         JeJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=IhWqEH+ifcQR6EnThkSLLdxyOoCGOTp66XJ4WIDsRQM=;
-        b=n/nDwzhlpdUx+tTJ/Cr7HdA3AlgNAlH6GD/tuot78NPRn04R4UXbY4Rj1qMFiwbtQq
-         7DVGNY1n17Uqt2vwOP+p4dNC5cfuqWs3m+rH3EDMYzgX0dqIna4+NVgMT53UCsYxnSxk
-         mlx2Sa4/mznVXVGv+fnN1g5LeCR5gpYoSylJc7RCHhsVM5ICGtUWZudXAdjhCwB7VnpX
-         wCTemwxbFHOpWCpxG7kBO9OXA8HEZtiP3LJ+lZuseZB38uPLuMGSJOzGTS2TQXeE5T1W
-         5h9DxFPLbVlwhmmaC9l/q/K07IIa2RQLvWJliexSJTQsXoywLQ8hBwtWz4721ZgZsuT2
-         nfuQ==
-X-Gm-Message-State: AGi0PuYSG4NQrbUhKf6trC7MtgM0MQx0VAvg00BUBde3I7qy1t9trQLg
-        OvMi2zXUq5K2L/Ra2cw+oijddQ==
-X-Google-Smtp-Source: APiQypJm1SUyhExIFhsNSoRGaTQ+ETR8QzrrZcogS3Uwn33V4q/ATjdOeTQc8R1D8teAyU06BdsV0w==
-X-Received: by 2002:a7b:c3da:: with SMTP id t26mr7405666wmj.3.1585905893625;
-        Fri, 03 Apr 2020 02:24:53 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id i2sm11239997wrx.22.2020.04.03.02.24.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Apr 2020 02:24:53 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-arm-kernel@lists.infradead.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH 7/7] Revert "serial: uartps: Register own uart console and driver structures"
-Date:   Fri,  3 Apr 2020 11:24:36 +0200
-Message-Id: <1ee35667e36a8efddee381df5fe495ad65f4d15c.1585905873.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.1585905873.git.michal.simek@xilinx.com>
-References: <cover.1585905873.git.michal.simek@xilinx.com>
+        Fri, 3 Apr 2020 05:26:59 -0400
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 0339Qsq7028468;
+        Fri, 3 Apr 2020 18:26:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0339Qsq7028468
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585906015;
+        bh=MstVQUcgSZG0zMpYAd6uwUB9YIo5n+SWfVQSoNG7zYs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vPSn6fquixsMdc8F/WHY+Z3hJJymMhmLaDGmIwv7h5J0ek55oMCHsTTC4epy4WIoN
+         SWVSfC4glyY7yTY1sWGPuwl0llHmc4VwIWmXPCNX8DcZD+thXY/QtgY0PKrotEctSq
+         fVbPm/PxVFq/ebVWrmiCPK5vIyJwgugYO9rmW34Hlp+lAx2lgGgH1Hji8mAx/HeoKV
+         2jpgLrQKENR2BHBqM7/Jj9FL/+1KODQSff6lqOmkSCfEi1101py0RwTjZ1b3akTWpZ
+         WHUvzU/EqP+t88fGHnBrDwg2DolNJlit/finZMiZkdqhWFynBslUIK3Byq04Z/rnFD
+         houwTm8pljgYg==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id y17so2438527uap.13;
+        Fri, 03 Apr 2020 02:26:54 -0700 (PDT)
+X-Gm-Message-State: AGi0PualAhsuBl8RJxJygZpAlVuOfIai2baHxMYhzGSlxm49F83EuqUa
+        c0dSU1yDc/wlZkqCK0ESScqAcxwSzwEnfz5iYXQ=
+X-Google-Smtp-Source: APiQypJv5Cv+OWIIu8e9neKOttTNCoftbQaRs6wYhkoxm4CNEoGf3PrOYPE8+yNwLCju9NAzOB9CzonSznjlClJ2kQA=
+X-Received: by 2002:ab0:2790:: with SMTP id t16mr5779840uap.40.1585906013243;
+ Fri, 03 Apr 2020 02:26:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200403051709.22407-1-masahiroy@kernel.org> <20200403085719.GA9282@ubuntu-m2-xlarge-x86>
+In-Reply-To: <20200403085719.GA9282@ubuntu-m2-xlarge-x86>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 3 Apr 2020 18:26:17 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATtqe_vSYTUD+7G8du46F3Kksx6F2yHK4Tw9PLdybqL7A@mail.gmail.com>
+Message-ID: <CAK7LNATtqe_vSYTUD+7G8du46F3Kksx6F2yHK4Tw9PLdybqL7A@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 024ca329bfb9a948f76eaff3243e21b7e70182f2.
+Hi Nathan,
 
-As Johan says, this driver needs a lot more work and these changes are
-only going in the wrong direction:
-  https://lkml.kernel.org/r/20190523091839.GC568@localhost
 
-Reported-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+On Fri, Apr 3, 2020 at 5:57 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Hi Masahiro,
+>
+> On Fri, Apr 03, 2020 at 02:17:09PM +0900, Masahiro Yamada wrote:
+> > As Documentation/kbuild/llvm.rst implies, building the kernel with a
+> > full set of LLVM tools gets very verbose and unwieldy.
+> >
+> > Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
+> > GCC and Binutils. You can pass LLVM=1 from the command line or as an
+> > environment variable. Then, Kbuild will use LLVM toolchains in your
+> > PATH environment.
+> >
+> > Please note LLVM=1 does not turn on the LLVM integrated assembler.
+> > You need to explicitly pass AS=clang to use it. When the upstream
+> > kernel is ready for the integrated assembler, I think we can make
+> > it default.
+>
+> I agree this should be the default but I think it should probably be
+> called out somewhere in the documentation as well since users might not
+> expect to have to have a cross assembler installed.
 
- drivers/tty/serial/xilinx_uartps.c | 95 +++++++++++++-----------------
- 1 file changed, 40 insertions(+), 55 deletions(-)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 41d9c2f188f0..ac137b6a1dc1 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -27,6 +27,7 @@
- #define CDNS_UART_TTY_NAME	"ttyPS"
- #define CDNS_UART_NAME		"xuartps"
- #define CDNS_UART_MAJOR		0	/* use dynamic node allocation */
-+#define CDNS_UART_MINOR		0	/* works best with devtmpfs */
- #define CDNS_UART_NR_PORTS	16
- #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
- #define CDNS_UART_REGISTER_SPACE	0x1000
-@@ -1132,6 +1133,8 @@ static const struct uart_ops cdns_uart_ops = {
- #endif
- };
- 
-+static struct uart_driver cdns_uart_uart_driver;
-+
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
- /**
-  * cdns_uart_console_putchar - write the character to the FIFO buffer
-@@ -1271,6 +1274,16 @@ static int cdns_uart_console_setup(struct console *co, char *options)
- 
- 	return uart_set_options(port, co, baud, parity, bits, flow);
- }
-+
-+static struct console cdns_uart_console = {
-+	.name	= CDNS_UART_TTY_NAME,
-+	.write	= cdns_uart_console_write,
-+	.device	= uart_console_device,
-+	.setup	= cdns_uart_console_setup,
-+	.flags	= CON_PRINTBUFFER,
-+	.index	= -1, /* Specified on the cmdline (e.g. console=ttyPS ) */
-+	.data	= &cdns_uart_uart_driver,
-+};
- #endif /* CONFIG_SERIAL_XILINX_PS_UART_CONSOLE */
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -1402,6 +1415,9 @@ static const struct of_device_id cdns_uart_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, cdns_uart_of_match);
- 
-+/* Temporary variable for storing number of instances */
-+static int instances;
-+
- /**
-  * cdns_uart_probe - Platform driver probe
-  * @pdev: Pointer to the platform device structure
-@@ -1415,11 +1431,6 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	struct cdns_uart *cdns_uart_data;
- 	const struct of_device_id *match;
--	struct uart_driver *cdns_uart_uart_driver;
--	char *driver_name;
--#ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
--	struct console *cdns_uart_console;
--#endif
- 
- 	cdns_uart_data = devm_kzalloc(&pdev->dev, sizeof(*cdns_uart_data),
- 			GFP_KERNEL);
-@@ -1429,12 +1440,6 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 	if (!port)
- 		return -ENOMEM;
- 
--	cdns_uart_uart_driver = devm_kzalloc(&pdev->dev,
--					     sizeof(*cdns_uart_uart_driver),
--					     GFP_KERNEL);
--	if (!cdns_uart_uart_driver)
--		return -ENOMEM;
--
- 	/* Look for a serialN alias */
- 	id = of_alias_get_id(pdev->dev.of_node, "serial");
- 	if (id < 0)
-@@ -1445,50 +1450,25 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	/* There is a need to use unique driver name */
--	driver_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s%d",
--				     CDNS_UART_NAME, id);
--	if (!driver_name)
--		return -ENOMEM;
--
--	cdns_uart_uart_driver->owner = THIS_MODULE;
--	cdns_uart_uart_driver->driver_name = driver_name;
--	cdns_uart_uart_driver->dev_name	= CDNS_UART_TTY_NAME;
--	cdns_uart_uart_driver->major = CDNS_UART_MAJOR;
--	cdns_uart_uart_driver->minor = id;
--	cdns_uart_uart_driver->nr = 1;
--
-+	if (!cdns_uart_uart_driver.state) {
-+		cdns_uart_uart_driver.owner = THIS_MODULE;
-+		cdns_uart_uart_driver.driver_name = CDNS_UART_NAME;
-+		cdns_uart_uart_driver.dev_name = CDNS_UART_TTY_NAME;
-+		cdns_uart_uart_driver.major = CDNS_UART_MAJOR;
-+		cdns_uart_uart_driver.minor = CDNS_UART_MINOR;
-+		cdns_uart_uart_driver.nr = CDNS_UART_NR_PORTS;
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
--	cdns_uart_console = devm_kzalloc(&pdev->dev, sizeof(*cdns_uart_console),
--					 GFP_KERNEL);
--	if (!cdns_uart_console)
--		return -ENOMEM;
--
--	strncpy(cdns_uart_console->name, CDNS_UART_TTY_NAME,
--		sizeof(cdns_uart_console->name));
--	cdns_uart_console->index = id;
--	cdns_uart_console->write = cdns_uart_console_write;
--	cdns_uart_console->device = uart_console_device;
--	cdns_uart_console->setup = cdns_uart_console_setup;
--	cdns_uart_console->flags = CON_PRINTBUFFER;
--	cdns_uart_console->data = cdns_uart_uart_driver;
--	cdns_uart_uart_driver->cons = cdns_uart_console;
-+		cdns_uart_uart_driver.cons = &cdns_uart_console;
- #endif
- 
--	rc = uart_register_driver(cdns_uart_uart_driver);
--	if (rc < 0) {
--		dev_err(&pdev->dev, "Failed to register driver\n");
--		return rc;
-+		rc = uart_register_driver(&cdns_uart_uart_driver);
-+		if (rc < 0) {
-+			dev_err(&pdev->dev, "Failed to register driver\n");
-+			return rc;
-+		}
- 	}
- 
--	cdns_uart_data->cdns_uart_driver = cdns_uart_uart_driver;
--
--	/*
--	 * Setting up proper name_base needs to be done after uart
--	 * registration because tty_driver structure is not filled.
--	 * name_base is 0 by default.
--	 */
--	cdns_uart_uart_driver->tty_driver->name_base = id;
-+	cdns_uart_data->cdns_uart_driver = &cdns_uart_uart_driver;
- 
- 	match = of_match_node(cdns_uart_of_match, pdev->dev.of_node);
- 	if (match && match->data) {
-@@ -1566,6 +1546,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 	port->ops	= &cdns_uart_ops;
- 	port->fifosize	= CDNS_UART_FIFO_SIZE;
- 	port->has_sysrq = IS_ENABLED(CONFIG_SERIAL_XILINX_PS_UART_CONSOLE);
-+	port->line	= id;
- 
- 	/*
- 	 * Register the port.
-@@ -1597,7 +1578,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 		console_port = port;
- #endif
- 
--	rc = uart_add_one_port(cdns_uart_uart_driver, port);
-+	rc = uart_add_one_port(&cdns_uart_uart_driver, port);
- 	if (rc) {
- 		dev_err(&pdev->dev,
- 			"uart_add_one_port() failed; err=%i\n", rc);
-@@ -1607,12 +1588,15 @@ static int cdns_uart_probe(struct platform_device *pdev)
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
- 	/* This is not port which is used for console that's why clean it up */
- 	if (console_port == port &&
--	    !(cdns_uart_uart_driver->cons->flags & CON_ENABLED))
-+	    !(cdns_uart_uart_driver.cons->flags & CON_ENABLED))
- 		console_port = NULL;
- #endif
- 
- 	cdns_uart_data->cts_override = of_property_read_bool(pdev->dev.of_node,
- 							     "cts-override");
-+
-+	instances++;
-+
- 	return 0;
- 
- err_out_pm_disable:
-@@ -1628,8 +1612,8 @@ static int cdns_uart_probe(struct platform_device *pdev)
- err_out_clk_dis_pclk:
- 	clk_disable_unprepare(cdns_uart_data->pclk);
- err_out_unregister_driver:
--	uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
--
-+	if (!instances)
-+		uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
- 	return rc;
- }
- 
-@@ -1664,7 +1648,8 @@ static int cdns_uart_remove(struct platform_device *pdev)
- 		console_port = NULL;
- #endif
- 
--	uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
-+	if (!--instances)
-+		uart_unregister_driver(cdns_uart_data->cdns_uart_driver);
- 	return rc;
- }
- 
+I will add the following info to llvm.rst:
+
+`LLVM=1` does not turn on the LLVM integrated assembler, so you still need
+assembler from GNU binutils. You can pass `AS=clang` to use the integrated
+assembler, but it is experimental as of writing.
+
+
+
+
+> > We discussed what we need, and we agreed to go with a simple boolean
+> > switch (https://lkml.org/lkml/2020/3/28/494).
+> >
+> > Some items in the discussion:
+> >
+> > - LLVM_DIR
+> >
+> >   When multiple versions of LLVM are installed, I just thought supporting
+> >   LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
+> >
+> >   CC      = $(LLVM_DIR)clang
+> >   LD      = $(LLVM_DIR)ld.lld
+> >     ...
+> >
+> >   However, we can handle this by modifying PATH. So, we decided to not do
+> >   this.
+> >
+> > - LLVM_SUFFIX
+> >
+> >   Some distributions (e.g. Debian) package specific versions of LLVM with
+> >   naming conventions that use the version as a suffix.
+> >
+> >   CC      = clang$(LLVM_SUFFIX)
+> >   LD      = ld.lld(LLVM_SUFFIX)
+> >     ...
+> >
+> >   will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
+> >   but the suffixed versions in /usr/bin/ are symlinks to binaries in
+> >   /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
+> >
+> > - HOSTCC, HOSTCXX, etc.
+> >
+> >   We can switch the host compilers in the same way:
+> >
+> >   ifneq ($(LLVM),)
+> >   HOSTCC       = clang
+> >   HOSTCXX      = clang++
+> >   else
+> >   HOSTCC       = gcc
+> >   HOSTCXX      = g++
+> >   endif
+>
+> I would personally like to see this but I do not have the strongest
+> opinion.
+>
+> >   This may the right thing to do, but I could not make up my mind.
+> >   Because we do not frequently switch the host compiler, a counter
+> >   solution I had in my mind was to leave it to the default of the
+> >   system.
+> >
+> >   HOSTCC       = cc
+> >   HOSTCXX      = c++
+> >
+> >   Many distributions support update-alternatives to switch the default
+> >   to GCC, Clang, or whatever, but reviewers were opposed to this
+> >   approach. So, this commit does not touch the host tools.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  Documentation/kbuild/kbuild.rst |  5 +++++
+> >  Documentation/kbuild/llvm.rst   |  5 +++++
+> >  Makefile                        | 20 ++++++++++++++++----
+> >  3 files changed, 26 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
+> > index 510f38d7e78a..2d1fc03d346e 100644
+> > --- a/Documentation/kbuild/kbuild.rst
+> > +++ b/Documentation/kbuild/kbuild.rst
+> > @@ -262,3 +262,8 @@ KBUILD_BUILD_USER, KBUILD_BUILD_HOST
+> >  These two variables allow to override the user@host string displayed during
+> >  boot and in /proc/version. The default value is the output of the commands
+> >  whoami and host, respectively.
+> > +
+> > +LLVM
+> > +----
+> > +If this variable is set to 1, Kbuild will use Clang and LLVM utilities instead
+> > +of GCC and GNU binutils to build the kernel.
+> > diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> > index d6c79eb4e23e..4602369f6a4f 100644
+> > --- a/Documentation/kbuild/llvm.rst
+> > +++ b/Documentation/kbuild/llvm.rst
+> > @@ -55,6 +55,11 @@ additional parameters to `make`.
+> >         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
+> >         HOSTLD=ld.lld
+> >
+> > +You can use a single switch `LLVM=1` to use LLVM utilities by default (except
+> > +for building host programs).
+> > +
+> > +     make LLVM=1 HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar HOSTLD=ld.lld
+> > +
+> >  Getting Help
+> >  ------------
+> >
+> > diff --git a/Makefile b/Makefile
+> > index c91342953d9e..6db89ecdd942 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -409,16 +409,28 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
+> >  KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+> >
+> >  # Make variables (CC, etc...)
+> > -LD           = $(CROSS_COMPILE)ld
+> > -CC           = $(CROSS_COMPILE)gcc
+> >  CPP          = $(CC) -E
+> > +ifneq ($(LLVM),)
+> > +CC           = clang
+> > +LD           = ld.lld
+> > +AR           = llvm-ar
+> > +NM           = llvm-nm
+> > +OBJCOPY              = llvm-objcopy
+> > +OBJDUMP              = llvm-objdump
+> > +READELF              = llvm-readelf
+> > +OBJSIZE              = llvm-size
+> > +STRIP                = llvm-strip
+> > +else
+> > +CC           = $(CROSS_COMPILE)gcc
+> > +LD           = $(CROSS_COMPILE)ld
+> >  AR           = $(CROSS_COMPILE)ar
+> >  NM           = $(CROSS_COMPILE)nm
+> > -STRIP                = $(CROSS_COMPILE)strip
+> >  OBJCOPY              = $(CROSS_COMPILE)objcopy
+> >  OBJDUMP              = $(CROSS_COMPILE)objdump
+> > -OBJSIZE              = $(CROSS_COMPILE)size
+> >  READELF              = $(CROSS_COMPILE)readelf
+> > +OBJSIZE              = $(CROSS_COMPILE)size
+> > +STRIP                = $(CROSS_COMPILE)strip
+> > +endif
+> >  PAHOLE               = pahole
+> >  LEX          = flex
+> >  YACC         = bison
+> > --
+> > 2.17.1
+> >
+>
+> I have verified that the variables get their correct value with LLVM=1
+> and that they are still overridable.
+>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200403085719.GA9282%40ubuntu-m2-xlarge-x86.
+
+
+
 -- 
-2.26.0
-
+Best Regards
+Masahiro Yamada
