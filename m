@@ -2,141 +2,120 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294CDC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232C3C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083F6207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2B62077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:16:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IvhLgMBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390843AbgDCNQr (ORCPT
+        id S2403926AbgDCNQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:16:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbgDCNQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:16:46 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4B8620721;
-        Fri,  3 Apr 2020 13:16:44 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 09:16:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Fri, 3 Apr 2020 09:16:56 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26806 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390852AbgDCNQz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 09:16:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585919813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=izOkr1BSQDJulAYByg5NgaMKcJ6WHmg0z2BChcgtZ1o=;
+        b=IvhLgMBrLjQopJ1l6WCp7lH5HfLvXxtPWXEYqyHHTHh5mlg1ZQVYpJc4XI5k95Wa6Bg3nl
+        J35b4tG0xpQgM4fflfQgbXKrRmKwWVEITeq2nY+I/G28GUSj6TMDpPou5z0S3v1ijm7Xyh
+        IDMI5mgyZFvmpbXiEpRorJF4EAV5WBs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-86jLnN6fPgepMkzE4Mu15A-1; Fri, 03 Apr 2020 09:16:52 -0400
+X-MC-Unique: 86jLnN6fPgepMkzE4Mu15A-1
+Received: by mail-wm1-f70.google.com with SMTP id s22so2024877wmh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 06:16:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=izOkr1BSQDJulAYByg5NgaMKcJ6WHmg0z2BChcgtZ1o=;
+        b=T+a2b0y0q7xg7L4C9j394CqrpKgQpQfTUBfWYHxUENjxpCD9PGgfTlZIwYHxeB9Bqv
+         yUSSXaD4gvlzDmETN/KQ3SCFz2g0+t3/pTC+qFvaLduLdzQDII74RmAvw2HhCiY7JEsI
+         aQaXCXAT1qzRuwGKKuh83b3uoh1rcCMtG5yFxU6eoM9fdl6FIbbuk+WtuaOipuM3TRWd
+         eEvuxoRn8ViQMNV9jIM0fTNTNvmNeIrxA/ygVbD9wIQw3wEBBIV8BQfMysjmC46VKlV7
+         2PLYmwCJxkzLBRNImcMmUSIk4U2mQCPRJjgLykpOuMJbagVdbooiELjhGc3kO1EhxJyp
+         fM9A==
+X-Gm-Message-State: AGi0Pubh/lpV5IAqWtB/8C4Kx29IFV5kiAIHUXwCkYLkzyLF9OBZWp65
+        mQcP8AwAHDUqbCLfr/HXV1FxBagfDoKBGdQvcxhgUarmNVdhirYVyb0lOSUykivLAv6vywKCe/j
+        F8na0bxU2gwYJnQ4AbQlgvuas
+X-Received: by 2002:adf:fe4b:: with SMTP id m11mr8924891wrs.20.1585919811103;
+        Fri, 03 Apr 2020 06:16:51 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIa2NLz9OGQj4FGUNxyoDHqAatWI/l10frH2PpuCDGPpiYh2zF1KU/LgdHFx+mVLgPN1dm5Ew==
+X-Received: by 2002:adf:fe4b:: with SMTP id m11mr8924870wrs.20.1585919810807;
+        Fri, 03 Apr 2020 06:16:50 -0700 (PDT)
+Received: from ?IPv6:2a02:8388:7c1:1280:a281:9dab:554b:2fdc? (2a02-8388-07c1-1280-a281-9dab-554b-2fdc.cable.dynamic.v6.surfer.at. [2a02:8388:7c1:1280:a281:9dab:554b:2fdc])
+        by smtp.gmail.com with ESMTPSA id b5sm1812721wrs.16.2020.04.03.06.16.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 06:16:49 -0700 (PDT)
+Subject: Re: [PATCH] perf script report: fix segfault when using DWARF mode
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>
+Cc:     linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>,
-        lkp@lists.01.org
-Subject: Re: [tracing] cd8f62b481:
- BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
-Message-ID: <20200403091642.5ce182f1@gandalf.local.home>
-In-Reply-To: <20200403154702.bc3478c84d70fb48b07d9985@kernel.org>
-References: <20200319232731.799117803@goodmis.org>
-        <20200326091256.GR11705@shao2-debian>
-        <20200401230700.d9ddb42b3459dca98144b55c@kernel.org>
-        <20200401102112.35036490@gandalf.local.home>
-        <20200401110401.23cda3b3@gandalf.local.home>
-        <20200402161920.3b3649cac4cc47a52679d69b@kernel.org>
-        <20200402141440.7868465a@gandalf.local.home>
-        <20200403154702.bc3478c84d70fb48b07d9985@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+ <20200402125417.422232-1-agerstmayr@redhat.com>
+ <6a098ce1-1981-dcff-ea62-af5fc07ec7fb@amd.com>
+ <20200403124028.GA18559@kernel.org>
+From:   Andreas Gerstmayr <agerstmayr@redhat.com>
+Message-ID: <bf95c9f1-1970-fce4-c6f2-dc231730e7ab@redhat.com>
+Date:   Fri, 3 Apr 2020 15:16:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200403124028.GA18559@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020 15:47:02 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> > +#define STATIC_TEMP_BUF_SIZE	128
-> > +static char static_temp_buf[STATIC_TEMP_BUF_SIZE];
-> > +
-> >  /* Find the next real entry, without updating the iterator itself */
-> >  struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
-> >  					  int *ent_cpu, u64 *ent_ts)
-> > @@ -3480,13 +3483,26 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
-> >  	int ent_size = iter->ent_size;
-> >  	struct trace_entry *entry;
-> >  
-> > +	/*
-> > +	 * If called from ftrace_dump(), then the iter->temp buffer
-> > +	 * will be the static_temp_buf and not created from kmalloc.
-> > +	 * If the entry size is greater than the buffer, we can
-> > +	 * not save it. Just return NULL in that case. This is only
-> > +	 * used to add markers when two consecutive events' time
-> > +	 * stamps have a large delta. See trace_print_lat_context()
-> > +	 */
-> > +	if (iter->temp == static_temp_buf &&
-> > +	    STATIC_TEMP_BUF_SIZE < ent_size)
-> > +		return NULL;
-> > +
-> >  	/*
-> >  	 * The __find_next_entry() may call peek_next_entry(), which may
-> >  	 * call ring_buffer_peek() that may make the contents of iter->ent
-> >  	 * undefined. Need to copy iter->ent now.
-> >  	 */
-> >  	if (iter->ent && iter->ent != iter->temp) {
-> > -		if (!iter->temp || iter->temp_size < iter->ent_size) {
-> > +		if ((!iter->temp || iter->temp_size < iter->ent_size) &&
-> > +		    !WARN_ON_ONCE(iter->temp == static_temp_buf)) {  
+On 03.04.20 14:40, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Apr 02, 2020 at 02:07:51PM -0500, Kim Phillips escreveu:
+>> On 4/2/20 7:54 AM, Andreas Gerstmayr wrote:
+>>> When running perf script report with a Python script and a callgraph in
+>>> DWARF mode, intr_regs->regs can be 0 and therefore crashing the regs_map
+>>> function.
+>>>
+>>> Added a check for this condition (same check as in builtin-script.c:595).
+>>>
+>>> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+>>> ---
+>>
+>> Tested-by: Kim Phillips <kim.phillips@amd.com>
 > 
-> This must not happen because ent_size == iter->ent_size.
-> If it happens, it should return NULL without any trial of kfree() and
-> kmalloc(), becuase it will cause illegal freeing memory and memory leak.
-> (Note that the iter->temp never be freed in ftrace_dump() path)
-
-Correct, which is why there's a ! in there. It's a paranoid check which
-should never trigger, which is why there's a WARN_ON_ONCE() there. But as
-the "!" is not easy to see, the above is the same logic as:
-
-	if ((!iter->temp || iter->temp_size < iter->ent_size) &&
-	    (iter->temp != static_temp_buf)) {
-
-Thus, if we get to that test against static_temp_buf, and it's true, then
-we will trigger the WARN_ON, but it wont call the kfree().
-
+> Thanks, added this to that patch.
 > 
-> Anyway, this condition is completery same as above return code.
-> 
-> >  			kfree(iter->temp);
-> >  			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
-> >  			if (!iter->temp)
-> > @@ -9203,6 +9219,8 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
-> >  
-> >  	/* Simulate the iterator */
-> >  	trace_init_global_iter(&iter);
-> > +	/* Can not use kmalloc for iter.temp */
-> > +	iter.temp = static_temp_buf;
-> >    
-> 
-> You may miss initializing temp_size here.
-> 
-> 	iter.temp_size = STATIC_TEMP_BUF_SIZE;
 
-Oh, damn! You're right.
+Great, thanks!
 
-> 
-> BTW, as I pointed, if the iter->temp is for avoiding the data overwritten
-> by ringbuffer writer, would we need to use it for ftrace_dump() too?
-> It seems that ftrace_dump() stops tracing.
 
-Yes, it is still needed. That's because the old way use to just leave the
-iter->ent pointing into the ring buffer itself. The new way, the ring
-buffer makes a copy of the event, and passes that back. When you do another
-read, it overwrites the copy. It doesn't matter if the ring buffer is
-stopped or not.
+Cheers,
+Andreas
 
--- Steve
