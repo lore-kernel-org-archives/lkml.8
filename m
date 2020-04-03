@@ -2,117 +2,122 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEBAC2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F836C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCA220721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3202077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390782AbgDCMoK (ORCPT
+        id S2390835AbgDCMo5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:44:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52681 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbgDCMoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:44:10 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jKLg7-00039d-3L; Fri, 03 Apr 2020 12:44:07 +0000
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        Michael Walle <michael@walle.cc>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: re: tty: serial: fsl_lpuart: fix DMA mapping - static analysis bug
- report
-Message-ID: <9722c1bb-f09e-7332-6381-0b423168afc7@canonical.com>
-Date:   Fri, 3 Apr 2020 13:44:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Fri, 3 Apr 2020 08:44:57 -0400
+Received: from mga11.intel.com ([192.55.52.93]:34643 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727965AbgDCMo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 08:44:56 -0400
+IronPort-SDR: RLPhhYI1UXHqWbFud3UOcrlUK/ErWkiqrAU2MJWpezrRXqLlxO2X1SvUlVJrXSwOtEVvgPqr1s
+ ImQS9V1DdSzA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 05:44:56 -0700
+IronPort-SDR: FIByPhSWdOnN913/D0S6XqXWgpwqP9R8Y5o3SECqUjmkpTTNF6mFEYXqyZxYOkHQre5oHzJlEz
+ TAdvK2BZqRGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
+   d="scan'208";a="241115423"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Apr 2020 05:44:56 -0700
+Received: from fmsmsx157.amr.corp.intel.com (10.18.116.73) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Apr 2020 05:44:55 -0700
+Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
+ FMSMSX157.amr.corp.intel.com (10.18.116.73) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Apr 2020 05:44:55 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX101.ccr.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
+ Fri, 3 Apr 2020 20:44:51 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Topic: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Index: AQHWAEUbC4GB74LMekup8jIcF6WIFqhlZUwAgAH1tzD//4hGgIAAhuqA
+Date:   Fri, 3 Apr 2020 12:44:51 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A220AE4@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
+ <20200402135240.GE1176452@myrica>
+ <A2975661238FB949B60364EF0F2C25743A2209E3@SHSMSX104.ccr.corp.intel.com>
+ <20200403123951.GA1410438@myrica>
+In-Reply-To: <20200403123951.GA1410438@myrica>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Sent: Friday, April 3, 2020 8:40 PM
+> Subject: Re: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+> 
+> On Fri, Apr 03, 2020 at 11:56:09AM +0000, Liu, Yi L wrote:
+> > > >  /**
+> > > > + * VFIO_MM objects - create, release, get, put, search
+> > > > + * Caller of the function should have held vfio.vfio_mm_lock.
+> > > > + */
+> > > > +static struct vfio_mm *vfio_create_mm(struct mm_struct *mm) {
+> > > > +	struct vfio_mm *vmm;
+> > > > +	struct vfio_mm_token *token;
+> > > > +	int ret = 0;
+> > > > +
+> > > > +	vmm = kzalloc(sizeof(*vmm), GFP_KERNEL);
+> > > > +	if (!vmm)
+> > > > +		return ERR_PTR(-ENOMEM);
+> > > > +
+> > > > +	/* Per mm IOASID set used for quota control and group operations */
+> > > > +	ret = ioasid_alloc_set((struct ioasid_set *) mm,
+> > >
+> > > Hmm, either we need to change the token of ioasid_alloc_set() to
+> > > "void *", or pass an actual ioasid_set struct, but this cast doesn't
+> > > look good :)
+> > >
+> > > As I commented on the IOASID series, I think we could embed a struct
+> > > ioasid_set into vfio_mm, pass that struct to all other ioasid_*
+> > > functions, and get rid of ioasid_sid.
+> >
+> > I think change to "void *" is better as we needs the token to ensure
+> > all threads within a single VM share the same ioasid_set.
+> 
+> Don't they share the same vfio_mm?
 
-Static analysis with Coverity has found an issue with the following commit:
+that's right. then both works well for me.
 
-From a092ab25fdaa445b821f5959e458350696fce44c Mon Sep 17 00:00:00 2001
-From: Michael Walle <michael@walle.cc>
-Date: Fri, 6 Mar 2020 22:44:31 +0100
-Subject: [PATCH] tty: serial: fsl_lpuart: fix DMA mapping
-
-The analysis report is as follows for function lpuart_dma_rx_free in
-source drivers/tty/serial/fsl_lpuart.c :
-
-var_compare_op: Comparing chan to null implies that chan might be null.
-
-1234        if (chan)
-1235                dmaengine_terminate_all(chan);
-1236
-
-Dereference after null check (FORWARD_NULL)
-var_deref_op: Dereferencing null pointer chan.
-
-1237        dma_unmap_sg(chan->device->dev, &sport->rx_sgl, 1,
-DMA_FROM_DEVICE);
-
-The check for chan being null implies it is may be null, however, the
-call to dma_unmap_sg dereferences chan which leads to a null pointer
-dereference issue.
-
-Colin
+Regards,
+Yi Liu
