@@ -2,100 +2,106 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A28C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F34C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64FC2206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hENydy7D"
+	by mail.kernel.org (Postfix) with ESMTP id 5DCBE206F6
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585933424;
+	bh=VJ3UvXiGIFoKcvKxye79uGqBaWUJ0CUGwyrmMoBijI0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CLlH/h8tiCy4nnvk+gVPJ2+mT9Xsf1VetDaN3VGA1XmUQfgTVvbEAriMtNA0L42g/
+	 W/c7zD8MDA25xRrMM/JWR9NPLTkQ79C5Nyqi2eUJS5KPDOls41A2U7hje+gZ5ltb7d
+	 GlwY+iN4esuqhamNC2/yJu+X7iZ+l2mIXlCyTGBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgDCRDK (ORCPT
+        id S2391001AbgDCRDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:03:10 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:41164 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgDCRDK (ORCPT
+        Fri, 3 Apr 2020 13:03:43 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40871 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbgDCRDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:03:10 -0400
-Received: by mail-qv1-f68.google.com with SMTP id t4so3929549qvz.8;
-        Fri, 03 Apr 2020 10:03:09 -0700 (PDT)
+        Fri, 3 Apr 2020 13:03:43 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 19so7658996ljj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:03:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-disposition:content-transfer-encoding;
-        bh=C18c1IugNAFxFaCXPQKTt7OVFB64Oo1MwWK6g2EBugk=;
-        b=hENydy7D0JCIgFa87b7M0ed1qoGpz0QGXHyXVDmHGDh7zw+L+WUhbK8IW02pBk8qHM
-         ADsA25xAJ67o4Ra6VRdXBwMhcZMuHy475xAxlyiU1YuRkbqv+PF2ir5V5qEjMcANfQVn
-         jGY8UQU13Viwi+GDqFDM01+/XrhVQbFZPaY/Tb2zki4oxJUEWTJXSoycxyeREVVBXM5T
-         uUK7ezP46TqBapFishKlJi3Sy21RVUbp0ZoycRDNJ8VBJIH1oXob0kZUNKCSq+meSRlw
-         PvtxAFdZSw3sGPJDdA0MlyJjyUWjLDDi5bCftL5qN/hJ4Jis+/StdK4ZXo5AsP3JJEfj
-         3FBw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=osWnZTRFrERPRvjQV1oxqFtgAfM+t2aXm4BmItThVbY=;
+        b=Q66SAsiyB/dcp3evAiaFZOWj2Luj1W9bWfjGrupDMZ6/ZpeHIYUWl4GYPxLoDlBaVa
+         ua2tv/WvTxjS+h01PueD+2pmjE8OZUGADC79GXF6v5cp0IRMJPrP65i4xvyubqD/4Qu+
+         oigARjvJzsTo1GXsZT+XxUFtlBUArDfqOh5GQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=C18c1IugNAFxFaCXPQKTt7OVFB64Oo1MwWK6g2EBugk=;
-        b=rybU4ozIerctSM0MzTB0k3ERvOnYEv6ZCk0L2c4W6/1IYwZN8R+xDAFiT8Pd59MexN
-         UFTVEdcfYD5zv8ByxFHsGXipcbXgxsLLYFmYUk5qTzyyb5rvnmQbousLiaburYrS/dTN
-         47iTws+XsMaZX3YUuQd3RkiQBiAP97qOVLYQEbIuJHSzEkRSU+H/olyY2alErw2q0DtC
-         twBn3MWyVsGQMRk/Lvj+FynUL7QaF4alci5buJE4RyJYrUDR+ziDeKKKIsEMalzXqrBn
-         3+Bx2IG///BqqOgXeXuLIQ265ouq3uOxdIFBqOy3BOhXfbqmnNOyZeb2NzEp+OaFATFL
-         q5Ig==
-X-Gm-Message-State: AGi0Pub7mxwRCDhfmmPwPQPG+PIW8qszdXyOnYgo1qSsXoaeIqhEOFoO
-        jpERSXYDFTJyuaFz6rQNkGg=
-X-Google-Smtp-Source: APiQypI7c1myt6pyEA1+Je1XA2txJx4TleqRCwZGZQeWyffLtTOCPCApztHQrbf9btvLkagoi//UCw==
-X-Received: by 2002:a05:6214:1933:: with SMTP id es19mr9320626qvb.186.1585933389339;
-        Fri, 03 Apr 2020 10:03:09 -0700 (PDT)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id k2sm6777761qte.16.2020.04.03.10.03.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 10:03:08 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 13:03:05 -0400
-Message-ID: <20200403130305.GB6453@t480s.localdomain>
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     netdev@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
-        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?B?UmVuw6k=?= van Dorst <opensource@vdorst.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in port5
- setup
-In-Reply-To: <20200403112830.505720-1-gch981213@gmail.com>
-References: <20200403112830.505720-1-gch981213@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=osWnZTRFrERPRvjQV1oxqFtgAfM+t2aXm4BmItThVbY=;
+        b=RqRen305xx//440k5RUbt+TZ++KCgLGbLh0KkaC5pCJjhWc0vXXXxHmTHgPY0xeDNw
+         7qM4hH/mVoMTu8dX95lyHdkDqfew86AdI1dhtn92mqgEL7fxWilFeKSgjdOwfHuBS5wW
+         TzvJRmPb9RdxYKBHJhBddd9zIf2HSgcLxD5a8jcNpZQzV3nuHYlcfS4TN6e4J8+DGn6L
+         A5MABnOpcntl0bRWi3ixJsL7fZl3elA3r7qLpr8n9tnoXpZgAYmU18jlqyERe1GbpMgt
+         kZNDYNyryCFYg+37UeEQB8MfO3xlTp9G7XE7XRIzo2FBYlWQN3AF35LbrHfJJIpT0R+d
+         VZDA==
+X-Gm-Message-State: AGi0PuYr4KOmvtQBorfwg1vwJYJXGzYc7TrF8LUZrxi0ZZ4YnrqLLGvT
+        Uj+PloA7EtQjwW0wZNI4lCfwWBiWQL0=
+X-Google-Smtp-Source: APiQypL75sgIoAoa5RUs4K+eseQxKJz0ggE3BJALyEFYXgwfyzxMdP2V44NxRh08f2ABaajbBF7ctg==
+X-Received: by 2002:a2e:904b:: with SMTP id n11mr5372038ljg.171.1585933419558;
+        Fri, 03 Apr 2020 10:03:39 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id l13sm5274571ljc.84.2020.04.03.10.03.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 10:03:38 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id g27so7630780ljn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:03:38 -0700 (PDT)
+X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr5423949lji.150.1585933417930;
+ Fri, 03 Apr 2020 10:03:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20200331080111.GA20569@gmail.com> <CAHk-=wjpBohNkBSxyPfC7w8165usbU5TuLohdbPs+D0bUYqJhQ@mail.gmail.com>
+ <CAHk-=wijWvUfEkqUZRpvo9FCaJNsioS_qZT+iNWUdqQ6eO8Ozw@mail.gmail.com>
+ <87v9mioj5r.fsf@nanos.tec.linutronix.de> <CAHk-=wh3_WTKeR=TTbPpbJYjC8DOPcDPJhhoopTVs3WJimsT=A@mail.gmail.com>
+ <nycvar.YEU.7.76.2004031546080.7494@gjva.wvxbf.pm>
+In-Reply-To: <nycvar.YEU.7.76.2004031546080.7494@gjva.wvxbf.pm>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 3 Apr 2020 10:03:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjF+j-sc98Oa8_c=tcfaVf7XfeLJGPgsWhBR+rwH5cjFw@mail.gmail.com>
+Message-ID: <CAHk-=wjF+j-sc98Oa8_c=tcfaVf7XfeLJGPgsWhBR+rwH5cjFw@mail.gmail.com>
+Subject: Re: [GIT PULL] x86 cleanups for v5.7
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 Apr 2020 19:28:24 +0800, Chuanhong Guo <gch981213@gmail.com> wrote:
-> The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
-> and a phy-handle isn't always available.
-> Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
-> connected to switch port 5 and setup mt7530 according to phy address
-> of 2nd gmac node, causing null pointer dereferencing when phy-handle
-> isn't defined in dts.
-> This commit fix this setup code by checking return value of
-> of_parse_phandle before using it.
-> 
-> Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
-> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-> Cc: stable@vger.kernel.org
+On Fri, Apr 3, 2020 at 6:47 AM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> FWIW, I am routinely using Joerg's
+>
+>         https://github.com/joergroedel/asmtool
+>
+> for exactly this.
 
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Ahh, that seems to be on *.s files only.
+
+I really prefer working on the object file basis, so that I can do a
+diff of the whole kernel if required, and (if I care about just one
+file) so that it shows the real code rather than all the odd section
+stuff we end up having for alternatives etc.
+
+               Linus
