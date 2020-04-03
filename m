@@ -2,118 +2,218 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6713EC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40E8C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F162173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="MLIeXrP5"
+	by mail.kernel.org (Postfix) with ESMTP id 8806B20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390492AbgDCIM2 (ORCPT
+        id S2390488AbgDCIPK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:12:28 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35882 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbgDCIM1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:12:27 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k18so5414657oib.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 01:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3ymTJVtUxBUPQPt/DjBQudCk2SDBLtq2q0vAVeHEhjU=;
-        b=MLIeXrP5vfs5pP0srG+5v4SHJhfyQO53bs//r28tSH5Z9+XMQzqZKd5isNZPnGtaVA
-         3cZRtIeOcaLBJRSQYypEbgbwY7mwZoRbBLKquFYBAGV9toZtODL6tslmFISYdlp5rKTK
-         DOJ5dJQ6DrOlklAY8LMbdgHc8DfcHyurH1bqY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3ymTJVtUxBUPQPt/DjBQudCk2SDBLtq2q0vAVeHEhjU=;
-        b=btmzA30uaouQmto6vQDGjy53Lg/XrIgLYs7F3w/cluWh6ot6xw/ZOu7QJhuLVLCaUA
-         ozBdTjN+2GGkUibFIgK7pXMxIg0WwCgwZNPBmLUZsIsPCZATWRaGD7IC1fRrkUNjF13q
-         RSXGm9hk8e62SlVzGuccYld+/CTofB7rgq0Sks4AL96yWK+Aoj68DIpa5LTV3sS5oK/A
-         odeHsIL1BReLZm1hVIesiRRy0v+KqRQAzt3WCOy5hlBbmZ/XsNknOwVR1OSPf103q+az
-         dIcrYCU2ewI/ecS3sGcOhDBhBMOaTuhmKI3Vk22cKjaHg4MFRu/ohgs04w/iyjcR8hKw
-         N2rg==
-X-Gm-Message-State: AGi0PuZYrE1yHrfhJIWxex2M8KzcnN1d5e9WmrticSYk0LfIqbhu3mQE
-        WEgfb5GC1A5ZUk9+voZJF3Cpd+OTGv/0e0nrbn4mnA==
-X-Google-Smtp-Source: APiQypLRxxLFI6qTSkiV0Pf6uGsAY0VtZxtzNnd9fFv8py//ecV5Oqx7DayfYPDR5/wP+uzeQY0CO8aRmlpOvO9fB58=
-X-Received: by 2002:aca:aac1:: with SMTP id t184mr2170657oie.14.1585901546393;
- Fri, 03 Apr 2020 01:12:26 -0700 (PDT)
+        Fri, 3 Apr 2020 04:15:10 -0400
+Received: from mga05.intel.com ([192.55.52.43]:8816 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727431AbgDCIPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:15:09 -0400
+IronPort-SDR: BbZyCd09IciS7GbOn69Ia49eZWuZDzckUXR7V7eivnev4F1LKIjODVd5mRFHISYmjbP4Sa9zQN
+ EFjZZNCObhJg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 01:15:08 -0700
+IronPort-SDR: HsdVkeowDfWXQccLSa0G2B6f3OYgoxOUVpkduskzeCFDpjU4wTPOSyCchqgYvKXgmRyVcozmpA
+ +KcLc1WWlBOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
+   d="scan'208";a="268288335"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga002.jf.intel.com with ESMTP; 03 Apr 2020 01:15:08 -0700
+Received: from FMSMSX109.amr.corp.intel.com (10.18.116.9) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Apr 2020 01:15:07 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ fmsmsx109.amr.corp.intel.com (10.18.116.9) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Apr 2020 01:15:07 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
+ Fri, 3 Apr 2020 16:15:03 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
+ quota tuning
+Thread-Topic: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
+ quota tuning
+Thread-Index: AQHWAEUbHl/tnnhWl0eaKvrwJMb1AqhgVzOAgACGb+D//4RdgIAAh3wg//+g6QCABR+ZgIABdR7Q
+Date:   Fri, 3 Apr 2020 08:15:02 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A22062E@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-3-git-send-email-yi.l.liu@intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF3C5@SHSMSX104.ccr.corp.intel.com>
+        <A2975661238FB949B60364EF0F2C25743A217C68@SHSMSX104.ccr.corp.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF46F@SHSMSX104.ccr.corp.intel.com>
+        <A2975661238FB949B60364EF0F2C25743A217D97@SHSMSX104.ccr.corp.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF888@SHSMSX104.ccr.corp.intel.com>
+ <20200402115831.22e31611@w520.home>
+In-Reply-To: <20200402115831.22e31611@w520.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <CAPM=9twza_DeycOEhT+u6Erh0yFTAUe447J6bxWCLq5+QW8ZaA@mail.gmail.com>
- <20200402203317.GA34560@ubuntu-m2-xlarge-x86> <CAHk-=wjHEOHCf7kAOJOY9bOr9O0CRzxds+8YcXVVGbMZ+7kyXg@mail.gmail.com>
-In-Reply-To: <CAHk-=wjHEOHCf7kAOJOY9bOr9O0CRzxds+8YcXVVGbMZ+7kyXg@mail.gmail.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Fri, 3 Apr 2020 10:12:15 +0200
-Message-ID: <CAKMK7uH+vX=eh17-m9mL17QQ1uxjfDEcdj-tno-fAYA4Z1+Jag@mail.gmail.com>
-Subject: Re: [git pull] drm for 5.7-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Dave Airlie <airlied@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 10:43 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, Apr 2, 2020 at 1:33 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Friday, April 3, 2020 1:59 AM
+> To: Tian, Kevin <kevin.tian@intel.com>
+> Subject: Re: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for quota
+> tuning
+> 
+> On Mon, 30 Mar 2020 11:44:08 +0000
+> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> 
+> > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > Sent: Monday, March 30, 2020 5:27 PM
+> > >
+> > > > From: Tian, Kevin <kevin.tian@intel.com>
+> > > > Sent: Monday, March 30, 2020 5:20 PM
+> > > > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> > > > Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter
+> > > for quota
+> > > > tuning
+> > > >
+> > > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > Sent: Monday, March 30, 2020 4:53 PM
+> > > > >
+> > > > > > From: Tian, Kevin <kevin.tian@intel.com>
+> > > > > > Sent: Monday, March 30, 2020 4:41 PM
+> > > > > > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> > > > > > Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1
+> > > > > > parameter
+> > > > > for quota
+> > > > > > tuning
+> > > > > >
+> > > > > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > > > > Sent: Sunday, March 22, 2020 8:32 PM
+> > > > > > >
+> > > > > > > From: Liu Yi L <yi.l.liu@intel.com>
+> > > > > > >
+> > > > > > > This patch adds a module option to make the PASID quota tunable by
+> > > > > > > administrator.
+> > > > > > >
+> > > > > > > TODO: needs to think more on how to  make the tuning to be per-
+> > > process.
+> > > > > > >
+> > > > > > > Previous discussions:
+> > > > > > > https://patchwork.kernel.org/patch/11209429/
+> > > > > > >
+> > > > > > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > > > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > > > > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > > > > > > Cc: Eric Auger <eric.auger@redhat.com>
+> > > > > > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > > > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > > > > > ---
+> > > > > > >  drivers/vfio/vfio.c             | 8 +++++++-
+> > > > > > >  drivers/vfio/vfio_iommu_type1.c | 7 ++++++-
+> > > > > > >  include/linux/vfio.h            | 3 ++-
+> > > > > > >  3 files changed, 15 insertions(+), 3 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c index
+> > > > > > > d13b483..020a792 100644
+> > > > > > > --- a/drivers/vfio/vfio.c
+> > > > > > > +++ b/drivers/vfio/vfio.c
+> > > > > > > @@ -2217,13 +2217,19 @@ struct vfio_mm
+> > > > > *vfio_mm_get_from_task(struct
+> > > > > > > task_struct *task)
+> > > > > > >  }
+> > > > > > >  EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
+> > > > > > >
+> > > > > > > -int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int min, int max)
+> > > > > > > +int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int quota, int min,
+> > > > > > > +int
+> > > > > max)
+> > > > > > >  {
+> > > > > > >  	ioasid_t pasid;
+> > > > > > >  	int ret = -ENOSPC;
+> > > > > > >
+> > > > > > >  	mutex_lock(&vmm->pasid_lock);
+> > > > > > >
+> > > > > > > +	/* update quota as it is tunable by admin */
+> > > > > > > +	if (vmm->pasid_quota != quota) {
+> > > > > > > +		vmm->pasid_quota = quota;
+> > > > > > > +		ioasid_adjust_set(vmm->ioasid_sid, quota);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > >
+> > > > > > It's a bit weird to have quota adjusted in the alloc path, since the
+> > > > > > latter
+> > > > > might
+> > > > > > be initiated by non-privileged users. Why not doing the simple math
+> > > > > > in
+> > > > > vfio_
+> > > > > > create_mm to set the quota when the ioasid set is created? even in
+> > > > > > the
+> > > > > future
+> > > > > > you may allow per-process quota setting, that should come from
+> > > > > > separate privileged path instead of thru alloc..
+> > > > >
+> > > > > The reason is the kernel parameter modification has no event which can
+> > > > > be used to adjust the quota. So I chose to adjust it in pasid_alloc
+> > > > > path. If it's not good, how about adding one more IOCTL to let user-
+> > > > > space trigger a quota adjustment event? Then even non-privileged user
+> > > > > could trigger quota adjustment, the quota is actually controlled by
+> > > > > privileged user. How about your opinion?
+> > > > >
+> > > >
+> > > > why do you need an event to adjust? As I said, you can set the quota when
+> > > the set is
+> > > > created in vfio_create_mm...
+> > >
+> > > oh, it's to support runtime adjustments. I guess it may be helpful to let
+> > > per-VM quota tunable even the VM is running. If just set the quota in
+> > > vfio_create_mm(), it is not able to adjust at runtime.
+> > >
 > >
-> > This fixes it but I am not sure if it is proper or not (could be
-> > problematic if CONFIG_PHYS_ADDR_T_64BIT is set but
-> > CONFIG_ARCH_DMA_ADDR_T_64BIT is not, not sure if that is possible) so I
-> > figured I'd report it and let you guys deal with it.
->
-> Yeah, no, that patch can't be right.
->
-> From your build failure, your configuration has dma_addr_t being a
-> 'long long unsigned int', and map->offset being a resource_size_t is
-> for just a 'unsigned int'. Casting 'unsigned int *' to 'unsigned long
-> long *' is not valid.
->
-> You'd have to do something like
->
->         dma_addr_t temp;
->
-> and pass the address of *that* in, and then assign that to map->offset
-> (and verify that it fits), I think.
->
-> That's kind of what the old code did.
->
-> Or alternatively, the 'offset' field should just be of type
-> 'dma_addr_t' instead (see include/drm/drm_legacy.h). But I didn't
-> check if something else wants it to be a resource_size_t.
+> > ok, I didn't note the module parameter was granted with a write permission.
+> > However there is a further problem. We cannot support PASID reclaim now.
+> > What about the admin sets a quota smaller than previous value while some
+> > IOASID sets already exceed the new quota? I'm not sure how to fail a runtime
+> > module parameter change due to that situation. possibly a normal sysfs
+> > node better suites the runtime change requirement...
+> 
+> Yep, making this runtime adjustable seems a bit unpredictable and racy,
+> and it's not clear to me how a user is going to jump in at just the
+> right time for a user and adjust the limit.  I'd probably go for a
+> simple non-runtime adjustable module option.  It's a safety net at this
+> point anyway afaict.  Thanks,
 
-This is all exclusive in legacy code back from the days when drm
-drivers where shared with *bsd. None of that code ever learned that
-there's maybe a difference between dma/phys/virtual address sizes, and
-that's about the least of the problems it has.
+thanks, I can do the changes.
 
-Revert seems to be clean, I'd vote for that. And maybe we instead try
-to push these horrors more under the CONFIG_DRM_LEGACY. I'll try to
-remember to do that, afaics the only thing outside are the
-drm_pci_alloc/free multi-layered wrappers in drm_pci.c.
-
-Linus, can you pls push the revert yourself, to avoid build bot
-breakage for longer than necessary?
-
-Thanks, Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Regards,
+Yi Liu
