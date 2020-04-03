@@ -2,137 +2,81 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20915C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BEFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9877207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98212077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:19:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szVOgU7I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OPL+2aKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390375AbgDCDP1 (ORCPT
+        id S2390337AbgDCDTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 23:15:27 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42104 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389108AbgDCDP1 (ORCPT
+        Thu, 2 Apr 2020 23:19:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35836 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388951AbgDCDT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 23:15:27 -0400
-Received: by mail-pg1-f196.google.com with SMTP id g6so885655pgs.9;
-        Thu, 02 Apr 2020 20:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IltRVvoEayvKnGQ7Rvg+SGl6Ghv0uHLFOtdxZ3fkhes=;
-        b=szVOgU7Ij4bSfc5vyUiBZrP7e8JPps3osaheiOwDv3b75Tf8c7S5eOrDm3X4aj1pUs
-         5XE9aR8GPtTUN7LY6z75qdznZg6T55luMJOgOjptgGFPwRN4AYzSRHj2ynHB0K16EPRF
-         3wZ715ZheMCdDSHJXoVymeFcIquijvxPiMwJBtZCReJUO+dHmV1DmtOWkYsMBkgyiwsa
-         P6jcVFj0nZSz1F8ZsEtqAPH62fmFLMPPDFBQ6blfoGruJODSXJ0xZsVayhH0a6n+2z2w
-         GcGQ4rxj+AxCAqpAm+aJvsJoiPl7e9WKmAJQkJ0LsJxZFLZ76I+hsW+2eaBvPFaCMqQX
-         uaTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IltRVvoEayvKnGQ7Rvg+SGl6Ghv0uHLFOtdxZ3fkhes=;
-        b=eXCpYV5rucNiWq/97dPJb7Ee/A5s4w/FY0AeMxmVxnpqhRnt9QxkXDSnWGKfYI2ons
-         sMm2gG3Ez0/By+ab+KOfXHT0am/SH2VcnHgnhRQZsxqD6sSXEiuOLdcP/6q5SiZDK+N0
-         1Bbv0G4B1rtQiEqv5Duidb263rMRzxLyEwdlbwtcKxzVN8SLDM+KEWg7F7aon+ShpAAO
-         SnkUfU+KG93qnLK0ueXOlTQTW3NhpwQSRmqhAAebmT/l6Xl5glNkGf0QP9eIyuRZFXZq
-         MmaRIGfIniskr86TpVhKMVPsRdCXny5CD9mWjtCmI51i5y/QRmIhAtmW4dj9rUGfc02X
-         +DEw==
-X-Gm-Message-State: AGi0PuZdMiOa5+TUw0ZytJhwf4VIakaJBXiPmfScSAaQ5mk7TqFUOGRA
-        sb//kM1Oqv2N1RmDOzDD7Mk=
-X-Google-Smtp-Source: APiQypIVQRcm0aBnBr00r95OdVOthcz4CyGfJdX4V8++0u4zxQyVA7xcKvvnkM0rhmRRZJtQZIpSuA==
-X-Received: by 2002:aa7:8f3a:: with SMTP id y26mr6219658pfr.180.1585883725969;
-        Thu, 02 Apr 2020 20:15:25 -0700 (PDT)
-Received: from localhost.localdomain ([211.250.214.198])
-        by smtp.gmail.com with ESMTPSA id t1sm4325811pgh.88.2020.04.02.20.15.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 20:15:25 -0700 (PDT)
-From:   Bumsik Kim <kbumsik@gmail.com>
-X-Google-Original-From: Bumsik Kim <k.bumsik@gmail.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, corbet@lwn.net
-Cc:     linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Bumsik Kim <k.bumsik@gmail.com>
-Subject: [PATCH] watchdog: clarify that stop() is optional
-Date:   Fri,  3 Apr 2020 12:15:07 +0900
-Message-Id: <20200403031507.63487-1-k.bumsik@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        Thu, 2 Apr 2020 23:19:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=XOG9i9h9wH5BxflLkb8p29SJ7IjpaH/ZwyrboCrvU4s=; b=OPL+2aKLCcL2Zgkla4acmM2/4s
+        yac1OCIcGgrXlupwIk5VwV2Z6N3GDvTU5N4dd2QkLp5RF5XrK2KjBTP+OiZ4avbuEynHNDxXBPQ1G
+        GqYD09B+/WFVKQHccytBi2cF+6YhMn7e6+WvFC7g8CdFgcb7rHEjTbbiXsgmUv1wS0Fj5XhDRujFH
+        mFYizEZWLR+xjYdyMYxWyTvpG4yG/dbtEOSry77davYwJS+YgK268mYhlBSIBR1Y+d9byTfvcmA7v
+        1NyJbBCo6D5DoKfcr2wwjn1LvtoLV9KS/rl+oUHzcMeWSIlm0O1fCS+aup222Zm0CzzfQmYjZleMY
+        cctpsQ6g==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKCrf-0002eS-CN; Fri, 03 Apr 2020 03:19:27 +0000
+Subject: Re: error fn f7 (asus)
+To:     "jack_solovey@ngs.ru" <jack_solovey@ngs.ru>,
+        linux-kernel@vger.kernel.org,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        =?UTF-8?Q?Jo=c3=a3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+References: <625e12e1-aee0-8b3c-8a4d-98e74739153c@ngs.ru>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3440f96b-291f-cd5e-7fc3-c3e9c0959f22@infradead.org>
+Date:   Thu, 2 Apr 2020 20:19:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <625e12e1-aee0-8b3c-8a4d-98e74739153c@ngs.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit d0684c8a9354 ("watchdog: Make stop function optional")
-made stop function not mandatory, but the comments
-and the doc weren't reflected. Fix it to clarify.
+[adding Cc's]
 
-Signed-off-by: Bumsik Kim <k.bumsik@gmail.com>
----
- Documentation/watchdog/convert_drivers_to_kernel_api.rst | 2 +-
- Documentation/watchdog/watchdog-kernel-api.rst           | 2 +-
- include/linux/watchdog.h                                 | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+On 3/8/20 11:43 PM, jack_solovey@ngs.ru wrote:
+> Hello, sorry this machine translation.
+> 
+> Laptop  Asus N56V
+> Prior to kernel 5, the FN+F7 buttons turned off the laptop screen.
+> Starting with kernel 5, these buttons turn on standby mode.
+> I have to use core 4.18
+> 
+> Linux Asus-N56VB 4.18.0-25-generic #26~18.04.1-Ubuntu SMP Thu Jun 27 07:28:31 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+> 
+> Whether it is planned to return the legacy function to the fn+f7 buttons to disable the main monitor.
 
-diff --git a/Documentation/watchdog/convert_drivers_to_kernel_api.rst b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
-index dd934cc08e40..51b999b5551a 100644
---- a/Documentation/watchdog/convert_drivers_to_kernel_api.rst
-+++ b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
-@@ -115,7 +115,7 @@ Add the watchdog operations
- ---------------------------
- 
- All possible callbacks are defined in 'struct watchdog_ops'. You can find it
--explained in 'watchdog-kernel-api.txt' in this directory. start(), stop() and
-+explained in 'watchdog-kernel-api.txt' in this directory. start() and
- owner must be set, the rest are optional. You will easily find corresponding
- functions in the old driver. Note that you will now get a pointer to the
- watchdog_device as a parameter to these functions, so you probably have to
-diff --git a/Documentation/watchdog/watchdog-kernel-api.rst b/Documentation/watchdog/watchdog-kernel-api.rst
-index 864edbe932c1..068a55ee0d4a 100644
---- a/Documentation/watchdog/watchdog-kernel-api.rst
-+++ b/Documentation/watchdog/watchdog-kernel-api.rst
-@@ -123,8 +123,8 @@ The list of watchdog operations is defined as::
- 	struct module *owner;
- 	/* mandatory operations */
- 	int (*start)(struct watchdog_device *);
--	int (*stop)(struct watchdog_device *);
- 	/* optional operations */
-+	int (*stop)(struct watchdog_device *);
- 	int (*ping)(struct watchdog_device *);
- 	unsigned int (*status)(struct watchdog_device *);
- 	int (*set_timeout)(struct watchdog_device *, unsigned int);
-diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-index 417d9f37077a..1464ce6ffa31 100644
---- a/include/linux/watchdog.h
-+++ b/include/linux/watchdog.h
-@@ -37,15 +37,15 @@ struct watchdog_governor;
-  *
-  * The watchdog_ops structure contains a list of low-level operations
-  * that control a watchdog device. It also contains the module that owns
-- * these operations. The start and stop function are mandatory, all other
-+ * these operations. The start function is mandatory, all other
-  * functions are optional.
-  */
- struct watchdog_ops {
- 	struct module *owner;
- 	/* mandatory operations */
- 	int (*start)(struct watchdog_device *);
--	int (*stop)(struct watchdog_device *);
- 	/* optional operations */
-+	int (*stop)(struct watchdog_device *);
- 	int (*ping)(struct watchdog_device *);
- 	unsigned int (*status)(struct watchdog_device *);
- 	int (*set_timeout)(struct watchdog_device *, unsigned int);
+Hi,
+
+Possibly caused by 78f3ac76d9e5219589718b9e4733bee21627b3f5
+(platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey).
+
 -- 
-2.26.0
+~Randy
 
