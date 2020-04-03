@@ -2,236 +2,69 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD087C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D9AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7646420787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D5E20787
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfDLwNIJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lglM60dp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390344AbgDCA02 (ORCPT
+        id S2390349AbgDCA1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 20:26:28 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44051 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731842AbgDCA02 (ORCPT
+        Thu, 2 Apr 2020 20:27:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40378 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731783AbgDCA1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 20:26:28 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i16so6940516edy.11;
-        Thu, 02 Apr 2020 17:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aPFWwf8vkXl+dFMjYxtDZrmI1dHgtdcvjjrsqN4+7bs=;
-        b=WfDLwNIJOwEB3kdveRX4JnqBj/MVNHxKdfVdIlxNCIwkpBudC0cIUIyIy0XzhbPb/Q
-         VaZV6qMGCgORTChI53hpWEYFWla9m57k+GdX9+SnNrAnHZnt3WAdsxK8sIguLvZULzwc
-         3sfLatjzBFf7DTKXRzaI2A7QiaLAt5ah93XlCvoGHozNt2J+rB8JrXuprHu9m+zLthnp
-         XDC0l+Ec657iuBG2JlYFK5ZJyC/a4I4Lw8TZcBZOpS5nH4CxkZSn3pgGtrSGQXkqo7Np
-         0GTzl7+7sEiE2HoBxUb+lmaWRWG3Y10+uHdHrKSMSUvQmG2JkhR0tBifKE+qPBbnQTOU
-         ptcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aPFWwf8vkXl+dFMjYxtDZrmI1dHgtdcvjjrsqN4+7bs=;
-        b=gvAfK6U4gdBmuADOjcgsGjuGUUrKXA0EUjMQWuDplcBem5pzP2u3TaAslTklKsn+J1
-         o79q41FuEHKAhLrGgc6jR/uqQ5icLsIqdwBSYBm9tdjnSXcXYi82GM+fewAreq52k7N1
-         pEWB67duQXdcwfK21Yd56zneuthscwfhvBjD8xf3HPOLR6mVrSGfV3L7J58XDzb0XAoA
-         sR8GEo3b/Ua/Cua7lHjb4f/hSGafwhR95yeJWfFDJEfoNGgwoNEAs67SMUGLbc68SVRY
-         jsS5bmmTpN9c4t/rGbXG4q73wnVx6L9je/SXOKVM7DMWlTUnHl5iyQHLBOpRFgqE0CnB
-         3t4g==
-X-Gm-Message-State: AGi0PubEH46SXTUe7uwX3mCBxRmkc1cfeiZXpFxj6HYefZmfXo8ZQx4v
-        Af1LbF7xzDPk9sfMd5mnGIs=
-X-Google-Smtp-Source: APiQypIk0yqb/weeyHpGFZmyGyckJM3fIRWZ75YSeoVaCqyuqnXSfWXnBR1isSXxtFR4yIsv1JPNNw==
-X-Received: by 2002:a05:6402:1ef:: with SMTP id i15mr5782942edy.0.1585873585185;
-        Thu, 02 Apr 2020 17:26:25 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host133-251-dynamic.52-79-r.retail.telecomitalia.it. [79.52.251.133])
-        by smtp.googlemail.com with ESMTPSA id j10sm1335981ejv.13.2020.04.02.17.26.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 17:26:24 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 2/2] devicetree: bindings: phy: Document dwc3 qcom phy
-Date:   Fri,  3 Apr 2020 02:26:05 +0200
-Message-Id: <20200403002608.946-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200403002608.946-1-ansuelsmth@gmail.com>
-References: <20200403002608.946-1-ansuelsmth@gmail.com>
+        Thu, 2 Apr 2020 20:27:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fjcWiaQ4VURRnXwyak7wpsiJ0QlywrYLsor4d7ICZUg=; b=lglM60dpQtXKHl3m6dND98BC9r
+        CnDWkjWD2HiLEBXizIprkqKRtbKHHsu+/ip8hEiNrST6v5FcPw7W8+J8MAII9R/QqjIO7xP0/U0sH
+        EmDbus1zVCBLhN8k6sCYuQpGySi1XruYohUlFvBttvUjEuEtYGIxj37yOuTTiyC2nAIRlgX0QY/ml
+        WrLmEgJV6pvRnDFH1IRyzDn2J7mTOW/4gU8IVEph9NaOV7QQ43rcCtj/3v+WrCKmFlVH51vIUlMbK
+        Z0/S7dz2acsE5svO2Y2LjZSJNYsnaXe+jtxtY1KXygniurqDZv8OpTOJ5Q8hss8kFJGLWwsmsRJSN
+        ubqz4VXQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKAAr-000170-3v; Fri, 03 Apr 2020 00:27:05 +0000
+Date:   Thu, 2 Apr 2020 17:27:05 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Aslan Bakirov <aslan@fb.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com, riel@surriel.com,
+        guro@fb.com, mhocko@kernel.org, hannes@cmpxchg.org
+Subject: Re: [PATCH v3] mm: cma: NUMA node interface
+Message-ID: <20200403002705.GP21484@bombadil.infradead.org>
+References: <20200402232236.2218713-1-aslan@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402232236.2218713-1-aslan@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-inizialize and use usb on ipq806x SoC
+On Thu, Apr 02, 2020 at 04:22:37PM -0700, Aslan Bakirov wrote:
+> +static inline int __init cma_declare_contiguous(phys_addr_t base,
+> +			phys_addr_t size, phys_addr_t limit,
+> +			phys_addr_t alignment, unsigned int order_per_bit,
+> +			bool fixed, const char *name, struct cma **res_cma)
+> +			{
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- .../bindings/phy/qcom,dwc3-hs-usb-phy.yaml    | 65 +++++++++++++++++++
- .../bindings/phy/qcom,dwc3-ss-usb-phy.yaml    | 65 +++++++++++++++++++
- 2 files changed, 130 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
+This { should be in the first column.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
-new file mode 100644
-index 000000000000..0bb59e3c2ab8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,dwc3-hs-usb-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm DWC3 HS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers. Each DWC3 PHY controller should have its own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,dwc3-hs-usb-phy
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  regmap:
-+    maxItems: 1
-+    description: phandle to usb3 dts definition
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      - "ref" Is required
-+      - "xo"	Optional external reference clock
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - regmap
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    hs_phy_0: hs_phy_0 {
-+      compatible = "qcom,dwc3-hs-usb-phy";
-+      regmap = <&usb3_0>;
-+      clocks = <&gcc USB30_0_UTMI_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
-+
-+    usb3_0: usb3@110f8800 {
-+      compatible = "qcom,dwc3", "syscon";
-+      reg = <0x110f8800 0x8000>;
-+
-+      /* ... */
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
-new file mode 100644
-index 000000000000..2f7b0d9db072
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,dwc3-ss-usb-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm DWC3 SS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers. Each DWC3 PHY controller should have its own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,dwc3-ss-usb-phy
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  regmap:
-+    maxItems: 1
-+    description: phandle to usb3 dts definition
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      - "ref" Is required
-+      - "xo"	Optional external reference clock
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - regmap
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    ss_phy_0: ss_phy_0 {
-+      compatible = "qcom,dwc3-ss-usb-phy";
-+      regmap = <&usb3_0>;
-+      clocks = <&gcc USB30_0_MASTER_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
-+
-+    usb3_0: usb3@110f8800 {
-+      compatible = "qcom,dwc3", "syscon";
-+      reg = <0x110f8800 0x8000>;
-+
-+      /* ... */
-+    };
--- 
-2.25.1
+> -			addr = memblock_phys_alloc_range(size, alignment,
+> -							 highmem_start, limit);
+> +			addr = memblock_alloc_range_nid(size, alignment,
+> +				 highmem_start, limit, nid, false);
+
+Two extra tabs, not one.
 
