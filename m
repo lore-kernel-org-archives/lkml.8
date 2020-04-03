@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2F6C2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0FEC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B6E207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E64B2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RePrLw3o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chfu5wP7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404328AbgDCPbO (ORCPT
+        id S2404343AbgDCPbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:31:14 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43607 "EHLO
+        Fri, 3 Apr 2020 11:31:21 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40356 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404310AbgDCPbM (ORCPT
+        by vger.kernel.org with ESMTP id S2404329AbgDCPbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:31:12 -0400
+        Fri, 3 Apr 2020 11:31:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585927871;
+        s=mimecast20190719; t=1585927874;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5Mna+DLBALS7Nv4a/6CqV2AmkqQOOKpm1xodEo/O7Gc=;
-        b=RePrLw3olQO9DAYOkzn0anO7bZFu9GSXvOSxJeqocnHGiGZ8xzt1rQqN9F+LmE+9UGr+MT
-        Z4QXKkA2Fya99I8fvEeWtQpNcR/IMHVOwWU6WrsuP+7GI9hGjBP1Q78lmIc0ebyrRH9/i/
-        MBou1TA/BzSuR3cOUWERb2umMCo8I4o=
+        bh=o9+iQkDrjMDPGfCAP/TxUctBQwhHf6q/sd2P4Ro4S4c=;
+        b=chfu5wP7vxou1UzafpExd5o3Nlu44PfNCHbKnZVo+BEHL5631KmaefWK/04TDZAbc923mY
+        lD1MWV3EcaJVowd5L00tIiWPTQObnuMMHW7F4XYI1mlFSt9iuX5/8v4yj7zvGCFh7GpIQi
+        QhpuwvQ7CZXbihX+1kRVUwxVD4sDtoA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-3_BoqKm6MkSVwTpjGmDjAA-1; Fri, 03 Apr 2020 11:31:08 -0400
-X-MC-Unique: 3_BoqKm6MkSVwTpjGmDjAA-1
+ us-mta-282-f7XVJwvaPGuR86Le5qU1SQ-1; Fri, 03 Apr 2020 11:31:10 -0400
+X-MC-Unique: f7XVJwvaPGuR86Le5qU1SQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8BBD2800D50;
-        Fri,  3 Apr 2020 15:31:06 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BDC4D8017CE;
+        Fri,  3 Apr 2020 15:31:08 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-112-213.ams2.redhat.com [10.36.112.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D8D626DD1;
-        Fri,  3 Apr 2020 15:31:04 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D633626DC4;
+        Fri,  3 Apr 2020 15:31:06 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -54,9 +54,9 @@ Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         Janosch Frank <frankja@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2 4/5] KVM: s390: vsie: Move conditional reschedule
-Date:   Fri,  3 Apr 2020 17:30:49 +0200
-Message-Id: <20200403153050.20569-5-david@redhat.com>
+Subject: [PATCH v2 5/5] KVM: s390: vsie: gmap_table_walk() simplifications
+Date:   Fri,  3 Apr 2020 17:30:50 +0200
+Message-Id: <20200403153050.20569-6-david@redhat.com>
 In-Reply-To: <20200403153050.20569-1-david@redhat.com>
 References: <20200403153050.20569-1-david@redhat.com>
 MIME-Version: 1.0
@@ -67,38 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's move it to the outer loop, in case we ever run again into long
-loops, trying to map the prefix. While at it, convert it to cond_resched(=
-).
+Let's use asce_type where applicable. Also, simplify our sanity check for
+valid table levels and convert it into a WARN_ON_ONCE(). Check if we even
+have a valid gmap shadow as the very first step.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/s390/kvm/vsie.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/s390/mm/gmap.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index 4f6c22d72072..ef05b4e167fb 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -1000,8 +1000,6 @@ static int do_vsie_run(struct kvm_vcpu *vcpu, struc=
-t vsie_page *vsie_page)
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 24ef30fb0833..a2bd8d7792e9 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -788,19 +788,19 @@ static inline unsigned long *gmap_table_walk(struct=
+ gmap *gmap,
+ 					     unsigned long gaddr, int level)
+ {
+ 	const int asce_type =3D gmap->asce & _ASCE_TYPE_MASK;
+-	unsigned long *table;
++	unsigned long *table =3D gmap->table;
 =20
- 	handle_last_fault(vcpu, vsie_page);
+-	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
+-		return NULL;
+ 	if (gmap_is_shadow(gmap) && gmap->removed)
+ 		return NULL;
 =20
--	if (need_resched())
--		schedule();
- 	if (test_cpu_flag(CIF_MCCK_PENDING))
- 		s390_handle_mcck();
++	if (WARN_ON_ONCE(level > (asce_type >> 2) + 1))
++		return NULL;
++
+ 	if (WARN_ON_ONCE(asce_type !=3D _ASCE_TYPE_REGION1 &&
+ 			 gaddr & (-1UL << (31 + (asce_type >> 2) * 11))))
+ 		return NULL;
 =20
-@@ -1185,6 +1183,7 @@ static int vsie_run(struct kvm_vcpu *vcpu, struct v=
-sie_page *vsie_page)
- 		    kvm_s390_vcpu_has_irq(vcpu, 0) ||
- 		    kvm_s390_vcpu_sie_inhibited(vcpu))
- 			break;
-+		cond_resched();
- 	}
-=20
- 	if (rc =3D=3D -EFAULT) {
+-	table =3D gmap->table;
+-	switch (gmap->asce & _ASCE_TYPE_MASK) {
++	switch (asce_type) {
+ 	case _ASCE_TYPE_REGION1:
+ 		table +=3D (gaddr & _REGION1_INDEX) >> _REGION1_SHIFT;
+ 		if (level =3D=3D 4)
 --=20
 2.25.1
 
