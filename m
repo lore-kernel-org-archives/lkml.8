@@ -2,153 +2,210 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B35C2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB860C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F192073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D622073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:38:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="sUtaWR8m"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="VngHtP3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390407AbgDCIiM (ORCPT
+        id S2390435AbgDCIiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:38:12 -0400
-Received: from mail-bn8nam12on2045.outbound.protection.outlook.com ([40.107.237.45]:11407
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727774AbgDCIiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:38:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QEceZJLUkZfF7gIDoQsF8XGW6BbYW4MNoglGTwRLhKAzjsZzd1oGXNhHaokaJ9cOr/Fw+Pvmwpzgl4Z6Bm2Rl21rpTIeKdZV7XYI/39bIJsTBJT1VtCUritpPGi1Ijs6zwZfn+sIcShgXzh1zqEbWGmv2UF34+NcuA9w3wDjK/Be8CCJSJ7L0zPTv+HPkUq5GCZrGfzBNMOQ9ZJ5jV4ivqixif6k3T65nJVuC+mhuO2YU8mvcPy01OCv7EzJeMwU46avqRSWe3QS/lbBPVDYPLrY8gej86P4s7r2vwsdGitHlkb+aGNxjibag3F1uPILFGZK8k/wxmxsWJQ4GYq/vA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sMI4f5p9Fg2FvGeGJ5AjpE1HNfKfZ5C35XgG80gsxWA=;
- b=CTPWGYBvwglmPjShtynRMIlWRg1gPzSuF7a2WH6lukQ5KA6yT/oslL8IrFjVGaYIq40epLFMdZFVlHCTcQKXG0SxjzkAlzN1wM0t1QMskj47KZX+3WeBcNyThrNcrBfWNZGSGf+yeoNuB4e+Ohi4TcClPeqhPILmaURl3899t6OZtsndHP+q1ktvC45rcER2BMStpSTELmJWvvSKTX7itHPA6VxP9GkUCccMaYsRJ+J+SEqdop0bVH0obTtidlzMdAS9HqIlNWW7cZ8C1P7Teg70vx9qNpw/7y6P+F3uYFgmevpj9zx7/TiDPwC+khvcetM2eiNOInD9cx0pkkxhEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=huawei.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 3 Apr 2020 04:38:21 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46367 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgDCIiU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:38:20 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k191so3166787pgc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 01:38:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sMI4f5p9Fg2FvGeGJ5AjpE1HNfKfZ5C35XgG80gsxWA=;
- b=sUtaWR8mM604L/41wFfjW55MWtDLagOvHtyf/7Dg+bbTh2FDZrFNpk+L2vzVS/jXZ5BD3P4f4ZlqmkDlzURKRuRj60sC56LONdkUSB+lUm/gDXKg9BB+vyczLQYLQfLhLSj13yer1LhYlZHEaSw9bZtaLzd8kvSui8MCWcUAI3Y=
-Received: from SN6PR08CA0018.namprd08.prod.outlook.com (2603:10b6:805:66::31)
- by SN1PR02MB3824.namprd02.prod.outlook.com (2603:10b6:802:24::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Fri, 3 Apr
- 2020 08:38:06 +0000
-Received: from SN1NAM02FT060.eop-nam02.prod.protection.outlook.com
- (2603:10b6:805:66:cafe::ba) by SN6PR08CA0018.outlook.office365.com
- (2603:10b6:805:66::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.17 via Frontend
- Transport; Fri, 3 Apr 2020 08:38:06 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT060.mail.protection.outlook.com (10.152.72.192) with Microsoft SMTP
- Server id 15.20.2878.15 via Frontend Transport; Fri, 3 Apr 2020 08:38:06
- +0000
-Received: from [149.199.38.66] (port=40903 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jKHpt-0003XS-Uq; Fri, 03 Apr 2020 01:37:57 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jKHq1-0006CY-Pt; Fri, 03 Apr 2020 01:38:05 -0700
-Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 0338c0t8003496;
-        Fri, 3 Apr 2020 01:38:00 -0700
-Received: from [172.30.17.108]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jKHpw-00069N-Aa; Fri, 03 Apr 2020 01:38:00 -0700
-Subject: Re: [PATCH -next] clk: zynqmp: Make zynqmp_clk_get_max_divisor static
-To:     YueHaibing <yuehaibing@huawei.com>, mturquette@baylibre.com,
-        sboyd@kernel.org, michal.simek@xilinx.com, rajan.vaja@xilinx.com,
-        tejas.patel@xilinx.com, m.tretter@pengutronix.de
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200403083040.37748-1-yuehaibing@huawei.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <713789e9-c947-44d4-cd66-06373537da31@xilinx.com>
-Date:   Fri, 3 Apr 2020 10:37:57 +0200
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4RbXM/dGYfjRYaN6K+o47qQ37StO0vdTgvlr+/msVR4=;
+        b=VngHtP3Dw0a7CTfyVS0zUwacgIPhRHGnYv1oxl2ldJHnQbrq6/XeodTErjKvaKQ7ux
+         +hZlL7sbIDXAHJGYwuWQYU29Ubnb1zue2cj1JggtJ28St3tQDWclhPngir+OW4wzB81X
+         rC7NoMB+F9heWqZM6aPt8SVL/OKiquRyUwUaPQIhSsNYLMIkEUw2RZy/xLR3zLx50gOo
+         7jAEDGVNw4r0Dr8BagnsoEH+Bu7j1XninWk1lP54DCemKNDNvllbgJaN7GriP/G6COw+
+         VCxeF7bSt/dPXSpnF6avpbpMqRca7OTtv0EHSso7kNDkBrVs6BDPo4aY7NrLHYw+YpyC
+         1qWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4RbXM/dGYfjRYaN6K+o47qQ37StO0vdTgvlr+/msVR4=;
+        b=O0/5ccldII4WTFEShSk3DzNWSkP/B0oYQyc0pe0Txl6o8I1cIDK4jzQ9KeFPqt8hHk
+         gQVPmnFlJE152IjZqxIKoDZE2T6Q2iX3yJHK2N0442VBpa5xelO8RNd+xikleGzaL2dG
+         VDmuj7jCHiMlVUnfYcp5LXKB0lkBf6+RBM0csw1S6BBXGVXZw+HFzPPEtCls1JaqmG0i
+         ff5vQuM0x2nkgqnoI6hYguI02Gi2a5XOuSot6K30Kj0MDddAyDCG37JFubQTEn+hXAof
+         j3pN8a/4hRPTnwiDZx3peO+J8fceAPrafN9SYhnfWu3OCu68RlbrXwz9nyQoiv/dHOH8
+         4rRg==
+X-Gm-Message-State: AGi0PuZgp6iaUngJMoaYobTdpAdUyiE67wt+AeSC7OycumXqkXqIi7+j
+        MVgZjt9/3xfD7KTk7kkTEAHqTk47/ok=
+X-Google-Smtp-Source: APiQypJBH2vwfkizH8xIqTNZXFpSWHlVXAcUhcZ/TRDiHJaw5/qJusuP4H8oo2YqQCx7vZDX+HD5Ig==
+X-Received: by 2002:a63:cf:: with SMTP id 198mr7399597pga.447.1585903098144;
+        Fri, 03 Apr 2020 01:38:18 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-87-207.dyn.iinet.net.au. [124.171.87.207])
+        by smtp.gmail.com with ESMTPSA id a19sm5345564pfk.110.2020.04.03.01.38.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 01:38:17 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct
+ device
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+References: <20200320141640.366360-1-hch@lst.de>
+ <20200320141640.366360-2-hch@lst.de>
+ <2f31d0dd-aa7e-8b76-c8a1-5759fda5afc9@ozlabs.ru>
+ <20200323083705.GA31245@lst.de> <20200323085059.GA32528@lst.de>
+ <87sghz2ibh.fsf@linux.ibm.com> <20200323172256.GB31269@lst.de>
+ <ffce1af6-a215-dee8-7b5c-2111f43accfd@ozlabs.ru>
+ <20200324075402.GJ23447@lst.de>
+ <41975da3-3a4a-fc3c-2b90-8d607cf220e6@ozlabs.ru>
+ <20200325083740.GC21605@lst.de>
+ <a705afc5-779d-baf4-e5d2-e2da04c82743@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <213b0c7d-f908-b4f4-466d-6240c3622cd6@ozlabs.ru>
+Date:   Fri, 3 Apr 2020 19:38:11 +1100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200403083040.37748-1-yuehaibing@huawei.com>
+In-Reply-To: <a705afc5-779d-baf4-e5d2-e2da04c82743@ozlabs.ru>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(46966005)(9786002)(478600001)(2906002)(8676002)(426003)(36756003)(81156014)(336012)(8936002)(5660300002)(81166006)(2616005)(4326008)(70206006)(186003)(70586007)(26005)(356004)(316002)(82740400003)(44832011)(31686004)(6666004)(31696002)(47076004);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a08502f4-06bc-48ce-2062-08d7d7aa54b5
-X-MS-TrafficTypeDiagnostic: SN1PR02MB3824:
-X-Microsoft-Antispam-PRVS: <SN1PR02MB382488974E27F00709180F88C6C70@SN1PR02MB3824.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 0362BF9FDB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QhTT/jLawP53B3IIBGurXmD91NG1GH6HAQavuWUzEfTpHqnDm5NJmMVnMrcRu6P0Ix5w8PGCz6l+C3gZl7iZeJaT9g32LpO9Z6hUZzleepJPqJdotH+ZmBcemj1vYHeOdvp7JQ3xG2UNYWERvxo5HGZ0YPlFssjlx9qZAT/E1hfnrknXUDAzi0OTZAHxTA25uCg8J5V9KjCKgQiluFO0UK47hRIwvsSyjxNQcBkk972UCALMdtbRs4CIO4vH6fVyTW/orHgxzuPjwj84V1ryoy7Bq5Gzc5UmKqYZng5/uFs414HZYjdExh93EApO8cBqxNvewgGezMYRsP8Z7ZfHPzDMC8JOFbAFnz8Y+Mg2yK8RWsdNkH5vOCYw6jDsSSRxlolIkDAO4yw71cE+EqAIAiYNckg4OLOIQoMpHNbNlwMZ/o65GaOcZveWMgluOs7RKukv1rbgNPvXGmShmFBNmC8Srn06ZX5OC38lVPkVQ075Be0FSnCgldMjwpGRPYDD99LblYp392ud6zkjHBZjqQ==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2020 08:38:06.1653
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a08502f4-06bc-48ce-2062-08d7d7aa54b5
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR02MB3824
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03. 04. 20 10:30, YueHaibing wrote:
-> Fix sparse warning:
+
+
+On 26/03/2020 12:26, Alexey Kardashevskiy wrote:
 > 
-> drivers/clk/zynqmp/divider.c:259:5: warning:
->  symbol 'zynqmp_clk_get_max_divisor' was not declared. Should it be static?
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/clk/zynqmp/divider.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 25/03/2020 19:37, Christoph Hellwig wrote:
+>> On Wed, Mar 25, 2020 at 03:51:36PM +1100, Alexey Kardashevskiy wrote:
+>>>>> This is for persistent memory which you can DMA to/from but yet it does
+>>>>> not appear in the system as a normal memory and therefore requires
+>>>>> special handling anyway (O_DIRECT or DAX, I do not know the exact
+>>>>> mechanics). All other devices in the system should just run as usual,
+>>>>> i.e. use 1:1 mapping if possible.
+>>>>
+>>>> On other systems (x86 and arm) pmem as long as it is page backed does
+>>>> not require any special handling.  This must be some weird way powerpc
+>>>> fucked up again, and I suspect you'll have to suffer from it.
+>>>
+>>>
+>>> It does not matter if it is backed by pages or not, the problem may also
+>>> appear if we wanted for example p2p PCI via IOMMU (between PHBs) and
+>>> MMIO might be mapped way too high in the system address space and make
+>>> 1:1 impossible.
+>>
+>> How can it be mapped too high for a direct mapping with a 64-bit DMA
+>> mask?
 > 
-> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-> index 4be2cc76aa2e..1e93a4d32fa9 100644
-> --- a/drivers/clk/zynqmp/divider.c
-> +++ b/drivers/clk/zynqmp/divider.c
-> @@ -256,7 +256,7 @@ static const struct clk_ops zynqmp_clk_divider_ops = {
->   * Return: Maximum divisor of a clock if query data is successful
->   *	   U16_MAX in case of query data is not success
->   */
-> -u32 zynqmp_clk_get_max_divisor(u32 clk_id, u32 type)
-> +static u32 zynqmp_clk_get_max_divisor(u32 clk_id, u32 type)
->  {
->  	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
->  	struct zynqmp_pm_query_data qdata = {0};
+> The window size is limited and often it is not even sparse. It requires
+> an 8 byte entry per an IOMMU page (which is most commonly is 64k max) so
+> 1TB limit (a guest RAM size) is a quite real thing. MMIO is mapped to
+> guest physical address space outside of this 1TB (on PPC).
+> 
 > 
 
-Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+I am trying now this approach on top of yours "dma-bypass.3" (it is
+"wip", needs an upper boundary check):
 
-Thanks,
-Michal
+https://github.com/aik/linux/commit/49d73c7771e3f6054804f6cfa80b4e320111662d
+
+Do you see any serious problem with this approach? Thanks!
+
+
+
+-- 
+Alexey
