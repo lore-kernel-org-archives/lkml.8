@@ -2,203 +2,109 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DC0C2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89060C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF14120787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:52:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="YNSyhomk"
+	by mail.kernel.org (Postfix) with ESMTP id 500092073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390413AbgDCHwh (ORCPT
+        id S2390200AbgDCHxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 03:52:37 -0400
-Received: from mail-eopbgr1410128.outbound.protection.outlook.com ([40.107.141.128]:25728
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387655AbgDCHwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 03:52:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iPRIrJJM6DxIZWlrxX25J6inykH3kNU1OqnkZswOovcXKjUbzh88VLHzsBlYEM1z4E0Jdsz1uNIgkrDovJXGMi/ztGUQl40lP9RNAEvoslGn0VH8Lm5IzI+d9RKOTYrDmYLK7GdaaprXM+VBrFTfkUn/IhCOK+9Z1YeNEuRbKSQt1rYBLWb4NSFc8XBZIAOq518gW5Uk0tWoLAMKGBFErDkL87OOUAQq3Gk9qR8qL2tPiRK6DCXRcndvAlsCuzUgOZfPQvqo3wYkYuaowXGrNZGKaWm82urMFLzJn6UT6USzFNPmMm4nkAl7LABlfLHe6kdYh4aZyrCvS3bRidgbkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J0p2YS2jzhjkQFt0D189Yj1uzwU6BrprkwNoIo/IMRQ=;
- b=LqOXBhxSCjJS5SgRDYh6jdJmQgu+cbdGyZYXjnB4yzYZARJqfVeO0j5LTU1vU8Anyed4F6Hp/2s85lBWlev83AP77J+wWOX+Y1Rni4jiaXlExr9lSFTnO9LaZGAtqFevfQb4QSQK+Sya9xNSzbYzmXRc0QbwlDh2/VwicQ8A3MtS1jTSKIkYP9+5dW+YTc2F/7ezqMtdrCwYbL5H/25IEMWhhQMCqE/m4c5Mxz8jf+nT+mf1KitfKXZj7BpRwu6JwZY2b0z8FZyvE9+4FMWwPOXwZSVLA9WCjJr7Uo722m+x3EP/kfAEjySb0oETf46+a6kRzIYpEuklfdst4rF8wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J0p2YS2jzhjkQFt0D189Yj1uzwU6BrprkwNoIo/IMRQ=;
- b=YNSyhomkhNDNGy6WwrQv/xgQO4HXcSuMQws2WG8pAVE6i1pPhCI22LZMOKgPqjuX9evOj6gqSqAhxt+IrExBdXuksWaQCxFxG9qfHS3AvUjyU1sABIKzNHKEsiHreOe95Lco8C6KQcYgSuqeGvhoIomjX9mjF6rr95b8231wFZE=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB2831.jpnprd01.prod.outlook.com (20.177.105.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.16; Fri, 3 Apr 2020 07:52:30 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
- 07:52:30 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v6 01/11] PCI: rcar: Rename pcie-rcar.c to
- pcie-rcar-host.c
-Thread-Topic: [PATCH v6 01/11] PCI: rcar: Rename pcie-rcar.c to
- pcie-rcar-host.c
-Thread-Index: AQHWCSZbXsVurzSitUKuta8LtwfZKahnBwTg
-Date:   Fri, 3 Apr 2020 07:52:29 +0000
-Message-ID: <TYAPR01MB4544C0756D781BB6545423E3D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1585856319-4380-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1585856319-4380-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a8c5ebf7-f909-45ba-fdc8-08d7d7a3f603
-x-ms-traffictypediagnostic: TYAPR01MB2831:|TYAPR01MB2831:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB2831E7DE898E43584BAC8BC0D8C70@TYAPR01MB2831.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:546;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(376002)(396003)(136003)(39860400002)(346002)(66946007)(66556008)(33656002)(6506007)(55236004)(76116006)(66446008)(64756008)(66476007)(26005)(9686003)(86362001)(2906002)(55016002)(316002)(81156014)(4326008)(478600001)(107886003)(7416002)(5660300002)(71200400001)(81166006)(52536014)(7696005)(110136005)(54906003)(8936002)(186003)(8676002)(921003)(1121003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FlZ5e1W1Jwwgk49Rb23U/0VpPtLkeYYl0KWEmoEpk9ybnZbu9iefQuRWDvQvPfNLbvJCLnW3HnPZ3M9Jg2/XaNDoltlQvqeL/K0wn8nlF795mkA2Hk9x8f884EfWPo+i+Vr6Twa+iKwnH7Ct1+OS8GB70aQhMIKN9epgJx6hRwE0pH6iajZ/ykvGO3az93AcnHu1+5LGuYh5hPY9q9sONpCIHdhqCTlu5j9YI0K/u3IcF9707Ha+9ZpgRO/s0yMk8HFmbpeE0l6YEKaACEnlZbi3i91jk1FUm2fXh4tzk/HAw7uT2tGkC1Q+HsKZ77Zbn29hOt+a/VKlNuBkLEwHhFvg+ut8R8GpxkcYrgsw99iSOctLlKuWcUoqm8PMiFfZJ6OSaTxhkTzFroF4M/FXG4YfbrdSjsNdeHORtMncmkGpR5VO0P1FIZ9b1kDqpq4qbo7PXF2gui63LQ/XObH8WjqX+ui92ELHo+KNevmbTyq6qCdUJaWedvJddfYMlQD/
-x-ms-exchange-antispam-messagedata: Tzqtdux/9zhTLulNPXfem+wGmP7LUwT0uW3Y88WAQh+tLZ8SMzZib8/54MBQjWt6uOfl46oJxieUHfFv6H+3kqHHyo5JN4Q/koDF5Pu/yyr7ClVxeCLBnX1heZWE+XHkbEQU8GS7Rv1wezFrb3vZrw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 3 Apr 2020 03:53:35 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58889 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732862AbgDCHxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 03:53:34 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jKH8s-0007k2-Pp; Fri, 03 Apr 2020 09:53:30 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jKH8o-0003QX-Hj; Fri, 03 Apr 2020 09:53:26 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH v1] net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+Date:   Fri,  3 Apr 2020 09:53:25 +0200
+Message-Id: <20200403075325.10205-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8c5ebf7-f909-45ba-fdc8-08d7d7a3f603
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 07:52:30.0643
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yK2ovDTL3eAh1QKVQz46ROnMd4OaToFC4Mtx7LUEav6Vz102LRr02wL0n0p/MtEsSE8axKXdoYKH6CoGdRUv6AL/DTlHdrHCGRzyGFL4WzZkABPgS0cVo2XmP+PaN9eM
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2831
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar-san,
+After the power-down bit is cleared, the chip internally triggers a
+global reset. According to the KSZ9031 documentation, we have to wait at
+least 1ms for the reset to finish.
 
-> From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:38 AM
->=20
-> This commit renames pcie-rcar.c to pcie-rcar-host.c in preparation for
-> adding support for endpoint mode. CONFIG_PCIE_RCAR is kept so that arm64
-> defconfig change can be a separate patch.
->=20
-> With this patch both config options PCIE_RCAR and PCIE_RCAR_HOST will be
-> available but PCIE_RCAR internally selects PCIE_RCAR_HOST so that bisect
-> builds wont be affected.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+If the chip is accessed during reset, read will return 0xffff, while
+write will be ignored. Depending on the system performance and MDIO bus
+speed, we may or may not run in to this issue.
 
-Thank you for the patch!
+This bug was discovered on an iMX6QP system with KSZ9031 PHY and
+attached PHY interrupt line. If IRQ was used, the link status update was
+lost. In polling mode, the link status update was always correct.
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+The investigation showed, that during a read-modify-write access, the
+read returned 0xffff (while the chip was still in reset) and
+corresponding write hit the chip _after_ reset and triggered (due to the
+0xffff) another reset in an undocumented bit (register 0x1f, bit 1),
+resulting in the next write being lost due to the new reset cycle.
 
-Best regards,
-Yoshihiro Shimoda
+This patch fixes the issue by adding a 1...2 ms sleep after the
+genphy_resume().
 
-> ---
->  drivers/pci/controller/Kconfig                         | 10 ++++++++++
->  drivers/pci/controller/Makefile                        |  2 +-
->  .../pci/controller/{pcie-rcar.c =3D> pcie-rcar-host.c}   |  0
->  3 files changed, 11 insertions(+), 1 deletion(-)
->  rename drivers/pci/controller/{pcie-rcar.c =3D> pcie-rcar-host.c} (100%)
->=20
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kcon=
-fig
-> index af0f0bc11917..cfdc898450d0 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -58,8 +58,18 @@ config PCIE_RCAR
->  	bool "Renesas R-Car PCIe controller"
->  	depends on ARCH_RENESAS || COMPILE_TEST
->  	depends on PCI_MSI_IRQ_DOMAIN
-> +	select PCIE_RCAR_HOST
->  	help
->  	  Say Y here if you want PCIe controller support on R-Car SoCs.
-> +	  This option will be removed after arm64 defconfig is updated.
-> +
-> +config PCIE_RCAR_HOST
-> +	bool "Renesas R-Car PCIe host controller"
-> +	depends on ARCH_RENESAS || COMPILE_TEST
-> +	depends on PCI_MSI_IRQ_DOMAIN
-> +	help
-> +	  Say Y here if you want PCIe controller support on R-Car SoCs in host
-> +	  mode.
->=20
->  config PCI_HOST_COMMON
->  	bool
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Mak=
-efile
-> index 158c59771824..9dbccb5b24e1 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -7,7 +7,7 @@ obj-$(CONFIG_PCI_MVEBU) +=3D pci-mvebu.o
->  obj-$(CONFIG_PCI_AARDVARK) +=3D pci-aardvark.o
->  obj-$(CONFIG_PCI_TEGRA) +=3D pci-tegra.o
->  obj-$(CONFIG_PCI_RCAR_GEN2) +=3D pci-rcar-gen2.o
-> -obj-$(CONFIG_PCIE_RCAR) +=3D pcie-rcar.o
-> +obj-$(CONFIG_PCIE_RCAR_HOST) +=3D pcie-rcar-host.o
->  obj-$(CONFIG_PCI_HOST_COMMON) +=3D pci-host-common.o
->  obj-$(CONFIG_PCI_HOST_GENERIC) +=3D pci-host-generic.o
->  obj-$(CONFIG_PCIE_XILINX) +=3D pcie-xilinx.o
-> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/=
-pcie-rcar-host.c
-> similarity index 100%
-> rename from drivers/pci/controller/pcie-rcar.c
-> rename to drivers/pci/controller/pcie-rcar-host.c
-> --
-> 2.20.1
+Fixes: 836384d2501d ("net: phy: micrel: Add specific suspend")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/micrel.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 2ec19e5540bff..05d20343b8161 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -25,6 +25,7 @@
+ #include <linux/micrel_phy.h>
+ #include <linux/of.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
+ 
+ /* Operation Mode Strap Override */
+ #define MII_KSZPHY_OMSO				0x16
+@@ -952,6 +953,12 @@ static int kszphy_resume(struct phy_device *phydev)
+ 
+ 	genphy_resume(phydev);
+ 
++	/* After switching from power-down to normal mode, an internal global
++	 * reset is automatically generated. Wait a minimum of 1 ms before
++	 * read/write access to the PHY registers.
++	 */
++	usleep_range(1000, 2000);
++
+ 	ret = kszphy_config_reset(phydev);
+ 	if (ret)
+ 		return ret;
+-- 
+2.26.0.rc2
 
