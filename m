@@ -2,220 +2,193 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7EFC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858F2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358FD2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:55:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ugedal.com header.i=@ugedal.com header.b="JYtJwflt"
+	by mail.kernel.org (Postfix) with ESMTP id 5B1E72077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404176AbgDCRzm (ORCPT
+        id S2403948AbgDCR4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:55:42 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42025 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728140AbgDCRzm (ORCPT
+        Fri, 3 Apr 2020 13:56:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20232 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727989AbgDCR4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:55:42 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q19so7804189ljp.9
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ugedal.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FPIH9Cepkvfx+qnRWFWOtOody6sfKssdMr1NGqEz4tY=;
-        b=JYtJwfltQr8Gy7OcS6GPL1nxZiPr6yZsZVksURjdfhhaIOMAvowZok4L/vE6sJ1+KT
-         ux3maGBK7iXLCNElB/EPonnQYhUDwD1FjJ86tQSvKoVL98kTwWToj4VlflIvYTKUKd/L
-         f3tuRC18LMu25zYYrYN1dU84yP41jsHanLBa/5k/P9nxOV/rM/vPmEgo0IulFCcHhwWG
-         /rN4xbDZ2Wk7p6qik4ctf/3NBqy4Z0ee5iUPBwltKmFKYIh8ZCvsOszFGnWyv8aamKTU
-         kXD0uwh5+NQCLnwXLupvvY/Ed3v+zQlkBHRVCntRbvdtBCpmaoe7nAtUh1AwNqKr8WZx
-         UQFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FPIH9Cepkvfx+qnRWFWOtOody6sfKssdMr1NGqEz4tY=;
-        b=GMz5qTNVDGw7HjDKG7nZ8V/Z5N8fbfQiEUwau3vmLCI8xCrB8vYomSa9aBHDZX/gWA
-         eXe5N8BGT0T7LRKpiJrrBJoCO/xWTW5GYlgpIThaWqGxPKSWCu3K7NBTsIHh6HPbc7Qw
-         LWRcQHbBHHnHKDdC8/JwlNSQKn1CLlWfLe5yi3wdBMz82h/u8csZ/Jl6l2tntu6Py7Vk
-         5FsHzIvFtWshpgWq3uaSYlXfU9CcJw68BZ3HGBsLWjVEQ6UFFZXvEFNpI/ahDrq+QMpO
-         zMq1Ty3PGIEvf0Es63Od3tOH4NWrai09DW4f7TjmFZ1Jc37b9rmsyODFpHRF+5iZP26F
-         y1LQ==
-X-Gm-Message-State: AGi0Pua/+cLU+qzVs1narfYhnjGadj5IArlX0ygauKpH3c+i1ZqEQg0B
-        vygCCJALgwbL4wVYYvNy/HrClw==
-X-Google-Smtp-Source: APiQypLCS+GwPGR8/cw+HpaBaDNdQMQ2twj7URTyHCsJPzGMMY5IVfeNWB6r16JXEq/68SuRQcA+bA==
-X-Received: by 2002:a2e:8612:: with SMTP id a18mr5165463lji.250.1585936538737;
-        Fri, 03 Apr 2020 10:55:38 -0700 (PDT)
-Received: from xps13.lan (238.89-10-169.nextgentel.com. [89.10.169.238])
-        by smtp.gmail.com with ESMTPSA id q20sm5267600ljj.66.2020.04.03.10.55.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 10:55:37 -0700 (PDT)
-From:   Odin Ugedal <odin@ugedal.com>
-To:     bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tj@kernel.org,
-        Harish.Kasiviswanathan@amd.com, guro@fb.com,
-        amd-gfx@lists.freedesktop.org
-Cc:     Odin Ugedal <odin@ugedal.com>
-Subject: [PATCH] device_cgroup: Cleanup cgroup eBPF device filter code
-Date:   Fri,  3 Apr 2020 19:55:28 +0200
-Message-Id: <20200403175528.225990-1-odin@ugedal.com>
-X-Mailer: git-send-email 2.26.0
+        Fri, 3 Apr 2020 13:56:39 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033HXkiG154362
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 13:56:38 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3068qs252a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 13:56:38 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Fri, 3 Apr 2020 18:56:18 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 Apr 2020 18:56:15 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033HuWdb55574760
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 17:56:32 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2AE3BAE045;
+        Fri,  3 Apr 2020 17:56:32 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A0D84AE04D;
+        Fri,  3 Apr 2020 17:56:31 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.17.43])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 17:56:31 +0000 (GMT)
+Subject: Re: [PATCH v2 1/5] KVM: s390: vsie: Fix region 1 ASCE sanity shadow
+ address checks
+To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, stable@vger.kernel.org
+References: <20200403153050.20569-1-david@redhat.com>
+ <20200403153050.20569-2-david@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Fri, 3 Apr 2020 19:56:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200403153050.20569-2-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040317-0016-0000-0000-000002FDBD76
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040317-0017-0000-0000-000033618D56
+Message-Id: <59b411eb-dabe-8cac-9270-7a9f0faa63d5@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_13:2020-04-03,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1015 suspectscore=0
+ adultscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Original cgroup v2 eBPF code for filtering device access made it
-possible to compile with CONFIG_CGROUP_DEVICE=n and still use the eBPF
-filtering. Change 
-commit 4b7d4d453fc4 ("device_cgroup: Export devcgroup_check_permission")
-reverted this, making it required to set it to y.
 
-Since the device filtering (and all the docs) for cgroup v2 is no longer
-a "device controller" like it was in v1, someone might compile their
-kernel with CONFIG_CGROUP_DEVICE=n. Then (for linux 5.5+) the eBPF
-filter will not be invoked, and all processes will be allowed access
-to all devices, no matter what the eBPF filter says.
 
-Signed-off-by: Odin Ugedal <odin@ugedal.com>
----
- drivers/gpu/drm/amd/amdkfd/kfd_priv.h |  2 +-
- include/linux/device_cgroup.h         | 14 +++++---------
- security/Makefile                     |  2 +-
- security/device_cgroup.c              | 19 ++++++++++++++++---
- 4 files changed, 23 insertions(+), 14 deletions(-)
+On 03.04.20 17:30, David Hildenbrand wrote:
+> In case we have a region 1 ASCE, our shadow/g3 address can have any value.
+> Unfortunately, (-1UL << 64) is undefined and triggers sometimes,
+> rejecting valid shadow addresses when trying to walk our shadow table
+> hierarchy.
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
-index 4a3049841086..c24cad3c64ed 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_priv.h
-@@ -1050,7 +1050,7 @@ void kfd_dec_compute_active(struct kfd_dev *dev);
- /* Check with device cgroup if @kfd device is accessible */
- static inline int kfd_devcgroup_check_permission(struct kfd_dev *kfd)
- {
--#if defined(CONFIG_CGROUP_DEVICE)
-+#if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
- 	struct drm_device *ddev = kfd->ddev;
- 
- 	return devcgroup_check_permission(DEVCG_DEV_CHAR, ddev->driver->major,
-diff --git a/include/linux/device_cgroup.h b/include/linux/device_cgroup.h
-index fa35b52e0002..9a72214496e5 100644
---- a/include/linux/device_cgroup.h
-+++ b/include/linux/device_cgroup.h
-@@ -1,6 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #include <linux/fs.h>
--#include <linux/bpf-cgroup.h>
- 
- #define DEVCG_ACC_MKNOD 1
- #define DEVCG_ACC_READ  2
-@@ -11,16 +10,10 @@
- #define DEVCG_DEV_CHAR  2
- #define DEVCG_DEV_ALL   4  /* this represents all devices */
- 
--#ifdef CONFIG_CGROUP_DEVICE
--int devcgroup_check_permission(short type, u32 major, u32 minor,
--			       short access);
--#else
--static inline int devcgroup_check_permission(short type, u32 major, u32 minor,
--					     short access)
--{ return 0; }
--#endif
- 
- #if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
-+int devcgroup_check_permission(short type, u32 major, u32 minor,
-+			       short access);
- static inline int devcgroup_inode_permission(struct inode *inode, int mask)
- {
- 	short type, access = 0;
-@@ -61,6 +54,9 @@ static inline int devcgroup_inode_mknod(int mode, dev_t dev)
- }
- 
- #else
-+static inline int devcgroup_check_permission(short type, u32 major, u32 minor,
-+			       short access)
-+{ return 0; }
- static inline int devcgroup_inode_permission(struct inode *inode, int mask)
- { return 0; }
- static inline int devcgroup_inode_mknod(int mode, dev_t dev)
-diff --git a/security/Makefile b/security/Makefile
-index 22e73a3482bd..3baf435de541 100644
---- a/security/Makefile
-+++ b/security/Makefile
-@@ -30,7 +30,7 @@ obj-$(CONFIG_SECURITY_YAMA)		+= yama/
- obj-$(CONFIG_SECURITY_LOADPIN)		+= loadpin/
- obj-$(CONFIG_SECURITY_SAFESETID)       += safesetid/
- obj-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+= lockdown/
--obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
-+obj-$(CONFIG_CGROUPS)			+= device_cgroup.o
- obj-$(CONFIG_BPF_LSM)			+= bpf/
- 
- # Object integrity file lists
-diff --git a/security/device_cgroup.c b/security/device_cgroup.c
-index 7d0f8f7431ff..43ab0ad45c1b 100644
---- a/security/device_cgroup.c
-+++ b/security/device_cgroup.c
-@@ -15,6 +15,8 @@
- #include <linux/rcupdate.h>
- #include <linux/mutex.h>
- 
-+#ifdef CONFIG_CGROUP_DEVICE
-+
- static DEFINE_MUTEX(devcgroup_mutex);
- 
- enum devcg_behavior {
-@@ -792,7 +794,7 @@ struct cgroup_subsys devices_cgrp_subsys = {
- };
- 
- /**
-- * __devcgroup_check_permission - checks if an inode operation is permitted
-+ * devcgroup_legacy_check_permission - checks if an inode operation is permitted
-  * @dev_cgroup: the dev cgroup to be tested against
-  * @type: device type
-  * @major: device major number
-@@ -801,7 +803,7 @@ struct cgroup_subsys devices_cgrp_subsys = {
-  *
-  * returns 0 on success, -EPERM case the operation is not permitted
-  */
--static int __devcgroup_check_permission(short type, u32 major, u32 minor,
-+static int devcgroup_legacy_check_permission(short type, u32 major, u32 minor,
- 					short access)
- {
- 	struct dev_cgroup *dev_cgroup;
-@@ -825,6 +827,10 @@ static int __devcgroup_check_permission(short type, u32 major, u32 minor,
- 	return 0;
- }
- 
-+#endif /* CONFIG_CGROUP_DEVICE */
-+
-+#if defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF)
-+
- int devcgroup_check_permission(short type, u32 major, u32 minor, short access)
- {
- 	int rc = BPF_CGROUP_RUN_PROG_DEVICE_CGROUP(type, major, minor, access);
-@@ -832,6 +838,13 @@ int devcgroup_check_permission(short type, u32 major, u32 minor, short access)
- 	if (rc)
- 		return -EPERM;
- 
--	return __devcgroup_check_permission(type, major, minor, access);
-+	#ifdef CONFIG_CGROUP_DEVICE
-+	return devcgroup_legacy_check_permission(type, major, minor, access);
-+
-+	#else /* CONFIG_CGROUP_DEVICE */
-+	return 0;
-+
-+	#endif /* CONFIG_CGROUP_DEVICE */
- }
- EXPORT_SYMBOL(devcgroup_check_permission);
-+#endif /* defined(CONFIG_CGROUP_DEVICE) || defined(CONFIG_CGROUP_BPF) */
--- 
-2.26.0
+I thin the range of the addresses do not matter.
+Took me a while to understand maybe rephrase that:
+
+In case we have a region 1 the following calculation 
+(31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)
+results in 64. As shifts beyond the size are undefined the compiler is free to use
+instructions like sllg. sllg will only use 6 bits of the shift value (here 64)
+resulting in no shift at all. That means that ALL addresses will be rejected.
+
+With that this makes sense. 
+
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
+
+> 
+> The result is that the prefix cannot get mapped and will loop basically
+> forever trying to map it (-EAGAIN loop).
+> 
+> After all, the broken check is only a sanity check, our table shadowing
+> code in kvm_s390_shadow_tables() already checks these conditions, injecting
+> proper translation exceptions. Turn it into a WARN_ON_ONCE().
+> 
+> Fixes: 4be130a08420 ("s390/mm: add shadow gmap support")
+> Tested-by: Janosch Frank <frankja@linux.ibm.com>
+> Reported-by: Janosch Frank <frankja@linux.ibm.com>
+> Cc: <stable@vger.kernel.org> # v4.8+
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  arch/s390/mm/gmap.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+> index 2fbece47ef6f..b93dd54b234a 100644
+> --- a/arch/s390/mm/gmap.c
+> +++ b/arch/s390/mm/gmap.c
+> @@ -787,14 +787,18 @@ static void gmap_call_notifier(struct gmap *gmap, unsigned long start,
+>  static inline unsigned long *gmap_table_walk(struct gmap *gmap,
+>  					     unsigned long gaddr, int level)
+>  {
+> +	const int asce_type = gmap->asce & _ASCE_TYPE_MASK;
+>  	unsigned long *table;
+>  
+>  	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
+>  		return NULL;
+>  	if (gmap_is_shadow(gmap) && gmap->removed)
+>  		return NULL;
+> -	if (gaddr & (-1UL << (31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)))
+> +
+> +	if (WARN_ON_ONCE(asce_type != _ASCE_TYPE_REGION1 &&
+> +			 gaddr & (-1UL << (31 + (asce_type >> 2) * 11))))
+>  		return NULL;
+> +
+>  	table = gmap->table;
+>  	switch (gmap->asce & _ASCE_TYPE_MASK) {
+>  	case _ASCE_TYPE_REGION1:
+> 
 
