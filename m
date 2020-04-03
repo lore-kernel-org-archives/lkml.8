@@ -2,111 +2,114 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011D8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE54C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43FD206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YOS+cGlm"
+	by mail.kernel.org (Postfix) with ESMTP id 87B3F20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585920788;
+	bh=4+Ge8PvEmnW8cbRafpoa4DLnP6F51x6BK/hz8piFjgA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=U0CFuNviZ3s55M2DD9qn5iIYa7Mw5PK+Ckm3Q9QxO6CDNgDd0wpmXuRun84lAXnEV
+	 zkrZoQk8UMODxwar7RuWL9v1+cg3CfGr4bnGFRU5+hzG0TTr4E1pOOl281H3W0D1Ui
+	 PiMDd1oMLLamoQT4f9jCdqJZLmKu9Kl4Dpr3CDkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390766AbgDCNbw (ORCPT
+        id S2403777AbgDCNdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:31:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38511 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgDCNbw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:31:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w3so2695810plz.5;
-        Fri, 03 Apr 2020 06:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:message-id:to:cc:subject:from:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+5T4dr5Yj+Mhb55fdklnxhoPtZWRWoLnIoAzNL4iVzc=;
-        b=YOS+cGlm77/Ojm1G7l/cgTl+O9eIf7FvOdio5AmN0XCQNvKAlcgfvAA8nPvEnxc60/
-         UeEutpFvnmnXG+k29rtqTnWG5wKEeF3nsoh2YIN4w/zdDLmDz/pzID+bWlKrATeRO7Vs
-         ORor44JDozSzkP6XSEBEV9XPa6Na0AzTRvvS1mKtrxZdgBEVYhVhT1E6mE5CXk58rX77
-         vuceNkSa7MJiYMFrSLXmivaptAQP+unrQloq5ziJE4kzFvfuRxNcdSYbiWONymUpN6B0
-         3/vEaKHhqNFIX1mg37gDSq7EP5OEuxqcpQzuxHN+fHrGr7sfeAUpoZTvfTOTvbPc+71p
-         /xvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:to:cc:subject:from:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+5T4dr5Yj+Mhb55fdklnxhoPtZWRWoLnIoAzNL4iVzc=;
-        b=kjMHNMi4FcAVjSh3pBRFs2JUJx/HNp3YhAxfWev7dOnwAAdkNXgqxTeMTjfG/O2buC
-         vbMJEu1KB5AWRNQhPoLEpzyR3tuEJEIYp9yVF2fk0kmCHdqW7J4SylinwTi3jUrjwO+S
-         Z0fY2wKUKeA4sfeZu8LkAKdi8iNmvISzXr57ClvwTjOxsLV/gsbH5STVMKJsITecrJtu
-         xnOM6S2RIMAxyVvmj9sTvSteJMpeI0ZgTK0H1rCEswwyiJVUZXMov1Oh2d1BuktMONOe
-         9S+OLtFiMVgjEPj6GSE8Jjj6dOSUG7XvTiHmNZif/u+MKDmu8kVSB5GWX2mm+5yqQEjP
-         HN/g==
-X-Gm-Message-State: AGi0PuY5JsDWB+3uyz1N7gzoVM1hegvrdo7CBXYNAHecBkNlVsWhsG3J
-        oeICbgUhaApr6BDUmiPoS6aDXVejtOc=
-X-Google-Smtp-Source: APiQypL9R84PWZWHAn0JmtowlAh8L8t7ApLHj3a0Vm48F2LFZDmxruE35v0ryZK/9TKxTRMYhRCS5g==
-X-Received: by 2002:a17:90a:9417:: with SMTP id r23mr6544890pjo.192.1585920711341;
-        Fri, 03 Apr 2020 06:31:51 -0700 (PDT)
-Received: from localhost (i118-16-243-73.s42.a014.ap.plala.or.jp. [118.16.243.73])
-        by smtp.gmail.com with ESMTPSA id 8sm5873017pfv.65.2020.04.03.06.31.49
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 03 Apr 2020 06:31:50 -0700 (PDT)
-Date:   Fri, 03 Apr 2020 22:31:47 +0900 (JST)
-Message-Id: <20200403.223147.300007237674208339.konishi.ryusuke@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] nilfs2: Logging style changes
-From:   Ryusuke Konishi <konishi.ryusuke@gmail.com>
-In-Reply-To: <cover.1584894497.git.joe@perches.com>
-References: <cover.1584894497.git.joe@perches.com>
-X-Mailer: Mew version 6.6 on Emacs 24.3 / Mule 6.0 (HANACHIRUSATO)
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Fri, 3 Apr 2020 09:33:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727431AbgDCNdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 09:33:07 -0400
+Received: from localhost (mobile-166-170-223-166.mycingular.net [166.170.223.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32436206B8;
+        Fri,  3 Apr 2020 13:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585920786;
+        bh=4+Ge8PvEmnW8cbRafpoa4DLnP6F51x6BK/hz8piFjgA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=U0xs/Qsz7Bb+JVjjkgP8LJAfHr1DAndu4Yyq6lBvOwCkhi+hCUS8XkjOWBbhRn9Qc
+         P/LiCwVrnqrudu4Y1t1dQZLAMXaCKQjeZBpF5CqdMP7bbUOw76uAY//XCSoz5O/7fZ
+         jOYsqvHpy+EgwRlQWxdMxJ6PkNPsLGsXfMBmif8c=
+Date:   Fri, 3 Apr 2020 08:33:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     kbuild@lists.01.org, Shiju Jose <shiju.jose@huawei.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        bp@alien8.de, james.morse@arm.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
+        tglx@linutronix.de, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        yangyicong@hisilicon.com
+Subject: Re: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
+ controller errors
+Message-ID: <20200403133303.GA213756@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403102313.GD2066@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 09:38:09 -0700, Joe Perches <joe@perches.com> wrote:
-> Reduce object size and use more common kernel logging styles.
-> 
-> Joe Perches (2):
->   nilfs2: Convert __nilfs_msg to integrate the level and format
->   nilfs2: Use a more common logging style
+On Fri, Apr 03, 2020 at 01:23:13PM +0300, Dan Carpenter wrote:
+> On Wed, Mar 25, 2020 at 12:36:39PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Mar 25, 2020 at 01:55:18PM +0000, Shiju Jose wrote:
+> > > The HiSilicon HIP PCIe controller is capable of handling errors
+> > > on root port and perform port reset separately at each root port.
+> > > 
+> > > This patch add error handling driver for HIP PCIe controller to log
+> > > and report recoverable errors. Perform root port reset and restore
+> > > link status after the recovery.
+> > > 
+> > > Following are some of the PCIe controller's recoverable errors
+> > > 1. completion transmission timeout error.
+> > > 2. CRS retry counter over the threshold error.
+> > > 3. ECC 2 bit errors
+> > > 4. AXI bresponse/rresponse errors etc.
+> > > 
+> > > Also fix the following Smatch warning:
+> > > warn: should '((((1))) << (9 + i))' be a 64 bit type?
+> > > if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+> > >      ^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > 
+> > I'm glad you did this fix, and thanks for acknowledging Dan, but I
+> > don't think it's necessary to mention it in the commit log here
+> > because it won't really be useful in the future.  It's only relevant
+> > when comparing the unmerged versions of this series, e.g., v4 compared
+> > to v3.
 
-Applied. Thank you.
+To elaborate on that a little, I think the commit log should describe
+the change specifically made by the patch.  You should be able to
+"git diff HEAD^" and match up the commit log with that diff output.
+You can't do that with this Smatch paragraph.
 
-Ryusuke Konishi
+> It's the kbuild template which suggests adding the Reported-by tags but
+> you're right that it's not really appropriate for patches that haven't
+> been merged yet.  I wish there were a correct tag.  I just saw yesterday
+> where a maintainer insisted that someone add a Suggested-by tag and I
+> don't think that's appropriate either.
 
-> 
->  fs/nilfs2/alloc.c     | 38 +++++++++----------
->  fs/nilfs2/btree.c     | 42 ++++++++++-----------
->  fs/nilfs2/cpfile.c    | 10 ++---
->  fs/nilfs2/dat.c       | 14 +++----
->  fs/nilfs2/direct.c    | 14 ++++---
->  fs/nilfs2/gcinode.c   |  2 +-
->  fs/nilfs2/ifile.c     |  4 +-
->  fs/nilfs2/inode.c     | 29 +++++++--------
->  fs/nilfs2/ioctl.c     | 37 +++++++++----------
->  fs/nilfs2/mdt.c       |  2 +-
->  fs/nilfs2/namei.c     |  6 +--
->  fs/nilfs2/nilfs.h     | 18 ++++++---
->  fs/nilfs2/page.c      | 11 +++---
->  fs/nilfs2/recovery.c  | 32 +++++++---------
->  fs/nilfs2/segbuf.c    |  2 +-
->  fs/nilfs2/segment.c   | 38 +++++++++----------
->  fs/nilfs2/sufile.c    | 29 +++++++--------
->  fs/nilfs2/super.c     | 73 +++++++++++++++++++------------------
->  fs/nilfs2/sysfs.c     | 29 +++++++--------
->  fs/nilfs2/the_nilfs.c | 85 ++++++++++++++++++++-----------------------
->  20 files changed, 254 insertions(+), 261 deletions(-)
-> 
-> -- 
-> 2.24.0
-> 
+Adding tags for every reviewer or bot comment seems like overkill.  I
+think the "lore" links are about the right level of attribution for
+this sort of thing, e.g., here:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=77d6b9094819ba55353de0ef92957f3f54f2c36c
+
+The Link: tag there gives you the whole v2 thread including review
+comments.  And Matthew's cover letter even included a link to the
+original v1 posting.  That seems perfect to me.
+
+Bjorn
