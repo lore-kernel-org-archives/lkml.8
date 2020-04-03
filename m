@@ -2,132 +2,468 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35783C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED331C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08EAB206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB4720737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="mec9o25/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="C8jIhCmn"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="CszzwIBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391270AbgDCAv3 (ORCPT
+        id S2391187AbgDCAzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 20:51:29 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:38873 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391002AbgDCAv2 (ORCPT
+        Thu, 2 Apr 2020 20:55:11 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37696 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390138AbgDCAzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 20:51:28 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8FBCC5C02F8;
-        Thu,  2 Apr 2020 20:51:27 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 02 Apr 2020 20:51:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type:content-transfer-encoding; s=fm2; bh=o4k4Q
-        byRVOVaBijp4V3irP0AE4nFGkKuv35zWmzD8BU=; b=mec9o25/tw3Q2livsvRKG
-        QhCtaxCniN6f8hKoSNg/O9gjNkUjnkW0FAjtI/W9t0iWwg5dQc3ycoxKwwu5HLJB
-        aLARhApfJU7v/YA4Z+x/KYO2oyYaHFjgG5wcjVmuSbJ5Qz5ObBHH2y2Is1bzzl3/
-        x5xx2d1Nb1g34kqdp9G74YI9kpoumzztHr1LgCK8KCQCkZYJ1bTXqAUMDOjmOFyD
-        XPrqjC+VXI/5ggaF4OZ0aPggnQh5PQ+8LyG6tkgx5UQuLFN53m0j+dr8NgXP6kIT
-        f83RsMOGdVoRRD9owhDCfpzxjNbtKcxDOx7DOEFW0AZI8+Ill4z/6pyj2sRCFgq4
-        g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=o4k4QbyRVOVaBijp4V3irP0AE4nFGkKuv35zWmzD8
-        BU=; b=C8jIhCmnDW9uX6UnO/+qCjj/AIgnTI6ruqM7x1NVRfMQYNFsZBUshXPdf
-        Lk38RkhieIkn4BHPje53naD2QERc/YMWjcZsrjizmeio701jDO3RkuLQobfw4C3v
-        njUtYBGL71JmM1jSQl0jrsQMFr049sg9+Yej7hUkwgITZnkFKMeAeh8JEYOOVmcR
-        a4hQhaaPdJ4Ho0KcBwhqv5D6HlBSPbNUpc+5iJEomWAkILL9tMOJsWCAX0cgVuqw
-        osgbqLFkH8YKIZDLK7+K9NRXg07fYzd2ngpDzT7uICMRaGmNnTsmGa0qvht+7ss3
-        iipXfF2ICZjgqZOOovkmYi72eomEg==
-X-ME-Sender: <xms:iIiGXvxSTTafl6tt0gQFQbHdfo5UEgXrpcVu8l0t0PaC4EwvQ_D4Zg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdehgdefkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtgfesthhqredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegr
-    jhdrihgurdgruh
-X-ME-Proxy: <xmx:iIiGXlvaWz23-H1wujEUO6g9z11ljzX5dmNpzGzv-ipV4s9drmtqRw>
-    <xmx:iIiGXr9q_QuNl9kf6dfh4o_1JEtkTfElIpSMuoP73M7-t56qeOtmfQ>
-    <xmx:iIiGXk0jV93oo_7IYJ-xld6fW28zXwFUvimoPbSNpWKpN4mwJ1-4eQ>
-    <xmx:j4iGXqRNGMdIVooQRfZbcToWLJCYOBPGxS4otGweza_msf_5QgkRDQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id DD995E00B0; Thu,  2 Apr 2020 20:51:20 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-1080-gca5de7b-fmstable-20200402v5
-Mime-Version: 1.0
-Message-Id: <48c9bd0e-3b5c-4f76-830f-4b0bd962148b@www.fastmail.com>
-In-Reply-To: <9360D2B2-8242-4BA1-BF06-8916E87EDE67@gmail.com>
-References: <20200306170218.79698-1-geissonator@yahoo.com>
- <20200306170218.79698-2-geissonator@yahoo.com>
- <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
- <9360D2B2-8242-4BA1-BF06-8916E87EDE67@gmail.com>
-Date:   Fri, 03 Apr 2020 11:21:41 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Andrew Geissler" <geissonator@gmail.com>
-Cc:     "Joel Stanley" <joel@jms.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH 2/2] ARM: dts: aspeed: zaius: Add gpio line names
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 Apr 2020 20:55:11 -0400
+Received: by mail-ed1-f67.google.com with SMTP id de14so7085694edb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 17:55:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Q8gQM+v8ylTPEY0VXsKwuAxOV0GazSw0N3IZJZGJxY=;
+        b=CszzwIBnsFLWhy9UWF9/wjuFCTrH+LDT/+UuIM3cikMWVvGRPZqxcmHkpC2wqHkMTj
+         H8q/QWYad4nPvB5svj6bwUNZvPbwbqlB3jVFbE53HNUa8qyz4f+u/H8Q51U31AXupxmT
+         mMHOW0STBVpg6yiA/ObBjMCdoLd6nl4tFBkBpvPZo9CyT4S4RX3M1YoAvTW+zTJcYg8X
+         6oaCFovx8ss5P2P7jZYMqnDVySEBY6Lursgtl/8uoXC7i1HNCEQgB9DWWBjso/lb9POp
+         fwCRQtStu2gXCBVenmlXaGgvHVtjyUP/kfq10Dhcp1dzVJvezE9nguefUpwNXKile1ni
+         Rtkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Q8gQM+v8ylTPEY0VXsKwuAxOV0GazSw0N3IZJZGJxY=;
+        b=cBhgTabHJGhBWrMD5e1LcpMs/f/7Pcx3P+CyCLsu/jBlV/7YYsEtd5NKS1b2P/xs1q
+         d7KimKkHsA1TSxT1ekjYRYRLwF5EQSVPKAntEHzBVMSwDuciXmH+cxo9TBgot8jjxRHH
+         9TJet8d1fNbDkC2Qrl7BsQLGUFFESDqV2CCCX4mVzYDolZbCVTBKDCtU8jUprQIaBJNP
+         Gt6Y3uUXRuUNe0G6udUIeeJ1ErzCQu4XN99Y2KEDyIiI2mrRuZ+AIwwkY52IG918l3Vk
+         +zoH4getWEpMWaZFemn7rnCBXEh0SbL4UvxsMFDZdkq3Gs94MXwCuWqsoAfSFL6eA+U4
+         a9xg==
+X-Gm-Message-State: AGi0PubDNOFjDSM4vVYQHZrasB9uOYHEG8HANReHuiwn057Lg8YP6dv5
+        ZANDMXoQg/6t0lJjXPR/B+Pu+9ZsY5hlZOacluuRrA==
+X-Google-Smtp-Source: APiQypJWHCo/tePpMHqtx/MA87Dzetjb0+DbzFWz4GRGYzPnjPE9RhAlbvBvy84CKVacRRQPyVG3e0nX/W/PD7N4RIU=
+X-Received: by 2002:a05:6402:b17:: with SMTP id bm23mr5529895edb.165.1585875307230;
+ Thu, 02 Apr 2020 17:55:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-17-alastair@d-silva.org>
+In-Reply-To: <20200327071202.2159885-17-alastair@d-silva.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 2 Apr 2020 17:54:56 -0700
+Message-ID: <CAPcyv4go3Ufv91E4yuVJ8x9eRU+rdOBZLC2SM9FVr-2o5iRZDw@mail.gmail.com>
+Subject: Re: [PATCH v4 16/25] nvdimm/ocxl: Implement the Read Error Log command
+To:     "Alastair D'Silva" <alastair@d-silva.org>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 31, 2020 at 1:59 AM Alastair D'Silva <alastair@d-silva.org> wrote:
+>
+> The read error log command extracts information from the controller's
+> internal error log.
+>
+> This patch exposes this information in 2 ways:
+> - During probe, if an error occurs & a log is available, print it to the
+>   console
+> - After probe, make the error log available to userspace via an IOCTL.
+>   Userspace is notified of pending error logs in a later patch
+>   ("powerpc/powernv/pmem: Forward events to userspace")
+
+So, have a look at the recent papr_scm patches to add health flags and
+smart data retrieval. I'd prefer to extend existing nvdimm device
+retrieval mechanisms than invent new ones.
 
 
-On Tue, 31 Mar 2020, at 04:46, Andrew Geissler wrote:
->=20
->=20
-> > On Mar 26, 2020, at 6:20 PM, Andrew Jeffery <andrew@aj.id.au> wrote:=
-
-> >=20
-> >=20
-> >=20
-> > On Sat, 7 Mar 2020, at 03:32, Andrew Geissler wrote:
-> >> Name the GPIOs to help userspace work with them. The names describe=
- the
-> >> functionality the lines provide, not the net or ball name. This mak=
-es it
-> >> easier to share userspace code across different systems and makes t=
-he
-> >> use of the lines more obvious.
-> >>=20
-> >> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
-> >=20
-> > So we're creating a bit of an ad-hoc ABI here between the DT and use=
-rspace.
-> >=20
-> > Where are we documenting it?
->=20
-> Yeah, so far it=E2=80=99s basically design by precedent. If you want y=
-our OpenBMC
-> function to work then follow the standards we're setting in other dts=E2=
-=80=99s.
->=20
-> Is there a good place to document this? I could create a OpenBMC desig=
-n
-> doc but that would not address non-OpenBMC areas.
-
-Don't let perfect be the enemy of good enough :) Lets document it in Ope=
-nBMC
-and then look at alternatives if we find it's necessary. I don't think w=
-e will given
-that the contract is between the kernel and OpenBMC userspace.
-
-Andrew
+>
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+>  drivers/nvdimm/ocxl/main.c                    | 240 ++++++++++++++++++
+>  include/uapi/nvdimm/ocxlpmem.h                |  46 ++++
+>  3 files changed, 287 insertions(+)
+>  create mode 100644 include/uapi/nvdimm/ocxlpmem.h
+>
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index 9425377615ce..ba0ce7dca643 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -340,6 +340,7 @@ Code  Seq#    Include File                                           Comments
+>  0xC0  00-0F  linux/usb/iowarrior.h
+>  0xCA  00-0F  uapi/misc/cxl.h
+>  0xCA  10-2F  uapi/misc/ocxl.h
+> +0xCA  30-3F  uapi/nvdimm/ocxlpmem.h                                  OpenCAPI Persistent Memory
+>  0xCA  80-BF  uapi/scsi/cxlflash_ioctl.h
+>  0xCB  00-1F                                                          CBM serial IEC bus in development:
+>                                                                       <mailto:michael.klein@puffin.lb.shuttle.de>
+> diff --git a/drivers/nvdimm/ocxl/main.c b/drivers/nvdimm/ocxl/main.c
+> index 9b85fcd3f1c9..e6be0029f658 100644
+> --- a/drivers/nvdimm/ocxl/main.c
+> +++ b/drivers/nvdimm/ocxl/main.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/fs.h>
+>  #include <linux/mm_types.h>
+>  #include <linux/memory_hotplug.h>
+> +#include <uapi/nvdimm/ocxlpmem.h>
+>  #include "ocxlpmem.h"
+>
+>  static const struct pci_device_id pci_tbl[] = {
+> @@ -401,10 +402,190 @@ static int file_release(struct inode *inode, struct file *file)
+>         return 0;
+>  }
+>
+> +/**
+> + * error_log_header_parse() - Parse the first 64 bits of the error log command response
+> + * @ocxlpmem: the device metadata
+> + * @length: out, returns the number of bytes in the response (excluding the 64 bit header)
+> + */
+> +static int error_log_header_parse(struct ocxlpmem *ocxlpmem, u16 *length)
+> +{
+> +       int rc;
+> +       u64 val;
+> +       u16 data_identifier;
+> +       u32 data_length;
+> +
+> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +                                    ocxlpmem->admin_command.data_offset,
+> +                                    OCXL_LITTLE_ENDIAN, &val);
+> +       if (rc)
+> +               return rc;
+> +
+> +       data_identifier = val >> 48;
+> +       data_length = val & 0xFFFF;
+> +
+> +       if (data_identifier != 0x454C) { // 'EL'
+> +               dev_err(&ocxlpmem->dev,
+> +                       "Bad data identifier for error log data, expected 'EL', got '%2s' (%#x), data_length=%u\n",
+> +                       (char *)&data_identifier,
+> +                       (unsigned int)data_identifier, data_length);
+> +               return -EINVAL;
+> +       }
+> +
+> +       *length = data_length;
+> +       return 0;
+> +}
+> +
+> +static int read_error_log(struct ocxlpmem *ocxlpmem,
+> +                         struct ioctl_ocxlpmem_error_log *log,
+> +                         bool buf_is_user)
+> +{
+> +       u64 val;
+> +       u16 user_buf_length;
+> +       u16 buf_length;
+> +       u64 *buf = (u64 *)log->buf_ptr;
+> +       u16 i;
+> +       int rc;
+> +
+> +       if (log->buf_size % 8)
+> +               return -EINVAL;
+> +
+> +       rc = ocxlpmem_chi(ocxlpmem, &val);
+> +       if (rc)
+> +               return rc;
+> +
+> +       if (!(val & GLOBAL_MMIO_CHI_ELA))
+> +               return -EAGAIN;
+> +
+> +       user_buf_length = log->buf_size;
+> +
+> +       mutex_lock(&ocxlpmem->admin_command.lock);
+> +
+> +       rc = admin_command_execute(ocxlpmem, ADMIN_COMMAND_ERRLOG);
+> +       if (rc != STATUS_SUCCESS) {
+> +               warn_status(ocxlpmem,
+> +                           "Unexpected status from retrieve error log", rc);
+> +               goto out;
+> +       }
+> +
+> +       rc = error_log_header_parse(ocxlpmem, &log->buf_size);
+> +       if (rc)
+> +               goto out;
+> +       // log->buf_size now contains the returned buffer size, not the user size
+> +
+> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +                                    ocxlpmem->admin_command.data_offset + 0x08,
+> +                                    OCXL_LITTLE_ENDIAN, &val);
+> +       if (rc)
+> +               goto out;
+> +
+> +       log->log_identifier = val >> 32;
+> +       log->program_reference_code = val & 0xFFFFFFFF;
+> +
+> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +                                    ocxlpmem->admin_command.data_offset + 0x10,
+> +                                    OCXL_LITTLE_ENDIAN, &val);
+> +       if (rc)
+> +               goto out;
+> +
+> +       log->error_log_type = val >> 56;
+> +       log->action_flags = (log->error_log_type == OCXLPMEM_ERROR_LOG_TYPE_GENERAL) ?
+> +                           (val >> 32) & 0xFFFFFF : 0;
+> +       log->power_on_seconds = val & 0xFFFFFFFF;
+> +
+> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +                                    ocxlpmem->admin_command.data_offset + 0x18,
+> +                                    OCXL_LITTLE_ENDIAN, &log->timestamp);
+> +       if (rc)
+> +               goto out;
+> +
+> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +                                    ocxlpmem->admin_command.data_offset + 0x20,
+> +                                    OCXL_LITTLE_ENDIAN, &log->wwid[0]);
+> +       if (rc)
+> +               goto out;
+> +
+> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +                                    ocxlpmem->admin_command.data_offset + 0x28,
+> +                                    OCXL_LITTLE_ENDIAN, &log->wwid[1]);
+> +       if (rc)
+> +               goto out;
+> +
+> +       rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +                                    ocxlpmem->admin_command.data_offset + 0x30,
+> +                                    OCXL_HOST_ENDIAN, (u64 *)log->fw_revision);
+> +       if (rc)
+> +               goto out;
+> +       log->fw_revision[8] = '\0';
+> +
+> +       buf_length = (user_buf_length < log->buf_size) ?
+> +                     user_buf_length : log->buf_size;
+> +       for (i = 0; i < buf_length / (sizeof(u64)); i++) {
+> +               rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +                                            ocxlpmem->admin_command.data_offset +
+> +                                                       i * sizeof(u64),
+> +                                            OCXL_HOST_ENDIAN, &val);
+> +               if (rc)
+> +                       goto out;
+> +
+> +               if (buf_is_user) {
+> +                       if (copy_to_user((u64 __user *)&buf[i], &val,
+> +                                        sizeof(u64))) {
+> +                               rc = -EFAULT;
+> +                               goto out;
+> +                       }
+> +               } else {
+> +                       buf[i] = val;
+> +               }
+> +       }
+> +
+> +       rc = admin_response_handled(ocxlpmem);
+> +       if (rc)
+> +               goto out;
+> +
+> +out:
+> +       mutex_unlock(&ocxlpmem->admin_command.lock);
+> +       return rc;
+> +}
+> +
+> +static int ioctl_error_log(struct ocxlpmem *ocxlpmem,
+> +                          struct ioctl_ocxlpmem_error_log __user *uarg)
+> +{
+> +       struct ioctl_ocxlpmem_error_log args;
+> +       int rc;
+> +
+> +       if (copy_from_user(&args, uarg, sizeof(args)))
+> +               return -EFAULT;
+> +
+> +       rc = read_error_log(ocxlpmem, &args, true);
+> +       if (rc)
+> +               return rc;
+> +
+> +       if (copy_to_user(uarg, &args, sizeof(args)))
+> +               return -EFAULT;
+> +
+> +       return 0;
+> +}
+> +
+> +static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+> +{
+> +       struct ocxlpmem *ocxlpmem = file->private_data;
+> +       int rc = -EINVAL;
+> +
+> +       switch (cmd) {
+> +       case IOCTL_OCXLPMEM_ERROR_LOG:
+> +               rc = ioctl_error_log(ocxlpmem,
+> +                                    (struct ioctl_ocxlpmem_error_log __user *)args);
+> +               break;
+> +       }
+> +       return rc;
+> +}
+> +
+>  static const struct file_operations fops = {
+>         .owner          = THIS_MODULE,
+>         .open           = file_open,
+>         .release        = file_release,
+> +       .unlocked_ioctl = file_ioctl,
+> +       .compat_ioctl   = file_ioctl,
+>  };
+>
+>  /**
+> @@ -493,6 +674,60 @@ static int read_device_metadata(struct ocxlpmem *ocxlpmem)
+>         return 0;
+>  }
+>
+> +static const char *decode_error_log_type(u8 error_log_type)
+> +{
+> +       switch (error_log_type) {
+> +       case 0x00:
+> +               return "general";
+> +       case 0x01:
+> +               return "predictive failure";
+> +       case 0x02:
+> +               return "thermal warning";
+> +       case 0x03:
+> +               return "data loss";
+> +       case 0x04:
+> +               return "health & performance";
+> +       default:
+> +               return "unknown";
+> +       }
+> +}
+> +
+> +static void dump_error_log(struct ocxlpmem *ocxlpmem)
+> +{
+> +       struct ioctl_ocxlpmem_error_log log;
+> +       u32 buf_size;
+> +       u8 *buf;
+> +       int rc;
+> +
+> +       if (ocxlpmem->admin_command.data_size == 0)
+> +               return;
+> +
+> +       buf_size = ocxlpmem->admin_command.data_size - 0x48;
+> +       buf = kzalloc(buf_size, GFP_KERNEL);
+> +       if (!buf)
+> +               return;
+> +
+> +       log.buf_ptr = (u64)buf;
+> +       log.buf_size = buf_size;
+> +
+> +       rc = read_error_log(ocxlpmem, &log, false);
+> +       if (rc < 0)
+> +               goto out;
+> +
+> +       dev_warn(&ocxlpmem->dev,
+> +                "OCXL PMEM Error log: WWID=0x%016llx%016llx LID=0x%x PRC=%x type=0x%x %s, Uptime=%u seconds timestamp=0x%llx\n",
+> +                log.wwid[0], log.wwid[1],
+> +                log.log_identifier, log.program_reference_code,
+> +                log.error_log_type,
+> +                decode_error_log_type(log.error_log_type),
+> +                log.power_on_seconds, log.timestamp);
+> +       print_hex_dump(KERN_WARNING, "buf", DUMP_PREFIX_OFFSET, 16, 1, buf,
+> +                      log.buf_size, false);
+> +
+> +out:
+> +       kfree(buf);
+> +}
+> +
+>  /**
+>   * probe_function0() - Set up function 0 for an OpenCAPI persistent memory device
+>   * This is important as it enables templates higher than 0 across all other
+> @@ -656,6 +891,11 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>         pci_set_drvdata(pdev, NULL);
+>
+>  err:
+> +       if (ocxlpmem &&
+> +           (ocxlpmem_chi(ocxlpmem, &chi) == 0) &&
+> +           (chi & GLOBAL_MMIO_CHI_ELA))
+> +               dump_error_log(ocxlpmem);
+> +
+>         /*
+>          * Further cleanup is done in the release handler via free_ocxlpmem()
+>          * This allows us to keep the character device live to handle IOCTLs to
+> diff --git a/include/uapi/nvdimm/ocxlpmem.h b/include/uapi/nvdimm/ocxlpmem.h
+> new file mode 100644
+> index 000000000000..5d3a03ea1e08
+> --- /dev/null
+> +++ b/include/uapi/nvdimm/ocxlpmem.h
+> @@ -0,0 +1,46 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> +/* Copyright 2020 IBM Corp. */
+> +#ifndef _UAPI_OCXL_SCM_H
+> +#define _UAPI_OCXL_SCM_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/ioctl.h>
+> +
+> +#define OCXLPMEM_ERROR_LOG_ACTION_RESET        (1 << (32 - 32))
+> +#define OCXLPMEM_ERROR_LOG_ACTION_CHKFW        (1 << (53 - 32))
+> +#define OCXLPMEM_ERROR_LOG_ACTION_REPLACE      (1 << (54 - 32))
+> +#define OCXLPMEM_ERROR_LOG_ACTION_DUMP         (1 << (55 - 32))
+> +
+> +#define OCXLPMEM_ERROR_LOG_TYPE_GENERAL                (0x00)
+> +#define OCXLPMEM_ERROR_LOG_TYPE_PREDICTIVE_FAILURE     (0x01)
+> +#define OCXLPMEM_ERROR_LOG_TYPE_THERMAL_WARNING        (0x02)
+> +#define OCXLPMEM_ERROR_LOG_TYPE_DATA_LOSS              (0x03)
+> +#define OCXLPMEM_ERROR_LOG_TYPE_HEALTH_PERFORMANCE     (0x04)
+> +
+> +struct ioctl_ocxlpmem_error_log {
+> +       __u32 log_identifier; /* out */
+> +       __u32 program_reference_code; /* out */
+> +       __u32 action_flags; /* out, recommended course of action */
+> +       __u32 power_on_seconds; /* out, Number of seconds the controller has been on when the error occurred */
+> +       __u64 timestamp; /* out, relative time since the current IPL */
+> +       __u64 wwid[2]; /* out, the NAA formatted WWID associated with the controller */
+> +       char  fw_revision[8 + 1]; /* out, firmware revision as null terminated text */
+> +       __u8  reserved0[7];
+> +       __u16 buf_size; /* in/out, buffer size provided/required.
+> +                        * If required is greater than provided, the buffer
+> +                        * will be truncated to the amount provided. If its
+> +                        * less, then only the required bytes will be populated.
+> +                        * If it is 0, then there are no more error log entries.
+> +                        */
+> +       __u8  error_log_type;
+> +       __u8  reserved1[5];
+> +       __u64 buf_ptr; /* coerced pointer to output buffer */
+> +       __u64 reserved2[2];
+> +};
+> +
+> +/* ioctl numbers */
+> +#define OCXLPMEM_MAGIC 0xCA
+> +/* OpenCAPI Persistent memory devices */
+> +#define IOCTL_OCXLPMEM_ERROR_LOG                       _IOWR(OCXLPMEM_MAGIC, 0x30, struct ioctl_ocxlpmem_error_log)
+> +
+> +#endif /* _UAPI_OCXL_SCM_H */
+> --
+> 2.24.1
+>
