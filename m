@@ -2,73 +2,169 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51714C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84169C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09558206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F142073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:48:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YL/XZaPn"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="YUPehTBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390855AbgDCPq2 (ORCPT
+        id S2390951AbgDCPsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:46:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48232 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbgDCPq2 (ORCPT
+        Fri, 3 Apr 2020 11:48:13 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41640 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbgDCPsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:46:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jumPZeY2/s1i3k4de+rl5jCcLuzdcZov7AWLXx3FDSY=; b=YL/XZaPn6ibQbSO45trkFn4k4b
-        KQAHKRXBwXSwkr9Oa1oh4p10NBFp1XMl3TTyPxH9Vb7n5e0zpffrw0MDgFS7jGf5dr9AMZjID3XXL
-        jSAxOytsZxCEU3QoMPMbXF60FTRV0+hmezAEozQ8w1mKezNfR4Spqt540nL+dRzvl/yeUusoYvm2i
-        v0tNp6a5kwKq+gQQliBmMAhycxhZJZsPubGkyot/8z9O0kjO26+ZeDTUJaSiYru67mRohoX9Jc84M
-        PcHDedxY33W+qVhNpUcjkPij0lCPyZqQ94Y1cQN3UjChHx7FoKET/OQi9H/6rPMMiRTPyfn1S+dWL
-        I/ntTCDw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jKOWU-0002tW-Nk; Fri, 03 Apr 2020 15:46:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 598C73010BC;
-        Fri,  3 Apr 2020 17:46:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4AD512B12426C; Fri,  3 Apr 2020 17:46:20 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 17:46:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Julien Thierry <jthierry@redhat.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
-Message-ID: <20200403154620.GS20730@hirez.programming.kicks-ass.net>
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-5-alexandre.chartre@oracle.com>
- <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
- <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
- <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
- <20200402154022.GG20730@hirez.programming.kicks-ass.net>
- <bc3a31dc-9d59-5756-aad3-187533f05654@redhat.com>
- <20200403151757.lhhia7pzqptvlqz5@treble>
+        Fri, 3 Apr 2020 11:48:12 -0400
+Received: by mail-qk1-f193.google.com with SMTP id y3so3615688qky.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:48:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3SpUySae/VsXCjRY3XWWqnugqthUBEDYud/syB3xOgc=;
+        b=YUPehTBOR7/xLu41qUjwkoNOixxplXeO/8kGx0TNMLVCTFYs7aYJXzT2cWH3mWKIXp
+         0WPC7smtZNTlXK0VMpgmZShtK8qIkas8f1wgX7JyRG9ymxBRJEIoZwmdAQlkxVqrXVXw
+         yuRwkwJzd7+E7mYwbmpOulWpe4+uCga0LeggxdmysmzFcl2Z44m9tAP9mPXt3i998bR5
+         MJL/tr8UQXyU/JGSqFmiFcIWDGlHuyqOdjVCTdDFRXrXjv65zuk4X4DXxVuQRwFzqY+0
+         ZbAf+mNiv+aoFVAnmVkyY5QPHgqLI7xI4lult+LOsWELPEctrFhUFMnDtVM8nR6qPVLG
+         cVrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3SpUySae/VsXCjRY3XWWqnugqthUBEDYud/syB3xOgc=;
+        b=e+b/W6YqRKN+z4E+UMrtPp4IwX1gqaubYSAUfINrNSkOQygDseTm8RHFAp1lhj3dEB
+         9Z2xyJfOlTMyD8VJZ7WPGSGixNC1tl/xB+Q3CRzj9TgdTkjucyx7PM0N1TXL2yGSYu/4
+         Q/L+P9n/4mCo3n5IOVBNKBmbVlnirw3v3ptdPVI4wZVzaQWBKszRskpmzvXxKc+z4UbB
+         VEWme6AtoW9TGOH6TcuMKSeg6HGvNSm6SE8j2MJ5bc+IHC/B2pJvEu2TaxvABJ9UpsPg
+         4Dcw3Svge6IzNoVTeIbbO2O9AfqVEKkDVXglWKHE1A3SkEdyZR6WTBRaHpISAIrIHMuJ
+         e6yQ==
+X-Gm-Message-State: AGi0PubWtq8B9h8pZZfJ2rPNa5aMUMr6ldomQV+zzsHWzWDX/FT/wlMF
+        1V9QFbMqfMU21qSwevOPt5wV2g==
+X-Google-Smtp-Source: APiQypKT+0DknujDcCjzS1PACiAIGzRvdLTYReyXUMKf3l8bsBKyfLkVJYHDKb45rP3wEsdymxxm4Q==
+X-Received: by 2002:a37:4ec1:: with SMTP id c184mr9361893qkb.0.1585928890501;
+        Fri, 03 Apr 2020 08:48:10 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::da28])
+        by smtp.gmail.com with ESMTPSA id w30sm7081523qtw.21.2020.04.03.08.48.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 08:48:09 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 11:48:08 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        mgorman@suse.de, Steven Rostedt <rostedt@goodmis.org>,
+        mingo@redhat.com, Linux MM <linux-mm@kvack.org>,
+        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] psi: enhance psi with the help of ebpf
+Message-ID: <20200403154808.GB69203@cmpxchg.org>
+References: <1585221127-11458-1-git-send-email-laoar.shao@gmail.com>
+ <20200326143102.GB342070@cmpxchg.org>
+ <CALOAHbCe9msQ+7uON=7iXnud-hzDcrnz_2er4PMQRXtNLM2BSQ@mail.gmail.com>
+ <20200331151103.GB2089@cmpxchg.org>
+ <CALOAHbAG=ehtwveu8DkQLkdeQEu7U3XA+LK4p_A7URQ0bW68=Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403151757.lhhia7pzqptvlqz5@treble>
+In-Reply-To: <CALOAHbAG=ehtwveu8DkQLkdeQEu7U3XA+LK4p_A7URQ0bW68=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 10:17:57AM -0500, Josh Poimboeuf wrote:
-> Peter, I think my previous idea for UNWIND_HINT_ADJUST stack_add=8 would
-> work here?
+On Wed, Apr 01, 2020 at 09:22:24AM +0800, Yafang Shao wrote:
+> On Tue, Mar 31, 2020 at 11:11 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > On Fri, Mar 27, 2020 at 09:17:59AM +0800, Yafang Shao wrote:
+> > > On Thu, Mar 26, 2020 at 10:31 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> With the newly added facility,  we can know when these events occur
+> and how long each event takes.
+> Then we can use these datas to generate a Latency Heat Map[1] and to
+> compare whether these latencies match with the application latencies
+> recoreded in its log - for example the slow query log in mysql. If the
+> refault latencies match with the slow query log, then these slow
+> queries are caused by these workingset refault.  If the refault
+> latencies don't match with slow query log, IOW much smaller than the
+> slow query log, then  the slow query log isn't caused by the
+> workingset refault.
 
-Yes, it would.
+Okay, you want to use it much finer-grained to understand individual
+end-to-end latencies for your services, rather than "the system is
+melting down and I want to know why." That sounds valid to me.
+
+> > > > Can you elaborate a bit how you are using this information? It's not
+> > > > quite clear to me from the example in patch #2.
+> > > >
+> > >
+> > > From the traced data in patch #2, we can find that the high latencies
+> > > of user tasks are always type 7 of memstall , which is
+> > > MEMSTALL_WORKINGSET_THRASHING,  and then we should look into the
+> > > details of wokingset of the user tasks and think about how to improve
+> > > it - for example, by reducing the workingset.
+> >
+> > That's an analyses we run frequently as well: we see high pressure,
+> > and then correlate it with the events.
+> >
+> > High rate of refaults? The workingset is too big.
+> >
+> > High rate of compaction work? Somebody is asking for higher order
+> > pages under load; check THP events next.
+> >
+> > etc.
+> >
+> > This works fairly reliably. I'm curious what the extra per-event
+> > latency breakdown would add and where it would be helpful.
+> >
+> > I'm not really opposed to your patches it if it is, I just don't see
+> > the usecase right now.
+> >
+> 
+> As I explained above, the rate of these events can't give us a full
+> view of the memory pressure. High memory pressure may not caused by
+> high rate of vmstat events, while it can be caused by low rate of
+> events but with high latencies.  Latencies are the application really
+> concerns, that's why PSI is very useful for us.
+> 
+> Furthermore, there're some events are not recored in vmstat. e.g.
+> 
+> typf of memstall                                           vmstat event
+> 
+> MEMSTALL_KSWAPD                                pageoutrun, {pgscan,
+> pgsteal}_kswapd
+> MEMSTALL_RECLAIM_DIRECT                {pgscan,steal}_direct
+> MEMSTALL_RECLAIM_MEMCG                /* no event */
+> MEMSTALL_RECLAIM_HIGH                     /* no event */
+> MEMSTALL_KCOMPACTD                         compact_daemon_wake
+> MEMSTALL_COMPACT                              compact_{stall, fail, success}
+> MEMSTALL_WORKINGSET_REFAULT     workingset_refault
+> MEMSTALL_WORKINGSET_THRASH      /* no event */
+> MEMSTALL_MEMDELAY                           /* no event */
+> MEMSTALL_SWAPIO                                 pswpin
+> 
+> After we add these types of memstall, we don't need to add these
+> missed events one by one.
+
+I'm a bit concerned about the maintainability of these things. It
+makes moving code around harder, and it forces somebody who has no
+interest in this debugging facility to thing about the categories.
+
+And naming them is hard even for somebody who does care. I'm not a fan
+of MEMSTALL_MEMDELAY, for example because it's way too
+non-descript. The distinction between MEMSTALL_WORKINGSET_REFAULT and
+MEMSTALL_WORKINGSET_THRASH is dubious as well.
+
+These are recipes for bit rot and making the code harder to hack on.
+
+I see two options to do this better: One is to use stack traces as
+identifiers instead of a made-up type. The other is to use the calling
+function as the id (see how kmalloc_track_caller() utilizes _RET_IP_).
+
+bpftrace can use the stack as a map key. So this should already work
+without any kernel modifications, using @start[tid, kstack]?
