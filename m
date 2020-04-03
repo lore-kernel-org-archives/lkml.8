@@ -2,98 +2,127 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C42C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60674C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A37120719
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:18:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQEiMd49"
+	by mail.kernel.org (Postfix) with ESMTP id 35E27206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgDCVSj (ORCPT
+        id S1728117AbgDCVVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:18:39 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39535 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727842AbgDCVSj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:18:39 -0400
-Received: by mail-pg1-f195.google.com with SMTP id g32so4160482pgb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 14:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wh5T6yPyoIGG+Zj0KpPrWCt6Ri24iIgqMcr/FSjIJjo=;
-        b=dQEiMd49xF9NMr54YPZPEh4RazLTQFxG6S/9P9F88Xuirh9ym2aWmtBdghXexh1frW
-         z/rgzY+sOVKm3vlHmNr71rvnMGgJRvyjZQYdHQmMI+CtLIVqT+r4WtrEpKhgXGQXZwnA
-         AOyQ+znPhKYs1ui2r43DlnnZ7xfyeaDB4uXqdvuTQG+aTdxydM1S1InyhLvsRaVLxMkT
-         vwjfTQB3iDUix3tGh22PHsg3qYgYNHJ4ePCmqZug/IzvED7jgumdbep2Cvgil7y0lxC1
-         6vQrzBFEzlPxDtZpLVT70OjLcwAxbRdmnuHcF6towIOeUCmYRxnFMG6kmapOOYAyskBM
-         NkYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wh5T6yPyoIGG+Zj0KpPrWCt6Ri24iIgqMcr/FSjIJjo=;
-        b=cwMYCS2Vcbn09a6Ohrrqi5oFwDSKFLPc9o9JNkpxB2Tu1VDsGHei8fDJm5GfvN1YK5
-         C+SFG7Fwzwq1mM5cnMfZtvdJvlgRq44JAeuwUNj1HEQ/lU2DBwIDSmaezxxYR7vNsClF
-         cT65dFCaWauG1O07VIEd5gHSertMY3QsVOgHT82tgjH5v9TMefYZBc6YnJU03N23ePmC
-         hBT83G1oFxHovI8k8xx2OpJL+zxwFW9SVfB0RStv/YI4YQWOQdiJC5/xvDtcgWIntEs2
-         QmfPv5K9Rraa0YHgrm5vVIfRYWREXhY/NFyl/zVR+BZ6dbxZR+shQeRsAN6RosfQ4E+3
-         tP8Q==
-X-Gm-Message-State: AGi0PuahpWgjmVmwYnCz9Y6lRrVlWr+k3yOCe8EF0ZHYLOzAfcVnFbMY
-        otsf2t4UT/gfKqrcZwSpq8rIFib3YqU=
-X-Google-Smtp-Source: APiQypJXDWUKp+Nep+BHCEq3Oh0B9wkDEQHXI5BOrNimox2vgXjNvj7+clayV+Yw4Dt6ILYEscXZRA==
-X-Received: by 2002:a63:a052:: with SMTP id u18mr10351993pgn.210.1585948717780;
-        Fri, 03 Apr 2020 14:18:37 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y15sm6406323pfc.206.2020.04.03.14.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 14:18:37 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 14:18:37 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] remoteproc/omap: Fix set_load call in
- omap_rproc_request_timer
-Message-ID: <20200403211837.GC20625@builder.lan>
-References: <20200402010812.GA751391@yoga>
- <20200403013134.11407-1-natechancellor@gmail.com>
- <CAHk-=whG84d5bGHU5HLOMgR59BqUcuawPTxGgVDm3JWiWJHi6A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whG84d5bGHU5HLOMgR59BqUcuawPTxGgVDm3JWiWJHi6A@mail.gmail.com>
+        Fri, 3 Apr 2020 17:21:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44378 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727879AbgDCVVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 17:21:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E75EFAD57;
+        Fri,  3 Apr 2020 21:21:47 +0000 (UTC)
+From:   Mian Yousaf Kaukab <ykaukab@suse.de>
+To:     linux-pm@vger.kernel.org, andy.tang@nxp.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com
+Cc:     viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, Mian Yousaf Kaukab <ykaukab@suse.de>
+Subject: [PATCH 2/2] clk: qoriq: add cpufreq platform device
+Date:   Fri,  3 Apr 2020 23:21:14 +0200
+Message-Id: <20200403212114.15565-2-ykaukab@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200403212114.15565-1-ykaukab@suse.de>
+References: <20200403212114.15565-1-ykaukab@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 03 Apr 10:48 PDT 2020, Linus Torvalds wrote:
+Add a platform device for qoirq-cpufreq driver for the compatible
+clockgen blocks.
 
-> On Thu, Apr 2, 2020 at 6:32 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > This is due to commit 02e6d546e3bd ("clocksource/drivers/timer-ti-dm:
-> > Enable autoreload in set_pwm") in the clockevents tree interacting with
-> > commit e28edc571925 ("remoteproc/omap: Request a timer(s) for remoteproc
-> > usage") from the rpmsg tree.
-> >
-> > This should have been fixed during the merge of the remoteproc tree
-> > since it happened after the clockevents tree merge; however, it does not
-> > look like my email was noticed by either maintainer and I did not pay
-> > attention when the pull was sent since I was on CC.
-> 
-> Thanks, I've taken this patch directly into my tree since it was my
-> merge that screwed up.
-> 
+Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+---
+ drivers/clk/clk-qoriq.c | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
 
-Thanks Nathan, Suman and Linus.
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index d5946f7486d6..374afcab89af 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -95,6 +95,7 @@ struct clockgen {
+ };
+ 
+ static struct clockgen clockgen;
++static bool add_cpufreq_dev __initdata;
+ 
+ static void cg_out(struct clockgen *cg, u32 val, u32 __iomem *reg)
+ {
+@@ -1019,7 +1020,7 @@ static void __init create_muxes(struct clockgen *cg)
+ 	}
+ }
+ 
+-static void __init clockgen_init(struct device_node *np);
++static void __init _clockgen_init(struct device_node *np, bool legacy);
+ 
+ /*
+  * Legacy nodes may get probed before the parent clockgen node.
+@@ -1030,7 +1031,7 @@ static void __init clockgen_init(struct device_node *np);
+ static void __init legacy_init_clockgen(struct device_node *np)
+ {
+ 	if (!clockgen.node)
+-		clockgen_init(of_get_parent(np));
++		_clockgen_init(of_get_parent(np), true);
+ }
+ 
+ /* Legacy node */
+@@ -1447,7 +1448,7 @@ static bool __init has_erratum_a4510(void)
+ }
+ #endif
+ 
+-static void __init clockgen_init(struct device_node *np)
++static void __init _clockgen_init(struct device_node *np, bool legacy)
+ {
+ 	int i, ret;
+ 	bool is_old_ls1021a = false;
+@@ -1516,12 +1517,35 @@ static void __init clockgen_init(struct device_node *np)
+ 		       __func__, np, ret);
+ 	}
+ 
++	/* Don't create cpufreq device for legacy clockgen blocks */
++	add_cpufreq_dev = !legacy;
++
+ 	return;
+ err:
+ 	iounmap(clockgen.regs);
+ 	clockgen.regs = NULL;
+ }
+ 
++static void __init clockgen_init(struct device_node *np)
++{
++	_clockgen_init(np, false);
++}
++
++static int __init clockgen_cpufreq_init(void)
++{
++	struct platform_device *pdev;
++
++	if (add_cpufreq_dev) {
++		pdev = platform_device_register_simple("qoriq-cpufreq", -1,
++				NULL, 0);
++		if (IS_ERR(pdev))
++			pr_err("Couldn't register qoriq-cpufreq err=%ld\n",
++				PTR_ERR(pdev));
++	}
++	return 0;
++}
++device_initcall(clockgen_cpufreq_init);
++
+ CLK_OF_DECLARE(qoriq_clockgen_1, "fsl,qoriq-clockgen-1.0", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_2, "fsl,qoriq-clockgen-2.0", clockgen_init);
+ CLK_OF_DECLARE(qoriq_clockgen_b4420, "fsl,b4420-clockgen", clockgen_init);
+-- 
+2.16.4
+
