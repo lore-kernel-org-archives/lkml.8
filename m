@@ -2,100 +2,71 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177F8C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F88C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E245C206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D194206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgDCXgx (ORCPT
+        id S1726220AbgDCXjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 19:36:53 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15425 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgDCXgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 19:36:53 -0400
-IronPort-SDR: wul7Grj97ctJgWVDPpkAt33TNRH/By7ZUpVcRePuApakKfWiASpzMfoDFsoP5QeWfuyBUvNVH0
- hxV7woaUfkFw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 16:36:52 -0700
-IronPort-SDR: 6oIBtUZ/jmWrjUZs9IVm41LQ6enIuxRukYfcqqTujn4cCSOT7/E2wfrxgroRoXoU4i5Akc1Oo8
- NI0IgVxlrsMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,341,1580803200"; 
-   d="scan'208";a="360673902"
-Received: from lskarbek-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.249.39.121])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2020 16:36:49 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id 8311721E34; Sat,  4 Apr 2020 02:36:47 +0300 (EEST)
-Date:   Sat, 4 Apr 2020 02:36:47 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
- DRM fourccs
-Message-ID: <20200403233647.GA4394@kekkonen.localdomain>
-References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
- <20200403102449.GB4882@pendragon.ideasonboard.com>
- <20200403104701.GC3172@kekkonen.localdomain>
- <e44e41317719727ea12aee4ff1e210dea796dd2f.camel@perches.com>
+        Fri, 3 Apr 2020 19:39:48 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:42962 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgDCXjs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 19:39:48 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKVuG-009xUJ-1w; Fri, 03 Apr 2020 23:39:24 +0000
+Date:   Sat, 4 Apr 2020 00:39:24 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux@googlegroups.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Marco Elver <elver@google.com>,
+        Brian Gerst <brgerst@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86: signal: move save_altstack_ex out of generic
+ headers
+Message-ID: <20200403233924.GM23230@ZenIV.linux.org.uk>
+References: <20200324220830.110002-1-ndesaulniers@google.com>
+ <20200403231611.81444-1-ndesaulniers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e44e41317719727ea12aee4ff1e210dea796dd2f.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200403231611.81444-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
-
-On Fri, Apr 03, 2020 at 11:38:29AM -0700, Joe Perches wrote:
-> On Fri, 2020-04-03 at 13:47 +0300, Sakari Ailus wrote:
-> > On Fri, Apr 03, 2020 at 01:24:49PM +0300, Laurent Pinchart wrote:
-> > > On Fri, Apr 03, 2020 at 12:11:56PM +0300, Sakari Ailus wrote:
-> > > > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > > > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > > > the same implementation can be used.
-> []
-> > > > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> []
-> > > > +static noinline_for_stack
-> > > > +char *fourcc_string(char *buf, char *end, const u32 *fourcc,
-> > > > +		    struct printf_spec spec, const char *fmt)
-> []
-> > > > +	if (fmt[1] != 'c' || fmt[2] != 'c')
+On Fri, Apr 03, 2020 at 04:16:06PM -0700, Nick Desaulniers wrote:
+> In some configurations (clang+KASAN), sas_ss_reset() may emit calls to
+> memset().  This is a problem for SMAP protections on x86, which should
+> try to minimize calls to any function not already on short whitelist, in
+> order to prevent leaking AC flags or being used as a gadget.
 > 
-> This could check outside a format string if
-> the %p4 is at the end of the format string.
+> Linus noted that unsafe_save_altstack() only has callsites in the
+> arch-specific arch/x86/kernel/signal.c, and shouldn't be defined in arch
+> independent headers.
 > 
-> 	printk("%p4", fourcc)
-> 
-> So this should verify
-> 
-> 	if (!(fmt[1] == 'c' && fmt[2] == 'c'))
+> Split the logic of unsafe_save_altstack() into two, and move the definitions
+> to arch/x86/include/asm/sigframe.h.  This does less work with the SMAP
+> guards down.
 
-How would these be different in functionality? fmt[2] won't be accessed if
-fmt[1] is not 'c' (including '\0'), just like on the line above. I find the
-original easier to read.
-
--- 
-Regards,
-
-Sakari Ailus
+Just move that into signal_delivered() and that's it.  SMAP or no SMAP -
+doing that until the sigframe is set and we are committed to entering
+the handler is wrong.
