@@ -2,107 +2,120 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A2CC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E39C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3C020721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3260320721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EopsoHAM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBPZr1m7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404296AbgDCPbI (ORCPT
+        id S2404355AbgDCPcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:31:08 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41276 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404271AbgDCPbG (ORCPT
+        Fri, 3 Apr 2020 11:32:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37930 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404003AbgDCPcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:31:06 -0400
+        Fri, 3 Apr 2020 11:32:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585927865;
+        s=mimecast20190719; t=1585927952;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=J1iTHN+tnT2p+g/fi18lrfKuFFUGCiTi5w5obFOSEB4=;
-        b=EopsoHAMjkbWWQGBDgGVRlc44ytfphdEJT5IcjfM157upxuba0Sybuu5qnq6PpAWPnXo4s
-        spTGVpJToPsuTroUt8i388j4exjb42klxMQDDcrH71u4wgIo9ClLsxF8tauuwV2S8VGBNR
-        npyXQ5J1dH1Rkh3Ct1iNSeLxT9EXK6Y=
+        bh=wX+8AzXpUy9HNfAx/Y9ZR0Uh1eYbs9htUS3q1RBw3UQ=;
+        b=fBPZr1m71KWsb8iI5jX9J42qPXhWSEdJxLn+wPEurH8L/vBuE8b5vlcXp8yEWYkb4JGHi5
+        5OzZ3K0ULokGsMhn4lMCG8qJ5DSSnkuwcBNwChv3LvnCjuaq0+NeXm+FnSBZ46vpOyTcCA
+        OpBFnROaVrDvb/9/0xxcQ+dEfeIREMo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-m04b8OhgN3i6PG6Oq4RBpg-1; Fri, 03 Apr 2020 11:31:03 -0400
-X-MC-Unique: m04b8OhgN3i6PG6Oq4RBpg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-457-2-NUm0cIPsSiHEn2Um8Y3A-1; Fri, 03 Apr 2020 11:32:30 -0400
+X-MC-Unique: 2-NUm0cIPsSiHEn2Um8Y3A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CBD7190B2A0;
-        Fri,  3 Apr 2020 15:31:02 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-112-213.ams2.redhat.com [10.36.112.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C83A26DD1;
-        Fri,  3 Apr 2020 15:30:59 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>, stable@vger.kernel.org
-Subject: [PATCH v2 2/5] KVM: s390: vsie: Fix delivery of addressing exceptions
-Date:   Fri,  3 Apr 2020 17:30:47 +0200
-Message-Id: <20200403153050.20569-3-david@redhat.com>
-In-Reply-To: <20200403153050.20569-1-david@redhat.com>
-References: <20200403153050.20569-1-david@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9FB21405;
+        Fri,  3 Apr 2020 15:32:28 +0000 (UTC)
+Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 04463100EBA6;
+        Fri,  3 Apr 2020 15:32:26 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 10:32:25 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
+Message-ID: <20200403153225.jgakhibh2mhkvc5n@treble>
+References: <20200402082220.808-1-alexandre.chartre@oracle.com>
+ <20200402082220.808-5-alexandre.chartre@oracle.com>
+ <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
+ <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
+ <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
+ <20200402154022.GG20730@hirez.programming.kicks-ass.net>
+ <bc3a31dc-9d59-5756-aad3-187533f05654@redhat.com>
+ <20200403151757.lhhia7pzqptvlqz5@treble>
+ <20200403152214.3frjrlhxvodffghg@treble>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200403152214.3frjrlhxvodffghg@treble>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Whenever we get an -EFAULT, we failed to read in guest 2 physical
-address space. Such addressing exceptions are reported via a program
-intercept to the nested hypervisor.
+On Fri, Apr 03, 2020 at 10:22:14AM -0500, Josh Poimboeuf wrote:
+> On Fri, Apr 03, 2020 at 10:17:57AM -0500, Josh Poimboeuf wrote:
+> > On Fri, Apr 03, 2020 at 09:11:55AM +0100, Julien Thierry wrote:
+> > > 
+> > > 
+> > > On 4/2/20 4:40 PM, Peter Zijlstra wrote:
+> > > > On Thu, Apr 02, 2020 at 04:31:05PM +0100, Julien Thierry wrote:
+> > > > > My understanding is that once you find an intra-function call, either you
+> > > > > hit a return, ending the branch, so the return should undo the modification
+> > > > > the intra-function call did (whether is it a retpoline return or not).
+> > > > > Otherwise, the intra-function call branch will need to reach an end in some
+> > > > > way (e.g. hitting a CONTEXT_SWITCH instruction, calling a
+> > > > > dead_end_function).
+> > > > > 
+> > > > > Am I missing something?
+> > > > 
+> > > > The thing is basically doing:
+> > > > 
+> > > > 	mov  $n, cx
+> > > > 1:	call 2f
+> > > > 2:	dec  cx
+> > > > 	jnz  1b
+> > > > 	add  8*n, sp
+> > > > 
+> > > > So it does N calls to self, then subtracts N words from the stack.
+> > > > 
+> > > > The reason being that the CPU has a return-stack-buffer for predicting
+> > > > returns, and call/ret being naturally paired, that works. The above
+> > > > is a software flush of the RSB.
+> > > > 
+> > > 
+> > > Ah, lovely... Maybe that's where SAVE/RESTORE unwind hints could be nice ;)
+> > > .
+> > > 
+> > > Otherwise, I don't really have a good suggestion for this...
+> > 
+> > Peter, I think my previous idea for UNWIND_HINT_ADJUST stack_add=8 would
+> > work here?
+> 
+> And if we're going to need that hint anyway, maybe we could get rid of
+> the nasty arch_exception_frame_size for the IRET thing and just use a
+> hint there after all ;-)
 
-We faked the intercept, we have to return to guest 2. Instead, right
-now we would be returning -EFAULT from the intercept handler, eventually
-crashing the VM.
+Actually, never mind -- I guess it wouldn't work because of inconsistent
+stack states and all that...
 
-Addressing exceptions can only happen if the g2->g3 page tables
-reference invalid g2 addresses (say, either a table or the final page is
-not accessible - so something that basically never happens in sane
-environments.
-
-Identified by manual code inspection.
-
-Fixes: a3508fbe9dc6 ("KVM: s390: vsie: initial support for nested virtual=
-ization")
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/s390/kvm/vsie.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index 076090f9e666..4f6c22d72072 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -1202,6 +1202,7 @@ static int vsie_run(struct kvm_vcpu *vcpu, struct v=
-sie_page *vsie_page)
- 		scb_s->iprcc =3D PGM_ADDRESSING;
- 		scb_s->pgmilc =3D 4;
- 		scb_s->gpsw.addr =3D __rewind_psw(scb_s->gpsw, 4);
-+		rc =3D 1;
- 	}
- 	return rc;
- }
---=20
-2.25.1
+-- 
+Josh
 
