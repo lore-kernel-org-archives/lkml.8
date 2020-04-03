@@ -2,169 +2,125 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496E6C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6ACC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2029B20737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:39:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="NFL2gYq6"
+	by mail.kernel.org (Postfix) with ESMTP id 3A00720787
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390685AbgDCJjM (ORCPT
+        id S2390697AbgDCJj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:39:12 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17879 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727431AbgDCJjM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:39:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585906718;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=oPji02Mj10zIV94105MzH8+cFbH8kX7/x2UDE2ufQdk=;
-        b=NFL2gYq6yOwR5PMtxtfMdPV3b9JEIAIDKpJF5SxosIlaHQV/dm5XVW4woY24SDPi
-        y8FUtatfGCb0ZHV8lWyWvAKj9Wnr/gz+InFkczzHoXR1JzwjGxojwXklrVtWZjsdXh9
-        cwLand8F5BdeATPIPM7d4gLYmm5W7dWEJ5tAB1tg=
-Received: from [10.233.233.252] (115.193.87.168 [115.193.87.168]) by mx.zoho.com.cn
-        with SMTPS id 1585906716374879.2219004893537; Fri, 3 Apr 2020 17:38:36 +0800 (CST)
-Date:   Fri, 03 Apr 2020 17:38:28 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <1585906191-26037-2-git-send-email-yangtiezhu@loongson.cn>
-References: <1585906191-26037-1-git-send-email-yangtiezhu@loongson.cn> <1585906191-26037-2-git-send-email-yangtiezhu@loongson.cn>
+        Fri, 3 Apr 2020 05:39:57 -0400
+Received: from mga01.intel.com ([192.55.52.88]:26488 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390660AbgDCJj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 05:39:56 -0400
+IronPort-SDR: GgMkbqAjlXj6Kj5UAAIlHGvbBBOldu6VzORqlDGN7fEQn1IcKDGHXvLtYKpNK5QZYG5lZ+5DwK
+ a8yGyErHQ6qQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 02:39:26 -0700
+IronPort-SDR: mrfzUyQhdnAbx6mzKGKFsTZVO2V/SsCPoTEyp8okqq/FlyrMWR9/Xl6C1QvBColw/C4o0d4tcH
+ M/aQK3AzdKQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
+   d="scan'208";a="451242657"
+Received: from seemahan-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.249.38.56])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Apr 2020 02:39:22 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 6354521F19; Fri,  3 Apr 2020 12:39:17 +0300 (EEST)
+Date:   Fri, 3 Apr 2020 12:39:16 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Perches <joe@perches.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
+ DRM fourccs
+Message-ID: <20200403093916.GA3172@kekkonen.localdomain>
+References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
+ <20200403093103.GI1922688@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 1/3] MIPS: Loongson: Get host bridge information
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <F7C43218-A2A0-47C7-8F90-117DD3247807@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403093103.GI1922688@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andy,
 
+Thanks for the comments.
 
-=E4=BA=8E 2020=E5=B9=B44=E6=9C=883=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885:=
-29:49, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->Read the address of host bridge configuration space to get the vendor
->ID
->and device ID of host bridge, and then we can distinguish various types
->of host bridge such as LS7A or RS780E=2E
+On Fri, Apr 03, 2020 at 12:31:03PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 03, 2020 at 12:11:56PM +0300, Sakari Ailus wrote:
+> > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
+> > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
+> > the same implementation can be used.
+> 
+> ...
+> 
+> > +static noinline_for_stack
+> > +char *fourcc_string(char *buf, char *end, const u32 *fourcc,
+> > +		    struct printf_spec spec, const char *fmt)
+> > +{
+> 
+> > +#define FOURCC_STRING_BE	"-BE"
+> > +	char s[sizeof(*fourcc) + sizeof(FOURCC_STRING_BE)] = { 0 };
+> 
+> I guess it makes it too complicated.
 
-I'm a little bit uncomfortable about this kind of hack=2E
+The above also clearly binds the size to the data that is expected to
+contain there. I'd prefer keeping it as-is. And yes, 8 would be correct,
+too.
 
-Wish Loongson will establish a elegant boot proctol in future=2E
+> 
+> 	char s[8];
+> 
+> > +	if (check_pointer(&buf, end, fourcc, spec))
+> > +		return buf;
+> > +
+> > +	if (fmt[1] != 'c' || fmt[2] != 'c')
+> > +		return error_string(buf, end, "(%p4?)", spec);
+> > +
+> 
+> > +	put_unaligned_le32(*fourcc & ~BIT(31), s);
+> 
+> Can you elaborate what the difference in output with this bit set over cleared?
+> I.o.w. why don't we need to put it as BE and for LE case addd "-LE"?
 
-For this patch,
+The established practice is that big endian formats have "-BE" suffix
+whereas the little endian ones have nothing. (At least when it comes to
+V4L2.)
 
-Reviewed-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+> 
+> > +	if (*fourcc & BIT(31))
+> > +		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
+> > +			sizeof(FOURCC_STRING_BE));
+> 
+> We know the size, and we may put '\0' as well
+> 	if (*fourcc & BIT(31))
+> 		strscpy(&s[4], "-BE", sizeof("-BE"));
+> 	else
+> 		strscpy(&s[4], "", sizeof(""));
 
->
->Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
->---
->
->v3:
->  - Modify the macro definition HOST_BRIDGE_CONFIG_ADDR and
->    add comment to make it easy to read=2E
->  - Use PCI_VENDOR_ID_LOONGSON in pci_ids=2Eh instead of 0x0014
->
->  PCI_VENDOR_ID_LOONGSON depends on the mainline tree's commit:
->https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/torvalds/linux=2Egit/=
-commit/?id=3D9acb9fe18d86
->
->v4:
->  - Use LS7A instead of Loongson 7A1000 in the description
->  - Use LS7A or ls7a instead of LS7A1000 or ls7a1000 in the code
->
-> arch/mips/include/asm/mach-loongson64/boot_param=2Eh |  6 ++++++
->arch/mips/loongson64/env=2Ec                         | 18
->++++++++++++++++++
-> 2 files changed, 24 insertions(+)
->
->diff --git a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->index 2ed483e=2E=2Efc9f14b 100644
->--- a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->+++ b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->@@ -192,6 +192,11 @@ struct boot_params {
-> 	struct efi_reset_system_t reset_system;
-> };
->=20
->+enum loongson_bridge_type {
->+	RS780E =3D 1,
->+	LS7A =3D 2
->+};
->+
-> struct loongson_system_configuration {
-> 	u32 nr_cpus;
-> 	u32 nr_nodes;
->@@ -200,6 +205,7 @@ struct loongson_system_configuration {
-> 	u16 boot_cpu_id;
-> 	u16 reserved_cpus_mask;
-> 	enum loongson_cpu_type cputype;
->+	enum loongson_bridge_type bridgetype;
-> 	u64 ht_control_base;
-> 	u64 pci_mem_start_addr;
-> 	u64 pci_mem_end_addr;
->diff --git a/arch/mips/loongson64/env=2Ec b/arch/mips/loongson64/env=2Ec
->index 2554ef1=2E=2E71f4aaf 100644
->--- a/arch/mips/loongson64/env=2Ec
->+++ b/arch/mips/loongson64/env=2Ec
->@@ -14,12 +14,15 @@
->  * Author: Wu Zhangjin, wuzhangjin@gmail=2Ecom
->  */
-> #include <linux/export=2Eh>
->+#include <linux/pci_ids=2Eh>
-> #include <asm/bootinfo=2Eh>
-> #include <loongson=2Eh>
-> #include <boot_param=2Eh>
-> #include <builtin_dtbs=2Eh>
-> #include <workarounds=2Eh>
->=20
->+#define HOST_BRIDGE_CONFIG_ADDR	((void __iomem *)TO_UNCAC(0x1a000000))
->+
-> u32 cpu_clock_freq;
-> EXPORT_SYMBOL(cpu_clock_freq);
-> struct efi_memory_map_loongson *loongson_memmap;
->@@ -43,6 +46,8 @@ void __init prom_init_env(void)
-> 	struct system_loongson *esys;
-> 	struct efi_cpuinfo_loongson *ecpu;
-> 	struct irq_source_routing_table *eirq_source;
->+	u32 id;
->+	u16 vendor, device;
->=20
-> 	/* firmware arguments are initialized in head=2ES */
-> 	boot_p =3D (struct boot_params *)fw_arg2;
->@@ -178,4 +183,17 @@ void __init prom_init_env(void)
-> 		memcpy(loongson_sysconf=2Esensors, esys->sensors,
-> 			sizeof(struct sensor_device) * loongson_sysconf=2Enr_sensors);
-> 	pr_info("CpuClock =3D %u\n", cpu_clock_freq);
->+
->+	/* Read the ID of PCI host bridge to detect bridge type */
->+	id =3D readl(HOST_BRIDGE_CONFIG_ADDR);
->+	vendor =3D id & 0xffff;
->+	device =3D (id >> 16) & 0xffff;
->+
->+	if (vendor =3D=3D PCI_VENDOR_ID_LOONGSON && device =3D=3D 0x7a00) {
->+		pr_info("The bridge chip is LS7A\n");
->+		loongson_sysconf=2Ebridgetype =3D LS7A;
->+	} else {
->+		pr_info("The bridge chip is RS780E or SR5690\n");
->+		loongson_sysconf=2Ebridgetype =3D RS780E;
->+	}
-> }
+The rest of the struct memory has already been set to zero in variable
+declaration.
 
---=20
-Jiaxun Yang
+-- 
+Kind regards,
+
+Sakari Ailus
