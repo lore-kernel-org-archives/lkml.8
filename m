@@ -2,152 +2,195 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3B1C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31B5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32293206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:18:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILFYgyub"
+	by mail.kernel.org (Postfix) with ESMTP id C926D206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391028AbgDCSSi (ORCPT
+        id S2391102AbgDCSSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:18:38 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38563 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgDCSSh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:18:37 -0400
-Received: by mail-pj1-f65.google.com with SMTP id m15so3298385pje.3;
-        Fri, 03 Apr 2020 11:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=XyOcRqHLrPMKWL0+JCToAyCGJJg9Vdkcz8glcxLfQsY=;
-        b=ILFYgyubl8EZk3gAnCfiFTzzgD6EDawXKLLuYpR4xGfNSvpQRhdd2gt6aT1KSee0fi
-         gCeeigsN7dAe4UWcrr4JBXqCqOVm6q5KX2ASNntgXyFgwVBqUYf+NnHBGG8Dob9ZPGOA
-         buqRasH4wFH8/JUfGTVhzq2/RVPmK/YWT2FJEj3Vgxl9B5CorEAWmASlAd6PxeWAGvMS
-         iUtOOJydqkpgYxC3/M2Dld4oqYMMcfkn/yAxSZRnbGaLaWsFe2e10tL2EdrQWVuRwNAo
-         QMxjkkUfgTyBZUlXVYAIbThKxEtPNChSuuWUg06MuxJYxpK1pLIGCgOAieb596eMeca/
-         RKRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XyOcRqHLrPMKWL0+JCToAyCGJJg9Vdkcz8glcxLfQsY=;
-        b=D4wrF9zPLggbsQI+dzW+kE0MGaXotOzmKt1l7VqGFHAdeCWv1InAhJ9HemaBLYETaw
-         8QXFVYvrM30ona1YWdMxmLud50VDPEUeFjMV41RIhRogVLmmUjwH0E4HvT41yxgq0pLn
-         Tqohr4GtUpNADGlbTui8ei8s6sQlksjMeECpx5orB6Wg1eyqi8BGxCy8VGu9OQ+cDagh
-         dekuSW/eJbM0G8/adWDKSW1sCfhGfvqhoYZk2RApI3qWGZy9zxyZE6mdG8DoSafAA/l2
-         qYQ5dX/WWNdLi3keTJCNto2cm8Um3ixm2eGCMP0LNVp8u6g23+c8IQMqKDtzArSk1a9B
-         s0Cw==
-X-Gm-Message-State: AGi0PuYeNE8zYL7TU2lHqttdqiHKN2/ZVRdCr1YiMWbblyGNzsAqH52K
-        +kPmDvi3hE6LeIFMF7p/08vlPUk=
-X-Google-Smtp-Source: APiQypJNWzRaLCfW1ZN5MjEnanFUEM0GaLuid95rtKhYEECecqDPgywodDlnjVvpHUmPkE0hN7jdrQ==
-X-Received: by 2002:a17:902:ac8d:: with SMTP id h13mr9142477plr.267.1585937916376;
-        Fri, 03 Apr 2020 11:18:36 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:d32:bec6:f832:439c:9244:ba33])
-        by smtp.gmail.com with ESMTPSA id f200sm6322893pfa.177.2020.04.03.11.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 11:18:35 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     gregkh@linuxfoundation.org, hariprasad.kelam@gmail.com,
-        colin.king@canonical.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ldv-project@linuxtesting.org, andrianov@ispras.ru,
-        stern@rowland.harvard.edu,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] usb: host: u132-hcd: Remove u132_static_list and list head u132_list
-Date:   Fri,  3 Apr 2020 23:48:16 +0530
-Message-Id: <20200403181816.8115-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 3 Apr 2020 14:18:46 -0400
+Received: from mga05.intel.com ([192.55.52.43]:46924 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391040AbgDCSSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 14:18:45 -0400
+IronPort-SDR: PXRSSESXKYEEHYvhIDI+FS1Io+l8lhYHSnMly4Gq7LO2yI5l7EEGr/hbloUkJmo+OZFivodHfM
+ xVLwUN0X0Rgg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 11:18:44 -0700
+IronPort-SDR: V0VLOAw+LUrgIbQPN4Z4zGQxldZS1U1Mpe8InN/iTYip2KU0gw6OiS1fNLpsLBcZOk70tvoDXx
+ bSl4qi4+Qc5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,340,1580803200"; 
+   d="scan'208";a="242873358"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Apr 2020 11:18:43 -0700
+Date:   Fri, 3 Apr 2020 11:18:43 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+Message-ID: <20200403181843.GK3952565@iweiny-DESK2.sc.intel.com>
+References: <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
+ <20200316095224.GF12783@quack2.suse.cz>
+ <20200316095509.GA13788@lst.de>
+ <20200401040021.GC56958@magnolia>
+ <20200401102511.GC19466@quack2.suse.cz>
+ <20200402085327.GA19109@lst.de>
+ <20200402205518.GF3952565@iweiny-DESK2.sc.intel.com>
+ <20200403072731.GA24176@lst.de>
+ <20200403154828.GJ3952565@iweiny-DESK2.sc.intel.com>
+ <20200403170338.GD29920@quack2.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403170338.GD29920@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Fri, Apr 03, 2020 at 07:03:38PM +0200, Jan Kara wrote:
+> On Fri 03-04-20 08:48:29, Ira Weiny wrote:
+> > On Fri, Apr 03, 2020 at 09:27:31AM +0200, Christoph Hellwig wrote:
+> > > On Thu, Apr 02, 2020 at 01:55:19PM -0700, Ira Weiny wrote:
+> > > > > I'd just return an error for that case, don't play silly games like
+> > > > > evicting the inode.
+> > > > 
+> > > > I think I agree with Christoph here.  But I want to clarify.  I was heading in
+> > > > a direction of failing the ioctl completely.  But we could have the flag change
+> > > > with an appropriate error which could let the user know the change has been
+> > > > delayed.
+> > > > 
+> > > > But I don't immediately see what error code is appropriate for such an
+> > > > indication.  Candidates I can envision:
+> > > > 
+> > > > EAGAIN
+> > > > ERESTART
+> > > > EUSERS
+> > > > EINPROGRESS
+> > > > 
+> > > > None are perfect but I'm leaning toward EINPROGRESS.
+> > > 
+> > > I really, really dislike that idea.  The whole point of not forcing
+> > > evictions is to make it clear - no this inode is "busy" you can't
+> > > do that.  A reasonably smart application can try to evict itself.
+> > 
+> > I don't understand.  What Darrick proposed would never need any
+> > evictions.  If the file has blocks allocated the FS_XFLAG_DAX flag can
+> > not be changed.  So I don't see what good eviction would do at all.
+> 
+> I guess there's some confusion here (may well be than on my side). Darrick
+> propose that we can switch FS_XFLAG_DAX only when file has no blocks
+> allocated - fine by me. But that still does not mean than we can switch
+> S_DAX immediately, does it? Because that would still mean we need to switch
+> aops on living inode and that's ... difficult and Christoph didn't want to
+> clutter the code with it.
+> 
+> So I've understood Darrick's proposal as: Just switch FS_XFLAG_DAX flag,
+> S_DAX flag will magically switch when inode gets evicted and the inode gets
+> reloaded from the disk again. Did I misunderstand anything?
+> 
+> And my thinking was that this is surprising behavior for the user and so it
+> will likely generate lots of bug reports along the lines of "DAX inode flag
+> does not work!". So I was pondering how to make the behavior less
+> confusing... The ioctl I've suggested was just a poor attempt at that.
 
-u132_static_list is a global list protected by u132_module_lock.
-It is read in the u132_hcd_exit() function without holding the lock
-thus may lead to data race.
-However, it turns out that this list isn't used for anything useful
-and thus it is okay to get rid of it.
-Thus, remove the u132_static_list from u132-hcd module.
-Also remove struct list_head u132_list from struct u132.
+Ok but then I don't understand Christophs comment to "just return an error for
+that case"?  Which case?
 
-Found by Linux Driver Verification project (linuxtesting.org).
+> 
+> > > But returning an error and doing a lazy change anyway is straight from
+> > > the playbook for arcane and confusing API designs.
+> > 
+> > Jan countered with a proposal that the FS_XFLAG_DAX does change with
+> > blocks allocated.  But that S_DAX would change on eviction.  Adding that
+> > some eviction ioctl could be added.
+> 
+> No, I didn't mean that we can change FS_XFLAG_DAX with blocks allocated. I
+> was still speaking about the case without blocks allocated.
 
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- drivers/usb/host/u132-hcd.c | 10 ----------
- 1 file changed, 10 deletions(-)
+Ah ok good point.  But again what 'error' do we return when FS_XFLAG_DAX
+changed but S_DAX did not?
 
-diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-index e9209e3e6248..995bc52d2d22 100644
---- a/drivers/usb/host/u132-hcd.c
-+++ b/drivers/usb/host/u132-hcd.c
-@@ -81,7 +81,6 @@ static DECLARE_WAIT_QUEUE_HEAD(u132_hcd_wait);
- static struct mutex u132_module_lock;
- static int u132_exiting;
- static int u132_instances;
--static struct list_head u132_static_list;
- /*
- * end of the global variables protected by u132_module_lock
- */
-@@ -177,7 +176,6 @@ struct u132_ring {
- };
- struct u132 {
- 	struct kref kref;
--	struct list_head u132_list;
- 	struct mutex sw_lock;
- 	struct mutex scheduler_lock;
- 	struct u132_platform_data *board;
-@@ -254,7 +252,6 @@ static void u132_hcd_delete(struct kref *kref)
- 	struct usb_hcd *hcd = u132_to_hcd(u132);
- 	u132->going += 1;
- 	mutex_lock(&u132_module_lock);
--	list_del_init(&u132->u132_list);
- 	u132_instances -= 1;
- 	mutex_unlock(&u132_module_lock);
- 	dev_warn(&u132->platform_dev->dev, "FREEING the hcd=%p and thus the u13"
-@@ -3089,7 +3086,6 @@ static int u132_probe(struct platform_device *pdev)
- 		retval = 0;
- 		hcd->rsrc_start = 0;
- 		mutex_lock(&u132_module_lock);
--		list_add_tail(&u132->u132_list, &u132_static_list);
- 		u132->sequence_num = ++u132_instances;
- 		mutex_unlock(&u132_module_lock);
- 		u132_u132_init_kref(u132);
-@@ -3192,7 +3188,6 @@ static struct platform_driver u132_platform_driver = {
- static int __init u132_hcd_init(void)
- {
- 	int retval;
--	INIT_LIST_HEAD(&u132_static_list);
- 	u132_instances = 0;
- 	u132_exiting = 0;
- 	mutex_init(&u132_module_lock);
-@@ -3213,14 +3208,9 @@ static int __init u132_hcd_init(void)
- module_init(u132_hcd_init);
- static void __exit u132_hcd_exit(void)
- {
--	struct u132 *u132;
--	struct u132 *temp;
- 	mutex_lock(&u132_module_lock);
- 	u132_exiting += 1;
- 	mutex_unlock(&u132_module_lock);
--	list_for_each_entry_safe(u132, temp, &u132_static_list, u132_list) {
--		platform_device_unregister(u132->platform_dev);
--	}
- 	platform_driver_unregister(&u132_platform_driver);
- 	printk(KERN_INFO "u132-hcd driver deregistered\n");
- 	wait_event(u132_hcd_wait, u132_instances == 0);
--- 
-2.17.1
+> 
+> > You then proposed just returning an error for that case.  (This lead me to
+> > believe that you were ok with an eviction based change of S_DAX.)
+> > 
+> > So I agreed that changing S_DAX could be delayed until an explicit eviction.
+> > But, to aid the 'smart application', a different error code could be used to
+> > indicate that the FS_XFLAG_DAX had been changed but that until that explicit
+> > eviction occurs S_DAX would remain.
+> > 
+> > So I don't fully follow what you mean by 'lazy change'?
+> > 
+> > Do you still really, really dislike an explicit eviction method for changing
+> > the S_DAX flag?
+> > 
+> > If FS_XFLAG_DAX can never be changed on a file with blocks allocated and the
+> > user wants to change the mode of operations on their 'data'; they would have to
+> > create a new file with the proper setting and move the data there.  For example
+> > copy the file into a directory marked FS_XFLAG_DAX==true?
+> > 
+> > I'm ok with either interface as I think both could be clear if documented.
+> 
+> I agree that what Darrick suggested is technically easily doable and can be
+> documented. But it is not natural behavior (i.e., different than all inode
+> flags we have) and we know how careful people are when reading
+> documentation...
+> 
+
+Ok For 5.8 why don't we not allow FS_XFLAG_DAX to be changed on files _at_
+_all_...
+
+In summary:
+
+ - Applications must call statx to discover the current S_DAX state.
+
+ - There exists an advisory file inode flag FS_XFLAG_DAX that is set based on
+   the parent directory FS_XFLAG_DAX inode flag.  (There is no way to change
+   this flag after file creation.)
+
+   If FS_XFLAG_DAX is set and the fs is on pmem then it will enable S_DAX at
+   inode load time; if FS_XFLAG_DAX is not set, it will not enable S_DAX.
+   Unless overridden...
+
+ - There exists a dax= mount option.
+
+   "-o dax=off" means "never set S_DAX, ignore FS_XFLAG_DAX"
+   	"-o nodax" means "dax=off"
+   "-o dax=always" means "always set S_DAX (at least on pmem), ignore FS_XFLAG_DAX"
+   	"-o dax" by itself means "dax=always"
+   "-o dax=iflag" means "follow FS_XFLAG_DAX" and is the default
+
+ - There exists an advisory directory inode flag FS_XFLAG_DAX that can be
+   changed at any time.  The flag state is copied into any files or
+   subdirectories when they are created within that directory.  If programs
+   require file access runs in S_DAX mode, they'll have to create those files
+   inside a directory with FS_XFLAG_DAX set, or mount the fs with an
+   appropriate dax mount option.
+
+
+???
+
+Ira
 
