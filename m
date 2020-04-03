@@ -2,134 +2,153 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98CBC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E850120757
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:13:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="o+0Z03po"
+	by mail.kernel.org (Postfix) with ESMTP id 923BC2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585909130;
+	bh=RO5qFxGEAhe7sc5dP8ijSZuqx2o+C7z3RagoGe96ce4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sLlAnKWs1YdOCQwxTw5yA9QPQzWvvm3rxecPinu82qxiRRpzd1cSTU9Yxmo4sXnWz
+	 +tMh8hn+QjJuApj+3bThoc0PU+/jayMjjkDrTlhPm413Y8vdBszXsVCGjmDYZndij+
+	 ba3RwMBn68imQ1vHeeJFHxGeGbjp1u/1lXtYYvIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390671AbgDCKNg (ORCPT
+        id S1727983AbgDCKSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:13:36 -0400
-Received: from mout.web.de ([212.227.15.4]:60845 "EHLO mout.web.de"
+        Fri, 3 Apr 2020 06:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbgDCKNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:13:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1585908784;
-        bh=/U+bW05Pvewq2voj1LF69LW/5jvM7rtMfQBqg8tSR2E=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=o+0Z03poM4U31FXxR/xinx7ahcOjHcaGziXpxkS+cVpIWlq+XA524EhQjZLils4sz
-         yUc9lD2mmU/pKSxfLv8uD9FcMWHh82Cl6zETQQpiCE6iFFHt3pANZbzPuMGA8sfbbJ
-         SGO6M/p9gfClWfgE8Ykrwvoe0AiaJxaPXGky35Ek=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.135.25.116]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M52ju-1j7sJ40qT8-00zBi2; Fri, 03
- Apr 2020 12:13:04 +0200
-Subject: Re: mfd: asic3: Delete redundant variable definition
-To:     Lee Jones <lee.jones@linaro.org>,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <b2a0e5f6-1f07-a7bd-2f3c-c95119efe635@web.de>
- <20200403092521.GD30614@dell>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <89c74a65-3da0-ddd5-2b80-407fd3a66ec6@web.de>
-Date:   Fri, 3 Apr 2020 12:12:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727835AbgDCKSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 06:18:46 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 336FE2073B;
+        Fri,  3 Apr 2020 10:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585909125;
+        bh=RO5qFxGEAhe7sc5dP8ijSZuqx2o+C7z3RagoGe96ce4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2O0x/Rmwj692FzKaUD7ywOxIZQvcu53sPHlXjEjIlShObU4sFOWKnrsKrAgctOhyu
+         akTamW7FymNkpQgHnCz4LcW+0wyFBrHDeonhr9QGBkmz5UPHK3gfsG3/yDiG60zyV5
+         177S2VE3YmUZgxBaXN3ei/D6L2m9weJs85y+Psvw=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jKJPP-000T70-DR; Fri, 03 Apr 2020 11:18:43 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200403092521.GD30614@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:WDlLIQDzCjgBF1LYn7Jo133V1B0JfwlQaoxkQlKIvM5fp6c08LT
- wqeApRwS9Cp94RUEQGQBwVgLCbiJw6EKUnKBC4KmdwowaoTEIq2gXrIrB2zgCCj8ad1bF5v
- J+EdKz0h0Pcwpv5s7GXIGWAdDJzDT8llUYlLByF9FmwKvR26dVkY6wGI2g+tGrWWmdb/EWv
- UTwGY0v/w/jU1AOTclD0A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CTbuHs7vKAQ=:yTxwslRopQ3AzDiu2MuMQ4
- Sm3jlcu9L67uW66FqSFFA06vAq4M++2qHpe7dhIz8ADTFaU5oZFNi6FWCBcMznI/Z6o8vut4i
- qfjNbiAmnH69AUDwHFwXLUR5rB7KHYL779q/+GaNx9bxKQoiDoVBs29srHojLH4H7pH8fdej2
- 0Wt2nTU3o8hm2tv1IQ/8bGOtzmifSNEzFvWp9Pf9i4XmH1ltQVpJ3rpCl9G8TL3k85kNdeeV1
- /yZ6quYhZdarW7eacSdsmDoZsusxMbTzvZXlBzqFE2CJQsWG6pgUp4ODYZo0b5WyZ63ToZ6ye
- XPImDJuZno/RRnb5+qbPTxE5s9Dz+E35T4Pv3M/i1s3rYOZ61REz8XPUO+lxZHOzu/tQEjfqF
- t39PkBp8RJoTrljcc3pnqK7VyjC6OsmH61NC6S1vOxyepx+XJkWDjADcogy1B7AXMpw4NY420
- o1vV2DYHRxuhfqorvrLZ0op2fcIghueq4rs23hdPz/IJrAVp/IuKx+l4TFAT0fpuOx+5y7yfv
- GYJdatecTsyGwfpNKBQps5b4LLGJ6IXsXhag+nRDxkKvaZHbyR0p29WNsgM7BsPKDKiZH9rbE
- Bc/4dKBng2CiIUxbJeHsy/5WVB7AL6bWIkrzz+znQgBsFz7CMXah1pNLDMQhn9jZ6GykS1bng
- tTouAC288UxMKPBKSHp8PJNZ6U6JN9UfgOwlcBdhPRHP9N3JlSrJh4w5VTozDMPr78/Z75gkJ
- gyrwn05nGQS07oAqclPYayNGcKPr2zh68769WygYvyG4XQsCeOYrNedwZLsDLiNHubOz0+fz/
- WUraimWTJAN3Ik087rVppsagpCcdRh7jowVKlH+HdqlFf8p1iuRx8zEd6S7Hy9+SGli7y6qPA
- JWBLWKPQesae1Da+F2k4L7RrN2kPJH6NyN8KmDVdv8Qj7O2eyEVAFziGyOMAX0INTquWPtupb
- SvgR5m+i1MGNU0Cf0f1E1d7/KSSCOlLDHAxfw9wBkxzG8mjYjGhAughmRYq0xds1AtSs+ypn9
- GUDP00ACIPs8mf/sccDc20K2mWT9e0JhjW3lg6sFpDtfy09m7NeB+y+s8PRmrmBmzvdkScP4c
- 8Wgyu90HAihCaKJ3eo0TShPirYJ8HcVCAVKZmS+QXduz+gdq2LHYJqJyICZC2d0DVWlNS9vxc
- yLU5v8JJ7r9Pp2ISva357SUiBXldsOunLd3xv8ePkQYa016mosTIWxrBzMY14z503CKu7ZaD+
- wXkfP0vmdtUmA9aKa
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 03 Apr 2020 11:18:43 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     =?UTF-8?Q?Lu=C3=ADs_Matallui?= <matallui@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Help with IRQ-MSI-IRQ bridges
+In-Reply-To: <CAE3Pknn88NZNqiaHahM4HVvTU82hdMcbhGWWb4AyXXYMbcGuaQ@mail.gmail.com>
+References: <CAE3Pknn88NZNqiaHahM4HVvTU82hdMcbhGWWb4AyXXYMbcGuaQ@mail.gmail.com>
+Message-ID: <3ebbe879471898218f34918b1d009887@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: matallui@gmail.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Why wasn't this sent 'in reply to'?  Something wrong with your mailer?
+Hi Luis,
 
-It seems that my mail program version contains still open issues for
-the preservation of this information after a click on a web link.
-mailto:tangbin%40cmss.chinamobile.com?In-Reply-To=%3C20200403042020.17452-1-tangbin@cmss.chinamobile.com%3E&Cc=lee.jones%40linaro.org%2Clinux-kernel%40vger.kernel.org&Subject=Re%3A%20%5BPATCH%5D%20mfd%3Aasic3%3ADelete%20redundant%20variable%20definition
+On 2020-04-03 02:35, Luís Matallui wrote:
+> Hi,
+> 
+> I've got this SoC which uses IRQ-MSI and MSI-IRQ bridges in order to
+> get interrupts from devices external to the ARM subsystem.
+> I already got some pointers from Maz and have been able to create the
+> drivers with the stacked domains and can now see the mappings working
+> fine across domains.
+> 
+> Maz pointed me to the Marvell mvebu-gicp (for my MSI controller, a.k.a
+> MSI-IRQ bridge) and to mvebu-icu for the MSI client (IRQ-MSI bridge).
+> 
+> I now have the interrupts working, but it seems like I'm missing a
+> bunch of them. And therefore my device doesn't work properly.
+> The main difference between my HW and Marvell's is that my IRQs are
+> not level-triggered and the MSIs don't support the two messages for
+> level-triggered interrupts.
 
+Which is probably a very good thing, as long as all your devices 
+generate
+only edge-triggered interrupts.
 
-> Now this messages is orphaned.  Floating about in my inbox on its own.
+> 
+> To illustrate my system:
+> 
+> DEV --line--> IRQ-MSI Bridge (MSIC) --msi--> MSI-IRQ Bridge (GICP)
+> --line--> GICv2
+> 
+> For MSIC, all I can do is configure the address and data for the MSI,
+> and I believe on every rising edge of the Device IRQ, an MSI is sent.
+> For GICP, all I have is a doorbell and a way to enable/disable it, and
+> whenever the doorbell is enabled and has a value != 0, the IRQ line to
+> GICv2 gets asserted.
+> 
+> The first thing I noticed is that when I get an interrupt, the IRQ
+> flow goes like:
+> 
+>   handle_irq();
+>   irq_eoi();
+> 
+> So, I guess my first question here is, how can I guarantee that I
+> don't get another MSI whilst in handle_irq()?
 
-This effect can be unfortunate.
+At the GIC level, once the interrupt is Ack'd, anything that is signed
+after this ack is a separate interrupt. It will be made pending and will
+fire once the GIC driver EOIs the first one.
 
+> If I do, then I will clear the doorbell on irq_eoi() (because that's
+> my only choice) and will lose the queued IRQs.
 
-Regards,
-Markus
+Why do you need to do anything at the doorbell level? This is just a 
+write,
+so there should be nothing to clear. If you do need to clear anything,
+then your MSI-IRQ bridge isn't stateless as it should, and you'll need 
+to
+give much more details about the HW. Do you have a pointer to the TRM
+for your HW?
+
+> It also seems that I'm missing IRQs in the beginning after probing the
+> device, and before it was working for me when I was setting up all
+> these registers manually and simply using GICv2 as my only interrupt
+> controller.
+
+Well, setting all of this in firmware is always the preferred option
+if you don't expect things to change dynamically.
+
+> I do see the unmask() ops being called for all my stacked irqchips, so
+> I don't understand how I'm missing so many interrupts.
+
+unmask is just a static configuration to enable the interrupt. There 
+shouldn't
+be that many calls to that later on unless an endpoint driver 
+disables/enables
+interrupts by hand.
+
+Please give us a bit more details to understand the context, as there is 
+only
+so much I can do with so little HW information.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
