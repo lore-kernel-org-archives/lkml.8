@@ -2,207 +2,708 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3714EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6607AC2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E909520787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD8120787
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 00:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9EB+sDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390333AbgDCAIJ (ORCPT
+        id S2390332AbgDCA0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 20:08:09 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:42182 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390235AbgDCAII (ORCPT
+        Thu, 2 Apr 2020 20:26:23 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37756 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731842AbgDCA0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 20:08:08 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK9sV-000597-3R; Thu, 02 Apr 2020 18:08:07 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jK9sU-0001GJ-4z; Thu, 02 Apr 2020 18:08:06 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
-        <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
-        <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
-        <87lfnda3w3.fsf@x220.int.ebiederm.org>
-        <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
-Date:   Thu, 02 Apr 2020 19:05:23 -0500
-In-Reply-To: <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
-        (Linus Torvalds's message of "Thu, 2 Apr 2020 16:44:15 -0700")
-Message-ID: <87imih8md8.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 2 Apr 2020 20:26:22 -0400
+Received: by mail-ed1-f65.google.com with SMTP id de14so6997997edb.4;
+        Thu, 02 Apr 2020 17:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1t38OqKK1oDsPwZMakicwoBebGmi6xTL4BAIax5Vufs=;
+        b=b9EB+sDYw+cJNJP5iQSUMjDYeSShbIOWpQ0CgvjNlq6F5MPj3esd3FAj2SI34t9zT9
+         ruCErFLNlKfMydy0Keu3dFe42m/D+zjJKZXmta4I7WpKxKb7mhu5T8xHDgfagVKMso/X
+         mc6mPh9U3IRxWvbSrm31y6EpNy6YiqDRejo0GItJXjZTg3fIG4Qv1WvqwBpsF4EYRcQS
+         RUg9DSNpkNt+CiZd22pDdbabgFrljmDFkDRnqqAtJ88mXzUU4KWVMQB5J8mG00t8ztpu
+         sfOCUPR4tFtzcBuduM7RR9cm5yCKdAppEN5Voq2W4RtTvo4e3OvwmWEOHo0q9M/IdyIc
+         GBgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1t38OqKK1oDsPwZMakicwoBebGmi6xTL4BAIax5Vufs=;
+        b=IYZ6EagrzgWkBIljGA/ccN9g+aIfurzNIJoq1JOWSXbAGGPo/UO9lQ46kFgZTOq7CA
+         58da2o9KozM6FGo+Vpk0HBEV+PgwgKY3KJosDu9u1XyI/JM+vu6APiDGcBSUzeP6XXyF
+         3/l/fSPhAVAzA73jIMdtaIM04gjPIQA8pGy/nnVZZPEhxkWAHLqA+fKB2PjkbVZSYwqO
+         Pv4CooAg4f21I4WjuFFKFTBe/s8Mkw5HCk0+QXuxKKbv5qZUEEPpYwDPQ+1lIBpTqcRK
+         GtNQylveayKEmTPPNUr++6b50vmT85CDbwNpl4PJPKS0S7qRsXZ61s70QMwwYL4CiDei
+         drVQ==
+X-Gm-Message-State: AGi0PuZss2bRHHEZEjrRj4LBeureeuywxQnuBSrNyQk6UivoWdCeNoVL
+        BFyscPCoMQZH7uRNbP5/wBo=
+X-Google-Smtp-Source: APiQypLUmR2Fr6NUrw8ZcYHXTuXWF62cH4Hl06U1Jq648CpDMCCC+DAacVfh7qfRT/WBy4gvBT+NSA==
+X-Received: by 2002:aa7:dacc:: with SMTP id x12mr5478560eds.109.1585873579352;
+        Thu, 02 Apr 2020 17:26:19 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host133-251-dynamic.52-79-r.retail.telecomitalia.it. [79.52.251.133])
+        by smtp.googlemail.com with ESMTPSA id j10sm1335981ejv.13.2020.04.02.17.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 17:26:18 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 1/2] phy: qualcomm: add qcom dwc3 phy
+Date:   Fri,  3 Apr 2020 02:26:04 +0200
+Message-Id: <20200403002608.946-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jK9sU-0001GJ-4z;;;mid=<87imih8md8.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+UA3zrmrj/p6b8R/HYq++Njt3rqPDaiwc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+This has lost in the original push for the dwc3 qcom driver.
+This is needed for ipq806x SoC as without this the usb ports
+doesn't work at all.
 
-> On Thu, Apr 2, 2020 at 4:04 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>
->> That is not the direction I intend to take either.
->
-> Ahh, good. Because those kinds of "play games with dropping locks in
-> the middle based on conditionals" really have been horrible.
->
-> Yes, we've done it, and it's almost always been asource of truly subtle bugs.
->
->> The exec_update_mutex is to be a strict subset of today's
->> cred_guard_mutex.  I tried to copy cred_guard_mutex's unlock style so
->> that was obvious and that turns out was messier than I intended.
->
-> Yes. That is why I had no problem pulling that subset, and my worries
-> were mainly about the explanations and that flag use.
->
->> Since I thought I already knew what was in the patches and the worst
->> problem was the missing unlock of cred_guard_mutex, and I know Bernd's
->> patches had been tested I applied them.  I missed that Bernd had added
->> the exec_mmap_called flag into my patch.  I thought he had only added
->> the missing unlock.
->
-> Ahh, so you meant for all of that to be entirely static refactoring,
-> rather than the conditional unlock depending on just how far we had
-> gotten.
->
-> Good, that's generally the much superior approach.
+Signed-off-by: Andy Gross <agross@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/phy/qualcomm/Kconfig         |  12 +
+ drivers/phy/qualcomm/Makefile        |   1 +
+ drivers/phy/qualcomm/phy-qcom-dwc3.c | 578 +++++++++++++++++++++++++++
+ 3 files changed, 591 insertions(+)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-dwc3.c
 
-Looking at it right now if I add the unlock to one code path I can
-get the flag and free_binprm out of it, and have it completely static.
+diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+index e46824da29f6..3d45a9156f85 100644
+--- a/drivers/phy/qualcomm/Kconfig
++++ b/drivers/phy/qualcomm/Kconfig
+@@ -91,3 +91,15 @@ config PHY_QCOM_USB_HSIC
+ 	select GENERIC_PHY
+ 	help
+ 	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
++
++config PHY_QCOM_DWC3
++	tristate "QCOM DWC3 USB PHY support"
++	depends on ARCH_QCOM
++	depends on HAS_IOMEM
++	depends on OF
++	select GENERIC_PHY
++	help
++	  This option enables support for the Synopsis PHYs present inside the
++	  Qualcomm USB3.0 DWC3 controller.  This driver supports both HS and SS
++	  PHY controllers.
++
+diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+index 283251d6a5d9..04c5a8da941a 100644
+--- a/drivers/phy/qualcomm/Makefile
++++ b/drivers/phy/qualcomm/Makefile
+@@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
+ obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
+ obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
+ obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
++obj-$(CONFIG_PHY_QCOM_DWC3)		+= phy-qcom-dwc3.o
+diff --git a/drivers/phy/qualcomm/phy-qcom-dwc3.c b/drivers/phy/qualcomm/phy-qcom-dwc3.c
+new file mode 100644
+index 000000000000..f33da199ddde
+--- /dev/null
++++ b/drivers/phy/qualcomm/phy-qcom-dwc3.c
+@@ -0,0 +1,578 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright (c) 2014-2015, Code Aurora Forum. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/delay.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++
++/* USB QSCRATCH Hardware registers */
++#define QSCRATCH_GENERAL_CFG		(0x08)
++#define HSUSB_PHY_CTRL_REG		(0x10)
++
++/* PHY_CTRL_REG */
++#define HSUSB_CTRL_DMSEHV_CLAMP			BIT(24)
++#define HSUSB_CTRL_USB2_SUSPEND			BIT(23)
++#define HSUSB_CTRL_UTMI_CLK_EN			BIT(21)
++#define HSUSB_CTRL_UTMI_OTG_VBUS_VALID		BIT(20)
++#define HSUSB_CTRL_USE_CLKCORE			BIT(18)
++#define HSUSB_CTRL_DPSEHV_CLAMP			BIT(17)
++#define HSUSB_CTRL_COMMONONN			BIT(11)
++#define HSUSB_CTRL_ID_HV_CLAMP			BIT(9)
++#define HSUSB_CTRL_OTGSESSVLD_CLAMP		BIT(8)
++#define HSUSB_CTRL_CLAMP_EN			BIT(7)
++#define HSUSB_CTRL_RETENABLEN			BIT(1)
++#define HSUSB_CTRL_POR				BIT(0)
++
++/* QSCRATCH_GENERAL_CFG */
++#define HSUSB_GCFG_XHCI_REV		BIT(2)
++
++/* USB QSCRATCH Hardware registers */
++#define SSUSB_PHY_CTRL_REG		(0x30)
++#define SSUSB_PHY_PARAM_CTRL_1		(0x34)
++#define SSUSB_PHY_PARAM_CTRL_2		(0x38)
++#define CR_PROTOCOL_DATA_IN_REG	(0x3c)
++#define CR_PROTOCOL_DATA_OUT_REG	(0x40)
++#define CR_PROTOCOL_CAP_ADDR_REG	(0x44)
++#define CR_PROTOCOL_CAP_DATA_REG	(0x48)
++#define CR_PROTOCOL_READ_REG		(0x4c)
++#define CR_PROTOCOL_WRITE_REG		(0x50)
++
++/* PHY_CTRL_REG */
++#define SSUSB_CTRL_REF_USE_PAD		BIT(28)
++#define SSUSB_CTRL_TEST_POWERDOWN	BIT(27)
++#define SSUSB_CTRL_LANE0_PWR_PRESENT	BIT(24)
++#define SSUSB_CTRL_SS_PHY_EN		BIT(8)
++#define SSUSB_CTRL_SS_PHY_RESET		BIT(7)
++
++/* SSPHY control registers - Does this need 0x30? */
++#define SSPHY_CTRL_RX_OVRD_IN_HI(lane)	(0x1006 + 0x100 * lane)
++#define SSPHY_CTRL_TX_OVRD_DRV_LO(lane)	(0x1002 + 0x100 * lane)
++
++/* SSPHY SoC version specific values */
++#define SSPHY_RX_EQ_VALUE		4 /* Override value for rx_eq */
++/* Override value for transmit preemphasis */
++#define SSPHY_TX_DEEMPH_3_5DB		23
++#define SSPHY_MPLL_VALUE		0 /* Override value for mpll */
++
++/* QSCRATCH PHY_PARAM_CTRL1 fields */
++#define PHY_PARAM_CTRL1_TX_FULL_SWING_MASK	0x07f00000u
++#define PHY_PARAM_CTRL1_TX_DEEMPH_6DB_MASK	0x000fc000u
++#define PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB_MASK	0x00003f00u
++#define PHY_PARAM_CTRL1_LOS_BIAS_MASK		0x000000f8u
++
++#define PHY_PARAM_CTRL1_MASK				\
++		(PHY_PARAM_CTRL1_TX_FULL_SWING_MASK |	\
++		 PHY_PARAM_CTRL1_TX_DEEMPH_6DB_MASK |	\
++		 PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB_MASK |	\
++		 PHY_PARAM_CTRL1_LOS_BIAS_MASK)
++
++#define PHY_PARAM_CTRL1_TX_FULL_SWING(x)	\
++		(((x) << 20) & PHY_PARAM_CTRL1_TX_FULL_SWING_MASK)
++#define PHY_PARAM_CTRL1_TX_DEEMPH_6DB(x)	\
++		(((x) << 14) & PHY_PARAM_CTRL1_TX_DEEMPH_6DB_MASK)
++#define PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB(x)	\
++		(((x) <<  8) & PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB_MASK)
++#define PHY_PARAM_CTRL1_LOS_BIAS(x)	\
++		(((x) <<  3) & PHY_PARAM_CTRL1_LOS_BIAS_MASK)
++
++/* RX OVRD IN HI bits */
++#define RX_OVRD_IN_HI_RX_RESET_OVRD		BIT(13)
++#define RX_OVRD_IN_HI_RX_RX_RESET		BIT(12)
++#define RX_OVRD_IN_HI_RX_EQ_OVRD		BIT(11)
++#define RX_OVRD_IN_HI_RX_EQ_MASK		0x0700
++#define RX_OVRD_IN_HI_RX_EQ_SHIFT		8
++#define RX_OVRD_IN_HI_RX_EQ_EN_OVRD		BIT(7)
++#define RX_OVRD_IN_HI_RX_EQ_EN			BIT(6)
++#define RX_OVRD_IN_HI_RX_LOS_FILTER_OVRD	BIT(5)
++#define RX_OVRD_IN_HI_RX_LOS_FILTER_MASK	0x0018
++#define RX_OVRD_IN_HI_RX_RATE_OVRD		BIT(2)
++#define RX_OVRD_IN_HI_RX_RATE_MASK		0x0003
++
++/* TX OVRD DRV LO register bits */
++#define TX_OVRD_DRV_LO_AMPLITUDE_MASK	0x007F
++#define TX_OVRD_DRV_LO_PREEMPH_MASK	0x3F80
++#define TX_OVRD_DRV_LO_PREEMPH_SHIFT	7
++#define TX_OVRD_DRV_LO_EN		BIT(14)
++
++/* SS CAP register bits */
++#define SS_CR_CAP_ADDR_REG		BIT(0)
++#define SS_CR_CAP_DATA_REG		BIT(0)
++#define SS_CR_READ_REG			BIT(0)
++#define SS_CR_WRITE_REG			BIT(0)
++
++struct qcom_dwc3_usb_phy {
++	struct regmap		*base;
++	struct device		*dev;
++	struct clk		*xo_clk;
++	struct clk		*ref_clk;
++	u32			rx_eq;
++	u32			tx_deamp_3_5db;
++	u32			mpll;
++};
++
++struct qcom_dwc3_phy_drvdata {
++	struct phy_ops	ops;
++	u32		clk_rate;
++};
++
++/**
++ * Write register and read back masked value to confirm it is written
++ *
++ * @base - QCOM DWC3 PHY base virtual address.
++ * @offset - register offset.
++ * @mask - register bitmask specifying what should be updated
++ * @val - value to write.
++ */
++static inline void qcom_dwc3_phy_write_readback(
++	struct qcom_dwc3_usb_phy *phy_dwc3, u32 offset,
++	const u32 mask, u32 val)
++{
++	u32 write_val, tmp;
++
++	tmp = regmap_read(phy_dwc3->base, offset, &tmp);
++	tmp &= ~mask;		/* retain other bits */
++	write_val = tmp | val;
++
++	regmap_write(phy_dwc3->base, offset, write_val);
++
++	/* Read back to see if val was written */
++	regmap_read(phy_dwc3->base, offset, &tmp);
++	tmp &= mask;		/* clear other bits */
++
++	if (tmp != val)
++		dev_err(phy_dwc3->dev, "write: %x to QSCRATCH: %x FAILED\n",
++			val, offset);
++}
++
++static int wait_for_latch(struct regmap *base, u32 addr)
++{
++	u32 retry = 10, data;
++
++	while (true) {
++		regmap_read(base, addr, &data);
++		if (!data)
++			break;
++
++		if (--retry == 0)
++			return -ETIMEDOUT;
++
++		usleep_range(10, 20);
++	}
++
++	return 0;
++}
++
++/**
++ * Write SSPHY register
++ *
++ * @base - QCOM DWC3 PHY base virtual address.
++ * @addr - SSPHY address to write.
++ * @val - value to write.
++ */
++static int qcom_dwc3_ss_write_phycreg(struct qcom_dwc3_usb_phy *phy_dwc3,
++					u32 addr, u32 val)
++{
++	int ret;
++
++	regmap_write(phy_dwc3->base, CR_PROTOCOL_DATA_IN_REG, addr);
++	regmap_write(phy_dwc3->base, CR_PROTOCOL_CAP_ADDR_REG,
++		     SS_CR_CAP_ADDR_REG);
++
++	ret = wait_for_latch(phy_dwc3->base, CR_PROTOCOL_CAP_ADDR_REG);
++	if (ret)
++		goto err_wait;
++
++	regmap_write(phy_dwc3->base, CR_PROTOCOL_DATA_IN_REG, val);
++	regmap_write(phy_dwc3->base, CR_PROTOCOL_CAP_DATA_REG,
++		     SS_CR_CAP_DATA_REG);
++
++	ret = wait_for_latch(phy_dwc3->base, CR_PROTOCOL_CAP_DATA_REG);
++	if (ret)
++		goto err_wait;
++
++	regmap_write(phy_dwc3->base, CR_PROTOCOL_WRITE_REG, SS_CR_WRITE_REG);
++
++	ret = wait_for_latch(phy_dwc3->base, CR_PROTOCOL_WRITE_REG);
++
++err_wait:
++	if (ret)
++		dev_err(phy_dwc3->dev, "timeout waiting for latch\n");
++	return ret;
++}
++
++/**
++ * Read SSPHY register.
++ *
++ * @base - QCOM DWC3 PHY base virtual address.
++ * @addr - SSPHY address to read.
++ */
++static int qcom_dwc3_ss_read_phycreg(struct regmap *base, u32 addr, u32 *val)
++{
++	int ret;
++
++	regmap_write(base, CR_PROTOCOL_DATA_IN_REG, addr);
++	regmap_write(base, CR_PROTOCOL_CAP_ADDR_REG, SS_CR_CAP_ADDR_REG);
++
++	ret = wait_for_latch(base, CR_PROTOCOL_CAP_ADDR_REG);
++	if (ret)
++		goto err_wait;
++
++	/*
++	 * Due to hardware bug, first read of SSPHY register might be
++	 * incorrect. Hence as workaround, SW should perform SSPHY register
++	 * read twice, but use only second read and ignore first read.
++	 */
++	regmap_write(base, CR_PROTOCOL_READ_REG, SS_CR_READ_REG);
++
++	ret = wait_for_latch(base, CR_PROTOCOL_READ_REG);
++	if (ret)
++		goto err_wait;
++
++	/* throwaway read */
++	regmap_read(base, CR_PROTOCOL_DATA_OUT_REG, &ret);
++
++	regmap_write(base, CR_PROTOCOL_READ_REG, SS_CR_READ_REG);
++
++	ret = wait_for_latch(base, CR_PROTOCOL_READ_REG);
++	if (ret)
++		goto err_wait;
++
++	regmap_read(base, CR_PROTOCOL_DATA_OUT_REG, val);
++
++err_wait:
++	return ret;
++}
++
++static int qcom_dwc3_hs_phy_init(struct phy *phy)
++{
++	struct qcom_dwc3_usb_phy *phy_dwc3 = phy_get_drvdata(phy);
++	int ret;
++	u32 val;
++
++	ret = clk_prepare_enable(phy_dwc3->xo_clk);
++	if (ret)
++		return ret;
++
++	ret = clk_prepare_enable(phy_dwc3->ref_clk);
++	if (ret) {
++		clk_disable_unprepare(phy_dwc3->xo_clk);
++		return ret;
++	}
++
++	/*
++	 * HSPHY Initialization: Enable UTMI clock, select 19.2MHz fsel
++	 * enable clamping, and disable RETENTION (power-on default is ENABLED)
++	 */
++	val = HSUSB_CTRL_DPSEHV_CLAMP | HSUSB_CTRL_DMSEHV_CLAMP |
++		HSUSB_CTRL_RETENABLEN  | HSUSB_CTRL_COMMONONN |
++		HSUSB_CTRL_OTGSESSVLD_CLAMP | HSUSB_CTRL_ID_HV_CLAMP |
++		HSUSB_CTRL_DPSEHV_CLAMP | HSUSB_CTRL_UTMI_OTG_VBUS_VALID |
++		HSUSB_CTRL_UTMI_CLK_EN | HSUSB_CTRL_CLAMP_EN | 0x70;
++
++	/* use core clock if external reference is not present */
++	if (!phy_dwc3->xo_clk)
++		val |= HSUSB_CTRL_USE_CLKCORE;
++
++	regmap_write(phy_dwc3->base, HSUSB_PHY_CTRL_REG, val);
++	usleep_range(2000, 2200);
++
++	/* Disable (bypass) VBUS and ID filters */
++	regmap_write(phy_dwc3->base, QSCRATCH_GENERAL_CFG, HSUSB_GCFG_XHCI_REV);
++
++	return 0;
++}
++
++static int qcom_dwc3_hs_phy_exit(struct phy *phy)
++{
++	struct qcom_dwc3_usb_phy *phy_dwc3 = phy_get_drvdata(phy);
++
++	clk_disable_unprepare(phy_dwc3->ref_clk);
++	clk_disable_unprepare(phy_dwc3->xo_clk);
++
++	return 0;
++}
++
++static int qcom_dwc3_ss_phy_init(struct phy *phy)
++{
++	struct qcom_dwc3_usb_phy *phy_dwc3 = phy_get_drvdata(phy);
++	int ret;
++	u32 data = 0;
++
++	ret = clk_prepare_enable(phy_dwc3->xo_clk);
++	if (ret)
++		return ret;
++
++	ret = clk_prepare_enable(phy_dwc3->ref_clk);
++	if (ret) {
++		clk_disable_unprepare(phy_dwc3->xo_clk);
++		return ret;
++	}
++
++	/* reset phy */
++	regmap_read(phy_dwc3->base, SSUSB_PHY_CTRL_REG, &data);
++	regmap_write(phy_dwc3->base, SSUSB_PHY_CTRL_REG,
++		data | SSUSB_CTRL_SS_PHY_RESET);
++	usleep_range(2000, 2200);
++	regmap_write(phy_dwc3->base, SSUSB_PHY_CTRL_REG, data);
++
++	/* clear REF_PAD if we don't have XO clk */
++	if (!phy_dwc3->xo_clk)
++		data &= ~SSUSB_CTRL_REF_USE_PAD;
++	else
++		data |= SSUSB_CTRL_REF_USE_PAD;
++
++	regmap_write(phy_dwc3->base, SSUSB_PHY_CTRL_REG, data);
++
++	/* wait for ref clk to become stable, this can take up to 30ms */
++	msleep(30);
++
++	data |= SSUSB_CTRL_SS_PHY_EN | SSUSB_CTRL_LANE0_PWR_PRESENT;
++	regmap_write(phy_dwc3->base, SSUSB_PHY_CTRL_REG, data);
++
++	/*
++	 * WORKAROUND: There is SSPHY suspend bug due to which USB enumerates
++	 * in HS mode instead of SS mode. Workaround it by asserting
++	 * LANE0.TX_ALT_BLOCK.EN_ALT_BUS to enable TX to use alt bus mode
++	 */
++	ret = qcom_dwc3_ss_read_phycreg(phy_dwc3->base, 0x102D, &data);
++	if (ret)
++		goto err_phy_trans;
++
++	data |= (1 << 7);
++	ret = qcom_dwc3_ss_write_phycreg(phy_dwc3, 0x102D, data);
++	if (ret)
++		goto err_phy_trans;
++
++	ret = qcom_dwc3_ss_read_phycreg(phy_dwc3->base, 0x1010, &data);
++	if (ret)
++		goto err_phy_trans;
++
++	data &= ~0xff0;
++	data |= 0x20;
++	ret = qcom_dwc3_ss_write_phycreg(phy_dwc3, 0x1010, data);
++	if (ret)
++		goto err_phy_trans;
++
++	/*
++	 * Fix RX Equalization setting as follows
++	 * LANE0.RX_OVRD_IN_HI. RX_EQ_EN set to 0
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ_EN_OVRD set to 1
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ set based on SoC version
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ_OVRD set to 1
++	 */
++	ret = qcom_dwc3_ss_read_phycreg(phy_dwc3->base,
++			SSPHY_CTRL_RX_OVRD_IN_HI(0), &data);
++	if (ret)
++		goto err_phy_trans;
++
++	data &= ~RX_OVRD_IN_HI_RX_EQ_EN;
++	data |= RX_OVRD_IN_HI_RX_EQ_EN_OVRD;
++	data &= ~RX_OVRD_IN_HI_RX_EQ_MASK;
++	data |= phy_dwc3->rx_eq << RX_OVRD_IN_HI_RX_EQ_SHIFT;
++	data |= RX_OVRD_IN_HI_RX_EQ_OVRD;
++	ret = qcom_dwc3_ss_write_phycreg(phy_dwc3,
++		SSPHY_CTRL_RX_OVRD_IN_HI(0), data);
++	if (ret)
++		goto err_phy_trans;
++
++	/*
++	 * Set EQ and TX launch amplitudes as follows
++	 * LANE0.TX_OVRD_DRV_LO.PREEMPH set based on SoC version
++	 * LANE0.TX_OVRD_DRV_LO.AMPLITUDE set to 110
++	 * LANE0.TX_OVRD_DRV_LO.EN set to 1.
++	 */
++	ret = qcom_dwc3_ss_read_phycreg(phy_dwc3->base,
++		SSPHY_CTRL_TX_OVRD_DRV_LO(0), &data);
++	if (ret)
++		goto err_phy_trans;
++
++	data &= ~TX_OVRD_DRV_LO_PREEMPH_MASK;
++	data |= phy_dwc3->tx_deamp_3_5db << TX_OVRD_DRV_LO_PREEMPH_SHIFT;
++	data &= ~TX_OVRD_DRV_LO_AMPLITUDE_MASK;
++	data |= 0x6E;
++	data |= TX_OVRD_DRV_LO_EN;
++	ret = qcom_dwc3_ss_write_phycreg(phy_dwc3,
++		SSPHY_CTRL_TX_OVRD_DRV_LO(0), data);
++	if (ret)
++		goto err_phy_trans;
++
++	qcom_dwc3_ss_write_phycreg(phy_dwc3, 0x30, phy_dwc3->mpll);
++
++	/*
++	 * Set the QSCRATCH PHY_PARAM_CTRL1 parameters as follows
++	 * TX_FULL_SWING [26:20] amplitude to 110
++	 * TX_DEEMPH_6DB [19:14] to 32
++	 * TX_DEEMPH_3_5DB [13:8] set based on SoC version
++	 * LOS_BIAS [7:3] to 9
++	 */
++	regmap_read(phy_dwc3->base, SSUSB_PHY_PARAM_CTRL_1, &data);
++
++	data &= ~PHY_PARAM_CTRL1_MASK;
++
++	data |= PHY_PARAM_CTRL1_TX_FULL_SWING(0x6e) |
++		PHY_PARAM_CTRL1_TX_DEEMPH_6DB(0x20) |
++		PHY_PARAM_CTRL1_TX_DEEMPH_3_5DB(phy_dwc3->tx_deamp_3_5db) |
++		PHY_PARAM_CTRL1_LOS_BIAS(0x9);
++
++	qcom_dwc3_phy_write_readback(phy_dwc3, SSUSB_PHY_PARAM_CTRL_1,
++				     PHY_PARAM_CTRL1_MASK, data);
++
++err_phy_trans:
++	return ret;
++}
++
++static int qcom_dwc3_ss_phy_exit(struct phy *phy)
++{
++	struct qcom_dwc3_usb_phy *phy_dwc3 = phy_get_drvdata(phy);
++
++	/* Sequence to put SSPHY in low power state:
++	 * 1. Clear REF_PHY_EN in PHY_CTRL_REG
++	 * 2. Clear REF_USE_PAD in PHY_CTRL_REG
++	 * 3. Set TEST_POWERED_DOWN in PHY_CTRL_REG to enable PHY retention
++	 */
++	qcom_dwc3_phy_write_readback(phy_dwc3, SSUSB_PHY_CTRL_REG,
++		SSUSB_CTRL_SS_PHY_EN, 0x0);
++	qcom_dwc3_phy_write_readback(phy_dwc3, SSUSB_PHY_CTRL_REG,
++		SSUSB_CTRL_REF_USE_PAD, 0x0);
++	qcom_dwc3_phy_write_readback(phy_dwc3, SSUSB_PHY_CTRL_REG,
++		SSUSB_CTRL_TEST_POWERDOWN, 0x0);
++
++	clk_disable_unprepare(phy_dwc3->ref_clk);
++	clk_disable_unprepare(phy_dwc3->xo_clk);
++
++	return 0;
++}
++
++static const struct qcom_dwc3_phy_drvdata qcom_dwc3_hs_drvdata = {
++	.ops = {
++		.init		= qcom_dwc3_hs_phy_init,
++		.exit		= qcom_dwc3_hs_phy_exit,
++		.owner		= THIS_MODULE,
++	},
++	.clk_rate = 60000000,
++};
++
++static const struct qcom_dwc3_phy_drvdata qcom_dwc3_ss_drvdata = {
++	.ops = {
++		.init		= qcom_dwc3_ss_phy_init,
++		.exit		= qcom_dwc3_ss_phy_exit,
++		.owner		= THIS_MODULE,
++	},
++	.clk_rate = 125000000,
++};
++
++static const struct of_device_id qcom_dwc3_phy_table[] = {
++	{ .compatible = "qcom,dwc3-hs-usb-phy", .data = &qcom_dwc3_hs_drvdata },
++	{ .compatible = "qcom,dwc3-ss-usb-phy", .data = &qcom_dwc3_ss_drvdata },
++	{ /* Sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, qcom_dwc3_phy_table);
++
++static int qcom_dwc3_phy_probe(struct platform_device *pdev)
++{
++	struct qcom_dwc3_usb_phy	*phy_dwc3;
++	struct phy_provider		*phy_provider;
++	struct phy			*generic_phy;
++	struct resource			*res;
++	const struct of_device_id *match;
++	const struct qcom_dwc3_phy_drvdata *data;
++	struct device_node *np;
++
++	phy_dwc3 = devm_kzalloc(&pdev->dev, sizeof(*phy_dwc3), GFP_KERNEL);
++	if (!phy_dwc3)
++		return -ENOMEM;
++
++	match = of_match_node(qcom_dwc3_phy_table, pdev->dev.of_node);
++	data = match->data;
++
++	phy_dwc3->dev = &pdev->dev;
++
++	phy_dwc3->base = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
++							 "regmap");
++	if (IS_ERR_OR_NULL(phy_dwc3->base))
++		return PTR_ERR_OR_ZERO(phy_dwc3->base) ? : -EINVAL;
++
++	phy_dwc3->ref_clk = devm_clk_get(phy_dwc3->dev, "ref");
++	if (IS_ERR(phy_dwc3->ref_clk)) {
++		dev_dbg(phy_dwc3->dev, "cannot get reference clock\n");
++		return PTR_ERR(phy_dwc3->ref_clk);
++	}
++
++	clk_set_rate(phy_dwc3->ref_clk, data->clk_rate);
++
++	phy_dwc3->xo_clk = devm_clk_get(phy_dwc3->dev, "xo");
++	if (IS_ERR(phy_dwc3->xo_clk)) {
++		dev_dbg(phy_dwc3->dev, "cannot get TCXO clock\n");
++		phy_dwc3->xo_clk = NULL;
++	}
++
++	/* Parse device node to probe HSIO settings */
++	np = of_node_get(pdev->dev.of_node);
++	if (!of_compat_cmp(match->compatible, "qcom,dwc3-ss-usb-phy",
++			   strlen(match->compatible))) {
++
++		if (of_property_read_u32(np, "rx_eq", &phy_dwc3->rx_eq) ||
++		    of_property_read_u32(np, "tx_deamp_3_5db",
++					 &phy_dwc3->tx_deamp_3_5db) ||
++		    of_property_read_u32(np, "mpll", &phy_dwc3->mpll)) {
++
++			dev_err(phy_dwc3->dev, "cannot get HSIO settings from device node, using default values\n");
++
++			/* Default HSIO settings */
++			phy_dwc3->rx_eq = SSPHY_RX_EQ_VALUE;
++			phy_dwc3->tx_deamp_3_5db = SSPHY_TX_DEEMPH_3_5DB;
++			phy_dwc3->mpll = SSPHY_MPLL_VALUE;
++		}
++	}
++
++	generic_phy = devm_phy_create(phy_dwc3->dev, pdev->dev.of_node,
++				      &data->ops);
++
++	if (IS_ERR(generic_phy))
++		return PTR_ERR(generic_phy);
++
++	phy_set_drvdata(generic_phy, phy_dwc3);
++	platform_set_drvdata(pdev, phy_dwc3);
++
++	phy_provider = devm_of_phy_provider_register(phy_dwc3->dev,
++			of_phy_simple_xlate);
++
++	if (IS_ERR(phy_provider))
++		return PTR_ERR(phy_provider);
++
++	return 0;
++}
++
++static struct platform_driver qcom_dwc3_phy_driver = {
++	.probe		= qcom_dwc3_phy_probe,
++	.driver		= {
++		.name	= "qcom-dwc3-usb-phy",
++		.owner	= THIS_MODULE,
++		.of_match_table = qcom_dwc3_phy_table,
++	},
++};
++
++module_platform_driver(qcom_dwc3_phy_driver);
++
++MODULE_ALIAS("platform:phy-qcom-dwc3");
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Andy Gross <agross@codeaurora.org>");
++MODULE_AUTHOR("Ivan T. Ivanov <iivanov@mm-sol.com>");
++MODULE_DESCRIPTION("DesignWare USB3 QCOM PHY driver");
+-- 
+2.25.1
 
-> I absolutely _hate_ the "drop and retake" model, unless it's a very
-> local case with a very explicit retry path.
->
-> In contrast, the "we have a flag that shows how far we've gotten"
-> _has_ been a successful model, and while I much prefer a static "lock
-> pairs with unlock", that "I have done this, so you need to unlock" is
-> not entirely out of the question when the static rules become too
-> complex to think about.
-
-We do definitely need one of those for the point of no return.  I
-need to check if we can set it sooner.  I think we have a weird case
-where we can't set the flag because calling force_sigsegv during when
-coredumping is rude.
-
-> The vfs code has something similar in FMODE_OPENED which is basically
-> a flag saying "I actually made it all the way to the ->open()"
-> callback. We used to have a static model, but the rules for when we
-> can use fput(), and when we have to use fdrop() were too hard for
-> people.
->
->> I spotted the weirdness in unlocking exec_update_mutex, and because it
->> does fix a real world deadlock with ptrace I did not back it out from my
->> tree.
->>
->> I have been much laxer on the details than I like to be my apologies.
->
-> Ok, as long as we have a sane plan..
->
-> And
->
->> The plan is:
->>         exec_udpate_mutex will cover just the subset of cred_guard_mutex
->>         after the point of no return, and after we do any actions that
->>         might block waiting for userspace to do anything.
->>
->>         So exec_update_mutex will just cover those things that exec
->>         is updating, so if you want an atomic snapshot of them
->>         plus the appropriate struct cred you can grab exec_update_mutex.
->>
->>         I added a new mutex instead of just fixing cred_guard_mutex so
->>         that we can update or revert the individual code paths if it
->>         is found that something is wrong.
->>
->>         The cred_guard_mutex also prevents other tasks from starting
->>         to ptrace the task that is exec'ing, and other tasks from
->>         setting no_new_privs on the task that is exec'ing.
->>
->>         My plan is to carefully refactor the code so it can perform
->>         both the ptrace and no_new_privs checks after the point of
->>         no return.
->
-> Ok. Sounds good.
->
->> I have uncovered all kinds of surprises while working in that direction
->> and I realize it is going to take a very delicate and careful touch to
->> achieve my goal.
->>
->> There are silly things like normal linux exec when you are ptraced and
->> exec changes the credentials the ordinary code will continue with the
->> old credentials, but the an LSM enabled your process is likely to be
->> killed instead.
->
-> Yeah. The "continue with old credentials" is actually very traditional
-> and the original behavior, and is useful for handling the case of
-> debugging something that is suid, but doesn't necessarily _require_
-> it.
-
-If we continue with old credentials I think we are still setting
-AT_SECURE which seems odd.  Especially since it doesn't appear to be
-intentional.
-
-> But the LSM's just say yes/no.
-
-Oh I wish what the LSM's were doing was anything approaching as
-simple as merely saying yes/no during exec.
-
-> I have this dim memory that it also triggers when you do the debugging
-> as root, but that may be some medication-induced memory.
-
-I have a memory of someone fixing something like that years ago.
-If you have sufficient privileges while ptracing the current code will
-allow you to trace a suid root exec.
-
->> There is the personal mind blowing scenario where selinux will increase
->> your credentials upon exec but if a magic directive is supplied in it's
->> rules will avoid setting AT_SECURE, so that userspace won't protect
->> itself from hostile takeover from the pre credential change environment.
->> Much to my surprise "noatsecure" is a known and documented feature of
->> selinux.  I am not certain but I think I even spotted it in use on
->> production.
->
-> We have had a _ton_ of random small rules so that people could enable
-> SElinux in legacy environments.
->
-> They are _probably_ effectively dead code in this day and age, but
-> it's hard to tell...
-
-For that specific case I attempted to look at the SELinux rules
-file on a production RHEL7 configuration and strings told me
-"noatsecure" is present.  But the whole thing is a binary blob
-and I have not spent enough time to figure out how to properly
-return it to test so I can see what that "noatsecure" means.
-It might just have been a section header in the binary file.
-
-There are a lot of things like that are either going to need comments
-from the relevant maintiners or to just be avoided for the time being.
-
-The plan is small careful patches so I get through it with setting
-off the minimal number of landmines.
-
-Eric
