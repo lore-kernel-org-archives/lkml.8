@@ -2,190 +2,170 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5387C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0727CC2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F1520719
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:22:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uyr9ebEV"
+	by mail.kernel.org (Postfix) with ESMTP id CD431207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgDCVWH (ORCPT
+        id S1728121AbgDCVX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:22:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24712 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727958AbgDCVWH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:22:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585948926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lPxdH1JXe7h2gPkmS5oPinAisRrZCpEB3AZHI2P5ejM=;
-        b=Uyr9ebEVXj09NjtzZU2ORoisaWWFTREneW7C+yB21bE5TNu+CcTASTJWTynk8ulS374sev
-        /m/uW5eFkpgJ73CsaSxBr9jxfGqb5PJPrwFV4b8nhbr2i2rt03rZCMaH98D0brijXG3x0m
-        0NfDow8QUTOq0LGkLZ/yrY6IS4X6OOY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-383-eunYrKpcOoiRPxIDITrryw-1; Fri, 03 Apr 2020 17:21:59 -0400
-X-MC-Unique: eunYrKpcOoiRPxIDITrryw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A54211005509;
-        Fri,  3 Apr 2020 21:21:54 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 363DD26DF1;
-        Fri,  3 Apr 2020 21:21:41 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 17:21:38 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
+        Fri, 3 Apr 2020 17:23:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45120 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727829AbgDCVX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 17:23:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D9212ABCC;
+        Fri,  3 Apr 2020 21:23:54 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@kernel.org>
+Date:   Sat, 04 Apr 2020 08:23:45 +1100
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Joel Fernandes <joel@joelfernandes.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, linux-kernel@vger.kernel.org,
-        linux-audit@redhat.com,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 3/3 RESEND] auditsc: Do not use RCU primitive to read
- from cred pointer
-Message-ID: <20200403212138.kr72jr57ppzsv6rm@madcap2.tricolour.ca>
-References: <20200402055640.6677-1-frextrite@gmail.com>
- <20200402055640.6677-3-frextrite@gmail.com>
- <CAHC9VhTUKepKiGZgAaWDADyTPnnM5unbM65T7jXZ3p8MFTNUuQ@mail.gmail.com>
- <20200403075613.GA2788@workstation-portable>
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH 1/2] mm: clarify __GFP_MEMALLOC usage
+In-Reply-To: <alpine.DEB.2.21.2004031238571.230548@chino.kir.corp.google.com>
+References: <20200403083543.11552-1-mhocko@kernel.org> <20200403083543.11552-2-mhocko@kernel.org> <alpine.DEB.2.21.2004031238571.230548@chino.kir.corp.google.com>
+Message-ID: <87blo8xnz2.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403075613.GA2788@workstation-portable>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-03 13:26, Amol Grover wrote:
-> On Thu, Apr 02, 2020 at 08:56:36AM -0400, Paul Moore wrote:
-> > On Thu, Apr 2, 2020 at 1:57 AM Amol Grover <frextrite@gmail.com> wrote:
-> > > task_struct::cred is only used task-synchronously and does
-> > > not require any RCU locks, hence, rcu_dereference_check is
-> > > not required to read from it.
-> > >
-> > > Suggested-by: Jann Horn <jannh@google.com>
-> > > Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> > > ---
-> > >  kernel/auditsc.c | 15 +++++----------
-> > >  1 file changed, 5 insertions(+), 10 deletions(-)
-> > 
-> > This is the exact same patch I ACK'd back in February, yes?
-> > 
-> > https://lore.kernel.org/linux-audit/CAHC9VhQCbg1V290bYEZM+izDPRpr=XYXakohnDaMphkBBFgUaA@mail.gmail.com
-> > 
-> 
-> Hi Paul,
-> 
-> That's correct. I've resend the series out of the fear that the first 2
-> patches might've gotten lost as it's been almost a month since I last
-> sent them. Could you please ack this again, and if you don't mind could
-> you please go through the other 2 patches and ack them aswell?
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Via who's tree are you expecting this will make it upstream?
+On Fri, Apr 03 2020, David Rientjes wrote:
 
-> Thanks
-> Amol
-> 
-> > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > > index 4effe01ebbe2..d3510513cdd1 100644
-> > > --- a/kernel/auditsc.c
-> > > +++ b/kernel/auditsc.c
-> > > @@ -430,24 +430,19 @@ static int audit_field_compare(struct task_struct *tsk,
-> > >  /* Determine if any context name data matches a rule's watch data */
-> > >  /* Compare a task_struct with an audit_rule.  Return 1 on match, 0
-> > >   * otherwise.
-> > > - *
-> > > - * If task_creation is true, this is an explicit indication that we are
-> > > - * filtering a task rule at task creation time.  This and tsk == current are
-> > > - * the only situations where tsk->cred may be accessed without an rcu read lock.
-> > >   */
-> > >  static int audit_filter_rules(struct task_struct *tsk,
-> > >                               struct audit_krule *rule,
-> > >                               struct audit_context *ctx,
-> > >                               struct audit_names *name,
-> > > -                             enum audit_state *state,
-> > > -                             bool task_creation)
-> > > +                             enum audit_state *state)
-> > >  {
-> > >         const struct cred *cred;
-> > >         int i, need_sid = 1;
-> > >         u32 sid;
-> > >         unsigned int sessionid;
-> > >
-> > > -       cred = rcu_dereference_check(tsk->cred, tsk == current || task_creation);
-> > > +       cred = tsk->cred;
-> > >
-> > >         for (i = 0; i < rule->field_count; i++) {
-> > >                 struct audit_field *f = &rule->fields[i];
-> > > @@ -745,7 +740,7 @@ static enum audit_state audit_filter_task(struct task_struct *tsk, char **key)
-> > >         rcu_read_lock();
-> > >         list_for_each_entry_rcu(e, &audit_filter_list[AUDIT_FILTER_TASK], list) {
-> > >                 if (audit_filter_rules(tsk, &e->rule, NULL, NULL,
-> > > -                                      &state, true)) {
-> > > +                                      &state)) {
-> > >                         if (state == AUDIT_RECORD_CONTEXT)
-> > >                                 *key = kstrdup(e->rule.filterkey, GFP_ATOMIC);
-> > >                         rcu_read_unlock();
-> > > @@ -791,7 +786,7 @@ static enum audit_state audit_filter_syscall(struct task_struct *tsk,
-> > >         list_for_each_entry_rcu(e, list, list) {
-> > >                 if (audit_in_mask(&e->rule, ctx->major) &&
-> > >                     audit_filter_rules(tsk, &e->rule, ctx, NULL,
-> > > -                                      &state, false)) {
-> > > +                                      &state)) {
-> > >                         rcu_read_unlock();
-> > >                         ctx->current_state = state;
-> > >                         return state;
-> > > @@ -815,7 +810,7 @@ static int audit_filter_inode_name(struct task_struct *tsk,
-> > >
-> > >         list_for_each_entry_rcu(e, list, list) {
-> > >                 if (audit_in_mask(&e->rule, ctx->major) &&
-> > > -                   audit_filter_rules(tsk, &e->rule, ctx, n, &state, false)) {
-> > > +                   audit_filter_rules(tsk, &e->rule, ctx, n, &state)) {
-> > >                         ctx->current_state = state;
-> > >                         return 1;
-> > >                 }
-> > > --
-> > > 2.24.1
-> > 
-> > paul moore
+> On Fri, 3 Apr 2020, Michal Hocko wrote:
+>
+>> From: Michal Hocko <mhocko@suse.com>
+>>=20
+>> It seems that the existing documentation is not explicit about the
+>> expected usage and potential risks enough. While it is calls out
+>> that users have to free memory when using this flag it is not really
+>> apparent that users have to careful to not deplete memory reserves
+>> and that they should implement some sort of throttling wrt. freeing
+>> process.
+>>=20
+>> This is partly based on Neil's explanation [1].
+>>=20
+>> [1] http://lkml.kernel.org/r/877dz0yxoa.fsf@notabene.neil.brown.name
+>> Signed-off-by: Michal Hocko <mhocko@suse.com>
+>> ---
+>>  include/linux/gfp.h | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>=20
+>> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+>> index e5b817cb86e7..e3ab1c0d9140 100644
+>> --- a/include/linux/gfp.h
+>> +++ b/include/linux/gfp.h
+>> @@ -110,6 +110,9 @@ struct vm_area_struct;
+>>   * the caller guarantees the allocation will allow more memory to be fr=
+eed
+>>   * very shortly e.g. process exiting or swapping. Users either should
+>>   * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
+>> + * Users of this flag have to be extremely careful to not deplete the r=
+eserve
+>> + * completely and implement a throttling mechanism which controls the c=
+onsumption
+>> + * of the reserve based on the amount of freed memory.
+>>   *
+>>   * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency r=
+eserves.
+>>   * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
+>
+> Hmm, any guidance that we can offer to users of this flag that aren't=20
+> aware of __GFP_MEMALLOC internals?  If I were to read this and not be=20
+> aware of the implementation, I would ask "how do I know when I'm at risk=
+=20
+> of depleting this reserve" especially since the amount of reserve is=20
+> controlled by sysctl.  How do I know when I'm risking a depletion of this=
+=20
+> shared reserve?
 
-- RGB
+"how do I know when I'm at risk of depleting this reserve" is definitely
+the wrong question to be asking.  The questions to ask are:
+=2D how little memory to I need to ensure forward progress?
+=2D how quick will that forward progress be?
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+In the ideal case a small allocation will be all that is needed in order
+for that allocation plus another page to be freed "quickly", in time
+governed only by throughput to some device.  In that case you probably
+don't need to worry about rate limiting.
 
+The reason I brought up ratelimiting is that RCU is slow.  You can get
+quite a lot of memory caught up in the kfree-rcu lists.  That's not much
+of a problem for normal memory, but it might be for the more limited
+reserves.
+
+The other difficulty with the the kfree_rcu case is that we have no idea
+how many users there will be, so we cannot realistically model how long
+the queue might get.  Compare with NFS swap-out there the only user it
+the VM swapping memory which (I think?) already tries to pace writeout
+with the speed of the device (or is that just writeback...).  I'm
+clearly not sure of the details but it is a more constrained environment
+so it is more predicatable.
+
+In many cases, preallocating a private reserve is better than using
+GFP_MEMALLOC.  That is what mempools provide and they are very effective
+(though often way over-allocated*).
+GFP_MEMALLOC was added because swap-over-NFS requires lots of different
+allocations (transmit headers, receive buffers, possible routing changes
+etc), many of them in the network layer which is very sensitive
+to latency (and mempools require a spinlock to get the reserves).
+
+Maybe the documentation should say.
+ Don't use this - use a mempool.  Here be dragons.
+
+I'm not sure you can really say anything more useful without writing a
+long essay.
+
+NeilBrown
+
+(*) mempool sizes should not exceed 2 without measurements demonstrating
+that more provides better throughput. Many are 2, (BIO_POOL_SIZE is 2,
+which is perfect) but some aren't.
+ #define DRBD_MIN_POOL_PAGES       128
+way too big!
+ #define MIN_IOS 256
+even bigger!
+ mempool_create_page_pool(2 * (F2FS_IO_SIZE(sbi) - 1), 0);
+This is really wrong.  If the IO size is relevant, then each object in
+the pool needs to be that size.  Having that many objects in the pool
+doesn't mean anything useful.
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6HqWIACgkQOeye3VZi
+gblsVA/6Aqj2d5fTiHsD2gn0anUaLQhlnZk/F9iPiqJLg0l4Y5puFl5T3XRb2EXm
+gUF1UwAIgdmvEsiv+7hnYkh/tOwNOVDO9t5dupgF0ObTgNmxLYJSWAa8KaZZJkXP
+KPwDsXCLhf/bDJIj2kZgvI0UdFWPE8oniiHuZBI3DAuPACCK9VY0Iuzu6ZGhEUNy
+UDXyRSNmit5XTceuaE+eL6iSq9ARMO7N3+INxnd7x0syHKhwy+pBQG+ODHTvTP0E
+4W1nMZsjxMlkmoPGEP2O6cq7/bfido/82abUgm+VYPtD0yLe1hCfbAqmCJj2Iq7R
+nqtCStoYRYWPRenUlGR2PtUqa5WRx0pZsVDTdyz274/HfoGqenQ3HzDul/eXerRt
+26vyD+Tge+WbjmOywQ0/8pUoz5cPlUMJFDshDeYcMmS0QnHUkHTXhTGxNWPtubaD
+PWT3dOJ5Le4xrAoFB4eYeoqYfuoyOMcl7z6DGJz+rm/cfwZAcVAvr4umYaOvKFbn
+yQjZ7MHdL74McU/dQQvxZGGHR0fOaVom0BpjKM97xbeNcAWqEvi1H58GK89HI+0b
+MeLppn33UjJ2Yh5gqN44ty9qp5r9HcNQLum3i102NoEG/5kPxqMMvx1uctJoT38B
+x5w+RPc+7Tz5yrHYuvNlF2+D74HOASzjQMZE9WBgcyZ860xPhCM=
+=oyj8
+-----END PGP SIGNATURE-----
+--=-=-=--
