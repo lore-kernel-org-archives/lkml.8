@@ -2,78 +2,108 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D64EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F906C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59BC420721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271112073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404287AbgDCPlm (ORCPT
+        id S2404340AbgDCPmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:41:42 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:52094 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgDCPlm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:41:42 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-        by gardel.0pointer.net (Postfix) with ESMTP id E771BE807B5;
-        Fri,  3 Apr 2020 17:41:39 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 7B7C41614E3; Fri,  3 Apr 2020 17:41:39 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 17:41:39 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-Message-ID: <20200403154139.GA34867@gardel-login>
-References: <20200401144109.GA29945@gardel-login>
- <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
- <2590640.1585757211@warthog.procyon.org.uk>
- <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
- <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
- <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
- <27994c53034c8f769ea063a54169317c3ee62c04.camel@themaw.net>
- <20200403111144.GB34663@gardel-login>
- <CAJfpeguQAw+Mgc8QBNd+h3KV8=Y-SOGT7TB_N_54wa8MCoOSzg@mail.gmail.com>
- <3248809.1585928191@warthog.procyon.org.uk>
+        Fri, 3 Apr 2020 11:42:08 -0400
+Received: from mga06.intel.com ([134.134.136.31]:63660 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727927AbgDCPmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 11:42:07 -0400
+IronPort-SDR: 9bfCzudLNj7uOORwNDviIt/Hb85RFrxUOY3StacdmABTB2FeqhMa9CL30RYs4RyQTyaStR6asA
+ +BlnNW5kmggA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 08:42:06 -0700
+IronPort-SDR: RJf5XcF3zEyRJ09/us8jp/H/8TQ45FeITNZoj6qmJvJZrpMyH+BeCLfEQNew/lqKhbG4wVGqnQ
+ bEFlq2iNEhbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,340,1580803200"; 
+   d="scan'208";a="241150363"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Apr 2020 08:42:06 -0700
+Message-ID: <0ddcfb2630456324203917b78297b00cf5111c9e.camel@intel.com>
+Subject: Re: [RFC PATCH v9 11/27] drm/i915/gvt: Change _PAGE_DIRTY to
+ _PAGE_DIRTY_BITS
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Cc:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 03 Apr 2020 08:42:06 -0700
+In-Reply-To: <34c83f97-f206-1b43-db40-7e6a7d0f6bb7@intel.com>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+         <20200205181935.3712-12-yu-cheng.yu@intel.com>
+         <34c83f97-f206-1b43-db40-7e6a7d0f6bb7@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3248809.1585928191@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fr, 03.04.20 16:36, David Howells (dhowells@redhat.com) wrote:
+On Wed, 2020-02-26 at 14:04 -0800, Dave Hansen wrote:
+> On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+> > diff --git a/drivers/gpu/drm/i915/gvt/gtt.c b/drivers/gpu/drm/i915/gvt/gtt.c
+> > index 4b04af569c05..e467ca182633 100644
+> > --- a/drivers/gpu/drm/i915/gvt/gtt.c
+> > +++ b/drivers/gpu/drm/i915/gvt/gtt.c
+> > @@ -1201,7 +1201,7 @@ static int split_2MB_gtt_entry(struct intel_vgpu *vgpu,
+> >  	}
+> >  
+> >  	/* Clear dirty field. */
+> > -	se->val64 &= ~_PAGE_DIRTY;
+> > +	se->val64 &= ~_PAGE_DIRTY_BITS;
+> >  
+> >  	ops->clear_pse(se);
+> >  	ops->clear_ips(se);
+> 
+> Are the i915 maintainers on cc?
+> 
+> Shouldn't this use pte_mkclean() instead of open-coding?
 
-> Lennart Poettering <mzxreary@0pointer.de> wrote:
->
-> > BTW, while we are at it: one more thing I'd love to see exposed by
-> > statx() is a simple flag whether the inode is a mount point.
->
-> Note that an inode or a dentry might be a mount point in one namespace, but
-> not in another.  Do you actually mean an inode - or do you actually mean the
-> (mount,dentry) pair that you're looking at?  (Ie. should it be namespace
-> specific?)
+These functions look like a set of pte_* equivalent for the driver.  They all
+use the bits directly.  Add its maintainers to cc.
 
-yes, it should be specific to the mount hierarchy in the current namespace.
+Yu-cheng
 
-Lennart
-
---
-Lennart Poettering, Berlin
