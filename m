@@ -2,407 +2,124 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96924C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9A7C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6402077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B373206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EDv+jKRU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OxNu8hBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404586AbgDCSLS (ORCPT
+        id S2404587AbgDCSL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:11:18 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54366 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404349AbgDCSLS (ORCPT
+        Fri, 3 Apr 2020 14:11:56 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41288 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403929AbgDCSLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:11:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585937475;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QMrgKApG4lqSw6EF2f2sUD+oLvWJV8i8xepU3m9dg4Q=;
-        b=EDv+jKRUrQ/CXXq5JMDZ0CgP085w31a0JhasMpuy0I5naxYVdGnvUeoqC2U0mp00w0iqmg
-        yvvA6zFKl6qTeVvv49ffDOQ2T8kwnT2/b5lAJmWJtZYjnv0D93dT5D/b9zl2saAXsl4EZw
-        qq/g4kmtxZCS/UoOEv/YFwPBPO7JqXM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-rnpZ9zi_MRG1L4FBIY2mxg-1; Fri, 03 Apr 2020 14:11:11 -0400
-X-MC-Unique: rnpZ9zi_MRG1L4FBIY2mxg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B390513F8;
-        Fri,  3 Apr 2020 18:11:09 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC6D960BF3;
-        Fri,  3 Apr 2020 18:11:02 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 12:11:02 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
-Message-ID: <20200403121102.255f069c@w520.home>
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A220BA4@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-7-git-send-email-yi.l.liu@intel.com>
-        <20200402135700.0da30021@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A220BA4@SHSMSX104.ccr.corp.intel.com>
+        Fri, 3 Apr 2020 14:11:55 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a24so3872292pfc.8;
+        Fri, 03 Apr 2020 11:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=InL1nM5nwgThlKsD/4bkNX1qcE/bZXvGbtLxWiEV5Yo=;
+        b=OxNu8hBJrUoQp2Lb2LIE/UM5hirqfD6c5uMcQCXC2u8pOw3HMfXarstJO/SPvZ/x8i
+         BQe2iL6TEiAjxfoflrg9GDgbZmUFSh8CImE/isyKwE0HXK0NWjFvdWBlnJefkopigLAs
+         hswZZMDAxa/GfH6bYsDLzLxtJem2o7n9R6JZ3ZIhMYuDfce8GXD2CFQ/kkR9k7vy9tz1
+         bcDg9TYQ7l/V1htX4BFoA9GsDTYnA55u7mM7/DLaInC/lJxe6JhWwKupkIZ3LAXot4u2
+         8Yd4v8YR5YukTm+WSgPlssyQAGFnGGIvWAmFENAQOFoIss7KRNDnFSg2+QaFJFGKI5qT
+         3mWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=InL1nM5nwgThlKsD/4bkNX1qcE/bZXvGbtLxWiEV5Yo=;
+        b=jyReMOwJbcd861kDszhjskoNMq0P/FH5zkmmJkos1mVsJBfZUmm9dnax7XVZ3vpzHi
+         C9Lm1ue409UEMCL/YQYpjLNKlaW9sJnJs86EwiKZkyCHMB+Zl19LezbPOzGEd49JOwRW
+         DROV/KGMsIfLFA0nmeabUu1WgQbc22Gt7D6hKix55PdgwnUAWGJxdTEQasWTTEm9CV9d
+         gQHVEMLVJ2ZiguQmtJVsPVAHbyrlGWI/Pw2PhkvTxI/bF4IC2c0859Ks6oeSQ2DpTWOn
+         DkzXu9Y1SVbJNa5BLWW2n2OzeL62fFhck1nwpAdj7qcfgtxVgN4TQbo+iE3Vhiqcrqxq
+         c7fw==
+X-Gm-Message-State: AGi0PubyibA0B+XHTVGRHapp+BjOhrco0DUgi7Q2JoliaoiLWx6bwTF/
+        EfsNQl9BNOFL8PUtTPtoAQ==
+X-Google-Smtp-Source: APiQypKjRNoAgzx/5wb/M/owzZxHRM/lRGtcZ2rOjqj2maD9tPRdTD1mkbejOsaR2Xm24xtV7NYdUA==
+X-Received: by 2002:a62:87cc:: with SMTP id i195mr9725165pfe.75.1585937512702;
+        Fri, 03 Apr 2020 11:11:52 -0700 (PDT)
+Received: from madhuparna-HP-Notebook ([2402:3a80:d32:bec6:f832:439c:9244:ba33])
+        by smtp.gmail.com with ESMTPSA id y28sm6275223pfp.128.2020.04.03.11.11.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Apr 2020 11:11:51 -0700 (PDT)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Fri, 3 Apr 2020 23:41:45 +0530
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        gregkh@linuxfoundation.org, hariprasad.kelam@gmail.com,
+        colin.king@canonical.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org,
+        andrianov@ispras.ru
+Subject: Re: [PATCH] usb: host: u132-hcd: Remove u132_static_list
+Message-ID: <20200403181145.GA7574@madhuparna-HP-Notebook>
+References: <20200402232228.22395-1-madhuparnabhowmik10@gmail.com>
+ <Pine.LNX.4.44L0.2004031038200.7035-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.2004031038200.7035-100000@netrider.rowland.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020 13:30:49 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
-
-> Hi Alex,
+On Fri, Apr 03, 2020 at 10:39:33AM -0400, Alan Stern wrote:
+> On Fri, 3 Apr 2020 madhuparnabhowmik10@gmail.com wrote:
 > 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Friday, April 3, 2020 3:57 AM
-> > To: Liu, Yi L <yi.l.liu@intel.com>
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > > 
-> > On Sun, 22 Mar 2020 05:32:03 -0700
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >   
-> > > From: Liu Yi L <yi.l.liu@intel.com>
-> > >
-> > > VFIO_TYPE1_NESTING_IOMMU is an IOMMU type which is backed by hardware
-> > > IOMMUs that have nesting DMA translation (a.k.a dual stage address
-> > > translation). For such hardware IOMMUs, there are two stages/levels of
-> > > address translation, and software may let userspace/VM to own the first-
-> > > level/stage-1 translation structures. Example of such usage is vSVA (
-> > > virtual Shared Virtual Addressing). VM owns the first-level/stage-1
-> > > translation structures and bind the structures to host, then hardware
-> > > IOMMU would utilize nesting translation when doing DMA translation fo
-> > > the devices behind such hardware IOMMU.
-> > >
-> > > This patch adds vfio support for binding guest translation (a.k.a stage 1)
-> > > structure to host iommu. And for VFIO_TYPE1_NESTING_IOMMU, not only bind
-> > > guest page table is needed, it also requires to expose interface to guest
-> > > for iommu cache invalidation when guest modified the first-level/stage-1
-> > > translation structures since hardware needs to be notified to flush stale
-> > > iotlbs. This would be introduced in next patch.
-> > >
-> > > In this patch, guest page table bind and unbind are done by using flags
-> > > VFIO_IOMMU_BIND_GUEST_PGTBL and VFIO_IOMMU_UNBIND_GUEST_PGTBL  
-> > under IOCTL  
-> > > VFIO_IOMMU_BIND, the bind/unbind data are conveyed by
-> > > struct iommu_gpasid_bind_data. Before binding guest page table to host,
-> > > VM should have got a PASID allocated by host via VFIO_IOMMU_PASID_REQUEST.
-> > >
-> > > Bind guest translation structures (here is guest page table) to host
-> > > are the first step to setup vSVA (Virtual Shared Virtual Addressing).
-> > >
-> > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.com>
-> > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > ---
-> > >  drivers/vfio/vfio_iommu_type1.c | 158  
-> > ++++++++++++++++++++++++++++++++++++++++  
-> > >  include/uapi/linux/vfio.h       |  46 ++++++++++++
-> > >  2 files changed, 204 insertions(+)
-> > >
-> > > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > > index 82a9e0b..a877747 100644
-> > > --- a/drivers/vfio/vfio_iommu_type1.c
-> > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > @@ -130,6 +130,33 @@ struct vfio_regions {
-> > >  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
-> > >  					(!list_empty(&iommu->domain_list))
-> > >
-> > > +struct domain_capsule {
-> > > +	struct iommu_domain *domain;
-> > > +	void *data;
-> > > +};
-> > > +
-> > > +/* iommu->lock must be held */
-> > > +static int vfio_iommu_for_each_dev(struct vfio_iommu *iommu,
-> > > +		      int (*fn)(struct device *dev, void *data),
-> > > +		      void *data)
-> > > +{
-> > > +	struct domain_capsule dc = {.data = data};
-> > > +	struct vfio_domain *d;
-> > > +	struct vfio_group *g;
-> > > +	int ret = 0;
-> > > +
-> > > +	list_for_each_entry(d, &iommu->domain_list, next) {
-> > > +		dc.domain = d->domain;
-> > > +		list_for_each_entry(g, &d->group_list, next) {
-> > > +			ret = iommu_group_for_each_dev(g->iommu_group,
-> > > +						       &dc, fn);
-> > > +			if (ret)
-> > > +				break;
-> > > +		}
-> > > +	}
-> > > +	return ret;
-> > > +}
-> > > +
-> > >  static int put_pfn(unsigned long pfn, int prot);
-> > >
-> > >  /*
-> > > @@ -2314,6 +2341,88 @@ static int vfio_iommu_info_add_nesting_cap(struct  
-> > vfio_iommu *iommu,  
-> > >  	return 0;
-> > >  }
-> > >
-> > > +static int vfio_bind_gpasid_fn(struct device *dev, void *data)
-> > > +{
-> > > +	struct domain_capsule *dc = (struct domain_capsule *)data;
-> > > +	struct iommu_gpasid_bind_data *gbind_data =
-> > > +		(struct iommu_gpasid_bind_data *) dc->data;
-> > > +
-> > > +	return iommu_sva_bind_gpasid(dc->domain, dev, gbind_data);
-> > > +}
-> > > +
-> > > +static int vfio_unbind_gpasid_fn(struct device *dev, void *data)
-> > > +{
-> > > +	struct domain_capsule *dc = (struct domain_capsule *)data;
-> > > +	struct iommu_gpasid_bind_data *gbind_data =
-> > > +		(struct iommu_gpasid_bind_data *) dc->data;
-> > > +
-> > > +	return iommu_sva_unbind_gpasid(dc->domain, dev,
-> > > +					gbind_data->hpasid);
-> > > +}
-> > > +
-> > > +/**
-> > > + * Unbind specific gpasid, caller of this function requires hold
-> > > + * vfio_iommu->lock
-> > > + */
-> > > +static long vfio_iommu_type1_do_guest_unbind(struct vfio_iommu *iommu,
-> > > +				struct iommu_gpasid_bind_data *gbind_data)
-> > > +{
-> > > +	return vfio_iommu_for_each_dev(iommu,
-> > > +				vfio_unbind_gpasid_fn, gbind_data);
-> > > +}
-> > > +
-> > > +static long vfio_iommu_type1_bind_gpasid(struct vfio_iommu *iommu,
-> > > +				struct iommu_gpasid_bind_data *gbind_data)
-> > > +{
-> > > +	int ret = 0;
-> > > +
-> > > +	mutex_lock(&iommu->lock);
-> > > +	if (!IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)) {
-> > > +		ret = -EINVAL;
-> > > +		goto out_unlock;
-> > > +	}
-> > > +
-> > > +	ret = vfio_iommu_for_each_dev(iommu,
-> > > +			vfio_bind_gpasid_fn, gbind_data);
-> > > +	/*
-> > > +	 * If bind failed, it may not be a total failure. Some devices
-> > > +	 * within the iommu group may have bind successfully. Although
-> > > +	 * we don't enable pasid capability for non-singletion iommu
-> > > +	 * groups, a unbind operation would be helpful to ensure no
-> > > +	 * partial binding for an iommu group.  
+> > u132_static_list is a global list protected by u132_module_lock.
+> > It is read in the u132_hcd_exit() function without holding the lock
+> > thus may lead to data race.
+> > However, it turns out that this list isn't used for anything useful
+> > and thus it is okay to get rid of it.
+> > Thus, remove the u132_static_list from u132-hcd module.
 > > 
-> > Where was the non-singleton group restriction done, I missed that.  
-> 
-> Hmm, it's missed. thanks for spotting it. How about adding this
-> check in the vfio_iommu_for_each_dev()? If looped a non-singleton
-> group, just skip it. It applies to the cache_inv path all the
-> same.
-
-I don't really understand the singleton issue, which is why I was
-surprised to see this since I didn't see a discussion previously.
-Skipping a singleton group seems like unpredictable behavior to the
-user though.
-
-> > > +	 */
-> > > +	if (ret)
-> > > +		/*
-> > > +		 * Undo all binds that already succeeded, no need to
-> > > +		 * check the return value here since some device within
-> > > +		 * the group has no successful bind when coming to this
-> > > +		 * place switch.
-> > > +		 */
-> > > +		vfio_iommu_type1_do_guest_unbind(iommu, gbind_data);  
+> > Found by Linux Driver Verification project (linuxtesting.org).
 > > 
-> > However, the for_each_dev function stops when the callback function
-> > returns error, are we just assuming we stop at the same device as we
-> > faulted on the first time and that we traverse the same set of devices
-> > the second time?  It seems strange to me that unbind should be able to
-> > fail.  
-> 
-> unbind can fail if a user attempts to unbind a pasid which is not belonged
-> to it or a pasid which hasn't ever been bound. Otherwise, I didn't see a
-> reason to fail.
-
-Even if so, this doesn't address the first part of the question.  If
-our for_each_dev() callback returns error then the loop stops and we
-can't be sure we've triggered it everywhere that it needs to be
-triggered.  There are also aspects of whether it's an error to unbind
-something that is not bound because the result is still that the pasid
-is unbound, right?
-
-> > > +
-> > > +out_unlock:
-> > > +	mutex_unlock(&iommu->lock);
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static long vfio_iommu_type1_unbind_gpasid(struct vfio_iommu *iommu,
-> > > +				struct iommu_gpasid_bind_data *gbind_data)
-> > > +{
-> > > +	int ret = 0;
-> > > +
-> > > +	mutex_lock(&iommu->lock);
-> > > +	if (!IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)) {
-> > > +		ret = -EINVAL;
-> > > +		goto out_unlock;
-> > > +	}
-> > > +
-> > > +	ret = vfio_iommu_type1_do_guest_unbind(iommu, gbind_data);  
+> > Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > ---
+> >  drivers/usb/host/u132-hcd.c | 8 --------
+> >  1 file changed, 8 deletions(-)
 > > 
-> > How is a user supposed to respond to their unbind failing?  
+> > diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
+> > index e9209e3e6248..52f70cf063ea 100644
+> > --- a/drivers/usb/host/u132-hcd.c
+> > +++ b/drivers/usb/host/u132-hcd.c
+> > @@ -81,7 +81,6 @@ static DECLARE_WAIT_QUEUE_HEAD(u132_hcd_wait);
+> >  static struct mutex u132_module_lock;
+> >  static int u132_exiting;
+> >  static int u132_instances;
+> > -static struct list_head u132_static_list;
+> >  /*
+> >  * end of the global variables protected by u132_module_lock
+> >  */
 > 
-> If it's a malicious unbind (e.g. unbind a not yet bound pasid or unbind
-> a pasid which doesn't belong to current user).
+> You forgot to remove the u132_list member from struct u132.
+>
+Thank you for letting me know, I will send the patch again with this
+change.
 
-And if it's not a malicious unbind?  To me this is similar semantics to
-free() failing.  Is there any remedy other than to abort?  Thanks,
+Regards,
+Madhuparna
 
-Alex
-
-> > > +
-> > > +out_unlock:
-> > > +	mutex_unlock(&iommu->lock);
-> > > +	return ret;
-> > > +}
-> > > +
-> > >  static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > >  				   unsigned int cmd, unsigned long arg)
-> > >  {
-> > > @@ -2471,6 +2580,55 @@ static long vfio_iommu_type1_ioctl(void  
-> > *iommu_data,  
-> > >  		default:
-> > >  			return -EINVAL;
-> > >  		}
-> > > +
-> > > +	} else if (cmd == VFIO_IOMMU_BIND) {
-> > > +		struct vfio_iommu_type1_bind bind;
-> > > +		u32 version;
-> > > +		int data_size;
-> > > +		void *gbind_data;
-> > > +		int ret;
-> > > +
-> > > +		minsz = offsetofend(struct vfio_iommu_type1_bind, flags);
-> > > +
-> > > +		if (copy_from_user(&bind, (void __user *)arg, minsz))
-> > > +			return -EFAULT;
-> > > +
-> > > +		if (bind.argsz < minsz)
-> > > +			return -EINVAL;
-> > > +
-> > > +		/* Get the version of struct iommu_gpasid_bind_data */
-> > > +		if (copy_from_user(&version,
-> > > +			(void __user *) (arg + minsz),
-> > > +					sizeof(version)))
-> > > +			return -EFAULT;  
-> > 
-> > Why are we coping things from beyond the size we've validated that the
-> > user has provided again?  
+> Alan Stern
 > 
-> let me wait for the result in Jacob's thread below. looks like need
-> to have a decision from you and Joreg. If using argsze is good, then
-> I guess we don't need the version-to-size mapping. right? Actually,
-> the version-to-size mapping is added to ensure vfio copy data correctly.
-> https://lkml.org/lkml/2020/4/2/876
-> 
-> > > +
-> > > +		data_size = iommu_uapi_get_data_size(
-> > > +				IOMMU_UAPI_BIND_GPASID, version);
-> > > +		gbind_data = kzalloc(data_size, GFP_KERNEL);
-> > > +		if (!gbind_data)
-> > > +			return -ENOMEM;
-> > > +
-> > > +		if (copy_from_user(gbind_data,
-> > > +			 (void __user *) (arg + minsz), data_size)) {
-> > > +			kfree(gbind_data);
-> > > +			return -EFAULT;
-> > > +		}  
-> > 
-> > And again.  argsz isn't just for minsz.
-> >  
-> > > +
-> > > +		switch (bind.flags & VFIO_IOMMU_BIND_MASK) {
-> > > +		case VFIO_IOMMU_BIND_GUEST_PGTBL:
-> > > +			ret = vfio_iommu_type1_bind_gpasid(iommu,
-> > > +							   gbind_data);
-> > > +			break;
-> > > +		case VFIO_IOMMU_UNBIND_GUEST_PGTBL:
-> > > +			ret = vfio_iommu_type1_unbind_gpasid(iommu,
-> > > +							     gbind_data);
-> > > +			break;
-> > > +		default:
-> > > +			ret = -EINVAL;
-> > > +			break;
-> > > +		}
-> > > +		kfree(gbind_data);
-> > > +		return ret;
-> > >  	}
-> > >
-> > >  	return -ENOTTY;
-> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > index ebeaf3e..2235bc6 100644
-> > > --- a/include/uapi/linux/vfio.h
-> > > +++ b/include/uapi/linux/vfio.h
-> > > @@ -14,6 +14,7 @@
-> > >
-> > >  #include <linux/types.h>
-> > >  #include <linux/ioctl.h>
-> > > +#include <linux/iommu.h>
-> > >
-> > >  #define VFIO_API_VERSION	0
-> > >
-> > > @@ -853,6 +854,51 @@ struct vfio_iommu_type1_pasid_request {
-> > >   */
-> > >  #define VFIO_IOMMU_PASID_REQUEST	_IO(VFIO_TYPE, VFIO_BASE + 22)
-> > >
-> > > +/**
-> > > + * Supported flags:
-> > > + *	- VFIO_IOMMU_BIND_GUEST_PGTBL: bind guest page tables to host for
-> > > + *			nesting type IOMMUs. In @data field It takes struct
-> > > + *			iommu_gpasid_bind_data.
-> > > + *	- VFIO_IOMMU_UNBIND_GUEST_PGTBL: undo a bind guest page table  
-> > operation  
-> > > + *			invoked by VFIO_IOMMU_BIND_GUEST_PGTBL.  
-> > 
-> > This must require iommu_gpasid_bind_data in the data field as well,
-> > right?  
-> 
-> yes.
-> 
-> Regards,
-> Yi Liu
-> 
-
