@@ -2,260 +2,278 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777E9C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906B4C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42436206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585906021;
-	bh=FmUVFQY4lObJIxbyyXlWQ7CK7GKBTr9kAi65AwQTX5Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DTKgTI/H2WwelApxlsap5bVzuMgTZxTBr/thDgdZ5KapppPhSps7zX7CsHLwwWb97
-	 RY6rzYgwZfRVk8oeHKLEWCEIWg/852MRKy0DY0fTqT4/4e1TJ/ezz0LbYB/cWJrQYb
-	 EcSezUDoxA4k15OVQHmJC81Fco3ktIYEfgkVdYJI=
+	by mail.kernel.org (Postfix) with ESMTP id 6367220721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389510AbgDCJ1A (ORCPT
+        id S2390427AbgDCJ1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:27:00 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:42026 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgDCJ07 (ORCPT
+        Fri, 3 Apr 2020 05:27:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20170 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727774AbgDCJ1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:26:59 -0400
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 0339Qsq7028468;
-        Fri, 3 Apr 2020 18:26:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0339Qsq7028468
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585906015;
-        bh=MstVQUcgSZG0zMpYAd6uwUB9YIo5n+SWfVQSoNG7zYs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vPSn6fquixsMdc8F/WHY+Z3hJJymMhmLaDGmIwv7h5J0ek55oMCHsTTC4epy4WIoN
-         SWVSfC4glyY7yTY1sWGPuwl0llHmc4VwIWmXPCNX8DcZD+thXY/QtgY0PKrotEctSq
-         fVbPm/PxVFq/ebVWrmiCPK5vIyJwgugYO9rmW34Hlp+lAx2lgGgH1Hji8mAx/HeoKV
-         2jpgLrQKENR2BHBqM7/Jj9FL/+1KODQSff6lqOmkSCfEi1101py0RwTjZ1b3akTWpZ
-         WHUvzU/EqP+t88fGHnBrDwg2DolNJlit/finZMiZkdqhWFynBslUIK3Byq04Z/rnFD
-         houwTm8pljgYg==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id y17so2438527uap.13;
-        Fri, 03 Apr 2020 02:26:54 -0700 (PDT)
-X-Gm-Message-State: AGi0PualAhsuBl8RJxJygZpAlVuOfIai2baHxMYhzGSlxm49F83EuqUa
-        c0dSU1yDc/wlZkqCK0ESScqAcxwSzwEnfz5iYXQ=
-X-Google-Smtp-Source: APiQypJv5Cv+OWIIu8e9neKOttTNCoftbQaRs6wYhkoxm4CNEoGf3PrOYPE8+yNwLCju9NAzOB9CzonSznjlClJ2kQA=
-X-Received: by 2002:ab0:2790:: with SMTP id t16mr5779840uap.40.1585906013243;
- Fri, 03 Apr 2020 02:26:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200403051709.22407-1-masahiroy@kernel.org> <20200403085719.GA9282@ubuntu-m2-xlarge-x86>
-In-Reply-To: <20200403085719.GA9282@ubuntu-m2-xlarge-x86>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 3 Apr 2020 18:26:17 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATtqe_vSYTUD+7G8du46F3Kksx6F2yHK4Tw9PLdybqL7A@mail.gmail.com>
-Message-ID: <CAK7LNATtqe_vSYTUD+7G8du46F3Kksx6F2yHK4Tw9PLdybqL7A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 3 Apr 2020 05:27:35 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03393atN172042
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 05:27:33 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 302072cskx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:27:33 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Fri, 3 Apr 2020 10:27:14 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 Apr 2020 10:27:12 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0339RSJP66257150
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 09:27:28 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E47FA4C050;
+        Fri,  3 Apr 2020 09:27:27 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67C9B4C044;
+        Fri,  3 Apr 2020 09:27:26 +0000 (GMT)
+Received: from ltc-wspoon6.aus.stglabs.ibm.com (unknown [9.40.193.95])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 09:27:26 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     npiggin@gmail.com, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
+        mpe@ellerman.id.au, oohall@gmail.com, mikey@neuling.org,
+        psampat@linux.ibm.com, Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [RFC] cpuidle/powernv : Support for pre-entry and post exit of stop state in firmware
+Date:   Fri,  3 Apr 2020 04:27:01 -0500
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20040309-4275-0000-0000-000003B8C402
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040309-4276-0000-0000-000038CE1CAB
+Message-Id: <20200403092701.39751-1-huntbag@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_05:2020-04-02,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=866 suspectscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan,
+This patch provides kernel framework fro opal support of save restore
+of sprs in idle stop loop. Opal support for stop states is needed to
+selectively enable stop states or to introduce a quirk quickly in case
+a buggy stop state is present.
 
+We make a opal call from kernel if firmware-stop-support for stop
+states is present and enabled. All the quirks for pre-entry of stop
+state is handled inside opal. A call from opal is made into kernel
+where we execute stop afer saving of NVGPRs.
+After waking up from 0x100 vector in kernel, we enter back into opal.
+All the quirks in post exit path, if any, are then handled in opal,
+from where we return successfully back to kernel.
+For deep stop states in which additional SPRs are lost, saving and
+restoration will be done in OPAL.
 
-On Fri, Apr 3, 2020 at 5:57 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Hi Masahiro,
->
-> On Fri, Apr 03, 2020 at 02:17:09PM +0900, Masahiro Yamada wrote:
-> > As Documentation/kbuild/llvm.rst implies, building the kernel with a
-> > full set of LLVM tools gets very verbose and unwieldy.
-> >
-> > Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
-> > GCC and Binutils. You can pass LLVM=1 from the command line or as an
-> > environment variable. Then, Kbuild will use LLVM toolchains in your
-> > PATH environment.
-> >
-> > Please note LLVM=1 does not turn on the LLVM integrated assembler.
-> > You need to explicitly pass AS=clang to use it. When the upstream
-> > kernel is ready for the integrated assembler, I think we can make
-> > it default.
->
-> I agree this should be the default but I think it should probably be
-> called out somewhere in the documentation as well since users might not
-> expect to have to have a cross assembler installed.
+This idea was first proposed by Nick here:
+https://patchwork.ozlabs.org/patch/1208159/
 
+The corresponding skiboot patch for this kernel patch is here:
+https://patchwork.ozlabs.org/patch/1265959/
 
-I will add the following info to llvm.rst:
+When we callback from OPAL into kernel, r13 is clobbered. So, to
+access PACA we need to restore it from HSPRGO. In future we can
+handle this into OPAL as in here:
+https://patchwork.ozlabs.org/patch/1245275/
 
-`LLVM=1` does not turn on the LLVM integrated assembler, so you still need
-assembler from GNU binutils. You can pass `AS=clang` to use the integrated
-assembler, but it is experimental as of writing.
+Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/powerpc/include/asm/opal-api.h        |  8 ++++-
+ arch/powerpc/include/asm/opal.h            |  3 ++
+ arch/powerpc/kernel/idle_book3s.S          |  5 +++
+ arch/powerpc/platforms/powernv/idle.c      | 37 ++++++++++++++++++++++
+ arch/powerpc/platforms/powernv/opal-call.c |  2 ++
+ 5 files changed, 54 insertions(+), 1 deletion(-)
 
-
-
-
-> > We discussed what we need, and we agreed to go with a simple boolean
-> > switch (https://lkml.org/lkml/2020/3/28/494).
-> >
-> > Some items in the discussion:
-> >
-> > - LLVM_DIR
-> >
-> >   When multiple versions of LLVM are installed, I just thought supporting
-> >   LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
-> >
-> >   CC      = $(LLVM_DIR)clang
-> >   LD      = $(LLVM_DIR)ld.lld
-> >     ...
-> >
-> >   However, we can handle this by modifying PATH. So, we decided to not do
-> >   this.
-> >
-> > - LLVM_SUFFIX
-> >
-> >   Some distributions (e.g. Debian) package specific versions of LLVM with
-> >   naming conventions that use the version as a suffix.
-> >
-> >   CC      = clang$(LLVM_SUFFIX)
-> >   LD      = ld.lld(LLVM_SUFFIX)
-> >     ...
-> >
-> >   will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
-> >   but the suffixed versions in /usr/bin/ are symlinks to binaries in
-> >   /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
-> >
-> > - HOSTCC, HOSTCXX, etc.
-> >
-> >   We can switch the host compilers in the same way:
-> >
-> >   ifneq ($(LLVM),)
-> >   HOSTCC       = clang
-> >   HOSTCXX      = clang++
-> >   else
-> >   HOSTCC       = gcc
-> >   HOSTCXX      = g++
-> >   endif
->
-> I would personally like to see this but I do not have the strongest
-> opinion.
->
-> >   This may the right thing to do, but I could not make up my mind.
-> >   Because we do not frequently switch the host compiler, a counter
-> >   solution I had in my mind was to leave it to the default of the
-> >   system.
-> >
-> >   HOSTCC       = cc
-> >   HOSTCXX      = c++
-> >
-> >   Many distributions support update-alternatives to switch the default
-> >   to GCC, Clang, or whatever, but reviewers were opposed to this
-> >   approach. So, this commit does not touch the host tools.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> >  Documentation/kbuild/kbuild.rst |  5 +++++
-> >  Documentation/kbuild/llvm.rst   |  5 +++++
-> >  Makefile                        | 20 ++++++++++++++++----
-> >  3 files changed, 26 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
-> > index 510f38d7e78a..2d1fc03d346e 100644
-> > --- a/Documentation/kbuild/kbuild.rst
-> > +++ b/Documentation/kbuild/kbuild.rst
-> > @@ -262,3 +262,8 @@ KBUILD_BUILD_USER, KBUILD_BUILD_HOST
-> >  These two variables allow to override the user@host string displayed during
-> >  boot and in /proc/version. The default value is the output of the commands
-> >  whoami and host, respectively.
-> > +
-> > +LLVM
-> > +----
-> > +If this variable is set to 1, Kbuild will use Clang and LLVM utilities instead
-> > +of GCC and GNU binutils to build the kernel.
-> > diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-> > index d6c79eb4e23e..4602369f6a4f 100644
-> > --- a/Documentation/kbuild/llvm.rst
-> > +++ b/Documentation/kbuild/llvm.rst
-> > @@ -55,6 +55,11 @@ additional parameters to `make`.
-> >         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
-> >         HOSTLD=ld.lld
-> >
-> > +You can use a single switch `LLVM=1` to use LLVM utilities by default (except
-> > +for building host programs).
-> > +
-> > +     make LLVM=1 HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar HOSTLD=ld.lld
-> > +
-> >  Getting Help
-> >  ------------
-> >
-> > diff --git a/Makefile b/Makefile
-> > index c91342953d9e..6db89ecdd942 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -409,16 +409,28 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
-> >  KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
-> >
-> >  # Make variables (CC, etc...)
-> > -LD           = $(CROSS_COMPILE)ld
-> > -CC           = $(CROSS_COMPILE)gcc
-> >  CPP          = $(CC) -E
-> > +ifneq ($(LLVM),)
-> > +CC           = clang
-> > +LD           = ld.lld
-> > +AR           = llvm-ar
-> > +NM           = llvm-nm
-> > +OBJCOPY              = llvm-objcopy
-> > +OBJDUMP              = llvm-objdump
-> > +READELF              = llvm-readelf
-> > +OBJSIZE              = llvm-size
-> > +STRIP                = llvm-strip
-> > +else
-> > +CC           = $(CROSS_COMPILE)gcc
-> > +LD           = $(CROSS_COMPILE)ld
-> >  AR           = $(CROSS_COMPILE)ar
-> >  NM           = $(CROSS_COMPILE)nm
-> > -STRIP                = $(CROSS_COMPILE)strip
-> >  OBJCOPY              = $(CROSS_COMPILE)objcopy
-> >  OBJDUMP              = $(CROSS_COMPILE)objdump
-> > -OBJSIZE              = $(CROSS_COMPILE)size
-> >  READELF              = $(CROSS_COMPILE)readelf
-> > +OBJSIZE              = $(CROSS_COMPILE)size
-> > +STRIP                = $(CROSS_COMPILE)strip
-> > +endif
-> >  PAHOLE               = pahole
-> >  LEX          = flex
-> >  YACC         = bison
-> > --
-> > 2.17.1
-> >
->
-> I have verified that the variables get their correct value with LLVM=1
-> and that they are still overridable.
->
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200403085719.GA9282%40ubuntu-m2-xlarge-x86.
-
-
-
+diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+index c1f25a760eb1..a2c782c99c9e 100644
+--- a/arch/powerpc/include/asm/opal-api.h
++++ b/arch/powerpc/include/asm/opal-api.h
+@@ -214,7 +214,9 @@
+ #define OPAL_SECVAR_GET				176
+ #define OPAL_SECVAR_GET_NEXT			177
+ #define OPAL_SECVAR_ENQUEUE_UPDATE		178
+-#define OPAL_LAST				178
++#define OPAL_REGISTER_OS_OPS			181
++#define OPAL_CPU_IDLE				182
++#define OPAL_LAST				182
+ 
+ #define QUIESCE_HOLD			1 /* Spin all calls at entry */
+ #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
+@@ -1181,6 +1183,10 @@ struct opal_mpipl_fadump {
+ 	struct	opal_mpipl_region region[];
+ } __packed;
+ 
++struct opal_os_ops {
++	__be64 os_idle_stop;
++};
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* __OPAL_API_H */
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index 9986ac34b8e2..3c340bc4df8e 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -400,6 +400,9 @@ void opal_powercap_init(void);
+ void opal_psr_init(void);
+ void opal_sensor_groups_init(void);
+ 
++extern int64_t opal_register_os_ops(struct opal_os_ops *os_ops);
++extern int64_t opal_cpu_idle(__be64 srr1_addr, uint64_t psscr);
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_POWERPC_OPAL_H */
+diff --git a/arch/powerpc/kernel/idle_book3s.S b/arch/powerpc/kernel/idle_book3s.S
+index 22f249b6f58d..8d287d1d06c0 100644
+--- a/arch/powerpc/kernel/idle_book3s.S
++++ b/arch/powerpc/kernel/idle_book3s.S
+@@ -49,6 +49,8 @@ _GLOBAL(isa300_idle_stop_noloss)
+  */
+ _GLOBAL(isa300_idle_stop_mayloss)
+ 	mtspr 	SPRN_PSSCR,r3
++	mr	r6, r13
++	mfspr	r13, SPRN_HSPRG0
+ 	std	r1,PACAR1(r13)
+ 	mflr	r4
+ 	mfcr	r5
+@@ -74,6 +76,7 @@ _GLOBAL(isa300_idle_stop_mayloss)
+ 	std	r31,-8*18(r1)
+ 	std	r4,-8*19(r1)
+ 	std	r5,-8*20(r1)
++	std	r6,-8*21(r1)
+ 	/* 168 bytes */
+ 	PPC_STOP
+ 	b	.	/* catch bugs */
+@@ -91,8 +94,10 @@ _GLOBAL(idle_return_gpr_loss)
+ 	ld	r1,PACAR1(r13)
+ 	ld	r4,-8*19(r1)
+ 	ld	r5,-8*20(r1)
++	ld	r6,-8*21(r1)
+ 	mtlr	r4
+ 	mtcr	r5
++	mr	r13,r6
+ 	/*
+ 	 * KVM nap requires r2 to be saved, rather than just restoring it
+ 	 * from PACATOC. This could be avoided for that less common case
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index 78599bca66c2..1841027b25c5 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -35,6 +35,7 @@
+ static u32 supported_cpuidle_states;
+ struct pnv_idle_states_t *pnv_idle_states;
+ int nr_pnv_idle_states;
++static bool firmware_stop_supported;
+ 
+ /*
+  * The default stop state that will be used by ppc_md.power_save
+@@ -602,6 +603,25 @@ struct p9_sprs {
+ 	u64 uamor;
+ };
+ 
++/*
++ * This function is called from OPAL if firmware support for stop
++ * states is present and enabled. It provides a fallback for idle
++ * stop states via OPAL.
++ */
++static uint64_t os_idle_stop(uint64_t psscr, bool save_gprs)
++{
++	/*
++	 * For lite state which does not lose even GPRS we call
++	 * idle_stop_noloss while for all other states we call
++	 * idle_stop_mayloss. Saving and restoration of other additional
++	 * SPRs if required is handled in OPAL. All the quirks are also
++	 * handled in OPAL.
++	 */
++	if (!save_gprs)
++		return isa300_idle_stop_noloss(psscr);
++	return isa300_idle_stop_mayloss(psscr);
++}
++
+ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ {
+ 	int cpu = raw_smp_processor_id();
+@@ -613,6 +633,16 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ 	unsigned long mmcr0 = 0;
+ 	struct p9_sprs sprs = {}; /* avoid false used-uninitialised */
+ 	bool sprs_saved = false;
++	int rc = 0;
++
++	/*
++	 * Kernel takes decision whether to make OPAL call or not. This logic
++	 * will be combined with the logic for BE opal to take decision.
++	 */
++	if (firmware_stop_supported) {
++		rc = opal_cpu_idle(cpu_to_be64(__pa(&srr1)), (uint64_t) psscr);
++		goto out;
++	}
+ 
+ 	if (!(psscr & (PSSCR_EC|PSSCR_ESL))) {
+ 		/* EC=ESL=0 case */
+@@ -1232,6 +1262,10 @@ static int pnv_parse_cpuidle_dt(void)
+ 		pr_warn("opal: PowerMgmt Node not found\n");
+ 		return -ENODEV;
+ 	}
++
++	if (of_device_is_compatible(np, "firmware-stop-supported"))
++		firmware_stop_supported = true;
++
+ 	nr_idle_states = of_property_count_u32_elems(np,
+ 						"ibm,cpu-idle-state-flags");
+ 
+@@ -1326,6 +1360,7 @@ static int pnv_parse_cpuidle_dt(void)
+ 
+ static int __init pnv_init_idle_states(void)
+ {
++	struct opal_os_ops os_ops;
+ 	int cpu;
+ 	int rc = 0;
+ 
+@@ -1349,6 +1384,8 @@ static int __init pnv_init_idle_states(void)
+ 		}
+ 	}
+ 
++	os_ops.os_idle_stop = be64_to_cpu(os_idle_stop);
++	rc = opal_register_os_ops((struct opal_os_ops *)(&os_ops));
+ 	/* In case we error out nr_pnv_idle_states will be zero */
+ 	nr_pnv_idle_states = 0;
+ 	supported_cpuidle_states = 0;
+diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+index 5cd0f52d258f..c885e607ba62 100644
+--- a/arch/powerpc/platforms/powernv/opal-call.c
++++ b/arch/powerpc/platforms/powernv/opal-call.c
+@@ -293,3 +293,5 @@ OPAL_CALL(opal_mpipl_query_tag,			OPAL_MPIPL_QUERY_TAG);
+ OPAL_CALL(opal_secvar_get,			OPAL_SECVAR_GET);
+ OPAL_CALL(opal_secvar_get_next,			OPAL_SECVAR_GET_NEXT);
+ OPAL_CALL(opal_secvar_enqueue_update,		OPAL_SECVAR_ENQUEUE_UPDATE);
++OPAL_CALL(opal_register_os_ops,			OPAL_REGISTER_OS_OPS);
++OPAL_CALL(opal_cpu_idle,			OPAL_CPU_IDLE);
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
