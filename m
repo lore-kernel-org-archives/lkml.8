@@ -2,84 +2,74 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D289C2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9025C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3368206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:34:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585877672;
-	bh=7b3Ysa1BLGv5if39DtngdrAT55GjsM/BtI03DHDpmQc=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=ba7cuQyRlxLNVPxMe0ahVFOPjCTZkT9Qol8nfmET6z6OwHBM98oN2j+xHXfJxDCie
-	 4ycMh7PRP51WQAfacjrJBLxp8P6ryphFhOl/qukf+61wlNnQ2TroYOd/T9AYv07+XS
-	 gC+LuODltlzVEiDag6oqoXarRmeUNunwFZ5gWOE4=
+	by mail.kernel.org (Postfix) with ESMTP id 91B69206A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390278AbgDCBea (ORCPT
+        id S2390331AbgDCBfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 21:34:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390223AbgDCBe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 21:34:28 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 535B1206A3;
-        Fri,  3 Apr 2020 01:34:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585877668;
-        bh=7b3Ysa1BLGv5if39DtngdrAT55GjsM/BtI03DHDpmQc=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=BzJgVKHHx6uUXr9l6xQGm5A8oJuQelPcnLUdfdHp+0Yh/+8Yhp6F/TS/8EolPRx11
-         1pEPmSDHQ07+CocsG9XLo2FztBK8wXruCK3ANoHjUNZI8CWBlI+GGjqonAlpruJzIF
-         tchnmiRZ5guOzb0AcRCF1h+0CDJZdMbRXP80mIYY=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 2 Apr 2020 21:35:06 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:3990 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390163AbgDCBfG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 21:35:06 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.3]) by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee55e86929b433-664e8; Fri, 03 Apr 2020 09:34:19 +0800 (CST)
+X-RM-TRANSID: 2ee55e86929b433-664e8
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee25e8692934ad-0cf03;
+        Fri, 03 Apr 2020 09:34:16 +0800 (CST)
+X-RM-TRANSID: 2ee25e8692934ad-0cf03
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     jun.nie@linaro.org, shawnguo@kernel.org, linux@armlinux.org.uk
+Cc:     Markus.Elfring@web.de, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] ARM:zx:Delete duplicate dev_err message in zx296702_pd_probe()
+Date:   Fri,  3 Apr 2020 09:35:41 +0800
+Message-Id: <20200403013541.20904-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200330205647.24806-1-ansuelsmth@gmail.com>
-References: <20200330205647.24806-1-ansuelsmth@gmail.com>
-Subject: Re: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Mathieu Olivari <mathieu@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>, Ansuel Smith <ansuelsmth@gmail.com>
-Date:   Thu, 02 Apr 2020 18:34:27 -0700
-Message-ID: <158587766752.125146.7582840761926137726@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Ansuel Smith (2020-03-30 13:56:46)
-> diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806=
-x.c
-> index b0eee0903807..f7d7a2bc84c1 100644
-> --- a/drivers/clk/qcom/gcc-ipq806x.c
-> +++ b/drivers/clk/qcom/gcc-ipq806x.c
-> @@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk =3D {
->                 .hw.init =3D &(struct clk_init_data){
->                         .name =3D "gsbi4_h_clk",
->                         .ops =3D &clk_branch_ops,
-> +                       .flags =3D CLK_IGNORE_UNUSED,
+In this place,devm_ioremap_resource() has already contains error
+message, so delete the duplicate dev_err message.
 
-Is this necessary? Shouldn't we skip clks that are protected during the
-unused phase?
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ arch/arm/mach-zx/zx296702-pm-domain.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
->                 },
->         },
->  };
-> --=20
-> 2.25.1
->
+diff --git a/arch/arm/mach-zx/zx296702-pm-domain.c b/arch/arm/mach-zx/zx296702-pm-domain.c
+index 7a08bf9dd..ac44ea8e6 100644
+--- a/arch/arm/mach-zx/zx296702-pm-domain.c
++++ b/arch/arm/mach-zx/zx296702-pm-domain.c
+@@ -169,10 +169,8 @@ static int zx296702_pd_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	pcubase = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(pcubase)) {
+-		dev_err(&pdev->dev, "ioremap fail.\n");
++	if (IS_ERR(pcubase))
+ 		return -EIO;
+-	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(zx296702_pm_domains); ++i)
+ 		pm_genpd_init(zx296702_pm_domains[i], NULL, false);
+-- 
+2.20.1.windows.1
+
+
+
