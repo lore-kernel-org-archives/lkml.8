@@ -2,205 +2,221 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42716C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB758C2BA18
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC092082F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D7E2082F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585914162;
+	bh=vwyBfcfoE8c+jmDCUlnZhC9wdVq+2QNcXgSjhNl4m2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=btw1TgwuqWMKhubj6Jkak+AGfcdRP5dL8Sh9qDYMk4W/CaI6CM7L0vB0pMHQrbsVW
+	 /P3pk0WPmHzFOnzJOCbaqpxeBPf0/zE1O+UMhRWNSOwTuPFqx+lQ1szZq0e/O7fYX3
+	 GsiCdKQ43RHHQnMg059vshO1ljfbcxOGVP3GqIvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390760AbgDCLmY convert rfc822-to-8bit (ORCPT
+        id S2390790AbgDCLmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:42:24 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41173 "EHLO mga09.intel.com"
+        Fri, 3 Apr 2020 07:42:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgDCLmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:42:23 -0400
-IronPort-SDR: byMFnovWTl17pjB2Ri7QGxOgZztKq0xF/KJyIGsRE5K6MlhMjmL6e4qS6nm7XANOFz4f1cJGzF
- x1lINNN0U8Pw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 04:42:22 -0700
-IronPort-SDR: 5iVGo26cmCIRFwKXXhqP8A2IymaOmPdiicCUqS/9qwaAtYkT4XqcFUOPP/Sw0EvfuMNejj/VNk
- unDdqrxXK2pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="242792637"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Apr 2020 04:42:22 -0700
-Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 04:42:22 -0700
-Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
- fmsmsx115.amr.corp.intel.com (10.18.116.19) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 04:42:21 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
- Fri, 3 Apr 2020 19:42:18 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Thread-Topic: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Thread-Index: AQHWAEVGuXHNl3uJkkGgSITNIYV006hl/jEAgAFHqvA=
-Date:   Fri, 3 Apr 2020 11:42:17 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A220988@SHSMSX104.ccr.corp.intel.com>
-References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
-        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
- <20200402165954.48d941ee@w520.home>
-In-Reply-To: <20200402165954.48d941ee@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1728092AbgDCLml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 07:42:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9A622073B;
+        Fri,  3 Apr 2020 11:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585914160;
+        bh=vwyBfcfoE8c+jmDCUlnZhC9wdVq+2QNcXgSjhNl4m2g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XGS1zNXUHy3En8Ri07Vc802COOZOtrSOkjVjAWObt4pBzrj6yGLK+RtjXtpI8XLbK
+         bXQcn2p/mUbYqzoecI8Bg0IfwRwL59Uc6kCgze1L9O0FKlHmdvOio630jHy/OpXifT
+         4GpoAdf57d+GE2+xdmEdtNBuTVi/hxLBz0FgyLLo=
+Date:   Fri, 3 Apr 2020 13:42:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     krzk@kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] tty: samsung_tty: 32-bit access for TX/RX hold
+ registers
+Message-ID: <20200403114237.GA3797881@kroah.com>
+References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+ <CGME20200403111520epcas2p42ef81138693ffaaa281499c7a24e0e48@epcas2p4.samsung.com>
+ <20200403111511.10598-1-hyunki00.koo@samsung.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403111511.10598-1-hyunki00.koo@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Fri, Apr 03, 2020 at 08:15:10PM +0900, Hyunki Koo wrote:
+> Support 32-bit access for the TX/RX hold registers UTXH and URXH.
+> 
+> This is required for some newer SoCs.
+> 
+> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+> ---
+> v2: 
+> line 954 : change rd_regl to rd_reg in for backward compatibility.
+> line 2031: Add init value for ourport->port.iotype  to UPIO_MEM 
+> v3:
+> line 2031: remove redundant init value  for ourport->port.iotype 
+> v4:
+> correct variable types and change misleading function name
+> ---
+>  drivers/tty/serial/samsung_tty.c | 76 +++++++++++++++++++++++++++++++++-------
+>  1 file changed, 64 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+> index 73f951d65b93..bdf1d4d12cb1 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -154,12 +154,47 @@ struct s3c24xx_uart_port {
+>  #define portaddrl(port, reg) \
+>  	((unsigned long *)(unsigned long)((port)->membase + (reg)))
+>  
+> -#define rd_regb(port, reg) (readb_relaxed(portaddr(port, reg)))
+> +static u32 rd_reg(struct uart_port *port, u32 reg)
+> +{
+> +	switch (port->iotype) {
+> +	case UPIO_MEM:
+> +		return readb_relaxed(portaddr(port, reg));
+> +	case UPIO_MEM32:
+> +		return readl_relaxed(portaddr(port, reg));
+> +	default:
+> +		return 0;
+> +	}
+> +	return 0;
+> +}
+> +
+>  #define rd_regl(port, reg) (readl_relaxed(portaddr(port, reg)))
+>  
+> -#define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
+> +static void wr_reg(struct uart_port *port, u32 reg, u32 val)
+> +{
+> +	switch (port->iotype) {
+> +	case UPIO_MEM:
+> +		writeb_relaxed(val, portaddr(port, reg));
+> +		break;
+> +	case UPIO_MEM32:
+> +		writel_relaxed(val, portaddr(port, reg));
+> +		break;
+> +	}
+> +}
+> +
+>  #define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port, reg))
+>  
+> +static void wr_reg_barrier(struct uart_port *port, u32 reg, u32 val)
+> +{
+> +	switch (port->iotype) {
+> +	case UPIO_MEM:
+> +		writeb(val, portaddr(port, reg));
+> +		break;
+> +	case UPIO_MEM32:
+> +		writel(val, portaddr(port, reg));
+> +		break;
+> +	}
+> +}
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Friday, April 3, 2020 7:00 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-> 
-> On Sun, 22 Mar 2020 05:33:14 -0700
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > From: Liu Yi L <yi.l.liu@intel.com>
-> >
-> > Per PCIe r5.0, sec 9.3.7.14, if a PF implements the PASID Capability, the
-> > PF PASID configuration is shared by its VFs.  VFs must not implement their
-> > own PASID Capability.
-> >
-> > Per PCIe r5.0, sec 9.3.7.11, VFs must not implement the PRI Capability. If
-> > the PF implements PRI, it is shared by the VFs.
-> >
-> > On bare metal, it has been fixed by below efforts.
-> > to PASID/PRI are
-> > https://lkml.org/lkml/2019/9/5/996
-> > https://lkml.org/lkml/2019/9/5/995
-> >
-> > This patch adds emulated PASID/PRI capabilities for VFs when assigned to
-> > VMs via vfio-pci driver. This is required for enabling vSVA on pass-through
-> > VFs as VFs have no PASID/PRI capability structure in its configure space.
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci_config.c | 325
-> ++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 323 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> > index 4b9af99..84b4ea0 100644
-> > --- a/drivers/vfio/pci/vfio_pci_config.c
-> > +++ b/drivers/vfio/pci/vfio_pci_config.c
-> > @@ -1509,11 +1509,304 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
-> >  	return 0;
-> >  }
-> >
-> > +static int vfio_fill_custom_vconfig_bytes(struct vfio_pci_device *vdev,
-> > +					int offset, uint8_t *data, int size)
-> > +{
-> > +	int ret = 0, data_offset = 0;
-> > +
-> > +	while (size) {
-> > +		int filled;
-> > +
-> > +		if (size >= 4 && !(offset % 4)) {
-> > +			__le32 *dwordp = (__le32 *)&vdev->vconfig[offset];
-> > +			u32 dword;
-> > +
-> > +			memcpy(&dword, data + data_offset, 4);
-> > +			*dwordp = cpu_to_le32(dword);
-> 
-> Why wouldn't we do:
-> 
-> *dwordp = cpu_to_le32(*(u32 *)(data + data_offset));
-> 
-> or better yet, increment data on each iteration for:
-> 
-> *dwordp = cpu_to_le32(*(u32 *)data);
-> 
-> vfio_fill_vconfig_bytes() does almost this same thing, getting the data
-> from config space rather than a buffer, so please figure out how to
-> avoid duplicating the logic.
+why do you have a default for the read function, but not the write
+functions?
 
-Got another alternative. I may use the vfio_fill_vconfig_bytes()
-to fill the cap data from PF's config space into VF's vconfig.
-And after that, I can further modify the data in vconfig. e.g.
-zero the control reg of pasid cap. would it make more sense?
 
-> > +			filled = 4;
-> > +		} else if (size >= 2 && !(offset % 2)) {
-> > +			__le16 *wordp = (__le16 *)&vdev->vconfig[offset];
-> > +			u16 word;
-> > +
-> > +			memcpy(&word, data + data_offset, 2);
-> > +			*wordp = cpu_to_le16(word);
-> > +			filled = 2;
-> > +		} else {
-> > +			u8 *byte = &vdev->vconfig[offset];
-> > +
-> > +			memcpy(byte, data + data_offset, 1);
-[...]
-> 
-> > +
-> > +	memset(map + epos, vpasid_cap.id, len);
-> 
-> See below.
-> 
-> > +	ret = vfio_fill_custom_vconfig_bytes(vdev, epos,
-> > +					(u8 *)&vpasid_cap, len);
-> > +	if (!ret) {
-> > +		/*
-> > +		 * Successfully filled in PASID cap, update
-> > +		 * the next offset in previous cap header,
-> > +		 * and also update caller about the offset
-> > +		 * of next cap if any.
-> > +		 */
-> > +		u32 val = epos;
-> > +		**prevp &= cpu_to_le32(~(0xffcU << 20));
-> > +		**prevp |= cpu_to_le32(val << 20);
-> > +		*prevp = (__le32 *)&vdev->vconfig[epos];
-> > +		*next = epos + len;
-> 
-> Could we make this any more complicated?
+> +
+>  /* Byte-order aware bit setting/clearing functions. */
+>  
+>  static inline void s3c24xx_set_bit(struct uart_port *port, int idx,
+> @@ -714,7 +749,7 @@ static void s3c24xx_serial_rx_drain_fifo(struct s3c24xx_uart_port *ourport)
+>  		fifocnt--;
+>  
+>  		uerstat = rd_regl(port, S3C2410_UERSTAT);
+> -		ch = rd_regb(port, S3C2410_URXH);
+> +		ch = rd_reg(port, S3C2410_URXH);
+>  
+>  		if (port->flags & UPF_CONS_FLOW) {
+>  			int txe = s3c24xx_serial_txempty_nofifo(port);
+> @@ -826,7 +861,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
+>  	}
+>  
+>  	if (port->x_char) {
+> -		wr_regb(port, S3C2410_UTXH, port->x_char);
+> +		wr_reg(port, S3C2410_UTXH, port->x_char);
+>  		port->icount.tx++;
+>  		port->x_char = 0;
+>  		goto out;
+> @@ -852,7 +887,7 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
+>  		if (rd_regl(port, S3C2410_UFSTAT) & ourport->info->tx_fifofull)
+>  			break;
+>  
+> -		wr_regb(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
+> +		wr_reg(port, S3C2410_UTXH, xmit->buf[xmit->tail]);
+>  		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+>  		port->icount.tx++;
+>  		count--;
+> @@ -916,7 +951,7 @@ static unsigned int s3c24xx_serial_tx_empty(struct uart_port *port)
+>  /* no modem control lines */
+>  static unsigned int s3c24xx_serial_get_mctrl(struct uart_port *port)
+>  {
+> -	unsigned int umstat = rd_regb(port, S3C2410_UMSTAT);
+> +	unsigned int umstat = rd_reg(port, S3C2410_UMSTAT);
+>  
+>  	if (umstat & S3C2410_UMSTAT_CTS)
+>  		return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
+> @@ -1974,7 +2009,7 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
+>  	struct device_node *np = pdev->dev.of_node;
+>  	struct s3c24xx_uart_port *ourport;
+>  	int index = probe_index;
+> -	int ret;
+> +	int ret, prop = 0;
+>  
+>  	if (np) {
+>  		ret = of_alias_get_id(np, "serial");
+> @@ -2000,10 +2035,27 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
+>  			dev_get_platdata(&pdev->dev) :
+>  			ourport->drv_data->def_cfg;
+>  
+> -	if (np)
+> +	if (np) {
+>  		of_property_read_u32(np,
+>  			"samsung,uart-fifosize", &ourport->port.fifosize);
+>  
+> +		if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
+> +			switch (prop) {
+> +			case 1:
+> +				ourport->port.iotype = UPIO_MEM;
+> +				break;
+> +			case 4:
+> +				ourport->port.iotype = UPIO_MEM32;
+> +				break;
+> +			default:
+> +				dev_warn(&pdev->dev, "unsupported reg-io-width (%d)\n",
+> +						prop);
+> +				ret = -EINVAL;
+> +				break;
+> +			}
+> +		}
+> +	}
 
-I'm not sure if adding comments addressed this comment. After adding
-new cap in vconfig, it needs to update the cap.next field of prior cap.
-And in case of further add other cap, this function needs to update the
-prevp pointer to the address of the newly added cap.
+If the property is not there, the type will be uninitialized and no
+warning will be spit out, are you sure you want to do that?
 
-Regards,
-Yi Liu
+Can you break this into 2 patches, one that changes the names of the
+macros and the calls to them, and the second that adds the new
+functionality?  That way it's easier to review/read.
 
+thanks,
+
+greg k-h
