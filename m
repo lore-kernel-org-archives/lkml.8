@@ -2,263 +2,237 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34812C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0765EC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E514F2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:11:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IkCqFgbE"
+	by mail.kernel.org (Postfix) with ESMTP id CC1462073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404134AbgDCPLC (ORCPT
+        id S2404150AbgDCPLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:11:02 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:35358 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403795AbgDCPLC (ORCPT
+        Fri, 3 Apr 2020 11:11:07 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60139 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404141AbgDCPLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:11:02 -0400
-Received: by mail-vs1-f65.google.com with SMTP id u11so5146312vsg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:11:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s3B7TP3PryQrSMDQHVPJCTFtzd/ywd5l72std87udlQ=;
-        b=IkCqFgbE8sOnVH23Bfho3RoIfyYvdmlWc/wIjurrNtsT+gexEJaUgZwBOJ0C/jJdD1
-         PgAWRVuRJSjJV0P1Qc0uJR+gA1+MciQJ438syn4YTV4DdihnuugJxVQIWYWTTZXQXDTZ
-         vD6xDLcZVIpxcuhFAZ5BbzrIYJfcFfcGZ1KwY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s3B7TP3PryQrSMDQHVPJCTFtzd/ywd5l72std87udlQ=;
-        b=dVOC6ZKOimF2SY1ObPm9bndYuUeywBfKlF9WpOAC/+A7VXWOK1x87+Cqq6tN9NRU2z
-         AR6WfEm01wk4LL56ZkKD6DfBLcUhvRZGv4vZsTsw1Q2ch9KOFMTKhryGMByR6/5gXVFM
-         9foJoe9+gZOkUkGKKJvzlt29EgCgQYbTprZVWPB8yjsYOP6yxBKzeYWf+QIM0t9dkbwT
-         DnJMEgkb9wuQbuDGZyyFpT5xN23YkeoJ6cGb8SUhP1c+2sy2eQsLP4LWcltyeFTgPt6l
-         Ig1GFElDn5ospJA0WlUwtHesKTudGcJXBbBwVi5UPCHhyTQkDcxmT6uS9xvuR1egdQr7
-         J4FQ==
-X-Gm-Message-State: AGi0Puas2AV2pTyb1BSYokpl2eTR2H1vYC0VeEnQltHn71UeJZznX59Y
-        vtTkqh+znEwa7H8HZXo9w1dPXUwF5Vk=
-X-Google-Smtp-Source: APiQypLHi2mrSoWE3WQ2tiBTeKsEzHhwhk0WBXgOmPL5eENw//7YiTHZa1Wfdn3pHMj4vuvrl9VdcA==
-X-Received: by 2002:a67:6896:: with SMTP id d144mr6279420vsc.104.1585926660188;
-        Fri, 03 Apr 2020 08:11:00 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id p66sm1229425vke.13.2020.04.03.08.10.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 08:10:59 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id y17so2813802uap.13
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:10:58 -0700 (PDT)
-X-Received: by 2002:ab0:7406:: with SMTP id r6mr6622996uap.22.1585926657542;
- Fri, 03 Apr 2020 08:10:57 -0700 (PDT)
+        Fri, 3 Apr 2020 11:11:07 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jKNy7-0005GW-Ki; Fri, 03 Apr 2020 17:10:51 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jKNy7-0007wC-2O; Fri, 03 Apr 2020 17:10:51 +0200
+Date:   Fri, 3 Apr 2020 17:10:51 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, robh+dt@kernel.org, jonathanh@nvidia.com,
+        bbasu@nvidia.com, ldewangan@nvidia.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
+Message-ID: <20200403151050.nh2mrffkqdqtkozq@pengutronix.de>
+References: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
 MIME-Version: 1.0
-References: <20200402155130.8264-1-dianders@chromium.org> <20200402085050.v2.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
- <20200403013356.GA6987@ming.t460p>
-In-Reply-To: <20200403013356.GA6987@ming.t460p>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 3 Apr 2020 08:10:45 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
-Message-ID: <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] blk-mq: Rerun dispatching in the case of budget contention
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Salman Qazi <sqazi@google.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-scsi@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
-        Ajay Joshi <ajay.joshi@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Hou Tao <houtao1@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 03, 2020 at 06:05:03PM +0530, Sandipan Patra wrote:
+> Added support for dynamic clock freq configuration in pwm kernel driver.
+> Earlier the pwm driver used to cache boot time clock rate by pwm clock
+> parent during probe. Hence dynamically changing pwm frequency was not
+> possible for all the possible ranges. With this change, dynamic calculation
+> is enabled and it is able to set the requested period from sysfs knob
+> provided the value is supported by clock source.
 
-On Thu, Apr 2, 2020 at 6:34 PM Ming Lei <ming.lei@redhat.com> wrote:
->
-> On Thu, Apr 02, 2020 at 08:51:30AM -0700, Douglas Anderson wrote:
-> > It is possible for two threads to be running
-> > blk_mq_do_dispatch_sched() at the same time with the same "hctx".
-> > This is because there can be more than one caller to
-> > __blk_mq_run_hw_queue() with the same "hctx" and hctx_lock() doesn't
-> > prevent more than one thread from entering.
-> >
-> > If more than one thread is running blk_mq_do_dispatch_sched() at the
-> > same time with the same "hctx", they may have contention acquiring
-> > budget.  The blk_mq_get_dispatch_budget() can eventually translate
-> > into scsi_mq_get_budget().  If the device's "queue_depth" is 1 (not
-> > uncommon) then only one of the two threads will be the one to
-> > increment "device_busy" to 1 and get the budget.
-> >
-> > The losing thread will break out of blk_mq_do_dispatch_sched() and
-> > will stop dispatching requests.  The assumption is that when more
-> > budget is available later (when existing transactions finish) the
-> > queue will be kicked again, perhaps in scsi_end_request().
-> >
-> > The winning thread now has budget and can go on to call
-> > dispatch_request().  If dispatch_request() returns NULL here then we
-> > have a potential problem.  Specifically we'll now call
->
-> As I mentioned before, it is a BFQ specific issue, it tells blk-mq
-> that it has work to do, and now the budget is assigned to the only
-> winning thread, however, dispatch_request() still returns NULL.
+Without having looked closely at the patch (yet), just for my
+understanding: If the PWM is running and the frequency changes, the
+output changes, too, right? If so, do we need a notifier that prevents a
+frequency change when the PWM is running?
 
-Correct that it only happens with BFQ, but whether it's a BFQ bug or
-not just depends on how you define the has_work() API.  If has_work()
-is allowed to be in-exact then it's either a blk-mq bug or a SCSI bug
-depending on how you cut it.  If has_work() must be exact then it is
-certainly a BFQ bug.  If has_work() doesn't need to be exact then it's
-not a BFQ bug.  I believe that a sane API could be defined either way.
-Either has_work() can be defined as a lightweight hint to trigger
-heavier code or it can be defined as something exact.  It's really up
-to blk-mq to say how they define it.
+And slightly orthogonal to this patch: The tegra driver needs some love
+to make it use the atomic callback .apply() instead of
+.config()/.enable()/.disable() and a .get_state() implementation.
 
-From his response on the SCSI patch [1], it sounded like Jens was OK
-with has_work() being a lightweight hint as long as BFQ ensures that
-the queues run later.  ...but, as my investigation found, I believe
-that BFQ _does_ try to ensure that the queue is run at a later time by
-calling blk_mq_run_hw_queues().  The irony is that due to the race
-we're talking about here, blk_mq_run_hw_queues() isn't guaranteed to
-be reliable if has_work() is inexact.  :(  One way to address this is
-to make blk_mq_run_hw_queues() reliable even if has_work() is inexact.
+> Changes mainly have 2 parts:
+>   - T186 and later chips [1]
+>   - T210 and prior chips [2]
+> 
+> For [1] - Changes implemented to set pwm period dynamically and
+>           also checks added to allow only if requested period(ns) is
+>           below or equals to higher range.
+> 
+> For [2] - Only checks if the requested period(ns) is below or equals
+>           to higher range defined by max clock limit. The limitation
+>           in T210 or prior chips are due to the reason of having only
+>           one pwm-controller supporting multiple channels. But later
+>           chips have multiple pwm controller instances each having
+> 	  single channel support.
+> 
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+> ---
+>  drivers/pwm/pwm-tegra.c | 45 +++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 43 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> index aa12fb3..d3ba33c 100644
+> --- a/drivers/pwm/pwm-tegra.c
+> +++ b/drivers/pwm/pwm-tegra.c
+> @@ -4,7 +4,7 @@
+>   *
+>   * Tegra pulse-width-modulation controller driver
+>   *
+> - * Copyright (c) 2010, NVIDIA Corporation.
+> + * Copyright (c) 2010-2020, NVIDIA Corporation.
+>   * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.de>
+>   */
+>  
+> @@ -83,10 +83,51 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	val = (u32)c << PWM_DUTY_SHIFT;
+>  
+>  	/*
+> +	 * Its okay to ignore the fraction part since we will be trying to set
+> +	 * slightly lower value to rate than the actual required rate
 
-...so Jens: care to clarify how you'd like has_work() to be defined?
+s/actual/actually/
 
+You round down the rate, that results in rounding up period and
+duty_cycle, right? If so, that's wrong. (Note that if the driver would
+use the atomic callbacks, the just introduced debug checks would tell
+you this.)
 
-> > - Because this problem only trips with inexact has_work() it's
-> >   believed that blk_mq_do_dispatch_ctx() does not need a similar
-> >   change.
->
-> Right, I prefer to fix it in BFQ, given it isn't a generic issue,
-> not worth of generic solution.
+> +	 */
+> +	rate = NSEC_PER_SEC/period_ns;
 
-Just to confirm: it sounds like you are saying that BFQ is not a first
-class citizen here because not everyone uses BFQ.  Is that really the
-best policy?  Couldn't I say that SCSI shouldn't be a first class
-citizen because not everyone uses SCSI?  In such a case I could argue
-that we should speed up the blk-mq layer by removing all the budget
-code since SCSI is the only user.  I'm not actually suggesting it,
-only pointing out that sometimes we need to make allowances in the
-code.
+space around / please.
 
+> +
+> +	/*
+> +	 *  Period in nano second has to be <= highest allowed period
+> +	 *  based on the max clock rate of the pwm controller.
+> +	 *
+> +	 *  higher limit = max clock limit >> PWM_DUTY_WIDTH
+> +	 */
+> +	if (rate > (pc->soc->max_frequency >> PWM_DUTY_WIDTH))
+> +		return -EINVAL;
 
-> > @@ -97,12 +97,34 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
-> >               if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
-> >                       break;
-> >
-> > -             if (!blk_mq_get_dispatch_budget(hctx))
-> > -                     break;
-> > +
-> > +             if (!blk_mq_get_dispatch_budget(hctx)) {
-> > +                     /*
-> > +                      * We didn't get budget so set contention.  If
-> > +                      * someone else had the budget but didn't dispatch
-> > +                      * they'll kick everything.  NOTE: we check one
-> > +                      * extra time _after_ setting contention to fully
-> > +                      * close the race.  If we don't actually dispatch
-> > +                      * we'll detext faux contention (with ourselves)
-> > +                      * but that should be rare.
-> > +                      */
-> > +                     atomic_set(&q->budget_contention, 1);
-> > +
-> > +                     if (!blk_mq_get_dispatch_budget(hctx))
->
-> scsi_mq_get_budget() implies a smp_mb(), so the barrier can order
-> between blk_mq_get_dispatch_budget() and atomic_set(&q->budget_contention, 0|1).
+Related to my question above: What happens if the rate increases after
+this check?
 
-I always struggle when working with memory barriers.  I think you are
-saying that this section of code is OK, though, presumably because the
-SCSI code does "atomic_inc_return" which implies this barrier.
+Also the division above is just done to compare the requested period
+value with the allowed range.
 
-Do you happen to know if it's documented that anyone who implements
-get_budget() for "struct blk_mq_ops" will have a memory barrier here?
-I know SCSI is the only existing user, but we'd want to keep it
-generic.
+Your check is:
 
+	NSEC_PER_SEC / period_ns > (max_frequency >> PWM_DUTY_WIDTH)
 
-> > +                             break;
-> > +             }
-> >
-> >               rq = e->type->ops.dispatch_request(hctx);
-> >               if (!rq) {
-> >                       blk_mq_put_dispatch_budget(hctx);
-> > +
-> > +                     /*
-> > +                      * We've released the budget but us holding it might
-> > +                      * have prevented someone else from dispatching.
-> > +                      * Detect that case and run all queues again.
-> > +                      */
-> > +                     if (atomic_read(&q->budget_contention))
->
-> scsi_mq_put_budget() doesn't imply smp_mb(), so one smp_mb__after_atomic()
-> is needed between the above two op.
+This is equivalent to
 
-OK, thanks.  I will add that we decide to move forward with this
-patch.  Again I'd wonder if this type of thing should be documented.
+	period_ns <= NSEC_PER_SEC / (max_frequency >> PWM_DUTY_WIDTH)
 
+where the right side is constant per PWM type. (Rounding might need
+addressing.)
 
-> > +                             blk_mq_run_hw_queues(q, true);
-> >                       break;
-> >               }
-> >
-> > diff --git a/block/blk-mq.c b/block/blk-mq.c
-> > index 2cd8d2b49ff4..6163c43ceca5 100644
-> > --- a/block/blk-mq.c
-> > +++ b/block/blk-mq.c
-> > @@ -1528,6 +1528,9 @@ void blk_mq_run_hw_queues(struct request_queue *q, bool async)
-> >       struct blk_mq_hw_ctx *hctx;
-> >       int i;
-> >
-> > +     /* We're running the queues, so clear the contention detector */
-> > +     atomic_set(&q->budget_contention, 0);
-> > +
->
-> You add extra cost in fast path.
+> +
+> +	/*
+>  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
+>  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
+>  	 */
+> -	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
+> +	if (pc->soc->num_channels == 1) {
+> +		/*
+> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
+> +		 * with the hieghest applicable rate that the controller can
 
-Yes, but it is a fairly minor cost added.  It's called once in a place
-where we're unlikely to be looping and where we're about to do a lot
-heavier operations (perhaps in a loop).  This doesn't feel like a
-dealbreaker.
+typo: s/hieghest/highest/
 
+> +		 * provide. Any further lower value can be derived by setting
+> +		 * PFM bits[0:12].
+> +		 * Higher mark is taken since BPMP has round-up mechanism
+> +		 * implemented.
+> +		 */
+> +		rate = rate << PWM_DUTY_WIDTH;
+> +
+> +		err = clk_set_rate(pc->clk, rate);
+> +		if (err < 0)
+> +			return -EINVAL;
+> +
+> +		rate = clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
+> +	} else {
+> +		/*
+> +		 * This is the case for SoCs who support multiple channels:
 
-> >       queue_for_each_hw_ctx(q, hctx, i) {
-> >               if (blk_mq_hctx_stopped(hctx))
-> >                       continue;
-> > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> > index f629d40c645c..07f21e45d993 100644
-> > --- a/include/linux/blkdev.h
-> > +++ b/include/linux/blkdev.h
-> > @@ -583,6 +583,8 @@ struct request_queue {
-> >
-> >  #define BLK_MAX_WRITE_HINTS  5
-> >       u64                     write_hints[BLK_MAX_WRITE_HINTS];
-> > +
-> > +     atomic_t                budget_contention;
->
-> It needn't to be a atomic variable, and simple 'unsigned'
-> int should be fine, what matters is that the order between
-> R/W this flag and get/put budget.
+s/who/that/
 
-Apparently I'm the only one who feels atomic_t is more documenting
-here.  I will cede to the will of the majority here and change to
-'unsigned int' if we decide to move forward with this patch.
+> +		 *
+> +		 * clk_set_rate() can not be called again in config because
+> +		 * T210 or any prior chip supports one pwm-controller and
+> +		 * multiple channels. Hence in this case cached clock rate
+> +		 * will be considered which was stored during probe.
 
--Doug
+I don't understand that. If 
+> +		 */
+> +		rate = pc->clk_rate >> PWM_DUTY_WIDTH;
+> +	}
+>  
+>  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+>  	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
 
-[1] https://lore.kernel.org/r/d6af2344-11f7-5862-daed-e21cbd496d92@kernel.dk
+I took a deeper look into the driver now. Just to ensure, I understood
+the PWMs behaviour right:
+
+There is an ENABLE bit (with obvious semantics), a 13-bit SCALE value
+and an 8-bit DUTY value. There is an internal counter incrementing by
+one each (SCALE + 1) clock cycles and resets at 256. The counter going
+from 0 to 256 defines the period length. On counter reset the output
+gets active and on reaching DUTY the output gets inactive.
+
+So we have:
+
+	.period = 256 * (SCALE + 1) / clkrate
+	.duty_cycle = DUTY * (SCALE + 1) / clkrate
+
+Right?
+
+There are a few things that could be improved in the driver:
+
+ - .config() does quite some divisions. This could be reduced which
+   probably even reduces rounding effects.
+
+ - When .duty_ns == .period the assignment of DUTY overflows.
+   (Can the PWM provide 100% duty cycle at all?)
+
+ - The comment "Since the actual PWM divider is the register's frequency
+   divider field minus 1, we need to decrement to get the correct value
+   to write to the register." seems wrong. If I understand correctly, we
+   need to do s/minus/plus/. If the register holds a 0, the divider
+   isn't -1 for sure?!
+
+How does the PWM behave when it gets disabled? Does it complete the
+currently running period? Does the output stop at the inactive level, or
+where it just happens to be? How does a running PWM behave when the
+register is updated? Does it complete the currently running period?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
