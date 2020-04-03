@@ -2,72 +2,140 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0AFC2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0950C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC60207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585876091;
-	bh=UDkQfWYeDpy8gRC+sgnoV8ebSNJatc9JRs4jGUJHRxQ=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=LlwrmPXktCzNLmSBp1CLMjihbb65GC3DgnbxWi1MXn13g/ZtjRKxrlS/9EAl9045c
-	 wGThK4Nzdl0UAZCROmYN/fqhdoPlme2hVO4QxhIlImyBr3SkUdjVVnNldlJVtCLpc4
-	 oHw4AkvZjn3qyOXvB+/MxmBpWPXuK9Ldj2eTDFJc=
+	by mail.kernel.org (Postfix) with ESMTP id 6A70620737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:13:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cl6oxazq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390189AbgDCBIJ (ORCPT
+        id S2390187AbgDCBNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 21:08:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731783AbgDCBIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 21:08:09 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3CD020675;
-        Fri,  3 Apr 2020 01:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585876088;
-        bh=UDkQfWYeDpy8gRC+sgnoV8ebSNJatc9JRs4jGUJHRxQ=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=FXFjUE9ZimtleKsD/qcXUDLjWbYiOA5l7vS6yMELDMIpxDrnRTf8qFWWyW3p+K+kc
-         LlHP92OAqYXvLjFobKCk9dYYEj4Z/DnLKXBGKJ5CjBLXio6sbLUC5l5JIDgvetV2QW
-         wCy3f46PPQ91iPc9TOjY6+iyeOqPZNmvZIHoStno=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 2 Apr 2020 21:13:52 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43821 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731783AbgDCBNw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 21:13:52 -0400
+Received: by mail-pf1-f193.google.com with SMTP id f206so2651365pfa.10;
+        Thu, 02 Apr 2020 18:13:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=a4w6WNUXo0OrnIhl+pN95pim8+mHdrQuMjAwNVyujGg=;
+        b=Cl6oxazqwil6UKwahFv6KFn7LXSZt8iHP/QsrKl6rvYj5FScx9Cl79/OqvpItS+e1a
+         wfJB3vjipRbG10zLOKy7Rm2AuH3ZEMPQn896o7k5sktqj2cbxYZSzsnQa11J/Y+pBfG0
+         5MOFkx3gvmZrGUKFqUzPhDOLB6WQHxdBFOrsMezSZ8tn5OGpAvK4+JPfw+OKDqI7Dca5
+         4Cs+TEcvicUO5XVfCbyDSTS6SmXnao7fILJ5ZmBQMda2Ai0hO0fpB7KKRUhNiEyB2edg
+         8AA+K29FMj3XBQeyw9uOujT7vCxpmH1kM3YxM6HbXhF38qPxs/0YpkY7uEvPpmrdbmxj
+         1QgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=a4w6WNUXo0OrnIhl+pN95pim8+mHdrQuMjAwNVyujGg=;
+        b=UhsK3QTrsJ8Elsw7vfx7NKuieXKmv+ZZEn5UWkfFWtmSgXQsimRXZVTMRfadDo8jaF
+         Bpo1qGUeFAwAIvg+o6Nj+YJIKsFDYWMlFr3SGGzkUB5tNeyZbtrf8zM0QrhPcRz/h3Nb
+         dX0WpEX0RVNf4uN63eTFgzKG9lgOwkAhsG+FIGIiVsyRTQXUshgtOZiXCJgrDcgr5psH
+         NbuuXyUVDd0Sqx0LnbDgWqqHET82cO1MrorOTbpGmwNgL2Z2xixcv977sjpzGW3SsIDO
+         zm8/B+1HE6OO2rvQze1rMo52sRGJ/0WPlXwlej0ge8mTMd3gsUkyIElrfccYH4TF7sIw
+         Y4dw==
+X-Gm-Message-State: AGi0Publusf45axHbe/Pqk/dkaNuxPcwm4t8QeTZau8r1SJr+1GKzJHm
+        J9x7stc2uP1WZYoRiMTFDTw=
+X-Google-Smtp-Source: APiQypK39T0+9ouLdDrpyYewtv4qEZi+u8NpoIYxybwCP33HGcnVFkE1wM5WuBtYGZekQehZhljX/Q==
+X-Received: by 2002:a62:7c82:: with SMTP id x124mr6202533pfc.280.1585876430597;
+        Thu, 02 Apr 2020 18:13:50 -0700 (PDT)
+Received: from sultan-box.localdomain (static-198-54-129-52.cust.tzulo.com. [198.54.129.52])
+        by smtp.gmail.com with ESMTPSA id b189sm4630053pfa.209.2020.04.02.18.13.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 18:13:49 -0700 (PDT)
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+X-Google-Original-From: Sultan Alsawaf
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>, stable@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915: Fix use-after-free due to intel_context_pin/unpin race
+Date:   Thu,  2 Apr 2020 18:13:18 -0700
+Message-Id: <20200403011318.2280-1-sultan@kerneltoast.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200330021640.14133-1-zhang.lyra@gmail.com>
-References: <20200330021640.14133-1-zhang.lyra@gmail.com>
-Subject: Re: [PATCH] clk: sprd: fix to get a correct ibias of pll
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Date:   Thu, 02 Apr 2020 18:08:07 -0700
-Message-ID: <158587608797.125146.13372364275748896742@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chunyan Zhang (2020-03-29 19:16:40)
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
->=20
-> The current driver is getting a wrong ibias index of pll clocks from
-> number 1. This patch fix that issue, then getting ibias index from 0.
->=20
-> Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
+From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-Applied to clk-next
+The retire and active callbacks can run simultaneously, allowing
+intel_context_pin() and intel_context_unpin() to run at the same time,
+trashing the ring and page tables. In 5.4, this was more noticeable
+because intel_ring_unpin() would set ring->vaddr to NULL and cause a
+clean NULL-pointer-dereference panic, but in newer kernels the
+use-after-free goes unnoticed.
+
+The NULL-pointer-dereference looks like this:
+BUG: unable to handle page fault for address: 0000000000003448
+RIP: 0010:gen8_emit_flush_render+0x163/0x190
+Call Trace:
+ execlists_request_alloc+0x25/0x40
+ __i915_request_create+0x1f4/0x2c0
+ i915_request_create+0x71/0xc0
+ i915_gem_do_execbuffer+0xb98/0x1a80
+ ? preempt_count_add+0x68/0xa0
+ ? _raw_spin_lock+0x13/0x30
+ ? _raw_spin_unlock+0x16/0x30
+ i915_gem_execbuffer2_ioctl+0x1de/0x3c0
+ ? i915_gem_busy_ioctl+0x7f/0x1d0
+ ? i915_gem_execbuffer_ioctl+0x2d0/0x2d0
+ drm_ioctl_kernel+0xb2/0x100
+ drm_ioctl+0x209/0x360
+ ? i915_gem_execbuffer_ioctl+0x2d0/0x2d0
+ ksys_ioctl+0x87/0xc0
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x4e/0x150
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Protect the retire callback with ref->mutex to complement the active
+callback and fix the corruption.
+
+Fixes: 12c255b5dad1 ("drm/i915: Provide an i915_active.acquire callback")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+---
+ drivers/gpu/drm/i915/i915_active.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/i915/i915_active.c b/drivers/gpu/drm/i915/i915_active.c
+index c4048628188a..0478bcf061b5 100644
+--- a/drivers/gpu/drm/i915/i915_active.c
++++ b/drivers/gpu/drm/i915/i915_active.c
+@@ -148,8 +148,10 @@ __active_retire(struct i915_active *ref)
+ 	spin_unlock_irqrestore(&ref->tree_lock, flags);
+ 
+ 	/* After the final retire, the entire struct may be freed */
++	mutex_lock(&ref->mutex);
+ 	if (ref->retire)
+ 		ref->retire(ref);
++	mutex_unlock(&ref->mutex);
+ 
+ 	/* ... except if you wait on it, you must manage your own references! */
+ 	wake_up_var(ref);
+-- 
+2.26.0
+
