@@ -2,113 +2,164 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01FBC2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95422C2BA18
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC47206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:51:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EE21H0uW"
+	by mail.kernel.org (Postfix) with ESMTP id 6CFDC206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgDFEvj (ORCPT
+        id S1726534AbgDFE5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 00:51:39 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:45226 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726408AbgDFEvj (ORCPT
+        Mon, 6 Apr 2020 00:57:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64368 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726473AbgDFE5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 00:51:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586148698; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=XqOVPv1elEVhl7owP6ToQ1u/b9NrcPBlIL+fC4WITPo=; b=EE21H0uWgnAl6/KllP+ia3WuJf79NkiYmPdUBmbFwl7pt/stDrmdL3Ck86WTlTvoSUrRbML0
- DTYTVPCXy39AN49sgEkinHG9dMg1GCvgPA0lH2Fr40YTbsunK6+WDJWVncfZWqLpsvkk2LgS
- +zXKlYqljDfWcHUu8OC4UsG9/Es=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8ab559.7fee662c65e0-smtp-out-n02;
- Mon, 06 Apr 2020 04:51:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D254C43637; Mon,  6 Apr 2020 04:51:37 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.172.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12DA5C433F2;
-        Mon,  6 Apr 2020 04:51:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 12DA5C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v15 5/7] soc: qcom: rpmh: Invoke rpmh_flush() for dirty
- caches
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1585660782-23416-1-git-send-email-mkshah@codeaurora.org>
- <1585660782-23416-6-git-send-email-mkshah@codeaurora.org>
- <CAD=FV=XMwRFcNqgAKnTyYc85xgsrWSzs7Q_4nC2kOzpE=YJaUQ@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <bc553806-d6b3-c81a-a0d2-afee3041a2c0@codeaurora.org>
-Date:   Mon, 6 Apr 2020 10:21:28 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 00:57:19 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0364Yl86097301;
+        Mon, 6 Apr 2020 00:57:10 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 306k5uj65u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 00:57:10 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0364tDZf016378;
+        Mon, 6 Apr 2020 04:57:09 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02dal.us.ibm.com with ESMTP id 306hv6h0ar-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 04:57:09 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0364v8eX54133176
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Apr 2020 04:57:08 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD6C628059;
+        Mon,  6 Apr 2020 04:57:08 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 230B628058;
+        Mon,  6 Apr 2020 04:57:08 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.79.181.69])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Apr 2020 04:57:08 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id AD3982E3231; Fri,  3 Apr 2020 16:54:28 +0530 (IST)
+Date:   Fri, 3 Apr 2020 16:54:28 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     ego@linux.vnet.ibm.com,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: Re: [PATCH v4 2/6] powerpc/idle: Add accessor function to always
+ read latest idle PURR
+Message-ID: <20200403112428.GB20293@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1585308760-28792-3-git-send-email-ego@linux.vnet.ibm.com>
+ <1585734073.0qmf6bbdoa.naveen@linux.ibm.com>
+ <20200403061536.GA9066@in.ibm.com>
+ <1585909343.fw0f8jg7ug.naveen@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=XMwRFcNqgAKnTyYc85xgsrWSzs7Q_4nC2kOzpE=YJaUQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585909343.fw0f8jg7ug.naveen@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_01:2020-04-03,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 clxscore=1015 mlxlogscore=999 adultscore=0
+ mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004060032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 03, 2020 at 04:04:56PM +0530, Naveen N. Rao wrote:
+> Gautham R Shenoy wrote:
+> >On Wed, Apr 01, 2020 at 03:12:53PM +0530, Naveen N. Rao wrote:
+> >>Hi Gautham,
+> >>
+> >>Gautham R. Shenoy wrote:
+> >>>From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> >>>
+> >>>+
+> >>>+static inline u64 read_this_idle_purr(void)
+> >>>+{
+> >>>+	/*
+> >>>+	 * If we are reading from an idle context, update the
+> >>>+	 * idle-purr cycles corresponding to the last idle period.
+> >>>+	 * Since the idle context is not yet over, take a fresh
+> >>>+	 * snapshot of the idle-purr.
+> >>>+	 */
+> >>>+	if (unlikely(get_lppaca()->idle == 1)) {
+> >>>+		update_idle_purr_accounting();
+> >>>+		snapshot_purr_idle_entry();
+> >>>+	}
+> >>>+
+> >>>+	return be64_to_cpu(get_lppaca()->wait_state_cycles);
+> >>>+}
+> >>>+
+> >>
+> >>I think this and read_this_idle_spurr() from the next patch should be moved
+> >>to Patch 4/6, where they are actually used.
+> >
+> >The reason I included this function in this patch was to justify why
+> >we were introducing snapshotting the purr values in a global per-cpu
+> >variable instead of on a stack variable. The reason being that someone
+> >might want to read the PURR value from an interrupt context which had
+> >woken up the CPU from idle. At this point, since epilog() function
+> >wasn't called, the idle PURR count corresponding to this latest idle
+> >period would have been accumulated in lppaca->wait_cycles. Thus, this
+> >helper function safely reads the value by
+> >   1) First updating the lppaca->wait_cycles with the latest idle_purr
+> >   count.
+> >   2) Take a fresh snapshot, since the time from now to the epilog()
+> >   call is also counted under idle CPU. So the PURR cycle increment
+> >   during this short period should also be accumulated in lppaca->wait_cycles.
+> >
+> >
+> >prolog()
+> >|	snapshot PURR
+> >|
+> >|
+> >|
+> >Idle
+> >|
+> >| <----- Interrupt . Read idle PURR ---- update idle PURR;
+> >|                              	         snapshot PURR;
+> >|                                   	 Read idle PURR.       |
+> >epilog()
+> >	update idle PURR
+> >
+> 
+> Yes, I understand. It makes sense.
+> 
+> >
+> >However, if you feel that moving this function to Patch 4 where it is
+> >actually used makes it more readable, I can do that.
+> 
+> My suggestion was from a bisectability standpoint though. This is a fairly
+> simple function, but it is generally recommended to ensure that newly added
+> code gets exercized in the patch that it is introduced in:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst#n119
+>
 
-On 4/3/2020 1:43 AM, Doug Anderson wrote:
-> Hi,
->
-> On Tue, Mar 31, 2020 at 6:20 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->> +/**
->> + * rpmh_rsc_ctrlr_is_busy: Check if any of the AMCs are busy.
-> nit: this is still not quite kerneldoc format.  Specifically, the
-> above should be:
->
-> * rpmh_rsc_ctrlr_is_busy() - Check if any of the AMCs are busy
->
-> You may think I'm being nit picky, but try running:
->
-> scripts/kernel-doc -rst drivers/soc/qcom/rpmh-rsc.c
->
-> Now search the output for "Check if any of the AMCs are busy".  It
-> won't be there as you have formatted it.  If you fix it to the proper
-> format then it shows up.  I'm not saying that you should fix up all
-> functions at once but if you're adding new functions why not make them
-> compliant?
->
->
-> Other than the kerneldoc nitpick which could happen later in a cleanup
-> series for the whole driver at once, this patch looks fine to me now.
->
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Fair point. Will move those functions to Patch 4.
 
-Thanks for the review Doug.
 
-I will fix this in v16 to update as per kernel doc format.
-
-Thanks,
-Maulik
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> Regards,
+> Naveen
+> 
