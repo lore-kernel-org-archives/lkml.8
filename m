@@ -2,134 +2,73 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2225C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CED1C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE582073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:16:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="S3oW3k4I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CONOz7b6"
+	by mail.kernel.org (Postfix) with ESMTP id 79546206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390575AbgDCJQ7 (ORCPT
+        id S2390362AbgDCJWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:16:59 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:46635 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390315AbgDCJQ6 (ORCPT
+        Fri, 3 Apr 2020 05:22:51 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:50495 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgDCJWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:16:58 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 2532264C;
-        Fri,  3 Apr 2020 05:16:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 03 Apr 2020 05:16:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=+vCRer2tBJ+2uqECiyHrHv9GUPx
-        3lpVNNvA4oxiT2TM=; b=S3oW3k4IQKifAEIXO6a7zxeJvC38/ZdHgeZv5OAtiIk
-        tCzAv0q2ql+qkFUaYTXcPLVLP0BVRoZZCjxIapk6sFpNEFhirYXA0Cxx64sdYLUj
-        t9U9zM9zmYBk+BuWBaSUJXqLyqyDgipxYis+BJeJ4ymBpASJjlcqx1626X4D+A+4
-        HrrSbZR7RrH/ROKXEDuZng7Fm17GJVkOryUiY/LhE66aSm/2Ebo1puULjJEY8z5T
-        ptZH9BZXGvI9e5cC2OucEtB6fOCupTWRsg8xSzS25wAl4ClIwOtkHkihDclURZLI
-        Bqe2qU3wkBuuzYBs3YC3UIk9kHxbkYCojoCMk50tqMw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+vCRer
-        2tBJ+2uqECiyHrHv9GUPx3lpVNNvA4oxiT2TM=; b=CONOz7b6rNkZTR78Ry7DwU
-        3l49bqn1vymWigoGUMOXAfufDm06aSdb8J2JZLi3SbuTPOOJsSfFbsb0IJMTWug0
-        eHht68UlXT4OUn0nqXSeTpoVTXJAxEDO6xmMcNjxm9zjRdgDkjTYEVa/vegNZ/OY
-        4HVFcfv1mRnbv+DJpY5sa5isYIXoPtHl537TkIFdqiwyZvdkpXPHJJ/YxFm5SGBl
-        Tb+a7RRJGLjXIH8CuiBkHzwkg7UN7uVNrQjsAm0d49RS2GztzjP0C08dp+gCe/1k
-        4IvJk5aX0RHYDeaTokxDep3WBGYyV7MQ7E5F1yihv26IIt+ANFuGpKLfambHC2Hw
-        ==
-X-ME-Sender: <xms:B_-GXkAHISz4ybNPJe62-mKYzpEmFrUwghjcn1U6ix0yF_4LoSh4UQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdeigddufecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledruddtje
-    enucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgv
-    gheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:B_-GXv3CRthpvXwgbXg-8fhUmO6U1nCg0F1PyTPYrFc3e8ZH9QAiBA>
-    <xmx:B_-GXmWeCT9aGokOJpb7n7uLYQDeUGxKbadODarCE21VI9ZCzmb-aw>
-    <xmx:B_-GXlx_YBR971siDDMvI4AetL_T8QXEGQb13HjKJSGPG0SsPi4ulA>
-    <xmx:CP-GXq8-x2PJ4VMa-QC3Jlv4aI9RRfMI72UVKAkP27STMkblQ5W2wQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 40ECE328005A;
-        Fri,  3 Apr 2020 05:16:55 -0400 (EDT)
-Date:   Fri, 3 Apr 2020 11:16:52 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Robert Beckett <bob.beckett@collabora.com>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v4.19.y, v4.14.y, v4.9.y] drm/etnaviv: Backport fix for
- mmu flushing
-Message-ID: <20200403091652.GB3740897@kroah.com>
-References: <20200402170758.8315-1-bob.beckett@collabora.com>
+        Fri, 3 Apr 2020 05:22:51 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7C44824000D;
+        Fri,  3 Apr 2020 09:22:45 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 11:22:45 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Colin King <colin.king@canonical.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linux-rtc@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][V2][next] rtc: ds1307: check for failed memory
+ allocation on wdt
+Message-ID: <20200403092245.GR3683@piout.net>
+References: <20200402135201.548313-1-colin.king@canonical.com>
+ <c6fe9db8-3e27-b6fc-fff7-131cecad3f88@roeck-us.net>
+ <20200402145312.GN3683@piout.net>
+ <20200403084504.GZ2001@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402170758.8315-1-bob.beckett@collabora.com>
+In-Reply-To: <20200403084504.GZ2001@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 06:07:55PM +0100, Robert Beckett wrote:
-> commit 4900dda90af2cb13bc1d4c12ce94b98acc8fe64e upstream
+On 03/04/2020 11:45:04+0300, Dan Carpenter wrote:
+> On Thu, Apr 02, 2020 at 04:53:12PM +0200, Alexandre Belloni wrote:
+> > 
+> > As stated, I also prefer keeping the watchdog optional and ignore the
+> > error.
 > 
-> Due to async need_flush updating via other buffer mapping, checking
-> gpu->need_flush in 3 places within etnaviv_buffer_queue can cause GPU
-> hangs.
-> 
-> This occurs due to need_flush being false for the first 2 checks in that
-> function, so that the extra dword does not get accounted for, but by the
-> time we come to check for the third time, gpu->mmu->need_flish is true,
-> which outputs the flush instruction. This causes the prefetch during the
-> final link to be off by 1. This causes GPU hangs.
-> 
-> It causes the ring to contain patterns like this:
-> 
-> 0x40000005, /* LINK (8) PREFETCH=0x5,OP=LINK */                                                      
-> 0x70040010, /*   ADDRESS *0x70040010 */                                                              
-> 0x40000002, /* LINK (8) PREFETCH=0x2,OP=LINK */                                                      
-> 0x70040000, /*   ADDRESS *0x70040000 */                                                              
-> 0x08010e04, /* LOAD_STATE (1) Base: 0x03810 Size: 1 Fixp: 0 */                                       
-> 0x0000001f, /*   GL.FLUSH_MMU := FLUSH_FEMMU=1,FLUSH_UNK1=1,FLUSH_UNK2=1,FLUSH_PEMMU=1,FLUSH_UNK4=1 */
-> 0x08010e03, /* LOAD_STATE (1) Base: 0x0380C Size: 1 Fixp: 0 */                                       
-> 0x00000000, /*   GL.FLUSH_CACHE := DEPTH=0,COLOR=0,TEXTURE=0,PE2D=0,TEXTUREVS=0,SHADER_L1=0,SHADER_L2=0,UNK10=0,UNK11=0,DESCRIPTOR_UNK12=0,DESCRIPTOR_UNK13=0 */
-> 0x08010e02, /* LOAD_STATE (1) Base: 0x03808 Size: 1 Fixp: 0 */                                       
-> 0x00000701, /*   GL.SEMAPHORE_TOKEN := FROM=FE,TO=PE,UNK28=0x0 */                                    
-> 0x48000000, /* STALL (9) OP=STALL */                                                                 
-> 0x00000701, /*   TOKEN FROM=FE,TO=PE,UNK28=0x0 */                                                    
-> 0x08010e00, /* LOAD_STATE (1) Base: 0x03800 Size: 1 Fixp: 0 */                                       
-> 0x00000000, /*   GL.PIPE_SELECT := PIPE=PIPE_3D */                                                   
-> 0x40000035, /* LINK (8) PREFETCH=0x35,OP=LINK */                                                     
-> 0x70041000, /*   ADDRESS *0x70041000 */
-> 
-> Here we see a link with prefetch of 5 dwords starting with the 3rd
-> instruction. It only loads the 5 dwords up and including the final
-> LOAD_STATE. It needs to include the final LINK instruction.
-> 
-> This was seen on imx6q, and the fix is confirmed to stop the GPU hangs.
-> 
-> The commit referenced inadvertently fixed this issue by checking
-> gpu->mmu->need_flush once at the start of the function.
-> Given that this commit is independant, and useful for all version, it
-> seems sensible to backport it to the stable branches.
-> 
+> Hopefully you aren't running out of memory on start up.  In current
+> kernels small memory allocations like this never fail so it doesn't
+> really affect runtime.  It only silences the NULL dereference static
+> checker warning.
 > 
 
-All now queued up, thanks for the backports.
+Yes, so the
 
-greg k-h
+if (!wdt)
+ return;
+
+would be enough instead of introducing unnecessary error handling.
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
