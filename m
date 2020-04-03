@@ -2,162 +2,218 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966A7C2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DFCC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E57206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9EB206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="YuszoxdT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CprgbpiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgDCP5D (ORCPT
+        id S2390817AbgDCP5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:57:03 -0400
-Received: from mail-bn7nam10on2081.outbound.protection.outlook.com ([40.107.92.81]:51540
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727989AbgDCP5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:57:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q0EEs2ftM4Mlns3gX5WKcbXsL+jGHpMAYnok0SpPpO6PnWIWygKsIww/h7Kcz8vhag3YD7nD1x/GCeXMbLAFSomgw8eDxy5vsnMpvEp98UAYr3bNCiFNVsk/tASvQo4gml/YBQx5m65sdHgO1LrlqdQ1doZD82TrGMmygxOwzird8iO1jGGuHawiEyVv336pL6hpxdA8pCodmMt379DvzO33/opJ+acr5+3kfkfcyAtMwE/pwK93cq/xwyu6bNm9dexmBj67WEIeuyFDNhoHjQ73c40oiWtMMP3MRtnokEJQ5zdquFmJ5rkBfxpYZjHzZRlWV2PeGmSLg/pj5Ljo7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GvyOMuTw77yIJheOplEKwK9UTv++WcbpV8gBsScfTZ8=;
- b=m6aMiUbMED7YhqpmJwp5seq2qmEkVvNlC3IRtaJ8nieSv7nDOl4KP1gao8RddY4BHnLhI1g0Eg0X9wrm/F/kbx6UvfL5vQqytvU07hGj+MyhwH1ji7d6LgqyGpAacEbInpks5mfOM8RbsCHFcYJXd5j5Cd+J/9N7bqI5oFGq+3wUZaUXEL27er+dT5ebMc9ezM6WeTXpjP7UuPfKFOg4ELIDtM9T+wi+jOsu8wWHNAGDmI8LF5pdOfakDsgRXhxpJ8UGt5S/x74BIQO7ZKSu7ZzIuzo9BsGS6Gjr2LRH5oR9nU0nSB3v6P2Rw83rju/dooEbGlFoL9ggwLCiPlFmeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GvyOMuTw77yIJheOplEKwK9UTv++WcbpV8gBsScfTZ8=;
- b=YuszoxdTx8v3SJizMU/HSitfWDAS8ApCjnfPwB7un674BcPixSQv4Tza25bFX5YjTjM403G1xDLthaKUo/OoQXxuNCGAo+/c/snIT2XbqS6z3q9QxmyVj9qBuMR4qMhCjKw92eGco3vZZT5Ldh/vp+aonorgIo30GUp+K7xZ2+8=
-Received: from BL0PR02CA0032.namprd02.prod.outlook.com (2603:10b6:207:3c::45)
- by SN6PR02MB4141.namprd02.prod.outlook.com (2603:10b6:805:3a::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Fri, 3 Apr
- 2020 15:56:57 +0000
-Received: from BL2NAM02FT013.eop-nam02.prod.protection.outlook.com
- (2603:10b6:207:3c:cafe::69) by BL0PR02CA0032.outlook.office365.com
- (2603:10b6:207:3c::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend
- Transport; Fri, 3 Apr 2020 15:56:57 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT013.mail.protection.outlook.com (10.152.77.19) with Microsoft SMTP
- Server id 15.20.2878.15 via Frontend Transport; Fri, 3 Apr 2020 15:56:57
- +0000
-Received: from [149.199.38.66] (port=38686 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jKOga-0000h4-Dd; Fri, 03 Apr 2020 08:56:48 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jKOgj-00009S-4X; Fri, 03 Apr 2020 08:56:57 -0700
-Received: from [172.30.17.108]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jKOge-00008l-AT; Fri, 03 Apr 2020 08:56:52 -0700
-Subject: Re: [PATCH 0/7] serial: uartps: Revert dynamic port allocation
-To:     Maarten Brock <m.brock@vanmierlo.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, johan@kernel.org,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-serial-owner@vger.kernel.org
-References: <cover.1585905873.git.michal.simek@xilinx.com>
- <20200403093216.GA3746303@kroah.com>
- <d9598635-a8ef-eff2-22e8-4fa37f8390b3@xilinx.com>
- <20200403094427.GA3754220@kroah.com>
- <2983dbe2-16e6-4b7b-73a6-49d8c3d70510@xilinx.com>
- <211f564d5594994fc677d3fea4222997@vanmierlo.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <a582c754-8803-0fc9-7ab3-0b79837a74ac@xilinx.com>
-Date:   Fri, 3 Apr 2020 17:56:48 +0200
+        Fri, 3 Apr 2020 11:57:15 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50300 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgDCP5O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 11:57:14 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033Fmkei060789;
+        Fri, 3 Apr 2020 15:57:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=MzcEPsaAgNUkBImNr/zrDhf2ysA5Vv2D7EAM71MO2d0=;
+ b=CprgbpiZJESxYfsiGeWjS9fbdpqMzft46zlN+MO7Z/wRZRSXUee0QVyRziFaodGT4ZYu
+ 7HmdkDEQ0ECPu6M25JtWC9XABevsvZN0jnbD63q/UbhnEOu0d3DQ6nokHet4EVWQRA4S
+ AjC1iCOTHrDzy7iBBrZT30sOvuQT7ycREhngEOGPqi2mM1p9KQy5DqMeclDEVq1X5Ta/
+ djZIdxBI5QKuIBtSF7yT5gF2EjkfIE1VlL4kg4/DpkrUvHwd3Mfdrv4pqTahWBP4t/Gy
+ wOA167egI8MJWoxMjMEGujXLE0L9kdCsUJL4I1s95rnFFKAGQKbAsZbJ8++RmS+z+Xmy AQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 303aqj2c5d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 15:57:03 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033Fl3He172436;
+        Fri, 3 Apr 2020 15:57:03 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 302g2nc6sc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 15:57:03 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033Fuw5w022157;
+        Fri, 3 Apr 2020 15:56:59 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 08:56:58 -0700
+Subject: Re: [PATCH v3] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma 65;5803;1c Commit 944d9fec8d7a ("hugetlb: add support for gigantic
+ page allocation at runtime") has added the run-time allocation of gigantic
+ pages. However it actually works only at early stages of the system loading,
+ when the majority of memory is free. After some time the memory gets
+ fragmented by non-movable pages, so the chances to find a contiguous 1 GB
+ block are getting close to zero. Even dropping caches manually doesn't help a
+ lot.
+To:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org,
+        Rik van Riel <riel@surriel.com>,
+        Andreas Schaufler <andreas.schaufler@gmx.de>
+References: <20200311220920.2487528-1-guro@fb.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <46ae32bd-0be9-fa7a-1eff-65ab69af5703@oracle.com>
+Date:   Fri, 3 Apr 2020 08:56:57 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <211f564d5594994fc677d3fea4222997@vanmierlo.com>
+In-Reply-To: <20200311220920.2487528-1-guro@fb.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(396003)(136003)(46966005)(2616005)(356004)(110136005)(36756003)(8676002)(186003)(5660300002)(81156014)(4326008)(316002)(26005)(31686004)(47076004)(70586007)(6666004)(81166006)(426003)(54906003)(336012)(2906002)(44832011)(82740400003)(8936002)(31696002)(9786002)(478600001)(53546011)(70206006);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 13a582d6-1725-4832-1947-08d7d7e7a36d
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4141:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <SN6PR02MB41414C5B4988DCB204A3B3F9C6C70@SN6PR02MB4141.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0362BF9FDB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nI0qrSHOX+mGqZ3KMZuDyvTR6K2Neb97ZTZdxV8ujD3LtTRTLITYaosEzTfnYiECT0hqHiZgtp0Z6dY18/GPFPCZOnFbUpEmwlAf0tFtZGcjsIpo41SPBYf+YtxhO764kbG4MhZcVn+bmPqHJctfl7xShchmErRi3z46iMhlBdDn5pRZ6W7xU2+edXH0Od598k59GwSSQszb/AbVEe173+41TL3wGMLPG8/r29q/kIGjae9e6iUGkk8ciRv/Z4mEl7SQukesi03HoDbvKJpIElKdpHMW+IeXATzbkErwVNMRBH+VJe9v+SeHHuI5Ppj6bAb2UBA50b6eDjYRz3+b96HCzrn6Piz2BaRul2sznsR+iWMk5ayljSqfWDOoyd3Qnc7bJo0bWRywWZUf5i3SH1IP1KaQYIA8VbH8EJ6NEfB55qv2Df1H4+bb1jqBONAHrbnbqfepNEDxZRHhat5uH6OjGuYz5WWqkMOuepoA2CkQoIJfP2i6omSxP9PIqCio/4l4VAxdtSVp6Mz0EwwQWg==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2020 15:56:57.5217
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13a582d6-1725-4832-1947-08d7d7e7a36d
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4141
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1011
+ malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03. 04. 20 17:48, Maarten Brock wrote:
-> On 2020-04-03 11:51, Michal Simek wrote:
->>
->> Thanks. I am definitely interested to hear more how this could be done
->> differently because that hardcoded limits are painful.
->> On FPGAs you can have a lot of uarts for whatever reason and users are
->> using DT aliases to have consistent naming.
->> Specifically on Xilinx devices we are using uartps which is ttyPS,
->> uartlite which is ttyUL, ns16500 which is ttyS and also pl011 which is
->> ttyAMA.
->> Only ttyAMA or ttyPS on one chip are possible.
->>
->> And right now you can't have serial0 alias pointed ttyPS0 and another
->> serial0 pointed to ttyUL0 or ttyS0. That's why others are shifted and we
->> can reach that hardcoded NR_UART limit easily.
->> And this was the reason why I have done these patches in past to remove
->> any limit from these drivers and if user asks for serial100 alias you
->> simply get ttyPS100 node.
+On 3/11/20 3:09 PM, Roman Gushchin wrote:
+> At large scale rebooting servers in order to allocate gigantic hugepages
+> is quite expensive and complex. At the same time keeping some constant
+> percentage of memory in reserved hugepages even if the workload isn't
+> using it is a big waste: not all workloads can benefit from using 1 GB
+> pages.
 > 
-> I would argue that the trouble originates from every uart driver using
-> its own naming scheme and thereby creating separate namespaces. If all
-> uarts would register as /dev/ttySnn then the serialN alias method would
-> work. These non-overlapping namespaces is something the linux kernel
-> driver community has allowed to happen.
+> The following solution can solve the problem:
+> 1) On boot time a dedicated cma area* is reserved. The size is passed
+>    as a kernel argument.
+> 2) Run-time allocations of gigantic hugepages are performed using the
+>    cma allocator and the dedicated cma area
 > 
-> If the namespaces are not abandoned and disallowed, then the serialN
-> alias method must no longer be used for any driver that does not create
-> /dev/ttySnn devices. Every namespace will require its own alias base.
-> Or forget about deriving the number from an alias and set the number in
-> a property in the device tree node itself. The latter has my preference.
+> In this case gigantic hugepages can be allocated successfully with a
+> high probability, however the memory isn't completely wasted if nobody
+> is using 1GB hugepages: it can be used for pagecache, anon memory,
+> THPs, etc.
+> 
+> * On a multi-node machine a per-node cma area is allocated on each node.
+>   Following gigantic hugetlb allocation are using the first available
+>   numa node if the mask isn't specified by a user.
+> 
+> Usage:
+> 1) configure the kernel to allocate a cma area for hugetlb allocations:
+>    pass hugetlb_cma=10G as a kernel argument
+> 
+> 2) allocate hugetlb pages as usual, e.g.
+>    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+> 
+> If the option isn't enabled or the allocation of the cma area failed,
+> the current behavior of the system is preserved.
+> 
+> x86 and arm-64 are covered by this patch, other architectures can be
+> trivially added later.
+> 
+> v3:
+>   - added fallback to the existing allocation mechanism
+>   - added min/max checks
+>   - switched to MiB in debug output
+>   - removed percentage option
+>   - added arch-specific order argument to determine an alignment
+>   - added arm support
+>   - fixed the !CONFIG_HUGETLBFS build
+> 
+>   Thanks to Michal, Mike, Andreas and Rik for ideas and suggestions!
+> 
+> v2:
+>   -fixed !CONFIG_CMA build, suggested by Andrew Morton
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Uartlite and as I see ucc_uart are only two driver which are using
-port-number property for this purpose.
-And IIRC this property was the part of any spec long time ago.
+It is a bit difficult to keep track of all the followup patches.  One
+small issue below.
 
-Thanks,
-Michal
+> ---
+>  .../admin-guide/kernel-parameters.txt         |   7 ++
+>  arch/arm64/mm/init.c                          |   6 +
+>  arch/x86/kernel/setup.c                       |   4 +
+>  include/linux/hugetlb.h                       |   8 ++
+>  mm/hugetlb.c                                  | 116 ++++++++++++++++++
+>  5 files changed, 141 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 0c9894247015..9eb0df40643d 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1452,6 +1452,13 @@
+>  	hpet_mmap=	[X86, HPET_MMAP] Allow userspace to mmap HPET
+>  			registers.  Default set by CONFIG_HPET_MMAP_DEFAULT.
+>  
+> +	hugetlb_cma=	[x86-64] The size of a cma area used for allocation
+> +			of gigantic hugepages.
+> +			Format: nn[KMGTPE]
+> +
+> +			If enabled, boot-time allocation of gigantic hugepages
+> +			is skipped.
+> +
+>  	hugepages=	[HW,X86-32,IA-64] HugeTLB pages to allocate at boot.
+>  	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
+>  			On x86-64 and powerpc, this option can be specified
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index b65dffdfb201..e42727e3568e 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/kexec.h>
+>  #include <linux/crash_dump.h>
+> +#include <linux/hugetlb.h>
+>  
+>  #include <asm/boot.h>
+>  #include <asm/fixmap.h>
+> @@ -457,6 +458,11 @@ void __init arm64_memblock_init(void)
+>  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+>  
+>  	dma_contiguous_reserve(arm64_dma32_phys_limit);
+> +
+> +#ifdef CONFIG_ARM64_4K_PAGES
+> +	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+> +#endif
+> +
+>  }
+
+The documentation is already 'out of date' as you added support for arm64.
+Not a huge deal as documentation rarely keeps up with code, but we should
+at least be correct here.
+
+I have a patch series in progress which cleans up existing hugetlb command
+line processing.
+https://lore.kernel.org/linux-mm/20200401183819.20647-1-mike.kravetz@oracle.com/
+
+No need to make any changes here, but assuming this support goes in first
+I would make the following changes as part of my series:
+- Don't list architectures in Documentation.  Just say support is arch
+  dependent.
+- Introduce some mechanism to print an error if hugetlb_cma is specified
+  on the command line, but not supported by architecture.  IIUC, no message
+  is printed today.  IMO, this only becomes important if the documentation
+  does not list supported architectures.
+ 
+Not insisting that documentation be updated to include arm64.
+Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+-- 
+Mike Kravetz
