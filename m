@@ -2,69 +2,165 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8898C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65698C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B8F2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BAAE2078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:59:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rbG//bSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390396AbgDCDxy (ORCPT
+        id S2390402AbgDCD7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 23:53:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12610 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390204AbgDCDxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 23:53:54 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6692AA6AF5AD6C0B077D
-        for <linux-kernel@vger.kernel.org>; Fri,  3 Apr 2020 11:53:39 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Apr 2020
- 11:53:32 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <jassisinghbrar@gmail.com>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] mailbox: pcc: make pcc_mbox_driver static
-Date:   Fri, 3 Apr 2020 11:52:08 +0800
-Message-ID: <20200403035208.13885-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        Thu, 2 Apr 2020 23:59:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:39705 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388951AbgDCD7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 23:59:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48tmQ45Mckz9sRR;
+        Fri,  3 Apr 2020 14:58:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585886335;
+        bh=vPphFPznj7/OS2PTUNdEppBK08fIzt1JA7EYmLUD+7E=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rbG//bSKRyT328C6M96TlOYdgplktlSwIPLUH6/1tUW1luCsAWdsvPppOYU5gK/K2
+         9l3CYr6rt1mAOfkTheSmexlEDi6L9k/5/b/pUm9v+4fdA9qUbMcIzCs0oBx56+pMGp
+         gvLWA1u4bBeXbw5yJ4AOJiC4psQibuLgsT2Pb5OrwV4L+3ctN9K8oLbpkr/AFjOGIR
+         5LGHSeYeV9HD0hL2KjB2rHbAOsaaO2lvBEMpbh4Cq60cHMsgKdW629IPTnZBr7BeLk
+         1O14eHU74t1o1QiZJQHDlb4U+CpN070qSYjqeai+ZyuCpwxsl+BmUQX3CwLrkE/1IG
+         9/gUm2t15CqtQ==
+Date:   Fri, 3 Apr 2020 14:58:51 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Thomas Hellstrom (VMware)" <thomas_os@shipmail.org>,
+        Peter Xu <peterx@redhat.com>
+Subject: linux-next: manual merge of the akpm-current tree with the drm tree
+Message-ID: <20200403145851.65194562@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/7OFIPXdXiiwXVCZCK_ELYvU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning:
+--Sig_/7OFIPXdXiiwXVCZCK_ELYvU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-drivers/mailbox/pcc.c:571:24: warning: symbol 'pcc_mbox_driver' was not
-declared. Should it be static?
+Hi all,
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/mailbox/pcc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
-index 34844b7a3675..8c7fac38bb1c 100644
---- a/drivers/mailbox/pcc.c
-+++ b/drivers/mailbox/pcc.c
-@@ -568,7 +568,7 @@ static int pcc_mbox_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--struct platform_driver pcc_mbox_driver = {
-+static struct platform_driver pcc_mbox_driver = {
- 	.probe = pcc_mbox_probe,
- 	.driver = {
- 		.name = "PCCT",
--- 
-2.17.2
+  include/linux/huge_mm.h
 
+between commit:
+
+  9a9731b18c9b ("mm: Add vmf_insert_pfn_xxx_prot() for huge page-table entr=
+ies")
+
+from the drm tree and commit:
+
+  7b6b88969e9d ("mm: merge parameters for change_protection()")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/huge_mm.h
+index f63b0882c1b3,e60c923e68c4..000000000000
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@@ -46,46 -46,9 +46,46 @@@ extern bool move_huge_pmd(struct vm_are
+  			 pmd_t *old_pmd, pmd_t *new_pmd);
+  extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+  			unsigned long addr, pgprot_t newprot,
+- 			int prot_numa);
++ 			unsigned long cp_flags);
+ -vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write=
+);
+ -vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write=
+);
+ +vm_fault_t vmf_insert_pfn_pmd_prot(struct vm_fault *vmf, pfn_t pfn,
+ +				   pgprot_t pgprot, bool write);
+ +
+ +/**
+ + * vmf_insert_pfn_pmd - insert a pmd size pfn
+ + * @vmf: Structure describing the fault
+ + * @pfn: pfn to insert
+ + * @pgprot: page protection to use
+ + * @write: whether it's a write fault
+ + *
+ + * Insert a pmd size pfn. See vmf_insert_pfn() for additional info.
+ + *
+ + * Return: vm_fault_t value.
+ + */
+ +static inline vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t p=
+fn,
+ +					    bool write)
+ +{
+ +	return vmf_insert_pfn_pmd_prot(vmf, pfn, vmf->vma->vm_page_prot, write);
+ +}
+ +vm_fault_t vmf_insert_pfn_pud_prot(struct vm_fault *vmf, pfn_t pfn,
+ +				   pgprot_t pgprot, bool write);
+ +
+ +/**
+ + * vmf_insert_pfn_pud - insert a pud size pfn
+ + * @vmf: Structure describing the fault
+ + * @pfn: pfn to insert
+ + * @pgprot: page protection to use
+ + * @write: whether it's a write fault
+ + *
+ + * Insert a pud size pfn. See vmf_insert_pfn() for additional info.
+ + *
+ + * Return: vm_fault_t value.
+ + */
+ +static inline vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t p=
+fn,
+ +					    bool write)
+ +{
+ +	return vmf_insert_pfn_pud_prot(vmf, pfn, vmf->vma->vm_page_prot, write);
+ +}
+ +
+  enum transparent_hugepage_flag {
+  	TRANSPARENT_HUGEPAGE_FLAG,
+  	TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+
+--Sig_/7OFIPXdXiiwXVCZCK_ELYvU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6GtHsACgkQAVBC80lX
+0GzACAf+OlhGSD0Y1SN+jUwpHitH1sNnbDMd2UK+dzRWiQm1r8KaOmnx1eetS1rO
+lut/8vNEJMkpqwU+hNsOY2TLEVxXpu+sA6Kw2uepqaf7XzrtDUlFAmaT2Bw3YaYq
+DQFOGVufic3SDLcknPhvOk2+kBJOcf9hJRM6HXmEJI3NJS5qciiz24X6adckuHwh
+20vgt20U4Aej3K6ZFOSkrjg7u6qCQI9h1Mty5ajsx7QK6MATBUetXjxhGUReOvG3
+goU1cxyQQNc1aqOb6Wb4WZcp/cc+p0CMoj1cVS2QXC9QQWcIAJXkYNR42iq9hPee
+U4qJki9t/svoRVCgyLJIQRnrMnu5bg==
+=NhXR
+-----END PGP SIGNATURE-----
+
+--Sig_/7OFIPXdXiiwXVCZCK_ELYvU--
