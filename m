@@ -2,96 +2,280 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45ABC2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01D0C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CD52080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE732077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:43:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o9LayuFg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="umvOf9x4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgDCTly (ORCPT
+        id S1728068AbgDCTnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 15:41:54 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55265 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgDCTly (ORCPT
+        Fri, 3 Apr 2020 15:43:45 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56846 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728001AbgDCTnp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 15:41:54 -0400
-Received: by mail-pj1-f68.google.com with SMTP id np9so3448637pjb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 12:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=RbHDsHw524llOarwKUky8DPquFPK39k02zZxPLpgMOs=;
-        b=o9LayuFgKoBojXjlwS/oiXjN8tTU2CWVtgI2vVG5IVreC6cv7JAJ814tPbdeVrolfv
-         hP+EA9GQktkMzNRkdlIsKpuzGGCUI5Kmm42QkeskOcEUCj7J1mcceNaJ14haAl05k5gP
-         ESQm83kGg1bqr463HiF/3yJrzScmhi96fkCiEyDeTVqJDsZToHzV6d4pmugDAV9Fa7Tw
-         QwYHlTfpPd38vQjW3zP95Wg9Nis9KDvYfCyop5c9CNfIIKai8JxX/JOSjJp6/cdYktpt
-         brfMrUAfcdXlbCqX7pvRr1XRuMNOwNyMtik5cl6tH2oUse/MCxQoA9h/mNAynTmT6V4Y
-         zyOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=RbHDsHw524llOarwKUky8DPquFPK39k02zZxPLpgMOs=;
-        b=efTYyz+HpNTgZZ3fyagBFUzBRntyZ/IzDIScJXIN1epEQ1VEmafwIpfcRXAqQQjI+h
-         HK/HA1c52cXxUKDmXhdN7owExPsF+7SJnpPCIbXGDl1LhKSWTE2DMag/FbKpQBrICoRP
-         lut2JPmGuOalhdUkFuynFo8Rcdlwm95TUvBKs3JBtHbkBjoHsvz4k8REBPMNorPtAhxe
-         cEbF1cJcfiXgfXQ1R3Vp2gEIMkfQtREbY4Mj3Ci8BCs28ZmTKS9XNwqnbUvFGkGuXHim
-         f20T5f4x3zRuBNZhiB0In/ZpMs/y3X8ygxBPC0TvIzUqRIe5Y5Rut6VveoZi+lyx3wXh
-         an6Q==
-X-Gm-Message-State: AGi0Puasqp93teXW+a+5ZT62biqNJwLvaKM6M/MPw85PKqredH+tNuPg
-        rXR8XLoTERsjNgQAKIQJROo5bQ==
-X-Google-Smtp-Source: APiQypKLZQh9aewTTYEjX9w87lyllSCPeYXK9v837ePzcHyqrZQT06a1Ayvitx1lVTs0mEx+/fYg1g==
-X-Received: by 2002:a17:90a:902:: with SMTP id n2mr11503771pjn.169.1585942912598;
-        Fri, 03 Apr 2020 12:41:52 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id h34sm3131100pjb.47.2020.04.03.12.41.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 12:41:52 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 12:41:51 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Michal Hocko <mhocko@kernel.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Neil Brown <neilb@suse.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH 2/2] mm: make it clear that gfp reclaim modifiers are
- valid only for sleepable allocations
-In-Reply-To: <20200403083543.11552-3-mhocko@kernel.org>
-Message-ID: <alpine.DEB.2.21.2004031241380.230548@chino.kir.corp.google.com>
-References: <20200403083543.11552-1-mhocko@kernel.org> <20200403083543.11552-3-mhocko@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 3 Apr 2020 15:43:45 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 033Jha1S002351;
+        Fri, 3 Apr 2020 14:43:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585943016;
+        bh=xXd+5AwGNJFgwyY081cDvIo2y0k7mAEOlzRr4E8sQog=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=umvOf9x4qMnPGdmEPSwB+KSzGQph3s4xg5mMRyFCP28ebfw2msfzd+/SH/seioXhU
+         xS2FV2TjSPEg6xMsmmlsCvWI8uHB1lKI9Csv7K8d6aosE0ZIvnxU8h2xcL0Wd4Vl8s
+         B2XGWUjU9Wu5VL5CgDSwWhnAEm0rakrIBevqi6j8=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 033JhaL6072883
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 3 Apr 2020 14:43:36 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
+ 2020 14:43:35 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 3 Apr 2020 14:43:35 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 033JhZ9S018356;
+        Fri, 3 Apr 2020 14:43:35 -0500
+Subject: Re: [PATCH v3] leds: ariel: Add driver for status LEDs on Dell Wyse
+ 3020
+To:     Lubomir Rintel <lkundrak@v3.sk>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+CC:     Pavel Machek <pavel@ucw.cz>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20200322074134.79237-1-lkundrak@v3.sk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ef7e8f03-0a43-156e-b86e-3ab3887f0245@ti.com>
+Date:   Fri, 3 Apr 2020 14:37:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200322074134.79237-1-lkundrak@v3.sk>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020, Michal Hocko wrote:
+Lubomir
 
-> From: Michal Hocko <mhocko@suse.com>
-> 
-> While it might be really clear to MM developers that gfp reclaim
-> modifiers are applicable only to sleepable allocations (those with
-> __GFP_DIRECT_RECLAIM) it seems that actual users of the API are not
-> always sure. Make it explicit that they are not applicable for
-> GFP_NOWAIT or GFP_ATOMIC allocations which are the most commonly used
-> non-sleepable allocation masks.
-> 
-> Acked-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+On 3/22/20 2:41 AM, Lubomir Rintel wrote:
+> This adds support for controlling the LEDs attached to the Embedded
+> Controller on a Dell Wyse 3020 "Ariel" board.
+>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+>
+> ---
+> Changes since v2:
+> - Hopefully sending out the correct patch this time...
+>
+> Changes since v1:
+> - Reduce code duplication with a loop
+> - Drop "ariel:" prefix from led names
+> - Do not print a message after a successful probe
+> ---
+>   drivers/leds/Kconfig      |  11 ++++
+>   drivers/leds/Makefile     |   1 +
+>   drivers/leds/leds-ariel.c | 133 ++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 145 insertions(+)
+>   create mode 100644 drivers/leds/leds-ariel.c
+>
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index d82f1dea37111..66424ee54cc01 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -83,6 +83,17 @@ config LEDS_APU
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called leds-apu.
+>   
+> +config LEDS_ARIEL
+> +	tristate "Dell Wyse 3020 status LED support"
+> +	depends on LEDS_CLASS
+> +	depends on (MACH_MMP3_DT && MFD_ENE_KB3930) || COMPILE_TEST
+> +	help
+> +	  This driver adds support for controlling the front panel status
+> +	  LEDs on Dell Wyse 3020 (Ariel) board via the KB3930 Embedded
+> +	  Controller.
+> +
+> +	  Say Y to if your machine is a Dell Wyse 3020 thin client.
+> +
+>   config LEDS_AS3645A
+>   	tristate "AS3645A and LM3555 LED flash controllers support"
+>   	depends on I2C && LEDS_CLASS_FLASH
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index d7e1107753fb1..bf3b22038d113 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
+>   obj-$(CONFIG_LEDS_88PM860X)		+= leds-88pm860x.o
+>   obj-$(CONFIG_LEDS_AAT1290)		+= leds-aat1290.o
+>   obj-$(CONFIG_LEDS_APU)			+= leds-apu.o
+> +obj-$(CONFIG_LEDS_ARIEL)		+= leds-ariel.o
+>   obj-$(CONFIG_LEDS_AS3645A)		+= leds-as3645a.o
+>   obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
+>   obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
+> diff --git a/drivers/leds/leds-ariel.c b/drivers/leds/leds-ariel.c
+> new file mode 100644
+> index 0000000000000..8fc56722e12f4
+> --- /dev/null
+> +++ b/drivers/leds/leds-ariel.c
+> @@ -0,0 +1,133 @@
+> +// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
+> +/*
+> + * Dell Wyse 3020 a.k.a. "Ariel" Embedded Controller LED Driver
+> + *
+> + * Copyright (C) 2020 Lubomir Rintel
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/leds.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of_platform.h>
+> +
+> +enum ec_index {
+> +	EC_BLUE_LED	= 0x01,
+> +	EC_AMBER_LED	= 0x02,
 
-Acked-by: David Rientjes <rientjes@google.com>
+Defining the value after the 0x0 is unnecessary as enums are incremental 
+only the first value needs to be defined if the following values are in 
+numerical order
+
+Can these also be #defined instead of an enum?  Not requesting them to 
+be just wondering about the design decision here.
+
+> +	EC_GREEN_LED	= 0x03,
+> +};
+> +
+> +enum {
+> +	EC_LED_OFF	= 0x00,
+> +	EC_LED_STILL	= 0x01,
+Same comment as above
+> +	EC_LED_FADE	= 0x02,
+> +	EC_LED_BLINK	= 0x03,
+> +};
+> +
+> +struct ariel_led {
+> +	struct regmap *ec_ram;
+> +	enum ec_index ec_index;
+> +	struct led_classdev led_cdev;
+> +};
+> +
+> +#define led_cdev_to_ariel_led(c) container_of(c, struct ariel_led, led_cdev)
+> +
+> +static enum led_brightness ariel_led_get(struct led_classdev *led_cdev)
+> +{
+> +	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
+> +	unsigned int led_status = 0;
+> +
+> +	if (regmap_read(led->ec_ram, led->ec_index, &led_status))
+> +		return LED_OFF;
+> +
+> +	if (led_status == EC_LED_STILL)
+> +		return LED_FULL;
+> +	else
+else is not needed here
+> +		return LED_OFF;
+> +}
+> +
+> +static void ariel_led_set(struct led_classdev *led_cdev,
+> +			  enum led_brightness brightness)
+> +{
+> +	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
+> +
+> +	if (brightness == LED_OFF)
+> +		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
+> +	else
+> +		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
+> +}
+> +
+> +static int ariel_blink_set(struct led_classdev *led_cdev,
+> +			   unsigned long *delay_on, unsigned long *delay_off)
+> +{
+> +	struct ariel_led *led = led_cdev_to_ariel_led(led_cdev);
+> +
+> +	if (*delay_on == 0 && *delay_off == 0)
+> +		return -EINVAL;
+> +
+> +	if (*delay_on == 0) {
+> +		regmap_write(led->ec_ram, led->ec_index, EC_LED_OFF);
+> +	} else if (*delay_off == 0) {
+> +		regmap_write(led->ec_ram, led->ec_index, EC_LED_STILL);
+> +	} else {
+> +		*delay_on = 500;
+> +		*delay_off = 500;
+> +		regmap_write(led->ec_ram, led->ec_index, EC_LED_BLINK);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +#define NLEDS 3
+
+This define needs to be more unique.
+
+Something like EC_NLEDS or EC_NUM_LEDS and should be moved to the top of 
+the file under the #includes
+
+> +
+> +static int ariel_led_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ariel_led *leds;
+> +	struct regmap *ec_ram;
+> +	int ret;
+> +	int i;
+> +
+> +	leds = devm_kcalloc(dev, NLEDS, sizeof(*leds), GFP_KERNEL);
+> +	if (!leds)
+> +		return -ENOMEM;
+> +
+> +	ec_ram = dev_get_regmap(dev->parent, "ec_ram");
+Maybe this should be checked before memory is allocated.
+> +	if (!ec_ram)
+> +		return -ENODEV;
+> +
+> +	leds[0].ec_index = EC_BLUE_LED;
+> +	leds[0].led_cdev.name = "blue:power",
+> +	leds[0].led_cdev.default_trigger = "default-on";
+> +
+> +	leds[1].ec_index = EC_AMBER_LED;
+> +	leds[1].led_cdev.name = "amber:status",
+> +
+> +	leds[2].ec_index = EC_GREEN_LED;
+> +	leds[2].led_cdev.name = "green:status",
+> +	leds[2].led_cdev.default_trigger = "default-on";
+> +
+> +	for (i = 0; i < NLEDS; i++) {
+
+I don't understand this loop.  i is incremented but never used.
+
+should the below be leds[i]?
+
+> +		leds[0].ec_ram = ec_ram;
+> +		leds[0].led_cdev.brightness_get = ariel_led_get;
+> +		leds[0].led_cdev.brightness_set = ariel_led_set;
+> +		leds[0].led_cdev.blink_set = ariel_blink_set;
+> +
+> +		ret = devm_led_classdev_register(dev, &leds[0].led_cdev);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+
+Dan
+
+
