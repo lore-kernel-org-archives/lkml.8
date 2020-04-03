@@ -2,403 +2,245 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CBBC2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE067C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2DB2076E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F2F2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:40:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xeFMnEEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404607AbgDCSg5 (ORCPT
+        id S2390992AbgDCSkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:36:57 -0400
-Received: from mga17.intel.com ([192.55.52.151]:4674 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404306AbgDCSg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:36:29 -0400
-IronPort-SDR: KIQakwr0Y8CBfZoJXLfkeZK+eB+cv55A3/3yFFA/f0Amj3Mn57c8QVnzf1zi8f/+tf1N34KOsu
- e0zIob8YZJCQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 11:36:27 -0700
-IronPort-SDR: 6me2BI9N5B8GJNyKec8lWaXDk8bYpxbNfWNYScucFBFkEQ3oouF6ciV4I9lEmKn7nSlBeGXqS9
- vNjGxhiqhAhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,340,1580803200"; 
-   d="scan'208";a="268439821"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 03 Apr 2020 11:36:27 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Lu Baolu" <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>
-Cc:     "Yi Liu" <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>, Liu@vger.kernel.org,
-        Yi L <yi.l.liu@linux.intel.com>
-Subject: [PATCH v11 05/10] iommu/vt-d: Add bind guest PASID support
-Date:   Fri,  3 Apr 2020 11:42:09 -0700
-Message-Id: <1585939334-21396-6-git-send-email-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        Fri, 3 Apr 2020 14:40:05 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35872 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728069AbgDCSkF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 14:40:05 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033IdpwV070659;
+        Fri, 3 Apr 2020 18:39:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=US8sLZnPxZ4y6UO3tSsSOv7UIGRPUmZ6f+wFCFJJeOQ=;
+ b=xeFMnEEbWYLoDz5Q5V+8ejlUQ96+jvJQ6VH388yPYlgQsWMjCKX3dhXGui0EA5iDYxIL
+ SeUdA9Iz1umAPmeBbGKEqvD7xq77dQHg765FxTV5LNf4FzEW28t5zAHIRUMDQN2RsxLd
+ cvGmvppcaH9X75UfLaXlyHr5PrTxVV1kwHo153hFWyfzo/sU2ua2zuOtwu0DEegGZfll
+ 3ym5lVJlp5dzzOtFk4YwEnMPFUDISPnW/vXZ4/6FuwEI3DgPx8KZuKRzeOvxczjSNopZ
+ Lt4Vw44B6sKXAQDA8Ffyx4/m/wDeh+etYwCvW11i2yUnsUjji91jZcegnl5uy0upMfxw Mg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 303yunn8cc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 18:39:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033ISOBr169247;
+        Fri, 3 Apr 2020 18:37:51 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 302g4xyebw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 18:37:51 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033Ibm72020164;
+        Fri, 3 Apr 2020 18:37:48 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 11:37:48 -0700
+Date:   Fri, 3 Apr 2020 11:37:46 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <david@fromorbit.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
+Message-ID: <20200403183746.GQ80283@magnolia>
+References: <20200316095224.GF12783@quack2.suse.cz>
+ <20200316095509.GA13788@lst.de>
+ <20200401040021.GC56958@magnolia>
+ <20200401102511.GC19466@quack2.suse.cz>
+ <20200402085327.GA19109@lst.de>
+ <20200402205518.GF3952565@iweiny-DESK2.sc.intel.com>
+ <20200403072731.GA24176@lst.de>
+ <20200403154828.GJ3952565@iweiny-DESK2.sc.intel.com>
+ <20200403170338.GD29920@quack2.suse.cz>
+ <20200403181843.GK3952565@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403181843.GK3952565@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When supporting guest SVA with emulated IOMMU, the guest PASID
-table is shadowed in VMM. Updates to guest vIOMMU PASID table
-will result in PASID cache flush which will be passed down to
-the host as bind guest PASID calls.
+On Fri, Apr 03, 2020 at 11:18:43AM -0700, Ira Weiny wrote:
+> On Fri, Apr 03, 2020 at 07:03:38PM +0200, Jan Kara wrote:
+> > On Fri 03-04-20 08:48:29, Ira Weiny wrote:
+> > > On Fri, Apr 03, 2020 at 09:27:31AM +0200, Christoph Hellwig wrote:
+> > > > On Thu, Apr 02, 2020 at 01:55:19PM -0700, Ira Weiny wrote:
+> > > > > > I'd just return an error for that case, don't play silly games like
+> > > > > > evicting the inode.
+> > > > > 
+> > > > > I think I agree with Christoph here.  But I want to clarify.  I was heading in
+> > > > > a direction of failing the ioctl completely.  But we could have the flag change
+> > > > > with an appropriate error which could let the user know the change has been
+> > > > > delayed.
+> > > > > 
+> > > > > But I don't immediately see what error code is appropriate for such an
+> > > > > indication.  Candidates I can envision:
+> > > > > 
+> > > > > EAGAIN
+> > > > > ERESTART
+> > > > > EUSERS
+> > > > > EINPROGRESS
+> > > > > 
+> > > > > None are perfect but I'm leaning toward EINPROGRESS.
+> > > > 
+> > > > I really, really dislike that idea.  The whole point of not forcing
+> > > > evictions is to make it clear - no this inode is "busy" you can't
+> > > > do that.  A reasonably smart application can try to evict itself.
+> > > 
+> > > I don't understand.  What Darrick proposed would never need any
+> > > evictions.  If the file has blocks allocated the FS_XFLAG_DAX flag can
+> > > not be changed.  So I don't see what good eviction would do at all.
+> > 
+> > I guess there's some confusion here (may well be than on my side). Darrick
+> > propose that we can switch FS_XFLAG_DAX only when file has no blocks
+> > allocated - fine by me. But that still does not mean than we can switch
+> > S_DAX immediately, does it? Because that would still mean we need to switch
+> > aops on living inode and that's ... difficult and Christoph didn't want to
+> > clutter the code with it.
+> > 
+> > So I've understood Darrick's proposal as: Just switch FS_XFLAG_DAX flag,
+> > S_DAX flag will magically switch when inode gets evicted and the inode gets
+> > reloaded from the disk again. Did I misunderstand anything?
+> > 
+> > And my thinking was that this is surprising behavior for the user and so it
+> > will likely generate lots of bug reports along the lines of "DAX inode flag
+> > does not work!". So I was pondering how to make the behavior less
+> > confusing... The ioctl I've suggested was just a poor attempt at that.
+> 
+> Ok but then I don't understand Christophs comment to "just return an error for
+> that case"?  Which case?
+> 
+> > 
+> > > > But returning an error and doing a lazy change anyway is straight from
+> > > > the playbook for arcane and confusing API designs.
+> > > 
+> > > Jan countered with a proposal that the FS_XFLAG_DAX does change with
+> > > blocks allocated.  But that S_DAX would change on eviction.  Adding that
+> > > some eviction ioctl could be added.
+> > 
+> > No, I didn't mean that we can change FS_XFLAG_DAX with blocks allocated. I
+> > was still speaking about the case without blocks allocated.
+> 
+> Ah ok good point.  But again what 'error' do we return when FS_XFLAG_DAX
+> changed but S_DAX did not?
+> 
+> > 
+> > > You then proposed just returning an error for that case.  (This lead me to
+> > > believe that you were ok with an eviction based change of S_DAX.)
+> > > 
+> > > So I agreed that changing S_DAX could be delayed until an explicit eviction.
+> > > But, to aid the 'smart application', a different error code could be used to
+> > > indicate that the FS_XFLAG_DAX had been changed but that until that explicit
+> > > eviction occurs S_DAX would remain.
+> > > 
+> > > So I don't fully follow what you mean by 'lazy change'?
+> > > 
+> > > Do you still really, really dislike an explicit eviction method for changing
+> > > the S_DAX flag?
+> > > 
+> > > If FS_XFLAG_DAX can never be changed on a file with blocks allocated and the
+> > > user wants to change the mode of operations on their 'data'; they would have to
+> > > create a new file with the proper setting and move the data there.  For example
+> > > copy the file into a directory marked FS_XFLAG_DAX==true?
+> > > 
+> > > I'm ok with either interface as I think both could be clear if documented.
+> > 
+> > I agree that what Darrick suggested is technically easily doable and can be
+> > documented. But it is not natural behavior (i.e., different than all inode
+> > flags we have) and we know how careful people are when reading
+> > documentation...
+> > 
+> 
+> Ok For 5.8 why don't we not allow FS_XFLAG_DAX to be changed on files _at_
+> _all_...
+> 
+> In summary:
+> 
+>  - Applications must call statx to discover the current S_DAX state.
 
-For the SL page tables, it will be harvested from device's
-default domain (request w/o PASID), or aux domain in case of
-mediated device.
+Ok.
 
-    .-------------.  .---------------------------.
-    |   vIOMMU    |  | Guest process CR3, FL only|
-    |             |  '---------------------------'
-    .----------------/
-    | PASID Entry |--- PASID cache flush -
-    '-------------'                       |
-    |             |                       V
-    |             |                CR3 in GPA
-    '-------------'
-Guest
-------| Shadow |--------------------------|--------
-      v        v                          v
-Host
-    .-------------.  .----------------------.
-    |   pIOMMU    |  | Bind FL for GVA-GPA  |
-    |             |  '----------------------'
-    .----------------/  |
-    | PASID Entry |     V (Nested xlate)
-    '----------------\.------------------------------.
-    |             |   |SL for GPA-HPA, default domain|
-    |             |   '------------------------------'
-    '-------------'
-Where:
- - FL = First level/stage one page tables
- - SL = Second level/stage two page tables
+>  - There exists an advisory file inode flag FS_XFLAG_DAX that is set based on
+>    the parent directory FS_XFLAG_DAX inode flag.  (There is no way to change
+>    this flag after file creation.)
+> 
+>    If FS_XFLAG_DAX is set and the fs is on pmem then it will enable S_DAX at
+>    inode load time; if FS_XFLAG_DAX is not set, it will not enable S_DAX.
+>    Unless overridden...
 
----
-v11: Fixed locking, avoid duplicated paging mode check, added helper to
-free svm if device list is empty. Use rate limited error message since
-the bind gpasid call comes from user space.
----
+Ok, fine with me. :)
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
----
- drivers/iommu/intel-iommu.c |   4 +
- drivers/iommu/intel-svm.c   | 206 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/intel-iommu.h |   8 +-
- include/linux/intel-svm.h   |  17 ++++
- 4 files changed, 234 insertions(+), 1 deletion(-)
+>  - There exists a dax= mount option.
+> 
+>    "-o dax=off" means "never set S_DAX, ignore FS_XFLAG_DAX"
+>    	"-o nodax" means "dax=off"
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index c0dadec5a6b3..94c7993dac6a 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -6178,6 +6178,10 @@ const struct iommu_ops intel_iommu_ops = {
- 	.dev_disable_feat	= intel_iommu_dev_disable_feat,
- 	.is_attach_deferred	= intel_iommu_is_attach_deferred,
- 	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
-+#ifdef CONFIG_INTEL_IOMMU_SVM
-+	.sva_bind_gpasid	= intel_svm_bind_gpasid,
-+	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
-+#endif
- };
- 
- static void quirk_iommu_igfx(struct pci_dev *dev)
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index d7f2a5358900..7cf711318b87 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -226,6 +226,212 @@ static LIST_HEAD(global_svm_list);
- 	list_for_each_entry((sdev), &(svm)->devs, list)	\
- 		if ((d) != (sdev)->dev) {} else
- 
-+
-+static inline void intel_svm_free_if_empty(struct intel_svm *svm, u64 pasid)
-+{
-+	if (list_empty(&svm->devs)) {
-+		ioasid_set_data(pasid, NULL);
-+		kfree(svm);
-+	}
-+}
-+
-+int intel_svm_bind_gpasid(struct iommu_domain *domain,
-+			struct device *dev,
-+			struct iommu_gpasid_bind_data *data)
-+{
-+	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-+	struct dmar_domain *dmar_domain;
-+	struct intel_svm_dev *sdev;
-+	struct intel_svm *svm;
-+	int ret = 0;
-+
-+	if (WARN_ON(!iommu) || !data)
-+		return -EINVAL;
-+
-+	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
-+	    data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
-+		return -EINVAL;
-+
-+	if (dev_is_pci(dev)) {
-+		/* VT-d supports devices with full 20 bit PASIDs only */
-+		if (pci_max_pasids(to_pci_dev(dev)) != PASID_MAX)
-+			return -EINVAL;
-+	} else {
-+		return -ENOTSUPP;
-+	}
-+
-+	/*
-+	 * We only check host PASID range, we have no knowledge to check
-+	 * guest PASID range.
-+	 */
-+	if (data->hpasid <= 0 || data->hpasid >= PASID_MAX)
-+		return -EINVAL;
-+
-+	dmar_domain = to_dmar_domain(domain);
-+
-+	mutex_lock(&pasid_mutex);
-+	svm = ioasid_find(NULL, data->hpasid, NULL);
-+	if (IS_ERR(svm)) {
-+		ret = PTR_ERR(svm);
-+		goto out;
-+	}
-+
-+	if (svm) {
-+		/*
-+		 * If we found svm for the PASID, there must be at
-+		 * least one device bond, otherwise svm should be freed.
-+		 */
-+		if (WARN_ON(list_empty(&svm->devs))) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		for_each_svm_dev(sdev, svm, dev) {
-+			/* In case of multiple sub-devices of the same pdev
-+			 * assigned, we should allow multiple bind calls with
-+			 * the same PASID and pdev.
-+			 */
-+			sdev->users++;
-+			goto out;
-+		}
-+	} else {
-+		/* We come here when PASID has never been bond to a device. */
-+		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
-+		if (!svm) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+		/* REVISIT: upper layer/VFIO can track host process that bind the PASID.
-+		 * ioasid_set = mm might be sufficient for vfio to check pasid VMM
-+		 * ownership. We can drop the following line once VFIO and IOASID set
-+		 * check is in place.
-+		 */
-+		svm->mm = get_task_mm(current);
-+		svm->pasid = data->hpasid;
-+		if (data->flags & IOMMU_SVA_GPASID_VAL) {
-+			svm->gpasid = data->gpasid;
-+			svm->flags |= SVM_FLAG_GUEST_PASID;
-+		}
-+		ioasid_set_data(data->hpasid, svm);
-+		INIT_LIST_HEAD_RCU(&svm->devs);
-+		mmput(svm->mm);
-+	}
-+	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
-+	if (!sdev) {
-+		/*
-+		 * If this is a new PASID that never bond to a device, then
-+		 * the device list must be empty which indicates struct svm
-+		 * was allocated in this function.
-+		 */
-+		intel_svm_free_if_empty(svm, data->hpasid);
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+	sdev->dev = dev;
-+	sdev->users = 1;
-+
-+	/* Set up device context entry for PASID if not enabled already */
-+	ret = intel_iommu_enable_pasid(iommu, sdev->dev);
-+	if (ret) {
-+		dev_err_ratelimited(dev, "Failed to enable PASID capability\n");
-+		kfree(sdev);
-+		intel_svm_free_if_empty(svm, data->hpasid);
-+		goto out;
-+	}
-+
-+	/*
-+	 * PASID table is per device for better security. Therefore, for
-+	 * each bind of a new device even with an existing PASID, we need to
-+	 * call the nested mode setup function here.
-+	 */
-+	spin_lock(&iommu->lock);
-+	ret = intel_pasid_setup_nested(iommu,
-+				       dev,
-+				       (pgd_t *)data->gpgd,
-+				       data->hpasid,
-+				       &data->vtd,
-+				       dmar_domain,
-+				       data->addr_width);
-+	if (ret) {
-+		dev_err_ratelimited(dev, "Failed to set up PASID %llu in nested mode, Err %d\n",
-+			data->hpasid, ret);
-+		/*
-+		 * PASID entry should be in cleared state if nested mode
-+		 * set up failed. So we only need to clear IOASID tracking
-+		 * data such that free call will succeed.
-+		 */
-+		kfree(sdev);
-+		intel_svm_free_if_empty(svm, data->hpasid);
-+		spin_unlock(&iommu->lock);
-+		goto out;
-+	}
-+	spin_unlock(&iommu->lock);
-+	svm->flags |= SVM_FLAG_GUEST_MODE;
-+
-+	init_rcu_head(&sdev->rcu);
-+	list_add_rcu(&sdev->list, &svm->devs);
-+ out:
-+	mutex_unlock(&pasid_mutex);
-+	return ret;
-+}
-+
-+int intel_svm_unbind_gpasid(struct device *dev, int pasid)
-+{
-+	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-+	struct intel_svm_dev *sdev;
-+	struct intel_svm *svm;
-+	int ret = -EINVAL;
-+
-+	if (WARN_ON(!iommu))
-+		return -EINVAL;
-+
-+	mutex_lock(&pasid_mutex);
-+	svm = ioasid_find(NULL, pasid, NULL);
-+	if (!svm) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (IS_ERR(svm)) {
-+		ret = PTR_ERR(svm);
-+		goto out;
-+	}
-+
-+	for_each_svm_dev(sdev, svm, dev) {
-+		ret = 0;
-+		sdev->users--;
-+		if (!sdev->users) {
-+			list_del_rcu(&sdev->list);
-+			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
-+			/* TODO: Drain in flight PRQ for the PASID since it
-+			 * may get reused soon, we don't want to
-+			 * confuse with its previous life.
-+			 * intel_svm_drain_prq(dev, pasid);
-+			 */
-+			kfree_rcu(sdev, rcu);
-+
-+			if (list_empty(&svm->devs)) {
-+				/*
-+				 * We do not free the IOASID here in that
-+				 * IOMMU driver did not allocate it.
-+				 * Unlike native SVM, IOASID for guest use was
-+				 * allocated prior to the bind call.
-+				 * In any case, if the free call comes before
-+				 * the unbind, IOMMU driver will get notified
-+				 * and perform cleanup.
-+				 */
-+				ioasid_set_data(pasid, NULL);
-+				kfree(svm);
-+			}
-+		}
-+		break;
-+	}
-+out:
-+	mutex_unlock(&pasid_mutex);
-+
-+	return ret;
-+}
-+
- int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_ops *ops)
- {
- 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 6da03f627ba3..a5bd53cf190c 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -706,7 +706,9 @@ struct dmar_domain *find_domain(struct device *dev);
- extern void intel_svm_check(struct intel_iommu *iommu);
- extern int intel_svm_enable_prq(struct intel_iommu *iommu);
- extern int intel_svm_finish_prq(struct intel_iommu *iommu);
--
-+extern int intel_svm_bind_gpasid(struct iommu_domain *domain,
-+		struct device *dev, struct iommu_gpasid_bind_data *data);
-+extern int intel_svm_unbind_gpasid(struct device *dev, int pasid);
- struct svm_dev_ops;
- 
- struct intel_svm_dev {
-@@ -723,9 +725,13 @@ struct intel_svm_dev {
- struct intel_svm {
- 	struct mmu_notifier notifier;
- 	struct mm_struct *mm;
-+
- 	struct intel_iommu *iommu;
- 	int flags;
- 	int pasid;
-+	int gpasid; /* Guest PASID in case of vSVA bind with non-identity host
-+		     * to guest PASID mapping.
-+		     */
- 	struct list_head devs;
- 	struct list_head list;
- };
-diff --git a/include/linux/intel-svm.h b/include/linux/intel-svm.h
-index d7c403d0dd27..c19690937540 100644
---- a/include/linux/intel-svm.h
-+++ b/include/linux/intel-svm.h
-@@ -44,6 +44,23 @@ struct svm_dev_ops {
-  * do such IOTLB flushes automatically.
-  */
- #define SVM_FLAG_SUPERVISOR_MODE	(1<<1)
-+/*
-+ * The SVM_FLAG_GUEST_MODE flag is used when a guest process bind to a device.
-+ * In this case the mm_struct is in the guest kernel or userspace, its life
-+ * cycle is managed by VMM and VFIO layer. For IOMMU driver, this API provides
-+ * means to bind/unbind guest CR3 with PASIDs allocated for a device.
-+ */
-+#define SVM_FLAG_GUEST_MODE	(1<<2)
-+/*
-+ * The SVM_FLAG_GUEST_PASID flag is used when a guest has its own PASID space,
-+ * which requires guest and host PASID translation at both directions. We keep
-+ * track of guest PASID in order to provide lookup service to device drivers.
-+ * One such example is a physical function (PF) driver that supports mediated
-+ * device (mdev) assignment. Guest programming of mdev configuration space can
-+ * only be done with guest PASID, therefore PF driver needs to find the matching
-+ * host PASID to program the real hardware.
-+ */
-+#define SVM_FLAG_GUEST_PASID	(1<<3)
- 
- #ifdef CONFIG_INTEL_IOMMU_SVM
- 
--- 
-2.7.4
+I surveyed the three fses that support dax and found that none of the
+filesystems actually have a 'nodax' flag.  Now would be the time not to
+add such a thing, and make people specify dax=off instead.  It would
+be handy if we could have a single fsparam_enum for figuring out the dax
+mount options.
 
+>    "-o dax=always" means "always set S_DAX (at least on pmem), ignore FS_XFLAG_DAX"
+>    	"-o dax" by itself means "dax=always"
+>    "-o dax=iflag" means "follow FS_XFLAG_DAX" and is the default
+> 
+>  - There exists an advisory directory inode flag FS_XFLAG_DAX that can be
+>    changed at any time.  The flag state is copied into any files or
+>    subdirectories when they are created within that directory.  If programs
+>    require file access runs in S_DAX mode, they'll have to create those files
+
+"...they must create..."
+
+>    inside a directory with FS_XFLAG_DAX set, or mount the fs with an
+>    appropriate dax mount option.
+
+Otherwise seems ok to me.
+
+--D
+
+> 
+> 
+> ???
+> 
+> Ira
+> 
