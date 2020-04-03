@@ -2,113 +2,128 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD01C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCC0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC454206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF115206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sho0d9Wt"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dOImOGuo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404590AbgDCQhW (ORCPT
+        id S2390850AbgDCQiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:37:22 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47028 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728357AbgDCQhW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:37:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=g4YKikYQtnB0AnubBFeONulKSeVzYL29a8W4iHit2bY=; b=sho0d9WtMchVQg/GM9WCgcSHfa
-        HyhG4jCxXzEda1YA7ngOuXk44i6naIf0b9lB+v8zQFKec4KRrNa014NPG/390zOvTUbtB8z23dA1r
-        kyJMDqe48dACeFcDXJiFz8F4PUF/QsgIVgZzxbO1Xph4nl/GfKMPB+WDBHP/rToRhYGlAvgM8dOC2
-        PJPhrVaFiOtZkv5Yqn/IU6WOPyOyVCM3wXJt1m8a0WgPsxLWu+v+kmDCBKr6JlSyWUNm+9kqrXGG8
-        OL8LrrZU8FAv3VNgKipNSPAn8OlqtIjl4NAqxntpP+1cc8VVHK8vcoVqPDfuWqaCrzLiHRqxpxAME
-        zUewE0SQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jKPJm-0003Dx-91; Fri, 03 Apr 2020 16:37:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD5123060FD;
-        Fri,  3 Apr 2020 18:37:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C85F22B124BED; Fri,  3 Apr 2020 18:37:16 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 18:37:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     jeyu@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        keescook@chromium.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200403163716.GV20730@hirez.programming.kicks-ass.net>
+        Fri, 3 Apr 2020 12:38:46 -0400
+Received: from mout.gmx.net ([212.227.15.18]:35189 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728337AbgDCQiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:38:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1585931790;
+        bh=E98VMExRB5iPNCFhVMy63LXkoHnjMzBitrH5WXG7qiM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=dOImOGuozI8DMcj7GtfGcJ+2x3A02rIMtx66rq0AVmXN7E4q7CI/da7CkeWOTKWum
+         IycbGLyWDsRfecjtP1NLyNzrqfNeeoMqQRrzmNqHx+QgXw5fwKZt2L5sbN7VItYE1V
+         XWz13lrkuz9UmUFYTqce0CgpC7APcPwy3VaVQJy8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MowKi-1iz57o1gsA-00qRcY; Fri, 03 Apr 2020 18:36:30 +0200
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+To:     alex.dewar@gmx.co.uk
+Cc:     Hannes Reinecke <hare@suse.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: aic7xxx: Use kzalloc() instead of kmalloc()+memset()
+Date:   Fri,  3 Apr 2020 17:36:10 +0100
+Message-Id: <20200403163611.46756-1-alex.dewar@gmx.co.uk>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fS9C2WUq6W0A/oQG43z3dHsTrS5lIbhUpgQbXvGZQ/vrI87kJb+
+ Fdbs4xZkNzfKzc9fcfh9QJa86SXvrj2f2gsHnDtyPcIdsEkzKAIfzVj63JcKL6XrCx551MV
+ uhg2dQ32m10T5TByu8cWyWyJwfBI8H6HYI8yUc8zhZ9G4BdPiipDJm3vVRUKlR4LsrVK8T0
+ +hP/W1B7p8JaaUTzOCseg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sDaxh1hmY2Q=:mMPhVPCYFTWiYQV81XN19Z
+ r+E9A2Wi3YqJoLIa6dZAwSHRMmBR7ja8qLFTL3eiwl03AcMj20Z00pllIz7kXqAPa1YxnhaTj
+ Jif44E1Ua43OynP2NUymyzSoPcE/N0OKuhkpI2kVYn2JvlifA5RogLYIWz07alohAxXx+rq9I
+ ukvmuV+JjS3J7qSU3hWehV6sGIa48qOoFNz0zx+eoxJBeS0WjhUcsHTe8SdeUBYLrP4VzPEAo
+ YISb5mqEyqIMLS2Cf6Ps42HXQulX/HdC1LsfTs+FKF4oQZ03Kq6qU0hs1KN+ZA/d3c6YPWQ28
+ d8fM2cFSziPbJhz6qzHwKf+Mzm7xZ9t0S5FpUbSXMi1kIN2J8QATlZ+NV1fEbNlk88cBhIfkm
+ 8pj+XFRkaxI4D2TCwyOz0eKj4f75udBO6nam23LAOn5JxBHHG+EzgTDMPP7O9/AHBGlZwmI7f
+ g3l4u42r/TdXdOk1XYo6xlCz1FuiF7ABhwK5RiuoRzmaJAKo7KPszXe8G6lhl4VRu9zyC0w94
+ mI4Xa7gEwopzA9Pjy7FXc49gGq/ayNZ2qms+LuW/C5yslKqRwJeyiovV/+VgV9MXSxOD83gWj
+ +ixfacN00iqSK1dodIzEQ7K6oTyq0eghQZTxWXbU2+8l3bv3pWr7sx6wv81CL2BHc460nXiqY
+ XF0w2r/6I7FtR0RCvZ3MMXrBhj27x6AguVTNvG0spFbZL8bnabrC1QW8Fut0h00BOOWuU2peM
+ xaGLFweLKhU5nZNhh8elyCeFElw6laK7HhO3ZkLqQ+PD2GAZtF/MBCUJYkxBtWXW47lgLnb/7
+ 8hr0H+Mge/jN/qz69FKGri6fdExkdt8plOsG7MOGgRsKWZQVkTBMNZt79LxGdlFQzRrJDCOBL
+ yMk0Z3pGDS8Fs7tPWY+9asCEGGD8Zd2j7yVC/Uu2X7l6Uaji41b68eAOeXdj8Pn1QhECEypMu
+ LH0IRiwMoBS+OWMynA7jyRZsuKvTwf0E0Lhg1UW1LiN95nwOFOAe6h/YZWkTYmF5u4pUnM1l7
+ TtRQpd48VL/BoGfvj0NhKJ5954hwkNLPj0G2Yj6efT5qVLN7h+5/z/aSM4uMoRvGuTZ16Y2Iz
+ 8xv7dY3XoIL9kjqWxV1v+CIRlxJqRF7Y0hyymNZSXFUreoMYyVUZ1qKuq/HST76gIbR+WzjFs
+ 2/YDUXDkRposv74bOG3vr8d3/8NsqFAtsFDqWsoSp3I/qLWwPgyYroqWQM5LQeLwffvY0nBQr
+ fOSiBQolfKVH0t1mD
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are a couple of places where kzalloc() could be used directly
+instead of calling kmalloc() then memset(). Replace them.
 
-We're very close to enforcing W^X memory, refuse to load modules that
-violate this principle per construction.
+Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
+=2D--
+ drivers/scsi/aic7xxx/aic79xx_core.c | 3 +--
+ drivers/scsi/aic7xxx/aic7xxx_core.c | 4 ++--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
----
- kernel/module.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+diff --git a/drivers/scsi/aic7xxx/aic79xx_core.c b/drivers/scsi/aic7xxx/ai=
+c79xx_core.c
+index a336a458c978..c38163707259 100644
+=2D-- a/drivers/scsi/aic7xxx/aic79xx_core.c
++++ b/drivers/scsi/aic7xxx/aic79xx_core.c
+@@ -6054,14 +6054,13 @@ ahd_alloc(void *platform_arg, char *name)
+ {
+ 	struct  ahd_softc *ahd;
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2044,9 +2044,28 @@ static void module_enable_x(const struct
- 	frob_text(&mod->core_layout, set_memory_x);
- 	frob_text(&mod->init_layout, set_memory_x);
- }
+-	ahd =3D kmalloc(sizeof(*ahd), GFP_ATOMIC);
++	ahd =3D kzalloc(sizeof(*ahd), GFP_ATOMIC);
+ 	if (!ahd) {
+ 		printk("aic7xxx: cannot malloc softc!\n");
+ 		kfree(name);
+ 		return NULL;
+ 	}
+
+-	memset(ahd, 0, sizeof(*ahd));
+ 	ahd->seep_config =3D kmalloc(sizeof(*ahd->seep_config), GFP_ATOMIC);
+ 	if (ahd->seep_config =3D=3D NULL) {
+ 		kfree(ahd);
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/ai=
+c7xxx_core.c
+index 84fc499cb1e6..36a7ea1ba7da 100644
+=2D-- a/drivers/scsi/aic7xxx/aic7xxx_core.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
+@@ -4384,13 +4384,13 @@ ahc_alloc(void *platform_arg, char *name)
+ 	struct  ahc_softc *ahc;
+ 	int	i;
+
+-	ahc =3D kmalloc(sizeof(*ahc), GFP_ATOMIC);
++	ahc =3D kzalloc(sizeof(*ahc), GFP_ATOMIC);
+ 	if (!ahc) {
+ 		printk("aic7xxx: cannot malloc softc!\n");
+ 		kfree(name);
+ 		return NULL;
+ 	}
+-	memset(ahc, 0, sizeof(*ahc));
 +
-+static int module_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
-+			       char *secstrings, struct module *mod)
-+{
-+	int i;
-+
-+	for (i = 0; i < hdr->e_shnum; i++) {
-+		if (sechdrs[i].sh_flags & (SHF_EXECINSTR|SHF_WRITE))
-+			return -ENOEXEC;
-+	}
-+
-+	return 0;
-+}
-+
- #else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
- static void module_enable_nx(const struct module *mod) { }
- static void module_enable_x(const struct module *mod) { }
-+static int module_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
-+			       char *secstrings, struct module *mod)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
- 
- 
-@@ -3378,6 +3397,11 @@ static struct module *layout_and_allocat
- 	if (err < 0)
- 		return ERR_PTR(err);
- 
-+	err = module_rwx_sections(info->hdr, info->sechdrs,
-+				  info->secstrings, info->mod);
-+	if (err < 0)
-+		return ERR_PTR(err);
-+
- 	/* We will do a special allocation for per-cpu sections later. */
- 	info->sechdrs[info->index.pcpu].sh_flags &= ~(unsigned long)SHF_ALLOC;
- 
+ 	ahc->seep_config =3D kmalloc(sizeof(*ahc->seep_config), GFP_ATOMIC);
+ 	if (ahc->seep_config =3D=3D NULL) {
+ 		kfree(ahc);
+=2D-
+2.26.0
+
