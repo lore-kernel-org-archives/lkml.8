@@ -2,146 +2,344 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B513C2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B3EC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFE520721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5568620721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390228AbgDCMaY (ORCPT
+        id S2403882AbgDCMbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:30:24 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48038 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgDCMaY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:30:24 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2E4C81C2F16; Fri,  3 Apr 2020 14:30:21 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 14:30:20 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
-        airlied@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Subject: [bisected] Re: 5.7-rc0: regression caused by drm tree, hangs while
- attempting to run X
-Message-ID: <20200403123019.GA3539@duo.ucw.cz>
-References: <20200402213253.GA2691@duo.ucw.cz>
- <20200402213506.GA2767@duo.ucw.cz>
- <20200403073720.GA23229@duo.ucw.cz>
- <20200403091430.GA3845@duo.ucw.cz>
- <20200403092634.GA3610@duo.ucw.cz>
- <20200403102928.GA3539@duo.ucw.cz>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
-Content-Disposition: inline
-In-Reply-To: <20200403102928.GA3539@duo.ucw.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 3 Apr 2020 08:31:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:52586 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728099AbgDCMbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 08:31:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4D2D7FA;
+        Fri,  3 Apr 2020 05:31:29 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 546163F68F;
+        Fri,  3 Apr 2020 05:31:27 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default boost value
+Date:   Fri,  3 Apr 2020 13:30:19 +0100
+Message-Id: <20200403123020.13897-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RT tasks by default run at the highest capacity/performance level. When
+uclamp is selected this default behavior is retained by enforcing the
+requested uclamp.min (p->uclamp_req[UCLAMP_MIN]) of the RT tasks to be
+uclamp_none(UCLAMP_MAX), which is SCHED_CAPACITY_SCALE; the maximum
+value.
 
---TB36FDmn/VVEgNH/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is also referred to as 'the default boost value of RT tasks'.
 
-Hi!
+See commit 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks").
 
-> > > commit f365ab31efacb70bed1e821f7435626e0b2528a6
-> > > Merge: 4646de87d325 59e7a8cc2dcf
-> > > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > > Date:   Wed Apr 1 15:24:20 2020 -0700
-> > >=20
-> > >     Merge tag 'drm-next-2020-04-01' of
-> > > git://anongit.freedesktop.org/drm/drm
->=20
->=20
-> > Any ideas, besides the b-word?
-> >=20
-> > Would c0ca be good commit for testing?
-> >=20
-> > commit 700d6ab987f3b5e28b13b5993e5a9a975c5604e2
-> > Merge: c0ca5437c509 2bdd4c28baff
->=20
-> c0ca is broken.
->=20
-> commit 9001b17698d86f842e2b13e0cafe8021d43209e9
-> Merge: bda1fb0ed000 217a485c8399
->=20
->     Merge tag 'drm-intel-next-2020-03-13' of git://anongit.freedesktop.or=
-g/drm/d
-> rm-intel into drm-next
->    =20
->     UAPI Changes:
->=20
-> So bda1fb0ed000 looks like test candidate... and that one works.
->=20
-> I guess 217a485c8399 is reasonable next step... and that
-> 11a48a5a18c63fd7621bb050228cebf13566e4d8 should work ok.=20
+On battery powered devices, it is desired to control this default
+(currently hardcoded) behavior at runtime to reduce energy consumed by
+RT tasks.
 
-# bad: [217a485c8399634abacd2f138b3524d2e78e8aad] drm/i915: Update DRIVER_D=
-ATE to 20200313
-# good: [11a48a5a18c63fd7621bb050228cebf13566e4d8] Linux 5.6-rc2
-git bisect start '217a485c8399' '11a48a5a18c63fd7621bb050228cebf13566e4d8'
-# good: [837b63e6087838d0f1e612d448405419199d8033] drm/i915: Program MBUS w=
-ith rmw during initialization
-git bisect good 837b63e6087838d0f1e612d448405419199d8033
-# good: [3a1b82a19ff91cfef9b5d9d9faabb0ebcac15df0] drm/i915/tgl: Allow DC5/=
-DC6 entry while PG2 is active
-git bisect good 3a1b82a19ff91cfef9b5d9d9faabb0ebcac15df0
-# good: [ba518bbd3f3c265419fa8c3702940cb7c642c6a5] drm/i915: Force DPCD bac=
-klight mode for some Dell CML 2020 panels
-git bisect good ba518bbd3f3c265419fa8c3702940cb7c642c6a5
-# good: [73ce0969d1d0bc2cb53370017923640db72e70ec] drm/i915: Clean up integ=
-er types in color code
-git bisect good 73ce0969d1d0bc2cb53370017923640db72e70ec
-# bad: [aa64f8e1cf235f2e36615dba57c2c50d06181f84] drm/i915: Add Wa_12096446=
-11:icl,ehl
-git bisect bad aa64f8e1cf235f2e36615dba57c2c50d06181f84
-# good: [32fc2849a3d59dc10efda38ef88e8f9052f711be] drm/i915/dsb: convert to=
- drm_device based logging macros.
-git bisect good 32fc2849a3d59dc10efda38ef88e8f9052f711be
-# good: [4aea5a9e6521c1ad484992d490f1cefa7d73d1ec] drm/i915/gem: Mark up th=
-e racy read of the mmap_singleton
-git bisect good 4aea5a9e6521c1ad484992d490f1cefa7d73d1ec
-# bad: [7dc8f1143778a35b190f9413f228b3cf28f67f8d] drm/i915/gem: Drop reloca=
-tion slowpath
-git bisect bad 7dc8f1143778a35b190f9413f228b3cf28f67f8d
-# good: [c02aac25f150d1b7215b9481f8cdd30cc607bedf] drm/i915/gem: Mark up sw=
--fence notify function
-git bisect good c02aac25f150d1b7215b9481f8cdd30cc607bedf
-# good: [07bcfd1291de77ffa9b627b4442783aba1335229] drm/i915/gen12: Disable =
-preemption timeout
-git bisect good 07bcfd1291de77ffa9b627b4442783aba1335229
-# first bad commit: [7dc8f1143778a35b190f9413f228b3cf28f67f8d] drm/i915/gem=
-: Drop relocation slowpath
+For example, a mobile device manufacturer where big.LITTLE architecture
+is dominant, the performance of the little cores varies across SoCs, and
+on high end ones the big cores could be too power hungry.
 
-Any ideas?
-									Pavel
+Given the diversity of SoCs, the new knob allows manufactures to tune
+the best performance/power for RT tasks for the particular hardware they
+run on.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+They could opt to further tune the value when the user selects
+a different power saving mode or when the device is actively charging.
 
---TB36FDmn/VVEgNH/
-Content-Type: application/pgp-signature; name="signature.asc"
+The runtime aspect of it further helps in creating a single kernel image
+that can be run on multiple devices that require different tuning.
 
------BEGIN PGP SIGNATURE-----
+Keep in mind that a lot of RT tasks in the system are created by the
+kernel. On Android for instance I can see over 50 RT tasks, only
+a handful of which created by the Android framework.
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXocsWwAKCRAw5/Bqldv6
-8qNdAJ9bkwEuRS3wjnjPE4AXxIIeuiDQkQCfZoT2AeeFq3CBrUDbDEIYnRVm9sk=
-=kIVi
------END PGP SIGNATURE-----
+To control the default behavior globally by system admins and device
+integrators, introduce the new sysctl_sched_rt_default_uclamp_util_min
+to change the default boost value of the RT tasks.
 
---TB36FDmn/VVEgNH/--
+I anticipate this to be mostly in the form of modifying the init script
+of a particular device.
+
+Whenever the new default changes, it'd be applied lazily on the next
+enqueue, assuming that it still uses the system default value and not a
+user applied one.
+
+Tested on Juno-r2 in combination with the RT capacity awareness [1].
+By default an RT task will go to the highest capacity CPU and run at the
+maximum frequency, which is particularly energy inefficient on high end
+mobile devices because the biggest core[s] are 'huge' and power hungry.
+
+With this patch the RT task can be controlled to run anywhere by
+default, and doesn't cause the frequency to be maximum all the time.
+Yet any task that really needs to be boosted can easily escape this
+default behavior by modifying its requested uclamp.min value
+(p->uclamp_req[UCLAMP_MIN]) via sched_setattr() syscall.
+
+[1] 804d402fb6f6: ("sched/rt: Make RT capacity-aware")
+
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Jonathan Corbet <corbet@lwn.net>
+CC: Juri Lelli <juri.lelli@redhat.com>
+CC: Vincent Guittot <vincent.guittot@linaro.org>
+CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Ben Segall <bsegall@google.com>
+CC: Mel Gorman <mgorman@suse.de>
+CC: Luis Chamberlain <mcgrof@kernel.org>
+CC: Kees Cook <keescook@chromium.org>
+CC: Iurii Zaikin <yzaikin@google.com>
+CC: Quentin Perret <qperret@google.com>
+CC: Valentin Schneider <valentin.schneider@arm.com>
+CC: Patrick Bellasi <patrick.bellasi@matbug.net>
+CC: Pavan Kondeti <pkondeti@codeaurora.org>
+CC: linux-doc@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-fsdevel@vger.kernel.org
+---
+
+Changes in v2:
+	* Do the lazy update in uclamp_rq_inc() (Thanks Qeuntin)
+	* Rename to: sysctl_sched_rt_default_uclamp_util_min (Quentin)
+	* uclamp_rt_sync_default_util_min() now is a static function in core.c
+	  with no prototype export in sched.h
+	* Added docs in sysctl/kernel.rst (patch 2) (Quentin)
+
+v1 can be found here:
+
+	https://lore.kernel.org/lkml/20191220164838.31619-1-qais.yousef@arm.com/
+
+Summary of v1 discussion:
+
+Patrick has voiced a concern about the approach. AFAIU the suggestion proposed
+by Patrick instead is to split sysctl_sched_uclamp_util_min into 2, one for RT
+and another for CFS. And use the RT constraint to limit how much boost RT tasks
+get globally.
+
+If my understanding was correct, the proposed approach by Patrick doesn't work
+for what we want to achieve here. Beside it breaks ABI.
+
+The global per RT task doesn't work because if I want to disable boosting for
+all RT tasks by default but still allow a handful of critical ones to be
+boosted, the global constraint will render any request via sched_setattr()
+syscall a NOP.
+
+So IIUC, we'll still _always_ boost RT tasks to max, but introduce a new knob
+to cap and restrict this boost. Which IMHO is a convoluted way to disable the
+hardcoded max boost behavior.
+
+This approach instead gives admins a direct control over the default boost
+value for RT tasks, which is exactly what we want, without any level of
+indirection. It converts a hardcoded value into a sysctl variable that
+sysadmins can modify at runtime.
+
+
+ include/linux/sched/sysctl.h |  1 +
+ kernel/sched/core.c          | 66 +++++++++++++++++++++++++++++++++---
+ kernel/sysctl.c              |  7 ++++
+ 3 files changed, 69 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index d4f6215ee03f..91204480fabc 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -59,6 +59,7 @@ extern int sysctl_sched_rt_runtime;
+ #ifdef CONFIG_UCLAMP_TASK
+ extern unsigned int sysctl_sched_uclamp_util_min;
+ extern unsigned int sysctl_sched_uclamp_util_max;
++extern unsigned int sysctl_sched_rt_default_uclamp_util_min;
+ #endif
+ 
+ #ifdef CONFIG_CFS_BANDWIDTH
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1a9983da4408..a726b26a5056 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -797,6 +797,27 @@ unsigned int sysctl_sched_uclamp_util_min = SCHED_CAPACITY_SCALE;
+ /* Max allowed maximum utilization */
+ unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
+ 
++/*
++ * By default RT tasks run at the maximum performance point/capacity of the
++ * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
++ * SCHED_CAPACITY_SCALE.
++ *
++ * This knob allows admins to change the default behavior when uclamp is being
++ * used. In battery powered devices, particularly, running at the maximum
++ * capacity and frequency will increase energy consumption and shorten the
++ * battery life.
++ *
++ * This knob only affects the default value RT has when a new RT task is
++ * forked or has just changed policy to RT, given the user hasn't modified the
++ * uclamp.min value of the task via sched_setattr().
++ *
++ * This knob will not override the system default sched_util_clamp_min defined
++ * above.
++ *
++ * Any modification is applied lazily on the next RT task wakeup.
++ */
++unsigned int sysctl_sched_rt_default_uclamp_util_min = SCHED_CAPACITY_SCALE;
++
+ /* All clamps are required to be less or equal than these values */
+ static struct uclamp_se uclamp_default[UCLAMP_CNT];
+ 
+@@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+ 	return uc_req;
+ }
+ 
++static void uclamp_rt_sync_default_util_min(struct task_struct *p)
++{
++	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
++
++	if (!uc_se->user_defined)
++		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
++}
++
+ unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+ 	struct uclamp_se uc_eff;
+@@ -1030,6 +1059,12 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ 	if (unlikely(!p->sched_class->uclamp_enabled))
+ 		return;
+ 
++	/*
++	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
++	 * user, we apply any new value on the next wakeup, which is here.
++	 */
++	uclamp_rt_sync_default_util_min(p);
++
+ 	for_each_clamp_id(clamp_id)
+ 		uclamp_rq_inc_id(rq, p, clamp_id);
+ 
+@@ -1121,12 +1156,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+ 				loff_t *ppos)
+ {
+ 	bool update_root_tg = false;
+-	int old_min, old_max;
++	int old_min, old_max, old_rt_min;
+ 	int result;
+ 
+ 	mutex_lock(&uclamp_mutex);
+ 	old_min = sysctl_sched_uclamp_util_min;
+ 	old_max = sysctl_sched_uclamp_util_max;
++	old_rt_min = sysctl_sched_rt_default_uclamp_util_min;
+ 
+ 	result = proc_dointvec(table, write, buffer, lenp, ppos);
+ 	if (result)
+@@ -1134,12 +1170,23 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+ 	if (!write)
+ 		goto done;
+ 
++	/*
++	 * The new value will be applied to all RT tasks the next time they
++	 * wakeup, assuming the task is using the system default and not a user
++	 * specified value. In the latter we shall leave the value as the user
++	 * requested.
++	 */
+ 	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
+ 	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
+ 		result = -EINVAL;
+ 		goto undo;
+ 	}
+ 
++	if (sysctl_sched_rt_default_uclamp_util_min > SCHED_CAPACITY_SCALE) {
++		result = -EINVAL;
++		goto undo;
++	}
++
+ 	if (old_min != sysctl_sched_uclamp_util_min) {
+ 		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
+ 			      sysctl_sched_uclamp_util_min, false);
+@@ -1165,6 +1212,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+ undo:
+ 	sysctl_sched_uclamp_util_min = old_min;
+ 	sysctl_sched_uclamp_util_max = old_max;
++	sysctl_sched_rt_default_uclamp_util_min = old_rt_min;
+ done:
+ 	mutex_unlock(&uclamp_mutex);
+ 
+@@ -1207,9 +1255,13 @@ static void __setscheduler_uclamp(struct task_struct *p,
+ 		if (uc_se->user_defined)
+ 			continue;
+ 
+-		/* By default, RT tasks always get 100% boost */
++		/*
++		 * By default, RT tasks always get 100% boost, which the admins
++		 * are allowed to change via
++		 * sysctl_sched_rt_default_uclamp_util_min knob.
++		 */
+ 		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+-			clamp_value = uclamp_none(UCLAMP_MAX);
++			clamp_value = sysctl_sched_rt_default_uclamp_util_min;
+ 
+ 		uclamp_se_set(uc_se, clamp_value, false);
+ 	}
+@@ -1241,9 +1293,13 @@ static void uclamp_fork(struct task_struct *p)
+ 	for_each_clamp_id(clamp_id) {
+ 		unsigned int clamp_value = uclamp_none(clamp_id);
+ 
+-		/* By default, RT tasks always get 100% boost */
++		/*
++		 * By default, RT tasks always get 100% boost, which the admins
++		 * are allowed to change via
++		 * sysctl_sched_rt_default_uclamp_util_min knob.
++		 */
+ 		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+-			clamp_value = uclamp_none(UCLAMP_MAX);
++			clamp_value = sysctl_sched_rt_default_uclamp_util_min;
+ 
+ 		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
+ 	}
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index ad5b88a53c5a..0272ae8c6147 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -465,6 +465,13 @@ static struct ctl_table kern_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= sysctl_sched_uclamp_handler,
+ 	},
++	{
++		.procname	= "sched_rt_default_util_clamp_min",
++		.data		= &sysctl_sched_rt_default_uclamp_util_min,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= sysctl_sched_uclamp_handler,
++	},
+ #endif
+ #ifdef CONFIG_SCHED_AUTOGROUP
+ 	{
+-- 
+2.17.1
+
