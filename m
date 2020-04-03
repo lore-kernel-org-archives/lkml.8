@@ -2,77 +2,148 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2438C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5462AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E352077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2143B2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585920160;
-	bh=CbaY+LpU0g/V5is4GrAjszTSE+0wpVzM2tT7i5LjNM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NNwqB7H5UYS0iY4hqQAwNFKZvEKTp37MLfP7SXidyuGS9yn0P5EMfQB3mnrurOWPQ
-	 aGiwj+rz3jdTRuc9DgoXALCOOsbfL06Th3GPmyYYpEZAByKBWCc8JFHTB+quhs50es
-	 MB9HgBf3t4OAap5CFmBk2Yl/Phst+QiXKmIvFR/Q=
+	s=default; t=1585920355;
+	bh=/zTnNBmHXlyRdW8HYY5Lgt7awm+IjqmRYBZhvQxaPOw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qdoWq0sG3gSFk9ckrwX7YwqICF3SKEeJKYcS3Q7lPQXlR/HNVh34KSgMQeWjsHo/5
+	 fnbxpaeLKlN9OIfrucRJk5/1YLhcI0x9na8OZnNWELV2LEcSHmWhhYI8brLx3HXDL2
+	 opSY7gRb69pa/++e+nohUV13l7nAXBkBWlhKy0v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390832AbgDCNWk (ORCPT
+        id S2390865AbgDCNZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:22:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbgDCNWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:22:39 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BDBF2077D;
-        Fri,  3 Apr 2020 13:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585920159;
-        bh=CbaY+LpU0g/V5is4GrAjszTSE+0wpVzM2tT7i5LjNM0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O4rWr0mhiZcStdlORJxbwdiVIzorMxbbp1FiR+xI/3m18douSW8mTwGRMrMInAp16
-         CqJpx+A/MYNWkXz4vq3Kp0TThUTHBNzcDeRUUDnVWszJiSj1kB7YA2/yYEk5+eCaIM
-         dSohy3vNXAJr6MWfh8vUZzvZer5aKEt/iKOxK+5w=
-Date:   Fri, 3 Apr 2020 14:22:34 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, g.nault@alphalink.fr
-Subject: Re: [PATCH 0/8] [backports] l2tp use-after-free fixes for 4.4 stable
-Message-ID: <20200403132233.GA18943@willie-the-truck>
-References: <20200402173250.7858-1-will@kernel.org>
- <20200403124557.GA3984782@kroah.com>
+        Fri, 3 Apr 2020 09:25:54 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37101 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgDCNZx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 09:25:53 -0400
+Received: by mail-oi1-f196.google.com with SMTP id u20so6061692oic.4;
+        Fri, 03 Apr 2020 06:25:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5bl0oW2UaMbm846MDbnqihMiQu6ij4SqNZLt2jQkKdU=;
+        b=G26iveqllpugosFx4k9CzIOEjokj18JAKguIZ/lQVRAm0v16lQnSJ2Fqs2yZ4ktKOw
+         J/zbaVP8JDLYhbyemnIg9twlgX7G33DcR5YiE5g5PMO++mmIG/2etTNijzvNtVvv9NB1
+         pVLEgv1RsYgCJEk+kdol2wUvj1Xb3OyNjxbIaQkKdOYNlCiihPSZXq7M0t9XsbA38Oeg
+         vFb7gAAo82BseNV9GwJPxWdirxEeDLLWSSs451aZJjZLisRJfiY9dGyAzH1InLY3oCQA
+         8sbwAvzyxJwf1/rYSqGSkJRyQe8xFCsMMjBJYzSLirmVRzucnI32ChpY8fKMsjfnN5Mp
+         X6Lg==
+X-Gm-Message-State: AGi0PuaeEWHG8JzOPmD2covqSLg4R5Wcnku/bMwKYrcdRmDyaDJVV8ty
+        3lnu9UuhYEnmUeQ+3ug2TUtzpY9uogG+Gh7Bf4E=
+X-Google-Smtp-Source: APiQypKZPO0JhoWTs/XSnrPSPcz/KXDIsII7JLUge7QN3UZ7VSoLgRf1WErGGN8QSjpAiedtM5tpf0hb+p7dfG1a2Vs=
+X-Received: by 2002:aca:2209:: with SMTP id b9mr3021772oic.103.1585920352757;
+ Fri, 03 Apr 2020 06:25:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403124557.GA3984782@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200403105235.105187-1-hdegoede@redhat.com> <20200403105235.105187-2-hdegoede@redhat.com>
+In-Reply-To: <20200403105235.105187-2-hdegoede@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 3 Apr 2020 15:25:41 +0200
+Message-ID: <CAJZ5v0gcRgTTRfCKHS00y599NBhWPgAYQF0RfFo6-vDegYA6Eg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "5 . 4+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 02:45:57PM +0200, Greg KH wrote:
-> On Thu, Apr 02, 2020 at 06:32:42PM +0100, Will Deacon wrote:
-> > Hi Greg,
-> > 
-> > Syzbot has been complaining about KASAN splats due to use-after-free
-> > issues in the l2tp code on 4.4 Android kernels (although I reproduced
-> > with latest 4.4 stable on my laptop):
-> > 
-> > https://syzkaller.appspot.com/bug?id=de316389db0fa0cd7ced6e564601ea8e56625ebc
-> > 
-> > These have been fixed upstream, but for some reason didn't get picked up
-> > for stable. This series applies to 4.4.y and I've sent patches for 4.9
-> > separately.
-> 
-> All now queued up, thanks.
+On Fri, Apr 3, 2020 at 12:52 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> The Power Management Events (PMEs) the INT0002 driver listens for get
+> signalled by the Power Management Controller (PMC) using the same IRQ
+> as used for the ACPI SCI.
+>
+> Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+> waking up the system") the SCI triggering, without there being a wakeup
+> cause recognized by the ACPI sleep code, will no longer wakeup the system.
+>
+> This breaks PMEs / wakeups signalled to the INT0002 driver, the system
+> never leaves the s2idle_loop() now.
+>
+> Use acpi_register_wakeup_handler() to register a function which checks
+> the GPE0a_STS register for a PME and trigger a wakeup when a PME has
+> been signalled.
+>
+> With this new mechanism the pm_wakeup_hard_event() call is no longer
+> necessary, so remove it and also remove the matching device_init_wakeup()
+> calls.
+>
+> Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Adjust for the wakeup-handler registration function being renamed to
+>   acpi_register_wakeup_handler()
+> ---
+>  drivers/platform/x86/intel_int0002_vgpio.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> index f14e2c5f9da5..9da19168b4f6 100644
+> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> @@ -122,11 +122,17 @@ static irqreturn_t int0002_irq(int irq, void *data)
+>         generic_handle_irq(irq_find_mapping(chip->irq.domain,
+>                                             GPE0A_PME_B0_VIRT_GPIO_PIN));
+>
+> -       pm_wakeup_hard_event(chip->parent);
+> -
 
-Thanks, Greg.
+If the event occurs before the "noirq" phase of suspending devices, it
+can be missed with this change AFAICS.
 
-Will
+>         return IRQ_HANDLED;
+>  }
+>
+> +static bool int0002_check_wake(void *data)
+> +{
+> +       u32 gpe_sts_reg;
+> +
+> +       gpe_sts_reg = inl(GPE0A_STS_PORT);
+> +       return (gpe_sts_reg & GPE0A_PME_B0_STS_BIT);
+> +}
+> +
+>  static struct irq_chip int0002_byt_irqchip = {
+>         .name                   = DRV_NAME,
+>         .irq_ack                = int0002_irq_ack,
+> @@ -220,13 +226,13 @@ static int int0002_probe(struct platform_device *pdev)
+>                 return ret;
+>         }
+>
+> -       device_init_wakeup(dev, true);
+> +       acpi_register_wakeup_handler(irq, int0002_check_wake, NULL);
+
+So I would just add the wakeup handler registration here.
+
+>         return 0;
+>  }
+>
+>  static int int0002_remove(struct platform_device *pdev)
+>  {
+> -       device_init_wakeup(&pdev->dev, false);
+> +       acpi_unregister_wakeup_handler(int0002_check_wake, NULL);
+>         return 0;
+>  }
+>
+> --
