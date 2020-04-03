@@ -2,249 +2,207 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2730C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E313C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881742073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:02:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmIfs+8G"
+	by mail.kernel.org (Postfix) with ESMTP id 36F8E2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgDCNC6 (ORCPT
+        id S1728260AbgDCNDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:02:58 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:32920 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbgDCNC6 (ORCPT
+        Fri, 3 Apr 2020 09:03:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37150 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728164AbgDCNDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:02:58 -0400
-Received: by mail-qv1-f68.google.com with SMTP id p19so3515375qve.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 06:02:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=krGLlta/aQjm86ctavg/bbvN6kU6ZKvE8Q6fvRKONgM=;
-        b=HmIfs+8GxOZL7ySKCQboldTzZZ3qbpIMS+IZzxe8LkVPcFW5eCh09esIuvXnvXlWUX
-         QcSlq6uJAQgAxh9WY3H+8vf45Um32kLLmfbE6FeRwuw6+auQ5wj2Z7Ex84Xz4VQlIY40
-         w03NlPq+wcCW4//gfG81sNHiKxzS8G2bHfRG9SDIDDSCqD6KR7QoTaisKgfSDRqQaXqY
-         cgTueG/3nDU3hVBqdpQ2Kbljs6Fq/s5my7mBha7NN7yx1MANNHZt1XIFxOLgiWsvreLK
-         DbIhQ6b/Wb6+LTZNCAvNfeVn3mk5CvWvdh0NWKoYoUcSsbpR3NuZfXNqAEq1gvsQfHqq
-         beAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=krGLlta/aQjm86ctavg/bbvN6kU6ZKvE8Q6fvRKONgM=;
-        b=gx2NgM58tTzMw6R0SfrcB2RnAogIsbJgz1RSHdr3+wK2IQiBt+9IPejRRoK4pxNxfe
-         0UvVXuzDoSyVfGEyVzOjF4xdmFa5SJjfGDUe2BmoLmXsj9ViShyNuaUIec9nulEbv48H
-         ejlc0ht4ED5nhxVacQDvMRO1MPFQcq3kxqpsXzEnwv3xidnmwKLHhuDuvbzunw41ECvq
-         2K+t+JmcF0muny4Amld5dwUFhckCh2gOaHyAHD3yvCoeCnfL5pwmTZINgMrcAcFQu/0t
-         cqQxGKw3xSxtifb3TLfXZd/OjAQXGYrqTPE+lwHaG916yZlfeF5SPJ4vYduO03zTybUW
-         xGAg==
-X-Gm-Message-State: AGi0PuaI4SIRvEKsxpHU9SO0aN82QRlJuUcDeyerqCdjCiZr4mqgScu6
-        ho7clxXnYh/GXJpWLAfIU+Q=
-X-Google-Smtp-Source: APiQypIJjrreM/wS8flHyyjMpngfo/QY/XZHhtMUVXxXr0y34kpXc4jFmBe6hUxnApQvv0jxzsxYzQ==
-X-Received: by 2002:a0c:b61e:: with SMTP id f30mr8326701qve.25.1585918976303;
-        Fri, 03 Apr 2020 06:02:56 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id f1sm5818669qkl.72.2020.04.03.06.02.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 06:02:55 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C6F78409A3; Fri,  3 Apr 2020 10:02:51 -0300 (-03)
-Date:   Fri, 3 Apr 2020 10:02:51 -0300
-To:     Daniel Shaulov <daniel.shaulov@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Daniel Shaulov <daniel.shaulov@granulate.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: Add support for DW_OP_call_frame_cfa vars
-Message-ID: <20200403130251.GB18559@kernel.org>
-References: <20200401161954.44640-1-daniel.shaulov@granulate.io>
- <20200402184943.GB23243@kernel.org>
- <20200402202523.GA55594@5f9ad775e7f6>
+        Fri, 3 Apr 2020 09:03:23 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033CWw0N134425
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 09:03:22 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 304r51nqe6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 09:03:20 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Fri, 3 Apr 2020 14:02:56 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 Apr 2020 14:02:53 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033D350Y57999404
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 13:03:05 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 944B7AE045;
+        Fri,  3 Apr 2020 13:03:05 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27146AE051;
+        Fri,  3 Apr 2020 13:03:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.156.196])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 13:03:05 +0000 (GMT)
+Subject: Re: [PATCH v1 5/5] KVM: s390: vsie: gmap_table_walk() simplifications
+To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20200402184819.34215-1-david@redhat.com>
+ <20200402184819.34215-6-david@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Fri, 3 Apr 2020 15:03:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402202523.GA55594@5f9ad775e7f6>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200402184819.34215-6-david@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="VlNIpXV7boDOQ3LRBC6v8WVFkTOdQwvN5"
+X-TM-AS-GCONF: 00
+x-cbid: 20040313-0008-0000-0000-00000369BC29
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040313-0009-0000-0000-00004A8B4BE5
+Message-Id: <99c824d1-88ca-c98d-c4e9-75a97c2a8a7b@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_07:2020-04-02,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ phishscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
+ spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Apr 02, 2020 at 08:25:24PM +0000, Daniel Shaulov escreveu:
-> On Thu, Apr 02, 2020 at 03:49:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Daniel, next time please consider providing precise steps to show what
-> > wasn't working and then how the patch solves the problem, i.e. get some
-> > go program, show the command lines used to build, probe, etc.
-> >
-> > - Arnaldo
-> 
-> Sure thing:
-> 
-> ---- contents of example.go ----
-> package main
-> 
-> import "fmt"
-> 
-> func example(param1 int, param2 int) {
-> 	fmt.Println(param1, param2)
-> }
-> 
-> func main() {
-> 	example(111, 222)
-> }
-> ---- end contents of example.go ----
-> 
-> Build with:
-> $ go build example.go
-> 
-> Note that the output file is named after the directory.
-> 
-> Then try to probe it with:
-> $ perf probe -x ./example 'main.example param1 param2'
-> 
-> The result is:
-> > Target program is compiled without optimization. Skipping prologue.
-> > Probe on address 0x4820f0 to force probing at the function entry.
-> >
-> > Sorry, we don't support this variable location yet.
-> >   Error: Failed to add events.
-> 
-> With my changes the event is added successfuly.
-> The reason for the change can be observed in the output of:
-> $ readelf --debug-dump=info ./example
-> 
-> Where we have the following for the main.example function (with go >= 1.10):
->  <1><63dd2>: Abbrev Number: 2 (DW_TAG_subprogram)
->     <63dd3>   DW_AT_name        : main.example
->     <63de0>   DW_AT_low_pc      : 0x4820f0
->     <63de8>   DW_AT_high_pc     : 0x4821c2
->     <63df0>   DW_AT_frame_base  : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
->     <63df2>   DW_AT_decl_file   : 0x1
->     <63df6>   DW_AT_external    : 1
->  <2><63df7>: Abbrev Number: 14 (DW_TAG_formal_parameter)
->     <63df8>   DW_AT_name        : param1
->     <63dff>   DW_AT_variable_parameter: 0
->     <63e00>   DW_AT_decl_line   : 5
->     <63e01>   DW_AT_type        : <0x220f>
->     <63e05>   DW_AT_location    : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
->  <2><63e07>: Abbrev Number: 14 (DW_TAG_formal_parameter)
->     <63e08>   DW_AT_name        : param2
->     <63e0f>   DW_AT_variable_parameter: 0
->     <63e10>   DW_AT_decl_line   : 5
->     <63e11>   DW_AT_type        : <0x220f>
->     <63e15>   DW_AT_location    : 2 byte block: 91 8 	(DW_OP_fbreg: 8)
->  <2><63e18>: Abbrev Number: 0
- 
-> The go compiler (after 1.10) uses DW_OP_call_frame_cfa for the first parameter and DW_OP_fbreg for the rest.
-> On go versions lower than 1.10, it used DW_OP_call_frame_cfa for all parameters.
-> Here is example output of the readelf on main.example, compiled with go1.9.7:
->  <1><2634d>: Abbrev Number: 2 (DW_TAG_subprogram)
->     <2634e>   DW_AT_name        : main.example
->     <2635b>   DW_AT_low_pc      : 0x487db0
->     <26363>   DW_AT_high_pc     : 0x487e99
->     <2636b>   DW_AT_frame_base  : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
->     <2636d>   DW_AT_external    : 1
->  <2><2636e>: Abbrev Number: 5 (DW_TAG_formal_parameter)
->     <2636f>   DW_AT_name        : param1
->     <26376>   DW_AT_location    : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
->     <26378>   DW_AT_type        : <0x27f1c>
->  <2><2637c>: Abbrev Number: 5 (DW_TAG_formal_parameter)
->     <2637d>   DW_AT_name        : param2
->     <26384>   DW_AT_location    : 4 byte block: 9c 11 8 22 	(DW_OP_call_frame_cfa; DW_OP_consts: 8; DW_OP_plus)
->     <26389>   DW_AT_type        : <0x27f1c>
->  <2><2638d>: Abbrev Number: 0
-> 
-> Hope this makes things easier to understand.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--VlNIpXV7boDOQ3LRBC6v8WVFkTOdQwvN5
+Content-Type: multipart/mixed; boundary="USmy0Wzc73PZu5yOZsW92xu6k5FR7HGDU"
 
-Right, but I tried following your instructions here and got up to this:
+--USmy0Wzc73PZu5yOZsW92xu6k5FR7HGDU
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
- <0><76ded>: Abbrev Number: 1 (DW_TAG_compile_unit)
-    <76dee>   DW_AT_name        : main
-    <76df3>   DW_AT_language    : 22    (Go)
-    <76df4>   DW_AT_stmt_list   : 0x27a7d
-    <76df8>   DW_AT_low_pc      : 0x48cd90
-    <76e00>   DW_AT_ranges      : 0x2e0
-    <76e04>   DW_AT_comp_dir    : .
-    <76e06>   DW_AT_producer    : Go cmd/compile go1.13.6
-    <76e1e>   Unknown AT value: 2905: main
- <1><76e23>: Abbrev Number: 4 (DW_TAG_subprogram)
-    <76e24>   DW_AT_name        : main.example
-    <76e31>   DW_AT_inline      : 1     (inlined)
-    <76e32>   DW_AT_external    : 1
- <2><76e33>: Abbrev Number: 17 (DW_TAG_formal_parameter)
-    <76e34>   DW_AT_name        : param1
-    <76e3b>   DW_AT_variable_parameter: 0
-    <76e3c>   DW_AT_type        : <0x37430>
- <2><76e40>: Abbrev Number: 17 (DW_TAG_formal_parameter)
-    <76e41>   DW_AT_name        : param2
-    <76e48>   DW_AT_variable_parameter: 0
-    <76e49>   DW_AT_type        : <0x37430>
- <2><76e4d>: Abbrev Number: 0
+On 4/2/20 8:48 PM, David Hildenbrand wrote:
+> Let's use asce_type where applicable. Also, simplify our sanity check f=
+or
+> valid table levels and convert it into a WARN_ON_ONCE(). Check if we ev=
+en
+> have a valid gmap shadow as the very first step.
+>=20
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  arch/s390/mm/gmap.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+> index fd32ab566f57..3c801dae7988 100644
+> --- a/arch/s390/mm/gmap.c
+> +++ b/arch/s390/mm/gmap.c
+> @@ -790,17 +790,18 @@ static inline unsigned long *gmap_table_walk(stru=
+ct gmap *gmap,
+>  	const int asce_type =3D gmap->asce & _ASCE_TYPE_MASK;
+>  	unsigned long *table;
+> =20
+> -	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
+> -		return NULL;
+>  	if (gmap_is_shadow(gmap) && gmap->removed)
+>  		return NULL;
+> =20
+> +	if (WARN_ON_ONCE(level > (asce_type >> 2) + 1))
+> +		return NULL;
+> +
+>  	if (WARN_ON_ONCE(asce_type !=3D _ASCE_TYPE_REGION1) &&
+>  			 gaddr & (-1UL << (31 + (asce_type >> 2) * 11)))
+>  		return NULL;
+> =20
+>  	table =3D gmap->table;
+
+We could also initialize this variable at the top, no?
+
+> -	switch (gmap->asce & _ASCE_TYPE_MASK) {
+> +	switch (asce_type) {
+>  	case _ASCE_TYPE_REGION1:
+>  		table +=3D (gaddr & _REGION1_INDEX) >> _REGION1_SHIFT;
+>  		if (level =3D=3D 4)
+>=20
 
 
-Which, with or without your patch ends with:
 
-[acme@five daniel.shaulov@gmail.com]$ perf probe -x ./example 'main.example param1 param2'
-Failed to find 'param1' in this function.
-Probe point 'main.example' not found.
-  Error: Failed to add events.
-[acme@five daniel.shaulov@gmail.com]$
+--USmy0Wzc73PZu5yOZsW92xu6k5FR7HGDU--
 
-[acme@five perf]$ rpm -q golang-bin
-golang-bin-1.13.6-1.fc31.x86_64
-[acme@five perf]$ cat /etc/fedora-release
-Fedora release 31 (Thirty One)
-[acme@five perf]$
+--VlNIpXV7boDOQ3LRBC6v8WVFkTOdQwvN5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Has the behaviour changed again in 1.13? Or is this some optimization
-level that fedora sets that ends up auto-inlining that main.example
-routine?
+-----BEGIN PGP SIGNATURE-----
 
-[acme@five daniel.shaulov@gmail.com]$ readelf --debug-dump=info ./example | grep main\.example -B10 -A13
- <0><76ded>: Abbrev Number: 1 (DW_TAG_compile_unit)
-    <76dee>   DW_AT_name        : main
-    <76df3>   DW_AT_language    : 22	(Go)
-    <76df4>   DW_AT_stmt_list   : 0x27a7d
-    <76df8>   DW_AT_low_pc      : 0x48cd90
-    <76e00>   DW_AT_ranges      : 0x2e0
-    <76e04>   DW_AT_comp_dir    : .
-    <76e06>   DW_AT_producer    : Go cmd/compile go1.13.6
-    <76e1e>   Unknown AT value: 2905: main
- <1><76e23>: Abbrev Number: 4 (DW_TAG_subprogram)
-    <76e24>   DW_AT_name        : main.example
-    <76e31>   DW_AT_inline      : 1	(inlined)
-    <76e32>   DW_AT_external    : 1
- <2><76e33>: Abbrev Number: 17 (DW_TAG_formal_parameter)
-    <76e34>   DW_AT_name        : param1
-    <76e3b>   DW_AT_variable_parameter: 0
-    <76e3c>   DW_AT_type        : <0x37430>
- <2><76e40>: Abbrev Number: 17 (DW_TAG_formal_parameter)
-    <76e41>   DW_AT_name        : param2
-    <76e48>   DW_AT_variable_parameter: 0
-    <76e49>   DW_AT_type        : <0x37430>
- <2><76e4d>: Abbrev Number: 0
- <1><76e4e>: Abbrev Number: 4 (DW_TAG_subprogram)
-    <76e4f>   DW_AT_name        : fmt.Println
-[acme@five daniel.shaulov@gmail.com]$
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl6HNAgACgkQ41TmuOI4
+ufj06BAAqPVN3ay5tibFacZICN2+AtixZeGC9aBiEXKkIPbn3vJLKfuxqGEJIAqR
+sa83dUYL4lYbsvOOC0UGTVDX9/ZcDIB1WIMOG6drCQO2TnOnwSs+u2RiIKnPUdTO
+q1nKtOWfSf2nHGHiIDozvnI2/ggdu0+VRx911rsbU51K07CSYStbransnkYwnlk/
+CLf5axqBAHm+yIIuZUXB+5GZ2DOwyNt1ALnq/2YPG1ekqsq6WEAAR2bsJ5zubipg
+6EtV0sN8ABBhnbAocbs/gDgc9siZOkL63UtuEJStsj1ADUp/2h9Dmoj8+NjXDoLQ
+zDwJbg6xVovcH6v3vG1E+msXr7kZpX4I4BQ6lXXWwJav1ilGfBqRMuouaXHb2jR6
+kwdRP16ekDsQSer35ahYJQqSjw5UDhYbhLNCdauXtgSBLXF+h8VMzMmEU4dyb3pS
+UAcZLq/wPPtQ+s2eI79XEaMkAopkKkhlhntukJptLKx2e5Av3+kS1lT2fW/64zBi
+mRs1E0Os8ATZNBmykyOR2n6l3fyBqWgOfoApWXFtf/VwlbIQofE3uKcSjFizOAPo
+IRbFuMEbHLKxra2XfI7u8rWbzEDsC93txiPO9+YWl96xSsAKucRv8sl+l1gp3Oe7
+1ROLm6bU2r9PG2vqZsG77evtwJwVixhYxQJDj8muar8dJzOW0RA=
+=Lk4v
+-----END PGP SIGNATURE-----
 
-- Arnaldo
+--VlNIpXV7boDOQ3LRBC6v8WVFkTOdQwvN5--
+
