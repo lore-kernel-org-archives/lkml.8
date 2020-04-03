@@ -5,90 +5,145 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0946DC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890EEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB179206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555A8206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:02:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gECGj7gc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNSzBx3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404443AbgDCSCN (ORCPT
+        id S2404469AbgDCSCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:02:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41353 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728382AbgDCSCM (ORCPT
+        Fri, 3 Apr 2020 14:02:15 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34704 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728459AbgDCSCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:02:12 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h9so9579734wrc.8;
-        Fri, 03 Apr 2020 11:02:11 -0700 (PDT)
+        Fri, 3 Apr 2020 14:02:13 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 65so9604977wrl.1;
+        Fri, 03 Apr 2020 11:02:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LK/63VpRTinhiS72eGFe8hpGS9Ib9592eNpC47zP9eg=;
-        b=gECGj7gco55CQi8eVKo1AAsMyzI0Y0o7rmDW5QCJXbr5LCVDnHUz/qtiOz9HHljK9T
-         u9pdBmKtyx175zDh0dSSJuFkNmrR/NQ0gMX1nMxBD7a+bRWQ/Yjlxsa+7k4njHtxJDFs
-         VxVe3xlwewOPBdJ6Q3mAV6CzGsrFDwVVuleFj7uruyY4cigK+mToq1Ef9rmOSJpMKORu
-         vno9S9n95Ue7BiIwgIRV5fS9wBKJp6kWKwNyvNQ9bBDuL1erUi+VSboMHYBpquB1LgcU
-         6XiHGEBC+V/siyW7Q/sXeeWBDxsoTgNbi6suhqpuri0rcQS16rFrSfmVmAn/7aT+I5o+
-         AZgg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bmSExbPcYsSLBGuvWWlddM3gtwpXwrgXWshNJkEoawc=;
+        b=HNSzBx3vmm9ICSvF+V+FKfX4HydCxtwyiJ5H9kcsNR3jMarjQKjZt4ZZ8PmdBTwA/C
+         SVlEHCG/8+6Rk2Z7t2qw8KNfPyJLGVnTP81H2mwdB2Qc5O6t1TlTPzYH4G502D1+xzHq
+         f3aufq0lV3hmNVz+5ZpO/1zZhsulaCujzWCmO8U5XGgIOQF11aqYxt3Wy2wxw6/e28D4
+         dBVdO9K9hu1uHJ1PEMAJMMW+/yHgHkyu04t9U6dmstavfayu2g5OOTs1vGJNoWB9LafO
+         ZYPQryA17uqXi704N7Jxwh55Icqjz2yQVEgbiaThOHVBX3yCTAR7Fowqv1KD5T43DEFX
+         zy4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LK/63VpRTinhiS72eGFe8hpGS9Ib9592eNpC47zP9eg=;
-        b=sKN1LnEqpheRaaCfJDOuElh3r6fxl3pONR88EyaSbNOeEcJ4MC3c+TMnAMerqAyq0a
-         wNsOoSldS7fv1IS2xFY7wmJKM4vf9aiSUizcguhX6CPcVPoYDvpILQSHckgzNvtvKiM5
-         n6+/vYEl68ouL3o84sYWCC6LZ2X74OvsSJPY7sxJc2BO+w8cErl4bmdY/38SWx5VPMCT
-         3BEKbNKORHQpoiPniindGv74G+TBCBk2dNprtVQ5gq5kVV8zbLucb/9EWXFbhoKXjzQM
-         7Bhq1Ec4F46iXyUzXkuFWi0wv6ztysXw4LK4owmFYaBY0k5wgpPZ+Nw9OhCALZsBvR3K
-         mXiQ==
-X-Gm-Message-State: AGi0PuYSlmO7+/uyMOyCspjNhFTB+0dSBjkHZozxP5U3r65zViHGQpqY
-        P5VV1w25UMjyUeRRn3EjQvg=
-X-Google-Smtp-Source: APiQypKVCRnue8W4nhBRXSD3dBoOHLKYUZYejfQvBtxGqmi0wdjXQIZrIC9WjOlCYfbVLWup7ZCNgA==
-X-Received: by 2002:adf:f68b:: with SMTP id v11mr9853798wrp.270.1585936930550;
-        Fri, 03 Apr 2020 11:02:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bmSExbPcYsSLBGuvWWlddM3gtwpXwrgXWshNJkEoawc=;
+        b=BArC7C97TdOP0PNqyz54K2L71pyYiMRpNrJRXF5XpvWH2mhP+h1UQYZ2TsvOqnTGSH
+         HaufSzx9Tw32GwlwSm87rLvenexlrBhkVT7X1nFGAK/asw2ezR/JWcDQyJzWncczIRNP
+         tzdtW/13Vn3to7100gCLON2qZ8gUcz6XWgLRn3AvTffTMw1Yy7u76W5m5r6EgCSE8tVt
+         6glKeQypvlEYxciMCH8kLi4lq9EZbuYrfrT5p7bpQM3S+ydzl9m4puoeMoSznEZ/KP2I
+         C9C5Eo9F8WenBvmbbAU4VogMoasYBtIwzGI4SL7MRTatVibJMNaaRUQZRLvEV5kOPkij
+         HU7Q==
+X-Gm-Message-State: AGi0PuZxBJYWgTbO5+t4FsTGRoBI8zkF8Pg3ufNQdQAFy4JPtVlpU3Ua
+        4wkFfQjDVh40dd8dFcxsT8c=
+X-Google-Smtp-Source: APiQypJIXvJp2Ky9wBX9h9hFu/x5hSk116TIOt+sFie8LhvXCTRdOUioItrnInQpyW3Iyj1g2uBNbw==
+X-Received: by 2002:adf:c511:: with SMTP id q17mr10412087wrf.275.1585936931733;
+        Fri, 03 Apr 2020 11:02:11 -0700 (PDT)
 Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id j11sm13005492wrt.14.2020.04.03.11.02.08
+        by smtp.gmail.com with ESMTPSA id j11sm13005492wrt.14.2020.04.03.11.02.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Apr 2020 11:02:09 -0700 (PDT)
+        Fri, 03 Apr 2020 11:02:11 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/4] ARM: dts: rockchip: remove identical #include from rk3288.dtsi
-Date:   Fri,  3 Apr 2020 20:01:56 +0200
-Message-Id: <20200403180159.13387-1-jbx6244@gmail.com>
+Subject: [PATCH v3 2/4] ARM: dts: rockchip: remove include for irq.h
+Date:   Fri,  3 Apr 2020 20:01:57 +0200
+Message-Id: <20200403180159.13387-2-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200403180159.13387-1-jbx6244@gmail.com>
+References: <20200403180159.13387-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are 2 identical '#include' for 'rk3288-power.h',
-so remove one of them.
+The 'irq.h' file is already included through 'arm-gic.h',
+so remove them from all Rockchip dtsi files.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
+ arch/arm/boot/dts/rk3036.dtsi | 1 -
+ arch/arm/boot/dts/rk322x.dtsi | 1 -
  arch/arm/boot/dts/rk3288.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/rk3xxx.dtsi | 1 -
+ arch/arm/boot/dts/rv1108.dtsi | 1 -
+ 5 files changed, 5 deletions(-)
 
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 781ac7583..8be47354d 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -1,7 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+ 
+ #include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rk3036-cru.h>
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index c14891fe8..86c4d62fc 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -1,7 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+ 
+ #include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rk3228-cru.h>
 diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index e72368a7a..f102fec69 100644
+index f102fec69..ace67aa7d 100644
 --- a/arch/arm/boot/dts/rk3288.dtsi
 +++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -7,7 +7,6 @@
+@@ -1,7 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+ 
+ #include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
  #include <dt-bindings/clock/rk3288-cru.h>
- #include <dt-bindings/power/rk3288-power.h>
- #include <dt-bindings/thermal/thermal.h>
--#include <dt-bindings/power/rk3288-power.h>
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index f9fcb7e96..c79d98edd 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -4,7 +4,6 @@
+  * Author: Heiko Stuebner <heiko@sntech.de>
+  */
+ 
+-#include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
  #include <dt-bindings/soc/rockchip,boot-mode.h>
  
- / {
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index b453f8d0f..7d2ef39db 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -1,7 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+ 
+ #include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/rv1108-cru.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
 -- 
 2.11.0
 
