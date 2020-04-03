@@ -2,120 +2,142 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B4BC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B33C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F182078C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585926810;
-	bh=I/Lij4c63/t1fugS8FYJeh/QU8MNx0FELG2JmOJkUBM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ubfdCPcDmHVldx4PkEnH+mklJYaeWKo9vMqteMxUOcuJhVzq/Zr3Cc7q1mCkmDFdK
-	 zfww6u8wQGUnLljKuRjdQwI9lhIpLZIuG5y/BHvclKE/yI+L8YvmSrl4DJJS0X29nY
-	 /OvvbJFbL11bN7M5OEnJ33sEVxEJCn5tL/K87y8I=
+	by mail.kernel.org (Postfix) with ESMTP id EEC5F2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:13:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NnJYHcrE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404155AbgDCPN2 (ORCPT
+        id S2404130AbgDCPNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:13:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728213AbgDCPN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:13:28 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 294EF2073B;
-        Fri,  3 Apr 2020 15:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585926807;
-        bh=I/Lij4c63/t1fugS8FYJeh/QU8MNx0FELG2JmOJkUBM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kozVUiqbzzOC27RXU2Gn4uoI/0YIM2nu4c0ig/txr/XTvAIKhfAqjzkfliXj9bNvS
-         iu1CoUTc1kgSjD+EpJT7qF5ykr4UqoaLcjmD2PtQqP0PmflPS8JbyPYTny1xaOithC
-         v4ZouSAp1urCKzuniCO1Y8+PqGLP1Yy1zRcDg3YU=
-From:   Will Deacon <will@kernel.org>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        kernel-team@android.com, Will Deacon <will@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH] tun: Don't put_page() for all negative return values from XDP program
-Date:   Fri,  3 Apr 2020 16:13:21 +0100
-Message-Id: <20200403151321.20166-1-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 3 Apr 2020 11:13:53 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41585 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728213AbgDCPNx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 11:13:53 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n17so7299756lji.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:13:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DSB/s+jkbmzG+872wg2P5RsXw25dw+k96VoLRNM+xIk=;
+        b=NnJYHcrEmoB8qNXKZ3slYqn5PMbvp36PsylL6He+9olAxu//fFL0pW4XIUIvD8cMrC
+         Y6yJUUkqD6a9+uUEcC8JRoRzvnPwwrxRCwu5cm7XKxdFF0A/t/nmcgJKXjWTTn4txEwc
+         Zq2lnpBvjQjY0ThdGLJ6pNVSru7mBNvrD2SWMqXXZmWfZHKPmHXm4eNcwAw8ElBj/jT3
+         cNeyUrYOt0SLmx7WShfQxs1JwZ5G+ZKdS5bWF08a2A6lsdVXeADyUkvgW+k9aHrbsLSu
+         +O5s8Z35IVJrBBcJYxOOQJRSxgQpvskRgy5RHSR0ueUphiBEl+Tl3s1X/15Em29ndTdH
+         X6ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DSB/s+jkbmzG+872wg2P5RsXw25dw+k96VoLRNM+xIk=;
+        b=ls4yhpWD1iUZtk9WmFcUtZfEchrBKKimda9o66JzVF4Ax1/jfhF/mYqBbZ5aMMa1tH
+         ukJrNggr/l0V8hVVKsFgVfxDJWdbiQuI1IyHcz5DUIqeUs7+a7qI02e0YvVAWATTNS60
+         cPoSP4Zm0vIzHgtz3izQATV1mZYZt9sVC+aVWM5ypzmY+t1fMmXX4oyNiYlQvCYuTAy9
+         4k+bmGzeCVXzKw3Z/vHa+nGvBRpRxPAKGbOMw0H50kFVKMS5WrFLR+nrFanLB7cD5d8F
+         jB+pQNGH5FbxG2cPWkbrCKgN/jWeHcR7oLw15PNnqJ3lzhozBFI27Boz/Bsvp0NGwnum
+         2fag==
+X-Gm-Message-State: AGi0PuY42dHc/6BfeH1GEpV6881DIzsHaOKNmkvphQmQkoOFB1tj3RcN
+        sKxOtp92j3Q+tVzaLdCZbUvcVrOEFrx3u8fCOAVqGw==
+X-Google-Smtp-Source: APiQypLtONB4lTDIuQGKUYhKGtjTQQxubEMFFX2sH19d1M6w/MHAofyXnuV7Dw13bDwXeScnw2+wB73K329En9qbzbE=
+X-Received: by 2002:a2e:9084:: with SMTP id l4mr5287406ljg.277.1585926830857;
+ Fri, 03 Apr 2020 08:13:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200403150236.74232-1-linux@roeck-us.net>
+In-Reply-To: <20200403150236.74232-1-linux@roeck-us.net>
+From:   Alain Michaud <alainmichaud@google.com>
+Date:   Fri, 3 Apr 2020 11:13:39 -0400
+Message-ID: <CALWDO_WK2Vcq+92isabfsn8+=0UPoexF4pxbnEcJJPGas62-yw@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: Simplify / fix return values from tk_request
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        BlueZ <linux-bluetooth@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sonny Sasaka <sonnysasaka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an XDP program is installed, tun_build_skb() grabs a reference to
-the current page fragment page if the program returns XDP_REDIRECT or
-XDP_TX. However, since tun_xdp_act() passes through negative return
-values from the XDP program, it is possible to trigger the error path by
-mistake and accidentally drop a reference to the fragments page without
-taking one, leading to a spurious free. This is believed to be the cause
-of some KASAN use-after-free reports from syzbot [1], although without a
-reproducer it is not possible to confirm whether this patch fixes the
-problem.
+Hi Guenter/Marcel,
 
-Ensure that we only drop a reference to the fragments page if the XDP
-transmit or redirect operations actually fail.
 
-[1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
+On Fri, Apr 3, 2020 at 11:03 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> Some static checker run by 0day reports a variableScope warning.
+>
+> net/bluetooth/smp.c:870:6: warning:
+>         The scope of the variable 'err' can be reduced. [variableScope]
+>
+> There is no need for two separate variables holding return values.
+> Stick with the existing variable. While at it, don't pre-initialize
+> 'ret' because it is set in each code path.
+>
+> tk_request() is supposed to return a negative error code on errors,
+> not a bluetooth return code. The calling code converts the return
+> value to SMP_UNSPECIFIED if needed.
+>
+> Fixes: 92516cd97fd4 ("Bluetooth: Always request for user confirmation for Just Works")
+> Cc: Sonny Sasaka <sonnysasaka@chromium.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  net/bluetooth/smp.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+> index d0b695ee49f6..30e8626dd553 100644
+> --- a/net/bluetooth/smp.c
+> +++ b/net/bluetooth/smp.c
+> @@ -854,8 +854,7 @@ static int tk_request(struct l2cap_conn *conn, u8 remote_oob, u8 auth,
+>         struct l2cap_chan *chan = conn->smp;
+>         struct smp_chan *smp = chan->data;
+>         u32 passkey = 0;
+> -       int ret = 0;
+> -       int err;
+> +       int ret;
+>
+>         /* Initialize key for JUST WORKS */
+>         memset(smp->tk, 0, sizeof(smp->tk));
+> @@ -887,12 +886,12 @@ static int tk_request(struct l2cap_conn *conn, u8 remote_oob, u8 auth,
+>         /* If Just Works, Continue with Zero TK and ask user-space for
+>          * confirmation */
+>         if (smp->method == JUST_WORKS) {
+> -               err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+> +               ret = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+>                                                 hcon->type,
+>                                                 hcon->dst_type,
+>                                                 passkey, 1);
+> -               if (err)
+> -                       return SMP_UNSPECIFIED;
+> +               if (ret)
+> +                       return ret;
+I think there may be some miss match between expected types of error
+codes here.  The SMP error code type seems to be expected throughout
+this code base, so this change would propagate a potential negative
+value while the rest of the SMP protocol expects strictly positive
+error codes.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-CC: Eric Dumazet <edumazet@google.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
-Signed-off-by: Will Deacon <will@kernel.org>
----
+>                 set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
+>                 return 0;
+>         }
+> --
+> 2.17.1
+>
 
-RFC -> V1: Added Fixes tag and Jason's Ack.
-
- drivers/net/tun.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 650c937ed56b..9de9b7d8aedd 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
- 			alloc_frag->offset += buflen;
- 		}
- 		err = tun_xdp_act(tun, xdp_prog, &xdp, act);
--		if (err < 0)
--			goto err_xdp;
-+		if (err < 0) {
-+			if (act == XDP_REDIRECT || act == XDP_TX)
-+				put_page(alloc_frag->page);
-+			goto out;
-+		}
-+
- 		if (err == XDP_REDIRECT)
- 			xdp_do_flush();
- 		if (err != XDP_PASS)
-@@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
- 
- 	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
- 
--err_xdp:
--	put_page(alloc_frag->page);
- out:
- 	rcu_read_unlock();
- 	local_bh_enable();
--- 
-2.26.0.292.g33ef6b2f38-goog
-
+Thanks,
+Alain
