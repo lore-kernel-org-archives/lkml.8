@@ -2,267 +2,292 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB49BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C857EC2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB8020737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9283020737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:29:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WgJzVzb+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaXKzquQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391053AbgDCS3W (ORCPT
+        id S2391110AbgDCS34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:29:22 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44836 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728066AbgDCS3W (ORCPT
+        Fri, 3 Apr 2020 14:29:56 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45337 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbgDCS34 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:29:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033IRcjR090531;
-        Fri, 3 Apr 2020 18:29:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=6q5a+uM2h8GBpnd8aFmiiHcoQVWCiKL86M3lyVkse0g=;
- b=WgJzVzb+eAzaxmjp962YgoFzGTo7hxB0HRM/FQeMInHx4gzoocjTYTM042h00unA4hu4
- 1NRv0Cre9pcxjwZcZEV0Ga3MygwpUaMsIOgUDLTvSTEMdwtNXOq9BHF6lG0HjJx1fD00
- zk1j27Gib71ASTBZxSu2aFGcQuS6weucX/WuG/1BAvIvrRgZJekYG9tXXxMXXi4WAWdH
- gewtTgOH9ebW4/wYvkII/2/2aWHzSEvZxkkhWDrqdt9K+gEkQEgonVolFQHNlNeJEEEc
- ScYFzw9CQ7qcVW7Tc8tKj+jw6TXG2uDm7gXUsXhkPLO55K+pL4xMAWY9OpjDVVpkLl2j qA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 303cevjkwm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 18:29:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033ISOqr169206;
-        Fri, 3 Apr 2020 18:29:10 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 302g4xy0hm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 18:29:09 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 033IT7WN008832;
-        Fri, 3 Apr 2020 18:29:08 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Apr 2020 11:29:06 -0700
-Date:   Fri, 3 Apr 2020 11:29:04 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <david@fromorbit.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
-Message-ID: <20200403182904.GP80283@magnolia>
-References: <CAPcyv4h9Xg61jk=Uq17xC6AGj9yOSAJnCaTzHcfBZwOVdRF9dw@mail.gmail.com>
- <20200316095224.GF12783@quack2.suse.cz>
- <20200316095509.GA13788@lst.de>
- <20200401040021.GC56958@magnolia>
- <20200401102511.GC19466@quack2.suse.cz>
- <20200402085327.GA19109@lst.de>
- <20200402205518.GF3952565@iweiny-DESK2.sc.intel.com>
- <20200403072731.GA24176@lst.de>
- <20200403154828.GJ3952565@iweiny-DESK2.sc.intel.com>
- <20200403170338.GD29920@quack2.suse.cz>
+        Fri, 3 Apr 2020 14:29:56 -0400
+Received: by mail-ed1-f65.google.com with SMTP id dj7so8523939edb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6e9wS8t2hCYFIL03IsdjDKcyfNg0eWNOAoHax5TvJ5U=;
+        b=FaXKzquQ9FH/6mXJ3DXbKgsg7EJ3aR3iah/lMxbr5GaD/LZS0XnsTf+U8hGuoV4ktv
+         O85TcxLq6oiP+LuQ5bGwHhs0xVzNTvhjuDKIx6mp9yLYV6u2oX0gC2D48Fj9EcRBSVdX
+         9cIhqNmb3/N8B9sv7INmJVvBAwwd5qGjS5mALPomTV5n6KB1/LssPtu2rY3AS5e+abmK
+         jFnX07JU7zLAK9/fBbIydycfBrOXsVHGyjsG0YBqh0r1zYpaygQYu4VuW8R3Sg56uEy+
+         yTkxJKl8YY6/vwzPQ77RF45syWIypHaSWdJM68/vz2WBJ6VzJZIJoNdHgkNLRMZoyXvJ
+         qLzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6e9wS8t2hCYFIL03IsdjDKcyfNg0eWNOAoHax5TvJ5U=;
+        b=czJHz4hDVd20WAUO7A6hfzzFjlNVhaVgj/m0lKrPsz2kGknhLSc1mJaYBvWzZc9xOs
+         WE3RYKOaa4IdYJnSF2R211SMbXLWiDFPA4m+nJJLAgU2PwvxdMnh7sGoADHw1POZ5mUV
+         zS30WOZwu3BNFSzaiPRvqwsXq7bPpiUEXfEjhJq08HPa1Dr/mFr+cTa9FruUnwRWmjwb
+         3Lt3YyvIT22VZWw3f/GDNVuHxKk59K0wrnT0r/7CCNeakZRBW2VpePPMt93XJwMyupGS
+         qJ5WDXxtvckelYGU781YAvJrHNKrnm+7Dcf9Iy360ayj/B/pEfAYEXp2BzuWEU6HQwwH
+         MKHw==
+X-Gm-Message-State: AGi0PuZb3XRoMLF0ACs6WyZmlTNvw+vlrfznoxgQ4O0JsojgG+7T8nKr
+        RSusgnJjYwdPMGWPuAh2SwA7fbzidZKtkGINcjE=
+X-Google-Smtp-Source: APiQypKDqIWAB5wvdki3EtQsyq1njBtFpddi2O04oweEZkTN3iFxAZETyRDZPciquHqSVWWb8iPicpeXL42y9lQNtNY=
+X-Received: by 2002:a05:6402:b7b:: with SMTP id cb27mr9242647edb.343.1585938592474;
+ Fri, 03 Apr 2020 11:29:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403170338.GD29920@quack2.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030151
+References: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com> <1585892447-32059-6-git-send-email-iamjoonsoo.kim@lge.com>
+In-Reply-To: <1585892447-32059-6-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 3 Apr 2020 11:29:40 -0700
+Message-ID: <CAHbLzkqdupWUv7vPpqDpOARuYkBiTxmQxNi-zaw_TWVB1FsNjQ@mail.gmail.com>
+Subject: Re: [PATCH v5 05/10] mm/swap: charge the page when adding to the swap cache
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 07:03:38PM +0200, Jan Kara wrote:
-> On Fri 03-04-20 08:48:29, Ira Weiny wrote:
-> > On Fri, Apr 03, 2020 at 09:27:31AM +0200, Christoph Hellwig wrote:
-> > > On Thu, Apr 02, 2020 at 01:55:19PM -0700, Ira Weiny wrote:
-> > > > > I'd just return an error for that case, don't play silly games like
-> > > > > evicting the inode.
-> > > > 
-> > > > I think I agree with Christoph here.  But I want to clarify.  I was heading in
-> > > > a direction of failing the ioctl completely.  But we could have the flag change
-> > > > with an appropriate error which could let the user know the change has been
-> > > > delayed.
-> > > > 
-> > > > But I don't immediately see what error code is appropriate for such an
-> > > > indication.  Candidates I can envision:
-> > > > 
-> > > > EAGAIN
-> > > > ERESTART
-> > > > EUSERS
-> > > > EINPROGRESS
-> > > > 
-> > > > None are perfect but I'm leaning toward EINPROGRESS.
-> > > 
-> > > I really, really dislike that idea.  The whole point of not forcing
-> > > evictions is to make it clear - no this inode is "busy" you can't
-> > > do that.  A reasonably smart application can try to evict itself.
-> > 
-> > I don't understand.  What Darrick proposed would never need any
-> > evictions.  If the file has blocks allocated the FS_XFLAG_DAX flag can
-> > not be changed.  So I don't see what good eviction would do at all.
-> 
-> I guess there's some confusion here (may well be than on my side). Darrick
-> propose that we can switch FS_XFLAG_DAX only when file has no blocks
-> allocated - fine by me. But that still does not mean than we can switch
-> S_DAX immediately, does it? Because that would still mean we need to switch
-> aops on living inode and that's ... difficult and Christoph didn't want to
-> clutter the code with it.
+On Thu, Apr 2, 2020 at 10:41 PM <js1304@gmail.com> wrote:
+>
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+>
+> Currently, some swapped-in pages are not charged to the memcg until
+> actual access to the page happens. I checked the code and found that
+> it could cause a problem. In this implementation, even if the memcg
+> is enabled, one can consume a lot of memory in the system by exploiting
+> this hole. For example, one can make all the pages swapped out and
+> then call madvise_willneed() to load the all swapped-out pages without
+> pressing the memcg. Although actual access requires charging, it's really
+> big benefit to load the swapped-out pages to the memory without pressing
+> the memcg.
+>
+> And, for workingset detection which is implemented on the following patch,
+> a memcg should be committed before the workingset detection is executed.
+> For this purpose, the best solution, I think, is charging the page when
+> adding to the swap cache. Charging there is not that hard. Caller of
+> adding the page to the swap cache has enough information about the charged
+> memcg. So, what we need to do is just passing this information to
+> the right place.
+>
+> With this patch, specific memcg could be pressured more since readahead
+> pages are also charged to it now. This would result in performance
+> degradation to that user but it would be fair since that readahead is for
+> that user.
 
-IIRC, the reason Ira was trying to introduce this file operations lock
-is because there isn't any other safe way to change the operations
-dynamically, because some of those operations don't start taking any
-locks at all until after we've accessed the file operations pointer.
+If I read the code correctly, the readahead pages may be *not* charged
+to it at all but other memcgs since mem_cgroup_try_charge() would
+retrieve the target memcg id from the swap entry then charge to it
+(generally it is the memcg from who the page is swapped out). So, it
+may open a backdoor to let one memcg stress other memcgs?
 
-Now that I think about it some more, that's also means we can't change
-S_DAX even on files without blocks allocated.  Look at fallocate, it
-doesn't even take i_rwsem until we've called into (say)
-xfs_file_fallocate.
-
-Ok, so with that in mind, I think we simply have to say that
-FS_XFLAG_DAX is 100% advisory, and S_DAX will magically switch some time
-in the future or after the next umount/mount cycle.
-
-FSSETXATTR can't evict an inode it has just set FS_XFLAG_DAX on, because
-it applies that change to the fd passed into ioctl(), which means that the
-caller has a reference to the fd -> file -> inode, which means the inode
-is unevictable until after the call completes.
-
-IOWs, 
-
-> So I've understood Darrick's proposal as: Just switch FS_XFLAG_DAX flag,
-> S_DAX flag will magically switch when inode gets evicted and the inode gets
-> reloaded from the disk again. Did I misunderstand anything?
-
-That was /my/ understanding. :)
-
-> And my thinking was that this is surprising behavior for the user and so it
-> will likely generate lots of bug reports along the lines of "DAX inode flag
-> does not work!". So I was pondering how to make the behavior less
-> confusing... The ioctl I've suggested was just a poor attempt at that.
-
-At best, userspace uses FSSETXATTR to change FS_XFLAG_DAX, and then
-calls some as-yet-undefined ioctl to try to evict the inode from memory.
-I'm not sure how you'd actually do that, though, considering that you'd
-have to close the fd and as soon as that happens the inode can disappear
-permanently.
-
-Ok, that's not sane.  Forget I ever wrote that.
-
-> > > But returning an error and doing a lazy change anyway is straight from
-> > > the playbook for arcane and confusing API designs.
-> > 
-> > Jan countered with a proposal that the FS_XFLAG_DAX does change with
-> > blocks allocated.  But that S_DAX would change on eviction.  Adding that
-> > some eviction ioctl could be added.
-> 
-> No, I didn't mean that we can change FS_XFLAG_DAX with blocks allocated. I
-> was still speaking about the case without blocks allocated.
-> 
-> > You then proposed just returning an error for that case.  (This lead me to
-> > believe that you were ok with an eviction based change of S_DAX.)
-> > 
-> > So I agreed that changing S_DAX could be delayed until an explicit eviction.
-> > But, to aid the 'smart application', a different error code could be used to
-> > indicate that the FS_XFLAG_DAX had been changed but that until that explicit
-> > eviction occurs S_DAX would remain.
-
-There's no point in returning a magic error code from FSSETXATTR, as I
-realized above.  To restate: FSSETXATTR can't evict the inode, so it
-would always have to return the magic error code.  The best we can do is
-tell userspace that they can set the advisory FS_XFLAG_DAX flag and then
-check STATX_ATTR_DAX immediately afterwards.  If some day in the future
-we get smarter and can change it immediately, the statx output will
-reflect that.
-
-> > So I don't fully follow what you mean by 'lazy change'?
-> > 
-> > Do you still really, really dislike an explicit eviction method for changing
-> > the S_DAX flag?
-> > 
-> > If FS_XFLAG_DAX can never be changed on a file with blocks allocated and the
-> > user wants to change the mode of operations on their 'data'; they would have to
-> > create a new file with the proper setting and move the data there.  For example
-> > copy the file into a directory marked FS_XFLAG_DAX==true?
-> > 
-> > I'm ok with either interface as I think both could be clear if documented.
-> 
-> I agree that what Darrick suggested is technically easily doable and can be
-> documented. But it is not natural behavior (i.e., different than all inode
-> flags we have) and we know how careful people are when reading
-> documentation...
-
-To reflect all that I've rambled in this thread, I withdraw the previous
-paragraph and submit this one for consideration:
-
- - There exists an advisory file inode flag FS_XFLAG_DAX.
-
-   If FS_XFLAG_DAX is set and the fs is on pmem then it will always
-   enable S_DAX at inode load time; if FS_XFLAG_DAX is not set, it will
-   never enable S_DAX.  The advice can be overridden by mount option.
-
-   Changing this flag does not necessarily change the S_DAX state
-   immediately but programs can query the S_DAX state via statx to
-   detect when the new advice has gone into effect.
-
-Consider this from the perspective of minimizing changes to userspace
-programs between now and the future.  If your program really wants
-S_DAX, you can write:
-
-	fd = open(...);
-
-	ioctl(fd, FSGETXATTR, &fsx);
-
-	if (fsx.xflags & FS_XFLAG_DAX)
-		return 0;
-
-	fsx.xflags |= FS_XFLAG_DAX;
-	ioctl(fd, FSSETXATTR, &fsx);
-
-	do {
-		statx(fd, STATX_GIVE_ME_EVERYTHING, &statx);
-		if (statx.attrs & STATX_ATTR_DAX)
-			return 0;
-
-		/* do stupid magic to evict things */
-	} while (we haven't gotten bored and wandered away);
-
-This code snippet will work with the current limitations of the kernel,
-and it'll continue working even on Linux v5000 where we finally figure
-out how to change S_DAX on the fly.
-
---D
-
-> 
-> 
-> 								Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> ---
+>  include/linux/swap.h |  4 ++--
+>  mm/shmem.c           | 18 ++++++++++--------
+>  mm/swap_state.c      | 25 +++++++++++++++++++++----
+>  3 files changed, 33 insertions(+), 14 deletions(-)
+>
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 273de48..eea0700 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -409,7 +409,7 @@ extern unsigned long total_swapcache_pages(void);
+>  extern void show_swap_cache_info(void);
+>  extern int add_to_swap(struct page *page);
+>  extern int add_to_swap_cache(struct page *page, swp_entry_t entry,
+> -                       gfp_t gfp, void **shadowp);
+> +                       struct vm_area_struct *vma, gfp_t gfp, void **shadowp);
+>  extern int __add_to_swap_cache(struct page *page, swp_entry_t entry);
+>  extern void __delete_from_swap_cache(struct page *page,
+>                         swp_entry_t entry, void *shadow);
+> @@ -567,7 +567,7 @@ static inline int add_to_swap(struct page *page)
+>  }
+>
+>  static inline int add_to_swap_cache(struct page *page, swp_entry_t entry,
+> -                                       gfp_t gfp_mask, void **shadowp)
+> +                       struct vm_area_struct *vma, gfp_t gfp, void **shadowp)
+>  {
+>         return -1;
+>  }
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 9e34b4e..8e28c1f 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -1369,7 +1369,7 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
+>         if (list_empty(&info->swaplist))
+>                 list_add(&info->swaplist, &shmem_swaplist);
+>
+> -       if (add_to_swap_cache(page, swap,
+> +       if (add_to_swap_cache(page, swap, NULL,
+>                         __GFP_HIGH | __GFP_NOMEMALLOC | __GFP_NOWARN,
+>                         NULL) == 0) {
+>                 spin_lock_irq(&info->lock);
+> @@ -1434,10 +1434,11 @@ static inline struct mempolicy *shmem_get_sbmpol(struct shmem_sb_info *sbinfo)
+>  #endif
+>
+>  static void shmem_pseudo_vma_init(struct vm_area_struct *vma,
+> -               struct shmem_inode_info *info, pgoff_t index)
+> +                       struct mm_struct *mm, struct shmem_inode_info *info,
+> +                       pgoff_t index)
+>  {
+>         /* Create a pseudo vma that just contains the policy */
+> -       vma_init(vma, NULL);
+> +       vma_init(vma, mm);
+>         /* Bias interleave by inode number to distribute better across nodes */
+>         vma->vm_pgoff = index + info->vfs_inode.i_ino;
+>         vma->vm_policy = mpol_shared_policy_lookup(&info->policy, index);
+> @@ -1450,13 +1451,14 @@ static void shmem_pseudo_vma_destroy(struct vm_area_struct *vma)
+>  }
+>
+>  static struct page *shmem_swapin(swp_entry_t swap, gfp_t gfp,
+> -                       struct shmem_inode_info *info, pgoff_t index)
+> +                       struct mm_struct *mm, struct shmem_inode_info *info,
+> +                       pgoff_t index)
+>  {
+>         struct vm_area_struct pvma;
+>         struct page *page;
+>         struct vm_fault vmf;
+>
+> -       shmem_pseudo_vma_init(&pvma, info, index);
+> +       shmem_pseudo_vma_init(&pvma, mm, info, index);
+>         vmf.vma = &pvma;
+>         vmf.address = 0;
+>         page = swap_cluster_readahead(swap, gfp, &vmf);
+> @@ -1481,7 +1483,7 @@ static struct page *shmem_alloc_hugepage(gfp_t gfp,
+>                                                                 XA_PRESENT))
+>                 return NULL;
+>
+> -       shmem_pseudo_vma_init(&pvma, info, hindex);
+> +       shmem_pseudo_vma_init(&pvma, NULL, info, hindex);
+>         page = alloc_pages_vma(gfp | __GFP_COMP | __GFP_NORETRY | __GFP_NOWARN,
+>                         HPAGE_PMD_ORDER, &pvma, 0, numa_node_id(), true);
+>         shmem_pseudo_vma_destroy(&pvma);
+> @@ -1496,7 +1498,7 @@ static struct page *shmem_alloc_page(gfp_t gfp,
+>         struct vm_area_struct pvma;
+>         struct page *page;
+>
+> -       shmem_pseudo_vma_init(&pvma, info, index);
+> +       shmem_pseudo_vma_init(&pvma, NULL, info, index);
+>         page = alloc_page_vma(gfp, &pvma, 0);
+>         shmem_pseudo_vma_destroy(&pvma);
+>
+> @@ -1652,7 +1654,7 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
+>                         count_memcg_event_mm(charge_mm, PGMAJFAULT);
+>                 }
+>                 /* Here we actually start the io */
+> -               page = shmem_swapin(swap, gfp, info, index);
+> +               page = shmem_swapin(swap, gfp, charge_mm, info, index);
+>                 if (!page) {
+>                         error = -ENOMEM;
+>                         goto failed;
+> diff --git a/mm/swap_state.c b/mm/swap_state.c
+> index f06af84..1db73a2 100644
+> --- a/mm/swap_state.c
+> +++ b/mm/swap_state.c
+> @@ -112,7 +112,7 @@ void show_swap_cache_info(void)
+>   * but sets SwapCache flag and private instead of mapping and index.
+>   */
+>  int add_to_swap_cache(struct page *page, swp_entry_t entry,
+> -                       gfp_t gfp, void **shadowp)
+> +                       struct vm_area_struct *vma, gfp_t gfp, void **shadowp)
+>  {
+>         struct address_space *address_space = swap_address_space(entry);
+>         pgoff_t idx = swp_offset(entry);
+> @@ -120,14 +120,26 @@ int add_to_swap_cache(struct page *page, swp_entry_t entry,
+>         unsigned long i, nr = compound_nr(page);
+>         unsigned long nrexceptional = 0;
+>         void *old;
+> +       bool compound = !!compound_order(page);
+> +       int error;
+> +       struct mm_struct *mm = vma ? vma->vm_mm : current->mm;
+> +       struct mem_cgroup *memcg;
+>
+>         VM_BUG_ON_PAGE(!PageLocked(page), page);
+>         VM_BUG_ON_PAGE(PageSwapCache(page), page);
+>         VM_BUG_ON_PAGE(!PageSwapBacked(page), page);
+>
+>         page_ref_add(page, nr);
+> +       /* PageSwapCache() prevent the page from being re-charged */
+>         SetPageSwapCache(page);
+>
+> +       error = mem_cgroup_try_charge(page, mm, gfp, &memcg, compound);
+> +       if (error) {
+> +               ClearPageSwapCache(page);
+> +               page_ref_sub(page, nr);
+> +               return error;
+> +       }
+> +
+>         do {
+>                 xas_lock_irq(&xas);
+>                 xas_create_range(&xas);
+> @@ -153,11 +165,16 @@ int add_to_swap_cache(struct page *page, swp_entry_t entry,
+>                 xas_unlock_irq(&xas);
+>         } while (xas_nomem(&xas, gfp));
+>
+> -       if (!xas_error(&xas))
+> +       if (!xas_error(&xas)) {
+> +               mem_cgroup_commit_charge(page, memcg, false, compound);
+>                 return 0;
+> +       }
+> +
+> +       mem_cgroup_cancel_charge(page, memcg, compound);
+>
+>         ClearPageSwapCache(page);
+>         page_ref_sub(page, nr);
+> +
+>         return xas_error(&xas);
+>  }
+>
+> @@ -221,7 +238,7 @@ int add_to_swap(struct page *page)
+>         /*
+>          * Add it to the swap cache.
+>          */
+> -       err = add_to_swap_cache(page, entry,
+> +       err = add_to_swap_cache(page, entry, NULL,
+>                         __GFP_HIGH|__GFP_NOMEMALLOC|__GFP_NOWARN, NULL);
+>         if (err)
+>                 /*
+> @@ -431,7 +448,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+>                 /* May fail (-ENOMEM) if XArray node allocation failed. */
+>                 __SetPageLocked(new_page);
+>                 __SetPageSwapBacked(new_page);
+> -               err = add_to_swap_cache(new_page, entry,
+> +               err = add_to_swap_cache(new_page, entry, vma,
+>                                 gfp_mask & GFP_KERNEL, NULL);
+>                 if (likely(!err)) {
+>                         /* Initiate read into locked page */
+> --
+> 2.7.4
+>
+>
