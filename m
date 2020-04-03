@@ -2,250 +2,191 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8DFC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD79CC2BA18
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FD2206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYjbsCof"
+	by mail.kernel.org (Postfix) with ESMTP id AE8B7206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbgDCX0N (ORCPT
+        id S1728584AbgDCX2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 19:26:13 -0400
-Received: from mail-ed1-f53.google.com ([209.85.208.53]:34281 "EHLO
-        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgDCX0M (ORCPT
+        Fri, 3 Apr 2020 19:28:32 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:56404 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726899AbgDCX2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 19:26:12 -0400
-Received: by mail-ed1-f53.google.com with SMTP id o1so11341736edv.1;
-        Fri, 03 Apr 2020 16:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sBEYU6dVbdfEFyer1fcNa3qb5j21cZVbtVGi72NYCaA=;
-        b=jYjbsCofi20e2JE9P2PqSwBGP821zDzxShm7OKPvv7o4Iw+7QorL3h6G0b7lwfZTkz
-         ezh7KJQgltU1Zl2pAyeeg7msiaGlxN80BFit4yTcobHYHKUZmgH14aafqKWyxa+PDGDr
-         ol3zxsrprBD5ax2hiT15jK+wPPXpwxMY4JXGe64MSUlhNmxgng80MUbXzs7SlSbND3wv
-         +kFojSvHbEutYmDJgHnz07GQGKcJpisV5BWZwCV01jmueBA+bkZxcUjX4GlWM8Cf3K70
-         MwY1UPntqa1WD2mEcxXVrplTdaFvZczuPTsEuI76MZINGfmwWkvADts6OebE1mEULlVq
-         mjQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sBEYU6dVbdfEFyer1fcNa3qb5j21cZVbtVGi72NYCaA=;
-        b=tV3zPotIq4l5oWa7yEwmLPeE2f7luF4LekHFUAPsLK1aLjLQ9f/7G4UUAnKcfuOvY4
-         Tty5g29U1Ptvi2Q7V+qEESULrKe+NNVquD/rPuloWZH+fGNXfe/AwZpjF/rKFH6awOkA
-         1Q/mr+/RKDpO+t9/QwpVhQQHNoAPO8NYECOYtkg0aTpCwDnbtDsGlCg2b6CJVxjGMKSO
-         MkqcV8M+DJHbFyNNZBc69/l39vfnAd298hJOhMssp4qNXeRbWgHR6MeuY2Xip5+cA5mj
-         k/RIW/iLcb2HgSZoMYJbMc0sZNBW0mgOKospe1C2izcVaRa8nG+vfnuXi9K+rByrs60K
-         7kNA==
-X-Gm-Message-State: AGi0Pubp3RaqOKeAk4TUd0qQ60nfl+Pt9V3dPH3HLGTyiGIFmzBayphx
-        0QnE8eZSFPxUNNs+1KqM47I=
-X-Google-Smtp-Source: APiQypK9y1LZRxyHO71Blj7cAf/YO9PLFj9WyABrfO30MPRaK2n91iyn2VAk7GNLH/85ljMJyhgigA==
-X-Received: by 2002:a17:906:4e45:: with SMTP id g5mr4816707ejw.295.1585956370201;
-        Fri, 03 Apr 2020 16:26:10 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host133-251-dynamic.52-79-r.retail.telecomitalia.it. [79.52.251.133])
-        by smtp.googlemail.com with ESMTPSA id o27sm517717ejc.23.2020.04.03.16.26.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 16:26:09 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 2/2] devicetree: bindings: phy: Document ipq806x dwc3 qcom phy
-Date:   Sat,  4 Apr 2020 01:25:57 +0200
-Message-Id: <20200403232559.25716-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200403232559.25716-1-ansuelsmth@gmail.com>
-References: <20200403232559.25716-1-ansuelsmth@gmail.com>
+        Fri, 3 Apr 2020 19:28:32 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 78475634C8C;
+        Sat,  4 Apr 2020 02:27:37 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jKViq-0001ju-HC; Sat, 04 Apr 2020 02:27:36 +0300
+Date:   Sat, 4 Apr 2020 02:27:36 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200403232736.GA6127@valkosipuli.retiisi.org.uk>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org>
+ <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
+ <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-inizialize and use usb on ipq806x SoC.
+Hi Robert,
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 66 ++++++++++++++++
- .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 78 +++++++++++++++++++
- 2 files changed, 144 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+On Thu, Apr 02, 2020 at 12:10:00PM +0200, Robert Foss wrote:
+> Hey Maxime,
+> 
+> On Wed, 1 Apr 2020 at 10:07, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > Hi,
+> >
+> > On Tue, Mar 31, 2020 at 03:33:44PM +0200, Robert Foss wrote:
+> > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > >
+> > > This patch adds documentation of device tree in YAML schema for the
+> > > OV8856 CMOS image sensor.
+> > >
+> > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> > > ---
+> > >
+> > > - Changes since v5:
+> > >   * Add assigned-clocks and assigned-clock-rates
+> > >   * robher: dt-schema errors
+> > >
+> > > - Changes since v4:
+> > >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+> > >   * Add clock-lanes property to example
+> > >   * robher: Fix syntax error in devicetree example
+> > >
+> > > - Changes since v3:
+> > >   * robher: Fix syntax error
+> > >   * robher: Removed maxItems
+> > >   * Fixes yaml 'make dt-binding-check' errors
+> > >
+> > > - Changes since v2:
+> > >   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+> > >   * Convert text documentation to YAML schema.
+> > >
+> > > - Changes since v1:
+> > >   Fixes comments from Sakari, Tomasz
+> > >   * Add clock-frequency and link-frequencies in DT
+> > >
+> > >  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
+> > >  MAINTAINERS                                   |   1 +
+> > >  2 files changed, 151 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > new file mode 100644
+> > > index 000000000000..beeddfbb8709
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > @@ -0,0 +1,150 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +# Copyright (c) 2019 MediaTek Inc.
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Ben Kao <ben.kao@intel.com>
+> > > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > +
+> > > +description: |-
+> > > +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> > > +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> > > +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> > > +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> > > +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> > > +  serial data output (up to 4-lane).
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: ovti,ov8856
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    description:
+> > > +      Input clock for the sensor.
+> > > +    items:
+> > > +      - const: xvclk
+> > > +
+> > > +  clock-frequency:
+> > > +    description:
+> > > +      Frequency of the xvclk clock in Hertz.
+> >
+> > We also had that discussion recently for another omnivision sensor
+> > (ov5645 iirc), but what is clock-frequency useful for?
+> >
+> > It seems that the sensor is passed in clocks, so if you need to
+> > retrieve the clock rate you should use the clock API instead.
+> >
+> > Looking at the driver, it looks like it first retrieves the clock, set
+> > it to clock-frequency, and then checks that this is OV8856_XVCLK_19_2
+> > (19.2 MHz).
+> 
+> As far as I understand it, 19.2MHz is requirement for the sensor mode
+> that currently defaults to. Some modes require higher clock speeds
+> than this however.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-new file mode 100644
-index 000000000000..c1d690ce646b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-hs
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  regmap:
-+    maxItems: 1
-+    description: phandle to usb3 dts definition
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      - "ref" Is required
-+      - "xo"	Optional external reference clock
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - regmap
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    hs_phy_0: hs_phy_0 {
-+      compatible = "qcom,ipq806x-usb-phy-hs";
-+      regmap = <&usb3_0>;
-+      clocks = <&gcc USB30_0_UTMI_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
-+
-+    usb3_0: usb3@110f8800 {
-+      compatible = "qcom,dwc3", "syscon";
-+      reg = <0x110f8800 0x8000>;
-+
-+      /* ... */
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-new file mode 100644
-index 000000000000..53a07b35c3e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-ss
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  regmap:
-+    maxItems: 1
-+    description: phandle to usb3 dts definition
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      - "ref" Is required
-+      - "xo"	Optional external reference clock
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+  rx_eq:
-+    maxItems: 1
-+    description: Override value for rx_eq. Default is 4.
-+
-+  tx_deamp_3_5db:
-+    maxItems: 1
-+    description: Override value for transmit preemphasis. Default is 23.
-+
-+  mpll:
-+    maxItems: 1
-+    description: Override value for mpll. Default is 0.
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - regmap
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    ss_phy_0: ss_phy_0 {
-+      compatible = "qcom,ipq806x-usb-phy-ss";
-+      regmap = <&usb3_0>;
-+      clocks = <&gcc USB30_0_MASTER_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
-+
-+    usb3_0: usb3@110f8800 {
-+      compatible = "qcom,dwc3", "syscon";
-+      reg = <0x110f8800 0x8000>;
-+
-+      /* ... */
-+    };
+It's very system specific. Either way, bindings should not assume a
+particular driver implementation.
+
+> 
+> >
+> > The datasheet says that the sensor can have any frequency in the 6 -
+> > 27 MHz range, so this is a driver limitation and should be set in the
+> > driver using the clock API, and you can always bail out if it doesn't
+> > provide a rate that is not acceptable for the drivers assumption.
+> >
+> > In any case, you don't need clock-frequency here...
+> 
+> So your suggestion is that we remove all clocks-rate properties, and
+> replace the clk_get_rate() calls in the driver with clk_set_rate()
+> calls for the desired frequencies?
+
+The driver shouldn't set the rate here unless it gets it from DT (but that
+was not the intention). So the driver should get the frequency instead.
+
 -- 
-2.25.1
+Regards,
 
+Sakari Ailus
