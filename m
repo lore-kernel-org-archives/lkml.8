@@ -2,143 +2,142 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4728C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D981C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88BD20721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:45:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N6CyMjyf"
+	by mail.kernel.org (Postfix) with ESMTP id EF25C20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403769AbgDCJpM (ORCPT
+        id S2390690AbgDCJq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:45:12 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40718 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727792AbgDCJpM (ORCPT
+        Fri, 3 Apr 2020 05:46:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53440 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727912AbgDCJq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:45:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585907111;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kS5ENOsGNL/0nyuCfyKnLwjxvhjQBYybEvJXw0BjaFU=;
-        b=N6CyMjyfxzVd2bl3Ieg8IQRkyQwr+KrNBJwqE3canQOsDx++SvIAbi16RWUYcB9yZ4pb0P
-        gdQrSVFyEVTojUgNStPg6Gnb7kxFfEXaJl0s8rQ5uVRMYCIJIr/G2pucB/5B7k6tYHOpUJ
-        H+SVHAMqZ8yO3cZUhduWUO+HhefLcak=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300--DxnThAKPHSW_oUQrNHOgA-1; Fri, 03 Apr 2020 05:45:09 -0400
-X-MC-Unique: -DxnThAKPHSW_oUQrNHOgA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3FD2108442D;
-        Fri,  3 Apr 2020 09:45:07 +0000 (UTC)
-Received: from krava (unknown [10.40.194.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 423C7B19A5;
-        Fri,  3 Apr 2020 09:45:03 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 11:45:00 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH] perf stat: Fix no metric header if --per-socket and
- --metric-only set
-Message-ID: <20200403094500.GH2784502@krava>
-References: <20200331180226.25915-1-yao.jin@linux.intel.com>
+        Fri, 3 Apr 2020 05:46:59 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0339XrJ1029449
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 05:46:58 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3043ga7npd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:46:57 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <prudo@linux.ibm.com>;
+        Fri, 3 Apr 2020 10:46:35 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 Apr 2020 10:46:32 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0339kpuS57933880
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 09:46:51 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3CEAAAE051;
+        Fri,  3 Apr 2020 09:46:51 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD1B7AE045;
+        Fri,  3 Apr 2020 09:46:50 +0000 (GMT)
+Received: from laptop2-ibm.local (unknown [9.145.155.48])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 09:46:50 +0000 (GMT)
+Date:   Fri, 3 Apr 2020 11:46:49 +0200
+From:   Philipp Rudo <prudo@linux.ibm.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Jeremy Cline <jcline@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Michal Kubecek <mkubecek@suse.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: add dummy toolchains to enable all cc-option
+ etc. in Kconfig
+In-Reply-To: <20200403090224.24045-1-masahiroy@kernel.org>
+References: <20200403090224.24045-1-masahiroy@kernel.org>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331180226.25915-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040309-0020-0000-0000-000003C0C410
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040309-0021-0000-0000-000022197373
+Message-Id: <20200403114649.1c1a149f@laptop2-ibm.local>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_06:2020-04-02,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 malwarescore=0 mlxlogscore=880 impostorscore=0 clxscore=1011
+ phishscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 02:02:26AM +0800, Jin Yao wrote:
-> We received a report that was no metric header displayed if --per-socket
-> and --metric-only were both set.
-> 
-> It's hard for script to parse the perf-stat output. This patch fixes this
-> issue.
-> 
-> Before:
-> 
->   root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
->   ^C
->    Performance counter stats for 'system wide':
-> 
->   S0        8                  2.6
-> 
->          2.215270071 seconds time elapsed
-> 
->   root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
->   #           time socket cpus
->        1.000411692 S0        8                  2.2
->        2.001547952 S0        8                  3.4
->        3.002446511 S0        8                  3.4
->        4.003346157 S0        8                  4.0
->        5.004245736 S0        8                  0.3
-> 
-> After:
-> 
->   root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
->   ^C
->    Performance counter stats for 'system wide':
-> 
->                                CPI
->   S0        8                  2.1
-> 
->          1.813579830 seconds time elapsed
-> 
->   root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
->   #           time socket cpus                  CPI
->        1.000415122 S0        8                  3.2
->        2.001630051 S0        8                  2.9
->        3.002612278 S0        8                  4.3
->        4.003523594 S0        8                  3.0
->        5.004504256 S0        8                  3.7
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Hi Masahiro,
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+On Fri,  3 Apr 2020 18:02:24 +0900
+Masahiro Yamada <masahiroy@kernel.org> wrote:
 
-thanks,
-jirka
+> Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
+> options your compiler does not support. This works well if you configure
+> and build the kernel on the same host machine.
+> 
+> It is inconvenient if you prepare the .config that is carried to a
+> different build environment (typically this happens when you package
+> the kernel for distros) because using a different compiler potentially
+> produces different CONFIG options than the real build environment.
+> So, you probably want to make as many options visible as possible.
+> In other words, you need to create a super-set of CONFIG options that
+> cover any build environment. If some of the CONFIG options turned out
+> to be unsupported on the build machine, they are automatically disabled
+> by the nature of Kconfig.
+> 
+> However, it is not feasible to get a full-featured compiler for every
+> arch.
+> 
+> This issue was discussed here:
+> 
+>   https://lkml.org/lkml/2019/12/9/620
+> 
+> Other than distros, savedefconfig is also a problem. Some arch subsytems
+> periodically resync defconfig files. If you use a less-capable compiler
+> for savedefconfig, options that do not meet 'depends on $(cc-option,...)'
+> will be forcibly disabled. So, defconfig && savedefconfig may silently
+> change the behavior.
+> 
+> This commit adds a set of dummy toolchains that pretend to support any
+> feature.
+> 
+> Most of compiler features are tested by cc-option, which simply checks
+> the exit code of $(CC). The dummy tools are just a shell script that
+> exits with 0 in most cases. So, $(cc-option, ...) is evaluated as 'y'.
+> 
+> There are more complicated checks such as:
+> 
+>   scripts/gcc-x86_{32,64}-has-stack-protector.sh
+>   scripts/gcc-plugin.sh
+>   scripts/tools-support-relr.sh
+> 
+> I tried my best to implement the dummy scripts to pass all checks.
+> 
+> From the top directory of the source tree, you can do:
+> 
+>    $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-> ---
->  tools/perf/util/stat-shadow.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> index 0fd713d3674f..03ecb8cd0eec 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -803,8 +803,11 @@ static void generic_metric(struct perf_stat_config *config,
->  				     out->force_header ?
->  				     (metric_name ? metric_name : name) : "", 0);
->  		}
-> -	} else
-> -		print_metric(config, ctxp, NULL, NULL, "", 0);
-> +	} else {
-> +		print_metric(config, ctxp, NULL, NULL,
-> +			     out->force_header ?
-> +			     (metric_name ? metric_name : name) : "", 0);
-> +	}
->  
->  	for (i = 1; i < pctx.num_ids; i++)
->  		zfree(&pctx.ids[i].name);
-> -- 
-> 2.17.1
-> 
+look good to me
+
+Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
+
+Thanks a lot
+Philipp
 
