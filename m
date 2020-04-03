@@ -2,294 +2,261 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95C5C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D12AC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86FDA207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365932080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:49:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIFeEpOz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fWh1K0Uw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgDCVqh (ORCPT
+        id S1728126AbgDCVs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:46:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43373 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbgDCVqh (ORCPT
+        Fri, 3 Apr 2020 17:48:59 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48038 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgDCVs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:46:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w15so4017936wrv.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 14:46:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=v+iGE8oCdknnpLmOrrqR6BJMhA0bX9IgV8fpeXtQ5J0=;
-        b=MIFeEpOzrtF50CYfGfCWVPnqO4KbHC2Sn9NyluzFXcVN9AXY6JcYpMTUfV+XVHje8y
-         o4sPQglPkr7+4A/cEHACtRxJKElF7det8wgP18jiG/8WFbg7s44CkizK2rtjxuHkikGL
-         rcbQrnHhYhfJ6DcrSBWx2EfnkYj618fAn5QhxDCcyM5R+yrIN9LOgqfnXPecGA1dAKWM
-         KjCwCIsyHA2/JAPAV+El0oqGixL8dfe5PvLtvJGtd0JUX+fIFV7ESKCwStaOgAPqdNX2
-         X3HMQu0s+9mzyrdipv9lcOuGvA4d7TEjBAQzhu0ikj/F0uKktjgW2JkOeOhdIAb7KaAS
-         Qogw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=v+iGE8oCdknnpLmOrrqR6BJMhA0bX9IgV8fpeXtQ5J0=;
-        b=dPUNBMWufsd29ADehCIGwy7lwn9RjZis/RXYZMimFR6TgyRV5ErAj/7Bhu6kh8Embb
-         rO+kfy3LSEGExFFmeicA2PmA8g8/2d/1VwK4D6bIeV8feigPgkieFyUUnPqekZTG5DRr
-         zz9w0oZRhdloRq8sp2+ZqZpbHdP6XaoN31E7g/htU6h7NqXVw1szjP6yV+SZlZ567HMy
-         cXmUa55fmwXwmnCpeH1DS2kTL4XcQFjs/9KAZhuTczjPab1Gliflb4ABJSolr99eg7gP
-         jqIqaQua3wNPI7nIEn8c+b+8J0RioBe0d8nnnBCyF97e0q4pe/1akgFz2RR9aGug2wKH
-         iqQA==
-X-Gm-Message-State: AGi0Pub1WMxe003YOy8aJl3+0MDIorOLcz0ReGRg+TeTY9VUcY3HDVTE
-        3yjWtYkOhq6Yn7bqjHRMZTI6bqxB1Fmr9D2VYtE=
-X-Google-Smtp-Source: APiQypIvGXoRArWnzY9VhQZKGNTTHUzl+dkL4Yr2T4iVaq5crIPD6a6+IehQ6ZrNo6MUVm2I++obaAfyLqJ+hYKBJtg=
-X-Received: by 2002:adf:e48a:: with SMTP id i10mr11745336wrm.71.1585950394605;
- Fri, 03 Apr 2020 14:46:34 -0700 (PDT)
+        Fri, 3 Apr 2020 17:48:58 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033LcvPl174793;
+        Fri, 3 Apr 2020 21:48:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=R4OFvOChQLjAMGwJPXTNmdMeH+x3uXolVLopD8/ykpY=;
+ b=fWh1K0Uwwg6tZViwQodLCu7IX2SIqZpOIKDKEBHIS4pDizu4KLDasB1BzxsqvzFPlRpj
+ AHtvQTmyBNu1oT/HqpDljqUMXpk+wMYcu9vnkOOQVpZobPfkWzZzkbvFBavIZVGtD8TZ
+ YCmjg7YQolnVSS+h230ByZtuIrnSYdZDrTaoBOdmFMAJrlXNO+CI3r0+cpczSUVzwHu1
+ bwtmodFp/9lVrpGuY3ttcqDYZ3m93i+ilf3kfwN0pxhFiuUbrYZMpACnveRYzmxMZrIj
+ bxiT4vCSj9lJcG3KgBOrB2dkQfczXaBLJcU3mBtL304LNJE/GQo+MrF1GzX7m+u6acPQ QA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 303aqj3ttw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 21:48:39 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033LbCvV035202;
+        Fri, 3 Apr 2020 21:46:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 302g2p0ybv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 Apr 2020 21:46:39 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033LkbIO017820;
+        Fri, 3 Apr 2020 21:46:37 GMT
+Received: from vbusired-dt (/10.154.116.130)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 21:46:37 +0000
+Date:   Fri, 3 Apr 2020 16:46:32 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rientjes@google.com,
+        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
+Subject: Re: [PATCH v6 11/14] KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP
+ ioctl
+Message-ID: <20200403214632.GA730481@vbusired-dt>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <4d4fbe2b9acda82c04834682900acf782182ec23.1585548051.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-References: <CAE3Pknn88NZNqiaHahM4HVvTU82hdMcbhGWWb4AyXXYMbcGuaQ@mail.gmail.com>
- <3ebbe879471898218f34918b1d009887@kernel.org> <CAE3PknnmUBPfCjJUxwLaTjAqU4tYXxakvH+qZTwYYyw4SS_DiA@mail.gmail.com>
- <20200403130327.6d961882@why> <CAE3Pknkq3+B=z32ZRsQS1aM1+EqGnysMY4pitFdpOKGmv4ax8Q@mail.gmail.com>
-In-Reply-To: <CAE3Pknkq3+B=z32ZRsQS1aM1+EqGnysMY4pitFdpOKGmv4ax8Q@mail.gmail.com>
-From:   =?UTF-8?Q?Lu=C3=ADs_Matallui?= <matallui@gmail.com>
-Date:   Fri, 3 Apr 2020 15:46:23 -0600
-Message-ID: <CAE3Pkn=e5FgvKAxMXWHSPDM7GruSq-udFsb0aAsCQvXs65o8Sg@mail.gmail.com>
-Subject: Re: Help with IRQ-MSI-IRQ bridges
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4d4fbe2b9acda82c04834682900acf782182ec23.1585548051.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=1 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030168
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Marc,
+On 2020-03-30 06:22:55 +0000, Ashish Kalra wrote:
+> From: Brijesh Singh <Brijesh.Singh@amd.com>
+> 
+> The ioctl can be used to set page encryption bitmap for an
+> incoming guest.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-Just wanted to close this thread and thank you for the help.
-Using that handle_fasteoi_ack_irq() saved my life.
+Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
 
-I was just having trouble unrelated to this, but some poorly documented SoC=
-.
-
-Thanks again!
-Luis
-
-On Fri, 3 Apr 2020 at 07:26, Lu=C3=ADs Matallui <matallui@gmail.com> wrote:
->
-> On Fri, 3 Apr 2020 at 06:03, Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > On Fri, 3 Apr 2020 05:13:35 -0600
-> > Lu=C3=ADs Matallui <matallui@gmail.com> wrote:
-> >
-> > > Hi Marc,
-> > >
-> > > On Fri, 3 Apr 2020 at 04:18, Marc Zyngier <maz@kernel.org> wrote:
-> > > >
-> > > > Hi Luis,
-> > > >
-> > > > On 2020-04-03 02:35, Lu=C3=ADs Matallui wrote:
-> > > > > Hi,
-> > > > >
-> > > > > I've got this SoC which uses IRQ-MSI and MSI-IRQ bridges in order=
- to
-> > > > > get interrupts from devices external to the ARM subsystem.
-> > > > > I already got some pointers from Maz and have been able to create=
- the
-> > > > > drivers with the stacked domains and can now see the mappings wor=
-king
-> > > > > fine across domains.
-> > > > >
-> > > > > Maz pointed me to the Marvell mvebu-gicp (for my MSI controller, =
-a.k.a
-> > > > > MSI-IRQ bridge) and to mvebu-icu for the MSI client (IRQ-MSI brid=
-ge).
-> > > > >
-> > > > > I now have the interrupts working, but it seems like I'm missing =
-a
-> > > > > bunch of them. And therefore my device doesn't work properly.
-> > > > > The main difference between my HW and Marvell's is that my IRQs a=
-re
-> > > > > not level-triggered and the MSIs don't support the two messages f=
-or
-> > > > > level-triggered interrupts.
-> > > >
-> > > > Which is probably a very good thing, as long as all your devices
-> > > > generate
-> > > > only edge-triggered interrupts.
-> > > >
-> > > > >
-> > > > > To illustrate my system:
-> > > > >
-> > > > > DEV --line--> IRQ-MSI Bridge (MSIC) --msi--> MSI-IRQ Bridge (GICP=
-)
-> > > > > --line--> GICv2
-> > > > >
-> > > > > For MSIC, all I can do is configure the address and data for the =
-MSI,
-> > > > > and I believe on every rising edge of the Device IRQ, an MSI is s=
-ent.
-> > > > > For GICP, all I have is a doorbell and a way to enable/disable it=
-, and
-> > > > > whenever the doorbell is enabled and has a value !=3D 0, the IRQ =
-line to
-> > > > > GICv2 gets asserted.
-> > > > >
-> > > > > The first thing I noticed is that when I get an interrupt, the IR=
-Q
-> > > > > flow goes like:
-> > > > >
-> > > > >   handle_irq();
-> > > > >   irq_eoi();
-> > > > >
-> > > > > So, I guess my first question here is, how can I guarantee that I
-> > > > > don't get another MSI whilst in handle_irq()?
-> > > >
-> > > > At the GIC level, once the interrupt is Ack'd, anything that is sig=
-ned
-> > > > after this ack is a separate interrupt. It will be made pending and=
- will
-> > > > fire once the GIC driver EOIs the first one.
-> > >
-> > > The thing here is, there is no Ack, or at least my irqchips are not g=
-etting
-> > > the irq_ack() callback, which is where I was expecting to clear the d=
-oorbell.
-> >
-> > Not getting an irq_ack() here is expected, as the GIC uses the fast_eoi
-> > flow, which doesn't use irq_ack() at all. If you really want irq_ack()
-> > to be called, you'll need to change that flow for the specified
-> > interrupts (handle_fasteoi_ack_irq is probably of interest).
-> >
->
-> I had tried level and trigger flow handlers and was always getting weird =
-hangs,
-> so never even attempted that, but with that handler I do get the Ack call=
-s now.
->
-> I'm still missing the interrupts, so I'm starting to believe I'm just
-> doing something
-> else wrong.
->
-> > >
-> > > >
-> > > > > If I do, then I will clear the doorbell on irq_eoi() (because tha=
-t's
-> > > > > my only choice) and will lose the queued IRQs.
-> > > >
-> > > > Why do you need to do anything at the doorbell level? This is just =
-a
-> > > > write,
-> > > > so there should be nothing to clear. If you do need to clear anythi=
-ng,
-> > > > then your MSI-IRQ bridge isn't stateless as it should, and you'll n=
-eed
-> > > > to
-> > > > give much more details about the HW. Do you have a pointer to the T=
-RM
-> > > > for your HW?
-> > >
-> > > The hardware is really simple. On the MSI controller (GICP) side, eac=
-h
-> > > interrupt only has 3 registers: 1 status, 1 mask and 1 clear. When an
-> > > MSI lands a write on the status register, it asserts the interrupt li=
-ne.
-> > > The interrupt stays asserted until we clear the status (using the cle=
-ar
-> > > register). The mask register is just to enable the interrupt basicall=
-y.
-> > > The MSI data is really irrelevant, as long as it's non-zero we always
-> > > obtain the same result.
-> >
-> > Does it mean it asserts a level each time it gets an edge, and you need
-> > to clear the MSI to allow another one? If so, that's a bit silly. it
-> > would have made a lot more sense to leave it flowing to the GIC where
-> > all the logic is already present.
->
-> Yes! I totally agree this is silly, but I'm pretty sure that's how it
-> works. I will
-> try to reach out to the SoC team to double check, but from their document=
-ation,
-> they say the interrupt line will stay asserted as long as the doorbell st=
-atus
-> value is different than 0, so until we manually clear it, it stays assert=
-ed.
->
-> > >
-> > > On the MSI client side, we only configure the MSI address and data fo=
-r
-> > > a certain device interrupt line, and for each rising edge, an MSI get=
-s issued.
-> > >
-> > > >
-> > > > > It also seems that I'm missing IRQs in the beginning after probin=
-g the
-> > > > > device, and before it was working for me when I was setting up al=
-l
-> > > > > these registers manually and simply using GICv2 as my only interr=
-upt
-> > > > > controller.
-> > > >
-> > > > Well, setting all of this in firmware is always the preferred optio=
-n
-> > > > if you don't expect things to change dynamically.
-> > >
-> > > Well, the solution I have now works perfectly for the configuration, =
-because
-> > > the MSIC gets configured by msi_compose_msg -> msi_write_msg at IRQ
-> > > allocation time and never gets touched again.
-> > >
-> > > Then when the IRQ gets activated, the GICP is unmasking the interrupt=
- but
-> > > enabling the doorbell (setting the mask register).
-> > >
-> > > The only thing I really need is to intercept every MSI before the han=
-dler so
-> > > I can Ack it by clearing the doorbell status register.
-> >
-> > See above.
-> >
-> > > > > I do see the unmask() ops being called for all my stacked irqchip=
-s, so
-> > > > > I don't understand how I'm missing so many interrupts.
-> > > >
-> > > > unmask is just a static configuration to enable the interrupt. Ther=
-e
-> > > > shouldn't
-> > > > be that many calls to that later on unless an endpoint driver
-> > > > disables/enables
-> > > > interrupts by hand.
-> > > >
-> > > > Please give us a bit more details to understand the context, as the=
-re is
-> > > > only
-> > > > so much I can do with so little HW information.
-> > > >
-> > > > Thanks,
-> > > >
-> > > >          M.
-> > > > --
-> > > > Jazz is not dead. It just smells funny...
-> > >
-> > > Let me know if that is good enough information. There's really not mu=
-ch on
-> > > the HW side.
-> >
-> > If I'm correct above, I'd say there is a bit too much there! ;-)
-> >
-> >         M.
-> > --
-> > Jazz is not dead. It just smells funny...
->
-> Thanks again Marc!
-> Let me try to reach out to the SoC guys and try to figure out what
-> else I'm doing
-> wrong. I will give you an update once I figure it out.
->
-> -- Luis
+> ---
+>  Documentation/virt/kvm/api.rst  | 22 +++++++++++++++++
+>  arch/x86/include/asm/kvm_host.h |  2 ++
+>  arch/x86/kvm/svm.c              | 42 +++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/x86.c              | 12 ++++++++++
+>  include/uapi/linux/kvm.h        |  1 +
+>  5 files changed, 79 insertions(+)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 8ad800ebb54f..4d1004a154f6 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -4675,6 +4675,28 @@ or shared. The bitmap can be used during the guest migration, if the page
+>  is private then userspace need to use SEV migration commands to transmit
+>  the page.
+>  
+> +4.126 KVM_SET_PAGE_ENC_BITMAP (vm ioctl)
+> +---------------------------------------
+> +
+> +:Capability: basic
+> +:Architectures: x86
+> +:Type: vm ioctl
+> +:Parameters: struct kvm_page_enc_bitmap (in/out)
+> +:Returns: 0 on success, -1 on error
+> +
+> +/* for KVM_SET_PAGE_ENC_BITMAP */
+> +struct kvm_page_enc_bitmap {
+> +	__u64 start_gfn;
+> +	__u64 num_pages;
+> +	union {
+> +		void __user *enc_bitmap; /* one bit per page */
+> +		__u64 padding2;
+> +	};
+> +};
+> +
+> +During the guest live migration the outgoing guest exports its page encryption
+> +bitmap, the KVM_SET_PAGE_ENC_BITMAP can be used to build the page encryption
+> +bitmap for an incoming guest.
+>  
+>  5. The kvm_run structure
+>  ========================
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 27e43e3ec9d8..d30f770aaaea 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1271,6 +1271,8 @@ struct kvm_x86_ops {
+>  				  unsigned long sz, unsigned long mode);
+>  	int (*get_page_enc_bitmap)(struct kvm *kvm,
+>  				struct kvm_page_enc_bitmap *bmap);
+> +	int (*set_page_enc_bitmap)(struct kvm *kvm,
+> +				struct kvm_page_enc_bitmap *bmap);
+>  };
+>  
+>  struct kvm_arch_async_pf {
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index bae783cd396a..313343a43045 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7756,6 +7756,47 @@ static int svm_get_page_enc_bitmap(struct kvm *kvm,
+>  	return ret;
+>  }
+>  
+> +static int svm_set_page_enc_bitmap(struct kvm *kvm,
+> +				   struct kvm_page_enc_bitmap *bmap)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +	unsigned long gfn_start, gfn_end;
+> +	unsigned long *bitmap;
+> +	unsigned long sz, i;
+> +	int ret;
+> +
+> +	if (!sev_guest(kvm))
+> +		return -ENOTTY;
+> +
+> +	gfn_start = bmap->start_gfn;
+> +	gfn_end = gfn_start + bmap->num_pages;
+> +
+> +	sz = ALIGN(bmap->num_pages, BITS_PER_LONG) / 8;
+> +	bitmap = kmalloc(sz, GFP_KERNEL);
+> +	if (!bitmap)
+> +		return -ENOMEM;
+> +
+> +	ret = -EFAULT;
+> +	if (copy_from_user(bitmap, bmap->enc_bitmap, sz))
+> +		goto out;
+> +
+> +	mutex_lock(&kvm->lock);
+> +	ret = sev_resize_page_enc_bitmap(kvm, gfn_end);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	i = gfn_start;
+> +	for_each_clear_bit_from(i, bitmap, (gfn_end - gfn_start))
+> +		clear_bit(i + gfn_start, sev->page_enc_bmap);
+> +
+> +	ret = 0;
+> +unlock:
+> +	mutex_unlock(&kvm->lock);
+> +out:
+> +	kfree(bitmap);
+> +	return ret;
+> +}
+> +
+>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>  	struct kvm_sev_cmd sev_cmd;
+> @@ -8161,6 +8202,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>  
+>  	.page_enc_status_hc = svm_page_enc_status_hc,
+>  	.get_page_enc_bitmap = svm_get_page_enc_bitmap,
+> +	.set_page_enc_bitmap = svm_set_page_enc_bitmap,
+>  };
+>  
+>  static int __init svm_init(void)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 3c3fea4e20b5..05e953b2ec61 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5238,6 +5238,18 @@ long kvm_arch_vm_ioctl(struct file *filp,
+>  			r = kvm_x86_ops->get_page_enc_bitmap(kvm, &bitmap);
+>  		break;
+>  	}
+> +	case KVM_SET_PAGE_ENC_BITMAP: {
+> +		struct kvm_page_enc_bitmap bitmap;
+> +
+> +		r = -EFAULT;
+> +		if (copy_from_user(&bitmap, argp, sizeof(bitmap)))
+> +			goto out;
+> +
+> +		r = -ENOTTY;
+> +		if (kvm_x86_ops->set_page_enc_bitmap)
+> +			r = kvm_x86_ops->set_page_enc_bitmap(kvm, &bitmap);
+> +		break;
+> +	}
+>  	default:
+>  		r = -ENOTTY;
+>  	}
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index db1ebf85e177..b4b01d47e568 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1489,6 +1489,7 @@ struct kvm_enc_region {
+>  #define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
+>  
+>  #define KVM_GET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
+> +#define KVM_SET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
+>  
+>  /* Secure Encrypted Virtualization command */
+>  enum sev_cmd_id {
+> -- 
+> 2.17.1
+> 
