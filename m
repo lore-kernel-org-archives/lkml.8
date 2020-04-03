@@ -2,80 +2,104 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FC3C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8D5C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5029D20721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4A420721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:31:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HwzTvOxK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F+3kh5Xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404248AbgDCPav (ORCPT
+        id S2404264AbgDCPbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:30:51 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36917 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbgDCPav (ORCPT
+        Fri, 3 Apr 2020 11:31:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34047 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728203AbgDCPbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:30:51 -0400
-Received: by mail-oi1-f196.google.com with SMTP id u20so6433338oic.4;
-        Fri, 03 Apr 2020 08:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uo/s3g2M9m8e4JRBF9iXkTq11nxfJs4YNqOuK0g635s=;
-        b=HwzTvOxKFbg1Nzxrq8vUyWts33+FbCcwLokJcdRvNaXKqErhG2dXIAtKvLxgG/aHez
-         +hv8xB/7//Dbm/Zhmw5+OnUMdnntE0JiRYjRTMXIpD/2mwRPUXI6Zs0JXbt1nq+b7rk7
-         ym+veq5DBylx1+j2ThMJRjNLl/Rm3cFjtKPHmJGNO9uiPa1EwEHpnk4q+gUXJzeFWkFT
-         R1C+bhvARxZ/UIcsvJIq5KbYt8Zuytu+xxGxWiiCifJRM321Vb5EbvUGLH1rEZ1H5O8q
-         HJ3E9lHC8Qzx/GgGDDYd+U3eODbMU01qEDPAEuMRX1mOq8bh+kqTnRFUURO2Nb03Jqra
-         DUVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uo/s3g2M9m8e4JRBF9iXkTq11nxfJs4YNqOuK0g635s=;
-        b=sHlXZ+iYzT40lgkvwc96I7B0jSnAQcjN74PVVP3B0rfICJF0jaPY96Opedm3e68d88
-         3OizYSngcrKcQGnEk3VlByqzxN+4SExNcStHnJzyhtikgt1LHpFOK8mBdUiYmFp+D/Dq
-         W8YQYgb5JeviflxEUzIJ8MNtGt58z8RBe6orNLJkPyRP+0ScHKMBHNJu8x04JJZALt4G
-         OwdZn8zgBcvz/wAGRjop4hPnjEjq04DWiN7tZ3GWCKB5DzYcZSMt0pMLSOaTxe0cZYyP
-         8Qrwd52Nvz2Y/mrvB4g54jFnPcNyAEYeaoS/cctzYXDv7DE4LlkThxNZvjmTqaTfD5h+
-         49Ug==
-X-Gm-Message-State: AGi0PuZzG3GsIz3TaFSm9LcxuwfLk6Si1up+LYbZtqKjlou1XVAExt0Z
-        /WvBeXRLRHmyGxUuhdGRKqpAUOkKJ4NTqrV0oFo=
-X-Google-Smtp-Source: APiQypJ7cD+pwX0/P2wdrT1+MMVyWXdLAxFwYHg2POSGg74nohO0TPq4/RAfSM2lHxhXIIs7mpaPEkf0RJ05d0WUul4=
-X-Received: by 2002:aca:b803:: with SMTP id i3mr3363192oif.92.1585927850037;
- Fri, 03 Apr 2020 08:30:50 -0700 (PDT)
+        Fri, 3 Apr 2020 11:31:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585927860;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=oH2OHy+Eyviif1iebcrHo18si9PoFShEfkJbOhyf4JQ=;
+        b=F+3kh5XiBcMkrLxp1/8445OrTNLsCpK9/A8KP6idXIUQ1fSgfcaxZg4iKm2yW/dttolYS2
+        hKXPRSMWa0kD25qKCYBq0us9xoa3a9u5L5YmmAfBj+ftenxQ+LjG80YI3B6enZ53BLfS2Z
+        aDjSLNbfA8XPgUHozhnrh1J9SozRb5M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-440-UbVvYl2_PIi2GI5z_52vtQ-1; Fri, 03 Apr 2020 11:30:58 -0400
+X-MC-Unique: UbVvYl2_PIi2GI5z_52vtQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6082C190B2A2;
+        Fri,  3 Apr 2020 15:30:57 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-112-213.ams2.redhat.com [10.36.112.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2AF0A26DC4;
+        Fri,  3 Apr 2020 15:30:51 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v2 0/5] KVM: s390: vsie: fixes and cleanups
+Date:   Fri,  3 Apr 2020 17:30:45 +0200
+Message-Id: <20200403153050.20569-1-david@redhat.com>
 MIME-Version: 1.0
-References: <20200401170106.134037-1-clemens.gruber@pqgruber.com>
-In-Reply-To: <20200401170106.134037-1-clemens.gruber@pqgruber.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Fri, 3 Apr 2020 11:30:39 -0400
-Message-ID: <CAGngYiXR7pPJ4kTXtzmL1T_yrbr_gs0RVFo5yufmJGc08xgeMg@mail.gmail.com>
-Subject: Re: [PATCH v2 REBASED] pwm: pca9685: fix pwm/gpio inter-operation
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PS perhaps you could also include a link to the mailing list
-discussion which prompted the revival of this patch?
+Some vsie/gmap fixes and two cleanups/improvements.
 
-Link: https://lore.kernel.org/lkml/20200330160238.GD2817345@ulmo/
+Patch #1 fixes an issue reported by Janosch. It was never observed so far=
+,
+because KVM usually doesn't use a region 1 table for it's guest (unless
+memory would be exceeding something like 16 EB, which isn't even supporte=
+d
+by the HW). Older QEMU+KVM or other hypervisors can trigger this.
+
+Patch #2 fixes a code path that probably was never taken and will most
+probably not be taken very often in the future - unless somebody really
+messes up the page tables for a guest (or writes a test for it). At some
+point, a test case for this would be nice.
+
+Patch #3 fixes a rare possible race. Don't think this is stable material.
+
+Gave it some testing with my limited access to somewhat-fast s390x
+machines. Booted a Linux kernel, supplying all possible number of
+page table hiearchies.
+
+v1 -> v2:
+- "KVM: s390: vsie: Fix region 1 ASCE sanity shadow address checks"
+-- Fix WARN_ON_ONCE
+- "gmap_table_walk() simplifications"
+-- Also init "table" directly
+
+David Hildenbrand (5):
+  KVM: s390: vsie: Fix region 1 ASCE sanity shadow address checks
+  KVM: s390: vsie: Fix delivery of addressing exceptions
+  KVM: s390: vsie: Fix possible race when shadowing region 3 tables
+  KVM: s390: vsie: Move conditional reschedule
+  KVM: s390: vsie: gmap_table_walk() simplifications
+
+ arch/s390/kvm/vsie.c |  4 ++--
+ arch/s390/mm/gmap.c  | 17 +++++++++++------
+ 2 files changed, 13 insertions(+), 8 deletions(-)
+
+--=20
+2.25.1
+
