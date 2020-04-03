@@ -2,99 +2,118 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B73C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DAFC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D673206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585936108;
-	bh=18GHNOBVkEj7vvORr2+RoP8PDn87EfmttlpKTzZy46Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=j0uHeDmOPK+QlPj75C3oQ+WU1fGGStqWDbuLQRujlGaMpX8EeM6tQ+1xZWdyrVwp4
-	 KJPDlZTT4pGhdsJKEXjIIiqnQyBECCpQosHkWhtAROTdBTWTos66lS96H6wEZ3Q7Ch
-	 9MJ0DH7CH0UAozUXYv/18pd3oaz17yTGy6ynv3AU=
+	by mail.kernel.org (Postfix) with ESMTP id 70B602077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:49:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="upgFVbek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404065AbgDCRs1 (ORCPT
+        id S1728476AbgDCRty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:48:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41623 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbgDCRs1 (ORCPT
+        Fri, 3 Apr 2020 13:49:54 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:42621 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbgDCRty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:48:27 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n17so7820635lji.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3THBIeg1DeeQfa1qWYP5fMgyz8PG9WZarWEKIAjybzc=;
-        b=N9neCI5Qjc956nHzpT6Wv66wmcCPHy18i498AuxWNSpHcXpezXTuTKm2OG1vKqL42o
-         JtGfih0oxhGl0Bq1LQLwJPruvqzhW2QlyHd3ffmbTf6kYcGwiNvs1B3JlPdeCUi9ce4q
-         vhAhfkqRxPVn0NCUVrvl0tZmhQSEnzqjCiCsM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3THBIeg1DeeQfa1qWYP5fMgyz8PG9WZarWEKIAjybzc=;
-        b=A4tfRgWOjkRp1Pao90aKbL4SUuTAIZVbHevNyPyBuXNOVbDg5h0OYmzHGeyYw334Qx
-         sBP/sEd3L5M6N8O7VpOkyMYsTsRkfmWOeUu32zA9hXEdVvNS6ulMVn06stOLzktkDeD4
-         5JjHdDiCiGusQCqwEZ3y1FmW7W3WXAGQE50x2MLJewBziM0jfIlbospZx9JpkYw4sIdx
-         Mi1GQrVyKK4Mvmp77rwVkgIF2MB06QzPl7C/l8eiO/W8SQuPlkphgKZzzWisvgaYsjmm
-         1NasoVsY0HTXcWNUOUu2U85RA3pA+FbPlxVcmUrffmZ9rHXk6c7KwomWqr4d3OrTK73J
-         c+yw==
-X-Gm-Message-State: AGi0PuYCJEj1FuOUoaq9I+u5vqVN2gewu+68G3U6+3isF2Bm1vagr5rq
-        zlEOtQahgrlOqzgQu/ASHzNyTuBQ5Ak=
-X-Google-Smtp-Source: APiQypKfaQ4yyVVyThFc+hDpjLTMquaMbVduxq+aOdI+OCkSAtLaPFHGlnvbVpXNrVn/WQjKYtgwcA==
-X-Received: by 2002:a2e:9886:: with SMTP id b6mr5602376ljj.237.1585936104199;
-        Fri, 03 Apr 2020 10:48:24 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id x28sm5371239ljd.24.2020.04.03.10.48.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 10:48:23 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id h6so6516935lfp.6
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:48:23 -0700 (PDT)
-X-Received: by 2002:ac2:46d3:: with SMTP id p19mr6173851lfo.125.1585936102736;
- Fri, 03 Apr 2020 10:48:22 -0700 (PDT)
+        Fri, 3 Apr 2020 13:49:54 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 5C49E22FF5;
+        Fri,  3 Apr 2020 19:49:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1585936191;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=76ONF2brR4UH2L2O0KzOMhJ0PFTRaWglQINMn8OL8ak=;
+        b=upgFVbekBHvxdaDNGJVhpdVyscg0XYHYqZq6hVIog0+GliunUNwJYzZ6vAKcaQfXyWxAly
+        zgQl8GxMQ8qEysW34mSD0D+WljfvOQKc2Gb20PCZQeAp47+QNqfJgHLzIuYLn95TJkPiPz
+        UiTgey0wO9TTCPggoxERk3qrT64JTpE=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] tty: serial: fsl_lpuart: make coverity happy
+Date:   Fri,  3 Apr 2020 19:49:42 +0200
+Message-Id: <20200403174942.9594-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200402010812.GA751391@yoga> <20200403013134.11407-1-natechancellor@gmail.com>
-In-Reply-To: <20200403013134.11407-1-natechancellor@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 3 Apr 2020 10:48:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whG84d5bGHU5HLOMgR59BqUcuawPTxGgVDm3JWiWJHi6A@mail.gmail.com>
-Message-ID: <CAHk-=whG84d5bGHU5HLOMgR59BqUcuawPTxGgVDm3JWiWJHi6A@mail.gmail.com>
-Subject: Re: [PATCH] remoteproc/omap: Fix set_load call in omap_rproc_request_timer
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 5C49E22FF5
+X-Spamd-Result: default: False [4.90 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.956];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 6:32 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> This is due to commit 02e6d546e3bd ("clocksource/drivers/timer-ti-dm:
-> Enable autoreload in set_pwm") in the clockevents tree interacting with
-> commit e28edc571925 ("remoteproc/omap: Request a timer(s) for remoteproc
-> usage") from the rpmsg tree.
->
-> This should have been fixed during the merge of the remoteproc tree
-> since it happened after the clockevents tree merge; however, it does not
-> look like my email was noticed by either maintainer and I did not pay
-> attention when the pull was sent since I was on CC.
+Coverity reports the following:
 
-Thanks, I've taken this patch directly into my tree since it was my
-merge that screwed up.
+  var_compare_op: Comparing chan to null implies that chan might be null.
 
-                   Linus
+  1234        if (chan)
+  1235                dmaengine_terminate_all(chan);
+  1236
+
+  Dereference after null check (FORWARD_NULL)
+  var_deref_op: Dereferencing null pointer chan.
+
+  1237        dma_unmap_sg(chan->device->dev, &sport->rx_sgl, 1, DMA_FROM_DEVICE);
+
+Technically, this is correct. But lpuart_dma_rx_free() is guarded by
+lpuart_dma_rx_use which is only true if there is a dma channel, see
+lpuart_rx_dma_startup(). In any way, this looks bogus. So remove
+the superfluous "if (chan)" check and make coverity happy.
+
+Fixes: a092ab25fdaa ("tty: serial: fsl_lpuart: fix DMA mapping")
+Signed-off-by: Michael Walle <michael@walle.cc>
+Reported-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/tty/serial/fsl_lpuart.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 4cb04d8bf034..83d803729d23 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1210,9 +1210,7 @@ static void lpuart_dma_rx_free(struct uart_port *port)
+ 					struct lpuart_port, port);
+ 	struct dma_chan *chan = sport->dma_rx_chan;
+ 
+-	if (chan)
+-		dmaengine_terminate_all(chan);
+-
++	dmaengine_terminate_all(chan);
+ 	dma_unmap_sg(chan->device->dev, &sport->rx_sgl, 1, DMA_FROM_DEVICE);
+ 	kfree(sport->rx_ring.buf);
+ 	sport->rx_ring.tail = 0;
+-- 
+2.20.1
+
