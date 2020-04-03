@@ -2,94 +2,126 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C5FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BA0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353EB206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D80B206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="UNBLvvWY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Od5TnW0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgDCUVO (ORCPT
+        id S1728001AbgDCUWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 16:21:14 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:62955 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbgDCUUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 16:20:33 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48vBBk1bhRz89;
-        Fri,  3 Apr 2020 22:20:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585945230; bh=9o0jU3pHTAuBzNswBF/b03ymf3m7K1HzGbtH3v7tck4=;
-        h=Date:From:Subject:To:Cc:From;
-        b=UNBLvvWYhaRBtVcXfkR4qe6OGXoBnZTDR2gPRLdjNwVo/uvvF/MrmL2evMNQqpzGM
-         XUTPxNsLKFK6lhbjVSzECWj/pwBAPoG3+yw1+lm0nWDgnY9fDkJjnTGhRawVCF6AVP
-         7gBbbTcPqAqG/fVUhLYuy4V2T0w6wtOoNTJZ8SIHeLc7Z6jg6ih5J6NaZBAeg9Iohh
-         OQj5Xt6ij3OqxLMu9leY1CVHl/n84G+u3VSjbUCDNqpkQpoguX4f+fTgfU2a+WfDjU
-         3G8eycQ6pdK00fis7QLmLpOfd55gAS51P7qIls01rUqMwFpfNeKxqADBKsZfzhnqVK
-         QyJUmrptgNU7w==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 03 Apr 2020 22:20:26 +0200
-Message-Id: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v3 00/11] extensions and fixes
+        Fri, 3 Apr 2020 16:22:19 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39873 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgDCUWS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 16:22:18 -0400
+Received: by mail-wm1-f66.google.com with SMTP id e9so9112939wme.4;
+        Fri, 03 Apr 2020 13:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yBk8iLmWQH2Q1E3LPZMZsmnW3Pw4Pve//DMaP+9GRcw=;
+        b=Od5TnW0JX69JZejRiSOQThcew53V/qQb6Bmp6Vc+2d9xpKE2425nPNWuX88VYBUfZ+
+         qF2XxHpkbaakJQuCqAsUOlkMvgaBc44RqeuD699hg/i9hgXmwam3uvyQFXk17RHPmdmB
+         GpXFfwbg/7Q7iaGkxBxhlZG/SXan1awKaIqdUcAIbnE/FTScJGstz9CjLNP5LoNA0bKi
+         g6l9Ilx5E5Dz1tE1mhFjItCWZJibjJVkKGYVijQnuUyFO7o5qBZB8QCuzpxXyw7aG3j7
+         IeF5lamSzViZWOz7go6RH9vELnnjuxlI8JswhF1upoupVYxR3F0FNGiT4hsV+dxmXEFc
+         VkOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yBk8iLmWQH2Q1E3LPZMZsmnW3Pw4Pve//DMaP+9GRcw=;
+        b=OTCdUobJgKsIBceLJ2DzoynkJKymPO/ON+jRaM28jM0mJoMcBxLydWVfAoJztaHcqK
+         VlNBOSb18Cpv8jjggyTZ0qwfYETFRDosFbGxHLyd6vWdMlJyn9N59vomymioSxgzYnLS
+         zCPrT/0wnRIdRtHJ1g0evzGpP6NVxPyafLMZH+gebPpp0cwGJbQwL9fzymmWzTdjLqMf
+         lmvfDWPo6Qfj3yNTr0oE0t6tBSjYLyYCUtFMdahbYLFD/LrD3ZKfZ/HuLNd6GG3O+vd4
+         mr5UJ/inM6vJpTL7k9dUTRXvcjpZm2nvZ/Aj8DzurHN0TsnKQDtn7ULciZ/zHS0AEvOQ
+         ilMA==
+X-Gm-Message-State: AGi0PuYH++d/OFAYMzU7DkTixLElO+X65ZEkAPYcs0YLnHHd3TntR8lw
+        zAXJc6FRWh1hDNx57LVyPwk=
+X-Google-Smtp-Source: APiQypJFOCUi4tKAeio05/zqLHzv/WlrXWSL+xY0XP5qgkzVVDY4z9ITgTTBC8omEPQy6x01r07Qwg==
+X-Received: by 2002:a1c:2489:: with SMTP id k131mr10731983wmk.86.1585945336217;
+        Fri, 03 Apr 2020 13:22:16 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id n7sm12843237wmf.4.2020.04.03.13.22.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 13:22:15 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] clocksource: Add NVIDIA Tegra186 timers support
+Date:   Fri,  3 Apr 2020 22:22:02 +0200
+Message-Id: <20200403202209.299823-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series covers three areas of power supply class:
+From: Thierry Reding <treding@nvidia.com>
 
-1-5. constify property and usb_type lists as they should not be changed
-     after driver registration
-6-8. fix and clean up HWMON labels
-9-11. extend core to support input/battery/output supply point
-     measurements
+This set of patches adds the device tree bindings and a simplified
+driver for the timers found on Tegra186 and later SoCs. The driver
+itself currently only exposes a couple of clock sources and a
+watchdog, which in turn relies on the counter provided by one of
+the timers. The timers themselves are not used at the moment because
+the SoC also has an architected timer and there's currently no use
+for the additional timers provided by this hardware block.
 
-I guess the first part is largely independent, so I can extract it to
-a separate series if that's useful.
+I suggest that patches 1 & 2 go through the clocksource tree, while
+I can carry the DTS changes in the Tegra tree for v5.8.
 
----
-v2: splits power_supply_hwmon_read_string() fix from extensioa
-    (patches 3-4)
-v3: removes power_supply_hwmon_read_string() parameter checks and
-    adds a prerequisite patches to two drivers to make them compile
-    after property list constification patch is applied
----
+Changes in v3:
+- request IRQ at the end of ->probe() to avoid potential race condition
+- only enable/disable watchdog when it's active
+- use _relaxed variants of register accessors
+- drop unneeded tegra186_timer.irq field
 
-Michał Mirosław (11):
-  power: charger-manager: remove duplicate assignment
-  power: charger-manager: don't write through desc->properties
-  power: generic-adc-battery: fold psy_props[] to private data
-  power: supply: core: reduce power_supply_show_usb_type() parameters
-  power: supply: core: allow to constify property lists
-  power: supply: core: fix HWMON temperature labels
-  power: supply: core: tabularize HWMON temperature labels
-  power: supply: core: hide unused HWMON labels
-  power: supply: core: add input voltage/current measurements
-  power: supply: core: add output voltage measurements
-  power: supply: core: document measurement points
+Changes in v2:
+- address review comments on the bindings
+- make the driver buildable as a module
+- support various clock sources
 
- Documentation/power/power_supply_class.rst |   6 +
- drivers/power/supply/charger-manager.c     |  17 +-
- drivers/power/supply/generic-adc-battery.c |  30 ++--
- drivers/power/supply/power_supply_hwmon.c  | 178 +++++++++++++++++++--
- drivers/power/supply/power_supply_sysfs.c  |  15 +-
- include/linux/power_supply.h               |   9 +-
- 6 files changed, 211 insertions(+), 44 deletions(-)
+Thierry
+
+Thierry Reding (7):
+  dt-bindings: timer: Add bindings for NVIDIA Tegra186 timers
+  clocksource: Add Tegra186 timers support
+  arm64: tegra: Order nodes by unit-address on Tegra194
+  arm64: tegra: Add native timer support on Tegra186
+  arm64: tegra: Enable native timers on Jetson TX2
+  arm64: tegra: Add native timer support on Tegra194
+  arm64: tegra: Enable native timers on Jetson AGX Xavier
+
+ .../bindings/timer/nvidia,tegra186-timer.yaml |  61 +++
+ .../arm64/boot/dts/nvidia/tegra186-p3310.dtsi |   4 +
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi      |  16 +
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |   4 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  81 +--
+ drivers/clocksource/Kconfig                   |   8 +
+ drivers/clocksource/Makefile                  |   1 +
+ drivers/clocksource/timer-tegra186.c          | 508 ++++++++++++++++++
+ 8 files changed, 651 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml
+ create mode 100644 drivers/clocksource/timer-tegra186.c
 
 -- 
-2.20.1
+2.24.1
+
