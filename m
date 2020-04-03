@@ -2,124 +2,115 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27033C2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0561C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0740120737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA2320721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390390AbgDCJNu (ORCPT
+        id S2390471AbgDCJOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:13:50 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:41791 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgDCJNt (ORCPT
+        Fri, 3 Apr 2020 05:14:33 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53190 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbgDCJOd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:13:49 -0400
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 5CA974000D;
-        Fri,  3 Apr 2020 09:13:45 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 11:13:44 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 2/3] drm: Add support for the LogiCVC display
- controller
-Message-ID: <20200403091344.GA720146@aptenodytes>
-References: <20191203150606.317062-1-paul.kocialkowski@bootlin.com>
- <20191203150606.317062-3-paul.kocialkowski@bootlin.com>
- <20200104192026.GA21210@ravnborg.org>
+        Fri, 3 Apr 2020 05:14:33 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4F9301C3297; Fri,  3 Apr 2020 11:14:31 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 11:14:30 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Subject: Re: 5.7-rc0: hangs while attempting to run X
+Message-ID: <20200403091430.GA3845@duo.ucw.cz>
+References: <20200402213253.GA2691@duo.ucw.cz>
+ <20200402213506.GA2767@duo.ucw.cz>
+ <20200403073720.GA23229@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
 Content-Disposition: inline
-In-Reply-To: <20200104192026.GA21210@ravnborg.org>
+In-Reply-To: <20200403073720.GA23229@duo.ucw.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=utf-8
+--5vNYLRcllDrimb99
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Sam,
+Hi!
 
-On Sat 04 Jan 20, 20:20, Sam Ravnborg wrote:
-> Good looking driver. Well structured in a number of relevant files.
-> A few comments in the following.
-> Some parts I fail to follow - due to my lack of DRM knowledge.
-> So all in all - only trivial comments.
+> > > Hardware is thinkpad x220. I had this crash few days ago. And today I
+> > > have similar-looking one, with slightly newer kernel. (Will post
+> > > as a follow-up).
+>=20
+> As part of quest for working system, I tried 5.7-rc0, based on
+>=20
+> Merge: 50a5de895dbe b4d8ddf8356d
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Wed Apr 1 18:18:18 2020 -0700
+>=20
+> It hangs in userspace, at a time when X should be starting, and I'm
+> looking at blinking cursor.
+>=20
+> 5.6-rcs worked, I'll test 5.6-final.
 
-Thanks for the review and the friendly feedback!
+5.6-final works.
 
-> With these fixed you can add:
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Hmm...
 
-I'll take most of your suggestions in for the next version and there's just=
- one
-point where I disagree:
+commit f365ab31efacb70bed1e821f7435626e0b2528a6
+Merge: 4646de87d325 59e7a8cc2dcf
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed Apr 1 15:24:20 2020 -0700
 
-> > +struct logicvc_drm {
-> > +	const struct logicvc_drm_caps *caps;
-> > +	struct logicvc_drm_config config;
-> > +	struct drm_device *drm;
-> Modern drm drivers are expected to embed drm_device.
-> See example in drm_drv.c
+    Merge tag 'drm-next-2020-04-01' of git://anongit.freedesktop.org/drm/drm
 
-Well, I see lots of modern drivers that use drm_dev_alloc, including vc4 th=
-at
-I took as a reference.=20
+Let me test 4646de87d32526ee87b46c2e0130413367fb5362...that one works.
 
-My understanding is that embedding the struct is a recommendation but
-drm_dev_alloc is still quite valid and that the choice is left open.
-Quoting drm_drv.c:
+Ok, so obviously... I should
+test... f365ab31efacb70bed1e821f7435626e0b2528a6
 
- * It is recommended that drivers embed &struct drm_device into their own d=
-evice
- * structure.
- *
- * Drivers that do not want to allocate their own device struct
- * embedding &struct drm_device can call drm_dev_alloc() instead.
+Now, this is anti-social:
 
-In my case, I like the fact that drm_dev_alloc correctly wraps drm_dev_init
-and drmm_add_final_kfree (and I'd rather not add & all around unless I'm
-obliged to ;)
+Busywait for request completion limit (ns)
+(DRM_I915_MAX_REQUEST_BUSYWAIT) [8000] (NEW)
 
-Cheers,
+How should I know what to answer here (or the others)
 
-Paul
+Interval between heartbeat pulses (ms) (DRM_I915_HEARTBEAT_INTERVAL) [2500]=
+ 2500
+Preempt timeout (ms, jiffy granularity) (DRM_I915_PREEMPT_TIMEOUT) [640] 640
 
+I just took the defaults.. but...=20
+
+Best regards,
+									Pavel
 --=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
---azLHFNyN32YCQGCU
+--5vNYLRcllDrimb99
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6G/kgACgkQ3cLmz3+f
-v9G3sAgAgKq1ecptnIYD6N1lYm1B5XbgAqGTpKFC1sy6w6tNYtI8NkV15ikcY/Tj
-j6XpWwEhri+sOme76KBKqfDOiDpDOAYAOKKOP4dV+x9WqlOqkFmuu/5sqkQNVB+E
-kS/DqxfIHWBWGcWJT3hJWRMBm99/8V2IigSWX6oiIZc+EyHy/dwbIns63A6MVF/c
-uhoZqBuOuakAZhV+r8KRNPJlOKLLjP4qEUFv5Ka5mh3+80Wy0Bz1f/H8n/bvllM6
-kUNHIix5hsKEVKWEwC/L4Pv1t0QYEsuWcHDW5pf2i9s05AWLgrl8vIublkUH0i4W
-D7/T/7LMAuS+MMAJGUFxf5/UJQ6+1g==
-=s+Sz
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXob+dgAKCRAw5/Bqldv6
+8oIcAJ9FR43pTa8IQWed9VsoTGof0bNbvgCfdDrEabp6lae0rSwI6E3Nc/CaGyQ=
+=tPNa
 -----END PGP SIGNATURE-----
 
---azLHFNyN32YCQGCU--
+--5vNYLRcllDrimb99--
