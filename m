@@ -2,113 +2,182 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51ABC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE33C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D2D206E9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507CD20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:36:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIpxYzwc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aCJmbHts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390231AbgDCHdq (ORCPT
+        id S2390258AbgDCHgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 03:33:46 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45325 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388873AbgDCHdq (ORCPT
+        Fri, 3 Apr 2020 03:36:15 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5388 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730759AbgDCHgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 03:33:46 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o26so3099838pgc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 00:33:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=6eTQPyddv5f9SRxTrCu1HpU/mZFl02NaYZhT7ltXJvM=;
-        b=DIpxYzwc7IBK/NsPfM0wzUov+Iv1OcKRReEWjT2bmDGtKez3CWY5TXWaIQMzsoUgtU
-         NIClVMRucU+ZGL4X3rND3J/Sv5+cPTJGKLNhRuL3g/1jq+O1PnA/AbdgkxCOxux7Z3Ee
-         05BisU9HXpM13G6inAt73sB+MxkGslDj0WX6KeoUU+IK+CfqfE6CThK5m87JlMCwcMR9
-         2n+z65y9hXathwW164UwoutNkcR83FebyA7fsHe1SZDx9fleqlPOOR4/YEvT+FHHHNF1
-         NUMWfJ0JwslkFzifHLGMtNoO2YqvXlAohajKqffSl0TVy4OxM3oldUugnckD5X2nPYHW
-         qMOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=6eTQPyddv5f9SRxTrCu1HpU/mZFl02NaYZhT7ltXJvM=;
-        b=L22tumUNdz0J3b3MsBee6PQRzpDgnD947idKiUfw0zGT2YRV1y9ciLOsuGyAYzVV5k
-         HX8cwdtTUwLaDE9urnhVdnq16rutMOYVA8cHejz4Ns7S2aiDHT2dAHmCHYy9DUxJgRsy
-         sWg21Sz5KeokLUpqgzlRCa6T9wK3DtiLn3zFPm10eQ3+jiTMoFSLS+SHb/Cn7zLy9kLj
-         ilBqZevCBQTWV1Wn1QTUHHMYKdIoYKrVOsicEPjshNTLC1wRYhR+le/h+GvMtJ/pmDlk
-         OTdrbRgm6/BVtgOAlY6eWnmsRVMRVX4vtzkBFK0uXSnHTgWkYvCvJYsDpAKnO4uNzhwe
-         EOdA==
-X-Gm-Message-State: AGi0PuYSCSpnrkmu/9cQKjkOsskUhkzcccNEEMVGuVbeBEmkPR95yXcX
-        Hj5jTE8Dgg5mtBuB1SQXIww=
-X-Google-Smtp-Source: APiQypI0pCTSglQqiqf6qQwJ44I91xTYmtj4PFApCZx7Y0Y3z+lHknCzOY64l1KScrStsuRgDAWPZg==
-X-Received: by 2002:aa7:9f42:: with SMTP id h2mr6792832pfr.22.1585899225368;
-        Fri, 03 Apr 2020 00:33:45 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id h4sm4750410pgg.67.2020.04.03.00.33.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 00:33:44 -0700 (PDT)
-Date:   Fri, 03 Apr 2020 17:33:38 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC WIP PATCH] powerpc/32: system call implement entry/exit
- logic in C
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <bbc0a09cfaf523bc00893253a7101362c98b31eb.1585667934.git.christophe.leroy@c-s.fr>
-        <059c1abd-6be2-25ea-83e0-dcd411b7951b@c-s.fr>
-In-Reply-To: <059c1abd-6be2-25ea-83e0-dcd411b7951b@c-s.fr>
+        Fri, 3 Apr 2020 03:36:15 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e86e73c0000>; Fri, 03 Apr 2020 00:35:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 03 Apr 2020 00:36:14 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 03 Apr 2020 00:36:14 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Apr
+ 2020 07:36:14 +0000
+Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Apr 2020
+ 07:36:13 +0000
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@iki.fi>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <digetx@gmail.com>,
+        <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+ <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
+ <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
+ <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
+ <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
+ <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
+ <20200331115221.GA4767@pendragon.ideasonboard.com>
+ <6aa7d86c-3943-d508-ccf6-5ac46546abe9@nvidia.com>
+ <3b00a559-992a-2da9-92b1-bee44e137ba2@nvidia.com>
+ <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
+ <20200401165805.GE4876@pendragon.ideasonboard.com>
+ <e3b437c6-76e1-d407-e81d-c05912ffcd0b@nvidia.com>
+Message-ID: <f80dfa8f-0188-a733-bde6-e3210977d910@nvidia.com>
+Date:   Fri, 3 Apr 2020 00:36:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1585898897.1jwur86s6a.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <e3b437c6-76e1-d407-e81d-c05912ffcd0b@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585899324; bh=lH8VCoTnCQfzYg8lxheGj9jbRYQX28Pk6wDY+1bd1Lc=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=aCJmbHtsc4d/J4y6wxxvtxPdp8AB1QyHvod3IkYmiYOFmNqRKzkoO4l4xehzZLMNN
+         HciKMWr46UM+naKvToV2stzzX9PdWPMx4AIVUrBCxI/BDYPaGEEB9iyN1aT+d0iHP6
+         lWU4h7sEP2wi0FLerEJpqXt1cnt5khCLapxZ/1tXVzyNkfEJCppASvxjcID5mzAauM
+         FNMkg3nG2Jdvl9gTDoveadA1PqSeMIPxzu+owU/zY+fOkicByGSu6uTgeeOskEALIn
+         bmNFWfEDYEYKPWlfkD9L9vnpfAltTR75ArZq8+fZ6XqcBr6p5Ly4MBXQL9GiEU2c6E
+         ewNJyE76dqBUg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on April 1, 2020 9:48 pm:
->=20
->=20
-> Le 31/03/2020 =C3=A0 17:22, Christophe Leroy a =C3=A9crit=C2=A0:
->> That's first try to port PPC64 syscall entry/exit logic in C to PPC32.
->> I've do the minimum to get it work. I have not reworked calls
->> to sys_fork() and friends for instance.
->>=20
->> For the time being, it seems to work more or less but:
->> - ping reports EINVAL on recvfrom
->> - strace shows NULL instead of strings in call like open() for instance.
->=20
-> For the two above problems, that's because system_call_exception()=20
-> doesn't set orig_gpr3 whereas DoSycall() does in entry_32.S . Is that=20
-> only done on PPC32 ?
->=20
-> With the following line at the begining of system_call_exception(), it=20
-> works perfectly:
->=20
-> 	regs->orig_gpr3 =3D r3;
+As we don't need have MC based for tegra internal TPG, will continue 
+with video node based for CSI sub-device in this series.
 
-Oh great, nice work. We should be able to make some simple helpers or
-move some things a bit to reduce the amount of ifdefs in the C code.
-It doesn't look too bad though.
+Next series will include sensor support, will discuss internally by then 
+and will implement accordingly.
 
-> I will now focus on performance to see if we can do something about it.
+Thanks
 
-What's the performance difference between current asm code just with
-always saving NVGPRS vs C?
+Sowjanya
 
-Thanks,
-Nick
 
-=
+On 4/1/20 11:24 AM, Sowjanya Komatineni wrote:
+>
+> On 4/1/20 9:58 AM, Laurent Pinchart wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> Hi Sowjanya,
+>>
+>> On Wed, Apr 01, 2020 at 09:36:03AM -0700, Sowjanya Komatineni wrote:
+>>> Hi Sakari/Laurent,
+>>>
+>>> Few questions to confirm my understanding on below discussion.
+>>>
+>>> 1. Some sensors that you are referring as don't work with single 
+>>> devnode
+>>> controlling pipeline devices are ISP built-in sensors where setup of
+>>> pipeline and subdevices happen separately?
+>> Sensors that include ISPs could indeed require to be exposed as multiple
+>> subdevs, but I was mostly referring to raw Bayer sensors with hardware
+>> architectures similar to the SMIA++ and MIPI CCS specifications. Those
+>> sensors can perform cropping in up to three different locations (analog
+>> crop, digital crop, output crop), and can also scale in up to three
+>> different locations (binning, skipping and filter-based scaling).
+>>
+>> Furthermore, with the V4L2 support for multiplexed streams that we are
+>> working on, a sensor that can produce both image data and embedded data
+>> would also need to be split in multiple subdevs.
+>
+> Thanks Laurent.
+>
+> For sensors with meta/embedded data along with image in same frame, 
+> Tegra VI HW extracts based on programmed embedded data size info.
+>
+> So in our driver we capture this as separate buffer as embedded data 
+> is part of frame.
+>
+> You above comment on multiplexed streams is for sensors using 
+> different virutal channels for diff streams?
+>
+>
+>>> 2. With driver supporting single device node control of entire pipeline
+>>> devices compared to MC-based, limitation is with userspace apps for 
+>>> only
+>>> these complex camera sensors?
+>> In those cases, several policy decisions on how to configure the sensor
+>> (whether to use binning, skipping and/or filter-based scaling for
+>> instance, or how much cropping and scaling to apply to achieve a certain
+>> output resolution) will need to be implemented in the kernel, and
+>> userspace will not have any control on them.
+>>
+>>> 3. Does all upstream video capture drivers eventually will be moved to
+>>> support MC-based?
+>> I think we'll see a decrease of the video-node-centric drivers in the
+>> future for embedded systems, especially the ones that include an ISP.
+>> When a system has an ISP, even if the ISP is implemented as a
+>> memory-to-memory device separate from the CSI-2 capture side, userspace
+>> will likely have a need for fine-grained control of the camera sensor.
+>>
+>>> 4. Based on libcamera doc looks like it will work with both types of
+>>> MC-based and single devnode based pipeline setup drivers for normal
+>>> sensors and limitation is when we use ISP built-in sensor or ISP HW
+>>> block. Is my understanding correct?
+>> libcamera supports both, it doesn't put any restriction in that area.
+>> The pipeline handler (the device-specific code in libcamera that
+>> configures and control the hardware pipeline) is responsible for
+>> interfacing with the kernel drivers, and is free to use an MC-centric or
+>> video-node-centric API depending on what the kernel drivers offer.
+>>
+>> The IPA (image processing algorithms) module is also vendor-specific.
+>> Although it will not interface directly with kernel drivers, it will
+>> have requirements on how fine-grained control of the sensor is required.
+>> For systems that have an ISP in the SoC, reaching a high image quality
+>> level requires fine-grained control of the sensor, or at the very least
+>> being able to retrieve fine-grained sensor configuration information
+>> from the kernel. For systems using a camera sensor with an integrated
+>> ISP and a CSI-2 receiver without any further processing on the SoC side,
+>> there will be no such fine-grained control of the sensor by the IPA (and
+>> there could even be no IPA module at all).
+>>
+>> -- 
+>> Regards,
+>>
+>> Laurent Pinchart
