@@ -2,118 +2,106 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A611EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617C9C2BA17
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B992073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370E82073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:04:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585911844;
+	bh=Tnu62GxRZazmdtU3qxAw82/oNuEAGbmNeB4dzPA4vEk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WF1b8O4bJslIIRh/YMdmSjfKBkN2fSht6cnZpG85Ix+paYClmtUgK3ggjEgep9WXP
+	 BLMYaUskgTe1o94drXF3chI1rt92VfdTbLEP6p3YFnOYzjbUJQZwYlk4D83SH2XnLG
+	 9i0+0fmGF5mxIj8USagdyfQko/QwhIVCGMgb7DjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390658AbgDCLCz (ORCPT
+        id S2390672AbgDCLED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:02:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:50311 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727911AbgDCLCy (ORCPT
+        Fri, 3 Apr 2020 07:04:03 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45307 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgDCLEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:02:54 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MsI0I-1j4aOK2k4g-00tmZz; Fri, 03 Apr 2020 13:02:38 +0200
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 387CE64FEE7;
-        Fri,  3 Apr 2020 11:02:37 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0FNzAkAu7U1m; Fri,  3 Apr 2020 13:02:36 +0200 (CEST)
-Received: from pflmari.corp.cetitec.com (unknown [10.8.5.74])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPSA id E413864FE1C;
-        Fri,  3 Apr 2020 13:02:36 +0200 (CEST)
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 9D617804FB; Fri,  3 Apr 2020 13:02:36 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 13:02:36 +0200
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v5 2/9] media: adv748x: include everything adv748x.h
- needs into the file
-Message-ID: <20200403110236.GD6164@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1585852001.git.alexander.riesen@cetitec.com>
- <046f909122e03286faf0a8916f30d56259656e14.1585852001.git.alexander.riesen@cetitec.com>
- <b56c7c08-d5f7-0b2a-350c-322401e07005@ideasonboard.com>
+        Fri, 3 Apr 2020 07:04:02 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t7so7969651wrw.12;
+        Fri, 03 Apr 2020 04:04:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uKZeJ3QaYya1YXVrP4ptZzn73kQ2uIA9YdMAiYW3qiU=;
+        b=bRFXPUocPPDDxK5sTdqdPo3dTezTWkCDR3FPrBlD70efz4aQukbSurMULRRL4RHcsv
+         g+VxxG2TRkdFv7IOV4dZP9Rkqkp87IfR4AKm4oYyA5qTeQD6DIfjMe9SxH9fhH6rrPJF
+         wyjHirBB1en9UNpCj/I1EPrzvT5lZpL096AOD3c27zq3oovx+DT9PYsnQsfr8HRzsJ/0
+         dXkb/QXv5UGrQEK4PrAHq61xAgHeNsR92NJUfnltfFwVoPdrAasUvoCn+XkjYnTNWjF7
+         638MoFZsuD1l3Gfg9l/ys5uLkPD8O0/Ta6TCrb1vTFV0D9QYF1Seh6XNjco+r5OdSO0M
+         Uz2A==
+X-Gm-Message-State: AGi0PuZOKMJKOGT8m4HG9pXqEDlvtdc0oRB1+RK9GCoixqesGlKql90q
+        ynOoFdbcilGEIMsb0asScQI=
+X-Google-Smtp-Source: APiQypLnsyKoca02cmMgitG6rzlmlWsncnvAW+5wBYZxxmEKLfRML3tOIzzWKNmTrdgpKhbofj5NbQ==
+X-Received: by 2002:a05:6000:1205:: with SMTP id e5mr8928579wrx.73.1585911840404;
+        Fri, 03 Apr 2020 04:04:00 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id 189sm11405996wme.31.2020.04.03.04.03.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 04:03:59 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 13:03:58 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     NeilBrown <neilb@suse.de>, Christoph Hellwig <hch@infradead.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2 - v2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK
+ instead.
+Message-ID: <20200403110358.GB22681@dhcp22.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name>
+ <87v9miydai.fsf@notabene.neil.brown.name>
+ <87sghmyd8v.fsf@notabene.neil.brown.name>
+ <87pncqyd7k.fsf@notabene.neil.brown.name>
+ <20200402151009.GA14130@infradead.org>
+ <87h7y1y0ra.fsf@notabene.neil.brown.name>
+ <20200403094220.GA29920@quack2.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b56c7c08-d5f7-0b2a-350c-322401e07005@ideasonboard.com>
-X-Provags-ID: V03:K1:T8O+dblCJ1e2U15lbOkjlij5GMMl3LOVr2BRKw66IzeBhsZ2qij
- Kst6QqDYcbzPnd8xHHlehYe1b7AneP2GxwwusfpVeuXdlOjAwYhuuILZ2E4PlyJp3Yv9NFq
- X7N5XdMq8PJtGGqoDQIfzTO9YOBpHB8PaqPqbAaHQ3Fk3ZNBn4KPvDReAf7wSrSsdcfX9V8
- H+3cZgXGhWrR3LyIf8+Bg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2k98zlaMJCo=:vbT7eSJ4i4yoyL2cM7tdLd
- omruHDxfZaqMhjzj2K01MsGbzI1Kw+qdPaHBfkTS09vmeZuLPa2zx0jK4TOmiq/Yh+rWcW9Jd
- cLsIfA8RRqk7G5oXRTlo6DD1tIeokVj61xARuWra1xgoRRB07v3n3hXe211mZ/T/RHTy+PsCX
- j9Dz2islkCuD3FjaQsVC/bvZi+LBg72Ux0TvUsYS3vwBeJ+CRp489Ppr6O5tx8bxBc6z3Yrrf
- 6DLqjr+3oOZ5Fwt+MtsMyppSjr+MEHnO4rkkdIV4SbVbOKezm55iNDFpPuAtaoY2bt8A+4yZb
- Z/s/tvs2IizJko3zhuKSr680rlqj43ONc6gPT556AQjncit9l3WY0bz3yDYsYzc49nUNn/TGY
- +romnkkfHtvVVBo/qL0eH4SwYTp3d/MKp1XTaTxtAtZhl8ztEQcG3NVwPilsLwRxTLefWRDRY
- ZTnXSPbnzYHIZxpMgDb+LOrUWqIZj+gMKCt1n1cTI5y2UJ2hO1LsdUIIoWRrXy2zVwasEWTvD
- m/LmD0gpdMl8zat0kElY5qJ1nQ1t//mNCiHQWBJR0UHD4szXxKIuucaImb3oq7XeWaLXc6Xg+
- 0hd6wg7JROLtkMK1EAgK7f5Vp5K1/X1JFBcQKrZl9TOXJdz5EBUhQ+Z2oTLIJ8f9fY4ZlEtYz
- d7SN8jSfJnsT20RyWClznH2CZtnMIje9GRWx0pxlHixIBUuRBfSOuJgSyspGjUblAeqKUHgjT
- WLX9R1nK+5/aRr3ehifwssyAhgyrVRd43Z+A8maRGayxnRPwk6wFbm824cftO+zfQZn/esaLK
- x1rpnUtKjOd1wjPAtKxZtlr9vmFLOk9XYMg0K//KPYZ+CoyqO9LsU8ABKjkkIG5XQOINKrU
+In-Reply-To: <20200403094220.GA29920@quack2.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kiran,
-
-Kieran Bingham, Fri, Apr 03, 2020 12:48:06 +0200:
-> On 02/04/2020 19:34, Alex Riesen wrote:
-> > --- a/drivers/media/i2c/adv748x/adv748x-core.c
-> > +++ b/drivers/media/i2c/adv748x/adv748x-core.c
-> > @@ -10,6 +10,8 @@
-> >   *	Kieran Bingham <kieran.bingham@ideasonboard.com>
-> >   */
-> >  
-> > +#include "adv748x.h"
-> > +
-> >  #include <linux/delay.h>
-> >  #include <linux/errno.h>
-> >  #include <linux/i2c.h>
+On Fri 03-04-20 11:42:20, Jan Kara wrote:
+[...]
+> > diff --git a/mm/vmstat.c b/mm/vmstat.c
+> > index 78d53378db99..d1291537bbb9 100644
+> > --- a/mm/vmstat.c
+> > +++ b/mm/vmstat.c
+> > @@ -1162,7 +1162,6 @@ const char * const vmstat_text[] = {
+> >  	"nr_file_hugepages",
+> >  	"nr_file_pmdmapped",
+> >  	"nr_anon_transparent_hugepages",
+> > -	"nr_unstable",
+> >  	"nr_vmscan_write",
+> >  	"nr_vmscan_immediate_reclaim",
+> >  	"nr_dirtied",
 > 
-> As linux/i2c.h is included in adv748x.h, we can remove this entry.
+> This is probably the most tricky to deal with given how /proc/vmstat is
+> formatted. OTOH for this file there's good chance we'd get away with just
+> deleting nr_unstable line because there are entries added to it in the
+> middle (e.g. in 60fbf0ab5da1 last September) and nobody complained yet.
 > 
+> What do mm people think? How were changes to vmstat counters handled in the
+> past?
 
-Corrected in v6.
-
-Thanks for review!
-Regards,
-Alex
-
+Adding new counters in the middle seems to be generally OK. I would be
+more worried about removing counters though. So if we can simply print a
+phone value at the very end then this should be a reasonable workaround.
+-- 
+Michal Hocko
+SUSE Labs
