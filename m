@@ -2,86 +2,84 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D80C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A3EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7547520659
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCD6920659
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 12:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M06xZPFG"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="ASnR0E3t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390847AbgDCMta (ORCPT
+        id S2390862AbgDCMt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:49:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47531 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727989AbgDCMta (ORCPT
+        Fri, 3 Apr 2020 08:49:57 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34845 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgDCMt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:49:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585918168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T1KkZ0XRRswbgUoInokEgiAJa+KYlL2aTUCPUcSLR1U=;
-        b=M06xZPFGPEV5PLlHGT1YE4Xy9lcnUp21HtM+kiIOoiVNFulb9VBm6MCCo2h0OlkfPZVdrm
-        MTlzBKAU20amicwfoLDfcPZ2TfYYaePPmfbLOFH7nxFxPFZqwo8mkeLPGqoV/LAF/Tu/Vn
-        rbo6XSubRmUYGju1eeiM7JD0UncH5UE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-101-6nMGoouJMkK4l8uYca7UpA-1; Fri, 03 Apr 2020 08:49:27 -0400
-X-MC-Unique: 6nMGoouJMkK4l8uYca7UpA-1
-Received: by mail-wr1-f72.google.com with SMTP id 88so357875wrq.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:49:27 -0700 (PDT)
+        Fri, 3 Apr 2020 08:49:56 -0400
+Received: by mail-ed1-f67.google.com with SMTP id c7so1399529edl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 05:49:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qQ4GjlaBNnkqjandRnDKumnjBIkctbwHxWdo0M4wsMI=;
+        b=ASnR0E3twBUn3zFHPgwVLzGRCQDeCNzuma4SqK3MmSzZIdWWrXFg8pCBWD4epfIJ+z
+         2OUBhBph32xan2QlF1RTOih+bc/LuuXJUQlq0iN2y5fu4d+/dnczuhRU9UUVpsoDdYuZ
+         ydiEvmwy9d48th4OPl+a1yTfrR9RPceRVflsdsZkGlttu3jIYGOzb5T/GwGoBaIFpoNA
+         k0KoH4qQBH7tOQ5AH4Xq8UCixq3wVjW29B7w90J3hbU3+JeFSJQhPhGXhAMsfueibgXa
+         c6wfYcKAP/B9C1KT13N/Uqu/GulrAEMyeVQ/PVEvYV0LxhXv0DoqB1zwusHV3iCHBTiK
+         OItw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=T1KkZ0XRRswbgUoInokEgiAJa+KYlL2aTUCPUcSLR1U=;
-        b=k1a0NMFYsm9ZAuIcKcELacjNnnAmzbaTNJR5+7WY9SBQye+39iGiQnoNkd5stS5OKs
-         XdwLqCuD8ktPb9gUIvZPyohG806zZMbTyk9T4NxAOefdJF5ZgSaggrGvqBSHPWCm7qyx
-         ze8ptVyInQQvWoIWF+ZgGRXq863/48jgnegnD2TF3TxB0DjnDtC+4yER2aV/UiH1rYpa
-         OmenXvBOjBQl7+HBA9vtVMFFcqpp+TJFskJtPq4vHlu94acIFpJb3u2LQwYKWX4X/avq
-         wFJHfM3d7hzE24Shm53cFLbz5+ZxzBEJToWmsseKxxBcOfNy3Jt0/vkzfaieVj/S5Ovy
-         gnUw==
-X-Gm-Message-State: AGi0PuZp0lQ1QbRww0p3iDDGhF5ZS3zC6Fg0yd1N5We9avGEDCGQmphw
-        Ztos8p0P5BFPR17LKUz5NDpdP7INW2d0JvUbgHuJJYcReGrpSP6KepAgmaNb0IIMCtHhG78AJa0
-        ewT9bmNIxOUWpStakCZiewPve
-X-Received: by 2002:adf:e848:: with SMTP id d8mr8636717wrn.209.1585918166424;
-        Fri, 03 Apr 2020 05:49:26 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJoZDTst7iMtymL+le90gPhjILOuY+V5+iX0JvWp5fRv+yD08cpySH5v9ZSJ1uy7aixV4S+MQ==
-X-Received: by 2002:adf:e848:: with SMTP id d8mr8636706wrn.209.1585918166276;
-        Fri, 03 Apr 2020 05:49:26 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id g3sm12136573wrm.66.2020.04.03.05.49.24
+        bh=qQ4GjlaBNnkqjandRnDKumnjBIkctbwHxWdo0M4wsMI=;
+        b=X2rEx6BkXHCYOU7WKYg+fJszDTpwtow2db6Y0QWqnNNPt0SRx5L4vEd/m6c3md9hF/
+         vyMbAoNtG72e2WWK9fBR0knzcny1lSTdgEyrnqqBxkklp+EsdOziw9mlOvjKagdVKpve
+         3/nsGSEJJpqXblnY2EjiKea9w3YdOFhTVwbGHJd5V/CUdQM2axwEOnjLstPDeGIaTSWG
+         K+OMWcbb0zQwWY0rM2jBxD199NbtKOMGfrsOscLSTQCidXFE31S9+aXwRlG5cb3pgcdG
+         4HbVlCUFkSlxNz0KeMoZrrL+yA3k/GSnmSaCAFzVagSR5Lsp1Hr5lh5NGFDiBOMkfrEs
+         plfg==
+X-Gm-Message-State: AGi0PuY0n1LV5d6ARlkyR8cVYvRLWfZkiH54y0cAVFH0BifYNZd6kOVn
+        jG07DMoohQWEAwZ5AgB3FmUQ2iJ466g=
+X-Google-Smtp-Source: APiQypL5gP9d5L/YD06dpE9QuVApfFMy3N0f0Ub7xYKYv6KkNS8Zf7gkd/4JdkznDB02IeowhtMk2Q==
+X-Received: by 2002:a17:906:7045:: with SMTP id r5mr8266254ejj.29.1585918193015;
+        Fri, 03 Apr 2020 05:49:53 -0700 (PDT)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id by25sm1649452ejb.16.2020.04.03.05.49.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 05:49:25 -0700 (PDT)
-Subject: Re: [PATCH 3/7] objtool: Add support for intra-function calls
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-4-alexandre.chartre@oracle.com>
- <db508586-258a-0616-d649-e76e95df9611@redhat.com>
- <20200402154919.2c6shw4hfreagchg@treble>
- <3d075cb2-8d99-5ab7-4842-efef1964247d@redhat.com>
- <20200403124107.GO20730@hirez.programming.kicks-ass.net>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <efa3b732-f102-9c4a-16e8-ffdb436cb9b1@redhat.com>
-Date:   Fri, 3 Apr 2020 13:49:24 +0100
+        Fri, 03 Apr 2020 05:49:52 -0700 (PDT)
+Subject: Re: [PATCH] ns: Fix time_for_children symlink
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Andrei Vagin <avagin@openvz.or>, Adrian Reber <adrian@lisas.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, Dmitry Safonov <0x7f454c46@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Containers <containers@lists.linux-foundation.org>,
+        stable <stable@vger.kernel.org>
+References: <a2418c48-ed80-3afe-116e-6611cb799557@gmail.com>
+ <20200403123431.tsvj6alagg3ee356@wittgenstein>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <11460527-7d03-0966-508a-b67dc2bc8459@arista.com>
+Date:   Fri, 3 Apr 2020 13:49:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200403124107.GO20730@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200403123431.tsvj6alagg3ee356@wittgenstein>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,26 +87,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/3/20 1:41 PM, Peter Zijlstra wrote:
-> On Fri, Apr 03, 2020 at 09:01:38AM +0100, Julien Thierry wrote:
+On 4/3/20 1:34 PM, Christian Brauner wrote:
+> On Fri, Apr 03, 2020 at 02:11:39PM +0200, Michael Kerrisk (man-pages) wrote:
+>> Dmitry, Andrei,
 >>
->> Last I found is in qcom_link_stack_sanitization() [2], but that's just a
->> workaround for a very specific hardware. In my local tree I just put the
->> function as STACK_FRAME_NON_STANDARD. But the code just saves the return
->> address, has 16 call instructions that just call the instruction after them,
->> restores the return address and lets the C-function return normally (and it
->> somehow fixes something for that hardware).
+>> Looking at the contents of the /proc/PID/ns/time_for_children
+>> symlink shows an anomaly:
 >>
-> That sounds very much like the RSB flushing we do.
+>> $ ls -l /proc/self/ns/* |awk '{print $9, $10, $11}'
+>> ...
+>> /proc/self/ns/pid -> pid:[4026531836]
+>> /proc/self/ns/pid_for_children -> pid:[4026531836]
+>> /proc/self/ns/time -> time:[4026531834]
+>> /proc/self/ns/time_for_children -> time_for_children:[4026531834]
+>> /proc/self/ns/user -> user:[4026531837]
+>> ...
+>>
+>> The reference for 'time_for_children' should be a 'time' namespace,
+>> just as the reference for 'pid_for_children' is a 'pid' namespace.
+>> In other words, I think the above time_for_children link should read:
+>>
+>> /proc/self/ns/time_for_children -> time:[4026531834]
+>>
+>> If you agree with this patch, then it should be marked for
+>> stable@vger.kernel.org.
+>>
+>> Signed-off-by: Michael Kerrisk <mtk.manpages@gmail.com>
 > 
+> Yeah, that just seems like an oversight.
+> 
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Yes, the piece of code you posted reminded me of this. The difference is 
-that the RSB part uses a loop and counter while the qcom thing has a 
-fixed amount of call instructions (which can make things easier for 
-static analysis, if we'd really want to go down that road).
+Thanks,
+
+Reviewed-by: Dmitry Safonov <dima@arista.com>
+Fixes: 769071ac9f20 ("ns: Introduce Time Namespace")
++Cc: stable # v5.6
 
 -- 
-Julien Thierry
-
+          Dmitry
