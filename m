@@ -2,150 +2,143 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471C3C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4728C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 149422080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88BD20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="NHFNZAJh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N6CyMjyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390743AbgDCJpE (ORCPT
+        id S2403769AbgDCJpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:45:04 -0400
-Received: from mail-eopbgr1400120.outbound.protection.outlook.com ([40.107.140.120]:6221
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727792AbgDCJpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:45:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eBfTxoYsfIPOsFCTdDSVRm1SoL5jy47WTROX0+0fi+Sw/Vy5q3XHWP9gx8KV3Dlnkahe1X9A45eEh/G96leUfexY4aHJvdjZC3lY61AOCYEjCypElqCqK81qfPahLGlHZovDA6ijCh8yUdTTBbqGLDEqxME8B3NFfr6qS/jtbcf42KSZnU6v+JwxcKsZ1uYlXP0UgRt1xnFrBfVryxY4gAUbTn6/tNbCTLBFZZHnCrvfRZ7wEX1KRHBCX7kKO/9FvHMFkA9sH7d5TOL58hm/zsdQV5lTKDeEFN+m2c/YkiiYDnvLNQWE26oyStbQAKAvWLkCR5T9VTNzQg2yPT3SGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jIc5nBQu/aOcO3k0qYvTFoWOqJSS8aaTn08gKjqehSA=;
- b=SFclxZULwwDQtSolv4+++tNai3uBt5CrbCNd6vc4EtLFWrYyWZ8Brfu5Cp2yyVmo7pFTgajUGaMofwl0tyy3OnNULaH8RLsGmI0WhAmf/y1DTlV6eKsS5t3BA0OhDMg+G8f5wIsUQ5B01P8+Zi4KZC1ehnpvfzZ1kpMS7LlOCwNwSkpQ3qrlT+htKrmDIy4cRFzXmtO4IYE+28HNFXPR9j0/iveA7wRO+CDFG0pApwgo3x3zcyw3rGsF/YNvDuHZy2ouq8iYPA1PWOzlPV38CZLKXwI43TAwmHCzWModqlXGrzVN+ZrDNlF7amUsDi67r1DsPDUJRH/XghXPl4J9Iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jIc5nBQu/aOcO3k0qYvTFoWOqJSS8aaTn08gKjqehSA=;
- b=NHFNZAJhDstltq32hGqLLeey9JwzlAIK5WyYzI806cP8joci8llpQzkg/o16ZLaQpO83xXlKMlKHhsZgSiBuaV8YwTzLMhKqfevf+oX7zEZG70mFcudTaRudRi7qYIp89RLJAzGZcOL2Gt698Tp8bBb7NQg7WRMt0owI+13gKbA=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB5246.jpnprd01.prod.outlook.com (20.179.187.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.17; Fri, 3 Apr 2020 09:44:58 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
- 09:44:58 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: RE: [PATCH v6 02/11] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
-Thread-Topic: [PATCH v6 02/11] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
-Thread-Index: AQHWCSZhTMobSnptQkuFlRDlbRGMO6hnB2iggAAJ7ICAAAiQUIAACS6AgAACZ6A=
-Date:   Fri, 3 Apr 2020 09:44:58 +0000
-Message-ID: <TYAPR01MB4544C82A8763A28034985C9DD8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1585856319-4380-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <TYAPR01MB454403D69A74036B74CC8220D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <CAMuHMdVWn=U82k5RJnBaRUgRHh3bRfdncOupmX67-u-nbwsG9w@mail.gmail.com>
- <TYAPR01MB4544B6B749588A7390323D28D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <OSBPR01MB35905B0D9DB55E8FBA340341AAC70@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB35905B0D9DB55E8FBA340341AAC70@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b8b28959-59cd-461b-ce6f-08d7d7b3ac43
-x-ms-traffictypediagnostic: TYAPR01MB5246:|TYAPR01MB5246:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB524602F757F73EDC9F0A000ED8C70@TYAPR01MB5246.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(346002)(39860400002)(366004)(136003)(396003)(52536014)(54906003)(55236004)(33656002)(55016002)(9686003)(86362001)(478600001)(8936002)(6506007)(71200400001)(2906002)(7696005)(7416002)(66556008)(186003)(110136005)(5660300002)(316002)(26005)(66946007)(81156014)(4326008)(76116006)(66476007)(66446008)(81166006)(8676002)(64756008);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QVSHotmYBiYyMcntgRJUe1oifgbDQid7HfY+XYyFcGF1OBrX0BzwJJm7tPjbdLnhHADap0iNJbEywr2yOYsrxxrAZjnaanQPEr98puLpQlsoY7JpqKDFaMnm7691PqjGRkiB70g//1JqJVuYmyUU3Xt/tfjQB+yfXmcYFeWBWIptFRIkXyNH8DtaVMGORagTkbZ0XLv/LFhc/mKeVlh1rdljVSXqjf3u5ZnSbj2q45sqia1gOMhdeK0HbJsOV4btUx/F0joJKHrhAjJdlN+3DnvqHZpiFovoi4/zvsRWw0H5yjjXSjhdyZqW7zM7UE7o6NcC5Cii8I09G0pz+c7kbmptr1GcZvYxy2iCfLWHIqMTn9TAKf0oLghviprKc7ohFdjaXrxyvBkveudpGFp6tQtSuyXAJ/kmV9w9E/DB1rdq1H2tKiBmLW/3VCOlB2Mi
-x-ms-exchange-antispam-messagedata: ZntTqWT1qDAwjWGvjXPfeAvUbYx2Z4KRJngscq04Gzb3tHaHkzznoMx/KPHyUlwm9I+Ei8KYCCT2wGSsUauT/OO36BfSRgCJ5avN3GKpVqKQMcuc5ef1vr7UkZ/T+nh9CGmUAR1shKeEECi0ldIJqQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 3 Apr 2020 05:45:12 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40718 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727792AbgDCJpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 05:45:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585907111;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kS5ENOsGNL/0nyuCfyKnLwjxvhjQBYybEvJXw0BjaFU=;
+        b=N6CyMjyfxzVd2bl3Ieg8IQRkyQwr+KrNBJwqE3canQOsDx++SvIAbi16RWUYcB9yZ4pb0P
+        gdQrSVFyEVTojUgNStPg6Gnb7kxFfEXaJl0s8rQ5uVRMYCIJIr/G2pucB/5B7k6tYHOpUJ
+        H+SVHAMqZ8yO3cZUhduWUO+HhefLcak=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-300--DxnThAKPHSW_oUQrNHOgA-1; Fri, 03 Apr 2020 05:45:09 -0400
+X-MC-Unique: -DxnThAKPHSW_oUQrNHOgA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3FD2108442D;
+        Fri,  3 Apr 2020 09:45:07 +0000 (UTC)
+Received: from krava (unknown [10.40.194.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 423C7B19A5;
+        Fri,  3 Apr 2020 09:45:03 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 11:45:00 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH] perf stat: Fix no metric header if --per-socket and
+ --metric-only set
+Message-ID: <20200403094500.GH2784502@krava>
+References: <20200331180226.25915-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8b28959-59cd-461b-ce6f-08d7d7b3ac43
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 09:44:58.3338
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jG4XhzeRNZ5dal9JO05wXwBo912oynQRqmYfeBjeDHxOV9G7uC7Dm00VRe9CfW2Zr1WTuWGCCPzMXeCFuTzHhbMaaDwCUpCFVgUTO18t4CswgrsU4j7+q95C/vQbYQoe
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5246
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331180226.25915-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUHJhYmhha2FyLXNhbiwNCg0KPiBGcm9tOiBQcmFiaGFrYXIgTWFoYWRldiBMYWQsIFNlbnQ6
-IEZyaWRheSwgQXByaWwgMywgMjAyMCA2OjMyIFBNDQo8c25pcD4NCj4gPiA+IEJUVywgSSdtIHdv
-bmRlcmluZyBhYm91dCAiW1BBVENIIHY2IDA1LzExXSBQQ0k6IHJjYXI6IEZpeCBjYWxjdWxhdGlu
-Zw0KPiA+ID4gbWFzayBmb3IgUENJRVBBTVIgcmVnaXN0ZXIiLiBDYW4gdGhlIGlzc3VlIGZpeGVk
-IGJ5IHRoaXMgcGF0Y2ggaGFwcGVuIHdpdGgNCj4gPiA+IHRoZSBjdXJyZW50IGRyaXZlciBpbiBo
-b3N0IG1vZGUsIG9yIGlzIHRoYXQgbGltaXRlZCB0byBlcCBtb2RlPw0KPiA+ID4gSW4gY2FzZSBv
-ZiB0aGUgZm9ybWVyLCBwbGVhc2Ugc3VibWl0IGl0IHRvIHRoZSBQQ0kgbWFpbnRhaW5lciBhcyBh
-IHNlcGFyYXRlDQo+ID4gPiBmaXguDQo+ID4NCj4gPiBUaGFuayB5b3UgZm9yIHBvaW50ZWQgaXQg
-b3V0LiBJIHRoaW5rIHRoaXMgaXMgdGhlIGNhc2Ugb2YgdGhlIGZvcm1lci4NCj4gPiBJSVVDLCBp
-ZiBzdWNoIGEgc21hbGwgd2luZG93IFBDSWUgZGV2aWNlIGV4aXN0cywgdGhlIGlzc3VlIGhhcHBl
-bnMuDQo+ID4NCj4gPiBQcmFiaGFrYXItc2FuLCBpcyBteSB1bmRlcnN0YW5kaW5nIGNvcnJlY3Q/
-DQo+ID4NCj4gVGhpcyBpc3N1ZSB3aWxsIG9ubHkgYmUgaGl0IG9uIEVQLCB3aGVuIGluIGhvc3Qg
-bW9kZSB0aGUgc2l6ZXMgd2lsbCBiZSBmaXhlZCB0byAxIE1ieXRlcyAvMiBNYnl0ZXMgLzEyOCBN
-Ynl0ZXMNCg0KVGhhbmsgeW91IGZvciB5b3VyIGNvbW1lbnQuIE5vdyBJIHVuZGVyc3Rvb2QgdGhp
-cyBpcyByZWxhdGVkIHRvICJQQ0lFbiBtZW1vcnkgbSIgaW4gdGhlIGRvY3VtZW50DQphbmQgcmVs
-YXRlZCB0byByYW5nZXMgcHJvcGVydHkgaW4gdGhlIGRldmljZSBub2RlLiBTbywgSSdkIGxpa2Ug
-dG8gcmVjYWxsIG15IHByZXZpb3VzIGNvbW1lbnQgYW5kDQpJIGFncmVlIHRoZSBwYXRjaCAwNi8x
-MSBpcyByZXF1aXJlZCBvbiBFUCBtb2RlIG9ubHkuDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGly
-byBTaGltb2RhDQoNCg==
+On Wed, Apr 01, 2020 at 02:02:26AM +0800, Jin Yao wrote:
+> We received a report that was no metric header displayed if --per-socket
+> and --metric-only were both set.
+> 
+> It's hard for script to parse the perf-stat output. This patch fixes this
+> issue.
+> 
+> Before:
+> 
+>   root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
+>   ^C
+>    Performance counter stats for 'system wide':
+> 
+>   S0        8                  2.6
+> 
+>          2.215270071 seconds time elapsed
+> 
+>   root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
+>   #           time socket cpus
+>        1.000411692 S0        8                  2.2
+>        2.001547952 S0        8                  3.4
+>        3.002446511 S0        8                  3.4
+>        4.003346157 S0        8                  4.0
+>        5.004245736 S0        8                  0.3
+> 
+> After:
+> 
+>   root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
+>   ^C
+>    Performance counter stats for 'system wide':
+> 
+>                                CPI
+>   S0        8                  2.1
+> 
+>          1.813579830 seconds time elapsed
+> 
+>   root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
+>   #           time socket cpus                  CPI
+>        1.000415122 S0        8                  3.2
+>        2.001630051 S0        8                  2.9
+>        3.002612278 S0        8                  4.3
+>        4.003523594 S0        8                  3.0
+>        5.004504256 S0        8                  3.7
+> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
+> ---
+>  tools/perf/util/stat-shadow.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 0fd713d3674f..03ecb8cd0eec 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -803,8 +803,11 @@ static void generic_metric(struct perf_stat_config *config,
+>  				     out->force_header ?
+>  				     (metric_name ? metric_name : name) : "", 0);
+>  		}
+> -	} else
+> -		print_metric(config, ctxp, NULL, NULL, "", 0);
+> +	} else {
+> +		print_metric(config, ctxp, NULL, NULL,
+> +			     out->force_header ?
+> +			     (metric_name ? metric_name : name) : "", 0);
+> +	}
+>  
+>  	for (i = 1; i < pctx.num_ids; i++)
+>  		zfree(&pctx.ids[i].name);
+> -- 
+> 2.17.1
+> 
+
