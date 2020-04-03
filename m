@@ -2,224 +2,407 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3412C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC0FC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19F12078C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="x7JxCfa9"
+	by mail.kernel.org (Postfix) with ESMTP id B0E1D207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgDCVqG (ORCPT
+        id S1728360AbgDCVqR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:46:06 -0400
-Received: from mail-dm6nam12on2043.outbound.protection.outlook.com ([40.107.243.43]:6168
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726460AbgDCVqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:46:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VXZSKB0pzJU6uHbNBPTACXPrvFLY4jf+o64lV9cwSVy4y8qU5lPFV7MlnZUbqJEFb6uapOKehZbGe6O7BXnth63vj5PygsWk/Xl+tfBCnxBiuztHLE4JuW5vACpWnPmY0EmhW35PKoEIpVneWP+f3LbJqH9f40CPYBQrSazK0qXfBYZLBoSilLxYfQhFRsfoOyXYrUbcANMLt3ZvhqHmu+bOHWHmEESMw1xfmSS1N9F2vuCaNfp4UrfkMx21GAmxg9OqlfJNoowfVzZEaHuulVgAPN3Ux0gshK/fT+OP4XOInvMCQpyV9ddsjRrz3j3rDsMLJVM666cIadYMNwiZ5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dqt+cOw/NNk8PMZok7O6ak7zpWkv3tw34fVZ7tA9cuc=;
- b=Cn5SIJ5TjNV5R5Nld5aBbtOjzT7yrsHU35UcNmCVXXM/5pcJtivWDwqqq/VHluA1vm0lUzt0H/YlT9SR/tIVztjmc4+hghlfAkersMR8hjUitCKV3sLw35YpVDQAk4w2DyWb8WO15RwWmot3rWfSX2sgeyfu7glU83dYu/IEQTlVojri9lVWkF5RNrEWHWkDvHulvU7VH+Qf9n4Ys1pe+9Pe9KqG26coR++bP0AXVe9ZH4OrhI0Wq8byT9S5KtOsEUApVfPU9E5bvV9aD/+yKD9El1NQy95JbDA4FnY3//2drvpiHPKDUudcG8/WEejLc/Dv5LhEFnMaC89hTEiAqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dqt+cOw/NNk8PMZok7O6ak7zpWkv3tw34fVZ7tA9cuc=;
- b=x7JxCfa9kfz2+lavsDLwWxvOGa5rVWf7nP0G7jp0ZvYzmSr6DARp5h0U7tuAq5Nmq/GkdO86BqvZyrJhH0+lxFRqTkWHlSH7xXXYrkeJ0f0or6Ubpu0yYZFjYEFOLGfjRkPbWdJRPzbO+wU4Y0naXdtLCjJ9ZiOug6zx2aOmRlY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ashish.Kalra@amd.com; 
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1465.namprd12.prod.outlook.com (2603:10b6:4:7::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Fri, 3 Apr 2020 21:46:01 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
- 21:46:01 +0000
-Date:   Fri, 3 Apr 2020 21:45:59 +0000
-From:   Ashish Kalra <ashish.kalra@amd.com>
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
-        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com,
-        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
-Subject: Re: [PATCH v6 12/14] KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET
- ioctl
-Message-ID: <20200403214559.GB28747@ashkalra_ubuntu_server>
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <9e959ee134ad77f62c9881b8c54cd27e35055072.1585548051.git.ashish.kalra@amd.com>
- <b77a4a1e-b8ca-57a2-d849-adda91bfeac7@oracle.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b77a4a1e-b8ca-57a2-d849-adda91bfeac7@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: DM6PR02CA0067.namprd02.prod.outlook.com
- (2603:10b6:5:177::44) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        Fri, 3 Apr 2020 17:46:17 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:42385 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727924AbgDCVqR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 17:46:17 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MkYoK-1iuRul1YPW-00m5xe for <linux-kernel@vger.kernel.org>; Fri, 03 Apr
+ 2020 23:46:13 +0200
+Received: by mail-qk1-f179.google.com with SMTP id x3so9784523qki.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 14:46:13 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYpY3y7HCetrbC20RCF4y5adJlErxwWY4Kxf7mxorysM5S5NLdI
+        lVcQWHKNStzilM3a8g7KCQSTz8NsGDeQgF8HRns=
+X-Google-Smtp-Source: APiQypIBKute2f7NfXo6S8IUK3sc+v5SDBWJLbEFHO6MsCX0a/1Z6t/eS4h+wOr9M59cy5y7mMSyJxj93q4yIaTVEQk=
+X-Received: by 2002:a37:8707:: with SMTP id j7mr11169036qkd.394.1585950372180;
+ Fri, 03 Apr 2020 14:46:12 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server (165.204.77.1) by DM6PR02CA0067.namprd02.prod.outlook.com (2603:10b6:5:177::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend Transport; Fri, 3 Apr 2020 21:46:00 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3d04e49e-e1ad-403d-bb07-08d7d81866fe
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1465:|DM5PR12MB1465:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1465DF326DE8701B42DB57988EC70@DM5PR12MB1465.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0362BF9FDB
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(86362001)(1076003)(5660300002)(44832011)(4326008)(478600001)(6496006)(52116002)(33656002)(16526019)(186003)(53546011)(6916009)(7416002)(8676002)(55016002)(81156014)(33716001)(956004)(81166006)(66946007)(9686003)(8936002)(316002)(26005)(66556008)(66476007)(2906002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zee9q4eATn2oYzAF+wgtHlydIHeBY2WwsISd9evmkDwIp0QuMm3vEoj6FRzb+C5T1u6qPMJT7tlXvaoueKI+ImqJG8/3SahsS6wJYr4//jxYdNicb2tAMIPbe6cXGFYkhqlDvI/ACOo4hM3rXyefOud/3GLSB4UhgP81hbXg71s6T+Nqc21lbk4aTKPr2Tv5TbmvQxvE9Cp0zLiLAnolOpe7y20ZWXWWQ2ArNyHfeaAWEmBVWwcr2M3iISg3RcyyE1+RMLexML+ltxXWJueqBTunUdZyyvJHnpPlDmGpNFhYcLlwGL2xeh9V2b4UttwW9SRduMqz1uDddJl1w/2Vp3vAGVKaLTqlsnDhjdc6Lu5FhPSV96SXFs1RgROyHMHB4/tI7bxEpT49uyXE2lewVaqkPwPwydUDEANcAIBIzu1Osg7GVdlBQe+AroBvp8qB
-X-MS-Exchange-AntiSpam-MessageData: eXoImM4QSph/5eebXFgnBJACeEuFabpx245UkHeRTwxyIBq3omh5ZC/lB65c5op0paHRSTNtNzkx0sSLMxKwJ5juwqRjuJ9Uwu+L+fdIahcKiz3b6oN+K4+aKsYK/N6UHqZKZ6oN3tuhQRbEXbIsbA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d04e49e-e1ad-403d-bb07-08d7d81866fe
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2020 21:46:01.7138
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: B8q3srQ8GLTtK3MAO2fmssiIhJKAAU47CmbRdVaWIzqSviWFjEPsACgg5zy4e/Wus1IcM3zx0FKp+DCkgwwaYg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1465
+References: <CAK8P3a1aO+LUu6KsW+s8aZMNWt2yz7kqe=LARY=ifMKOqT9uNQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1aO+LUu6KsW+s8aZMNWt2yz7kqe=LARY=ifMKOqT9uNQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 3 Apr 2020 23:45:56 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3iGtudeWTwufBYYM29jL5b_FRkqzU2QZiQRu0B2NhyZg@mail.gmail.com>
+Message-ID: <CAK8P3a3iGtudeWTwufBYYM29jL5b_FRkqzU2QZiQRu0B2NhyZg@mail.gmail.com>
+Subject: [GIT PULL 4/4] ARM: devicetree updates
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:dCmuulq/aQ6cSjvc4BMEw1+phRCVHM16Q0hJd7IDil04IpafzOS
+ 1bgziuk4OFoSItuST9F7pvJULTHKZHL8JDkaGLVmejOsTzq5pPFlgTFgIKh7s0TZAElFWj9
+ qaYuINbumdV34Q0g/Hvg7Ns3DhtQIfqM3FcpbyaUxm8uqkfTCGsLy5TAQzO1Kxd0nKcsim3
+ wfrDUNgim645Graww93bA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wcJPGWgjpDU=:YO5aDB4yYBxYZ9JEpmFAFs
+ Vv09Olp4V2YxIau5sk8mqjq8ufBtApJStc54KSGmpJYya2q3aZ88q9GW0olMKwwl+F7H2A/ue
+ HTM5k9MG6lrnQdzW8q8Uio27Vg5im5Bq686AzjM9JbR39j/jKx8zA2IOGL+mhm42nOxtgBb4N
+ aZoTAu1WezOG0GSjJlmuC8lfOKXhMh64MsdasYzu9+03Zzz/atwwiSnDq6qzSipIICLfSd49a
+ 89nqUVV2kJAPEhOSZdQ4ZoIr+fXN9hHdb7NHo2Mi0E1aiTMPdw6CdN0BWF62vBb99T73D9k7N
+ b6yxgvsV7YqVW542NN/fmUUcCOJmhR7cbb9yxLPW6ZPJFiBhaNBUxi3pw5Y2G2OJVN7x/60sZ
+ BU2gpYni3JPTiZP5zX8uwfvEXprKGGwXzqn3Y9hK2Kgl1bD7vgxr/hAhT8a4MO+m7goihnpkZ
+ ZyANqxxqk5TzFCGAe4CQcFLPN0mOee7rX83F9EytyN6SGAdlR0PBFOiDi5fFUiu6o5BkqTORZ
+ 7uWjWxUOmJHl/A1OPEJrjjvTjrb3PpVcyOHuA9jSJvXfN8QugjMllg85J6I49tYutJ7At8ADp
+ fAbTnXbArlBGRxeNeZcPbTU2c/66HHeeUzgo2dIcmMw7fIGGYXf9K0rEBynDA5YIMP/RQ1zdt
+ ztQUBYH3oyNcWWDwW6dJ/hso58VTjKu9z6gVw+LOYM9rWYuxKUehl6FAjrsTDxm63xSWWLPZn
+ AwZzgLLo3jGH7rcDFB5r+tmlBXYEaoaaQRjhQJuE0bzqcxavF9xQ2oWYWvAVVrL6FwnlxkcR/
+ UgeYbkp4qzaLI3QX/EHwUNMgR4xBs2gPniLahQ56RHKp/47M6c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 02:14:23PM -0700, Krish Sadhukhan wrote:
-> 
-> On 3/29/20 11:23 PM, Ashish Kalra wrote:
-> > From: Ashish Kalra <ashish.kalra@amd.com>
-> > 
-> > This ioctl can be used by the application to reset the page
-> > encryption bitmap managed by the KVM driver. A typical usage
-> > for this ioctl is on VM reboot, on reboot, we must reinitialize
-> > the bitmap.
-> > 
-> > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> > ---
-> >   Documentation/virt/kvm/api.rst  | 13 +++++++++++++
-> >   arch/x86/include/asm/kvm_host.h |  1 +
-> >   arch/x86/kvm/svm.c              | 16 ++++++++++++++++
-> >   arch/x86/kvm/x86.c              |  6 ++++++
-> >   include/uapi/linux/kvm.h        |  1 +
-> >   5 files changed, 37 insertions(+)
-> > 
-> > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> > index 4d1004a154f6..a11326ccc51d 100644
-> > --- a/Documentation/virt/kvm/api.rst
-> > +++ b/Documentation/virt/kvm/api.rst
-> > @@ -4698,6 +4698,19 @@ During the guest live migration the outgoing guest exports its page encryption
-> >   bitmap, the KVM_SET_PAGE_ENC_BITMAP can be used to build the page encryption
-> >   bitmap for an incoming guest.
-> > +4.127 KVM_PAGE_ENC_BITMAP_RESET (vm ioctl)
-> > +-----------------------------------------
-> > +
-> > +:Capability: basic
-> > +:Architectures: x86
-> > +:Type: vm ioctl
-> > +:Parameters: none
-> > +:Returns: 0 on success, -1 on error
-> > +
-> > +The KVM_PAGE_ENC_BITMAP_RESET is used to reset the guest's page encryption
-> > +bitmap during guest reboot and this is only done on the guest's boot vCPU.
-> > +
-> > +
-> >   5. The kvm_run structure
-> >   ========================
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index d30f770aaaea..a96ef6338cd2 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -1273,6 +1273,7 @@ struct kvm_x86_ops {
-> >   				struct kvm_page_enc_bitmap *bmap);
-> >   	int (*set_page_enc_bitmap)(struct kvm *kvm,
-> >   				struct kvm_page_enc_bitmap *bmap);
-> > +	int (*reset_page_enc_bitmap)(struct kvm *kvm);
-> >   };
-> >   struct kvm_arch_async_pf {
-> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> > index 313343a43045..c99b0207a443 100644
-> > --- a/arch/x86/kvm/svm.c
-> > +++ b/arch/x86/kvm/svm.c
-> > @@ -7797,6 +7797,21 @@ static int svm_set_page_enc_bitmap(struct kvm *kvm,
-> >   	return ret;
-> >   }
-> > +static int svm_reset_page_enc_bitmap(struct kvm *kvm)
-> > +{
-> > +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> > +
-> > +	if (!sev_guest(kvm))
-> > +		return -ENOTTY;
-> > +
-> > +	mutex_lock(&kvm->lock);
-> > +	/* by default all pages should be marked encrypted */
-> > +	if (sev->page_enc_bmap_size)
-> > +		bitmap_fill(sev->page_enc_bmap, sev->page_enc_bmap_size);
-> > +	mutex_unlock(&kvm->lock);
-> > +	return 0;
-> > +}
-> > +
-> >   static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
-> >   {
-> >   	struct kvm_sev_cmd sev_cmd;
-> > @@ -8203,6 +8218,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
-> >   	.page_enc_status_hc = svm_page_enc_status_hc,
-> >   	.get_page_enc_bitmap = svm_get_page_enc_bitmap,
-> >   	.set_page_enc_bitmap = svm_set_page_enc_bitmap,
-> > +	.reset_page_enc_bitmap = svm_reset_page_enc_bitmap,
-> 
-> 
-> We don't need to initialize the intel ops to NULL ? It's not initialized in
-> the previous patch either.
-> 
-> >   };
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
 
-This struct is declared as "static storage", so won't the non-initialized
-members be 0 ?
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
 
-> >   static int __init svm_init(void)
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 05e953b2ec61..2127ed937f53 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -5250,6 +5250,12 @@ long kvm_arch_vm_ioctl(struct file *filp,
-> >   			r = kvm_x86_ops->set_page_enc_bitmap(kvm, &bitmap);
-> >   		break;
-> >   	}
-> > +	case KVM_PAGE_ENC_BITMAP_RESET: {
-> > +		r = -ENOTTY;
-> > +		if (kvm_x86_ops->reset_page_enc_bitmap)
-> > +			r = kvm_x86_ops->reset_page_enc_bitmap(kvm);
-> > +		break;
-> > +	}
-> >   	default:
-> >   		r = -ENOTTY;
-> >   	}
-> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> > index b4b01d47e568..0884a581fc37 100644
-> > --- a/include/uapi/linux/kvm.h
-> > +++ b/include/uapi/linux/kvm.h
-> > @@ -1490,6 +1490,7 @@ struct kvm_enc_region {
-> >   #define KVM_GET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
-> >   #define KVM_SET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
-> > +#define KVM_PAGE_ENC_BITMAP_RESET	_IO(KVMIO, 0xc7)
-> >   /* Secure Encrypted Virtualization command */
-> >   enum sev_cmd_id {
-> Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/arm-dt-5.7
+
+for you to fetch changes up to 8bdbf169084ec00833bff61cda0014b7fbdf15ac:
+
+  Merge branch 'arm/late' into arm/dt (2020-04-03 22:45:37 +0200)
+
+----------------------------------------------------------------
+ARM: devicetree updates for v5.7
+
+Most of the commits are for additional hardware support and minor fixes
+for existing machines for all the usual platforms: qcom, amlogic, at91,
+gemini, mediatek, ti, socfpga, i.mx, layerscape, uniphier, rockchip,
+exynos, ux500, mvebu, tegra, stm32, renesas, sunxi, broadcom, omap,
+and versatile.
+
+The conversion of binding files to machine-readable yaml format
+continues, along with fixes found during the validation.
+Andre Przywara takes over maintainership for the old Calxeda Highbank
+platform and provides a number of updates.
+
+The OMAP2+ platforms see a continued move from platform data into
+dts files, for many devices that relied on a mix of auxiliary data
+in addition to the DT description
+
+A moderate number of new SoCs and machines are added, here is a full
+list:
+
+- Two new Qualcomm SoCs with their evaluation boards: Snapdragon 865
+  (SM8250) is the current high-end phone chip, and IPQ6018 is a new
+  WiFi-6 router chip.
+
+- Mediatek MT8516 application processor SoC for voice assistants, along
+  with the "pumpkin" development board
+
+- NXP i.MX8M Plus SoC, a variant of the popular i.MX8M, along with an
+  evaluation board.
+
+- Kontron "sl28" board family based on NXP LS1028A
+
+- Eleven variations of the new i.MX6 TechNexion Pico board, combining
+  the "dwarf", "hobbit", "nymph" and "pi" baseboards with i.MX6/i.MX7
+  SoM carriers
+
+- Three additional variants of the Toradex Colibri board family, all
+  based on versions of the NXP i.MX7.
+
+- The Pinebook Pro laptop based on Rockchip RK3399
+
+- Samsung S7710 Galaxy Xcover 2, a 2013 vintage Android phone based on
+  the ST-Ericsson u8500 platform
+
+- DH Electronics DHCOM SoM and PDK2 rev. 400 carrier based on
+  STMicroelectronics stm32mp157
+
+- Renesas M3ULCB starter kit for R-Car M3-W+
+
+- Hoperun HiHope development board with Renesas RZ/G2M
+
+- Pine64 PineTab tablet and PinePhone phone, both based on Allwinner A64
+
+- Linutronix Testbox v2 for the Lamobo R1 router, based on Allwinner A20
+
+- PocketBook Touch Lux 3 ebook reader, based on Allwinner A13
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+----------------------------------------------------------------
+To spare you the 80kb of git-request-pull output, here is a very
+abbreviated version
+
+Arnd Bergmann (38):
+      Merge tag 'renesas-arm-dt-for-v5.7-tag1' of
+git://git.kernel.org/.../geert/renesas-devel into arm/dt
+      Merge tag 'renesas-arm64-dt-for-v5.7-tag1' of
+git://git.kernel.org/.../geert/renesas-devel into arm/dt
+      Merge tag 'versatile-dts-v5.7-1' of
+git://git.kernel.org/.../linusw/linux-integrator into arm/dt
+      Merge tag 'omap-for-v5.7/dt-signed' of
+git://git.kernel.org/.../tmlind/linux-omap into arm/dt
+      Merge tag 'arm-soc/for-5.7/devicetree' of
+https://github.com/Broadcom/stblinux into arm/dt
+      Merge tag 'sunxi-dt-for-5.7' of
+git://git.kernel.org/.../sunxi/linux into arm/dt
+      Merge tag 'renesas-arm-dt-for-v5.7-tag2' of
+git://git.kernel.org/.../geert/renesas-devel into arm/dt
+      Merge tag 'renesas-arm64-dt-for-v5.7-tag2' of
+git://git.kernel.org/.../geert/renesas-devel into arm/dt
+      Merge tag 'renesas-dt-bindings-for-v5.7-tag1' of
+git://git.kernel.org/.../geert/renesas-devel into arm/dt
+      Merge tag 'stm32-dt-for-v5.7-1' of
+git://git.kernel.org/.../atorgue/stm32 into arm/dt
+      Merge tag 'tegra-for-5.7-dt-bindings' of
+git://git.kernel.org/.../tegra/linux into arm/dt
+      Merge tag 'tegra-for-5.7-arm-dt' of
+git://git.kernel.org/.../tegra/linux into arm/dt
+      Merge tag 'tegra-for-5.7-arm64-dt' of
+git://git.kernel.org/.../tegra/linux into arm/dt
+      Merge tag 'mvebu-dt64-5.7-1' of
+git://git.infradead.org/linux-mvebu into arm/dt
+      Merge tag 'ux500-dts-v5.7' of
+git://git.kernel.org/.../linusw/linux-stericsson into arm/dt
+      Merge tag 'samsung-dt-5.7' of
+git://git.kernel.org/.../krzk/linux into arm/dt
+      Merge tag 'v5.7-rockchip-dts32-1' of
+git://git.kernel.org/.../mmind/linux-rockchip into arm/dt
+      Merge tag 'v5.7-rockchip-dts64-1' of
+git://git.kernel.org/.../mmind/linux-rockchip into arm/dt
+      Merge tag 'amlogic-dt64' of
+git://git.kernel.org/.../khilman/linux-amlogic into arm/dt
+      Merge tag 'uniphier-dt-v5.7' of
+git://git.kernel.org/.../masahiroy/linux-uniphier into arm/dt
+      Merge tag 'uniphier-dt64-v5.7' of
+git://git.kernel.org/.../masahiroy/linux-uniphier into arm/dt
+      Merge tag 'imx-bindings-5.7' of
+git://git.kernel.org/.../shawnguo/linux into arm/dt
+      Merge tag 'imx-dt-5.7' of
+git://git.kernel.org/.../shawnguo/linux into arm/dt
+      Merge tag 'imx-dt64-5.7' of
+git://git.kernel.org/.../shawnguo/linux into arm/dt
+      Merge tag 'socfpga_dts_update_for_v5.7' of
+git://git.kernel.org/.../dinguyen/linux into arm/dt
+      Merge tag 'ti-k3-soc-for-v5.7' of
+git://git.kernel.org/.../kristo/linux into arm/dt
+      Merge tag 'v5.6-next-dts64' of
+git://git.kernel.org/.../matthias.bgg/linux into arm/dt
+      Merge tag 'v5.6-next-dts32' of
+git://git.kernel.org/.../matthias.bgg/linux into arm/dt
+      Merge tag 'gemini-dts-v5.7' of
+git://git.kernel.org/.../linusw/linux-nomadik into arm/dt
+      Merge tag 'at91-5.7-dt' of git://git.kernel.org/.../at91/linux into arm/dt
+      Merge tag 'amlogic-dt64-2' of
+git://git.kernel.org/.../khilman/linux-amlogic into arm/dt
+      Merge tag 'socfpga_dts_update_for_v5.7_part2' of
+git://git.kernel.org/.../dinguyen/linux into arm/dt
+      Merge tag 'qcom-dts-for-5.7' of
+git://git.kernel.org/.../qcom/linux into arm/dt
+      arm64: dts: Revert "specify console via command line"
+      Merge tag 'omap-for-v5.7/ti-sysc-drop-pdata-signed' of
+git://git.kernel.org/.../tmlind/linux-omap into arm/late
+      Merge tag 'omap-for-v5.7/ti-sysc-drop-pdata-ti81xx-signed' of
+git://git.kernel.org/.../tmlind/linux-omap into arm/late
+      Merge tag 'qcom-arm64-for-5.7' of
+git://git.kernel.org/.../qcom/linux into arm/late
+      Merge branch 'arm/late' into arm/dt
+
+      1 Aapo Vienamo
+      1 Adam Ford
+      1 Ahmad Fatoum
+      6 Alain Volmat
+      1 Alex Elder
+      2 Alexandre Belloni
+      1 Alexandre Courbot
+      2 Alexis Ballier
+      4 Alifer Moraes
+      4 Amelie Delaunay
+      4 Amit Kucheria
+      8 Andre Przywara
+      1 Andrey Lebedev
+      5 Andrey Smirnov
+      4 André Draszik
+      4 Andy Yan
+      7 Angus Ainslie (Purism)
+     30 Anson Huang
+     38 Arnd Bergmann
+      1 Balakrishna Godavarthi
+      2 Bastian Germann
+      5 Benjamin Gaignard
+      8 Bjorn Andersson
+      1 Carlos de Paula
+      1 Chris Brandt
+      7 Christian Hewitt
+      2 Christian Lamparter
+      1 Chunyan Zhang
+      2 Claudiu Manoil
+      1 Cristian Birsan
+      1 Dalon Westergreen
+      3 Dave Gerlach
+      1 David Dai
+      2 Dikshita Agarwal
+      6 Douglas Anderson
+      2 Emmanuel Vadot
+      1 Enric Balletbo i Serra
+      2 Eugen Hristev
+      2 Fabien Parent
+      7 Fabio Estevam
+      1 Fabrizio Castro
+     12 Florian Fainelli
+     11 Geert Uytterhoeven
+      2 Grygorii Strashko
+      1 Guido Günther
+      1 Harigovindan P
+      1 Heiko Stuebner
+      8 Horia Geantă
+      2 Hou Zhiqiang
+      1 Hsin-Yi Wang
+      3 Icenowy Zheng
+      3 Igor Opaniuk
+      3 JC Kuo
+      3 Jagan Teki
+      1 James Liao
+     10 Jernej Skrabec
+      4 Jerome Brunet
+      1 Jianxin Pan
+     33 Johan Jonker
+      5 Jon Hunter
+      2 Jonathan Marek
+      1 Joshua Watt
+      1 Joyce Ooi
+      3 Kamel Bouhara
+      1 Katsuhiro Suzuki
+      1 Kevin Hilman
+      1 Kieran Bingham
+      1 Konrad Dybcio
+      2 Kuldeep Singh
+      5 Kunihiko Hayashi
+      1 Ley Foon Tan
+     13 Linus Walleij
+      1 Loic Poulain
+      2 Lucas Stach
+      1 Lukasz Luba
+      1 Mans Rullgard
+      2 Marco Felsch
+      2 Marcus Cooper
+      8 Marek Szyprowski
+      7 Marek Vasut
+      2 Marian-Cristian Rotariu
+      2 Martin Kaiser
+      1 Martin Kepplinger
+      8 Masahiro Yamada
+      1 Mathieu Poirier
+      2 Matthias Brugger
+      1 Matthias Kaehlcke
+      4 Maxime Ripard
+      1 Michael Heimpold
+     10 Michael Walle
+      1 Michal Vokáč
+      1 Mohammad Rasim
+     11 Nagarjuna Kristam
+      7 Neil Armstrong
+      1 Nicolas Saenz Julienne
+      1 Odelu Kukatla
+      5 Oleksandr Suvorov
+      2 Oleksij Rempel
+      9 Ondrej Jirman
+      6 Peng Fan
+      1 Peter Chen
+      1 Philipp Zabel
+      1 Rabeeh Khoury
+      3 Rajendra Nayak
+      1 Rajeshwari
+      1 Ran Bi
+      3 Rob Herring
+      2 Robert Jones
+      1 Robin Murphy
+      1 Roger Quadros
+      4 Russell King
+      1 Sai Prakash Ranjan
+      1 Sam Shih
+      9 Samuel Holland
+      1 Sandeep Maheswaram
+      2 Sibi Sankar
+      1 Silvano di Ninno
+      1 Sivaprakash Murugesan
+      8 Sowjanya Komatineni
+      2 Sricharan R
+      7 Srinivas Kandagatla
+      1 Stanimir Varbanov
+      1 Stefan Agner
+      1 Stefan Wahren
+      1 Stephan Gerhold
+      2 Stephen Boyd
+      7 Suman Anna
+      2 Takeshi Kihara
+      1 Taniya Das
+      3 Thierry Reding
+      1 Tim Harvey
+      1 Tobias Schramm
+      3 Tomasz Maciej Nowak
+     62 Tony Lindgren
+      1 Vadym Kochan
+      3 Veerabhadrarao Badiganti
+      1 Venkata Narendra Kumar Gutta
+      2 Vidya Sagar
+      3 Vignesh Raghavendra
+      1 Vitor Massaru Iha
+      2 Vivek Unune
+      2 Vladimir Oltean
+      1 Xiaowei Bao
+      2 Yangbo Lu
+      1 Yangtao Li
+      3 Yann Gautier
+      2 Yuya Hamamachi
+      2 michael.kao
+      1 yong.liang
+
+   2.0% Documentation/devicetree/bindings/arm/bcm/
+   0.0% Documentation/devicetree/bindings/arm/sunxi/
+   3.1% Documentation/devicetree/bindings/arm/tegra/
+   5.1% Documentation/devicetree/bindings/arm/
+   0.0% Documentation/devicetree/bindings/bus/
+   0.0% Documentation/devicetree/bindings/crypto/
+   0.0% Documentation/devicetree/bindings/media/
+   0.0% Documentation/devicetree/bindings/pci/
+   0.1% Documentation/devicetree/bindings/phy/
+   0.0% Documentation/devicetree/bindings/spi/
+   0.6% Documentation/devicetree/bindings/usb/
+  31.1% arch/arm/boot/dts/
+   5.5% arch/arm/mach-omap2/
+   3.5% arch/arm64/boot/dts/allwinner/
+   0.0% arch/arm64/boot/dts/altera/
+   1.3% arch/arm64/boot/dts/amlogic/
+   0.0% arch/arm64/boot/dts/arm/
+  20.0% arch/arm64/boot/dts/freescale/
+   0.0% arch/arm64/boot/dts/intel/
+   0.1% arch/arm64/boot/dts/marvell/
+   7.1% arch/arm64/boot/dts/mediatek/
+   1.6% arch/arm64/boot/dts/nvidia/
+   8.8% arch/arm64/boot/dts/qcom/
+   1.1% arch/arm64/boot/dts/renesas/
+   4.3% arch/arm64/boot/dts/rockchip/
+   0.3% arch/arm64/boot/dts/socionext/
+   0.1% arch/arm64/boot/dts/ti/
+   2.9% drivers/bus/
+   0.0% drivers/clk/imx/
+   0.0% drivers/clk/ti/
+   0.1% drivers/gpu/drm/omapdrm/dss/
+   0.0% include/dt-bindings/bus/
+   0.1% include/dt-bindings/clock/
+   0.0% include/dt-bindings/soc/
+   0.0% include/linux/platform_data/
+ 506 files changed, 20094 insertions(+), 4929 deletions(-)
