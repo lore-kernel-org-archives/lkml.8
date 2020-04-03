@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4F0C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E64C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F462078C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C67D214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="gKxgUTjj"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="euX0p0KD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390872AbgDCNf7 (ORCPT
+        id S2390880AbgDCNgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:35:59 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:34774 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390839AbgDCNf5 (ORCPT
+        Fri, 3 Apr 2020 09:36:00 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45509 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390857AbgDCNf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:35:57 -0400
-Received: by mail-qv1-f67.google.com with SMTP id s18so3565967qvn.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 06:35:56 -0700 (PDT)
+        Fri, 3 Apr 2020 09:35:58 -0400
+Received: by mail-qk1-f194.google.com with SMTP id o18so5074966qko.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 06:35:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=xV2roW1zd//aHKXeeRMtDzonpXvqHnYcXH/dEAXKebY=;
-        b=gKxgUTjjyK9JdLcYNwX9EauAoepcu27x6GXWjEpR46ij/dc6xlZ7wnYtViH3EQavJn
-         HOt9nW/20SrzNtfqIRm0G2ISZkKcFAf3C1KVjNhUhp9pEiukugQ605rm9vmnPx7mkNvP
-         ZNYIS8j0tHZyXmvLMU1BS8iBHURCmSg3JSRu0bFChoOuOp8IokGwoQkXkzHn6Xzm1H7i
-         KS9GDYAKbLmo2cOCmgJ2EA6QYBMkreysneeVcit2+SPPDpUxjs/S2QI1rQEVhP7gmj4f
-         iUGTxyAGbfL60BYr10LpDL9NhXno8Nt7chB+LlqVlV7B3m8doWFbLszscU0ZGkIE/VCr
-         sTPw==
+        bh=t5mNk/pBsrx+7SZ7Dr7HuNaAm2sCHM+52woIf4SjdLE=;
+        b=euX0p0KDOn8g3Gb1NEzcdIwRj0eFSMuMP0GNCXsR+rIq/KXzGri2F/Vs/jEf/Kb9Gl
+         jTRNzJvFK8e53RNfBPpE6nkBqeOG15Zh3UG/MF+KKs/KfxM2OW77BXTAt+jQoN83/DEJ
+         69UvFw+oK9bXxLJakw0CYE7rWtfkcssbI1ETSOF6HC9Wg3nHvwfkishfjJHoBKoppOHh
+         NQhbPYrBrMbFcTB0JU4KCpCFN/vmWJ/xXsSCi5bU2EGJwZwiGfwBDPioObbkSLQl6rMY
+         fLVHxnVbmbESLJSwWMyuqRRNJbcqcaf3RoN4qx0ptzn87eLlqcECUMZJTkXVJ9hZ2geR
+         t+nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=xV2roW1zd//aHKXeeRMtDzonpXvqHnYcXH/dEAXKebY=;
-        b=Wyl5A4ZxR9Ciegofn/5LX0TVnR1RGMSD/7nMhS6HhBoCfAzWdDdUl4OvNmPvnnbK4C
-         ubc0bB0uwIbGRllqT0P/Z7BvatTH8U7A0w/HSzBUvHrphQO9Pnvdrn4FIKlwgulN8UHS
-         6qzYX/QGoZAZqf/wf3VkclwddS1XVe1pKKZ+ttXDtF2jZef+ASHNgJi4XmQaPz1Hfx1O
-         zsYFC6M7KwE5Q/PdvT9QE0l92haBD3axt072iT12mLTo6VIzmLx2GWxe61uXkFN3vku7
-         FoU79SEup4HVBRF+i1QYlkDBtpRCLeYQZVE8RWotfWVr4Gqs8OmnG3EBDXB7gSwGGl9v
-         Kagw==
-X-Gm-Message-State: AGi0Puax5n7va2mQTg9uR3QGkzxk9+HbuzKotZsdMOGWJccdjVHaDz7Y
-        RFCCXAWefRksJL9XBSy5mRo3FWlMnZs=
-X-Google-Smtp-Source: APiQypIbv6y9E8OGazxpKwwHMm4tbcInhdZmQGRl8YFqOn9cVkWqcwO9mwtCdRPeq+IuzgWJUSlyaw==
-X-Received: by 2002:a0c:db86:: with SMTP id m6mr7945568qvk.116.1585920955477;
-        Fri, 03 Apr 2020 06:35:55 -0700 (PDT)
+        bh=t5mNk/pBsrx+7SZ7Dr7HuNaAm2sCHM+52woIf4SjdLE=;
+        b=jYiDMy3I2POBMJJLuPW5IdRzVgI6ga351asLZYbKwNn7GXySYYdKpvyrhj6OoXLOPp
+         i8yvYOM248p/kDqY3Ztk5lPK1XPbQJvknDkkg4MI/OdqVafKSlkALAIPFiLcBsaqMamg
+         nUXeKsPFpkMR14eA64uc+zgQeK3vJ2UcxiczLHeyJ/qmr8eRTBMhPP8gViqF3eH9ktZH
+         ftSZredSnKX9/2p/hqHmb6OkETm3u8XLUpu8JtRv9ZM6D8W8gEwjn+bA5VPTumuJEA9o
+         3ZK6yIxSHGoGRa7QaoVGDC8QG40qj/U1DMnnYHWqN7t+mF74AQxIGMoaQPL5qzky5lb0
+         /PQg==
+X-Gm-Message-State: AGi0PuYf/2nn+BneD389DPxRhuFxgbtYOG79V0h89Qec4b7ujBK93iy9
+        5ZePe8eHttgL7aGOROu1Aio5OAX19Qo=
+X-Google-Smtp-Source: APiQypIS+Ilc05wjUfNSDBZF6lQsnbsb8T/dby3KyfO+CIdtRbbr8ey0xj0xIdbJ3VAfjfs6tlhD2A==
+X-Received: by 2002:a05:620a:cc6:: with SMTP id b6mr8775786qkj.74.1585920957072;
+        Fri, 03 Apr 2020 06:35:57 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id 17sm6210799qkm.105.2020.04.03.06.35.54
+        by smtp.gmail.com with ESMTPSA id 17sm6210799qkm.105.2020.04.03.06.35.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 06:35:54 -0700 (PDT)
+        Fri, 03 Apr 2020 06:35:56 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         mhocko@suse.com, linux-mm@kvack.org, dan.j.williams@intel.com,
         shile.zhang@linux.alibaba.com, daniel.m.jordan@oracle.com,
         pasha.tatashin@soleen.com, ktkhai@virtuozzo.com, david@redhat.com,
         jmorris@namei.org, sashal@kernel.org, vbabka@suse.cz
-Subject: [PATCH v3 2/3] mm: initialize deferred pages with interrupts enabled
-Date:   Fri,  3 Apr 2020 09:35:48 -0400
-Message-Id: <20200403133549.14338-3-pasha.tatashin@soleen.com>
+Subject: [PATCH v3 3/3] mm: call cond_resched() from deferred_init_memmap()
+Date:   Fri,  3 Apr 2020 09:35:49 -0400
+Message-Id: <20200403133549.14338-4-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200403133549.14338-1-pasha.tatashin@soleen.com>
 References: <20200403133549.14338-1-pasha.tatashin@soleen.com>
@@ -72,100 +72,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initializing struct pages is a long task and keeping interrupts disabled
-for the duration of this operation introduces a number of problems.
+Now that deferred pages are initialized with interrupts enabled we can
+replace touch_nmi_watchdog() with cond_resched(), as it was before
+3a2d7fa8a3d5.
 
-1. jiffies are not updated for long period of time, and thus incorrect time
-   is reported. See proposed solution and discussion here:
-   lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
-2. It prevents farther improving deferred page initialization by allowing
-   intra-node multi-threading.
+For now, we cannot do the same in deferred_grow_zone() as it is still
+initializes pages with interrupts disabled.
 
-We are keeping interrupts disabled to solve a rather theoretical problem
-that was never observed in real world (See 3a2d7fa8a3d5).
+This change fixes RCU problem described:
+linux-mm/20200401104156.11564-2-david@redhat.com
 
-Lets keep interrupts enabled. In case we ever encounter a scenario where
-an interrupt thread wants to allocate large amount of memory this early in
-boot we can deal with that by growing zone (see deferred_grow_zone()) by
-the needed amount before starting deferred_init_memmap() threads.
-
-Before:
-[    1.232459] node 0 initialised, 12058412 pages in 1ms
-
-After:
-[    1.632580] node 0 initialised, 12051227 pages in 436ms
+[   60.474005] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+[   60.475000] rcu:  1-...0: (0 ticks this GP) idle=02a/1/0x4000000000000000 softirq=1/1 fqs=15000
+[   60.475000] rcu:  (detected by 0, t=60002 jiffies, g=-1199, q=1)
+[   60.475000] Sending NMI from CPU 0 to CPUs 1:
+[    1.760091] NMI backtrace for cpu 1
+[    1.760091] CPU: 1 PID: 20 Comm: pgdatinit0 Not tainted 4.18.0-147.9.1.el8_1.x86_64 #1
+[    1.760091] Hardware name: Red Hat KVM, BIOS 1.13.0-1.module+el8.2.0+5520+4e5817f3 04/01/2014
+[    1.760091] RIP: 0010:__init_single_page.isra.65+0x10/0x4f
+[    1.760091] Code: 48 83 cf 63 48 89 f8 0f 1f 40 00 48 89 c6 48 89 d7 e8 6b 18 80 ff 66 90 5b c3 31 c0 b9 10 00 00 00 49 89 f8 48 c1 e6 33 f3 ab <b8> 07 00 00 00 48 c1 e2 36 41 c7 40 34 01 00 00 00 48 c1 e0 33 41
+[    1.760091] RSP: 0000:ffffba783123be40 EFLAGS: 00000006
+[    1.760091] RAX: 0000000000000000 RBX: fffffad34405e300 RCX: 0000000000000000
+[    1.760091] RDX: 0000000000000000 RSI: 0010000000000000 RDI: fffffad34405e340
+[    1.760091] RBP: 0000000033f3177e R08: fffffad34405e300 R09: 0000000000000002
+[    1.760091] R10: 000000000000002b R11: ffff98afb691a500 R12: 0000000000000002
+[    1.760091] R13: 0000000000000000 R14: 000000003f03ea00 R15: 000000003e10178c
+[    1.760091] FS:  0000000000000000(0000) GS:ffff9c9ebeb00000(0000) knlGS:0000000000000000
+[    1.760091] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.760091] CR2: 00000000ffffffff CR3: 000000a1cf20a001 CR4: 00000000003606e0
+[    1.760091] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    1.760091] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    1.760091] Call Trace:
+[    1.760091]  deferred_init_pages+0x8f/0xbf
+[    1.760091]  deferred_init_memmap+0x184/0x29d
+[    1.760091]  ? deferred_free_pages.isra.97+0xba/0xba
+[    1.760091]  kthread+0x112/0x130
+[    1.760091]  ? kthread_flush_work_fn+0x10/0x10
+[    1.760091]  ret_from_fork+0x35/0x40
+[   89.123011] node 0 initialised, 1055935372 pages in 88650ms
 
 Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
 Cc: stable@vger.kernel.org # 4.17+
 
-Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Reported-by: Yiqian Wei <yiwei@redhat.com>
+Tested-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- include/linux/mmzone.h |  2 ++
- mm/page_alloc.c        | 20 +++++++-------------
- 2 files changed, 9 insertions(+), 13 deletions(-)
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 462f6873905a..c5bdf55da034 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -721,6 +721,8 @@ typedef struct pglist_data {
- 	/*
- 	 * Must be held any time you expect node_start_pfn,
- 	 * node_present_pages, node_spanned_pages or nr_zones to stay constant.
-+	 * Also synchronizes pgdat->first_deferred_pfn during deferred page
-+	 * init.
- 	 *
- 	 * pgdat_resize_lock() and pgdat_resize_unlock() are provided to
- 	 * manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index e8ff6a176164..4a60f2427eb0 100644
+index 4a60f2427eb0..445f74358997 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -1790,6 +1790,13 @@ static int __init deferred_init_memmap(void *data)
- 	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
- 	pgdat->first_deferred_pfn = ULONG_MAX;
- 
-+	/*
-+	 * Once we unlock here, the zone cannot be grown anymore, thus if an
-+	 * interrupt thread must allocate this early in boot, zone must be
-+	 * pre-grown prior to start of deferred page initialization.
-+	 */
-+	pgdat_resize_unlock(pgdat, &flags);
-+
- 	/* Only the highest zone is deferred so find it */
- 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
- 		zone = pgdat->node_zones + zid;
-@@ -1812,8 +1819,6 @@ static int __init deferred_init_memmap(void *data)
- 		touch_nmi_watchdog();
+@@ -1816,7 +1816,7 @@ static int __init deferred_init_memmap(void *data)
+ 	 */
+ 	while (spfn < epfn) {
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+-		touch_nmi_watchdog();
++		sched_clock();
  	}
  zone_empty:
--	pgdat_resize_unlock(pgdat, &flags);
--
  	/* Sanity check that the next zone really is unpopulated */
- 	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
- 
-@@ -1855,17 +1860,6 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
- 
- 	pgdat_resize_lock(pgdat, &flags);
- 
--	/*
--	 * If deferred pages have been initialized while we were waiting for
--	 * the lock, return true, as the zone was grown.  The caller will retry
--	 * this zone.  We won't return to this function since the caller also
--	 * has this static branch.
--	 */
--	if (!static_branch_unlikely(&deferred_pages)) {
--		pgdat_resize_unlock(pgdat, &flags);
--		return true;
--	}
--
- 	/*
- 	 * If someone grew this zone while we were waiting for spinlock, return
- 	 * true, as there might be enough pages already.
 -- 
 2.17.1
 
