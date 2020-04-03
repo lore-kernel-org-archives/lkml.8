@@ -2,189 +2,116 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58392C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B32C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D68206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59E5207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bMgkJ3Sm"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SarIPIQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404446AbgDCR2S (ORCPT
+        id S2404255AbgDCRar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:28:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29850 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2403831AbgDCR2R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:28:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585934897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=teuy+sFz4u16kM5p1bWOo2plt8bmjSuv9csLpTGopn8=;
-        b=bMgkJ3Sm2qyymGkKpoILE1MnsW1TdoaIt3CCU0jnr5Wclh82qDnaWQX7rLQ1J58AySTilS
-        M+DKV0HrfI5pPOz+tRLiKpAAaUTRe9P6qjHAMH4nr+EdTxsRKZ6Mu3u/CwwcNj6XfNbQAu
-        4IR4H6nFyxpqjd+V6YNxWdjOgUD9jIU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-LOgI8shxPyCl2ELpbS2FPQ-1; Fri, 03 Apr 2020 13:28:14 -0400
-X-MC-Unique: LOgI8shxPyCl2ELpbS2FPQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D11151137843;
-        Fri,  3 Apr 2020 17:28:11 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EB65A60BF3;
-        Fri,  3 Apr 2020 17:28:07 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 11:28:07 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
- userspace
-Message-ID: <20200403112807.30a56c48@w520.home>
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A220662@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-4-git-send-email-yi.l.liu@intel.com>
-        <20200402120100.19e43c72@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A220662@SHSMSX104.ccr.corp.intel.com>
+        Fri, 3 Apr 2020 13:30:47 -0400
+Received: from mout.gmx.net ([212.227.17.21]:35871 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403981AbgDCRar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 13:30:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1585935032;
+        bh=gNFpDKKwiTezkt3owt2u3asT3zDsRHR/nSLRzKGjZlU=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=SarIPIQSqNqxpAt89OURT8FivW6drYCgEVFTsN9/9n9Xuz69uaFls4c0KT/eDp8KZ
+         lU+8G/ik3PkJZb5CgwuOQij3cQpU8pwTaWsduldtc/t5PZW2lGaAHFobaYAyhu06Oi
+         n9aczJ6O2xJVrSCRkWVwLuXbHtjhwliREHKwDWZw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([82.19.195.159]) by mail.gmx.com
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MhlKy-1ipk5o1hzc-00dp3s; Fri, 03 Apr 2020 19:30:32 +0200
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+To:     alex.dewar@gmx.co.uk
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
+Subject: [PATCH] Coccinelle: zalloc_simple: Fix patch mode for dma_alloc_coherent()
+Date:   Fri,  3 Apr 2020 18:30:10 +0100
+Message-Id: <20200403173011.65511-1-alex.dewar@gmx.co.uk>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jzuIV293In4jZGU3O+2pdnE+8RxxVxRqA655L/kzkJWgyppp7L3
+ /4kLXfJn+ctPh6ZS8Bfwb7/FJEq4aWCM/JIZWI2VTUefC5tTGWTNCetLn2c223EYHsx8Ruv
+ j4g8jPlKaLXxDGLoAsET2lDKieDDLvyUlTnLJ0PdtC5OAhBJspekcfQ/Isn/qXCui6hgUyB
+ 1N0S+6e0wWkzeH1W6fX4w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:P6FN45gUO5g=:3+cZirxTizNsPm56Jld8M8
+ wtcIvejBdbdoPOJ0qcYuRoQA9c+xfailewR63A/FEr8eRT0iU+vE/MYE/XVNSPWjwOTMD7TG1
+ ZxvlxxeRuIdfe0ZFpEZgfG5Jmv+n5FB2Zz+C2vXSDzETxttgOIqPQF6h82Vrhx0K4I1t7m5v3
+ qv86AyFoeLBKjBKZaTNQtHGSY3XLZFbJuqKHTtEMXkmcDmW/fT+XwTwq+AeuoIGW0z6rgOTop
+ MCNSftpZ4AceAhfLasTxlPDJle0Hpau5KaOYXPpvOW0NK6moTEeWvKVh4DJ3G7nt6IghgtYNB
+ PYyuomgJE9FDHnBmjGFYRWYER7QVdwhphAq0AcsAWKbtkEc+yGUOa/Mc6MD7Vhc5hMh8C7lSj
+ jQQBTvAIxGwGKQEqNAUpy+n3zZGcQrq2wWWLCSb3Up73P7sNFxpmmh1i5//GtIlkzFTYGQPJY
+ Udh2C4FBT+MgfVnX2zCNmCv//Jyp9NKqVfbhWmrAg+sVOAwRuc0KNGb1G4L6ZG589q+MrOWQ3
+ cPYRnwhnKmxHncMvOg/xz8omOlqFtBEGIcDVnCcausdi8BLCdOMiI+eSfYubHZYroUwqiKMQh
+ snAVD7inMvVtP/jGr+y8vOmwXd9EisVAE6O27EN8iJ+wKgJR1UjdXvutVa9sHP4FECAr80DO1
+ YjZWHIznBJJnjbUr1ClwDZoI3pz9EpAxe90OZbs9ypvOUSRk/SPUUdP9jUNWyikRRBOYR0I9z
+ NVvYsFl0l4Rpn58xTmeoezAozwrKaU6rfl4cf2fHoI4OZKxZtdKuyJsvCQrOmNnQhCKl4oDNm
+ BdHZFgdfbFpIovC6Cg8UCPfE6ASPrA9YZY/UPjrPGpEKvJUQPaTTQp7YtR7mfyy1xgEcnmZ8/
+ uCaEDapbHeIvjm7hePJ22bgNHiWpKUcfcB1dXzcVhs9RoSIeDkxWE1CWIZYLYspMh3yIjL05x
+ dgv6I/LE0Fz6gDOKb32rEa276h76Yt5bP/hXvsSkRpW8cWdfSSe0idQ6Cfo217dMO5Gn4Mgfn
+ WXC+EVuGsqBFKt6yocA2CS7bWtD0hGJsR1kwX+7wf0JUzGA1e0tq+8C/xNGcWRrNGOkfhwGyU
+ m5uQrKbfXi7iMHfsGpD6xNu3PxMF7OUav2+fzT0ur/DV0W22cdwHCmfpG/5pcYIIBTRiWP90c
+ iW++oQPLJFNaI05O79WyUf+yUwn+zmdlwhEMR9DKYmUV2WiuR9+gGDylvd3QhIq8hpfd+EpNf
+ aiWAEHD7hrCdh4snE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020 08:17:44 +0000
-"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+Commit dfd32cad146e ("dma-mapping: remove dma_zalloc_coherent()"), in
+removing dma_zalloc_coherent() treewide, inadvertently removed the patch
+rule for dma_alloc_coherent(), leaving Coccinelle unable to auto-generate
+patches for this case. Fix this.
 
-> > From: Alex Williamson < alex.williamson@redhat.com >
-> > Sent: Friday, April 3, 2020 2:01 AM
-> > To: Liu, Yi L <yi.l.liu@intel.com>
-> > Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
-> > userspace
-> > 
-> > On Sun, 22 Mar 2020 05:32:00 -0700
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >   
-> > > From: Liu Yi L <yi.l.liu@intel.com>
-> > >
-> > > This patch reports PASID alloc/free availability to userspace (e.g.
-> > > QEMU) thus userspace could do a pre-check before utilizing this feature.
-> > >
-> > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > ---
-> > >  drivers/vfio/vfio_iommu_type1.c | 28 ++++++++++++++++++++++++++++
-> > >  include/uapi/linux/vfio.h       |  8 ++++++++
-> > >  2 files changed, 36 insertions(+)
-> > >
-> > > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > > b/drivers/vfio/vfio_iommu_type1.c index e40afc0..ddd1ffe 100644
-> > > --- a/drivers/vfio/vfio_iommu_type1.c
-> > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > @@ -2234,6 +2234,30 @@ static int vfio_iommu_type1_pasid_free(struct  
-> > vfio_iommu *iommu,  
-> > >  	return ret;
-> > >  }
-> > >
-> > > +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
-> > > +					 struct vfio_info_cap *caps)
-> > > +{
-> > > +	struct vfio_info_cap_header *header;
-> > > +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
-> > > +
-> > > +	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
-> > > +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-> > > +	if (IS_ERR(header))
-> > > +		return PTR_ERR(header);
-> > > +
-> > > +	nesting_cap = container_of(header,
-> > > +				struct vfio_iommu_type1_info_cap_nesting,
-> > > +				header);
-> > > +
-> > > +	nesting_cap->nesting_capabilities = 0;
-> > > +	if (iommu->nesting) {
-> > > +		/* nesting iommu type supports PASID requests (alloc/free) */
-> > > +		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > >  				   unsigned int cmd, unsigned long arg)  { @@ -  
-> > 2283,6 +2307,10 @@  
-> > > static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > >  		if (ret)
-> > >  			return ret;
-> > >
-> > > +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > >  		if (caps.size) {
-> > >  			info.flags |= VFIO_IOMMU_INFO_CAPS;
-> > >
-> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > index 298ac80..8837219 100644
-> > > --- a/include/uapi/linux/vfio.h
-> > > +++ b/include/uapi/linux/vfio.h
-> > > @@ -748,6 +748,14 @@ struct vfio_iommu_type1_info_cap_iova_range {
-> > >  	struct	vfio_iova_range iova_ranges[];
-> > >  };
-> > >
-> > > +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  2
-> > > +
-> > > +struct vfio_iommu_type1_info_cap_nesting {
-> > > +	struct	vfio_info_cap_header header;
-> > > +#define VFIO_IOMMU_PASID_REQS	(1 << 0)
-> > > +	__u32	nesting_capabilities;
-> > > +};
-> > > +
-> > >  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
-> > >
-> > >  /**  
-> > 
-> > I think this answers my PROBE question on patch 1/.   
-> yep.
-> > Should the quota/usage be exposed to the user here?  Thanks,  
-> 
-> Do you mean report the quota available for this user in this cap info as well?
+Fixes: dfd32cad146e ("dma-mapping: remove dma_zalloc_coherent()")
+CC: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Alex Dewar <alex.dewar@gmx.co.uk>
+=2D--
+ scripts/coccinelle/api/alloc/zalloc-simple.cocci | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Yes.  Would it be useful?
-
-> For usage, do you mean the alloc and free or others?
-
-I mean how many of the quota are currently in allocated, or
-alternatively, how many remain.  Thanks,
-
-Alex
+diff --git a/scripts/coccinelle/api/alloc/zalloc-simple.cocci b/scripts/co=
+ccinelle/api/alloc/zalloc-simple.cocci
+index 26cda3f48f01..c53aab7fe096 100644
+=2D-- a/scripts/coccinelle/api/alloc/zalloc-simple.cocci
++++ b/scripts/coccinelle/api/alloc/zalloc-simple.cocci
+@@ -70,6 +70,15 @@ statement S;
+ - x =3D (T)vmalloc(E1);
+ + x =3D (T)vzalloc(E1);
+ |
++- x =3D dma_alloc_coherent(E2,E1,E3,E4);
+++ x =3D dma_alloc_coherent(E2,E1,E3,E4);
++|
++- x =3D (T *)dma_alloc_coherent(E2,E1,E3,E4);
+++ x =3D dma_alloc_coherent(E2,E1,E3,E4);
++|
++- x =3D (T)dma_alloc_coherent(E2,E1,E3,E4);
+++ x =3D (T)dma_alloc_coherent(E2,E1,E3,E4);
++|
+ - x =3D kmalloc_node(E1,E2,E3);
+ + x =3D kzalloc_node(E1,E2,E3);
+ |
+=2D-
+2.26.0
 
