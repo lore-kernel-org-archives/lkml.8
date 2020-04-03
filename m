@@ -2,170 +2,103 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D08C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DAEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AB720737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B04206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QEqv/vSL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="psnmWQR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgDCVHD (ORCPT
+        id S1728573AbgDCVHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:07:03 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38246 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbgDCVGw (ORCPT
+        Fri, 3 Apr 2020 17:07:05 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37077 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727879AbgDCVHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:06:52 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033KhLhf091472;
-        Fri, 3 Apr 2020 21:05:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=x8ybG/iimUgzbNVNmvlsTOVXJmmb61zSQ0uqKvz1O08=;
- b=QEqv/vSLVtZ5IPl78Nuf4BzqJRmp9KzBkSvO06ddZZWWUQZxNBp0ognV/kIp5oW/t7sv
- 9409AwpBcBCtZMMocmzpild1qz9rACHWC4aP9BZsuy3iawblnJjBKUDv9ob2ZD5PjiiF
- Ygcca0c8+9ooBYqxNnw2eHEj/Qx/MJoxf79wY75mkOxkZb4AYbM11Vct3nm/zFQ6GZ06
- Ywtm4wj1KxtL7urj+087ExW970VjdYRhdC/f5TnXwrvwG8rPzHEh+50CtD8t/yOji8AO
- YXAp1C9EsLV2xLPakq3/27J0kFvHcaXJAJWFPtNfzK7V53m9K/mvDdvHxdQnAZM6P8Cp yg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 303aqj3px1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 21:05:50 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033KgFkB047476;
-        Fri, 3 Apr 2020 21:05:50 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 302ga5ve94-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 21:05:50 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 033L5cus013176;
-        Fri, 3 Apr 2020 21:05:38 GMT
-Received: from neelam.us.oracle.com (/10.152.128.16)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Apr 2020 14:05:37 -0700
-From:   Alex Kogan <alex.kogan@oracle.com>
-To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        alex.kogan@oracle.com, dave.dice@oracle.com
-Subject: [PATCH v10 2/5] locking/qspinlock: Refactor the qspinlock slow path
-Date:   Fri,  3 Apr 2020 16:59:27 -0400
-Message-Id: <20200403205930.1707-3-alex.kogan@oracle.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200403205930.1707-1-alex.kogan@oracle.com>
-References: <20200403205930.1707-1-alex.kogan@oracle.com>
+        Fri, 3 Apr 2020 17:07:03 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t11so6963530lfe.4;
+        Fri, 03 Apr 2020 14:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Jki7A5iXnffJdSlBZi8ckrm0OPi/inFqAyqX+Ha0Fdc=;
+        b=psnmWQR6M6uPn8Yo1rz3yibcg8vtiiPJOu+yZiqhT9h6oYYRGUiMYw0ydiNWZy79EK
+         DyV+mlJnkfAj4B961XkNmZF4OFiogv5ZLPB8Cu4idUD+vzEyYewf4FciyDIaark+LBXG
+         5JoDHNE8IxGLUg9LsVeUwLmH/2mGSuSbj97ai31NkxeTMQfmn5VnZAHfMKXqI/VVA/22
+         kRXyBuExEsnv9IDj3tIIHO84bnWPpH8gPSMv4NKGD6VHcx3OMVYtmwqWB3JedKtsMypM
+         6VpaDGcz9UQpqemClrB9rwOBJxv4JuqihcKstW0N5myOqQ8Os2c1s6Qe1DeJL7Kn+uRT
+         ptNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Jki7A5iXnffJdSlBZi8ckrm0OPi/inFqAyqX+Ha0Fdc=;
+        b=rXcaXp8Y4oCvsjBpwe19+qGU8aDyKsYjoun4dZNb+DCID6SUDZlH55im9htUgzzYaI
+         sCPkVBvz4uxJwzfJUHyaZ30w0dWaUZ4ltxw8veQm96qTT8SnnrIvooYw9Nc9Xk7Kln3+
+         +P5wptBwWql0vNvH+ttHg014iGeIDvTh091Pm1UvSgBL//VeruA6TotALsSjdShC5KVc
+         JLD2rUJaxcGBOdCSrSm4NmlZNB84ixo+6mlD8p6kgNOyWUttRoTCxqy/LGBougUicj40
+         ib/ev42pmqauVWAgHfR1Rpzq0jkSiRDrxMbIPuBAM2Kf6BkGmQQTHv2wzJ6T5P4RDzMk
+         kaSQ==
+X-Gm-Message-State: AGi0Pub4YiLTy2wf44acTMHTgxPzYZqM2yV+pf0lBvTkZ3755Gp2MCco
+        hQV0fp1+RmHV1o5K81r+3Dsg4SO4
+X-Google-Smtp-Source: APiQypLLBXgFa4KTCAa3WGPmA2abd73sXhS1qwFRuXxsawAd5A+taNVNWmqUMr0ilw3v+Ti7hCbBng==
+X-Received: by 2002:ac2:58c8:: with SMTP id u8mr6591647lfo.115.1585948019676;
+        Fri, 03 Apr 2020 14:06:59 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id h3sm6838873lfk.30.2020.04.03.14.06.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 14:06:59 -0700 (PDT)
+Subject: Re: [PATCH v3 2/7] clocksource: Add Tegra186 timers support
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200403202209.299823-1-thierry.reding@gmail.com>
+ <20200403202209.299823-3-thierry.reding@gmail.com>
+ <eb2a848f-9a4f-7c06-aff0-86d5087fe053@gmail.com>
+Message-ID: <185abbe6-5c17-1c04-708e-6374b28ce97f@gmail.com>
+Date:   Sat, 4 Apr 2020 00:06:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <eb2a848f-9a4f-7c06-aff0-86d5087fe053@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004030165
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1011
- malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move some of the code manipulating the spin lock into separate functions.
-This would allow easier integration of alternative ways to manipulate
-that lock.
+03.04.2020 23:51, Dmitry Osipenko пишет:
+> 03.04.2020 23:22, Thierry Reding пишет:
+> ...
+>> +static irqreturn_t tegra186_timer_irq(int irq, void *data)
+>> +{
+>> +	struct tegra186_timer *tegra = data;
+>> +
+>> +	if (watchdog_active(&tegra->wdt->base)) {
+>> +		tegra186_wdt_disable(tegra->wdt);
+>> +		tegra186_wdt_enable(tegra->wdt);
+>> +	}
+> 
+> Shouldn't this return IRQ_NONE if watchdog is inactive?
+> 
+>> +	return IRQ_HANDLED;
+>> +}
+> 
 
-Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
-Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
-Reviewed-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/qspinlock.c | 38 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index ac1dedbe0237..6e63c72e3fbd 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -289,6 +289,34 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
- #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
- #endif
- 
-+/*
-+ * __try_clear_tail - try to clear tail by setting the lock value to
-+ * _Q_LOCKED_VAL.
-+ * @lock: Pointer to the queued spinlock structure
-+ * @val: Current value of the lock
-+ * @node: Pointer to the MCS node of the lock holder
-+ */
-+static __always_inline bool __try_clear_tail(struct qspinlock *lock,
-+						   u32 val,
-+						   struct mcs_spinlock *node)
-+{
-+	return atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL);
-+}
-+
-+/*
-+ * __mcs_lock_handoff - pass the MCS lock to the next waiter
-+ * @node: Pointer to the MCS node of the lock holder
-+ * @next: Pointer to the MCS node of the first waiter in the MCS queue
-+ */
-+static __always_inline void __mcs_lock_handoff(struct mcs_spinlock *node,
-+					    struct mcs_spinlock *next)
-+{
-+	arch_mcs_lock_handoff(&next->locked, 1);
-+}
-+
-+#define try_clear_tail		__try_clear_tail
-+#define mcs_lock_handoff	__mcs_lock_handoff
-+
- #endif /* _GEN_PV_LOCK_SLOWPATH */
- 
- /**
-@@ -533,7 +561,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	 *       PENDING will make the uncontended transition fail.
- 	 */
- 	if ((val & _Q_TAIL_MASK) == tail) {
--		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL))
-+		if (try_clear_tail(lock, val, node))
- 			goto release; /* No contention */
- 	}
- 
-@@ -550,7 +578,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- 	if (!next)
- 		next = smp_cond_load_relaxed(&node->next, (VAL));
- 
--	arch_mcs_lock_handoff(&next->locked, 1);
-+	mcs_lock_handoff(node, next);
- 	pv_kick_node(lock, next);
- 
- release:
-@@ -575,6 +603,12 @@ EXPORT_SYMBOL(queued_spin_lock_slowpath);
- #undef pv_kick_node
- #undef pv_wait_head_or_lock
- 
-+#undef try_clear_tail
-+#define try_clear_tail		__try_clear_tail
-+
-+#undef mcs_lock_handoff
-+#define mcs_lock_handoff			__mcs_lock_handoff
-+
- #undef  queued_spin_lock_slowpath
- #define queued_spin_lock_slowpath	__pv_queued_spin_lock_slowpath
- 
--- 
-2.21.1 (Apple Git-122.3)
-
+Could you please explain why this interrupt handler is needed at all?
+Shouldn't the watchdog's core take care of the pinging?
