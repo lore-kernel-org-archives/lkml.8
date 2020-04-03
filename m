@@ -2,150 +2,160 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F53C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23864C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8C2206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC0E206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:03:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WIhgZV01"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="OKnX6Ocs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390313AbgDCIBw (ORCPT
+        id S2390198AbgDCIDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:01:52 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31115 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727431AbgDCIBw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:01:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585900911;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lsBzvnpYz4f+Oue6jUVYPkRL5iE2RlTfH/8UEWbiijA=;
-        b=WIhgZV01KuWnd2s6Bkd0k3BkeZCcSgA9Jm5OnbiT7nnCwQtt0yiYdk7/0sxi+xCH+2Bdfm
-        8AvxWDixbAMMzEvM+WRLOhi0oKcR+4uWLAsPtIbt0FArJsujb3vr3DBbiXtCxrlqU48EAw
-        IxlOacrm7Woz0gb0TYYyWgg51sKMLzo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-SkzrbWYBPh2vvz2ASvwFYQ-1; Fri, 03 Apr 2020 04:01:49 -0400
-X-MC-Unique: SkzrbWYBPh2vvz2ASvwFYQ-1
-Received: by mail-wm1-f71.google.com with SMTP id t65so2456745wmf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 01:01:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lsBzvnpYz4f+Oue6jUVYPkRL5iE2RlTfH/8UEWbiijA=;
-        b=k3OAWtPPTdRVGw2fu0x4hZosWka6TOHZ89sySZTK36N2c0zurL/mfS8pUSgQG1Fxij
-         jbzAP9KCke8cXuR8UDuBmtc166gVDGOXvrylTZlhmn97wJkALNu2whh7+KOtibdXcfRf
-         QAorBVKkD0CiPb8OH9U1NoZfIRvDe9EZtABVlc3HlpsytWH3uyxqGZGdakg75tKCqLQb
-         ylN7B8y9p3t4pptiyYjSNcgDV7lZRjVSoR9KSCYBPfuVQOKl7P0crT+qWLPPXiOxpk3A
-         r9yJ6hOL/tVM1EnKiDFsHMRum9SWE9hicesHYdntjx9ylASFDt+uhu2hHkg82MqKdjNB
-         O0kg==
-X-Gm-Message-State: AGi0PuaAILCavouw6hkEE75s2u4SH7nzPC3JnN1Lmru2LY6yoUfAYxxF
-        Hqm3CU3yHdYyt+vu7MqmphPNsDIdtouDEW+cjC+N4JLOEkMR0EJRS7XyijeTBCrjyMFJoixGDQq
-        n89Uv2OjbxNnmYgxz2HmXA/QJ
-X-Received: by 2002:a5d:40ce:: with SMTP id b14mr1588280wrq.414.1585900908394;
-        Fri, 03 Apr 2020 01:01:48 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJQVFGdWtp3aWk3Dg5yEbOAfGHh4/ffY0mjzN0BPu586loesXwLM2se4u++rDlWKus3co2LFg==
-X-Received: by 2002:a5d:40ce:: with SMTP id b14mr1588262wrq.414.1585900908157;
-        Fri, 03 Apr 2020 01:01:48 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id d18sm11437380wrn.9.2020.04.03.01.01.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 01:01:47 -0700 (PDT)
-Subject: Re: [PATCH v2 10/10] objtool: Support multiple stack_op per
- instruction
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        raphael.gault@arm.com
-References: <20200327152847.15294-1-jthierry@redhat.com>
- <20200327152847.15294-11-jthierry@redhat.com>
- <20200402175426.77houvk46xhcxxmn@treble>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <3b3f07b3-172b-0560-96c7-d9386e3cab23@redhat.com>
-Date:   Fri, 3 Apr 2020 09:01:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 3 Apr 2020 04:03:55 -0400
+Received: from mail-eopbgr1400109.outbound.protection.outlook.com ([40.107.140.109]:65120
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727431AbgDCIDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:03:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Uiy0+QZIvc64LNvhbOFrkrH0bBEG1BZSk5flbhgnj9f/z1O+NL1irvL6kad+ehBl4CIKkE3aTpkkaP53w5ksPNZoWi2Yz5UIkRBI2J9wT+gKJuw2EwvCuYWlKapUsrTHFS42zTu7CI+naDWnKifmVQY0H1cf1Ue3ZYHnj7E7lrpB3S3i60XyEnUZS1m3TfTYkNo21RQuWDm7wu293jyH3MxNag7MbmUbU2BqKINVaKbippg04vfOMsQrz/V7FKnQQgkb8VAEsdESjQlz3HZyv8HvETRsQDMfWqQWiAvnG+BOJVibjtpET5AW4oiyBapFZnMhvVwuWO7WY2ujuGA0ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=opwQOdpInWInfv8/ILIN8UjJH4voXce+WuFPHYKWLTk=;
+ b=T3V9fp6B1tnxlHkzatkKD6XDUyyF9jzq8QHkjakB3AQK3LKFL1FmQFEbcsqdrJOyelkDu8LsGYDU97GWfGGLRZy1QHon+KvEPx8Mqp7Cy4eFGoSp6VPJNE5xTz64nufjdjCt61/VoHg3l3SK752J8ru3u+fmbMUdEGlE77UlfcqIEZyyGp8tsVntsEx69QC67MfJg+0xIZNJvA02tgEM5ldNAR6I4D0cuf3gvOPNfN5lIkSU+O+hiuqStHEaUJNOTnf42VNSAXB+WJOJRak1s4+iAB/1FHgtYW5AY3X0JpnTqdKyaFBgIf5dtrTG+CV91oU1YhEK3WYB1BpAfjdHOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=opwQOdpInWInfv8/ILIN8UjJH4voXce+WuFPHYKWLTk=;
+ b=OKnX6OcswQLmH1A4olLgclqcHGGlYFNtFy/MsMLG1KAU2UBwPHsMfQ3RS/Qm2732ZYXXX8d/VlqnePOO6Qn9f8qEouNHaVrvqgPt5OuN45GdAzMFDelYeAlpYymaY9JbNGXyKoEMHkzFuib43/pM3XTKF2ipkBDYgdpvLkePGkY=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4045.jpnprd01.prod.outlook.com (20.178.139.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Fri, 3 Apr 2020 08:03:47 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
+ 08:03:47 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: RE: [PATCH v6 02/11] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
+Thread-Topic: [PATCH v6 02/11] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
+Thread-Index: AQHWCSZhTMobSnptQkuFlRDlbRGMO6hnB2ig
+Date:   Fri, 3 Apr 2020 08:03:46 +0000
+Message-ID: <TYAPR01MB454403D69A74036B74CC8220D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1585856319-4380-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1585856319-4380-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cef45f47-5e23-4887-d180-08d7d7a58979
+x-ms-traffictypediagnostic: TYAPR01MB4045:|TYAPR01MB4045:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB4045BCEBF22C5D48978D2C9ED8C70@TYAPR01MB4045.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0362BF9FDB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(39860400002)(376002)(136003)(346002)(396003)(66946007)(4744005)(55016002)(52536014)(81156014)(7696005)(26005)(9686003)(86362001)(5660300002)(81166006)(8676002)(4326008)(66476007)(55236004)(33656002)(6506007)(7416002)(71200400001)(110136005)(54906003)(76116006)(186003)(316002)(478600001)(8936002)(2906002)(66446008)(64756008)(66556008);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Yuou5xOZfJilGRWI+Yr3Dh7if35T29VPK/Kt1FJD3/z+a7CFTQ4lgAsEpWvF+bQoVIe6Z+kDzvQ+r3TN4JaPUouctDnEdKN/dRZGWqMiLjimvHUVK31Gn9Sl5yAGUwbg6zfRO0I5LHMm6AJmMPw8qmPyH+woNjUpoKIp4wwCIyWzuCTvD9uI9zO48pCgrL+MfJc25dNCOrDH1qchh5XcVYJBu1QUfYpwILdejlLgfgS/kHCg3PFRz+nilKbEUFZXjFPvz37vpdazdj2YgPj3M4fRjXNcg9LCdcLZg5ay2l0xAXLNYAKRZ/GtdDB72RTqFpM1ptH3VtOVyhT9LfLEF5hdK2F5DJ+XPU9n6MzPNUYTIjwLrBipVNXRCz8VySlWWXFOWeusr121olTSScmBnBCkXAiZbpqLisXkm1Bt0pBHMOMwb8lNsl6o1gZqKsnC
+x-ms-exchange-antispam-messagedata: j5kzffjPnMXPKbWtAfQwFosgeg+M1mDttnSPsJ7HXj/U2Eot1le+HJ5NrSd1PdyaaiGxlyHglnZ3lEGF79sN5PkzI/0onfuPadv16CJR+AoeHr1rFUvg0smtKo3ebohQMSXvYaorAoZ5OL3djlifHg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20200402175426.77houvk46xhcxxmn@treble>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cef45f47-5e23-4887-d180-08d7d7a58979
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 08:03:47.0173
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mWMPHwwdDOMKlNsPBRBIX0LLFqa5XilvkX6xcBC9+6AdK688YsyEjhNaSxatOPZu4nNgarCCPMw10t4aJm5CuOyF3Cw/JHKrSBrGnmTkPTqAKjvibD7c+yYaYsVrL6Zd
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Prabhakar-san,
 
+> From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:39 AM
+>=20
+> config option PCIE_RCAR internally selects PCIE_RCAR_HOST which builds th=
+e
+> same driver. So this patch renames CONFIG_PCIE_RCAR to
+> CONFIG_PCIE_RCAR_HOST so that PCIE_RCAR can be safely dropped from Kconfi=
+g
+> file.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On 4/2/20 6:54 PM, Josh Poimboeuf wrote:
-> On Fri, Mar 27, 2020 at 03:28:47PM +0000, Julien Thierry wrote:
->> @@ -127,6 +129,10 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
->>   	if (insn.sib.nbytes)
->>   		sib = insn.sib.bytes[0];
->>   
->> +	op = calloc(1, sizeof(*op));
->> +	if (!op)
->> +		return -1;
->> +
-> 
-> Why not malloc()?
-> 
+Thank you for the patch!
 
-It's just that previsously, stack_op was part of the instruction 
-structure and was initialized to all 0 in decode_instructions(). Now 
-that it's created here, I assumed it would be better to have the same 
-thing here and initialized the new stack_op to all 0.
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Do you prefer to have an explicit malloc() + memset()?
+But, I'm thinking this patch (and patch 03/11) should be separated
+from this patch series for arm64 subsystem to ease maintenance.
+My scenario is:
+ 1) patch series 1: R-Car PCIe endpoint support.
+ -- This means: patch 1, 4 - 9, 11
 
->> +static int handle_insn_ops(struct instruction *insn, struct insn_state *state)
->> +{
->> +	struct stack_op *op;
->> +
->> +	list_for_each_entry(op, &insn->stack_ops, list) {
->> +		int res;
->> +
->> +		res = update_insn_state(insn, state, op);
->> +		if (res)
->> +			return res;
-> 
-> This should probably be like:
-> 
-> 		if (update_insn_state(insn, state, op))
-> 			return 1;
-> 
-> That way the error codes are converted to non-fatal warnings like before
-> (which I admit is confusing...)
-> 
+ 2) After the patch series 1 is merged, submit this patch 2/11 to arm subsy=
+stem
+   and submit the patch 10/11 to misc subsystem.
 
-Right, I'll change this.
+ 3) At last, submit patch 3/11 after the patch 2/11 is merged.
 
->> @@ -2205,29 +2244,8 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->>   			return 0;
->>   
->>   		case INSN_STACK:
->> -			if (update_insn_state(insn, &state))
->> +			if (handle_insn_ops(insn, &state))
->>   				return 1;
-> 
-> How about "handle_stack_ops"?
-> 
+Geert-san, what do you think?
 
-Works for me!
-
-Thanks,
-
--- 
-Julien Thierry
+Best regards,
+Yoshihiro Shimoda
 
