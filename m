@@ -2,134 +2,175 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF423C2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C08C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51BB2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF73A2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xAvsPRmx"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iRiKiLFM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgDCKYH (ORCPT
+        id S2390368AbgDCKZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:24:07 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55234 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgDCKYH (ORCPT
+        Fri, 3 Apr 2020 06:25:00 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42320 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgDCKZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:24:07 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033AMomI006005;
-        Fri, 3 Apr 2020 10:23:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=i1ggMKgfprzTBmjTkkEMaaj/fyNdcd8zJqS5dJmvgJw=;
- b=xAvsPRmx6gh2+EBdOl3phuDMaeJVrKvTjp6xEuk3T0W/akHIREcWwUO2qd/9GBhYbnK5
- 2EFUQ3ejOxz7Kx0pE0i/5o2PmxnptZ0ieBpf8ZEiopScTh80lrLHV9ZWgpg/SKIY94nw
- aH5gSrCFzm5dPel69pBlBxCI2A69Vhjvj0Kca8H+EhisfwdePicoR9G7ERosqx0w5Z3W
- zZ69uJCW7BlUXSxh71GsKZrJwKNcal1GZirX+BWZZr74ABPYJ4g0L/ccPfbVLQ6m1no0
- qLyqCjytjwLppX5hCxgmQrV8JSaH3At7sHXk3eL3DaViOBijD+rE0Fa7QzTaJ6vhqNre Xg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 303aqj0r6t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 10:23:32 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033ANAt4064259;
-        Fri, 3 Apr 2020 10:23:31 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 304sjscrgu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 10:23:31 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 033ANOPg014410;
-        Fri, 3 Apr 2020 10:23:24 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Apr 2020 03:23:24 -0700
-Date:   Fri, 3 Apr 2020 13:23:13 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>, kbuild@lists.01.org
-Cc:     Shiju Jose <shiju.jose@huawei.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rjw@rjwysocki.net, lenb@kernel.org, bp@alien8.de,
-        james.morse@arm.com, tony.luck@intel.com,
-        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
-        tglx@linutronix.de, linuxarm@huawei.com,
-        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
-        yangyicong@hisilicon.com
-Subject: Re: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
- controller errors
-Message-ID: <20200403102313.GD2066@kadam>
-References: <24330bd8-afaa-d7ac-594c-f9fda4242400@huawei.com>
- <20200325173639.GA484@google.com>
+        Fri, 3 Apr 2020 06:25:00 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 762F3321;
+        Fri,  3 Apr 2020 12:24:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1585909497;
+        bh=6AoVQWC6bVmf4rPCkhV3E1jg4poMS4+qepNdH5JPhVA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iRiKiLFMPN5UE41ZLkDupUaGCjHlB/2vNn4igBxHdgWI/tZM7dYRfx9D7Mr66RmCZ
+         Jt5Jhn5PWoJpQFiEazxfqGbvL6VKGQDGFNqgJ9J4vVsgJJrbje+QDU78tcbC5j66so
+         O+9JhRVhwejCsOa4CwMs4JaP8DARZdxgh1AcVfMY=
+Date:   Fri, 3 Apr 2020 13:24:49 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Perches <joe@perches.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
+ DRM fourccs
+Message-ID: <20200403102449.GB4882@pendragon.ideasonboard.com>
+References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200325173639.GA484@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
- malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030090
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9579 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1011
- malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030090
+In-Reply-To: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've added the kbuild list because I think you have a point.
+Hi Sakari,
 
-On Wed, Mar 25, 2020 at 12:36:39PM -0500, Bjorn Helgaas wrote:
-> [+cc Dan]
+Thank you for the patch.
+
+On Fri, Apr 03, 2020 at 12:11:56PM +0300, Sakari Ailus wrote:
+> Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
+> pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
+> the same implementation can be used.
 > 
-
-Shiju had already added me to the CC list...
-
-> On Wed, Mar 25, 2020 at 01:55:18PM +0000, Shiju Jose wrote:
-> > The HiSilicon HIP PCIe controller is capable of handling errors
-> > on root port and perform port reset separately at each root port.
-> > 
-> > This patch add error handling driver for HIP PCIe controller to log
-> > and report recoverable errors. Perform root port reset and restore
-> > link status after the recovery.
-> > 
-> > Following are some of the PCIe controller's recoverable errors
-> > 1. completion transmission timeout error.
-> > 2. CRS retry counter over the threshold error.
-> > 3. ECC 2 bit errors
-> > 4. AXI bresponse/rresponse errors etc.
-> > 
-> > Also fix the following Smatch warning:
-> > warn: should '((((1))) << (9 + i))' be a 64 bit type?
-> > if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-> >      ^^^ This should be BIT_ULL() because it goes up to 9 + 32.
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+> since v1:
 > 
-> I'm glad you did this fix, and thanks for acknowledging Dan, but I
-> don't think it's necessary to mention it in the commit log here
-> because it won't really be useful in the future.  It's only relevant
-> when comparing the unmerged versions of this series, e.g., v4 compared
-> to v3.
+> - Improve documentation (add -BE suffix, refer to "FourCC".
+> 
+> - Use '%p4cc' conversion specifier instead of '%ppf'.
+> 
+> - Fix 31st bit handling in printing FourCC codes.
+> 
+> - Use string() correctly, to allow e.g. proper field width handling.
+> 
+> - Remove loop, use put_unaligned_le32() instead.
+> 
+>  Documentation/core-api/printk-formats.rst | 12 +++++++++++
+>  lib/vsprintf.c                            | 25 +++++++++++++++++++++++
+>  2 files changed, 37 insertions(+)
+> 
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index 8ebe46b1af39..550568520ab6 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -545,6 +545,18 @@ For printing netdev_features_t.
+>  
+>  Passed by reference.
+>  
+> +V4L2 and DRM FourCC code (pixel format)
+> +---------------------------------------
+> +
+> +::
+> +
+> +	%p4cc
+> +
+> +Print a FourCC code used by V4L2 or DRM. The "-BE" suffix is added on big endian
+> +formats.
+> +
+> +Passed by reference.
+> +
+>  Thanks
+>  ======
+>  
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 7c488a1ce318..93eea6a320da 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1721,6 +1721,28 @@ char *netdev_bits(char *buf, char *end, const void *addr,
+>  	return special_hex_number(buf, end, num, size);
+>  }
+>  
+> +static noinline_for_stack
+> +char *fourcc_string(char *buf, char *end, const u32 *fourcc,
+> +		    struct printf_spec spec, const char *fmt)
+> +{
+> +#define FOURCC_STRING_BE	"-BE"
+> +	char s[sizeof(*fourcc) + sizeof(FOURCC_STRING_BE)] = { 0 };
+> +
+> +	if (check_pointer(&buf, end, fourcc, spec))
+> +		return buf;
+> +
+> +	if (fmt[1] != 'c' || fmt[2] != 'c')
+> +		return error_string(buf, end, "(%p4?)", spec);
+> +
+> +	put_unaligned_le32(*fourcc & ~BIT(31), s);
+> +
+> +	if (*fourcc & BIT(31))
+> +		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
+> +			sizeof(FOURCC_STRING_BE));
+> +
+> +	return string(buf, end, s, spec);
 
-It's the kbuild template which suggests adding the Reported-by tags but
-you're right that it's not really appropriate for patches that haven't
-been merged yet.  I wish there were a correct tag.  I just saw yesterday
-where a maintainer insisted that someone add a Suggested-by tag and I
-don't think that's appropriate either.
+Taking V4L2_PIX_FMT_Y16_BE as an example, this will print 'Y16 -BE'
+(without quotes). There are other 4CCs that contain spaces and would
+suffer from a similar issue. Even in little-endian format, it would
+result in additional spaces in the output string. Is this what we want ?
+Should the caller always enclose the 4CC in quotes or brackets for
+clarity ? Or should still be done here ?
 
-regards,
-dan carpenter
+> +}
+> +
+>  static noinline_for_stack
+>  char *address_val(char *buf, char *end, const void *addr,
+>  		  struct printf_spec spec, const char *fmt)
+> @@ -2131,6 +2153,7 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+>   *       correctness of the format string and va_list arguments.
+>   * - 'K' For a kernel pointer that should be hidden from unprivileged users
+>   * - 'NF' For a netdev_features_t
+> + * - '4cc' V4L2 or DRM FourCC code, with "-BE" suffix on big endian formats.
+>   * - 'h[CDN]' For a variable-length buffer, it prints it as a hex string with
+>   *            a certain separator (' ' by default):
+>   *              C colon
+> @@ -2223,6 +2246,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  		return restricted_pointer(buf, end, ptr, spec);
+>  	case 'N':
+>  		return netdev_bits(buf, end, ptr, spec, fmt);
+> +	case '4':
+> +		return fourcc_string(buf, end, ptr, spec, fmt);
+>  	case 'a':
+>  		return address_val(buf, end, ptr, spec, fmt);
+>  	case 'd':
 
+-- 
+Regards,
+
+Laurent Pinchart
