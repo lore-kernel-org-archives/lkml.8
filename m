@@ -2,140 +2,123 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AC8C2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332BDC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E12208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0642B20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:29:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="AePlV6cv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390543AbgDCI21 (ORCPT
+        id S2390157AbgDCI3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:28:27 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33035 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389015AbgDCI20 (ORCPT
+        Fri, 3 Apr 2020 04:29:06 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44830 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbgDCI3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:28:26 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m14so5455032oic.0;
-        Fri, 03 Apr 2020 01:28:26 -0700 (PDT)
+        Fri, 3 Apr 2020 04:29:05 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a49so6412122otc.11
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 01:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=02Izn5NIEOgQ17Wwu9B2nDjWYnskhkbWYrLbCws9cys=;
+        b=AePlV6cvRFaia2Flr22OaglBCSan4Fn1fu1TjdH+PdqjokxAikNigzQZUfp4HAtll6
+         YGMdl+BcQ1Graq9IqqFvdG6d375dVL46YFsYvHdO39lzISMurfDlqYGtDvDCsUlXkMqv
+         sssHVyogZ9QM32uJngkP6RMbY0sg1Hsp8mtmI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Jd71ZkzudxX5g2IyvVUOYdKyHi8OFqEjn6IvsJ3wV7k=;
-        b=FptaELtUqZtw2PU+tc3+NF2788XDhVfr2VIIe/2V4QAciH24UopAEvzEfFTk/eMdr0
-         KK/bH8IlvDlRvFlCFXPsGiRlA/hSkE2w5OtvxkMdZHMNIERNp89MWsiIAJA2VmdcXoe0
-         ltumbPd00FeL8SIWehhKXlPqxNa8Xa/nGbJBnbEqx15TEWLKO5PbN/Ah1PvmwVIpuDW/
-         qpyf1Az7WlIF/EcBQWWZlhK6KZ7Rv8PVaR9Mru0mJZDROQwD4npZKPiNSCghc4nsZSbU
-         WAFKIioIP8XG8tZQUQ37UB3Ue+j4/8lXhRQK+ITWCjXfzdhRUMh4YNwkg4ogzTorSu0b
-         gRXQ==
-X-Gm-Message-State: AGi0PubH7hqbi2eLKTJiwBMHgXhLZ2t5EbB/p+TopymSgWJx8ZrALXP3
-        lelfEc20rHbEF5+UXWZS5KqygYsQa28o31HrWi8=
-X-Google-Smtp-Source: APiQypIS6fpMGxM4Q7dZQ7e1YsUy6vcUkIWwvKfW8MQ2oAPzqQO4S5tcl4AqLxJx41ERvItQuVYYFJJlh5Wv+BynmHU=
-X-Received: by 2002:aca:cdd1:: with SMTP id d200mr2041353oig.153.1585902505654;
- Fri, 03 Apr 2020 01:28:25 -0700 (PDT)
+        bh=02Izn5NIEOgQ17Wwu9B2nDjWYnskhkbWYrLbCws9cys=;
+        b=LiLYsy3Zf3xBtg1qZeuZxXRKNF7QdS+P0JnEIj+/XjvLGmlSLAUfVzKG2KI6ZCZkMo
+         uCAkmgS0ilWbRIyvu+2KYVxnZ13YFpqKqQzQTgaWbmZgUA834Jax6mJx5c6HEazXVL9v
+         B9iS2VjiAtmeUR5S4UGqHXiQcSPWT1t2p5MWN+eSXXKHi6fmwqSz2m+rGMoCVqIgqv+u
+         PxJnBcvPMoyTjaDHF6LQz6oGHGdrgdWdwmC8z+STUuHVKuZs6oCcEp5qpz23NRk75by/
+         heaYFUKrxNElV+uX5NvB8dCbH4vhIRB+6Mb5te013lTMKeF1V8Vzu4ceCsRbgbPU02Vs
+         OjUg==
+X-Gm-Message-State: AGi0PuYxkznrXsnxZCyYtiQRs/28dSPEFRtE4wLE0vTBpMqrcRsFcSBF
+        48f3+XH6C46sZ13AQheLsj5M+cBh16JdtxRQpLXCzw==
+X-Google-Smtp-Source: APiQypJyeKCFnlQPk1pGtIlyDJ5aPoiQwEGi4t/hFFgGBNvUJhvcbzE54yJz9hoZgKP2mj2jINCfs30xT8u1zpxIb0w=
+X-Received: by 2002:a4a:c819:: with SMTP id s25mr5852558ooq.6.1585902543776;
+ Fri, 03 Apr 2020 01:29:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1585856319-4380-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <TYAPR01MB454403D69A74036B74CC8220D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB454403D69A74036B74CC8220D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 3 Apr 2020 10:28:13 +0200
-Message-ID: <CAMuHMdVWn=U82k5RJnBaRUgRHh3bRfdncOupmX67-u-nbwsG9w@mail.gmail.com>
-Subject: Re: [PATCH v6 02/11] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
+References: <20200402203317.GA34560@ubuntu-m2-xlarge-x86> <20200402215926.30714-1-chris@chris-wilson.co.uk>
+ <20200403013420.GA11516@ubuntu-m2-xlarge-x86>
+In-Reply-To: <20200403013420.GA11516@ubuntu-m2-xlarge-x86>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 3 Apr 2020 10:28:52 +0200
+Message-ID: <CAKMK7uE9pv23edViQBC=Jy5fQV=-NQTNdk1qi91Z8shpeuL7FA@mail.gmail.com>
+Subject: Re: [PATCH] drm/legacy: Fix type for drm_local_map.offset
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shimoda-san,
-
-On Fri, Apr 3, 2020 at 10:03 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:39 AM
+On Fri, Apr 3, 2020 at 8:54 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Thu, Apr 02, 2020 at 10:59:26PM +0100, Chris Wilson wrote:
+> > drm_local_map.offset is not only used for resource_size_t but also
+> > dma_addr_t which may be of different sizes.
 > >
-> > config option PCIE_RCAR internally selects PCIE_RCAR_HOST which builds the
-> > same driver. So this patch renames CONFIG_PCIE_RCAR to
-> > CONFIG_PCIE_RCAR_HOST so that PCIE_RCAR can be safely dropped from Kconfig
-> > file.
+> > Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Fixes: 8e4ff9b56957 ("drm: Remove the dma_alloc_coherent wrapper for internal usage")
+> > Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+> > Cc: Dave Airlie <airlied@gmail.com>
+> > Cc: Nathan Chancellor <natechancellor@gmail.com>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > ---
+> >  include/drm/drm_legacy.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > diff --git a/include/drm/drm_legacy.h b/include/drm/drm_legacy.h
+> > index dcef3598f49e..aed382c17b26 100644
+> > --- a/include/drm/drm_legacy.h
+> > +++ b/include/drm/drm_legacy.h
+> > @@ -136,7 +136,7 @@ struct drm_sg_mem {
+> >   * Kernel side of a mapping
+> >   */
+> >  struct drm_local_map {
+> > -     resource_size_t offset;  /**< Requested physical address (0 for SAREA)*/
+> > +     dma_addr_t offset;       /**< Requested physical address (0 for SAREA)*/
+> >       unsigned long size;      /**< Requested physical size (bytes) */
+> >       enum drm_map_type type;  /**< Type of memory to map */
+> >       enum drm_map_flags flags;        /**< Flags */
+> > --
+> > 2.20.1
+> >
 >
-> Thank you for the patch!
+> Thanks for the quick fix!
 >
-> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> I ran it through my set of build tests and nothing else seems to have
+> broken (at least not any more than it already is...).
 >
-> But, I'm thinking this patch (and patch 03/11) should be separated
-> from this patch series for arm64 subsystem to ease maintenance.
-> My scenario is:
->  1) patch series 1: R-Car PCIe endpoint support.
->  -- This means: patch 1, 4 - 9, 11
->
->  2) After the patch series 1 is merged, submit this patch 2/11 to arm subsystem
->    and submit the patch 10/11 to misc subsystem.
->
->  3) At last, submit patch 3/11 after the patch 2/11 is merged.
->
-> Geert-san, what do you think?
+> Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
 
-Thanks, I agree with your summary.
+This works too, missed it when replying to Linus
 
-I can take patch 2/11 through renesas-devel.
-Probably it's best if I submit it to arm-soc as a fix for v5.8, after
-the driver part
-has been merged into v5.8-rc1, so 3/11 can be submitted for v5.9.
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-BTW, I'm wondering about "[PATCH v6 05/11] PCI: rcar: Fix calculating
-mask for PCIEPAMR register". Can the issue fixed by this patch happen with
-the current driver in host mode, or is that limited to ep mode?
-In case of the former, please submit it to the PCI maintainer as a separate
-fix.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Linux I guess this one is better, but like I explained it really
+doesn't matter what we do with drm legacy code, it's a horror show
+that should be disabled on all modern distros anyway. We just keep it
+because of "never break old uapi". Maybe in a few years more ...
+-Daniel
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
