@@ -2,73 +2,100 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5378C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A28C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E24E2063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FC2206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:03:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QsHoyLpx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hENydy7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391114AbgDCQ7X (ORCPT
+        id S1728377AbgDCRDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:59:23 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42127 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728121AbgDCQ7X (ORCPT
+        Fri, 3 Apr 2020 13:03:10 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41164 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbgDCRDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:59:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585933162;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0cjGQs7ZJFpDDMnRgUApJKcyQromsXU5+AxTIgkAGnM=;
-        b=QsHoyLpxkgh/amDoMB0D8hhrlaaw2eVrAs1t9Sz6sGu3usVh83r3PS6bcNwfDwF6XMVxJh
-        Pwh5nGy89fU+nCpoau0kEaudurtwIPgv5aUdm18fBZL2OF7CD1WeEsHlMEtW7r7BZFpHBG
-        q9XwzthKTU5/gWQCpfOD95kIyhmlCV4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-ZmqnCpb_M4aoc7eYn4ga7A-1; Fri, 03 Apr 2020 12:59:20 -0400
-X-MC-Unique: ZmqnCpb_M4aoc7eYn4ga7A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3C5F800D5C;
-        Fri,  3 Apr 2020 16:59:18 +0000 (UTC)
-Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B63547E32F;
-        Fri,  3 Apr 2020 16:59:16 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 11:59:13 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     jeyu@kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, keescook@chromium.org,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200403165913.cxjxrwp7j5kssfxk@treble>
-References: <20200403163716.GV20730@hirez.programming.kicks-ass.net>
+        Fri, 3 Apr 2020 13:03:10 -0400
+Received: by mail-qv1-f68.google.com with SMTP id t4so3929549qvz.8;
+        Fri, 03 Apr 2020 10:03:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=C18c1IugNAFxFaCXPQKTt7OVFB64Oo1MwWK6g2EBugk=;
+        b=hENydy7D0JCIgFa87b7M0ed1qoGpz0QGXHyXVDmHGDh7zw+L+WUhbK8IW02pBk8qHM
+         ADsA25xAJ67o4Ra6VRdXBwMhcZMuHy475xAxlyiU1YuRkbqv+PF2ir5V5qEjMcANfQVn
+         jGY8UQU13Viwi+GDqFDM01+/XrhVQbFZPaY/Tb2zki4oxJUEWTJXSoycxyeREVVBXM5T
+         uUK7ezP46TqBapFishKlJi3Sy21RVUbp0ZoycRDNJ8VBJIH1oXob0kZUNKCSq+meSRlw
+         PvtxAFdZSw3sGPJDdA0MlyJjyUWjLDDi5bCftL5qN/hJ4Jis+/StdK4ZXo5AsP3JJEfj
+         3FBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=C18c1IugNAFxFaCXPQKTt7OVFB64Oo1MwWK6g2EBugk=;
+        b=rybU4ozIerctSM0MzTB0k3ERvOnYEv6ZCk0L2c4W6/1IYwZN8R+xDAFiT8Pd59MexN
+         UFTVEdcfYD5zv8ByxFHsGXipcbXgxsLLYFmYUk5qTzyyb5rvnmQbousLiaburYrS/dTN
+         47iTws+XsMaZX3YUuQd3RkiQBiAP97qOVLYQEbIuJHSzEkRSU+H/olyY2alErw2q0DtC
+         twBn3MWyVsGQMRk/Lvj+FynUL7QaF4alci5buJE4RyJYrUDR+ziDeKKKIsEMalzXqrBn
+         3+Bx2IG///BqqOgXeXuLIQ265ouq3uOxdIFBqOy3BOhXfbqmnNOyZeb2NzEp+OaFATFL
+         q5Ig==
+X-Gm-Message-State: AGi0Pub7mxwRCDhfmmPwPQPG+PIW8qszdXyOnYgo1qSsXoaeIqhEOFoO
+        jpERSXYDFTJyuaFz6rQNkGg=
+X-Google-Smtp-Source: APiQypI7c1myt6pyEA1+Je1XA2txJx4TleqRCwZGZQeWyffLtTOCPCApztHQrbf9btvLkagoi//UCw==
+X-Received: by 2002:a05:6214:1933:: with SMTP id es19mr9320626qvb.186.1585933389339;
+        Fri, 03 Apr 2020 10:03:09 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id k2sm6777761qte.16.2020.04.03.10.03.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 10:03:08 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 13:03:05 -0400
+Message-ID: <20200403130305.GB6453@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     netdev@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
+        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?B?UmVuw6k=?= van Dorst <opensource@vdorst.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in port5
+ setup
+In-Reply-To: <20200403112830.505720-1-gch981213@gmail.com>
+References: <20200403112830.505720-1-gch981213@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200403163716.GV20730@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 06:37:16PM +0200, Peter Zijlstra wrote:
+On Fri,  3 Apr 2020 19:28:24 +0800, Chuanhong Guo <gch981213@gmail.com> wrote:
+> The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
+> and a phy-handle isn't always available.
+> Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
+> connected to switch port 5 and setup mt7530 according to phy address
+> of 2nd gmac node, causing null pointer dereferencing when phy-handle
+> isn't defined in dts.
+> This commit fix this setup code by checking return value of
+> of_parse_phandle before using it.
 > 
-> We're very close to enforcing W^X memory
+> Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> Cc: stable@vger.kernel.org
 
-Oh, and I haven't forgotten ;-)  Will bump it up the TODO list and
-finish it soon.
-
--- 
-Josh
-
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
