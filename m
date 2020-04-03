@@ -2,284 +2,166 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5ABC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710AEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93D3206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:19:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585934385;
-	bh=KwoVdbxuLurcwZ6tzVcPQ1p256AfOix1p2+b/yvaElI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X9jxQR0F3WjwyJT+jAfYdtFION3t2qnAusInhS1JlCL6WZL/SZ0K/rI0ROEOavp7p
-	 0/CoPUST2nKw3aw7B6uGnXqmbMlPjIgukS+v5LVGgnTltr7iMCGxkGz6n0biIo/SVh
-	 tm+TINV/0Z2tguHSRLZGC6tWpKmUuFUz+jBaXYrw=
+	by mail.kernel.org (Postfix) with ESMTP id 44E92206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404270AbgDCRTo (ORCPT
+        id S2404288AbgDCRUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:19:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51724 "EHLO mail.kernel.org"
+        Fri, 3 Apr 2020 13:20:20 -0400
+Received: from mga11.intel.com ([192.55.52.93]:53973 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727998AbgDCRTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:19:44 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B7952080C;
-        Fri,  3 Apr 2020 17:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585934383;
-        bh=KwoVdbxuLurcwZ6tzVcPQ1p256AfOix1p2+b/yvaElI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z7sUKFm/atbB3d0guNhEPm8JNRYUrzkM1COSbvzZ7X//eJFJ62EwzBG0Rr6wL4iTi
-         xYknAG7LxPixigyxtyM4gOOdvTe/XI13qnUD4p/9TRCpHlT7AzdLZYXQ980eUVtiMN
-         wFJ5mnnx95sY6IuGPDXbC0cq38yOGAPj4Jy6Zskw=
-Date:   Fri, 3 Apr 2020 10:19:43 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] f2fs: fix long latency due to discard during umount
-Message-ID: <20200403171943.GC68460@google.com>
-References: <1585550730-1858-1-git-send-email-stummala@codeaurora.org>
- <20200331184655.GB198665@google.com>
- <20200401092201.GB20234@codeaurora.org>
+        id S1728066AbgDCRUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 13:20:20 -0400
+IronPort-SDR: 8xRw2mYWBlAVu/aHRg51EJ02lTNoKTB2QHP/bHZfhTkM00OiVvwG8YikkfYY22eJDS+dbE+3h8
+ Rn9WxJU0hyAA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 10:20:19 -0700
+IronPort-SDR: jokLSxJtXu412ArxBhtTIlU+DAQiS2gQuXmIsa1nfWOkvQAVA9lSueHRZFvFyNXDzYVPKYN25D
+ N8rXpo0SK7vQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,340,1580803200"; 
+   d="scan'208";a="296043927"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Apr 2020 10:20:19 -0700
+Date:   Fri, 3 Apr 2020 10:20:18 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [RFC PATCH] x86/split_lock: Disable SLD if an unaware
+ (out-of-tree) module enables VMX
+Message-ID: <20200403172018.GD2701@linux.intel.com>
+References: <20200403163007.6463-1-sean.j.christopherson@intel.com>
+ <20200403164244.GZ20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401092201.GB20234@codeaurora.org>
+In-Reply-To: <20200403164244.GZ20730@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/01, Sahitya Tummala wrote:
-> Hi Jaegeuk,
-> 
-> On Tue, Mar 31, 2020 at 11:46:55AM -0700, Jaegeuk Kim wrote:
-> > On 03/30, Sahitya Tummala wrote:
-> > > F2FS already has a default timeout of 5 secs for discards that
-> > > can be issued during umount, but it can take more than the 5 sec
-> > > timeout if the underlying UFS device queue is already full and there
-> > > are no more available free tags to be used. In that case, submit_bio()
-> > > will wait for the already queued discard requests to complete to get
-> > > a free tag, which can potentially take way more than 5 sec.
-> > > 
-> > > Fix this by submitting the discard requests with REQ_NOWAIT
-> > > flags during umount. This will return -EAGAIN for UFS queue/tag full
-> > > scenario without waiting in the context of submit_bio(). The FS can
-> > > then handle these requests by retrying again within the stipulated
-> > > discard timeout period to avoid long latencies.
+On Fri, Apr 03, 2020 at 06:42:44PM +0200, Peter Zijlstra wrote:
+> On Fri, Apr 03, 2020 at 09:30:07AM -0700, Sean Christopherson wrote:
+> > Hook into native CR4 writes to disable split-lock detection if CR4.VMXE
+> > is toggled on by an SDL-unaware entity, e.g. an out-of-tree hypervisor
+> > module.  Most/all VMX-based hypervisors blindly reflect #AC exceptions
+> > into the guest, or don't intercept #AC in the first place.  With SLD
+> > enabled, this results in unexpected #AC faults in the guest, leading to
+> > crashes in the guest and other undesirable behavior.
 > > 
-> > Sorry, Sahitya, but, do we really need to do like this? How about just
-> > controlling # of outstanding discarding bios in __issue_discard_cmd()?
-> 
-> Do you mean something like this?
-> 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 1a62b27..860dd43 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -1099,7 +1099,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
->         } else if (discard_type == DPOLICY_FSTRIM) {
->                 dpolicy->io_aware = false;
->         } else if (discard_type == DPOLICY_UMOUNT) {
-> -               dpolicy->max_requests = UINT_MAX;
-> +               dpolicy->max_requests = 30;
-
-Can we use max queue depth of the block device?
-
->                 dpolicy->io_aware = false;
->                 /* we need to issue all to keep CP_TRIMMED_FLAG */
->                 dpolicy->granularity = 1;
-> @@ -1470,12 +1470,14 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->         struct list_head *pend_list;
->         struct discard_cmd *dc, *tmp;
->         struct blk_plug plug;
-> -       int i, issued = 0;
-> +       int i, issued;
->         bool io_interrupted = false;
-> 
->         if (dpolicy->timeout != 0)
->                 f2fs_update_time(sbi, dpolicy->timeout);
-> 
-> +retry:
-> +       issued = 0;
->         for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
->                 if (dpolicy->timeout != 0 &&
->                                 f2fs_time_over(sbi, dpolicy->timeout))
-> @@ -1522,6 +1524,11 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->                         break;
->         }
-> 
-> +       if (dpolicy->type == DPOLICY_UMOUNT && issued) {
-> +               __wait_all_discard_cmd(sbi, dpolicy);
-> +               goto retry;
-> +       }
-> +
->         if (!issued && io_interrupted)
->                 issued = -1;
-> 
-> Thanks,
-> 
+> > Reported-by: "Kenneth R. Crudup" <kenny@panix.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Jessica Yu <jeyu@kernel.org>
+> > Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> > Cc: Kenneth R. Crudup <kenny@panix.com>
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Fenghua Yu <fenghua.yu@intel.com>
+> > Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> > Cc: Nadav Amit <namit@vmware.com>
+> > Cc: Thomas Hellstrom <thellstrom@vmware.com>
+> > Cc: Tony Luck <tony.luck@intel.com>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Jann Horn <jannh@google.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: David Laight <David.Laight@ACULAB.COM>
+> > Cc: Doug Covelli <dcovelli@vmware.com>
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
 > > 
-> > > 
-> > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > > ---
-> > > v3:
-> > > -Handle the regression reported by Chao with v2.
-> > > -simplify the logic to split the dc with multiple bios incase any bio returns
-> > >  EAGAIN and retry those new dc within 5 sec timeout.
-> > > 
-> > >  fs/f2fs/segment.c | 65 +++++++++++++++++++++++++++++++++++++++++++------------
-> > >  1 file changed, 51 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > index fb3e531..55d18c7 100644
-> > > --- a/fs/f2fs/segment.c
-> > > +++ b/fs/f2fs/segment.c
-> > > @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
-> > >  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
-> > >  	unsigned long flags;
-> > >  
-> > > -	dc->error = blk_status_to_errno(bio->bi_status);
-> > > -
-> > >  	spin_lock_irqsave(&dc->lock, flags);
-> > > +	if (!dc->error)
-> > > +		dc->error = blk_status_to_errno(bio->bi_status);
-> > > +
-> > >  	dc->bio_ref--;
-> > > -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
-> > > -		dc->state = D_DONE;
-> > > -		complete_all(&dc->wait);
-> > > +	if (!dc->bio_ref) {
-> > > +		if (dc->error || dc->state == D_SUBMIT) {
-> > > +			dc->state = D_DONE;
-> > > +			complete_all(&dc->wait);
-> > > +		}
-> > >  	}
-> > >  	spin_unlock_irqrestore(&dc->lock, flags);
-> > >  	bio_put(bio);
-> > > @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> > >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
-> > >  					&(dcc->fstrim_list) : &(dcc->wait_list);
-> > > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > +	int flag;
-> > >  	block_t lstart, start, len, total_len;
-> > >  	int err = 0;
-> > >  
-> > > +	flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > > +
-> > >  	if (dc->state != D_PREP)
-> > >  		return 0;
-> > >  
-> > > @@ -1192,10 +1198,6 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > >  		dc->bio_ref++;
-> > >  		spin_unlock_irqrestore(&dc->lock, flags);
-> > >  
-> > > -		atomic_inc(&dcc->queued_discard);
-> > > -		dc->queued++;
-> > > -		list_move_tail(&dc->list, wait_list);
-> > > -
-> > >  		/* sanity check on discard range */
-> > >  		__check_sit_bitmap(sbi, lstart, lstart + len);
-> > >  
-> > > @@ -1203,6 +1205,29 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > >  		bio->bi_end_io = f2fs_submit_discard_endio;
-> > >  		bio->bi_opf |= flag;
-> > >  		submit_bio(bio);
-> > > +		if (flag & REQ_NOWAIT) {
-> > > +			if (dc->error == -EAGAIN) {
-> > > +				spin_lock_irqsave(&dc->lock, flags);
-> > > +				dc->len -= len;
-> > > +				if (!dc->len) {
-> > > +					dc->len = total_len;
-> > > +					dc->state = D_PREP;
-> > > +					reinit_completion(&dc->wait);
-> > > +				} else {
-> > > +					dcc->undiscard_blks -= total_len;
-> > > +					if (dc->state == D_PARTIAL)
-> > > +						dc->state = D_SUBMIT;
-> > > +				}
-> > > +				err = dc->error;
-> > > +				dc->error = 0;
-> > > +				spin_unlock_irqrestore(&dc->lock, flags);
-> > > +				break;
-> > > +			}
-> > > +		}
-> > > +
-> > > +		atomic_inc(&dcc->queued_discard);
-> > > +		dc->queued++;
-> > > +		list_move_tail(&dc->list, wait_list);
-> > >  
-> > >  		atomic_inc(&dcc->issued_discard);
-> > >  
-> > > @@ -1214,8 +1239,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > >  		len = total_len;
-> > >  	}
-> > >  
-> > > -	if (!err && len)
-> > > -		__update_discard_tree_range(sbi, bdev, lstart, start, len);
-> > > +	if ((!err || err == -EAGAIN) && total_len && dc->start != start)
-> > > +		__update_discard_tree_range(sbi, bdev, lstart, start,
-> > > +					total_len);
-> > >  	return err;
-> > >  }
-> > >  
-> > > @@ -1470,12 +1496,15 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >  	struct list_head *pend_list;
-> > >  	struct discard_cmd *dc, *tmp;
-> > >  	struct blk_plug plug;
-> > > -	int i, issued = 0;
-> > > +	int i, err, issued = 0;
-> > >  	bool io_interrupted = false;
-> > > +	bool retry;
-> > >  
-> > >  	if (dpolicy->timeout != 0)
-> > >  		f2fs_update_time(sbi, dpolicy->timeout);
-> > >  
-> > > +retry:
-> > > +	retry = false;
-> > >  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
-> > >  		if (dpolicy->timeout != 0 &&
-> > >  				f2fs_time_over(sbi, dpolicy->timeout))
-> > > @@ -1509,7 +1538,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >  				break;
-> > >  			}
-> > >  
-> > > -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > > +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > > +			if (err == -EAGAIN) {
-> > > +				congestion_wait(BLK_RW_ASYNC,
-> > > +						DEFAULT_IO_TIMEOUT);
-> > > +				retry = true;
-> > > +			}
-> > >  
-> > >  			if (issued >= dpolicy->max_requests)
-> > >  				break;
-> > > @@ -1522,6 +1556,9 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >  			break;
-> > >  	}
-> > >  
-> > > +	if (retry)
-> > > +		goto retry;
-> > > +
-> > >  	if (!issued && io_interrupted)
-> > >  		issued = -1;
-> > >  
-> > > -- 
-> > > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> > > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> > A bit ugly, but on the plus side the code is largely contained to intel.c.
+> > I think forgoing the on_all_cpus() remote kill is safe? 
 > 
-> -- 
-> --
-> Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> How would it be safe? You can't control where the module text will be
+> ran, or how quickly.
+
+Ugh, I forgot about the stupid core scope behavior.
+
+CR4.VMXE needs to be set on every logical CPU before that CPU can do VMXON
+and enter a guest, so every CPU will come through this code and locally
+disable SLD.
+
+But, a SMT sibling could race on the WRMSR and re-enable SLD on the CPU
+that just killed SLD.  Waiting until other CPUs stop enabling SLD should
+work.  Something like this?  Disclaimer, memory ordering isn't my forte.
+
+static atomic_t enabling_sld = ATOMIC_INIT(0);
+
+static void sld_update_msr(bool on)
+{
+	u64 test_ctrl_val = msr_test_ctrl_cache;
+
+	if (on && !sld_killed)
+		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+
+	if (test_ctrl_val & MSR_TEST_CTRL_SPLIT_LOCK_DETECT)
+		atomic_inc(&enabling_sld);
+
+	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+
+	if (test_ctrl_val & MSR_TEST_CTRL_SPLIT_LOCK_DETECT)
+		atomic_dec(&enabling_sld);
+}
+
+void split_lock_cr4_write(unsigned long val)
+{
+	u64 ctrl;
+
+	/*
+	 * Out-of-tree hypervisors that aren't aware of split-lock will blindly
+	 * reflect split-lock #AC into their guests.  Kill split-lock detection
+	 * if an unaware entity enables VMX.
+	 */
+	if (!static_cpu_has(X86_FEATURE_VMX) ||
+	    !static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) ||
+	    !(val & X86_CR4_VMXE) || atomic_read(&cr4_vmxe_split_lock_safe) ||
+	    (native_read_cr4() & X86_CR4_VMXE))
+		return;
+
+	WARN_ON_ONCE(1);
+
+	/*
+	 * Set the global kill flag to prevent re-enabling SLD, e.g. via
+	 * switch_to_sld().
+	 */
+	WRITE_ONCE(sld_killed, true);
+
+	/*
+	 * No need to forcefully disable SLD on other CPUs, they'll come here
+	 * if/when they set CR4.VMXE.  But, wait until no other threads are
+	 * enabling SLD, i.e. have seen sld_killed, as the MSR may be shared
+	 * by SMT siblings.
+	 */
+	while (atomic_read(&enabling_sld));
+	sld_update_msr(false);
+}
