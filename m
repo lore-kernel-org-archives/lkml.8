@@ -2,83 +2,180 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE4C2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FEBC2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07BEC2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A64207FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ha+I+lDn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dwy+bq65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404487AbgDCQX7 (ORCPT
+        id S2404503AbgDCQYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:23:59 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:25765 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728293AbgDCQXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:23:33 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48v4xH4RJBzpX;
-        Fri,  3 Apr 2020 18:23:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585931011; bh=K+vbcp79f0yG60D3y6nK9BE+zeYjqGJsmkCt6t37wr0=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=ha+I+lDn0IayMpv5TffKHTJ/ZweBKjNKFKzbvhL6uuaDiN0PLLEhPQ5PqoAe6SKkM
-         GLT3qLFt5qr2M9gSzrzoYJxue0sCC70JZohrXbyYMq3RorKPdRgiqEGihRCYEuAKXG
-         /fM3NaSPaQ7BmrIFwOY0jAUA02s/54vDjXaaDg19DklUr/K5tIdLbCCWF9p57qCR23
-         nf2o3kCtspSV0mcY1zSL7SRU4xcckg0usR8z3INYfuwVy+oKb13dkokJIdfjOOenjd
-         EeVZg8mGLz2lJJd1zt0vYwRLb4yRa9owxMsFVdpH1th8NnbwG+tmeCdSDTXABnCQwT
-         SVo6bVokhDw3Q==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 03 Apr 2020 18:23:31 +0200
-Message-Id: <edb51336ad361f8dad6d9745e47823da6a94a204.1585929579.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 2/8] power: supply: core: allow to constify property lists
+        Fri, 3 Apr 2020 12:24:04 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38128 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728293AbgDCQYC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:24:02 -0400
+Received: by mail-pj1-f65.google.com with SMTP id m15so3150195pje.3;
+        Fri, 03 Apr 2020 09:24:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VHZL7VkAiKyU+OLHV3Q6UdUVJcGFPeA3Rqtpg/t6Yag=;
+        b=dwy+bq652NZlCPKGx5RgdbE2OCzGh0yfXL9N8TXnYdtV2PAgt+wHhZP0nI7MgdbW+z
+         V4Fdv6jBOOMTO20U07atV5R/0L7kcbcoNMV8j22XiaHaa4Pl24XCrp5FVsPXj+iSxqts
+         FLFCWZpMIBghvL4H82MK9mnaLSH/B1y2Hu9JwxUAv45WxaCg9Kkfm/fgd+FGp6pb66V3
+         o/RYVkAUGZ/qYcpE3w4+DyNgwURQMfkbFc/eV8BzqxUlhohMVFRvnz18/P24DGqd4WBL
+         AYq+RCRw4E68lWbCmkwSFLWmxXlHFWZKNCv84RhYqfZg2X9b2RBKkMo3vxiDoAOuyqST
+         e5xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VHZL7VkAiKyU+OLHV3Q6UdUVJcGFPeA3Rqtpg/t6Yag=;
+        b=eO09LTc84W7s0pi5qVqjHKAMNlOxDnyCIj99bcSYYRJr6iWWjbGG/h79MDXZ/RY/tP
+         NxEPT4Yq3pBxBEpwco77Tqeqce9jM/n04f5oYqEC5cEtHzTiuquCozdPAZ+4VD3ImDEV
+         v9eJWv8GfcDJF0GuoZBiKGmLW/sLisHEcVuShVPmDo3y1PEB/V7KWb85N2shu7WaiKm6
+         ba5n1fU5nC3ecOIbfQJ99fu0EqAQGNfp39xOBFOWUQdLsFIOW3WS0+ELR9zDf0+7s1xK
+         CEH0ax19v7so5aT+lcFtqUslk+HQ4yqd4eDWDppPQ2er5JRDeC+nS5y8jzft/DtwV3m7
+         k8YA==
+X-Gm-Message-State: AGi0PuZ0HmAKjXxhghuvoZkUJaqOJ591raq9fNrj8E03IMMvHq/e3r68
+        Njy0tBnmDmJob8kQq7Yx6ZCFiK2DrFC8VTzvfNI=
+X-Google-Smtp-Source: APiQypJ45+3EwU1AMNAqrlW12hA1LE6C4EtPe9jefycJESLHDJfelc4gB2zOt0moSFww3plOb4WBlmvfq/lhal9a/eU=
+X-Received: by 2002:a17:902:b190:: with SMTP id s16mr8506114plr.262.1585931041577;
+ Fri, 03 Apr 2020 09:24:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200403154834.303105-1-hdegoede@redhat.com> <20200403154834.303105-2-hdegoede@redhat.com>
+ <3798902.sSGyZ91sKY@kreacher>
+In-Reply-To: <3798902.sSGyZ91sKY@kreacher>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 3 Apr 2020 19:23:54 +0300
+Message-ID: <CAHp75VfThW1CrkneP5kEm_7KejQgS2dhDi0YyDrL4y3=uY9ZbA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "5 . 4+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since tables pointed to by power_supply_desc->properties and
-->usb_types are not expected to change after registration, mark
-the pointers accordingly
+On Fri, Apr 3, 2020 at 7:08 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Friday, April 3, 2020 5:48:34 PM CEST Hans de Goede wrote:
+> > The Power Management Events (PMEs) the INT0002 driver listens for get
+> > signalled by the Power Management Controller (PMC) using the same IRQ
+> > as used for the ACPI SCI.
+> >
+> > Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+> > waking up the system") the SCI triggering, without there being a wakeup
+> > cause recognized by the ACPI sleep code, will no longer wakeup the system.
+> >
+> > This breaks PMEs / wakeups signalled to the INT0002 driver, the system
+> > never leaves the s2idle_loop() now.
+> >
+> > Use acpi_register_wakeup_handler() to register a function which checks
+> > the GPE0a_STS register for a PME and trigger a wakeup when a PME has
+> > been signalled.
+> >
+> > Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+> > Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>
+> Andy, any objections?
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- include/linux/power_supply.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+No,
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index dcd5a71e6c67..6a34df65d4d1 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -223,9 +223,9 @@ struct power_supply_config {
- struct power_supply_desc {
- 	const char *name;
- 	enum power_supply_type type;
--	enum power_supply_usb_type *usb_types;
-+	const enum power_supply_usb_type *usb_types;
- 	size_t num_usb_types;
--	enum power_supply_property *properties;
-+	const enum power_supply_property *properties;
- 	size_t num_properties;
- 
- 	/*
+Hans, just today when testing some other stuff noticed this
+
+[   49.279001] irq 9: nobody cared (try booting with the "irqpoll" option)
+[   49.289176] CPU: 0 PID: 168 Comm: irq/123-ATML100 Not tainted
+5.6.0-next-20200403+ #212
+[   49.300915] Hardware name: Intel Corporation CHERRYVIEW D0
+PLATFORM/Braswell CRB, BIOS BRAS.X64.B082.R00.150727 0557 07/27/2015
+[   49.316520] Call Trace:
+[   49.322093]  <IRQ>
+[   49.327193]  dump_stack+0x50/0x70
+[   49.333744]  __report_bad_irq+0x30/0xa2
+[   49.340858]  note_interrupt.cold+0xb/0x62
+...
+[   49.685087] handlers:
+[   49.690307] [<000000000ab3cf88>] acpi_irq
+[   49.697463] [<00000000e5d78029>] int0002_irq [intel_int0002_vgpio]
+[   49.707063] Disabling IRQ #9
+
+Is this what your series fixes?
+
+>
+> > ---
+> > Changes in v3:
+> > - Keep the pm_wakeup_hard_event() call
+> >
+> > Changes in v2:
+> > - Adjust for the wakeup-handler registration function being renamed to
+> >   acpi_register_wakeup_handler()
+> > ---
+> >  drivers/platform/x86/intel_int0002_vgpio.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> > index f14e2c5f9da5..55f088f535e2 100644
+> > --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> > +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> > @@ -127,6 +127,14 @@ static irqreturn_t int0002_irq(int irq, void *data)
+> >       return IRQ_HANDLED;
+> >  }
+> >
+> > +static bool int0002_check_wake(void *data)
+> > +{
+> > +     u32 gpe_sts_reg;
+> > +
+> > +     gpe_sts_reg = inl(GPE0A_STS_PORT);
+> > +     return (gpe_sts_reg & GPE0A_PME_B0_STS_BIT);
+> > +}
+> > +
+> >  static struct irq_chip int0002_byt_irqchip = {
+> >       .name                   = DRV_NAME,
+> >       .irq_ack                = int0002_irq_ack,
+> > @@ -220,6 +228,7 @@ static int int0002_probe(struct platform_device *pdev)
+> >               return ret;
+> >       }
+> >
+> > +     acpi_register_wakeup_handler(irq, int0002_check_wake, NULL);
+> >       device_init_wakeup(dev, true);
+> >       return 0;
+> >  }
+> > @@ -227,6 +236,7 @@ static int int0002_probe(struct platform_device *pdev)
+> >  static int int0002_remove(struct platform_device *pdev)
+> >  {
+> >       device_init_wakeup(&pdev->dev, false);
+> > +     acpi_unregister_wakeup_handler(int0002_check_wake, NULL);
+> >       return 0;
+> >  }
+> >
+> >
+>
+>
+>
+>
+
+
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
