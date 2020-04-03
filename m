@@ -2,384 +2,122 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1496C2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822DAC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8467320737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7B6208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390602AbgDCJhF (ORCPT
+        id S2390432AbgDCJhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 3 Apr 2020 05:37:05 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:64461 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgDCJhF (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:47143 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727843AbgDCJhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Apr 2020 05:37:05 -0400
-X-Originating-IP: 93.29.109.196
-Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 2AB5F4000B;
-        Fri,  3 Apr 2020 09:37:01 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 1/2] dt-bindings: display: Document the Xylon LogiCVC display controller
-Date:   Fri,  3 Apr 2020 11:36:16 +0200
-Message-Id: <20200403093617.760278-2-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200403093617.760278-1-paul.kocialkowski@bootlin.com>
-References: <20200403093617.760278-1-paul.kocialkowski@bootlin.com>
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jKIkI-0000BB-CT; Fri, 03 Apr 2020 09:36:14 +0000
+Date:   Fri, 3 Apr 2020 11:36:12 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     syzbot <syzbot+f675f964019f884dbd0f@syzkaller.appspotmail.com>,
+        adobriyan@gmail.com, akpm@linux-foundation.org,
+        allison@lohutok.net, areber@redhat.com, aubrey.li@linux.intel.com,
+        avagin@gmail.com, bfields@fieldses.org, christian@brauner.io,
+        cyphar@cyphar.com, ebiederm@xmission.com,
+        gregkh@linuxfoundation.org, guro@fb.com, jlayton@kernel.org,
+        joel@joelfernandes.org, keescook@chromium.org,
+        linmiaohe@huawei.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
+        peterz@infradead.org, sargun@sargun.me,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk
+Subject: Re: possible deadlock in send_sigurg
+Message-ID: <20200403093612.mtd7edubsng24uuh@wittgenstein>
+References: <00000000000011d66805a25cd73f@google.com>
+ <20200403091135.GA3645@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200403091135.GA3645@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Xylon LogiCVC is a display controller implemented as programmable
-logic in Xilinx FPGAs.
+On Fri, Apr 03, 2020 at 11:11:35AM +0200, Oleg Nesterov wrote:
+> On 04/02, syzbot wrote:
+> >
+> >                       lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
+> >                       __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+> >                       _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+> >                       spin_lock include/linux/spinlock.h:353 [inline]
+> >                       proc_pid_make_inode+0x1f9/0x3c0 fs/proc/base.c:1880
+> 
+> Yes, spin_lock(wait_pidfd.lock) is not safe...
+> 
+> Eric, at first glance the fix is simple.
+> 
+> Oleg.
+> 
+> 
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../display/xylon,logicvc-display.yaml        | 313 ++++++++++++++++++
- 1 file changed, 313 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc-display.yaml
+Um, when did this lock get added to proc/base.c in the first place and
+why has it been abused for this?
+People just recently complained loudly about this in the
+cred_guard_mutex thread that abusing locks for things they weren't
+intended for is a bad idea...
 
-diff --git a/Documentation/devicetree/bindings/display/xylon,logicvc-display.yaml b/Documentation/devicetree/bindings/display/xylon,logicvc-display.yaml
-new file mode 100644
-index 000000000000..817fcced764f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/xylon,logicvc-display.yaml
-@@ -0,0 +1,313 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Bootlin
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/display/xylon,logicvc-display.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Xylon LogiCVC display controller
-+
-+maintainers:
-+  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-+
-+description: |
-+  The Xylon LogiCVC is a display controller that supports multiple layers.
-+  It is usually implemented as programmable logic and was optimized for use
-+  with Xilinx Zynq-7000 SoCs and Xilinx FPGAs.
-+
-+  Because the controller is intended for use in a FPGA, most of the
-+  configuration of the controller takes place at logic configuration bitstream
-+  synthesis time. As a result, many of the device-tree bindings are meant to
-+  reflect the synthesis configuration and must not be configured differently.
-+  Matching synthesis parameters are provided when applicable.
-+
-+  Layers are declared in the "layers" sub-node and have dedicated configuration.
-+  In version 3 of the controller, each layer has fixed memory offset and address
-+  starting from the video memory base address for its framebuffer. In version 4,
-+  framebuffers are configured with a direct memory address instead.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - xylon,logicvc-3.02.a-display
-+      - xylon,logicvc-4.01.a-display
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 4
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 4
-+    items:
-+      # vclk is required and must be provided as first item.
-+      - const: vclk
-+      # Other clocks are optional and can be provided in any order.
-+      - enum:
-+          - vclk2
-+          - lvdsclk
-+          - lvdsclkn
-+      - enum:
-+          - vclk2
-+          - lvdsclk
-+          - lvdsclkn
-+      - enum:
-+          - vclk2
-+          - lvdsclk
-+          - lvdsclkn
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  memory-region:
-+    maxItems: 1
-+
-+  xylon,display-interface:
-+    enum:
-+      # Parallel RGB interface (C_DISPLAY_INTERFACE == 0)
-+      - parallel-rgb
-+      # ITU-T BR656 interface (C_DISPLAY_INTERFACE == 1)
-+      - bt656
-+      # 4-bit LVDS interface (C_DISPLAY_INTERFACE == 2)
-+      - lvds-4bits
-+      # 3-bit LVDS interface (C_DISPLAY_INTERFACE == 4)
-+      - lvds-3bits
-+      # DVI interface (C_DISPLAY_INTERFACE == 5)
-+      - dvi
-+    description: Display output interface (C_DISPLAY_INTERFACE).
-+
-+  xylon,display-colorspace:
-+    enum:
-+      # RGB colorspace (C_DISPLAY_COLOR_SPACE == 0)
-+      - rgb
-+      # YUV 4:2:2 colorspace (C_DISPLAY_COLOR_SPACE == 1)
-+      - yuv422
-+      # YUV 4:4:4 colorspace (C_DISPLAY_COLOR_SPACE == 2)
-+      - yuv444
-+    description: Display output colorspace (C_DISPLAY_COLOR_SPACE).
-+
-+  xylon,display-depth:
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    description: Display output depth (C_PIXEL_DATA_WIDTH).
-+
-+  xylon,row-stride:
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    description: Fixed number of pixels in a framebuffer row (C_ROW_STRIDE).
-+
-+  xylon,syscon:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      Syscon phandle representing the top-level logicvc instance, useful when
-+      the parent node is not the top-level logicvc instance.
-+
-+  xylon,dithering:
-+    $ref: "/schemas/types.yaml#/definitions/flag"
-+    description: Dithering module is enabled (C_XCOLOR)
-+
-+  xylon,background-layer:
-+    $ref: "/schemas/types.yaml#/definitions/flag"
-+    description: |
-+      The last layer is used to display a black background (C_USE_BACKGROUND).
-+      The layer must still be registered.
-+
-+  xylon,layers-configurable:
-+     $ref: "/schemas/types.yaml#/definitions/flag"
-+     description: |
-+       Configuration of layers' size, position and offset is enabled
-+       (C_USE_SIZE_POSITION).
-+
-+  layers:
-+    type: object
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      "^layer@[0-9]+$":
-+        type: object
-+
-+        properties:
-+          reg:
-+            maxItems: 1
-+
-+          xylon,layer-depth:
-+            $ref: "/schemas/types.yaml#/definitions/uint32"
-+            description: Layer depth (C_LAYER_X_DATA_WIDTH).
-+
-+          xylon,layer-colorspace:
-+            enum:
-+              # RGB colorspace (C_LAYER_X_TYPE == 0)
-+              - rgb
-+              # YUV packed colorspace (C_LAYER_X_TYPE == 0)
-+              - yuv
-+            description: Layer colorspace (C_LAYER_X_TYPE).
-+
-+          xylon,layer-alpha-mode:
-+            enum:
-+              # Alpha is configured layer-wide (C_LAYER_X_ALPHA_MODE == 0)
-+              - layer
-+              # Alpha is configured per-pixel (C_LAYER_X_ALPHA_MODE == 1)
-+              - pixel
-+            description: Alpha mode for the layer (C_LAYER_X_ALPHA_MODE).
-+
-+          xylon,layer-base-offset:
-+            $ref: "/schemas/types.yaml#/definitions/uint32"
-+            description: |
-+              Offset in number of lines (C_LAYER_X_OFFSET) starting from the
-+              video RAM base (C_VMEM_BASEADDR), only for version 3.
-+
-+          xylon,layer-buffer-offset:
-+            $ref: "/schemas/types.yaml#/definitions/uint32"
-+            description: |
-+              Offset in number of lines (C_BUFFER_*_OFFSET) starting from the
-+              layer base offset for the second buffer used in double-buffering.
-+
-+          xylon,layer-primary:
-+            $ref: "/schemas/types.yaml#/definitions/flag"
-+            description: |
-+              Layer should be registered as a primary plane (exactly one is
-+              required).
-+
-+        additionalProperties: false
-+
-+        required:
-+          - reg
-+          - xylon,layer-depth
-+          - xylon,layer-colorspace
-+          - xylon,layer-alpha-mode
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - layer@0
-+
-+    additionalProperties: false
-+
-+    description: |
-+      The description of the display controller layers, containing layer
-+      sub-nodes that each describe a registered layer.
-+
-+  ports:
-+    type: object
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - xylon,display-interface
-+  - xylon,display-colorspace
-+  - xylon,display-depth
-+  - xylon,row-stride
-+  - layers
-+  - ports
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    logicvc: logicvc@43c00000 {
-+      compatible = "xylon,logicvc-3.02.a", "syscon", "simple-mfd";
-+      reg = <0x43c00000 0x6000>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      logicvc_display: display-engine@0 {
-+        compatible = "xylon,logicvc-3.02.a-display";
-+        reg = <0x0 0x6000>;
-+
-+        memory-region = <&logicvc_cma>;
-+
-+        clocks = <&logicvc_vclk 0>, <&logicvc_lvdsclk 0>;
-+        clock-names = "vclk", "lvdsclk";
-+
-+        interrupt-parent = <&intc>;
-+        interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        xylon,display-interface = "lvds-4bits";
-+        xylon,display-colorspace = "rgb";
-+        xylon,display-depth = <16>;
-+        xylon,row-stride = <1024>;
-+
-+        xylon,layers-configurable;
-+
-+        layers {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          layer@0 {
-+            reg = <0>;
-+            xylon,layer-depth = <16>;
-+            xylon,layer-colorspace = "rgb";
-+            xylon,layer-alpha-mode = "layer";
-+            xylon,layer-base-offset = <0>;
-+            xylon,layer-buffer-offset = <480>;
-+            xylon,layer-primary;
-+          };
-+
-+          layer@1 {
-+            reg = <1>;
-+            xylon,layer-depth = <16>;
-+            xylon,layer-colorspace = "rgb";
-+            xylon,layer-alpha-mode = "layer";
-+            xylon,layer-base-offset = <2400>;
-+            xylon,layer-buffer-offset = <480>;
-+          };
-+
-+          layer@2 {
-+            reg = <2>;
-+            xylon,layer-depth = <16>;
-+            xylon,layer-colorspace = "rgb";
-+            xylon,layer-alpha-mode = "layer";
-+            xylon,layer-base-offset = <960>;
-+            xylon,layer-buffer-offset = <480>;
-+          };
-+
-+          layer@3 {
-+            reg = <3>;
-+            xylon,layer-depth = <16>;
-+            xylon,layer-colorspace = "rgb";
-+            xylon,layer-alpha-mode = "layer";
-+            xylon,layer-base-offset = <480>;
-+            xylon,layer-buffer-offset = <480>;
-+          };
-+
-+          layer@4 {
-+            reg = <4>;
-+            xylon,layer-depth = <16>;
-+            xylon,layer-colorspace = "rgb";
-+            xylon,layer-alpha-mode = "layer";
-+            xylon,layer-base-offset = <8192>;
-+            xylon,layer-buffer-offset = <480>;
-+          };
-+        };
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          logicvc_out: port@1 {
-+            reg = <1>;
-+
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            logicvc_output: endpoint@0 {
-+              reg = <0>;
-+              remote-endpoint = <&panel_input>;
-+            };
-+          };
-+        };
-+      };
-+    };
--- 
-2.26.0
-
+> index 74f948a6b621..9ec8c114aa60 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -1839,9 +1839,9 @@ void proc_pid_evict_inode(struct proc_inode *ei)
+>  	struct pid *pid = ei->pid;
+>  
+>  	if (S_ISDIR(ei->vfs_inode.i_mode)) {
+> -		spin_lock(&pid->wait_pidfd.lock);
+> +		spin_lock_irq(&pid->wait_pidfd.lock);
+>  		hlist_del_init_rcu(&ei->sibling_inodes);
+> -		spin_unlock(&pid->wait_pidfd.lock);
+> +		spin_unlock_irq(&pid->wait_pidfd.lock);
+>  	}
+>  
+>  	put_pid(pid);
+> @@ -1877,9 +1877,9 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
+>  	/* Let the pid remember us for quick removal */
+>  	ei->pid = pid;
+>  	if (S_ISDIR(mode)) {
+> -		spin_lock(&pid->wait_pidfd.lock);
+> +		spin_lock_irq(&pid->wait_pidfd.lock);
+>  		hlist_add_head_rcu(&ei->sibling_inodes, &pid->inodes);
+> -		spin_unlock(&pid->wait_pidfd.lock);
+> +		spin_unlock_irq(&pid->wait_pidfd.lock);
+>  	}
+>  
+>  	task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
+> diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+> index 1e730ea1dcd6..6b7ee76e1b36 100644
+> --- a/fs/proc/inode.c
+> +++ b/fs/proc/inode.c
+> @@ -123,9 +123,9 @@ void proc_invalidate_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock
+>  		if (!node)
+>  			break;
+>  		ei = hlist_entry(node, struct proc_inode, sibling_inodes);
+> -		spin_lock(lock);
+> +		spin_lock_irq(lock);
+>  		hlist_del_init_rcu(&ei->sibling_inodes);
+> -		spin_unlock(lock);
+> +		spin_unlock_irq(lock);
+>  
+>  		inode = &ei->vfs_inode;
+>  		sb = inode->i_sb;
+> 
