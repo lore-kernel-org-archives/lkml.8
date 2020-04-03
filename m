@@ -2,95 +2,125 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012A3C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9176C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51052073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882B62077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:02:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sISnmSPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404056AbgDCPBp (ORCPT
+        id S2404073AbgDCPCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:01:45 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:51982 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbgDCPBp (ORCPT
+        Fri, 3 Apr 2020 11:02:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40510 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727431AbgDCPCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:01:45 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
-        by gardel.0pointer.net (Postfix) with ESMTP id 7C208E807B5;
-        Fri,  3 Apr 2020 17:01:43 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 1E8C41614E3; Fri,  3 Apr 2020 17:01:43 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 17:01:43 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-Message-ID: <20200403150143.GA34800@gardel-login>
-References: <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
- <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
- <20200402143623.GB31529@gardel-login>
- <CAJfpegtRi9epdxAeoVbm+7UxkZfzC6XmD4K_5dg=RKADxy_TVA@mail.gmail.com>
- <20200402152831.GA31612@gardel-login>
- <CAJfpegum_PsCfnar8+V2f_VO3k8CJN1LOFJV5OkHRDbQKR=EHg@mail.gmail.com>
- <20200402155020.GA31715@gardel-login>
- <CAJfpeguM__+S6DiD4MWFv5GCf_EUWvGFT0mzuUCCrfQwggqtDQ@mail.gmail.com>
- <20200403110842.GA34663@gardel-login>
- <CAJfpegtYKhXB-HNddUeEMKupR5L=RRuydULrvm39eTung0=yRg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJfpegtYKhXB-HNddUeEMKupR5L=RRuydULrvm39eTung0=yRg@mail.gmail.com>
+        Fri, 3 Apr 2020 11:02:42 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c20so3590921pfi.7;
+        Fri, 03 Apr 2020 08:02:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=4YpqHPmNjdfxD+myCwE9+ZdlqOWWnIhvap42vDlW798=;
+        b=sISnmSPcQUnG1+CR35He0jcyyZyBGwKTWKyDSFrNM/S9qy8OVb4+JYtyjMQOypvWyg
+         iBKYArDegkYwzJT5pwI7R7ENEDzI6Eak6q8679Nls9+o0IPBrZ0GOTEHfRgYmm0kNV3p
+         uDF9xsFaMrxD1RYpMKyeuznDuOFYE1Gu21HJimEeOH+AqvF1om619BPvgpaJICuuRVbI
+         TSQKz8X8BP/uO7WJgXgDCiBmJTqDcme4Keq9uWUHUVocQcfImgXhfv9tRBPtF5fJZA3Q
+         gF6SYKl7KyzssJimAiTdGUuShlg1k5QL7RZvxMsREKg6oAj6ZrEdgWw//yZcur9w+4Hp
+         zf3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=4YpqHPmNjdfxD+myCwE9+ZdlqOWWnIhvap42vDlW798=;
+        b=Tt0kcLgyuleEb/0lvtmBBb/YzI+WgjbvrSZFR5pO6xeYfmnktYqaBRiWuVRxOGRx5V
+         /WEd9GF6xNPlmA7KbnxH8IhVASsyyaog0/kN55KKpS48CyIeSVvo1UTgaZndol1JsiVo
+         fHUWR20mOwREDV0aEeNqHAo/d890VU1C+Pavm+Nd4Gru76M5O33Q2BJPBmRTpNOjrrvd
+         C68cr/uUmX0El/mTacZ0bJ5kptV640OVCAcsjNRy5yX1H8E6HLI2XHXlF5HO4IRptpvd
+         351uW+zKvCJ4KxDsTkk09L6bgIcs2gXLEsGR/HfA18AQld1haDaLqlN4BtSzrczTdN5t
+         pDdg==
+X-Gm-Message-State: AGi0PublQ0OalzLdnmpmDrnH3/IVLZlKFVatli/PYNKSN6SfDSv0y5/Q
+        4qSFr0KX2hw78V9klhdY2UM=
+X-Google-Smtp-Source: APiQypKOgoKXjp5DVMVFL0ACh1yz1W4cr8fCOv0VenqUDwxhDd+6Lh3NNbb28N+UoFqSOvYXcOX61A==
+X-Received: by 2002:a63:ff4e:: with SMTP id s14mr8723561pgk.269.1585926159581;
+        Fri, 03 Apr 2020 08:02:39 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id hg20sm5928383pjb.3.2020.04.03.08.02.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Apr 2020 08:02:38 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Sonny Sasaka <sonnysasaka@chromium.org>
+Subject: [PATCH] Bluetooth: Simplify / fix return values from tk_request
+Date:   Fri,  3 Apr 2020 08:02:36 -0700
+Message-Id: <20200403150236.74232-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fr, 03.04.20 13:48, Miklos Szeredi (miklos@szeredi.hu) wrote:
+Some static checker run by 0day reports a variableScope warning.
 
-> > > Does that make any sense?
-> >
-> > When all mounts in the init mount namespace are unmounted and all
-> > remaining processes killed we switch root back to the initrd, so that
-> > even the root fs can be unmounted, and then we disassemble any backing
-> > complex storage if there is, i.e. lvm, luks, raid, …
->
-> I think it could be done the other way round, much simpler:
->
->  - switch back to initrd
->  - umount root, keeping the tree intact (UMOUNT_DETACHED)
->  - kill all remaining processes, wait for all to exit
+net/bluetooth/smp.c:870:6: warning:
+	The scope of the variable 'err' can be reduced. [variableScope]
 
-Nah. What I wrote above is drastically simplified. It's IRL more
-complex. Specific services need to be killed between certain mounts
-are unmounted, since they are a backend for another mount. NFS, or
-FUSE or stuff like that usually has some processes backing them
-around, and we need to stop the mounts they provide before these
-services, and then the mounts these services reside on after that, and
-so on. It's a complex dependency tree of stuff that needs to be done
-in order, so that we can deal with arbitrarily nested mounts, storage
-subsystems, and backing services.
+There is no need for two separate variables holding return values.
+Stick with the existing variable. While at it, don't pre-initialize
+'ret' because it is set in each code path.
 
-Anyway, this all works fine in systemd, the dependency logic is
-there. We want a more efficient way to watch mounts, that's
-all. Subscribing and constantly reparsing /proc/self/mountinfo is
-awful, that's all.
+tk_request() is supposed to return a negative error code on errors,
+not a bluetooth return code. The calling code converts the return
+value to SMP_UNSPECIFIED if needed.
 
-Lennart
+Fixes: 92516cd97fd4 ("Bluetooth: Always request for user confirmation for Just Works")
+Cc: Sonny Sasaka <sonnysasaka@chromium.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ net/bluetooth/smp.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---
-Lennart Poettering, Berlin
+diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+index d0b695ee49f6..30e8626dd553 100644
+--- a/net/bluetooth/smp.c
++++ b/net/bluetooth/smp.c
+@@ -854,8 +854,7 @@ static int tk_request(struct l2cap_conn *conn, u8 remote_oob, u8 auth,
+ 	struct l2cap_chan *chan = conn->smp;
+ 	struct smp_chan *smp = chan->data;
+ 	u32 passkey = 0;
+-	int ret = 0;
+-	int err;
++	int ret;
+ 
+ 	/* Initialize key for JUST WORKS */
+ 	memset(smp->tk, 0, sizeof(smp->tk));
+@@ -887,12 +886,12 @@ static int tk_request(struct l2cap_conn *conn, u8 remote_oob, u8 auth,
+ 	/* If Just Works, Continue with Zero TK and ask user-space for
+ 	 * confirmation */
+ 	if (smp->method == JUST_WORKS) {
+-		err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
++		ret = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+ 						hcon->type,
+ 						hcon->dst_type,
+ 						passkey, 1);
+-		if (err)
+-			return SMP_UNSPECIFIED;
++		if (ret)
++			return ret;
+ 		set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
+ 		return 0;
+ 	}
+-- 
+2.17.1
+
