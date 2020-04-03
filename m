@@ -2,228 +2,119 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113D6C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879F8C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C96206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:00:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aHlID9tE"
+	by mail.kernel.org (Postfix) with ESMTP id 588C9206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585936892;
+	bh=7zmbXy9Ngm7ydugKdrnEPuKqypDBIdC9kEsYoVRFRUg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ylyZImI8f+qg9wPnU7MibCN1Botc5PUDL8SyWa6U9VzIpEgQWaGYayi00XUz6KgpS
+	 /yNYaZHDk8gJz904uxX83c2uwVhca+eDHBhDcZi0KLBa27VP4sOkZkZ7oQxD0U2FZ5
+	 H9PKwdssTJZTSzAJMZlqhisFM4MO8YP+kpd0MG4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404238AbgDCSAr (ORCPT
+        id S2404394AbgDCSBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:00:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60090 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404096AbgDCSAq (ORCPT
+        Fri, 3 Apr 2020 14:01:31 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35201 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728513AbgDCSBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:00:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585936845;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0NiMkDJ11j6iIzUVzg7SnDb83MwqOSNwZhS3zwBcV2Y=;
-        b=aHlID9tEKRmEW5JEuilOyelPmmW5E//w6ipraMYYuvgsxiDNBnRBk9+gcsaEtxh3bdL9Yf
-        xeohdkoZ5rNCDD9cz6c6y8dbTMsTL+IZ4gpv1GVRZ4OBNsvBv6KpJk9IMP3IbzMRcfT5r1
-        49XbfyZRnBXQXF/nDktcklSjPqmf7ps=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-446-YokxTUBLPHi7KLMQlFoTWQ-1; Fri, 03 Apr 2020 14:00:39 -0400
-X-MC-Unique: YokxTUBLPHi7KLMQlFoTWQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8665F801E66;
-        Fri,  3 Apr 2020 18:00:37 +0000 (UTC)
-Received: from redhat.com (ovpn-114-27.phx2.redhat.com [10.3.114.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F27F60BF3;
-        Fri,  3 Apr 2020 18:00:36 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 14:00:34 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [POC 20/23] module/livepatch: Relocate local variables in the
- module loaded when the livepatch is being loaded
-Message-ID: <20200403180034.GB30284@redhat.com>
-References: <20200117150323.21801-1-pmladek@suse.com>
- <20200117150323.21801-21-pmladek@suse.com>
+        Fri, 3 Apr 2020 14:01:30 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k21so7922872ljh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:01:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GJVFgRSGYKBnNbBPTVD/IukQXQa7rwPwND5Kh+NTBuo=;
+        b=Ys0nLdOPaMPZHWrNpQG57PugKN6mkPGdJSUx/TQDpwY2GQmZdYkhxJaiTGDykgi3DV
+         b9peyP0pK7wyoIA4rX92GpUwZxOJ1gL4WdkK8qsym8w0OHPBQz5LC8Pgsely+7R6EED/
+         Y1qrLKu/XLubSi3S/jM7cWoFX4dK0Vuw/7IEk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GJVFgRSGYKBnNbBPTVD/IukQXQa7rwPwND5Kh+NTBuo=;
+        b=CmKZ2S2rbDc0+gjPkl96Lhp+i+E5QLRYCuHdztUAYY1B4Ep702/MJjfyryq9M2T/bn
+         G2RbE/tBo4oiK4MgXAnMUFDl9fMBf7+TyCi37nvcMCU/PBaCey1b/x6Ix0nWn+IakETG
+         okXn4xbQlAwJrJIbVKdGPWD/MAXcbQa0fGZudEJFPXFeB7fL00pcZsol+l2u4lvk2B6H
+         DrZ2Gzh1TbDUK5xfbiv3lE+oWk18LPqrxlWpTgBF8mZpUlurR7ulOBZK1d4p3PP21olV
+         2VToR1VqwRQMKT69CWH3u5MWufOx3NXZ/MYApz2DIMqK3bxAjozdHQMi9riGJA2MnfxU
+         5MCA==
+X-Gm-Message-State: AGi0PuZEF2iWgEonyJ+6neT5B+aMNE9SJynATQLdB0SLHt0Ud/PqbNLe
+        /Ha548CP40Ulil0a/dD1WYz5OMOPwuM=
+X-Google-Smtp-Source: APiQypKnGS8j5JnvV6+AX+j4b7TukVykzor1tDBx+LJFEIJKj61JI0V5cgNNZqe7iqpITgbm+SOWTw==
+X-Received: by 2002:a2e:91cc:: with SMTP id u12mr5875418ljg.244.1585936888402;
+        Fri, 03 Apr 2020 11:01:28 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id c203sm4602756lfd.38.2020.04.03.11.01.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 11:01:27 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id t17so7848792ljc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 11:01:27 -0700 (PDT)
+X-Received: by 2002:a2e:8652:: with SMTP id i18mr5777613ljj.265.1585936886747;
+ Fri, 03 Apr 2020 11:01:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117150323.21801-21-pmladek@suse.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <36e43241c7f043a24b5069e78c6a7edd11043be5.1585898438.git.christophe.leroy@c-s.fr>
+ <42da416106d5c1cf92bda1e058434fe240b35f44.1585898438.git.christophe.leroy@c-s.fr>
+In-Reply-To: <42da416106d5c1cf92bda1e058434fe240b35f44.1585898438.git.christophe.leroy@c-s.fr>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 3 Apr 2020 11:01:10 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh_DY_dysMX0NuvJmMFr3+QDKOZPZqWKwLkkjgZTuyQ+A@mail.gmail.com>
+Message-ID: <CAHk-=wh_DY_dysMX0NuvJmMFr3+QDKOZPZqWKwLkkjgZTuyQ+A@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] uaccess: Rename user_access_begin/end() to user_full_access_begin/end()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>, Peter Anvin <hpa@zytor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:03:20PM +0100, Petr Mladek wrote:
-> The special SHF_RELA_LIVEPATCH section is still needed to find static
-> (non-exported) symbols. But it can be done together with the other
-> relocations when the livepatch module is being loaded.
-> 
-> There is no longer needed to copy the info section. The related
-> code in the module loaded will get removed in separate patch.
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  include/linux/livepatch.h |  4 +++
->  kernel/livepatch/core.c   | 62 +++--------------------------------------------
->  kernel/module.c           | 16 +++++++-----
->  3 files changed, 18 insertions(+), 64 deletions(-)
-> 
-> 
-> [ ... snip ... ]
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index bd92854b42c2..c14b5135db27 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -2410,16 +2410,20 @@ static int apply_relocations(struct module *mod, const struct load_info *info)
->  		if (!(info->sechdrs[infosec].sh_flags & SHF_ALLOC))
->  			continue;
->  
-> -		/* Livepatch relocation sections are applied by livepatch */
-> -		if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH)
-> -			continue;
-> -
-> -		if (info->sechdrs[i].sh_type == SHT_REL)
-> +		/* Livepatch need to resolve static symbols. */
-> +		if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH) {
-> +			err = klp_resolve_symbols(info->sechdrs, i, mod);
-> +			if (err < 0)
-> +				break;
-> +			err = apply_relocate_add(info->sechdrs, info->strtab,
-> +						 info->index.sym, i, mod);
-> +		} else if (info->sechdrs[i].sh_type == SHT_REL) {
->  			err = apply_relocate(info->sechdrs, info->strtab,
->  					     info->index.sym, i, mod);
-> -		else if (info->sechdrs[i].sh_type == SHT_RELA)
-> +		} else if (info->sechdrs[i].sh_type == SHT_RELA) {
->  			err = apply_relocate_add(info->sechdrs, info->strtab,
->  						 info->index.sym, i, mod);
-> +		}
->  		if (err < 0)
->  			break;
->  	}
+On Fri, Apr 3, 2020 at 12:21 AM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+>
+> Now we have user_read_access_begin() and user_write_access_begin()
+> in addition to user_access_begin().
 
+I realize Al asked for this, but I don't think it really adds anything
+to the series.
 
-Hi Petr,
+The "full" makes the names longer, but not really any more legible.
 
-At first I thought there was a simple order of operations problem here
-with respect to klp_resolve_symbols() accessing core_kallsyms before
-they were setup by add_kallsyms():
+So I like 1-4, but am unconvinced about 5 and would prefer that to be
+dropped. Sorry for the bikeshedding.
 
-load_module
-  apply_relocations
+And I like this series much better without the cookie that was
+discussed, and just making the hard rule be that they can't nest.
 
- 	/* Livepatch need to resolve static symbols. */
- 	if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH) {
- 		err = klp_resolve_symbols(info->sechdrs, i, mod);
+Some architecture may obviously use a cookie internally if they have
+some nesting behavior of their own, but it doesn't look like we have
+any major reason to expose that as the actual interface.
 
-    klp_resolve_symbols
+The only other question is how to synchronize this? I'm ok with it
+going through the ppc tree, for example, and just let others build on
+that.  Maybe using a shared immutable branch with 5.6 as a base?
 
-	sym = pmod->core_kallsyms.symtab + ELF_R_SYM(relas[i].r_info);
-                    ^^^^^^^^^^^^^^^^^^^^
-                                  used before init (below)
-  ...
-  post_relocation
-    add_kallsyms
-
-        /*
-         * Now populate the cut down core kallsyms for after init
-         * and set types up while we still have access to sections.
-         */
-        mod->core_kallsyms.symtab = dst = mod->core_layout.base + info->symoffs;
-        mod->core_kallsyms.strtab = s = mod->core_layout.base + info->stroffs;
-        mod->core_kallsyms.typetab = mod->core_layout.base + info->core_typeoffs;
-             ^^^^^^^^^^^^^^^^^^^^^
-                           core_kallsyms initialized here
-
-But after tinkering with the patchset, a larger problem is that
-klp_resolve_symbols() writes st_values to the core_kallsyms copies, but
-then apply_relocate_add() references the originals in the load_info
-structure.
-
-I assume that klp_resolve_symbols() originally looked at the
-core_kallsyms copies for handling the late module patching case.  If we
-no longer need to support that, then how about this slight modification
-to klp_resolve_symbols() to make it look more the like
-apply_relocate{_add,} calls?
-
--->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
-
-diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-index 3b27ef1a7291..54d5a4045e5a 100644
---- a/include/linux/livepatch.h
-+++ b/include/linux/livepatch.h
-@@ -210,6 +210,8 @@ int klp_module_coming(struct module *mod);
- void klp_module_going(struct module *mod);
- 
- int klp_resolve_symbols(Elf_Shdr *sechdrs,
-+			const char *strtab,
-+			unsigned int symindex,
- 			unsigned int relsec,
- 			struct module *pmod);
- 
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index cc0ac93fe8cd..02638e3b09b0 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -197,13 +197,14 @@ static int klp_find_object_symbol(const char *objname, const char *name,
- }
- 
- int klp_resolve_symbols(Elf_Shdr *sechdrs,
-+			const char *strtab,
-+			unsigned int symindex,
- 			unsigned int relsec,
- 			struct module *pmod)
- {
- 	int i, cnt, vmlinux, ret;
- 	char objname[MODULE_NAME_LEN];
- 	char symname[KSYM_NAME_LEN];
--	char *strtab = pmod->core_kallsyms.strtab;
- 	Elf_Shdr *relasec = sechdrs + relsec;
- 	Elf_Rela *relas;
- 	Elf_Sym *sym;
-@@ -224,7 +225,8 @@ int klp_resolve_symbols(Elf_Shdr *sechdrs,
- 	relas = (Elf_Rela *) relasec->sh_addr;
- 	/* For each rela in this klp relocation section */
- 	for (i = 0; i < relasec->sh_size / sizeof(Elf_Rela); i++) {
--		sym = pmod->core_kallsyms.symtab + ELF_R_SYM(relas[i].r_info);
-+		sym = (Elf64_Sym *)sechdrs[symindex].sh_addr +
-+			ELF_R_SYM(relas[i].r_info);
- 		if (sym->st_shndx != SHN_LIVEPATCH) {
- 			pr_err("symbol %s is not marked as a livepatch symbol\n",
- 			       strtab + sym->st_name);
-diff --git a/kernel/module.c b/kernel/module.c
-index d435bad80d7d..a65f089f19c9 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2320,7 +2320,8 @@ static int apply_relocations(struct module *mod, const struct load_info *info)
- 
- 		/* Livepatch need to resolve static symbols. */
- 		if (info->sechdrs[i].sh_flags & SHF_RELA_LIVEPATCH) {
--			err = klp_resolve_symbols(info->sechdrs, i, mod);
-+			err = klp_resolve_symbols(info->sechdrs, info->strtab,
-+						  info->index.sym, i, mod);
- 			if (err < 0)
- 				break;
- 			err = apply_relocate_add(info->sechdrs, info->strtab,
-
--->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
-
-
--- Joe
-
+                   Linus
