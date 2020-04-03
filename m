@@ -2,114 +2,131 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0360C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAC3C2BA18
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF79F2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585923745;
-	bh=IG3HW5nXis1myAfaOtsltKO4crrvHruEx/TVC+6Pvqg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NhB2jm1fGXH5KBwVaa0eOpe3YFXQPi95D5P8/F74wySfdibfYkkBbyJtlXbwepd1q
-	 MtyQZ0RG0gA1rRlmVs3FG6aeHJUiQd+OZcmVLH3VWAAsuhNE0dJ7FuCq07GZCAuqVE
-	 o3eXntqkieztYlElmr0eXs1W3GK28BVb9EeBmo2U=
+	by mail.kernel.org (Postfix) with ESMTP id 4A3882077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:22:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mr+nvzcL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391064AbgDCOWY (ORCPT
+        id S2391073AbgDCOWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:22:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54742 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390812AbgDCOWY (ORCPT
+        Fri, 3 Apr 2020 10:22:47 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35816 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390940AbgDCOWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:22:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=YN+nDi5ri8WqCT+wyS5XzUuEbEnx6eD8KXJvPFKkcJ0=; b=JsEUU9LS/TRsw3vAcYvjbME7w1
-        46230s179k6N8hcYbzdod0iClZb5pfF1hnPswFh0w511l3De0mzqGLNLF9CSrEAUGNiJdbxIjd0Dc
-        GVkUchwJ3Jb6w2V2udovgVkaRiKitbWGjSoJ/Sh5iVHWfe5UwMKTGFoC016EVbAebiyeBR0GhGFAa
-        JIsSlT1WXIfB8WjA3HpGyLPTYjL9aL4c/2u7PIr/aH6buIywtwfpOFJp+3g1mbZi12WJ8m9CcRf4K
-        yK6E5zkRJfoZkfu/xKrHK9XxdAClb2YT91sHCSHTlRtwaifkkWC7gfpBbi+BGG2trtwPdzmvyVgdt
-        GHXCjRIQ==;
-Received: from ip5f5ad4d8.dynamic.kabel-deutschland.de ([95.90.212.216] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jKND8-0001JS-8I; Fri, 03 Apr 2020 14:22:18 +0000
-Date:   Fri, 3 Apr 2020 16:22:10 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
- DRM fourccs
-Message-ID: <20200403162210.23f1e2a5@coco.lan>
-In-Reply-To: <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk>
-References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
-        <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 3 Apr 2020 10:22:47 -0400
+Received: by mail-wr1-f67.google.com with SMTP id g3so6449765wrx.2;
+        Fri, 03 Apr 2020 07:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=eO7X7pq9711SintqFPgETXqv2Z2n0tdDbbm4z7qxhxQ=;
+        b=mr+nvzcL9deyVcXVL/g1iirSVwK3iqndoX+uC5K0N8OLS2lWwJzFG9Jw2Us/+fDJpW
+         brLw+fuh6Ak35u+NuycplcSpqr82DZbcL0hLTZu/+IUeMfHv70EY85g6KjszihMlq5iA
+         lSHDCK302Ag022kI1mIAq4N+ho3T7qHlcGZNzQvXl2zDPWFa/vGS/tAnUZqurLVHM11r
+         WiZbq3t67mum6LuNLEe/neZ2QBJEXLMGOK8/86HtQtVT40k8OfRnx0CMngdy3mKuFtbT
+         3V4NR93kIMMp7AZIbDs2j6RSLe193oXCWnU1L3yihX4G5Xlj/0HCPorjdSQgpacir6kO
+         h8Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=eO7X7pq9711SintqFPgETXqv2Z2n0tdDbbm4z7qxhxQ=;
+        b=BspySNqG+4jmDrhr1uPKAzkiZeUG8n6mBsXVT+jt5SmhlNkOvbHdTAh4Bh4zhdhm0l
+         O9DIvQmDr/BLulWcOwi5qan23QOPTnmAd2TC21VQVCWXyAh4ZNzotQ5OYg9zCcuxZEao
+         jySFdsoln2eeadcBIjldTiU7XT+YCF8NK4TculHOWNf5B5U5fqoA0X19n844Bn9hSxjv
+         1WKttaM/S0RHH+xEbPstOcgi1Of+Y41Ecw6jbiJwRLgI4Sq9kXAy7pAY1om3Q7/bT5pu
+         okVPCdAN4HUg8cPT0ITZWG7egh9HhidHqfHR4Pyk9vW+Yg3rJ93IdmGff36jEY5KNNUa
+         ELuA==
+X-Gm-Message-State: AGi0PuZdzo4l/aX40P3iZfecLM2Fvvuva/bXB810LMRnwT/vwFBxftsB
+        SrOMMjtROTLFZUAOig/oUNpkUV9R
+X-Google-Smtp-Source: APiQypKqvGkEBCSrGQT9ZsOFXHyYXGCO7wGvqTuF8jcFlGkZFIKO0QpJ3Mhc4I2GDp3Z3cr8LBDI5Q==
+X-Received: by 2002:adf:f8c1:: with SMTP id f1mr9559333wrq.345.1585923765447;
+        Fri, 03 Apr 2020 07:22:45 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id u16sm12132223wro.23.2020.04.03.07.22.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Apr 2020 07:22:44 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 2/2] dt-bindings: display: rockchip-vop: add additional properties
+Date:   Fri,  3 Apr 2020 16:22:35 +0200
+Message-Id: <20200403142235.8870-2-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200403142235.8870-1-jbx6244@gmail.com>
+References: <20200403142235.8870-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 3 Apr 2020 14:10:53 +0200
-Rasmus Villemoes <linux@rasmusvillemoes.dk> escreveu:
+In the old txt situation we add/describe only properties that are used
+by the driver/hardware itself. With yaml it also filters things in a
+node that are used by other drivers like 'assigned-clocks' and
+'assigned-clock-rates' for rk3399 and 'power-domains' for most
+Rockchip Socs in 'vop' nodes, so add them to 'rockchip-vop.yaml'.
 
-> On 03/04/2020 11.11, Sakari Ailus wrote:
-> > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > the same implementation can be used.  
-> 
-> This seems quite niche to me, I'm not sure that belongs in vsprintf.c.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes v5:
+  Add reviewed by
+---
+ .../devicetree/bindings/display/rockchip/rockchip-vop.yaml    | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-It is used on different subsystems. At least media, drm and input (yes, 
-there are some input multi-touch devices with return images using
-"GREY" fourcc - see drivers/input/touchscreen/sur40.c).
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+index 42ee2b5c3..1695e3e4b 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+@@ -75,9 +75,18 @@ properties:
+       A port node with endpoint definitions as defined in
+       Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
++  assigned-clocks:
++    maxItems: 2
++
++  assigned-clock-rates:
++    maxItems: 2
++
+   iommus:
+     maxItems: 1
+ 
++  power-domains:
++    maxItems: 1
++
+ required:
+   - compatible
+   - reg
+@@ -94,6 +103,7 @@ examples:
+   - |
+     #include <dt-bindings/clock/rk3288-cru.h>
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/rk3288-power.h>
+     vopb: vopb@ff930000 {
+       compatible = "rockchip,rk3288-vop";
+       reg = <0x0 0xff930000 0x0 0x19c>,
+@@ -103,6 +113,7 @@ examples:
+                <&cru DCLK_VOP0>,
+                <&cru HCLK_VOP0>;
+       clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++      power-domains = <&power RK3288_PD_VIO>;
+       resets = <&cru SRST_LCDC1_AXI>,
+                <&cru SRST_LCDC1_AHB>,
+                <&cru SRST_LCDC1_DCLK>;
+-- 
+2.11.0
 
-> What's wrong with having a
-> 
-> char *fourcc_string(char *buf, u32 x)
-> 
-> that formats x into buf and returns buf, so it can be used in a
-> 
-> char buf[8];
-> pr_debug("bla: %s\n", fourcc_string(buf, x))
-> 
-> Or, for that matter, since it's for debugging, why not just print x with
-> 0x%08x?
-
-That's about what it has been done so far, using different solutions
-on different places. Some display hex values, others display fourcc
-(usually ignoring the BE case). We'd like to have a common solution
-that won't be subsystem-specific and will handle it on a proper unified
-way.
-
-With regards to ex values, see for example the GREY format:
-
-	V4L2_PIX_FMT_GREY ('GREY')
-
-when someone reads 'GREY', this is easily understandable as a grey image
-format, even by someone that it is not familiar with 4cc codes. Same is
-true for several other widely used formats, like BGR and RGB.
-
-If you see its hexa representation, 0x47524559 is a lot more obscure.
-
-Thanks,
-Mauro
