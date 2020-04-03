@@ -2,263 +2,107 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9452EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85858C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530AF206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9C3206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 21:12:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sUr7HY1K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuwN5K/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgDCVLJ (ORCPT
+        id S1728160AbgDCVL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 17:11:09 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42122 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbgDCVLJ (ORCPT
+        Fri, 3 Apr 2020 17:11:59 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44079 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgDCVL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 17:11:09 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033L92HC132796;
-        Fri, 3 Apr 2020 21:10:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=9NtL6bJW3Vibj3T2e+wi14Zc2JO1BYTNJgCkJSHA8U0=;
- b=sUr7HY1KQlCqkIYO0JIzEbvDqNDsX0IQdCE7IIrtd1Ui1u8Y5P4henunpIpVFnBnhOE+
- XVjtCHDSa83W5g3x1alQviV981Y8pN6S+1iDT8CWdY84J//Objh4qsrMHK0BJKliNovT
- o8U2/NHxw9Ey5Zw8RtfrPq8RS2BP/UMKKko89U342DRBWup/JY2e6C0UpLTfjmMbJ/OY
- 5asofsZ4DAi6p7Uj2Gyp5KKp9wLoL0w1qbyyBAtg2ds0R3jhg0SdMTRZsifqcK6l+UWJ
- Ih2FRSivIx+/JTYCdwuOLYnVEQ+6ymvsrWRmYGXO8Uei0WE6e56zmAXLpzc1TJSdt96X kQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 303aqj3qdk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 21:10:48 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 033L8WIQ150198;
-        Fri, 3 Apr 2020 21:10:48 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 302g4y6yym-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Apr 2020 21:10:47 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 033LAiZi016759;
-        Fri, 3 Apr 2020 21:10:44 GMT
-Received: from localhost.localdomain (/10.159.159.117)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 Apr 2020 14:10:44 -0700
-Subject: Re: [PATCH v6 11/14] KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP
- ioctl
-To:     Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
-        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rientjes@google.com, srutherford@google.com, luto@kernel.org,
-        brijesh.singh@amd.com
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <4d4fbe2b9acda82c04834682900acf782182ec23.1585548051.git.ashish.kalra@amd.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <56d25d86-f66c-d68c-a6ea-17a99927f3cd@oracle.com>
-Date:   Fri, 3 Apr 2020 14:10:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 3 Apr 2020 17:11:58 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p14so8397855lji.11;
+        Fri, 03 Apr 2020 14:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JoTm+bFk1b4wV/ZEGvF6eL+XjT1zXesgWygtLbj063Q=;
+        b=HuwN5K/syHVKjw8JGl/TibGxBj4HjiW/VyIlS+G/15frL85inIIKnqT+dc3oTVDx1p
+         H5hjUGiXTNxqaoiioBZ9dVotsWUC+eKxm3fN9IbNZHYiMq1YLbrgGI8LVKzc80ldkyrI
+         VhpeLPY6+BkqAYcaWYtVbQl1NwquvxcDjk/gsxcuVK6QvoUyYXMNCgfjjWj1+APOm7hx
+         KGcMcEmykKDduf6NE+PTYXtWOehw1d4T2KM5HCK2ctfRmFSvUcvMAvfnn2U7JtIyM9GR
+         EPKYwiab+XnPyNbTE9wm3XE17Abg7wbS+i2FTR6xGIRRweGL5ALfmHTA2igirMIRhoCF
+         7OZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JoTm+bFk1b4wV/ZEGvF6eL+XjT1zXesgWygtLbj063Q=;
+        b=amJWzDEnF9C3nJFjcHPyq3mFYS4/on6etzHelEXRa+nRmE6/xZIBZ//VHDasIHdoEy
+         KpBJZkCMEVYS4ay6YU2R0dnJX6QbuIMwCSHOetsOP/wCMSJu5NJBvUL8c1MMgHfkjbI7
+         9Ay4yDEZzL66VDCfItRNgS9UzFPjYIiR88p/g3nLWw2n/d9IDLHeUgzJjN0QpBSCnWtX
+         O2D/EAC6aGLcYAJW4qGdW87iK+k40QwUaAdxCpd6FPm216Jf7shtBM3PsPN+7bcRxxtr
+         atTPfegCuXnLLUa3S+yhuTx4p0tuU2Whz9x3eQCEHfenW3zL/Zj4LGqAyar2SM0iogNF
+         CLIg==
+X-Gm-Message-State: AGi0PuZCRoASR0x+hTewlG15CAorrUTjyRnySg73qhZ/mZevszCKLrVr
+        Yigmg64UJuz3sapoyfh5rf7NA5O3
+X-Google-Smtp-Source: APiQypIDMsBV/vJeVbN8qdBLtOyA9ymv6vUWZwD632rhkKfhjIYIXBFGsmKQw664GSpELaqbZjSajQ==
+X-Received: by 2002:a2e:8146:: with SMTP id t6mr5962740ljg.236.1585948314719;
+        Fri, 03 Apr 2020 14:11:54 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id v9sm5659166ljj.31.2020.04.03.14.11.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 14:11:54 -0700 (PDT)
+Subject: Re: [PATCH v3 5/7] arm64: tegra: Enable native timers on Jetson TX2
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200403202209.299823-1-thierry.reding@gmail.com>
+ <20200403202209.299823-6-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <948734ce-0f4e-e09b-a928-74199455eed7@gmail.com>
+Date:   Sat, 4 Apr 2020 00:11:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <4d4fbe2b9acda82c04834682900acf782182ec23.1585548051.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200403202209.299823-6-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030166
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004030166
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/29/20 11:22 PM, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
->
-> The ioctl can be used to set page encryption bitmap for an
-> incoming guest.
->
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+03.04.2020 23:22, Thierry Reding пишет:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Enable the native timers on Jetson TX2 to allow using the watchdog
+> functionality to recover from system hangs, for example.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->   Documentation/virt/kvm/api.rst  | 22 +++++++++++++++++
->   arch/x86/include/asm/kvm_host.h |  2 ++
->   arch/x86/kvm/svm.c              | 42 +++++++++++++++++++++++++++++++++
->   arch/x86/kvm/x86.c              | 12 ++++++++++
->   include/uapi/linux/kvm.h        |  1 +
->   5 files changed, 79 insertions(+)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 8ad800ebb54f..4d1004a154f6 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -4675,6 +4675,28 @@ or shared. The bitmap can be used during the guest migration, if the page
->   is private then userspace need to use SEV migration commands to transmit
->   the page.
->   
-> +4.126 KVM_SET_PAGE_ENC_BITMAP (vm ioctl)
-> +---------------------------------------
-> +
-> +:Capability: basic
-> +:Architectures: x86
-> +:Type: vm ioctl
-> +:Parameters: struct kvm_page_enc_bitmap (in/out)
-> +:Returns: 0 on success, -1 on error
-> +
-> +/* for KVM_SET_PAGE_ENC_BITMAP */
-> +struct kvm_page_enc_bitmap {
-> +	__u64 start_gfn;
-> +	__u64 num_pages;
-> +	union {
-> +		void __user *enc_bitmap; /* one bit per page */
-> +		__u64 padding2;
+>  arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
+> index da96de04d003..9aa17744c4a0 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
+> @@ -58,6 +58,10 @@ memory-controller@2c00000 {
+>  		status = "okay";
+>  	};
+>  
+> +	timer@3010000 {
+> +		status = "okay";
 > +	};
-> +};
-> +
-> +During the guest live migration the outgoing guest exports its page encryption
-> +bitmap, the KVM_SET_PAGE_ENC_BITMAP can be used to build the page encryption
-> +bitmap for an incoming guest.
->   
->   5. The kvm_run structure
->   ========================
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 27e43e3ec9d8..d30f770aaaea 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1271,6 +1271,8 @@ struct kvm_x86_ops {
->   				  unsigned long sz, unsigned long mode);
->   	int (*get_page_enc_bitmap)(struct kvm *kvm,
->   				struct kvm_page_enc_bitmap *bmap);
-> +	int (*set_page_enc_bitmap)(struct kvm *kvm,
-> +				struct kvm_page_enc_bitmap *bmap);
->   };
->   
->   struct kvm_arch_async_pf {
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index bae783cd396a..313343a43045 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -7756,6 +7756,47 @@ static int svm_get_page_enc_bitmap(struct kvm *kvm,
->   	return ret;
->   }
->   
-> +static int svm_set_page_enc_bitmap(struct kvm *kvm,
-> +				   struct kvm_page_enc_bitmap *bmap)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	unsigned long gfn_start, gfn_end;
-> +	unsigned long *bitmap;
-> +	unsigned long sz, i;
-> +	int ret;
-> +
-> +	if (!sev_guest(kvm))
-> +		return -ENOTTY;
-> +
-> +	gfn_start = bmap->start_gfn;
-> +	gfn_end = gfn_start + bmap->num_pages;
 
-
-Same comment as the previous one. Do we continue if num_pages is zero ?
-
-> +
-> +	sz = ALIGN(bmap->num_pages, BITS_PER_LONG) / 8;
-> +	bitmap = kmalloc(sz, GFP_KERNEL);
-> +	if (!bitmap)
-> +		return -ENOMEM;
-> +
-> +	ret = -EFAULT;
-> +	if (copy_from_user(bitmap, bmap->enc_bitmap, sz))
-> +		goto out;
-> +
-> +	mutex_lock(&kvm->lock);
-> +	ret = sev_resize_page_enc_bitmap(kvm, gfn_end);
-> +	if (ret)
-> +		goto unlock;
-> +
-> +	i = gfn_start;
-> +	for_each_clear_bit_from(i, bitmap, (gfn_end - gfn_start))
-> +		clear_bit(i + gfn_start, sev->page_enc_bmap);
-> +
-> +	ret = 0;
-> +unlock:
-> +	mutex_unlock(&kvm->lock);
-> +out:
-> +	kfree(bitmap);
-> +	return ret;
-> +}
-> +
->   static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->   {
->   	struct kvm_sev_cmd sev_cmd;
-> @@ -8161,6 +8202,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
->   
->   	.page_enc_status_hc = svm_page_enc_status_hc,
->   	.get_page_enc_bitmap = svm_get_page_enc_bitmap,
-> +	.set_page_enc_bitmap = svm_set_page_enc_bitmap,
->   };
->   
->   static int __init svm_init(void)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 3c3fea4e20b5..05e953b2ec61 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -5238,6 +5238,18 @@ long kvm_arch_vm_ioctl(struct file *filp,
->   			r = kvm_x86_ops->get_page_enc_bitmap(kvm, &bitmap);
->   		break;
->   	}
-> +	case KVM_SET_PAGE_ENC_BITMAP: {
-> +		struct kvm_page_enc_bitmap bitmap;
-> +
-> +		r = -EFAULT;
-> +		if (copy_from_user(&bitmap, argp, sizeof(bitmap)))
-> +			goto out;
-> +
-> +		r = -ENOTTY;
-> +		if (kvm_x86_ops->set_page_enc_bitmap)
-> +			r = kvm_x86_ops->set_page_enc_bitmap(kvm, &bitmap);
-> +		break;
-> +	}
->   	default:
->   		r = -ENOTTY;
->   	}
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index db1ebf85e177..b4b01d47e568 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1489,6 +1489,7 @@ struct kvm_enc_region {
->   #define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
->   
->   #define KVM_GET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc5, struct kvm_page_enc_bitmap)
-> +#define KVM_SET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc6, struct kvm_page_enc_bitmap)
->   
->   /* Secure Encrypted Virtualization command */
->   enum sev_cmd_id {
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Why timer needs to be enabled per-board?
