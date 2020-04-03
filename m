@@ -2,220 +2,109 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E70DC2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9F2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59CD420675
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC60820675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 01:46:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="WiorhD9n";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="O854i+9y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="cyjOj5oX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390301AbgDCBoO (ORCPT
+        id S2390302AbgDCBqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 21:44:14 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51669 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389108AbgDCBoO (ORCPT
+        Thu, 2 Apr 2020 21:46:11 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:17748 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389108AbgDCBqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 21:44:14 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.nyi.internal (Postfix) with ESMTP id DFB5958024C;
-        Thu,  2 Apr 2020 21:44:11 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 02 Apr 2020 21:44:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        KyvhXjB5DdFettsz9BCOqHLXK5wPN6w15uaxcR0jueY=; b=WiorhD9nz+ySgT04
-        SlNTC1Oo8MVXYRcS83g1m8PfBwjQq0WtZOY+ve90s7jrQhNHK/rGJcMtj3Fj/4oM
-        mB+lQ7RNXJnKaR7B5EIK/QThJCwpB/wNxenqGKo9EU7b2IhziOM2RwONboe8FpaM
-        6HcnaBkeXuqMJVEoTjuXRG3JS/a7nDrufJPK+eyf/g5SkCFn391tmJU7OkikIWhE
-        rIjfzU/o6DkRzw2Db0lqyZe0vOUCuS+WieH7WE0ttAlkc27Wok7tFbGWQ/ItG4ZS
-        vzdhK6Ea6r+RIlQOrxYxDZl8du4CLT/Mqy5ZHll7p+xydP6kThbZbDMEU/jDHbRM
-        wSVI7w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=KyvhXjB5DdFettsz9BCOqHLXK5wPN6w15uaxcR0ju
-        eY=; b=O854i+9yi0NoUPthyXezXO261AjR/d6v7HnPjiHRJdw/Jx3AA84b6upw0
-        RFM86AqDYX+XAivrs4F1Jftl4CBoF152UfNZC2y95Sl6p8/RBO0ZTimFPolkgFcg
-        J0mdkKWrgVpT5b6SADDMyxG4cb27h/0EwU24UmQYH4q2kOe+/RJyaHwUR6xmeCej
-        JrzdkdTKV5hbyjX0F5/wyYbgI2cFyoaj/xTS7nQMPjN9UE1P5perydJTl131XXKf
-        qo5j4bRdfK/EAQVaLBVjwMobHqG9+mQaSPXPSv5rnHOss48o/WjuBC4tCQasVPwH
-        FXd87Df2/F++wZnShVZ3eVsHr2zbQ==
-X-ME-Sender: <xms:6pSGXkdHxUvI6wlmnAbrK1IhF4RG_jpiEwxWWlIYz4vFQvMKLdnMrg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdehgdegkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftgfoggfgsehtjeertdertdejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
-    duieeirddvfedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
-X-ME-Proxy: <xmx:6pSGXnwfhJE9N0v1qesQ14JQMfUdxALscI2X0tTbRm_x9mGm6FudxQ>
-    <xmx:6pSGXr22pq9nSguKU9WXSf6z6T8RAxP-KcQWIzw_azBWppVaSkjMUg>
-    <xmx:6pSGXlzVC2JgYjpSWiUJF1qr6HHJ2FUWJxxDMVCEktQZmsruDI_grw>
-    <xmx:65SGXhje8TwcSnI3ENAKN-q0A7TP3GpKJnBHff2RR7XgGd8RC_5abQ>
-Received: from centos8 (unknown [118.209.166.232])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AA752306CEE4;
-        Thu,  2 Apr 2020 21:44:05 -0400 (EDT)
-Message-ID: <27994c53034c8f769ea063a54169317c3ee62c04.camel@themaw.net>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
-Date:   Fri, 03 Apr 2020 09:44:01 +0800
-In-Reply-To: <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
-References: <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
-         <1445647.1585576702@warthog.procyon.org.uk>
-         <2418286.1585691572@warthog.procyon.org.uk>
-         <20200401144109.GA29945@gardel-login>
-         <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
-         <2590640.1585757211@warthog.procyon.org.uk>
-         <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
-         <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
-         <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-9.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 2 Apr 2020 21:46:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1585878372; x=1617414372;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sXzY6X7y/HJOV8eyJ7EyKZ7Q9GvaNwIs3iD8jdW9I3A=;
+  b=cyjOj5oX8uQxeq4+VxP/Fsw1GOMZ4cVSS/EabhPVL9jzcOuKb0Qtbi8z
+   XUkmKQpvTETGXkuEllPQKGHUjCkxMXTuwrPVX5z/h4FgEYK24QUXMR4uF
+   e2AQnhC+IFt7mPeJ3zmwAuu9v1KY3wJ10+0cVSgch+w6vxGRjBIuJhqRV
+   djJrkocRJnZgoLTjErwacwVf8hQSadNNbQgZofHqLnInBu29bh+fDKvkm
+   JNVLg2vRHdXKza7zMJZcvnZpE5tVbcctqnOR+rJ+adUyd1prPwoBmMRiA
+   3+pzZCVmco/udH95aeWYSWLaewq4MVBND+4qXLWrr/REOK6ArskILWFvT
+   g==;
+IronPort-SDR: Z/huWYO4R/vhI7IfVzj5I0Nb5XiE+FTx40j1NKMG2BNOCiZKq9vnIGCC+lbSqB1jSra17xG3y0
+ LmFrJq/3s+Vs2JlveRQcgGJyYe62BjMwP9E6n8eYlDWnmgwKPHbPNXSoUPJvYfFPt+gp4XAAZ6
+ T87P3UBCiRlNqYHPVeZbOcxNxj81JFN4lJCiNjrrKUitK0+auCu64qrEiba7tyemmw8sbIktnK
+ UkfNUen1aE6JXpi7wma0O0F5KhcikeJOtmlSqEBSyN/toKeb3jnPsMdb/XrkFs7/QHaztc5/Mw
+ KiA=
+X-IronPort-AV: E=Sophos;i="5.72,337,1580745600"; 
+   d="scan'208";a="134782509"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Apr 2020 09:46:11 +0800
+IronPort-SDR: KDKavQl3zDQbbQaDL1DEzBVyiPipWeM0Z0KLjungVVbXONLsGNkpfx2mct4IlSMwSKPeajf3Jr
+ Qqv9m5XbfuHpQ+6evOprhkkIGSuDzSIGaBR/7XNZYakdM7uV+SYVQvxyYJJlFxGi5fZW4uD9Qq
+ BVjIa7CALMPbkD66Kzxfd5wc7lEG1Yz6/A3fo8wZWTJmJuGLAUbJFhppCq40oz+CBG0uK3FCsR
+ 7pldTg6f8tQM9f3+Jg/NBEaC18huoydclI5FckyNkyZzYe7H4qAcn4bn+DpCA+mck/ZZE3n2HQ
+ jkO55+Ck8IruJKiIDDmpd2tR
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 18:37:01 -0700
+IronPort-SDR: ZAP/86deKbIkcrM7fGbTYi3JBhvMWizQVQ+sVBUZ+C9VlVOhubJ5WIm8d89j3VAGd0ilAEJ70s
+ g9qEgSzrNx/ZvR/3xNdL9yT4Z2jkaZxnyMGv9VkGzF2J3yS7Sii8aR6/ckOAHG10e32sqzV4zb
+ +t3u6OJe5ZBIHaqO6wLNuy/GaLFQ+DhtzNzFRZFfHZyQPaeo5bDi2dWoGjyiz38k1NxbMcFQZR
+ Bp1Yueq5YC1cuW83W8C4eDtvKvpUGtTcChQJZjIUGooois9pihtCB8WjR8mlczKVkSHvx49mdh
+ O/8=
+WDCIronportException: Internal
+Received: from usa002249.ad.shared (HELO yoda.hgst.com) ([10.86.55.19])
+  by uls-op-cesaip02.wdc.com with ESMTP; 02 Apr 2020 18:46:10 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] irqchip/sifive-plic: Fix maximum priority threshold value
+Date:   Thu,  2 Apr 2020 18:46:09 -0700
+Message-Id: <20200403014609.71831-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-02 at 15:52 +0200, Miklos Szeredi wrote:
-> On Thu, Apr 2, 2020 at 4:52 AM Ian Kent <raven@themaw.net> wrote:
-> > On Wed, 2020-04-01 at 18:40 +0200, Miklos Szeredi wrote:
-> > > On Wed, Apr 1, 2020 at 6:07 PM David Howells <dhowells@redhat.com
-> > > >
-> > > wrote:
-> > > > Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > > > 
-> > > > > I've still not heard a convincing argument in favor of a
-> > > > > syscall.
-> > > > 
-> > > > From your own results, scanning 10000 mounts through mountfs
-> > > > and
-> > > > reading just
-> > > > two values from each is an order of magnitude slower without
-> > > > the
-> > > > effect of the
-> > > > dentry/inode caches.  It gets faster on the second run because
-> > > > the
-> > > > mountfs
-> > > > dentries and inodes are cached - but at a cost of >205MiB of
-> > > > RAM.  And it's
-> > > > *still* slower than fsinfo().
-> > > 
-> > > Already told you that we can just delete the dentry on
-> > > dput_final, so
-> > > the memory argument is immaterial.
-> > > 
-> > > And the speed argument also, because there's no use case where
-> > > that
-> > > would make a difference.  You keep bringing up the notification
-> > > queue
-> > > overrun when watching a subtree, but that's going to be painful
-> > > with
-> > > fsinfo(2) as well.   If that's a relevant use case (not saying
-> > > it's
-> > > true), might as well add a /mnt/MNT_ID/subtree_info (trivial
-> > > again)
-> > > that contains all information for the subtree.  Have fun
-> > > implementing
-> > > that with fsinfo(2).
-> > 
-> > Forgive me for not trawling through your patch to work this out
-> > but how does a poll on a path get what's needed to get mount info.
-> > 
-> > Or, more specifically, how does one get what's needed to go
-> > directly
-> > to the place to get mount info. when something in the tree under
-> > the
-> > polled path changes (mount/umount). IIUC poll alone won't do
-> > subtree
-> > change monitoring?
-> 
-> The mechanisms are basically the same as with fsinfo(2).   You can
-> get
-> to the mountfs entry through the mount ID or through a proc/fd/ type
-> symlink.  So if you have a path, there are two options:
-> 
->  - find out the mount ID belonging to that path and go to
-> /mountfs/$mntid/
->  - open the path with fd = open(path, O_PATH) and the go to
-> /proc/self/fdmount/$fd/
-> 
-> Currently the only way to find the mount id from a path is by parsing
-> /proc/self/fdinfo/$fd.  It is trivial, however, to extend statx(2) to
-> return it directly from a path.   Also the mount notification queue
-> that David implemented contains the mount ID of the changed mount.
+As per the PLIC specification, maximum priority threshold value is 0x7
+not 0xF. Even though it doesn't cause any error in qemu/hifive unleashed,
+there may be some implementation which checks the upper bound resulting in
+an illegal access.
 
-I'm aware the mount id comes through David's notifications, I was
-wondering how to get that via your recommendation, thanks.
+Fixes: ccbe80bad571 (irqchip/sifive-plic: Enable/Disable external
+		     interrupts upon cpu online/offline)
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+---
+ drivers/irqchip/irq-sifive-plic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-In your scheme it sounds like the mount id doesn't hold the
-importance it deserves, it's central to the whole idea of getting
-information about these mounts. But it sounds like you need to
-open fds to paths you might not know to find it ...
-
-Your explanation wasn't clear on how one gets notifications of
-events within a tree under a mount you've opened an fd on to
-get events?
-
-> 
-> > Don't get me wrong, neither the proc nor the fsinfo implementations
-> > deal with the notification storms that cause much of the problem we
-> > see now.
-> > 
-> > IMHO that's a separate and very difficult problem in itself that
-> > can't even be considered until getting the information efficiently
-> > is resolved.
-> 
-> This mount notification storm issue got me thinking.   If I
-> understand
-> correctly, systemd wants mount notifications so that it can do the
-> desktop pop-up thing.   Is that correct?
-> 
-> But that doesn't apply to automounts at all.  A new mount performed
-> by
-> automount is uninteresting to to desktops, since it's triggered by
-> crossing the automount point (i.e. a normal path lookup), not an
-> external event like inserting a usb stick, etc...
-> 
-> Am I missing something?
-
-Yeah, you're not missing anything.
-
-Unfortunately, in a recent discussion on the autofs mailing list,
-an investigation showed that systemd does want/get events for
-autofs mounts and proceeds to issue around a 100 or so events on
-the d-bus for every one.
-
-> 
-> Maybe the solution is to just allow filtering out such notifications
-> at the source, so automount triggers don't generate events for
-> systemd.
-
-Except that autofs automounts might be expected to be seen on a
-desktop, that's not out of the question I guess.
-
-Ian
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index c34fb3ae0ff8..d0a71febdadc 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -56,7 +56,7 @@
+ #define     CONTEXT_THRESHOLD		0x00
+ #define     CONTEXT_CLAIM		0x04
+ 
+-#define	PLIC_DISABLE_THRESHOLD		0xf
++#define	PLIC_DISABLE_THRESHOLD		0x7
+ #define	PLIC_ENABLE_THRESHOLD		0
+ 
+ struct plic_priv {
+-- 
+2.25.1
 
