@@ -2,189 +2,133 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10857C2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E898C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB5E20678
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317AD20678
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CcoVHzm+"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="HfLgM9ci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404194AbgDCPRE (ORCPT
+        id S2404203AbgDCPRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:17:04 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45124 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728119AbgDCPRE (ORCPT
+        Fri, 3 Apr 2020 11:17:08 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36614 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728119AbgDCPRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:17:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585927023;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=xkxLP2UmpM842KB/xvoKAxk6ceBszsGg8PKTZSGhySY=;
-        b=CcoVHzm+6rnC4txkfO0hDmwFT3Gj47GHpbb2XB1vh9Bvey7jdeAUeKJZOS9JYyenbx+y0n
-        KX9zDr3DczVZRjpvvGywLxqgXktYbWfURxAYavpa2eQRaG2D/S9DK9r7X8bvQe9gwnKQ0G
-        gMGFW47q/NhHgBHjmEtK8vg9k86ImcY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-353-dSZLhbaEP2OiZnFQ6bWOag-1; Fri, 03 Apr 2020 11:16:59 -0400
-X-MC-Unique: dSZLhbaEP2OiZnFQ6bWOag-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CAF398017F4;
-        Fri,  3 Apr 2020 15:16:56 +0000 (UTC)
-Received: from [10.36.112.213] (ovpn-112-213.ams2.redhat.com [10.36.112.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A79DB60BF3;
-        Fri,  3 Apr 2020 15:16:53 +0000 (UTC)
-Subject: Re: [PATCH v4 3/3] mm: call cond_resched() from
- deferred_init_memmap()
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        mhocko@suse.com, linux-mm@kvack.org, dan.j.williams@intel.com,
-        shile.zhang@linux.alibaba.com, daniel.m.jordan@oracle.com,
-        ktkhai@virtuozzo.com, jmorris@namei.org, sashal@kernel.org,
-        vbabka@suse.cz
-References: <20200403140952.17177-1-pasha.tatashin@soleen.com>
- <20200403140952.17177-4-pasha.tatashin@soleen.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <4dc3a50b-2d90-1ab8-a6af-d8b8b5483209@redhat.com>
-Date:   Fri, 3 Apr 2020 17:16:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200403140952.17177-4-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Fri, 3 Apr 2020 11:17:05 -0400
+Received: by mail-pj1-f67.google.com with SMTP id nu11so3066307pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:17:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fx4AohXcpCWWeloAMp1+tr3EHYpkAySrgcIIxr7kcOY=;
+        b=HfLgM9cilYyLla4cdYfW2AvcCIEbJysfo/iCt8RVApG6bgtOq43c2VYE04UoFPb2n6
+         CXkOo7muD8btnl4gKcGYJBV9EIRwOyKcsDiYZy42T96eb+YaLVciY0c+nbPHAO9S/2Yy
+         9EcbWGLe0PB7/LAPQg4AxqiAUjSOYAONdeOKggAy/hHrsZhAMC3bdD4IIzSYID+LmytA
+         yCaC9GQZ8iawK2uO7YQQ1ufg7BLMI7jWkpxQS9RP66GM7jaZiMVqyCNZbwz2d+ruissJ
+         gMgY01yJ1aPjzk0wfGs2RVyzGJOWx3rS0rJhEqG1EX2DXrfl14xHj2SKc3Kj75Q11TSr
+         zrdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Fx4AohXcpCWWeloAMp1+tr3EHYpkAySrgcIIxr7kcOY=;
+        b=KVd5gVP6cqmSzIYtx2MEYj9PpRxY2+rNpkgyObIiYC52TJuiJCO90EEBfhDcMo7+ma
+         gXCtGf6qaJ39lsvZf3CXaNwSDYheIp7psBn7vtOBEQgWil9JRxuGYxCxJRSoGOZWSS0+
+         2cPhJdo4GM7bVP/QbbROt4ZLJWYF607jQIs+BgDzZJrYwGPjgXRxn2SpICyMxp6CEwpF
+         kVJ65yYZTYdjjuHtDSv0+2KLj/w/24K/+1JehjHZAXFF4+XCy/GZxxG9YSAobEkqELQJ
+         JxcJchd6XZV4VSK69Kq2NBtB9yiEg4ABSnTcWEa74BUD0sRq+msvwRpqd/xiB64pLuQg
+         38Og==
+X-Gm-Message-State: AGi0PubHqaEmcq6C4/QNKViUrM2nC+ZGiwqPxMg8l1h2lOvHgNoGn0Pa
+        wuA1sdvXfJSids4PKJEPD8ynew==
+X-Google-Smtp-Source: APiQypKmng9gZ+Pi+NIKxo4VVzepa02lDucm/bsTEinOB0lbG6J9uaAqmzf3pxPsEoJl7m2wAkEAew==
+X-Received: by 2002:a17:902:b787:: with SMTP id e7mr8423259pls.128.1585927023636;
+        Fri, 03 Apr 2020 08:17:03 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id p70sm5969601pjp.47.2020.04.03.08.17.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 08:17:02 -0700 (PDT)
+Date:   Fri, 03 Apr 2020 08:17:02 -0700 (PDT)
+X-Google-Original-Date: Fri, 03 Apr 2020 08:12:08 PDT (-0700)
+Subject:     Re: [RFC PATCH 1/7] riscv: Get rid of compile time logic with MAX_EARLY_MAPPING_SIZE
+In-Reply-To: <20200322110028.18279-2-alex@ghiti.fr>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, zong.li@sifive.com,
+        anup@brainfault.org, Christoph Hellwig <hch@lst.de>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        alex@ghiti.fr
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     alex@ghiti.fr
+Message-ID: <mhng-ee39eb13-2567-479e-b0f4-5d23dff8496c@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.04.20 16:09, Pavel Tatashin wrote:
-> Now that deferred pages are initialized with interrupts enabled we can
-> replace touch_nmi_watchdog() with cond_resched(), as it was before
-> 3a2d7fa8a3d5.
-> 
-> For now, we cannot do the same in deferred_grow_zone() as it is still
-> initializes pages with interrupts disabled.
-> 
-> This change fixes RCU problem described:
-> linux-mm/20200401104156.11564-2-david@redhat.com
-> 
-> [   60.474005] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> [   60.475000] rcu:  1-...0: (0 ticks this GP) idle=02a/1/0x4000000000000000 softirq=1/1 fqs=15000
-> [   60.475000] rcu:  (detected by 0, t=60002 jiffies, g=-1199, q=1)
-> [   60.475000] Sending NMI from CPU 0 to CPUs 1:
-> [    1.760091] NMI backtrace for cpu 1
-> [    1.760091] CPU: 1 PID: 20 Comm: pgdatinit0 Not tainted 4.18.0-147.9.1.el8_1.x86_64 #1
-> [    1.760091] Hardware name: Red Hat KVM, BIOS 1.13.0-1.module+el8.2.0+5520+4e5817f3 04/01/2014
-> [    1.760091] RIP: 0010:__init_single_page.isra.65+0x10/0x4f
-> [    1.760091] Code: 48 83 cf 63 48 89 f8 0f 1f 40 00 48 89 c6 48 89 d7 e8 6b 18 80 ff 66 90 5b c3 31 c0 b9 10 00 00 00 49 89 f8 48 c1 e6 33 f3 ab <b8> 07 00 00 00 48 c1 e2 36 41 c7 40 34 01 00 00 00 48 c1 e0 33 41
-> [    1.760091] RSP: 0000:ffffba783123be40 EFLAGS: 00000006
-> [    1.760091] RAX: 0000000000000000 RBX: fffffad34405e300 RCX: 0000000000000000
-> [    1.760091] RDX: 0000000000000000 RSI: 0010000000000000 RDI: fffffad34405e340
-> [    1.760091] RBP: 0000000033f3177e R08: fffffad34405e300 R09: 0000000000000002
-> [    1.760091] R10: 000000000000002b R11: ffff98afb691a500 R12: 0000000000000002
-> [    1.760091] R13: 0000000000000000 R14: 000000003f03ea00 R15: 000000003e10178c
-> [    1.760091] FS:  0000000000000000(0000) GS:ffff9c9ebeb00000(0000) knlGS:0000000000000000
-> [    1.760091] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    1.760091] CR2: 00000000ffffffff CR3: 000000a1cf20a001 CR4: 00000000003606e0
-> [    1.760091] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [    1.760091] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [    1.760091] Call Trace:
-> [    1.760091]  deferred_init_pages+0x8f/0xbf
-> [    1.760091]  deferred_init_memmap+0x184/0x29d
-> [    1.760091]  ? deferred_free_pages.isra.97+0xba/0xba
-> [    1.760091]  kthread+0x112/0x130
-> [    1.760091]  ? kthread_flush_work_fn+0x10/0x10
-> [    1.760091]  ret_from_fork+0x35/0x40
-> [   89.123011] node 0 initialised, 1055935372 pages in 88650ms
-> 
-> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
-> Cc: stable@vger.kernel.org # 4.17+
-> 
-> Reported-by: Yiqian Wei <yiwei@redhat.com>
-> Tested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+On Sun, 22 Mar 2020 04:00:22 PDT (-0700), alex@ghiti.fr wrote:
+> There is no need to compare at compile time MAX_EARLY_MAPPING_SIZE value
+> with PGDIR_SIZE since MAX_EARLY_MAPPING_SIZE is set to 128MB which is less
+> than PGDIR_SIZE that is equal to 1GB: that allows to simplify early_pmd
+> definition.
+>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 > ---
->  mm/page_alloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 5ffa8d7e5545..deacfe575872 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1810,7 +1810,7 @@ static int __init deferred_init_memmap(void *data)
->  	 */
->  	while (spfn < epfn) {
->  		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
-> -		touch_nmi_watchdog();
-> +		cond_resched();
->  	}
->  zone_empty:
->  	/* Sanity check that the next zone really is unpopulated */
-> 
+>  arch/riscv/mm/init.c | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 238bd0033c3f..18bbb426848e 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -247,13 +247,7 @@ static void __init create_pte_mapping(pte_t *ptep,
+>
+>  pmd_t trampoline_pmd[PTRS_PER_PMD] __page_aligned_bss;
+>  pmd_t fixmap_pmd[PTRS_PER_PMD] __page_aligned_bss;
+> -
+> -#if MAX_EARLY_MAPPING_SIZE < PGDIR_SIZE
+> -#define NUM_EARLY_PMDS		1UL
+> -#else
+> -#define NUM_EARLY_PMDS		(1UL + MAX_EARLY_MAPPING_SIZE / PGDIR_SIZE)
+> -#endif
+> -pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
+> +pmd_t early_pmd[PTRS_PER_PMD] __initdata __aligned(PAGE_SIZE);
+>
+>  static pmd_t *__init get_pmd_virt(phys_addr_t pa)
+>  {
+> @@ -267,14 +261,12 @@ static pmd_t *__init get_pmd_virt(phys_addr_t pa)
+>
+>  static phys_addr_t __init alloc_pmd(uintptr_t va)
+>  {
+> -	uintptr_t pmd_num;
+> -
+>  	if (mmu_enabled)
+>  		return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+>
+> -	pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
+> -	BUG_ON(pmd_num >= NUM_EARLY_PMDS);
+> -	return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
+> +	BUG_ON((va - PAGE_OFFSET) >> PGDIR_SHIFT);
+> +
+> +	return (uintptr_t)early_pmd;
+>  }
+>
+>  static void __init create_pmd_mapping(pmd_t *pmdp,
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+My specific worry here was that allyesconfig kernels are quite large, and that
+dropping the code to handle large kernels would make it even harder to boot
+them.  That said, I can't actually get one to boot so I'm happy to just push
+that off until later and drop the code we can't practically use.
 
--- 
-Thanks,
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
-David / dhildenb
-
+Thanks!
