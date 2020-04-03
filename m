@@ -2,101 +2,176 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6200C2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED94C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B27206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD027206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7dLnWa7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnH4HwG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgDCXRL (ORCPT
+        id S1728822AbgDCXTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 19:17:11 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35201 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbgDCXRL (ORCPT
+        Fri, 3 Apr 2020 19:19:05 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36974 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727958AbgDCXTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 19:17:11 -0400
-Received: by mail-qt1-f193.google.com with SMTP id e14so7998555qts.2;
-        Fri, 03 Apr 2020 16:17:10 -0700 (PDT)
+        Fri, 3 Apr 2020 19:19:05 -0400
+Received: by mail-il1-f195.google.com with SMTP id a6so9090915ilr.4;
+        Fri, 03 Apr 2020 16:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xM1oCYmkMlq3+sLKqObCJMQTJsuA5Jqv8BvDLuWnBOg=;
-        b=A7dLnWa7+Z0q5FgV+Q6evVSpYkzGfVpKzTzZbXGRqgARtmMgKjzwPtED+trqBiKMLB
-         h7UOEzChdnH3BEMWS9iNQ/dw7Nrkrh5CyozQwYHCL9GGb7VMQCrr9POlKWzZ3BZfw2TZ
-         llr1mkUPPV9JUpk142NG4xHZidaEFqcz+MieSlXgdoo2wM8iLx+soMT+mBYKbKVmL8/U
-         GPDoJ6X/GeioSbkVZeaAnk631LuydGeUKSBpECRAN4TCDH9mMvzpQtNuFhCukQPNk410
-         M5pHUySiOuNxLmMqGRgLMIktjNdzgTKZyNJIla/hwnio3mPxMwzOSi0bOxIlSRMccb1M
-         LIUA==
+         :cc:content-transfer-encoding;
+        bh=dPU5rDbRXNZR3mGxrVtgTT7qKCNIJzL3wX4Y2kmnrAI=;
+        b=PnH4HwG48u1Ut+Ivho3hvvqb5bhaAn4hSi8EHYGucTzs1wkC3b4hv1g19ShqB9AOhX
+         URcN/2rsL80NiwAX3sTZFmaeuvHiVq+d5ouj5aV6lBlZ7SuAG4GGoaKg6dp4hL1tqiQr
+         VdyMqjf0lOFut5bLlrm/v8h3QdrXjW/N9csK77csL48LcAj6JKr/GptmX9+9rgj7FQ3T
+         Mw58AU2tiMh7G56Pq7HU4egpWgB4YyFIcZNoBEClZfga29RMkKiCNOdajMHsheKPfEZ5
+         9t5bvKmj/oq9x3AwpXm5ysdVgBEUwxYsgg6fZ9xrf9S06kevIdf2Mv1KO5kfaByVFZI4
+         fNhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xM1oCYmkMlq3+sLKqObCJMQTJsuA5Jqv8BvDLuWnBOg=;
-        b=CpYKuQxJTntZ2WRTvaXZcTFwk2SSxklBqSSBoFcejeuBaYIxGmuQBp2bfCC3KC/vYf
-         Hs9M3iqErbIUwE/4uNlu5fFycVkBOjjPAIYP06yoaZ3i25pQkL4EtJmyVxUGd0oCE+WO
-         1mDOLj0BITsf1Q74Grmsuht8eLn58++oWTTE+9m09Sc0Nh/F5e1gtihMJMReCSKRYUd7
-         hpLu9q+rQIvFcTnb+ncuK/uf3OipkjEd+9p6pSXHHm9lEeQe/0fuAuwNud/WKOEN/ibB
-         EzadSbkpIajYMYvJ3b1FX/N1yvN+cqTeuVhd+k+FqydFN+/AD+Zhxkb6oUywdDMJYL/N
-         WvUQ==
-X-Gm-Message-State: AGi0PuYxzQApLoZDUHS9/NKzZ5Lc61kit1rFSIQz9gIIQ87ICTTlZPZF
-        tOsiB8X1SIVMbndpJmJS4fQp3DqkKl32OsjDigRY
-X-Google-Smtp-Source: APiQypIJ9EeGhqEYBNuojfMk/NBEwbuhBIvBY3MiOzP9TQ7PRz4g8cTsBfCR7zo8LctPvaYJT0NFeLhGothNIvHov1k=
-X-Received: by 2002:ac8:2668:: with SMTP id v37mr3486320qtv.143.1585955829985;
- Fri, 03 Apr 2020 16:17:09 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dPU5rDbRXNZR3mGxrVtgTT7qKCNIJzL3wX4Y2kmnrAI=;
+        b=FbooZicPc+RoVA6ckCkh1Bhjj7q9HSPrdDoa92x2idgKAei4tBOFMCBBFU1w47OZMR
+         4rTaQwV2+7typtiVkeC5X2+1k50lwF8Fe5JccR1+7HLe6GYF2FzgJvng3ZBCo3tNmBI5
+         5KfXyzaE/T1445YAPpSwr6hK9cOxsnxzEWaz+xtA5/uwnh2nZ4pe8qJj4np5aylN5HUi
+         5xwewXn3F+82tLfERvpraQIu8MJ5YbUdsIO4LglNE+oCDMMjS+cMTAQ6Jw94Db05k4LJ
+         F39ZXeVzAhxJ0n7QfTUS8alVZG3lVwwm61n88To8+BbGAZArikOt8qnbtRgl50Ckb9b7
+         4y2A==
+X-Gm-Message-State: AGi0PuZMWLmtbV0CYzFnUpSlMIv+cqCvvviS5SbE7CePpyZZVuPfumMN
+        WHJZXLlJLTVOo/osAFRibMx/AJptwQo8gmkN1y0=
+X-Google-Smtp-Source: APiQypJH2cfMpfCnPZK+pA8s6rPIi/FSJMp/KP8TFfCWVsLY5vUTwL1Z/RTjJEpywJNpHvOm4Rhvp5j8LzkY7e9bcu0=
+X-Received: by 2002:a92:cf52:: with SMTP id c18mr10652807ilr.246.1585955944184;
+ Fri, 03 Apr 2020 16:19:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200404091916.6f00a24d@canb.auug.org.au>
-In-Reply-To: <20200404091916.6f00a24d@canb.auug.org.au>
-From:   Rob Herring <robherring2@gmail.com>
-Date:   Fri, 3 Apr 2020 17:16:58 -0600
-Message-ID: <CAL_JsqKd=3zw4uAbDthp-c=_+4XFup0XEdw8nHOmJDzxS2-qSA@mail.gmail.com>
-Subject: Re: linux-next: build warnings in Linus' tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200323194507.90944-1-abhishekpandit@chromium.org>
+ <20200323124503.v3.1.I17e2220fd0c0822c76a15ef89b882fb4cfe3fe89@changeid>
+ <7FD50BDC-A4B5-4ED9-8DAB-887039735800@holtmann.org> <CANFp7mX=LvTzttCHcb14TRF8YukQt_WdMpYzJP5LP_ZXwzQTsQ@mail.gmail.com>
+In-Reply-To: <CANFp7mX=LvTzttCHcb14TRF8YukQt_WdMpYzJP5LP_ZXwzQTsQ@mail.gmail.com>
+From:   Dave Taht <dave.taht@gmail.com>
+Date:   Fri, 3 Apr 2020 16:18:53 -0700
+Message-ID: <CAA93jw5aSU6H=9yvtfXTDg1V_MXi42KNJ0imTiwFx6dLjBtBtg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] Bluetooth: Prioritize SCO traffic
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Nicolas
+On Fri, Apr 3, 2020 at 11:11 AM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
+>
+> Hi Marcel,
+>
+> Thanks for merging.
+>
+> I agree that the distinction between SCO/eSCO and ACL/LE is a bit
+> concerning for scheduling. I will make some time to revisit this as
+> part of Audio improvements we are making.
 
-On Fri, Apr 3, 2020 at 4:19 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Today's linux-next build of Linus' tree (arm multi_v7_defconfig) produced
-> these warnings:
->
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
-> arch/arm/boot/dts/bcm2835-rpi.dtsi:18.4-15: Warning (dma_ranges_format): /soc/firmware:dma-ranges: empty "dma-ranges" property but its #address-cells (2) differs from /soc (1)
->
-> I have no idea what caused this :-(
+A) I know nothing of bluetooth.
+B) I am unfond of strict priority queues, as they can cause
+starvation. My immediate instinct is to reach for a drr++ derived
+solution
+to give fairness to all flows, and a bit of priority to the ones that
+matter most.
 
-A dtc update combined with changes that landed in the above file after
-I tested and fixed the new warnings.
 
-Rob
+>
+> Thanks
+> Abhishek
+>
+> Abhishek
+>
+> On Thu, Apr 2, 2020 at 11:56 PM Marcel Holtmann <marcel@holtmann.org> wro=
+te:
+> >
+> > Hi Abhishek,
+> >
+> > > When scheduling TX packets, send all SCO/eSCO packets first, check fo=
+r
+> > > pending SCO/eSCO packets after every ACL/LE packet and send them if a=
+ny
+> > > are pending.  This is done to make sure that we can meet SCO deadline=
+s
+> > > on slow interfaces like UART.
+> > >
+> > > If we were to queue up multiple ACL packets without checking for a SC=
+O
+> > > packet, we might miss the SCO timing. For example:
+> > >
+> > > The time it takes to send a maximum size ACL packet (1024 bytes):
+> > > t =3D 10/8 * 1024 bytes * 8 bits/byte * 1 packet / baudrate
+> > >        where 10/8 is uart overhead due to start/stop bits per byte
+> > >
+> > > Replace t =3D 3.75ms (SCO deadline), which gives us a baudrate of 273=
+0666.
+> > >
+> > > At a baudrate of 3000000, if we didn't check for SCO packets within 1=
+024
+> > > bytes, we would miss the 3.75ms timing window.
+> > >
+> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > > ---
+> > >
+> > > Changes in v3:
+> > > * Removed hci_sched_sync
+> > >
+> > > Changes in v2:
+> > > * Refactor to check for SCO/eSCO after each ACL/LE packet sent
+> > > * Enabled SCO priority all the time and removed the sched_limit varia=
+ble
+> > >
+> > > net/bluetooth/hci_core.c | 106 +++++++++++++++++++++-----------------=
+-
+> > > 1 file changed, 57 insertions(+), 49 deletions(-)
+> >
+> > patch has been applied to bluetooth-next tree.
+> >
+> > However I have been a bit reluctant to apply this right away. I think w=
+hen this code was originally written, we only had ACL and SCO packets. The =
+world was pretty simple. And right now we also only have two packets types =
+(ignoring ISO packets for now), but we added LE and eSCO as separate schedu=
+ling and thus =E2=80=9Cfake=E2=80=9D packet types.
+> >
+> > I have the feeling that this serialized packet processing will get us i=
+nto trouble since we prioritize BR/EDR packets over LE packets and SCO over=
+ eSCO. I think we should have looked at all packets based on SO_PRIORITY an=
+d with ISO packets we have to most likely re-design this. Anyway, just some=
+thing to think about.
+> >
+> > Regards
+> >
+> > Marcel
+> >
+
+
+
+--=20
+Make Music, Not War
+
+Dave T=C3=A4ht
+CTO, TekLibre, LLC
+http://www.teklibre.com
+Tel: 1-831-435-0729
