@@ -2,105 +2,116 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27C9C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225B8C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C04206F6
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A702073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:56:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WswrqRlh"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="RN9Kg8Bh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390945AbgDCQ4m (ORCPT
+        id S2391043AbgDCQ4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:56:42 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23372 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726087AbgDCQ4m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:56:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585933001;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YEhHAWV6eoa7/VaPAdgqUWSGR2q1/D+L9I10tbha8Hs=;
-        b=WswrqRlhILM2mTyOBLepXocI6q8KfS/MuUaXDAfvSjn8hmTQxr5vL0beaw2ttcmHUuJJFk
-        PbQRsdhbGomohI3VlECykYlfgia1RWTj0h6d2LuGJnonQSTzETtY8UXqcOPyjw8zGmzeGM
-        ZEp+7vCKPH0tS/WH+zK9a38UXpYtxb0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-UGSdHACePgakTn3OGQp4rA-1; Fri, 03 Apr 2020 12:56:37 -0400
-X-MC-Unique: UGSdHACePgakTn3OGQp4rA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7DD8190B2A2;
-        Fri,  3 Apr 2020 16:56:35 +0000 (UTC)
-Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 391B35C3F8;
-        Fri,  3 Apr 2020 16:56:34 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 11:56:31 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     jeyu@kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, keescook@chromium.org,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200403165631.hrxxm3pnzqa4vxln@treble>
-References: <20200403163716.GV20730@hirez.programming.kicks-ass.net>
+        Fri, 3 Apr 2020 12:56:47 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:36600 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbgDCQ4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:56:45 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48v5gZ3jQRz89;
+        Fri,  3 Apr 2020 18:56:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1585933002; bh=AKiZe9v9Y0LBmwVIkVjc7YkrXM9XLJKMJUSVn3jCmO0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RN9Kg8Bh/VOAImlkFnNMcOXp3WXSAtBBZrJ0Pfd64BT8ZIVORDToaZltZ0nD4H3ee
+         UFzA8m03JQT4oEDSQgerdStSiL66V1HAZsbsHhqAuFg7Mdh4adBD63fSjUyt1RX4U1
+         6Za+tRZtwsjFQcbMyN54s8ejuWV2JGtcg2juZD3457Q7qLVBdJLy1IukiEkla71den
+         v1layTbWEsbBnzgFfssxdmrNY+gxNqXcnaYdYL1h/j49OF+TloBMA1zwPOvVetp+2f
+         Sveg5bm44U8mf9rEnL4SG7zNYk79iGei9dsny3ixmofwvHoMnV+SKeRacyvkRKjiWt
+         pmee4yYZOUHUA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Fri, 3 Apr 2020 18:56:39 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 4/8] power: supply: core: tabularize HWMON temperature
+ labels
+Message-ID: <20200403165639.GA1966@qmqm.qmqm.pl>
+References: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
+ <ae82abf9da86542f5657a8c37106bcdae5011927.1585929579.git.mirq-linux@rere.qmqm.pl>
+ <dad5d544-7f6d-5c0d-6c6e-9d23cb0a6055@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-2
 Content-Disposition: inline
-In-Reply-To: <20200403163716.GV20730@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dad5d544-7f6d-5c0d-6c6e-9d23cb0a6055@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 06:37:16PM +0200, Peter Zijlstra wrote:
+On Fri, Apr 03, 2020 at 09:47:40AM -0700, Guenter Roeck wrote:
+> On 4/3/20 9:23 AM, Micha³ Miros³aw wrote:
+> > Rework power_supply_hwmon_read_string() to check it's parameters.
+> > This allows to extend it later with labels for other types of
+> > measurements.
+> > 
+> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> > ---
+> > v2: split from fix temperature labels
+> > ---
+> >  drivers/power/supply/power_supply_hwmon.c | 21 +++++++++++++++++++--
+> >  1 file changed, 19 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
+> > index 67b6ee60085e..48c73994732c 100644
+> > --- a/drivers/power/supply/power_supply_hwmon.c
+> > +++ b/drivers/power/supply/power_supply_hwmon.c
+> > @@ -43,6 +43,11 @@ static int power_supply_hwmon_curr_to_property(u32 attr)
+> >  	}
+> >  }
+> >  
+> > +static const char *const ps_temp_label[] = {
+> > +	"temp",
+> > +	"ambient temp",
+> > +};
+> > +
+> >  static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
+> >  {
+> >  	if (channel) {
+> > @@ -144,8 +149,20 @@ static int power_supply_hwmon_read_string(struct device *dev,
+> >  					  u32 attr, int channel,
+> >  					  const char **str)
+> >  {
+> > -	*str = channel ? "temp ambient" : "temp";
+> > -	return 0;
+> > +	if (channel < 0)
+> > +		return -EINVAL;
+> > +
 > 
-> We're very close to enforcing W^X memory, refuse to load modules that
-> violate this principle per construction.
+> This is unnecessary.
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Jessica Yu <jeyu@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> ---
->  kernel/module.c |   24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> > +	switch (type) {
+> > +	case hwmon_temp:
+> > +		if (channel >= ARRAY_SIZE(ps_temp_label))
+> > +			return -EINVAL;
 > 
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -2044,9 +2044,28 @@ static void module_enable_x(const struct
->  	frob_text(&mod->core_layout, set_memory_x);
->  	frob_text(&mod->init_layout, set_memory_x);
->  }
-> +
-> +static int module_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
-> +			       char *secstrings, struct module *mod)
+> As is this. We don't usually check boundaries like this for
+> in-kernel APIs, and I personally would not want to have it
+> introduced in the kernel more than necessary. This just increases
+> kernel image size with zero benefit.
 
-A verb would be nice: "module_enforce_rwx_sections"?
+I'll amend other patches in the same spirit, then. I like the code size
+argument.
 
-Shouldn't this be under STRICT_MODULE_RWX instead of
-ARCH_HAS_STRICT_MODULE_RWX?
-
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < hdr->e_shnum; i++) {
-> +		if (sechdrs[i].sh_flags & (SHF_EXECINSTR|SHF_WRITE))
-> +			return -ENOEXEC;
-
-I think you only want the error when both are set?
-
-		if (sechdrs[i].sh_flags & (SHF_EXECINSTR|SHF_WRITE) == (SHF_EXECINSTR|SHF_WRITE))
-
--- 
-Josh
-
+Best Regards,
+Micha³ Miros³aw
