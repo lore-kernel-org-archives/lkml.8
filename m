@@ -2,168 +2,140 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CFDC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311BEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0FA720678
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7899206F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:46:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vMm6h/ZB"
+	dkim=pass (2048-bit key) header.d=invensense.com header.i=@invensense.com header.b="eQIYaGMP";
+	dkim=pass (1024-bit key) header.d=invensense.onmicrosoft.com header.i=@invensense.onmicrosoft.com header.b="YZOGADGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390376AbgDCHoa (ORCPT
+        id S2390317AbgDCHqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 03:44:30 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51156 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388873AbgDCHoa (ORCPT
+        Fri, 3 Apr 2020 03:46:19 -0400
+Received: from mx0a-00328301.pphosted.com ([148.163.145.46]:30904 "EHLO
+        mx0a-00328301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389116AbgDCHqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 03:44:30 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t128so6152683wma.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 00:44:29 -0700 (PDT)
+        Fri, 3 Apr 2020 03:46:19 -0400
+Received: from pps.filterd (m0156134.ppops.net [127.0.0.1])
+        by mx0a-00328301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0337j7hQ010412
+        for <linux-kernel@vger.kernel.org>; Fri, 3 Apr 2020 00:46:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invensense.com; h=from : to :
+ subject : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=pfpt1; bh=GzCTbJ+07kHRAlKIsEbJt5ngQwRTIxGGugPS8trlEm0=;
+ b=eQIYaGMPIrFh1uIwxeyYl/U9t1mJuBZbvama2nzU7bBM4KrA8D1flVE5KksVHRIG6ypN
+ radytZFEAdyC1GQIO/iex6Qdq6zs7URkGSVE1HxAEmMvf8YPCLf/pV5/LZ5rJ9xBEPTQ
+ JIdIuCJ44tK4jbEDPGyulBU3l+FIbH1uKPIPiypj+I0v6R3HVjTVm2ihuUxQaR18RitE
+ GIWa3BnAefNnv0uCzLaStkWX64xZvkVnS8h3HqU8SxhfhCmVfB6cBS+FsVy38jKEcS1Y
+ XKq/Sz9TqzNCxNx1vf4f1luwcw4XfIg8MZT5fbbItHmKMfIU8HIVXgcu00rqfH3/dWjF aw== 
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2173.outbound.protection.outlook.com [104.47.58.173])
+        by mx0a-00328301.pphosted.com with ESMTP id 3053vw0mqq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 00:46:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EC9S19rbotpJo1Ntx34aGsVk6tO5DaADMGYGVDlixhZ+yWSNgVvg+VWtGIi7Gtk01aNEvW9Qx2rlxfIeQerl+9ujN011jllkjBkoz5ivKZHS3WYGxCALg1NAcoEho4Dvi9EeR2FPyQsaDOU8CVV0gtar9tghTogUzAGllmVGjYpzk7XjPZyndU5t1AvQdBANGtNCMfIOm2O8bH+yLeN/cQh38YovCcSpLGfTdMzpLnuOmr3GMz7Ry6HXjufpI+WeFyRokkNV+Ff+OFm6AJ1VIGeoIGK0N3ak/aMNBYDXNJB7UeDMtXvQEN22xLi+QlitfI8uIOBFl+L2fGlD4n0Pkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GzCTbJ+07kHRAlKIsEbJt5ngQwRTIxGGugPS8trlEm0=;
+ b=IEmqXGp2/kJxK/HvouC0k+QjeXVA7xxOL2TKHkni3VdELRLLt2Rbvnt4rZYx83LNKhzgvZ4TOI9jyz54EOjMDoDUkRKCFg2bPH1AJbp98ti7de6whC0YIOzkHLTSj6Es0ArE1nsOsYGK7VxPdWGnKMXSd2gy32zdzDZVmQIL0ADehnzei4B/TcdsW1kmplJ7tfaSAahjyxCu9kLm3qXKuC5q1dfer9NDjY6KmDJddV4Rje7Jl3LeJeu1WNUC7U3p8mi1qio0fRnohbhNFNUCZjJVkgOCyzzZiNXSYsip6t+645PRHxe0bR2kKWhC48L3h01+0yodPpXSbyzN075rfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=invensense.com; dmarc=pass action=none
+ header.from=invensense.com; dkim=pass header.d=invensense.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SK5TZMyPADiz9lPA4tN7KNl354WRdu5AzdV44f6b77I=;
-        b=vMm6h/ZBwLu7dr+LSxkMDOGeAfibGmXEGxAVenzMfVNy4Pko88T2Jcq/bKHAhmJaZJ
-         AJJm/WFkICfZoO0o5JRK2bLIB/SjVtEwCJicEXsbdyf5Gxv1/fAxkGMQ/ZeTuy+FjGTf
-         T2lYw8Xb5sTtLZmrJqmls06dS8DVxqtRzkQtjVIlz2wK459EwmWy+G+7IqSkIKPxjYGZ
-         kbQz4wUcjAxEOzUQrBDl75tkxXFSS141c9kvQVFd3IAD/o6IFX2bSB1LYM92gcB6BVMu
-         owqyhfZkMy58/NnQuyyC9X5jA1nSfm0aPbiaAM9hwyMi4MZlKcVFdk654x+UR8I3ka8N
-         mZFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=SK5TZMyPADiz9lPA4tN7KNl354WRdu5AzdV44f6b77I=;
-        b=eFO82JwfexehsjaVSRa8CQ6/CzzFp5ZvdPWUW1rz7xkduGXj3tPH0eBhz+5OKRnmjI
-         4sKh7BHN0/5giuFqpCnbLxxkgrqDjoQ9APBLv8RGZ005JM905TSdJdkbZUA6ISLyXpzk
-         1ZpOL38RYh5yxxKpwu5MDLkn8c5RT2vFAYwziRXvkjCCoKl8Y8JQNDM/ciEe0uvJdYCU
-         DfWIkj07j88VE1OrWoZ5FcI33ZCXEU04d+kIcn4hoB7GGL6Fy+qhODi4/LCjdI1Q1k/y
-         RQYVF7Le2bHqnC0a5DeU/Wf2Lv1f3xyM/5JBf4HaRDSKjN1ovhDjRJEMszRQppzZET0B
-         A9Sw==
-X-Gm-Message-State: AGi0PubXPRvcsJ+aLCHarIq+z4Bd1aOlwFAjZKpIRXJ+JPOvU9j0+qW5
-        /1FxtwmXvyiAbrPU54sSR4Gsq3m5yicqGg==
-X-Google-Smtp-Source: APiQypIUZNDrHwAO1tmJINP2Rv/tr1kJE5vqgm3/VUgkcPmobAGHKAFQznhv92Oxh4f8LW6rYlK/Hw==
-X-Received: by 2002:a1c:41d4:: with SMTP id o203mr7071415wma.1.1585899868366;
-        Fri, 03 Apr 2020 00:44:28 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id e5sm11161802wru.92.2020.04.03.00.44.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 00:44:27 -0700 (PDT)
-Subject: Re: [PATCH] crypto:amlogic - Delete duplicate dev_err in
- meson_crypto_probe()
-To:     Tang Bin <tangbin@cmss.chinamobile.com>, clabbe@baylibre.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net
-Cc:     linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200403015710.2764-1-tangbin@cmss.chinamobile.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <ab31f6e4-23cc-48f2-6d43-218e7fa652b9@baylibre.com>
-Date:   Fri, 3 Apr 2020 09:44:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200403015710.2764-1-tangbin@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8
+ d=invensense.onmicrosoft.com; s=selector2-invensense-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GzCTbJ+07kHRAlKIsEbJt5ngQwRTIxGGugPS8trlEm0=;
+ b=YZOGADGoHdRMdh1HqsGeHhowomXFlp0WtMawz0GQ1az6u3oU+HmE1J9MdyPHxgK9V48xp5brNRY9hisJhrqdYC87wJ17csqCojc0pxv1joml9aX67Ok36I7eTIM6dPdIY5+Xn4IGlAnRYhM06V42iEZPO4NNHXusPM926AIJaI4=
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com (2603:10b6:208:265::9)
+ by MN2PR12MB3727.namprd12.prod.outlook.com (2603:10b6:208:15a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Fri, 3 Apr
+ 2020 07:46:14 +0000
+Received: from MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::7471:da8b:8ca1:6af0]) by MN2PR12MB4422.namprd12.prod.outlook.com
+ ([fe80::7471:da8b:8ca1:6af0%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
+ 07:46:13 +0000
+From:   Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: regmap issue with ranges and noinc read
+Thread-Topic: regmap issue with ranges and noinc read
+Thread-Index: AQHWCYouzYcjR9f54kiGOXYXc1Kxkw==
+Date:   Fri, 3 Apr 2020 07:46:13 +0000
+Message-ID: <MN2PR12MB44229A91FD24E5020C202177C4C70@MN2PR12MB4422.namprd12.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [91.174.78.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b8ede01e-50ba-4f49-229d-08d7d7a315b3
+x-ms-traffictypediagnostic: MN2PR12MB3727:
+x-microsoft-antispam-prvs: <MN2PR12MB3727469BE73BC1C9B605D416C4C70@MN2PR12MB3727.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0362BF9FDB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4422.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(136003)(366004)(39850400004)(346002)(396003)(376002)(8936002)(76116006)(66446008)(52536014)(81156014)(66476007)(6506007)(66556008)(81166006)(7696005)(5660300002)(91956017)(316002)(64756008)(33656002)(71200400001)(478600001)(8676002)(9686003)(66946007)(2906002)(186003)(26005)(86362001)(55016002)(6916009);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: invensense.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VTuY2NcmTrxmipss+xxI/SLmKKEoPiG02VpzwgJTq22rdk4ZSjPzK+c0udoCMvwHeFn5zC9BAPHSGqQB80SY1kd8N6ET2y5xNsfylc4YsS1pZftQJxfN0shz+3JlXE90IVqkxZ94FgxQn7Bf9TMEnR8rWrXi1ZeZTQ9BVs/h4xtbq6XPxW7lwpPyuixDR5xMyYQYU1NhTmTBeIX41TW4LxnrNgyigKVYnHdaej+LTyJ08Vx5zCM4ikNZs0VE+h5RPoph6WiAL+7/3J9b1EkkbL2jCgyhbplFDeBbo7HFNJyjZg1vXnSutxqWHAOVGLwSa4f0Wlvsn0GkWA7t/dUd4LflFnRT3BW/6uRhaIgQBdPKsoGtaYNTts5Zi0+bg9ODPZhRIM2B9Hqa3a2hiqhZrPR+tzvh9RbCovagUzbQTNHZjwWy+VOW6puNP7UIbt0e
+x-ms-exchange-antispam-messagedata: ovi0C9qrw0QiYKcZRWlrsykBTwOZBupxnUTUtuTdrswN4Dwo6wNwiU+XQUfbP+nHacwtB78IgIWE8adznu2+uFpiZ/bJ0E6GEP1D4PCoWnPtYY6DW/NdrbN7RxmJ30X8JpmCmx+cBwFu56EMRkTDQA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: invensense.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8ede01e-50ba-4f49-229d-08d7d7a315b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 07:46:13.7846
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 462b3b3b-e42b-47ea-801a-f1581aac892d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w86sRjCuBTgCx1Kv+hyo+D1+izaBK8NFLI6eeT3YXggpaUreEn6NReNC0JdesBHmJC5miSTAlZqIRn0LfY99HROXAq/VYKdX3TWzWZdosTI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3727
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_05:2020-04-02,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=797
+ mlxscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
+ clxscore=1015 malwarescore=0 phishscore=0 priorityscore=1501 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004030065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject should be: "[PATCH v3] crypto:amlogic: Delete duplicate dev_err in meson_crypto_probe()"
-
-So for the next send, it will be "[PATCH v3] crypto: amlogic: ..."
-
-On 03/04/2020 03:57, Tang Bin wrote:
-> In this place, when something goes wrong, platform_get_irq() will
-> print an error message, so in order to avoid the situation of repeat
-> output，we should remove dev_err here.
-> 
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> ---
->  drivers/crypto/amlogic/amlogic-gxl-core.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
-> index 9d4ead2f7..411857fad 100644
-> --- a/drivers/crypto/amlogic/amlogic-gxl-core.c
-> +++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
-> @@ -253,10 +253,8 @@ static int meson_crypto_probe(struct platform_device *pdev)
->  	mc->irqs = devm_kcalloc(mc->dev, MAXFLOW, sizeof(int), GFP_KERNEL);
->  	for (i = 0; i < MAXFLOW; i++) {
->  		mc->irqs[i] = platform_get_irq(pdev, i);
-> -		if (mc->irqs[i] < 0) {
-> -			dev_err(mc->dev, "Cannot get IRQ for flow %d\n", i);
-> +		if (mc->irqs[i] < 0)
->  			return mc->irqs[i];
-> -		}
->  
->  		err = devm_request_irq(&pdev->dev, mc->irqs[i], meson_irq_handler, 0,
->  				       "gxl-crypto", mc);
-> 
-
-This is better.
-
-With the subject fixed, it will be ok.
-
-Neil
+Hello,=0A=
+=0A=
+I have an issue using regmap noinc read when using ranges.=0A=
+=0A=
+My device is 8-bits registers and 8-bits values and uses several register b=
+anks that you can switch using a bank register available on all banks.=0A=
+I am configuring regmap with 1 range with window len of 0x100 and using vir=
+tual register addresses like 0x0aRR, where a is the bank number and RR regi=
+ster address (0x0032 for register 0x32 in bank 0, and 0x0123 for register 0=
+x23 in bank 1). This is working pretty well so far.=0A=
+=0A=
+The device has in bank 0 a virtual register for reading a data FIFO, which =
+is larger than a bank (0x800, 2048). When using the regmap_noinc_read API f=
+or reading my FIFO, I am limited in size to not overflow the range window l=
+en. regmap is checking that and returns EINVAL in this case (check is done =
+inside _regmap_select_page called in _regmap_raw_read). It certainly makes =
+sense when using the standard remap_bulk_read API, but for the noinc_read w=
+here we are not reading continuous register this doesn't seem to be relevan=
+t. And this prevent the read of the entire FIFO data in this case.=0A=
+=0A=
+Is there any reason to check the range window len bounds for the noinc_read=
+ API or is this a bug?=0A=
+=0A=
+Thanks for your help.=0A=
+=0A=
+Best regards,=0A=
+JB=
