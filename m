@@ -2,142 +2,152 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DD4C2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26110C2BA18
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB2120787
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAD5206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="EjFlSsOU"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hf9DrYah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390557AbgDCIqF (ORCPT
+        id S2390563AbgDCIqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:46:05 -0400
-Received: from mail-eopbgr1400115.outbound.protection.outlook.com ([40.107.140.115]:63155
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727876AbgDCIqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:46:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nr/V3asjqMduLVCyc0ueWORVQwaCVblk+hSp3t9GeNWzqJtqZ32CnO6X4xPCNySKn0tbU4B+JbXS6OIjS/JAFzkk4OHmilQz1uiQSVUI5WpZJ6A+W6hPZ9Q3BULVbzt8x97Z9XO72Qs00vw6H/PvBqsIb22O6KHR1jxtUlu1PJJa2JwPEUDTggf7nApogfIXSVi9eKp7+qqo1sqn3KTTX5frsbuPg8XeoZ444whqXuTdAvn1/zo5mdVHXS3xu7vi90dhmWZWofPv7RsKdLk16K4QU5+Hm2MZRuAXB96AESp3I07pxERrTcvI7H2fjt4qUjAzr0zeL5RBeMEWOb9JhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N42OdNkqK4bOsQO0Ggz3XzzkvnH3BcwgXjGhbVe8U8Q=;
- b=m/rBLjjAD/DCPHX5499n4IEz27115y38krZZXG72MxXuW1z81pjzuV22eagOYt7K4coCJUMX81HpUxBJAy293L3QawIEU5A0OFmYkf9gV4ophIFI1nCXJQS+dqwzltQBLNZ+Adsg+LdWvKt2IUhcr7Kq3ycvM0lrAVaFFSJ2T1V1sg+wWKBPEt+WSKaMww1cn7DGzdzoQtXLKOv0TuMRau8ONelA0MEZvwu4pHTAMU/e8HXuCM7t4ylv3t8o+SHCHhIL5vSp9ohVsvKUWwQxrVvgNH9U4uz9Sj8MnzPhjroSDTafSyctimkWbupoCrbocxlloHnWB8COcdUjCHaXrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N42OdNkqK4bOsQO0Ggz3XzzkvnH3BcwgXjGhbVe8U8Q=;
- b=EjFlSsOUZu5KDHqaVXjL6X6w61hp5OkFy9VKZo9YyT8Gk+T5uLWMEwEGMaF7uDBoWh2KAl7oY6L1oqaeyYFgvXJW5MYt8AHFbhbP7wNk3WlHFSMrh3nhllqRGgMYQI1eHekNzkFog6KKPw7a0t7oc6evFxT78yR3T/fP1UmgJ3c=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB4958.jpnprd01.prod.outlook.com (20.179.186.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Fri, 3 Apr 2020 08:46:01 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
- 08:46:01 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v6 09/11] PCI: Add Renesas R8A774C0 device ID
-Thread-Topic: [PATCH v6 09/11] PCI: Add Renesas R8A774C0 device ID
-Thread-Index: AQHWCSZ+0p3wXypTI0ic4GUPb70TfahnFeXQ
-Date:   Fri, 3 Apr 2020 08:46:01 +0000
-Message-ID: <TYAPR01MB454419FA48A7B700E8F627DDD8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1585856319-4380-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1585856319-4380-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 11e895f9-8d2d-46d6-7a28-08d7d7ab6fde
-x-ms-traffictypediagnostic: TYAPR01MB4958:|TYAPR01MB4958:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB4958E85D132633B3DE711618D8C70@TYAPR01MB4958.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(55236004)(110136005)(107886003)(5660300002)(7696005)(2906002)(8676002)(186003)(9686003)(86362001)(71200400001)(81166006)(66476007)(64756008)(76116006)(54906003)(4326008)(66446008)(6506007)(8936002)(55016002)(66556008)(558084003)(81156014)(316002)(66946007)(33656002)(52536014)(7416002)(478600001)(26005)(921003)(1121003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EkE99+6GdfL5u4/wVTBUXPRhFL0d1uO0V4sEMz+/udklClDTQ/IlfOQAOMNET2C6PHPEcokYHWBolkLXFn4QLoQGInGhdOAyU4iKg34f4II3DnE0LSObkSA74/e+2gpUzKWh6pPYmjYLz6cNIfLd5LHH7LA6AhWvkhDeZAs/Vlqc1DhJyttTQl9BNoPBlOS4GA4eH4t5zXskxI5Hm7zvgQDtHtvVIN9w5PobZiyxM6F4lYzgPl7/Hk7W0+4wirW5eC1gXOu5rKcx8p23ZMYqZZR/R0MZZYeArZrJKwM+Zuo4OD+ub+hYA+y0fgM/HetSEk8t7FFtxfdJMPXOUs/BhzKTajMM7tpHl0ZtBwJP26OCwLFgMV+ZbzH+bdYYopGSCVRH+7qsx2h0EdxGHgyDe0bKwdUxVKN1eYMUIVsq9Yxejd/yGGytLI6UosEjp4srBmVGWt0zigNq09L6C1lf5meirG3zED/wicybUvhZuCvqKkyzlxod75yNOYNyR/e/
-x-ms-exchange-antispam-messagedata: DXf7p/NqWiwiVfaimAcx+YFPSSvwBA1f17LNuvVyncuDiKHwU9unDjj3X+55uYcuejYhgwdVhTDCH+Y4HDk+0pZ6IM1qBImCpMhiPjYP9FqsEE1Zz2qbnWTyQin6X7FHbRoGOmS7CvfFzMGuHLYuYQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 3 Apr 2020 04:46:23 -0400
+Received: from mout.web.de ([212.227.17.11]:48329 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727876AbgDCIqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:46:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1585903527;
+        bh=Vpz6XPOiR0eFsWz4pmEGbilzDuLBi/PkgsMquA3H+w0=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=hf9DrYahRNJTRCUbNMGTWJ5DZGZHDI0nDE8vCJnEVzHiaEg7vRYoCZJlQaHUwiX4Y
+         DOzz1YIwQ5PTjbLBp4xla2hvNSHx6pnmwM+pU6m6crc9hUjCyzmIBtdkvNSjn3Dfmv
+         U3cbVWOTSfFeQuOrAD5YhC6wApc87omT5qhkrj7I=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.135.25.116]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MS290-1jmExR1xtq-00TDjC; Fri, 03
+ Apr 2020 10:45:27 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Corentin Labbe <clabbe@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] crypto: amlogic - Delete duplicate dev_err in
+ meson_crypto_probe()
+To:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e1916128-6554-ea57-49ef-e4ad7b0d7229@web.de>
+Date:   Fri, 3 Apr 2020 10:45:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11e895f9-8d2d-46d6-7a28-08d7d7ab6fde
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 08:46:01.0336
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QdvUtspfL0YH382ihlTae2nua9qdkIZJkmxOJM3s6PmyE5I0a/5VXT3xstcek0KoipFTNf0T7JKF/9qRSghBjWibA4YChYDCEPBbxMnU+SCdT9H9ZVLilj3gLwx72j5G
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4958
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MSu6HIVdeTHd2XyP5jXiajKNJGqrJGBmMR9QwzjWrokVW3SDI0d
+ //KW+9njLxsG7E4F+xSe3adwMVsxeP1uwoHkGaNEeBhh6oXt0Sx6BqZ51Q1pausQgQWO173
+ tfsjgCHuyd8NOxY+PMzxsDWyvNQ+eaJgnteiTlvoNRI+IWF/EpFl1mVZsLAakKsfnhCzD/7
+ SRfylTPckJwaILkP8SZfw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jix0vBawNm8=:6RYvzk3+EjPdl28Y7TcoGf
+ H68cR5Aih0J5sXr0BgkSE3zjlixchXXTsFWFSdKvZHCTLh9YdAkByHu8VI1qewhN6nw4Vtcis
+ y+q/tOqXZIvY0lfjQxNRmPU2BTpMU1RsVIP7IOK9aGnaLpOlIefxwx8NtuMVAj7kG5r/W2WIl
+ F7U7me4WC29CTT28jCF0/PGrOR9wYj1p76kRJmAZdbwMBMU9Jg9AL813C/gwzN9gqjp5zOMkA
+ gXda9kfz3kCoCPGgwQFMHqC3WSW+uXVTqPseibl1WA+QQmFn5OFVmJdoBeiebbOFPkRTL/Y2D
+ wSRDJssIn5qJrTWl7An2iiNlJfp2x93gt51x3fJ9CUK7UACbU6l730wLP+S7JbI5+rAnoAsWp
+ rK2ckbmzmYOyWYT1UtCUPyP/Wi721iBF3j6ycV0bjm8oVDlCkvZUNmv+6vE4mJ6uRZvsvl3sL
+ EBWAggx22c20zABttCVMrlLanQ1hDlfx9i5MiWAEpodkonQBDU5MzZUA9fd3Wfsb74ZAbCuPG
+ QVYYa/2ClSM9/4nM8IVdThLKlEBMQSy0eQJyb4c9VeM12lrZV37QFYe6o27JKfcvd05CqHmpr
+ 1C/V1JfrUIl8a2MknwulLbIHifg3e+B1ohCJjtRBfxovIeDoPatVJaG/cB6OflFmqNpbwFVHX
+ uuqDYRM596DrKwbys7jgdiKzRECtM1rEDi8iNu5nTznrMcANNcxEY1MPA4HlvoQm19FD7vwFP
+ 9WStSEHKjP6OIJ+SZpXniexLvyFmBAG9lXWLaEktB2++2/k9nK0HxK4Vhj38AWVBKlKyRwVc+
+ tuLjjEQWYIjbVVO82nGqMlSRSAnxjjqT6PLf8njL87McIKSZfm3r28gPuddHzDXkZa8IOZ3P8
+ qUjhT9moNWC0iPcukvYXQtf44nexk+FkBBqCaES+vAqVkHqW9rws89QofmVOQCkATHy7D6bPm
+ 0kRzK+opcWE6TgQV3KOHyInXdmhehaO8RKiIPi8Xj8aLZ1Jpv2eEwy2f9INEp905N3cZtRqJY
+ sunjZPQeWkmSqdTMNdx+p6TKGdZyRKCAIMuBiTkyiXEjX9nY2+UKx2EKN2e2jwS/SAZT6b6GP
+ Po9GvlcLxp3GS8h3YcV57zISO5uQOoDzILvkiwL/vMiZ3t3D10koclmJDxf+A8SjfKfOIKWUE
+ A2UGNLxP9+XagfcKwgpplxHZXTu8mohH/e+FJ0xQzwn6G/dHScpYCLrJv5Z+gbgk9bhS6XAJO
+ ww/1GWOfW4J/LEwfB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar-san,
+> In this place,
 
-> From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:39 AM
->=20
-> Add R8A774C0 device ID so that this can be used by
-> pci_endpoint_test driver.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+I suggest to omit such a wording from the change description.
 
-Thank you for the patch!
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> when something goes wrong, platform_get_irq() will
+> print an error message,
 
-Best regards,
-Yoshihiro Shimoda
+This information is helpful here.
 
+
+> so in order to avoid the situation of repeat output=EF=BC=8C
+
+Possible adjustments:
+* Separate sentences
+
+* =E2=80=9Crepeated output=E2=80=9D
+
+
+> we should remove dev_err here.
+
+Thus remove a redundant function call.
+
+
+How do you think about to change any more source files in a systematic way=
+?
+
+Regards,
+Markus
