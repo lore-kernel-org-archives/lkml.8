@@ -2,136 +2,185 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B23BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A926C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C7020721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ves+3435"
+	by mail.kernel.org (Postfix) with ESMTP id 4318520721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390506AbgDCIP1 (ORCPT
+        id S2390510AbgDCIRv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:15:27 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46445 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390493AbgDCIP1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:15:27 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r7so5983780ljg.13;
-        Fri, 03 Apr 2020 01:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xULmbnigaj/k48l6kNwyFcGwHPYsq90A4ICZ4qM/NnA=;
-        b=Ves+3435IKbJxDL7FRv9swcqnzkV4kRiqpXzMND9PHZfJr07xy/BSPJ9N8mMrPF7Py
-         GpcqqWz5qMmtk17989l45cMJhU+6t8wnOy2ezo3l3IiY2DZ8OxFeTg1aYwyY6L9gEjc/
-         kVFsq9qZHGDHfEw57r2lbFcYxXvsbgviJ53aAi0bJFje6k8RiVw+oUNTk/b17TRVIvJI
-         ItQLgB4p//nq4JUJL4Ts3xaBrrwTmLJYIZtvOGJOQwetnaEsTY8V+Apa9HwBf+2S37mR
-         XVImlUuZ1CfuLVlPNgD4VunZZu3KoXhrsrIiEQaxbzrsHAfFMgV+ujSQmxjH87wnUtRV
-         HulA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xULmbnigaj/k48l6kNwyFcGwHPYsq90A4ICZ4qM/NnA=;
-        b=q9uYVY8D8Rq+XVRn8ISYdod5wmRgGBXG/k6eRlJ/GTpk7tCIdJnLG0lW/Mib+dB/Ad
-         oDsH3h8aBZFY6XiUqjXoxuj4FuJmjEZY779J5F45CG66+qU4+OrEpxXfiI+O4IcXHTze
-         4+CfjNfTsq35QaaXnsNonFroDSXed6aAH0dW1WmP/ObR2W6ylW3Joraj3xu8tVFYgdn8
-         w3mlMdHhp8t2yZMtw1oJ9NmY2C5w0xVrLownzDgl25NzsTx9G8OPmjMGHymQfOFyu/x5
-         4Q02FtwAsY026arldPOWAnkBcsDC2gOY7lrR7OeMVlJDIMDoJIkfCUwEz9SUcYHW7cTg
-         vdrg==
-X-Gm-Message-State: AGi0PuZk9IlAsRU/fhy08MY4YzFyXgmhjVzB4F57q9uuhlw9uTKvIS8H
-        /N6ZPCl6p8L1POQ4ptiDmp5yeeHvSgzHZgswCt0=
-X-Google-Smtp-Source: APiQypIFN3V/gBbR2aRhH32fQnbna2itH9wMXLg0XTnMezep0xFxf8nb1vibli9SR0XIwTtyBKw8J/OWkox62p7hygs=
-X-Received: by 2002:a2e:9b07:: with SMTP id u7mr4094550lji.110.1585901722773;
- Fri, 03 Apr 2020 01:15:22 -0700 (PDT)
+        Fri, 3 Apr 2020 04:17:51 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21515 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390467AbgDCIRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:17:51 -0400
+IronPort-SDR: VqAncYQ/fwR8Wx+LIoRTkBxW0HZ95Jtfuq++7ZO8RLgmm9Grl7AakO/9nPHfSUj/7gUg8m3+9n
+ rujJiNe0kiJg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 01:17:51 -0700
+IronPort-SDR: G6b6slSIE/t2d13pNmA/tIbwsDvao3N24PZCcZsdrf55GWQvM/6MbJhOv+kyDytmBX+dj+aTqQ
+ bqYzx7NKrBRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
+   d="scan'208";a="268289774"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga002.jf.intel.com with ESMTP; 03 Apr 2020 01:17:49 -0700
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Apr 2020 01:17:49 -0700
+Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Apr 2020 01:17:49 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
+ Fri, 3 Apr 2020 16:17:45 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
+ userspace
+Thread-Topic: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
+ userspace
+Thread-Index: AQHWAEUdmZ6qeWVhq0GPreoHiPHgtahlqq4AgAF03/A=
+Date:   Fri, 3 Apr 2020 08:17:44 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A220662@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-4-git-send-email-yi.l.liu@intel.com>
+ <20200402120100.19e43c72@w520.home>
+In-Reply-To: <20200402120100.19e43c72@w520.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200326135258.2764f0de@canb.auug.org.au> <20200401121431.6a996244@canb.auug.org.au>
-In-Reply-To: <20200401121431.6a996244@canb.auug.org.au>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Fri, 3 Apr 2020 16:15:11 +0800
-Message-ID: <CADBw62qar4qPJmjZj1+9tb6sgqUcCrjei6G62wPaH=YVf48=zA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 9:14 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> On Thu, 26 Mar 2020 13:52:58 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> From: Alex Williamson < alex.williamson@redhat.com >
+> Sent: Friday, April 3, 2020 2:01 AM
+> To: Liu, Yi L <yi.l.liu@intel.com>
+> Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
+> userspace
+> 
+> On Sun, 22 Mar 2020 05:32:00 -0700
+> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> 
+> > From: Liu Yi L <yi.l.liu@intel.com>
 > >
-> > Hi all,
+> > This patch reports PASID alloc/free availability to userspace (e.g.
+> > QEMU) thus userspace could do a pre-check before utilizing this feature.
 > >
-> > After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
-> > failed like this:
-> >
-> > drivers/power/reset/sc27xx-poweroff.c: In function 'sc27xx_poweroff_shutdown':
-> > drivers/power/reset/sc27xx-poweroff.c:38:4: error: implicit declaration of function 'cpu_down' [-Werror=implicit-function-declaration]
-> >    38 |    cpu_down(cpu);
-> >       |    ^~~~~~~~
-> >
-> > Caused by commit
-> >
-> >   33c3736ec888 ("cpu/hotplug: Hide cpu_up/down()")
-> >
-> > interacting with commit
-> >
-> >   274afbc3ad33 ("power: reset: sc27xx: Change to use cpu_down()")
-> >
-> > from the battery tree.
-> >
-> > I have added the following merge fix patch:
-> >
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Thu, 26 Mar 2020 13:42:00 +1100
-> > Subject: [PATCH] power: reset: sc27xx: use remove_cpu instead of cpu_down
-> >
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Eric Auger <eric.auger@redhat.com>
+> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 > > ---
-> >  drivers/power/reset/sc27xx-poweroff.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >  drivers/vfio/vfio_iommu_type1.c | 28 ++++++++++++++++++++++++++++
+> >  include/uapi/linux/vfio.h       |  8 ++++++++
+> >  2 files changed, 36 insertions(+)
 > >
-> > diff --git a/drivers/power/reset/sc27xx-poweroff.c b/drivers/power/reset/sc27xx-poweroff.c
-> > index 69863074daf6..90287c31992c 100644
-> > --- a/drivers/power/reset/sc27xx-poweroff.c
-> > +++ b/drivers/power/reset/sc27xx-poweroff.c
-> > @@ -35,7 +35,7 @@ static void sc27xx_poweroff_shutdown(void)
-> >
-> >       for_each_online_cpu(cpu) {
-> >               if (cpu != smp_processor_id())
-> > -                     cpu_down(cpu);
-> > +                     remove_cpu(cpu);
-> >       }
-> >  #endif
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> > b/drivers/vfio/vfio_iommu_type1.c index e40afc0..ddd1ffe 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -2234,6 +2234,30 @@ static int vfio_iommu_type1_pasid_free(struct
+> vfio_iommu *iommu,
+> >  	return ret;
 > >  }
-> > --
-> > 2.25.0
->
-> This fixup is now needed when the battery tree is merged into Linus' tree.
+> >
+> > +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
+> > +					 struct vfio_info_cap *caps)
+> > +{
+> > +	struct vfio_info_cap_header *header;
+> > +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
+> > +
+> > +	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
+> > +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
+> > +	if (IS_ERR(header))
+> > +		return PTR_ERR(header);
+> > +
+> > +	nesting_cap = container_of(header,
+> > +				struct vfio_iommu_type1_info_cap_nesting,
+> > +				header);
+> > +
+> > +	nesting_cap->nesting_capabilities = 0;
+> > +	if (iommu->nesting) {
+> > +		/* nesting iommu type supports PASID requests (alloc/free) */
+> > +		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static long vfio_iommu_type1_ioctl(void *iommu_data,
+> >  				   unsigned int cmd, unsigned long arg)  { @@ -
+> 2283,6 +2307,10 @@
+> > static long vfio_iommu_type1_ioctl(void *iommu_data,
+> >  		if (ret)
+> >  			return ret;
+> >
+> > +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> >  		if (caps.size) {
+> >  			info.flags |= VFIO_IOMMU_INFO_CAPS;
+> >
+> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > index 298ac80..8837219 100644
+> > --- a/include/uapi/linux/vfio.h
+> > +++ b/include/uapi/linux/vfio.h
+> > @@ -748,6 +748,14 @@ struct vfio_iommu_type1_info_cap_iova_range {
+> >  	struct	vfio_iova_range iova_ranges[];
+> >  };
+> >
+> > +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  2
+> > +
+> > +struct vfio_iommu_type1_info_cap_nesting {
+> > +	struct	vfio_info_cap_header header;
+> > +#define VFIO_IOMMU_PASID_REQS	(1 << 0)
+> > +	__u32	nesting_capabilities;
+> > +};
+> > +
+> >  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+> >
+> >  /**
+> 
+> I think this answers my PROBE question on patch 1/. 
+yep.
+> Should the quota/usage be exposed to the user here?  Thanks,
 
-Thanks Stephen.
+Do you mean report the quota available for this user in this cap info as well?
+For usage, do you mean the alloc and free or others?
 
-Sebastian, could you pick up this patch to avoid the compiling issue? Thanks.
-
--- 
-Baolin Wang
+Regards,
+Yi Liu
