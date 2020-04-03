@@ -2,392 +2,399 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC9AC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3392C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F3F207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:17:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p8ulibXM"
+	by mail.kernel.org (Postfix) with ESMTP id A8BCA2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585934251;
+	bh=l1eZzuSrsJENZVUI62o3D9oiO2GXFnr80ZvHYvbnZdI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wBvDcPNt2PmmwR/zK6MD9HNExaGOG1EUO8WmPRnbNTRgu46iDubllwFFKuTgqx3Wj
+	 iOSsfyr898WynaCNuHJokEeGSzPa3dIZ2EsUhzMASIvRUlqGLMOkjzDi5qP88AMC9L
+	 UCJ7C2wofxriIXhL5szMqkh70B15NBxJVQ9C8+c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404132AbgDCRR2 (ORCPT
+        id S2404159AbgDCRRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:17:28 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54107 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403834AbgDCRR2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:17:28 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d77so7933180wmd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 10:17:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fiyLiEQCjzFCZ/HdRdxYlu8TdBvUIdiFWSO5Ut+t7qk=;
-        b=p8ulibXMca4Td1MRyVPlE10431BT1QNm4P/I2k2DIAewf0Ex0oII+Jf1JWC8RTLH9n
-         a8oTjB3Pg4DiUDnzUzfm2OVSoY3e/T6UrwjPTTTgw85Sec5EU2mGizkI5+6Fqv+gLO3F
-         xvuGlcomQOl4vm6eYydnFqMgSVXMZ69MOrt5ApbIaFremwguhcWjw66qqiDL1MieIysU
-         aLHTfQKpf2jtJiCD5jil3+Vk0qxySEjm/Ip+EWbbmy8b/5RODfV/H0cJzbU317p6DmwP
-         yoCHXgo+qVuTgEiniVJZIOwkNSE4i+76cmiAUQWcBCeVfSGnqlf+4mj5wcB/5fgCRpiZ
-         b2Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fiyLiEQCjzFCZ/HdRdxYlu8TdBvUIdiFWSO5Ut+t7qk=;
-        b=RZhpq7MXkeedx5n6b6VwENHgckdO7sYOOeAbjnJS9PwQTSEXi1INZeBsPy/XAycpT9
-         3qOjCjsy5jMabPI5IJtJD7UqsrP3tE0Fa3vINHh4bzi32uttuweGDQpjhVd6Fl8YKtPi
-         YCFn2gEm/70xoloCsUYJMcb62up3gRmEHU/sCP2x4PcmdNTZX5CrlkZkdP82nwpvJL8K
-         cG9FxLZcKGVPaTlRyxxsyrycyv2W26cCfhkdtvA5ztoApy/OGDTBgRPMwgH72iEtsdAW
-         /7sS3r5XdAizfkNcB62UtDgmOFXT21hsNcDctRv+SXleQf6i0TansoDPd8/7XuA93sPk
-         IbYw==
-X-Gm-Message-State: AGi0PuZmszuchzSb3OQVVGMK+FvJniDYe+/I+EzVHdzAxb4sq8xNN6Ut
-        BUKoVYBr+ErlhaADuPVpqWRgfNuqJa0kKfHwMqSBDA==
-X-Google-Smtp-Source: APiQypI59kkjNC4NlwfUR28/V2xN/BhC9qJgFAy4BOdpyHK/hqH2SXTJLceymVY+krgQU9XJiLffPL1oLaAXOADSHTA=
-X-Received: by 2002:a1c:750f:: with SMTP id o15mr10014390wmc.110.1585934245587;
- Fri, 03 Apr 2020 10:17:25 -0700 (PDT)
+        Fri, 3 Apr 2020 13:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404106AbgDCRR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 13:17:29 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48284206F5;
+        Fri,  3 Apr 2020 17:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585934248;
+        bh=l1eZzuSrsJENZVUI62o3D9oiO2GXFnr80ZvHYvbnZdI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GQ0NugnxdDmDJx3SHy7mG+wP3jTt75lc4LruQ3F0OWq95g6nR45pMw0xWQ88Jxw+h
+         A6epIwW/2uGMdtn1MBfy//xPU+evKjnEsrcRuPTkhJp5fJgDUH02KX9WHvDQ/K9Zql
+         qWFh7hW+6EhbsQ+r2Z2aue3H0ZNXbI2j2A6V+Mzk=
+Date:   Fri, 3 Apr 2020 10:17:27 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Sahitya Tummala <stummala@codeaurora.org>
+Cc:     Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] f2fs: prevent meta updates while checkpoint is in
+ progress
+Message-ID: <20200403171727.GB68460@google.com>
+References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
+ <20200331035419.GB79749@google.com>
+ <20200331090608.GZ20234@codeaurora.org>
+ <20200331184307.GA198665@google.com>
+ <20200401050801.GA20234@codeaurora.org>
 MIME-Version: 1.0
-References: <20200402204639.161637-1-trishalfonso@google.com>
- <20200402204639.161637-2-trishalfonso@google.com> <CAAeHK+xFLmnAHPPCrmmqb1of7+cZmvKKPgAMACjArrLChG=xDw@mail.gmail.com>
-In-Reply-To: <CAAeHK+xFLmnAHPPCrmmqb1of7+cZmvKKPgAMACjArrLChG=xDw@mail.gmail.com>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Fri, 3 Apr 2020 10:17:14 -0700
-Message-ID: <CAKFsvUKZFiiLFGcFykLoXhK1ehc-T=c6EkHf1UNmQRJc=uBQXg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] KUnit: KASAN Integration
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401050801.GA20234@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 6:20 AM Andrey Konovalov <andreyknvl@google.com> wro=
-te:
->
-> On Thu, Apr 2, 2020 at 10:46 PM 'Patricia Alfonso' via kasan-dev
-> <kasan-dev@googlegroups.com> wrote:
-> >
-> > Integrate KASAN into KUnit testing framework.
-> >         - Fail tests when KASAN reports an error that is not expected
-> >         - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN
-> >         tests
-> >         - Expected KASAN reports pass tests and are still printed when =
-run
-> >         without kunit_tool (kunit_tool still bypasses the report due to=
- the
-> >         test passing)
-> >         - KUnit struct in current task used to keep track of the curren=
-t
-> >         test from KASAN code
-> >
-> > Make use of "[PATCH v3 kunit-next 1/2] kunit: generalize
-> > kunit_resource API beyond allocated resources" and "[PATCH v3
-> > kunit-next 2/2] kunit: add support for named resources" from Alan
-> > Maguire [1]
-> >         - A named resource is added to a test when a KASAN report is
-> >          expected
-> >         - This resource contains a struct for kasan_data containing
-> >         booleans representing if a KASAN report is expected and if a
-> >         KASAN report is found
-> >
-> > [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-sen=
-d-email-alan.maguire@oracle.com/T/#t)
-> >
-> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> > ---
-> >  include/kunit/test.h  |  5 ++++
-> >  include/linux/kasan.h |  6 +++++
-> >  lib/kunit/test.c      | 13 ++++++----
-> >  lib/test_kasan.c      | 56 +++++++++++++++++++++++++++++++++++++++----
-> >  mm/kasan/report.c     | 30 +++++++++++++++++++++++
-> >  5 files changed, 101 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index ac59d18e6bab..1dc3d118f64b 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -225,6 +225,11 @@ struct kunit {
-> >         struct list_head resources; /* Protected by lock. */
-> >  };
-> >
-> > +static inline void kunit_set_failure(struct kunit *test)
-> > +{
-> > +       WRITE_ONCE(test->success, false);
-> > +}
-> > +
-> >  void kunit_init_test(struct kunit *test, const char *name, char *log);
-> >
-> >  int kunit_run_tests(struct kunit_suite *suite);
-> > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> > index 5cde9e7c2664..148eaef3e003 100644
-> > --- a/include/linux/kasan.h
-> > +++ b/include/linux/kasan.h
-> > @@ -14,6 +14,12 @@ struct task_struct;
-> >  #include <asm/kasan.h>
-> >  #include <asm/pgtable.h>
-> >
-> > +/* kasan_data struct is used in KUnit tests for KASAN expected failure=
-s */
-> > +struct kunit_kasan_expectation {
-> > +       bool report_expected;
-> > +       bool report_found;
-> > +};
-> > +
-> >  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
-> >  extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
-> >  extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
-> > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > index 2cb7c6220a00..030a3281591e 100644
-> > --- a/lib/kunit/test.c
-> > +++ b/lib/kunit/test.c
-> > @@ -10,16 +10,12 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/kref.h>
-> >  #include <linux/sched/debug.h>
-> > +#include <linux/sched.h>
-> >
-> >  #include "debugfs.h"
-> >  #include "string-stream.h"
-> >  #include "try-catch-impl.h"
-> >
-> > -static void kunit_set_failure(struct kunit *test)
-> > -{
-> > -       WRITE_ONCE(test->success, false);
-> > -}
-> > -
-> >  static void kunit_print_tap_version(void)
-> >  {
-> >         static bool kunit_has_printed_tap_version;
-> > @@ -288,6 +284,10 @@ static void kunit_try_run_case(void *data)
-> >         struct kunit_suite *suite =3D ctx->suite;
-> >         struct kunit_case *test_case =3D ctx->test_case;
-> >
-> > +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> > +       current->kunit_test =3D test;
-> > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
-> > +
-> >         /*
-> >          * kunit_run_case_internal may encounter a fatal error; if it d=
-oes,
-> >          * abort will be called, this thread will exit, and finally the=
- parent
-> > @@ -603,6 +603,9 @@ void kunit_cleanup(struct kunit *test)
-> >                 spin_unlock(&test->lock);
-> >                 kunit_remove_resource(test, res);
-> >         }
-> > +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> > +       current->kunit_test =3D NULL;
-> > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
-> >  }
-> >  EXPORT_SYMBOL_GPL(kunit_cleanup);
-> >
-> > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > index 3872d250ed2c..dbfa0875ee09 100644
-> > --- a/lib/test_kasan.c
-> > +++ b/lib/test_kasan.c
-> > @@ -23,12 +23,60 @@
-> >
-> >  #include <asm/page.h>
-> >
-> > -/*
-> > - * Note: test functions are marked noinline so that their names appear=
- in
-> > - * reports.
-> > +#include <kunit/test.h>
-> > +
-> > +static struct kunit_resource resource;
-> > +static struct kunit_kasan_expectation fail_data;
-> > +static bool multishot;
-> > +static int orig_panic_on_warn;
-> > +
-> > +static int kasan_test_init(struct kunit *test)
-> > +{
-> > +       /*
-> > +        * Temporarily enable multi-shot mode and set panic_on_warn=3D0=
-.
-> > +        * Otherwise, we'd only get a report for the first case.
-> > +        */
-> > +       multishot =3D kasan_save_enable_multi_shot();
-> > +
-> > +       orig_panic_on_warn =3D panic_on_warn;
-> > +       panic_on_warn =3D 0;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static void kasan_test_exit(struct kunit *test)
-> > +{
-> > +       kasan_restore_multi_shot(multishot);
-> > +
-> > +       /* Restore panic_on_warn */
->
-> Nit: no need for this comment, I think it's clear that here we're
-> restoring stuff we saved in kasan_test_init().
->
-Okay!
+On 04/01, Sahitya Tummala wrote:
+> Hi Jaegeuk,
+> 
+> Got it.
+> The diff below looks good to me.
+> Would you like me to test it and put a patch for this?
 
-> > +       panic_on_warn =3D orig_panic_on_warn;
-> > +}
-> > +
-> > +/**
-> > + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expressi=
-on does
-> > + * not cause a KASAN error. This uses a KUnit resource named "kasan_da=
-ta." Do
-> > + * Do not use this name for a KUnit resource outside here.
-> > + *
-> >   */
-> > +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
-> > +       struct kunit_resource *res; \
-> > +       struct kunit_kasan_expectation *kasan_data; \
-> > +       fail_data.report_expected =3D true; \
-> > +       fail_data.report_found =3D false; \
-> > +       kunit_add_named_resource(test, \
-> > +                               NULL, \
-> > +                               NULL, \
-> > +                               &resource, \
-> > +                               "kasan_data", &fail_data); \
-> > +       condition; \
-> > +       res =3D kunit_find_named_resource(test, "kasan_data"); \
->
-> Is res going to be =3D=3D &resource here? If so, no need to call
-> kunit_find_named_resource().
->
+Sahitya, Chao,
 
-You're right. Thanks for the suggestion!
+Could you please take a look at this patch and test intensively?
 
-> > +       kasan_data =3D res->data; \
-> > +       KUNIT_EXPECT_EQ(test, \
-> > +                       kasan_data->report_expected, \
-> > +                       kasan_data->report_found); \
->
-> Nit: no need to add kasan_data var, just use resource.data->report_expect=
-ed.
->
+Thanks,
 
-I can probably just use fail_data->report_expected, actually.
+From b9126ba7437602d7945c420eb2eb411f9cb95600 Mon Sep 17 00:00:00 2001
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+Date: Tue, 31 Mar 2020 11:43:07 -0700
+Subject: [PATCH] f2fs: refactor resize_fs to avoid meta updates in progress
 
-> > +       kunit_put_resource(res); \
-> > +} while (0)
-> >
-> > -static noinline void __init kmalloc_oob_right(void)
-> >  {
-> >         char *ptr;
-> >         size_t size =3D 123;
-> > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > index 5ef9f24f566b..497477c4b679 100644
-> > --- a/mm/kasan/report.c
-> > +++ b/mm/kasan/report.c
-> > @@ -32,6 +32,8 @@
-> >
-> >  #include <asm/sections.h>
-> >
-> > +#include <kunit/test.h>
-> > +
-> >  #include "kasan.h"
-> >  #include "../slab.h"
-> >
-> > @@ -455,12 +457,35 @@ static bool report_enabled(void)
-> >         return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
-> >  }
-> >
-> > +#if IS_ENABLED(CONFIG_KUNIT)
-> > +void kasan_update_kunit_status(struct kunit *cur_test)
->
-> This isn't used outside of report.c, right? Then _static_ void
-> kasan_update_kunit_status().
->
+Sahitya raised an issue:
+- prevent meta updates while checkpoint is in progress
 
-Correct.
+allocate_segment_for_resize() can cause metapage updates if
+it requires to change the current node/data segments for resizing.
+Stop these meta updates when there is a checkpoint already
+in progress to prevent inconsistent CP data.
 
-> > +{
-> > +       struct kunit_resource *resource;
-> > +       struct kunit_kasan_expectation *kasan_data;
-> > +
-> > +       if (!kunit_find_named_resource(cur_test, "kasan_data")) {
-> > +               kunit_set_failure(cur_test);
-> > +               return;
-> > +       }
-> > +
-> > +       resource =3D kunit_find_named_resource(cur_test, "kasan_data");
->
-> Do this before the if above, and then check if (!resource), will save
-> you a call to kunit_find_named_resource().
->
-> > +       kasan_data =3D resource->data;
-> > +       kasan_data->report_found =3D true;
->
-> No need for kasan_data var (if it can't be NULL or something), just do:
->
-> resource->data->report_found =3D true;
->
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/checkpoint.c        |   6 ++-
+ fs/f2fs/f2fs.h              |   2 +-
+ fs/f2fs/file.c              |   5 +-
+ fs/f2fs/gc.c                | 105 +++++++++++++++++++-----------------
+ fs/f2fs/super.c             |   1 -
+ include/trace/events/f2fs.h |   4 +-
+ 6 files changed, 66 insertions(+), 57 deletions(-)
 
-The compiler seems to really hate this...
-mm/kasan/report.c: In function =E2=80=98kasan_update_kunit_status=E2=80=99:
-mm/kasan/report.c:471:16: warning: dereferencing =E2=80=98void *=E2=80=99 p=
-ointer
-  471 |  resource->data->report_found =3D true;
-      |                ^~
-mm/kasan/report.c:471:16: error: request for member =E2=80=98report_found=
-=E2=80=99 in
-something not a structure or union
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index 852890b72d6ac..531995192b714 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1553,7 +1553,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 			return 0;
+ 		f2fs_warn(sbi, "Start checkpoint disabled!");
+ 	}
+-	mutex_lock(&sbi->cp_mutex);
++	if (cpc->reason != CP_RESIZE)
++		mutex_lock(&sbi->cp_mutex);
+ 
+ 	if (!is_sbi_flag_set(sbi, SBI_IS_DIRTY) &&
+ 		((cpc->reason & CP_FASTBOOT) || (cpc->reason & CP_SYNC) ||
+@@ -1622,7 +1623,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+ 	f2fs_update_time(sbi, CP_TIME);
+ 	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
+ out:
+-	mutex_unlock(&sbi->cp_mutex);
++	if (cpc->reason != CP_RESIZE)
++		mutex_unlock(&sbi->cp_mutex);
+ 	return err;
+ }
+ 
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index be02a5cadd944..f9b2caa2135bd 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -193,6 +193,7 @@ enum {
+ #define	CP_DISCARD	0x00000010
+ #define CP_TRIMMED	0x00000020
+ #define CP_PAUSE	0x00000040
++#define CP_RESIZE 	0x00000080
+ 
+ #define MAX_DISCARD_BLOCKS(sbi)		BLKS_PER_SEC(sbi)
+ #define DEF_MAX_DISCARD_REQUEST		8	/* issue 8 discards per round */
+@@ -1421,7 +1422,6 @@ struct f2fs_sb_info {
+ 	unsigned int segs_per_sec;		/* segments per section */
+ 	unsigned int secs_per_zone;		/* sections per zone */
+ 	unsigned int total_sections;		/* total section count */
+-	struct mutex resize_mutex;		/* for resize exclusion */
+ 	unsigned int total_node_count;		/* total node block count */
+ 	unsigned int total_valid_node_count;	/* valid node block count */
+ 	loff_t max_file_blocks;			/* max block index of file */
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 257e61d0afffb..b4c12370bb3d6 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -3305,7 +3305,6 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(file_inode(filp));
+ 	__u64 block_count;
+-	int ret;
+ 
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+@@ -3317,9 +3316,7 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+ 			   sizeof(block_count)))
+ 		return -EFAULT;
+ 
+-	ret = f2fs_resize_fs(sbi, block_count);
+-
+-	return ret;
++	return f2fs_resize_fs(sbi, block_count);
+ }
+ 
+ static int f2fs_ioc_enable_verity(struct file *filp, unsigned long arg)
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 26248c8936db0..ca07fa4a6fd68 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1399,12 +1399,28 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
+ 				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
+ }
+ 
+-static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+-							unsigned int end)
++static int free_segment_range(struct f2fs_sb_info *sbi,
++				unsigned int secs, bool gc_only)
+ {
+-	int type;
+-	unsigned int segno, next_inuse;
++	unsigned int segno, next_inuse, start, end;
++	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+ 	int err = 0;
++	int type;
++
++	/* Force block allocation for GC */
++	MAIN_SECS(sbi) -= secs;
++	start = MAIN_SECS(sbi) * sbi->segs_per_sec;
++	end = MAIN_SEGS(sbi) - 1;
++
++	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
++	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
++		if (SIT_I(sbi)->last_victim[gc_mode] >= start)
++			SIT_I(sbi)->last_victim[gc_mode] = 0;
++
++	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
++		if (sbi->next_victim_seg[gc_type] >= start)
++			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
++	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
+ 
+ 	/* Move out cursegs from the target range */
+ 	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
+@@ -1417,18 +1433,20 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+ 			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
+ 		};
+ 
+-		down_write(&sbi->gc_lock);
+ 		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
+-		up_write(&sbi->gc_lock);
+ 		put_gc_inode(&gc_list);
+ 
+-		if (get_valid_blocks(sbi, segno, true))
+-			return -EAGAIN;
++		if (!gc_only && get_valid_blocks(sbi, segno, true)) {
++			err = -EAGAIN;
++			goto out;
++		}
+ 	}
++	if (gc_only)
++		goto out;
+ 
+-	err = f2fs_sync_fs(sbi->sb, 1);
++	err = f2fs_write_checkpoint(sbi, &cpc);
+ 	if (err)
+-		return err;
++		goto out;
+ 
+ 	next_inuse = find_next_inuse(FREE_I(sbi), end + 1, start);
+ 	if (next_inuse <= end) {
+@@ -1436,6 +1454,8 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+ 			 next_inuse);
+ 		f2fs_bug_on(sbi, 1);
+ 	}
++out:
++	MAIN_SECS(sbi) -= secs;
+ 	return err;
+ }
+ 
+@@ -1481,6 +1501,7 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+ 
+ 	SM_I(sbi)->segment_count = (int)SM_I(sbi)->segment_count + segs;
+ 	MAIN_SEGS(sbi) = (int)MAIN_SEGS(sbi) + segs;
++	MAIN_SECS(sbi) += secs;
+ 	FREE_I(sbi)->free_sections = (int)FREE_I(sbi)->free_sections + secs;
+ 	FREE_I(sbi)->free_segments = (int)FREE_I(sbi)->free_segments + segs;
+ 	F2FS_CKPT(sbi)->user_block_count = cpu_to_le64(user_block_count + blks);
+@@ -1502,6 +1523,7 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ {
+ 	__u64 old_block_count, shrunk_blocks;
++	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+ 	unsigned int secs;
+ 	int gc_mode, gc_type;
+ 	int err = 0;
+@@ -1538,10 +1560,22 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ 		return -EINVAL;
+ 	}
+ 
+-	freeze_bdev(sbi->sb->s_bdev);
+-
+ 	shrunk_blocks = old_block_count - block_count;
+ 	secs = div_u64(shrunk_blocks, BLKS_PER_SEC(sbi));
++
++	/* protect MAIN_SEC in free_segment_range */
++	f2fs_lock_op(sbi);
++	err = free_segment_range(sbi, secs, true);
++	f2fs_unlock_op(sbi);
++	if (err)
++		return err;
++
++	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
++
++	freeze_super(sbi->sb);
++	down_write(&sbi->gc_lock);
++	mutex_lock(&sbi->cp_mutex);
++
+ 	spin_lock(&sbi->stat_lock);
+ 	if (shrunk_blocks + valid_user_blocks(sbi) +
+ 		sbi->current_reserved_blocks + sbi->unusable_block_count +
+@@ -1550,69 +1584,44 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ 	else
+ 		sbi->user_block_count -= shrunk_blocks;
+ 	spin_unlock(&sbi->stat_lock);
+-	if (err) {
+-		thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+-		return err;
+-	}
+-
+-	mutex_lock(&sbi->resize_mutex);
+-	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+-
+-	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+-
+-	MAIN_SECS(sbi) -= secs;
+-
+-	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
+-		if (SIT_I(sbi)->last_victim[gc_mode] >=
+-					MAIN_SECS(sbi) * sbi->segs_per_sec)
+-			SIT_I(sbi)->last_victim[gc_mode] = 0;
+-
+-	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
+-		if (sbi->next_victim_seg[gc_type] >=
+-					MAIN_SECS(sbi) * sbi->segs_per_sec)
+-			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
+-
+-	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
++	if (err)
++		goto out_err;
+ 
+-	err = free_segment_range(sbi, MAIN_SECS(sbi) * sbi->segs_per_sec,
+-			MAIN_SEGS(sbi) - 1);
++	err = free_segment_range(sbi, secs, false):
+ 	if (err)
+-		goto out;
++		goto recover_out;
+ 
+ 	update_sb_metadata(sbi, -secs);
+ 
+ 	err = f2fs_commit_super(sbi, false);
+ 	if (err) {
+ 		update_sb_metadata(sbi, secs);
+-		goto out;
++		goto recover_out;
+ 	}
+ 
+-	mutex_lock(&sbi->cp_mutex);
+ 	update_fs_metadata(sbi, -secs);
+ 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+ 	set_sbi_flag(sbi, SBI_IS_DIRTY);
+-	mutex_unlock(&sbi->cp_mutex);
+ 
+-	err = f2fs_sync_fs(sbi->sb, 1);
++	err = f2fs_write_checkpoint(sbi, &cpc);
+ 	if (err) {
+-		mutex_lock(&sbi->cp_mutex);
+ 		update_fs_metadata(sbi, secs);
+-		mutex_unlock(&sbi->cp_mutex);
+ 		update_sb_metadata(sbi, secs);
+ 		f2fs_commit_super(sbi, false);
+ 	}
+-out:
++recover_out:
+ 	if (err) {
+ 		set_sbi_flag(sbi, SBI_NEED_FSCK);
+ 		f2fs_err(sbi, "resize_fs failed, should run fsck to repair!");
+ 
+-		MAIN_SECS(sbi) += secs;
+ 		spin_lock(&sbi->stat_lock);
+ 		sbi->user_block_count += shrunk_blocks;
+ 		spin_unlock(&sbi->stat_lock);
+ 	}
++out_err:
++	mutex_unlock(&sbi->cp_mutex);
++	up_write(&sbi->gc_lock);
++	thaw_super(sbi->sb);
+ 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+-	mutex_unlock(&sbi->resize_mutex);
+-	thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+ 	return err;
+ }
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index b83b17b54a0a6..1e7b1d21d0177 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -3412,7 +3412,6 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 	init_rwsem(&sbi->gc_lock);
+ 	mutex_init(&sbi->writepages);
+ 	mutex_init(&sbi->cp_mutex);
+-	mutex_init(&sbi->resize_mutex);
+ 	init_rwsem(&sbi->node_write);
+ 	init_rwsem(&sbi->node_change);
+ 
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 4d7d4c391879d..5d1a72001fdb4 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -50,6 +50,7 @@ TRACE_DEFINE_ENUM(CP_RECOVERY);
+ TRACE_DEFINE_ENUM(CP_DISCARD);
+ TRACE_DEFINE_ENUM(CP_TRIMMED);
+ TRACE_DEFINE_ENUM(CP_PAUSE);
++TRACE_DEFINE_ENUM(CP_RESIZE);
+ 
+ #define show_block_type(type)						\
+ 	__print_symbolic(type,						\
+@@ -126,7 +127,8 @@ TRACE_DEFINE_ENUM(CP_PAUSE);
+ 		{ CP_RECOVERY,	"Recovery" },				\
+ 		{ CP_DISCARD,	"Discard" },				\
+ 		{ CP_PAUSE,	"Pause" },				\
+-		{ CP_TRIMMED,	"Trimmed" })
++		{ CP_TRIMMED,	"Trimmed" },				\
++		{ CP_RESIZE,	"Resize" })
+ 
+ #define show_fsync_cpreason(type)					\
+ 	__print_symbolic(type,						\
+-- 
+2.26.0.292.g33ef6b2f38-goog
 
-Do you know how to fix this? I don't think I fully understand the error.
-
-> > +}
-> > +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> > +
-> >  void kasan_report_invalid_free(void *object, unsigned long ip)
-> >  {
-> >         unsigned long flags;
-> >         u8 tag =3D get_tag(object);
-> >
-> >         object =3D reset_tag(object);
-> > +
-> > +#if IS_ENABLED(CONFIG_KUNIT)
-> > +       if (current->kunit_test)
-> > +               kasan_update_kunit_status(current->kunit_test);
-> > +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> > +
-> >         start_report(&flags);
-> >         pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (voi=
-d *)ip);
-> >         print_tags(tag, object);
-> > @@ -481,6 +506,11 @@ void __kasan_report(unsigned long addr, size_t siz=
-e, bool is_write, unsigned lon
-> >         if (likely(!report_enabled()))
-> >                 return;
-> >
-> > +#if IS_ENABLED(CONFIG_KUNIT)
-> > +       if (current->kunit_test)
-> > +               kasan_update_kunit_status(current->kunit_test);
-> > +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> > +
-> >         disable_trace_on_warning();
-> >
-> >         tagged_addr =3D (void *)addr;
-
---=20
-Best,
-Patricia
