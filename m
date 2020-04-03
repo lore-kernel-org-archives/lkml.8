@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF49FC2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96896C2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F0A2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6AD215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OuxAUaRQ"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="AJAMCfKg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404377AbgDCQTz (ORCPT
+        id S2404392AbgDCQT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:19:55 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49310 "EHLO mail.skyhub.de"
+        Fri, 3 Apr 2020 12:19:58 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49384 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404348AbgDCQTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:19:53 -0400
+        id S2404374AbgDCQTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:19:55 -0400
 Received: from zn.tnic (p200300EC2F0D8900BDBBB37D18611998.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8900:bdbb:b37d:1861:1998])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DCF121EC0CE3;
-        Fri,  3 Apr 2020 18:19:51 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 530C21EC0CF3;
+        Fri,  3 Apr 2020 18:19:54 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585930792;
+        t=1585930794;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=D7B+yy1oKm9SYObHllQrPSWx0l5ENOI+htOp1S4XJSQ=;
-        b=OuxAUaRQOHX+WoCqXkOZvSLwJD2rRocC9IDJjFyrySC+OJJeJxBK5CYbbnul62GrC4mKFR
-        lcUDYqOV1ZsSn+cR6lkJU1oQe9sBpSuN4JqJPl8xNJiR32taGAhefSbZJ+sWuT70HhFnme
-        f04iOb1NN1ibRRVUD+RZRj6R365P89s=
+        bh=cBsewcd5O2TRQ4KvHAkBQnG2M3bkQT4wvGh+cR4bzek=;
+        b=AJAMCfKg839wBJjWJfvwivNYPgka5Hq6fmY+FHGcRevMM04+n7U6cSwNjvrZL+Zluq+uAk
+        9myJ/ZdbM54Z1LDMUKAoPnEV5HpGfr7hGtsLipuZk5TBFzAkKtXOJm1t8HFShqdcddstlV
+        zFkBvwERnb3/lTl8MryITXUCVs0jPfQ=
 From:   Borislav Petkov <bp@alien8.de>
 To:     X86 ML <x86@kernel.org>
 Cc:     Yazen Ghannam <Yazen.Ghannam@amd.com>,
         linux-edac <linux-edac@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/7] x86/mce/amd: Protect a not-fully initialized bank from the thresholding interrupt
-Date:   Fri,  3 Apr 2020 18:19:39 +0200
-Message-Id: <20200403161943.1458-4-bp@alien8.de>
+Subject: [PATCH 6/7] x86/mce/amd: Cleanup threshold device remove path
+Date:   Fri,  3 Apr 2020 18:19:42 +0200
+Message-Id: <20200403161943.1458-7-bp@alien8.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200403161943.1458-1-bp@alien8.de>
 References: <20200403161943.1458-1-bp@alien8.de>
@@ -57,67 +57,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-Make sure the thresholding bank descriptor is fully initialized when the
-thresholding interrupt fires after a hotplug event.
+Pass in the bank pointer directly to the cleaning up functions,
+obviating the need for per-CPU accesses. Make the clean up path
+interrupt-safe by cleaning the bank pointer first so that the rest of
+the teardown happens safe from the thresholding interrupt.
 
- [ bp: Write commit message and document long-forgotten bank_map. ]
+No functional changes.
+
+ [ bp: Write commit message and reverse bank->shared test to save an
+   indentation level in threshold_remove_bank(). ]
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 ---
- arch/x86/kernel/cpu/mce/amd.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/amd_nb.h |  1 +
+ arch/x86/kernel/cpu/mce/amd.c | 79 ++++++++++++++++-------------------
+ 2 files changed, 38 insertions(+), 42 deletions(-)
 
+diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
+index c7df20e78b09..455066a06f60 100644
+--- a/arch/x86/include/asm/amd_nb.h
++++ b/arch/x86/include/asm/amd_nb.h
+@@ -57,6 +57,7 @@ struct threshold_bank {
+ 
+ 	/* initialized to the number of CPUs on the node sharing this bank */
+ 	refcount_t		cpus;
++	unsigned int		shared;
+ };
+ 
+ struct amd_northbridge {
 diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index c3b3326ad4ac..563942157758 100644
+index a33d9a1caf36..16e7aea86ab1 100644
 --- a/arch/x86/kernel/cpu/mce/amd.c
 +++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -192,7 +192,12 @@ EXPORT_SYMBOL_GPL(smca_banks);
- static char buf_mcatype[MAX_MCATYPE_NAME_LEN];
+@@ -1362,6 +1362,7 @@ static int threshold_create_bank(struct threshold_bank **bp, unsigned int cpu,
+ 	}
  
- static DEFINE_PER_CPU(struct threshold_bank **, threshold_banks);
--static DEFINE_PER_CPU(unsigned int, bank_map);	/* see which banks are on */
-+
-+/*
-+ * A list of the banks enabled on each logical CPU. Controls which respective
-+ * descriptors to initialize later in mce_threshold_create_device().
-+ */
-+static DEFINE_PER_CPU(unsigned int, bank_map);
+ 	if (is_shared_bank(bank)) {
++		b->shared = 1;
+ 		refcount_set(&b->cpus, 1);
  
- /* Map of banks that have more than MCA_MISC0 available. */
- static DEFINE_PER_CPU(u32, smca_misc_banks_map);
-@@ -1016,13 +1021,22 @@ static void log_and_reset_block(struct threshold_block *block)
- static void amd_threshold_interrupt(void)
+ 		/* nb is already initialized, see above */
+@@ -1391,21 +1392,16 @@ static void threshold_block_release(struct kobject *kobj)
+ 	kfree(to_block(kobj));
+ }
+ 
+-static void deallocate_threshold_block(unsigned int cpu, unsigned int bank)
++static void deallocate_threshold_blocks(struct threshold_bank *bank)
  {
- 	struct threshold_block *first_block = NULL, *block = NULL, *tmp = NULL;
-+	struct threshold_bank **bp = this_cpu_read(threshold_banks);
- 	unsigned int bank, cpu = smp_processor_id();
+-	struct threshold_block *pos = NULL;
+-	struct threshold_block *tmp = NULL;
+-	struct threshold_bank *head = per_cpu(threshold_banks, cpu)[bank];
+-
+-	if (!head)
+-		return;
++	struct threshold_block *pos, *tmp;
  
-+	/*
-+	 * Validate that the threshold bank has been initialized already. The
-+	 * handler is installed at boot time, but on a hotplug event the
-+	 * interrupt might fire before the data has been initialized.
-+	 */
-+	if (!bp)
+-	list_for_each_entry_safe(pos, tmp, &head->blocks->miscj, miscj) {
++	list_for_each_entry_safe(pos, tmp, &bank->blocks->miscj, miscj) {
+ 		list_del(&pos->miscj);
+ 		kobject_put(&pos->kobj);
+ 	}
+ 
+-	kobject_put(&head->blocks->kobj);
++	kobject_put(&bank->blocks->kobj);
+ }
+ 
+ static void __threshold_remove_blocks(struct threshold_bank *b)
+@@ -1419,57 +1415,56 @@ static void __threshold_remove_blocks(struct threshold_bank *b)
+ 		kobject_del(&pos->kobj);
+ }
+ 
+-static void threshold_remove_bank(unsigned int cpu, int bank)
++static void threshold_remove_bank(struct threshold_bank *bank)
+ {
+ 	struct amd_northbridge *nb;
+-	struct threshold_bank *b;
+ 
+-	b = per_cpu(threshold_banks, cpu)[bank];
+-	if (!b)
+-		return;
++	if (!bank->blocks)
++		goto out_free;
+ 
+-	if (!b->blocks)
+-		goto free_out;
++	if (!bank->shared)
++		goto out_dealloc;
+ 
+-	if (is_shared_bank(bank)) {
+-		if (!refcount_dec_and_test(&b->cpus)) {
+-			__threshold_remove_blocks(b);
+-			per_cpu(threshold_banks, cpu)[bank] = NULL;
+-			return;
+-		} else {
+-			/*
+-			 * the last CPU on this node using the shared bank is
+-			 * going away, remove that bank now.
+-			 */
+-			nb = node_to_amd_nb(amd_get_nb_id(cpu));
+-			nb->bank4 = NULL;
+-		}
++	if (!refcount_dec_and_test(&bank->cpus)) {
++		__threshold_remove_blocks(bank);
 +		return;
++	} else {
++		/*
++		 * The last CPU on this node using the shared bank is going
++		 * away, remove that bank now.
++		 */
++		nb = node_to_amd_nb(amd_get_nb_id(smp_processor_id()));
++		nb->bank4 = NULL;
+ 	}
+ 
+-	deallocate_threshold_block(cpu, bank);
++out_dealloc:
++	deallocate_threshold_blocks(bank);
+ 
+-free_out:
+-	kobject_del(b->kobj);
+-	kobject_put(b->kobj);
+-	kfree(b);
+-	per_cpu(threshold_banks, cpu)[bank] = NULL;
++out_free:
++	kobject_put(bank->kobj);
++	kfree(bank);
+ }
+ 
+ int mce_threshold_remove_device(unsigned int cpu)
+ {
+ 	struct threshold_bank **bp = this_cpu_read(threshold_banks);
+-	unsigned int bank;
++	unsigned int bank, numbanks = this_cpu_read(mce_num_banks);
+ 
+ 	if (!bp)
+ 		return 0;
+ 
+-	for (bank = 0; bank < per_cpu(mce_num_banks, cpu); ++bank) {
+-		if (!(per_cpu(bank_map, cpu) & (1 << bank)))
+-			continue;
+-		threshold_remove_bank(cpu, bank);
+-	}
+-	/* Clear the pointer before freeing the memory */
++	/*
++	 * Clear the pointer before cleaning up, so that the interrupt won't
++	 * touch anything of this.
++	 */
+ 	this_cpu_write(threshold_banks, NULL);
 +
- 	for (bank = 0; bank < this_cpu_read(mce_num_banks); ++bank) {
- 		if (!(per_cpu(bank_map, cpu) & (1 << bank)))
- 			continue;
- 
--		first_block = per_cpu(threshold_banks, cpu)[bank]->blocks;
-+		first_block = bp[bank]->blocks;
- 		if (!first_block)
- 			continue;
- 
-@@ -1247,6 +1261,7 @@ static int allocate_threshold_blocks(unsigned int cpu, struct threshold_bank *tb
- 
- 	INIT_LIST_HEAD(&b->miscj);
- 
-+	/* This is safe as @tb is not visible yet */
- 	if (tb->blocks)
- 		list_add(&b->miscj, &tb->blocks->miscj);
- 	else
++	for (bank = 0; bank < numbanks; bank++) {
++		if (bp[bank]) {
++			threshold_remove_bank(bp[bank]);
++			bp[bank] = NULL;
++		}
++	}
+ 	kfree(bp);
+ 	return 0;
+ }
 -- 
 2.21.0
 
