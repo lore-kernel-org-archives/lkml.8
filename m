@@ -2,81 +2,134 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BEFC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8458C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D98212077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OPL+2aKL"
+	by mail.kernel.org (Postfix) with ESMTP id 677AC20675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390337AbgDCDTa (ORCPT
+        id S2390358AbgDCDc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 23:19:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35836 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388951AbgDCDT3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 23:19:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=XOG9i9h9wH5BxflLkb8p29SJ7IjpaH/ZwyrboCrvU4s=; b=OPL+2aKLCcL2Zgkla4acmM2/4s
-        yac1OCIcGgrXlupwIk5VwV2Z6N3GDvTU5N4dd2QkLp5RF5XrK2KjBTP+OiZ4avbuEynHNDxXBPQ1G
-        GqYD09B+/WFVKQHccytBi2cF+6YhMn7e6+WvFC7g8CdFgcb7rHEjTbbiXsgmUv1wS0Fj5XhDRujFH
-        mFYizEZWLR+xjYdyMYxWyTvpG4yG/dbtEOSry77davYwJS+YgK268mYhlBSIBR1Y+d9byTfvcmA7v
-        1NyJbBCo6D5DoKfcr2wwjn1LvtoLV9KS/rl+oUHzcMeWSIlm0O1fCS+aup222Zm0CzzfQmYjZleMY
-        cctpsQ6g==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jKCrf-0002eS-CN; Fri, 03 Apr 2020 03:19:27 +0000
-Subject: Re: error fn f7 (asus)
-To:     "jack_solovey@ngs.ru" <jack_solovey@ngs.ru>,
-        linux-kernel@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        =?UTF-8?Q?Jo=c3=a3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-References: <625e12e1-aee0-8b3c-8a4d-98e74739153c@ngs.ru>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3440f96b-291f-cd5e-7fc3-c3e9c0959f22@infradead.org>
-Date:   Thu, 2 Apr 2020 20:19:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 23:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388951AbgDCDc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 23:32:58 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07C4420675;
+        Fri,  3 Apr 2020 03:32:56 +0000 (UTC)
+Date:   Thu, 2 Apr 2020 23:32:55 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH][for-next] tracing: One last update before sending a pull
+ request
+Message-ID: <20200402233255.1dd3a5e8@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <625e12e1-aee0-8b3c-8a4d-98e74739153c@ngs.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[adding Cc's]
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+for-next
 
-On 3/8/20 11:43 PM, jack_solovey@ngs.ru wrote:
-> Hello, sorry this machine translation.
-> 
-> Laptop  Asus N56V
-> Prior to kernel 5, the FN+F7 buttons turned off the laptop screen.
-> Starting with kernel 5, these buttons turn on standby mode.
-> I have to use core 4.18
-> 
-> Linux Asus-N56VB 4.18.0-25-generic #26~18.04.1-Ubuntu SMP Thu Jun 27 07:28:31 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-> 
-> Whether it is planned to return the legacy function to the fn+f7 buttons to disable the main monitor.
+Head SHA1: 75b564fe13f10b4ba1500c4022396b56befa489f
 
-Hi,
 
-Possibly caused by 78f3ac76d9e5219589718b9e4733bee21627b3f5
-(platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey).
+Steven Rostedt (VMware) (1):
+      tracing: Do not allocate buffer in trace_find_next_entry() in atomic
 
--- 
-~Randy
+----
+ kernel/trace/trace.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+---------------------------
+commit 75b564fe13f10b4ba1500c4022396b56befa489f
+Author: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Date:   Wed Apr 1 22:44:46 2020 -0400
 
+    tracing: Do not allocate buffer in trace_find_next_entry() in atomic
+    
+    When dumping out the trace data in latency format, a check is made to peek
+    at the next event to compare its timestamp to the current one, and if the
+    delta is of a greater size, it will add a marker showing so. But to do this,
+    it needs to save the current event otherwise peeking at the next event will
+    remove the current event. To save the event, a temp buffer is used, and if
+    the event is bigger than the temp buffer, the temp buffer is freed and a
+    bigger buffer is allocated.
+    
+    This allocation is a problem when called in atomic context. The only way
+    this gets called via atomic context is via ftrace_dump(). Thus, use a static
+    buffer of 128 bytes (which covers most events), and if the event is bigger
+    than that, simply return NULL. The callers of trace_find_next_entry() need
+    to handle a NULL case, as that's what would happen if the allocation failed.
+    
+    Link: https://lore.kernel.org/r/20200326091256.GR11705@shao2-debian
+    
+    Fixes: ff895103a84ab ("tracing: Save off entry when peeking at next entry")
+    Reported-by: kernel test robot <rong.a.chen@intel.com>
+    Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6519b7afc499..4b7bbfe7f809 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3472,6 +3472,9 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
+ 	return next;
+ }
+ 
++#define STATIC_TEMP_BUF_SIZE	128
++static char static_temp_buf[STATIC_TEMP_BUF_SIZE];
++
+ /* Find the next real entry, without updating the iterator itself */
+ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+ 					  int *ent_cpu, u64 *ent_ts)
+@@ -3480,13 +3483,26 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+ 	int ent_size = iter->ent_size;
+ 	struct trace_entry *entry;
+ 
++	/*
++	 * If called from ftrace_dump(), then the iter->temp buffer
++	 * will be the static_temp_buf and not created from kmalloc.
++	 * If the entry size is greater than the buffer, we can
++	 * not save it. Just return NULL in that case. This is only
++	 * used to add markers when two consecutive events' time
++	 * stamps have a large delta. See trace_print_lat_context()
++	 */
++	if (iter->temp == static_temp_buf &&
++	    STATIC_TEMP_BUF_SIZE < ent_size)
++		return NULL;
++
+ 	/*
+ 	 * The __find_next_entry() may call peek_next_entry(), which may
+ 	 * call ring_buffer_peek() that may make the contents of iter->ent
+ 	 * undefined. Need to copy iter->ent now.
+ 	 */
+ 	if (iter->ent && iter->ent != iter->temp) {
+-		if (!iter->temp || iter->temp_size < iter->ent_size) {
++		if ((!iter->temp || iter->temp_size < iter->ent_size) &&
++		    !WARN_ON_ONCE(iter->temp == static_temp_buf)) {
+ 			kfree(iter->temp);
+ 			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
+ 			if (!iter->temp)
+@@ -9203,6 +9219,8 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
+ 
+ 	/* Simulate the iterator */
+ 	trace_init_global_iter(&iter);
++	/* Can not use kmalloc for iter.temp */
++	iter.temp = static_temp_buf;
+ 
+ 	for_each_tracing_cpu(cpu) {
+ 		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
