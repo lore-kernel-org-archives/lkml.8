@@ -2,185 +2,224 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A926C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF30C2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4318520721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4137320721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 08:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390510AbgDCIRv convert rfc822-to-8bit (ORCPT
+        id S2390524AbgDCIST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:17:51 -0400
-Received: from mga01.intel.com ([192.55.52.88]:21515 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390467AbgDCIRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 04:17:51 -0400
-IronPort-SDR: VqAncYQ/fwR8Wx+LIoRTkBxW0HZ95Jtfuq++7ZO8RLgmm9Grl7AakO/9nPHfSUj/7gUg8m3+9n
- rujJiNe0kiJg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 01:17:51 -0700
-IronPort-SDR: G6b6slSIE/t2d13pNmA/tIbwsDvao3N24PZCcZsdrf55GWQvM/6MbJhOv+kyDytmBX+dj+aTqQ
- bqYzx7NKrBRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="268289774"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga002.jf.intel.com with ESMTP; 03 Apr 2020 01:17:49 -0700
-Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 01:17:49 -0700
-Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
- FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 3 Apr 2020 01:17:49 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
- Fri, 3 Apr 2020 16:17:45 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
- userspace
-Thread-Topic: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
- userspace
-Thread-Index: AQHWAEUdmZ6qeWVhq0GPreoHiPHgtahlqq4AgAF03/A=
-Date:   Fri, 3 Apr 2020 08:17:44 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A220662@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-4-git-send-email-yi.l.liu@intel.com>
- <20200402120100.19e43c72@w520.home>
-In-Reply-To: <20200402120100.19e43c72@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 3 Apr 2020 04:18:19 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60991 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390480AbgDCISS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 04:18:18 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jKHWo-0002IG-Qi; Fri, 03 Apr 2020 10:18:14 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jKHWn-0005DA-RG; Fri, 03 Apr 2020 10:18:13 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH v1] net: phy: micrel: add phy-mode support for the KSZ9031 PHY
+Date:   Fri,  3 Apr 2020 10:18:12 +0200
+Message-Id: <20200403081812.19717-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Alex Williamson < alex.williamson@redhat.com >
-> Sent: Friday, April 3, 2020 2:01 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
-> userspace
-> 
-> On Sun, 22 Mar 2020 05:32:00 -0700
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > From: Liu Yi L <yi.l.liu@intel.com>
-> >
-> > This patch reports PASID alloc/free availability to userspace (e.g.
-> > QEMU) thus userspace could do a pre-check before utilizing this feature.
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> >  drivers/vfio/vfio_iommu_type1.c | 28 ++++++++++++++++++++++++++++
-> >  include/uapi/linux/vfio.h       |  8 ++++++++
-> >  2 files changed, 36 insertions(+)
-> >
-> > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > b/drivers/vfio/vfio_iommu_type1.c index e40afc0..ddd1ffe 100644
-> > --- a/drivers/vfio/vfio_iommu_type1.c
-> > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > @@ -2234,6 +2234,30 @@ static int vfio_iommu_type1_pasid_free(struct
-> vfio_iommu *iommu,
-> >  	return ret;
-> >  }
-> >
-> > +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
-> > +					 struct vfio_info_cap *caps)
-> > +{
-> > +	struct vfio_info_cap_header *header;
-> > +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
-> > +
-> > +	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
-> > +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-> > +	if (IS_ERR(header))
-> > +		return PTR_ERR(header);
-> > +
-> > +	nesting_cap = container_of(header,
-> > +				struct vfio_iommu_type1_info_cap_nesting,
-> > +				header);
-> > +
-> > +	nesting_cap->nesting_capabilities = 0;
-> > +	if (iommu->nesting) {
-> > +		/* nesting iommu type supports PASID requests (alloc/free) */
-> > +		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static long vfio_iommu_type1_ioctl(void *iommu_data,
-> >  				   unsigned int cmd, unsigned long arg)  { @@ -
-> 2283,6 +2307,10 @@
-> > static long vfio_iommu_type1_ioctl(void *iommu_data,
-> >  		if (ret)
-> >  			return ret;
-> >
-> > +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> >  		if (caps.size) {
-> >  			info.flags |= VFIO_IOMMU_INFO_CAPS;
-> >
-> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > index 298ac80..8837219 100644
-> > --- a/include/uapi/linux/vfio.h
-> > +++ b/include/uapi/linux/vfio.h
-> > @@ -748,6 +748,14 @@ struct vfio_iommu_type1_info_cap_iova_range {
-> >  	struct	vfio_iova_range iova_ranges[];
-> >  };
-> >
-> > +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  2
-> > +
-> > +struct vfio_iommu_type1_info_cap_nesting {
-> > +	struct	vfio_info_cap_header header;
-> > +#define VFIO_IOMMU_PASID_REQS	(1 << 0)
-> > +	__u32	nesting_capabilities;
-> > +};
-> > +
-> >  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
-> >
-> >  /**
-> 
-> I think this answers my PROBE question on patch 1/. 
-yep.
-> Should the quota/usage be exposed to the user here?  Thanks,
+Add support for following phy-modes: rgmii, rgmii-id, rgmii-txid, rgmii-rxid.
 
-Do you mean report the quota available for this user in this cap info as well?
-For usage, do you mean the alloc and free or others?
+This PHY has an internal RX delay of 1.2ns and no delay for TX.
 
-Regards,
-Yi Liu
+The pad skew registers allow to set the total TX delay to max 1.38ns and
+the total RX delay to max of 2.58ns (configurable 1.38ns + build in
+1.2ns) and a minimal delay of 0ns.
+
+According to the RGMII v2 specification the delay provided by PCB traces
+should be between 1.5ns and 2.0ns. As this PHY can provide max delay of
+only 1.38ns on the TX line, in RGMII-ID mode a symmetric delay of 1.38ns
+for both the RX and TX lines is chosen, even if the RX line could be
+configured with the 1.5ns according to the standard.
+
+The phy-modes can still be fine tuned/overwritten by *-skew-ps
+device tree properties described in:
+Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/micrel.c | 109 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 2ec19e5540bff..4fe5a814f586d 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -19,6 +19,7 @@
+  *			 ksz9477
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/phy.h>
+@@ -489,9 +490,50 @@ static int ksz9021_config_init(struct phy_device *phydev)
+ 
+ /* MMD Address 0x2 */
+ #define MII_KSZ9031RN_CONTROL_PAD_SKEW	4
++#define MII_KSZ9031RN_RX_CTL_M		GENMASK(7, 4)
++#define MII_KSZ9031RN_TX_CTL_M		GENMASK(3, 0)
++
+ #define MII_KSZ9031RN_RX_DATA_PAD_SKEW	5
++#define MII_KSZ9031RN_RXD3		GENMASK(15, 12)
++#define MII_KSZ9031RN_RXD2		GENMASK(11, 8)
++#define MII_KSZ9031RN_RXD1		GENMASK(7, 4)
++#define MII_KSZ9031RN_RXD0		GENMASK(3, 0)
++
+ #define MII_KSZ9031RN_TX_DATA_PAD_SKEW	6
++#define MII_KSZ9031RN_TXD3		GENMASK(15, 12)
++#define MII_KSZ9031RN_TXD2		GENMASK(11, 8)
++#define MII_KSZ9031RN_TXD1		GENMASK(7, 4)
++#define MII_KSZ9031RN_TXD0		GENMASK(3, 0)
++
+ #define MII_KSZ9031RN_CLK_PAD_SKEW	8
++#define MII_KSZ9031RN_GTX_CLK		GENMASK(9, 5)
++#define MII_KSZ9031RN_RX_CLK		GENMASK(4, 0)
++
++/* KSZ9031 has internal RGMII_IDRX = 1.2ns and RGMII_IDTX = 0ns. To
++ * provide different RGMII options we need to configure delay offset
++ * for each pad relative to build in delay.
++ */
++/* set rx to +0.18ns and rx_clk to "No delay adjustment" value to get delays of
++ * 1.38ns
++ */
++#define RX_ID				0x1a
++#define RX_CLK_ID			0xf
++
++/* set rx to +0.30ns and rx_clk to -0.90ns to compensate the
++ * internal 1.2ns delay.
++ */
++#define RX_ND				0xc
++#define RX_CLK_ND			0x0
++
++/* set tx to -0.42ns and tx_clk to +0.96ns to get 1.38ns delay */
++#define TX_ID				0x0
++#define TX_CLK_ID			0x1f
++
++/* set tx and tx_clk to "No delay adjustment" to keep 0ns
++ * dealy
++ */
++#define TX_ND				0x7
++#define TX_CLK_ND			0xf
+ 
+ /* MMD Address 0x1C */
+ #define MII_KSZ9031RN_EDPD		0x23
+@@ -564,6 +606,67 @@ static int ksz9031_enable_edpd(struct phy_device *phydev)
+ 			     reg | MII_KSZ9031RN_EDPD_ENABLE);
+ }
+ 
++static int ksz9031_config_rgmii_delay(struct phy_device *phydev)
++{
++	u16 rx, tx, rx_clk, tx_clk;
++	int ret;
++
++	switch (phydev->interface) {
++	case PHY_INTERFACE_MODE_RGMII:
++		tx = TX_ND;
++		tx_clk = TX_CLK_ND;
++		rx = RX_ND;
++		rx_clk = RX_CLK_ND;
++		break;
++	case PHY_INTERFACE_MODE_RGMII_ID:
++		tx = TX_ID;
++		tx_clk = TX_CLK_ID;
++		rx = RX_ID;
++		rx_clk = RX_CLK_ID;
++		break;
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++		tx = TX_ND;
++		tx_clk = TX_CLK_ND;
++		rx = RX_ID;
++		rx_clk = RX_CLK_ID;
++		break;
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++		tx = TX_ID;
++		tx_clk = TX_CLK_ID;
++		rx = RX_ND;
++		rx_clk = RX_CLK_ND;
++		break;
++	default:
++		return 0;
++	}
++
++	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_CONTROL_PAD_SKEW,
++			    FIELD_PREP(MII_KSZ9031RN_RX_CTL_M, rx) |
++			    FIELD_PREP(MII_KSZ9031RN_TX_CTL_M, tx));
++	if (ret < 0)
++		return ret;
++
++	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_RX_DATA_PAD_SKEW,
++			    FIELD_PREP(MII_KSZ9031RN_RXD3, rx) |
++			    FIELD_PREP(MII_KSZ9031RN_RXD2, rx) |
++			    FIELD_PREP(MII_KSZ9031RN_RXD1, rx) |
++			    FIELD_PREP(MII_KSZ9031RN_RXD0, rx));
++	if (ret < 0)
++		return ret;
++
++	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_TX_DATA_PAD_SKEW,
++			    FIELD_PREP(MII_KSZ9031RN_TXD3, tx) |
++			    FIELD_PREP(MII_KSZ9031RN_TXD2, tx) |
++			    FIELD_PREP(MII_KSZ9031RN_TXD1, tx) |
++			    FIELD_PREP(MII_KSZ9031RN_TXD0, tx));
++	if (ret < 0)
++		return ret;
++
++	return phy_write_mmd(phydev, 2, MII_KSZ9031RN_CLK_PAD_SKEW,
++			     FIELD_PREP(MII_KSZ9031RN_GTX_CLK, tx_clk) |
++			     FIELD_PREP(MII_KSZ9031RN_RX_CLK, rx_clk));
++}
++
+ static int ksz9031_config_init(struct phy_device *phydev)
+ {
+ 	const struct device *dev = &phydev->mdio.dev;
+@@ -596,6 +699,12 @@ static int ksz9031_config_init(struct phy_device *phydev)
+ 	} while (!of_node && dev_walker);
+ 
+ 	if (of_node) {
++		if (phy_interface_is_rgmii(phydev)) {
++			result = ksz9031_config_rgmii_delay(phydev);
++			if (result < 0)
++				return result;
++		}
++
+ 		ksz9031_of_load_skew_values(phydev, of_node,
+ 				MII_KSZ9031RN_CLK_PAD_SKEW, 5,
+ 				clk_skews, 2);
+-- 
+2.26.0.rc2
+
