@@ -2,109 +2,102 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE7FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13781C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C7720719
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:13:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZbaNyU8s"
+	by mail.kernel.org (Postfix) with ESMTP id DD6122076E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 19:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585941261;
+	bh=imyyqIJRl5n2TRDy87GoQbmJVeFzTinDt+M5mJkXmns=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=oF+ES7hJaAQLdHALURu7wddKWnnnGfd264zIaUpHXF5E6k/LuEmXdY4s8jls+9Pk0
+	 AXm6hidEvQiRVbT/VMB11PFxYUZtfZK8wy80NZgPVHU9oc03iqnw4CkFa7aUaxym2e
+	 S/rTkYEngrL2JlaVv0NoP2NXVdFFF+PbWWG0srFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgDCTNt (ORCPT
+        id S2390664AbgDCTOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 15:13:49 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59420 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728352AbgDCTNs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 15:13:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 033JDiG1034910;
-        Fri, 3 Apr 2020 14:13:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585941224;
-        bh=opefHXpRY+yQD0H5nfaeAPuvZRCgMSVglcVu8kVV+ME=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZbaNyU8sTbEkEd20NtLBRw6ojyXCH1NUfIRCyD0ojVUhrdK4+NST8GGdyzozm7MOu
-         18sGQZ1pyNJGxibJmyFd4rx2m2T5XY2yrUkDYbehvvgg+j8QU5dJDx0PNFT81L7rwA
-         m9yFUfekFynapVtf7Fj+tIHuDFVPshg7NtpNStTE=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 033JDi3D067843
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Apr 2020 14:13:44 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
- 2020 14:13:44 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Apr 2020 14:13:44 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 033JDh3X126629;
-        Fri, 3 Apr 2020 14:13:44 -0500
-Subject: Re: Cleanups in "next" tree
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200322115906.GA10623@duo.ucw.cz>
- <3a103317-b9fb-5d0f-6944-0114b9af1629@gmail.com> <20200402225745.GA9830@amd>
- <a4802e70-106b-3476-536f-1d8798ce156f@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <82de0f5e-2382-e2ae-ec70-392cc95502fc@ti.com>
-Date:   Fri, 3 Apr 2020 14:07:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 3 Apr 2020 15:14:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728296AbgDCTOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 15:14:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3248920719;
+        Fri,  3 Apr 2020 19:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585941260;
+        bh=imyyqIJRl5n2TRDy87GoQbmJVeFzTinDt+M5mJkXmns=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=rhNsW0F00Iio6KqEe/9izVA5oyGU5i1OI+UDJ1vuq5h3eI7vLhcqQsXHw3yXWb2yz
+         MNWghs8tag5eZD+J+Dz9NSnNCoBuETuANZxAL8bNl4867ZKL+aAYsGBOWMlESDmvK+
+         J+ugrQJvCD3oFT3x8pwY6tVDJ3wn8VmT1qxTChcA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id ED132352275C; Fri,  3 Apr 2020 12:14:19 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 12:14:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: add emergency pool for headless case
+Message-ID: <20200403191419.GU19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200403173051.4081-1-urezki@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a4802e70-106b-3476-536f-1d8798ce156f@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403173051.4081-1-urezki@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+On Fri, Apr 03, 2020 at 07:30:51PM +0200, Uladzislau Rezki (Sony) wrote:
+> Maintain an emergency pool for each CPU with some
+> extra objects. There is read-only sysfs attribute,
+> the name is "rcu_nr_emergency_objs". It reflects
+> the size of the pool. As for now the default value
+> is 3.
+> 
+> The pool is populated when low memory condition is
+> detected. Please note it is only for headless case
+> it means when the regular SLAB is not able to serve
+> any request, the pool is used.
+> 
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> ---
+>  kernel/rcu/tree.c | 133 +++++++++++++++++++++++++++++++++-------------
+>  1 file changed, 97 insertions(+), 36 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 5e26145e9ead..f9f1f935ab0b 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -114,6 +114,14 @@ int rcu_num_lvls __read_mostly = RCU_NUM_LVLS;
+>  int rcu_kfree_nowarn;
+>  module_param(rcu_kfree_nowarn, int, 0444);
+>  
+> +/*
+> + * For headless variant. Under memory pressure an
+> + * emergency pool can be used if the regular SLAB
+> + * is not able to serve some memory for us.
+> + */
+> +int rcu_nr_emergency_objs = 3;
+> +module_param(rcu_nr_emergency_objs, int, 0444);
 
-On 4/3/20 1:45 PM, Jacek Anaszewski wrote:
-> On 4/3/20 12:57 AM, Pavel Machek wrote:
->> On Sun 2020-03-22 14:35:56, Jacek Anaszewski wrote:
->>> Hi Pavel,
->>>
->>> On 3/22/20 12:59 PM, Pavel Machek wrote:
->>>> Hi!
->>>>
->>>> I've commited some cleanups into LED tree ( git/pavel/linux-leds.git
->>>> branch for-next ), if someone wants to review them.
->>> You abused your maintainer power by bypassing the usual patch
->>> submission procedure. Please remove the patches from linux-next
->>> and submit them officially for discussion. I would have some objections
->>> to them.
->> I'm sorry I failed to meet your high expectations... But I don't
->> believe I done anything completely outside of usual kernel procedures.
-> I believe code review is quite usual kernel procedure.
->
->> Could you list the patches and objections you have?
-> I already expressed my concerns regarding Turris Omnia patch.
->
-> My comments regarding remaining patches:
->
-> - "Make label "white:power" to be consistent with"
->
-> I disagree here. "system" was OK.
->
-> - "Warn about old defines that probably should not be used."
->
-> Obsolete is only LED_FULL, so the comment is in wrong line
+Please document this in Documentation/admin-guide/kernel-parameters.txt.
 
-I would prefer to have the commit sha that obsoleted the LED_FULL to be 
-referenced in the commit message so we have traceability.
-
-Dan
+							Thanx, Paul
