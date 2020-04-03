@@ -2,135 +2,87 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B769EC2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAC0C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A51020721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdFDFz2q"
+	by mail.kernel.org (Postfix) with ESMTP id 3CF052073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404196AbgDCQTF (ORCPT
+        id S2404242AbgDCQTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:19:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41323 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403834AbgDCQTF (ORCPT
+        Fri, 3 Apr 2020 12:19:19 -0400
+Received: from fieber.vanmierlo.com ([84.243.197.177]:48688 "EHLO
+        kerio9.vanmierlo.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404084AbgDCQTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:19:05 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k9so6562408oia.8;
-        Fri, 03 Apr 2020 09:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=vfUcEFpIecfa5phk+Cj5BK1agH676+gFMqNkyPySnNU=;
-        b=DdFDFz2q+lRpwrK421yRNEfez1sLOWU8raR7jvvY4t65RJ615jwCRUugHdjp3QECXD
-         9DA4Q0scR3LkOWuReNJy0sSDlq9CWoI18F15XqJHgA70pA1+vTdRwywrhjpQRrvnTi0W
-         IsQZLbSGEOkB3r/mu/JNCjQJwqxdRjSP3UmWlPvEsjpKiZNL4QZVA/QzaCYZlzKMoqQj
-         4/O4fPQ/pFvR9y6uWk5Fj92HR/5uCnjXe1t/LJkam4NgoHlgStWB5nFZNvr1zb3oBQHD
-         3GMW3cwIyHjpFgV3PIVkl2+JjMM+p0s5BnOQtUVxsUYiruJU44hwkraKGaiurzcYL47T
-         ljsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=vfUcEFpIecfa5phk+Cj5BK1agH676+gFMqNkyPySnNU=;
-        b=jsf2v5dBqz/zHoHC+eD4c6snEPVXGzi0YDanhI/0u91tsFHOZC0ODANjPZWl0GlBni
-         L8h+jt6/z8Sd6dohK/kDxiMFloS96/F8YemS1sEaYma0D8eStaOMBc/ev20V/sRTJZKn
-         +Dj33N97LpbchqFcbrxgKgFFY41WHnda5CLK7XBn14rM4ZxFLLL/oNooOoXEYtg6+LSM
-         GsRS2wD8e4wBx2MV8QvhPTiER6lzpwHLFkItr7xwM1Ege6Bfl7LWfBbcGB1ge1USXsG6
-         xwGdwyNlv00HmV/2uZARMILpwpPvBw+MhBAXTEYhXMtMYMzMA+xpEBjlKh7PXNy40+CH
-         RSJw==
-X-Gm-Message-State: AGi0PuZZf5fAjNec5CjxPlh+oa/t/m2E7Z8Mg55GAChR5AUW3vZqegUT
-        wVWsiPRGWofWBELPjts/bm4=
-X-Google-Smtp-Source: APiQypLdIe/bnR5Sgh9v1UByIaBo9hKSJA7hdJa7okRoa7dJKQmZWyXte4DCMLxfGDR33+o59+3cYw==
-X-Received: by 2002:aca:acc2:: with SMTP id v185mr3748001oie.27.1585930744166;
-        Fri, 03 Apr 2020 09:19:04 -0700 (PDT)
-Received: from andrews-mbp-2.attlocal.net ([2600:1700:19e0:3310:4ee:b6ec:777a:fdfb])
-        by smtp.gmail.com with ESMTPSA id i17sm2193668otc.16.2020.04.03.09.19.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Apr 2020 09:19:03 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 2/2] ARM: dts: aspeed: zaius: Add gpio line names
-From:   Andrew Geissler <geissonator@gmail.com>
-In-Reply-To: <48c9bd0e-3b5c-4f76-830f-4b0bd962148b@www.fastmail.com>
-Date:   Fri, 3 Apr 2020 11:19:02 -0500
-Cc:     Joel Stanley <joel@jms.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <270714A1-2910-4B84-86B6-46177F439A52@gmail.com>
-References: <20200306170218.79698-1-geissonator@yahoo.com>
- <20200306170218.79698-2-geissonator@yahoo.com>
- <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
- <9360D2B2-8242-4BA1-BF06-8916E87EDE67@gmail.com>
- <48c9bd0e-3b5c-4f76-830f-4b0bd962148b@www.fastmail.com>
-To:     Andrew Jeffery <andrew@aj.id.au>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 3 Apr 2020 12:19:18 -0400
+X-Greylist: delayed 1805 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Apr 2020 12:19:18 EDT
+X-Footer: dmFubWllcmxvLmNvbQ==
+Received: from roundcube.vanmierlo.com ([192.168.37.37])
+        (authenticated user m.brock@vanmierlo.com)
+        by kerio9.vanmierlo.com (Kerio Connect 9.2.11 beta 1) with ESMTPA;
+        Fri, 3 Apr 2020 17:48:42 +0200
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 03 Apr 2020 17:48:42 +0200
+From:   Maarten Brock <m.brock@vanmierlo.com>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, johan@kernel.org,
+        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
+        linux-serial-owner@vger.kernel.org
+Subject: Re: [PATCH 0/7] serial: uartps: Revert dynamic port allocation
+In-Reply-To: <2983dbe2-16e6-4b7b-73a6-49d8c3d70510@xilinx.com>
+References: <cover.1585905873.git.michal.simek@xilinx.com>
+ <20200403093216.GA3746303@kroah.com>
+ <d9598635-a8ef-eff2-22e8-4fa37f8390b3@xilinx.com>
+ <20200403094427.GA3754220@kroah.com>
+ <2983dbe2-16e6-4b7b-73a6-49d8c3d70510@xilinx.com>
+Message-ID: <211f564d5594994fc677d3fea4222997@vanmierlo.com>
+X-Sender: m.brock@vanmierlo.com
+User-Agent: Roundcube Webmail/1.3.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-04-03 11:51, Michal Simek wrote:
+> 
+> Thanks. I am definitely interested to hear more how this could be done
+> differently because that hardcoded limits are painful.
+> On FPGAs you can have a lot of uarts for whatever reason and users are
+> using DT aliases to have consistent naming.
+> Specifically on Xilinx devices we are using uartps which is ttyPS,
+> uartlite which is ttyUL, ns16500 which is ttyS and also pl011 which is
+> ttyAMA.
+> Only ttyAMA or ttyPS on one chip are possible.
+> 
+> And right now you can't have serial0 alias pointed ttyPS0 and another
+> serial0 pointed to ttyUL0 or ttyS0. That's why others are shifted and 
+> we
+> can reach that hardcoded NR_UART limit easily.
+> And this was the reason why I have done these patches in past to remove
+> any limit from these drivers and if user asks for serial100 alias you
+> simply get ttyPS100 node.
 
+I would argue that the trouble originates from every uart driver using
+its own naming scheme and thereby creating separate namespaces. If all
+uarts would register as /dev/ttySnn then the serialN alias method would
+work. These non-overlapping namespaces is something the linux kernel
+driver community has allowed to happen.
 
-> On Apr 2, 2020, at 7:51 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
->=20
->=20
->=20
-> On Tue, 31 Mar 2020, at 04:46, Andrew Geissler wrote:
->>=20
->>=20
->>> On Mar 26, 2020, at 6:20 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
->>>=20
->>>=20
->>>=20
->>> On Sat, 7 Mar 2020, at 03:32, Andrew Geissler wrote:
->>>> Name the GPIOs to help userspace work with them. The names describe =
-the
->>>> functionality the lines provide, not the net or ball name. This =
-makes it
->>>> easier to share userspace code across different systems and makes =
-the
->>>> use of the lines more obvious.
->>>>=20
->>>> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
->>>=20
->>> So we're creating a bit of an ad-hoc ABI here between the DT and =
-userspace.
->>>=20
->>> Where are we documenting it?
->>=20
->> Yeah, so far it=E2=80=99s basically design by precedent. If you want =
-your OpenBMC
->> function to work then follow the standards we're setting in other =
-dts=E2=80=99s.
->>=20
->> Is there a good place to document this? I could create a OpenBMC =
-design
->> doc but that would not address non-OpenBMC areas.
->=20
-> Don't let perfect be the enemy of good enough :) Lets document it in =
-OpenBMC
-> and then look at alternatives if we find it's necessary. I don't think =
-we will given
-> that the contract is between the kernel and OpenBMC userspace.
+If the namespaces are not abandoned and disallowed, then the serialN
+alias method must no longer be used for any driver that does not create
+/dev/ttySnn devices. Every namespace will require its own alias base.
+Or forget about deriving the number from an alias and set the number in
+a property in the device tree node itself. The latter has my preference.
 
-Ok, I put a doc up for review here:
-https://gerrit.openbmc-project.xyz/c/openbmc/docs/+/30988
-
->=20
-> Andrew
+Maarten
 
