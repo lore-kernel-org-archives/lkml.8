@@ -4,81 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D22C2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6B4C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D654220721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6273B2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="cvcB6fRG"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="fFBoOCiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404432AbgDCQXe (ORCPT
+        id S2404441AbgDCQXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:23:34 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:21872 "EHLO rere.qmqm.pl"
+        Fri, 3 Apr 2020 12:23:35 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:16700 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404374AbgDCQXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2404284AbgDCQXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 Apr 2020 12:23:33 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48v4xJ0Dn5zqB;
-        Fri,  3 Apr 2020 18:23:32 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48v4xH1Vr3zGl;
+        Fri,  3 Apr 2020 18:23:31 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585931012; bh=fseErXmDkX64tuP/VBZQqH12qqnxX3YPVLXIds6NfEI=;
+        t=1585931011; bh=8lunpxS98lM0f3PoyUteDz8Xwp4fV51FcDnCqkylrZA=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=cvcB6fRGkOZ95vWWooSHpXFLGj53m6WseMTpjM79hEvtg8CL+V9uyE/GWq3xqp+YI
-         QPHzdF5hXCCicdhEopQRtsKEJrR3LaKtjcOF4/GbRhI6SLXHWX37e0NSN06Htkjujh
-         iG87RvngSpY69OX+eTUQN4gm2VYBRFG3N13pCe5tcGiIrD4DugG2Qes9f1EgNZgrY8
-         FRvhIvQR6Xl0Xf/yF/IEKq1grz2+IFUo6uPpkdP8Rv1Hyf6rNyGcdBrrRogLFQVYDE
-         eIoaYWaBwVHIH74aIJBLL6s8moyJZ4pboAyqVMJDqzrceXvkpbO5cOMZPqaBI47SC9
-         97fQa353pZd9g==
+        b=fFBoOCiZ3YnSg5A6zUE339EV7k7+8yHYKQWCFtzyFZ0tvOtnw0RyquTHs97P3VKXK
+         gmvevHujRta48yTH8VpBv2ePoL4FPhMmpyAJatiMkfrKSYM4EzsjeHnxZzN/ZOYDuA
+         D1pDHuQfAct9TqwXTXU1hOJ/ZiVECVgfl3k1q1sywZ4eIy5tVQ/xJuNZbJl2SOGE54
+         IRXSLlKm8L4sT2uKmkO7xlV2Nu3hZZVvgtNpxvOjBzCy6nig0Z17RXvva9cdaUXpaD
+         pXt4JtxVWF73hhUmS4MhsCjHLIxnEqkXhBgMhNHj7DzsHvoM9wJosdA8iZXhejPRHO
+         WHy7Rh7pi44hQ==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 03 Apr 2020 18:23:31 +0200
-Message-Id: <f6ab03acc5118cee8cd77ed8ae11a881c3ce2a1e.1585929579.git.mirq-linux@rere.qmqm.pl>
+Date:   Fri, 03 Apr 2020 18:23:29 +0200
+Message-Id: <cdf9c0b02acdee77721039d4e7557e0e232d837d.1585929579.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 3/8] power: supply: core: fix HWMON temperature labels
+Subject: [PATCH v2 1/8] power: supply: core: reduce
+ power_supply_show_usb_type() parameters
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tempX_label files are swapped compared to what
-power_supply_hwmon_temp_to_property() uses. Make them match.
+Reduce power_supply_show_usb_type() parameter count by folding
+power_supply_desc dereference into the function.  This makes following
+patch making usb_types const easier.
 
-Cc: stable@vger.kernel.org
-Fixes: e67d4dfc9ff1 ("power: supply: Add HWMON compatibility layer")
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
-v2: split parameter checking to separate patch
----
- drivers/power/supply/power_supply_hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/power/supply/power_supply_sysfs.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-index 75cf861ba492..67b6ee60085e 100644
---- a/drivers/power/supply/power_supply_hwmon.c
-+++ b/drivers/power/supply/power_supply_hwmon.c
-@@ -144,7 +144,7 @@ static int power_supply_hwmon_read_string(struct device *dev,
- 					  u32 attr, int channel,
- 					  const char **str)
- {
--	*str = channel ? "temp" : "temp ambient";
-+	*str = channel ? "temp ambient" : "temp";
- 	return 0;
- }
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index f37ad4eae60b..51de3f47b25d 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -78,8 +78,7 @@ static const char * const power_supply_scope_text[] = {
+ };
  
+ static ssize_t power_supply_show_usb_type(struct device *dev,
+-					  enum power_supply_usb_type *usb_types,
+-					  ssize_t num_usb_types,
++					  const struct power_supply_desc *desc,
+ 					  union power_supply_propval *value,
+ 					  char *buf)
+ {
+@@ -88,8 +87,8 @@ static ssize_t power_supply_show_usb_type(struct device *dev,
+ 	bool match = false;
+ 	int i;
+ 
+-	for (i = 0; i < num_usb_types; ++i) {
+-		usb_type = usb_types[i];
++	for (i = 0; i < desc->num_usb_types; ++i) {
++		usb_type = desc->usb_types[i];
+ 
+ 		if (value->intval == usb_type) {
+ 			count += sprintf(buf + count, "[%s] ",
+@@ -163,8 +162,7 @@ static ssize_t power_supply_show_property(struct device *dev,
+ 			      power_supply_type_text[value.intval]);
+ 		break;
+ 	case POWER_SUPPLY_PROP_USB_TYPE:
+-		ret = power_supply_show_usb_type(dev, psy->desc->usb_types,
+-						 psy->desc->num_usb_types,
++		ret = power_supply_show_usb_type(dev, psy->desc,
+ 						 &value, buf);
+ 		break;
+ 	case POWER_SUPPLY_PROP_SCOPE:
 -- 
 2.20.1
 
