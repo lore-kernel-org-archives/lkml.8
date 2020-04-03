@@ -2,158 +2,91 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6049FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C68C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3842078C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE5E2078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390845AbgDCLyi (ORCPT
+        id S2390859AbgDCLzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:54:38 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57346 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390632AbgDCLyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:54:38 -0400
-IronPort-SDR: dijLxQS/MoWpstj+9ivruchsn7c4Au+be+sfeIrYj8KoKeYRa21Y5EGsHhPIIJCgvqOxFi46qe
- vn8yiUJFwTZQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 04:54:37 -0700
-IronPort-SDR: DVwCbmHW9ZMpGxGiBAr9d5FKQY6dyp+OIcOV0vaurqBLKuq7e2cTj8JMX0ejF1Rb4rtW04bqI/
- MkemSyY1vAIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="241105550"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Apr 2020 04:54:34 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jKKuC-00FQDf-55; Fri, 03 Apr 2020 14:54:36 +0300
-Date:   Fri, 3 Apr 2020 14:54:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Petr Mladek <pmladek@suse.com>, linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
- DRM fourccs
-Message-ID: <20200403115436.GY1922688@smile.fi.intel.com>
-References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
- <20200403102449.GB4882@pendragon.ideasonboard.com>
- <20200403104701.GC3172@kekkonen.localdomain>
- <20200403131926.7caf3288@coco.lan>
+        Fri, 3 Apr 2020 07:55:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56278 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726087AbgDCLzL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 07:55:11 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033BY9J8036485;
+        Fri, 3 Apr 2020 07:55:09 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3020wgthgn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 07:55:09 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 033Bt1Qi007018;
+        Fri, 3 Apr 2020 11:55:08 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma04wdc.us.ibm.com with ESMTP id 301x778ptg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 11:55:08 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033Bt7cx47907102
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 11:55:07 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D8A5AC060;
+        Fri,  3 Apr 2020 11:55:07 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29555AC059;
+        Fri,  3 Apr 2020 11:55:07 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 11:55:07 +0000 (GMT)
+Subject: Re: [PATCH v4 0/2] tpm2: Make TPM2 logs accessible for non-UEFI
+ firmware
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org
+References: <20200402225140.922789-1-stefanb@linux.vnet.ibm.com>
+ <20200403070114.GD25305@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <7205b5ee-cfb7-cfda-7834-b43323294282@linux.ibm.com>
+Date:   Fri, 3 Apr 2020 07:55:06 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403131926.7caf3288@coco.lan>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200403070114.GD25305@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_07:2020-04-02,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=992
+ adultscore=0 suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 01:19:26PM +0200, Mauro Carvalho Chehab wrote:
-> Em Fri, 3 Apr 2020 13:47:02 +0300
-> Sakari Ailus <sakari.ailus@linux.intel.com> escreveu:
-> 
-> > > > +static noinline_for_stack
-> > > > +char *fourcc_string(char *buf, char *end, const u32 *fourcc,
-> > > > +		    struct printf_spec spec, const char *fmt)
-> > > > +{
-> > > > +#define FOURCC_STRING_BE	"-BE"
-> > > > +	char s[sizeof(*fourcc) + sizeof(FOURCC_STRING_BE)] = { 0 };
-> > > > +
-> > > > +	if (check_pointer(&buf, end, fourcc, spec))
-> > > > +		return buf;
-> > > > +
-> > > > +	if (fmt[1] != 'c' || fmt[2] != 'c')
-> > > > +		return error_string(buf, end, "(%p4?)", spec);
-> > > > +
-> > > > +	put_unaligned_le32(*fourcc & ~BIT(31), s);
-> > > > +
-> > > > +	if (*fourcc & BIT(31))
-> > > > +		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
-> > > > +			sizeof(FOURCC_STRING_BE));
-> > > > +
-> > > > +	return string(buf, end, s, spec);  
-> > > 
-> > > Taking V4L2_PIX_FMT_Y16_BE as an example, this will print 'Y16 -BE'
-> > > (without quotes). There are other 4CCs that contain spaces and would
-> > > suffer from a similar issue. Even in little-endian format, it would
-> > > result in additional spaces in the output string. Is this what we want ?
-> > > Should the caller always enclose the 4CC in quotes or brackets for
-> > > clarity ? Or should still be done here ?  
-> > 
-> > Good question. Space is indeed a valid character in a 4cc code.
-> > 
-> > If I omit one or more spaces, it will no longer be a 4cc, but a 3cc or even
-> > a 2cc. Jokes aside, there are probably fair arguments both ways.
-> > 
-> > I presume there's no 4cc code where the location of a space would make a
-> > difference but all of the spaces are trailing spaces.
-> 
-> Yes. I guess it doesn't make any sense to allow a 4cc code with an
-> space before or in the middle.
-> 
-> Btw, on a quick search at the Internet for non-Linux definitions,
-> a Fourcc code "Y8  " is actually shown at the lists as just "Y8", 
-> e. g. removing the leading spaces:
-> 
-> 	https://www.fourcc.org/codecs.php
-> 	http://abcavi.kibi.ru/fourcc.php
-> 	https://softron.zendesk.com/hc/en-us/articles/207695697-List-of-FourCC-codes-for-video-codecs
-> 	https://www.free-codecs.com/guides/guides.php?f=fourcc
-> 
-> One interesting detail there is that some tables show some codes 
-> like "BGR(15)". While I'm not sure how this is encoded, I suspect
-> that the fourcc is actually "BGR\x15".
-> 
-> We don't do that on V4L, nor we have plans to do so. Not sure if
-> DRM would accept something like that. Of so, then the logic should
-> have some special handler if the code is below 32.	
+On 4/3/20 3:01 AM, Jarkko Sakkinen wrote:
+> Reviewed-by: Jarkko Sakkinen<jarkko.sakkinen@linux.intel.com>
+>
+> I'll apply this after I'll get Rafael's answer whether I can add his ack
+> to the commits.
+>
+> /Jarkko
 
-It is easy to achieve I think, with help of string_escape*() functions.
+Thank you!
 
-> > It's also worth noting that the formats printed are mostly for debugging
-> > purpose and thus even getting a hypothetical case wrong is not a grave
-> > issue. This would also support just printing them as-is though.
-> > 
-> > I'm leaning slightly towards omitting any spaces if the code has them. 
-> 
-> I would just remove trailing spaces, and then use a loop from the end
-> to remove trailing spaces (and optionally handle codes ending with a
-> value below 32, if are there any such case with DRM fourcc codes).
-> 
-> On the other hand, I don't mind if you prefer to use just one for()
-> loop and just trip any spaces inside it.
-> 
-> > This is something that couldn't be done by using a macro...
-> 
-> Well, I suspect that it might be possible to write a macro
-> for doing that too, for example using preprocessor concatenation
-> logic that could produce the same results. If you do something 
-> like that, however, I suspect that te macro would face some 
-> portability issues, as, as far as I know, not all C compilers
-> would handle string concatenation the same way.
-> 
-> Thanks,
-> Mauro
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+    Stefan
 
