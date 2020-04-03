@@ -2,176 +2,119 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED94C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1D2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD027206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64A6206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 23:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnH4HwG4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R5C5no3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgDCXTF (ORCPT
+        id S1728375AbgDCXXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 19:19:05 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36974 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727958AbgDCXTF (ORCPT
+        Fri, 3 Apr 2020 19:23:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32303 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726899AbgDCXXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 19:19:05 -0400
-Received: by mail-il1-f195.google.com with SMTP id a6so9090915ilr.4;
-        Fri, 03 Apr 2020 16:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dPU5rDbRXNZR3mGxrVtgTT7qKCNIJzL3wX4Y2kmnrAI=;
-        b=PnH4HwG48u1Ut+Ivho3hvvqb5bhaAn4hSi8EHYGucTzs1wkC3b4hv1g19ShqB9AOhX
-         URcN/2rsL80NiwAX3sTZFmaeuvHiVq+d5ouj5aV6lBlZ7SuAG4GGoaKg6dp4hL1tqiQr
-         VdyMqjf0lOFut5bLlrm/v8h3QdrXjW/N9csK77csL48LcAj6JKr/GptmX9+9rgj7FQ3T
-         Mw58AU2tiMh7G56Pq7HU4egpWgB4YyFIcZNoBEClZfga29RMkKiCNOdajMHsheKPfEZ5
-         9t5bvKmj/oq9x3AwpXm5ysdVgBEUwxYsgg6fZ9xrf9S06kevIdf2Mv1KO5kfaByVFZI4
-         fNhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dPU5rDbRXNZR3mGxrVtgTT7qKCNIJzL3wX4Y2kmnrAI=;
-        b=FbooZicPc+RoVA6ckCkh1Bhjj7q9HSPrdDoa92x2idgKAei4tBOFMCBBFU1w47OZMR
-         4rTaQwV2+7typtiVkeC5X2+1k50lwF8Fe5JccR1+7HLe6GYF2FzgJvng3ZBCo3tNmBI5
-         5KfXyzaE/T1445YAPpSwr6hK9cOxsnxzEWaz+xtA5/uwnh2nZ4pe8qJj4np5aylN5HUi
-         5xwewXn3F+82tLfERvpraQIu8MJ5YbUdsIO4LglNE+oCDMMjS+cMTAQ6Jw94Db05k4LJ
-         F39ZXeVzAhxJ0n7QfTUS8alVZG3lVwwm61n88To8+BbGAZArikOt8qnbtRgl50Ckb9b7
-         4y2A==
-X-Gm-Message-State: AGi0PuZMWLmtbV0CYzFnUpSlMIv+cqCvvviS5SbE7CePpyZZVuPfumMN
-        WHJZXLlJLTVOo/osAFRibMx/AJptwQo8gmkN1y0=
-X-Google-Smtp-Source: APiQypJH2cfMpfCnPZK+pA8s6rPIi/FSJMp/KP8TFfCWVsLY5vUTwL1Z/RTjJEpywJNpHvOm4Rhvp5j8LzkY7e9bcu0=
-X-Received: by 2002:a92:cf52:: with SMTP id c18mr10652807ilr.246.1585955944184;
- Fri, 03 Apr 2020 16:19:04 -0700 (PDT)
+        Fri, 3 Apr 2020 19:23:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585956208;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=shK7qBjf2e10sdSywtDvuJVbDi+077h/FJ4bWP1/wIQ=;
+        b=R5C5no3AjIi4bEk0+0xerl8GpMOTpgDii0OCWQhEuHGXVc99qTHHUFrDoaF8MQR5uLyegm
+        YuAarBpc/d+/uYfo2jERQ0wpD4gU5YU8gT/VHUl/+UYsdpZO+oA8SF5M62bQkAlH+94a2g
+        tASABuCfu9GkdN1iyoVRavplabpQBVc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-155-VZgX9-JIN_KgLhI2gGovrQ-1; Fri, 03 Apr 2020 19:23:26 -0400
+X-MC-Unique: VZgX9-JIN_KgLhI2gGovrQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69C82107ACC4;
+        Fri,  3 Apr 2020 23:23:25 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-118-94.rdu2.redhat.com [10.10.118.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 650E639B;
+        Fri,  3 Apr 2020 23:23:24 +0000 (UTC)
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+From:   Waiman Long <longman@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+References: <87blobnq02.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
+ <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
+ <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
+ <87lfnda3w3.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
+ <328f5ad3-f8b3-09b9-f2f7-b6dae0137542@redhat.com>
+ <CAHk-=wgww8LFqUenUtNV7hzYSxAemjbOVYfZMXqOxK7DGRrZaw@mail.gmail.com>
+ <c7c770c9-2c5c-4878-a224-d115720068f3@redhat.com>
+Organization: Red Hat
+Message-ID: <86aa9fc6-6ac9-a0c2-3e1d-a602ef16d873@redhat.com>
+Date:   Fri, 3 Apr 2020 19:23:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200323194507.90944-1-abhishekpandit@chromium.org>
- <20200323124503.v3.1.I17e2220fd0c0822c76a15ef89b882fb4cfe3fe89@changeid>
- <7FD50BDC-A4B5-4ED9-8DAB-887039735800@holtmann.org> <CANFp7mX=LvTzttCHcb14TRF8YukQt_WdMpYzJP5LP_ZXwzQTsQ@mail.gmail.com>
-In-Reply-To: <CANFp7mX=LvTzttCHcb14TRF8YukQt_WdMpYzJP5LP_ZXwzQTsQ@mail.gmail.com>
-From:   Dave Taht <dave.taht@gmail.com>
-Date:   Fri, 3 Apr 2020 16:18:53 -0700
-Message-ID: <CAA93jw5aSU6H=9yvtfXTDg1V_MXi42KNJ0imTiwFx6dLjBtBtg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] Bluetooth: Prioritize SCO traffic
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c7c770c9-2c5c-4878-a224-d115720068f3@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 11:11 AM Abhishek Pandit-Subedi
-<abhishekpandit@chromium.org> wrote:
+On 4/3/20 7:16 PM, Waiman Long wrote:
+> On 4/3/20 4:59 PM, Linus Torvalds wrote:
+>> On Fri, Apr 3, 2020 at 1:41 PM Waiman Long <longman@redhat.com> wrote:
+>>> Another alternative is to add new functions like down_read_unfair() that
+>>> perform unfair read locking for its callers. That will require less code
+>>> change, but the calling functions have to make the right choice.
+>> I'd prefer the static choice model - and I'd hide this in some
+>> "task_cred_read_lock()" function anyway rather than have the users do
+>> "mutex_lock_killable(&task->signal->cred_guard_mutex)" like they do
+>> now.
+>>
+>> How nasty would it be to add the "upgrade" op? I took a quick look,
+>> but that just made me go "Waiman would know" ;)
+>>
+>>              Linus
+>>
+> With static choice, you mean defined at init time. Right? In that case,
+> you don't really need a special encapsulation function.
 >
-> Hi Marcel,
+> With upgrade, if there is only one reader, it is pretty straight
+> forward. With more than one readers, it gets more complicated as we have
+> to wait for other readers to unlock. We can spin for a certain period of
+> time. After that, that reader can use the handoff mechanism by queuing
+> itself in front the wait queue before releasing the read lock and go to
+> sleep. That will make sure that it will get the lock once all the other
+> readers exits. For an unfair rwsem, the writer cannot assert the handoff
+> bit and so it shouldn't interfere with this upgrade process.
 >
-> Thanks for merging.
->
-> I agree that the distinction between SCO/eSCO and ACL/LE is a bit
-> concerning for scheduling. I will make some time to revisit this as
-> part of Audio improvements we are making.
+> If there are multiple upgrade readers, only one can win the race. The
+> others have to release the read lock and queue themselves as writers.
+> Will that be acceptable?
 
-A) I know nothing of bluetooth.
-B) I am unfond of strict priority queues, as they can cause
-starvation. My immediate instinct is to reach for a drr++ derived
-solution
-to give fairness to all flows, and a bit of priority to the ones that
-matter most.
+Alternatively, we could assert that only one reader can do the upgrade
+and do a WARN_ON_ONCE() if multiple concurrent upgrade attempts is detected.
 
+Regards,
+Longman
 
->
-> Thanks
-> Abhishek
->
-> Abhishek
->
-> On Thu, Apr 2, 2020 at 11:56 PM Marcel Holtmann <marcel@holtmann.org> wro=
-te:
-> >
-> > Hi Abhishek,
-> >
-> > > When scheduling TX packets, send all SCO/eSCO packets first, check fo=
-r
-> > > pending SCO/eSCO packets after every ACL/LE packet and send them if a=
-ny
-> > > are pending.  This is done to make sure that we can meet SCO deadline=
-s
-> > > on slow interfaces like UART.
-> > >
-> > > If we were to queue up multiple ACL packets without checking for a SC=
-O
-> > > packet, we might miss the SCO timing. For example:
-> > >
-> > > The time it takes to send a maximum size ACL packet (1024 bytes):
-> > > t =3D 10/8 * 1024 bytes * 8 bits/byte * 1 packet / baudrate
-> > >        where 10/8 is uart overhead due to start/stop bits per byte
-> > >
-> > > Replace t =3D 3.75ms (SCO deadline), which gives us a baudrate of 273=
-0666.
-> > >
-> > > At a baudrate of 3000000, if we didn't check for SCO packets within 1=
-024
-> > > bytes, we would miss the 3.75ms timing window.
-> > >
-> > > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > > ---
-> > >
-> > > Changes in v3:
-> > > * Removed hci_sched_sync
-> > >
-> > > Changes in v2:
-> > > * Refactor to check for SCO/eSCO after each ACL/LE packet sent
-> > > * Enabled SCO priority all the time and removed the sched_limit varia=
-ble
-> > >
-> > > net/bluetooth/hci_core.c | 106 +++++++++++++++++++++-----------------=
--
-> > > 1 file changed, 57 insertions(+), 49 deletions(-)
-> >
-> > patch has been applied to bluetooth-next tree.
-> >
-> > However I have been a bit reluctant to apply this right away. I think w=
-hen this code was originally written, we only had ACL and SCO packets. The =
-world was pretty simple. And right now we also only have two packets types =
-(ignoring ISO packets for now), but we added LE and eSCO as separate schedu=
-ling and thus =E2=80=9Cfake=E2=80=9D packet types.
-> >
-> > I have the feeling that this serialized packet processing will get us i=
-nto trouble since we prioritize BR/EDR packets over LE packets and SCO over=
- eSCO. I think we should have looked at all packets based on SO_PRIORITY an=
-d with ISO packets we have to most likely re-design this. Anyway, just some=
-thing to think about.
-> >
-> > Regards
-> >
-> > Marcel
-> >
-
-
-
---=20
-Make Music, Not War
-
-Dave T=C3=A4ht
-CTO, TekLibre, LLC
-http://www.teklibre.com
-Tel: 1-831-435-0729
