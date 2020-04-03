@@ -2,105 +2,305 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0212BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24515C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB37C2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D871C2078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 03:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="xCpnIFv0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="spNmuEnP"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="SmXkdqxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390392AbgDCDuK (ORCPT
+        id S2390395AbgDCDux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 23:50:10 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:37957 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389477AbgDCDuJ (ORCPT
+        Thu, 2 Apr 2020 23:50:53 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:52170 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389477AbgDCDux (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 23:50:09 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D3E795802F5;
-        Thu,  2 Apr 2020 23:50:08 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 02 Apr 2020 23:50:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=P0i5a44/PsPVXizK2loCZDTGox+XOyW
-        9+9DooRb9EMI=; b=xCpnIFv0cZaUC0AT3DOLbflHBL9J8ZgbLYc5wbe/jrK9xf0
-        2DrW2l0EHIfkNsyHA1GvpB7OtMjoRjcPThiu1r4wTCJJOnrfJyZPiFq4Dg3AJ6wf
-        a85rCFiUQkwyYiwQOtCWvxoHxzKiqttkGod6I0yWN/TioFl+i1V7Hj5IQTYCwbQC
-        znkD6kxL2gP/y+MCtrePHGlpybz2YLv9gsZyE7LY9Op1vYXzEstBJtZ4vRbOeaZF
-        vTx+w1purQ9LiCNNN1fxdjz2t3ZXhaUKs/FwwOl8bY3vHTrntt2MYrpNxcxZxRzz
-        UVhqrJO6Uhqo3L0+MijmP3fdZAPUbPcAaf8l0ZA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=P0i5a4
-        4/PsPVXizK2loCZDTGox+XOyW9+9DooRb9EMI=; b=spNmuEnPJL8Uu297qnnHKy
-        rVOe2vFT6f/6b+xH026WDSohpHZdg8xnj9yghCLCKM/rgNrP0qcKPPvuEq3bz91c
-        IkLsmP8xu1bPI2TfqfgUQUOHRQU3C9Lb1ukkQhXGAbCYh6bizNqEYrv9khjRe5wZ
-        VpxfvrnYKrJYAH1X5aeawv1fijcB0QqbTnJEBIL2i8j7OWw2zsRljAEOfL4ISZ0p
-        wo3BZ2RoeP9T46XJgve+IcLR4rEpIH8oPKxmdTjQEhUxhzf62WB+8z9+VUlPdAHR
-        Li/tpyMFcYScbN0Byx2BjzYEvBksqSffm8w1fyHumWEm/LlV/MOVHc601cm5UMag
-        ==
-X-ME-Sender: <xms:abKGXrawh2OniH8S0iCs40jn3tE3MLaWUO1O7DzwPZMwVHiZwOiUmQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdehgdejhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucffohhmrg
-    hinhepkhgvrhhnvghlrdhorhhgpdguvghvihgtvghsrdhpihhnghenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiug
-    drrghu
-X-ME-Proxy: <xmx:abKGXvlPkC1DxluARvIz4GaXXaHhMdSSm3xWLd9ypVAGbxaeaS2-Sw>
-    <xmx:abKGXu3Aj5bepyhous-L-NVYVZy5zOZEmFcgFo4Z9CiCwBm8fmqjmg>
-    <xmx:abKGXn1jySVFIH3-waYbwYInoEN1TIXY0UmbLkxz2p-O6vvw7YFerA>
-    <xmx:cLKGXryKVaezoVOQ2k_ilBFTF_ZS0jkbQmrbG0_MwuNVc1LC4v28CQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AFA09E00B0; Thu,  2 Apr 2020 23:50:01 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-1082-g13d7805-fmstable-20200403v1
-Mime-Version: 1.0
-Message-Id: <7734002a-181e-4baf-b9a3-af66894acc16@www.fastmail.com>
-In-Reply-To: <cover.fe20dfec1a7c91771c6bb574814ffb4bb49e2136.1576462051.git-series.andrew@aj.id.au>
-References: <cover.fe20dfec1a7c91771c6bb574814ffb4bb49e2136.1576462051.git-series.andrew@aj.id.au>
-Date:   Fri, 03 Apr 2020 14:20:21 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     openipmi-developer@lists.sourceforge.net
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        "Corey Minyard" <minyard@acm.org>, "Arnd Bergmann" <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_0/3]_ipmi:_kcs-bmc:_Rework_bindings_to_clean_up_?=
- =?UTF-8?Q?DT_warnings?=
-Content-Type: text/plain
+        Thu, 2 Apr 2020 23:50:53 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 20A782DC3D2F;
+        Fri,  3 Apr 2020 14:50:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1585885852;
+        bh=q0MWnVXh2aGk7v7ivIwQdA2GkasasysLWo22AkPKzug=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
+        b=SmXkdqxMWlBa5BfHDElmGi2xtWIwhlyZC+XnoaUyPT5aE6boLWD/AQN/Ujgix+fN4
+         lt4B5wlyflX5LxbuaPBd1/I+r9LZcxTBoOIJNrsPr7cwQ3rF8gAIphr9HUyU+/njBu
+         hoDUPWUmDhnMr2IDYjVrcWf8DJx+zthb6UW/Ew6sB5BFaYRlbN8ZP22iJ5//EwDrEq
+         dD4ehflXTk9vxREms73gx7K8mPfP1KwZYMl53l3NYL4Xwx/xE/mxenCpwKDjuyfzy5
+         PICZfF6bNcnScT6yJ1xqOYXDXaGhd9kSOB33hti6KhvnMClTAq2WANlpPBZVVSIvcL
+         8s0um1BD8fZCugtMXGq1JJtYm9lY4Vdx0/S22VpY28H9zFPcBf8ek6CH7t+BVz3vQX
+         1Kbfx9wB695SdNby60eBt8a4f23Yn9HWKUD+g3geM6UqmJSLXlha16GKuUlNpgR97c
+         xNrt0sa9YC5YmQ+gienhkCLZV959msXZmwlkGv3KDF1SaRC8vCPEV4+E1xsA7FncHc
+         xG5nT1bBI8S5029N239hJ5/GvRTWmSG6LD9okWBr23r7lr94UNfv5fYS6mHbrTb0J6
+         Q5sMgtZJxUzfbhwpv97hSzGRHHpOZU2lNlpmnojVWlsVdZ4cyc46gSWYOgf6FF5YiT
+         KvA+UO/Nh6edhA/eclMg0h9A=
+Received: from Hawking (ntp.lan [10.0.1.1])
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id 0333obha097274
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 3 Apr 2020 14:50:39 +1100 (AEDT)
+        (envelope-from alastair@d-silva.org)
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     "'Dan Williams'" <dan.j.williams@intel.com>
+Cc:     "'Aneesh Kumar K . V'" <aneesh.kumar@linux.ibm.com>,
+        "'Oliver O'Halloran'" <oohall@gmail.com>,
+        "'Benjamin Herrenschmidt'" <benh@kernel.crashing.org>,
+        "'Paul Mackerras'" <paulus@samba.org>,
+        "'Michael Ellerman'" <mpe@ellerman.id.au>,
+        "'Frederic Barrat'" <fbarrat@linux.ibm.com>,
+        "'Andrew Donnellan'" <ajd@linux.ibm.com>,
+        "'Arnd Bergmann'" <arnd@arndb.de>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'Vishal Verma'" <vishal.l.verma@intel.com>,
+        "'Dave Jiang'" <dave.jiang@intel.com>,
+        "'Ira Weiny'" <ira.weiny@intel.com>,
+        "'Andrew Morton'" <akpm@linux-foundation.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Rob Herring'" <robh@kernel.org>,
+        "'Anton Blanchard'" <anton@ozlabs.org>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Mahesh Salgaonkar'" <mahesh@linux.vnet.ibm.com>,
+        "'Madhavan Srinivasan'" <maddy@linux.vnet.ibm.com>,
+        "=?utf-8?Q?'C=C3=A9dric_Le_Goater'?=" <clg@kaod.org>,
+        "'Anju T Sudhakar'" <anju@linux.vnet.ibm.com>,
+        "'Hari Bathini'" <hbathini@linux.ibm.com>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Greg Kurz'" <groug@kaod.org>,
+        "'Nicholas Piggin'" <npiggin@gmail.com>,
+        "'Masahiro Yamada'" <yamada.masahiro@socionext.com>,
+        "'Alexey Kardashevskiy'" <aik@ozlabs.ru>,
+        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
+        "'linuxppc-dev'" <linuxppc-dev@lists.ozlabs.org>,
+        "'linux-nvdimm'" <linux-nvdimm@lists.01.org>,
+        "'Linux MM'" <linux-mm@kvack.org>
+References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-8-alastair@d-silva.org> <CAPcyv4gUU4PbQK1YJLfOToLDmFWsWWLySwkqHuoqGDvKZJGQvg@mail.gmail.com>
+In-Reply-To: <CAPcyv4gUU4PbQK1YJLfOToLDmFWsWWLySwkqHuoqGDvKZJGQvg@mail.gmail.com>
+Subject: RE: [PATCH v4 07/25] ocxl: Add functions to map/unmap LPC memory
+Date:   Fri, 3 Apr 2020 14:50:36 +1100
+Message-ID: <303a01d6096b$0ea3e120$2beba360$@d-silva.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-au
+Thread-Index: AQJ5L4Hn/mp5p0p1jYAFWLJ+xmWSbgDVHtBXAp4PBwGnBNz6cA==
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Fri, 03 Apr 2020 14:50:47 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+> -----Original Message-----
+> From: Dan Williams <dan.j.williams@intel.com>
+> Sent: Wednesday, 1 April 2020 7:49 PM
+> To: Alastair D'Silva <alastair@d-silva.org>
+> Cc: Aneesh Kumar K . V <aneesh.kumar@linux.ibm.com>; Oliver O'Halloran
+> <oohall@gmail.com>; Benjamin Herrenschmidt
+> <benh@kernel.crashing.org>; Paul Mackerras <paulus@samba.org>; Michael
+> Ellerman <mpe@ellerman.id.au>; Frederic Barrat =
+<fbarrat@linux.ibm.com>;
+> Andrew Donnellan <ajd@linux.ibm.com>; Arnd Bergmann
+> <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>;
+> Vishal Verma <vishal.l.verma@intel.com>; Dave Jiang
+> <dave.jiang@intel.com>; Ira Weiny <ira.weiny@intel.com>; Andrew Morton
+> <akpm@linux-foundation.org>; Mauro Carvalho Chehab
+> <mchehab+samsung@kernel.org>; David S. Miller <davem@davemloft.net>;
+> Rob Herring <robh@kernel.org>; Anton Blanchard <anton@ozlabs.org>;
+> Krzysztof Kozlowski <krzk@kernel.org>; Mahesh Salgaonkar
+> <mahesh@linux.vnet.ibm.com>; Madhavan Srinivasan
+> <maddy@linux.vnet.ibm.com>; C=C3=A9dric Le Goater <clg@kaod.org>; Anju =
+T
+> Sudhakar <anju@linux.vnet.ibm.com>; Hari Bathini
+> <hbathini@linux.ibm.com>; Thomas Gleixner <tglx@linutronix.de>; Greg
+> Kurz <groug@kaod.org>; Nicholas Piggin <npiggin@gmail.com>; Masahiro
+> Yamada <yamada.masahiro@socionext.com>; Alexey Kardashevskiy
+> <aik@ozlabs.ru>; Linux Kernel Mailing List =
+<linux-kernel@vger.kernel.org>;
+> linuxppc-dev <linuxppc-dev@lists.ozlabs.org>; linux-nvdimm <linux-
+> nvdimm@lists.01.org>; Linux MM <linux-mm@kvack.org>
+> Subject: Re: [PATCH v4 07/25] ocxl: Add functions to map/unmap LPC
+> memory
+>=20
+> On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva =
+<alastair@d-silva.org>
+> wrote:
+> >
+> > Add functions to map/unmap LPC memory
+> >
+>=20
+> "map memory" is an overloaded term. I'm guessing this patch has =
+nothing to
+> do with mapping memory in the MMU. Is it updating hardware resource
+> decoders to start claiming address space that was allocated =
+previously?
+>=20
 
-On Mon, 16 Dec 2019, at 12:57, Andrew Jeffery wrote:
-> Hello,
-> 
-> This is a short series reworking the devicetree binding and driver for the
-> ASPEED BMC KCS devices. With the number of supported ASPEED BMC devicetrees the
-> changes enable removal of more than 100 lines of warning output from dtc.
-> 
-> v1 can be found here:
-> 
-> https://lore.kernel.org/lkml/cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au/
-> 
-> v2 cleans up the commit message of 2/3 and changes the name of the property
-> governing the LPC IO address for the KCS devices.
+It's similar to MMIO - these calls end up setting up a BAR which places =
+the LPC
+memory into a physical memory range addressable by the kernel.
 
-Ping?
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> > ---
+> >  drivers/misc/ocxl/core.c          | 51 =
++++++++++++++++++++++++++++++++
+> >  drivers/misc/ocxl/ocxl_internal.h |  3 ++
+> >  include/misc/ocxl.h               | 21 +++++++++++++
+> >  3 files changed, 75 insertions(+)
+> >
+> > diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c =
+index
+> > 2531c6cf19a0..75ff14e3882a 100644
+> > --- a/drivers/misc/ocxl/core.c
+> > +++ b/drivers/misc/ocxl/core.c
+> > @@ -210,6 +210,56 @@ static void unmap_mmio_areas(struct ocxl_afu
+> *afu)
+> >         release_fn_bar(afu->fn, afu->config.global_mmio_bar);  }
+> >
+> > +int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu) {
+> > +       struct pci_dev *dev =3D to_pci_dev(afu->fn->dev.parent);
+> > +
+> > +       if ((afu->config.lpc_mem_size + afu-
+> >config.special_purpose_mem_size) =3D=3D 0)
+> > +               return 0;
+> > +
+> > +       afu->lpc_base_addr =3D ocxl_link_lpc_map(afu->fn->link, =
+dev);
+> > +       if (afu->lpc_base_addr =3D=3D 0)
+> > +               return -EINVAL;
+> > +
+> > +       if (afu->config.lpc_mem_size > 0) {
+> > +               afu->lpc_res.start =3D afu->lpc_base_addr + afu-
+> >config.lpc_mem_offset;
+> > +               afu->lpc_res.end =3D afu->lpc_res.start + =
+afu->config.lpc_mem_size
+> - 1;
+> > +       }
+> > +
+> > +       if (afu->config.special_purpose_mem_size > 0) {
+> > +               afu->special_purpose_res.start =3D =
+afu->lpc_base_addr +
+> > +                                                =
+afu->config.special_purpose_mem_offset;
+> > +               afu->special_purpose_res.end =3D =
+afu->special_purpose_res.start +
+> > +                                              =
+afu->config.special_purpose_mem_size - 1;
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(ocxl_afu_map_lpc_mem);
+> > +
+> > +struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu) {
+> > +       return &afu->lpc_res;
+> > +}
+> > +EXPORT_SYMBOL_GPL(ocxl_afu_lpc_mem);
+> > +
+> > +static void unmap_lpc_mem(struct ocxl_afu *afu) {
+> > +       struct pci_dev *dev =3D to_pci_dev(afu->fn->dev.parent);
+> > +
+> > +       if (afu->lpc_res.start || afu->special_purpose_res.start) {
+> > +               void *link =3D afu->fn->link;
+> > +
+> > +               // only release the link when the the last consumer =
+calls release
+> > +               ocxl_link_lpc_release(link, dev);
+> > +
+> > +               afu->lpc_res.start =3D 0;
+> > +               afu->lpc_res.end =3D 0;
+> > +               afu->special_purpose_res.start =3D 0;
+> > +               afu->special_purpose_res.end =3D 0;
+> > +       }
+> > +}
+> > +
+> >  static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct
+> > pci_dev *dev)  {
+> >         int rc;
+> > @@ -251,6 +301,7 @@ static int configure_afu(struct ocxl_afu *afu, =
+u8
+> > afu_idx, struct pci_dev *dev)
+> >
+> >  static void deconfigure_afu(struct ocxl_afu *afu)  {
+> > +       unmap_lpc_mem(afu);
+> >         unmap_mmio_areas(afu);
+> >         reclaim_afu_pasid(afu);
+> >         reclaim_afu_actag(afu);
+> > diff --git a/drivers/misc/ocxl/ocxl_internal.h
+> > b/drivers/misc/ocxl/ocxl_internal.h
+> > index 2d7575225bd7..7b975a89db7b 100644
+> > --- a/drivers/misc/ocxl/ocxl_internal.h
+> > +++ b/drivers/misc/ocxl/ocxl_internal.h
+> > @@ -52,6 +52,9 @@ struct ocxl_afu {
+> >         void __iomem *global_mmio_ptr;
+> >         u64 pp_mmio_start;
+> >         void *private;
+> > +       u64 lpc_base_addr; /* Covers both LPC & special purpose =
+memory */
+> > +       struct resource lpc_res;
+> > +       struct resource special_purpose_res;
+> >  };
+> >
+> >  enum ocxl_context_status {
+> > diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h index
+> > 357ef1aadbc0..d8b0b4d46bfb 100644
+> > --- a/include/misc/ocxl.h
+> > +++ b/include/misc/ocxl.h
+> > @@ -203,6 +203,27 @@ int ocxl_irq_set_handler(struct ocxl_context
+> > *ctx, int irq_id,
+> >
+> >  // AFU Metadata
+> >
+> > +/**
+> > + * ocxl_afu_map_lpc_mem() - Map the LPC system & special purpose
+> > +memory for an AFU
+> > + * Do not call this during device discovery, as there may me =
+multiple
+>=20
+> s/me/be/
+>=20
+>=20
+> > + * devices on a link, and the memory is mapped for the whole link,
+> > +not
+> > + * just one device. It should only be called after all devices have
+> > + * registered their memory on the link.
+> > + *
+> > + * @afu: The AFU that has the LPC memory to map
+> > + *
+> > + * Returns 0 on success, negative on failure  */ int
+> > +ocxl_afu_map_lpc_mem(struct ocxl_afu *afu);
+> > +
+> > +/**
+> > + * ocxl_afu_lpc_mem() - Get the physical address range of LPC =
+memory
+> > +for an AFU
+> > + * @afu: The AFU associated with the LPC memory
+> > + *
+> > + * Returns a pointer to the resource struct for the physical =
+address
+> > +range  */ struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu);
+> > +
+> >  /**
+> >   * ocxl_afu_config() - Get a pointer to the config for an AFU
+> >   * @afu: a pointer to the AFU to get the config for
+> > --
+> > 2.24.1
+> >
+
+
+
+--=20
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva     msn: alastair@d-silva.org
+blog: http://alastair.d-silva.org    Twitter: @EvilDeece
+
