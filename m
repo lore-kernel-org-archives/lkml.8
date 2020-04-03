@@ -2,87 +2,89 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E06FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93848C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D3B20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BEC2080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 06:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388951AbgDCGsn (ORCPT
+        id S2388457AbgDCGxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 02:48:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59906 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387962AbgDCGsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 02:48:43 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7EFA5B00FAE0776F69B5;
-        Fri,  3 Apr 2020 14:48:28 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Apr 2020
- 14:48:19 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <gregkh@linuxfoundation.org>,
-        <christophe.leroy@c-s.fr>, <allison@lohutok.net>,
-        <armijn@tjaldur.nl>, <tglx@linutronix.de>,
-        <aneesh.kumar@linux.ibm.com>, <yuehaibing@huawei.com>
-CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] powerpc/mm: ptdump: Add missing include <asm/hvcall.h>
-Date:   Fri, 3 Apr 2020 14:47:56 +0800
-Message-ID: <20200403064756.36128-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20200402135828.37308-1-yuehaibing@huawei.com>
-References: <20200402135828.37308-1-yuehaibing@huawei.com>
+        Fri, 3 Apr 2020 02:53:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:36967 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729423AbgDCGxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 02:53:23 -0400
+IronPort-SDR: pkfLmWpzZubv+DHa8fiJAyu7bJwuIO/XCyMy5rPySuD4tcYd27exZU7XlcCsZITG71e2Vc3aag
+ yzROJfHYaVbQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 23:53:22 -0700
+IronPort-SDR: SYWvhQZyVHVpX4T8X0mwVSyHpqrQLoipgtu+F7FP2HWJYz+ETML7SiQEeGyQnC63G4SX1xnMaq
+ d+R0X+4p/0pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,338,1580803200"; 
+   d="scan'208";a="451200393"
+Received: from unknown (HELO [10.239.13.3]) ([10.239.13.3])
+  by fmsmga006.fm.intel.com with ESMTP; 02 Apr 2020 23:53:20 -0700
+Subject: Re: [LKP] Re: de8f5e4f2d ("lockdep: Introduce wait-type checks"): [
+ 17.344674] EIP: default_idle
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        kernel test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        LKP <lkp@lists.01.org>
+References: <20200402081732.GM8179@shao2-debian>
+ <87h7y2ns2j.fsf@nanos.tec.linutronix.de>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <75dd6e6b-745d-23be-6d3d-1984b1f7f47d@intel.com>
+Date:   Fri, 3 Apr 2020 14:52:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+In-Reply-To: <87h7y2ns2j.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-while PPC_PSERIES is not set, gcc build fails:
-
-arch/powerpc/mm/ptdump/hashpagetable.c: In function ‘pseries_find’:
-arch/powerpc/mm/ptdump/hashpagetable.c:262:18: error: ‘H_SUCCESS’ undeclared (first use in this function); did you mean ‘FL_ACCESS’?
-   if (lpar_rc != H_SUCCESS)
-                  ^~~~~~~~~
-                  FL_ACCESS
-
-If PPC_PSERIES is not set, <asm/plpar_wrappers.h> does not
-include <asm/hvcall.h>, which leads to this failure.
-
-Add missing include file <asm/hvcall.h> in hashpagetable.c to fix this.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 65e701b2d2a8 ("powerpc/ptdump: drop non vital #ifdefs")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: Add hvcall.h instead of vio.h, also rework patch log
----
- arch/powerpc/mm/ptdump/hashpagetable.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/powerpc/mm/ptdump/hashpagetable.c b/arch/powerpc/mm/ptdump/hashpagetable.c
-index b6ed9578382f..3e7e6206688c 100644
---- a/arch/powerpc/mm/ptdump/hashpagetable.c
-+++ b/arch/powerpc/mm/ptdump/hashpagetable.c
-@@ -20,6 +20,7 @@
- #include <asm/page.h>
- #include <asm/pgalloc.h>
- #include <asm/plpar_wrappers.h>
-+#include <asm/hvcall.h>
- #include <linux/memblock.h>
- #include <asm/firmware.h>
- 
--- 
-2.17.1
 
 
+On 4/2/20 5:40 PM, Thomas Gleixner wrote:
+> kernel test robot <lkp@intel.com> writes:
+>> Greetings,
+>>
+>> 0day kernel testing robot got the below dmesg and the first bad commit is
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>>
+>> commit de8f5e4f2dc1f032b46afda0a78cab5456974f89
+>> Author:     Peter Zijlstra <peterz@infradead.org>
+>> AuthorDate: Sat Mar 21 12:26:01 2020 +0100
+>> Commit:     Peter Zijlstra <peterz@infradead.org>
+>> CommitDate: Sat Mar 21 16:00:24 2020 +0100
+>>
+>>      lockdep: Introduce wait-type checks
+> Can you please avoid enabling
+>
+>> CONFIG_PROVE_RAW_LOCK_NESTING=y
+> for now?
+>
+> As the changelog states, there are known issues and that's why the
+> config is default=n.
+
+Hi Thomas,
+
+Thanks for the advice, we have disabled CONFIG_PROVE_RAW_LOCK_NESTING.
+
+Best Regards,
+Rong Chen
