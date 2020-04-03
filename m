@@ -2,136 +2,151 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9325C2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EF2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89544206A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73EB2208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:09:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MxQnN3ZX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DpyFsdCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388932AbgDCHHy (ORCPT
+        id S2388898AbgDCHJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 03:07:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48420 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388472AbgDCHHy (ORCPT
+        Fri, 3 Apr 2020 03:09:19 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34485 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730550AbgDCHJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 03:07:54 -0400
+        Fri, 3 Apr 2020 03:09:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585897673;
+        s=mimecast20190719; t=1585897758;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=6XkVKL4skcBI9I3qnEHa0ueL+rxPTyXtnrcDFqwnTr4=;
-        b=MxQnN3ZXAT8QKZWAhJ1cROA63j7WlnkXJbrSQ7TGAJwn8b2pfQAtZ93eV2T2ICRUC97x7r
-        D1vj1eyZVGaw9HPdZoYA5zT6KDIYn2+zN7hgHjRfe88bCqECqaNc7HpMRA/nvQVrw5Eby/
-        TNW6uskM9QGEy3Zx7J8OUrbVg5OLjQA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-174-nAxzqPFrOTCfQncJe5Elhw-1; Fri, 03 Apr 2020 03:07:51 -0400
-X-MC-Unique: nAxzqPFrOTCfQncJe5Elhw-1
-Received: by mail-wr1-f72.google.com with SMTP id v14so2628297wrq.13
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 00:07:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=6XkVKL4skcBI9I3qnEHa0ueL+rxPTyXtnrcDFqwnTr4=;
-        b=iLyK97hM4ZNHjvOWbYaz/PtrzQJpY9T+wqOekxjs2DUVB+9EHSPKb5v6p4CLEmeWEV
-         OgBOPYlePW1p3ebnL837we/uJYJFqQPOei8EAfyF1ObnlfypwFvSSO1OILg//BCdw2qx
-         dqDSC5yvIGKGXfbdgdVexUnt6eKJ0Ftbc3Qsk0SPw8pEeiQnqIS8/j59QwxDmPyE1qKZ
-         DbARSZn11BzV5te+7sJPFr3o7bMS8F5cEh0ciHByMOBJyU8m8bvGM6CjeTWv0VGUtJ7o
-         PvseHbit2SqEI7ZXdhJ1j4Vx1lkD8A/p4JFFwmZRwLx6oship1lUkHWsaDAmWNvBfW82
-         xWFg==
-X-Gm-Message-State: AGi0PuY9zfGCLUSPfHyylytAaBEd7BrMOCUGoBTffIYDKQLnBkRh8wcy
-        VD1gbelWqbNsgfsOBnvc+6zneGq+Q8NkW0POKHz8oR//TcsnHE5kkrptMEl2F7tBA9xL8k4RsFm
-        sPtzYjsAXi4CvzsXgXDa+LhC9
-X-Received: by 2002:adf:f3c5:: with SMTP id g5mr7325853wrp.230.1585897669656;
-        Fri, 03 Apr 2020 00:07:49 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKj00MKc2lrco4DtzMzrre8ASngvPTRlJYQu6MPCyFkbxQQEZUm4rZj/EV1GW2sYRctom4M+w==
-X-Received: by 2002:adf:f3c5:: with SMTP id g5mr7325834wrp.230.1585897669459;
-        Fri, 03 Apr 2020 00:07:49 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id u13sm11316556wru.88.2020.04.03.00.07.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 00:07:48 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "Andrea Parri \(Microsoft\)" <parri.andrea@gmail.com>
-Subject: RE: [PATCH 5/5] Drivers: hv: check VMBus messages lengths
-In-Reply-To: <MW2PR2101MB1052E7B2458F489E0123C1D9D7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200401103638.1406431-1-vkuznets@redhat.com> <20200401103816.1406642-1-vkuznets@redhat.com> <20200401103816.1406642-2-vkuznets@redhat.com> <MW2PR2101MB1052E7B2458F489E0123C1D9D7C70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-Date:   Fri, 03 Apr 2020 09:07:47 +0200
-Message-ID: <87369lyrlo.fsf@vitty.brq.redhat.com>
+        bh=TUShErNk8cwU7hJf8BxmK0K5c6pEQ4hGGKwc5zmiaaw=;
+        b=DpyFsdCBBAPnnPBQEEqxC7y4nxlol9/XgIFm3seGuP41Yl6AhXF3itCz3//LHzhGzUyn9L
+        G6U3zAfTIvMCVF/9U2RTnITO60F+bLnFu05FP2xd/DyqDKDfRLRakrx0bwhSIRQD5Up+XQ
+        t0YI5ibSuTRk5UQsTusXqWKincM7Fps=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-63-Cvy3b_roPf66oPbJTVFQdA-1; Fri, 03 Apr 2020 03:09:13 -0400
+X-MC-Unique: Cvy3b_roPf66oPbJTVFQdA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2400818A6EC1;
+        Fri,  3 Apr 2020 07:09:09 +0000 (UTC)
+Received: from localhost (ovpn-12-42.pek2.redhat.com [10.72.12.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 115A11147D2;
+        Fri,  3 Apr 2020 07:09:07 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 15:09:04 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Hoan Tran <hoan@os.amperecomputing.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+Message-ID: <20200403070904.GO2402@MiWiFi-R3L-srv>
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330175100.GD30942@linux.ibm.com>
+ <20200330182301.GM14243@dhcp22.suse.cz>
+ <20200331081423.GE30942@linux.ibm.com>
+ <20200331085513.GE30449@dhcp22.suse.cz>
+ <20200331140332.GA2129@MiWiFi-R3L-srv>
+ <20200331142138.GL30449@dhcp22.suse.cz>
+ <20200331143140.GA2402@MiWiFi-R3L-srv>
+ <cc717f09-2b18-b242-e438-3ec730c5dac0@os.amperecomputing.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc717f09-2b18-b242-e438-3ec730c5dac0@os.amperecomputing.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
+On 04/02/20 at 09:46pm, Hoan Tran wrote:
+> Hi All,
+> 
+> On 3/31/20 7:31 AM, Baoquan He wrote:
+> > On 03/31/20 at 04:21pm, Michal Hocko wrote:
+> > > On Tue 31-03-20 22:03:32, Baoquan He wrote:
+> > > > Hi Michal,
+> > > > 
+> > > > On 03/31/20 at 10:55am, Michal Hocko wrote:
+> > > > > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
+> > > > > > Maybe I mis-read the code, but I don't see how this could happen. In the
+> > > > > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
+> > > > > > calculate_node_totalpages() that ensures that node->node_zones are entirely
+> > > > > > within the node because this is checked in zone_spanned_pages_in_node().
+> > > > > 
+> > > > > zone_spanned_pages_in_node does chech the zone boundaries are within the
+> > > > > node boundaries. But that doesn't really tell anything about other
+> > > > > potential zones interleaving with the physical memory range.
+> > > > > zone->spanned_pages simply gives the physical range for the zone
+> > > > > including holes. Interleaving nodes are essentially a hole
+> > > > > (__absent_pages_in_range is going to skip those).
+> > > > > 
+> > > > > That means that when free_area_init_core simply goes over the whole
+> > > > > physical zone range including holes and that is why we need to check
+> > > > > both for physical and logical holes (aka other nodes).
+> > > > > 
+> > > > > The life would be so much easier if the whole thing would simply iterate
+> > > > > over memblocks...
+> > > > 
+> > > > The memblock iterating sounds a great idea. I tried with putting the
+> > > > memblock iterating in the upper layer, memmap_init(), which is used for
+> > > > boot mem only anyway. Do you think it's doable and OK? It yes, I can
+> > > > work out a formal patch to make this simpler as you said. The draft code
+> > > > is as below. Like this it uses the existing code and involves little change.
+> > > 
+> > > Doing this would be a step in the right direction! I haven't checked the
+> > > code very closely though. The below sounds way too simple to be truth I
+> > > am afraid. First for_each_mem_pfn_range is available only for
+> > > CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
+> > > saying that I really hate that being conditional). Also I haven't really
+> > > checked the deferred initialization path - I have a very vague
+> > > recollection that it has been converted to the memblock api but I have
+> > > happilly dropped all that memory.
+> > 
+> > Thanks for your quick response and pointing out the rest suspect aspects,
+> > I will investigate what you mentioned, see if they impact.
+> 
+> I would like to check if we still move on with my patch to remove
+> CONFIG_NODES_SPAN_OTHER_NODES and have another patch on top it?
 
-> From: Vitaly Kuznetsov <vkuznets@redhat.com>  Sent: Wednesday, April 1, 2020 3:38 AM
->> 
->> VMBus message handlers (channel_message_table) receive a pointer to
->> 'struct vmbus_channel_message_header' and cast it to a structure of their
->> choice, which is sometimes longer than the header. We, however, don't check
->> that the message is long enough so in case hypervisor screws up we'll be
->> accessing memory beyond what was allocated for temporary buffer.
->> 
->> Previously, we used to always allocate and copy 256 bytes from message page
->> to temporary buffer but this is hardly better: in case the message is
->> shorter than we expect we'll be trying to consume garbage as some real
->> data and no memory guarding technique will be able to identify an issue.
->> 
->> Introduce 'min_payload_len' to 'struct vmbus_channel_message_table_entry'
->> and check against it in vmbus_on_msg_dpc(). Note, we can't require the
->> exact length as new hypervisor versions may add extra fields to messages,
->> we only check that the message is not shorter than we expect.
->
-> This assumes that the current structure definitions don't already
-> include extra fields that were added in newer versions of Hyper-V.  If they did,
-> the minimum length test could fail on older versions of Hyper-V.  But I
-> looked through the structure definitions and don't see any indication that
-> such extra fields have been added, so this should be OK.
->
-
-Yes, my understanding as well. When we decide to extend some of these
-structures for newer VMbus version we'll have a choice: keep the require
-length minimal or implement a more somplex check (e.g. add a 'length
-check' function pointer to vmbus_channel_message_table_entry() -- or
-pass 'length' to all message handlers and handle it ther). But as we
-currently have no such cases this will definitely look over-engineered
-so I decided to go the easiest way.
-
->> 
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  drivers/hv/channel_mgmt.c | 54 ++++++++++++++++++++++-----------------
->>  drivers/hv/hyperv_vmbus.h |  1 +
->>  drivers/hv/vmbus_drv.c    |  6 +++++
->>  3 files changed, 37 insertions(+), 24 deletions(-)
->> 
->
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
->
-
-Thanks!
-
--- 
-Vitaly
+I think we would like to replace CONFIG_NODES_SPAN_OTHER_NODES with
+CONFIG_NUMA, and just let UMA return 0 as node id, as Michal replied in
+another mail. Anyway, your patch 2~5 are still needed to sit on top of
+the change of this new plan.
 
