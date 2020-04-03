@@ -2,126 +2,113 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27A4C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5D2C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E9E206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FF82078C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 22:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQO68LKD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OKwXzGMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbgDCWjh (ORCPT
+        id S1728556AbgDCWpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 18:39:37 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35372 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbgDCWjh (ORCPT
+        Fri, 3 Apr 2020 18:45:05 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36564 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727923AbgDCWpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 18:39:37 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g3so8094870wrx.2;
-        Fri, 03 Apr 2020 15:39:35 -0700 (PDT)
+        Fri, 3 Apr 2020 18:45:05 -0400
+Received: by mail-pj1-f68.google.com with SMTP id nu11so3644096pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 15:45:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UpKvuDI1PGicwT1rg/Ja3rf4nyRsLxbYz+4E9C/TDSU=;
-        b=BQO68LKDoogOR16LZjyPauaQEdOkEIbHpIEoXwMzrJie0LrjWI6YUmv50fv3D07VY6
-         KgboFHwMT+JPhcOlK5Rdbrc8g7C402ueF43OgP2NyCfMas/DBHjwXkLjsajPppWIjGVK
-         tEnTOCA8HJwn3GyANS/ikGDV5xOn0rq/FOu8nnKjHUAzl/7sQJ6zAVSbIi6Du/g0E/0d
-         3NFk7hHYR6Eobj2jyTRRXqPPJw6is9NDKyIPw5w8dgEFfjEeTx1jv1aDjc6c4uBCPh7j
-         YtbjDYsP+hWxr0tLCS0UgSdROh1bDHi8yOdIJC5kOgdTzieHF38S8bVcvuN5CjrgkAmF
-         NcEQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Dh/YzwcmTNEGeHjfzHpzt3+RVjAmlGCyq1UYQzxyT7s=;
+        b=OKwXzGMXRPUowM4ABa1P1uclRN312qDo0rkVMaxCnf//bzaQk0hTNa4VSw7AKcTaMe
+         NBvdo/yL8y3JSLsBpOZkG4L0cy6JcxsIOqb2KZQUghuixheFfu9xWqNHpqzTvApWeK6n
+         rGHvNIf6rcWOjII10ibRZ/BMIG0fZJkQ5Tg2w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UpKvuDI1PGicwT1rg/Ja3rf4nyRsLxbYz+4E9C/TDSU=;
-        b=JpuSAmUQNqwQxQEVT41e1eX8LjRzCS4ZoXoM+LUar2bVFF8Ishq5K2f+ZXlxRck7sg
-         /FTgvb7nmsjl7GUtvquZRjR/dGO/r1fELx7euvHbNmY+4hUuCJ+89p/XfRLVQAHI4Egr
-         +6lqa7GhKC0XqIX1TFecrop9ukjRhAtdQdLqAxSSQtesyfzfEd23EKof9A0ceOm8r4Lz
-         K11rJccCZ42v2ZzjqZF9MKOU7XaQXqcDMZXJOtAGk3s/dQ4PXYy0Y9DYJ+2CMWWtGq5p
-         ZwFHa5NRGXEDSRM5HxPA3JkcPQIrnpjH0dzSkzvGgGH4qerImFMMxINx5+mgNUOF5vVh
-         ACqw==
-X-Gm-Message-State: AGi0PuZcc705sXmxQvkqIEI31p7B0VoPeDCO9Mo5xhpJnxb1q5VLEjqy
-        L6hS1gPdTN95FLGE9ylXW0w=
-X-Google-Smtp-Source: APiQypIIjX4dVjK/pfyxINrITNHRDZUv1crUf2VsOxM8ntQcX/E1QQHm/gbT6AspeE9o6pgdcMHkiw==
-X-Received: by 2002:a5d:44c4:: with SMTP id z4mr1675877wrr.221.1585953575218;
-        Fri, 03 Apr 2020 15:39:35 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 189sm13554498wme.31.2020.04.03.15.39.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Apr 2020 15:39:34 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 22:39:33 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
- node
-Message-ID: <20200403223933.vkwfwatu572entz4@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200330123643.17120-6-richard.weiyang@gmail.com>
- <20200330124842.GY22483@bombadil.infradead.org>
- <20200330141558.soeqhstone2liqud@master>
- <20200330142821.GD22483@bombadil.infradead.org>
- <20200331134208.gfkyym6n3gpgk3x3@master>
- <20200331164212.GC21484@bombadil.infradead.org>
- <20200331220440.roq4pv6wk7tq23gx@master>
- <20200331235912.GD21484@bombadil.infradead.org>
- <20200401221021.v6igvcpqyeuo2cws@master>
- <20200401222000.GK21484@bombadil.infradead.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Dh/YzwcmTNEGeHjfzHpzt3+RVjAmlGCyq1UYQzxyT7s=;
+        b=TTOb0JU7ygJJZydn373bpAysq70/N9rfcJfprpEobNvlPGxoORNJFO8s6Q3z9/Ly6R
+         g2wdnFfY4rCmZqwUmWUe3o7oFxAOyKZtoRYyu9FSzP6iQQxrP5m1gpIIjPzVVuKMB05Y
+         4Q60Hra7J/0ZdSJu0r2hWTp9zOmCEQi5k3b9EZr3lcM5Z/LyGv/dFRyHmJROSBU8V7jk
+         9JAm2nIw0Fp+yNhrwiKHDC5gBmueEI/9x0/jv0kl2Mbol9FkvD85ylqqJkXeT1sqiqzk
+         XnKCYGInJTBzMNJt3yjw/Oo215EDtbdW95IWlRRCQARazvZ/dx3UQxH4LBYZ4ikNlnbS
+         ErSw==
+X-Gm-Message-State: AGi0PuYeQawxmHsm+qgjlFDXE2Be1QKm3yQo4KmCsbwge80xmjQ4C3Lb
+        3GN6mNeQCaio8IBXLns85VTiXA==
+X-Google-Smtp-Source: APiQypLzpCCsWiQ/lFaeewHX9vuuuIEqsKxPFJbCGqChBNQwRFmwfICRd70XwZr6HeooQ2rNiYBH/A==
+X-Received: by 2002:a17:90a:9b17:: with SMTP id f23mr12281284pjp.118.1585953902199;
+        Fri, 03 Apr 2020 15:45:02 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o14sm6399628pfh.147.2020.04.03.15.45.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 15:45:01 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 15:45:00 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] kbuild: do not pass $(KBUILD_CFLAGS) to
+ scripts/mkcompile_h
+Message-ID: <202004031544.FEFA2BF@keescook>
+References: <20200403212459.13914-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401222000.GK21484@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200403212459.13914-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 03:20:00PM -0700, Matthew Wilcox wrote:
->On Wed, Apr 01, 2020 at 10:10:21PM +0000, Wei Yang wrote:
->> On Tue, Mar 31, 2020 at 04:59:12PM -0700, Matthew Wilcox wrote:
->> >On Tue, Mar 31, 2020 at 10:04:40PM +0000, Wei Yang wrote:
->> >> cc -I. -I../../include -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined   -c -o main.o main.c
->> >> In file included from ./linux/../../../../include/linux/radix-tree.h:15,
->> >>                  from ./linux/radix-tree.h:5,
->> >>                  from main.c:10:
->> >> ./linux/rcupdate.h:5:10: fatal error: urcu.h: No such file or directory
->> >>     5 | #include <urcu.h>
->> >>       |          ^~~~~~~~
->> >> compilation terminated.
->> >> make: *** [<builtin>: main.o] Error 1
->> >
->> >Oh, you need liburcu installed.  On Debian, that's liburcu-dev ... probably
->> >liburcu-devel on Red Hat style distros.
->> 
->> The bad news is I didn't find the package on Fedora.
->
->Really?  https://www.google.com/search?q=fedora+liburcu has the -devel
->package as the second hit from https://pkgs.org/search/?q=liburcu
+On Sat, Apr 04, 2020 at 06:24:59AM +0900, Masahiro Yamada wrote:
+> scripts/mkcompile_h uses $(CC) only for getting the version string.
+> 
+> I suspected there was a specific reason why the additional flags were
+> needed, and dug the commit history. This code dates back to at least
+> 2002 [1], but I could not get any more clue.
 
-Did a run on 5.6 without my change. The output is
+I would be alarmed to find it changing the version string with flags. ;)
 
-[root@debug010000002015 radix-tree]# ./main
-random seed 1585904186
-running tests
-XArray: 21151201 of 21151201 tests passed
-vvv Ignore these warnings
-assertion failed at idr.c:269
-assertion failed at idr.c:206
-^^^ Warnings over
-IDA: 34980531 of 34980531 tests passed
-tests completed
+> Just get rid of it.
+> 
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=29f3df7eba8ddf91a55183f9967f76fbcc3ab742
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Is these two assertion expected?
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+> 
+>  init/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/init/Makefile b/init/Makefile
+> index 30aa8ab11120..d45e967483b2 100644
+> --- a/init/Makefile
+> +++ b/init/Makefile
+> @@ -35,4 +35,4 @@ include/generated/compile.h: FORCE
+>  	@$($(quiet)chk_compile.h)
+>  	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@	\
+>  	"$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"	\
+> -	"$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)" "$(LD)"
+> +	"$(CONFIG_PREEMPT_RT)" "$(CC)" "$(LD)"
+> -- 
+> 2.17.1
+> 
 
 -- 
-Wei Yang
-Help you, Help me
+Kees Cook
