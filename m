@@ -2,99 +2,108 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA305C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306E9C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7153820737
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lH7T1Ypx"
+	by mail.kernel.org (Postfix) with ESMTP id E69BE2080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 18:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585938923;
+	bh=Gx76OWxX9x0q7P0Z37+EbVclgWRovp84Puof/u/5vEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FrELUnxEzN0L2Ylwfdwlosi123UKWU80GyT7R6Di1736TylwLG7Tndl5za7bwSgym
+	 xc4Hb+LKstOzZphezFtqNURd3hkiXL5EtnMrNDMvncBpU2yCEHIBSNQtAowXhOpEAG
+	 SkYW69bsTULQivD/uvQ4nGgYwWIvB4QlWiaOxeiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404292AbgDCScv (ORCPT
+        id S2404156AbgDCSfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:32:51 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36533 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728329AbgDCScv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 14:32:51 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c23so3920284pgj.3;
-        Fri, 03 Apr 2020 11:32:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FzPfvi3I/HmH3OyF3HqqnKY2AW2ORrTIHByXu3Bwni8=;
-        b=lH7T1YpxFgux3nqxzeng0K2rPNoR2sfinwJlU96tTh5l3OmatqWHV0mZcgeAKR7Y8R
-         Ft2/GO0QrOd97Ck5Gy4eLeCizaIt+4GFz2g6tiga3K2b/KmDsiF8TzYKIRIS5DAOGAYD
-         Hw6cmIjC8Xe+R5c3yJwySVbvLY8MophPyx/jp4Tyq76vvxL0/f2d0XA+5TLj+klW9Umq
-         7KA+v3ZLzuTC7tRsCW48A3WaU24znc9ilEvSu9kITrf3bsqQPibq+/QBmveNZX0venkL
-         M1FtNDuE6OyTLizs8iBsv6acltEm58mJH5Em/HLgAeVPZhTM5nfLvkz3KBj2eygy7zGg
-         hUHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FzPfvi3I/HmH3OyF3HqqnKY2AW2ORrTIHByXu3Bwni8=;
-        b=FDIRp//eO3Ywu1rzsHuskPCZuPwqfVQ+75RsnEL4h9LYTx5OTlrD3X9TejzR83MUrh
-         8nYRKJMM1/WLGTLdgiUjzmjNCGcVm9bo0KRFhlEdPB3mIwPeh9aXG08Wsr9+2aSOnyiL
-         /Ukbh8nlYg7bBuPeFThuzoeJG7hUrhNRcTD6Hm1GVLYroXeHK4zIEnCuMEaNEsKl9uju
-         jXcTOH/uoPLI8d/U451WoK7ggZEpsgy2Q5WBuH5suAQXILPtxo2LCBbHzc8YkEFbp1C1
-         0mkhEolKwhewmeT0Jg2zG36rtdvFUy6JpdArl5xU8cBig9tPjn7xVflYdyvQCHRH+voL
-         9WpA==
-X-Gm-Message-State: AGi0PuY7ceDbE1zouWAwCFFt5p4LoSRZSlJq9Vp21Ilbevp/Qp6CEpYb
-        KRUrebegV/XSQkJg6J7q7RNNT4LnAS1gW7Nr6Oo=
-X-Google-Smtp-Source: APiQypIinwhumgGUt5DCeRKHr/ntgaMAqGInmnYQfu/+UNIt74kFm7mloe68bJzGZFPbOBTMbIZcwwsq2pTaxMlkK+E=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr9915310pgb.203.1585938770173;
- Fri, 03 Apr 2020 11:32:50 -0700 (PDT)
+        Fri, 3 Apr 2020 14:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728268AbgDCSfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 14:35:21 -0400
+Received: from linux-8ccs (p3EE2C7AC.dip0.t-ipconnect.de [62.226.199.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8A1120737;
+        Fri,  3 Apr 2020 18:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585938921;
+        bh=Gx76OWxX9x0q7P0Z37+EbVclgWRovp84Puof/u/5vEU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JeQ9+pUN2c8n8uUQYjFz+dS/UE4wuA5ctlqaMFqD/40NAvVNnup89ZeKUH4pvJj3I
+         bMxbdHHE9qn17bP3IVaeG92n4eUdKEN66EuKoSi5lEhmGzb3BODyehc0TibGwf5svU
+         6bGWiyvfOjjlpgRD4UrW8lzBge9YU4oyCPlVQPqY=
+Date:   Fri, 3 Apr 2020 20:35:15 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [patch 1/2] x86,module: Detect VMX modules and disable
+ Split-Lock-Detect
+Message-ID: <20200403183515.GA2529@linux-8ccs>
+References: <20200402123258.895628824@linutronix.de>
+ <20200402124205.242674296@linutronix.de>
+ <20200403163605.GC2701@linux.intel.com>
+ <20200403164156.GY20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
- <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk> <b1e6213ba9f67da8278dd5c5f5e4def8ab927c83.camel@perches.com>
- <20200403193242.38611906@coco.lan> <2751400ae13b25d8259a8a9d7b36caf98ec2d367.camel@perches.com>
-In-Reply-To: <2751400ae13b25d8259a8a9d7b36caf98ec2d367.camel@perches.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 3 Apr 2020 21:32:42 +0300
-Message-ID: <CAHp75Vf+m_qzOwZb38dObLpKV2N27-J_7beqffhFVoSHaNV2vg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
- DRM fourccs
-To:     Joe Perches <joe@perches.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200403164156.GY20730@hirez.programming.kicks-ass.net>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 8:54 PM Joe Perches <joe@perches.com> wrote:
-> On Fri, 2020-04-03 at 19:32 +0200, Mauro Carvalho Chehab wrote:
-> > Em Fri, 03 Apr 2020 09:56:42 -0700
-> > Joe Perches <joe@perches.com> escreveu:
++++ Peter Zijlstra [03/04/20 18:41 +0200]:
+>On Fri, Apr 03, 2020 at 09:36:05AM -0700, Sean Christopherson wrote:
+>> On Thu, Apr 02, 2020 at 02:32:59PM +0200, Thomas Gleixner wrote:
+>> > --- a/arch/x86/kernel/module.c
+>> > +++ b/arch/x86/kernel/module.c
+>> > @@ -24,6 +24,7 @@
+>> >  #include <asm/pgtable.h>
+>> >  #include <asm/setup.h>
+>> >  #include <asm/unwind.h>
+>> > +#include <asm/cpu.h>
+>> >
+>> >  #if 0
+>> >  #define DEBUGP(fmt, ...)				\
+>> > @@ -253,6 +254,11 @@ int module_finalize(const Elf_Ehdr *hdr,
+>> >  					    tseg, tseg + text->sh_size);
+>> >  	}
+>> >
+>> > +	if (text && !me->sld_safe) {
+>>
+>> As also reported by the test bot, sld_safe only exist if CPU_SUP_INTEL=y.
+>>
+>> This can also be conditioned on boot_cpu_has(X86_FEATURE_VMX), or the
+>> static variant.  If CPU_SUP_INTEL=y, X86_FEATURE_VMX will be set if and
+>> only if VMX is fully enabled, i.e. supported by the CPU and enabled in
+>> MSR_IA32_FEATURE_CONTROl.
+>>
+>> > +		void *tseg = (void *)text->sh_addr;
+>> > +		split_lock_validate_module_text(me, tseg, tseg + text->sh_size);
+>> > +	}
+>
+>Ideally we push it all into arch code, but load_info isn't exposed to
+>arch module code :/.
 
-> It _might_ be useful to use a CONFIG_MEDIA_SUPPORT guard
-> in lib/vsprintf for this.
+Hm, I can look into exposing load_info to arch module code and will
+post a patch on Monday.
 
-No need. FourCC, if Sakari makes it more generic, can be used for
-other purposes, e.g. printing component names from the chips (not
-related to media at all).
-
--- 
-With Best Regards,
-Andy Shevchenko
+Jessica
