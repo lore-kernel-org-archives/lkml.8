@@ -2,286 +2,93 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A8FC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF66C2BA12
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C13920721
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43AE20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TiWTHwfw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWM3eM4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404304AbgDCPeu (ORCPT
+        id S2404357AbgDCPfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:34:50 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30509 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404257AbgDCPeu (ORCPT
+        Fri, 3 Apr 2020 11:35:03 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55406 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404257AbgDCPfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:34:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585928088;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fgNAe0kFX8jwOB1IGnADdVWTUeU+aOcqCkGioFUGvME=;
-        b=TiWTHwfwkliu0zdRzwy9LSgU2fxE8jvM5RO8mTyOyTt6QbJeRl4zHqlp+aewiwlRq0Yebg
-        Cn64BOsYL8/N/CL/GbQHqMsZoc5miUhc3lamwCWsTnzIjeGUImlkmRz2tiXDDxtlmWD4mF
-        I5+8jO6JPWi/rKU0MhtALiIi9rln8nY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-uzZvj-nxM0uyMHF_EGtW_Q-1; Fri, 03 Apr 2020 11:34:44 -0400
-X-MC-Unique: uzZvj-nxM0uyMHF_EGtW_Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9E90800D50;
-        Fri,  3 Apr 2020 15:34:42 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 92087A0A7B;
-        Fri,  3 Apr 2020 15:34:36 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 09:34:36 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-Message-ID: <20200403093436.094b1928@w520.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
-        <20200402142428.2901432e@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Fri, 3 Apr 2020 11:35:03 -0400
+Received: by mail-pj1-f68.google.com with SMTP id fh8so3119176pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=OBTqvoJaPRzJzFYbgduwTTs1J5D9wflAy+OmVHZv2bE=;
+        b=VWM3eM4TgcEp3bwAqSNkP36LzS6eQ3DJCQar0MaDV+IbULRSznAHfkGGrZfUUgFeHx
+         WA83xCYji6p2nU4Gj1nZ1dPXRhOwyL59Gnb6BqQytUW9YYIb6nH9lfgEn9Z+WVF8/u2R
+         xXou7NYPy+Ynfc2/bQEQuyTHukyR19omZN7JKr0hJz5GBtMgCLWBB7jDvyixlcIWnMgv
+         d1XHRQHf29iCOCDybn8vN6BIt2emLUG0ctr65dJkvX+nITffnvDgUxP8B1DwlNguezJa
+         l0vIoMv7hnIvJlD0KJzIskQ/DIeIkPRyFLqvHwQp6hG0SBwHz1VgJ5KdUxT/dgU2551w
+         VH6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OBTqvoJaPRzJzFYbgduwTTs1J5D9wflAy+OmVHZv2bE=;
+        b=NM0Rxid+juySJbuEIchTt2gPGMDLve54O/0GYiBNgOPTu31E3GC9Ru7ikUrE8CczXl
+         Ej/Yn5K/31ngbqdpYi/X7O9D8OLM4T7Cvig+q4y0Ja/UfIurjqSFwNCy8R4V+pPpxT+O
+         ydhSuqhzW1psNQbdUiiGEIEwZWW82QyaLFjrRRaPqJ3fghH4AFY6L1JsWl8wawFgFL4b
+         4h2YPSGkBafpTKatK21Nrq9SgtxBGOKWnOBcTYp490ec7AmOVAb9vtmpXq2smggM/gNn
+         so2fPSRPTr8tAzs9jAjbw8NAHv/cgvKNKf9tpMViduSLuzNgyNi1Qq8O/dG8WEgLX1O0
+         Qiqw==
+X-Gm-Message-State: AGi0PuY0Dwq6Z4bdNrs64SqiZAD1UzCrrrT1C3h8jRO3okt4+aBT5tmo
+        8xz/VrBhtDV+8zsZ735VVD0y4T5z
+X-Google-Smtp-Source: APiQypJJiNXI4c4eCEzEuJotLFPpEG3qfziqFlxS1yRA5Y7XU1zlhh/l5Ii/b2Lugm0W5VX8iuUmPQ==
+X-Received: by 2002:a17:902:ee93:: with SMTP id a19mr8563263pld.258.1585928102358;
+        Fri, 03 Apr 2020 08:35:02 -0700 (PDT)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id d7sm6043761pfa.106.2020.04.03.08.35.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Apr 2020 08:35:01 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     rostedt@goodmis.org
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] trace: Fix a typo in comment "bascially" -> "basically"
+Date:   Fri,  3 Apr 2020 23:34:57 +0800
+Message-Id: <1585928097-28123-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 Apr 2020 06:39:22 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+Here is a typo in comment. Fix it.
+s/bascially/basically
 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Friday, April 3, 2020 4:24 AM
-> > 
-> > On Sun, 22 Mar 2020 05:32:04 -0700
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> >   
-> > > From: Liu Yi L <yi.l.liu@linux.intel.com>
-> > >
-> > > For VFIO IOMMUs with the type VFIO_TYPE1_NESTING_IOMMU, guest  
-> > "owns" the  
-> > > first-level/stage-1 translation structures, the host IOMMU driver has no
-> > > knowledge of first-level/stage-1 structure cache updates unless the guest
-> > > invalidation requests are trapped and propagated to the host.
-> > >
-> > > This patch adds a new IOCTL VFIO_IOMMU_CACHE_INVALIDATE to  
-> > propagate guest  
-> > > first-level/stage-1 IOMMU cache invalidations to host to ensure IOMMU  
-> > cache  
-> > > correctness.
-> > >
-> > > With this patch, vSVA (Virtual Shared Virtual Addressing) can be used safely
-> > > as the host IOMMU iotlb correctness are ensured.
-> > >
-> > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > Signed-off-by: Liu Yi L <yi.l.liu@linux.intel.com>
-> > > Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > ---
-> > >  drivers/vfio/vfio_iommu_type1.c | 49  
-> > +++++++++++++++++++++++++++++++++++++++++  
-> > >  include/uapi/linux/vfio.h       | 22 ++++++++++++++++++
-> > >  2 files changed, 71 insertions(+)
-> > >
-> > > diff --git a/drivers/vfio/vfio_iommu_type1.c  
-> > b/drivers/vfio/vfio_iommu_type1.c  
-> > > index a877747..937ec3f 100644
-> > > --- a/drivers/vfio/vfio_iommu_type1.c
-> > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > @@ -2423,6 +2423,15 @@ static long  
-> > vfio_iommu_type1_unbind_gpasid(struct vfio_iommu *iommu,  
-> > >  	return ret;
-> > >  }
-> > >
-> > > +static int vfio_cache_inv_fn(struct device *dev, void *data)
-> > > +{
-> > > +	struct domain_capsule *dc = (struct domain_capsule *)data;
-> > > +	struct iommu_cache_invalidate_info *cache_inv_info =
-> > > +		(struct iommu_cache_invalidate_info *) dc->data;
-> > > +
-> > > +	return iommu_cache_invalidate(dc->domain, dev, cache_inv_info);
-> > > +}
-> > > +
-> > >  static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > >  				   unsigned int cmd, unsigned long arg)
-> > >  {
-> > > @@ -2629,6 +2638,46 @@ static long vfio_iommu_type1_ioctl(void  
-> > *iommu_data,  
-> > >  		}
-> > >  		kfree(gbind_data);
-> > >  		return ret;
-> > > +	} else if (cmd == VFIO_IOMMU_CACHE_INVALIDATE) {
-> > > +		struct vfio_iommu_type1_cache_invalidate cache_inv;
-> > > +		u32 version;
-> > > +		int info_size;
-> > > +		void *cache_info;
-> > > +		int ret;
-> > > +
-> > > +		minsz = offsetofend(struct  
-> > vfio_iommu_type1_cache_invalidate,  
-> > > +				    flags);  
-> > 
-> > This breaks backward compatibility as soon as struct
-> > iommu_cache_invalidate_info changes size by its defined versioning
-> > scheme.  ie. a field gets added, the version is bumped, all existing
-> > userspace breaks.  Our minsz is offsetofend to the version field,
-> > interpret the version to size, then reevaluate argsz.  
-> 
-> btw the version scheme is challenged by Christoph Hellwig. After
-> some discussions, we need your guidance how to move forward.
-> Jacob summarized available options below:
-> 	https://lkml.org/lkml/2020/4/2/876
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ kernel/trace/trace_benchmark.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ok
-
-> >   
-> > > +
-> > > +		if (copy_from_user(&cache_inv, (void __user *)arg, minsz))
-> > > +			return -EFAULT;
-> > > +
-> > > +		if (cache_inv.argsz < minsz || cache_inv.flags)
-> > > +			return -EINVAL;
-> > > +
-> > > +		/* Get the version of struct iommu_cache_invalidate_info */
-> > > +		if (copy_from_user(&version,
-> > > +			(void __user *) (arg + minsz), sizeof(version)))
-> > > +			return -EFAULT;
-> > > +
-> > > +		info_size = iommu_uapi_get_data_size(
-> > > +					IOMMU_UAPI_CACHE_INVAL,  
-> > version);  
-> > > +
-> > > +		cache_info = kzalloc(info_size, GFP_KERNEL);
-> > > +		if (!cache_info)
-> > > +			return -ENOMEM;
-> > > +
-> > > +		if (copy_from_user(cache_info,
-> > > +			(void __user *) (arg + minsz), info_size)) {
-> > > +			kfree(cache_info);
-> > > +			return -EFAULT;
-> > > +		}
-> > > +
-> > > +		mutex_lock(&iommu->lock);
-> > > +		ret = vfio_iommu_for_each_dev(iommu, vfio_cache_inv_fn,
-> > > +					    cache_info);  
-> > 
-> > How does a user respond when their cache invalidate fails?  Isn't this
-> > also another case where our for_each_dev can fail at an arbitrary point
-> > leaving us with no idea whether each device even had the opportunity to
-> > perform the invalidation request.  I don't see how we have any chance
-> > to maintain coherency after this faults.  
-> 
-> Then can we make it simple to support singleton group only? 
-
-Are you suggesting a single group per container or a single device per
-group?  Unless we have both, aren't we always going to have this issue.
-OTOH, why should a cache invalidate fail?
-
-> > > +		mutex_unlock(&iommu->lock);
-> > > +		kfree(cache_info);
-> > > +		return ret;
-> > >  	}
-> > >
-> > >  	return -ENOTTY;
-> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > index 2235bc6..62ca791 100644
-> > > --- a/include/uapi/linux/vfio.h
-> > > +++ b/include/uapi/linux/vfio.h
-> > > @@ -899,6 +899,28 @@ struct vfio_iommu_type1_bind {
-> > >   */
-> > >  #define VFIO_IOMMU_BIND		_IO(VFIO_TYPE, VFIO_BASE + 23)
-> > >
-> > > +/**
-> > > + * VFIO_IOMMU_CACHE_INVALIDATE - _IOW(VFIO_TYPE, VFIO_BASE + 24,
-> > > + *			struct vfio_iommu_type1_cache_invalidate)
-> > > + *
-> > > + * Propagate guest IOMMU cache invalidation to the host. The cache
-> > > + * invalidation information is conveyed by @cache_info, the content
-> > > + * format would be structures defined in uapi/linux/iommu.h. User
-> > > + * should be aware of that the struct  iommu_cache_invalidate_info
-> > > + * has a @version field, vfio needs to parse this field before getting
-> > > + * data from userspace.
-> > > + *
-> > > + * Availability of this IOCTL is after VFIO_SET_IOMMU.  
-> > 
-> > Is this a necessary qualifier?  A user can try to call this ioctl at
-> > any point, it only makes sense in certain configurations, but it should
-> > always "do the right thing" relative to the container iommu config.
-> > 
-> > Also, I don't see anything in these last few patches testing the
-> > operating IOMMU model, what happens when a user calls them when not
-> > using the nesting IOMMU?
-> > 
-> > Is this ioctl and the previous BIND ioctl only valid when configured
-> > for the nesting IOMMU type?  
-> 
-> I think so. We should add the nesting check in those new ioctls.
-> 
-> >   
-> > > + *
-> > > + * returns: 0 on success, -errno on failure.
-> > > + */
-> > > +struct vfio_iommu_type1_cache_invalidate {
-> > > +	__u32   argsz;
-> > > +	__u32   flags;
-> > > +	struct	iommu_cache_invalidate_info cache_info;
-> > > +};
-> > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE  
-> > + 24)
-> > 
-> > The future extension capabilities of this ioctl worry me, I wonder if
-> > we should do another data[] with flag defining that data as CACHE_INFO.  
-> 
-> Can you elaborate? Does it mean with this way we don't rely on iommu
-> driver to provide version_to_size conversion and instead we just pass
-> data[] to iommu driver for further audit?
-
-No, my concern is that this ioctl has a single function, strictly tied
-to the iommu uapi.  If we replace cache_info with data[] then we can
-define a flag to specify that data[] is struct
-iommu_cache_invalidate_info, and if we need to, a different flag to
-identify data[] as something else.  For example if we get stuck
-expanding cache_info to meet new demands and develop a new uapi to
-solve that, how would we expand this ioctl to support it rather than
-also create a new ioctl?  There's also a trade-off in making the ioctl
-usage more difficult for the user.  I'd still expect the vfio layer to
-check the flag and interpret data[] as indicated by the flag rather
-than just passing a blob of opaque data to the iommu layer though.
-Thanks,
-
-Alex
+diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
+index 2e9a474..4d61af0 100644
+--- a/kernel/trace/trace_benchmark.c
++++ b/kernel/trace/trace_benchmark.c
+@@ -155,7 +155,7 @@ static int benchmark_event_kthread(void *arg)
+ 
+ 		/*
+ 		 * We don't go to sleep, but let others run as well.
+-		 * This is bascially a "yield()" to let any task that
++		 * This is basically a "yield()" to let any task that
+ 		 * wants to run, schedule in, but if the CPU is idle,
+ 		 * we'll keep burning cycles.
+ 		 *
+-- 
+1.8.3.1
 
