@@ -2,86 +2,107 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D218DC2BA16
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D80C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A772C206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:41:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lZKfrtq4"
+	by mail.kernel.org (Postfix) with ESMTP id 6C0A82063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 04:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731629AbgDCElb (ORCPT
+        id S1732002AbgDCElt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 00:41:31 -0400
-Received: from m12-17.163.com ([220.181.12.17]:54183 "EHLO m12-17.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgDCElb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 00:41:31 -0400
-X-Greylist: delayed 932 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Apr 2020 00:41:27 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Wbeh/
-        XXcF9p0H3UV40lvWAHy5eGKJ2dZMK1faGpA0Mk=; b=lZKfrtq4VPhBnTsUSbGIX
-        iQy/EXDnhCeyIreOXuLN7PUTXqpqhYuWq69bgVyYEZ1QboneYk1an9JVxTCB89rV
-        WoE+jpFOnr7Mw+mHf8w/IMQxdK1zpHfPW9SRwi6yJnlem8O3LeeQZlVV9wOrafOG
-        rj96huHOzeyV6v68Hx2p0o=
-Received: from localhost.localdomain (unknown [125.82.11.124])
-        by smtp13 (Coremail) with SMTP id EcCowACXzbI+uoZevzrGCg--.22384S4;
-        Fri, 03 Apr 2020 12:23:28 +0800 (CST)
-From:   Hu Haowen <xianfengting221@163.com>
-To:     saeedm@mellanox.com, leon@kernel.org, davem@davemloft.net
-Cc:     moshe@mellanox.com, lsahlber@redhat.com, kw@linux.com,
-        wqu@suse.com, xiubli@redhat.com, xianfengting221@163.com,
-        chris@chris-wilson.co.uk, stfrench@microsoft.com,
-        airlied@redhat.com, yamada.masahiro@socionext.com, cai@lca.pw,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [v2] net/mlx5: add the missing space character
-Date:   Fri,  3 Apr 2020 12:23:12 +0800
-Message-Id: <20200403042312.9036-1-xianfengting221@163.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 3 Apr 2020 00:41:49 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:54562 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgDCEls (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 00:41:48 -0400
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 9CA6E2001B8;
+        Fri,  3 Apr 2020 04:41:47 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 8C84020735; Fri,  3 Apr 2020 06:41:08 +0200 (CEST)
+Date:   Fri, 3 Apr 2020 06:41:08 +0200
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Hu Haowen <xianfengting221@163.com>
+Cc:     jeyu@kernel.org, maennich@google.com, axboe@kernel.dk,
+        nborisov@suse.com, josef@toxicpanda.com, stfrench@microsoft.com,
+        chris@chris-wilson.co.uk, wqu@suse.com, xiubli@redhat.com,
+        airlied@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pcmcia: remove some unused space characters
+Message-ID: <20200403044108.GA306056@light.dominikbrodowski.net>
+References: <20200330020024.8174-1-xianfengting221@163.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: EcCowACXzbI+uoZevzrGCg--.22384S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7GryfGr4fCr1UZrWUWw17ZFb_yoW8Jr45pF
-        s8JFZrurs7tw45Xa18ZFW8Z3s5GwsYkay09F4fC393Xrn5tr48Crn3tryYkr10kr13J3sx
-        tF9rArW7Awn8W37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jU73kUUUUU=
-X-Originating-IP: [125.82.11.124]
-X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiMgD6AFWBoITXkAAAs-
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330020024.8174-1-xianfengting221@163.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 91b56d8462a9 ("net/mlx5: improve some comments") did not add
-that missing space character and this commit is used to fix it up.
+On Mon, Mar 30, 2020 at 10:00:24AM +0800, Hu Haowen wrote:
+> There are a few space characters I found by chance. I think they are
+> redundant, so I removed them.
+> 
+> Signed-off-by: Hu Haowen <xianfengting221@163.com>
 
-Fixes: 91b56d8462a9 ("net/mlx5: improve some comments")
-Signed-off-by: Hu Haowen <xianfengting221@163.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied to pcmcia-next.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-index c9c9b479bda5..31bddb48e5c3 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-@@ -676,7 +676,7 @@ static void mlx5_fw_tracer_handle_traces(struct work_struct *work)
- 	block_count = tracer->buff.size / TRACER_BLOCK_SIZE_BYTE;
- 	start_offset = tracer->buff.consumer_index * TRACER_BLOCK_SIZE_BYTE;
- 
--	/* Copy the block to local buffer to avoid HW override while being processed*/
-+	/* Copy the block to local buffer to avoid HW override while being processed */
- 	memcpy(tmp_trace_block, tracer->buff.log_buf + start_offset,
- 	       TRACER_BLOCK_SIZE_BYTE);
- 
--- 
-2.20.1
+Thanks,
+	Dominik
 
-
+> ---
+>  drivers/pcmcia/sa1100_simpad.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pcmcia/sa1100_simpad.c b/drivers/pcmcia/sa1100_simpad.c
+> index e2e8729afd9d..784ada5b8c4f 100644
+> --- a/drivers/pcmcia/sa1100_simpad.c
+> +++ b/drivers/pcmcia/sa1100_simpad.c
+> @@ -14,7 +14,7 @@
+>  #include <asm/mach-types.h>
+>  #include <mach/simpad.h>
+>  #include "sa1100_generic.h"
+> - 
+> +
+>  static int simpad_pcmcia_hw_init(struct soc_pcmcia_socket *skt)
+>  {
+>  
+> @@ -66,7 +66,7 @@ simpad_pcmcia_configure_socket(struct soc_pcmcia_socket *skt,
+>  		simpad_clear_cs3_bit(VCC_3V_EN|VCC_5V_EN|EN0|EN1);
+>  		break;
+>  
+> -	case 33:  
+> +	case 33:
+>  		simpad_clear_cs3_bit(VCC_3V_EN|EN1);
+>  		simpad_set_cs3_bit(VCC_5V_EN|EN0);
+>  		break;
+> @@ -95,7 +95,7 @@ static void simpad_pcmcia_socket_suspend(struct soc_pcmcia_socket *skt)
+>  	simpad_set_cs3_bit(PCMCIA_RESET);
+>  }
+>  
+> -static struct pcmcia_low_level simpad_pcmcia_ops = { 
+> +static struct pcmcia_low_level simpad_pcmcia_ops = {
+>  	.owner			= THIS_MODULE,
+>  	.hw_init		= simpad_pcmcia_hw_init,
+>  	.hw_shutdown		= simpad_pcmcia_hw_shutdown,
+> -- 
+> 2.20.1
+> 
+> 
