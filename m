@@ -2,154 +2,230 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F7FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55225C2BA16
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4302077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224072077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:06:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qi7RSUUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403797AbgDCNGH (ORCPT
+        id S2403832AbgDCNGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:06:07 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37527 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390770AbgDCNGG (ORCPT
+        Fri, 3 Apr 2020 09:06:18 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40094 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403800AbgDCNGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:06:06 -0400
-Received: by mail-oi1-f193.google.com with SMTP id u20so6008118oic.4;
-        Fri, 03 Apr 2020 06:06:06 -0700 (PDT)
+        Fri, 3 Apr 2020 09:06:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s8so6308229wrt.7;
+        Fri, 03 Apr 2020 06:06:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=YWX9cu/QSo8yRIN7AcBy13ogB4+/rJ1kxLeU3StGuPk=;
+        b=Qi7RSUUREUB7NjQKdlKSApbx4ENGqn4aokUL81r8T9zR3j2ArRBvIMNQ6H0MBZxW7C
+         RSkOkxN1mazkVMuF9ZInCYn+Lc/b3aIGlISZgDoKippise92hno9knc2+W9QFwFRtya3
+         niaQ2NvYMGjI9Q517Xa2hzQdFKU28DDdb1T6fEpYjAdSz6hPUJmYxjVhprnul/rvxK0i
+         TvVqe97bD++d7SdEJgolK7xZF7WdY7tqNQSfWzT5XhowIdQ9FJpFydwxJG9fOC7qdNSc
+         +LAoVS0SSz8/V+jj4Gn0wVY/TM8cYFs19fc2b/LWEf4QwdMAgr8OTMTdheCIUcpBzLej
+         vSdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OqCaoyULkRti7vSZNQ9Yg7YDSRokCroTLEsyV92N24k=;
-        b=OmbUxeIhGY4opoqn9d9LWfXToCy+ltbUdYO0sVVfaSeUwJIJuOzt2diGU761XLuxb0
-         dZGyhoU88hzLYkcFt4Eio5fbuSdcJ1Dshn5UzKojF7e9YYwxDyjl5NtWh4iNPDVE6SQA
-         0w8C606Joa/UTGbUm2n4PgCGn6jmfSy0IArVvx12wqjRMvfSAprtVVjTcp/Z3Bsp2NWq
-         F7XH+VGHt92D7W28qFML7SryeNI73CdEsr4EyTEN1B+tgEgwdv3Rk5GM7ZPtrO6E98Wy
-         3HBUiP/05DJ5sTtdJhnGYjO+P98nOvWf7gpsWJdPKoh4qkKn7og2SMAboe2kkUqgnNna
-         2ocA==
-X-Gm-Message-State: AGi0PubVoXxlHnNkddumsv+OgfpZ+28n2QcgM84c3lMlMYkRdWJ4jc1y
-        dIwSGZ8/Xi6donLWn8CEZ4rlBfZqmQfZwKzLURvcikYl
-X-Google-Smtp-Source: APiQypLi6mhOGXOuNWGE5LKpAmZQ+POe3LwGn5mnAx7luDfu0zthSY9F3kKpkDv+5OX3zFZqkIIqtWChzdEZhSWTxfY=
-X-Received: by 2002:aca:ad93:: with SMTP id w141mr2963325oie.54.1585919165884;
- Fri, 03 Apr 2020 06:06:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <TYAPR01MB45443DF63B9EF29054F7C41FD8C60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <CALAqxLWopjCkiM=NR868DTcX-apPc1MPnONJMppm1jzCboAheg@mail.gmail.com> <CAMuHMdVtHhq9Nef1pBtBUKfRU2L-KgDffiOv28VqhrewR_j1Dw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVtHhq9Nef1pBtBUKfRU2L-KgDffiOv28VqhrewR_j1Dw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 3 Apr 2020 15:05:54 +0200
-Message-ID: <CAMuHMdXotufr5Hq39O2MsLtwAHK0v34OYbaxYOV21rYrdBD=kw@mail.gmail.com>
-Subject: Re: How to fix WARN from drivers/base/dd.c in next-20200401 if CONFIG_MODULES=y?
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YWX9cu/QSo8yRIN7AcBy13ogB4+/rJ1kxLeU3StGuPk=;
+        b=KkFN0vc80vdx41WjAgnsnIJS8AE971jnsWRufJ1NNdImlryytvjLhDVRk9lw8efpUy
+         d8h4JaXdIXtd7bKmtGbhaZnZSjyOjdl8coh5XFeQ0aex7ZKV7dATwpgQ5CZ33LNoa3dU
+         PkxeTLrZA4dkQsshbLDAGKQ0rSgvRZEpsAr+o0Z+9VBtWQA5oo/2LiPFeIjC1T7ZHeKy
+         CT8VxO4MRzsAogMVcxJDfhrGX5Q3Tv2QFHlFe2KZF49t4vrJNRNSccwari98/VH1buk1
+         VWMg1DsoiwP3GS8d4YZwRO+Vk0oXf6kYv6B4Vga9nx7ehiggBUxRtqi+YgjmgqU9ysXc
+         e5hQ==
+X-Gm-Message-State: AGi0PuYuWVez7cmw6Jffpmc4+Gfs7SL6hB8Kg8HQkRKW/Y9E0O/KR2MR
+        86Qum+teCM67ZdhZR6wWWrE=
+X-Google-Smtp-Source: APiQypIahrHiJOQlFe44D75IWRJ+qbieepz8CijZqcdOPl7y3Au0IjGYFn4Nnml+G/if8kVNM4+PZw==
+X-Received: by 2002:adf:f3d2:: with SMTP id g18mr6387844wrp.356.1585919174979;
+        Fri, 03 Apr 2020 06:06:14 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id o9sm7036093wru.29.2020.04.03.06.06.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Apr 2020 06:06:14 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     jacob-chen@iotwrt.com
+Cc:     ezequiel@collabora.com, mchehab@kernel.org, robh+dt@kernel.org,
+        heiko@sntech.de, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: media: convert rockchip rga bindings to yaml
+Date:   Fri,  3 Apr 2020 15:06:06 +0200
+Message-Id: <20200403130607.6138-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+Current dts files for Rockchip with 'rga' nodes
+are manually verified. In order to automate this process
+rockchip-rga.txt has to be converted to yaml.
 
-On Fri, Apr 3, 2020 at 1:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Apr 2, 2020 at 7:27 PM John Stultz <john.stultz@linaro.org> wrote:
-> > On Thu, Apr 2, 2020 at 3:17 AM Yoshihiro Shimoda
-> > <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > >
-> > > I found an issue after applied the following patches:
-> > > ---
-> > > 64c775f driver core: Rename deferred_probe_timeout and make it global
-> > > 0e9f8d0 driver core: Remove driver_deferred_probe_check_state_continue()
-> > > bec6c0e pinctrl: Remove use of driver_deferred_probe_check_state_continue()
-> > > e2cec7d driver core: Set deferred_probe_timeout to a longer default if CONFIG_MODULES is set
->
-> Note that just setting deferred_probe_timeout = -1 like for the
-> CONFIG_MODULES=n case doesn't help.
->
-> > > c8c43ce driver core: Fix driver_deferred_probe_check_state() logic
-> > > ---
-> > >
-> > > Before these patches, on my environment [1], some device drivers
-> > > which has iommus property output the following message when probing:
-> > >
-> > > [    3.222205] ravb e6800000.ethernet: ignoring dependency for device, assuming no driver
-> > > [    3.257174] ravb e6800000.ethernet eth0: Base address at 0xe6800000, 2e:09:0a:02:eb:2d, IRQ 117.
-> > >
-> > > So, since ravb driver is probed within 4 seconds, we can use NFS rootfs correctly.
-> > >
-> > > However, after these patches are applied, since the patches are always waiting for 30 seconds
-> > > for of_iommu_configure() when IOMMU hardware is disabled, drivers/base/dd.c output WARN.
-> > > Also, since ravb cannot be probed for 30 seconds, we cannot use NFS rootfs anymore.
-> > > JFYI, I copied the kernel log to the end of this email.
-> >
-> > Hey,
-> >   Terribly sorry for the trouble. So as Robin mentioned I have a patch
-> > to remove the WARN messages, but I'm a bit more concerned about why
-> > after the 30 second delay, the ethernet driver loads:
-> >   [   36.218666] ravb e6800000.ethernet eth0: Base address at
-> > 0xe6800000, 2e:09:0a:02:eb:2d, IRQ 117.
-> > but NFS fails.
-> >
-> > Is it just that the 30 second delay is too long and NFS gives up?
->
-> I added some debug code to mount_nfs_root(), which shows that the first
-> 3 tries happen before ravb is instantiated, and the last 3 tries happen
-> after.  So NFS root should work, if the network works.
->
-> However, it seems the Ethernet PHY is never initialized, hence the link
-> never becomes ready.
+Changed:
+  Add missing reg property
 
-So the issue is not nfsroot in-se, but the ip-config that needs to
-happen before that.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+Changes v2:
+  Change MAINTAINERS
+---
+ .../devicetree/bindings/media/rockchip-rga.txt     | 34 ----------
+ .../devicetree/bindings/media/rockchip-rga.yaml    | 78 ++++++++++++++++++++++
+ MAINTAINERS                                        |  2 +-
+ 3 files changed, 79 insertions(+), 35 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.yaml
 
-The call to wait_for_devices() in ip_auto_config() (which is a
-late_initcall()) returns -ENODEV, as the network device hasn't probed
-successfully yet, so ip-config is aborted.
-
-The (whitespace-damaged) patch below fixes that, but may have unintended
-side-effects.
-
---- a/net/ipv4/ipconfig.c
-+++ b/net/ipv4/ipconfig.c
-@@ -1469,7 +1469,11 @@ static int __init ip_auto_config(void)
-        /* Wait for devices to appear */
-        err = wait_for_devices();
-        if (err)
-+#ifdef IPCONFIG_DYNAMIC
-+               goto try_try_again;
-+#else
-                return err;
-+#endif
-
-        /* Setup all network devices */
-        err = ic_open_devs();
-
-Probably we want at least some CONFIG_ROOT_NFS || CONFIG_CIFS_ROOT,
-and ROOT_DEV == Root_NFS || ROOT_DEV == Root_CIFS checks.
-
-Thanks for your comments!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
+deleted file mode 100644
+index c53a8e513..000000000
+--- a/Documentation/devicetree/bindings/media/rockchip-rga.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-device-tree bindings for rockchip 2D raster graphic acceleration controller (RGA)
+-
+-RGA is a standalone 2D raster graphic acceleration unit. It accelerates 2D
+-graphics operations, such as point/line drawing, image scaling, rotation,
+-BitBLT, alpha blending and image blur/sharpness.
+-
+-Required properties:
+-- compatible: value should be one of the following
+-  "rockchip,rk3228-rga", "rockchip,rk3288-rga": for Rockchip RK3228
+-  "rockchip,rk3288-rga": for Rockchip RK3288
+-  "rockchip,rk3399-rga": for Rockchip RK3399
+-
+-- interrupts: RGA interrupt specifier.
+-
+-- clocks: phandle to RGA sclk/hclk/aclk clocks
+-
+-- clock-names: should be "aclk", "hclk" and "sclk"
+-
+-- resets: Must contain an entry for each entry in reset-names.
+-  See ../reset/reset.txt for details.
+-- reset-names: should be "core", "axi" and "ahb"
+-
+-Example:
+-SoC-specific DT entry:
+-	rga: rga@ff680000 {
+-		compatible = "rockchip,rk3399-rga";
+-		reg = <0xff680000 0x10000>;
+-		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
+-		clock-names = "aclk", "hclk", "sclk";
+-
+-		resets = <&cru SRST_RGA_CORE>, <&cru SRST_A_RGA>, <&cru SRST_H_RGA>;
+-		reset-names = "core, "axi", "ahb";
+-	};
+diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.yaml b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+new file mode 100644
+index 000000000..3b110b574
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rockchip-rga.yaml
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/rockchip-rga.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip 2D raster graphic acceleration controller (RGA)
++
++description:
++  RGA is a standalone 2D raster graphic acceleration unit. It accelerates 2D
++  graphics operations, such as point/line drawing, image scaling, rotation,
++  BitBLT, alpha blending and image blur/sharpness.
++
++maintainers:
++  - Jacob Chen <jacob-chen@iotwrt.com>
++  - Ezequiel Garcia <ezequiel@collabora.com>
++
++properties:
++  compatible:
++    oneOf:
++      - const: rockchip,rk3288-rga
++      - const: rockchip,rk3399-rga
++      - items:
++          - const: rockchip,rk3228-rga
++          - const: rockchip,rk3288-rga
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 3
++
++  clock-names:
++    items:
++      - const: aclk
++      - const: hclk
++      - const: sclk
++
++  resets:
++    maxItems: 3
++
++  reset-names:
++    items:
++      - const: core
++      - const: axi
++      - const: ahb
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3399-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    rga: rga@ff680000 {
++      compatible = "rockchip,rk3399-rga";
++      reg = <0xff680000 0x10000>;
++      interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru ACLK_RGA>,
++               <&cru HCLK_RGA>,
++               <&cru SCLK_RGA_CORE>;
++      clock-names = "aclk", "hclk", "sclk";
++      resets = <&cru SRST_RGA_CORE>,
++               <&cru SRST_A_RGA>,
++               <&cru SRST_H_RGA>;
++      reset-names = "core", "axi", "ahb";
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ce80b22cf..ca7cdd2c0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14367,7 +14367,7 @@ M:	Ezequiel Garcia <ezequiel@collabora.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	drivers/media/platform/rockchip/rga/
+-F:	Documentation/devicetree/bindings/media/rockchip-rga.txt
++F:	Documentation/devicetree/bindings/media/rockchip-rga.yaml
+ 
+ HANTRO VPU CODEC DRIVER
+ M:	Ezequiel Garcia <ezequiel@collabora.com>
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.11.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
