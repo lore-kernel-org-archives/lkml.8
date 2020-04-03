@@ -2,147 +2,93 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAEBC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEE4C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B03206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XVB2Fpkh"
+	by mail.kernel.org (Postfix) with ESMTP id 7A4FA20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:16:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390267AbgDCJQ0 (ORCPT
+        id S2390516AbgDCJQw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:16:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44509 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgDCJQZ (ORCPT
+        Fri, 3 Apr 2020 05:16:52 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:62410 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727774AbgDCJQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:16:25 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 142so3217483pgf.11;
-        Fri, 03 Apr 2020 02:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=RGJzzKFtpMKwScibAzUPyVKFWmPESO3cVWtJiVbhtHk=;
-        b=XVB2FpkhVY7LY+m+aYgnH9JhrXwxRrKtZ4KedbZoQ2SvOFvh7m7j2z6xHqnEpWua4g
-         5wzj4NqRE5PhS5z1FB/u0m2aZZZgIXJhbcfiV/zGGuFPzd2c20GNNPDZjSIVOeqeTaq3
-         StVZZ56H4ERPXhfY7iO941/MztLAKIR588259sQWUECLm+wy/lJks1cnnuJmzSB8zUdD
-         IAiV6HO9Lk8x/O/WjbOs4YQHV3DBiw2hovWjix4wfiboFG+qzOdZNCeqmBcLX9d8LoCU
-         zGYAOEelIN46+4Vb3jcI1H2Jodm5VPX8nLCT/fY53mic5cqJbGRoy4289ya3wA/FM8ix
-         ZQkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=RGJzzKFtpMKwScibAzUPyVKFWmPESO3cVWtJiVbhtHk=;
-        b=q7mfQ/XA3ybAq+PYxzRcYnR4p6nISY7EZFrWjnRv3a0UfQxDA1peQRPQNyTgeBNweM
-         EHG+GHwESTiXcG9Y1isZV3JlXiuAwx9F8aI/+kOoIiGGg+hfM8PEq8mgBh5l4VzZKWaS
-         9s6SO8sq3AQiJpLIdB1bmLIaSvqRFAlYnsaAUrpWdg1BztbBV7vyUL0vdYo16GlGkLkm
-         9NCmUFZHXvxY7s+N3fN3n+cn2p6VGB+nEqTAuaOu/tp/mjQrWsslRAsHqlYXthuV8yFM
-         Wn3RqtNPaPFUkmJ2YtIUZZPVo9LymCVyjehz38vlh5FjZgMqe/nxF46tMHKMX5LbD56L
-         c/OQ==
-X-Gm-Message-State: AGi0PuZBUBfCggdB3e2WNkobVsp85XsWbRLO77nlHaMzG/xIwZ2ZWten
-        GTSc5j320HK5eD17AIp0ypU=
-X-Google-Smtp-Source: APiQypKLkyqex5WEdWq1dy4thrKY9/NTeFrsj5htXG6HJa5dtUYNkxEOcte9tTGGs8QwsckqyNKaIg==
-X-Received: by 2002:a62:5f06:: with SMTP id t6mr7789776pfb.192.1585905384838;
-        Fri, 03 Apr 2020 02:16:24 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id e80sm5608468pfh.117.2020.04.03.02.16.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Apr 2020 02:16:24 -0700 (PDT)
-From:   Geliang Tang <geliangtang@gmail.com>
-To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] mptcp: add some missing pr_fmt defines
-Date:   Fri,  3 Apr 2020 17:14:08 +0800
-Message-Id: <f66ab0b7dfcc895d901e6e85b30f2a21842d2b2c.1585904950.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <34c83a5fe561739c7b85a3c4959eb44c3155d075.1585899578.git.geliangtang@gmail.com>
+        Fri, 3 Apr 2020 05:16:52 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 20785495-1500050 
+        for multiple; Fri, 03 Apr 2020 10:16:45 +0100
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200403091430.GA3845@duo.ucw.cz>
+References: <20200402213253.GA2691@duo.ucw.cz> <20200402213506.GA2767@duo.ucw.cz> <20200403073720.GA23229@duo.ucw.cz> <20200403091430.GA3845@duo.ucw.cz>
+Subject: Re: [Intel-gfx] 5.7-rc0: hangs while attempting to run X
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+To:     Pavel Machek <pavel@ucw.cz>, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        kernel list <linux-kernel@vger.kernel.org>,
+        rodrigo.vivi@intel.com
+Message-ID: <158590540341.5852.3933814252282882685@build.alporthouse.com>
+User-Agent: alot/0.8.1
+Date:   Fri, 03 Apr 2020 10:16:43 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the mptcp logs didn't print out the format string:
+Quoting Pavel Machek (2020-04-03 10:14:30)
+> Hi!
+> 
+> > > > Hardware is thinkpad x220. I had this crash few days ago. And today I
+> > > > have similar-looking one, with slightly newer kernel. (Will post
+> > > > as a follow-up).
+> > 
+> > As part of quest for working system, I tried 5.7-rc0, based on
+> > 
+> > Merge: 50a5de895dbe b4d8ddf8356d
+> > Author: Linus Torvalds <torvalds@linux-foundation.org>
+> > Date:   Wed Apr 1 18:18:18 2020 -0700
+> > 
+> > It hangs in userspace, at a time when X should be starting, and I'm
+> > looking at blinking cursor.
+> > 
+> > 5.6-rcs worked, I'll test 5.6-final.
+> 
+> 5.6-final works.
+> 
+> Hmm...
+> 
+> commit f365ab31efacb70bed1e821f7435626e0b2528a6
+> Merge: 4646de87d325 59e7a8cc2dcf
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Wed Apr 1 15:24:20 2020 -0700
+> 
+>     Merge tag 'drm-next-2020-04-01' of git://anongit.freedesktop.org/drm/drm
+> 
+> Let me test 4646de87d32526ee87b46c2e0130413367fb5362...that one works.
+> 
+> Ok, so obviously... I should
+> test... f365ab31efacb70bed1e821f7435626e0b2528a6
+> 
+> Now, this is anti-social:
+> 
+> Busywait for request completion limit (ns)
+> (DRM_I915_MAX_REQUEST_BUSYWAIT) [8000] (NEW)
+> 
+> How should I know what to answer here (or the others)
+> 
+> Interval between heartbeat pulses (ms) (DRM_I915_HEARTBEAT_INTERVAL) [2500] 2500
+> Preempt timeout (ms, jiffy granularity) (DRM_I915_PREEMPT_TIMEOUT) [640] 640
+> 
+> I just took the defaults.. but... 
 
-[  185.651493] DSS
-[  185.651494] data_fin=0 dsn64=0 use_map=0 ack64=1 use_ack=1
-[  185.651494] data_ack=13792750332298763796
-[  185.651495] MPTCP: msk=00000000c4b81cfc ssk=000000009743af53 data_avail=0 skb=0000000063dc595d
-[  185.651495] MPTCP: msk=00000000c4b81cfc ssk=000000009743af53 status=0
-[  185.651495] MPTCP: msk ack_seq=9bbc894565aa2f9a subflow ack_seq=9bbc894565aa2f9a
-[  185.651496] MPTCP: msk=00000000c4b81cfc ssk=000000009743af53 data_avail=1 skb=0000000012e809e1
-
-So this patch added these missing pr_fmt defines. Then we can get the same
-format string "MPTCP" in all mptcp logs like this:
-
-[  142.795829] MPTCP: DSS
-[  142.795829] MPTCP: data_fin=0 dsn64=0 use_map=0 ack64=1 use_ack=1
-[  142.795829] MPTCP: data_ack=8089704603109242421
-[  142.795830] MPTCP: msk=00000000133a24e0 ssk=000000002e508c64 data_avail=0 skb=00000000d5f230df
-[  142.795830] MPTCP: msk=00000000133a24e0 ssk=000000002e508c64 status=0
-[  142.795831] MPTCP: msk ack_seq=66790290f1199d9b subflow ack_seq=66790290f1199d9b
-[  142.795831] MPTCP: msk=00000000133a24e0 ssk=000000002e508c64 data_avail=1 skb=00000000de5aca2e
-
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-
----
-Changes in v2:
- - add pr_fmt to C files, not headers. 
----
- net/mptcp/options.c    | 2 ++
- net/mptcp/pm.c         | 2 ++
- net/mptcp/pm_netlink.c | 2 ++
- 3 files changed, 6 insertions(+)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index bd220ee4aac9..faf57585b892 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -4,6 +4,8 @@
-  * Copyright (c) 2017 - 2019, Intel Corporation.
-  */
- 
-+#define pr_fmt(fmt) "MPTCP: " fmt
-+
- #include <linux/kernel.h>
- #include <net/tcp.h>
- #include <net/mptcp.h>
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 064639f72487..977d9c8b1453 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -3,6 +3,8 @@
-  *
-  * Copyright (c) 2019, Intel Corporation.
-  */
-+#define pr_fmt(fmt) "MPTCP: " fmt
-+
- #include <linux/kernel.h>
- #include <net/tcp.h>
- #include <net/mptcp.h>
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index a0ce7f324499..86d61ab34c7c 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -4,6 +4,8 @@
-  * Copyright (c) 2020, Red Hat, Inc.
-  */
- 
-+#define pr_fmt(fmt) "MPTCP: " fmt
-+
- #include <linux/inet.h>
- #include <linux/kernel.h>
- #include <net/tcp.h>
--- 
-2.17.1
-
+It is _deep_ under EXPERT.
+-Chris
