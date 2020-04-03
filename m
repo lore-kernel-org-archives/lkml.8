@@ -2,172 +2,371 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C25C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF283C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59886206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585892419;
-	bh=QvwTD819lz0XbSap6oH7pSjo7uP65gkShMIyJNk5z28=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rzeXEWp5znCJ8z7e0cRIXernV17bQdZpDjWnHr5xXHJ9OQ3oGiiE5K4CdPKYDPmE4
-	 lTUdvEqGxahyUjK0tVG0998VCzoEo/dFhG7XHPS3IltLXfJQsMTCHY/8KZoVMBVfci
-	 9YZGCDHILf6BTUTMEQO5hZ/JmDf6BPsLU3KIakQM=
+	by mail.kernel.org (Postfix) with ESMTP id 8FE6020719
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 05:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZeY6GfK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbgDCFkD (ORCPT
+        id S1732541AbgDCFlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 01:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbgDCFkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 01:40:02 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D28A5206F5;
-        Fri,  3 Apr 2020 05:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585892402;
-        bh=QvwTD819lz0XbSap6oH7pSjo7uP65gkShMIyJNk5z28=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=avJNCsKEeFL00UUlmA6L9XVCt1colG+S2TRgZ0bQaEVVMVCnZhn8QIcmctCZG1KFY
-         KIciRT5zyoPQtnSkc6amNrxYaj3rbdYAOAt8gabT+88qXFJ5GRma4peGZN8D7AVQO+
-         0tSwHIb+zjN1Hrh0f/mWzDDIxuWaWkAtHqMaQdSU=
-Date:   Fri, 3 Apr 2020 14:39:56 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Daniel Shaulov <daniel.shaulov@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Daniel Shaulov <daniel.shaulov@granulate.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: Add support for DW_OP_call_frame_cfa vars
-Message-Id: <20200403143956.f6d4f7771a55e8fe97afacee@kernel.org>
-In-Reply-To: <20200402202523.GA55594@5f9ad775e7f6>
-References: <20200401161954.44640-1-daniel.shaulov@granulate.io>
-        <20200402184943.GB23243@kernel.org>
-        <20200402202523.GA55594@5f9ad775e7f6>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 3 Apr 2020 01:41:07 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36051 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729349AbgDCFlH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 01:41:07 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c23so3001609pgj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 22:41:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=JpEWlty5iU4yVEF0VoZT8ihanR9mHkOnsExRDYdzEPo=;
+        b=uZeY6GfKM9sqc/ALNFgLZqAsGBizsRSVFgMaT9dBeQ7K8xgadMzrlOeKV6fxLGANjz
+         Qe4Pf4WWy5oCv45VSlJExIsVnsnbNj1vIes662v2Qet2lSesbglNInC8SzuJpVCuoUEp
+         M053lmGw6KITkIdyfq/SWyO4m/S5LW2QqRdyu09psD+baqjCz331b3GeOFqNK/HX/HIX
+         c2yl5/Gl8gxyfv0sTH5BKtvuawkt5pAJySStp2J8L9OWZ74evDuNq4+c7QnLD1kmYcM6
+         EWq+SN/RZBcxKe/JU3OwUpYGL5OPBne8A8wyI87xwcqsUXLyoI7r51tfbgG+zIXLRK0l
+         ycRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JpEWlty5iU4yVEF0VoZT8ihanR9mHkOnsExRDYdzEPo=;
+        b=dOSPldAZdNYcYTIr4m6Wh2DHeg4TWKSmVysuqX7nHeNgDQsaw4gzEKn44mWgEtKeEn
+         5PpTNx9GQqxA+uCKE0DdZ7dVHrbKlkx4YCIVerjVuD0GFIB4pf8gDVqM6XdITFMP8x2L
+         XM5QouuXnufc64NCllJ+43CFIDjDKEKqodhKsD3ZKf4SaZBj76wXMdJue+Dd1J9OxdaB
+         Kt4DhnZizVnmlfH9aWIqcaIa5KuSFPXZH+SPhCX5XI4Nv1dWGJurkn0qfzordXUqmgVp
+         F/0mzkf6d8m0uUx4ly2n6Hgpxj3hC/ohzoJT775eiEbomqiWjd+bheGVBEPeeFtF08za
+         8BZw==
+X-Gm-Message-State: AGi0PuadOqrPTpVnRQOvhKZPbWp9Ik28GKOwT1a2P8I0Rh23zo9EM4ir
+        g5wZaakg7E2/dMQF/8YEK/ZrKAAh
+X-Google-Smtp-Source: APiQypLaqcFt1Bqh8gUQfOO4TRxG2T8Y2ltQCc/4pSN854NzCpSALg9eyOcE5xOOAEmIB1UpL6TqfQ==
+X-Received: by 2002:a63:7b1d:: with SMTP id w29mr6498599pgc.4.1585892465534;
+        Thu, 02 Apr 2020 22:41:05 -0700 (PDT)
+Received: from localhost.localdomain ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id e6sm4568295pgu.44.2020.04.02.22.41.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 02 Apr 2020 22:41:04 -0700 (PDT)
+From:   js1304@gmail.com
+X-Google-Original-From: iamjoonsoo.kim@lge.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: [PATCH v5 00/10] workingset protection/detection on the anonymous LRU list
+Date:   Fri,  3 Apr 2020 14:40:38 +0900
+Message-Id: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-On Thu, 2 Apr 2020 20:25:24 +0000
-Daniel Shaulov <daniel.shaulov@gmail.com> wrote:
+Hello,
 
-> On Thu, Apr 02, 2020 at 03:49:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Daniel, next time please consider providing precise steps to show what
-> > wasn't working and then how the patch solves the problem, i.e. get some
-> > go program, show the command lines used to build, probe, etc.
-> >
-> > - Arnaldo
-> 
-> Sure thing:
-> 
-> ---- contents of example.go ----
-> package main
-> 
-> import "fmt"
-> 
-> func example(param1 int, param2 int) {
-> 	fmt.Println(param1, param2)
-> }
-> 
-> func main() {
-> 	example(111, 222)
-> }
-> ---- end contents of example.go ----
-> 
-> Build with:
-> $ go build example.go
-> 
-> Note that the output file is named after the directory.
-> 
-> Then try to probe it with:
-> $ perf probe -x ./example 'main.example param1 param2'
-> 
-> The result is:
-> > Target program is compiled without optimization. Skipping prologue.
-> > Probe on address 0x4820f0 to force probing at the function entry.
-> >
-> > Sorry, we don't support this variable location yet.
-> >   Error: Failed to add events.
-> 
-> With my changes the event is added successfuly.
-> The reason for the change can be observed in the output of:
-> $ readelf --debug-dump=info ./example
-> 
-> Where we have the following for the main.example function (with go >= 1.10):
->  <1><63dd2>: Abbrev Number: 2 (DW_TAG_subprogram)
->     <63dd3>   DW_AT_name        : main.example
->     <63de0>   DW_AT_low_pc      : 0x4820f0
->     <63de8>   DW_AT_high_pc     : 0x4821c2
->     <63df0>   DW_AT_frame_base  : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
->     <63df2>   DW_AT_decl_file   : 0x1
->     <63df6>   DW_AT_external    : 1
->  <2><63df7>: Abbrev Number: 14 (DW_TAG_formal_parameter)
->     <63df8>   DW_AT_name        : param1
->     <63dff>   DW_AT_variable_parameter: 0
->     <63e00>   DW_AT_decl_line   : 5
->     <63e01>   DW_AT_type        : <0x220f>
->     <63e05>   DW_AT_location    : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
->  <2><63e07>: Abbrev Number: 14 (DW_TAG_formal_parameter)
->     <63e08>   DW_AT_name        : param2
->     <63e0f>   DW_AT_variable_parameter: 0
->     <63e10>   DW_AT_decl_line   : 5
->     <63e11>   DW_AT_type        : <0x220f>
->     <63e15>   DW_AT_location    : 2 byte block: 91 8 	(DW_OP_fbreg: 8)
->  <2><63e18>: Abbrev Number: 0
-> 
-> The go compiler (after 1.10) uses DW_OP_call_frame_cfa for the first parameter and DW_OP_fbreg for the rest.
-> On go versions lower than 1.10, it used DW_OP_call_frame_cfa for all parameters.
-> Here is example output of the readelf on main.example, compiled with go1.9.7:
->  <1><2634d>: Abbrev Number: 2 (DW_TAG_subprogram)
->     <2634e>   DW_AT_name        : main.example
->     <2635b>   DW_AT_low_pc      : 0x487db0
->     <26363>   DW_AT_high_pc     : 0x487e99
->     <2636b>   DW_AT_frame_base  : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
->     <2636d>   DW_AT_external    : 1
->  <2><2636e>: Abbrev Number: 5 (DW_TAG_formal_parameter)
->     <2636f>   DW_AT_name        : param1
->     <26376>   DW_AT_location    : 1 byte block: 9c 	(DW_OP_call_frame_cfa)
->     <26378>   DW_AT_type        : <0x27f1c>
->  <2><2637c>: Abbrev Number: 5 (DW_TAG_formal_parameter)
->     <2637d>   DW_AT_name        : param2
->     <26384>   DW_AT_location    : 4 byte block: 9c 11 8 22 	(DW_OP_call_frame_cfa; DW_OP_consts: 8; DW_OP_plus)
->     <26389>   DW_AT_type        : <0x27f1c>
->  <2><2638d>: Abbrev Number: 0
-> 
-> Hope this makes things easier to understand.
+This patchset implements workingset protection and detection on
+the anonymous LRU list.
 
-Thanks for the explanation. That is a useful info to understand what go compiler does on dwarf.
-OK, so that is same as "DW_OP_fbreg: 0".
+* Changes on v5
+- change memcg charge timing for the swapped-in page (fault -> swap-in)
+- avoid readahead if previous owner of the swapped-out page isn't me
+- use another lruvec to update the reclaim_stat for a new anonymous page
+- add two more cases to fix up the reclaim_stat
 
-Thank you,
+* Changes on v4
+- In the patch "mm/swapcache: support to handle the exceptional
+entries in swapcache":
+-- replace the word "value" with "exceptional entries"
+-- add to handle the shadow entry in add_to_swap_cache()
+-- support the huge page
+-- remove the registration code for shadow shrinker
 
-> 
-> Daniel.
-> 
+- remove the patch "mm/workingset: use the node counter
+if memcg is the root memcg" since workingset detection for
+anonymous page doesn't use shadow shrinker now
+- minor style fixes
 
+* Changes on v3
+- rework the patch, "mm/vmscan: protect the workingset on anonymous LRU"
+(use almost same reference tracking algorithm to the one for the file
+mapped page)
+
+* Changes on v2
+- fix a critical bug that uses out of index lru list in
+workingset_refault()
+- fix a bug that reuses the rotate value for previous page
+
+* SUBJECT
+workingset protection
+
+* PROBLEM
+In current implementation, newly created or swap-in anonymous page is
+started on the active list. Growing the active list results in rebalancing
+active/inactive list so old pages on the active list are demoted to the
+inactive list. Hence, hot page on the active list isn't protected at all.
+
+Following is an example of this situation.
+
+Assume that 50 hot pages on active list and system can contain total
+100 pages. Numbers denote the number of pages on active/inactive
+list (active | inactive). (h) stands for hot pages and (uo) stands for
+used-once pages.
+
+1. 50 hot pages on active list
+50(h) | 0
+
+2. workload: 50 newly created (used-once) pages
+50(uo) | 50(h)
+
+3. workload: another 50 newly created (used-once) pages
+50(uo) | 50(uo), swap-out 50(h)
+
+As we can see, hot pages are swapped-out and it would cause swap-in later.
+
+* SOLUTION
+Since this is what we want to avoid, this patchset implements workingset
+protection. Like as the file LRU list, newly created or swap-in anonymous
+page is started on the inactive list. Also, like as the file LRU list,
+if enough reference happens, the page will be promoted. This simple
+modification changes the above example as following.
+
+1. 50 hot pages on active list
+50(h) | 0
+
+2. workload: 50 newly created (used-once) pages
+50(h) | 50(uo)
+
+3. workload: another 50 newly created (used-once) pages
+50(h) | 50(uo), swap-out 50(uo)
+
+hot pages remains in the active list. :)
+
+* EXPERIMENT
+I tested this scenario on my test bed and confirmed that this problem
+happens on current implementation. I also checked that it is fixed by
+this patchset.
+
+I did another test to show the performance effect of this patchset.
+
+- ebizzy (with modified random function)
+ebizzy is the test program that main thread allocates lots of memory and
+child threads access them randomly during the given times. Swap-in/out
+will happen if allocated memory is larger than the system memory.
+
+The random function that represents the zipf distribution is used to
+make hot/cold memory. Hot/cold ratio is controlled by the parameter. If
+the parameter is high, hot memory is accessed much larger than cold one.
+If the parameter is low, the number of access on each memory would be
+similar. I uses various parameters in order to show the effect of
+patchset on various hot/cold ratio workload.
+
+My test setup is a virtual machine with 8 cpus and 1024MB memory.
+
+Result format is as following.
+
+Parameter 0.1 ... 1.3
+Allocated memory size
+Throughput for base (larger is better)
+Throughput for patchset (larger is better)
+Improvement (larger is better)
+
+
+* single thread
+
+     0.1      0.3      0.5      0.7      0.9      1.1      1.3
+<512M>
+  7009.0   7372.0   7774.0   8523.0   9569.0  10724.0  11936.0
+  6973.0   7342.0   7745.0   8576.0   9441.0  10730.0  12033.0
+   -0.01     -0.0     -0.0     0.01    -0.01      0.0     0.01
+<768M>
+   915.0   1039.0   1275.0   1687.0   2328.0   3486.0   5445.0
+   920.0   1037.0   1238.0   1689.0   2384.0   3638.0   5381.0
+    0.01     -0.0    -0.03      0.0     0.02     0.04    -0.01
+<1024M>
+   425.0    471.0    539.0    753.0   1183.0   2130.0   3839.0
+   414.0    468.0    553.0    770.0   1242.0   2187.0   3932.0
+   -0.03    -0.01     0.03     0.02     0.05     0.03     0.02
+<1280M>
+   320.0    346.0    410.0    556.0    871.0   1654.0   3298.0
+   316.0    346.0    411.0    550.0    892.0   1652.0   3293.0
+   -0.01      0.0      0.0    -0.01     0.02     -0.0     -0.0
+<1536M>
+   273.0    290.0    341.0    458.0    733.0   1381.0   2925.0
+   271.0    293.0    344.0    462.0    740.0   1398.0   2969.0
+   -0.01     0.01     0.01     0.01     0.01     0.01     0.02
+<2048M>
+    77.0     79.0     95.0    147.0    276.0    690.0   1816.0
+    91.0     94.0    115.0    170.0    321.0    770.0   2018.0
+    0.18     0.19     0.21     0.16     0.16     0.12     0.11
+
+
+* multi thread (8)
+
+     0.1      0.3      0.5      0.7      0.9      1.1      1.3
+<512M>
+ 29083.0  29648.0  30145.0  31668.0  33964.0  38414.0  43707.0
+ 29238.0  29701.0  30301.0  31328.0  33809.0  37991.0  43667.0
+    0.01      0.0     0.01    -0.01     -0.0    -0.01     -0.0
+<768M>
+  3332.0   3699.0   4673.0   5830.0   8307.0  12969.0  17665.0
+  3579.0   3992.0   4432.0   6111.0   8699.0  12604.0  18061.0
+    0.07     0.08    -0.05     0.05     0.05    -0.03     0.02
+<1024M>
+  1921.0   2141.0   2484.0   3296.0   5391.0   8227.0  14574.0
+  1989.0   2155.0   2609.0   3565.0   5463.0   8170.0  15642.0
+    0.04     0.01     0.05     0.08     0.01    -0.01     0.07
+<1280M>
+  1524.0   1625.0   1931.0   2581.0   4155.0   6959.0  12443.0
+  1560.0   1707.0   2016.0   2714.0   4262.0   7518.0  13910.0
+    0.02     0.05     0.04     0.05     0.03     0.08     0.12
+<1536M>
+  1303.0   1399.0   1550.0   2137.0   3469.0   6712.0  12944.0
+  1356.0   1465.0   1701.0   2237.0   3583.0   6830.0  13580.0
+    0.04     0.05      0.1     0.05     0.03     0.02     0.05
+<2048M>
+   172.0    184.0    215.0    289.0    514.0   1318.0   4153.0
+   175.0    190.0    225.0    329.0    606.0   1585.0   5170.0
+    0.02     0.03     0.05     0.14     0.18      0.2     0.24
+
+As we can see, as allocated memory grows, patched kernel get the better
+result. Maximum improvement is 21% for the single thread test and
+24% for the multi thread test.
+
+
+* SUBJECT
+workingset detection
+
+* PROBLEM
+Later part of the patchset implements the workingset detection for
+the anonymous LRU list. There is a corner case that workingset protection
+could cause thrashing. If we can avoid thrashing by workingset detection,
+we can get the better performance.
+
+Following is an example of thrashing due to the workingset protection.
+
+1. 50 hot pages on active list
+50(h) | 0
+
+2. workload: 50 newly created (will be hot) pages
+50(h) | 50(wh)
+
+3. workload: another 50 newly created (used-once) pages
+50(h) | 50(uo), swap-out 50(wh)
+
+4. workload: 50 (will be hot) pages
+50(h) | 50(wh), swap-in 50(wh)
+
+5. workload: another 50 newly created (used-once) pages
+50(h) | 50(uo), swap-out 50(wh)
+
+6. repeat 4, 5
+
+Without workingset detection, this kind of workload cannot be promoted
+and thrashing happens forever.
+
+* SOLUTION
+Therefore, this patchset implements workingset detection.
+All the infrastructure for workingset detecion is already implemented,
+so there is not much work to do. First, extend workingset detection
+code to deal with the anonymous LRU list. Then, make swap cache handles
+the exceptional value for the shadow entry. Lastly, install/retrieve
+the shadow value into/from the swap cache and check the refault distance.
+
+* EXPERIMENT
+I made a test program to imitates above scenario and confirmed that
+problem exists. Then, I checked that this patchset fixes it.
+
+My test setup is a virtual machine with 8 cpus and 6100MB memory. But,
+the amount of the memory that the test program can use is about 280 MB.
+This is because the system uses large ram-backed swap and large ramdisk
+to capture the trace.
+
+Test scenario is like as below.
+
+1. allocate cold memory (512MB)
+2. allocate hot-1 memory (96MB)
+3. activate hot-1 memory (96MB)
+4. allocate another hot-2 memory (96MB)
+5. access cold memory (128MB)
+6. access hot-2 memory (96MB)
+7. repeat 5, 6
+
+Since hot-1 memory (96MB) is on the active list, the inactive list can
+contains roughly 190MB pages. hot-2 memory's re-access interval
+(96+128 MB) is more 190MB, so it cannot be promoted without workingset
+detection and swap-in/out happens repeatedly. With this patchset,
+workingset detection works and promotion happens. Therefore, swap-in/out
+occurs less.
+
+Here is the result. (average of 5 runs)
+
+type swap-in swap-out
+base 863240 989945
+patch 681565 809273
+
+As we can see, patched kernel do less swap-in/out.
+
+Patchset is based on v5.6.
+Patchset can also be available at
+
+https://github.com/JoonsooKim/linux/tree/improve-anonymous-lru-management-v5.00-v5.6
+
+Enjoy it.
+
+Thanks.
+
+Joonsoo Kim (10):
+  mm/vmscan: make active/inactive ratio as 1:1 for anon lru
+  mm/vmscan: protect the workingset on anonymous LRU
+  mm/workingset: extend the workingset detection for anon LRU
+  mm/swapcache: support to handle the exceptional entries in swapcache
+  mm/swap: charge the page when adding to the swap cache
+  mm/swap: implement workingset detection for anonymous LRU
+  mm/workingset: support to remember the previous owner of the page
+  mm/swap: do not readahead if the previous owner of the swap entry
+    isn't me
+  mm/vmscan: restore active/inactive ratio for anonymous LRU
+  mm/swap: reinforce the reclaim_stat changed by anon LRU algorithm
+    change
+
+ include/linux/mmzone.h        |  14 ++++--
+ include/linux/pagevec.h       |   2 +-
+ include/linux/swap.h          |  24 +++++++---
+ include/linux/vmstat.h        |   2 +-
+ include/trace/events/vmscan.h |   3 +-
+ kernel/events/uprobes.c       |   2 +-
+ mm/huge_memory.c              |   6 +--
+ mm/khugepaged.c               |   2 +-
+ mm/memcontrol.c               |  12 +++--
+ mm/memory.c                   |  23 +++++++--
+ mm/migrate.c                  |   2 +-
+ mm/mlock.c                    |   2 +-
+ mm/shmem.c                    |  21 +++++----
+ mm/swap.c                     | 105 +++++++++++++++++++++++++++++++++++-------
+ mm/swap_state.c               |  95 ++++++++++++++++++++++++++++++++------
+ mm/swapfile.c                 |   2 +-
+ mm/userfaultfd.c              |   2 +-
+ mm/vmscan.c                   |  38 +++++++++------
+ mm/vmstat.c                   |   6 ++-
+ mm/workingset.c               |  90 +++++++++++++++++++++++++++---------
+ mm/zswap.c                    |   2 +-
+ 21 files changed, 343 insertions(+), 112 deletions(-)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.7.4
+
