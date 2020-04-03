@@ -6,75 +6,93 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD41BC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F052C2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24D0206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2171A2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 17:24:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VJfn5M9P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fki8HQR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391125AbgDCRYR (ORCPT
+        id S2391141AbgDCRYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:24:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33595 "EHLO
+        Fri, 3 Apr 2020 13:24:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30565 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728268AbgDCRYR (ORCPT
+        with ESMTP id S1728268AbgDCRYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 13:24:17 -0400
+        Fri, 3 Apr 2020 13:24:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585934656;
+        s=mimecast20190719; t=1585934686;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MQcoDzg7dqsbSOK/FNjmA6dmkRKt+JbKVQHmTtEj3TE=;
-        b=VJfn5M9PpoOT1n9MWv98oZfchJaOTOMbxr3FC/mlBPtlWnBkN8uB/3GfjA+qvOXOEdcJUX
-        fItGybK4v0xPtnBoQIyYKjmUT3EoHKHHlJlXQZ50XnCC3h0VW2pMhFdCqfGpDeETe9qXZQ
-        3/MYYFHRuvnh3XV70N9frGnu9rGgpwk=
+         to:to:cc:cc; bh=TeNYEnMMfU3AiH0HRgQNWv1IhmQIdH3VbtTA4I/7zoQ=;
+        b=Fki8HQR0STTDXI20u7bY8oCYF/PdS/ozLY2QUReJdm40yfW/9UoLa90cHmWLvww0x0M9h7
+        PitlSLEXbfCO4Gg6PayfZ0ygXl04TYMth4G5xZQp/PAJUWbAykpITHgZ8/NS5IuFeQQXSr
+        SJic80bN1fd7shHKx5KJLIkfCe0GYrc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-FdqbzCerOFm2yu-ZDwDc6w-1; Fri, 03 Apr 2020 13:24:13 -0400
-X-MC-Unique: FdqbzCerOFm2yu-ZDwDc6w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-77-AkRCr9DvPSGybudoVX-j4A-1; Fri, 03 Apr 2020 13:24:39 -0400
+X-MC-Unique: AkRCr9DvPSGybudoVX-j4A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C91D7800D53;
-        Fri,  3 Apr 2020 17:24:11 +0000 (UTC)
-Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AFD791001938;
-        Fri,  3 Apr 2020 17:24:10 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 12:24:08 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, jthierry@redhat.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH 5/7] x86/speculation: Annotate intra-function calls
-Message-ID: <20200403172408.odvcsymwlyx6ises@treble>
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-6-alexandre.chartre@oracle.com>
- <20200403160538.qwu237amhanr6pyi@treble>
- <20200403161607.jxz6duaz7dud22wf@treble>
- <2c615bae-6002-80b7-493d-b24ec48f69c9@oracle.com>
- <20200403171836.GB20730@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200403171836.GB20730@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 304B7100550D;
+        Fri,  3 Apr 2020 17:24:38 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 135E05C1B0;
+        Fri,  3 Apr 2020 17:24:30 +0000 (UTC)
+From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
+To:     pbonzini@redhat.com, kvm@vger.kernel.org
+Cc:     drjones@redhat.com, david@redhat.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH v2 0/2] selftests: kvm: Introduce the mem_slot_test test
+Date:   Fri,  3 Apr 2020 14:24:26 -0300
+Message-Id: <20200403172428.15574-1-wainersm@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 07:18:36PM +0200, Peter Zijlstra wrote:
-> What we need in this case though is only a different stack layout inside
-> the alternative, and that is doable.
+This series introduces a new KVM selftest (mem_slot_test) that goal
+is to verify memory slots can be added up to the maximum allowed. An
+extra slot is attempted which should occur on error.
 
-I'm not sure what you mean... any stack changes within the alternative
-have to match exactly the stack changes at the same offsets of the
-original code because ORC doesn't know the difference between the two.
+The patch 01 is needed so that the VM fd can be accessed from the
+test code (for the ioctl call attempting to add an extra slot).
+
+I ran the test successfully on x86_64, aarch64, and s390x.  This
+is why it is enabled to build on those arches.
+
+v1: https://lore.kernel.org/kvm/20200330204310.21736-1-wainersm@redhat.com
+
+Changes v1 -> v2:
+ - Rebased to queue
+ - vm_get_fd() returns int instead of unsigned int (patch 01) [drjones]
+ - Removed MEM_REG_FLAGS and GUEST_VM_MODE defines [drjones]
+ - Replaced DEBUG() with pr_info() [drjones]
+ - Calculate number of guest pages with vm_calc_num_guest_pages()
+   [drjones]
+ - Using memory region of 1 MB sized (matches mininum needed
+   for s390x)
+ - Removed the increment of guest_addr after the loop [drjones]
+ - Added assert for the errno when adding a slot beyond-the-limit [drjones]
+ - Prefer KVM_MEM_READONLY flag but on s390x it switch to KVM_MEM_LOG_DIRTY_PAGES,
+   so ensure the coverage of both flags. Also somewhat tests the KVM_CAP_READONLY_MEM capability check [drjones]
+ - Moved the test logic to test_add_max_slots(), this allows to more easily add new cases in the "suite".
+
+Wainer dos Santos Moschetta (2):
+  selftests: kvm: Add vm_get_fd() in kvm_util
+  selftests: kvm: Add mem_slot_test test
+
+ tools/testing/selftests/kvm/.gitignore        |  1 +
+ tools/testing/selftests/kvm/Makefile          |  3 +
+ .../testing/selftests/kvm/include/kvm_util.h  |  1 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  5 ++
+ tools/testing/selftests/kvm/mem_slot_test.c   | 85 +++++++++++++++++++
+ 5 files changed, 95 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
 
 -- 
-Josh
+2.17.2
 
