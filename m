@@ -7,96 +7,186 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97571C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98701C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A6B2054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565DB2054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 02:26:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="ApEJfMGE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ScIMSWfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390421AbgDCCZ3 (ORCPT
+        id S2390422AbgDCC0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 Apr 2020 22:25:29 -0400
-Received: from smtp2.ustc.edu.cn ([202.38.64.46]:53068 "EHLO ustc.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389366AbgDCCZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 Apr 2020 22:25:29 -0400
+        Thu, 2 Apr 2020 22:26:15 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37664 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388951AbgDCC0P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 Apr 2020 22:26:15 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w10so6751066wrm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 Apr 2020 19:26:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mail.ustc.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
-        Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=5Ff+gzssjXpUxll6RYKKOboaCB53dA6nJFGdRslGlz4=; b=ApEJfMGE0z+pJ
-        RtGalc7lsNqR6sAUG6UzXeLk9sWZaSP52XjcwbvmYjbs5Uh3Go+6mP0rIECytAnJ
-        kbz5jlJO4baZd2EWNmf8dI/VGJUgHlInUsLqAM5RZm2D3NsCacZ+Wayvw79QfD1y
-        nbca9TJocdzNJukygO+FFUvXUx3FNs=
-Received: from xhacker (unknown [101.86.20.80])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygCXwXWNnoZe2NgQAA--.14355S2;
-        Fri, 03 Apr 2020 10:25:18 +0800 (CST)
-Date:   Fri, 3 Apr 2020 10:23:29 +0800
-From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: stmmac: dwmac1000: fix out-of-bounds mac address reg
- setting
-Message-ID: <20200403102329.0690d7b2@xhacker>
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8qP4HMBtgJcP3marxCvlPQM9EFvKm/v0Fyiot+R1GsA=;
+        b=ScIMSWfMnsrla8uAenHK1uo9zA/AEmGHi707UQmAtVeQVmrHa9Qsl/p2yb0UfP5R2A
+         fm74AxgyRryOoRv+MCk2i+dBZmcBjHww2+tPdSGF+d7CgouoObzQZeFL6ecfXd4d8UqV
+         1mnIXA/V8NFYMY9oa0THwurtkBKi355Lcv2QJ9e72p55LimTZWkc+A5OKDqFUMg5hy/h
+         gIGen7WC/oY+KEGyFROi3ejILIotOdhbqWT2t42ZooFwZ1yWN/lzbpvC8sNColkimABE
+         zU9uGEzvL0Es9e7KoIrWH6gjSblkqXOXmuwbdSovIrBfO5gMzmIfWMAP4XRqahwDt97y
+         oM4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8qP4HMBtgJcP3marxCvlPQM9EFvKm/v0Fyiot+R1GsA=;
+        b=OUrbUkBRyH5spR61Ar+79e6KiobtijDZPntIID6HCrjOSoN3SIzkgi/I1TeMTDATnp
+         SNEH47pSxL5/utin8rva8Hk8CrhAAa0H8FJP/V1Qx482myMD55pRPUemPIT/ysr/f/Rz
+         L13ceoDdoDutHct1rOMfZr5zr8wy7NfYuTMLDFgaCMwWty2K00zT7M4BXPs2QRsR9Pqo
+         ZCGNDAuheloTAQOY4ngmBcLJZK6JJhzGYat3K0IBQ3Vz4pCYZopQMIcDigVExqnTndff
+         Zes/pAlftqnolKdGa4b1r4eKmcunoYhbB71Jdrs3OUbBrfsgnMiJG/E7mKt72WWUuDNk
+         V9Wg==
+X-Gm-Message-State: AGi0PubDXmuvdhXB24eRZr60QLnr376oyDtFpqTSCOLg0wDPLw67iIbP
+        iB68lvr6ZmgczY3YqBONjySSHZp/YpyYb7sHouwqRg==
+X-Google-Smtp-Source: APiQypKNqjpq5zsdm7paTTwT5mrYSRaq+pPFJWnICDZB81b6LKwVd2z7s8iLBVPLFkgKpwY0frAVE0e2jJKwM9HNlTU=
+X-Received: by 2002:a5d:5112:: with SMTP id s18mr6550112wrt.306.1585880773030;
+ Thu, 02 Apr 2020 19:26:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LkAmygCXwXWNnoZe2NgQAA--.14355S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4fXw1xKryDGF4fKr4Durg_yoW8JFWkpF
-        47CFy5ZrZ2gr48Wa1kXwn8XFykGayUKr4UWFWIkwna9F93J3yj9F9I9ay5twsrAr4rWFy3
-        tr4jkr9rCFn0kwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
-        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2Iq
-        xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-        106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-        xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7
-        xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWU
-        JVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2rcTDUUUU
-X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
+References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com> <1583466184-7060-5-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <1583466184-7060-5-git-send-email-tiantao6@hisilicon.com>
+From:   Xinliang Liu <xinliang.liu@linaro.org>
+Date:   Fri, 3 Apr 2020 10:26:01 +0800
+Message-ID: <CAKoKPbwgiFdvfLHXoD9wPJvJ5yzMMrxNEEJUArSEvNdx46+m9Q@mail.gmail.com>
+Subject: Re: [PATCH 2/4] drm/hisilicon: Code cleanup for hibmc_drv_vdac
+To:     Tian Tao <tiantao6@hisilicon.com>
+Cc:     Chen Feng <puck.chen@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, tzimmermann@suse.de,
+        kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>, linuxarm@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Hi Tao,
 
-Commit 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address
-entries") cleared the unused mac address entries, but introduced an
-out-of bounds mac address register programming bug -- After setting
-the secondary unicast mac addresses, the "reg" value has reached
-netdev_uc_count() + 1, thus we should only clear address entries
-if (addr < perfect_addr_number)
+On Fri, 6 Mar 2020 at 11:44, Tian Tao <tiantao6@hisilicon.com> wrote:
+>
+> code cleanup for hibmc_drv_vdac.c, no actual function changes.
+>
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
+> ---
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 49 ++++++++----------------
+>  1 file changed, 16 insertions(+), 33 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+> index 678ac2e..f0e6bb8 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+> @@ -52,32 +52,6 @@ static const struct drm_connector_funcs hibmc_connector_funcs = {
+>         .atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+>  };
+>
+> -static struct drm_connector *
+> -hibmc_connector_init(struct hibmc_drm_private *priv)
+> -{
+> -       struct drm_device *dev = priv->dev;
+> -       struct drm_connector *connector;
+> -       int ret;
+> -
+> -       connector = devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL);
+> -       if (!connector) {
+> -               DRM_ERROR("failed to alloc memory when init connector\n");
+> -               return ERR_PTR(-ENOMEM);
+> -       }
+> -
+> -       ret = drm_connector_init(dev, connector,
+> -                                &hibmc_connector_funcs,
+> -                                DRM_MODE_CONNECTOR_VGA);
+> -       if (ret) {
+> -               DRM_ERROR("failed to init connector: %d\n", ret);
+> -               return ERR_PTR(ret);
+> -       }
+> -       drm_connector_helper_add(connector,
+> -                                &hibmc_connector_helper_funcs);
+> -
+> -       return connector;
+> -}
+> -
+>  static void hibmc_encoder_mode_set(struct drm_encoder *encoder,
+>                                    struct drm_display_mode *mode,
+>                                    struct drm_display_mode *adj_mode)
+> @@ -109,13 +83,6 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)
+>         struct drm_connector *connector;
+>         int ret;
+>
+> -       connector = hibmc_connector_init(priv);
+> -       if (IS_ERR(connector)) {
+> -               DRM_ERROR("failed to create connector: %ld\n",
+> -                         PTR_ERR(connector));
+> -               return PTR_ERR(connector);
+> -       }
+> -
+>         encoder = devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
+>         if (!encoder) {
+>                 DRM_ERROR("failed to alloc memory when init encoder\n");
+> @@ -131,6 +98,22 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)
+>         }
+>
+>         drm_encoder_helper_add(encoder, &hibmc_encoder_helper_funcs);
+> +       connector = devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL);
+> +       if (!connector) {
+> +               DRM_ERROR("failed to alloc memory when init connector\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       ret = drm_connector_init(dev, connector,
+> +                                &hibmc_connector_funcs,
+> +                                DRM_MODE_CONNECTOR_VGA);
+> +       if (ret) {
+> +               DRM_ERROR("failed to init connector: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       drm_connector_helper_add(connector, &hibmc_connector_helper_funcs);
+> +       drm_connector_register(connector);
 
-Fixes: 9463c4455900 ("net: stmmac: dwmac1000: Clear unused address entries")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You don't need to register a non-hotplug connector as it will be
+registered at drm_dev_register automatically.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-index 542784300620..efc6ec1b8027 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -207,7 +207,7 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
- 			reg++;
- 		}
- 
--		while (reg <= perfect_addr_number) {
-+		while (reg < perfect_addr_number) {
- 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
- 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
- 			reg++;
--- 
-2.26.0
+See function definition:
+
+ 488 /**
+ 489  * drm_connector_register - register a connector
+ 490  * @connector: the connector to register
+ 491  *
+ 492  * Register userspace interfaces for a connector. Only call this
+for connectors
+ 493  * which can be hotplugged after drm_dev_register() has been
+called already,
+ 494  * e.g. DP MST connectors. All other connectors will be
+registered automatically
+ 495  * when calling drm_dev_register().
+ 496  *
+ 497  * Returns:
+ 498  * Zero on success, error code on failure.
+ 499  */
+ 500 int drm_connector_register(struct drm_connector *connector)
+ 501 {
 
 
+Besides, I don't think this patch cleans much things.
+
+-Xinliang
+
+>         drm_connector_attach_encoder(connector, encoder);
+>
+>         return 0;
+> --
+> 2.7.4
+>
