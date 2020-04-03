@@ -2,162 +2,168 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FFDC2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430BEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA866206F8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ibt3ZzYn"
+	by mail.kernel.org (Postfix) with ESMTP id 07B09206F8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585929168;
+	bh=Ail9cbVIWJKaAdQNGg562dCC5Z5n7fm+++URHFuUF/k=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=kil/HOei2HvMZ7e/Pv6RgHjvsS+yOzbokWKgomQRDv5Iyye0pvd70mrkYaKfI970a
+	 chmCJd4iaIRo/NWKEebwVbJvr9pK5hq4EVechrGznIk3wxUXFpi3FT6xxR9xTOqxZg
+	 aRRaUUxDJuw2Du4Mh5a+KT+VOzhYvzBxSlo+BCkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgDCPuL (ORCPT
+        id S1728237AbgDCPwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:50:11 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:40047 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728066AbgDCPuL (ORCPT
+        Fri, 3 Apr 2020 11:52:47 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35004 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgDCPwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:50:11 -0400
-Received: by mail-ua1-f67.google.com with SMTP id a10so2897758uad.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:50:09 -0700 (PDT)
+        Fri, 3 Apr 2020 11:52:46 -0400
+Received: by mail-qk1-f196.google.com with SMTP id k13so8485254qki.2;
+        Fri, 03 Apr 2020 08:52:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PYwienmhzZwcpFtvNd9RSefcPiogX2fAxxNq9wneN/A=;
-        b=ibt3ZzYn6jEr1uFt9Fmxd4uysCVOIdfYmHGyhSZVgnBIR/pi9AaC9kTdCIEoL3kfEI
-         m1M3HVCiUKSl6z1hjBYbZy2HkUEoTPSNAqg2H5d/uB54PUOTygq+XKIgydbJxzGK9u4+
-         eUkWHSb6TOmh7iVjaVyVEdX8JIuz0FKdd/+4k=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=Za/htZk64WGRnsEWR8r2929pAGBMjmkKLkKsEbUZhBs=;
+        b=D/f3vfZFF1SiLQnrJ7rrb/lAykV3v6OqChYhbcgVee38gxZWZfqb0GD7NQUHUUEVnP
+         CotxEZoNUSzeFNJzkp3sTAhsrGhzfdahKtgmqAYQTlFKsUg2QTt6klbDdtCNxX3UKD+A
+         HL1AE7mC8xc5PbraXwCj0VYCmbNcFq91kAurjBJOjxbt2m3UDImWk0FWUOlqFeP//Pmp
+         OckC5PpYrSEXC7t7QwWuEbz2HOMGVVjhbqZqOPa6opx3L0ghYVH/Ure9CjImZ+4T5LLZ
+         ReOeb1smxypWR2ST/UZJICBAKdLT4UkpAUQrx5wlUL+Wl7R7JPmLHY/Vfo7d4V9vMCre
+         Ml+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PYwienmhzZwcpFtvNd9RSefcPiogX2fAxxNq9wneN/A=;
-        b=OGnHQTXIwgjnUYwXVUJJIxDZ5pvkfhEBp/eUkwMaDrY8USML82RzYt85U/8ynMjNA1
-         uUhGupr4oibBLq2cOe40oebSdnrYWstyhRwOBE6XYvek+cb3lZqppENCNF5/7cCfe2S3
-         udHwlfc6VvSg7HNxzGi9WW1Oopi3Fx1XWaos9Y+KykcEVx2JqaQb7+75x/HGLkrNnRYO
-         CAlGDEVLTk8e0vSdr+yd0FSJXRMZ0lG7ZjXJj3WHDjqOqUWObBcye3rnko/NmJ0Dg7e5
-         CnyyBfOnOjJM8bhyZWZ0y/nZbjiChH+XA1x9Fzqsr2L4JnJ6IzwikDutT+xmOY6wamji
-         MNAg==
-X-Gm-Message-State: AGi0PuYuehdh5/Uk7UnEfhqW5ojt6megbrgoU9DgDjfj0sDzgI19eNhz
-        iFsmGrfk/rovoV00BH3lr7vGOCV+UbQ=
-X-Google-Smtp-Source: APiQypLx0JHNak+1nLH5HMazrInf4aqiaYtkktTLZLi03ZYhuMA5k52yMSxg9mFC0NrAP0ZccAVQxw==
-X-Received: by 2002:ab0:480f:: with SMTP id b15mr6682654uad.11.1585929008971;
-        Fri, 03 Apr 2020 08:50:08 -0700 (PDT)
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com. [209.85.221.176])
-        by smtp.gmail.com with ESMTPSA id h1sm2314763vke.7.2020.04.03.08.50.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 08:50:08 -0700 (PDT)
-Received: by mail-vk1-f176.google.com with SMTP id n128so2120313vke.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 08:50:07 -0700 (PDT)
-X-Received: by 2002:a1f:e182:: with SMTP id y124mr7153752vkg.0.1585929006777;
- Fri, 03 Apr 2020 08:50:06 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=Za/htZk64WGRnsEWR8r2929pAGBMjmkKLkKsEbUZhBs=;
+        b=gi0hXyrCI28JOrHQ/fc8haIeBM05bpeSFgka+Dq0AIgEmzKB1tSZwt3YcCY+2FWKu5
+         mgGdNYyASpdsnA6+KpZ3/Tq0HtyD542VpQy9t/uxalUZ73t49Gr3YHlIH1TlYTT7lYbl
+         FRDCLxbrdcE0kJhpxdjxrQvq57Pz9XOKnTDHFCCSxz83/FersvpCfOKPhU+GQnDeT+WZ
+         e8z2TTV2Esua9awlqtIdugQY/+fgZUS8EbL41cjiiyJKWL4SpciYUgDyDjfsteX1BiMY
+         L6S5iQa+//QNMQjxnRPyMVnVg+93YLOaffWy/lgm4yA6lHv+7Y6nKzJbRYkECarpUg79
+         6/dA==
+X-Gm-Message-State: AGi0Pubg/joyBBIsvSxsPqujuPLixicBKAFUfm05fVxezus5QnbVH3kg
+        75x939DglYIRr9xAUWt9tDeTOB74s8A=
+X-Google-Smtp-Source: APiQypLzguTcFK111DFmQiS//JU4ZPE6fQa4NUxfxmvPxl+oS3xFFLVGNYZI9KZnc7oa3liVXZf9oQ==
+X-Received: by 2002:a37:2e44:: with SMTP id u65mr2850086qkh.42.1585929165516;
+        Fri, 03 Apr 2020 08:52:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::842b])
+        by smtp.gmail.com with ESMTPSA id 4sm6669594qkl.51.2020.04.03.08.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 08:52:44 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 11:52:43 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>
+Subject: [GIT PULL] cgroup changes for v5.7-rc1
+Message-ID: <20200403155243.GF162390@mtj.duckdns.org>
 MIME-Version: 1.0
-References: <20200402155130.8264-1-dianders@chromium.org> <20200402085050.v2.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
- <20200403013356.GA6987@ming.t460p> <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
-In-Reply-To: <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 3 Apr 2020 08:49:54 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vsk0SjkA+DbUwJxvO6NFcr0CO9=H1FD7okJ2PxMt5pYA@mail.gmail.com>
-Message-ID: <CAD=FV=Vsk0SjkA+DbUwJxvO6NFcr0CO9=H1FD7okJ2PxMt5pYA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] blk-mq: Rerun dispatching in the case of budget contention
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Salman Qazi <sqazi@google.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-scsi@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
-        Ajay Joshi <ajay.joshi@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Hou Tao <houtao1@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello, Linus.
 
-On Fri, Apr 3, 2020 at 8:10 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Correct that it only happens with BFQ, but whether it's a BFQ bug or
-> not just depends on how you define the has_work() API.  If has_work()
-> is allowed to be in-exact then it's either a blk-mq bug or a SCSI bug
-> depending on how you cut it.  If has_work() must be exact then it is
-> certainly a BFQ bug.  If has_work() doesn't need to be exact then it's
-> not a BFQ bug.  I believe that a sane API could be defined either way.
-> Either has_work() can be defined as a lightweight hint to trigger
-> heavier code or it can be defined as something exact.  It's really up
-> to blk-mq to say how they define it.
->
-> From his response on the SCSI patch [1], it sounded like Jens was OK
-> with has_work() being a lightweight hint as long as BFQ ensures that
-> the queues run later.  ...but, as my investigation found, I believe
-> that BFQ _does_ try to ensure that the queue is run at a later time by
-> calling blk_mq_run_hw_queues().  The irony is that due to the race
-> we're talking about here, blk_mq_run_hw_queues() isn't guaranteed to
-> be reliable if has_work() is inexact.  :(  One way to address this is
-> to make blk_mq_run_hw_queues() reliable even if has_work() is inexact.
->
-> ...so Jens: care to clarify how you'd like has_work() to be defined?
+* Christian extended clone3 so that processes can be spawned into cgroups
+  directly. This is not only neat in terms of semantics but also avoids grabbing
+  the global cgroup_threadgroup_rwsem for migration.
 
-Sorry to reply so quickly after my prior reply, but I might have found
-an extreme corner case where we can still run into the same race even
-if has_work() is exact.  This is all theoretical from code analysis.
-Maybe you can poke a hole in my scenario or tell me it's so
-implausible that we don't care, but it seems like it's theoretically
-possible.  For this example I'll assume a budget of 1 (AKA only one
-thread can get budget for a given queue):
+* Daniel added !root xattr support to cgroupfs. Userland already uses xattrs on
+  cgroupfs for bookkeeping. This will allow delegated cgroups to support such
+  usages.
 
-* Threads A and B both run has_work() at the same time with the same
-  "hctx".  has_work() is exact but there's no lock, so it's OK if
-  Thread A and B both get back true.
+* Prateek tried to make cpuset hotplug handling synchronous but that led to
+  possible deadlock scenarios. Reverted.
 
-* Thread B gets interrupted for a long time right after it decides
-  that there is work.  Maybe its CPU gets an interrupt and the
-  interrupt handler is slow.
+* Other minor changes including release_agent_path handling cleanup.
 
-* Thread A runs, get budget, dispatches work.
+Thanks.
 
-* Thread A's work finishes and budget is released.
+The following changes since commit 2e5383d7904e60529136727e49629a82058a5607:
 
-* Thread B finally runs again and gets budget.
+  cgroup1: don't call release_agent when it is "" (2020-03-04 11:53:33 -0500)
 
-* Since Thread A already took care of the work and no new work has
-  come in, Thread B will get NULL from dispatch_request().  I believe
-  this is specifically why dispatch_request() is allowed to return
-  NULL in the first place if has_work() must be exact.
+are available in the Git repository at:
 
-* Thread B will now be holding the budget and is about to call
-  put_budget(), but hasn't called it yet.
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.7
 
-* Thread B gets interrupted for a long time (again).  Dang interrupts.
+for you to fetch changes up to 0c05b9bdbfe52ad9b391a28dd26f047715627e0c:
 
-* Now Thread C (with a different "hctx" but the same queue) comes
-  along and runs blk_mq_do_dispatch_sched().
+  docs: cgroup-v1: Document the cpuset_v2_mode mount option (2020-04-03 11:42:56 -0400)
 
-* Thread C won't do anything because it can't get budget.
+----------------------------------------------------------------
+Christian Brauner (6):
+      cgroup: unify attach permission checking
+      cgroup: add cgroup_get_from_file() helper
+      cgroup: refactor fork helpers
+      cgroup: add cgroup_may_write() helper
+      clone3: allow spawning processes into cgroups
+      selftests/cgroup: add tests for cloning into cgroups
 
-* Finally Thread B will run again and put the budget without kicking
-  any queues.
+Daniel Xu (4):
+      kernfs: kvmalloc xattr value instead of kmalloc
+      kernfs: Add removed_size out param for simple_xattr_set
+      kernfs: Add option to enable user xattrs
+      cgroupfs: Support user xattrs
 
-Now we have a potential I/O stall because nobody will ever kick the
-queues.
+Madhuparna Bhowmik (1):
+      cgroup.c: Use built-in RCU list checking
 
+Michal Koutný (1):
+      cgroup: Clean up css_set task traversal
 
-I think the above example could happen even on non-BFQ systems and I
-think it would also be fixed by an approach like the one in my patch.
+Prateek Sood (1):
+      cpuset: Make cpuset hotplug synchronous
 
--Doug
+Suren Baghdasaryan (1):
+      kselftest/cgroup: add cgroup destruction test
+
+Tejun Heo (3):
+      Merge branch 'for-5.6-fixes' into for-5.7
+      cgroup: Restructure release_agent_path handling
+      Revert "cpuset: Make cpuset hotplug synchronous"
+
+Waiman Long (1):
+      docs: cgroup-v1: Document the cpuset_v2_mode mount option
+
+ Documentation/admin-guide/cgroup-v1/cpusets.rst   |  11 +
+ fs/kernfs/inode.c                                 |  91 +++++-
+ fs/kernfs/kernfs-internal.h                       |   2 +
+ fs/xattr.c                                        |  17 +-
+ include/linux/cgroup-defs.h                       |   5 +-
+ include/linux/cgroup.h                            |  23 +-
+ include/linux/kernfs.h                            |  11 +-
+ include/linux/sched/task.h                        |   4 +
+ include/linux/xattr.h                             |   3 +-
+ include/uapi/linux/sched.h                        |   5 +
+ kernel/cgroup/cgroup-v1.c                         |  34 +-
+ kernel/cgroup/cgroup.c                            | 361 ++++++++++++++++------
+ kernel/cgroup/cpuset.c                            |   8 +-
+ kernel/cgroup/pids.c                              |  15 +-
+ kernel/fork.c                                     |  19 +-
+ mm/shmem.c                                        |   2 +-
+ tools/testing/selftests/cgroup/Makefile           |   6 +-
+ tools/testing/selftests/cgroup/cgroup_util.c      | 126 ++++++++
+ tools/testing/selftests/cgroup/cgroup_util.h      |   4 +
+ tools/testing/selftests/cgroup/test_core.c        | 177 +++++++++++
+ tools/testing/selftests/clone3/clone3_selftests.h |  19 +-
+ 21 files changed, 795 insertions(+), 148 deletions(-)
+
+-- 
+tejun
