@@ -2,145 +2,169 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08762C2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496E6C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B2A2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2029B20737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 09:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="NFL2gYq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390682AbgDCJiY (ORCPT
+        id S2390685AbgDCJjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 05:38:24 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51617 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbgDCJiY (ORCPT
+        Fri, 3 Apr 2020 05:39:12 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17879 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727431AbgDCJjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 05:38:24 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 76b677d628e2c161; Fri, 3 Apr 2020 11:38:22 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rafael@kernel.org, robh@kernel.org,
-        "open list:POWER MANAGEMENT CORE" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 1/4] powercap/drivers/idle_inject: Specify idle state max latency
-Date:   Fri, 03 Apr 2020 11:38:22 +0200
-Message-ID: <2577452.sm1PKieV59@kreacher>
-In-Reply-To: <20200329220324.8785-1-daniel.lezcano@linaro.org>
-References: <20200329220324.8785-1-daniel.lezcano@linaro.org>
+        Fri, 3 Apr 2020 05:39:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585906718;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=oPji02Mj10zIV94105MzH8+cFbH8kX7/x2UDE2ufQdk=;
+        b=NFL2gYq6yOwR5PMtxtfMdPV3b9JEIAIDKpJF5SxosIlaHQV/dm5XVW4woY24SDPi
+        y8FUtatfGCb0ZHV8lWyWvAKj9Wnr/gz+InFkczzHoXR1JzwjGxojwXklrVtWZjsdXh9
+        cwLand8F5BdeATPIPM7d4gLYmm5W7dWEJ5tAB1tg=
+Received: from [10.233.233.252] (115.193.87.168 [115.193.87.168]) by mx.zoho.com.cn
+        with SMTPS id 1585906716374879.2219004893537; Fri, 3 Apr 2020 17:38:36 +0800 (CST)
+Date:   Fri, 03 Apr 2020 17:38:28 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1585906191-26037-2-git-send-email-yangtiezhu@loongson.cn>
+References: <1585906191-26037-1-git-send-email-yangtiezhu@loongson.cn> <1585906191-26037-2-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 1/3] MIPS: Loongson: Get host bridge information
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <F7C43218-A2A0-47C7-8F90-117DD3247807@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, March 30, 2020 12:03:17 AM CEST Daniel Lezcano wrote:
-> Currently the idle injection framework uses the play_idle() function
-> which puts the current CPU in an idle state. The idle state is the
-> deepest one, as specified by the latency constraint when calling the
-> subsequent play_idle_precise() function with the INT_MAX.
-> 
-> The idle_injection is used by the cpuidle_cooling device which
-> computes the idle / run duration to mitigate the temperature by
-> injecting idle cycles. The cooling device has no control on the depth
-> of the idle state.
-> 
-> Allow finer control of the idle injection mechanism by allowing to
-> specify the latency for the idle state. Thus the cooling device has
-> the ability to have a guarantee on the exit latency of the idle states
-> it is injecting.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-And I'm assuming that you will take care of the series yourself.
-
-> ---
->   - V2:
->     - Remove the get_latency helper
-> 
-> ---
->  drivers/powercap/idle_inject.c | 16 +++++++++++++++-
->  include/linux/idle_inject.h    |  4 ++++
->  2 files changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
-> index cd1270614cc6..49f42c475620 100644
-> --- a/drivers/powercap/idle_inject.c
-> +++ b/drivers/powercap/idle_inject.c
-> @@ -61,12 +61,14 @@ struct idle_inject_thread {
->   * @timer: idle injection period timer
->   * @idle_duration_us: duration of CPU idle time to inject
->   * @run_duration_us: duration of CPU run time to allow
-> + * @latency_us: max allowed latency
->   * @cpumask: mask of CPUs affected by idle injection
->   */
->  struct idle_inject_device {
->  	struct hrtimer timer;
->  	unsigned int idle_duration_us;
->  	unsigned int run_duration_us;
-> +	unsigned int latency_us;
->  	unsigned long int cpumask[0];
->  };
->  
-> @@ -138,7 +140,8 @@ static void idle_inject_fn(unsigned int cpu)
->  	 */
->  	iit->should_run = 0;
->  
-> -	play_idle(READ_ONCE(ii_dev->idle_duration_us));
-> +	play_idle_precise(READ_ONCE(ii_dev->idle_duration_us) * NSEC_PER_USEC,
-> +			  READ_ONCE(ii_dev->latency_us) * NSEC_PER_USEC);
->  }
->  
->  /**
-> @@ -169,6 +172,16 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
->  	*idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
->  }
->  
-> +/**
-> + * idle_inject_set_latency - set the maximum latency allowed
-> + * @latency_us: set the latency requirement for the idle state
-> + */
-> +void idle_inject_set_latency(struct idle_inject_device *ii_dev,
-> +			     unsigned int latency_us)
-> +{
-> +	WRITE_ONCE(ii_dev->latency_us, latency_us);
-> +}
-> +
->  /**
->   * idle_inject_start - start idle injections
->   * @ii_dev: idle injection control device structure
-> @@ -297,6 +310,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
->  	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
->  	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->  	ii_dev->timer.function = idle_inject_timer_fn;
-> +	ii_dev->latency_us = UINT_MAX;
->  
->  	for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
->  
-> diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
-> index a445cd1a36c5..91a8612b8bf9 100644
-> --- a/include/linux/idle_inject.h
-> +++ b/include/linux/idle_inject.h
-> @@ -26,4 +26,8 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
->  void idle_inject_get_duration(struct idle_inject_device *ii_dev,
->  				 unsigned int *run_duration_us,
->  				 unsigned int *idle_duration_us);
-> +
-> +void idle_inject_set_latency(struct idle_inject_device *ii_dev,
-> +			     unsigned int latency_ns);
-> +
->  #endif /* __IDLE_INJECT_H__ */
-> 
 
 
+=E4=BA=8E 2020=E5=B9=B44=E6=9C=883=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885:=
+29:49, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
+>Read the address of host bridge configuration space to get the vendor
+>ID
+>and device ID of host bridge, and then we can distinguish various types
+>of host bridge such as LS7A or RS780E=2E
 
+I'm a little bit uncomfortable about this kind of hack=2E
 
+Wish Loongson will establish a elegant boot proctol in future=2E
+
+For this patch,
+
+Reviewed-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+
+>
+>Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
+>---
+>
+>v3:
+>  - Modify the macro definition HOST_BRIDGE_CONFIG_ADDR and
+>    add comment to make it easy to read=2E
+>  - Use PCI_VENDOR_ID_LOONGSON in pci_ids=2Eh instead of 0x0014
+>
+>  PCI_VENDOR_ID_LOONGSON depends on the mainline tree's commit:
+>https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/torvalds/linux=2Egit/=
+commit/?id=3D9acb9fe18d86
+>
+>v4:
+>  - Use LS7A instead of Loongson 7A1000 in the description
+>  - Use LS7A or ls7a instead of LS7A1000 or ls7a1000 in the code
+>
+> arch/mips/include/asm/mach-loongson64/boot_param=2Eh |  6 ++++++
+>arch/mips/loongson64/env=2Ec                         | 18
+>++++++++++++++++++
+> 2 files changed, 24 insertions(+)
+>
+>diff --git a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>index 2ed483e=2E=2Efc9f14b 100644
+>--- a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>+++ b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>@@ -192,6 +192,11 @@ struct boot_params {
+> 	struct efi_reset_system_t reset_system;
+> };
+>=20
+>+enum loongson_bridge_type {
+>+	RS780E =3D 1,
+>+	LS7A =3D 2
+>+};
+>+
+> struct loongson_system_configuration {
+> 	u32 nr_cpus;
+> 	u32 nr_nodes;
+>@@ -200,6 +205,7 @@ struct loongson_system_configuration {
+> 	u16 boot_cpu_id;
+> 	u16 reserved_cpus_mask;
+> 	enum loongson_cpu_type cputype;
+>+	enum loongson_bridge_type bridgetype;
+> 	u64 ht_control_base;
+> 	u64 pci_mem_start_addr;
+> 	u64 pci_mem_end_addr;
+>diff --git a/arch/mips/loongson64/env=2Ec b/arch/mips/loongson64/env=2Ec
+>index 2554ef1=2E=2E71f4aaf 100644
+>--- a/arch/mips/loongson64/env=2Ec
+>+++ b/arch/mips/loongson64/env=2Ec
+>@@ -14,12 +14,15 @@
+>  * Author: Wu Zhangjin, wuzhangjin@gmail=2Ecom
+>  */
+> #include <linux/export=2Eh>
+>+#include <linux/pci_ids=2Eh>
+> #include <asm/bootinfo=2Eh>
+> #include <loongson=2Eh>
+> #include <boot_param=2Eh>
+> #include <builtin_dtbs=2Eh>
+> #include <workarounds=2Eh>
+>=20
+>+#define HOST_BRIDGE_CONFIG_ADDR	((void __iomem *)TO_UNCAC(0x1a000000))
+>+
+> u32 cpu_clock_freq;
+> EXPORT_SYMBOL(cpu_clock_freq);
+> struct efi_memory_map_loongson *loongson_memmap;
+>@@ -43,6 +46,8 @@ void __init prom_init_env(void)
+> 	struct system_loongson *esys;
+> 	struct efi_cpuinfo_loongson *ecpu;
+> 	struct irq_source_routing_table *eirq_source;
+>+	u32 id;
+>+	u16 vendor, device;
+>=20
+> 	/* firmware arguments are initialized in head=2ES */
+> 	boot_p =3D (struct boot_params *)fw_arg2;
+>@@ -178,4 +183,17 @@ void __init prom_init_env(void)
+> 		memcpy(loongson_sysconf=2Esensors, esys->sensors,
+> 			sizeof(struct sensor_device) * loongson_sysconf=2Enr_sensors);
+> 	pr_info("CpuClock =3D %u\n", cpu_clock_freq);
+>+
+>+	/* Read the ID of PCI host bridge to detect bridge type */
+>+	id =3D readl(HOST_BRIDGE_CONFIG_ADDR);
+>+	vendor =3D id & 0xffff;
+>+	device =3D (id >> 16) & 0xffff;
+>+
+>+	if (vendor =3D=3D PCI_VENDOR_ID_LOONGSON && device =3D=3D 0x7a00) {
+>+		pr_info("The bridge chip is LS7A\n");
+>+		loongson_sysconf=2Ebridgetype =3D LS7A;
+>+	} else {
+>+		pr_info("The bridge chip is RS780E or SR5690\n");
+>+		loongson_sysconf=2Ebridgetype =3D RS780E;
+>+	}
+> }
+
+--=20
+Jiaxun Yang
