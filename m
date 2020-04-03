@@ -2,100 +2,83 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF30CC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F73C2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A022073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBEEF20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:23:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoU0Gn3G"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ConTcMwy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404254AbgDCQXI (ORCPT
+        id S2404373AbgDCQXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:23:08 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35788 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbgDCQXI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:23:08 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g3so6928214wrx.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 09:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=1gGWWeC2/OTnoDAZbJD9MrkCcGY0rWCnSshI7XLBK9s=;
-        b=CoU0Gn3GhUUyoXblp3ViX6zxql2UAoZbEop/mUmzV98ectg7tucyl4x99VV1ltiuIR
-         qvvBhII7aHD1Q8CQ1DqgvrQztNmwGO0/yA9lKXDu96apsF6T08YWUe/s6nH60fpTne5M
-         Igyh7ZNMcHDsWJEc3Az8A/3rDyp2QDAYC7e4dDcyNMlQlFCejSHiZUAqUCjmKW7pduSp
-         iN5b0+2cRJvvhkIB2C9C891axzLUO1zLbivONN8ELqgJj3cnB6NymLFs1GUgIiFdCMPo
-         RDtJoFvImzbSdmvyT5+rIY3IHBxsm7+iW9IMAp6SKNB5FNx4P4lfmZbzs+m5gRqmuDb1
-         rgDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=1gGWWeC2/OTnoDAZbJD9MrkCcGY0rWCnSshI7XLBK9s=;
-        b=lFHkS5tU5vJW8ViNR6vrkT4DD/mAcxQENq0mY2oKMddE/VL0pEI47sSaQr13iXIS7G
-         zH3S1PSMcyvTSYpgTuTbZitBHxzw+9SYHlDlQtfJ4gQx76TK29CCrOF9kp8uOx0hkaVG
-         ml5p/WULLC1T52p/FQbqTFD6NcVFmSkYRgx8XYYmdNpqd5bg5E0ba9NN1Stya54foPPV
-         UeBtFNWg4je+toS35nb2gg8zAFim4UhDkAx+GfqKm+uoDyOiH9/Nuf4tR2aDXzAEXEqd
-         pmhFhaAvMNjER9VRqhixsr29uFJSCo7UAyXnp34cXp3e1GFmpvF+zh3tjgsOU4glRqUq
-         K5aA==
-X-Gm-Message-State: AGi0PuYJrLs+otbe/eQR/o1G7x0Qu6I5BJYzI5Y+A8L/KkV+OCRpq6AI
-        2LKAEmEQe6J7dn1SJx3qTQ==
-X-Google-Smtp-Source: APiQypLZfMaVxV5Ta1pcCvzH/arF2VJiE3LWc/nWKn8c4lA/UJQ6EgXiQi5a4vB54vWSGNPRbIEhtw==
-X-Received: by 2002:a5d:6187:: with SMTP id j7mr10285824wru.419.1585930986390;
-        Fri, 03 Apr 2020 09:23:06 -0700 (PDT)
-Received: from earth.lan (host-92-23-85-227.as13285.net. [92.23.85.227])
-        by smtp.gmail.com with ESMTPSA id x18sm12612461wrr.2.2020.04.03.09.23.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 09:23:05 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-X-Google-Original-From: Jules Irenge <djed@earth.lan>
-Date:   Fri, 3 Apr 2020 17:23:04 +0100 (BST)
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Jules Irenge <jbi.octave@gmail.com>, julia.lawall@lip6.fr,
-        boqun.feng@gmail.com, Jules Irenge <jbi.octave@example.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 02/10] sched/topology: Replace 1 and 0 by boolean value
-In-Reply-To: <20200330112752.GJ20696@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.LFD.2.21.2004031717230.10601@earth.lan>
-References: <0/10> <20200327212358.5752-1-jbi.octave@gmail.com> <20200327212358.5752-3-jbi.octave@gmail.com> <20200330112752.GJ20696@hirez.programming.kicks-ass.net>
+        Fri, 3 Apr 2020 12:23:32 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:56843 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728293AbgDCQXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:23:31 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48v4xF4cj3z89;
+        Fri,  3 Apr 2020 18:23:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1585931009; bh=0CzaEgqfN263drxxDU5ar5X4YqApOdcM1FZ/ZfZc11c=;
+        h=Date:From:Subject:To:Cc:From;
+        b=ConTcMwycOVedQJkGyrX7J1npsFs24MHi/SGmCHT5MLCbIF1C9GoqdPwPVBeAQfIy
+         8zz+xnI41EAi9m3mzgWGU0o919zo7WjItC7G8V1jFN/2UsrURwxTr8cTTdycmv/bZO
+         0gViE6ld8TIQFipnU2Zmpe11c/5xDk5oGAbdwflbThZKbBh7lAQTpcf4gsZSgJkfWx
+         cLEH6Hujii5qEHnjpJJg0lc66hk5dtQNR8GUgdYm0qtveZV2IG3mf6OiGF8uYvYNKs
+         UzJ/2NulYQ8eO6R5ejyA+txe7E4w3MBEkajEuw+lwuW7bS//ScPwmCVwCsKT3VDBxR
+         Yls3f4ONOqUng==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Fri, 03 Apr 2020 18:23:29 +0200
+Message-Id: <cover.1585929579.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2 0/8] power: supply: core: extensions and fixes
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series covers three areas of power supply class:
 
+1-2. constify property and usb_type lists as they should not be changed
+     after driver registration
+3-5. fix and clean up HWMON labels
+6-8. extend core to support input/battery/output supply point
+     measurements
 
-On Mon, 30 Mar 2020, Peter Zijlstra wrote:
+---
+v2: splits power_supply_hwmon_read_string() fix from extensioa
+    (patches 3-4)
 
-> On Fri, Mar 27, 2020 at 09:23:49PM +0000, Jules Irenge wrote:
->> From: Jules Irenge <jbi.octave@example.com>
->>
->> Coccinelle reports a warning inside sched_energy_aware_handler()
->>
->> WARNING: Assignment of 0/1 to bool variable
->
-> That's definitely not a warning and quite sensible in any case. Please
-> learn C.
+Michał Mirosław (8):
+  power: supply: core: reduce power_supply_show_usb_type() parameters
+  power: supply: core: allow to constify property lists
+  power: supply: core: fix HWMON temperature labels
+  power: supply: core: tabularize HWMON temperature labels
+  power: supply: core: hide unused HWMON labels
+  power: supply: core: add input voltage/current measurements
+  power: supply: core: add output voltage measurements
+  power: supply: core: document measurement points
 
-Thanks for the reply, I think I took the warning literally. I will take 
-the advice any way.
+ Documentation/power/power_supply_class.rst |   6 +
+ drivers/power/supply/power_supply_hwmon.c  | 198 +++++++++++++++++++--
+ drivers/power/supply/power_supply_sysfs.c  |  15 +-
+ include/linux/power_supply.h               |   9 +-
+ 4 files changed, 210 insertions(+), 18 deletions(-)
 
-Thanks,
-Jules
+-- 
+2.20.1
+
