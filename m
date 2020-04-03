@@ -2,199 +2,138 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ABEC2BA12
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898BAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778B42137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692B42077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390970AbgDCN7k (ORCPT
+        id S2390996AbgDCN7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:59:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50235 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728213AbgDCN7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:59:40 -0400
-IronPort-SDR: doRDbxzMLXo9A9Er73exZGM/Jwqp41Z2dCDP8m2LIHO8/LgY64ySDHorTfmW2wwtf5oNcoiPyY
- umS85X6ekQNw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 06:59:39 -0700
-IronPort-SDR: /2xYoklzvbD7Z3OBiQji7Z/4+0GLMR0+8oACt8P+r/jxr/MscjgYt9dWLSNMoaqNCYglsm00yp
- iLcTkSF+7tOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
-   d="scan'208";a="423531409"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 03 Apr 2020 06:59:38 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jKMrE-00FRbl-QL; Fri, 03 Apr 2020 16:59:40 +0300
-Date:   Fri, 3 Apr 2020 16:59:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Fengping yu <fengping.yu@mediatek.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH v3 2/2] add MediaTek keypad driver
-Message-ID: <20200403135940.GN3676135@smile.fi.intel.com>
-References: <20200403131419.6555-1-fengping.yu@mediatek.com>
- <20200403131419.6555-3-fengping.yu@mediatek.com>
+        Fri, 3 Apr 2020 09:59:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60539 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728213AbgDCN7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 09:59:44 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jKMrE-0005V1-3h; Fri, 03 Apr 2020 15:59:40 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jKMrD-000573-17; Fri, 03 Apr 2020 15:59:39 +0200
+Date:   Fri, 3 Apr 2020 15:59:38 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+Message-ID: <20200403135938.qmrvhclm6evfibqj@pengutronix.de>
+References: <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+ <20200330141436.GG2431644@ulmo>
+ <20200330191654.waoocllctanh5nk5@pengutronix.de>
+ <20200331204559.GB2954599@ulmo>
+ <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
+ <20200401182833.GB2978178@ulmo>
+ <20200401203156.d7x5ynnnhob3jyoo@pengutronix.de>
+ <20200401213738.GA3052587@ulmo>
+ <20200402140221.bjbol77uegjma6oz@pengutronix.de>
+ <5dbdbc15-ff29-f577-0632-6a28378b0104@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200403131419.6555-3-fengping.yu@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5dbdbc15-ff29-f577-0632-6a28378b0104@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 09:14:23PM +0800, Fengping yu wrote:
-> From: "fengping.yu" <fengping.yu@mediatek.com>
+Hello,
 
-You have to give a proper commit message. Emptiness is not good enough.
+On Fri, Apr 03, 2020 at 02:21:38PM +0530, Lokesh Vutla wrote:
+> On 02/04/20 7:32 PM, Uwe Kleine-König wrote:
+> > Having said that I don't know how critical this really is. Given that
+> > the PWM under discussion doesn't complete periods on stop, it probably
+> > isn't.
+> 
+> It is a limitation with the existing driver as well. Nothing is being changed
+> regarding stopping of PWM. The same is marked under the limitations in the driver.
 
-> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
+What I wrote was ambiguous and I think you understood the meaning I
+didn't intend. What I wanted to say is: Given that the PWM stops
+abruptly there is only little (if any at all) advantage of
+"stop-to-update" over "racy-atomic-update" as we see broken cycles no
+matter which alternative we pick.
 
-...
+> > I spend some time thinking about when the glitch actually happens.
+> > Currently the load value is written first and then the match value.
+> > If no period ends between the two writes there is only a problem when in
+> > the currently running period the match event didn't happen yet. Then we
+> > see a cycle with
+> > 
+> >    .period = oldperiod + newperiod
+> >    .dutycycle = oldperiod + newdutycycle
+> > 
+> > (if the new match value isn't hit in the current cycle) or one with
+> > 
+> >    .period = oldperiod
+> >    .duty_cycle = newdutycycle + (oldperiod - newperiod)
+> > 
+> > (if the new match value is hit in the current cycle). The probability
+> > that one of the two happen is: olddutycycle / oldperiod which is quite
+> > probable. (With olddutycycle = oldperiod there is no problem though.)
+> > 
+> > If after writing the new load value and before writing the new match
+> > value a period ends it might happen that we see a cycle with
+> > 
+> >   .period = newperiod
+> >   .dutycycle = olddutycycle + (newperiod - oldperiod)
+> > 
+> > (if the previous match value is used) or one with
+> > 
+> >   .period = 2 * newperiod
+> >   .dutycycle = newperiod + newdutycycle
+> > 
+> > (if new match value is written too late for the first cycle with the new
+> > period).
+> 
+> That's exactly why we have marked in the Limitations sections that the current
+> period might produce a cycle with mixed settings.  Frankly, I'm a bit torn here.
+> There are other PWMs inside Linux with  similar limitations and documented
+> similarly. If there is an overall objection for such hardware, the entire policy
+> should be changed or the framework should be updated to allow user to choose for
+> dynamic updates. IMHO, this series should not be blocked for this decision.
 
-> +#include <linux/fs.h>
+Yes, there are other drivers that have similar "problems" and the status
+quo is that depending on the driver author one or the other workaround
+is chosen. I think the PWM framework would benefit if there were a
+common guideline which path to choose in such a situation.
 
-This is for..?
+> Please consider it for the coming merge window.
 
-> +#include <linux/gpio.h>
+It's already in next, so I assume it will be merged.
 
-Wrong header.
-
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-
-I hardly found any user of these two.
-
-...
-
-> +#define BITS_TO_U32(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
-
-I believe this is in bits.h. But see below.
-
-> +struct mtk_keypad {
-> +	struct input_dev *input_dev;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	unsigned int irqnr;
-> +	bool wakeup;
-> +	u32 key_debounce;
-> +	u32 n_rows;
-> +	u32 n_cols;
-
-> +	DECLARE_BITMAP(keymap_state, KPD_NUM_BITS);
-
-And where is bitmap.h?
-
-> +};
-
-...
-
-> +	for_each_set_bit(bit_nr, change, KPD_NUM_BITS) {
-> +		pressed = test_bit(bit_nr, new_state) == 0U;
-> +		dev_dbg(&keypad->input_dev->dev, "%s",
-> +			pressed ? "pressed" : "released");
-> +
-
-> +	/* per 32bit register only use low 16bit as keypad mem register */
-
-Indentation issue.
-
-> +		code = keycode[bit_nr - 16 * (BITS_TO_U32(bit_nr) - 1)];
-
-For example,
-	128 - 16 * (4 - 1) = 80
-	135 - 16 * (5 - 1) = 71
-Is this correct?
-
-> +		input_report_key(keypad->input_dev, code, pressed);
-> +		input_sync(keypad->input_dev);
-> +
-> +		dev_dbg(&keypad->input_dev->dev,
-> +			"report Linux keycode = %d\n", code);
-> +	}
-
-...
-
-> +	ret = of_property_read_u32(node, "mediatek,debounce-us",
-> +				   &keypad->key_debounce);
-
-Can't you use device property API instead?
-
-> +	keypad->wakeup = of_property_read_bool(node, "wakeup-source");
-
-Ditto.
-
-...
-
-> +	keypad_pinctrl = devm_pinctrl_get(dev);
-> +	if (IS_ERR(keypad_pinctrl)) {
-
-> +		dev_err(dev, "Cannot find keypad_pinctrl!\n");
-
-Isn't it a duplicate and pin control actually does this for you?
-
-> +		return PTR_ERR(keypad_pinctrl);
-> +	}
-> +
-> +	kpd_default = pinctrl_lookup_state(keypad_pinctrl, "default");
-> +	if (IS_ERR(kpd_default)) {
-
-> +		dev_err(dev, "Cannot find ecall_state!\n");
-
-Ditto.
-
-> +		return PTR_ERR(kpd_default);
-> +	}
-
-> +	return pinctrl_select_state(keypad_pinctrl,	kpd_default);
-
-Indentation issue.
-
-> +}
-
-...
-
-> +	keypad->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(keypad->base)) {
-
-> +		dev_err(&pdev->dev, "KP iomap failed\n");
-
-Duplicate noise.
-
-> +		return PTR_ERR(keypad->base);
-> +	}
-
-...
-
-> +	keypad->irqnr = platform_get_irq(pdev, 0);
-> +	if (keypad->irqnr < 0) {
-
-> +		dev_err(&pdev->dev, "KP get irqnr failed\n");
-
-Duplicate noise.
-
-
-> +		ret = -keypad->irqnr;
-
-Why -?
-
-> +		goto disable_kpd_clk;
-> +	}
+Best regards
+Uwe
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
