@@ -2,110 +2,205 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B206C2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42716C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B212137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:41:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="z9abDNdI"
+	by mail.kernel.org (Postfix) with ESMTP id 1BC092082F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 11:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403783AbgDCLk7 (ORCPT
+        id S2390760AbgDCLmY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 07:40:59 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50279 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390732AbgDCLk7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 07:40:59 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t128so6848653wma.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 04:40:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O50Gx6rk+wnrYYoowjLyR0iGzy1NO7KyGopLJExdfSE=;
-        b=z9abDNdIei6Jogiontn/W6q8FgmXjboqlQnpVhtcCA7XD7FJVj5qaJyDQcuPm4ZI2o
-         RhbXgNPXza5zxHBVUOseYHCPkUfaH1SCQz5U0OKGUUqNUmzPIFiCbAiiEzPnQu7lvARM
-         5MNmtHpmIkYezDSJPZGNCCvBa/Y0WpEbsMyHdqfLa1yqtA8Vdot6T+XJBPdhS0l6ZhBq
-         2P19Kv+H/K1PLmo74xHKbxd7335m7xzfsLU4m+9+ZqprAeoJsOVLC/lQZw36sgr/Hb/C
-         c1oZPIMkU2EoI7yHNlOaKH7Yk4iVHFx0ISkdwiSpjFKE7T8FNXXhH0rsyZfeODNn2Gc7
-         Tamg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O50Gx6rk+wnrYYoowjLyR0iGzy1NO7KyGopLJExdfSE=;
-        b=N1UtHl6MpQELTyxu0fyLHCAE0NMEAFjvKqMdebyI+vb74g2FCt8uj+ff2K1nQPUa8i
-         C426NgmbEAkFOt2ttWu2GKD6ZEpD//4NIUM4oyMkj72ho/nntCNAVguBYhFwHR3ebZx6
-         8R79xhOzPDF/+C4RsUaAVTC5nAmW/E+CLxF/ve7fgHkfxKRyAK4Roy28wXUMP8bSi2x7
-         XzbZQPEKkd9SWrQCuJHGxiOw9A9N3W1lElP5g7lqJRDxWNdmdTTMbIft8QqY0dPadGFz
-         z3XdxT0QWXZz73WNL732m6L1kFXOueEniwMYoetqR6whzv5KjT2pWVLgsy0JNXc14dnq
-         KJgQ==
-X-Gm-Message-State: AGi0PuYqrcfeoPfK8nXe/amM49/wlYvJmqYIBM9JpcHtbjFwNPzU1KK6
-        DVzEvruzrZ0MAPqWxhna3ZN2/w==
-X-Google-Smtp-Source: APiQypJkSanW+EcNhfC6YNTQD6pFP9FvhotDhVGxwUvZOc++TU5vRmEFsilKl4bwzNtedter13VIiA==
-X-Received: by 2002:a1c:418b:: with SMTP id o133mr8582992wma.165.1585914057449;
-        Fri, 03 Apr 2020 04:40:57 -0700 (PDT)
-Received: from localhost.localdomain (dh207-96-48.xnet.hr. [88.207.96.48])
-        by smtp.googlemail.com with ESMTPSA id s9sm14477643wmc.2.2020.04.03.04.40.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 04:40:56 -0700 (PDT)
-From:   Robert Marko <robert.marko@sartura.hr>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Abhishek Sahu <absahu@codeaurora.org>,
-        Pavel Kubelun <be.dissent@gmail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH] ARM: dts: qcom: ipq4019: fix high resolution timer
-Date:   Fri,  3 Apr 2020 13:40:40 +0200
-Message-Id: <20200403114040.349787-1-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.26.0
+        Fri, 3 Apr 2020 07:42:24 -0400
+Received: from mga09.intel.com ([134.134.136.24]:41173 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728012AbgDCLmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 07:42:23 -0400
+IronPort-SDR: byMFnovWTl17pjB2Ri7QGxOgZztKq0xF/KJyIGsRE5K6MlhMjmL6e4qS6nm7XANOFz4f1cJGzF
+ x1lINNN0U8Pw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 04:42:22 -0700
+IronPort-SDR: 5iVGo26cmCIRFwKXXhqP8A2IymaOmPdiicCUqS/9qwaAtYkT4XqcFUOPP/Sw0EvfuMNejj/VNk
+ unDdqrxXK2pA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,339,1580803200"; 
+   d="scan'208";a="242792637"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Apr 2020 04:42:22 -0700
+Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Apr 2020 04:42:22 -0700
+Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
+ fmsmsx115.amr.corp.intel.com (10.18.116.19) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 3 Apr 2020 04:42:21 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
+ Fri, 3 Apr 2020 19:42:18 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Thread-Topic: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Thread-Index: AQHWAEVGuXHNl3uJkkGgSITNIYV006hl/jEAgAFHqvA=
+Date:   Fri, 3 Apr 2020 11:42:17 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A220988@SHSMSX104.ccr.corp.intel.com>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+ <20200402165954.48d941ee@w520.home>
+In-Reply-To: <20200402165954.48d941ee@w520.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhishek Sahu <absahu@codeaurora.org>
+Hi Alex,
 
-Cherry-picked from CAF QSDK repo.
-Original commit message:
-The kernel is failing in switching the timer for high resolution
-mode and clock source operates in 10ms resolution. The always-on
-property needs to be given for timer device tree node to make
-clock source working in 1ns resolution.
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Friday, April 3, 2020 7:00 AM
+> To: Liu, Yi L <yi.l.liu@intel.com>
+> Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+> 
+> On Sun, 22 Mar 2020 05:33:14 -0700
+> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> 
+> > From: Liu Yi L <yi.l.liu@intel.com>
+> >
+> > Per PCIe r5.0, sec 9.3.7.14, if a PF implements the PASID Capability, the
+> > PF PASID configuration is shared by its VFs.  VFs must not implement their
+> > own PASID Capability.
+> >
+> > Per PCIe r5.0, sec 9.3.7.11, VFs must not implement the PRI Capability. If
+> > the PF implements PRI, it is shared by the VFs.
+> >
+> > On bare metal, it has been fixed by below efforts.
+> > to PASID/PRI are
+> > https://lkml.org/lkml/2019/9/5/996
+> > https://lkml.org/lkml/2019/9/5/995
+> >
+> > This patch adds emulated PASID/PRI capabilities for VFs when assigned to
+> > VMs via vfio-pci driver. This is required for enabling vSVA on pass-through
+> > VFs as VFs have no PASID/PRI capability structure in its configure space.
+> >
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Eric Auger <eric.auger@redhat.com>
+> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci_config.c | 325
+> ++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 323 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > index 4b9af99..84b4ea0 100644
+> > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > @@ -1509,11 +1509,304 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+> >  	return 0;
+> >  }
+> >
+> > +static int vfio_fill_custom_vconfig_bytes(struct vfio_pci_device *vdev,
+> > +					int offset, uint8_t *data, int size)
+> > +{
+> > +	int ret = 0, data_offset = 0;
+> > +
+> > +	while (size) {
+> > +		int filled;
+> > +
+> > +		if (size >= 4 && !(offset % 4)) {
+> > +			__le32 *dwordp = (__le32 *)&vdev->vconfig[offset];
+> > +			u32 dword;
+> > +
+> > +			memcpy(&dword, data + data_offset, 4);
+> > +			*dwordp = cpu_to_le32(dword);
+> 
+> Why wouldn't we do:
+> 
+> *dwordp = cpu_to_le32(*(u32 *)(data + data_offset));
+> 
+> or better yet, increment data on each iteration for:
+> 
+> *dwordp = cpu_to_le32(*(u32 *)data);
+> 
+> vfio_fill_vconfig_bytes() does almost this same thing, getting the data
+> from config space rather than a buffer, so please figure out how to
+> avoid duplicating the logic.
 
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-Signed-off-by: Pavel Kubelun <be.dissent@gmail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Tested-by: Robert Marko <robert.marko@sartura.hr>
-Cc: Luka Perkov <luka.perkov@sartura.hr>
----
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Got another alternative. I may use the vfio_fill_vconfig_bytes()
+to fill the cap data from PF's config space into VF's vconfig.
+And after that, I can further modify the data in vconfig. e.g.
+zero the control reg of pasid cap. would it make more sense?
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index ee45253361cb..b4803a428340 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -166,6 +166,7 @@ timer {
- 			     <1 4 0xf08>,
- 			     <1 1 0xf08>;
- 		clock-frequency = <48000000>;
-+		always-on;
- 	};
- 
- 	soc {
--- 
-2.26.0
+> > +			filled = 4;
+> > +		} else if (size >= 2 && !(offset % 2)) {
+> > +			__le16 *wordp = (__le16 *)&vdev->vconfig[offset];
+> > +			u16 word;
+> > +
+> > +			memcpy(&word, data + data_offset, 2);
+> > +			*wordp = cpu_to_le16(word);
+> > +			filled = 2;
+> > +		} else {
+> > +			u8 *byte = &vdev->vconfig[offset];
+> > +
+> > +			memcpy(byte, data + data_offset, 1);
+[...]
+> 
+> > +
+> > +	memset(map + epos, vpasid_cap.id, len);
+> 
+> See below.
+> 
+> > +	ret = vfio_fill_custom_vconfig_bytes(vdev, epos,
+> > +					(u8 *)&vpasid_cap, len);
+> > +	if (!ret) {
+> > +		/*
+> > +		 * Successfully filled in PASID cap, update
+> > +		 * the next offset in previous cap header,
+> > +		 * and also update caller about the offset
+> > +		 * of next cap if any.
+> > +		 */
+> > +		u32 val = epos;
+> > +		**prevp &= cpu_to_le32(~(0xffcU << 20));
+> > +		**prevp |= cpu_to_le32(val << 20);
+> > +		*prevp = (__le32 *)&vdev->vconfig[epos];
+> > +		*next = epos + len;
+> 
+> Could we make this any more complicated?
+
+I'm not sure if adding comments addressed this comment. After adding
+new cap in vconfig, it needs to update the cap.next field of prior cap.
+And in case of further add other cap, this function needs to update the
+prevp pointer to the address of the newly added cap.
+
+Regards,
+Yi Liu
 
