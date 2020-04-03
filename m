@@ -2,310 +2,470 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6107EC43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D14C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1451B206F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:13:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGFTK8c3"
+	by mail.kernel.org (Postfix) with ESMTP id BED8E2080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 07:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388870AbgDCHNe (ORCPT
+        id S2389723AbgDCHNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 03:13:34 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33648 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730759AbgDCHNe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 03:13:34 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c138so3079724pfc.0;
-        Fri, 03 Apr 2020 00:13:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=PomIT0vOJJubjpTKtqaxIW1z5qgbZ78B+V6vQRPg/ek=;
-        b=jGFTK8c3nbtmc18VUKXManK/oeSzFTQrHkvganlOLxTtRzpx9LhO2LBruyVYpPw9kB
-         SfjhioMy6EVnX/WHKQyoiykAsSPtiZRSSrXAOb94c0+J0T3H9X3PY7NJltUaEw5VR0u/
-         xTG0T+Tf2NHx72Skalb9+xyiOsyohvmCgNfH1nCSZMHVDaq0Xu6ACkYxrKX3zmin1t1N
-         4dWeoto0wgpZ5imi64wBqVy0pIABjiOVcNvJgjri+2ew4tqkH2iAzS2C7hPaUeEJrjX5
-         /JbitfrbVqWzHZ9uz+JdJchhhcQCkpQ7L5TTVDuse0XFI2IeaZRlef6ij/SnkCuKy5z0
-         1r2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=PomIT0vOJJubjpTKtqaxIW1z5qgbZ78B+V6vQRPg/ek=;
-        b=H1grLKCecsLAgCkDpr9gFKbP3WOBiCNnt/ahoiOqwRwxHtU3ah81kt0b23JQXQeed0
-         K4xxVrMEyoystrGxUiRX6UuHCqFz6Hio4+lsrwl+hNQBmJVDRhhzxY3j4ueOG/TheURJ
-         XXxJ8OhUi7Y6VMocfWAnO4cysU6Tpvkf87TpEtsPfags1AI23Zzrvss72kqgKfSOgDZ9
-         MyNIGiH50HDIRvRzl43Nv27HiUxqlNVUPsFnjBls86hagkSes6P4WNaXUsiWofCRdnL4
-         j6j7i9sVdnC+g+ltM15RbwpIxZuE3Wi2kV3WPITmIuABUlsyNeZKTYs/IAFmOC5cbc8a
-         9OOQ==
-X-Gm-Message-State: AGi0PuYUy5fP37Oxd2WRGBwDOB4P32Nz/NeHPiadYLt0vQu+AxQE58Pn
-        kiZAyxnaMlMq0JW0xuPJS+/xOdNe
-X-Google-Smtp-Source: APiQypIJqE4VJKubu8R9yMCR6k5nV3HrHF8fEz8TuqPWJDQVNhkIq3UVFUy/DNAWzk5PVXK4EfFEKg==
-X-Received: by 2002:aa7:9f42:: with SMTP id h2mr6731404pfr.22.1585898012953;
-        Fri, 03 Apr 2020 00:13:32 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id t66sm5054577pjb.45.2020.04.03.00.13.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 00:13:31 -0700 (PDT)
-Date:   Fri, 03 Apr 2020 17:13:25 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
-To:     Michal =?iso-8859-1?q?Such=E1nek?= <msuchanek@suse.de>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
-        <cover.1584620202.git.msuchanek@suse.de>
-        <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
-        <1585039473.da4762n2s0.astroid@bobo.none>
-        <20200324193833.GH25468@kitsune.suse.cz>
-In-Reply-To: <20200324193833.GH25468@kitsune.suse.cz>
+        Fri, 3 Apr 2020 03:13:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34170 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730759AbgDCHNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 03:13:52 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7BF5FCFBE00A849D079A;
+        Fri,  3 Apr 2020 15:13:41 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 3 Apr 2020
+ 15:13:34 +0800
+Subject: Re: [PATCH v7 1/4] x86: kdump: move reserve_crashkernel_low() into
+ crash_core.c
+To:     Dave Young <dyoung@redhat.com>
+References: <20191223152349.180172-1-chenzhou10@huawei.com>
+ <20191223152349.180172-2-chenzhou10@huawei.com>
+ <20191227055458.GA14893@dhcp-128-65.nay.redhat.com>
+ <09d42854-461b-e85c-ba3f-0e1173dc95b5@huawei.com>
+ <20191228093227.GA19720@dhcp-128-65.nay.redhat.com>
+ <75429528-ba74-cfd3-b5bc-df5425ac0496@huawei.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <james.morse@arm.com>, <bhsharma@redhat.com>, <horms@verge.net.au>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <xiexiuqi@huawei.com>,
+        kbuild test robot <lkp@intel.com>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <38281780-5f3d-63dd-77cb-599815173c3c@huawei.com>
+Date:   Fri, 3 Apr 2020 15:13:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1585896170.ohti800w9v.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <75429528-ba74-cfd3-b5bc-df5425ac0496@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.131.64]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Such=C3=A1nek's on March 25, 2020 5:38 am:
-> On Tue, Mar 24, 2020 at 06:48:20PM +1000, Nicholas Piggin wrote:
->> Michal Suchanek's on March 19, 2020 10:19 pm:
->> > There are two almost identical copies for 32bit and 64bit.
->> >=20
->> > The function is used only in 32bit code which will be split out in nex=
-t
->> > patch so consolidate to one function.
->> >=20
->> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
->> > Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> > ---
->> > v6:  new patch
->> > v8:  move the consolidated function out of the ifdef block.
->> > v11: rebase on top of def0bfdbd603
->> > ---
->> >  arch/powerpc/perf/callchain.c | 48 +++++++++++++++++-----------------=
--
->> >  1 file changed, 24 insertions(+), 24 deletions(-)
->> >=20
->> > diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callcha=
-in.c
->> > index cbc251981209..c9a78c6e4361 100644
->> > --- a/arch/powerpc/perf/callchain.c
->> > +++ b/arch/powerpc/perf/callchain.c
->> > @@ -161,18 +161,6 @@ static int read_user_stack_64(unsigned long __use=
-r *ptr, unsigned long *ret)
->> >  	return read_user_stack_slow(ptr, ret, 8);
->> >  }
->> > =20
->> > -static int read_user_stack_32(unsigned int __user *ptr, unsigned int =
-*ret)
->> > -{
->> > -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
->> > -	    ((unsigned long)ptr & 3))
->> > -		return -EFAULT;
->> > -
->> > -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
->> > -		return 0;
->> > -
->> > -	return read_user_stack_slow(ptr, ret, 4);
->> > -}
->> > -
->> >  static inline int valid_user_sp(unsigned long sp, int is_64)
->> >  {
->> >  	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32=
-)
->> > @@ -277,19 +265,9 @@ static void perf_callchain_user_64(struct perf_ca=
-llchain_entry_ctx *entry,
->> >  }
->> > =20
->> >  #else  /* CONFIG_PPC64 */
->> > -/*
->> > - * On 32-bit we just access the address and let hash_page create a
->> > - * HPTE if necessary, so there is no need to fall back to reading
->> > - * the page tables.  Since this is called at interrupt level,
->> > - * do_page_fault() won't treat a DSI as a page fault.
->> > - */
->> > -static int read_user_stack_32(unsigned int __user *ptr, unsigned int =
-*ret)
->> > +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
->> >  {
->> > -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
->> > -	    ((unsigned long)ptr & 3))
->> > -		return -EFAULT;
->> > -
->> > -	return probe_user_read(ret, ptr, sizeof(*ret));
->> > +	return 0;
->> >  }
->> > =20
->> >  static inline void perf_callchain_user_64(struct perf_callchain_entry=
-_ctx *entry,
->> > @@ -312,6 +290,28 @@ static inline int valid_user_sp(unsigned long sp,=
- int is_64)
->> > =20
->> >  #endif /* CONFIG_PPC64 */
->> > =20
->> > +/*
->> > + * On 32-bit we just access the address and let hash_page create a
->> > + * HPTE if necessary, so there is no need to fall back to reading
->> > + * the page tables.  Since this is called at interrupt level,
->> > + * do_page_fault() won't treat a DSI as a page fault.
->> > + */
->>=20
->> The comment is actually probably better to stay in the 32-bit
->> read_user_stack_slow implementation. Is that function defined
->> on 32-bit purely so that you can use IS_ENABLED()? In that case
-> It documents the IS_ENABLED() and that's where it is. The 32bit
-> definition is only a technical detail.
+Hi Dave,
 
-Sorry for the late reply, busy trying to fix bugs in the C rewrite
-series. I don't think it is the right place, it should be in the
-ppc32 implementation detail. ppc64 has an equivalent comment at the
-top of its read_user_stack functions.
+On 2019/12/31 9:39, Chen Zhou wrote:
+> Hi Dave,
+> 
+> On 2019/12/28 17:32, Dave Young wrote:
+>> On 12/27/19 at 07:04pm, Chen Zhou wrote:
+>>> Hi Dave
+>>>
+>>> On 2019/12/27 13:54, Dave Young wrote:
+>>>> Hi,
+>>>> On 12/23/19 at 11:23pm, Chen Zhou wrote:
+>>>>> In preparation for supporting reserve_crashkernel_low in arm64 as
+>>>>> x86_64 does, move reserve_crashkernel_low() into kernel/crash_core.c.
+>>>>>
+>>>>> Note, in arm64, we reserve low memory if and only if crashkernel=X,low
+>>>>> is specified. Different with x86_64, don't set low memory automatically.
+>>>>
+>>>> Do you have any reason for the difference?  I'd expect we have same
+>>>> logic if possible and remove some of the ifdefs.
+>>>
+>>> In x86_64, if we reserve crashkernel above 4G, then we call reserve_crashkernel_low()
+>>> to reserve low memory.
+>>>
+>>> In arm64, to simplify, we call reserve_crashkernel_low() at the beginning of reserve_crashkernel()
+>>> and then relax the arm64_dma32_phys_limit if reserve_crashkernel_low() allocated something.
+>>> In this case, if reserve crashkernel below 4G there will be 256M low memory set automatically
+>>> and this needs extra considerations.
+>>
+>> Sorry that I did not read the old thread details and thought that is
+>> arch dependent.  But rethink about that, it would be better that we can
+>> have same semantic about crashkernel parameters across arches.  If we
+>> make them different then it causes confusion, especially for
+>> distributions.
+>>
+>> OTOH, I thought if we reserve high memory then the low memory should be
+>> needed.  There might be some exceptions, but I do not know the exact
+>> one, can we make the behavior same, and special case those systems which
+>> do not need low memory reservation.
+>>
+> I thought like this and did implement with crashkernel parameters arch independent.
+> This is my v4: https://lkml.org/lkml/2019/5/6/1361, i implemented according to x86_64's
+> behavior.
+> 
+>>>
+>>> previous discusses:
+>>> 	https://lkml.org/lkml/2019/6/5/670
+>>> 	https://lkml.org/lkml/2019/6/13/229
+>>
+>> Another concern from James:
+>> "
+>> With both crashk_low_res and crashk_res, we end up with two entries in /proc/iomem called
+>> "Crash kernel". Because its sorted by address, and kexec-tools stops searching when it
+>> find "Crash kernel", you are always going to get the kernel placed in the lower portion.
+>> "
+>>
+>> The kexec-tools code is iterating all "Crash kernel" ranges and add them
+>> in an array.  In X86 code, it uses the higher range to locate memory.
+> 
+> We also discussed about this: https://lkml.org/lkml/2019/6/13/227.
+> I guess James's opinion is that kexec-tools should take forward compatibility into account.
+> "But we can't rely on people updating user-space when they update the kernel!" -- James
+> 
+>>
+>>>
+>>>>
+>>>>>
+>>>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>>>>> ---
+>>>>>  arch/x86/kernel/setup.c    | 62 ++++-----------------------------
+>>>>>  include/linux/crash_core.h |  3 ++
+>>>>>  include/linux/kexec.h      |  2 --
+>>>>>  kernel/crash_core.c        | 87 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>  kernel/kexec_core.c        | 17 ---------
+>>>>>  5 files changed, 96 insertions(+), 75 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+>>>>> index cedfe20..5f38942 100644
+>>>>> --- a/arch/x86/kernel/setup.c
+>>>>> +++ b/arch/x86/kernel/setup.c
+>>>>> @@ -486,59 +486,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>>>>>  # define CRASH_ADDR_HIGH_MAX	SZ_64T
+>>>>>  #endif
+>>>>>  
+>>>>> -static int __init reserve_crashkernel_low(void)
+>>>>> -{
+>>>>> -#ifdef CONFIG_X86_64
+>>>>> -	unsigned long long base, low_base = 0, low_size = 0;
+>>>>> -	unsigned long total_low_mem;
+>>>>> -	int ret;
+>>>>> -
+>>>>> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+>>>>> -
+>>>>> -	/* crashkernel=Y,low */
+>>>>> -	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
+>>>>> -	if (ret) {
+>>>>> -		/*
+>>>>> -		 * two parts from kernel/dma/swiotlb.c:
+>>>>> -		 * -swiotlb size: user-specified with swiotlb= or default.
+>>>>> -		 *
+>>>>> -		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+>>>>> -		 * to 8M for other buffers that may need to stay low too. Also
+>>>>> -		 * make sure we allocate enough extra low memory so that we
+>>>>> -		 * don't run out of DMA buffers for 32-bit devices.
+>>>>> -		 */
+>>>>> -		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
+>>>>> -	} else {
+>>>>> -		/* passed with crashkernel=0,low ? */
+>>>>> -		if (!low_size)
+>>>>> -			return 0;
+>>>>> -	}
+>>>>> -
+>>>>> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+>>>>> -	if (!low_base) {
+>>>>> -		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>>>>> -		       (unsigned long)(low_size >> 20));
+>>>>> -		return -ENOMEM;
+>>>>> -	}
+>>>>> -
+>>>>> -	ret = memblock_reserve(low_base, low_size);
+>>>>> -	if (ret) {
+>>>>> -		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
+>>>>> -		return ret;
+>>>>> -	}
+>>>>> -
+>>>>> -	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+>>>>> -		(unsigned long)(low_size >> 20),
+>>>>> -		(unsigned long)(low_base >> 20),
+>>>>> -		(unsigned long)(total_low_mem >> 20));
+>>>>> -
+>>>>> -	crashk_low_res.start = low_base;
+>>>>> -	crashk_low_res.end   = low_base + low_size - 1;
+>>>>> -	insert_resource(&iomem_resource, &crashk_low_res);
+>>>>> -#endif
+>>>>> -	return 0;
+>>>>> -}
+>>>>> -
+>>>>>  static void __init reserve_crashkernel(void)
+>>>>>  {
+>>>>>  	unsigned long long crash_size, crash_base, total_mem;
+>>>>> @@ -602,9 +549,12 @@ static void __init reserve_crashkernel(void)
+>>>>>  		return;
+>>>>>  	}
+>>>>>  
+>>>>> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+>>>>> -		memblock_free(crash_base, crash_size);
+>>>>> -		return;
+>>>>> +	if (crash_base >= (1ULL << 32)) {
+>>>>> +		if (reserve_crashkernel_low()) {
+>>>>> +			memblock_free(crash_base, crash_size);
+>>>>> +			return;
+>>>>> +		}
+>>>>> +		insert_resource(&iomem_resource, &crashk_low_res);
+>>>>
+>>>> Some specific reason to move insert_resouce out of the
+>>>> reserve_crashkernel_low function?
+>>>
+>>> No specific reason.
+>>> I just exposed arm64 "Crash kernel low" in request_standard_resources() as other resources,
+>>> so did this change.
+>>
+>> Ok.
+>>
+>>>
+>>>>
+>>>>>  	}
+>>>>>  
+>>>>>  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+>>>>> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+>>>>> index 525510a..4df8c0b 100644
+>>>>> --- a/include/linux/crash_core.h
+>>>>> +++ b/include/linux/crash_core.h
+>>>>> @@ -63,6 +63,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>>>>>  extern unsigned char *vmcoreinfo_data;
+>>>>>  extern size_t vmcoreinfo_size;
+>>>>>  extern u32 *vmcoreinfo_note;
+>>>>> +extern struct resource crashk_res;
+>>>>> +extern struct resource crashk_low_res;
+>>>>>  
+>>>>>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>>>>>  			  void *data, size_t data_len);
+>>>>> @@ -74,5 +76,6 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>>>>>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>>>>>  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>>>>>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>>>>> +int __init reserve_crashkernel_low(void);
+>>>>>  
+>>>>>  #endif /* LINUX_CRASH_CORE_H */
+>>>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>>>>> index 1776eb2..5d5d963 100644
+>>>>> --- a/include/linux/kexec.h
+>>>>> +++ b/include/linux/kexec.h
+>>>>> @@ -330,8 +330,6 @@ extern int kexec_load_disabled;
+>>>>>  
+>>>>>  /* Location of a reserved region to hold the crash kernel.
+>>>>>   */
+>>>>> -extern struct resource crashk_res;
+>>>>> -extern struct resource crashk_low_res;
+>>>>>  extern note_buf_t __percpu *crash_notes;
+>>>>>  
+>>>>>  /* flag to track if kexec reboot is in progress */
+>>>>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>>>>> index 9f1557b..eb72fd6 100644
+>>>>> --- a/kernel/crash_core.c
+>>>>> +++ b/kernel/crash_core.c
+>>>>> @@ -7,6 +7,8 @@
+>>>>>  #include <linux/crash_core.h>
+>>>>>  #include <linux/utsname.h>
+>>>>>  #include <linux/vmalloc.h>
+>>>>> +#include <linux/memblock.h>
+>>>>> +#include <linux/swiotlb.h>
+>>>>>  
+>>>>>  #include <asm/page.h>
+>>>>>  #include <asm/sections.h>
+>>>>> @@ -19,6 +21,22 @@ u32 *vmcoreinfo_note;
+>>>>>  /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
+>>>>>  static unsigned char *vmcoreinfo_data_safecopy;
+>>>>>  
+>>>>> +/* Location of the reserved area for the crash kernel */
+>>>>> +struct resource crashk_res = {
+>>>>> +	.name  = "Crash kernel",
+>>>>> +	.start = 0,
+>>>>> +	.end   = 0,
+>>>>> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+>>>>> +	.desc  = IORES_DESC_CRASH_KERNEL
+>>>>> +};
+>>>>> +struct resource crashk_low_res = {
+>>>>> +	.name  = "Crash kernel",
+>>>>> +	.start = 0,
+>>>>> +	.end   = 0,
+>>>>> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+>>>>> +	.desc  = IORES_DESC_CRASH_KERNEL
+>>>>> +};
+>>>>> +
+>>>>>  /*
+>>>>>   * parsing the "crashkernel" commandline
+>>>>>   *
+>>>>> @@ -292,6 +310,75 @@ int __init parse_crashkernel_low(char *cmdline,
+>>>>>  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+>>>>>  }
+>>>>>  
+>>>>> +#if defined(CONFIG_X86_64)
+>>>>> +#define CRASH_ALIGN		SZ_16M
+>>>>> +#elif defined(CONFIG_ARM64)
+>>>>> +#define CRASH_ALIGN		SZ_2M
+>>>>> +#endif
+>>>>
+>>>> I think no need to have the #ifdef, although I can not think out of
+>>>> reason we have 16M for X86, maybe move it to 2M as well if no other
+>>>> objections.  Then it will be easier to reserve crashkernel successfully
+>>>> considering nowadays we have KASLR and other stuff it becomes harder.
+>>>
+>>> I also don't figure out why it is 16M in x86.
+>>
+>> IMHO, if we do not know why and in theory it should work with 2M, can
+>> you do some basic testing and move it to 2M?
+>>
+>> We can easily move back to 16M if someone really report something, but
+>> if we do not change it will always stay there but we do not know why.
+> 
+> Ok. I will do some test later.
 
->> I would prefer to put a BUG() there which makes it self documenting.
-> Which will cause checkpatch complaints about introducing new BUG() which
-> is frowned on.
+Recently, i tested with 2M alignment in x86 and the system works well.
 
-It's fine in this case, that warning is about not introducing
-runtime bugs, but this wouldn't be.
+Besides, i found memblock_find_in_range() in reserve_crashkernel()
+restrict the lower bound of the range to "CRASH_ALIGN".
+If we can make memblock_find_in_range() search from the start of memory?
 
-But... I actually don't like adding read_user_stack_slow on 32-bit
-and especially not just to make IS_ENABLED work.
+The code is as follows:
 
-IMO this would be better if you really want to consolidate it
+static void __init reserve_crashkernel(void)
+{
+	...
+	if (!high)
+            crash_base = memblock_find_in_range(CRASH_ALIGN,
+                        CRASH_ADDR_LOW_MAX,
+                        crash_size, CRASH_ALIGN);
+        if (!crash_base)
+            crash_base = memblock_find_in_range(CRASH_ALIGN,
+                        CRASH_ADDR_HIGH_MAX,
+                        crash_size, CRASH_ALIGN);
 
----
+Thanks,
+Chen Zhou
+> 
+>>
+>>>
+>>>>
+>>>>> +
+>>>>> +int __init reserve_crashkernel_low(void)
+>>>>> +{
+>>>>> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+>>>>> +	unsigned long long base, low_base = 0, low_size = 0;
+>>>>> +	unsigned long total_low_mem;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+>>>>> +
+>>>>> +	/* crashkernel=Y,low */
+>>>>> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size,
+>>>>> +			&base);
+>>>>> +	if (ret) {
+>>>>> +#ifdef CONFIG_X86_64
+>>>>> +		/*
+>>>>> +		 * two parts from lib/swiotlb.c:
+>>>>> +		 * -swiotlb size: user-specified with swiotlb= or default.
+>>>>> +		 *
+>>>>> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+>>>>> +		 * to 8M for other buffers that may need to stay low too. Also
+>>>>> +		 * make sure we allocate enough extra low memory so that we
+>>>>> +		 * don't run out of DMA buffers for 32-bit devices.
+>>>>> +		 */
+>>>>> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
+>>>>> +				256UL << 20);
+>>>>> +#else
+>>>>> +		/*
+>>>>> +		 * in arm64, reserve low memory if and only if crashkernel=X,low
+>>>>> +		 * specified.
+>>>>> +		 */
+>>>>> +		return -EINVAL;
+>>>>> +#endif
+>>>>
+>>>> As said before, can you explore about why it needs different logic, it
+>>>> would be good to keep two arches same.
+>>>>
+>>>>> +	} else {
+>>>>> +		/* passed with crashkernel=0,low ? */
+>>>>> +		if (!low_size)
+>>>>> +			return 0;
+>>>>> +	}
+>>>>> +
+>>>>> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+>>>>> +	if (!low_base) {
+>>>>> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>>>>> +		       (unsigned long)(low_size >> 20));
+>>>>> +		return -ENOMEM;
+>>>>> +	}
+>>>>> +
+>>>>> +	ret = memblock_reserve(low_base, low_size);
+>>>>> +	if (ret) {
+>>>>> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
+>>>>> +				__func__);
+>>>>> +		return ret;
+>>>>> +	}
+>>>>> +
+>>>>> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+>>>>> +		(unsigned long)(low_size >> 20),
+>>>>> +		(unsigned long)(low_base >> 20),
+>>>>> +		(unsigned long)(total_low_mem >> 20));
+>>>>> +
+>>>>> +	crashk_low_res.start = low_base;
+>>>>> +	crashk_low_res.end   = low_base + low_size - 1;
+>>>>> +#endif
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>>>>>  			  void *data, size_t data_len)
+>>>>>  {
+>>>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>>>>> index 15d70a9..458d093 100644
+>>>>> --- a/kernel/kexec_core.c
+>>>>> +++ b/kernel/kexec_core.c
+>>>>> @@ -53,23 +53,6 @@ note_buf_t __percpu *crash_notes;
+>>>>>  /* Flag to indicate we are going to kexec a new kernel */
+>>>>>  bool kexec_in_progress = false;
+>>>>>  
+>>>>> -
+>>>>> -/* Location of the reserved area for the crash kernel */
+>>>>> -struct resource crashk_res = {
+>>>>> -	.name  = "Crash kernel",
+>>>>> -	.start = 0,
+>>>>> -	.end   = 0,
+>>>>> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+>>>>> -	.desc  = IORES_DESC_CRASH_KERNEL
+>>>>> -};
+>>>>> -struct resource crashk_low_res = {
+>>>>> -	.name  = "Crash kernel",
+>>>>> -	.start = 0,
+>>>>> -	.end   = 0,
+>>>>> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+>>>>> -	.desc  = IORES_DESC_CRASH_KERNEL
+>>>>> -};
+>>>>> -
+>>>>>  int kexec_should_crash(struct task_struct *p)
+>>>>>  {
+>>>>>  	/*
+>>>>> -- 
+>>>>> 2.7.4
+>>>>>
+>>>>
+>>>> Thanks
+>>>> Dave
+>>>>
+>>>>
+>>>> .
+>>>>
+>>> Thanks,
+>>> Chen Zhou
+>>>
+>>
+>> Thanks
+>> Dave
+>>
+>>
+> 
+> Thanks,
+> Chen Zhou
+> 
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index cbc251981209..ca3a599b3f54 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -108,7 +108,7 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *=
-entry, struct pt_regs *re
-  * interrupt context, so if the access faults, we read the page tables
-  * to find which page (if any) is mapped and access it directly.
-  */
--static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
-+static int read_user_stack_slow(const void __user *ptr, void *buf, int nb)
- {
- 	int ret =3D -EFAULT;
- 	pgd_t *pgdir;
-@@ -149,28 +149,21 @@ static int read_user_stack_slow(void __user *ptr, voi=
-d *buf, int nb)
- 	return ret;
- }
-=20
--static int read_user_stack_64(unsigned long __user *ptr, unsigned long *re=
-t)
-+static int __read_user_stack(const void __user *ptr, void *ret, size_t siz=
-e)
- {
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned long) ||
--	    ((unsigned long)ptr & 7))
-+	if ((unsigned long)ptr > TASK_SIZE - size ||
-+	    ((unsigned long)ptr & (size - 1)))
- 		return -EFAULT;
-=20
--	if (!probe_user_read(ret, ptr, sizeof(*ret)))
-+	if (!probe_user_read(ret, ptr, size))
- 		return 0;
-=20
--	return read_user_stack_slow(ptr, ret, 8);
-+	return read_user_stack_slow(ptr, ret, size);
- }
-=20
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+static int read_user_stack_64(unsigned long __user *ptr, unsigned long *re=
-t)
- {
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
--		return -EFAULT;
--
--	if (!probe_user_read(ret, ptr, sizeof(*ret)))
--		return 0;
--
--	return read_user_stack_slow(ptr, ret, 4);
-+	return __read_user_stack(ptr, ret, sizeof(*ret));
- }
-=20
- static inline int valid_user_sp(unsigned long sp, int is_64)
-@@ -283,13 +276,13 @@ static void perf_callchain_user_64(struct perf_callch=
-ain_entry_ctx *entry,
-  * the page tables.  Since this is called at interrupt level,
-  * do_page_fault() won't treat a DSI as a page fault.
-  */
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+static int __read_user_stack(const void __user *ptr, void *ret, size_t siz=
-e)
- {
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
-+	if ((unsigned long)ptr > TASK_SIZE - size ||
-+	    ((unsigned long)ptr & (size - 1)))
- 		return -EFAULT;
-=20
--	return probe_user_read(ret, ptr, sizeof(*ret));
-+	return probe_user_read(ret, ptr, size);
- }
-=20
- static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx =
-*entry,
-@@ -312,6 +305,11 @@ static inline int valid_user_sp(unsigned long sp, int =
-is_64)
-=20
- #endif /* CONFIG_PPC64 */
-=20
-+static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+{
-+	return __read_user_stack(ptr, ret, sizeof(*ret));
-+}
-+
- /*
-  * Layout for non-RT signal frames
-  */
-=
