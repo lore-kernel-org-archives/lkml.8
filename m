@@ -2,101 +2,117 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57E8C2BA17
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549BEC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B0921556
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585908085;
-	bh=MvMvhKUfLZWHOyD15kKxWI7zF3UoWs6qfcxOpwmQ41Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YqNQIh+v/48zuQyrhdeVz3WegQhbNUEWsG53JdUZCxRprZO3mtFQPzgJFk8wxH44Q
-	 13ze5jnO7s+hA9a1wwZiW+iCYYrwTELK9AA8E5Popp/zluYzYsO5CEU9ebHJClSmXQ
-	 nP2DIa0gUj3luPBzqfoMO92Yismo4jTEjcoc8XQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 2DEA120757
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 10:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390593AbgDCKBY (ORCPT
+        id S2390689AbgDCKBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 06:01:24 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37582 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgDCKBY (ORCPT
+        Fri, 3 Apr 2020 06:01:31 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47847 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgDCKBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 06:01:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w10so7826600wrm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 03:01:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jYXQbnu/Oi974qhNjSFy5pRIJC0tTSSAvVWrXVkMiaM=;
-        b=f9jXWkGd/SUoZijMzwljdg3VzLw+L4WrnVp3Ca6jyRlzXvDwIucJleDzGrOnGqAywY
-         3SJiQRppazdkgIfiafD0y363gL/iRWV6Z8q+omPZsiyluehsdGNgMaikZ6rNcG06SzCc
-         DjBg2K8DEbm5CPzw1oTXSuIJBl4wnFzSGZahtBlJaGQZWJ9dW+dgzhdaVqi7jMRimYcM
-         oC6n3TqKwjHOAdaiGkTGMb3yp7JcTY0uxzawk592B1yQWENG2d2KQdGLnEol9wjmJ5qK
-         nbrz+0h5+gLJwrhzDHorgmE5zorOc2+FGUPU9+EYrzJ+falr4w2y6gf84h3gZ1/oO5wy
-         UHhQ==
-X-Gm-Message-State: AGi0PuYDPByvDgQHTN5SBqdct4VLIELin+r/QGwiNZ1fj+6QaT36KcOa
-        0EHmmad2AgYJVV61ejtYtkM=
-X-Google-Smtp-Source: APiQypLgiYupoXaD9R5zABwqMgbYZI0KQAYTivfAw3CSUMkXzEfl/iXsdKbvlVPO+gTJwGowyftDIg==
-X-Received: by 2002:adf:f401:: with SMTP id g1mr7876035wro.140.1585908082788;
-        Fri, 03 Apr 2020 03:01:22 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id z129sm10951833wmb.7.2020.04.03.03.01.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 03:01:21 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 12:01:20 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Aslan Bakirov <aslanbekirov@gmail.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Aslan Bakirov <aslan@fb.com>,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kernel-team@fb.com, riel@surriel.com,
-        Roman Gushchin <guro@fb.com>, hannes@cmpxchg.org
-Subject: Re: [PATCH v3] mm: cma: NUMA node interface
-Message-ID: <20200403100120.GY22681@dhcp22.suse.cz>
-References: <20200403021254.2842224-1-aslan@fb.com>
- <20200403050205.GI3952565@iweiny-DESK2.sc.intel.com>
- <CAJth39gjy34swBqVUy7mOo0-Dbxzb5TZn2jUNsrcq8iHpK_ToA@mail.gmail.com>
+        Fri, 3 Apr 2020 06:01:30 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jKJ8g-00027G-MO; Fri, 03 Apr 2020 10:01:26 +0000
+Subject: Re: [PATCH][V2][next] rtc: ds1307: check for failed memory allocation
+ on wdt
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linux-rtc@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200402135201.548313-1-colin.king@canonical.com>
+ <c6fe9db8-3e27-b6fc-fff7-131cecad3f88@roeck-us.net>
+ <20200402145312.GN3683@piout.net> <20200403084504.GZ2001@kadam>
+ <20200403092245.GR3683@piout.net>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
+ fanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZOxbBCTvTitYOy3bjs
+ +LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2NoaSEC8Ae8LSSyCMecd22d9Pn
+ LR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyBP9GP65oPev39SmfAx9R92SYJygCy0pPv
+ BMWKvEZS/7bpetPNx6l2xu9UvwoeEbpzUvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3oty
+ dNTWkP6Wh3Q85m+AlifgKZudjZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2m
+ uj83IeFQ1FZ65QAiCdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08y
+ LGPLTf5wyAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
+ zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaByVUv/NsyJ
+ FQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQABtCVDb2xpbiBLaW5n
+ IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+iQI2BBMBCAAhBQJOkyQoAhsDBQsJCAcDBRUK
+ CQgLBRYCAwEAAh4BAheAAAoJEGjCh9/GqAImsBcP9i6C/qLewfi7iVcOwqF9avfGzOPf7CVr
+ n8CayQnlWQPchmGKk6W2qgnWI2YLIkADh53TS0VeSQ7Tetj8f1gV75eP0Sr/oT/9ovn38QZ2
+ vN8hpZp0GxOUrzkvvPjpH+zdmKSaUsHGp8idfPpZX7XeBO0yojAs669+3BrnBcU5wW45SjSV
+ nfmVj1ZZj3/yBunb+hgNH1QRcm8ZPICpjvSsGFClTdB4xu2AR28eMiL/TTg9k8Gt72mOvhf0
+ fS0/BUwcP8qp1TdgOFyiYpI8CGyzbfwwuGANPSupGaqtIRVf+/KaOdYUM3dx/wFozZb93Kws
+ gXR4z6tyvYCkEg3x0Xl9BoUUyn9Jp5e6FOph2t7TgUvv9dgQOsZ+V9jFJplMhN1HPhuSnkvP
+ 5/PrX8hNOIYuT/o1AC7K5KXQmr6hkkxasjx16PnCPLpbCF5pFwcXc907eQ4+b/42k+7E3fDA
+ Erm9blEPINtt2yG2UeqEkL+qoebjFJxY9d4r8PFbEUWMT+t3+dmhr/62NfZxrB0nTHxDVIia
+ u8xM+23iDRsymnI1w0R78yaa0Eea3+f79QsoRW27Kvu191cU7QdW1eZm05wO8QUvdFagVVdW
+ Zg2DE63Fiin1AkGpaeZG9Dw8HL3pJAJiDe0KOpuq9lndHoGHs3MSa3iyQqpQKzxM6sBXWGfk
+ EkK5Ag0ETpMkKAEQAMX6HP5zSoXRHnwPCIzwz8+inMW7mJ60GmXSNTOCVoqExkopbuUCvinN
+ 4Tg+AnhnBB3R1KTHreFGoz3rcV7fmJeut6CWnBnGBtsaW5Emmh6gZbO5SlcTpl7QDacgIUuT
+ v1pgewVHCcrKiX0zQDJkcK8FeLUcB2PXuJd6sJg39kgsPlI7R0OJCXnvT/VGnd3XPSXXoO4K
+ cr5fcjsZPxn0HdYCvooJGI/Qau+imPHCSPhnX3WY/9q5/WqlY9cQA8tUC+7mgzt2VMjFft1h
+ rp/CVybW6htm+a1d4MS4cndORsWBEetnC6HnQYwuC4bVCOEg9eXMTv88FCzOHnMbE+PxxHzW
+ 3Gzor/QYZGcis+EIiU6hNTwv4F6fFkXfW6611JwfDUQCAHoCxF3B13xr0BH5d2EcbNB6XyQb
+ IGngwDvnTyKHQv34wE+4KtKxxyPBX36Z+xOzOttmiwiFWkFp4c2tQymHAV70dsZTBB5Lq06v
+ 6nJs601Qd6InlpTc2mjd5mRZUZ48/Y7i+vyuNVDXFkwhYDXzFRotO9VJqtXv8iqMtvS4xPPo
+ 2DtJx6qOyDE7gnfmk84IbyDLzlOZ3k0p7jorXEaw0bbPN9dDpw2Sh9TJAUZVssK119DJZXv5
+ 2BSc6c+GtMqkV8nmWdakunN7Qt/JbTcKlbH3HjIyXBy8gXDaEto5ABEBAAGJAh8EGAEIAAkF
+ Ak6TJCgCGwwACgkQaMKH38aoAiZ4lg/+N2mkx5vsBmcsZVd3ys3sIsG18w6RcJZo5SGMxEBj
+ t1UgyIXWI9lzpKCKIxKx0bskmEyMy4tPEDSRfZno/T7p1mU7hsM4owi/ic0aGBKP025Iok9G
+ LKJcooP/A2c9dUV0FmygecRcbIAUaeJ27gotQkiJKbi0cl2gyTRlolKbC3R23K24LUhYfx4h
+ pWj8CHoXEJrOdHO8Y0XH7059xzv5oxnXl2SD1dqA66INnX+vpW4TD2i+eQNPgfkECzKzGj+r
+ KRfhdDZFBJj8/e131Y0t5cu+3Vok1FzBwgQqBnkA7dhBsQm3V0R8JTtMAqJGmyOcL+JCJAca
+ 3Yi81yLyhmYzcRASLvJmoPTsDp2kZOdGr05Dt8aGPRJL33Jm+igfd8EgcDYtG6+F8MCBOult
+ TTAu+QAijRPZv1KhEJXwUSke9HZvzo1tNTlY3h6plBsBufELu0mnqQvHZmfa5Ay99dF+dL1H
+ WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
+ QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
+ GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
+Message-ID: <5509d4e5-a6eb-c3ff-e89b-a4470ec3920a@canonical.com>
+Date:   Fri, 3 Apr 2020 11:01:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJth39gjy34swBqVUy7mOo0-Dbxzb5TZn2jUNsrcq8iHpK_ToA@mail.gmail.com>
+In-Reply-To: <20200403092245.GR3683@piout.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 03-04-20 10:51:32, Aslan Bakirov wrote:
-> On Fri, Apr 3, 2020 at 6:02 AM Ira Weiny <ira.weiny@intel.com> wrote:
+On 03/04/2020 10:22, Alexandre Belloni wrote:
+> On 03/04/2020 11:45:04+0300, Dan Carpenter wrote:
+>> On Thu, Apr 02, 2020 at 04:53:12PM +0200, Alexandre Belloni wrote:
+>>>
+>>> As stated, I also prefer keeping the watchdog optional and ignore the
+>>> error.
+>>
+>> Hopefully you aren't running out of memory on start up.  In current
+>> kernels small memory allocations like this never fail so it doesn't
+>> really affect runtime.  It only silences the NULL dereference static
+>> checker warning.
+>>
 > 
-> > On Thu, Apr 02, 2020 at 07:12:56PM -0700, Aslan Bakirov wrote:
-> > > I've noticed that there is no interfaces exposed by CMA which would let
-> > me
-> > > to declare contigous memory on particular NUMA node.
-> > >
-> > > This patchset adds the ability to try to allocate contiguous memory on
-> > > specific node. It will fallback to other nodes if the specified one
-> > > doesn't work.
-> > >
-> > > Implement a new method for declaring contigous memory on particular node
-> > > and keep cma_declare_contiguous() as a wrapper.
-> >
-> > Is there an additional patch which uses this new interface?
-> >
-> > Generally the patch seems reasonable but we should have a user.
+> Yes, so the
 > 
+> if (!wdt)
+>  return;
 > 
->  Thanks for the comments. Yes, actually, this is the version 3 of first
-> patch ([PATCH 1/2] mm: cma: NUMA node interface)
->  of patchset. Second patch, which uses this interface is  "[PATCH 2/2] mm:
-> hugetlb: Use node interface of cma"
-
-It would have been much more clear to send those two patches together as
-you can see.
--- 
-Michal Hocko
-SUSE Labs
+> would be enough instead of introducing unnecessary error handling.
+> 
+OK, I'll send a V3 later today.
