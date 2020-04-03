@@ -2,109 +2,73 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9537C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1FCC2BA15
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DBE2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40048206E9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 16:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iHm7w32l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404680AbgDCQw2 (ORCPT
+        id S2390898AbgDCQxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:52:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41364 "EHLO mx2.suse.de"
+        Fri, 3 Apr 2020 12:53:10 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:54172 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbgDCQw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 12:52:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C4AFCAA7C;
-        Fri,  3 Apr 2020 16:52:25 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 816351E1235; Fri,  3 Apr 2020 18:52:25 +0200 (CEST)
-Date:   Fri, 3 Apr 2020 18:52:25 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        boqun.feng@gmail.com, Amir Goldstein <amir73il@gmail.com>,
-        "open list:FSNOTIFY: FILESYSTEM NOTIFICATION INFRASTRUCTURE" 
-        <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 2/7] fsnotify: Add missing annotation for
- fsnotify_finish_user_wait()
-Message-ID: <20200403165225.GC29920@quack2.suse.cz>
-References: <0/7>
- <20200331204643.11262-1-jbi.octave@gmail.com>
- <20200331204643.11262-3-jbi.octave@gmail.com>
- <20200401092433.GA19466@quack2.suse.cz>
- <alpine.LFD.2.21.2004031710120.10601@earth.lan>
+        id S1728341AbgDCQxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 12:53:10 -0400
+Received: from zn.tnic (p200300EC2F0D8900BDBBB37D18611998.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8900:bdbb:b37d:1861:1998])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8D0A31EC0C64;
+        Fri,  3 Apr 2020 18:53:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585932788;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=aL0ozGoheXBfskhoUlG0XEem1C7MV0gBiq23Nu6Wea0=;
+        b=iHm7w32lF5P2+lf2EH9UJFXu22nhEzD59fuMfIB/inxE1rvqGkqIt9M7uI5KTISn2hdSQK
+        6S71yUqOPPPcNBZA/SIS+0FWhtOM7imTnAz32es9pY2EfDvwY1Q5mMwT96ciRnW1SzdUu9
+        QDQ+ewMGUmyqRnnj+0T1r5zVvSed/GU=
+Date:   Fri, 3 Apr 2020 18:53:05 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] x86/acpi: fix a deadlock with cpu hotplug
+Message-ID: <20200403165305.GF20218@zn.tnic>
+References: <20200403140345.3828-1-cai@lca.pw>
+ <CAJZ5v0jjZzSosFwR3Yqu9mWtUNms1u9fbJbQb=tc5=CPc7r_1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.21.2004031710120.10601@earth.lan>
+In-Reply-To: <CAJZ5v0jjZzSosFwR3Yqu9mWtUNms1u9fbJbQb=tc5=CPc7r_1w@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 03-04-20 17:15:44, Jules Irenge wrote:
-> 
-> 
-> On Wed, 1 Apr 2020, Jan Kara wrote:
-> 
-> > On Tue 31-03-20 21:46:38, Jules Irenge wrote:
-> > > Sparse reports a warning at fsnotify_finish_user_wait()
-> > > 
-> > > warning: context imbalance in fsnotify_finish_user_wait()
-> > > 	- wrong count at exit
-> > > 
-> > > The root cause is the missing annotation at fsnotify_finish_user_wait()
-> > > Add the missing __acquires(&fsnotify_mark_srcu) annotation.
-> > > 
-> > > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-> > 
-> > OK, but then fsnotify_prepare_user_wait() needs __releases annotation as
-> > well if we're going to be serious about sparse warnings in this code?
-> > 
-> > 								Honza
-> > 
-> > > ---
-> > >  fs/notify/mark.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/fs/notify/mark.c b/fs/notify/mark.c
-> > > index 1d96216dffd1..44fea637bb02 100644
-> > > --- a/fs/notify/mark.c
-> > > +++ b/fs/notify/mark.c
-> > > @@ -350,6 +350,7 @@ bool fsnotify_prepare_user_wait(struct fsnotify_iter_info *iter_info)
-> > >  }
-> > > 
-> > >  void fsnotify_finish_user_wait(struct fsnotify_iter_info *iter_info)
-> > > +	__acquires(&fsnotify_mark_srcu)
-> > >  {
-> > >  	int type;
-> > > 
-> > > --
-> > > 2.24.1
-> > > 
-> > -- 
-> > Jan Kara <jack@suse.com>
-> > SUSE Labs, CR
-> > 
-> 
-> Thanks for the reply. I think adding an annotation at
-> fsnotify_prepare_user_wait() will not theoretically remove the warning.
-> That's the only reason why I skipped it .
+On Fri, Apr 03, 2020 at 05:45:10PM +0200, Rafael J. Wysocki wrote:
+> I can take this one unless there are objections or concerns.
 
-Well, I think the goal isn't really to remove warnings but to make
-annotations correct... So even if sparse was not clever enough to spot that
-missing annotation, you should add it if you've decided to fix sparse
-annotations for fsnotify code.
+Please do - I did trigger that yesterday again.
 
-								Honza
+Tested-by: Borislav Petkov <bp@suse.de>
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
