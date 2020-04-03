@@ -2,120 +2,74 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232C3C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6B4C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2B62077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4255C20721
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 13:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IvhLgMBr"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MWJcVcfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403926AbgDCNQ4 (ORCPT
+        id S2403985AbgDCNRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 09:16:56 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26806 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390852AbgDCNQz (ORCPT
+        Fri, 3 Apr 2020 09:17:32 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51747 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728044AbgDCNRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 09:16:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585919813;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=izOkr1BSQDJulAYByg5NgaMKcJ6WHmg0z2BChcgtZ1o=;
-        b=IvhLgMBrLjQopJ1l6WCp7lH5HfLvXxtPWXEYqyHHTHh5mlg1ZQVYpJc4XI5k95Wa6Bg3nl
-        J35b4tG0xpQgM4fflfQgbXKrRmKwWVEITeq2nY+I/G28GUSj6TMDpPou5z0S3v1ijm7Xyh
-        IDMI5mgyZFvmpbXiEpRorJF4EAV5WBs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-86jLnN6fPgepMkzE4Mu15A-1; Fri, 03 Apr 2020 09:16:52 -0400
-X-MC-Unique: 86jLnN6fPgepMkzE4Mu15A-1
-Received: by mail-wm1-f70.google.com with SMTP id s22so2024877wmh.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 06:16:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=izOkr1BSQDJulAYByg5NgaMKcJ6WHmg0z2BChcgtZ1o=;
-        b=T+a2b0y0q7xg7L4C9j394CqrpKgQpQfTUBfWYHxUENjxpCD9PGgfTlZIwYHxeB9Bqv
-         yUSSXaD4gvlzDmETN/KQ3SCFz2g0+t3/pTC+qFvaLduLdzQDII74RmAvw2HhCiY7JEsI
-         aQaXCXAT1qzRuwGKKuh83b3uoh1rcCMtG5yFxU6eoM9fdl6FIbbuk+WtuaOipuM3TRWd
-         eEvuxoRn8ViQMNV9jIM0fTNTNvmNeIrxA/ygVbD9wIQw3wEBBIV8BQfMysjmC46VKlV7
-         2PLYmwCJxkzLBRNImcMmUSIk4U2mQCPRJjgLykpOuMJbagVdbooiELjhGc3kO1EhxJyp
-         fM9A==
-X-Gm-Message-State: AGi0Pubh/lpV5IAqWtB/8C4Kx29IFV5kiAIHUXwCkYLkzyLF9OBZWp65
-        mQcP8AwAHDUqbCLfr/HXV1FxBagfDoKBGdQvcxhgUarmNVdhirYVyb0lOSUykivLAv6vywKCe/j
-        F8na0bxU2gwYJnQ4AbQlgvuas
-X-Received: by 2002:adf:fe4b:: with SMTP id m11mr8924891wrs.20.1585919811103;
-        Fri, 03 Apr 2020 06:16:51 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIa2NLz9OGQj4FGUNxyoDHqAatWI/l10frH2PpuCDGPpiYh2zF1KU/LgdHFx+mVLgPN1dm5Ew==
-X-Received: by 2002:adf:fe4b:: with SMTP id m11mr8924870wrs.20.1585919810807;
-        Fri, 03 Apr 2020 06:16:50 -0700 (PDT)
-Received: from ?IPv6:2a02:8388:7c1:1280:a281:9dab:554b:2fdc? (2a02-8388-07c1-1280-a281-9dab-554b-2fdc.cable.dynamic.v6.surfer.at. [2a02:8388:7c1:1280:a281:9dab:554b:2fdc])
-        by smtp.gmail.com with ESMTPSA id b5sm1812721wrs.16.2020.04.03.06.16.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 06:16:49 -0700 (PDT)
-Subject: Re: [PATCH] perf script report: fix segfault when using DWARF mode
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
- <20200402125417.422232-1-agerstmayr@redhat.com>
- <6a098ce1-1981-dcff-ea62-af5fc07ec7fb@amd.com>
- <20200403124028.GA18559@kernel.org>
-From:   Andreas Gerstmayr <agerstmayr@redhat.com>
-Message-ID: <bf95c9f1-1970-fce4-c6f2-dc231730e7ab@redhat.com>
-Date:   Fri, 3 Apr 2020 15:16:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 3 Apr 2020 09:17:31 -0400
+X-UUID: 5ffa3c17e6404c58a271e196b7e7b454-20200403
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=RWw7C/2TsuzJWYtwo/pc+O+f23J/XZ2uNIvbEeMLBzc=;
+        b=MWJcVcfJ0LJInI2KGZJ0OWSjgUWaFrVYUSEzmJXoNKS5Z/7I4W/VJx4Yvzo/XyelPAl3RplaowMSbj6Ecnpa3bJglv5/OqGxixzyWhOWeIzj1sctR0iysg5bKgDTzFTyvcdVnQLdZ9yjZx0SkqSQPIM/dsDC9SUUDKf2ehBf+z0=;
+X-UUID: 5ffa3c17e6404c58a271e196b7e7b454-20200403
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <fengping.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 572868818; Fri, 03 Apr 2020 21:17:25 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 3 Apr 2020 21:17:20 +0800
+Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 3 Apr 2020 21:17:20 +0800
+From:   Fengping yu <fengping.yu@mediatek.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
+CC:     <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Subject: [PATCH v3] Add support for MediaTek keypad 
+Date:   Fri, 3 Apr 2020 21:14:18 +0800
+Message-ID: <20200403131419.6555-1-fengping.yu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200403124028.GA18559@kernel.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.04.20 14:40, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Apr 02, 2020 at 02:07:51PM -0500, Kim Phillips escreveu:
->> On 4/2/20 7:54 AM, Andreas Gerstmayr wrote:
->>> When running perf script report with a Python script and a callgraph in
->>> DWARF mode, intr_regs->regs can be 0 and therefore crashing the regs_map
->>> function.
->>>
->>> Added a check for this condition (same check as in builtin-script.c:595).
->>>
->>> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
->>> ---
->>
->> Tested-by: Kim Phillips <kim.phillips@amd.com>
-> 
-> Thanks, added this to that patch.
-> 
-
-Great, thanks!
-
-
-Cheers,
-Andreas
+DQpUaGlzIHBhdGNoc2V0IGFkZCBzdXBwb3J0IHRvIE1lZGlhVGVrIG1hdHJpeCBrZXlwYWQuDQoN
+CkNoYW5nZSBzaW5jZSB2MjoNCi0gcmVtb3ZlIGV4dHJhIHNwYWNlIGFuZCByZWR1bmRhbnQgbGlu
+ZQ0KLSB1cGRhdGUga2V5cGFkIGRldmljZXRyZWUgZG9jdW1lbnQgZGVib3VuY2UgdGltZSB1bml0
+DQotIGNoYW5nZSB0byB1c2UgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKCkgdG8gc2lt
+cGxpZnkgY29kZQ0KLSB1c2UgYml0bWFwIHRvIHN0b3JlIGFuZCBjaGVjayBrZXlwYWQgc3RhdGUN
+Cg0KZmVuZ3BpbmcueXUgKDIpOg0KICBhZGQgZHQtYmluZGluZyBkb2N1bWVudCBmb3IgTWVkaWFU
+ZWsgS2V5cGFkDQogIGFkZCBNZWRpYVRlayBrZXlwYWQgZHJpdmVyDQoNCiAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9pbnB1dC9tdGsta3BkLnR4dCAgICAgfCAgNjEgKysrKysNCiBhcmNoL2FybTY0
+L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaW5w
+dXQva2V5Ym9hcmQvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAgNyArDQogZHJpdmVycy9pbnB1
+dC9rZXlib2FyZC9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJzL2lucHV0
+L2tleWJvYXJkL210ay1rcGQuYyAgICAgICAgICAgICAgfCAyNTggKysrKysrKysrKysrKysrKysr
+DQogNSBmaWxlcyBjaGFuZ2VkLCAzMjggaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC50eHQNCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9pbnB1dC9rZXlib2FyZC9tdGsta3BkLmMNCg0KLS0N
+CjIuMTguMA0KDQo=
 
