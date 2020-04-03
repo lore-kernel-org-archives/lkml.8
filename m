@@ -2,51 +2,51 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11069C2BA15
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD18C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF47A20678
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B2520678
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 15:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ExiJaq+k"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PZDQbdPQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404223AbgDCPSL (ORCPT
+        id S2404232AbgDCPSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:18:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29472 "EHLO
+        Fri, 3 Apr 2020 11:18:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43814 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404080AbgDCPSL (ORCPT
+        with ESMTP id S2404080AbgDCPSU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 11:18:11 -0400
+        Fri, 3 Apr 2020 11:18:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585927090;
+        s=mimecast20190719; t=1585927098;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=G4Hd4QamM5Yc4B1HCJcNWtBIWbRqGSOz7W+rHr5l48Q=;
-        b=ExiJaq+kxLm34lQR6RBPxOUX3LOXah4LELVk+b1Ok/IoIzQqqzIbjufmZheoBTQeGmLuGb
-        JQBOABQQ1sROugW3C9QcqXsbOB42LUqspVib8NQfZqSVLNDWJsZxuxqcz8D5HZnoN8o1NQ
-        ZN08dwzcegz+fr126pfgbSWjHL7vveg=
+        bh=r9AChLwMSKg4YFhFPg7Imr1MIR4UOajnzauX4lYZuyo=;
+        b=PZDQbdPQwBfaoswolp5a58ApfX/J7WHw8yg86m/hmU/Qf97F7Ke+QdqkfD3LzafDmIEofa
+        iTQuGOFrnm6+0L8HgwLzM03K3UBZddtiosoJ1rDm7ynKQ6zT82kxfa1QXpZe8drsQiBBig
+        xf38gXW1c//spvjHvcg39xTjq7ZgDtk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-sIv6VcLVNv2o1tJyKj40Hg-1; Fri, 03 Apr 2020 11:18:00 -0400
-X-MC-Unique: sIv6VcLVNv2o1tJyKj40Hg-1
+ us-mta-390-RQ2bUpOsNvSWSqDlTR1f2g-1; Fri, 03 Apr 2020 11:18:14 -0400
+X-MC-Unique: RQ2bUpOsNvSWSqDlTR1f2g-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D8368026AF;
-        Fri,  3 Apr 2020 15:17:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AF257800D50;
+        Fri,  3 Apr 2020 15:18:12 +0000 (UTC)
 Received: from [10.36.112.213] (ovpn-112-213.ams2.redhat.com [10.36.112.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E5B8997AE8;
-        Fri,  3 Apr 2020 15:17:54 +0000 (UTC)
-Subject: Re: [PATCH v4 3/3] mm: call cond_resched() from
- deferred_init_memmap()
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B52299E01;
+        Fri,  3 Apr 2020 15:18:09 +0000 (UTC)
+Subject: Re: [PATCH v4 2/3] mm: initialize deferred pages with interrupts
+ enabled
 To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
         linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         mhocko@suse.com, linux-mm@kvack.org, dan.j.williams@intel.com,
@@ -54,7 +54,7 @@ To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
         ktkhai@virtuozzo.com, jmorris@namei.org, sashal@kernel.org,
         vbabka@suse.cz
 References: <20200403140952.17177-1-pasha.tatashin@soleen.com>
- <20200403140952.17177-4-pasha.tatashin@soleen.com>
+ <20200403140952.17177-3-pasha.tatashin@soleen.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -100,12 +100,12 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <4fb5a025-c5d9-abb5-b063-16a22c8443f6@redhat.com>
-Date:   Fri, 3 Apr 2020 17:17:54 +0200
+Message-ID: <06a1b582-368e-926a-2f77-c320c08a3450@redhat.com>
+Date:   Fri, 3 Apr 2020 17:18:09 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200403140952.17177-4-pasha.tatashin@soleen.com>
+In-Reply-To: <20200403140952.17177-3-pasha.tatashin@soleen.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -116,22 +116,103 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 03.04.20 16:09, Pavel Tatashin wrote:
-> Now that deferred pages are initialized with interrupts enabled we can
-> replace touch_nmi_watchdog() with cond_resched(), as it was before
-> 3a2d7fa8a3d5.
+> Initializing struct pages is a long task and keeping interrupts disabled
+> for the duration of this operation introduces a number of problems.
 > 
-> For now, we cannot do the same in deferred_grow_zone() as it is still
-> initializes pages with interrupts disabled.
+> 1. jiffies are not updated for long period of time, and thus incorrect time
+>    is reported. See proposed solution and discussion here:
+>    lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
+> 2. It prevents farther improving deferred page initialization by allowing
+>    intra-node multi-threading.
 > 
-> This change fixes RCU problem described:
-> linux-mm/20200401104156.11564-2-david@redhat.com
+> We are keeping interrupts disabled to solve a rather theoretical problem
+> that was never observed in real world (See 3a2d7fa8a3d5).
+> 
+> Lets keep interrupts enabled. In case we ever encounter a scenario where
+> an interrupt thread wants to allocate large amount of memory this early in
+> boot we can deal with that by growing zone (see deferred_grow_zone()) by
+> the needed amount before starting deferred_init_memmap() threads.
+> 
+> Before:
+> [    1.232459] node 0 initialised, 12058412 pages in 1ms
+> 
+> After:
+> [    1.632580] node 0 initialised, 12051227 pages in 436ms
+> 
+> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
+> Cc: stable@vger.kernel.org # 4.17+
+> 
+> Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  include/linux/mmzone.h |  2 ++
+>  mm/page_alloc.c        | 20 +++++++-------------
+>  2 files changed, 9 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index e84d448988b6..ac6a8245f063 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -723,6 +723,8 @@ typedef struct pglist_data {
+>  	/*
+>  	 * Must be held any time you expect node_start_pfn,
+>  	 * node_present_pages, node_spanned_pages or nr_zones to stay constant.
+> +	 * Also synchronizes pgdat->first_deferred_pfn during deferred page
+> +	 * init.
+>  	 *
+>  	 * pgdat_resize_lock() and pgdat_resize_unlock() are provided to
+>  	 * manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d95bfd328107..5ffa8d7e5545 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1784,6 +1784,13 @@ static int __init deferred_init_memmap(void *data)
+>  	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
+>  	pgdat->first_deferred_pfn = ULONG_MAX;
+>  
+> +	/*
+> +	 * Once we unlock here, the zone cannot be grown anymore, thus if an
+> +	 * interrupt thread must allocate this early in boot, zone must be
+> +	 * pre-grown prior to start of deferred page initialization.
+> +	 */
+> +	pgdat_resize_unlock(pgdat, &flags);
+> +
+>  	/* Only the highest zone is deferred so find it */
+>  	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
+>  		zone = pgdat->node_zones + zid;
+> @@ -1806,8 +1813,6 @@ static int __init deferred_init_memmap(void *data)
+>  		touch_nmi_watchdog();
+>  	}
+>  zone_empty:
+> -	pgdat_resize_unlock(pgdat, &flags);
+> -
+>  	/* Sanity check that the next zone really is unpopulated */
+>  	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
+>  
+> @@ -1849,17 +1854,6 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
+>  
+>  	pgdat_resize_lock(pgdat, &flags);
+>  
+> -	/*
+> -	 * If deferred pages have been initialized while we were waiting for
+> -	 * the lock, return true, as the zone was grown.  The caller will retry
+> -	 * this zone.  We won't return to this function since the caller also
+> -	 * has this static branch.
+> -	 */
+> -	if (!static_branch_unlikely(&deferred_pages)) {
+> -		pgdat_resize_unlock(pgdat, &flags);
+> -		return true;
+> -	}
+> -
+>  	/*
+>  	 * If someone grew this zone while we were waiting for spinlock, return
+>  	 * true, as there might be enough pages already.
+> 
 
-BTW,
-
-https://lkml.kernel.org/r/20200401104156.11564-2-david@redhat.com
-
-Would be better.
-
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
