@@ -2,87 +2,101 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0D5C2BA18
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB6EC43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77122077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CCC2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 14:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390990AbgDCOUb (ORCPT
+        id S2391026AbgDCOVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:20:31 -0400
-Received: from www62.your-server.de ([213.133.104.62]:40646 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgDCOUa (ORCPT
+        Fri, 3 Apr 2020 10:21:46 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:48057 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390896AbgDCOVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 10:20:30 -0400
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jKNBJ-0007Yy-8S; Fri, 03 Apr 2020 16:20:25 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jKNBI-000EqM-Uq; Fri, 03 Apr 2020 16:20:24 +0200
-Subject: Re: Question on "uaccess: Add strict non-pagefault kernel-space read
- function"
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        bgregg@netflix.com
-References: <20200403133533.GA3424@infradead.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <5ddc8c04-279d-9a14-eaa7-755467902ead@iogearbox.net>
-Date:   Fri, 3 Apr 2020 16:20:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 3 Apr 2020 10:21:46 -0400
+X-Originating-IP: 77.205.41.241
+Received: from localhost.localdomain (241.41.205.77.rev.sfr.net [77.205.41.241])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1D96C1BF22A;
+        Fri,  3 Apr 2020 14:21:41 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH 0/3] media: rockchip: Introduce driver for the camera interface on PX30
+Date:   Fri,  3 Apr 2020 16:21:19 +0200
+Message-Id: <20200403142122.297283-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200403133533.GA3424@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25770/Thu Apr  2 14:58:54 2020)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Hello everyone,
 
-On 4/3/20 3:35 PM, Christoph Hellwig wrote:
-[...]
-> I just stumbled over your above commit, and it really confuses me.
-> 
-> Not the newly added functions, which seems perfectly sane, but why you
-> left the crazy old functions in place instead of investing a little
-> bit of extra effort to clean the existing mess up and switch everyone
-> to the sane new variants?
+Here's a series to add very basic support for the camera interface on
+the Rockchip PX30 SoC.
 
-With crazy old functions I presume you mean the old bpf_probe_read()
-which is mapped to BPF_FUNC_probe_read helper or something else entirely?
+This Camera Interface is also supported on other Rockchip SoC such as
+the RK1808, RK3128, RK3288 and RK3288, but for now I've only been able to
+test it on the PX30, using a PAL format.
 
-For the former, basically my main concern was that these would otherwise
-break existing tools like bcc/bpftrace/.. unfortunately until they are not
-converted over yet to _strict variants.
+This driver is mostly based on the driver found in Rockchip's BSP, that
+has been trimmed down to support the set of features that I was able to test,
+that is pretty much a very basic one-frame capture and video streaming
+with GStreamer. 
 
-At least on x86, they would still rely on the broken semantic to probe
-kernel and user memory with probe_read where it 'happens to work', but not
-on other archs where the address space is not shared.
+This first draft only supports the Parallel interface, although the
+controller has support for BT656 and CSI2.
 
-But once these are fixed, I would love to deprecate these in one way or
-another. The warning in 00c42373d397 ("x86-64: add warning for non-canonical
-user access address dereferences") should be a good incentive to switch
-since people have been hitting it in production as the non-canonical space
-is sometimes used in user space to tag pointers, for example.
+Finally, this controller has an iommu that could be used in this driver,
+but as of today I've not been able to get it to work.
+
+Any review is welcome.
 
 Thanks,
-Daniel
+
+Maxime
+
+Maxime Chevallier (3):
+  media: dt-bindings: media: Document Rockchip CIF bindings
+  media: rockchip: Introduce driver for Rockhip's camera interface
+  arm64: dts: rockchip: Add the camera interface description of the PX30
+
+ .../bindings/media/rockchip-cif.yaml          |   98 ++
+ arch/arm64/boot/dts/rockchip/px30.dtsi        |   12 +
+ drivers/media/platform/Kconfig                |   13 +
+ drivers/media/platform/Makefile               |    1 +
+ drivers/media/platform/rockchip/cif/Makefile  |    3 +
+ drivers/media/platform/rockchip/cif/capture.c | 1170 +++++++++++++++++
+ drivers/media/platform/rockchip/cif/dev.c     |  407 ++++++
+ drivers/media/platform/rockchip/cif/dev.h     |  208 +++
+ drivers/media/platform/rockchip/cif/regs.h    |  256 ++++
+ 9 files changed, 2168 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-cif.yaml
+ create mode 100644 drivers/media/platform/rockchip/cif/Makefile
+ create mode 100644 drivers/media/platform/rockchip/cif/capture.c
+ create mode 100644 drivers/media/platform/rockchip/cif/dev.c
+ create mode 100644 drivers/media/platform/rockchip/cif/dev.h
+ create mode 100644 drivers/media/platform/rockchip/cif/regs.h
+
+-- 
+2.24.1
+
