@@ -2,143 +2,110 @@ Return-Path: <SRS0=4r1w=5T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0049C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649E4C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1664207FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3410E20737
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 Apr 2020 20:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYkKd9mu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7SDuK2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgDCUl7 (ORCPT
+        id S1727948AbgDCUpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 16:41:59 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31432 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726368AbgDCUl7 (ORCPT
+        Fri, 3 Apr 2020 16:45:12 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41194 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgDCUpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 16:41:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585946518;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9W4ERNpDc97NCwFIYXreAgn7Lw6lJhCk4ENzF6ZX0o8=;
-        b=AYkKd9muiXzWUgqmlflffREKmGdm07TzsAGAQsmk+/4e6s2XdQs9fOvtBn1a3PLJ9eA2Ne
-        EPERjfUbo3LmtuUF6UAL1L9HcOejKZibWKqwKrf4wz6e6RESjFyDd9xyV/x9IR2xIWhplz
-        M6wjURInKx1HFq5AG+LaYJ2uoOy3MbY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-se2pBvTZNHSbW6RRzF7z6A-1; Fri, 03 Apr 2020 16:41:54 -0400
-X-MC-Unique: se2pBvTZNHSbW6RRzF7z6A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F748100550D;
-        Fri,  3 Apr 2020 20:41:52 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-94.rdu2.redhat.com [10.10.118.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2CBF560BF3;
-        Fri,  3 Apr 2020 20:41:51 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
- <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <328f5ad3-f8b3-09b9-f2f7-b6dae0137542@redhat.com>
-Date:   Fri, 3 Apr 2020 16:41:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 3 Apr 2020 16:45:11 -0400
+Received: by mail-lj1-f193.google.com with SMTP id n17so8344487lji.8;
+        Fri, 03 Apr 2020 13:45:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gyX/O2Ze4URKpHvdvcUbunyVeBFLNpqM1D+xSUQcU20=;
+        b=l7SDuK2vWHtYAVjGxUg8CK0CatllCqvrOh7YX0Y/PoTbJ9J+kP7XRzDykjgt/ggoze
+         lPhVhljtKOw2Vts0Z6ldnIeCh2mWJdaa4sLjP12SG0mOoMB5ymXU1soWqLase82rRVJF
+         huaz3xvH6jtvEes8ZHBvIP4E6zVr2D2gh3Q11xAZnR3nPTlcRtrvbGBrhZBq3LvlQLM0
+         sfr5KdOkf9wInypHHEqhJez+naqmlfp0Nk4uuJ8q6u+FUAlF1eLU+tMG+9VUOVplEEYK
+         QClMKd5r1xwC2krQv8dp64NChunjpU7lKTtf0+q+sMJwIc73JIKW2MqmvFD2XqRoAKLa
+         oQcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gyX/O2Ze4URKpHvdvcUbunyVeBFLNpqM1D+xSUQcU20=;
+        b=VIuC5tkrkXvZuFSw10yUSg+IgmM73WfMJJg7+6Ip/TxuhUpEsO/rPO9FuY6Dr90SAV
+         5v3cjS0owKSG2n+S2ryyh8MnwvmPAlDN7N/gAzH+NJiTOY2kD5VGW1BQro5Rm5oht+JX
+         BpMTwBeozs2oCsZQ+cNythT7h9fo8QOHG2Wo4MLoNP3GVi5M9Qvom0nMWOO9kdCMjRMS
+         9Uk5+x4L6JVcxeRs7Nwy5KJtpmMMcNQz3ADB5qs3knMR/IBSezth8rK+EFW78/awx1VS
+         oWE8LuIDJWVO45byfD+7CjdWrdYiYi9NxrP0QBPKl1/veJMlZtQ2vToO43TTZ+rTDB/d
+         fSag==
+X-Gm-Message-State: AGi0PuZeYsQzD9t2agAcxP3IZg9Xe1xjRMCDYTzTkLSz3hqe0rxSyKFz
+        XTYWur6PJ3jVj3FyMuDxHdRkji7j
+X-Google-Smtp-Source: APiQypKMj0aqmaeAInyOZIsDaLF0J+4JL/6tvSSQ8+cWUfCtwi2YnSM2jY4khJgvVESjgw6Xly1Fiw==
+X-Received: by 2002:a05:651c:310:: with SMTP id a16mr5465268ljp.275.1585946707554;
+        Fri, 03 Apr 2020 13:45:07 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id r24sm5522163ljn.25.2020.04.03.13.45.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 13:45:06 -0700 (PDT)
+Subject: Re: [PATCH v3 2/7] clocksource: Add Tegra186 timers support
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200403202209.299823-1-thierry.reding@gmail.com>
+ <20200403202209.299823-3-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <82a08b57-c151-daf8-0719-1034be07538c@gmail.com>
+Date:   Fri, 3 Apr 2020 23:45:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
+In-Reply-To: <20200403202209.299823-3-thierry.reding@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/20 3:26 PM, Linus Torvalds wrote:
-> I'm including some locking people here because of these issues, so
-> that they can maybe verify my thinking.
->
->  (a) our rwsem's are fair
->
->      So the whole "execve takes it for reading, so now others can take
-> it for reading too without deadlocks" is simply not true - if you use
-> the existing rwsem.
->
->      Because a concurrent (blocked) writer will then block other
-> readers for fairness reasons, and holding it for reading doesn't
-> guarantee that others can get it for reading.
->
->      So clearly, the above doesn't even *fix* the deadlocks - unless
-> we have an unfair mode (or just a special lock for just this that is
-> not our standard rwsem, but a special unfair one).
->
->      So I'm suggesting we use a special unfair rwsem here (we can make
-> a simple spinlock-based one - it doesn't need to be as clever or
-> optimized as the real rwsems are)
->
->  (b) similarly, our rwsem's don't actually have a "upgrade from read
-> to write", because that's also a fundamentally deadlocky operation.
->
->      Again, that's true. Except execve() is special, and we know
-> there's only _one_ execve() at a time that will complete, since we're
-> serializing them. So for this particular use, "upgrade to write" would
-> be possible without the general-case deadlock issues.
->
->  (c) I didn't think things through, and even with these special
-> semantics, my idea is complete garbage
->
->      Ok, this may well be true.
->
-> Anyway, the advantage of this (if it works) is that it would allow us
-> to go back to the _really_ simple original model of just taking this
-> lock for reading at the beginning of execve(), and not worrying so
-> much about complex nesting or very complex rules for exactly when we
-> got the lock and error handling.
->
-> The final part when we actually update the credentials and dumpability
-> and stuff in execve() is actually fairly simple. So the "upgrade to a
-> write lock" phase doesn't worry me too much.  It's the interaction
-> with all the previous parts (which happen with it held just for
-> reading) that tend to be the nastier ones.
->
-> And ptrace_attach() really is special, and I think it would be the
-> only one that really needs that write lock.
+03.04.2020 23:22, Thierry Reding пишет:
+...
+> +config TEGRA186_TIMER
+> +	tristate "NVIDIA Tegra186 timer driver"
+> +	depends on ARCH_TEGRA || COMPILE_TEST
+> +	depends on WATCHDOG && WATCHDOG_CORE
+> +	help
+> +	  Enables support for the timers and watchdogs found on NVIDIA
+> +	  Tegra186 and later SoCs.
 
-Making an unfair rwsem that prefer readers (like the original rwlock
-semantics) is certainly doable. I don't think that is hard to do. I can
-think of 2 possible ways to do that. We=C2=A0 could make the unfairness
-globally applies to all the readers of a rwsem by defining the fairness
-state at init time. That will require keeping the state in the rwsem
-structure increasing its size.
+Personally, I'd like to see this in drivers/watchdog/ because I've seen
+cases where subsys maintainers are doing bulk-changes to drivers and
+missing those that reside outside of the subsys directory.
 
-Another alternative is to add new functions like down_read_unfair() that
-perform unfair read locking for its callers. That will require less code
-change, but the calling functions have to make the right choice.
+But, that's not to me to decide, so I don't really mind.
 
-Cheers,
-Longman
+...
+> +static void tegra186_wdt_enable(struct tegra186_wdt *wdt)
+> +{
+> +	struct tegra186_timer *tegra = wdt->tmr->parent;
+> +	u32 value;
+> +
+> +	/* unmask hardware IRQ, this may have been lost across powergate */
+> +	value = TKEIE_WDT_MASK(wdt->index, 1);
+> +	writel(value, tegra->regs + TKEIE(wdt->tmr->hwirq));
 
-
+Perhaps this one also could be relaxed, for consistency. Sorry for
+missing it in v2 :)
