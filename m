@@ -2,111 +2,125 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC7FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DF7C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6750F206F7
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5D2206D4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:14:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gkz39G++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgDDFOh (ORCPT
+        id S1726077AbgDDFOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 01:14:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:20416 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgDDFOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 01:14:37 -0400
-IronPort-SDR: sNg7+XhwNe7+VMbYDOncI814nOTz8lk4c5mBZ77AYxvD2Lw3W6Lgb5AycpNEUMORaUprk8TT/O
- LJLK1oPTa79A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 22:14:36 -0700
-IronPort-SDR: WsrgfXpQrVQnchJaZq+bi7mBvZ3kcbN+sfxIuXKBCrgtlsXmYOxUjrr4L5qiwFvTUMqURrunEj
- aBRVQCF/7+cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,342,1580803200"; 
-   d="scan'208";a="360723667"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2020 22:14:34 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jKb8b-000A3Q-Ph; Sat, 04 Apr 2020 13:14:33 +0800
-Date:   Sat, 4 Apr 2020 13:14:03 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     kbuild-all@lists.01.org, Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 05/14] power: supply: bq25890: fix ADC mode configuration
-Message-ID: <202004041339.5x3xwKVj%lkp@intel.com>
-References: <a1275df1b8de5112d81e4f0b57f34af34a4a0942.1585838678.git.mirq-linux@rere.qmqm.pl>
+        Sat, 4 Apr 2020 01:14:40 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51563 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725957AbgDDFOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 01:14:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585977278;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ZpFf/EoCFh5H+QhRcDIRFMLkLiYNbq7Buj4lk/PV9+E=;
+        b=Gkz39G++aYlnMkwUgw1TjGcNADhbWXvaH3nYNBLmmCHtbj8LoS0cHfD2+CG1Z7RKE+SIk6
+        wHeg4Hz1R6JC84u1++NS6dO44BZ6ZO5jK1RngfFl7FKmCgy1o9/Ek7uAPHAUMt+Jy4rf6f
+        guHlY/h1+Z3fa/76SI+mvaTlxfrKl2g=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-276-0xgC6SnvMRSLsmNc8VYbNg-1; Sat, 04 Apr 2020 01:14:36 -0400
+X-MC-Unique: 0xgC6SnvMRSLsmNc8VYbNg-1
+Received: by mail-qv1-f70.google.com with SMTP id h12so7735518qvx.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 22:14:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZpFf/EoCFh5H+QhRcDIRFMLkLiYNbq7Buj4lk/PV9+E=;
+        b=p/IVH847ACs3AoDvLjiPvlnIRvQJTo+Zs8gYN1l38B9VdXXZgBR/fCxvwH/CReLWFj
+         /WrPOuyWHwXt5St7wJ41yJR0JGWdf43qN9QllbhB19fuCFR47yPRxiwFjT4IFrJ69sY0
+         CXcXxbtYfmSy/XAmftGfj2bAKuX3bRtnBxAv4ypswjNEsJvpLjF30o7br0uAJ1NgsKvZ
+         oCDfFjzzathafP/KT0A8bNrcVc9PS65wmRE3lRSLKtFcfc+Qu+KdLKdOI1loIX4WSzOh
+         RUelAEHvMai+gkP8avcb5OGViPqkHVvNuCoOUA1o9zzp8nfIxFiDJJQGVHMy1d8hK+t3
+         LlKg==
+X-Gm-Message-State: AGi0PuYIOCAM89kghkHh3T/RdxMlOgOf5XIe4Ty72CEqZ7dl+MhIUXDZ
+        lZ9bdEho30zkqvDrnDvCQ4MeGeSuVK2d9e3PErdPltNoF9T1cWR33lkvsXvprxyCnc6zVpF2kMG
+        qIc6S/V/ZNV8d8Z6gE9OBKaIh
+X-Received: by 2002:a37:bc81:: with SMTP id m123mr12055897qkf.319.1585977276502;
+        Fri, 03 Apr 2020 22:14:36 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKViJKhK46Bek5h3iQkjtptKzLOTEk2G1SgElgDH20cPIvTEPA2VrkO8I0zh/Xbyt+SD5/dCQ==
+X-Received: by 2002:a37:bc81:: with SMTP id m123mr12055873qkf.319.1585977275982;
+        Fri, 03 Apr 2020 22:14:35 -0700 (PDT)
+Received: from dev.jcline.org.com ([136.56.87.133])
+        by smtp.gmail.com with ESMTPSA id t23sm8844247qtj.63.2020.04.03.22.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 22:14:35 -0700 (PDT)
+From:   Jeremy Cline <jcline@redhat.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeremy Cline <jcline@redhat.com>
+Subject: [PATCH] libbpf: Initialize *nl_pid so gcc 10 is happy
+Date:   Sat,  4 Apr 2020 01:14:30 -0400
+Message-Id: <20200404051430.698058-1-jcline@redhat.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a1275df1b8de5112d81e4f0b57f34af34a4a0942.1585838678.git.mirq-linux@rere.qmqm.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi "Michał,
+Builds of Fedora's kernel-tools package started to fail with "may be
+used uninitialized" warnings for nl_pid in bpf_set_link_xdp_fd() and
+bpf_get_link_xdp_info() on the s390 architecture.
 
-I love your patch! Perhaps something to improve:
+Although libbpf_netlink_open() always returns a negative number when it
+does not set *nl_pid, the compiler does not determine this and thus
+believes the variable might be used uninitialized. Assuage gcc's fears
+by explicitly initializing nl_pid.
 
-[auto build test WARNING on power-supply/for-next]
-[also build test WARNING on linus/master v5.6 next-20200403]
-[cannot apply to linux/master]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Micha-Miros-aw/power-supply-bq25890-fix-and-extend/20200404-010738
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-188-g79f7ac98-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
-   drivers/power/supply/bq25890_charger.c:381:14: sparse: sparse: undefined identifier 'POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW'
-   drivers/power/supply/bq25890_charger.c:382:14: sparse: sparse: undefined identifier 'POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW'
->> drivers/power/supply/bq25890_charger.c:381:14: sparse: sparse: incompatible types for 'case' statement
-   drivers/power/supply/bq25890_charger.c:382:14: sparse: sparse: incompatible types for 'case' statement
-   drivers/power/supply/bq25890_charger.c:686:23: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected unsigned int enum power_supply_property *properties @@    got unsignunsigned int enum power_supply_property *properties @@
-   drivers/power/supply/bq25890_charger.c:686:23: sparse:    expected unsigned int enum power_supply_property *properties
-   drivers/power/supply/bq25890_charger.c:686:23: sparse:    got unsigned int enum power_supply_property const *
-   drivers/power/supply/bq25890_charger.c:381:14: sparse: sparse: Expected constant expression in case statement
-   drivers/power/supply/bq25890_charger.c:382:14: sparse: sparse: Expected constant expression in case statement
-
-vim +/case +381 drivers/power/supply/bq25890_charger.c
-
-   377	
-   378	static bool bq25890_is_adc_property(enum power_supply_property psp)
-   379	{
-   380		switch (psp) {
- > 381		case POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW:
-   382		case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW:
-   383		case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-   384		case POWER_SUPPLY_PROP_CURRENT_NOW:
-   385			return true;
-   386	
-   387		default:
-   388			return false;
-   389		}
-   390	}
-   391	
-
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1807781
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ tools/lib/bpf/netlink.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/lib/bpf/netlink.c b/tools/lib/bpf/netlink.c
+index 18b5319025e19..9a14694176de0 100644
+--- a/tools/lib/bpf/netlink.c
++++ b/tools/lib/bpf/netlink.c
+@@ -142,7 +142,7 @@ static int __bpf_set_link_xdp_fd_replace(int ifindex, int fd, int old_fd,
+ 		struct ifinfomsg ifinfo;
+ 		char             attrbuf[64];
+ 	} req;
+-	__u32 nl_pid;
++	__u32 nl_pid = 0;
+ 
+ 	sock = libbpf_netlink_open(&nl_pid);
+ 	if (sock < 0)
+@@ -288,7 +288,7 @@ int bpf_get_link_xdp_info(int ifindex, struct xdp_link_info *info,
+ {
+ 	struct xdp_id_md xdp_id = {};
+ 	int sock, ret;
+-	__u32 nl_pid;
++	__u32 nl_pid = 0;
+ 	__u32 mask;
+ 
+ 	if (flags & ~XDP_FLAGS_MASK || !info_size)
+-- 
+2.26.0
+
