@@ -2,162 +2,176 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC06EC2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A380BC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 982B5206F8
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:46:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rv/r05mv"
+	by mail.kernel.org (Postfix) with ESMTP id 72DC8206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586015216;
+	bh=WJRemwJCqzpDcI6pJ9JuFYK2/3qEZkXB/hThgp1+WDs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EerOKW+hy2l4hE/1WS8SzwJYBddgiOXBnM14H6rWSizPhkiHFnSMiAC9xq879sggn
+	 gVDziKkJZBShlrTBdgde5AJfb/X4poiDiwx6rdc5benFqDU1MzZerEaPAVI1NksaqS
+	 Bk1dsnliCvcUqBUpXvTk2wWYtGkeAccFj8nPn0DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgDDPqd (ORCPT
+        id S1726395AbgDDPqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 11:46:33 -0400
-Received: from mout.web.de ([212.227.17.12]:59571 "EHLO mout.web.de"
+        Sat, 4 Apr 2020 11:46:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgDDPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 11:46:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586015133;
-        bh=KyZgrczXO1krNBmQKvyLbqtYplTFmZVQJf5tbfA9XAQ=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=rv/r05mv0bWQEBoppGvuBm7ghbmsMeciPx+aPne91DIO611O1oUD/TG8D0vALtTKw
-         2ns84eIp+dhVzT4zAF/bXkG+dWN+F57/KIrjIWLWLZlfiysHZpN8VVM+WpQmI6o+ts
-         XPPhd6BgiMz8EzCq+QV8MsjN7zFu6+YLZeQSLBnw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.132.181.229]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LvjrE-1jFAOn0ImK-017RWz; Sat, 04
- Apr 2020 17:45:33 +0200
-To:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Maxime Ripard <mripard@kernel.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] crypto: sun8i-ss - Delete an error message in
- sun8i_ss_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <c7e1193f-7d8b-7da3-a2a8-e92ca0fd83b2@web.de>
-Date:   Sat, 4 Apr 2020 17:45:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726039AbgDDPqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 11:46:55 -0400
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97845206C3;
+        Sat,  4 Apr 2020 15:46:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586015213;
+        bh=WJRemwJCqzpDcI6pJ9JuFYK2/3qEZkXB/hThgp1+WDs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TIYkobiaZmaasIZmR6h4Q1DdVRaXr1785QzuvlU9dd/AoXtDZ6Y0gBE1O/ewnwcjE
+         rWVoc0dI+EKeV6zAte9vbrxi9Lo23C/DePzk6Z0mJtfRIDD5DV55QNHbG+ZiesJxbY
+         gdN7yfQg8uqBJ5y2O1MJxFjDwHv5KGoNL/G9WFyc=
+Received: by mail-ed1-f45.google.com with SMTP id c7so5386842edl.2;
+        Sat, 04 Apr 2020 08:46:53 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaDS8rHkM5X1LG7d4E4ZLeL/kfvp56LG+IooSDIKBqs0V042c3+
+        9O+d0SRlh4h3FXHhCM9f4074eTnUKojoVX106g==
+X-Google-Smtp-Source: APiQypK7z+HsfAmBbW8fRL2j4biTCkMbLc7PDBmY54QJwJhjpBtAQh3RlWcMHGlQ9VeMeZHePyRCYJTqhyjeIPOpuk0=
+X-Received: by 2002:a05:6402:335:: with SMTP id q21mr3140080edw.47.1586015212120;
+ Sat, 04 Apr 2020 08:46:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+References: <20200331082725.81048-1-jitao.shi@mediatek.com> <20200331082725.81048-4-jitao.shi@mediatek.com>
+In-Reply-To: <20200331082725.81048-4-jitao.shi@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 4 Apr 2020 23:46:40 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9=uyfSYms_F=T8guvB9Bx9V=Pjo1TtmmfihMgSj1dt9Q@mail.gmail.com>
+Message-ID: <CAAOTY_9=uyfSYms_F=T8guvB9Bx9V=Pjo1TtmmfihMgSj1dt9Q@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] drm/mediatek: add the mipitx driving control
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, huijuan.xie@mediatek.com,
+        stonea168@163.com, cawa.cheng@mediatek.com,
+        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5FpBcij+BqOT5cKfMWMBchVp2+6GIQ1CHyZL6N5QI8MkwA+O2Y/
- p+TJVNMRqZYn1e7bnPMHnFMzKgN39KQhIJiEq7PKeT1pKnlSy/EX8Iddy9Didxe39peh21j
- s/J4i9Uxd91JkSaS4pAM7JrhRUndYCix3Mn0PsQKzujGxemw0gtFswfvFa93GQsOUorpFsU
- 7Ia7W6sahLiDignwC8gjQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zQK96incmDI=:eomnBbkuIuiqgCU+A935Is
- YmUsLZRJlPk7iguUUreebPM92qLvn/xDTrRj5V4L2c7ADdAY6KqATOyTgAxWxBrhjboWo+ur/
- ejH60oYqgME00FUUqetvAxM3y8MDL0epgVcZDIFKxju0NxW07gOWFOhMkFFJibOghuM1FQKCD
- y3fxDI2cO2EiXEbSWfE2HpjZ/UH/5CKPXj5yNNBGvm1YBKl/xtBD4+Kc9GEL5sb06gq4O8wGO
- 2qvYGtbpzIfaUlXAYul4ugxrm28TtOx5spmbOhY5hUN3jwWMEFn8uCgoYy8xkN00l1UZzxMPa
- wRKQkLe9607pG9nZ1mOjBJ/LxLy/1L2PZWWidYV3MlCHl/Tv9fzZJIYlqNdRB0vibxLf6+OdV
- qk9BQOPjD/O7SScwCY+weXd/fxpLc9hcY9MQzqJj5JRxHkgWdFJpB5BjQd6Si/uHAquCn+cAB
- Jrgw15d6egWJ/W8iSykIa+eZ67vt4PvoulS1TeGI0YBAs8GSfuG2L6JFkn1De9b0eFNphMzEF
- 4JUXNZlTo26pDycPV2u6UmOUca1K70BUJwejRexC2YJHwlCLoNq94NlmE5zmtJRyd7qvPnvNa
- EP1xiQtXkEe0YHY2uHDRtH9aBlRmgSAHLSGGkiW9GHtk3sH+ZUJK9HFwmqxIlG53JkHApH9Bj
- vwXRoo2KBy0336qnKeTPdOqj+T7x7+dD/AgGEgA65XXB/Nz/Iq3aOOIHZCkMj/wmPylFmiScX
- NeTzdZ919cMEWQpBjmMCirqr9HgtNg2snF3XSgxFC750qiSQeVLwqPKFXZRko5hOcukwzAISD
- q75Fjg806E2uo+KF4Fo6uARGG5hxbQoMWV2by9F168i47PexgEmlitC+x64rVSU05qr3E2f1V
- qAgSkfKBe89l4JEDVUI4IMBsQJM+4GAs9I/0JGPg3u758Jek7w3AkMBhrHtXm80wJbllvUuqq
- FbOG4sKsCXZ9lYIH8+Kqw4sh+7Q7Qrj5mcLcpQkSoMfVw2IG7tT5It5YPLmJU97j7gNKHfm4I
- MZx7cnVl03QqSxuBLCsRvbjrgYnLyW98UHkBZyymPx+Vj6yPfeIzG84x3oS4z35VKbeo69cgQ
- JcXsgFmIEZtKnA3YnqtXkOCAX1GifcGJDKLHsaA77P4Fzonp4EETMciiFTPIney0En+FZdFTX
- FiLSc4ygy5gJQZNP/QjCpQ7W5qgJwCxc4gZDdfrSSIqfC5Z2JatjN2b2DtQNCJDRK4Ldvkj55
- C9cuyhZFlMQppOhXF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 4 Apr 2020 17:34:53 +0200
+Hi, Jitao:
 
-The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
-Thus omit a redundant message for the exception handling in the
-calling function.
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=8831=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:28=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Add a property in device tree to control the driving by different
+> board.
 
-This issue was detected by using the Coccinelle software.
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c b/drivers/c=
-rypto/allwinner/sun8i-ss/sun8i-ss-core.c
-index 6b301afffd11..a1fb2fbdbe7b 100644
-=2D-- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-@@ -537,10 +537,8 @@ static int sun8i_ss_probe(struct platform_device *pde=
-v)
- 		return err;
-
- 	irq =3D platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(ss->dev, "Cannot get SecuritySystem IRQ\n");
-+	if (irq < 0)
- 		return irq;
--	}
-
- 	ss->reset =3D devm_reset_control_get(&pdev->dev, NULL);
- 	if (IS_ERR(ss->reset)) {
-=2D-
-2.26.0
-
+>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 14 ++++++++++++++
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  1 +
+>  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c |  7 +++++++
+>  3 files changed, 22 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/med=
+iatek/mtk_mipi_tx.c
+> index e4d34484ecc8..e301af64809e 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> @@ -125,6 +125,20 @@ static int mtk_mipi_tx_probe(struct platform_device =
+*pdev)
+>                 return ret;
+>         }
+>
+> +       ret =3D of_property_read_u32(dev->of_node, "drive-strength-microa=
+mp",
+> +                                  &mipi_tx->mipitx_drive);
+> +       /* If can't get the "mipi_tx->mipitx_drive", set it default 0x8 *=
+/
+> +       if (ret < 0)
+> +               mipi_tx->mipitx_drive =3D 4600;
+> +
+> +       /* check the mipitx_drive valid */
+> +       if (mipi_tx->mipitx_drive > 6000 || mipi_tx->mipitx_drive < 3000)=
+ {
+> +               dev_warn(dev, "drive-strength-microamp is invalid %d, not=
+ in 3000 ~ 6000\n",
+> +                        mipi_tx->mipitx_drive);
+> +               mipi_tx->mipitx_drive =3D clamp_val(mipi_tx->mipitx_drive=
+, 3000,
+> +                                                 6000);
+> +       }
+> +
+>         ref_clk_name =3D __clk_get_name(ref_clk);
+>
+>         ret =3D of_property_read_string(dev->of_node, "clock-output-names=
+",
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h b/drivers/gpu/drm/med=
+iatek/mtk_mipi_tx.h
+> index 413f35d86219..eea44327fe9f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+> @@ -27,6 +27,7 @@ struct mtk_mipi_tx {
+>         struct device *dev;
+>         void __iomem *regs;
+>         u32 data_rate;
+> +       u32 mipitx_drive;
+>         const struct mtk_mipitx_data *driver_data;
+>         struct clk_hw pll_hw;
+>         struct clk *pll;
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/gpu/=
+drm/mediatek/mtk_mt8183_mipi_tx.c
+> index 91f08a351fd0..e4cc967750cb 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> @@ -17,6 +17,9 @@
+>  #define RG_DSI_BG_CORE_EN              BIT(7)
+>  #define RG_DSI_PAD_TIEL_SEL            BIT(8)
+>
+> +#define MIPITX_VOLTAGE_SEL     0x0010
+> +#define RG_DSI_HSTX_LDO_REF_SEL                (0xf << 6)
+> +
+>  #define MIPITX_PLL_PWR         0x0028
+>  #define MIPITX_PLL_CON0                0x002c
+>  #define MIPITX_PLL_CON1                0x0030
+> @@ -123,6 +126,10 @@ static void mtk_mipi_tx_power_on_signal(struct phy *=
+phy)
+>         mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_E=
+N);
+>         mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_E=
+N);
+>
+> +       mtk_mipi_tx_update_bits(mipi_tx, MIPITX_VOLTAGE_SEL,
+> +                               RG_DSI_HSTX_LDO_REF_SEL,
+> +                               (mipi_tx->mipitx_drive - 3000) / 200 << 6=
+);
+> +
+>         mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKMODE_=
+EN);
+>  }
+>
+> --
+> 2.21.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
