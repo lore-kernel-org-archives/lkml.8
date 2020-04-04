@@ -7,129 +7,160 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150F9C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 07:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE80C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 07:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0A6206B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 07:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01EFF206B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 07:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="K9YbTwii"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="U/z7FaYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgDDHb3 (ORCPT
+        id S1726407AbgDDHbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 03:31:29 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:45514 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgDDHb2 (ORCPT
+        Sat, 4 Apr 2020 03:31:32 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:41697 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgDDHba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 03:31:28 -0400
-Received: by mail-ua1-f65.google.com with SMTP id 9so3607210uav.12
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 00:31:27 -0700 (PDT)
+        Sat, 4 Apr 2020 03:31:30 -0400
+Received: by mail-vs1-f67.google.com with SMTP id a63so6463003vsa.8
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 00:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dXNBeLfM6R3R19w3bxqedjhSw7Yhw0sbY/Bu8wxHhNM=;
-        b=K9YbTwiiwL/a4VLDnpu5F3Hq8KeS8sp2Bogf3BWS8wg6wCIlaDysaRLwg2ST82QLUR
-         nUQpTR/v1zRda+156B0X8ftbXO2WUt6H26B8+4YfKy43SMkveIuOnbwDuihA4edy+PzM
-         WW2xHUZjnYmwUS4RJwf7/q8cV3nzbsfFQi+xqKtsIDuKJl2qsk3YdmCkxBoe96HfyzVa
-         hOha+K3Crr31w3B/0eXDmTQwhbr5xXgEP+GwVrdbJsaTPImW/qnL6DZUfMwMnUOvDNR/
-         LkImfM5LUM0Vzas4XekGUg8OljE0XwgWF4krPz/WrqRzhqyYCJwwfVpRBIaC81uGjvgf
-         k1Ig==
+        bh=PM54+TAF+g/S8Jdu48v4vdALgU1uHmqD41DlN+nN2GQ=;
+        b=U/z7FaYgCxrifjRMbUMuNc48xDQkG1azVQ1qAqD5C7gQ2BC0+SFLokHqrseBZoS9BZ
+         HhrCnBVjIlsNzTSk4g9jfL9JJz+m5CKI+s5CrxslyKnjLoTsEBG8QO2itdwefQVPu7Sh
+         RWs2OJabHZCg++IlG5djjUt5kNFHWUOxPGGHY1AUmooXc5/Kvu95qNG/RJNI1bp408I1
+         rv4YucMhPRAVJiiew6KxAcltBjYQn1wwVVPeylGsfx2YHhAuDgZgIaV+C9Eq+6VzjDvp
+         i2sBU69P9pmQehnOz4LSQCQfw45G1MRqFniKV+pNE9TYCEJv2jY/nLd6aPv16oy5YDpy
+         UvZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dXNBeLfM6R3R19w3bxqedjhSw7Yhw0sbY/Bu8wxHhNM=;
-        b=QI/hEdDodPKu7oSV4IQQJ9XTOgzONMhH4RofivibJ3Vy1g/2iubpU94hPIcoXJYPeb
-         OZwG8KFRPRcazVUtKgWv7GDqGQBo8tgpgsDx9xjJCiFFfLd2nfk9236678TQzX7jxxiE
-         DL2at6pSWR+jrl2fE3Wt/Bi8Adq5PEOH/9sE6HLrn+I0rSCHfp7BSmSj1hhwtnE27hfY
-         oVboMOY1gCWpptISveL8dkb7cUtntA2QtBJu/vnUl4sH+8uKLbMB4M7XxN65C1ejo04x
-         Dg+qJqGT91Fx08tAYtbmPtrFFA3s6S+aObecQ3hbZYkAY2o0IYUpbVc1Nl97AZlRmwBJ
-         S5eQ==
-X-Gm-Message-State: AGi0Pubn/uFpFVzg8KxvArrUnWo/BpQTCfEcqK841zxZnfFBmzlIpQfI
-        rNzEDb8PZaTiT1ZOu/02fX0aFy2UCSCCCSBsVz9i4A==
-X-Google-Smtp-Source: APiQypIq2cyCGz5JZIv/r8tGEb/BpinV5GrEfcNrT3/vbI5ddO5WB/a7RzCBv4uPhl0soQO+cllbNeAjHq87RdpoFB0=
-X-Received: by 2002:ab0:70d9:: with SMTP id r25mr9801332ual.67.1585985486878;
- Sat, 04 Apr 2020 00:31:26 -0700 (PDT)
+        bh=PM54+TAF+g/S8Jdu48v4vdALgU1uHmqD41DlN+nN2GQ=;
+        b=TyfR1QOl4nsGFDz1yIqKaciMmtb8oer7b4IZQaLsyUqVmCCfNeWx4IQofAMK7s/RNi
+         6GtAi+3dgxNNgZQDYPzdW0mYMLcBWhZBAONy35DK+3iAVl5TolO+Vl7tnZwRWtaJIfX5
+         yJLJFOKQA2+aOh9AjBrcU3RYhS8I4nLrMW/6QEw3rU9/olGPegMjQWz9z4a/bLITyitY
+         3PX7S3n7wmWUvovp1yNjhclaaGlxqfPzh60A0smsjFa6hTl6SDkqvqyxZWYYLiwjbtWT
+         jV1LbJtBoJk2kMeQMcju0HvNJB7NGDYoagRIYnFeUdUyCUlvFJ7sH/mi+zuFxiGvYzFt
+         Xp8A==
+X-Gm-Message-State: AGi0PuYCu+4pbdpY8buGHEeXTFC0z9D1wt++CIJ49GCmJw/5fX/gnqNC
+        YJJkRM2zPBp9hwm9a1UBs+XVW+Ets7Zi2hkhugAuUg==
+X-Google-Smtp-Source: APiQypIu/alTBXDgKITDXBctny47stbSvo55Own/Vu8y0I7bxK1KHmvt7pgNCgb+JQCSxYjPHiy+3AH9i6i2tnOhjmE=
+X-Received: by 2002:a67:69d5:: with SMTP id e204mr8446240vsc.159.1585985488361;
+ Sat, 04 Apr 2020 00:31:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200402142747.8307-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20200402142747.8307-1-daniel.lezcano@linaro.org>
+References: <20200331075356.19171-1-j-keerthy@ti.com> <20200331075356.19171-2-j-keerthy@ti.com>
+In-Reply-To: <20200331075356.19171-2-j-keerthy@ti.com>
 From:   Amit Kucheria <amit.kucheria@verdurent.com>
 Date:   Sat, 4 Apr 2020 13:00:00 +0530
-Message-ID: <CAHLCerOXZBA9aoH0Ef9tzcsSnKAQUKwuaCNOyJTakf6uCG+11A@mail.gmail.com>
-Subject: Re: [PATCH V2 1/9] thermal: Move default governor config option to
- the internal header
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+Message-ID: <CAHLCerPrmsMU3uVwQGXfZAsWkgxiG+1M136f6uuWgwB4EF2uGg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: thermal: k3: Add VTM bindings documentation
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, t-kristo@ti.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 7:58 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+On Tue, Mar 31, 2020 at 1:24 PM Keerthy <j-keerthy@ti.com> wrote:
 >
-> The default governor set at compilation time is a thermal internal
-> business, no need to export to the global thermal header.
+> Add VTM bindings documentation. In the Voltage Thermal
+> Management Module(VTM), K3 AM654 supplies a voltage
+> reference and a temperature sensor feature that are gathered in the band
+> gap voltage and temperature sensor (VBGAPTS) module. The band
+> gap provides current and voltage reference for its internal
+> circuits and other analog IP blocks. The analog-to-digital
+> converter (ADC) produces an output value that is proportional
+> to the silicon temperature.
 >
-> Move the config options to the internal header.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/thermal/thermal_core.h | 11 +++++++++++
->  include/linux/thermal.h        | 11 -----------
->  2 files changed, 11 insertions(+), 11 deletions(-)
 >
-> diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-> index 37cd4e2bead2..828305508556 100644
-> --- a/drivers/thermal/thermal_core.h
-> +++ b/drivers/thermal/thermal_core.h
-> @@ -12,6 +12,17 @@
->  #include <linux/device.h>
->  #include <linux/thermal.h>
+> Changes in v5:
 >
-> +/* Default Thermal Governor */
-> +#if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
-> +#define DEFAULT_THERMAL_GOVERNOR       "step_wise"
-> +#elif defined(CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE)
-> +#define DEFAULT_THERMAL_GOVERNOR       "fair_share"
-> +#elif defined(CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE)
-> +#define DEFAULT_THERMAL_GOVERNOR       "user_space"
-> +#elif defined(CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR)
-> +#define DEFAULT_THERMAL_GOVERNOR       "power_allocator"
-> +#endif
+>   * Added Reviewed-by: Rob Herring <robh@kernel.org>
+>
+>  .../bindings/thermal/ti,am654-thermal.yaml    | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> new file mode 100644
+> index 000000000000..d241b65d6072
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/ti,am654-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  /* Initial state of a cooling device during binding */
->  #define THERMAL_NO_TARGET -1UL
->
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index 448841ab0dca..71cff87dcb46 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -32,17 +32,6 @@
->  /* use value, which < 0K, to indicate an invalid/uninitialized temperature */
->  #define THERMAL_TEMP_INVALID   -274000
->
-> -/* Default Thermal Governor */
-> -#if defined(CONFIG_THERMAL_DEFAULT_GOV_STEP_WISE)
-> -#define DEFAULT_THERMAL_GOVERNOR       "step_wise"
-> -#elif defined(CONFIG_THERMAL_DEFAULT_GOV_FAIR_SHARE)
-> -#define DEFAULT_THERMAL_GOVERNOR       "fair_share"
-> -#elif defined(CONFIG_THERMAL_DEFAULT_GOV_USER_SPACE)
-> -#define DEFAULT_THERMAL_GOVERNOR       "user_space"
-> -#elif defined(CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR)
-> -#define DEFAULT_THERMAL_GOVERNOR       "power_allocator"
-> -#endif
-> -
->  struct thermal_zone_device;
->  struct thermal_cooling_device;
->  struct thermal_instance;
+> +title: Texas Instruments AM654 VTM (DTS) binding
+> +
+> +maintainers:
+> +  - Keerthy <j-keerthy@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,am654-vtm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  "#thermal-sensor-cells":
+> +    const: 1
+> +
+> +required:
+> +  - "#thermal-sensor-cells"
+> +  - compatible
+> +  - reg
+> +  - power-domains
+> +
+
+A nit-pick: arrange the required properties in order they're listed above.
+
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +    vtm: thermal@42050000 {
+> +        compatible = "ti,am654-vtm";
+> +        reg = <0x0 0x42050000 0x0 0x25c>;
+> +        power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
+> +        #thermal-sensor-cells = <1>;
+> +    };
+> +
+> +    mpu0_thermal: mpu0_thermal {
+> +        polling-delay-passive = <250>; /* milliseconds */
+> +        polling-delay = <500>; /* milliseconds */
+> +        thermal-sensors = <&vtm0 0>;
+> +
+> +        trips {
+> +                mpu0_crit: mpu0_crit {
+> +                        temperature = <125000>; /* milliCelsius */
+> +                        hysteresis = <2000>; /* milliCelsius */
+> +                        type = "critical";
+> +                };
+> +        };
+> +    };
+> +...
 > --
 > 2.17.1
 >
