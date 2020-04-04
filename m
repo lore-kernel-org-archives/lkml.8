@@ -2,164 +2,100 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10A5C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C40FC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C463E206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CACF206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="KVr7ugD1"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="fxQvOM9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgDDT57 (ORCPT
+        id S1726377AbgDDT6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 15:57:59 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41735 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgDDT56 (ORCPT
+        Sat, 4 Apr 2020 15:58:13 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46205 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgDDT6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 15:57:58 -0400
-Received: by mail-qt1-f193.google.com with SMTP id i3so9519939qtv.8
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 12:57:56 -0700 (PDT)
+        Sat, 4 Apr 2020 15:58:13 -0400
+Received: by mail-lf1-f66.google.com with SMTP id q5so8591425lfb.13
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 12:58:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9CbVDZTIMk5DedKHwOhqZguosZYkuF+efmzxSvwSHmA=;
-        b=KVr7ugD1uCChONGUAtH0ZrG1JFeu24vOGuBSUCXWE9Hd/QJ6QGr2dmamlEzvoswCpj
-         8o9wKR62qOm72sk7VVi5b8MpjFHEnicmKJh86KHMgBuj5wQLnq/P6MlDkNo8xrERB2eD
-         Xg8Y3KzC7dxU+ioN1VAr8OUON4n7JstpkEL6w=
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fteReWnRxKhJdJWjlTSPXgrS3vLMPMuiU4lJg9jIfSg=;
+        b=fxQvOM9Lay46fYPKSDwRyjYD4lXBlyxEjdno5ma6bzlVNdYRGOuWf/tbaUv/55Q2lP
+         EVY09E/9dAK2jBbFJeg9lDuSAWqqeksSjOU37unrtRrFJyhzd6tATm71K8eXlp2Gr+Xf
+         un6AHFnxDD9q+D16pjQltDO0eaN61u+s+/mBaAdzSsY8AvFnCUZgVRf9CJetzRN4ZpVM
+         bF/w1Kf5Oi7aqHjrJLTNEbsQOTHkYDaGfmER7lPy2oCVuWIJthlpUotXne6dcIlvr6NR
+         w4XcTrX8P4vmYX8fYB4/ajJSYBOUTjKlTtOdGFhR2m+on9qo3p4kPeGCbzdSr+v7AFxw
+         8egA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9CbVDZTIMk5DedKHwOhqZguosZYkuF+efmzxSvwSHmA=;
-        b=D3dW6yvUfvVY+6kBIeYTmt7QeGCAx+5vkT5zQmzx3jJmo6yB1Eqe+D6yEuLIp9FqVm
-         elyV1jFG3l5ZJLd3393qc3z+zBoq+cKphqvgrlv5G9j6VHwfzeCfrxextx6YsFoNplSG
-         p2C2HL61i9TqL3hO1yIMQxSRJp9q0ljALbertPZf28tZHM1vqjIU1uAvPKxrwvm7BHvQ
-         +ppv+8t2enYZ8UJTGff/A1eDCfLyytxEPv5y2h1m93mzm9lGtmXG7PQQ4WX4lDeZj1hz
-         sgWbKtSA99zBiMM9WENoB9hNsRaiuaXHqjKUrAIQ6YBkRnhw6F2vnN1PozDcLyjgAHzw
-         bZ0w==
-X-Gm-Message-State: AGi0PuZsPuF9yFvVKIXz9uvoB12M/ec/VOZaETiLj6BMNGy5E4vFhy2Z
-        Cfxs0m+6E7fdOqUxhN4eOe8q9Q==
-X-Google-Smtp-Source: APiQypLKG/hPeALBgzrGmT3BqaE9y/Jr3Gs9BPj6JbRbIsn3Qc3jFF/ApsTcSf//hZQhFM/LuuyVsg==
-X-Received: by 2002:ac8:f4a:: with SMTP id l10mr14435539qtk.146.1586030276074;
-        Sat, 04 Apr 2020 12:57:56 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id w17sm1403373qkb.11.2020.04.04.12.57.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 12:57:55 -0700 (PDT)
-Date:   Sat, 4 Apr 2020 15:57:55 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] Documentation/litmus-tests: Add litmus tests for
- atomic APIs
-Message-ID: <20200404195755.GB83565@google.com>
-References: <20200326024022.7566-1-boqun.feng@gmail.com>
- <20200327221843.GA226939@google.com>
- <20200331014037.GB59159@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200402035816.GA46686@google.com>
- <20200402080358.GC59159@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fteReWnRxKhJdJWjlTSPXgrS3vLMPMuiU4lJg9jIfSg=;
+        b=N7u/cxbyD4MRxDUu4fOF9lbZFLu0hZEqfBlrTUzq2E6Z+GeytBg2vJlCT6/b0WBKoW
+         SIoPTfLQenR0xONxdy4rZrA9o6UKWoW83q23N1wjUfzIocn8lBf23qQ6Rs28F8SbPUG9
+         +Qid78V09g+9vdhwvKIPz3CWiodgytoeMw+OshvwmNJqUnYcAqMprEuaKxiTh5we3oq4
+         ozpxdxMkj4s7py36xZPLnrogBEGTHph6kYTxqrLLocRq6GdfeIbvAYTYvsMUXpXAPlMY
+         sr2Qib9dFEVuv5uas7OGjAjhjHKxbqDUhT+0TyeBanOqAxvSy19+4Q5Dn3QSHXsZiFC6
+         jy8Q==
+X-Gm-Message-State: AGi0PuZs+Su6xt7oxPPgb7nxedLXTY277cNjM4l4tIZn3NHsesbALbUa
+        OYGZvciSnM2LxK+J7H3oRHuCJzXhSf8=
+X-Google-Smtp-Source: APiQypKdP67XgZkBynzeqRe85FshGKIefaHHc1NIHPIiUZ8B4LhIHwK14iHkq0dRQYef5S2pU2TzEA==
+X-Received: by 2002:ac2:4554:: with SMTP id j20mr905472lfm.91.1586030289580;
+        Sat, 04 Apr 2020 12:58:09 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:44d4:5e2:6cf1:70e1:48ed:4ff5])
+        by smtp.gmail.com with ESMTPSA id 64sm1352580lfh.32.2020.04.04.12.58.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 Apr 2020 12:58:08 -0700 (PDT)
+Subject: Re: [PATCH] ata:ahci_xgene:use devm_platform_ioremap_resource() to
+ simplify code
+To:     =?UTF-8?B?5ZSQ5b2s?= <tangbin@cmss.chinamobile.com>,
+        axboe <axboe@kernel.dk>
+Cc:     linux-ide <linux-ide@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200401084952.5828-1-tangbin@cmss.chinamobile.com>
+ <c1cfde01-769d-2904-3be3-a41cc51c1519@cogentembedded.com>
+ <202004011744223003066@cmss.chinamobile.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <84628923-02d6-ae1e-fb23-373ad090d706@cogentembedded.com>
+Date:   Sat, 4 Apr 2020 22:58:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402080358.GC59159@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+In-Reply-To: <202004011744223003066@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 04:03:58PM +0800, Boqun Feng wrote:
-> On Wed, Apr 01, 2020 at 11:58:16PM -0400, Joel Fernandes wrote:
-> > On Tue, Mar 31, 2020 at 09:40:37AM +0800, Boqun Feng wrote:
-> > > On Fri, Mar 27, 2020 at 06:18:43PM -0400, Joel Fernandes wrote:
-> > > > On Thu, Mar 26, 2020 at 10:40:18AM +0800, Boqun Feng wrote:
-> > > > > A recent discussion raises up the requirement for having test cases for
-> > > > > atomic APIs:
-> > > > > 
-> > > > > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
-> > > > > 
-> > > > > , and since we already have a way to generate a test module from a
-> > > > > litmus test with klitmus[1]. It makes sense that we add more litmus
-> > > > > tests for atomic APIs. And based on the previous discussion, I create a
-> > > > > new directory Documentation/atomic-tests and put these litmus tests
-> > > > > here.
-> > > > > 
-> > > > > This patchset starts the work by adding the litmus tests which are
-> > > > > already used in atomic_t.txt, and also improve the atomic_t.txt to make
-> > > > > it consistent with the litmus tests.
-> > > > > 
-> > > > > Previous version:
-> > > > > v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
-> > > > > v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
-> > > > > v3: https://lore.kernel.org/linux-doc/20200227004049.6853-1-boqun.feng@gmail.com/
-> > > > 
-> > > > For full series:
-> > > > 
-> > > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > 
-> > > > One question I had was in the existing atomic_set() documentation, it talks
-> > > > about atomic_add_unless() implementation based on locking could have issues.
-> > > > It says the way to fix such cases is:
-> > > > 
-> > > > Quote:
-> > > >     the typical solution is to then implement atomic_set{}() with
-> > > >     atomic_xchg().
-> > > > 
-> > > > I didn't get how using atomic_xchg() fixes it. Is the assumption there that
-> > > > atomic_xchg() would be implemented using locking to avoid atomic_set() having
-> > > 
-> > > Right, I think that's the intent of the sentence.
-> > > 
-> > > > issues? If so, we could clarify that in the document.
-> > > > 
-> > > 
-> > > Patches are welcome ;-)
-> > 
-> > 
-> > ---8<-----------------------
-> > 
-> > Like this? I'll add it to my tree and send it to Paul during my next
-> > series, unless you disagree ;-)
-> > 
-> > Subject: [PATCH] doc: atomic_t: Document better about the locking within
-> >  atomic_xchg()
-> > 
-> > It is not fully clear how the atomic_set() would not cause an issue with
-> > preservation of the atomicity of RMW in this example. Make it clear that
-> > locking within atomic_xchg() would save the day.
-> > 
-> > Suggested-by: Boqun Feng <boqun.feng@gmail.com>
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> Thanks!
-> 
-> Acked-by: Boqun Feng <boqun.feng@gmail.com>
+Hello!
 
-Thanks for the Ack, will send it to Paul during next series with your tag.
+On 04/01/2020 12:44 PM, 唐彬 wrote:
 
- - Joel
+>         I think the previous code in memory resource #4 to use 'csr' maybe useless，if
+> devm_ioremap_resource() failed，the function will return, the 'ctx->csr_mux = csr'  will 
+> become useless。So I do the same way as the other three。This's my idea, please criticize
+> and correct it。Thank you very much!
 
+   I was unable to understand what you mean here.
+   My point is that the driver happily works if the MUX registers do not exist, and your
+patch makes the driver fail the probe in this case. Even if this was correct, it's usually
+a bad idea to do several thing in the same patch. So, you'd need a patch changing the probing logic before you convert things to devm_platfrom_ioremap_resource()...
+
+[...]
+
+MBR, Sergei
