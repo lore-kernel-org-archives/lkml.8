@@ -2,95 +2,99 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A623AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE603C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750C4206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586009629;
-	bh=ZvuleyhiKzg2qJsFUH+wTl9rb8FF4uXXYTWgnvLY7H8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YK6el6pgUweKL7aU2t+E60sEDkofp+CUC3tAvz50zACbQ3OUBfNb0cG0Wyuw7KwCK
-	 pAcPZS1SZZakKVle8p58zOMXSI786Ymq06FtCy/uYlpX2CwhftfxX8BgKjucINXYGk
-	 KLclGIlPpPbUUokMusRMqhniTku5OyKaPQffHFFE=
+	by mail.kernel.org (Postfix) with ESMTP id B2A2F206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:14:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="G6NTYvDu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDDONs (ORCPT
+        id S1726399AbgDDOOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49526 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 10:14:36 -0400
+Received: from mout.gmx.net ([212.227.17.22]:45685 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgDDONs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:13:48 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B64A206D4;
-        Sat,  4 Apr 2020 14:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586009628;
-        bh=ZvuleyhiKzg2qJsFUH+wTl9rb8FF4uXXYTWgnvLY7H8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BUJXJ67HM8feh6Ehp8/PVEKDVNXonHBGWgL+5sdET+uAfflyQJuoOahXckHB8wRtu
-         ydGRnNQl7EV0JLnWFeVSUY6SVQbW4CLjnejlZjN0s2wIxcxh5I4U3jZ24BPtcq4fl1
-         Hc4xAN/itxl5jYnBZUtamOgM4fjgiPQMawaj7NDk=
-Date:   Sat, 4 Apr 2020 15:13:41 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Nishant Malpani <nish.malpani25@gmail.com>, robh+dt@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] dt-bindings: iio: tsl2563: convert bindings to YAML
-Message-ID: <20200404151341.19388a2e@archlinux>
-In-Reply-To: <20200330225934.GA19255@bogus>
-References: <20200318071940.12220-1-nish.malpani25@gmail.com>
-        <20200330225934.GA19255@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726230AbgDDOOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 10:14:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1586009670;
+        bh=hRaUp3hCnZJVEG7mmUIHbMEf8Y5x3Wo+lh+jBopxi5o=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=G6NTYvDuGgE/zgMbr0ldv/Vu9sQYrVu8ywLA/d9vDZKemWDAPfxfGRTrNhzdUNno9
+         4nvRhrWG9aPKcQsg9x5w9JLd07PVOksqnMnelqVZl9Lv4gCcqNmM/0IbGk8FIB6Rxj
+         +hhrKVlYJ6Wxm+eOrrdWz1xcQMHUZgCRxfzd/Tg4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1N1wpt-1j9z9b2BNx-012K2i; Sat, 04 Apr 2020 16:14:30 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] staging: vt6656: Cleanup of the vnt_get_frame_time function
+Date:   Sat,  4 Apr 2020 16:13:57 +0200
+Message-Id: <20200404141400.3772-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:n5f1uHTm3ww255qlGVet1oNDUdp7hKWqHK32lthOs6ALSdAJoQu
+ kblKwI6IdyYZp1Kzbe/b4M37FZ3kNT+ZKZWZilKykKENQQ29AKix1PIL/EqtMSyzRLrU5Ex
+ Fh0YGCak1hhWm8W2DsJav1/6cL57+R6NfAYY/pP80Oee14VJJuXdrmQwfKIemScDBqI3qP/
+ QPDejmM4lJmUXVZIKdLdQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:n0kAG4Sp7Y8=:JSgDBObDv0fUbc7+5d15Oe
+ KAmBf4rVzRZTXxN+HdQ1IeyThvIArBiCWedWzue+bhWQAGCo2iNq9Y9Ep81HT746HVHeQrsBF
+ xy68gUBLLSNDCjzteUhMKCWTI51WoUeUYOi7NcUjE/pgrMc8qcpecmDpXgqzfuheptg2pI7yG
+ ttTtnVQ9xLxqi1WTq4ArSHlz2QpxX2Av3gBqhoH5BUiHzE1GK8IYof/yyoP2/kNF2Fhjv5YVD
+ WJbHKsfiRVKEjyYnenCRvmyFb3mxuoFn8fF2BgYt/+ijOIfmweNHqiLmfN2jS/iVRHtr+qt60
+ Fj/gBIc6WXPjYdkG5vusaiOVXxBEFdDf5HW9Lnft56lgnBhbzjAmjf11wQzhOjwXoazPO/Eel
+ I3GzdBJFnipo7o85ULHZJxtO/qJ3SpEX1aWdokYAvorgrvgOU+PayPoghDDwDEfTdidlyefFb
+ gSjZz7dv1FLP9rpV4yHogvsVXDieWLhCA59zofo3xVntrKWDIcv2Kt7IqdtH1T8OFxg7rRorO
+ 9KuS5iO9h3Y/71xUv8iKfQo6IRnqRdgTTPV0e6NRq4EbAv+13q+Y1nuQFypuTz/c9lYs79cof
+ e5xz6AqIRdX0JYXpDxDApAgGhoa1m+5FlGMERVl/lWKgaj4gdpszlK249MEj47xxDZqByTZjX
+ F6PmfB49DLRrNBNlvBH5YzlbmZsq0++n7qIEI77buUG27U70h0v2Q6GnQ9N5rnRez70UEMO59
+ n8XZJ3zpxnEV28Aq4CkAqkTRgp8w3D+1nsxYlGhaU0pTiyxUI7iaBBmDk6Tl543RnPwk725ce
+ UNXSYtBXR6vG2yDRcbbkq5qzDOQEMNTCq2zZmoFB95Uv0ffUWHpcNdF3dPSjzbnBYkRo7i9Rj
+ EOaw8M26DKex6YGgWTXaWuVFLJ0LbX5VVTVYjVCqMDAbK6jGFAI7Bg4CBc1rwJR982mdvIWvO
+ XmA/q2sykeZTk3pBtwUbIdScCa+WYVAfqZdpKVRNzdKDKadqfWjRLBUagBFgi+cJD4ALtjn9b
+ 6xJRFyd7LvPeKmkHRaoKK3K9hx2ZhOe0CfJcIMvRIXcHAE/OucqNjmCKaql0xyy5ivXVZCKbZ
+ ZAfD9yaV8tAWeLnursRqlFmW/22Es0ReV/XYjomg3QBCEMdk5jy1WLOJODSgXTsLjTvCtfxIX
+ xtRYnv/07eetF5kXt60sZpwEOL72yPwIUXqmgRV0gmSR7n3AobMPv6TL/q4w3Zyu/Gg+6cxwr
+ E7RgZ8LHaZ8DwadxX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 16:59:34 -0600
-Rob Herring <robh@kernel.org> wrote:
+This patch series makes a cleanup of the vnt_get_frame_time function.
 
-> On Wed, 18 Mar 2020 12:49:40 +0530, Nishant Malpani wrote:
-> > Convert the TSL2563 device tree bindings to the new YAML format.
-> > 
-> > Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
-> > ---
-> > 
-> > Changes in v4:
-> >   - Change $id property to reflect corrected relative path.
-> > 
-> > Changes in v3:
-> >   - Include the complete diff (changes from v1).
-> > 
-> > Changes in v2:
-> >   - Rename the dt-bindings to include manufacturer's name.
-> >   - Synchronize the bindings with the driver.
-> > ---
-> >  .../bindings/iio/light/amstaos,tsl2563.yaml   | 49 +++++++++++++++++++
-> >  .../devicetree/bindings/iio/light/tsl2563.txt | 19 -------
-> >  2 files changed, 49 insertions(+), 19 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
-> >   
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+The first patch removes the define RATE_54M and changes it for the
+ARRAY_SIZE macro. This way avoid possibles issues if the size of the
+vnt_frame_time array change in the future but not change accordingly the
+RATE_54M constant.
 
-Thanks,
+The second patch makes use of the define RATE_11M instead of a magic
+number.
 
-Jonathan
+The third patch remove unnecessary local variable initialization.
+
+Oscar Carter (3):
+  staging: vt6656: Use ARRAY_SIZE instead of define RATE_54M
+  staging: vt6656: Use define instead of magic number for tx_rate
+  staging: vt6656: Remove unnecessary local variable initialization
+
+ drivers/staging/vt6656/baseband.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+=2D-
+2.20.1
 
