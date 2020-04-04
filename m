@@ -2,182 +2,80 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8524C2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10FBC2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF31206CC
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C1B206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RQqJwzxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgDDN1S (ORCPT
+        id S1726370AbgDDNci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 09:27:18 -0400
-Received: from mx1.riseup.net ([198.252.153.129]:50944 "EHLO mx1.riseup.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbgDDN1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 09:27:18 -0400
-Received: from bell.riseup.net (unknown [10.0.1.178])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
-        by mx1.riseup.net (Postfix) with ESMTPS id 48vczS5CNZzFf7L;
-        Sat,  4 Apr 2020 06:27:16 -0700 (PDT)
-X-Riseup-User-ID: F8F57A2DDE432EE31E84DE8D17AF1C72D44BF04F35BE92F4EE594C81FF024D1C
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-         by bell.riseup.net (Postfix) with ESMTPSA id 48vczN0GsGzJvNh;
-        Sat,  4 Apr 2020 06:27:11 -0700 (PDT)
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        paul.kocialkowski@bootlin.com, GNUtoo@cyberdimension.org
-References: <CGME20190921125017epcas3p2f5661cca04f0959f9707f6111102435d@epcas3p2.samsung.com>
- <20190921124843.6967-1-joonas.kylmala@iki.fi>
- <d8a8bf25-0c5e-8d94-9406-b1f74e3edfac@samsung.com>
-From:   =?UTF-8?Q?Joonas_Kylm=c3=a4l=c3=a4?= <joonas.kylmala@iki.fi>
-Autocrypt: addr=joonas.kylmala@iki.fi; prefer-encrypt=mutual; keydata=
- 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
- gKPkEg==
-Subject: Re: [PATCH] drm/panel: samsung: s6e8aa0: Add backlight control
- support
-Message-ID: <53385e44-1847-ace0-cd87-5571f6acd3f2@iki.fi>
-Date:   Sat, 4 Apr 2020 16:27:02 +0300
+        Sat, 4 Apr 2020 09:32:38 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41398 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgDDNci (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 09:32:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sKdYVJdX3k84mHqdB1JfFeNgO6VOXjckqROOgUeE4T4=; b=RQqJwzxbWHaBvffTkFmFoeuIT9
+        0KZmodiErmNfv2LtfCUfDyJcjHkH4RfSOsoid7JlkKJUV5p4ScnNpXWzE3P5xzexAeQYc+FSYrS2i
+        DSaqwcVupQPV7yMZHG1+CeA3Ub8qwESC4xifxPz4VkD6B8qd4j4cB5d4lWko4QUvEic+AOt5aA6yT
+        tDfHhJssqVIlazOv4p2qEkzwn5mkkkcQFA36DiUq3ufECxfRLpzCDjNmpAxWGioYRN5qGXrar8Oxz
+        SJFv2y3X3dK1HAUtSWuDomXCt2XKVh94H/Axybee9XKp9DtahS09PRNRHVkBHFJtBExlkop3QdpSy
+        7xaibUIA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKiuM-0008Ff-Hf; Sat, 04 Apr 2020 13:32:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0C0A9304D2B;
+        Sat,  4 Apr 2020 15:32:19 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EE02D2B1362DC; Sat,  4 Apr 2020 15:32:18 +0200 (CEST)
+Date:   Sat, 4 Apr 2020 15:32:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
+Message-ID: <20200404133218.GL20760@hirez.programming.kicks-ass.net>
+References: <20200402082220.808-1-alexandre.chartre@oracle.com>
+ <20200402082220.808-5-alexandre.chartre@oracle.com>
+ <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
+ <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
+ <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
+ <20200402154022.GG20730@hirez.programming.kicks-ass.net>
+ <bc3a31dc-9d59-5756-aad3-187533f05654@redhat.com>
+ <20200403151757.lhhia7pzqptvlqz5@treble>
+ <20200403154620.GS20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <d8a8bf25-0c5e-8d94-9406-b1f74e3edfac@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403154620.GS20730@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 03, 2020 at 05:46:20PM +0200, Peter Zijlstra wrote:
+> On Fri, Apr 03, 2020 at 10:17:57AM -0500, Josh Poimboeuf wrote:
+> > Peter, I think my previous idea for UNWIND_HINT_ADJUST stack_add=8 would
+> > work here?
+> 
+> Yes, it would.
 
-addressing this email to you all since there might be widespread race
-condition issue in the DRM panel drivers that are using MIPI DSI. See
-below for my message.
+Sorry, I have reconsidered. While it will shut up objtool, it will not
+'work'. That is, the ORC data generated will not correctly unwind.
 
-Andrzej Hajda:
->> +static int s6e8aa0_set_brightness(struct backlight_device *bd)
->> +{
->> +	struct s6e8aa0 *ctx = bl_get_data(bd);
->> +	const u8 *gamma;
->> +
->> +	if (ctx->error)
->> +		return;
->> +
->> +	gamma = ctx->variant->gamma_tables[bd->props.brightness];
->> +
->> +	if (ctx->version >= 142)
->> +		s6e8aa0_elvss_nvm_set(ctx);
->> +
->> +	s6e8aa0_dcs_write(ctx, gamma, GAMMA_TABLE_LEN);
->> +
->> +	/* update gamma table. */
->> +	s6e8aa0_dcs_write_seq_static(ctx, 0xf7, 0x03);
->> +
->> +	return s6e8aa0_clear_error(ctx);
->> +}
->> +
->> +static const struct backlight_ops s6e8aa0_backlight_ops = {
->> +	.update_status	= s6e8aa0_set_brightness,
-> 
-> 
-> This is racy, update_status can be called in any time between probe and
-> remove, particularly:
-> 
-> a) before panel enable,
-> 
-> b) during panel enable,
-> 
-> c) when panel is enabled,
-> 
-> d) during panel disable,
-> 
-> e) after panel disable,
-> 
-> 
-> b and d are racy for sure - backlight and drm callbacks are async.
-> 
-> IMO the best solution would be to register backlight after attaching
-> panel to drm, but for this drm_panel_funcs should have attach/detach
-> callbacks (like drm_bridge_funcs),
-> 
-> then update_status callback should take some drm_connector lock to
-> synchronize with drm, and write to hw only when pipe is enabled.
-
-I have done now research and if I understand right one issue here might
-be with setting the backlight brightness if the DSI device is not
-attached before calling update_status() since calling it would call
-subsequently s6e8aa0_set_brightness() -> s6e8aa0_dcs_write() ->
-mipi_dsi_dcs_write_buffer(), which then requires DSI to be attached.
-
-But now to the part that affects many of the panel drivers using MIPI
-DSI, like panel-samsung-s6e63j0x03.c, panel-simple.c, etc.:
-mipi_dsi_attach(dsi) seems to be always called only after the DRM panel
-helper drm_panel_add(). Now I think this is problematic since
-drm_panel_add() makes the panel available for use in userspace but if
-the user tries to actually do something with the panel before
-mipi_dsi_attach(dsi) is called it would not work.
-
-So for some reason the mipi_dsi_attach() is called in all those drivers
-after drm_panel_add() and at least to the problem I pointed out above
-moving the call there before drm_panel_add() would fix the issue but
-then I don't know if it causes some other issue.
-
-Also I don't know if Andrzej had some other issues in mind that could be
-caused by this race condition, so if there are multiple instead of just
-that one issue with DSI not being attached then we might want to have
-all these issues fixed by for example the solution Andrzej proposed
-where we have attach/detach callbacks in drm_bridge_funcs.
-
-Please let me know if anything I write above doesn't make sense, I'm
-still trying to understand the DRM subsystem better.
-
-Joonas
+I'll try and write a longer email tonight.
