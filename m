@@ -2,554 +2,335 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F11C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2371C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C537206F7
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A53206F8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JgMYdbwU"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="sTbZanwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgDDSiy (ORCPT
+        id S1726307AbgDDSmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 14:38:54 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17601 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgDDSiy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 14:38:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e88d3d80000>; Sat, 04 Apr 2020 11:37:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 04 Apr 2020 11:38:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 04 Apr 2020 11:38:52 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 4 Apr
- 2020 18:38:51 +0000
-Received: from [10.24.37.103] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 4 Apr 2020
- 18:38:47 +0000
-Subject: Re: [TEGRA194_CPUFREQ Patch 2/3] cpufreq: Add Tegra194 cpufreq driver
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
-        <mperttunen@nvidia.com>, <sumitg@nvidia.com>
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <1575394348-17649-2-git-send-email-sumitg@nvidia.com>
- <20200326115023.xy3n5bl7uetuw7mx@vireshk-i7>
-From:   sumitg <sumitg@nvidia.com>
-Message-ID: <d233b26b-6b50-7d41-9f33-a5dc151e0e7d@nvidia.com>
-Date:   Sun, 5 Apr 2020 00:08:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 4 Apr 2020 14:42:13 -0400
+Received: from mout.web.de ([217.72.192.78]:49281 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbgDDSmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 14:42:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586025717;
+        bh=trCALmJZseGACsClEdyAIz3NMsZceSEOXCi9yrgcNQs=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=sTbZanwSbwh6vReBP4BkKqrp7ZOjpXmptcnFPi5ADLqpp49BkB+OLkgyHYh6kDKkj
+         xTqQQb5YLd5s8Yn6dTj2pWN97LTBTJvt31XQgvsjQheuJzokJXHWaIKjbqGXQt+M9r
+         CconQOuVhX+4G50Z/U7XfA5QgRe2zQdRiFSEYruI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.43.108] ([89.204.138.81]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LcgZv-1iwDsw1e0F-00k4OB; Sat, 04
+ Apr 2020 20:41:57 +0200
+To:     Shawn Lin <shawn.lin@rock-chips.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Soeren Moch <smoch@web.de>
+Subject: [BUG] PCI: rockchip: rk3399: pcie switch support
+Message-ID: <4d03dd8c-14f9-d1ef-6fd2-095423be3dd3@web.de>
+Date:   Sat, 4 Apr 2020 20:41:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200326115023.xy3n5bl7uetuw7mx@vireshk-i7>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586025432; bh=5hdYw6ObfGFLG9jd7U4HnmWEClP8GiKvWCoh8X9OSgI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JgMYdbwUbXedZkmtlgwLgotdD5XBTnbRfd8+VzIPxVAItPIWtZdKzjXWh8HDCiK5P
-         E/Byrm5R8gc3drmATdYYHROEby12KKeMW26FfoHdvK0X9CpNxA0AFH8KVgGG5T+I4B
-         n2wJ4KMU/ST+K6FKmSM/da5gCPk4ckX5MIZQ1BGRC/DoLnlEDdj8LIMZYdwBJpfZpf
-         d7JeYfspqxAVJQZX0fSvtwTWJyyNoEM2Cc6HQMVYY/x7c6SMNblPXJDX06Ntpk1CH0
-         Ta0w1cLh7MXX1SYYEQGydNYuaHibCJhm5kbZ3b59CfvhTpAiDQ9gAK0MiNa72o4kOb
-         3EM1a1HCBZqsg==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+X-Provags-ID: V03:K1:u8HfsDqQbXgpehXSoYFpxfi5/sgKOSigN7n7MgtbB5C25j4rBZE
+ eGE3jCmubCFLRVXY5ow9YfrzR1y4iEx3+lCqq+xLpcfF/ysc4vcQA/sp5JvR9K6Ho4Ndwdi
+ OoR9afTkZ1UrRAQEMSsLvwbxOkVMrl3dZejumepGQdhiC1BQ/bdk46ji4wAAS+iT13ga2wH
+ hefwuPZ4NAj8oKdppUY7A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Vc8nQLqxyRM=:3XRlLs7Uzjecv1ItVf27yu
+ daFevHFaCZTD6uB8dMGSlAlPpkjoegDMXZCdiCu8CnxRlJWnfm5ncblZI4aVdC8ySgKe+Yxnx
+ BAtYH8eDB6WqeHpwEUiwPxckjACEkhAk8M8NbCNPTJcEaMlVU12j3exvNV5jPkFcucugmzqE+
+ k5mlg9ro2elqx/7oo1sTsIBAkPnjURsS2vFvOBsbp11be5auGhrTl3vjC4MwjrYDAvW+Cb3e8
+ zUFUZ10/4JqZgzd69LmCTdOaczh5bDQ9ExXA5V1Vk+KYXQg3sW3QRGg2DJioP1i/rHsg45ugB
+ RFWCRmczSWC7DzHALi+3WjVZkzegMAi+RzBsKaQmNM9U0z1SC5cGkqOXuTM0U45kDF4D2QGjJ
+ eBOJDoo+x2/O+T2HPHNGAgW8egP+COEHQUJQyng4yQbbWOZIvW706vjC+iQdW4Jb3MoYS6xko
+ XGyIgLuD7k3aBgRfg4GIclWpLtczGyPtakEF0t51SYKDwxS2ciIc+AzBrqIA9NW2woP52GhPg
+ 537lZu0qDlmY/wQegcAjt5utLahU9DbcgiO3pSSzWscxAxM6rG5Vab5B+t06vTAidfnLdD35V
+ t9WtjCQJ6f8ql7TrCqGVYZXNvk1ehVdcjxd0QI7e3U13bZTXjiCMV2/A478Lv1VOyQyaU2XIS
+ 80g3O7XAPP3uSlfw4QTJnSPahRP0nsGXwjnHBX/GprDDXuUAjQVN7MyWBWsHuO9HMWBl6huAc
+ aFC+5QM4XK61vxQCsmtfuvGaiqH/OCf2yzYOo2BMPtxdgK1g8lWn8YpsnXGghMXP1u8JwL1db
+ PYvS8yalTcQkYTHF2N03SH21/G4IShUNvTVJo7PD0c9s6SbnO3VFhQxUBjO/7q13XmUGTESen
+ usOLjlc4SzFlvqcYfBO2ESMOmmsMI/3QxO++WCYXh3nMymf8hPYO9a8NogILIJ44BdsA5gEme
+ R+dE8iaUFwWNW+tcEz5zfiwRL1oXoAe/zdW//siMtKFvZOwvqrz/mAVr+oD7NwQExvQVKsnNo
+ XPMq0JbYHs9AWM0ccNQ9SrlM7qvKT5kOeg1SVmAvY/cyu1WhY8fEryNQvLSLAo6ZoPQ/JoWFU
+ xKAum9PFS/UF+nLzIGw9apo6ZctN/t0P16WWAhxUOTU9iIyK1Kv+9EAZPJnS322tcm6wsN+wv
+ +Y4801YFXKglwlBfJEXUX5Sa/gPJwb1P91tpZRhyxgF4Wa1ZlAhCqcf4Fwi8lB16POnwplm1q
+ 2iCdYJpL2qA5vGT6T
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I want to use a PCIe switch on a RK3399 based RockPro64 V2.1 board.
+"Normal" PCIe cards work (mostly) just fine on this board. The PCIe
+switches (I tried Pericom and ASMedia based switches) also work fine on
+other boards. The RK3399 PCIe controller with pcie_rockchip_host driver
+also recognises the switch, but fails to initialize the buses behind the
+bridge properly, see syslog from linux-5.6.0.
+
+Any ideas what I do wrong, or any suggestions what I can test here?
+
+Thanks,
+Soeren
 
 
-On 26/03/20 5:20 PM, Viresh Kumar wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On 03-12-19, 23:02, Sumit Gupta wrote:
->> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
->> new file mode 100644
->> index 0000000..9df12f4
->> --- /dev/null
->> +++ b/drivers/cpufreq/tegra194-cpufreq.c
->> @@ -0,0 +1,423 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
->> + */
->> +
->> +#include <linux/cpu.h>
->> +#include <linux/cpufreq.h>
->> +#include <linux/delay.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +
->> +#include <asm/smp_plat.h>
->> +
->> +#include <soc/tegra/bpmp.h>
->> +#include <soc/tegra/bpmp-abi.h>
->> +
->> +#define KHZ                     1000
->> +#define REF_CLK_MHZ             408 /* 408 MHz */
->> +#define US_DELAY                2000
->> +#define US_DELAY_MIN            2
->> +#define CPUFREQ_TBL_STEP_HZ     (50 * KHZ * KHZ)
->> +#define MAX_CNT                 ~0U
->> +
->> +/* cpufreq transisition latency */
->> +#define TEGRA_CPUFREQ_TRANSITION_LATENCY (300 * 1000) /* unit in nanoseconds */
->> +
->> +enum cluster {
->> +     CLUSTER0,
->> +     CLUSTER1,
->> +     CLUSTER2,
->> +     CLUSTER3,
-> 
-> All these have same CPUs ? Or big little kind of stuff ? How come they
-> have different frequency tables ?
-> 
-T194 SOC has homogeneous architecture where each cluster has two 
-symmetric Carmel cores and and not big little. LUT's are per cluster and 
-all LUT's have same values currently. Future SOC's may have different 
-LUT values per cluster.
-
->> +     MAX_CLUSTERS,
->> +};
->> +
->> +struct tegra194_cpufreq_data {
->> +     void __iomem *regs;
->> +     size_t num_clusters;
->> +     struct cpufreq_frequency_table **tables;
->> +};
->> +
->> +static DEFINE_MUTEX(cpufreq_lock);
->> +
->> +struct tegra_cpu_ctr {
->> +     u32 cpu;
->> +     u32 delay;
->> +     u32 coreclk_cnt, last_coreclk_cnt;
->> +     u32 refclk_cnt, last_refclk_cnt;
->> +};
->> +
->> +static struct workqueue_struct *read_counters_wq;
->> +struct read_counters_work {
->> +     struct work_struct work;
->> +     struct tegra_cpu_ctr c;
->> +};
->> +
->> +static enum cluster get_cpu_cluster(u8 cpu)
->> +{
->> +     return MPIDR_AFFINITY_LEVEL(cpu_logical_map(cpu), 1);
->> +}
->> +
->> +/*
->> + * Read per-core Read-only system register NVFREQ_FEEDBACK_EL1.
->> + * The register provides frequency feedback information to
->> + * determine the average actual frequency a core has run at over
->> + * a period of time.
->> + *   [31:0] PLLP counter: Counts at fixed frequency (408 MHz)
->> + *   [63:32] Core clock counter: counts on every core clock cycle
->> + *                   where the core is architecturally clocking
->> + */
->> +static u64 read_freq_feedback(void)
->> +{
->> +     u64 val = 0;
->> +
->> +     asm volatile("mrs %0, s3_0_c15_c0_5" : "=r" (val) : );
->> +
->> +     return val;
->> +}
->> +
->> +u16 map_freq_to_ndiv(struct mrq_cpu_ndiv_limits_response *nltbl, u32 freq)
->> +{
->> +     return DIV_ROUND_UP(freq * nltbl->pdiv * nltbl->mdiv,
->> +                         nltbl->ref_clk_hz / KHZ);
->> +}
->> +
->> +static inline u32 map_ndiv_to_freq(struct mrq_cpu_ndiv_limits_response
->> +                                *nltbl, u16 ndiv)
->> +{
->> +     return nltbl->ref_clk_hz / KHZ * ndiv / (nltbl->pdiv * nltbl->mdiv);
->> +}
->> +
->> +static void tegra_read_counters(struct work_struct *work)
->> +{
->> +     struct read_counters_work *read_counters_work;
->> +     struct tegra_cpu_ctr *c;
->> +     u64 val;
->> +
->> +     /*
->> +      * ref_clk_counter(32 bit counter) runs on constant clk,
->> +      * pll_p(408MHz).
->> +      * It will take = 2 ^ 32 / 408 MHz to overflow ref clk counter
->> +      *              = 10526880 usec = 10.527 sec to overflow
->> +      *
->> +      * Like wise core_clk_counter(32 bit counter) runs on core clock.
->> +      * It's synchronized to crab_clk (cpu_crab_clk) which runs at
->> +      * freq of cluster. Assuming max cluster clock ~2000MHz,
->> +      * It will take = 2 ^ 32 / 2000 MHz to overflow core clk counter
->> +      *              = ~2.147 sec to overflow
->> +      */
->> +     read_counters_work = container_of(work, struct read_counters_work,
->> +                                       work);
->> +     c = &read_counters_work->c;
->> +
->> +     val = read_freq_feedback();
->> +     c->last_refclk_cnt = lower_32_bits(val);
->> +     c->last_coreclk_cnt = upper_32_bits(val);
->> +     udelay(c->delay);
->> +     val = read_freq_feedback();
->> +     c->refclk_cnt = lower_32_bits(val);
->> +     c->coreclk_cnt = upper_32_bits(val);
->> +}
->> +
->> +/*
->> + * Return instantaneous cpu speed
->> + * Instantaneous freq is calculated as -
->> + * -Takes sample on every query of getting the freq.
->> + *   - Read core and ref clock counters;
->> + *   - Delay for X us
->> + *   - Read above cycle counters again
->> + *   - Calculates freq by subtracting current and previous counters
->> + *     divided by the delay time or eqv. of ref_clk_counter in delta time
->> + *   - Return Kcycles/second, freq in KHz
->> + *
->> + *   delta time period = x sec
->> + *                     = delta ref_clk_counter / (408 * 10^6) sec
->> + *   freq in Hz = cycles/sec
->> + *              = (delta cycles / x sec
->> + *              = (delta cycles * 408 * 10^6) / delta ref_clk_counter
->> + *   in KHz     = (delta cycles * 408 * 10^3) / delta ref_clk_counter
->> + *
->> + * @cpu - logical cpu whose freq to be updated
->> + * Returns freq in KHz on success, 0 if cpu is offline
->> + */
->> +static unsigned int tegra194_get_speed_common(u32 cpu, u32 delay)
->> +{
->> +     struct read_counters_work read_counters_work;
->> +     struct tegra_cpu_ctr c;
->> +     u32 delta_refcnt;
->> +     u32 delta_ccnt;
->> +     u32 rate_mhz;
->> +
->> +     read_counters_work.c.cpu = cpu;
->> +     read_counters_work.c.delay = delay;
->> +     INIT_WORK_ONSTACK(&read_counters_work.work, tegra_read_counters);
->> +     queue_work_on(cpu, read_counters_wq, &read_counters_work.work);
->> +     flush_work(&read_counters_work.work);
-> 
-> Why can't this be done in current context ?
-> 
-We used work queue instead of smp_call_function_single() to have long delay.
-
->> +     c = read_counters_work.c;
->> +
->> +     if (c.coreclk_cnt < c.last_coreclk_cnt)
->> +             delta_ccnt = c.coreclk_cnt + (MAX_CNT - c.last_coreclk_cnt);
->> +     else
->> +             delta_ccnt = c.coreclk_cnt - c.last_coreclk_cnt;
->> +     if (!delta_ccnt)
->> +             return 0;
->> +
->> +     /* ref clock is 32 bits */
->> +     if (c.refclk_cnt < c.last_refclk_cnt)
->> +             delta_refcnt = c.refclk_cnt + (MAX_CNT - c.last_refclk_cnt);
->> +     else
->> +             delta_refcnt = c.refclk_cnt - c.last_refclk_cnt;
->> +     if (!delta_refcnt) {
->> +             pr_debug("cpufreq: %d is idle, delta_refcnt: 0\n", cpu);
->> +             return 0;
->> +     }
->> +     rate_mhz = ((unsigned long)(delta_ccnt * REF_CLK_MHZ)) / delta_refcnt;
->> +
->> +     return (rate_mhz * KHZ); /* in KHz */
->> +}
->> +
->> +static unsigned int tegra194_get_speed(u32 cpu)
->> +{
->> +     return tegra194_get_speed_common(cpu, US_DELAY);
->> +}
->> +
->> +static unsigned int tegra194_fast_get_speed(u32 cpu)
->> +{
->> +     return tegra194_get_speed_common(cpu, US_DELAY_MIN);
-> 
-> Why is this required specially here ? Why can't you work with normal
-> delay ?
-> 
-Less delay value used during init to reduce cpu boot time.
-
->> +}
->> +
->> +static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
->> +{
->> +     struct tegra194_cpufreq_data *data = cpufreq_get_driver_data();
->> +     int cluster = get_cpu_cluster(policy->cpu);
->> +
->> +     if (cluster >= data->num_clusters)
->> +             return -EINVAL;
->> +
->> +     policy->cur = tegra194_fast_get_speed(policy->cpu); /* boot freq */
->> +
->> +     /* set same policy for all cpus */
->> +     cpumask_copy(policy->cpus, cpu_possible_mask);
-> 
-> You are copying cpu_possible_mask mask here, and so this routine will
-> get called only once.
-> 
-> I still don't understand the logic behind clusters and frequency
-> tables.
-> 
-Currently, we use same policy for all CPU's to maximize throughput. Will 
-add separate patch later to set policy as per cluster. But we are not 
-using that in T194 due to perf reasons.
-
->> +
->> +     policy->freq_table = data->tables[cluster];
->> +     policy->cpuinfo.transition_latency = TEGRA_CPUFREQ_TRANSITION_LATENCY;
->> +
->> +     return 0;
->> +}
->> +
->> +static void set_cpu_ndiv(void *data)
->> +{
->> +     struct cpufreq_frequency_table *tbl = data;
->> +     u64 ndiv_val = (u64)tbl->driver_data;
->> +
->> +     asm volatile("msr s3_0_c15_c0_4, %0" : : "r" (ndiv_val));
->> +}
->> +
->> +static int tegra194_cpufreq_set_target(struct cpufreq_policy *policy,
->> +                                    unsigned int index)
->> +{
->> +     struct cpufreq_frequency_table *tbl = policy->freq_table + index;
->> +     static struct cpufreq_freqs freqs;
->> +
->> +     mutex_lock(&cpufreq_lock);
-> 
-> No need of lock here.
->
-Done
-
->> +     freqs.old = policy->cur;
->> +     freqs.new = tbl->frequency;
->> +
->> +     cpufreq_freq_transition_begin(policy, &freqs);
->> +     on_each_cpu_mask(policy->cpus, set_cpu_ndiv, tbl, true);
-> 
-> When CPUs share clock line, why is this required for every CPU ?
->Per core NVFREQ_REQ system register is written to make frequency 
-requests for the core. Cluster h/w then forwards the max(core0, core1) 
-request to cluster NAFLL.
-
->> +     cpufreq_freq_transition_end(policy, &freqs, 0);
->> +
->> +     mutex_unlock(&cpufreq_lock);
->> +
->> +     return 0;
->> +}
->> +
->> +static struct cpufreq_driver tegra194_cpufreq_driver = {
->> +     .name = "tegra194",
->> +     .flags = CPUFREQ_STICKY | CPUFREQ_CONST_LOOPS |
->> +             CPUFREQ_NEED_INITIAL_FREQ_CHECK | CPUFREQ_ASYNC_NOTIFICATION,
-> 
-> Why Async here ? I am really confused if I am not able to understand
-> the driver or you :)
-> 
-Have removed the flag as it was not required. Thank you for pointing.
-
->> +     .verify = cpufreq_generic_frequency_table_verify,
->> +     .target_index = tegra194_cpufreq_set_target,
->> +     .get = tegra194_get_speed,
->> +     .init = tegra194_cpufreq_init,
->> +     .attr = cpufreq_generic_attr,
->> +};
->> +
->> +static void tegra194_cpufreq_free_resources(void)
->> +{
->> +     flush_workqueue(read_counters_wq);
->> +     destroy_workqueue(read_counters_wq);
->> +}
->> +
->> +static struct cpufreq_frequency_table *init_freq_table
-> 
-> Don't break line here, rather break after above *.
-> 
-Done
-
->> +             (struct platform_device *pdev, struct tegra_bpmp *bpmp,
->> +              unsigned int cluster_id)
->> +{
->> +     struct cpufreq_frequency_table *opp_table;
-> 
-> Please name it freq_table :)
-> 
-Done
-
->> +     struct mrq_cpu_ndiv_limits_response resp;
->> +     unsigned int num_freqs, ndiv, delta_ndiv;
->> +     struct mrq_cpu_ndiv_limits_request req;
->> +     struct tegra_bpmp_message msg;
->> +     u16 freq_table_step_size;
->> +     int err, index;
->> +
->> +     memset(&req, 0, sizeof(req));
->> +     req.cluster_id = cluster_id;
->> +
->> +     memset(&msg, 0, sizeof(msg));
->> +     msg.mrq = MRQ_CPU_NDIV_LIMITS;
->> +     msg.tx.data = &req;
->> +     msg.tx.size = sizeof(req);
->> +     msg.rx.data = &resp;
->> +     msg.rx.size = sizeof(resp);
->> +
->> +     err = tegra_bpmp_transfer(bpmp, &msg);
->> +     if (err)
->> +             return ERR_PTR(err);
->> +
->> +     /*
->> +      * Make sure frequency table step is a multiple of mdiv to match
->> +      * vhint table granularity.
->> +      */
->> +     freq_table_step_size = resp.mdiv *
->> +                     DIV_ROUND_UP(CPUFREQ_TBL_STEP_HZ, resp.ref_clk_hz);
->> +
->> +     dev_dbg(&pdev->dev, "cluster %d: frequency table step size: %d\n",
->> +             cluster_id, freq_table_step_size);
->> +
->> +     delta_ndiv = resp.ndiv_max - resp.ndiv_min;
->> +
->> +     if (unlikely(delta_ndiv == 0))
->> +             num_freqs = 1;
->> +     else
->> +             /* We store both ndiv_min and ndiv_max hence the +1 */
->> +             num_freqs = delta_ndiv / freq_table_step_size + 1;
->> +
->> +     num_freqs += (delta_ndiv % freq_table_step_size) ? 1 : 0;
->> +
->> +     opp_table = devm_kcalloc(&pdev->dev, num_freqs + 1, sizeof(*opp_table),
->> +                              GFP_KERNEL);
->> +     if (!opp_table)
->> +             return ERR_PTR(-ENOMEM);
->> +
->> +     for (index = 0, ndiv = resp.ndiv_min;
->> +                     ndiv < resp.ndiv_max;
->> +                     index++, ndiv += freq_table_step_size) {
->> +             opp_table[index].driver_data = ndiv;
->> +             opp_table[index].frequency = map_ndiv_to_freq(&resp, ndiv);
->> +     }
->> +
->> +     opp_table[index].driver_data = resp.ndiv_max;
->> +     opp_table[index++].frequency = map_ndiv_to_freq(&resp, resp.ndiv_max);
->> +     opp_table[index].frequency = CPUFREQ_TABLE_END;
->> +
->> +     return opp_table;
->> +}
->> +
->> +static int tegra194_cpufreq_probe(struct platform_device *pdev)
->> +{
->> +     struct tegra194_cpufreq_data *data;
->> +     struct tegra_bpmp *bpmp;
->> +     int err, i;
->> +
->> +     data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +     if (!data)
->> +             return -ENOMEM;
->> +
->> +     data->num_clusters = MAX_CLUSTERS;
->> +     data->tables = devm_kcalloc(&pdev->dev, data->num_clusters,
->> +                                 sizeof(*data->tables), GFP_KERNEL);
->> +     if (!data->tables)
->> +             return -ENOMEM;
->> +
->> +     platform_set_drvdata(pdev, data);
->> +
->> +     read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
->> +     if (!read_counters_wq) {
->> +             dev_err(&pdev->dev, "fail to create_workqueue\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     bpmp = of_tegra_bpmp_get();
->> +     if (IS_ERR(bpmp)) {
->> +             err = PTR_ERR(bpmp);
->> +             goto err_free_res;
->> +     }
->> +
->> +     for (i = 0; i < data->num_clusters; i++) {
->> +             data->tables[i] = init_freq_table(pdev, bpmp, i);
->> +             if (IS_ERR(data->tables[i])) {
->> +                     err = PTR_ERR(data->tables[i]);
->> +                     goto put_bpmp;
->> +             }
->> +     }
->> +
->> +     tegra_bpmp_put(bpmp);
->> +
->> +     tegra194_cpufreq_driver.driver_data = data;
->> +
->> +     err = cpufreq_register_driver(&tegra194_cpufreq_driver);
->> +     if (err)
->> +             goto err_free_res;
->> +
->> +     return err;
->> +
->> +put_bpmp:
->> +     tegra_bpmp_put(bpmp);
->> +err_free_res:
->> +     tegra194_cpufreq_free_resources();
->> +     return err;
->> +}
->> +
->> +static int tegra194_cpufreq_remove(struct platform_device *pdev)
->> +{
->> +     cpufreq_unregister_driver(&tegra194_cpufreq_driver);
->> +     tegra194_cpufreq_free_resources();
->> +
->> +     return 0;
->> +}
->> +
->> +static struct platform_driver tegra194_cpufreq_platform_driver = {
->> +     .driver = {
->> +             .name = "tegra194-cpufreq",
->> +     },
->> +     .probe = tegra194_cpufreq_probe,
->> +     .remove = tegra194_cpufreq_remove,
->> +};
->> +
->> +static int __init tegra_cpufreq_init(void)
-> 
-> I seem to be forgetting this, but should we use __init with modules or
-> not ?
-> 
-Yes
-
-Thankyou for the review. I will send v2 with suggested changes.
-
-> --
-> viresh
-> 
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.501951] rockchip-p=
+cie
+f8000000.pcie: f8000000.pcie supply vpcie1v8 not found, using dummy
+regulator
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.502906] rockchip-p=
+cie
+f8000000.pcie: f8000000.pcie supply vpcie0v9 not found, using dummy
+regulator
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.572050] rockchip-p=
+cie
+f8000000.pcie: host bridge /pcie@f8000000 ranges:
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.573018] rockchip-p=
+cie
+f8000000.pcie: Parsing ranges property...
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.573040] rockchip-p=
+cie
+f8000000.pcie:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MEM 0x00fa000000..0x00fbdffff=
+f -> 0x00fa000000
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.574080] rockchip-p=
+cie
+f8000000.pcie:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IO 0x00fbe00000..0x00fb=
+efffff -> 0x00fbe00000
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.575420] rockchip-p=
+cie
+f8000000.pcie: PCI host bridge to bus 0000:00
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.576247] pci_bus 00=
+00:00: root
+bus resource [bus 00-1f]
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.576930] pci_bus 00=
+00:00: root
+bus resource [mem 0xfa000000-0xfbdfffff]
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.577739] pci_bus 00=
+00:00: root
+bus resource [io=C2=A0 0x0000-0xfffff] (bus address [0xfbe00000-0xfbefffff=
+])
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.578876] pci_bus 00=
+00:00:
+scanning bus
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.578918] pci 0000:0=
+0:00.0:
+[1d87:0100] type 01 class 0x060400
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.579734] pci 0000:0=
+0:00.0:
+supports D1
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.580252] pci 0000:0=
+0:00.0: PME#
+supported from D0 D1 D3hot
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.580952] pci 0000:0=
+0:00.0: PME#
+disabled
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.585475] pci_bus 00=
+00:00: fixups
+for bus
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.585491] pci 0000:0=
+0:00.0:
+scanning [bus 00-00] behind bridge, pass 0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.585497] pci 0000:0=
+0:00.0:
+bridge configuration invalid ([bus 00-00]), reconfiguring
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.586562] pci 0000:0=
+0:00.0:
+scanning [bus 00-00] behind bridge, pass 1
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.586725] pci_bus 00=
+00:01:
+scanning bus
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.586792] pci 0000:0=
+1:00.0:
+[1b21:1182] type 01 class 0x060400
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.587785] pci 0000:0=
+1:00.0: Max
+Payload Size set to 256 (was 128, max 256)
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.588625] pci 0000:0=
+1:00.0:
+enabling Extended Tags
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.589487] pci 0000:0=
+1:00.0: PME#
+supported from D0 D3hot D3cold
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.590199] pci 0000:0=
+1:00.0: PME#
+disabled
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.590344] pci 0000:0=
+1:00.0: 2.000
+Gb/s available PCIe bandwidth, limited by 2.5 GT/s x1 link at
+0000:00:00.0 (capable of 4.000 Gb/s with 5 GT/s x1 link)
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.598206] pci_bus 00=
+00:01: fixups
+for bus
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.598226] pci 0000:0=
+1:00.0:
+scanning [bus 00-00] behind bridge, pass 0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.598231] pci 0000:0=
+1:00.0:
+bridge configuration invalid ([bus 00-00]), reconfiguring
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.599163] pci 0000:0=
+1:00.0:
+scanning [bus 00-00] behind bridge, pass 1
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.599443] pci_bus 00=
+00:02:
+scanning bus
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.599460] Internal e=
+rror:
+synchronous external abort: 96000210 [#1] PREEMPT SMP
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.600271] Modules li=
+nked in:
+pcie_rockchip_host(+) brcmfmac brcmutil
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.600978] CPU: 3 PID=
+: 565 Comm:
+modprobe Not tainted 5.6.0 #1
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.601607] Hardware n=
+ame: Pine64
+RockPro64 v2.1 (DT)
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.602147] pstate: 60=
+000085 (nZCv
+daIf -PAN -UAO)
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.602666] pc :
+rockchip_pcie_rd_conf+0x120/0x228 [pcie_rockchip_host]
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.603373] lr :
+rockchip_pcie_rd_conf+0x94/0x228 [pcie_rockchip_host]
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.604064] sp : fffff=
+fc011003500
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.604419] x29: fffff=
+fc011003500
+x28: 0000000000000000
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.604986] x27: 00000=
+00000000001
+x26: 0000000000000000
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.605552] x25: 00000=
+00000000000
+x24: ffffffc011003644
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.606117] x23: fffff=
+f80f1792000
+x22: ffffffc011003584
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.606683] x21: fffff=
+f80e98313c0
+x20: 0000000000000004
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.607249] x19: fffff=
+fc012200000
+x18: 00000000fffffff0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.607815] x17: 00000=
+00000000000
+x16: 0000000000000000
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.608381] x15: fffff=
+fc010b77c00
+x14: ffffffc010be2e28
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.608947] x13: 00000=
+00000000000
+x12: ffffffc010be2000
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.609512] x11: fffff=
+fc010b77000
+x10: ffffffc010be2470
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.610079] x9 : 00000=
+00011821b21
+x8 : 0000000000000001
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.615455] x7 : 00000=
+00000000000
+x6 : 0000000000000000
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.621487] x5 : 00000=
+00000200000
+x4 : 0000000000000000
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.627519] x3 : 00000=
+00000c00008
+x2 : 000000000080000b
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.633551] x1 : fffff=
+fc015c00008
+x0 : ffffffc012000000
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.639583] Call trace=
+:
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.645785]=C2=A0
+rockchip_pcie_rd_conf+0x120/0x228 [pcie_rockchip_host]
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.656354]=C2=A0
+pci_bus_read_config_dword+0x80/0xd0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.665083]=C2=A0
+pci_bus_generic_read_dev_vendor_id+0x30/0x1a8
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.674722]=C2=A0
+pci_bus_read_dev_vendor_id+0x48/0x68
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.683382]=C2=A0
+pci_scan_single_device+0x7c/0xd8
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.691690]=C2=A0 pci_=
+scan_slot+0x34/0x118
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.699155]=C2=A0
+pci_scan_child_bus_extend+0x60/0x2cc
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.707774]=C2=A0
+pci_scan_bridge_extend+0x340/0x578
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.716224]=C2=A0
+pci_scan_child_bus_extend+0x20c/0x2cc
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.724943]=C2=A0
+pci_scan_bridge_extend+0x340/0x578
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.733320]=C2=A0
+pci_scan_child_bus_extend+0x20c/0x2cc
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.741998]=C2=A0
+pci_scan_child_bus+0x10/0x18
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.749739]=C2=A0
+pci_scan_root_bus_bridge+0x78/0xd0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.757988]=C2=A0
+rockchip_pcie_probe+0x830/0xb90 [pcie_rockchip_host]
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.768042]=C2=A0
+platform_drv_probe+0x50/0xa0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.775758]=C2=A0 real=
+ly_probe+0xd8/0x300
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.782939]=C2=A0
+driver_probe_device+0x54/0xe8
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.790661]=C2=A0
+device_driver_attach+0x6c/0x78
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.798461]=C2=A0 __dr=
+iver_attach+0x54/0xd0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.805744]=C2=A0 bus_=
+for_each_dev+0x70/0xc0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.813119]=C2=A0 driv=
+er_attach+0x20/0x28
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.820101]=C2=A0 bus_=
+add_driver+0x178/0x1d8
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.827249]=C2=A0 driv=
+er_register+0x60/0x110
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.834308]=C2=A0
+__platform_driver_register+0x44/0x50
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.842299]=C2=A0
+rockchip_pcie_driver_init+0x20/0x1000 [pcie_rockchip_host]
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.852443]=C2=A0 do_o=
+ne_initcall+0x74/0x1a8
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.859430]=C2=A0 do_i=
+nit_module+0x50/0x1f0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.866276]=C2=A0 load=
+_module+0x1c0c/0x2158
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.873100]=C2=A0
+__do_sys_finit_module+0xd0/0xe8
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.880480]=C2=A0
+__arm64_sys_finit_module+0x1c/0x28
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.888157]=C2=A0
+el0_svc_common.constprop.1+0x7c/0xe8
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.896000]=C2=A0 do_e=
+l0_svc+0x18/0x20
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.902285]=C2=A0
+el0_sync_handler+0x12c/0x1b0
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.909380]=C2=A0 el0_=
+sync+0x114/0x140
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.915692] Code: a8c3=
+7bfd d65f03c0
+f94002a0 8b130013 (b9400273)
+Apr=C2=A0 4 19:50:38 rockpro64 kernel: [=C2=A0=C2=A0 74.925210] ---[ end t=
+race
+181d7993f92f3f3d ]---
 
