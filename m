@@ -2,82 +2,82 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9354C2BA17
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2B8C2BA17
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5235206F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80564206F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qG9Xv3/J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrBwp7SC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgDDViq (ORCPT
+        id S1726498AbgDDVkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 17:38:46 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42360 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgDDViq (ORCPT
+        Sat, 4 Apr 2020 17:40:51 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46480 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgDDVkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 17:38:46 -0400
-Received: by mail-lf1-f68.google.com with SMTP id s13so8677888lfb.9;
-        Sat, 04 Apr 2020 14:38:44 -0700 (PDT)
+        Sat, 4 Apr 2020 17:40:51 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r7so10565496ljg.13;
+        Sat, 04 Apr 2020 14:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1i+S6a4uHzSY+BQZ8PHkY5IC7kC4Cj62mj3ww4KuN0s=;
-        b=qG9Xv3/J7M6EwLU3dRRGCXzNCve0vRhsgTHEEHGvLV0QifAW6J/VK49jNtYlBCExgE
-         47Yt5EnulF6Uf1viL4wvobvYyk899mSPD+9VZvUm1+DroVT8O6DEXaMf3B3jiPujOacW
-         ZS9Mm3ctgdTz0omaU/Ho1wFYrAPELDo8jWeM5r40/FXfj6Y82gR7nGQdhQxQlSswtj7X
-         shnQoxdaG8pRqnzHLrYElQVkq6TeI5gOjM4OdEqf7iV8ipYGYsg69bW90/LlNInxLWeB
-         e1+bB+J8xhkYML9br36O5cRvdJzuJVnhxfidTZvysUKLT39WP/lrnOFQXgNaRAi2cU7h
-         nV4Q==
+        bh=JMPqtLiyle3hnA0yz5/rma3PZC3NUiCA2HOMNpCxoFQ=;
+        b=rrBwp7SCLJer6Iw0pYwVspuK7bro/VSRwtB8zM5qgwbyvzzKRUJbGV9N+budcgTwNr
+         OFekZzJDxmBdIeE12U2VWCwh8ZvfcjZKiVdzeZiupLBiWUdUoTYqpIKF4NpjpWU61cao
+         yrP8Do5Vpmo+F+1qYoNqpTkyv+fpVpFBcSmyYx+uRukNgR5WMwPWxEKmdhCZ0mnwwce6
+         P7Gze7I7oyv9PDPGkPDVuORJxgcZWhRGaq47fMbN9Ug2Uoitw9AASDjXlKlBVLho/6tt
+         mM3mgQTp+eRNIwUPzVYibKJl5dq5kVFwovcwwxGno0wowr338SuMm8ZkdR0J2LSX0ZBD
+         wLYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=1i+S6a4uHzSY+BQZ8PHkY5IC7kC4Cj62mj3ww4KuN0s=;
-        b=EeWgm1MjbcAwJ11kR9vApwOgrPfVZCKUF0gQI2o4OvOB1wo+stmIR9AflzP28E/emS
-         hJC7AvnJOHt09GP+Bq43UVfXcmX8owrQeWj8QDYXw65RUqY6+Gc+HQ4YmSufnYj46JhT
-         VR8PNssBhGjsgcw+ENqVyCK01WvLIoqLuCp9tNg+djXGuCA7XC371mpPltgpwKOyMYsR
-         /CgtIqhqMilxFCRok/DA/HHvWmUMPRfqCqpD9gGPEqmReNy8uhoX19r398/8APlRON+l
-         kk+v/yu0sBBbf+3jwVCK8UBAOgGi/ZSJ+PaGsa0OHO8TVV8o4I/10/3jDJ1awBbIJx+A
-         CAWg==
-X-Gm-Message-State: AGi0PuYhEREkhHRTjcaSd51069qao9FZdHBEsX4XT1wCrH0Ieh1jhDfI
-        L+NtE1Vq5aZOXySYRH9jRoI=
-X-Google-Smtp-Source: APiQypL/WS5BkYpFiYatRqfon1xKCULCb1LS1ppwANvI6/MQo+M6De7OuwPHxhO4AEIq9IV6bHCEqw==
-X-Received: by 2002:a19:6749:: with SMTP id e9mr8621242lfj.122.1586036323466;
-        Sat, 04 Apr 2020 14:38:43 -0700 (PDT)
+        bh=JMPqtLiyle3hnA0yz5/rma3PZC3NUiCA2HOMNpCxoFQ=;
+        b=Qexh1hh3RneyWfBuLcl95l6eeI0K6oa4mUuzr1N1P4j26rU4fv+VN2EIBXB2Ti1jXp
+         Y4zSLZSqdz9VoaUTZSm1YCo9xNDTmCmq3toT3BvWPJWuH8xn6QeKOJA402h/no1HHDDp
+         mJ5ft6vz/lmNE9MU9KMpcyjz+o9qQWQoAQvSiZKRcDrsJE0apuHQ4o4MJc9oD552Kp2P
+         Y0vWuZ1Muod+2scvVZLVVDgdnZHIYE9EhoiT8wuo40LVNHN1q0kvHdlF09fa4gnv4SUo
+         BsttPy3Bht5kOzJUp0CC9QrKu2fy5rtEoi6rXtw3ohM5FqoZPTd8aLf8xdaiuBFFQCKi
+         pXoQ==
+X-Gm-Message-State: AGi0PubDgto/YJEQciNW/Qs4dkL55wqWBSerwelvEEf9nU9p2MEDZD+M
+        hz8Aq4X5Z/GCuPb/XcUdVj4=
+X-Google-Smtp-Source: APiQypIfdQmzxGJNdWVHAB8GwLoAsSFoHOImV2N3Dvsfbby+B0RiPRPlfuolT2+enPk6TRO8Q0P9xQ==
+X-Received: by 2002:a2e:b4d1:: with SMTP id r17mr8227053ljm.117.1586036447002;
+        Sat, 04 Apr 2020 14:40:47 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id g5sm8802157lfj.14.2020.04.04.14.38.39
+        by smtp.googlemail.com with ESMTPSA id a6sm8730966lfl.5.2020.04.04.14.40.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Apr 2020 14:38:42 -0700 (PDT)
-Subject: Re: [PATCH v10 54/55] Input: atmel_mxt_ts: Implement synchronization
- during various operation
-To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-55-jiada_wang@mentor.com>
- <c53637ef-8e5d-3243-7236-5da360021f21@gmail.com>
- <b06c7915-562f-ec68-766a-2118cfe57a0f@mentor.com>
- <b9a8865c-7754-16f7-8f66-9cd70dc42d3c@gmail.com>
- <271b1013-63e4-cd05-f859-07032c0e8a85@mentor.com>
+        Sat, 04 Apr 2020 14:40:46 -0700 (PDT)
+Subject: Re: [PATCH] PM / devfreq: tegra30: Delete an error message in
+ tegra_devfreq_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+References: <ba67e238-43a7-6c53-363e-7a2c12f09949@web.de>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <19099308-7965-7d2f-e985-d41fe40cc6d6@gmail.com>
-Date:   Sun, 5 Apr 2020 00:38:32 +0300
+Message-ID: <27bdd09b-0b8d-a6ef-2ffd-53421277fcca@gmail.com>
+Date:   Sun, 5 Apr 2020 00:40:42 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <271b1013-63e4-cd05-f859-07032c0e8a85@mentor.com>
+In-Reply-To: <ba67e238-43a7-6c53-363e-7a2c12f09949@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -86,125 +86,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.04.2020 11:39, Wang, Jiada пишет:
-> Hi Dmitry
+04.04.2020 21:45, Markus Elfring пишет:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 4 Apr 2020 20:34:02 +0200
 > 
-> On 2020/04/02 22:24, Dmitry Osipenko wrote:
->> 02.04.2020 14:50, Wang, Jiada пишет:
->>> Hi Dmitry
->>>
->>> On 2020/04/02 1:04, Dmitry Osipenko wrote:
->>>> 31.03.2020 13:50, Jiada Wang пишет:
->>>>> From: Sanjeev Chugh <sanjeev_chugh@mentor.com>
->>>>>
->>>>> There could be scope of race conditions when sysfs is being handled
->>>>> and at the same time, device removal is occurring. For example,
->>>>> we don't want the device removal to begin if the Atmel device
->>>>> cfg update is going on or firmware update is going on. In such
->>>>> cases, wait for device update to be completed before the removal
->>>>> continues.
->>>>>
->>>>>       Thread                                          Thread 2:
->>>>> =========================
->>>>> =========================
->>>>> mxt_update_fw_store()                           mxt_remove()
->>>>> mutex_lock(&data->lock)                         ...
->>>>> mxt_initialize()                                //Tries to acquire
->>>>> lock
->>>>>     request_firmware_nowait()                    
->>>>> mutex_lock(&data->lock)
->>>>> ...                                             ==>waits for lock()
->>>>> ...                                             .
->>>>> ...                                             .
->>>>> mutex_unlock(&data->lock)                       .
->>>>>                                                   //Gets lock and
->>>>> proceeds
->>>>>                                                 
->>>>> mxt_free_input_device();
->>>>>                                                   ...
->>>>>                                                 
->>>>> mutex_unlock(&data->lock)
->>>>>                                                   //Frees atmel driver
->>>>> data
->>>>>                                                   kfree(data)
->>>>>
->>>>> If the request_firmware_nowait() completes after the driver removal,
->>>>> and callback is triggered. But kernel crashes since the module is
->>>>> already removed.
->>>>>
->>>>> This commit adds state machine to serialize such scenarios.
->>>>
->>>> Won't it be easier to bump driver's module use-count by __module_get()
->>>> while firmware is updating? Or remove sysfs during of mxt_remove()? >
->>>
->>> thanks for your inspiration, I will replace state machine with module
->>> use-count.
->>
->> I'm actually now thinking that the suggestion about the module-count
->> wasn't very correct because this won't really help in regards to
->> mxt_update_fw_store() / mxt_remove() racing.
->>
->> I see that mxt_remove() already invokes the mxt_sysfs_remove(), which
->> should block until mxt_update_fw_store() is completed, shouldn't it?
+> The function “platform_get_irq” can log an error already.
+> Thus omit a redundant message for the exception handling in the
+> calling function.
 > 
-> Yes, you are correct,
-> this commit isn't addressing the real root cause
+> This issue was detected by using the Coccinelle software.
 > 
->>
->> I guess the kfree(data) isn't the real cause of the problem and
->> something like this should help:
->>
->> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c
->> b/drivers/input/touchscreen/atmel_mxt_ts.c
->> index b2edf51e1595..4e66106feeb9 100644
->> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
->> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
->> @@ -4254,6 +4254,7 @@ static void mxt_sysfs_remove(struct mxt_data *data)
->>       struct i2c_client *client = data->client;
->>
->>       sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
->> +    sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
->>   }
->>
->>   static void mxt_reset_slots(struct mxt_data *data)
->> @@ -4649,31 +4650,19 @@ static int mxt_remove(struct i2c_client *client)
->>   {
->>       struct mxt_data *data = i2c_get_clientdata(client);
->>
->> -    mutex_lock(&data->lock);
->> -    if (data->e_state == MXT_STATE_UPDATING_CONFIG_ASYNC ||
->> -        data->e_state == MXT_STATE_UPDATING_CONFIG) {
->> -        data->e_state = MXT_STATE_GOING_AWAY;
->> -        mutex_unlock(&data->lock);
->> -        mxt_wait_for_completion(data, &data->update_cfg_completion,
->> -                    MXT_CONFIG_TIMEOUT);
->> -    } else {
->> -        data->e_state = MXT_STATE_GOING_AWAY;
->> -        mutex_unlock(&data->lock);
->> -    }
->> +    mxt_sysfs_remove(data);
->>
->> -    disable_irq(data->irq);
->> -    sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
->>       if (data->reset_gpio) {
->>           sysfs_remove_link(&client->dev.kobj, "reset");
->>           gpiod_unexport(data->reset_gpio);
->>       }
->> +
->>       mxt_debug_msg_remove(data);
->> -    mxt_sysfs_remove(data);
->>       mxt_free_input_device(data);
->>       mxt_free_object_table(data);
->>
->>     if (debug_state)
->>         cancel_delayed_work_sync(&data->watchdog_work);
->> +    disable_irq(data->irq);
->>
->>       return 0;
->>   }
->>
-> yes, I confirmed, the root cause is because irq is disabled while
-> firmware is being updated, this cause update of firmware can't proceed.
-> by move disable irq after sysfs entry removal can fix the issue
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/devfreq/tegra30-devfreq.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index 28b2c7ca416e..93e6f4b25b04 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -807,10 +807,9 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  	}
+> 
+>  	err = platform_get_irq(pdev, 0);
+> -	if (err < 0) {
+> -		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
+> +	if (err < 0)
+>  		return err;
+> -	}
+> +
+>  	tegra->irq = err;
+> 
+>  	irq_set_status_flags(tegra->irq, IRQ_NOAUTOEN);
+> --
+> 2.26.0
+> 
 
-Okay :)
+Thanks,
+
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
