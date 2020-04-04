@@ -7,46 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BE7C2BA18
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9F7C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89F62072B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D3F206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgDDIoT (ORCPT
+        id S1727795AbgDDIoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:44:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41522 "EHLO
+        Sat, 4 Apr 2020 04:44:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41527 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgDDImA (ORCPT
+        with ESMTP id S1726388AbgDDImB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:42:00 -0400
+        Sat, 4 Apr 2020 04:42:01 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeN5-0000xv-TT; Sat, 04 Apr 2020 10:41:44 +0200
+        id 1jKeNC-00011Y-0Y; Sat, 04 Apr 2020 10:41:50 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 819031C0243;
-        Sat,  4 Apr 2020 10:41:43 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:41:43 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 390491C04E3;
+        Sat,  4 Apr 2020 10:41:47 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:41:46 -0000
+From:   "tip-bot2 for Namhyung Kim" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf top: Support --group-sort-idx to change the
- sort order
-Cc:     Jin Yao <yao.jin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Subject: [tip: perf/urgent] perf cgroup: Maintain cgroup hierarchy
+Cc:     Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200324220711.6025-1-yao.jin@linux.intel.com>
-References: <20200324220711.6025-1-yao.jin@linux.intel.com>
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200325124536.2800725-5-namhyung@kernel.org>
+References: <20200325124536.2800725-5-namhyung@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158598970316.28353.17958323669353267634.tip-bot2@tip-bot2>
+Message-ID: <158598970685.28353.1240498154608229451.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,77 +60,228 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     df7deb2cceef0546ab2115702da3421b7c61a8c0
-Gitweb:        https://git.kernel.org/tip/df7deb2cceef0546ab2115702da3421b7c61a8c0
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Wed, 25 Mar 2020 06:07:10 +08:00
+Commit-ID:     d1277aa36bff4bfc1a187a469fc6a6a1d17cf59c
+Gitweb:        https://git.kernel.org/tip/d1277aa36bff4bfc1a187a469fc6a6a1d17cf59c
+Author:        Namhyung Kim <namhyung@kernel.org>
+AuthorDate:    Wed, 25 Mar 2020 21:45:31 +09:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Fri, 03 Apr 2020 09:37:55 -03:00
 
-perf top: Support --group-sort-idx to change the sort order
+perf cgroup: Maintain cgroup hierarchy
 
-'perf report' supports the option --group-sort-idx, which sorts the
-output by the event at the index n in event group.
+Each cgroup is kept in the perf_env's cgroup_tree sorted by the cgroup
+id.  Hist entries have cgroup id can compare it directly and later it
+can be used to find a group name using this tree.
 
-For example:
-
-  perf record -e cycles,instructions,cache-misses
-  perf report --group --group-sort-idx 2 --stdio
-
-The perf-report output is sorted by cache-misses.
-
-This patch supports --group-sort-idx in perf-top.
-
-For example:
-
-  perf top --group -e cycles,instructions,cache-misses --group-sort-idx 2
-
-The perf-top output is sorted by cache-misses.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200324220711.6025-1-yao.jin@linux.intel.com
+Link: http://lore.kernel.org/lkml/20200325124536.2800725-5-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-top.txt | 5 +++++
- tools/perf/builtin-top.c              | 4 ++++
- 2 files changed, 9 insertions(+)
+ tools/perf/util/cgroup.c  | 80 ++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/cgroup.h  | 17 ++++++--
+ tools/perf/util/env.c     |  2 +-
+ tools/perf/util/env.h     |  6 +++-
+ tools/perf/util/machine.c |  9 +++-
+ 5 files changed, 109 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-index ddab103..487737a 100644
---- a/tools/perf/Documentation/perf-top.txt
-+++ b/tools/perf/Documentation/perf-top.txt
-@@ -53,6 +53,11 @@ Default is to monitor all CPUS.
- --group::
-         Put the counters into a counter group.
- 
-+--group-sort-idx::
-+	Sort the output by the event at the index n in group. If n is invalid,
-+	sort by the first event. It can support multiple groups with different
-+	amount of events. WARNING: This should be used on grouped events.
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index 5bc9d3b..b73fb78 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -191,3 +191,83 @@ int parse_cgroups(const struct option *opt, const char *str,
+ 	}
+ 	return 0;
+ }
 +
- -F <freq>::
- --freq=<freq>::
- 	Profile at this frequency. Use 'max' to use the currently maximum
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 02ea2cf..9ff7943 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1560,6 +1560,10 @@ int cmd_top(int argc, const char **argv)
- 		    "Record namespaces events"),
- 	OPT_BOOLEAN(0, "all-cgroups", &opts->record_cgroup,
- 		    "Record cgroup events"),
-+	OPT_INTEGER(0, "group-sort-idx", &symbol_conf.group_sort_idx,
-+		    "Sort the output by the event at the index n in group. "
-+		    "If n is invalid, sort by the first event. "
-+		    "WARNING: should be used on grouped events."),
- 	OPTS_EVSWITCH(&top.evswitch),
- 	OPT_END()
- 	};
++static struct cgroup *__cgroup__findnew(struct rb_root *root, uint64_t id,
++					bool create, const char *path)
++{
++	struct rb_node **p = &root->rb_node;
++	struct rb_node *parent = NULL;
++	struct cgroup *cgrp;
++
++	while (*p != NULL) {
++		parent = *p;
++		cgrp = rb_entry(parent, struct cgroup, node);
++
++		if (cgrp->id == id)
++			return cgrp;
++
++		if (cgrp->id < id)
++			p = &(*p)->rb_left;
++		else
++			p = &(*p)->rb_right;
++	}
++
++	if (!create)
++		return NULL;
++
++	cgrp = malloc(sizeof(*cgrp));
++	if (cgrp == NULL)
++		return NULL;
++
++	cgrp->name = strdup(path);
++	if (cgrp->name == NULL) {
++		free(cgrp);
++		return NULL;
++	}
++
++	cgrp->fd = -1;
++	cgrp->id = id;
++	refcount_set(&cgrp->refcnt, 1);
++
++	rb_link_node(&cgrp->node, parent, p);
++	rb_insert_color(&cgrp->node, root);
++
++	return cgrp;
++}
++
++struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
++			       const char *path)
++{
++	struct cgroup *cgrp;
++
++	down_write(&env->cgroups.lock);
++	cgrp = __cgroup__findnew(&env->cgroups.tree, id, true, path);
++	up_write(&env->cgroups.lock);
++	return cgrp;
++}
++
++struct cgroup *cgroup__find(struct perf_env *env, uint64_t id)
++{
++	struct cgroup *cgrp;
++
++	down_read(&env->cgroups.lock);
++	cgrp = __cgroup__findnew(&env->cgroups.tree, id, false, NULL);
++	up_read(&env->cgroups.lock);
++	return cgrp;
++}
++
++void perf_env__purge_cgroups(struct perf_env *env)
++{
++	struct rb_node *node;
++	struct cgroup *cgrp;
++
++	down_write(&env->cgroups.lock);
++	while (!RB_EMPTY_ROOT(&env->cgroups.tree)) {
++		node = rb_first(&env->cgroups.tree);
++		cgrp = rb_entry(node, struct cgroup, node);
++
++		rb_erase(node, &env->cgroups.tree);
++		cgroup__put(cgrp);
++	}
++	up_write(&env->cgroups.lock);
++}
+diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
+index 2ec11f0..e98d597 100644
+--- a/tools/perf/util/cgroup.h
++++ b/tools/perf/util/cgroup.h
+@@ -3,16 +3,19 @@
+ #define __CGROUP_H__
+ 
+ #include <linux/refcount.h>
++#include <linux/rbtree.h>
++#include "util/env.h"
+ 
+ struct option;
+ 
+ struct cgroup {
+-	char *name;
+-	int fd;
+-	refcount_t refcnt;
++	struct rb_node		node;
++	u64			id;
++	char			*name;
++	int			fd;
++	refcount_t		refcnt;
+ };
+ 
+-
+ extern int nr_cgroups; /* number of explicit cgroups defined */
+ 
+ struct cgroup *cgroup__get(struct cgroup *cgroup);
+@@ -26,4 +29,10 @@ void evlist__set_default_cgroup(struct evlist *evlist, struct cgroup *cgroup);
+ 
+ int parse_cgroups(const struct option *opt, const char *str, int unset);
+ 
++struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
++			       const char *path);
++struct cgroup *cgroup__find(struct perf_env *env, uint64_t id);
++
++void perf_env__purge_cgroups(struct perf_env *env);
++
+ #endif /* __CGROUP_H__ */
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 4154f94..fadc597 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -6,6 +6,7 @@
+ #include <linux/ctype.h>
+ #include <linux/zalloc.h>
+ #include "bpf-event.h"
++#include "cgroup.h"
+ #include <errno.h>
+ #include <sys/utsname.h>
+ #include <bpf/libbpf.h>
+@@ -168,6 +169,7 @@ void perf_env__exit(struct perf_env *env)
+ 	int i;
+ 
+ 	perf_env__purge_bpf(env);
++	perf_env__purge_cgroups(env);
+ 	zfree(&env->hostname);
+ 	zfree(&env->os_release);
+ 	zfree(&env->version);
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 11d05ae..7632075 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -88,6 +88,12 @@ struct perf_env {
+ 		u32			btfs_cnt;
+ 	} bpf_progs;
+ 
++	/* same reason as above (for perf-top) */
++	struct {
++		struct rw_semaphore	lock;
++		struct rb_root		tree;
++	} cgroups;
++
+ 	/* For fast cpu to numa node lookup via perf_env__numa_node */
+ 	int			*numa_map;
+ 	int			 nr_numa_map;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 399b473..97142e9 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -33,6 +33,7 @@
+ #include "asm/bug.h"
+ #include "bpf-event.h"
+ #include <internal/lib.h> // page_size
++#include "cgroup.h"
+ 
+ #include <linux/ctype.h>
+ #include <symbol/kallsyms.h>
+@@ -654,13 +655,19 @@ int machine__process_namespaces_event(struct machine *machine __maybe_unused,
+ 	return err;
+ }
+ 
+-int machine__process_cgroup_event(struct machine *machine __maybe_unused,
++int machine__process_cgroup_event(struct machine *machine,
+ 				  union perf_event *event,
+ 				  struct perf_sample *sample __maybe_unused)
+ {
++	struct cgroup *cgrp;
++
+ 	if (dump_trace)
+ 		perf_event__fprintf_cgroup(event, stdout);
+ 
++	cgrp = cgroup__findnew(machine->env, event->cgroup.id, event->cgroup.path);
++	if (cgrp == NULL)
++		return -ENOMEM;
++
+ 	return 0;
+ }
+ 
