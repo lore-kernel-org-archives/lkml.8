@@ -2,101 +2,92 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABBAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4F9C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5290A2071C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F265120644
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvWQiF5F"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WslufRIL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgDDPen (ORCPT
+        id S1726446AbgDDPfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 11:34:43 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46223 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgDDPem (ORCPT
+        Sat, 4 Apr 2020 11:35:42 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47262 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgDDPfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 11:34:42 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 111so10537805oth.13;
-        Sat, 04 Apr 2020 08:34:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wJJHt0CSx4rCuEsqr8ESfPqtz2SvcHs+oQjfrjV6kEc=;
-        b=rvWQiF5F8bJnmlWbMT7R49NetVKvTAdp4EJoY3L86knHIuMiThiWt9GN38kOhTFKJh
-         R/puK9Sr3rH99oncCgmc1eK4NIkt+fy8pJp82Uj0vAMSBEQnbAGzU5HSBYLjcU31y0Hq
-         4yaatE2LPEJ5lgaSEd+1NuCPVvtORn+cSTnedW8fICKr4mMw9NT+KjMSLPPB7sN4dlZC
-         dLsMVRtTOT7xshyqN4Uaiqm3NnxvOoKvRkQmkMqQn3LongPZHMloOdNa73uECn/jAC9x
-         dkVQTIIDejHXp9ieN+gkTLpU7d54CHS/0Ks69XfSwNU+pS+nL+vefjtCj7Al4RwaRHRj
-         jSGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wJJHt0CSx4rCuEsqr8ESfPqtz2SvcHs+oQjfrjV6kEc=;
-        b=qvrzP2zJZuma8eBENfjixEQZSgXoh9tiuwNs/hnBp+0tx/iQaepfGS0CvDBcBP2TjF
-         klgYZmoAnbliOaWJEg//04Eij7dhyIEdEIzNvy9I2ulwk31K3+JjOZBs7AtE7Nx1Fl+C
-         vDa0oH8/Ztu78FpsG0GEQH6of2bJbjZ0fJeynaMWqP6qYphGiMNl/mFPjFwvQRW8rn3u
-         yaQLmy2e4CcJxq/lJf56PNb/MoNjS3Zc2r6stsvjFJefUNW3t+XBqyZXVc7e74iAQAmf
-         wnYbeHpcwP3kNpNrzi8f0ErQVNM9J8aKmzT3fPOVK1vWxY2SoksV3pJ+m+4Mprv+dQGt
-         vUKQ==
-X-Gm-Message-State: AGi0PuYGM1M4Kc6mqRFnjd239hP2meLsH+7zGofk7MrZ0ZA9uW4GNVHc
-        f5TLcb1UH2xlqa9qR634WDeK+Q6l8W0WKeMTZqY=
-X-Google-Smtp-Source: APiQypJurN6kKeueDqM6o5vZ2pCFzzx2u9sVqqily6xPz9KLmAwCuSMsRcuswvGToxGksPlnBUBs6hgZxPamk8aeaiQ=
-X-Received: by 2002:a9d:7a45:: with SMTP id z5mr10438979otm.181.1586014481828;
- Sat, 04 Apr 2020 08:34:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200403112830.505720-1-gch981213@gmail.com> <20200403180911.Horde.9xqnJvjcRDe-ttshlJbG6WE@www.vdorst.com>
- <CAJsYDVJj1JajVxeGifaOprXYstG-gC_OYwd5LrALUY_4BdtR3A@mail.gmail.com> <20200404150810.GA161768@lunn.ch>
-In-Reply-To: <20200404150810.GA161768@lunn.ch>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Sat, 4 Apr 2020 23:34:30 +0800
-Message-ID: <CAJsYDV+NY90r=PV0dYRRaTEuxQAMTbakLvguX-1jOu3OQwYfSQ@mail.gmail.com>
-Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
-        netdev@vger.kernel.org, stable@vger.kernel.org,
-        Sean Wang <sean.wang@mediatek.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 4 Apr 2020 11:35:41 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 034FRsCm040152;
+        Sat, 4 Apr 2020 15:35:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ content-transfer-encoding : from : mime-version : subject : message-id :
+ date : cc : to; s=corp-2020-01-29;
+ bh=DLf2vhWBRYv3EPu/oUxKTRyjQV56vIPOgQY2nOhxbP0=;
+ b=WslufRIL4441F25A+QBTCYAvUFxpAc0TRPSF1dIj+BChAWs6c2cO2rQ4nUHDth3qjSU6
+ O5NOJIubS+o1Ir+rPaKDuezDh+zlpd9WF3stAb70LdJ7ZZLrL0H4sZ40wwQLc7NMgOw4
+ mo8V7c3Yfd0B6zKvkRrZFAbDPvLpnxf7eswqn8Ggx2sM+nugQZe3dwJU1qtYbVNICu6T
+ 6suba0EPMWOc/GSq7/+Df5dCk1tkdhl+Xu68FXEvcornLYFH7aSV8Xz0j7GBLeq9iBWr
+ dtuy8K20p41vkntWsmnlc8bLYZh0V/1DTFyUp+t+ilNU44qglD/ZmYFnsNCDcZleKJO0 yg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 306j6m1650-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 04 Apr 2020 15:35:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 034FRG0e100081;
+        Sat, 4 Apr 2020 15:35:07 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 306j21fub1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 04 Apr 2020 15:35:06 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 034FZ4nb019828;
+        Sat, 4 Apr 2020 15:35:04 GMT
+Received: from [10.0.0.106] (/76.25.178.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 04 Apr 2020 08:35:04 -0700
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   William Kucharski <william.kucharski@oracle.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re:   [PATCH] mm/vmalloc: Sanitize __get_vm_area() arguments
+Message-Id: <D25C4027-6EF9-44C2-AD4D-DDC785288B9A@oracle.com>
+Date:   Sat, 4 Apr 2020 09:35:02 -0600
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jroedel@suse.de,
+        vbabka@suse.cz, urezki@gmail.com,
+        Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: iPhone Mail (17F5034c)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9581 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=582 spamscore=0 adultscore=0 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004040145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9581 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=659 spamscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004040145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+=EF=BB=BFIs there any need to similarly sanitize =E2=80=9Csize=E2=80=9D to a=
+ssure start + size doesn=E2=80=99t go past =E2=80=9Cend?=E2=80=9D
 
-On Sat, Apr 4, 2020 at 11:08 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> > > MT7530 tries to detect if 2nd GMAC is using a phy with phy-address 0 or 4.
-> >
-> > What if the 2nd GMAC connects to an external PHY on address 0 on a
-> > different mdio-bus?
->
-> In general, you using a phy-handle to cover such a situation. If there
-> is a phy-handle, just use it.
+> On Apr 3, 2020, at 10:33, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> =EF=BB=BF
+> __get_vm_area() is an exported symbol, make sure the callers stay in
+> the expected memory range. When calling this function with memory
+> ranges outside of the VMALLOC range *bad* things can happen.
 
-If it's determining where switch mac5 is wired, a phy-handle is fine.
-Here we are determining where exposed rgmii2 pins are wired.
-It can be wired to switch mac5 or skip the switch mac completely
-and connected to phy0/phy4.
-Current driver is determining rgmii2 wiring on mt7530 using phy-handle
-on *another unrelated ethernet node* which doesn't sound right.
-
--- 
-Regards,
-Chuanhong Guo
