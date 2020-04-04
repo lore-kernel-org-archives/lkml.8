@@ -2,268 +2,197 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722A1C2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 12:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2E2C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA94206F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 12:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8E6206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:00:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="VxLdtqtE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgDDMvK (ORCPT
+        id S1726323AbgDDNAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 08:51:10 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:52089 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgDDMvJ (ORCPT
+        Sat, 4 Apr 2020 09:00:45 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37175 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgDDNAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 08:51:09 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A7EF124000A;
-        Sat,  4 Apr 2020 12:51:06 +0000 (UTC)
-Date:   Sat, 4 Apr 2020 14:51:06 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RTC for 5.7
-Message-ID: <20200404125106.GA12183@piout.net>
+        Sat, 4 Apr 2020 09:00:45 -0400
+Received: by mail-wm1-f67.google.com with SMTP id j19so10820639wmi.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 06:00:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WRUK9Ms0WeS5OK2iO/4vjHdnRSnaNQskl7BP9q0uE6I=;
+        b=VxLdtqtEso8z+nbdFzeBHULpwTxfHFk2lHLH3sGQXdnWdQR9GBV6evBqa4v/Hd67id
+         Ppnt+JRvh3n5cph+hdz2Je5ZLrISsbuFaMru8mZHNZ0kwSu71Rhntw8kg252fp8U3GZM
+         hcQo6t16ejHZ6TTIBsxxZnH1H0NUye7dtkxN4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WRUK9Ms0WeS5OK2iO/4vjHdnRSnaNQskl7BP9q0uE6I=;
+        b=eOWKuBGGp6F/GfBZ5DaDgI0R5lNjBP0O9thpf77z3IoujtQ/T2OitAd037jVkuQ7ym
+         O5c7GyEO+7Rus0MGoUcXj6oTs1SqffkuVzsO+Ey/8HZgtJi1xCTM5h/e3fNZBAAzrFri
+         Mta5ZC12dfhwMGdqXYYRcLFcwAEoraGxiRfhhLleKEI52D25xo6f/1X7j0uS50AeaD/e
+         gv9JUWGEEu66W762k9Lz6qmAIBTwQgqVeh0RixVxEaKw0dNaVasrAnYHWHKgVvIddFbK
+         zx32kizYqYQoPHciBNDaeCh9PXIz1eHRaq50H8+gSw5m9xNRbrnKIPtH1Bo9gU/RIalY
+         wRaw==
+X-Gm-Message-State: AGi0Puagdk5ru99L5c871ZqiwvbglO/QpMZ6NRQ3uMSnKzlb9Z6M04QD
+        +bQOY96pR19VMk67Ml5dnl3CJDE0fhjqZmPx0dEantV8
+X-Google-Smtp-Source: APiQypLI7YvZQkb0mLx8qp8JXyMLlLFqQ8w/4kT24eFi/Y15UdOQb13Elit3vs6Eg9CD9fZPxSvRVVYGtLm+ZdVxhCw=
+X-Received: by 2002:a7b:cd8c:: with SMTP id y12mr5425396wmj.106.1586005242282;
+ Sat, 04 Apr 2020 06:00:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20200330131439.2405-1-ignat@cloudflare.com> <20200330131439.2405-2-ignat@cloudflare.com>
+ <f96ad8b8-0a26-448a-4a27-8712a82001c4@infradead.org>
+In-Reply-To: <f96ad8b8-0a26-448a-4a27-8712a82001c4@infradead.org>
+From:   Ignat Korchagin <ignat@cloudflare.com>
+Date:   Sat, 4 Apr 2020 14:00:31 +0100
+Message-ID: <CALrw=nH=Stp9RMCrZveASdp=bf_t8-pSRnXv7E7pC8+aGHsj4w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mnt: add support for non-rootfs initramfs
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+Sorry, forgot to follow up in this thread. I've reposted v2 patches
+with documentation.
 
-Here is the pull-request for the RTC subsystem for 5.7.
+Regards,
+Ignat
 
-More cleanup this cycle, with the final goal of removing the
-rtc_time_to_tm and rtc_tm_to_time wrappers. All the drivers that have 
-been modified for this now are ready for the end of times (whether it 
-happens in 2033, 2038, 2106, 2127 or even 4052). There is also a single
-new driver and the usual fixes and features.
-
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
-
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.7
-
-for you to fetch changes up to 1821b79d6a7d6973d1630e71380da8bb5e95f3a5:
-
-  rtc: ds1307: check for failed memory allocation on wdt (2020-04-03 13:38:24 +0200)
-
-----------------------------------------------------------------
-RTC for 5.7
-
-Subsystem:
- - The rtc_time_to_tm and rtc_tm_to_time wrappers have finally been removed and
-   only the 64bit version remain.
- - hctosys now works with drivers compiled as modules
-
-New driver:
- - MediaTek MT2712 SoC based RTC
-
-Drivers:
- - set range for 88pm860x, au1xxx, cpcap, da9052, davinci, ds1305, ds1374,
-   mcp5121, pl030, pl031, pm8xxx, puv3, sa1100, sirfsoc, starfire, sun6i
- - ds1307: DS1388 oscillator failure detection and watchdog support
- - jz4740: JZ4760 support
- - pcf85063: clock out pin support
- - sun6i: external 32k oscillator is now optional, the range is now handled by
-   the core, providing a solution for 2034.
-
-----------------------------------------------------------------
-Alexandre Belloni (57):
-      rtc: sirfsoc: convert to devm_rtc_allocate_device
-      rtc: sirfsoc: set range
-      rtc: sirfsoc: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: davinci: convert to devm_rtc_allocate_device
-      rtc: davinci: remove useless 24h alarm handling
-      rtc: davinci: let the core handle rtc range
-      rtc: davinci: remove useless error handling
-      rtc: pl030: set range
-      rtc: pl030: remove useless invalid alarm handling
-      rtc: pl030: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: starfire: set range
-      rtc: starfire: switch to rtc_time64_to_tm
-      rtc: au1xxx: convert to devm_rtc_allocate_device
-      rtc: au1xxx: remove goto label
-      rtc: au1xxx: set range
-      rtc: au1xxx: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: sa1100: fix possible race condition
-      rtc: sa1100: set range
-      rtc: sa1100: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: cpcap: convert to devm_rtc_allocate_device
-      rtc: cpcap: set range
-      rtc: cpcap: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: ds1374: fix possible race condition
-      rtc: ds1374: set range
-      rtc: ds1374: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: ds1305: set range
-      rtc: ds1305: switch to rtc_tm_to_time64
-      rtc: pm8xxx: convert to devm_rtc_allocate_device
-      rtc: pm8xxx: set range
-      rtc: pm8xxx: : switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: pm8xxx: stop validating valid alarm time
-      rtc: mpc5121: simplify probe
-      rtc: mpc5121: convert to devm_rtc_allocate_device
-      rtc: mpc5121: set range
-      rtc: mpc5121: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: fsl-ftm-alarm: allow COMPILE_TEST
-      rtc: pl031: remove useless invalid alarm handling
-      rtc: pl031: set range
-      rtc: pl031: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: ab8500: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: puv3: set range
-      rtc: puv3: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: 88pm860x: fix possible race condition
-      rtc: 88pm860x: stop setting a default time
-      rtc: 88pm860x: stop calling unused callback
-      rtc: 88pm860x: set range
-      rtc: 88pm860x: stop mangling alarm time
-      rtc: 88pm860x: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: 88pm860x: remove platform data support
-      rtc: mt2712: fix build without PM_SLEEP
-      rtc: class: avoid unnecessary lookup in hctosys
-      rtc: da9052: convert to devm_rtc_allocate_device
-      rtc: da9052: set range
-      rtc: da9052: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: sun6i: switch to rtc_time64_to_tm/rtc_tm_to_time64
-      rtc: sun6i: let the core handle rtc range
-      rtc: remove rtc_time_to_tm and rtc_tm_to_time
-
-Anson Huang (4):
-      rtc: snvs: Remove unused include of of_device.h
-      rtc: snvs: Improve Kconfig dependency
-      rtc: snvs: Use devm_add_action_or_reset() for calls to clk_disable_unprepare()
-      rtc: mxc: Use devm_add_action_or_reset() for calls to clk_disable_unprepare()
-
-Biwen Li (1):
-      rtc: fsl-ftm-alarm: report alarm to core
-
-Chris Packham (2):
-      rtc: ds1307: handle oscillator failure flags for ds1388 variant
-      rtc: ds1307: add support for watchdog timer on ds1388
-
-Colin Ian King (2):
-      rtc: class: remove redundant assignment to variable err
-      rtc: ds1307: check for failed memory allocation on wdt
-
-Corentin Labbe (1):
-      rtc: max8907: add missing select REGMAP_IRQ
-
-Eugene Syromiatnikov (1):
-      rtc: make definitions in include/uapi/linux/rtc.h actually useful for user space
-
-Geert Uytterhoeven (1):
-      rtc: sh: Restore devm_ioremap() alignment
-
-Jernej Skrabec (1):
-      rtc: sun6i: Make external 32k oscillator optional
-
-Keyur Patel (1):
-      rtc: bd70528: Avoid double error messaging when IRQ absent
-
-Leonard Crestez (1):
-      rtc: imx-sc: Align imx sc msg structs to 4
-
-Michael McCormick (1):
-      rtc: pcf85063: Add pcf85063 clkout control to common clock framework
-
-Paul Cercueil (3):
-      rtc: jz4740: Add support for JZ4760 SoC
-      rtc: jz4740: Rename vendor-specific DT properties
-      dt-bindings: rtc: Convert and update jz4740-rtc doc to YAML
-
-Peng Ma (1):
-      rtc: fsl-ftm-alarm: enable acpi support
-
-Ran Bi (3):
-      dt-bindings: rtc: add bindings for MT2712 RTC
-      rtc: add support for the MediaTek MT2712 RTC
-      MAINTAINERS: add MT2712 RTC files
-
-Srinivas Neeli (1):
-      rtc: zynqmp: Clear alarm interrupt status before interrupt enable
-
-Steve Muckle (1):
-      rtc: class: support hctosys from modular RTC drivers
-
-Thomas Bogendoerfer (1):
-      rtc: m48t35: remove SGI-IP27 kludge
-
-Uwe Kleine-König (1):
-      rtc: omap: drop unused dt-bindings header
-
-Ville Syrjälä (1):
-      rtc: cmos: Use spin_lock_irqsave() in cmos_interrupt()
-
-suguosong (1):
-      rtc: sysfs: use kobj_to_dev
-
-韩科才 (1):
-      rtc: pm8xxx: clear alarm register when alarm is not enabled
-
- .../devicetree/bindings/rtc/ingenic,jz4740-rtc.txt |  37 --
- .../devicetree/bindings/rtc/ingenic,rtc.yaml       |  83 ++++
- .../devicetree/bindings/rtc/rtc-mt2712.txt         |  14 +
- MAINTAINERS                                        |   2 +
- drivers/rtc/Kconfig                                |  18 +-
- drivers/rtc/Makefile                               |   2 +-
- drivers/rtc/class.c                                |  49 +++
- drivers/rtc/hctosys.c                              |  69 ----
- drivers/rtc/rtc-88pm860x.c                         | 104 +----
- drivers/rtc/rtc-ab8500.c                           |  10 +-
- drivers/rtc/rtc-au1xxx.c                           |  29 +-
- drivers/rtc/rtc-bd70528.c                          |   4 +-
- drivers/rtc/rtc-cmos.c                             |   5 +-
- drivers/rtc/rtc-cpcap.c                            |  13 +-
- drivers/rtc/rtc-da9052.c                           |  18 +-
- drivers/rtc/rtc-davinci.c                          |  58 +--
- drivers/rtc/rtc-ds1305.c                           |  10 +-
- drivers/rtc/rtc-ds1307.c                           | 126 ++++++
- drivers/rtc/rtc-ds1374.c                           |  27 +-
- drivers/rtc/rtc-fsl-ftm-alarm.c                    |  23 +-
- drivers/rtc/rtc-imx-sc.c                           |   2 +-
- drivers/rtc/rtc-jz4740.c                           |   9 +-
- drivers/rtc/rtc-m48t35.c                           |   7 +-
- drivers/rtc/rtc-mpc5121.c                          |  61 +--
- drivers/rtc/rtc-mt2712.c                           | 423 +++++++++++++++++++++
- drivers/rtc/rtc-mxc.c                              |  46 +--
- drivers/rtc/rtc-omap.c                             |   1 -
- drivers/rtc/rtc-pcf85063.c                         | 157 ++++++++
- drivers/rtc/rtc-pl030.c                            |  27 +-
- drivers/rtc/rtc-pl031.c                            |  53 +--
- drivers/rtc/rtc-pm8xxx.c                           |  40 +-
- drivers/rtc/rtc-puv3.c                             |  14 +-
- drivers/rtc/rtc-sa1100.c                           |  40 +-
- drivers/rtc/rtc-sh.c                               |   3 +-
- drivers/rtc/rtc-sirfsoc.c                          |  44 +--
- drivers/rtc/rtc-snvs.c                             |  28 +-
- drivers/rtc/rtc-starfire.c                         |  10 +-
- drivers/rtc/rtc-sun6i.c                            |  47 +--
- drivers/rtc/rtc-zynqmp.c                           |  27 +-
- drivers/rtc/sysfs.c                                |   2 +-
- include/linux/rtc.h                                |  12 -
- include/uapi/linux/rtc.h                           |  11 +-
- 42 files changed, 1192 insertions(+), 573 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt2712.txt
- delete mode 100644 drivers/rtc/hctosys.c
- create mode 100644 drivers/rtc/rtc-mt2712.c
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+On Mon, Mar 30, 2020 at 8:03 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 3/30/20 6:14 AM, Ignat Korchagin wrote:
+> > The main need for this is to support container runtimes on stateless Linux
+> > system (pivot_root system call from initramfs).
+> >
+> > Normally, the task of initramfs is to mount and switch to a "real" root
+> > filesystem. However, on stateless systems (booting over the network) it is just
+> > convenient to have your "real" filesystem as initramfs from the start.
+> >
+> > This, however, breaks different container runtimes, because they usually use
+> > pivot_root system call after creating their mount namespace. But pivot_root does
+> > not work from initramfs, because initramfs runs form rootfs, which is the root
+> > of the mount tree and can't be unmounted.
+> >
+> > One workaround is to do:
+> >
+> >   mount --bind / /
+> >
+> > However, that defeats one of the purposes of using pivot_root in the cloned
+> > containers: get rid of host root filesystem, should the code somehow escapes the
+> > chroot.
+> >
+> > There is a way to solve this problem from userspace, but it is much more
+> > cumbersome:
+> >   * either have to create a multilayered archive for initramfs, where the outer
+> >     layer creates a tmpfs filesystem and unpacks the inner layer, switches root
+> >     and does not forget to properly cleanup the old rootfs
+> >   * or we need to use keepinitrd kernel cmdline option, unpack initramfs to
+> >     rootfs, run a script to create our target tmpfs root, unpack the same
+> >     initramfs there, switch root to it and again properly cleanup the old root,
+> >     thus unpacking the same archive twice and also wasting memory, because
+> >     the kernel stores compressed initramfs image indefinitely.
+> >
+> > With this change we can ask the kernel (by specifying nonroot_initramfs kernel
+> > cmdline option) to create a "leaf" tmpfs mount for us and switch root to it
+> > before the initramfs handling code, so initramfs gets unpacked directly into
+> > the "leaf" tmpfs with rootfs being empty and no need to clean up anything.
+> >
+> > This also bring the behaviour in line with the older style initrd, where the
+> > initrd is located on some leaf filesystem in the mount tree and rootfs remaining
+> > empty.
+> >
+> > Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+> > ---
+> >  fs/namespace.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+>
+> Hi,
+> Please document "nonroot_initramfs" in
+> Documentation/admin-guide/kernel-parameters.txt.
+>
+> > diff --git a/fs/namespace.c b/fs/namespace.c
+> > index 85b5f7bea82e..a1ec862e8146 100644
+> > --- a/fs/namespace.c
+> > +++ b/fs/namespace.c
+> > @@ -3701,6 +3701,49 @@ static void __init init_mount_tree(void)
+> >       set_fs_root(current->fs, &root);
+> >  }
+> >
+> > +#if IS_ENABLED(CONFIG_TMPFS)
+> > +static int __initdata nonroot_initramfs;
+> > +
+> > +static int __init nonroot_initramfs_param(char *str)
+> > +{
+> > +     if (*str)
+> > +             return 0;
+> > +     nonroot_initramfs = 1;
+> > +     return 1;
+> > +}
+> > +__setup("nonroot_initramfs", nonroot_initramfs_param);
+> > +
+> > +static void __init init_nonroot_initramfs(void)
+> > +{
+> > +     int err;
+> > +
+> > +     if (!nonroot_initramfs)
+> > +             return;
+> > +
+> > +     err = ksys_mkdir("/root", 0700);
+> > +     if (err < 0)
+> > +             goto out;
+> > +
+> > +     err = do_mount("tmpfs", "/root", "tmpfs", 0, NULL);
+> > +     if (err)
+> > +             goto out;
+> > +
+> > +     err = ksys_chdir("/root");
+> > +     if (err)
+> > +             goto out;
+> > +
+> > +     err = do_mount(".", "/", NULL, MS_MOVE, NULL);
+> > +     if (err)
+> > +             goto out;
+> > +
+> > +     err = ksys_chroot(".");
+> > +     if (!err)
+> > +             return;
+> > +out:
+> > +     printk(KERN_WARNING "Failed to create a non-root filesystem for initramfs\n");
+> > +}
+> > +#endif /* IS_ENABLED(CONFIG_TMPFS) */
+> > +
+> >  void __init mnt_init(void)
+> >  {
+> >       int err;
+> > @@ -3734,6 +3777,10 @@ void __init mnt_init(void)
+> >       shmem_init();
+> >       init_rootfs();
+> >       init_mount_tree();
+> > +
+> > +#if IS_ENABLED(CONFIG_TMPFS)
+> > +     init_nonroot_initramfs();
+> > +#endif
+> >  }
+> >
+> >  void put_mnt_ns(struct mnt_namespace *ns)
+> >
+>
+> thanks.
+> --
+> ~Randy
+>
