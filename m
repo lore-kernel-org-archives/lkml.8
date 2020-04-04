@@ -2,115 +2,81 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B14C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141A0C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CA1206B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D76A9206B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iDlR/6TV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgDDISN (ORCPT
+        id S1725962AbgDDI2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:18:13 -0400
-Received: from mga03.intel.com ([134.134.136.65]:7558 "EHLO mga03.intel.com"
+        Sat, 4 Apr 2020 04:28:18 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34858 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgDDISM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:18:12 -0400
-IronPort-SDR: pTuOzoX0oZHsGbI1XX2yEEA6qKwf7IfXTx/lOlXAbGcPolN93BENPMATfk/3WfEPwa700Z/GC8
- qza/HhhG/gTQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2020 01:18:11 -0700
-IronPort-SDR: oWNvoibv/NVKa6nUxJdw9GnxF7+JVv9j3/h3sDQzlGAbdflpMLM9iNTXJpIG5pdiQp8BytKN+t
- lB0vFI0Ft37w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,343,1580803200"; 
-   d="scan'208";a="451544685"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 04 Apr 2020 01:18:10 -0700
-Received: from [10.249.93.66] (abudanko-mobl.ccr.corp.intel.com [10.249.93.66])
-        by linux.intel.com (Postfix) with ESMTP id 764C65802C8;
-        Sat,  4 Apr 2020 01:18:03 -0700 (PDT)
-Subject: Re: [PATCH v8 04/12] perf tool: extend Perf tool with CAP_PERFMON
- capability support
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
+        id S1725730AbgDDI2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 04:28:18 -0400
+Received: from zn.tnic (p200300EC2F1E3400040841973BDD3BB0.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:3400:408:4197:3bdd:3bb0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 26EFA1EC02FE;
+        Sat,  4 Apr 2020 10:28:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585988897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=KD7/EU25J2NOqaxnICLmUh19mbe66wMyELa4SPkmqR0=;
+        b=iDlR/6TV5HB0fSFqnTt3UZRpzcG1jvgV6kBv7ev6GXOPFt1J2w1QUwFJeopty9CyHY3YdP
+        gXlRQ8lzCzTuV3AjWX1KwZgtcVQiFkOP00VriGfxJdkml7/99GYQ6D/1XzFbCBAkN8UheU
+        cWMny/FqQFTL0tyGEgDy6BRWjNJ0nmc=
+Date:   Sat, 4 Apr 2020 10:28:09 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <a66d5648-2b8e-577e-e1f2-1d56c017ab5e@linux.intel.com>
- <CAM9d7cgRczLcyUi1y96a=87Hh3BhFgRUS8Kw=DBg4C0hVYj2HQ@mail.gmail.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <ab15a8af-26a6-f8e7-cd7a-6b3fde99eaf9@linux.intel.com>
-Date:   Sat, 4 Apr 2020 11:18:01 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>, x86@kernel.org,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Subject: Re: [PATCH] x86/cpufeatures: Add enumeration for serialize
+ instruction
+Message-ID: <20200404082809.GA7356@zn.tnic>
+References: <20200403014026.19137-1-ricardo.neri-calderon@linux.intel.com>
+ <20200403081217.GA20218@zn.tnic>
+ <20200404052039.GA14886@ranerica-svr.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7cgRczLcyUi1y96a=87Hh3BhFgRUS8Kw=DBg4C0hVYj2HQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200404052039.GA14886@ranerica-svr.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Namhyung,
+On Fri, Apr 03, 2020 at 10:20:39PM -0700, Ricardo Neri wrote:
+> Do you mean code in the kernel using this instructions. Thus far, I
+> don't have any kernel use cases for this instruction.
 
-On 04.04.2020 5:18, Namhyung Kim wrote:
-> Hello,
-> 
-> On Thu, Apr 2, 2020 at 5:47 PM Alexey Budankov
-> <alexey.budankov@linux.intel.com> wrote:
->>
->>
->> Extend error messages to mention CAP_PERFMON capability as an option
->> to substitute CAP_SYS_ADMIN capability for secure system performance
->> monitoring and observability operations. Make perf_event_paranoid_check()
->> and __cmd_ftrace() to be aware of CAP_PERFMON capability.
->>
->> CAP_PERFMON implements the principal of least privilege for performance
->> monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
->> principle of least privilege: A security design principle that states
->> that a process or program be granted only those privileges (e.g.,
->> capabilities) necessary to accomplish its legitimate function, and only
->> for the time that such privileges are actually required)
->>
->> For backward compatibility reasons access to perf_events subsystem remains
->> open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
->> secure perf_events monitoring is discouraged with respect to CAP_PERFMON
->> capability.
->>
->> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->> Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+I'm sure you can find at least a couple of places in the kernel
+which use CPUID to serialize and could switch to this new insn with
+alternatives, for example. Or all those memory barrier uses. Would it be
+better to switch to SERIALIZE there? Dunno, but would be good to know.
+And so on.
 
-Thanks! I appreciate you involvement and effort.
+> My intention is to expose this instruction to user space via
+> /proc/cpuinfo. Is that not acceptable?
 
-~Alexey
+I know what your intention is. What good is the string "serialize" in
+/proc/cpuinfo if nothing uses it?
 
-> 
-> Thanks
-> Namhyung
-> 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
