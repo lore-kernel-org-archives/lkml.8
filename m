@@ -5,111 +5,103 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9365C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153D8C2BA18
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E079206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7E8206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586019635;
-	bh=Q9DGxEZ75n/+g0aOKcev+m75GcJbUC1U+Egq5Ib2rDc=;
+	s=default; t=1586019669;
+	bh=5OFmxiVoCmVBqy5diJ09G/GGUCSa1tSBI7WL/e1C9WE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N2ec4tCsi2WiNn0lGpyhB/kf72gnzAMj3kpV3BTRjs/245YN6lWijKJslucCdUjKK
-	 I6G3743JuCi4NppQ4Ghjqj7/HbU8WxSRZDFNloo7fUO6xf/gItWIh0RL7SUH2d+xrB
-	 Qyns4vqPPY6RdfD4iXgcjdjRo+VkVLePeVedtYIQ=
+	b=mElfBNFWt+gigOtc42S79ahPmNoQuM7pBBkFVtVcAL8A6+UKU6cd+Ia2CUxmz909R
+	 +Q4tpN5hnHq2iVqYVOzgqZ8I93cb/aOOYJ05X8go5uY94mLpshllsmdESNtjdlwW10
+	 /T1nCiPBVhMIB7m/7Jo3AzBTK0bHg3jEY4b/qNec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgDDRAc (ORCPT
+        id S1726329AbgDDRBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 13:00:32 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:37789 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgDDRAc (ORCPT
+        Sat, 4 Apr 2020 13:01:07 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:44595 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgDDRBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 13:00:32 -0400
-Received: by mail-il1-f194.google.com with SMTP id a6so10572786ilr.4;
-        Sat, 04 Apr 2020 10:00:30 -0700 (PDT)
+        Sat, 4 Apr 2020 13:01:07 -0400
+Received: by mail-io1-f43.google.com with SMTP id h6so1224045iok.11;
+        Sat, 04 Apr 2020 10:01:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b4kl0NLLFcA0pn57UJb7veMZizU71qWwaJMkCLDmT14=;
-        b=bTwG+72I/zpvdcle8kEay+ZzI43XVulBvGIJfU+HkKxt7FOVYnKU4jfYh6GF9A4WDN
-         UmEUOf9MhTiZn1G+OTCIX6uLjCBvvc0kI5fq7p1WugkX/Ay24rLVfAQJ/5IF8hQzc0gT
-         MuQ/+VrDFDSVpmSWaf6mUstB2xHzHEeGh4EofjpA66g6OfkoW1G3DUtKu80bc5DaAhMy
-         fKUIRPA7dNlqVXdU2Fq/2Dafr1pPfAfderhikO2pGgqtVUkB3B24YupUaFltjVhbU4TC
-         CZKbDvtEkWE6O6AlPdetaCn3La4a0Yeqkbk+2PLG3uWsR7t2H1y0GrWwyagEr/+bm/J4
-         SECA==
-X-Gm-Message-State: AGi0PuYq0NWJIEFZ2wlce1QlVXOhsIALO+9kAQcw+AwM3wZ7SNlv96RD
-        4EpteDqzkcyNofLFOygW8hOVwpw=
-X-Google-Smtp-Source: APiQypJ+bshZTlCGhsnPSYdXqvLk4YbF17FiZptNH1O88h8uIgBD2k4BdVMGGzXW6OxeszhF7KqufA==
-X-Received: by 2002:a92:8c93:: with SMTP id s19mr12535365ill.222.1586019629542;
-        Sat, 04 Apr 2020 10:00:29 -0700 (PDT)
+        bh=W3QnbCRQ+OMyJ5TR+NLbh/l1h0t7JzVwEHPSm6WoW2A=;
+        b=MS/YNzu0fOA3xASyLUOCH4oMoW3CxmN6JjV05M9JmdYIobpmDpwUTV86+Hz1mbWkvq
+         B/JdmwqEXFhmFwWDczewcOsHlK3X7C9b9XhMron12UzUf1+T0dJtB9nQUVPjtSkfbG5K
+         HmwN52gZXt0G3jZyauV5c92W812vHENduACOc5t1wiSiGSaLTdQxfSF0acL7ldoydiFh
+         sd7s6DpIBbOpv++zUmyZsG8f7MLQzDQ4jplP1yfjjqXTK5Uq8cwhYjxyQjS43m1KyAfY
+         95FVAyT5oFOxTD52uyJR3gITBUfSuPK8sSX9anCEoHNQgouIQyM5OH500bAHYCAm5oLV
+         xy1w==
+X-Gm-Message-State: AGi0PuZsLDrc37yaW2GrSbb59Iml1WeOwT6bpNJdU9al4glL7SQw72jT
+        tQtfgW32CHuAO2S1CJtx/A==
+X-Google-Smtp-Source: APiQypKwYcyLwX0Wb9G7R8uv+u7P+MQBJY18WS53VRC/llom69e5hbwh4TiXP7skB+jS0vodAp0mBA==
+X-Received: by 2002:a02:c85b:: with SMTP id r27mr13256182jao.83.1586019665982;
+        Sat, 04 Apr 2020 10:01:05 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id t86sm4038008ili.82.2020.04.04.10.00.27
+        by smtp.gmail.com with ESMTPSA id l70sm4072094ili.81.2020.04.04.10.01.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 10:00:28 -0700 (PDT)
-Received: (nullmailer pid 25017 invoked by uid 1000);
-        Sat, 04 Apr 2020 17:00:26 -0000
-Date:   Sat, 4 Apr 2020 11:00:26 -0600
+        Sat, 04 Apr 2020 10:01:05 -0700 (PDT)
+Received: (nullmailer pid 25897 invoked by uid 1000);
+        Sat, 04 Apr 2020 17:01:04 -0000
+Date:   Sat, 4 Apr 2020 11:01:04 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH 1/3] media: dt-bindings: media: Document Rockchip CIF
- bindings
-Message-ID: <20200404170026.GA24638@bogus>
-References: <20200403142122.297283-1-maxime.chevallier@bootlin.com>
- <20200403142122.297283-2-maxime.chevallier@bootlin.com>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     linux-clk@vger.kernel.org, dinguyen@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCHv5 4/5] dt-bindings: documentation: add clock bindings
+ information for Agilex
+Message-ID: <20200404170104.GA25196@bogus>
+References: <20200403235403.13990-1-dinguyen@kernel.org>
+ <20200403235403.13990-5-dinguyen@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403142122.297283-2-maxime.chevallier@bootlin.com>
+In-Reply-To: <20200403235403.13990-5-dinguyen@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 Apr 2020 16:21:20 +0200, Maxime Chevallier wrote:
-> Add a documentation for the Rockchip Camera Interface controller
-> binding.
+On Fri,  3 Apr 2020 18:54:02 -0500, Dinh Nguyen wrote:
+> Document the Agilex clock bindings, and add the clock header file. The
+> clock header is an enumeration of all the different clocks on the Agilex
+> platform.
 > 
-> This controller can be found on platforms such as the PX30 or the
-> RK3288, the PX30 being the only platform supported so far.
-> 
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 > ---
->  .../bindings/media/rockchip-cif.yaml          | 98 +++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-cif.yaml
+> v5: update license to GPL-2.0-only
+>     Add additionalProperties
+>     Add clock input for clkmgr
+> v4: really fix build error(comment formatting was wrong)
+> v3: address comments from Stephen Boyd
+>     fix build error(tab removed in line 37)
+>     renamed to intel,agilex.yaml
+> v2: convert original document to YAML
+> ---
+>  .../bindings/clock/intel,agilex.yaml          | 40 +++++++++++
+>  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
+>  2 files changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/media/rockchip-cif.yaml:  while scanning a simple key
-  in "<unicode string>", line 13, column 1
-could not find expected ':'
-  in "<unicode string>", line 15, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/rockchip-cif.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/media/rockchip-cif.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-warning: no schema found in file: Documentation/devicetree/bindings/media/rockchip-cif.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.yaml: ignoring, error parsing file
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml: clock-controller@ffd10000: 'clocks', 'reg' do not match any of the regexes: 'pinctrl-[0-9]+'
 
-See https://patchwork.ozlabs.org/patch/1266070
+See https://patchwork.ozlabs.org/patch/1266287
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
