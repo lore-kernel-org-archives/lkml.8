@@ -2,68 +2,95 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADA0C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD45C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FF42070E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586022639;
-	bh=6Sp2RW5CMAyCNcVsTHa/ppjJwGkTlFk1A7tHKSmndvQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=rUXtP/qBryHfeOoO8V8PSnKAY2+w3wc+UDoCXFzxUXK0WvUKNR4OAPvFfqNtmyi4f
-	 xhJZsi1Tyg06NqYH92kkME31ImAHaO3bHTpWIVWKj9i2zF8z+ivOyfTL6hbtHzHZuN
-	 +apMibzSfn/1s77ti0E3CuRwpIwfaycBTYNWiD74=
+	by mail.kernel.org (Postfix) with ESMTP id 5A6302070E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZfF0Aas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgDDRui (ORCPT
+        id S1726622AbgDDRun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 13:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgDDRuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 13:50:25 -0400
-Subject: Re: [GIT PULL] thread changes for v5.7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586022625;
-        bh=6Sp2RW5CMAyCNcVsTHa/ppjJwGkTlFk1A7tHKSmndvQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=vM2uWH/CrbCu07X8ANokgw/XC5x5K6VyOAa6AbeeEieBhdWnQrWrHY/BlWtPLTtdC
-         +Hzu2CJJ5++z7v76t/nxTHUyT815TgsxvlgxbA4yKA/gdgIcNdgR2VtNULDl0wGJlZ
-         RM3i28Sr5VdTWWlbk/FIddwGd/GzmumqAJNJHNUk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200404114357.1359783-1-christian.brauner@ubuntu.com>
-References: <20200404114357.1359783-1-christian.brauner@ubuntu.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200404114357.1359783-1-christian.brauner@ubuntu.com>
-X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux
- tags/threads-v5.7
-X-PR-Tracked-Commit-Id: 6952a4f646446fde9e190b62c5e45f84c6cf91aa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1e396a5d171d61aa00d49389d92f8afb21568635
-Message-Id: <158602262524.31764.16904505521685076936.pr-tracker-bot@kernel.org>
-Date:   Sat, 04 Apr 2020 17:50:25 +0000
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Sat, 4 Apr 2020 13:50:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26838 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726582AbgDDRuj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 13:50:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586022638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XpIFvMqlAZPPaPuZTXJXVsC8D8YnUvdMZglxGAOu27U=;
+        b=GZfF0AasXfCLxmQ1+zSLNzfA7g44uzlsI2H7h8Pl5ZTr4KpnJb84wSWrnVo1hFEpN80eVk
+        Cysmq6NAZghaAfj3XhnUNw/f7Qt0kz6ybyWn4rbzqVPJnELbdoGt3Ip5tZslo3OLeIfzaf
+        M45V8/gSn2PWx/bTvDKrs8ZgbNGMCVs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-453-Ihhp-RW2NgOWfPBvLNLeEQ-1; Sat, 04 Apr 2020 13:50:33 -0400
+X-MC-Unique: Ihhp-RW2NgOWfPBvLNLeEQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84432DB20;
+        Sat,  4 Apr 2020 17:50:30 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.53])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7252DB19B5;
+        Sat,  4 Apr 2020 17:50:25 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Sat,  4 Apr 2020 19:50:30 +0200 (CEST)
+Date:   Sat, 4 Apr 2020 19:50:24 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de,
+        Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux@googlegroups.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Marco Elver <elver@google.com>,
+        Brian Gerst <brgerst@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86: signal: move save_altstack_ex out of generic
+ headers
+Message-ID: <20200404175023.GC26298@redhat.com>
+References: <20200324220830.110002-1-ndesaulniers@google.com>
+ <20200403231611.81444-1-ndesaulniers@google.com>
+ <20200404160100.GB26298@redhat.com>
+ <20200404170604.GN23230@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200404170604.GN23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat,  4 Apr 2020 13:43:57 +0200:
+On 04/04, Al Viro wrote:
+>
+> On Sat, Apr 04, 2020 at 06:01:00PM +0200, Oleg Nesterov wrote:
+> >
+> > Nevermind, Al has already suggested to use signal_delivered()...
+>
+> FWIW, I propose to do is the patch below (against the current mainline);
+> objections?
 
-> git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/threads-v5.7
+Looks great, fwiw
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1e396a5d171d61aa00d49389d92f8afb21568635
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
