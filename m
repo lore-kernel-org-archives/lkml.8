@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD9FC2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E02CC2BA18
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7019F20752
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B9FD21D82
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgDDInY (ORCPT
+        id S1726077AbgDDImO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:43:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41723 "EHLO
+        Sat, 4 Apr 2020 04:42:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41587 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgDDImP (ORCPT
+        with ESMTP id S1726443AbgDDImF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:42:15 -0400
+        Sat, 4 Apr 2020 04:42:05 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeNT-0001J1-Sj; Sat, 04 Apr 2020 10:42:08 +0200
+        id 1jKeN2-0000ua-OT; Sat, 04 Apr 2020 10:41:40 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A8AFD1C0809;
-        Sat,  4 Apr 2020 10:42:01 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:42:01 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6E1511C047B;
+        Sat,  4 Apr 2020 10:41:40 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:41:40 -0000
+From:   "tip-bot2 for Andreas Gerstmayr" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf report/top TUI: Support hotkeys to let user
- select any event for sorting
-Cc:     Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Subject: [tip: perf/urgent] perf script report: Fix SEGFAULT when using DWARF mode
+Cc:     Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200220013616.19916-4-yao.jin@linux.intel.com>
-References: <20200220013616.19916-4-yao.jin@linux.intel.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200402125417.422232-1-agerstmayr@redhat.com>
+References: <20200402125417.422232-1-agerstmayr@redhat.com>
 MIME-Version: 1.0
-Message-ID: <158598972128.28353.6234743869854468419.tip-bot2@tip-bot2>
+Message-ID: <158598970009.28353.16717946414374202141.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,123 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     dbddf17474411f5725fc76fc7e507410f0d4077f
-Gitweb:        https://git.kernel.org/tip/dbddf17474411f5725fc76fc7e507410f0d4077f
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Thu, 20 Feb 2020 09:36:16 +08:00
+Commit-ID:     1a4025f06059eeaecb2ef24363350ea3431568df
+Gitweb:        https://git.kernel.org/tip/1a4025f06059eeaecb2ef24363350ea3431568df
+Author:        Andreas Gerstmayr <agerstmayr@redhat.com>
+AuthorDate:    Thu, 02 Apr 2020 14:54:16 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 24 Mar 2020 09:37:27 -03:00
+CommitterDate: Fri, 03 Apr 2020 09:39:53 -03:00
 
-perf report/top TUI: Support hotkeys to let user select any event for sorting
+perf script report: Fix SEGFAULT when using DWARF mode
 
-When performing "perf report --group", it shows the event group information
-together. In previous patch, we have supported a new option "--group-sort-idx"
-to sort the output by the event at the index n in event group.
+When running perf script report with a Python script and a callgraph in
+DWARF mode, intr_regs->regs can be 0 and therefore crashing the regs_map
+function.
 
-It would be nice if we can use a hotkey in browser to select a event
-to sort.
+Added a check for this condition (same check as in builtin-script.c:595).
 
-For example,
-
-  # perf report --group
-
- Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
-                        Overhead  Command    Shared Object            Symbol
-  92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
-   3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
-   1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
-   1.56%   0.01%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494ce
-   1.56%   0.00%   0.00%   0.00%  mgen       [kernel.kallsyms]        [k] task_tick_fair
-   0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
-   0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
-   0.00%   0.03%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] g_main_context_check
-   0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] apic_timer_interrupt
-   0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] check_preempt_curr
-
-When user press hotkey '3' (event index, starting from 0), it indicates
-to sort output by the forth event in group.
-
-  Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
-                        Overhead  Command    Shared Object            Symbol
-  92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
-   0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
-   3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
-   0.00%   0.00%   0.00%   0.06%  swapper    [kernel.kallsyms]        [k] hrtimer_start_range_ns
-   1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
-   0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
-   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] update_curr
-   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] apic_timer_interrupt
-   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] native_apic_msr_eoi_write
-   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] __update_load_avg_se
-
- v6:
- ---
- Jiri provided a good improvement to eliminate unneeded refresh.
- This improvement is added to v6.
-
- v2:
- ---
- 1. Report warning at helpline when index is invalid.
- 2. Report warning at helpline when it's not group event.
- 3. Use "case '0' ... '9'" to refine the code
- 4. Split K_RELOAD implementation to another patch.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+Tested-by: Kim Phillips <kim.phillips@amd.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200220013616.19916-4-yao.jin@linux.intel.com
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lore.kernel.org/lkml/20200402125417.422232-1-agerstmayr@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ tools/perf/util/scripting-engines/trace-event-python.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 9f3401f..95ac5e2 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2992,7 +2992,8 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 	"s             Switch to another data file in PWD\n"
- 	"t             Zoom into current Thread\n"
- 	"V             Verbose (DSO names in callchains, etc)\n"
--	"/             Filter symbol by name";
-+	"/             Filter symbol by name\n"
-+	"0-9           Sort by event n in group";
- 	static const char top_help[] = HIST_BROWSER_HELP_COMMON
- 	"P             Print histograms to perf.hist.N\n"
- 	"t             Zoom into current Thread\n"
-@@ -3053,6 +3054,31 @@ do_hotkey:		 // key came straight from options ui__popup_menu()
- 			 * go to the next or previous
- 			 */
- 			goto out_free_stack;
-+		case '0' ... '9':
-+			if (!symbol_conf.event_group ||
-+			    evsel->core.nr_members < 2) {
-+				snprintf(buf, sizeof(buf),
-+					 "Sort by index only available with group events!");
-+				helpline = buf;
-+				continue;
-+			}
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 8c1b27c..2c372cf 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -694,6 +694,9 @@ static int regs_map(struct regs_dump *regs, uint64_t mask, char *bf, int size)
+ 
+ 	bf[0] = 0;
+ 
++	if (!regs || !regs->regs)
++		return 0;
 +
-+			if (key - '0' == symbol_conf.group_sort_idx)
-+				continue;
-+
-+			symbol_conf.group_sort_idx = key - '0';
-+
-+			if (symbol_conf.group_sort_idx >= evsel->core.nr_members) {
-+				snprintf(buf, sizeof(buf),
-+					 "Max event group index to sort is %d (index from 0 to %d)",
-+					 evsel->core.nr_members - 1,
-+					 evsel->core.nr_members - 1);
-+				helpline = buf;
-+				continue;
-+			}
-+
-+			key = K_RELOAD;
-+			goto out_free_stack;
- 		case 'a':
- 			if (!hists__has(hists, sym)) {
- 				ui_browser__warning(&browser->b, delay_secs * 2,
+ 	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
+ 		u64 val = regs->regs[i++];
+ 
