@@ -2,386 +2,219 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C7EC2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8977C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDCD206CC
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD7C206CC
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbgDDFzP (ORCPT
+        id S1726148AbgDDFzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 01:55:15 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:49382 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbgDDFzP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 01:55:15 -0400
-Received: by mail-il1-f200.google.com with SMTP id 75so9288185ilv.16
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 22:55:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=9AMQArMuO93J/CpN0Qc3E0byB9kG+Ic8o1NP1LGYUQw=;
-        b=ZS7ZY6gWgnfP+N2NXjCEEpfYd2EkPH7JGOlWF1JM6lQMdo3vwsYOmhuV2rzz7N8BKh
-         VGL+nXR/LypSAk/ga0zTk2yp40YYkh2rEOpSmrQxzgg3p4EBP2PDBn4rnWfnrZkzP7Ah
-         OG0OJss0OEKa9QftELstIvgcxG9u/GS8EOIBsaI0UOszx23FAzChP6JVMVP40YZFo+AS
-         UfogvLCBWrq/ViN/5VPhjtL+FrEuARy/YcgqdBzaxWH/ZIZ5M1PniW0b+qo5D7U44Qz5
-         iwqoyQnaXoYqY8sB8DbgQj3teFKFWRLAoBrAMaRGrDSRMtZM25LgaOf9xhPCbcPcVT1C
-         w5JA==
-X-Gm-Message-State: AGi0PuanZK7ae6GMhQgFCNnnqfrwhydJXdlafjGa2wUB4csOwPgGbBXJ
-        LEXozmgpZ5sub6/VwyKw1kTEM3nNntKuPSE6fRACzkdbSUy2
-X-Google-Smtp-Source: APiQypJ3zVy2n6UjAJUoBMWPPx4h13PWSTKaTDLsZYs9bjfa0f4ELC/F5D/hidjVTeMq0QTtYxvSKKTaxvdNv55+JU6idVqNJdMQ
+        Sat, 4 Apr 2020 01:55:51 -0400
+Received: from mga04.intel.com ([192.55.52.120]:50512 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgDDFzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 01:55:50 -0400
+IronPort-SDR: etPNhnc6HKAJZgQtS+x5GbMXbBxmtZwKf8vlyTVjvQIVGCNBftA4p9UoPdhpxv8U3CHYIFUtnZ
+ O3l6maiMSPSA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 22:55:49 -0700
+IronPort-SDR: Eq4SyEw4Bmyc6LHn2YN/ti7Q2wz/+QVx8bS6bYUAmIAEezubwYF0jwTj+2YhbYyCNRdPdXZaR3
+ Netmkspauh4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,342,1580803200"; 
+   d="scan'208";a="285337244"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 03 Apr 2020 22:55:48 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jKbmV-00060c-E0; Sat, 04 Apr 2020 13:55:47 +0800
+Date:   Sat, 04 Apr 2020 13:55:32 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.04.01a] BUILD REGRESSION
+ ffebabde5e80e76612fd06a934cd2a147128054c
+Message-ID: <5e882154.k5Wg7DONTR/ADXus%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-Received: by 2002:a02:7688:: with SMTP id z130mr11279368jab.108.1585979713773;
- Fri, 03 Apr 2020 22:55:13 -0700 (PDT)
-Date:   Fri, 03 Apr 2020 22:55:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000760d0705a270ad0c@google.com>
-Subject: possible deadlock in send_sigio
-From:   syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org,
-        allison@lohutok.net, areber@redhat.com, aubrey.li@linux.intel.com,
-        avagin@gmail.com, bfields@fieldses.org, christian@brauner.io,
-        cyphar@cyphar.com, ebiederm@xmission.com,
-        gregkh@linuxfoundation.org, guro@fb.com, jlayton@kernel.org,
-        joel@joelfernandes.org, keescook@chromium.org,
-        linmiaohe@huawei.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com, mingo@kernel.org,
-        oleg@redhat.com, peterz@infradead.org, sargun@sargun.me,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.04.01a
+branch HEAD: ffebabde5e80e76612fd06a934cd2a147128054c  rcu: Remove self-stack-trace when all quiescent states seen
 
-syzbot found the following crash on:
+Regressions in current branch:
 
-HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15f39c5de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=91b674b8f0368e69
-dashboard link: https://syzkaller.appspot.com/bug?extid=a9fb1457d720a55d6dc5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1454c3b7e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a22ac7e00000
+ftrace.c:(.text+0x3ccc): undefined reference to `synchronize_rcu_tasks_rude'
+kernel/trace/ftrace.c:238:2: error: implicit declaration of function 'synchronize_rcu_tasks_rude'; did you mean 'synchronize_rcu_tasks'? [-Werror=implicit-function-declaration]
+kernel/trace/ftrace.c:2914:3: error: implicit declaration of function 'synchronize_rcu_tasks_rude'; did you mean 'synchronize_rcu_tasks'? [-Werror=implicit-function-declaration]
 
-The bug was bisected to:
+Error ids grouped by kconfigs:
 
-commit 7bc3e6e55acf065500a24621f3b313e7e5998acf
-Author: Eric W. Biederman <ebiederm@xmission.com>
-Date:   Thu Feb 20 00:22:26 2020 +0000
+recent_errors
+|-- arm-pxa_defconfig
+|   `-- ftrace.c:(.text):undefined-reference-to-synchronize_rcu_tasks_rude
+|-- powerpc-ppc64_defconfig
+|   `-- kernel-trace-ftrace.c:error:implicit-declaration-of-function-synchronize_rcu_tasks_rude
+|-- powerpc-rhel-kconfig
+|   `-- kernel-trace-ftrace.c:error:implicit-declaration-of-function-synchronize_rcu_tasks_rude
+|-- s390-randconfig-a001-20200403
+|   `-- kernel-trace-ftrace.c:error:implicit-declaration-of-function-synchronize_rcu_tasks_rude
+`-- x86_64-randconfig-d003-20200404
+    `-- kernel-trace-ftrace.c:error:implicit-declaration-of-function-synchronize_rcu_tasks_rude
 
-    proc: Use a list of inodes to flush from proc
+elapsed time: 509m
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=165c4acde00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=155c4acde00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=115c4acde00000
+configs tested: 135
+configs skipped: 0
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com
-Fixes: 7bc3e6e55acf ("proc: Use a list of inodes to flush from proc")
-
-========================================================
-WARNING: possible irq lock inversion dependency detected
-5.6.0-syzkaller #0 Not tainted
---------------------------------------------------------
-ksoftirqd/0/9 just changed the state of lock:
-ffffffff898090d8 (tasklist_lock){.+.?}-{2:2}, at: send_sigio+0xa9/0x340 fs/fcntl.c:800
-but this lock took another, SOFTIRQ-unsafe lock in the past:
- (&pid->wait_pidfd){+.+.}-{2:2}
-
-
-and interrupts could create inverse lock ordering between them.
-
-
-other info that might help us debug this:
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&pid->wait_pidfd);
-                               local_irq_disable();
-                               lock(tasklist_lock);
-                               lock(&pid->wait_pidfd);
-  <Interrupt>
-    lock(tasklist_lock);
-
- *** DEADLOCK ***
-
-8 locks held by ksoftirqd/0/9:
- #0: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: __write_once_size include/linux/compiler.h:226 [inline]
- #0: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: __skb_unlink include/linux/skbuff.h:2078 [inline]
- #0: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: __skb_dequeue include/linux/skbuff.h:2093 [inline]
- #0: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: process_backlog+0x1ad/0x7a0 net/core/dev.c:6131
- #1: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: __skb_pull include/linux/skbuff.h:2309 [inline]
- #1: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: ip_local_deliver_finish+0x124/0x360 net/ipv4/ip_input.c:228
- #2: ffff88808e1750e0 (slock-AF_INET/1){+.-.}-{2:2}, at: tcp_v4_rcv+0x2d09/0x39c0 net/ipv4/tcp_ipv4.c:1997
- #3: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: sock_def_error_report+0x0/0x4d0 include/linux/compiler.h:199
- #4: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: rcu_lock_release include/linux/rcupdate.h:213 [inline]
- #4: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: rcu_read_unlock include/linux/rcupdate.h:655 [inline]
- #4: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: sock_def_error_report+0x1d6/0x4d0 net/core/sock.c:2809
- #5: ffffffff899bb200 (rcu_read_lock){....}-{1:2}, at: kill_fasync+0x3d/0x470 fs/fcntl.c:1021
- #6: ffff8880a41312b8 (&new->fa_lock){.+.?}-{2:2}, at: kill_fasync_rcu fs/fcntl.c:1002 [inline]
- #6: ffff8880a41312b8 (&new->fa_lock){.+.?}-{2:2}, at: kill_fasync fs/fcntl.c:1023 [inline]
- #6: ffff8880a41312b8 (&new->fa_lock){.+.?}-{2:2}, at: kill_fasync+0x162/0x470 fs/fcntl.c:1016
- #7: ffff8880a5d263f8 (&f->f_owner.lock){.+.?}-{2:2}, at: send_sigio+0x24/0x340 fs/fcntl.c:786
-
-the shortest dependencies between 2nd lock and 1st lock:
- -> (&pid->wait_pidfd){+.+.}-{2:2} {
-    HARDIRQ-ON-W at:
-                      lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                      __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                      _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                      spin_lock include/linux/spinlock.h:353 [inline]
-                      proc_pid_make_inode+0x1f9/0x3c0 fs/proc/base.c:1880
-                      proc_pid_instantiate+0x51/0x150 fs/proc/base.c:3285
-                      proc_pid_lookup+0x1da/0x340 fs/proc/base.c:3320
-                      proc_root_lookup+0x20/0x60 fs/proc/root.c:243
-                      __lookup_slow+0x256/0x490 fs/namei.c:1530
-                      lookup_slow fs/namei.c:1547 [inline]
-                      walk_component+0x418/0x6a0 fs/namei.c:1846
-                      link_path_walk.part.0+0x4f1/0xb50 fs/namei.c:2166
-                      link_path_walk fs/namei.c:2098 [inline]
-                      path_openat+0x25a/0x27b0 fs/namei.c:3342
-                      do_filp_open+0x203/0x260 fs/namei.c:3375
-                      do_sys_openat2+0x585/0x770 fs/open.c:1148
-                      do_sys_open+0xc3/0x140 fs/open.c:1164
-                      do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-                      entry_SYSCALL_64_after_hwframe+0x49/0xb3
-    SOFTIRQ-ON-W at:
-                      lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                      __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                      _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                      spin_lock include/linux/spinlock.h:353 [inline]
-                      proc_pid_make_inode+0x1f9/0x3c0 fs/proc/base.c:1880
-                      proc_pid_instantiate+0x51/0x150 fs/proc/base.c:3285
-                      proc_pid_lookup+0x1da/0x340 fs/proc/base.c:3320
-                      proc_root_lookup+0x20/0x60 fs/proc/root.c:243
-                      __lookup_slow+0x256/0x490 fs/namei.c:1530
-                      lookup_slow fs/namei.c:1547 [inline]
-                      walk_component+0x418/0x6a0 fs/namei.c:1846
-                      link_path_walk.part.0+0x4f1/0xb50 fs/namei.c:2166
-                      link_path_walk fs/namei.c:2098 [inline]
-                      path_openat+0x25a/0x27b0 fs/namei.c:3342
-                      do_filp_open+0x203/0x260 fs/namei.c:3375
-                      do_sys_openat2+0x585/0x770 fs/open.c:1148
-                      do_sys_open+0xc3/0x140 fs/open.c:1164
-                      do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-                      entry_SYSCALL_64_after_hwframe+0x49/0xb3
-    INITIAL USE at:
-                     lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                     __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-                     _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
-                     __wake_up_common_lock+0xb4/0x130 kernel/sched/wait.c:122
-                     do_notify_pidfd kernel/signal.c:1900 [inline]
-                     do_notify_parent+0x19e/0xe60 kernel/signal.c:1927
-                     exit_notify kernel/exit.c:660 [inline]
-                     do_exit+0x238f/0x2dd0 kernel/exit.c:816
-                     call_usermodehelper_exec_async+0x507/0x710 kernel/umh.c:125
-                     ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-  }
-  ... key      at: [<ffffffff8bbaf680>] __key.53746+0x0/0x40
-  ... acquired at:
-   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-   _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
-   __wake_up_common_lock+0xb4/0x130 kernel/sched/wait.c:122
-   do_notify_pidfd kernel/signal.c:1900 [inline]
-   do_notify_parent+0x19e/0xe60 kernel/signal.c:1927
-   exit_notify kernel/exit.c:660 [inline]
-   do_exit+0x238f/0x2dd0 kernel/exit.c:816
-   call_usermodehelper_exec_async+0x507/0x710 kernel/umh.c:125
-   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
--> (tasklist_lock){.+.?}-{2:2} {
-   HARDIRQ-ON-R at:
-                    lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                    __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
-                    _raw_read_lock+0x2d/0x40 kernel/locking/spinlock.c:223
-                    do_wait+0x3b9/0xa00 kernel/exit.c:1436
-                    kernel_wait4+0x14c/0x260 kernel/exit.c:1611
-                    call_usermodehelper_exec_sync kernel/umh.c:150 [inline]
-                    call_usermodehelper_exec_work+0x172/0x260 kernel/umh.c:187
-                    process_one_work+0x965/0x16a0 kernel/workqueue.c:2266
-                    worker_thread+0x96/0xe20 kernel/workqueue.c:2412
-                    kthread+0x388/0x470 kernel/kthread.c:268
-                    ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-   IN-SOFTIRQ-R at:
-                    lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                    __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
-                    _raw_read_lock+0x2d/0x40 kernel/locking/spinlock.c:223
-                    send_sigio+0xa9/0x340 fs/fcntl.c:800
-                    kill_fasync_rcu fs/fcntl.c:1009 [inline]
-                    kill_fasync fs/fcntl.c:1023 [inline]
-                    kill_fasync+0x21c/0x470 fs/fcntl.c:1016
-                    sock_wake_async+0xd2/0x160 net/socket.c:1337
-                    sk_wake_async include/net/sock.h:2259 [inline]
-                    sk_wake_async include/net/sock.h:2255 [inline]
-                    sock_def_error_report+0x2d7/0x4d0 net/core/sock.c:2808
-                    tcp_reset net/ipv4/tcp_input.c:4138 [inline]
-                    tcp_reset+0x195/0x4e0 net/ipv4/tcp_input.c:4114
-                    tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:5937 [inline]
-                    tcp_rcv_state_process+0x2ead/0x4c80 net/ipv4/tcp_input.c:6204
-                    tcp_v4_do_rcv+0x34c/0x8b0 net/ipv4/tcp_ipv4.c:1643
-                    tcp_v4_rcv+0x2f60/0x39c0 net/ipv4/tcp_ipv4.c:2003
-                    ip_protocol_deliver_rcu+0x57/0x880 net/ipv4/ip_input.c:204
-                    ip_local_deliver_finish+0x220/0x360 net/ipv4/ip_input.c:231
-                    NF_HOOK include/linux/netfilter.h:307 [inline]
-                    NF_HOOK include/linux/netfilter.h:301 [inline]
-                    ip_local_deliver+0x1c8/0x4e0 net/ipv4/ip_input.c:252
-                    dst_input include/net/dst.h:441 [inline]
-                    ip_rcv_finish+0x1da/0x2f0 net/ipv4/ip_input.c:428
-                    NF_HOOK include/linux/netfilter.h:307 [inline]
-                    NF_HOOK include/linux/netfilter.h:301 [inline]
-                    ip_rcv+0xd0/0x3c0 net/ipv4/ip_input.c:539
-                    __netif_receive_skb_one_core+0xf5/0x160 net/core/dev.c:5187
-                    __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5301
-                    process_backlog+0x21e/0x7a0 net/core/dev.c:6133
-                    napi_poll net/core/dev.c:6571 [inline]
-                    net_rx_action+0x4c2/0x1070 net/core/dev.c:6639
-                    __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
-                    run_ksoftirqd kernel/softirq.c:604 [inline]
-                    run_ksoftirqd+0x89/0x100 kernel/softirq.c:596
-                    smpboot_thread_fn+0x653/0x9e0 kernel/smpboot.c:165
-                    kthread+0x388/0x470 kernel/kthread.c:268
-                    ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-   SOFTIRQ-ON-R at:
-                    lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                    __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
-                    _raw_read_lock+0x2d/0x40 kernel/locking/spinlock.c:223
-                    do_wait+0x3b9/0xa00 kernel/exit.c:1436
-                    kernel_wait4+0x14c/0x260 kernel/exit.c:1611
-                    call_usermodehelper_exec_sync kernel/umh.c:150 [inline]
-                    call_usermodehelper_exec_work+0x172/0x260 kernel/umh.c:187
-                    process_one_work+0x965/0x16a0 kernel/workqueue.c:2266
-                    worker_thread+0x96/0xe20 kernel/workqueue.c:2412
-                    kthread+0x388/0x470 kernel/kthread.c:268
-                    ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-   INITIAL USE at:
-                   lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-                   __raw_write_lock_irq include/linux/rwlock_api_smp.h:196 [inline]
-                   _raw_write_lock_irq+0x5b/0x80 kernel/locking/spinlock.c:311
-                   copy_process+0x3430/0x72c0 kernel/fork.c:2205
-                   _do_fork+0x12d/0x1010 kernel/fork.c:2432
-                   kernel_thread+0xb1/0xf0 kernel/fork.c:2519
-                   rest_init+0x23/0x365 init/main.c:626
-                   start_kernel+0x867/0x8a1 init/main.c:998
-                   secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
- }
- ... key      at: [<ffffffff898090d8>] tasklist_lock+0x18/0x40
- ... acquired at:
-   mark_lock_irq kernel/locking/lockdep.c:3585 [inline]
-   mark_lock+0x624/0xf10 kernel/locking/lockdep.c:3935
-   mark_usage kernel/locking/lockdep.c:3826 [inline]
-   __lock_acquire+0x1ed9/0x4e00 kernel/locking/lockdep.c:4298
-   lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
-   __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
-   _raw_read_lock+0x2d/0x40 kernel/locking/spinlock.c:223
-   send_sigio+0xa9/0x340 fs/fcntl.c:800
-   kill_fasync_rcu fs/fcntl.c:1009 [inline]
-   kill_fasync fs/fcntl.c:1023 [inline]
-   kill_fasync+0x21c/0x470 fs/fcntl.c:1016
-   sock_wake_async+0xd2/0x160 net/socket.c:1337
-   sk_wake_async include/net/sock.h:2259 [inline]
-   sk_wake_async include/net/sock.h:2255 [inline]
-   sock_def_error_report+0x2d7/0x4d0 net/core/sock.c:2808
-   tcp_reset net/ipv4/tcp_input.c:4138 [inline]
-   tcp_reset+0x195/0x4e0 net/ipv4/tcp_input.c:4114
-   tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:5937 [inline]
-   tcp_rcv_state_process+0x2ead/0x4c80 net/ipv4/tcp_input.c:6204
-   tcp_v4_do_rcv+0x34c/0x8b0 net/ipv4/tcp_ipv4.c:1643
-   tcp_v4_rcv+0x2f60/0x39c0 net/ipv4/tcp_ipv4.c:2003
-   ip_protocol_deliver_rcu+0x57/0x880 net/ipv4/ip_input.c:204
-   ip_local_deliver_finish+0x220/0x360 net/ipv4/ip_input.c:231
-   NF_HOOK include/linux/netfilter.h:307 [inline]
-   NF_HOOK include/linux/netfilter.h:301 [inline]
-   ip_local_deliver+0x1c8/0x4e0 net/ipv4/ip_input.c:252
-   dst_input include/net/dst.h:441 [inline]
-   ip_rcv_finish+0x1da/0x2f0 net/ipv4/ip_input.c:428
-   NF_HOOK include/linux/netfilter.h:307 [inline]
-   NF_HOOK include/linux/netfilter.h:301 [inline]
-   ip_rcv+0xd0/0x3c0 net/ipv4/ip_input.c:539
-   __netif_receive_skb_one_core+0xf5/0x160 net/core/dev.c:5187
-   __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5301
-   process_backlog+0x21e/0x7a0 net/core/dev.c:6133
-   napi_poll net/core/dev.c:6571 [inline]
-   net_rx_action+0x4c2/0x1070 net/core/dev.c:6639
-   __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
-   run_ksoftirqd kernel/softirq.c:604 [inline]
-   run_ksoftirqd+0x89/0x100 kernel/softirq.c:596
-   smpboot_thread_fn+0x653/0x9e0 kernel/smpboot.c:165
-   kthread+0x388/0x470 kernel/kthread.c:268
-   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-
-stack backtrace:
-CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_irq_inversion_bug kernel/locking/lockdep.c:3448 [inline]
- check_usage_forwards.cold+0x20/0x29 kernel/locking/lockdep.c:3472
- mark_lock_irq kernel/locking/lockdep.c:3585 [inline]
- mark_lock+0x624/0xf10 kernel/locking/lockdep.c:3935
- mark_usage kernel/locking/lockdep.c:3826 [inline]
- __lock_acquire+0x1ed9/0x4e00 kernel/locking/lockdep.c:4298
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
- __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
- _raw_read_lock+0x2d/0x40 kernel/locking/spinlock.c:223
- send_sigio+0xa9/0x340 fs/fcntl.c:800
- kill_fasync_rcu fs/fcntl.c:1009 [inline]
- kill_fasync fs/fcntl.c:1023 [inline]
- kill_fasync+0x21c/0x470 fs/fcntl.c:1016
- sock_wake_async+0xd2/0x160 net/socket.c:1337
- sk_wake_async include/net/sock.h:2259 [inline]
- sk_wake_async include/net/sock.h:2255 [inline]
- sock_def_error_report+0x2d7/0x4d0 net/core/sock.c:2808
- tcp_reset net/ipv4/tcp_input.c:4138 [inline]
- tcp_reset+0x195/0x4e0 net/ipv4/tcp_input.c:4114
- tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:5937 [inline]
- tcp_rcv_state_process+0x2ead/0x4c80 net/ipv4/tcp_input.c:6204
- tcp_v4_do_rcv+0x34c/0x8b0 net/ipv4/tcp_ipv4.c:1643
- tcp_v4_rcv+0x2f60/0x39c0 net/ipv4/tcp_ipv4.c:2003
- ip_protocol_deliver_rcu+0x57/0x880 net/ipv4/ip_input.c:204
- ip_local_deliver_finish+0x220/0x360 net/ipv4/ip_input.c:231
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip_local_deliver+0x1c8/0x4e0 net/ipv4/ip_input.c:252
- dst_input include/net/dst.h:441 [inline]
- ip_rcv_finish+0x1da/0x2f0 net/ipv4/ip_input.c:428
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip_rcv+0xd0/0x3c0 net/ipv4/ip_input.c:539
- __netif_receive_skb_one_core+0xf5/0x160 net/core/dev.c:5187
- __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5301
- process_backlog+0x21e/0x7a0 net/core/dev.c:6133
- napi_poll net/core/dev.c:6571 [inline]
- net_rx_action+0x4c2/0x1070 net/core/dev.c:6639
- __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
- run_ksoftirqd kernel/softirq.c:604 [inline]
- run_ksoftirqd+0x89/0x100 kernel/softirq.c:596
- smpboot_thread_fn+0x653/0x9e0 kernel/smpboot.c:165
- kthread+0x388/0x470 kernel/kthread.c:268
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+riscv                    nommu_virt_defconfig
+mips                             allyesconfig
+riscv                            allmodconfig
+ia64                                defconfig
+powerpc                             defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+c6x                  randconfig-a001-20200403
+h8300                randconfig-a001-20200403
+microblaze           randconfig-a001-20200403
+nios2                randconfig-a001-20200403
+sparc64              randconfig-a001-20200403
+csky                 randconfig-a001-20200403
+openrisc             randconfig-a001-20200403
+s390                 randconfig-a001-20200403
+sh                   randconfig-a001-20200403
+xtensa               randconfig-a001-20200403
+csky                 randconfig-a001-20200404
+openrisc             randconfig-a001-20200404
+s390                 randconfig-a001-20200404
+sh                   randconfig-a001-20200404
+xtensa               randconfig-a001-20200404
+x86_64               randconfig-d003-20200404
+x86_64               randconfig-d001-20200404
+i386                 randconfig-d003-20200404
+i386                 randconfig-d001-20200404
+x86_64               randconfig-d002-20200404
+i386                 randconfig-d002-20200404
+i386                 randconfig-f001-20200404
+x86_64               randconfig-f003-20200404
+i386                 randconfig-f003-20200404
+x86_64               randconfig-f002-20200404
+i386                 randconfig-f002-20200404
+i386                 randconfig-g003-20200404
+x86_64               randconfig-g002-20200404
+i386                 randconfig-g001-20200404
+i386                 randconfig-g002-20200404
+x86_64               randconfig-g001-20200404
+x86_64               randconfig-h002-20200404
+i386                 randconfig-h002-20200404
+i386                 randconfig-h003-20200404
+i386                 randconfig-h001-20200404
+arm64                randconfig-a001-20200403
+sparc                randconfig-a001-20200403
+ia64                 randconfig-a001-20200403
+arc                  randconfig-a001-20200403
+arm                  randconfig-a001-20200403
+powerpc              randconfig-a001-20200403
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
