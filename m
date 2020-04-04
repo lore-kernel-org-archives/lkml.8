@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90479C2BA18
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D08C2BA16
 	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638DC20842
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C82A21973
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgDDImX (ORCPT
+        id S1726705AbgDDImW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:42:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41735 "EHLO
+        Sat, 4 Apr 2020 04:42:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41734 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbgDDImP (ORCPT
+        with ESMTP id S1726552AbgDDImP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 4 Apr 2020 04:42:15 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeNQ-0001AG-CF; Sat, 04 Apr 2020 10:42:04 +0200
+        id 1jKeNT-0001I6-2o; Sat, 04 Apr 2020 10:42:07 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 65ADE1C04DD;
-        Sat,  4 Apr 2020 10:41:55 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:41:55 -0000
-From:   "tip-bot2 for John Garry" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B41ED1C07A5;
+        Sat,  4 Apr 2020 10:42:00 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:42:00 -0000
+From:   "tip-bot2 for Kajol Jain" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf pmu: Add is_pmu_core()
-Cc:     John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/urgent] perf metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Cc:     Kajol Jain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, linuxarm@huawei.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1584442939-8911-6-git-send-email-john.garry@huawei.com>
-References: <1584442939-8911-6-git-send-email-john.garry@huawei.com>
+In-Reply-To: <20200221101121.28920-1-kjain@linux.ibm.com>
+References: <20200221101121.28920-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Message-ID: <158598971502.28353.1893341793306423695.tip-bot2@tip-bot2>
+Message-ID: <158598972036.28353.16143166623073607650.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,60 +65,201 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     d504fae93dd61b734aefc403c7653d958aef655a
-Gitweb:        https://git.kernel.org/tip/d504fae93dd61b734aefc403c7653d958aef655a
-Author:        John Garry <john.garry@huawei.com>
-AuthorDate:    Tue, 17 Mar 2020 19:02:17 +08:00
+Commit-ID:     58fc90fda0cc983c11c5290c7a9e992b08ac4a5c
+Gitweb:        https://git.kernel.org/tip/58fc90fda0cc983c11c5290c7a9e992b08ac4a5c
+Author:        Kajol Jain <kjain@linux.ibm.com>
+AuthorDate:    Fri, 21 Feb 2020 15:41:21 +05:30
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 24 Mar 2020 10:35:59 -03:00
+CommitterDate: Tue, 24 Mar 2020 09:37:27 -03:00
 
-perf pmu: Add is_pmu_core()
+perf metricgroup: Fix printing event names of metric group with multiple events incase of overlapping events
 
-Add a function to decide whether a PMU is a core PMU.
+Commit f01642e4912b ("perf metricgroup: Support multiple events for
+metricgroup") introduced support for multiple events in a metric group.
+But with the current upstream, metric events names are not printed
+properly incase we try to run multiple metric groups with overlapping
+event.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+With current upstream version, incase of overlapping metric events issue
+is, we always start our comparision logic from start.  So, the events
+which already matched with some metric group also take part in
+comparision logic. Because of that when we have overlapping events, we
+end up matching current metric group event with already matched one.
+
+For example, in skylake machine we have metric event CoreIPC and
+Instructions. Both of them need 'inst_retired.any' event value.  As
+events in Instructions is subset of events in CoreIPC, they endup in
+pointing to same 'inst_retired.any' value.
+
+In skylake platform:
+
+command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+
+ Performance counter stats for 'CPU(s) 0':
+
+     1,254,992,790      inst_retired.any          # 1254992790.0
+                                                    Instructions
+                                                  #      1.3 CoreIPC
+       977,172,805      cycles
+     1,254,992,756      inst_retired.any
+
+       1.000802596 seconds time elapsed
+
+command:# sudo ./perf stat -M UPI,IPC sleep 1
+
+   Performance counter stats for 'sleep 1':
+           948,650      uops_retired.retire_slots
+           866,182      inst_retired.any          #      0.7 IPC
+           866,182      inst_retired.any
+         1,175,671      cpu_clk_unhalted.thread
+
+Patch fixes the issue by adding a new bool pointer 'evlist_used' to keep
+track of events which already matched with some group by setting it
+true.  So, we skip all used events in list when we start comparision
+logic.  Patch also make some changes in comparision logic, incase we get
+a match miss, we discard the whole match and start again with first
+event id in metric event.
+
+With this patch:
+
+In skylake platform:
+
+command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+
+ Performance counter stats for 'CPU(s) 0':
+
+         3,348,415      inst_retired.any          #      0.3 CoreIPC
+        11,779,026      cycles
+         3,348,381      inst_retired.any          # 3348381.0
+                                                    Instructions
+
+       1.001649056 seconds time elapsed
+
+command:# ./perf stat -M UPI,IPC sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+         1,023,148      uops_retired.retire_slots #      1.1 UPI
+           924,976      inst_retired.any
+           924,976      inst_retired.any          #      0.6 IPC
+         1,489,414      cpu_clk_unhalted.thread
+
+       1.003064672 seconds time elapsed
+
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: linuxarm@huawei.com
-Link: http://lore.kernel.org/lkml/1584442939-8911-6-git-send-email-john.garry@huawei.com
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Link: http://lore.kernel.org/lkml/20200221101121.28920-1-kjain@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 5 +++++
- tools/perf/util/pmu.h | 1 +
- 2 files changed, 6 insertions(+)
+ tools/perf/util/metricgroup.c | 49 ++++++++++++++++++++--------------
+ 1 file changed, 30 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index c616a06..55129d0 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1400,6 +1400,11 @@ static void wordwrap(char *s, int start, int max, int corr)
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index c3a8c70..926449a 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -95,13 +95,16 @@ struct egroup {
+ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 				      const char **ids,
+ 				      int idnum,
+-				      struct evsel **metric_events)
++				      struct evsel **metric_events,
++				      bool *evlist_used)
+ {
+ 	struct evsel *ev;
+-	int i = 0;
++	int i = 0, j = 0;
+ 	bool leader_found;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
++		if (evlist_used[j++])
++			continue;
+ 		if (!strcmp(ev->name, ids[i])) {
+ 			if (!metric_events[i])
+ 				metric_events[i] = ev;
+@@ -109,22 +112,17 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			if (i == idnum)
+ 				break;
+ 		} else {
+-			if (i + 1 == idnum) {
+-				/* Discard the whole match and start again */
+-				i = 0;
+-				memset(metric_events, 0,
+-				       sizeof(struct evsel *) * idnum);
+-				continue;
+-			}
+-
+-			if (!strcmp(ev->name, ids[i]))
+-				metric_events[i] = ev;
+-			else {
+-				/* Discard the whole match and start again */
+-				i = 0;
+-				memset(metric_events, 0,
+-				       sizeof(struct evsel *) * idnum);
+-				continue;
++			/* Discard the whole match and start again */
++			i = 0;
++			memset(metric_events, 0,
++				sizeof(struct evsel *) * idnum);
++
++			if (!strcmp(ev->name, ids[i])) {
++				if (!metric_events[i])
++					metric_events[i] = ev;
++				i++;
++				if (i == idnum)
++					break;
+ 			}
+ 		}
  	}
+@@ -146,7 +144,10 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			    !strcmp(ev->name, metric_events[i]->name)) {
+ 				ev->metric_leader = metric_events[i];
+ 			}
++			j++;
+ 		}
++		ev = metric_events[i];
++		evlist_used[ev->idx] = true;
+ 	}
+ 
+ 	return metric_events[0];
+@@ -162,6 +163,13 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 	int ret = 0;
+ 	struct egroup *eg;
+ 	struct evsel *evsel;
++	bool *evlist_used;
++
++	evlist_used = calloc(perf_evlist->core.nr_entries, sizeof(bool));
++	if (!evlist_used) {
++		ret = -ENOMEM;
++		return ret;
++	}
+ 
+ 	list_for_each_entry (eg, groups, nd) {
+ 		struct evsel **metric_events;
+@@ -172,7 +180,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			break;
+ 		}
+ 		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
+-					 metric_events);
++					 metric_events, evlist_used);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
+@@ -196,6 +204,9 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 		expr->metric_events = metric_events;
+ 		list_add(&expr->nd, &me->head);
+ 	}
++
++	free(evlist_used);
++
+ 	return ret;
  }
  
-+bool is_pmu_core(const char *name)
-+{
-+	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
-+}
-+
- void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
- 			bool long_desc, bool details_flag, bool deprecated)
- {
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 0b4a0ef..b756946 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -88,6 +88,7 @@ int perf_pmu__format_parse(char *dir, struct list_head *head);
- 
- struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
- 
-+bool is_pmu_core(const char *name);
- void print_pmu_events(const char *event_glob, bool name_only, bool quiet,
- 		      bool long_desc, bool details_flag,
- 		      bool deprecated);
