@@ -2,221 +2,144 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB80C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D5FC2BA17
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 12:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88DB20659
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB582206F7
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 12:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z3OHSHnW"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="LXo/U23F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgDDLwz (ORCPT
+        id S1726229AbgDDMCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 07:52:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22828 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726303AbgDDLwy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 07:52:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586001173;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=f64FR+wQwG4Rf+1Nwf9deQLAxinVjgUZ9huOaCrREcU=;
-        b=Z3OHSHnWPWsWIyIGN/wtzxXfwRCbOzgoDMqprZpfeMmNuoRNLuu0mV4ryC6WHKcV5lU+jk
-        NaQnC7XcMk0xBeaXYyczpDqj2fgxvPSleYPHilcUqJL/8IUDe4y6w1l6QzBQzva/yi1ZcQ
-        lsjoUPEKUW7H0aOPQI8uyqsEzod3qkQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-oaFdpjrKOD6fPgR02xN1ZQ-1; Sat, 04 Apr 2020 07:52:51 -0400
-X-MC-Unique: oaFdpjrKOD6fPgR02xN1ZQ-1
-Received: by mail-wm1-f72.google.com with SMTP id a4so1365870wmb.3
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 04:52:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=f64FR+wQwG4Rf+1Nwf9deQLAxinVjgUZ9huOaCrREcU=;
-        b=I0AkRZEQH3F4nniu5sZwnO6lfpi00w4LIxNTg43O5T8PgTaMxXOYUkBPc+ak936IZy
-         +clhU5X8fB6BPg2cXDwYuUe4DsLrRrDugWqXEVNtLPDrxJOTFe7+Sv6orSwPWsCWioiT
-         IliKhbT/sY8cRjgja6ZxtIbrcVm/ywNMEflgIgXF9yB2f+wywkCjAxvaSNHMKdVx6JFj
-         +Jrz4h/qoucnKM7DQVSfo5vDm2UoHpSxKR1ltyj3o0hyk10fMhh/ctt2L3wnSrimCQvO
-         Ul9oRdzaDKyujI0xpkK5gpH4CCAuy5gt28pfLs+OZXHnplGgWj58I0RHZjV3gndbVcfy
-         bb7g==
-X-Gm-Message-State: AGi0PuZD5kbnt+qi0DXnaQsfL307GyTJqa7b8e+2J+zWXXVamoawmgMB
-        PNd6wzs38SlWZY+MigQoHjeLGvpjX8vOJOxJxTDlauF1CizZsFv7s5yMpN+f2ieKWatr41pnb0q
-        GJChzylHpzma1XeXADXehyTT1
-X-Received: by 2002:a7b:cb59:: with SMTP id v25mr13986480wmj.13.1586001170108;
-        Sat, 04 Apr 2020 04:52:50 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK0AZLIM+VFnAkYrCUNC87FZEsHxgjBLzBFl6igf0XOnAGiRT//XV5W7FDIbXfi3Leu5nrGlA==
-X-Received: by 2002:a7b:cb59:: with SMTP id v25mr13986456wmj.13.1586001169826;
-        Sat, 04 Apr 2020 04:52:49 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id z16sm346059wrg.66.2020.04.04.04.52.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Apr 2020 04:52:49 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] platform/x86: intel_int0002_vgpio: Use
- acpi_register_wakeup_handler()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "5 . 4+" <stable@vger.kernel.org>
-References: <20200403154834.303105-1-hdegoede@redhat.com>
- <20200403154834.303105-2-hdegoede@redhat.com> <3798902.sSGyZ91sKY@kreacher>
- <CAHp75VfThW1CrkneP5kEm_7KejQgS2dhDi0YyDrL4y3=uY9ZbA@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f054f195-d5e7-8041-4995-8a52d2bd7674@redhat.com>
-Date:   Sat, 4 Apr 2020 13:52:47 +0200
+        Sat, 4 Apr 2020 08:02:05 -0400
+Received: from mout.web.de ([217.72.192.78]:57061 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbgDDMCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 08:02:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586001647;
+        bh=2+t496lVX30o7xPopsLI94blHCVuADQCmQc1LISk3c8=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=LXo/U23FDhG3ApcaV27fZIIcEiunU45Hj8kI+pvUPYChw7apbvxIGUMV2bQfCxps6
+         xPf8LIwbNUxhzG5y8JOPhjQPyvmLMRkMEBbFUhGT5OPM+U8HxSDgXTST2DkjZOzWJx
+         4Dc8NAVsLFAwZS4awlEqnmWPSI3fGWpp0Lcsk7hY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.132.181.229]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lhvlm-1izKov0M5a-00n7D3; Sat, 04
+ Apr 2020 14:00:47 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Corentin Labbe <clabbe@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v6] crypto: amlogic - Delete duplicate dev_err() in
+ meson_crypto_probe()
+To:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <25715704-5648-77c9-96d5-0639280e796c@web.de>
+Date:   Sat, 4 Apr 2020 14:00:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfThW1CrkneP5kEm_7KejQgS2dhDi0YyDrL4y3=uY9ZbA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:eawbiwXdJyDCWAumDCQZk8FePH6h7au3Pj1TqcybVEw+59HRIZ0
+ Y8ImAuzi9rWq50bkRYDOdRFw0MKWnMcZa/pXtqj/qtNXB4cLtlIGIZEoOLCAlG2kTeSki+a
+ J/89bSpeo+Rj9jGbgSjFlcXX6Ny5+HsljeLKeCFNtrAO7f/Yww9OfzPlCJO7BBN/IjCQeR1
+ roLLCHPbYfwIeTMM0a35w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gmctkTjB1cM=:Xof4a9d5BRoRn0f4oXRjnG
+ tFXoS5k/De/lyeru9wPYRkk+F0vccvw5K3J61MKGna1fx6XykyFzoqzq0ssdSDKJCVeeqkFsY
+ jfJ+G70FXKm+l9Ab1CiHl4b+xfULYn1TlbEQxYs1jPKNkD8OmjgLsIzaWbkc9JyIsZavJdUma
+ xdUhN2aP2LXf+IBE6pEGXzxsZYPm+Ab6Owns+OCq7Qyj4ToWT9u88GNVb9JQSrMc1lCFI+tAv
+ AOTLnCQ+lAwpbpk3YOFfdiWxTFK+tVqWHiZTsZQiSDO9f4s3ZF1UK4lpMlRMaRqRaqxvNzWTs
+ uiwXoM5h7/WnACVJ7lKkC93vBHu/2FymEYo5Exb0NPQi+Z8OZB68VPYZw2f3yI2GWNjR0z9OE
+ nbLbtxH9wAt1SQzby2OlpJbxeM8xT6NJs0Q9qezPhzypoLZt0kVY/n8NVnaEtbIzH6MkAwSz+
+ ngD96IAC9rPovTGYPS0tk2mhiV8hbwqop8PIPNof1aVzBp3UBBVZS3osuA0nlQoIZgwVtZUP6
+ CCxmrx3VFmpkAcEA/qYvhTwMXV2CkVE4j8bDW+78rbINONuf7G0fjV6/MTt3Sx8xMZyM3Ar2y
+ 5qkEuyeccVfgSygj7be9Vv39My3aDGUA9fkqhK3ya/x3s1mGTztD3noTzhHArhgLPwyOx/jZj
+ Dwr8erqefAw63crCWo+fNEhcd1nykhP7hajtrloHTG+vPsH+KPxIPCrTWE1J62DYg5u82u6ur
+ fYi3+BVv7RJ1L3Lk9+ZR2aIN2WxKbX7M69JZYkrkpIlVZ7/1CtxlmQGwkqGIpAwCr90lpK0go
+ UWbNj7A8McefYEiDJ2f85yI2PXmOUqye73Wa1FCqMEAlEoR9iwXBgDIhyhCwBOv5xkQQ/I3gB
+ Fwm14mSsbFLgmW/eA5iF4kiu6ZAh/N3Wct1CL10BXC6WjBVouoASfDXDY5BrMBTdjaDbgWMOV
+ F9IkplJDo6lz4d1wUJBEeiWCwMqSd42xt06zk0wd7mdRXNQFW+rkbbb5lLhtYSRZwxnUIcLf3
+ EOZyLpfZNouP0wpniAC3FZnqV7wTcZoZjHsYH9BIDQrt4k70KAA728R6PBmR4kZ8s4Wr2kSWG
+ Qt6xhpuef+T7kyFwsUp3+LKQyul5IECubqbM/X72XMEvWCtGT6oYpHYq3hdVhE4tVJbnH5HLK
+ 8QtDOJkBcYOMul7yDlv+zKb14Hvd/C7oZdlA6J65F6LH0zdX7A4d01z+bFlGi1tWMKpIAvmOP
+ 6IXs0vNy4pZTOPDJN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> When something goes wrong, platform_get_irq() will print an error messag=
+e,
 
-On 4/3/20 6:23 PM, Andy Shevchenko wrote:
-> On Fri, Apr 3, 2020 at 7:08 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->>
->> On Friday, April 3, 2020 5:48:34 PM CEST Hans de Goede wrote:
->>> The Power Management Events (PMEs) the INT0002 driver listens for get
->>> signalled by the Power Management Controller (PMC) using the same IRQ
->>> as used for the ACPI SCI.
->>>
->>> Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
->>> waking up the system") the SCI triggering, without there being a wakeup
->>> cause recognized by the ACPI sleep code, will no longer wakeup the system.
->>>
->>> This breaks PMEs / wakeups signalled to the INT0002 driver, the system
->>> never leaves the s2idle_loop() now.
->>>
->>> Use acpi_register_wakeup_handler() to register a function which checks
->>> the GPE0a_STS register for a PME and trigger a wakeup when a PME has
->>> been signalled.
->>>
->>> Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
->>> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>
->> Andy, any objections?
-> 
-> No,
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> Hans, just today when testing some other stuff noticed this
-> 
-> [   49.279001] irq 9: nobody cared (try booting with the "irqpoll" option)
-> [   49.289176] CPU: 0 PID: 168 Comm: irq/123-ATML100 Not tainted
-> 5.6.0-next-20200403+ #212
-> [   49.300915] Hardware name: Intel Corporation CHERRYVIEW D0
-> PLATFORM/Braswell CRB, BIOS BRAS.X64.B082.R00.150727 0557 07/27/2015
-> [   49.316520] Call Trace:
-> [   49.322093]  <IRQ>
-> [   49.327193]  dump_stack+0x50/0x70
-> [   49.333744]  __report_bad_irq+0x30/0xa2
-> [   49.340858]  note_interrupt.cold+0xb/0x62
-> ...
-> [   49.685087] handlers:
-> [   49.690307] [<000000000ab3cf88>] acpi_irq
-> [   49.697463] [<00000000e5d78029>] int0002_irq [intel_int0002_vgpio]
-> [   49.707063] Disabling IRQ #9
-> 
-> Is this what your series fixes?
+This information is reasonable.
 
-I don't think that my series fixes this.
 
-My series fixes CHT devices no longer waking up from s2idle
-when woken by pressing a key on the USB attached keyboard dock
-of various 2-in-1s. Before we were relying on the ACPI code
-also waking up on IRQs which from the ACPI SCI handler pov where
-spurious. Rafael fixed the ACPI SCI handling during s2idle
-also waking the system on spurious events. My patch hooks
-the INT0002 driver into the ACPI SCI handling / wakeup checks
-during s2idle.
+> so in order to avoid the situation of repeat output=EF=BC=8C
 
-I guess Rafael may have made some related changes elsewhere
-though where the SCI no longer returns IRQ_HANDLED in some cases?
+Possible adjustments:
+* Separate sentences
 
-Rafael?
+* Avoid another typo: =E2=80=9Crepeated output=E2=80=9D
+
+
+> we should remove dev_err here.
+
+Thus remove a redundant function call.
+(An imperative wording is usually preferred for Linux commit messages.)
 
 Regards,
-
-Hans
-
-
-
-
-> 
->>
->>> ---
->>> Changes in v3:
->>> - Keep the pm_wakeup_hard_event() call
->>>
->>> Changes in v2:
->>> - Adjust for the wakeup-handler registration function being renamed to
->>>    acpi_register_wakeup_handler()
->>> ---
->>>   drivers/platform/x86/intel_int0002_vgpio.c | 10 ++++++++++
->>>   1 file changed, 10 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
->>> index f14e2c5f9da5..55f088f535e2 100644
->>> --- a/drivers/platform/x86/intel_int0002_vgpio.c
->>> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
->>> @@ -127,6 +127,14 @@ static irqreturn_t int0002_irq(int irq, void *data)
->>>        return IRQ_HANDLED;
->>>   }
->>>
->>> +static bool int0002_check_wake(void *data)
->>> +{
->>> +     u32 gpe_sts_reg;
->>> +
->>> +     gpe_sts_reg = inl(GPE0A_STS_PORT);
->>> +     return (gpe_sts_reg & GPE0A_PME_B0_STS_BIT);
->>> +}
->>> +
->>>   static struct irq_chip int0002_byt_irqchip = {
->>>        .name                   = DRV_NAME,
->>>        .irq_ack                = int0002_irq_ack,
->>> @@ -220,6 +228,7 @@ static int int0002_probe(struct platform_device *pdev)
->>>                return ret;
->>>        }
->>>
->>> +     acpi_register_wakeup_handler(irq, int0002_check_wake, NULL);
->>>        device_init_wakeup(dev, true);
->>>        return 0;
->>>   }
->>> @@ -227,6 +236,7 @@ static int int0002_probe(struct platform_device *pdev)
->>>   static int int0002_remove(struct platform_device *pdev)
->>>   {
->>>        device_init_wakeup(&pdev->dev, false);
->>> +     acpi_unregister_wakeup_handler(int0002_check_wake, NULL);
->>>        return 0;
->>>   }
->>>
->>>
->>
->>
->>
->>
-> 
-> 
-
+Markus
