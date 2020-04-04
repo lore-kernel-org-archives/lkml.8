@@ -2,183 +2,103 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DCDC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 16:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC3EC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 16:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E85720659
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 16:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16BC206F8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 16:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586018790;
+	bh=YQG4A/GOYNd5Jp5QAvFtVV//iwhK5hZrHteGmAX+ZTI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XxdEnmB12v++c1+XQ69ZDV/c1JKv53e6Mz4MM1ea9y9BRX/DeP54sAUhY6zcFHBhc
+	 bpz9w2gERmJEs5sHpGeZg7i7wUB5XsEt14BufCEKDTRN69TQcSOkoXvmDxsp+9xImx
+	 EQWYj03zYWn0qDBKvoqchEiIFjePsmrmrl8G5vFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgDDQnb (ORCPT
+        id S1726312AbgDDQq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 12:43:31 -0400
-Received: from mga01.intel.com ([192.55.52.88]:17558 "EHLO mga01.intel.com"
+        Sat, 4 Apr 2020 12:46:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgDDQna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 12:43:30 -0400
-IronPort-SDR: meBxrhJNHUNdXSRdRuHkBXR7mbGFYfuZ8f8kBCraffO3LZJywyZvAj9XuJvDqVFhwIM/uBU0FN
- xWuASW7VJhOw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2020 09:43:29 -0700
-IronPort-SDR: cxxqeWy1cgeXhnc3x20ZmgteExAIV5lnq4/bZKJ1zQXdz0cRlc995VVTWIJnnbEVTbCDs6ow2m
- e/98S8Jh4Ktw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,344,1580803200"; 
-   d="scan'208";a="274277970"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Apr 2020 09:43:28 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jKltI-000DHh-9S; Sun, 05 Apr 2020 00:43:28 +0800
-Date:   Sun, 05 Apr 2020 00:42:41 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- b6f2835f2878311d82b610994511a946dde89ac9
-Message-ID: <5e88b901.Ed6YiGtaIqt/2ccu%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726057AbgDDQq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 12:46:28 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04114206D4;
+        Sat,  4 Apr 2020 16:46:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586018788;
+        bh=YQG4A/GOYNd5Jp5QAvFtVV//iwhK5hZrHteGmAX+ZTI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Chu2MnaGnccIKwDG6kMVXAqNdd6Up23J/BnZNgW1WTxLB+vGzeu/1vBFuH3d2Wmj7
+         IiRhxh4zmcsdEsCdrEvbHRbieYyKMuZxwYVXbpc65XAPVWIJiTU1LqoAUdFekAGqVI
+         79he8aXsBtMixMTbsEaeIcwT3gzoKlqJ8IPDlwQ0=
+Date:   Sat, 4 Apr 2020 17:46:24 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mircea Caprioru <mircea.caprioru@analog.com>
+Cc:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH] iio: core: Fix handling of 'dB'
+Message-ID: <20200404174624.0b7f1c80@archlinux>
+In-Reply-To: <20200401112230.4708-1-mircea.caprioru@analog.com>
+References: <20200401112230.4708-1-mircea.caprioru@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: b6f2835f2878311d82b610994511a946dde89ac9  Merge branch 'perf/urgent'
+On Wed, 1 Apr 2020 14:22:30 +0300
+Mircea Caprioru <mircea.caprioru@analog.com> wrote:
 
-elapsed time: 484m
+> This patch fixes the call to iio_str_to_fixpoint when using 'dB' sufix.
+> Before this the scale_db was not used when parsing the string written to
+> the attribute and it failed with invalid value.
+> 
+> Fixes: b8528224741b ("iio: core: Handle 'dB' suffix in core")
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 
-configs tested: 116
-configs skipped: 0
+Gah, I guess this messed up around the introduction of the character handling.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Applied to the fixes-togreg branch of iio.git.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-mips                 randconfig-a001-20200404
-nds32                randconfig-a001-20200404
-m68k                 randconfig-a001-20200404
-parisc               randconfig-a001-20200404
-alpha                randconfig-a001-20200404
-riscv                randconfig-a001-20200404
-sparc64              randconfig-a001-20200404
-h8300                randconfig-a001-20200404
-nios2                randconfig-a001-20200404
-microblaze           randconfig-a001-20200404
-c6x                  randconfig-a001-20200404
-i386                 randconfig-f001-20200404
-x86_64               randconfig-f003-20200404
-i386                 randconfig-f003-20200404
-x86_64               randconfig-f002-20200404
-i386                 randconfig-f002-20200404
-x86_64               randconfig-h002-20200404
-arm64                randconfig-a001-20200404
-sparc                randconfig-a001-20200404
-ia64                 randconfig-a001-20200404
-arc                  randconfig-a001-20200404
-arm                  randconfig-a001-20200404
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+Thanks,
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Jonathan
+
+> ---
+>  drivers/iio/industrialio-core.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 157d95a24faa..7da9cd2a2b58 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -909,14 +909,11 @@ static ssize_t iio_write_channel_info(struct device *dev,
+>  			return -EINVAL;
+>  		integer = ch;
+>  	} else {
+> -		ret = iio_str_to_fixpoint(buf, fract_mult, &integer, &fract);
+> +		ret = __iio_str_to_fixpoint(buf, fract_mult, &integer, &fract,
+> +					    scale_db);
+>  		if (ret)
+>  			return ret;
+>  	}
+> -	ret = __iio_str_to_fixpoint(buf, fract_mult, &integer, &fract,
+> -				    scale_db);
+> -	if (ret)
+> -		return ret;
+>  
+>  	ret = indio_dev->info->write_raw(indio_dev, this_attr->c,
+>  					 integer, fract, this_attr->address);
+
