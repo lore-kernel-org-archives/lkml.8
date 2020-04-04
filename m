@@ -2,122 +2,186 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B66DC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 10:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1D6C2BA17
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 10:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6BC2072B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 10:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5B2206F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 10:08:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="aTi0ATN9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSIPidUk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgDDKGB (ORCPT
+        id S1726246AbgDDKIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 06:06:01 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38690 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbgDDKGA (ORCPT
+        Sat, 4 Apr 2020 06:08:49 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36421 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgDDKIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 06:06:00 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v16so9538992ljg.5
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 03:05:58 -0700 (PDT)
+        Sat, 4 Apr 2020 06:08:49 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d202so10488820wmd.1;
+        Sat, 04 Apr 2020 03:08:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=f5WeYVcExZ58viobGo5xENBYY/7iA5WtiHNaBP74Ohk=;
-        b=aTi0ATN9MaY24407laRnBef6LfGPpOgdRBwSwCQz2c3RW4Gj/WkUSmsjFupt1+Si1I
-         /jw0cOt3bzoZ1L8XI8Cd7xl4uND//yB9GJHWzUv8WZWdrs2vMEb5P/6AngfEuXPZiSGf
-         XPfLEX+uHTRcYFmBj3aEbcKNRHtdDgUwBBnViuTIu3RWq8uVF0MXaSq7dRYUFOEfUxag
-         Me75vpJfK3iUGksokG2xHslbFjKJVBBYOFEjoY7PYPAXlsjqaldQ3YKyfSNa7FMzpHkn
-         t+K46duTvK6NW20LFcqGjElqmIe9KQb5vJm4zg6VH9x14j7uPUY0uawotq+psxvUvGUB
-         UXxg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=k19yJNcLZwMmdgmupRO5KsWO4QfHOYro/tYovVHgC3Y=;
+        b=YSIPidUk/oTQWZpDza0hrpNyBx97HDJ/wmCYAxSpI19LEAUDT+rsQ0bMjdFDPJCqZN
+         pYuVRJGs5iIqj2z2oERMydTKwhtgUmLmJmtYCfmgeAN4xL2J3SZ2rZA7tAka8ox2pDy9
+         QKj02xMWsJqZ/RCmHKODoKcsQ44R2J+JagH4WiAV6HnyZy3Uo6BThcUeJy/cIBKkQnGe
+         sL52N9WoUvs1bLJepcvAQ+r1iLFa4HitrnuW+emaQeUAvhezcdJ7dWlAUlI4qUfJpwLI
+         M74uvKo50gSuTTN8Zf/Nh0UAHHtQQVOuj2/T1yGOyRgles18x3E6Yx2y9U9pQAV+TTsp
+         tP1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=f5WeYVcExZ58viobGo5xENBYY/7iA5WtiHNaBP74Ohk=;
-        b=YqOi1Sxj2TwqpeOQtJI5bZ4QG0MUuXSZJ32DMnUszUiZXzcW0+M6tRgDMtpHsyKz8K
-         hn6I8ECfxHyG+luWST19cP5n3TwujvWqk6K5GlU2GOYqMdi+OmAGniEVLPhrWCXwF+d0
-         MbYILv/UsnM3Eks+nUAm2FMn/TvlJkBm0sQ4pZEkqCF9Jl/pvjrOxs74ke//8msxcfI1
-         aZFHuRP8Ckfyzruu8bh3KnomIFVwlEZTWQjuNJpz8f/ejv98hP+rCplt7+zj9WsTV2QW
-         biTDVg2LB1Bzp0rXzsdTeffCojGGD5tqc076Cmv8nwKlWxx+UEBumw9j8dDLYo3KADY0
-         xS+A==
-X-Gm-Message-State: AGi0Pub/egcoBsZkvR4F+DeCNCPc8cMclIRbNhxKWNGC5z2ymAYeadry
-        /HBIQ27UtRUTGmoOMUbQ/wMM+w==
-X-Google-Smtp-Source: APiQypJgK3TXAPv85OfJ7vCTcz4u4tUzYYbvpr+INBxhiypWT+murLDDhRYYaeJT38bk35encw/Ldg==
-X-Received: by 2002:a2e:818e:: with SMTP id e14mr7232769ljg.225.1585994757852;
-        Sat, 04 Apr 2020 03:05:57 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:6f0:5f98:6c2c:3527:3946:ae? ([2a00:1fa0:6f0:5f98:6c2c:3527:3946:ae])
-        by smtp.gmail.com with ESMTPSA id p21sm6378055ljg.5.2020.04.04.03.05.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Apr 2020 03:05:57 -0700 (PDT)
-Subject: Re: [PATCH 2/6] i915/gvt/kvm: a NULL ->mm does not mean a thread is a
- kthread
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200404094101.672954-1-hch@lst.de>
- <20200404094101.672954-3-hch@lst.de>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <0fb3cce8-fa3d-5c97-1eba-0f359797eea2@cogentembedded.com>
-Date:   Sat, 4 Apr 2020 13:05:52 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=k19yJNcLZwMmdgmupRO5KsWO4QfHOYro/tYovVHgC3Y=;
+        b=DTbYV1NUhxt/IKqB4n6TKKax/PxPGxGSfiOgbS4+iN52NYPOx7kOSAl+j1CtCKMQc6
+         rPgyPkJQx2zoqfEWNO/A4cDMCAhamm4rjHjieL+9RnhcVxUrc27WEadQqjMygd/tUfkG
+         fj1PsMSDJJziaH6Y1w+5974YLGuDIewTnZgLq9YW5Gnp+EAguXFJEG5jcNlS9n7ZK6RJ
+         iGmOSMwmUKvXQhcXU6xzAflo3KockYq3clVNfL41OzQhpS4DYpoZVn9YJwmYcQVDKW4z
+         g/H14uxek1UAqYtGEcQDnhYDWmMUqXm6Nl9OxeuKvK/ClPkwlO8iEZ/a1/5nZcjbcAGz
+         c2eQ==
+X-Gm-Message-State: AGi0PuaX8CuGUMSP7OMHqIetAQ6mlmXfcu4Q8EyYlE8BDz3nokTRglfD
+        ZrgxFhySvx2obnC47q0jCHI4S93EH7U=
+X-Google-Smtp-Source: APiQypIdwL9uZrcwcpY9k0V31zPZlwVuis0vnZlRmrZk+h21HMxt5HUQDLYQem/NbTY2O3XDl0gE4A==
+X-Received: by 2002:a1c:740a:: with SMTP id p10mr13328690wmc.46.1585994925667;
+        Sat, 04 Apr 2020 03:08:45 -0700 (PDT)
+Received: from debian64.daheim (p5B0D7489.dip0.t-ipconnect.de. [91.13.116.137])
+        by smtp.gmail.com with ESMTPSA id r3sm16233561wrm.35.2020.04.04.03.08.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Apr 2020 03:08:45 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.93)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1jKfj8-00020y-DI; Sat, 04 Apr 2020 12:08:34 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas =?ISO-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/5] usb: xhci: Add support for Renesas controller with memory
+Date:   Sat, 04 Apr 2020 12:08:32 +0200
+Message-ID: <226575470.unBdNOV7p8@debian64>
+In-Reply-To: <20200401161852.GD72691@vkoul-mobl>
+References: <20200323170601.419809-1-vkoul@kernel.org> <9854066.43zovN3OMW@debian64> <20200401161852.GD72691@vkoul-mobl>
 MIME-Version: 1.0
-In-Reply-To: <20200404094101.672954-3-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi,
 
-On 04.04.2020 12:40, Christoph Hellwig wrote:
-
-> Use the proper API instead.
+On Wednesday, 1 April 2020 18:18:52 CEST Vinod Koul wrote:
+> On 01-04-20, 17:39, Christian Lamparter wrote:
+> > On Wednesday, 1 April 2020 14:57:48 CEST Vinod Koul wrote:
+> > > On 26-03-20, 17:21, Vinod Koul wrote:
+> > > > On 26-03-20, 13:29, Mathias Nyman wrote:
+> > > > > On 23.3.2020 19.05, Vinod Koul wrote:
+> > > > > > Some rensas controller like uPD720201 and uPD720202 need firmware to be
+> > > > > > loaded. Add these devices in table and invoke renesas firmware loader
+> > > > > > functions to check and load the firmware into device memory when
+> > > > > > required.
+> > > > > > 
+> > > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > > > > ---
+> > > > > >  drivers/usb/host/xhci-pci-renesas.c |  1 +
+> > > > > >  drivers/usb/host/xhci-pci.c         | 29 ++++++++++++++++++++++++++++-
+> > > > > >  drivers/usb/host/xhci-pci.h         |  3 +++
+> > > > > >  3 files changed, 32 insertions(+), 1 deletion(-)
+> > > > > > 
+> > > > > 
+> > > > > It's unfortunate if firmware loading couldn't be initiated in a PCI fixup hook
+> > > > > for this Renesas controller. What was the reason it failed?
+> > > > > 
+> > > > > Nicolas Saenz Julienne just submitted a solution like that for Raspberry Pi 4
+> > > > > where firmware loading is initiated in pci-quirks.c quirk_usb_early_handoff()
+> > > > > 
+> > > > > https://lore.kernel.org/lkml/20200324182812.20420-1-nsaenzjulienne@suse.de
+> > > > > 
+> > > > > Is he doing something different than what was done for the Renesas controller?
+> > > > 
+> > > > I tried and everytime ended up not getting firmware. Though I did not
+> > > > investigate a lot. Christian seemed to have tested sometime back as
+> > > > well.
+> > > > 
+> > > > Another problem is that we dont get driver_data in the quirk and there
+> > > > didnt seem a way to find the firmware name.
+> > > > 
+> > > > > > diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
+> > > > > > index c588277ac9b8..d413d53df94b 100644
+> > > > > > --- a/drivers/usb/host/xhci-pci-renesas.c
+> > > > > > +++ b/drivers/usb/host/xhci-pci-renesas.c
+> > > > > > @@ -336,6 +336,7 @@ static void renesas_fw_callback(const struct firmware *fw,
+> > > > > >  		goto cleanup;
+> > > > > >  	}
+> > > > > >  
+> > > > > > +	xhci_pci_probe(pdev, ctx->id);
+> > > > > >  	return;
+> > > > > 
+> > > > > I haven't looked into this but instead of calling xhci_pci_probe() here in the async fw
+> > > > > loading callback could we just return -EPROBE_DEFER until firmware is loaded when
+> > > > > xhci_pci_probe() is originally called?
+> > > > 
+> > > > Hmm, initially my thinking was how to tell device core to probe again,
+> > > > and then digging up I saw wait_for_device_probe() which can be used, let
+> > > > me try that
+> > > 
+> > > Sorry to report back that it doesn't work as planned :(
+> > > 
+> > > I modified the code to invoke the request_firmware_nowait() which will load
+> > > the firmware and provide the firmware in callback. Meanwhile return -EPROBE_DEFER.
+> > > 
+> > > After a bit, the core invokes the driver probe again and we hit the
+> > > roadblock. The request_firmware uses devres and allocates resources for
+> > > loading the firmware. The problem is that device core checks for this:
+> > > 
+> > > bus: 'pci': really_probe: probing driver xhci_hcd_pci with device 0000:01:00.0
+> > > pci 0000:01:00.0: Resources present before probing
+> > > 
+> > > And here the probe fails. In some cases the firmware_callback finishes
+> > > before this and we can probe again, but that is not very reliable.
+> > > 
+> > > I tested another way to use request_firmware() (sync version) and then
+> > > load the firmware in probe and load. The request is done only for
+> > > renesas devices if they dont have firmware already running.
+> > > So rest of the devices wont have any impact.
+> > > 
+> > > Now should we continue this way in the patchset or move to sync version.
+> > > Am okay either way.
+> > 
+> > Just a word of caution.
+> > 
+> > The problem with the usage of "sync" request_firmware in drivers is that if the
+> > code is built into the kernel the request_firmware() could be called before the
+> > (root) filesystem on which the firmware resides is ready.... So this will get
+> > weird during boot because what is the sync request_firmware() going to do? From what
+> > I know, this is why the funny _async firmware request APIs are even a thing...
 > 
-> Fixes: f440c8a572d7 ("drm/i915/gvt/kvmgt: read/write GPA via KVM API")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   drivers/gpu/drm/i915/gvt/kvmgt.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> index 074c4efb58eb..5848400620b4 100644
-> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> @@ -2037,7 +2037,7 @@ static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
->   	struct kvmgt_guest_info *info;
->   	struct kvm *kvm;
->   	int idx, ret;
-> -	bool kthread = current->mm == NULL;
-> +	bool kthread = (current->flags & PF_KTHREAD);
+> So is your usage a module or inbuilt. I am using it as a module, so
+> seems okay. For inbuilt, someone needs to do make it in kernel or make
+> sure the initramfs has this :)
 
-    Don't need the parens.
+Yes, after testing on the device, I can state that everything went as intended :-).
 
-[...]
+Cheers,
+Christian
 
-MBR, Sergei
+
+
