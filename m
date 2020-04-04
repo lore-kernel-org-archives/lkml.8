@@ -2,146 +2,101 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A9BC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9DEC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22C62071C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF3B206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586015294;
-	bh=f79TrnrnhzuAnsy0dVUGOTKKJcCZ4TFJB6dIy6CFPoU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BVl5gMEmPXa8M1FjR8AXjuZmrG6YlZx6963zxDpW6iTbIg+F9N2PlsozrOwrrb0bz
-	 7tIFs1ERWcsN2cwoPaTtK6iTWP6YL7+vHlewCfNu2X5rfs1uImzgGozKtrn+0skR6o
-	 IoBdBDKw2V4XjSN/5Gxy3nzDJApaCjqscssbVUlk=
+	s=default; t=1586015448;
+	bh=0Nn+EFUzUjFBB+9yzouXCkUYoa5BAhVneCkFnDND6d4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U21gqlup7RFkMepKi0kZFSvaEgYoQ0+dScNDFSYzbGnFjH7XLXGTHpGZkBWJZ7sRc
+	 P0Yr57khzKlrnjILC8j8sVbBmaRKJQQUKC7W6e56Tc2oILpa+ZxJFd1CbqHPt1Zmaz
+	 Nl37K3PDcHa+ZsjqxJlr1ryKjl9hSfDKHIbron2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDDPsM (ORCPT
+        id S1726353AbgDDPur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 11:48:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 11:50:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgDDPsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 11:48:12 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726130AbgDDPuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 11:50:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B423206F8;
-        Sat,  4 Apr 2020 15:48:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36704206E6;
+        Sat,  4 Apr 2020 15:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586015292;
-        bh=f79TrnrnhzuAnsy0dVUGOTKKJcCZ4TFJB6dIy6CFPoU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=u6A75/dHENWT1DMubW2G0YYioDbgl/1hzaP+/TkAfdMx6OIYBX6Y362tVblQ0hAz9
-         kCPCmBWSeNP67D2NGvb3a+23lgyZ8O5gyOXcAl1f3UWhI6pUDO2Q4IKNuJOV5BQLDH
-         bmzTRMlavCQt91Buts3pOw+sAqiEkuqZWGkMyNpU=
-Date:   Sat, 4 Apr 2020 16:48:07 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] dt-bindings: mfd: add document bindings for
- mp2629
-Message-ID: <20200404164807.76b4d306@archlinux>
-In-Reply-To: <20200329123110.26482-2-sravanhome@gmail.com>
-References: <20200329123110.26482-1-sravanhome@gmail.com>
-        <20200329123110.26482-2-sravanhome@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1586015445;
+        bh=0Nn+EFUzUjFBB+9yzouXCkUYoa5BAhVneCkFnDND6d4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qJ2Npy7plxKmyeQJZrczC3n26CVBnACKU6IgjVyrjMQ1IyiyGSLHX4Wvw0u56uA91
+         k0vX8QHI1fzvN6NQBb2jxEmq+8UTfS9N8ZO+Ouecx69XxZ690RY+XApmQIR4JZ9pOd
+         SdLiVERAxzZbwO/61tuXlG56flA5KGrBJurbt6hY=
+Date:   Sat, 4 Apr 2020 17:50:40 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Taehee Yoo <ap420073@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, rafael@kernel.org,
+        j.vosburgh@gmail.com, vfalico@gmail.com, andy@greyhouse.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mitch.a.williams@intel.com
+Subject: Re: [PATCH net v2 1/3] class: add class_has_file_ns() helper function
+Message-ID: <20200404155040.GC1476305@kroah.com>
+References: <20200404141827.26255-1-ap420073@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200404141827.26255-1-ap420073@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 29 Mar 2020 14:31:06 +0200
-Saravanan Sekar <sravanhome@gmail.com> wrote:
-
-> Add device tree binding information for mp2629 mfd driver.
+On Sat, Apr 04, 2020 at 02:18:27PM +0000, Taehee Yoo wrote:
+> The new helper function is to check whether the class file is existing
+> or not. This function will be used by networking stack to
+> check "/sys/class/net/*" file.
 > 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
+> Fixes: b76cdba9cdb2 ("[PATCH] bonding: add sysfs functionality to bonding (large)")
+> Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 > ---
->  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> new file mode 100644
-> index 000000000000..3c3cd023256a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> v1 -> v2:
+>  - Implement class_has_file_ns() instead of class_find_and_get_file_ns().
+>  - Change headline.
+>  - Add kernel documentation comment.
+> 
+>  drivers/base/class.c         | 22 ++++++++++++++++++++++
+>  include/linux/device/class.h |  3 ++-
+>  2 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/class.c b/drivers/base/class.c
+> index bcd410e6d70a..a2f2787f6aa7 100644
+> --- a/drivers/base/class.c
+> +++ b/drivers/base/class.c
+> @@ -105,6 +105,28 @@ void class_remove_file_ns(struct class *cls, const struct class_attribute *attr,
+>  		sysfs_remove_file_ns(&cls->p->subsys.kobj, &attr->attr, ns);
+>  }
+>  
+> +/**
+> + * class_has_file_ns - check whether file is existing or not
+> + * @cls: the compatibility class
+> + * @name: name to look for
+> + * @ns: the namespace tag to use
+> + */
+> +bool class_has_file_ns(struct class *cls, const char *name,
+> +		       const void *ns)
 
-For new bindings a dual license is preferred.  See most of the
-bindings added recently.  This is to aid sharing outside of
-the linux kernel tree.
+Why would you use this?  And what happens if the file shows up, or goes
+away, instantly after this call is made?
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
-> +
-> +maintainers:
-> +  - Saravanan Sekar <sravanhome@gmail.com>
-> +
-> +description: |
-> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
-> +  wireless camera and portable devices. Chip is contrlled over I2C.
-> +
-> +  The battery charge management device handles battery charger controller and
-> +  ADC IIO device for battery, system voltage
-> +
-> +properties:
-> +  compatible:
-> +    const: mps,mp2629
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is the IRQ number, the second cell is the trigger type.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/input/linux-event-codes.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        pmic@4b {
-> +            compatible = "mps,mp2629";
-> +            reg = <0x4b>;
-> +
-> +            interrupt-controller;
-> +            interrupt-parent = <&gpio2>;
-> +            #interrupt-cells = <2>;
-> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> +    };
+This feels very broken.
 
+greg k-h
