@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBCAC2BA18
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF392C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE8020842
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA8B21556
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgDDIm0 (ORCPT
+        id S1726799AbgDDIm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:42:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41774 "EHLO
+        Sat, 4 Apr 2020 04:42:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41795 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgDDImV (ORCPT
+        with ESMTP id S1726708AbgDDImY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:42:21 -0400
+        Sat, 4 Apr 2020 04:42:24 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeNW-0001M7-SW; Sat, 04 Apr 2020 10:42:10 +0200
+        id 1jKeNZ-0001NB-2S; Sat, 04 Apr 2020 10:42:13 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 548E71C07F3;
-        Sat,  4 Apr 2020 10:42:04 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:42:03 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 833781C0821;
+        Sat,  4 Apr 2020 10:42:05 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:42:05 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf report: Print al_addr when symbol is not found
-Cc:     Jin Yao <yao.jin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/urgent] perf parse-events: Fix 3 use after frees found
+ with clang ASAN
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200227043939.4403-2-yao.jin@linux.intel.com>
-References: <20200227043939.4403-2-yao.jin@linux.intel.com>
+        Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        clang-built-linux@googlegroups.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200314170356.62914-1-irogers@google.com>
+References: <20200314170356.62914-1-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158598972387.28353.17069125196597189631.tip-bot2@tip-bot2>
+Message-ID: <158598972511.28353.7459181864895625736.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,190 +65,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     443bc639e518c6c4e8fc2e0456cccf3a04f6e77f
-Gitweb:        https://git.kernel.org/tip/443bc639e518c6c4e8fc2e0456cccf3a04f6e77f
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Thu, 27 Feb 2020 12:39:37 +08:00
+Commit-ID:     d4953f7ef1a2e87ef732823af35361404d13fea8
+Gitweb:        https://git.kernel.org/tip/d4953f7ef1a2e87ef732823af35361404d13fea8
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Sat, 14 Mar 2020 10:03:56 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Mon, 23 Mar 2020 11:08:29 -03:00
 
-perf report: Print al_addr when symbol is not found
+perf parse-events: Fix 3 use after frees found with clang ASAN
 
-For branch mode, if the symbol is not found, it prints
-the address.
+Reproducible with a clang asan build and then running perf test in
+particular 'Parse event definition strings'.
 
-For example, 0x0000555eee0365a0 in below output.
-
-  Overhead  Command  Source Shared Object  Source Symbol                            Target Symbol
-    17.55%  div      libc-2.27.so          [.] __random                             [.] __random
-     6.11%  div      div                   [.] 0x0000555eee0365a0                   [.] rand
-     6.10%  div      libc-2.27.so          [.] rand                                 [.] 0x0000555eee036769
-     5.80%  div      libc-2.27.so          [.] __random_r                           [.] __random
-     5.72%  div      libc-2.27.so          [.] __random                             [.] __random_r
-     5.62%  div      libc-2.27.so          [.] __random_r                           [.] __random_r
-     5.38%  div      libc-2.27.so          [.] __random                             [.] rand
-     4.56%  div      libc-2.27.so          [.] __random                             [.] __random
-     4.49%  div      div                   [.] 0x0000555eee036779                   [.] 0x0000555eee0365ff
-     4.25%  div      div                   [.] 0x0000555eee0365fa                   [.] 0x0000555eee036760
-
-But it's not very easy to understand what the instructions
-are in the binary. So this patch uses the al_addr instead.
-
-With this patch, the output is
-
-  Overhead  Command  Source Shared Object  Source Symbol                            Target Symbol
-    17.55%  div      libc-2.27.so          [.] __random                             [.] __random
-     6.11%  div      div                   [.] 0x00000000000005a0                   [.] rand
-     6.10%  div      libc-2.27.so          [.] rand                                 [.] 0x0000000000000769
-     5.80%  div      libc-2.27.so          [.] __random_r                           [.] __random
-     5.72%  div      libc-2.27.so          [.] __random                             [.] __random_r
-     5.62%  div      libc-2.27.so          [.] __random_r                           [.] __random_r
-     5.38%  div      libc-2.27.so          [.] __random                             [.] rand
-     4.56%  div      libc-2.27.so          [.] __random                             [.] __random
-     4.49%  div      div                   [.] 0x0000000000000779                   [.] 0x00000000000005ff
-     4.25%  div      div                   [.] 0x00000000000005fa                   [.] 0x0000000000000760
-
-Now we can use objdump to dump the object starting from 0x5a0.
-
-For example,
-objdump -d --start-address 0x5a0 div
-
-00000000000005a0 <rand@plt>:
- 5a0:   ff 25 2a 0a 20 00       jmpq   *0x200a2a(%rip)        # 200fd0 <__cxa_finalize@plt+0x200a20>
- 5a6:   68 02 00 00 00          pushq  $0x2
- 5ab:   e9 c0 ff ff ff          jmpq   570 <srand@plt-0x10>
- ...
-
-Committer testing:
-
-  [root@seventh ~]# perf record -a -b sleep 1
-  [root@seventh ~]# perf report --header-only | grep cpudesc
-  # cpudesc : Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz
-  [root@seventh ~]# perf evlist -v
-  cycles: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD|BRANCH_STACK, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, branch_sample_type: ANY
-  [root@seventh ~]#
-
-Before:
-
-  [root@seventh ~]# perf report --stdio --dso libsystemd-shared-241.so | head -20
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 2K of event 'cycles'
-  # Event count (approx.): 2240
-  #
-  # Overhead  Command          Source Shared Object      Source Symbol           Target Symbol           Basic Block Cycles
-  # ........  ...............  ........................  ......................  ......................  ..................
-  #
-       0.13%  systemd-journal  libc-2.29.so              [.] cfree@GLIBC_2.2.5   [.] _int_free           1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00007fe406465c82  [.] 0x00007fe406465d80  1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00007fe406465ded  [.] 0x00007fe406465c30  1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00007fe406465e4e  [.] 0x00007fe406465de0  1
-       0.09%  systemd-journal  systemd-journald          [.] free@plt            [.] cfree@GLIBC_2.2.5   1
-       0.09%  systemd-journal  libc-2.29.so              [.] _int_free           [.] _int_free           18
-       0.09%  systemd-journal  libc-2.29.so              [.] _int_free           [.] _int_free           2
-       0.04%  systemd          libsystemd-shared-241.so  [.] bus_resolve@plt     [.] bus_resolve         204
-       0.04%  systemd          libsystemd-shared-241.so  [.] getpid_cached@plt   [.] getpid_cached       7
-  [root@seventh ~]#
-
-After:
-
-  [root@seventh ~]# perf report --stdio --dso libsystemd-shared-241.so | head -20
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 2K of event 'cycles'
-  # Event count (approx.): 2240
-  #
-  # Overhead  Command          Source Shared Object      Source Symbol           Target Symbol           Basic Block Cycles
-  # ........  ...............  ........................  ......................  ......................  ..................
-  #
-       0.13%  systemd-journal  libc-2.29.so              [.] cfree@GLIBC_2.2.5   [.] _int_free           1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00000000000f7c82  [.] 0x00000000000f7d80  1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00000000000f7ded  [.] 0x00000000000f7c30  1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00000000000f7e4e  [.] 0x00000000000f7de0  1
-       0.09%  systemd-journal  systemd-journald          [.] free@plt            [.] cfree@GLIBC_2.2.5   1
-       0.09%  systemd-journal  libc-2.29.so              [.] _int_free           [.] _int_free           18
-       0.09%  systemd-journal  libc-2.29.so              [.] _int_free           [.] _int_free           2
-       0.04%  systemd          libsystemd-shared-241.so  [.] bus_resolve@plt     [.] bus_resolve         204
-       0.04%  systemd          libsystemd-shared-241.so  [.] getpid_cached@plt   [.] getpid_cached       7
-  [root@seventh ~]#
-
-Lets use -v to get full paths and then try objdump on the unresolved address:
-
-  [root@seventh ~]# perf report -v --stdio --dso libsystemd-shared-241.so |& grep libsystemd-shared-241.so | tail -1
-     0.04% systemd-journal /usr/lib/systemd/libsystemd-shared-241.so 0x80c1a B [.] 0x0000000000080c1a 0x80a95 B [.] 0x0000000000080a95 61
-  [root@seventh ~]#
-
-  [root@seventh ~]# objdump -d --start-address 0x00000000000f7d80 /usr/lib/systemd/libsystemd-shared-241.so | head -20
-
-  /usr/lib/systemd/libsystemd-shared-241.so:     file format elf64-x86-64
-
-  Disassembly of section .text:
-
-  00000000000f7d80 <proc_cmdline_parse_given@@SD_SHARED+0x330>:
-     f7d80:	41 39 11             	cmp    %edx,(%r9)
-     f7d83:	0f 84 ff fe ff ff    	je     f7c88 <proc_cmdline_parse_given@@SD_SHARED+0x238>
-     f7d89:	4c 8d 05 97 09 0c 00 	lea    0xc0997(%rip),%r8        # 1b8727 <utf8_skip_data@@SD_SHARED+0x3147>
-     f7d90:	b9 49 00 00 00       	mov    $0x49,%ecx
-     f7d95:	48 8d 15 c9 f5 0b 00 	lea    0xbf5c9(%rip),%rdx        # 1b7365 <utf8_skip_data@@SD_SHARED+0x1d85>
-     f7d9c:	31 ff                	xor    %edi,%edi
-     f7d9e:	48 8d 35 9b ff 0b 00 	lea    0xbff9b(%rip),%rsi        # 1b7d40 <utf8_skip_data@@SD_SHARED+0x2760>
-     f7da5:	e8 a6 d6 f4 ff       	callq  45450 <log_assert_failed_realm@plt>
-     f7daa:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
-     f7db0:	41 56                	push   %r14
-     f7db2:	41 55                	push   %r13
-     f7db4:	41 54                	push   %r12
-     f7db6:	55                   	push   %rbp
-  [root@seventh ~]#
-
-If we tried the the reported address before this patch:
-
-  [root@seventh ~]# objdump -d --start-address 0x00007fe406465d80 /usr/lib/systemd/libsystemd-shared-241.so | head -20
-
-  /usr/lib/systemd/libsystemd-shared-241.so:     file format elf64-x86-64
-
-  [root@seventh ~]#
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200227043939.4403-2-yao.jin@linux.intel.com
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200314170356.62914-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/sort.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/evsel.c        | 1 +
+ tools/perf/util/parse-events.c | 6 +++---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index ab0cfd7..e860595 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -869,7 +869,8 @@ static int hist_entry__sym_from_snprintf(struct hist_entry *he, char *bf,
- 	if (he->branch_info) {
- 		struct addr_map_symbol *from = &he->branch_info->from;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 816d930..15ccd19 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1287,6 +1287,7 @@ void perf_evsel__exit(struct evsel *evsel)
+ 	perf_thread_map__put(evsel->core.threads);
+ 	zfree(&evsel->group_name);
+ 	zfree(&evsel->name);
++	zfree(&evsel->pmu_name);
+ 	perf_evsel__object.fini(evsel);
+ }
  
--		return _hist_entry__sym_snprintf(&from->ms, from->addr, he->level, bf, size, width);
-+		return _hist_entry__sym_snprintf(&from->ms, from->al_addr,
-+						 he->level, bf, size, width);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index a7dc0b0..1010774 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1449,7 +1449,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu, NULL,
+ 				    auto_merge_stats, NULL);
+ 		if (evsel) {
+-			evsel->pmu_name = name;
++			evsel->pmu_name = name ? strdup(name) : NULL;
+ 			evsel->use_uncore_alias = use_uncore_alias;
+ 			return 0;
+ 		} else {
+@@ -1497,7 +1497,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 		evsel->snapshot = info.snapshot;
+ 		evsel->metric_expr = info.metric_expr;
+ 		evsel->metric_name = info.metric_name;
+-		evsel->pmu_name = name;
++		evsel->pmu_name = name ? strdup(name) : NULL;
+ 		evsel->use_uncore_alias = use_uncore_alias;
+ 		evsel->percore = config_term_percore(&evsel->config_terms);
  	}
- 
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
-@@ -881,7 +882,8 @@ static int hist_entry__sym_to_snprintf(struct hist_entry *he, char *bf,
- 	if (he->branch_info) {
- 		struct addr_map_symbol *to = &he->branch_info->to;
- 
--		return _hist_entry__sym_snprintf(&to->ms, to->addr, he->level, bf, size, width);
-+		return _hist_entry__sym_snprintf(&to->ms, to->al_addr,
-+						 he->level, bf, size, width);
- 	}
- 
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
+@@ -1547,7 +1547,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 				if (!parse_events_add_pmu(parse_state, list,
+ 							  pmu->name, head,
+ 							  true, true)) {
+-					pr_debug("%s -> %s/%s/\n", config,
++					pr_debug("%s -> %s/%s/\n", str,
+ 						 pmu->name, alias->str);
+ 					ok++;
+ 				}
