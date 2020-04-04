@@ -7,42 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA52C2BA18
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FC1C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A44420752
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D742720CC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgDDImQ (ORCPT
+        id S1727181AbgDDInT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:42:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41568 "EHLO
+        Sat, 4 Apr 2020 04:43:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41751 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgDDImE (ORCPT
+        with ESMTP id S1726571AbgDDImR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:42:04 -0400
+        Sat, 4 Apr 2020 04:42:17 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeNF-00014F-A5; Sat, 04 Apr 2020 10:41:53 +0200
+        id 1jKeNS-0001CP-7i; Sat, 04 Apr 2020 10:42:06 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7D00B1C07EC;
-        Sat,  4 Apr 2020 10:41:50 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:41:50 -0000
-From:   "tip-bot2 for Hagen Paul Pfeifer" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CFD8D1C081A;
+        Sat,  4 Apr 2020 10:41:56 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:41:56 -0000
+From:   "tip-bot2 for John Garry" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf script: Introduce --deltatime option
-Cc:     Hagen Paul Pfeifer <hagen@jauu.net>,
+Subject: [tip: perf/urgent] perf jevents: Support test events folder
+Cc:     John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, linuxarm@huawei.com,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200204173709.489161-1-hagen@jauu.net>
-References: <20200204173709.489161-1-hagen@jauu.net>
+In-Reply-To: <1584442939-8911-3-git-send-email-john.garry@huawei.com>
+References: <1584442939-8911-3-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Message-ID: <158598971015.28353.16760736954390988398.tip-bot2@tip-bot2>
+Message-ID: <158598971644.28353.16674126587372574726.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,184 +64,162 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     26567ed79d13ec54b2c5661ce8a07fd149a23a9b
-Gitweb:        https://git.kernel.org/tip/26567ed79d13ec54b2c5661ce8a07fd149a23a9b
-Author:        Hagen Paul Pfeifer <hagen@jauu.net>
-AuthorDate:    Tue, 04 Feb 2020 18:37:09 +01:00
+Commit-ID:     d84478088780acdecfcf50a0e52b71cc4ab7c520
+Gitweb:        https://git.kernel.org/tip/d84478088780acdecfcf50a0e52b71cc4ab7c520
+Author:        John Garry <john.garry@huawei.com>
+AuthorDate:    Tue, 17 Mar 2020 19:02:14 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 27 Mar 2020 10:38:47 -03:00
+CommitterDate: Tue, 24 Mar 2020 10:35:59 -03:00
 
-perf script: Introduce --deltatime option
+perf jevents: Support test events folder
 
-For some kind of analysis a deltatime output is more human friendly and
-reduce the cognitive load for further analysis.
+With the goal of supporting pmu-events test case, introduce support for
+a test events folder.
 
-The following output demonstrate the new option "deltatime": calculate
-the time difference in relation to the previous event.
+These test events can be used for testing generation of pmu-event tables
+and alias creation for any arch.
 
-  $ perf script --deltatime
-  test  2525 [001]     0.000000:            sdt_libev:ev_add: (5635e72a5ebd)
-  test  2525 [001]     0.000091:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     1.000051: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.000685:            sdt_libev:ev_add: (5635e72a5ebd)
-  test  2525 [001]     0.000048:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     1.000104: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.003895:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     0.996034: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.000058:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     1.000004: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.000064:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     0.999934: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.000056:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     0.999930: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
+When running the pmu-events test case, these test events will be used as
+the platform-agnostic events, so aliases can be created per-PMU and
+validated against known expected values.
 
-Committer testing:
+To support the test events, add a "testcpu" entry in pmu_events_map[].
+The pmu-events test will be able to lookup the events map for "testcpu",
+to verify the generated tables against expected values.
 
-So go from default output to --reltime and then this new --deltatime, to
-contrast the various timestamp presentation modes for a random perf.data file I
-had laying around:
+The resultant generated pmu-events.c will now look like the following:
 
-  [root@five ~]# perf script --reltime | head
-     perf 442394 [000]     0.000000:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000002:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000004:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000006:  128 cycles: ffffffff972415a1 perf_event_update_userpage+0x1 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000009: 2597 cycles: ffffffff97463785 cap_task_setscheduler+0x5 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000036:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000038:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000040:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000041:  224 cycles: ffffffff9700a53a perf_ibs_handle_irq+0x1da (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000044: 4439 cycles: ffffffff97120d85 put_prev_entity+0x45 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-  [root@five ~]# perf script --deltatime | head
-     perf 442394 [000]     0.000000:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000002:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000001:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000001:  128 cycles: ffffffff972415a1 perf_event_update_userpage+0x1 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000002: 2597 cycles: ffffffff97463785 cap_task_setscheduler+0x5 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000027:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000002:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000001:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000001:  224 cycles: ffffffff9700a53a perf_ibs_handle_irq+0x1da (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000002: 4439 cycles: ffffffff97120d85 put_prev_entity+0x45 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-  [root@five ~]# perf script | head
-     perf 442394 [000]  7600.157861:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]  7600.157864:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]  7600.157866:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]  7600.157867:  128 cycles: ffffffff972415a1 perf_event_update_userpage+0x1 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]  7600.157870: 2597 cycles: ffffffff97463785 cap_task_setscheduler+0x5 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157897:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157900:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157901:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157903:  224 cycles: ffffffff9700a53a perf_ibs_handle_irq+0x1da (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157906: 4439 cycles: ffffffff97120d85 put_prev_entity+0x45 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-  [root@five ~]#
+  struct pmu_event pme_ampere_emag[] = {
+  {
+  	.name = "ldrex_spec",
+  	.event = "event=0x6c",
+  	.desc = "Exclusive operation spe...",
+  	.topic = "intrinsic",
+  	.long_desc = "Exclusive operation ...",
+  },
+  ...
+  };
 
-Andi suggested we better implement it as a new field, i.e. -F deltatime, like:
+  struct pmu_event pme_test_cpu[] = {
+  {
+  	.name = "uncore_hisi_ddrc.flux_wcmd",
+  	.event = "event=0x2",
+  	.desc = "DDRC write commands. Unit: hisi_sccl,ddrc ",
+  	.topic = "uncore",
+  	.long_desc = "DDRC write commands",
+  	.pmu = "hisi_sccl,ddrc",
+  },
+  {
+  	.name = "unc_cbo_xsnp_response.miss_eviction",
+  	.event = "umask=0x81,event=0x22",
+  	.desc = "Unit: uncore_cbox A cross-core snoop resulted ...",
+  	.topic = "uncore",
+  	.long_desc = "A cross-core snoop resulted from L3 ...",
+  	.pmu = "uncore_cbox",
+  },
+  {
+  	.name = "eist_trans",
+  	.event = "umask=0x0,period=200000,event=0x3a",
+  	.desc = "Number of Enhanced Intel SpeedStep(R) ...",
+  	.topic = "other",
+  },
+  {
+  	.name = 0,
+  },
+  };
 
-  [root@five ~]# perf script -F deltatime
-  Invalid field requested.
+  struct pmu_events_map pmu_events_map[] = {
+  ...
+  {
+  	.cpuid = "0x00000000500f0000",
+  	.version = "v1",
+  	.type = "core",
+  	.table = pme_ampere_emag
+  },
+  ...
+  {
+  	.cpuid = "testcpu",
+  	.version = "v1",
+  	.type = "core",
+  	.table = pme_test_cpu,
+  },
+  {
+  	.cpuid = 0,
+  	.version = 0,
+  	.type = 0,
+  	.table = 0,
+  },
+  };
 
-   Usage: perf script [<options>]
-      or: perf script [<options>] record <script> [<record-options>] <command>
-      or: perf script [<options>] report <script> [script-args]
-      or: perf script [<options>] <script> [<record-options>] <command>
-      or: perf script [<options>] <top-script> [script-args]
-
-      -F, --fields <str>    comma separated output fields prepend with 'type:'. +field to add and -field to remove.Valid types: hw,sw,trace,raw,synth. Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr,symoff,srcline,period,iregs,uregs,brstack,brstacksym,flags,bpf-output,brstackinsn,brstackoff,callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc
-  [root@five ~]#
-
-I.e. we have -F for maximum flexibility:
-
-  [root@five ~]# perf script -F comm,pid,cpu,time | head
-            perf 442394 [000]  7600.157861:
-            perf 442394 [000]  7600.157864:
-            perf 442394 [000]  7600.157866:
-            perf 442394 [000]  7600.157867:
-            perf 442394 [000]  7600.157870:
-            perf 442394 [001]  7600.157897:
-            perf 442394 [001]  7600.157900:
-            perf 442394 [001]  7600.157901:
-            perf 442394 [001]  7600.157903:
-            perf 442394 [001]  7600.157906:
-  [root@five ~]#
-
-But since we already have --reltime, having --deltatime, documented one after
-the other is sensible.
-
-Signed-off-by: Hagen Paul Pfeifer <hagen@jauu.net>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20200204173709.489161-1-hagen@jauu.net
-[ Added 'perf script' man page entry for --deltatime ]
+Cc: James Clark <james.clark@arm.com>
+Cc: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: linuxarm@huawei.com
+Link: http://lore.kernel.org/lkml/1584442939-8911-3-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt |  3 +++
- tools/perf/builtin-script.c              | 17 +++++++++++++++++
- 2 files changed, 20 insertions(+)
+ tools/perf/pmu-events/jevents.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index db6a36a..4af255b 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -390,6 +390,9 @@ include::itrace.txt[]
- --reltime::
- 	Print time stamps relative to trace start.
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 3c4236a..fa86c5f 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -771,6 +771,19 @@ static void print_mapping_table_suffix(FILE *outfp)
+ 	fprintf(outfp, "};\n");
+ }
  
-+--deltatime::
-+	Print time stamps relative to previous event.
++static void print_mapping_test_table(FILE *outfp)
++{
++	/*
++	 * Print the terminating, NULL entry.
++	 */
++	fprintf(outfp, "{\n");
++	fprintf(outfp, "\t.cpuid = \"testcpu\",\n");
++	fprintf(outfp, "\t.version = \"v1\",\n");
++	fprintf(outfp, "\t.type = \"core\",\n");
++	fprintf(outfp, "\t.table = pme_test_cpu,\n");
++	fprintf(outfp, "},\n");
++}
 +
- --per-event-dump::
- 	Create per event files with a "perf.data.EVENT.dump" name instead of
-         printing to stdout, useful, for instance, for generating flamegraphs.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 656b347..f63869a 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -63,7 +63,9 @@
- static char const		*script_name;
- static char const		*generate_script_lang;
- static bool			reltime;
-+static bool			deltatime;
- static u64			initial_time;
-+static u64			previous_time;
- static bool			debug_mode;
- static u64			last_timestamp;
- static u64			nr_unordered;
-@@ -704,6 +706,13 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 			if (!initial_time)
- 				initial_time = sample->time;
- 			t = sample->time - initial_time;
-+		} else if (deltatime) {
-+			if (previous_time)
-+				t = sample->time - previous_time;
-+			else {
-+				t = 0;
-+			}
-+			previous_time = sample->time;
- 		}
- 		nsecs = t;
- 		secs = nsecs / NSEC_PER_SEC;
-@@ -3555,6 +3564,7 @@ int cmd_script(int argc, const char **argv)
- 		     "anything beyond the specified depth will be ignored. "
- 		     "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
- 	OPT_BOOLEAN(0, "reltime", &reltime, "Show time stamps relative to start"),
-+	OPT_BOOLEAN(0, "deltatime", &deltatime, "Show time stamps relative to previous event"),
- 	OPT_BOOLEAN('I', "show-info", &show_full_info,
- 		    "display extended information from perf.data file"),
- 	OPT_BOOLEAN('\0', "show-kernel-path", &symbol_conf.show_kernel_path,
-@@ -3651,6 +3661,13 @@ int cmd_script(int argc, const char **argv)
- 		}
+ static int process_mapfile(FILE *outfp, char *fpath)
+ {
+ 	int n = 16384;
+@@ -848,6 +861,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
  	}
  
-+	if (reltime && deltatime) {
-+		fprintf(stderr,
-+			"reltime and deltatime - the two don't get along well. "
-+			"Please limit to --reltime or --deltatime.\n");
-+		return -1;
+ out:
++	print_mapping_test_table(outfp);
+ 	print_mapping_table_suffix(outfp);
+ 	fclose(mapfp);
+ 	free(line);
+@@ -1168,6 +1182,22 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	}
+ 
++	sprintf(ldirname, "%s/test", start_dirname);
++
++	rc = nftw(ldirname, process_one_file, maxfds, 0);
++	if (rc && verbose) {
++		pr_info("%s: Error walking file tree %s rc=%d for test\n",
++			prog, ldirname, rc);
++		goto empty_map;
++	} else if (rc < 0) {
++		/* Make build fail */
++		free_arch_std_events();
++		ret = 1;
++		goto out_free_mapfile;
++	} else if (rc) {
++		goto empty_map;
 +	}
 +
- 	if (itrace_synth_opts.callchain &&
- 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
- 		scripting_max_stack = itrace_synth_opts.callchain_sz;
+ 	if (close_table)
+ 		print_events_table_suffix(eventsfp);
+ 
