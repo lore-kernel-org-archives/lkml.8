@@ -2,89 +2,92 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2F2C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8766C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 544DF206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586010100;
-	bh=7t82RrM++T30E89ZOhG5gQGEdfaKn84+qzeujIakTj8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=puCrkYcidHxtrq3yUCOi/Mesp7gBhQH8nmgO0AJnuSzQBAsUvUYa6pGiD7owHlloO
-	 rMeDkzsYAEPGa6L6IWkQ7D5D+aeArjE+rD9+Sz6XFbBZy62n3ERUIRdy8YOMJdXDYb
-	 En+2JbKufNCvUKRJkhoiV+YCtpk0FAs3myMZAOis=
+	by mail.kernel.org (Postfix) with ESMTP id 88469206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:22:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fqaFysNp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgDDOVj (ORCPT
+        id S1726327AbgDDOWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgDDOVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:21:39 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 4 Apr 2020 10:22:40 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58058 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725730AbgDDOWk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 10:22:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586010158;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZBXXFQq1y2qUkhtU8bFmrD9Xf22O0XSHFLk6Da/v1Ng=;
+        b=fqaFysNpRD7ViHHR2RRO8/AekGdLA2OsSeC9AkpgF0sUmaDOpQ3dHHhyKo8VpN64KeTzCn
+        LGzzsHOx37Denawkz9MjmIpvS96W0ZrL0sBaRR3HW08x/7Q90N4H+HW57g/SMfuMdhPISC
+        T5Pp1ZZ5Ha9M3du54klAdn3Big1+MYg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-AapuGhmOOn2xw4RaB3Ma6g-1; Sat, 04 Apr 2020 10:22:36 -0400
+X-MC-Unique: AapuGhmOOn2xw4RaB3Ma6g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4375206C3;
-        Sat,  4 Apr 2020 14:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586010098;
-        bh=7t82RrM++T30E89ZOhG5gQGEdfaKn84+qzeujIakTj8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QI1PMeZ4PbbeA6Wp211RM+j9uwqkqCiW+K62B7GHmcRCR47xCrLEsT7epwk6ihJtG
-         MFQ7zvLrXbo2RTUlu+V1GeOasysTob31U1wjQEev5A76znjVYIoPRkplJU1+S5/ICE
-         j+Z7nCNof353uV40QkmFf7Ml7xGnWS/7PKbb+mKQ=
-Date:   Sat, 4 Apr 2020 15:21:32 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>, robh+dt@kernel.org,
-        alexandre.torgue@st.com, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, olivier.moysan@st.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: iio: adc: stm32-adc: fix id relative path
-Message-ID: <20200404152132.62382a66@archlinux>
-In-Reply-To: <20200330232115.GA17380@bogus>
-References: <1584641907-8228-1-git-send-email-fabrice.gasnier@st.com>
-        <20200330232115.GA17380@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78D328018A2;
+        Sat,  4 Apr 2020 14:22:35 +0000 (UTC)
+Received: from treble (ovpn-118-100.rdu2.redhat.com [10.10.118.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 479415C1B0;
+        Sat,  4 Apr 2020 14:22:34 +0000 (UTC)
+Date:   Sat, 4 Apr 2020 09:22:32 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
+Message-ID: <20200404142232.wpn7estahnabfy3z@treble>
+References: <20200402082220.808-1-alexandre.chartre@oracle.com>
+ <20200402082220.808-5-alexandre.chartre@oracle.com>
+ <c0f265ed-c86b-d3f1-3894-941c25e42d0e@redhat.com>
+ <fc224792-bd1c-08ff-072f-e584740521b4@oracle.com>
+ <a250f29d-969a-b704-6dd6-c6cc7b84f526@redhat.com>
+ <20200402154022.GG20730@hirez.programming.kicks-ass.net>
+ <bc3a31dc-9d59-5756-aad3-187533f05654@redhat.com>
+ <20200403151757.lhhia7pzqptvlqz5@treble>
+ <20200403154620.GS20730@hirez.programming.kicks-ass.net>
+ <20200404133218.GL20760@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200404133218.GL20760@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 17:21:15 -0600
-Rob Herring <robh@kernel.org> wrote:
-
-> On Thu, 19 Mar 2020 19:18:27 +0100, Fabrice Gasnier wrote:
-> > Fix id relative path that shouldn't contain 'bindings', as pointed out
-> > when submitting st,stm32-dac bindings conversion to json-schema [1].
-> > [1] https://patchwork.ozlabs.org/patch/1257568/
+On Sat, Apr 04, 2020 at 03:32:18PM +0200, Peter Zijlstra wrote:
+> On Fri, Apr 03, 2020 at 05:46:20PM +0200, Peter Zijlstra wrote:
+> > On Fri, Apr 03, 2020 at 10:17:57AM -0500, Josh Poimboeuf wrote:
+> > > Peter, I think my previous idea for UNWIND_HINT_ADJUST stack_add=8 would
+> > > work here?
 > > 
-> > Fixes: a8cf1723c4b7 ("dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema")
-> > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > ---
-> >  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >   
+> > Yes, it would.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Sorry, I have reconsidered. While it will shut up objtool, it will not
+> 'work'. That is, the ORC data generated will not correctly unwind.
+> 
+> I'll try and write a longer email tonight.
 
-Applied to the fixes-togreg branch of iio.git
-I will hopefully send a pull request for this around the time
-the merge window closes.
+Right, that's what I've been trying to say.  The ORC data will be
+non-deterministic unless we unroll the loop.  Or did you mean something
+else?
 
-Thanks,
+-- 
+Josh
 
-Jonathan.
