@@ -2,176 +2,268 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03472C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550A5C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDACB206D4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586009272;
-	bh=/fGwNQGSGd8258j4HpL7qVgnU4jtouS/+Lk1L8UMLa0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qsMWknPGev0q4H++NxQsmxutJLtngK5gb4Kacl1Znn9ZqBM7ICFShDNrEgO50kCi0
-	 foqIvGf8m/Qc+H45Nm/VP97HL1Ou6s+/l9x/OFOEoGDQZS7BhNOcJOYYgLLeDMZwoR
-	 SUO339rC+Zw0bPOfBpyWpsnOzh4WfTgPEEIrxMKE=
+	by mail.kernel.org (Postfix) with ESMTP id 12B8A206D4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:12:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tCOrjF31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgDDOHw (ORCPT
+        id S1726331AbgDDOMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgDDOHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:07:51 -0400
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+        Sat, 4 Apr 2020 10:12:25 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:16796 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726039AbgDDOMZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 10:12:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586009544; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=1mFW4GvYCJDueYcN+uUWXvjyL3gGkxOhuBmkTrdqcJA=; b=tCOrjF31O4Sex79wdTqomCQ1ZW3svigpQEFNpOrQ2eLQhm5FrmElQQjQwmioVZBOSWvBum2J
+ 5eNQi0/9ap+1gMTj7CznQGzENqQALAc6O48B4oZi9Zvg+/eQr+/Ctxru0KD2d3mIVwmwdjwq
+ Y4jKljvG5BgQQI5xS4SjyC6fYo4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8895c7.7f0a3bf3c6f8-smtp-out-n05;
+ Sat, 04 Apr 2020 14:12:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6E60EC433BA; Sat,  4 Apr 2020 14:12:23 +0000 (UTC)
+Received: from [10.79.170.113] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13B1E2071C;
-        Sat,  4 Apr 2020 14:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586009271;
-        bh=/fGwNQGSGd8258j4HpL7qVgnU4jtouS/+Lk1L8UMLa0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y6kx7ZctsdH13Tn2DH/MWaklMItFSw/j1F5h0zFx9Sa4p4YGfwaQNyFCi55i9jn9n
-         IXLbICIi/o6HN642XKH/oL+0gGZ6MUMnAi/f/fKnfd45Seui669+Hj7LUS3fzuq2Ng
-         B2Ec4WS5K3mgCnmu+njSanerAiao94B2vW673P5Y=
-Received: by mail-ed1-f48.google.com with SMTP id cw6so12832626edb.9;
-        Sat, 04 Apr 2020 07:07:51 -0700 (PDT)
-X-Gm-Message-State: AGi0PuauDL87zVwO7OA4MANJzBdryN3DFY+HZ3H8EFapyk+BUrAX7ZpR
-        CpCdYNhrXgAzb5WzhrjeRP3HVy10sT+XE/N2uA==
-X-Google-Smtp-Source: APiQypK0S3Kzy+Z7UNvOp7SLCqBUhpNPhPvCjDCuGG8pOnT9BD/0gjPBqrnjz9yHn+AyXpA4LOucO3kSR8nPurmuA+4=
-X-Received: by 2002:a17:906:fca4:: with SMTP id qw4mr422751ejb.324.1586009269517;
- Sat, 04 Apr 2020 07:07:49 -0700 (PDT)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85C34C433F2;
+        Sat,  4 Apr 2020 14:12:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85C34C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+Subject: Re: [PATCH v4 2/2] Embedded USB Debugger (EUD) driver
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ckadabi@codeaurora.org, tsoni@codeaurora.org,
+        bryanh@codeaurora.org, psodagud@codeaurora.org,
+        rnayak@codeaurora.org, satyap@codeaurora.org,
+        pheragu@codeaurora.org
+References: <1580445811-15948-1-git-send-email-akdwived@codeaurora.org>
+ <1580445811-15948-3-git-send-email-akdwived@codeaurora.org>
+ <20200203193533.GL3948@builder>
+ <5008a446-a90c-b68a-aaa4-3e7cd90418fa@linaro.org>
+ <d09f8a1d-0544-838f-e6f8-1c47f58e4f1f@codeaurora.org>
+ <8a854c02-7435-46c6-5bd1-05273e5249e4@linaro.org>
+ <aa942701-d11b-dcf2-d28f-144582af0d2f@codeaurora.org>
+ <a6cbc859-184e-2a0d-bd2b-0ad9653e5ee2@linaro.org>
+From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Message-ID: <5db1a666-62ec-c850-6626-ad33d337b452@codeaurora.org>
+Date:   Sat, 4 Apr 2020 19:42:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200403080350.95826-1-jitao.shi@mediatek.com> <20200403080350.95826-4-jitao.shi@mediatek.com>
-In-Reply-To: <20200403080350.95826-4-jitao.shi@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sat, 4 Apr 2020 22:07:37 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-FJ9LY6KwnzA+6bb0X=i1VRk8EOvtcM73rfidPhnGdnw@mail.gmail.com>
-Message-ID: <CAAOTY_-FJ9LY6KwnzA+6bb0X=i1VRk8EOvtcM73rfidPhnGdnw@mail.gmail.com>
-Subject: Re: [PATCH v14 3/3] drm/mediatek: set dpi pin mode to gpio low to
- avoid leakage current
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        srv_heupstream@mediatek.com, huijuan.xie@mediatek.com,
-        stonea168@163.com, cawa.cheng@mediatek.com,
-        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a6cbc859-184e-2a0d-bd2b-0ad9653e5ee2@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
 
-Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=883=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:04=E5=AF=AB=E9=81=93=EF=BC=9A
+On 2/18/2020 8:18 PM, Bryan O'Donoghue wrote:
+> On 18/02/2020 13:23, Dwivedi, Avaneesh Kumar (avani) wrote:
+>>
+>> On 2/18/2020 1:14 AM, Bryan O'Donoghue wrote:
+>>> On 16/02/2020 16:07, Dwivedi, Avaneesh Kumar (avani) wrote:
+>>>>
+>>>> On 2/4/2020 8:40 AM, Bryan O'Donoghue wrote:
+>>>>> On 03/02/2020 19:35, Bjorn Andersson wrote:
+>>>>>> On Thu 30 Jan 20:43 PST 2020, Avaneesh Kumar Dwivedi wrote:
+>>>>>
+>>>>> Hi Avaneesh.
+>>>>
+>>>> Hello Bryan, Thank you very much for your review comments.
+>>>>
+>>>> Will be replying to your comments and will be posting new patchset 
+>>>> soon as per review comments.
+>>>>
+>>>>>
+>>>>>> Please aim for keeping the sort order in this file (ignore QCOM_APR
+>>>>>> which obviously is in the wrong place)
+>>>>>>
+>>>>>>> +       tristate "QTI Embedded USB Debugger (EUD)"
+>>>>>>> +       depends on ARCH_QCOM
+>>>>>
+>>>>> If we persist with the model of EXTCON you should "select EXTCON" 
+>>>>> here.
+>>>
+>>>> I have asked this query with Bjorn Also against his review 
+>>>> comments, whether we need to persist with extcon or need to switch 
+>>>> to usb role switch framework, as we are notifying not only to usb 
+>>>> controller but also to pmic charger so in case we adopt usb role 
+>>>> switch then how we will notify to pmic charger to enable charging 
+>>>> battery ? Also as i mentioned there my dilema is it does not look 
+>>>> very apt to model EUD hw IP as c type connector, so please let me 
+>>>> know your views.
+>>>
+>>> I think there's a desire to model USB ports as connector child nodes 
+>>> of a USB controllers as opposed to the more generic extcon so, I 
+>>> think the effort should probably be made to model it up as typec.
+>> this comment is irrespective of your below comment (If we were to 
+>> support Control Peripheral where the local DWC3 controller has the 
+>> signals routed away entirely, then I think we would need to look into 
+>> modelling that in device tree - and using an overlay to show the DWC3 
+>> controller going away in Control Peripheral mode and coming back. )?
 >
-> Config dpi pins mode to output and pull low when dpi is disabled.
-> Aovid leakage current from some dpi pins (Hsync Vsync DE ... ).
+> Yes, I think irrespective we should model this as a connector not an 
+> extcon and I think you could do think you could do that as a typec
+>
+> 1. Using role-switch
+> 2. Use the regulator API to capture EUD related charger messages
+>    and trigger changes in the PMIC as opposed to using extcon
+>    to notify.
+>
+> I could be wrong about #2
 
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+HI Bryan,
+
+Sorry for long pause on this thread, I went through USB role switch 
+framework  and yes we can move to it for notification of VBUS event, but 
+i am not able to find a good example in upstream, of how battery charger 
+module can be notified about charger stop and charger start event if we 
+don't use extcon interface for notification. I am not sure it would be 
+simple regulator enable and disable call, i will discuss with PMIC guys 
+on this and will come back.
 
 >
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+>>> Can that work for you ?
+>> Did not comprehend this comment fully. if possible can you give some 
+>> example.
+>
+> My understanding is we are generally being encouraged to model ports 
+> as connectors instead of extcon. I think it is possible to model your 
+> port driver as a typec connector using USB role-switching and the 
+> regulator API i.e. I don't think you really need extcon here.
+>
+>>> Ah so, the EUD is a mux, that sits between the connector and the 
+>>> controller, routing UTMI signals to an internal USB hub, which 
+>>> in-turn has debug functions attached to the hub...
+>> Yes that is correct understanding.
+>>>
+>>> Can the Arm core see the hub ? I assume not ?
+>> Not sure what is it mean by "Can the Arm core see the hub"?
+>
+> In Debug mode will a DWC3 controller in host mode enumerate the 
+> internal hub ? If so, is that a supported use-case ?
+In debug mode DWC3 controller will only enumerate in device mode.
+>
+>>> There are a few different modes - you should probably be clear on 
+>>> which mode it is you are supporting.
+>>>
+>>> Normal mode: (Bypass)
+>>> Port | EUD | Controller
+>>>
+>>> Normal + debug hub mode: (Debug)
+>>> Port | EUD | Controller + HUB -> debug functions
+>>>
+>>> Debug hub mode: (Control Peripheral)
+>>> Port | EUD | HUB -> debug functions
+>>>
+>>> its not clear to me from the documentation or the code which mode it 
+>>> is we are targeting to be supported here.
+>> Its debug mode which we are supporting in driver.
+>>>
+>>> I think you should support Debug mode only here, so that the Arm 
+>>> core never has to deal with the situation where the USB connector 
+>>> "goes away".
+>> Can you please help what you mean by "so that the Arm core never has 
+>> to deal with the situation where the USB connector "goes away""
+>
+> So my thinking is
+>
+> - DWC3 in host mode
+>   For argument sake, lets say an external self-powered hub is connected
+>   and a number of USB devices are enumerated
+> - EUD switches to Control Peripheral mode
+>
+> In this case what would happen ?
+I am not getting clarity about this from spec document, what i 
+understand is in this case PHY signal to USB controller will get 
+stop(UTMI switch will block signal from USB PHY to USB controller), so 
+before to switching to control peripheral mode EUD should send detach 
+event to USB controller so that it can enter low power mode, let me know 
+if it is grossly wrong understanding. In any case we are not supporting 
+control peripheral mode in present state of driver.
+>
+>>>
+>>> If we were to support Control Peripheral where the local DWC3 
+>>> controller has the signals routed away entirely, then I think we 
+>>> would need to look into modelling that in device tree - and using an 
+>>> overlay to show the DWC3 controller going away in Control Peripheral 
+>>> mode and coming back.
+>> debug mode is set run time via user, i will check how we can model 
+>> such scenario where device tree corresponding to a h/w module is only 
+>> valid in some scenario at run time. if possible please elaborate bit 
+>> more on your suggestion
+>
+> If Debug mode is all you are trying to do support then I don't think 
+> you really need to model that in DT.
+>
+> However if intend to support Control Peripheral mode which as I 
+> understand it, switches the UTMI signals away from a DWC3 controller 
+> in Host mode, then I think you would need to use a DT overlay to 
+> switch off the controller, before switching.
+>
+> That's why I'm asking you about Control Peripheral mode - do you want 
+> to support it - and if so, then what happens to DWC3 in host mode when 
+> the UTMI signals go away ?
+>
+> I think you've said you only want to support Debug mode, which makes 
+> more sense to me.
+>
+> Is Debug mode only valid when the DWC3 controller is in 
+> peripheral/device mode and if so, should we be checking/enforcing that 
+> somewhere - DT or EUD-driver code ?
+
+Yes in debug mode DWC3 controller should always be in device mode, and i 
+believe this we can insure when we inform USB controller about attach 
+event after starting in debug mode, using role-switch framework isnt it? 
+may be i am not getting your statement, how device mode enumeration can 
+be enforced using DT ?
+
+>
+>>> Also final thought since the EUD can operate in different modes, it 
+>>> really should be a string that gets passed in - with the string name 
+>>> aligning to the documentation "bypass", "debug" and so on, so that 
+>>> the mode we are switching to is obvious to anybody who has the spec 
+>>> and the driver.
+>>
+>> you mean we should document that this driver works in debug mode 
+>> only? not clear on where one should pass "debug" and "bypass" string?
+>
+> You have a routine to switch to debug mode that takes a parameter from 
+> user-space right ?
+>
+> Bjorn mentioned you could write 42. My question/suggestion is why 
+> isn't the value written a string which corresponds to the supported 
+> modes from the EUD spec ?
+> "bypass" as default "debug" the mode you want to add, at a later time 
+> you could optionally add in "control-periperhal" mode.
+>
+> Makes a little more sense to me than writing just 0, 1 or 42 :) into 
+> your store routine.
+OK.
+>
 > ---
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 31 ++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediate=
-k/mtk_dpi.c
-> index 087f5ce732e1..1e01254788d9 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -10,7 +10,9 @@
->  #include <linux/kernel.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/of_graph.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/types.h>
->
-> @@ -74,6 +76,9 @@ struct mtk_dpi {
->         enum mtk_dpi_out_yc_map yc_map;
->         enum mtk_dpi_out_bit_num bit_num;
->         enum mtk_dpi_out_channel_swap channel_swap;
-> +       struct pinctrl *pinctrl;
-> +       struct pinctrl_state *pins_gpio;
-> +       struct pinctrl_state *pins_dpi;
->         int refcount;
->  };
->
-> @@ -379,6 +384,9 @@ static void mtk_dpi_power_off(struct mtk_dpi *dpi)
->         if (--dpi->refcount !=3D 0)
->                 return;
->
-> +       if (dpi->pinctrl && dpi->pins_gpio)
-> +               pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio);
-> +
->         mtk_dpi_disable(dpi);
->         clk_disable_unprepare(dpi->pixel_clk);
->         clk_disable_unprepare(dpi->engine_clk);
-> @@ -403,6 +411,9 @@ static int mtk_dpi_power_on(struct mtk_dpi *dpi)
->                 goto err_pixel;
->         }
->
-> +       if (dpi->pinctrl && dpi->pins_dpi)
-> +               pinctrl_select_state(dpi->pinctrl, dpi->pins_dpi);
-> +
->         mtk_dpi_enable(dpi);
->         return 0;
->
-> @@ -705,6 +716,26 @@ static int mtk_dpi_probe(struct platform_device *pde=
-v)
->         dpi->dev =3D dev;
->         dpi->conf =3D (struct mtk_dpi_conf *)of_device_get_match_data(dev=
-);
->
-> +       dpi->pinctrl =3D devm_pinctrl_get(&pdev->dev);
-> +       if (IS_ERR(dpi->pinctrl)) {
-> +               dpi->pinctrl =3D NULL;
-> +               dev_dbg(&pdev->dev, "Cannot find pinctrl!\n");
-> +       }
-> +       if (dpi->pinctrl) {
-> +               dpi->pins_gpio =3D pinctrl_lookup_state(dpi->pinctrl, "sl=
-eep");
-> +               if (IS_ERR(dpi->pins_gpio)) {
-> +                       dpi->pins_gpio =3D NULL;
-> +                       dev_dbg(&pdev->dev, "Cannot find pinctrl idle!\n"=
-);
-> +               }
-> +               if (dpi->pins_gpio)
-> +                       pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio=
-);
-> +
-> +               dpi->pins_dpi =3D pinctrl_lookup_state(dpi->pinctrl, "def=
-ault");
-> +               if (IS_ERR(dpi->pins_dpi)) {
-> +                       dpi->pins_dpi =3D NULL;
-> +                       dev_dbg(&pdev->dev, "Cannot find pinctrl active!\=
-n");
-> +               }
-> +       }
->         mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         dpi->regs =3D devm_ioremap_resource(dev, mem);
->         if (IS_ERR(dpi->regs)) {
-> --
-> 2.21.0
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> bod
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
