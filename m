@@ -2,123 +2,242 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0833EC2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 12:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABBCC2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 12:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6DD8206F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 12:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90512206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 12:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RgVJg0wg"
+	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="FnkcgQFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgDDMMf (ORCPT
+        id S1726272AbgDDMT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 08:12:35 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39393 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgDDMMf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 08:12:35 -0400
-Received: by mail-oi1-f194.google.com with SMTP id d63so8697532oig.6
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 05:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jKltLIjkeugNXvKZ/WNOjs3yWnJYwRe4Lc/bVmXm/3E=;
-        b=RgVJg0wgr143G4gyzDbbfm84LsLH3MP4SN7MaIkYorAoVDOBWyb/mqeqd/llZlUALK
-         pLOIJVHAXJ7+DwM8KcJEYnfUrevmL8hDEkZ/97Bp0ubUMgkETckeKob2oHdooiBOjPr3
-         rriSFYQXyrtdLZ63XdkfzTqKQnT0ak5J596o7hBoouU6OSZJZHm9fjqZkFJTSTYEbQS7
-         7jpm0dVmQsP6BVViUdq/XOgAkGrqCq705tOsDII+pSJ/6Xp2C22g2JIm5HujNedbTOk/
-         u2M1MideUCCoOEGi150OaW2iKtBiCAQTEXiz4tcpxZLbeOK+BimEdjw0BjbuYQ9r/WUl
-         XMBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jKltLIjkeugNXvKZ/WNOjs3yWnJYwRe4Lc/bVmXm/3E=;
-        b=nRr2MGSRY1uuIJzblkj0PxUFgh/5KhccqFHJzLR5NRS4J5+rvye/By3Hf9IZAzSQ/x
-         3zJTGovs1NbW9+mpAsgowoAxnA5sG68f2jP1YCoXRDmMUAJMt9LqQ8kDtB+yV+CLJqO3
-         ExeBj6Bo48H+G3oUiZoK2oUckxXaucxUFHzYpj7HqhWrmtQmjUrlFr7ApsS6BXh26EMW
-         fn46lH3vFVjKp3zx5+FQ/Q+prsFz7HEzvg5aqU4/5pW/aTCc4LrIMTmuVeMAyYIV5m08
-         y8IKznIEJpQOr2Yw3xdXT2m+vNeXdgDSmdKPsourNibUgCQohuvPl9hOlIuzmpbF7BI2
-         KwnQ==
-X-Gm-Message-State: AGi0PuZdkXdMEht6L6e5kw8kAkS2Vnyn3Zp3JcyxRQVGMf5nRSJPVsiK
-        tmuY9muj1mF/W49T7SQHVs04F+Z+c2M6Ixmv+4v8EA==
-X-Google-Smtp-Source: APiQypKoUIArlv+AU+qdaFbGmgtLIA43dBjeqmsMapEs9zbS0kBYGn63b7pHIli+RFC4il0+K87DaAx7Q7EETQmoj+c=
-X-Received: by 2002:a05:6808:56:: with SMTP id v22mr6104012oic.116.1586002354371;
- Sat, 04 Apr 2020 05:12:34 -0700 (PDT)
+        Sat, 4 Apr 2020 08:19:56 -0400
+Received: from mx.0dd.nl ([5.2.79.48]:48138 "EHLO mx.0dd.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbgDDMT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 08:19:56 -0400
+Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mx.0dd.nl (Postfix) with ESMTPS id A81075FC75;
+        Sat,  4 Apr 2020 14:19:54 +0200 (CEST)
+Authentication-Results: mx.0dd.nl;
+        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="FnkcgQFR";
+        dkim-atps=neutral
+Received: from www (www.vdorst.com [192.168.2.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.vdorst.com (Postfix) with ESMTPSA id 4CD4627C8BA;
+        Sat,  4 Apr 2020 14:19:54 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com 4CD4627C8BA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
+        s=default; t=1586002794;
+        bh=ctayAcaFI2hlA1UO9mKHsTkEOszfKFOnmNt31e4Np0I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FnkcgQFRZELMzJe7wCKoQLLnSJGlZWKvPN6+dQ6pGu2p1AJE439FO+gj7O8yLm2FD
+         51WSsVONmjWuhENP5JtBfGcBJstO848Mcr1Su1pN+ntJOfggcmGfly9QsN3BZKd1Wc
+         9OsTxvzq6kYNQdnEAmxRJ5pdAEz2EfIYLRB1+Xc51kKwOYVeXgYYbGfOYPDTy5RmUH
+         PjfibHRoWN2G1gcctcK8ax45ErcuaBVa/8o/8S04z1+sABIwbHS6UiWiF0+jvbdT+j
+         AqRZtxuPtDVw09HjT+mv2mB5UT+9Px5SpXLKJ5cgKNGmQHfJqjp/WwAGPg0XKZ6Ay/
+         i05ABzsRQxn9g==
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
+ www.vdorst.com (Horde Framework) with HTTPS; Sat, 04 Apr 2020 12:19:54 +0000
+Date:   Sat, 04 Apr 2020 12:19:54 +0000
+Message-ID: <20200404121954.Horde.D4IT7LfXGUekf9m8q6GWcn4@www.vdorst.com>
+From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+To:     sean.wang@mediatek.com
+Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        vivien.didelot@savoirfairelinux.com, Mark-MC.Lee@mediatek.com,
+        john@phrozen.org, Landen.Chao@mediatek.com,
+        steven.liu@mediatek.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net 2/2] net: ethernet: mediatek: move mt7623 settings
+ out off the mt7530
+References: <1585960697-15547-1-git-send-email-sean.wang@mediatek.com>
+ <1585960697-15547-2-git-send-email-sean.wang@mediatek.com>
+In-Reply-To: <1585960697-15547-2-git-send-email-sean.wang@mediatek.com>
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-References: <cover.1583772574.git.zong.li@sifive.com> <d27d9e68491e1df67dbee6c22df6a72ff95bab18.1583772574.git.zong.li@sifive.com>
- <20200401003233.17fe4b6f7075e5b8f0ed5114@kernel.org> <CANXhq0ra3o+mgenbYLq_q0eZY2KiXNpWmo2V0amD0cFDqCQkXw@mail.gmail.com>
- <20200402101733.1ef240faeaeada6e4d38ae80@kernel.org> <CANXhq0rMbkNxQ3_qqYEKe8DSbL-vfQku6V9a81Hy9cxW4LaW9g@mail.gmail.com>
- <20200404121428.596911ba5653f8b18a80eab2@kernel.org>
-In-Reply-To: <20200404121428.596911ba5653f8b18a80eab2@kernel.org>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Sat, 4 Apr 2020 20:12:24 +0800
-Message-ID: <CANXhq0rc+6jor7CMaa-zqSn3vNBdJhj3gD5wGxPkXAtVVHDHdQ@mail.gmail.com>
-Subject: Re: [PATCH v3 8/9] riscv: introduce interfaces to patch kernel code
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 4, 2020 at 11:14 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> Hi Zong,
->
-> On Fri, 3 Apr 2020 17:04:51 +0800
-> Zong Li <zong.li@sifive.com> wrote:
->
-> > > > > > +{
-> > > > > > +     void *waddr = addr;
-> > > > > > +     bool across_pages = (((uintptr_t) addr & ~PAGE_MASK) + len) > PAGE_SIZE;
-> > > > > > +     unsigned long flags = 0;
-> > > > > > +     int ret;
-> > > > > > +
-> > > > > > +     raw_spin_lock_irqsave(&patch_lock, flags);
-> > > > >
-> > > > > This looks a bit odd since stop_machine() is protected by its own mutex,
-> > > > > and also the irq is already disabled here.
-> > > >
-> > > > We need it because we don't always enter the riscv_patch_text_nosync()
-> > > > through stop_machine mechanism. If we call the
-> > > > riscv_patch_text_nosync() directly, we need a lock to protect the
-> > > > page.
-> > >
-> > > Oh, OK, but it leads another question. Is that safe to patch the
-> > > text without sync? Would you use it for UP system?
-> > > I think it is better to clarify "in what case user can call _nosync()"
-> > > and add a comment on it.
-> >
-> > The ftrace is one of the cases, as documentation of ftrace said, when
-> > dynamic ftrace is initialized, it calls kstop_machine to make the
-> > machine act like a uniprocessor so that it can freely modify code
-> > without worrying about other processors executing that same code. So
-> > the ftrace called the _nosync interface here directly.
->
-> Hmm, even though, since it already running under kstop_machine(), no
-> other thread will run.
-> Could you consider to use text_mutex instead of that? The text_mutex
-> is already widely used in x86 and kernel/kprobes.c etc.
->
-> (Hmm, it seems except for x86, alternative code don't care about
->  racing...)
->
+Hi Sean,
 
-Yes, text_mutex seems to be great. I'll change to use text_mutex in
-the next version if it works fine after testing. Thanks.
+See comments below.
 
-> Thank you,
+Quoting sean.wang@mediatek.com:
+
+> From: René van Dorst <opensource@vdorst.com>
+>
+> Moving mt7623 logic out off mt7530, is required to make hardware setting
+> consistent after we introduce phylink to mtk driver.
+>
+> Fixes: b8fc9f30821e ("net: ethernet: mediatek: Add basic PHYLINK support")
+> Reviewed-by: Sean Wang <sean.wang@mediatek.com>
+> Tested-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: René van Dorst <opensource@vdorst.com>
+> ---
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 43 ++++++++++++++++++---
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.h |  8 ++++
+>  2 files changed, 45 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c  
+> b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> index 8d28f90acfe7..14da599664e6 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> @@ -65,6 +65,17 @@ u32 mtk_r32(struct mtk_eth *eth, unsigned reg)
+>  	return __raw_readl(eth->base + reg);
+>  }
+>
+> +u32 mtk_m32(struct mtk_eth *eth, u32 mask, u32 set, unsigned reg)
+> +{
+> +	u32 val;
+> +
+> +	val = mtk_r32(eth, reg);
+> +	val &= ~mask;
+> +	val |= set;
+> +	mtk_w32(eth, val, reg);
+> +	return reg;
+> +}
+> +
+>  static int mtk_mdio_busy_wait(struct mtk_eth *eth)
+>  {
+>  	unsigned long t_start = jiffies;
+> @@ -160,11 +171,21 @@ static int mt7621_gmac0_rgmii_adjust(struct  
+> mtk_eth *eth,
+>  	return 0;
+>  }
+>
+> -static void mtk_gmac0_rgmii_adjust(struct mtk_eth *eth, int speed)
+> +static void mtk_gmac0_rgmii_adjust(struct mtk_eth *eth,
+> +				   phy_interface_t interface, int speed)
+>  {
+>  	u32 val;
+>  	int ret;
+>
+> +	if (interface == PHY_INTERFACE_MODE_TRGMII) {
+> +		mtk_w32(eth, TRGMII_MODE, INTF_MODE);
+> +		val = 500000000;
+> +		ret = clk_set_rate(eth->clks[MTK_CLK_TRGPLL], val);
+> +		if (ret)
+> +			dev_err(eth->dev, "Failed to set trgmii pll: %d\n", ret);
+> +		return;
+> +	}
+> +
+>  	val = (speed == SPEED_1000) ?
+>  		INTF_MODE_RGMII_1000 : INTF_MODE_RGMII_10_100;
+>  	mtk_w32(eth, val, INTF_MODE);
+> @@ -193,7 +214,7 @@ static void mtk_mac_config(struct phylink_config  
+> *config, unsigned int mode,
+>  	struct mtk_mac *mac = container_of(config, struct mtk_mac,
+>  					   phylink_config);
+>  	struct mtk_eth *eth = mac->hw;
+> -	u32 mcr_cur, mcr_new, sid;
+> +	u32 mcr_cur, mcr_new, sid, i;
+>  	int val, ge_mode, err;
+>
+>  	/* MT76x8 has no hardware settings between for the MAC */
+> @@ -251,10 +272,20 @@ static void mtk_mac_config(struct  
+> phylink_config *config, unsigned int mode,
+>  							      state->interface))
+>  					goto err_phy;
+>  			} else {
+> -				if (state->interface !=
+> -				    PHY_INTERFACE_MODE_TRGMII)
+> -					mtk_gmac0_rgmii_adjust(mac->hw,
+> -							       state->speed);
+> +				mtk_gmac0_rgmii_adjust(mac->hw,
+> +						       state->interface,
+> +						       state->speed);
+> +
+
+As I tried to explain in my email of 27 March.
+
+mtk_gmac0_rgmii_adjust() needs to be modified or split-up!
+Russell King pointed out that mtk_gmac0_rgmii_adjust() is using state->speed
+variable. This variable may has not the right value so it should not be used
+here. Also mtk_gmac0_rgmii_adjust() is only called on a  
+state->interface change
+not state->speed change.
+
+So can we make this function only dependend on the state->interface and how?
+
+I think in both cases, remove mtk_gmac0_rgmii_adjust() changes in this  
+patch and
+create a separet patch to fix mtk_gmac0_rgmii_adjust() issue. Would be  
+great if
+that also complies to the latest PHYLINK api [1]. So that functions that using
+state->speed and other related parameters move to mac_link_up(). Similair also
+on the mt7530 switch driver [2].
+
+Greats,
+
+René
+
+[1]:  
+https://lore.kernel.org/linux-arm-kernel/20200217172242.GZ25745@shell.armlinux.org.uk/
+[2]:  
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=1d01145fd659f9f96ede1c34e3bea0ccb558a293
+
+> +				/* mt7623_pad_clk_setup */
+> +				for (i = 0 ; i < NUM_TRGMII_CTRL; i++)
+> +					mtk_w32(mac->hw,
+> +						TD_DM_DRVP(8) | TD_DM_DRVN(8),
+> +						TRGMII_TD_ODT(i));
+> +
+> +				/* Assert/release MT7623 RXC reset */
+> +				mtk_m32(mac->hw, 0, RXC_RST | RXC_DQSISEL,
+> +					TRGMII_RCK_CTRL);
+> +				mtk_m32(mac->hw, RXC_RST, 0, TRGMII_RCK_CTRL);
+>  			}
+>  		}
+>
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h  
+> b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+> index 85830fe14a1b..454cfcd465fd 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+> @@ -352,10 +352,13 @@
+>  #define DQSI0(x)		((x << 0) & GENMASK(6, 0))
+>  #define DQSI1(x)		((x << 8) & GENMASK(14, 8))
+>  #define RXCTL_DMWTLAT(x)	((x << 16) & GENMASK(18, 16))
+> +#define RXC_RST			BIT(31)
+>  #define RXC_DQSISEL		BIT(30)
+>  #define RCK_CTRL_RGMII_1000	(RXC_DQSISEL | RXCTL_DMWTLAT(2) | DQSI1(16))
+>  #define RCK_CTRL_RGMII_10_100	RXCTL_DMWTLAT(2)
+>
+> +#define NUM_TRGMII_CTRL		5
+> +
+>  /* TRGMII RXC control register */
+>  #define TRGMII_TCK_CTRL		0x10340
+>  #define TXCTL_DMWTLAT(x)	((x << 16) & GENMASK(18, 16))
+> @@ -363,6 +366,11 @@
+>  #define TCK_CTRL_RGMII_1000	TXCTL_DMWTLAT(2)
+>  #define TCK_CTRL_RGMII_10_100	(TXC_INV | TXCTL_DMWTLAT(2))
+>
+> +/* TRGMII TX Drive Strength */
+> +#define TRGMII_TD_ODT(i)	(0x10354 + 8 * (i))
+> +#define  TD_DM_DRVP(x)		((x) & 0xf)
+> +#define  TD_DM_DRVN(x)		(((x) & 0xf) << 4)
+> +
+>  /* TRGMII Interface mode register */
+>  #define INTF_MODE		0x10390
+>  #define TRGMII_INTF_DIS		BIT(0)
 > --
-> Masami Hiramatsu <mhiramat@kernel.org>
+> 2.25.1
+
+
+
