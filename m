@@ -2,90 +2,107 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9EEC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5489C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381AE206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC53206F8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:17:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="c4fufxCN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IrFJh1K/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgDDPIr (ORCPT
+        id S1726258AbgDDPRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 11:08:47 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:48146 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgDDPIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 11:08:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=vp27F8VCbpDyMug+E/DkoFiqJ0iXvSFB3dG9NhdVtJ4=; b=c4fufxCNaxCfxlabO36Hw9VuYU
-        Iy7BaNe3r6MvvPPy9rhjqGjZJpP9y0GM9FWH6DappHyVFuggm31hWHqH+YqpzuLjkqxjiY+lCXKRh
-        qEj3F2/EgI8g3uP6a3Lm8t5Z4mb59eooVu3rTup4yLq4VA8REUq6oXm6aucvLfNwtXf8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jKkP4-000xRF-B9; Sat, 04 Apr 2020 17:08:10 +0200
-Date:   Sat, 4 Apr 2020 17:08:10 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
-        netdev@vger.kernel.org, stable@vger.kernel.org,
-        Sean Wang <sean.wang@mediatek.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in
- port5 setup
-Message-ID: <20200404150810.GA161768@lunn.ch>
-References: <20200403112830.505720-1-gch981213@gmail.com>
- <20200403180911.Horde.9xqnJvjcRDe-ttshlJbG6WE@www.vdorst.com>
- <CAJsYDVJj1JajVxeGifaOprXYstG-gC_OYwd5LrALUY_4BdtR3A@mail.gmail.com>
+        Sat, 4 Apr 2020 11:17:16 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36211 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgDDPRQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 11:17:16 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c23so5177734pgj.3
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 08:17:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lkx/PDRUrbuIL8ZH/z7Ipoul4vzVtKjRl5EKv8ZnQbg=;
+        b=IrFJh1K/98kXxSDXGPejYN4e7zKLkA6OGaCSCAZYxtA57gT0+rGVywLPYc/ce4dQuo
+         k88bemNyVWr7gwc6flBvONIBiH7ZMh8l9IeD1UqNJkHInBXCqjIa5+nAV7KeO/YyJQAy
+         dfCjhOLc42+0xS7hFt4zHO37GeuxI893KEip4wUXAlOBnutz/Z7kgP3izLyA4sbH99n6
+         9l4eraPTVmsE+TKXI+LDoXVlQya0A7mdgVty0/WiYfGUFpPOPwEisX07t94GrfEmga6K
+         w+yUzHBlU7xQbVtNnk17kqF2XjipPPURQGx8PFYREzAbnpb46MkcvdTBo7nVonG8czhj
+         Kvpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lkx/PDRUrbuIL8ZH/z7Ipoul4vzVtKjRl5EKv8ZnQbg=;
+        b=LkGRstphNHHAuZGt2R6vsrzGtUZFmGWCzQ+MWARYO+f+RN5rjVVa7aXCGoGrBLkytT
+         0cZe4zfzAulKK/qNye42QZXqbGumoH3qvay2CKZRObBgblUKTM+DkPjPdgGpxwv44Jj9
+         J0/cPPGfdv13n7nsgEsafiY13LApV5ZoMKE+1xBEkrRuS9RH7uuHMZAMzR2UW8T4IZTW
+         Bz8NmE/ws9VE8BwhR1NrzELHBRnfvpVOyHneP3/6rdAwwt+4l49UD53SmYekGpLSFgcl
+         D0NnfD0qEFKPDXr5BERE+5MDQP6RtwrefTzB2ROko/Zt857P5k7kT1DdkSCOwMpmZCvn
+         k2Jg==
+X-Gm-Message-State: AGi0PuZyCShDjJpdVKaJLyHvNL26VeFqM4A2sKVWA4xMQIRxJlmqXpLo
+        foqKkx9/3vxkHrGr1W6V/z7U3aW2C124ZmxYx0U=
+X-Google-Smtp-Source: APiQypKYFZLwu2/QO3pceJcENh5As9ISGvBBZd3LrD2FLAhfckw9T5K7GuM0sThal21sOy41LEWm5A0+19H5hbVZgxc=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr13808647pgb.203.1586013433253;
+ Sat, 04 Apr 2020 08:17:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJsYDVJj1JajVxeGifaOprXYstG-gC_OYwd5LrALUY_4BdtR3A@mail.gmail.com>
+References: <524ae90a-a7cb-feee-6107-743c52c2b1e4@web.de>
+In-Reply-To: <524ae90a-a7cb-feee-6107-743c52c2b1e4@web.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 4 Apr 2020 18:17:00 +0300
+Message-ID: <CAHp75VcBKEJtEZg9wUVdqnSHWb3gaOx493GGWMtisdTAwxmGkA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: pxa: ssp: Delete an error message in pxa_ssp_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Enrico Weigelt <lkml@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 04, 2020 at 11:19:10AM +0800, Chuanhong Guo wrote:
-> Hi!
-> 
-> On Sat, Apr 4, 2020 at 2:09 AM René van Dorst <opensource@vdorst.com> wrote:
-> >
-> > Quoting Chuanhong Guo <gch981213@gmail.com>:
-> >
-> > Hi Chuanhong,
-> >
-> > > The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
-> > > and a phy-handle isn't always available.
-> > > Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
-> > > connected to switch port 5 and setup mt7530 according to phy address
-> > > of 2nd gmac node, causing null pointer dereferencing when phy-handle
-> > > isn't defined in dts.
-> >
-> > MT7530 tries to detect if 2nd GMAC is using a phy with phy-address 0 or 4.
-> 
-> What if the 2nd GMAC connects to an external PHY on address 0 on a
-> different mdio-bus?
+On Sat, Apr 4, 2020 at 5:03 PM Markus Elfring <Markus.Elfring@web.de> wrote=
+:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 4 Apr 2020 15:50:10 +0200
+> Subject: [PATCH] ARM: pxa: ssp: Delete an error message in pxa_ssp_probe(=
+)
+>
+> The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
+> Thus omit a redundant message for the exception handling in the
+> calling function.
 
-In general, you using a phy-handle to cover such a situation. If there
-is a phy-handle, just use it.
+...
 
-   Andrew
+>         ssp->irq =3D platform_get_irq(pdev, 0);
+> -       if (ssp->irq < 0) {
+> -               dev_err(dev, "no IRQ resource defined\n");
+> +       if (ssp->irq < 0)
+>                 return -ENODEV;
+> -       }
+
+At the same time we can unshadow the error code, i.e.
+  return ssp->irq;
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
