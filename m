@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76025C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D2BC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50BB82070E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926C22074B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586022629;
-	bh=QR0SRq7v4sEsNOTfmR2H46SgRrsCKg2QnhZJxkPR4ys=;
+	s=default; t=1586022631;
+	bh=nEvxDfugBteWRqUcG2AhaZPvHgaoyJZb6JLw1mHFGNk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=KMLFsG4+yqVnUfVwQyQO/6JlZH6fzM0ZbrKqrHOXAIrTNJHyecrX1Xv2VsdGkCOtp
-	 f7BuEKH4dFxL899xR1WKwuZi0r5cTUG+KdPgr4mAR08MWZiMHB7nl85FkJI8sX8UKQ
-	 tR6n/g2KtTK/mSPG5zwEXhH0Wn18b2UBAfoOp6s4=
+	b=Bl8gnH3Wm3wUI283jk/cFjZiXK6M3jOdryEhv0Xigr1EMXFizOc3j+ppkDZ5rKjMO
+	 RiZd88189cpuhAS3d5QGvQBSOpFzEtseVopE+UDEPhYPlS0+B5p8HDmcOBQV5f87ZE
+	 jNxvZzMlnZiBJjpL1ezrVkxlvLqzNXJZ+Pj2v87M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgDDRu2 (ORCPT
+        id S1726554AbgDDRua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 13:50:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40430 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 13:50:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbgDDRu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 13:50:26 -0400
-Subject: Re: [GIT PULL] GPIO bulk changes for v5.7
+        id S1726510AbgDDRu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 13:50:28 -0400
+Subject: Re: [GIT PULL] s390 patches for the 5.7 merge window
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586022626;
-        bh=QR0SRq7v4sEsNOTfmR2H46SgRrsCKg2QnhZJxkPR4ys=;
+        s=default; t=1586022627;
+        bh=nEvxDfugBteWRqUcG2AhaZPvHgaoyJZb6JLw1mHFGNk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=JOzX6GcCwq7BK3jmrZXTkySAQXy/nokw3MKUUubPZnInBnPg9FHnMG50xjEf7HpKg
-         NELN0YbJJcQfcX9i9R8RqrXYqwr795lijQJlGD1rWAgzv1QJC+GPUhdYgBoL1fhXmc
-         EezLCpn84XNEpFdCJZPXm3weunQd3o4UGYXJPqfE=
+        b=1Wg/OpNJPJYpnpNwQSoOAUyM38IbBZpTFjvKyEXpJqU3fTuzRGBfRXO+o/RowvI0V
+         1bx0IyJxil6yjwnLP6JzESUZUo4BUQra87hr/DibIc54xR0epG0nR+tBWrauAXP1Z+
+         ILPGL/Spsfzb5Yq1QDLyE8pr4pirdEP6zjlJD2Bw=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYMcy0ctKsUTdeXQ7EKZ40AeQVEo4fE4BpgXODJ+U6K1Q@mail.gmail.com>
-References: <CACRpkdYMcy0ctKsUTdeXQ7EKZ40AeQVEo4fE4BpgXODJ+U6K1Q@mail.gmail.com>
+In-Reply-To: <your-ad-here.call-01586006344-ext-2743@work.hours>
+References: <your-ad-here.call-01586006344-ext-2743@work.hours>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYMcy0ctKsUTdeXQ7EKZ40AeQVEo4fE4BpgXODJ+U6K1Q@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
- tags/gpio-v5.7-1
-X-PR-Tracked-Commit-Id: 4ed7d7dd4890bb8120a3e77c16191a695fdfcc5a
+X-PR-Tracked-Message-Id: <your-ad-here.call-01586006344-ext-2743@work.hours>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.7-1
+X-PR-Tracked-Commit-Id: 1058c163dc31b3335c9cf7c4fa42ccf87be73017
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 828907ef25e0133f50c346ef5a3c79a707a9b100
-Message-Id: <158602262630.31764.14239984515947823534.pr-tracker-bot@kernel.org>
-Date:   Sat, 04 Apr 2020 17:50:26 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
+X-PR-Merge-Commit-Id: ad0bf4eb91c2f9b93479b679e5472094ddb76da8
+Message-Id: <158602262784.31764.4676490478972592998.pr-tracker-bot@kernel.org>
+Date:   Sat, 04 Apr 2020 17:50:27 +0000
+To:     Vasily Gorbik <gor@linux.ibm.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 4 Apr 2020 14:08:34 +0200:
+The pull request you sent on Sat, 4 Apr 2020 15:19:04 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.7-1
+> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.7-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/828907ef25e0133f50c346ef5a3c79a707a9b100
+https://git.kernel.org/torvalds/c/ad0bf4eb91c2f9b93479b679e5472094ddb76da8
 
 Thank you!
 
