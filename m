@@ -2,170 +2,333 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D12EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618D1C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3904206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:08:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dri6mJYt"
+	by mail.kernel.org (Postfix) with ESMTP id 28B36206CC
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 13:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgDDNIh (ORCPT
+        id S1726327AbgDDNTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 09:08:37 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36608 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgDDNIh (ORCPT
+        Sat, 4 Apr 2020 09:19:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6494 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725870AbgDDNTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 09:08:37 -0400
-Received: by mail-wm1-f65.google.com with SMTP id d202so10861012wmd.1;
-        Sat, 04 Apr 2020 06:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=g0lhfmepuqxhkSzHeSEIiTb4vyevQh1xR17a67PwJQQ=;
-        b=dri6mJYtciFG4/ZrwuqQCU7c4IS9vONkv8q4vmhBQEpUdqKGcpRPW/npcbLU1edukx
-         yiBxoc3c+BjEFjYpu5MBAEWNGYlm96JrWvx7bgShueCqpuG/I22f565wbJO+P+em0K3W
-         6hqruMAWMS6niWUvgYJ1F9Rs6PGC2wzAauiMSE8+L7CHoh9OjsESG7lEhCvEjdZwopB0
-         qwRveLIJ9agq47IsCnLHWAoyuREzPAwbygJyAFKVbrZwc+eXe9dnQhIFRUTFJFA2QOYE
-         EEk25wlmEpjI7NCUggZJgRo3e8iFbc0QZJDlmNsGXUdAQjzLhLGUQUaQ9fhGkDsweY1/
-         oxOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=g0lhfmepuqxhkSzHeSEIiTb4vyevQh1xR17a67PwJQQ=;
-        b=JwMQ6FSEGHhMHECHT/cib1Uxp1iW+ZaELGsvdVfTtRcq2HkTKeoESu1cSbOg81tNNp
-         5Nm0sAkNU5Yj0V97N61MwznFYHSFAGWzuaKagCzw0UiRZpIBi+blOAeq8HBX++bcUCBX
-         vSeLfhv0HV9jbuzkw/5/jDLYhxTJDVtyudGXhLM1TUYa5dRD/yW4E4o8TaayWrRa7kOD
-         B90mGzSaHnqxidSZEJKnQQ7r+Z+moSaVEtKrKAIc8i1Wp32WLTH2Ho3KgP4gj93JsY2n
-         M7rOmF4HTSzukfDp+T+exeZSxeoaT3l+2PX+gb83cH3d/8pDq4tEbbbRaX7UCD3OHxUB
-         39mw==
-X-Gm-Message-State: AGi0PuaX7OBZFLYyF607iv8U/F0bO77fqWO8NwMmWCxRsUq5JIqbnDRh
-        xS+b+chdKLjkYP8dXnA6dAlN1Dl2Wj0=
-X-Google-Smtp-Source: APiQypI6hvMZkNwvsVxpYR5i02eTANSRy4tAI7LcYtYqoPJlBQhAQ1XfVNnuj0VEh0Xt5PF6ZJvYNw==
-X-Received: by 2002:a1c:9c15:: with SMTP id f21mr13348654wme.18.1586005714207;
-        Sat, 04 Apr 2020 06:08:34 -0700 (PDT)
-Received: from [192.168.43.88] ([109.126.129.227])
-        by smtp.gmail.com with ESMTPSA id w81sm16009467wmg.19.2020.04.04.06.08.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Apr 2020 06:08:33 -0700 (PDT)
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Felipe Balbi <balbi@kernel.org>,
-        amd-gfx@lists.freedesktop.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        linux-usb@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        intel-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        intel-gvt-dev@lists.freedesktop.org,
-        Jason Wang <jasowang@redhat.com>
-References: <20200404094101.672954-1-hch@lst.de>
- <20200404094101.672954-6-hch@lst.de>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [Intel-gfx] [PATCH 5/6] kernel: better document the
- use_mm/unuse_mm API contract
-Message-ID: <8c1e6600-bee3-d074-28e6-813a6dbf5fd0@gmail.com>
-Date:   Sat, 4 Apr 2020 16:07:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Sat, 4 Apr 2020 09:19:12 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 034D4MXI098434
+        for <linux-kernel@vger.kernel.org>; Sat, 4 Apr 2020 09:19:10 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 306p40cytg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 09:19:10 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Sat, 4 Apr 2020 14:18:49 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 4 Apr 2020 14:18:48 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 034DJ6A158523796
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 4 Apr 2020 13:19:06 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5048E4C040;
+        Sat,  4 Apr 2020 13:19:06 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF3734C044;
+        Sat,  4 Apr 2020 13:19:05 +0000 (GMT)
+Received: from localhost (unknown [9.145.25.218])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  4 Apr 2020 13:19:05 +0000 (GMT)
+Date:   Sat, 4 Apr 2020 15:19:04 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 patches for the 5.7 merge window
 MIME-Version: 1.0
-In-Reply-To: <20200404094101.672954-6-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+x-cbid: 20040413-0016-0000-0000-000002FE369E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040413-0017-0000-0000-000033620863
+Message-Id: <your-ad-here.call-01586006344-ext-2743@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-04_09:2020-04-03,2020-04-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 suspectscore=2
+ bulkscore=0 phishscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004040117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/04/2020 12:41, Christoph Hellwig wrote:
-> Switch the function documentation to kerneldoc comments, and add
-> WARN_ON_ONCE asserts that the calling thread is a kernel thread and
-> does not have ->mm set (or has ->mm set in the case of unuse_mm).
-> 
-> Also give the functions a kthread_ prefix to better document the
-> use case.
-> 
+Hello Linus,
 
-io_uring and io-wq bits LGTM.
+please pull s390 changes for 5.7. There are some common code changes to
+remove s390 specific power management callbacks. Agreed by Rafael:
+http://lkml.kernel.org/r/CAJZ5v0jiz-YmULR+T3k38=WYkx83F=JAmNpc3r7=+N398FQOkQ@mail.gmail.com
 
-> --- a/include/linux/kthread.h
-> +++ b/include/linux/kthread.h
-...
-> -/*
-> - * unuse_mm
-> - *	Reverses the effect of use_mm, i.e. releases the
-> - *	specified mm context which was earlier taken on
-> - *	by the calling kernel thread
-> - *	(Note: this routine is intended to be called only
-> - *	from a kernel thread context)
-> +/**
-> + * kthread_use_mm - reverse the effect of kthread_use_mm()
+Thank you,
+Vasily
 
-s/kthread_use_mm/kthread_unuse_mm/
-for the first one
+The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
 
-> + * @mm: address space to operate on
->   */
-> -void unuse_mm(struct mm_struct *mm)
-> +void kthread_unuse_mm(struct mm_struct *mm)
->  {
+  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
 
--- 
-Pavel Begunkov
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.7-1
+
+for you to fetch changes up to 1058c163dc31b3335c9cf7c4fa42ccf87be73017:
+
+  s390/mm: cleanup init_new_context() callback (2020-03-28 12:46:12 +0100)
+
+----------------------------------------------------------------
+s390 updates for the 5.7 merge window
+
+- Update maintainers. Niklas Schnelle takes over zpci and Vineeth Vijayan
+  common io code.
+
+- Extend cpuinfo to include topology information.
+
+- Add new extended counters for IBM z15 and sampling buffer allocation
+  rework in perf code.
+
+- Add control over zeroing out memory during system restart.
+
+- CCA protected key block version 2 support and other fixes/improvements
+  in crypto code.
+
+- Convert to new fallthrough; annotations.
+
+- Replace zero-length arrays with flexible-arrays.
+
+- QDIO debugfs and other small improvements.
+
+- Drop 2-level paging support optimization for compat tasks. Varios
+  mm cleanups.
+
+- Remove broken and unused hibernate / power management support.
+
+- Remove fake numa support which does not bring any benefits.
+
+- Exclude offline CPUs from CPU topology masks to be more consistent
+  with other architectures.
+
+- Prevent last branching instruction address leaking to userspace.
+
+- Other small various fixes and improvements all over the code.
+
+----------------------------------------------------------------
+Alexander Gordeev (14):
+      s390/mm: cleanup phys_to_pfn() and friends
+      s390/cpuinfo: add system topology information
+      s390/mm: optimize page table upgrade routine
+      s390/cpuinfo: show processor physical address
+      s390/numa: remove redundant cpus_with_topology variable
+      s390/topology: remove offline CPUs from CPU topology masks
+      s390/cpuinfo: show number of online cores
+      s390/cpuinfo: show number of online CPUs within a package
+      s390/cpuinfo: fix wrong output when CPU0 is offline
+      s390/cpuinfo: do not skip info for CPUs without MHz feature
+      s390/mm: cleanup arch_get_unmapped_area() and friends
+      s390/mm: remove page table downgrade support
+      s390/mm: cleanup virtual memory constants usage
+      s390/mm: cleanup init_new_context() callback
+
+Christian Borntraeger (2):
+      s390/mm: mark private defines for vm_fault_t as such
+      s390/config: do not select VIRTIO_CONSOLE via Kconfig
+
+Gerald Schaefer (1):
+      s390/ipl: add support to control memory clearing for FCP and CCW re-IPL
+
+Gustavo A. R. Silva (1):
+      s390: Replace zero-length array with flexible-array member
+
+Harald Freudenberger (5):
+      s390/zcrypt: Support for CCA protected key block version 2
+      s390/zcrypt: replace snprintf/sprintf with scnprintf
+      s390/ap: Remove ap device suspend and resume callbacks
+      s390/zcrypt: use kvmalloc instead of kmalloc for 256k alloc
+      s390/ap: remove power management code from ap bus and drivers
+
+Heiko Carstens (6):
+      s390/mm: remove fake numa support
+      s390: enable bpf jit by default when not built as always-on
+      s390/irq: make init_ext_interrupts static
+      s390/traps: mark test_monitor_call __init
+      s390: remove broken hibernate / power management support
+      PM: remove s390 specific callbacks
+
+Joe Perches (4):
+      s390: use fallthrough;
+      s390/zcrypt: use fallthrough;
+      s390/vfio: use fallthrough;
+      s390/cio: use fallthrough;
+
+Julian Wiedmann (9):
+      s390/qdio: clean up cdev access in qdio_setup_irq()
+      s390/qdio: reduce access to cdev->private->qdio_data
+      s390/qdio: use QDIO_IRQ_STATE_INACTIVE instead of 0
+      s390/qdio: simplify debugfs code
+      s390/qdio: export SSQD via debugfs
+      s390/qdio: pass ISC as parameter to chsc_sadc()
+      s390/ccwgroup: remove pm support
+      s390/qdio: remove unused function declarations
+      s390/qdio: set qdio_irq->cdev at allocation time
+
+Michael Mueller (1):
+      s390/diag: fix display of diagnose call statistics
+
+Niklas Schnelle (2):
+      s390/pci: Fix zpci_alloc_domain() over allocation
+      s390/pci: Improve handling of unset UID
+
+Peter Oberparleiter (2):
+      MAINTAINERS: Update s390/cio maintainer
+      MAINTAINERS: Update s390/pci maintainer
+
+Pierre Morel (1):
+      s390/pci: embedding hotplug_slot in zdev
+
+Stefan Raspl (1):
+      s390/arch: install kernels with their proper version ID
+
+Sven Schnelle (1):
+      s390: prevent leaking kernel address in BEAR
+
+Takashi Iwai (1):
+      s390/zcrypt: Use scnprintf() for avoiding potential buffer overflow
+
+Thomas Richter (3):
+      s390/cpum_sf: Rework sampling buffer allocation
+      s390/cpum_cf: Add new extended counters for IBM z15
+      s390/cpum_sf: Fix wrong page count in error message
+
+Torsten Duwe (1):
+      s390/crypto: explicitly memzero stack key material in aes_s390.c
+
+Ursula Braun (1):
+      s390/ism: remove pm support
+
+afzal mohammed (1):
+      s390/irq: replace setup_irq() by request_irq()
+
+ MAINTAINERS                            |   4 +-
+ arch/s390/Kconfig                      |  73 +----
+ arch/s390/appldata/appldata_os.c       |   2 +-
+ arch/s390/boot/install.sh              |  17 +-
+ arch/s390/configs/debug_defconfig      |   1 +
+ arch/s390/configs/defconfig            |   1 +
+ arch/s390/crypto/aes_s390.c            |   3 +
+ arch/s390/include/asm/hw_irq.h         |   1 -
+ arch/s390/include/asm/ipl.h            |   1 +
+ arch/s390/include/asm/lowcore.h        |   4 +-
+ arch/s390/include/asm/mmu.h            |   2 -
+ arch/s390/include/asm/mmu_context.h    |  44 +--
+ arch/s390/include/asm/numa.h           |  13 +-
+ arch/s390/include/asm/page.h           |  18 +-
+ arch/s390/include/asm/pci.h            |   6 +
+ arch/s390/include/asm/pgalloc.h        |  39 +--
+ arch/s390/include/asm/processor.h      |  10 +-
+ arch/s390/include/asm/setup.h          |   7 +
+ arch/s390/include/asm/smp.h            |   1 +
+ arch/s390/include/asm/topology.h       |  15 +-
+ arch/s390/kernel/Makefile              |   1 -
+ arch/s390/kernel/asm-offsets.c         |   2 +
+ arch/s390/kernel/diag.c                |   2 +-
+ arch/s390/kernel/entry.S               |  65 ++--
+ arch/s390/kernel/ipl.c                 |  73 ++++-
+ arch/s390/kernel/irq.c                 |  26 +-
+ arch/s390/kernel/machine_kexec.c       |  31 --
+ arch/s390/kernel/perf_cpum_cf_events.c | 123 ++++++-
+ arch/s390/kernel/perf_cpum_sf.c        |  44 +--
+ arch/s390/kernel/process.c             |   1 +
+ arch/s390/kernel/processor.c           |  34 +-
+ arch/s390/kernel/setup.c               |   4 +
+ arch/s390/kernel/signal.c              |   4 +-
+ arch/s390/kernel/smp.c                 |  13 +-
+ arch/s390/kernel/suspend.c             | 240 --------------
+ arch/s390/kernel/swsusp.S              | 276 ----------------
+ arch/s390/kernel/topology.c            |  34 +-
+ arch/s390/kernel/traps.c               |   2 +-
+ arch/s390/mm/cmm.c                     |  46 +--
+ arch/s390/mm/fault.c                   |  21 +-
+ arch/s390/mm/hugetlbpage.c             |  11 +-
+ arch/s390/mm/mmap.c                    |  40 +--
+ arch/s390/mm/pageattr.c                |  16 -
+ arch/s390/mm/pgalloc.c                 | 108 +++---
+ arch/s390/mm/vmem.c                    |   4 +
+ arch/s390/numa/Makefile                |   2 -
+ arch/s390/numa/mode_emu.c              | 577 ---------------------------------
+ arch/s390/numa/numa.c                  | 147 +--------
+ arch/s390/numa/numa_mode.h             |  25 --
+ arch/s390/numa/toptree.c               | 351 --------------------
+ arch/s390/numa/toptree.h               |  61 ----
+ arch/s390/pci/pci.c                    |  83 ++---
+ arch/s390/pci/pci_clp.c                |   2 +-
+ drivers/pci/hotplug/s390_pci_hpc.c     |  99 ++----
+ drivers/s390/block/dasd_diag.c         |   2 +-
+ drivers/s390/block/dasd_eckd.h         |   2 +-
+ drivers/s390/char/con3215.c            |   2 +-
+ drivers/s390/char/hmcdrv_ftp.c         |   2 +-
+ drivers/s390/char/raw3270.h            |   2 +-
+ drivers/s390/char/sclp_cmd.c           |   2 +-
+ drivers/s390/char/sclp_pci.c           |   2 +-
+ drivers/s390/char/sclp_sdias.c         |   2 +-
+ drivers/s390/char/tape_core.c          |   6 +-
+ drivers/s390/cio/airq.c                |   8 +-
+ drivers/s390/cio/ccwgroup.c            |  69 ----
+ drivers/s390/cio/chsc.c                |   5 +-
+ drivers/s390/cio/chsc.h                |   3 +-
+ drivers/s390/cio/cio.c                 |   8 +-
+ drivers/s390/cio/device.c              |   4 +-
+ drivers/s390/cio/idset.c               |   2 +-
+ drivers/s390/cio/qdio.h                |   9 +-
+ drivers/s390/cio/qdio_debug.c          |  59 ++--
+ drivers/s390/cio/qdio_debug.h          |   3 +-
+ drivers/s390/cio/qdio_main.c           |  23 +-
+ drivers/s390/cio/qdio_setup.c          |  29 +-
+ drivers/s390/cio/qdio_thinint.c        |   2 +-
+ drivers/s390/crypto/ap_bus.c           | 212 +++---------
+ drivers/s390/crypto/ap_bus.h           |   5 -
+ drivers/s390/crypto/ap_card.c          |  17 +-
+ drivers/s390/crypto/ap_queue.c         |  75 +----
+ drivers/s390/crypto/pkey_api.c         |   2 +-
+ drivers/s390/crypto/vfio_ap_ops.c      |   2 +-
+ drivers/s390/crypto/zcrypt_card.c      |   6 +-
+ drivers/s390/crypto/zcrypt_ccamisc.c   |  33 +-
+ drivers/s390/crypto/zcrypt_ccamisc.h   |   2 +-
+ drivers/s390/crypto/zcrypt_cex2a.c     |   2 -
+ drivers/s390/crypto/zcrypt_cex2c.c     |   2 -
+ drivers/s390/crypto/zcrypt_cex4.c      |  76 ++---
+ drivers/s390/crypto/zcrypt_ep11misc.c  |  10 +-
+ drivers/s390/crypto/zcrypt_msgtype6.c  |  10 +-
+ drivers/s390/crypto/zcrypt_queue.c     |   4 +-
+ drivers/s390/net/ism_drv.c             |  20 --
+ include/linux/suspend.h                |  34 --
+ kernel/power/Kconfig                   |   3 -
+ kernel/power/snapshot.c                |  18 -
+ 95 files changed, 800 insertions(+), 2809 deletions(-)
+ delete mode 100644 arch/s390/kernel/suspend.c
+ delete mode 100644 arch/s390/kernel/swsusp.S
+ delete mode 100644 arch/s390/numa/mode_emu.c
+ delete mode 100644 arch/s390/numa/numa_mode.h
+ delete mode 100644 arch/s390/numa/toptree.c
+ delete mode 100644 arch/s390/numa/toptree.h
+
