@@ -2,182 +2,129 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9203CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 01:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1F5C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 01:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CA220737
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 01:25:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Fb93cdTz"
+	by mail.kernel.org (Postfix) with ESMTP id DC2EB2064A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 01:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585963779;
+	bh=aeWvhZUdVfTp0O61TTqBL76FSwlp8n1vPFEO7AvJCKU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Co/WUhgrjYRbR0kbdaE6TwFzfIrNHUUr1owQKETSpPM/QovJYuciuOUKvhXVd69Gf
+	 Z5O+ceX/G3ExkKWoHgjIba3hIpglRrvQbQRvKOthNVppoWZgM3Dve5MFKYyIUF7qXb
+	 3/e8Mcn2xbNMmqAGTGfqLmbDLfLFTc+/vRX6hOn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgDDBZq (ORCPT
+        id S1726377AbgDDB3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 21:25:46 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18798 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbgDDBZR (ORCPT
+        Fri, 3 Apr 2020 21:29:38 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35600 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgDDB3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 21:25:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e87e1ef0000>; Fri, 03 Apr 2020 18:25:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 03 Apr 2020 18:25:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 03 Apr 2020 18:25:16 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 4 Apr
- 2020 01:25:16 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sat, 4 Apr 2020 01:25:16 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.164.193]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e87e1fb0000>; Fri, 03 Apr 2020 18:25:16 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v6 5/9] dt-binding: tegra: Add VI and CSI bindings
-Date:   Fri, 3 Apr 2020 18:25:03 -0700
-Message-ID: <1585963507-12610-6-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 3 Apr 2020 21:29:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i19so9729082wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 18:29:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VRwOcI1+h35fHJSbSWxbypPvdZDgUSqWGPr4ShkMhi0=;
+        b=b63nZy6oknlHTQAORbiyZBvkxv9xQNJsW0hSX8S3s6v6FakUGt3HvvAEYinGBHsunB
+         V8iDhCGB0jOMEW1GR+TVq2NqOCYUSXN0bwrhadvoR9pwDyLapDkxm2YwB3izaicQBCkm
+         zIAS32LHabLFK8OZzckNEQBs1uEL6mBa4bIDUnQAM39XytXNmaZUpmOtTGU+xTp5pMU8
+         iwHPzWyKi7dLQDewNu7nsWTuMmQf2OydcLfUzJ9wqw93mNTMhH0MyWKrOI00m7xhBbfV
+         FaPawiQsVa0xE2yxHEmphSoE4kIP8QR8Qk3Q2rkQYqtxTuAy5t4xxxl6ojwLbCIfDsaN
+         bW8w==
+X-Gm-Message-State: AGi0PuZ6MXP/seUYP9nigS38XkjLwGxj0n+sKg/MHLuII09EOmku/RMW
+        5cW9BhOrK92Qqf9XWl3r7AFwba6v69S/UZ0smEw=
+X-Google-Smtp-Source: APiQypKW+iQvXq14tWLpIG/DKw3YUnGjZqziD1HmFlVhDwJEBHktD9t0Bh9GPjRCC94/qvwipD5AGqT0BpEV5awcnEk=
+X-Received: by 2002:a7b:c842:: with SMTP id c2mr11954058wml.154.1585963775062;
+ Fri, 03 Apr 2020 18:29:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585963503; bh=Vqv5bsBKIiBNCZv0B++VnPXirplSb+nH14xh52dCjJ8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=Fb93cdTzPKiTSFRsv7GHFopMgM3StN3tgFOmnH0O48uM0mCpGxe36jEhLF+be+4w5
-         yXXbXd5GMN4GgrDUSno4lY0UpRsMQHQhyQTou4BTcAwWPWw/Wp1AS5peItSkybngPF
-         qm8MnyxNd1b88FxbH0m1Zb45eFBqnhjhoXDIppHpzktnsuJcD2d0L6+rVP96r45kIr
-         Q79Z8FXEW2kYUWJYi2wbYDVK1izqTBXUu/RUQNV/s6E0ppG5k9Abn4yEkmob02QnbQ
-         +/rEhO9uYFRoBOiwphu53dXk39eNLLKfg8DZXSHc1pQ5E4W1nd/aB0ga/LL5z+VROb
-         uH0XKTkYlaNHw==
+References: <20200325124536.2800725-1-namhyung@kernel.org> <20200325124536.2800725-5-namhyung@kernel.org>
+ <20200403123606.GC23243@kernel.org>
+In-Reply-To: <20200403123606.GC23243@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Sat, 4 Apr 2020 10:29:24 +0900
+Message-ID: <CAM9d7cjxwTFDqMmqzM5Mwg4OZnBxN8tdnd7bHfZG9fDTtAs28A@mail.gmail.com>
+Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra contains VI controller which can support up to 6 MIPI CSI
-camera sensors.
+Hi Arnaldo,
 
-Each Tegra CSI port from CSI unit can be one-to-one mapper to
-VI channel and can capture from an external camera sensor or
-from built-in test pattern generator.
+On Fri, Apr 3, 2020 at 9:36 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> Em Wed, Mar 25, 2020 at 09:45:31PM +0900, Namhyung Kim escreveu:
+> > Each cgroup is kept in the perf_env's cgroup_tree sorted by the cgroup
+> > id.  Hist entries have cgroup id can compare it directly and later it
+> > can be used to find a group name using this tree.
+>
+> This one breaks the 'perf test python' test, I fixed it adding this
+> patch before your series:
 
-This patch adds dt-bindings for Tegra VI and CSI.
+Thanks a lot for fixing this and taking care of the whole thing!
+Namhyung
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- .../display/tegra/nvidia,tegra20-host1x.txt        | 73 ++++++++++++++++++----
- 1 file changed, 60 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-index 9999255..4731921 100644
---- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-+++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-@@ -40,14 +40,30 @@ of the following host1x client modules:
- 
-   Required properties:
-   - compatible: "nvidia,tegra<chip>-vi"
--  - reg: Physical base address and length of the controller's registers.
-+  - reg: Physical base address and length of the controller registers.
-   - interrupts: The interrupt outputs from the controller.
--  - clocks: Must contain one entry, for the module clock.
-+  - clocks: clocks: Must contain one entry, for the module clock.
-     See ../clocks/clock-bindings.txt for details.
--  - resets: Must contain an entry for each entry in reset-names.
--    See ../reset/reset.txt for details.
--  - reset-names: Must include the following entries:
--    - vi
-+  - Tegra20/Tegra30/Tegra114/Tegra124:
-+    - resets: Must contain an entry for each entry in reset-names.
-+      See ../reset/reset.txt for details.
-+    - reset-names: Must include the following entries:
-+      - vi
-+  - Tegra210:
-+    - power-domains: Must include venc powergate node as vi is in VE partition.
-+  - Tegra210 has CSI part of VI sharing same host interface and register space.
-+    So, VI device node should have CSI child node.
-+
-+    - csi: mipi csi interface to vi
-+
-+      Required properties:
-+      - compatible: "nvidia,tegra210-csi"
-+      - reg: Physical base address offset to parent and length of the controller
-+        registers.
-+      - clocks: Must contain entries csi, cilab, cilcd, cile, csi_tpg clocks.
-+        See ../clocks/clock-bindings.txt for details.
-+      - power-domains: Must include sor powergate node as csicil is in
-+        SOR partition.
- 
- - epp: encoder pre-processor
- 
-@@ -309,13 +325,44 @@ Example:
- 			reset-names = "mpe";
- 		};
- 
--		vi {
--			compatible = "nvidia,tegra20-vi";
--			reg = <0x54080000 0x00040000>;
--			interrupts = <0 69 0x04>;
--			clocks = <&tegra_car TEGRA20_CLK_VI>;
--			resets = <&tegra_car 100>;
--			reset-names = "vi";
-+		vi@54080000 {
-+			compatible = "nvidia,tegra210-vi";
-+			reg = <0x0 0x54080000 0x0 0x700>;
-+			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
-+			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-+
-+			clocks = <&tegra_car TEGRA210_CLK_VI>;
-+			power-domains = <&pd_venc>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ranges = <0x0 0x0 0x54080000 0x2000>;
-+
-+			csi@838 {
-+				compatible = "nvidia,tegra210-csi";
-+				reg = <0x838 0x1300>;
-+				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
-+						  <&tegra_car TEGRA210_CLK_CILCD>,
-+						  <&tegra_car TEGRA210_CLK_CILE>,
-+						  <&tegra_car TEGRA210_CLK_CSI_TPG>;
-+				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
-+							 <&tegra_car TEGRA210_CLK_PLL_P>,
-+							 <&tegra_car TEGRA210_CLK_PLL_P>;
-+				assigned-clock-rates = <102000000>,
-+						       <102000000>,
-+						       <102000000>,
-+						       <972000000>;
-+
-+				clocks = <&tegra_car TEGRA210_CLK_CSI>,
-+					 <&tegra_car TEGRA210_CLK_CILAB>,
-+					 <&tegra_car TEGRA210_CLK_CILCD>,
-+					 <&tegra_car TEGRA210_CLK_CILE>,
-+					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
-+				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
-+				power-domains = <&pd_sor>;
-+			};
- 		};
- 
- 		epp {
--- 
-2.7.4
-
+> From ea3c4ab73cb2ea2960bba6894560b1ef91e69737 Mon Sep 17 00:00:00 2001
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date: Fri, 3 Apr 2020 09:29:52 -0300
+> Subject: [PATCH 1/1] perf python: Include rwsem.c in the pythong biding
+>
+> We'll need it for the cgroup patches, and its better to have it in a
+> separate patch in case we need to later revert the cgroup patches.
+>
+> I.e. without this we have:
+>
+>   [root@five ~]# perf test -v python
+>   19: 'import perf' in python                               :
+>   --- start ---
+>   test child forked, pid 148447
+>   Traceback (most recent call last):
+>     File "<stdin>", line 1, in <module>
+>   ImportError: /tmp/build/perf/python/perf.cpython-37m-x86_64-linux-gnu.so: undefined symbol: down_write
+>   test child finished with -1
+>   ---- end ----
+>   'import perf' in python: FAILED!
+>   [root@five ~]#
+>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/python-ext-sources | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+> index e7279ea6043a..a9d9c142eb7c 100644
+> --- a/tools/perf/util/python-ext-sources
+> +++ b/tools/perf/util/python-ext-sources
+> @@ -34,3 +34,4 @@ util/string.c
+>  util/symbol_fprintf.c
+>  util/units.c
+>  util/affinity.c
+> +util/rwsem.c
+> --
+> 2.25.1
+>
