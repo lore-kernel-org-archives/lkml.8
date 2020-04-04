@@ -2,102 +2,115 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3A1C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D10C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FA0206F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8006B206F8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="nKpFGX2x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehRBq562"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgDDRft (ORCPT
+        id S1726307AbgDDRj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 13:35:49 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:33482 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgDDRft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 13:35:49 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id DC68DC726E3;
-        Sat,  4 Apr 2020 19:35:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1586021748;
-        bh=/fComAiMOskQAqf/UfIUYXWfRZk4X9H3xzWxUvkHj3g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nKpFGX2xzaf4wi4HV7XuaUHhbQe2RAKVpLKCzqAdur/qPj3Je/xLiqEXEbdWJUs8r
-         3Eh2cBzxyJhXDVccN5iSo3jdY56KDl0Zx5bStwmvIWMGrFJbtbXJ4wbCoOnYgedNfs
-         izo4sOfJhTz+VXVJCjRd3WBWJATSlwYBnN19fI0M=
-Date:   Sat, 4 Apr 2020 19:35:46 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle
- struct element
-Message-ID: <20200404173546.GA55833@workstation.tuxnet>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
- <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
- <20200330151231.GA1650@workstation.tuxnet>
- <CAGngYiUe-tihBJUcXQ738_5aA9pzgp_-NSs4iCrz3eWO6rMukA@mail.gmail.com>
+        Sat, 4 Apr 2020 13:39:29 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53266 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgDDRj3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 13:39:29 -0400
+Received: by mail-pj1-f66.google.com with SMTP id l36so4580870pjb.3;
+        Sat, 04 Apr 2020 10:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rf3Vq8/IRCAw+STZ9AZuxHBMPJ565JHv5wHKM/w6aSo=;
+        b=ehRBq562FPQrUJIbElTPYPx+q5KfznlIHZ8EH27UafRR+Lrtpgcz/j80larxavVq+x
+         qPBOtLebWxmyU5/ilyzeQawxJkXoWABwQtz/Xt9fyvASkS2wq0ClYk3JuwDFCXdBQEM0
+         j0TJO9WgJ60TO5Hv98e4iLOxz4szb1jB/FFNRRGEkIhVcBsGbON3Ili0jAjpL8AHRT5g
+         LKHA1Tyj6X5v7HDraGPPxvYQI4fEPlqwx3265M3UgEyQp21rhwpwBFymaZ11jLa06lSU
+         WVCWS5WApuqJUOzeGRrKXrRiicjWcAwnVtXAz76oHB612Q+yPaba50p3RoZJ4CiPmed3
+         dehg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rf3Vq8/IRCAw+STZ9AZuxHBMPJ565JHv5wHKM/w6aSo=;
+        b=PTHkp9i+cfIGB9Gmg4MJ3kdM6MJOmg0H57s58d3Ejq2ab4t3Nh/qmVkNIkcEM1eGtW
+         unrER907q+MkhX7bYZq4BtdPhTA7wrwVoM3MSzRPVvgJ3aGxx5AdgNQ6uqrmeHaeeQkt
+         X+WNrX4+EjibewAg6B0bkG7nWdmVNdHPqnna9SB/TXu3whOoCAnF36sFDCu3SEpF4Gux
+         nkniVqGWUO4CbY1o4hYybaNwUPREDrJQU+AsibUGdfKmQI05j+NhieWFsZM5vB4xHvbp
+         11WBXKDIf30ej5YhmvQ0Tjo754ql3AzNkZRd4HcSzs3lMTbTlQpRqekwSK1l4lFHB3fr
+         /Uag==
+X-Gm-Message-State: AGi0PuYpU44DFVPU4fYipUDq8XvJ4Qs8q5MiKDanHoW4nnFufKnIc5Yn
+        reWs3iLmX96SsyWQDPmA1g==
+X-Google-Smtp-Source: APiQypIkqhCIesa36KRc3Ycny4VLIp6X6B0R6zkeWVfbRUStUOKP3RTg9kUW6HNSHLIdpUMj1+ysjA==
+X-Received: by 2002:a17:90a:5a42:: with SMTP id m2mr16400067pji.165.1586021967954;
+        Sat, 04 Apr 2020 10:39:27 -0700 (PDT)
+Received: from madhuparna-HP-Notebook ([2402:3a80:d33:cff:f832:439c:9244:ba33])
+        by smtp.gmail.com with ESMTPSA id y131sm8055532pfb.78.2020.04.04.10.39.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Apr 2020 10:39:27 -0700 (PDT)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Sat, 4 Apr 2020 23:09:21 +0530
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     madhuparnabhowmik10@gmail.com, hariprasad.kelam@gmail.com,
+        colin.king@canonical.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org,
+        andrianov@ispras.ru, stern@rowland.harvard.edu
+Subject: Re: [PATCH] usb: host: u132-hcd: Remove u132_static_list and list
+ head u132_list
+Message-ID: <20200404173921.GB19729@madhuparna-HP-Notebook>
+References: <20200403181816.8115-1-madhuparnabhowmik10@gmail.com>
+ <20200404092308.GB1110038@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGngYiUe-tihBJUcXQ738_5aA9pzgp_-NSs4iCrz3eWO6rMukA@mail.gmail.com>
+In-Reply-To: <20200404092308.GB1110038@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Apr 03, 2020 at 07:50:07PM -0400, Sven Van Asbroeck wrote:
-> On Mon, Mar 30, 2020 at 11:12 AM Clemens Gruber
-> <clemens.gruber@pqgruber.com> wrote:
-> >
-> > On Wed, Feb 26, 2020 at 06:03:02PM +0100, Matthias Schiffer wrote:
-> > > As it turns out, this driver is broken in yet another way I didn't find
-> > > before: For changing the global prescaler the chip needs to be put into
-> > > sleep mode, but the driver doesn't follow the restart sequence
-> > > described in the datasheet when waking it back up. In consequence,
-> > > changing the period of one PWM does not only modify the period of all
-> > > PWMs (which is bad enough, but can't be avoided with this hardware),
-> > > but it also leaves all PWMs disabled...
-> >
-> > I am unable to reproduce this: If I set a specific duty cycle on a
-> > channel and then change the period, the channel stays active.
-> > I can see the brightness of an LED decrease if I increase the period.
+On Sat, Apr 04, 2020 at 11:23:08AM +0200, Greg KH wrote:
+> On Fri, Apr 03, 2020 at 11:48:16PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > u132_static_list is a global list protected by u132_module_lock.
+> > It is read in the u132_hcd_exit() function without holding the lock
+> > thus may lead to data race.
+> > However, it turns out that this list isn't used for anything useful
+> > and thus it is okay to get rid of it.
+> > Thus, remove the u132_static_list from u132-hcd module.
+> > Also remove struct list_head u132_list from struct u132.
+> > 
+> > Found by Linux Driver Verification project (linuxtesting.org).
+> > 
+> > Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > ---
+> >  drivers/usb/host/u132-hcd.c | 10 ----------
+> >  1 file changed, 10 deletions(-)
 > 
-> What happens when pwm channels 0 and 1 are both enabled, and
-> you change the pwm period of channel 0. Does channel 1 remain
-> on?
+> Please properly version your patches, otherwise I have no idea what
+> changed from the previous one, nor do I know which patch to take over
+> which.
+> 
+> The instructions for how to do this is in the documentation.  Please fix
+> up and resend so I have a chance to know what to do...
+>
+Sure, I will do it.
 
-Yes. Both channels remain on.
-
-Let's say I configure a period of 5ms for both channels 0 and 1, as well
-as a duty cycle of 4ms, meaning a relative duty cycle of 80%.
-If I then increase the period of channel 0 to 10ms, there will be a
-relative duty cycle of 40% on channel 0, but channel 1 will remain at a
-relative duty cycle of 80%.
-This is due to the relative nature of the internal ON/OFF times. For
-the channel with the period change however, we recalculate the duty_ns
-to period_ns ratio and reprogram the ON/OFF registers, because the user
-might have already given us a different duty cycle in .config / .apply.
-
-As the user is setting the duty cycle in nanoseconds, it makes sense
-that the relative duty cycle decreases in an absolute period increase.
-As for the behavior that the other channels remain at the same relative
-duty cycle: Not sure how we can avoid this, other than reprogramming all
-15 other channels if one of them is changed and that's not really
-acceptable, I think.
-
-Clemens
+Thank you,
+Madhuparna
+> thanks,
+> 
+> greg k-h
