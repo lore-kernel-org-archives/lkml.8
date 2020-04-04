@@ -2,90 +2,116 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709BEC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A895C2BA18
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3458F206F8
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53696206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586020885;
-	bh=SE4gZcJuNTmb7yDgc4HuE63ounKibEbM+/KCHpXhNfU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oexw6RX320jjCl2Mg73vPfAE3rj7ZNZ8OGdj6beyWtKTxmnjOyJO0IB8z9TLrzzhS
-	 sDTVNQvwfs2/de4D0L/3lV0qXSk8MGs/nvO/PD9mF0nhypUt5bChKpRWg2GPkNNvsp
-	 SOEbdYerFXQtkrfZWBKk9TIioiekkMDMNzWxwFiY=
+	s=default; t=1586021354;
+	bh=1YRY/BtoK+oCmfLxUgTel8s7rvGfSUbGrrzgKVih6nY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IydX0XGY/VTOcvOqgCJdgLIWz34MBI3Coj7796OyDPqypvN67g6LP0AjsQqQByWiA
+	 ov4m8DA1xvO9CYGlLoiRMhcCFks0nc8v7Ldqbs1uAJYEKrzQX5Jh+wCcdF0NteOHOg
+	 AwM98LHuSiw7r7fIvLmjE/8Mcqt8uDxcBZg3yHd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgDDRVY (ORCPT
+        id S1726297AbgDDR3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 13:21:24 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41522 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgDDRVY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 13:21:24 -0400
-Received: by mail-il1-f196.google.com with SMTP id t6so10554219ilj.8;
-        Sat, 04 Apr 2020 10:21:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1n2uOR6wFgUHEXtF3w9/WEH6BH4ieKdqJajPzMFObBI=;
-        b=LqUaTS2tmTqwkvSVJ36XELhdoBM1DNe1aYU72dtwIDiFcOAdu3+3boiLqEinf0/+4e
-         iiaHbs1t8SbY6sgViwEGBGhOurLcNa4Pm2CdwI7l7et60sqfgO/B22FnFnrchrOPKQSI
-         yh9awobC6ktPqXW+ifFNJ3YkElAnjoCQdzHummgJqXrHGQyWN3QvmmB5JsXuNQBZTJEb
-         AyZsdBkvZaOF59RI+ux+wHR34fKEiljmhwus/8/GWdDWVnjXQICdLKdcVBMSzhICDofK
-         reMTx79y7mBFF+7ZGum4HWAPdN7zZOC/+wGaoILfcp8zWYwiv5ADKPbBIGyiBszyiHaZ
-         vK7A==
-X-Gm-Message-State: AGi0PuZmv9l4CMYmkCTc0t6+dVv7VscbxMMWP8mFfdjGCEaVnUL7LiPV
-        YLoaKe6fc9h+jRv5EyhwXA==
-X-Google-Smtp-Source: APiQypJQmZoJcNGxvGUS5ebio90Mu9iNzLO0TNKqrWWw6ta7vdiuT/lWFRwb1TqO2AyRYUyPJGlFvg==
-X-Received: by 2002:a92:881b:: with SMTP id h27mr14581682ild.262.1586020882799;
-        Sat, 04 Apr 2020 10:21:22 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id j84sm4091586ili.65.2020.04.04.10.21.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 10:21:22 -0700 (PDT)
-Received: (nullmailer pid 28438 invoked by uid 1000);
-        Sat, 04 Apr 2020 17:21:20 -0000
-Date:   Sat, 4 Apr 2020 11:21:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
-        martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 14/14] dt-bindings: usb: dwc3: remove old DWC3 wrapper
-Message-ID: <20200404172120.GA28402@bogus>
-References: <20200326134507.4808-1-narmstrong@baylibre.com>
- <20200326134507.4808-15-narmstrong@baylibre.com>
+        Sat, 4 Apr 2020 13:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbgDDR3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 13:29:12 -0400
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5D7120738;
+        Sat,  4 Apr 2020 17:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586021352;
+        bh=1YRY/BtoK+oCmfLxUgTel8s7rvGfSUbGrrzgKVih6nY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K7g6enz9N7SInnM1t57+GGbJ3tnE12kvNU9CHwPa5UmgCqMwiV4nmhOfME3a3gKEw
+         JA01/sC0/EGndoehPB+s8TfHgJfyjAuh0KMVH/tO35gjji2rRkLGt8VTHXXGfqw32t
+         oo2xJMdu/CFr66gZDnsYT04SqNSULnE0ZZu8V31o=
+Received: by mail-qk1-f177.google.com with SMTP id b62so11667720qkf.6;
+        Sat, 04 Apr 2020 10:29:11 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYMxIL5KdGK32vBmYlVnq+miOnStuJdw7Cw1uM3IYbjh7Y4V5dR
+        Q8AFgeprgMQa+MhN76/IXxjC4RlTlPyMts6TiQ==
+X-Google-Smtp-Source: APiQypKltYkylVrSPKCUv+1vg9krREsG3icPca70j/C/uoyPDOcwI2wCbSRcNg5mnZ14H6Lfn8qOBnwKqoaC0DWfWAY=
+X-Received: by 2002:a37:393:: with SMTP id 141mr14220851qkd.393.1586021350914;
+ Sat, 04 Apr 2020 10:29:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326134507.4808-15-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200320094233.GA30959@localhost.localdomain>
+In-Reply-To: <20200320094233.GA30959@localhost.localdomain>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Sat, 4 Apr 2020 11:28:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJjLGz6LPQmTP5eJTdti38yQa86UWiwCTae81Fr7eMHtA@mail.gmail.com>
+Message-ID: <CAL_JsqJjLGz6LPQmTP5eJTdti38yQa86UWiwCTae81Fr7eMHtA@mail.gmail.com>
+Subject: Re: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020 14:45:06 +0100, Neil Armstrong wrote:
-> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> 
-> There is now an updated bindings for these SoCs making the old
-> compatible obsolete.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../devicetree/bindings/usb/amlogic,dwc3.txt  | 42 -------------------
->  1 file changed, 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-> 
+On Fri, Mar 20, 2020 at 3:42 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+>
+> Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
+> the binding document to two separate documents (own documents for BD71837
+> and BD71847) as they have different amount of regulators. This way we can
+> better enforce the node name check for regulators. ROHM is also providing
+> BD71850 - which is almost identical to BD71847 - main difference is some
+> initial regulator states. The BD71850 can be driven by same driver and it
+> has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
+> introduce compatible for it.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+I did, but there's some dtc warnings that need to be fixed:
+
+Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:23.17-30:
+Warning (reg_format): /example-0/i2c/pmic@4b:reg: property has invalid
+length (4 bytes) (#address-cells == 2, #size-cells == 1)
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
+Warning (pci_device_reg): Failed prerequisite 'reg_format'
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
+Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
+Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:20.13-131.11:
+Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for
+I2C bus
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:20.13-131.11:
+Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for
+I2C bus
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
+Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
+Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
+Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:21.25-130.15:
+Warning (avoid_default_addr_size): /example-0/i2c/pmic@4b: Relying on
+default #address-cells value
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:21.25-130.15:
+Warning (avoid_default_addr_size): /example-0/i2c/pmic@4b: Relying on
+default #size-cells value
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
+Warning (unique_unit_address): Failed prerequisite
+'avoid_default_addr_size'
+
+Rob
