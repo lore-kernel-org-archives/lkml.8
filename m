@@ -2,162 +2,416 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6DFC2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1201DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906F8206D4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DA6206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pV/4ZGEP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NBCKst4i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgDDO5X (ORCPT
+        id S1726475AbgDDPBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:57:23 -0400
-Received: from mout.web.de ([212.227.17.11]:37347 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbgDDO5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:57:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586012220;
-        bh=C2KveFWKzUHHIjPTMkE7LjhJpUU2YKMSuSmnzYsVjWw=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=pV/4ZGEPFPYOpDMrLirSpicQAvAYwyBaWACxbD0KPyJMyRKX1qEUiu+B8M+dDf331
-         i49QqyWeRk3h79sqLnjU8ZnrnSXZU0f5ufDKd6fUeM2xVwx5jR6D0xoYZYTSMnRJay
-         ZcVn48JmgMa/Bafdtvq3bbhv13rM9jMJiBZObd6s=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.132.181.229]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lh6QF-1j0WYV2rWp-00oU5K; Sat, 04
- Apr 2020 16:57:00 +0200
-To:     linux-crypto@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Deepak Saxena <dsaxena@plexity.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Matt Mackall <mpm@selenic.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] hwrng: omap - Delete an error message in
- of_get_omap_rng_device_details()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <eae7170c-4371-4865-7b85-589c0ed2b5b6@web.de>
-Date:   Sat, 4 Apr 2020 16:56:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 4 Apr 2020 11:01:16 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:35488 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgDDPBQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 11:01:16 -0400
+Received: by mail-qv1-f65.google.com with SMTP id q73so5176458qvq.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 08:01:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AsJPI0kgDCKGswo0+xFUMj9ekMPPjTHCNOTX6rTxeB8=;
+        b=NBCKst4iqQqjP8k5jOCubePQx47OOiWEBhIj5jzxri9gtnvjZpDv3O09t/bhD2SVoX
+         QUAdujBotIBRYcG7u+gkn2Ti1NQ8IY9BxX35UH+V+Uas3pbHmeP/X8c7hRRMK5Y20rr1
+         T8hIVUKnVOFNV7XaSelIE9S+Vi6Sn9aM8iovCibmdAviYHEcjUO+eB49oSxT6k+hDepf
+         Y0CxtlBW2zZPdoyVwy23EiJw75+AFsH0TeRJXrP/VCSYLQLBubwK00Zckc/YNgidDA+y
+         ivpzLAYAiO6t8KMCvpi8Lb4r3uVtZ1/f6QNzq+7SfOfWkaOJBhEK6jU3gXvHD4CN40VG
+         ZIBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AsJPI0kgDCKGswo0+xFUMj9ekMPPjTHCNOTX6rTxeB8=;
+        b=grMzdPW152Q23FsRefORFcq8bkwaSkXKeTcjr8Dp2+0Ryw7P5NvMkcrGre8qowqU/c
+         Bq7u1cFJzXnaauIls2bF5FWZIEmQUdcapJDq5XRGTkEOjfyImdGi1DMEZL70E7RVa3tZ
+         ZOPD1zU5SzSxiZrW/oc3NPbPwWA2hlSi7sR5Bx6s3xA/ThHi1ZS5sez6lqWaOc4004qD
+         JydY4m+urB9ifnHhAxWcHcj5W8A90kvvpjmSL5s2kdwOarWWMBv5eS/haQEDzPAL+A0l
+         SNvPQY4+Ruq+c+TfIonQ3huP9G/v9b3cZOB+CMIa0DzGStwo+kVTqy5xIgCzuxqws+5L
+         AYpg==
+X-Gm-Message-State: AGi0PuahuRQ5TzRt2OFrjGy9/Oe4B89GKhgEovbfoxvEpv5Lh0OXofYI
+        aYp/Tp/sQqiVUiUGrRIm4bgDYecAA0xvT65bfG+kJg==
+X-Google-Smtp-Source: APiQypI+Y25nGgXrD7Ut0TNZeTXXfBz7/2dPd5u0GfPZ64ekcp3Fqw+axoRmDDBqjRVZVq/lt5GCNJGL+Vy12LFHaMQ=
+X-Received: by 2002:a0c:a2a2:: with SMTP id g31mr42043qva.31.1586012474420;
+ Sat, 04 Apr 2020 08:01:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1mPM05PZGf5upbNmlHG8hg8fF92RQEBvmnzWQrYIkEaPD85ry/M
- OaaBtZmMOttnAg7hdNThgh7MoUQC50mmeRC+5VGkP6ahJTkIadEJsYTawavxEy9w45Cacug
- 0PjpH0ioVyCWfo1G7V4OfN6SAkkkgF5nvW4zx/kAaGEchlUXdnZZNOYosEhVWx68cbwjp4N
- 5NRRzAWlGVcrd1pJAIvMw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gvGdsMt4DYg=:FhU4m91UNfE5Wl3rFdrB2g
- eNgBUC8hZTdYQ3ZeLTcMiiy6c/saA/8U/MvxiOtgZgLKbXW0N+w/gJee2wTh4oFABoh8GnkZQ
- qOXdUsaZz83yFeXfkHneidHgjMRWsCp2r88ls2IITBMP4SAnL6KPgD5SK09wNQmTVJjyieqYr
- 5XuB8mnET1GqVhwkIO3BnfeFnfYzTzgYTnRx69oeWzV102u09LpHMLcw989Tc7hGp1Vg+wph9
- 0brzN4RAIQDOUEPkeErHd9nEecpqHJxhHrkmhcAG7XFo2SGX7OOqa0URNJ4umqkjFUVEvhdmi
- X/zZZ0pPee6ZNpywNkfjg4I+20qpsliPq3PbpdYFNAN6St6dabHDmzSN345H1BM08mRlqoSpF
- oqAkjD7mozkiHqshzUIsS2rAgAoVfxL2b+EGhqE7QSOXGA39P8T0C9k4trb1umC3x/Nkd7MeT
- EQqCB1N1x1Vjh+vVxqxKO+PLU50jlX1/Sugk/wNHCVhIyrkr03GjlEHzwQY7EJt5SqAcWZ3Du
- G0AgAPuZaOeFNPkazaUl+1cy0C0L2Xw37psx4yaKfkPTuOT2q/tn+zA1tUqQOSyXD3ltZuLAh
- 3ogLFpBu5s+2uJfJ40ekvgmuQE0DVPN/v0DakYtNYf05Jy38+o6IWBxyKazXhRZnR4zqzgYHm
- VUcTPr35HwANTGHn8HsnuDULXEsk7eW6/iSRJAYf9XZUi2cSSEN2CQFC01w5izIJDN3VpaIhw
- t5xj3+W4X1YZpAnuin5FIf7kezU6iP96VgoxJc/JC5SovAXasxs5kcpeKIdZKWR/91lHCc6h3
- xYOIi71PfvEN1i0pIYPGXgYP0izqinowbH5taDenBdxM3gP4hyXUo+cBK0L2chOsug6t0SSYK
- Oos0il+5k620NH2MJuJCI0jaX9QnPdd6XjhUoFVjGMgx6wASUVliaIPyqC9e3oDI7pJs06ObJ
- Lc3G0WRCNuWNnYdGcVX5CK1KH73QwZXc6N7c2vbIYdCXgDNj1ItqMpUymsAEFqxpB2Xwjo1Ks
- Rmzkz9MUClyOorQRzIUq6Xlw1/A8VMbGKcxc1yenyxxEv8JKoPbHaR6DztbqnBIjPY/GMT/Wb
- r/c/70Icp5NjSpk8Ycc+g4Sl5vGb4LmlqvmEDR6NlYOrnk4grAT4nyZwxuU0IEMBIabmn8NAZ
- XdumufQjU/3BDI2dkfUMZPfm3mug1ML1j+T1lZdUeqWKFl+qek6ZxA60o+GxhJnijfCVfJT6W
- OQyrugSeNEloQqnGW
+References: <20200323233354.239365-1-kunyi@google.com> <20200323233354.239365-2-kunyi@google.com>
+ <20200331154630.GA41691@roeck-us.net>
+In-Reply-To: <20200331154630.GA41691@roeck-us.net>
+From:   Kun Yi <kunyi@google.com>
+Date:   Sat, 4 Apr 2020 08:00:00 -0700
+Message-ID: <CAGMNF6WQ4FLZOiHf6cL43oMtREV+Zi8gbZbnNbgxVaHHcp-FYQ@mail.gmail.com>
+Subject: Re: [PATCH linux hwmon-next v2 1/3] hwmon: (sbtsi) Add basic support
+ for SB-TSI sensors
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Joel Stanley <joel@jms.id.au>, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 4 Apr 2020 16:45:57 +0200
+On Tue, Mar 31, 2020 at 8:46 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Mon, Mar 23, 2020 at 04:33:52PM -0700, Kun Yi wrote:
+> > SB Temperature Sensor Interface (SB-TSI) is an SMBus compatible
+> > interface that reports AMD SoC's Ttcl (normalized temperature),
+> > and resembles a typical 8-pin remote temperature sensor's I2C interface
+> > to BMC.
+> >
+> > This commit adds basic support using this interface to read CPU
+> > temperature, and read/write high/low CPU temp thresholds.
+> >
+> > To instantiate this driver on an AMD CPU with SB-TSI
+> > support, the i2c bus number would be the bus connected from the board
+> > management controller (BMC) to the CPU. The i2c address is specified in
+> > Section 6.3.1 of the spec [1]: The SB-TSI address is normally 98h for socket 0
+> > and 90h for socket 1, but it could vary based on hardware address select pins.
+> >
+> > [1]: https://www.amd.com/system/files/TechDocs/56255_OSRR.pdf
+> >
+> > Test status: tested reading temp1_input, and reading/writing
+> > temp1_max/min.
+> >
+> > Signed-off-by: Kun Yi <kunyi@google.com>
+> > Change-Id: I85ec65a57e8d73d7343aa9e250860ec85bfa79e5
+> > ---
+> >  drivers/hwmon/Kconfig      |  10 ++
+> >  drivers/hwmon/Makefile     |   1 +
+> >  drivers/hwmon/sbtsi_temp.c | 261 +++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 272 insertions(+)
+> >  create mode 100644 drivers/hwmon/sbtsi_temp.c
+> >
+> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> > index 05a30832c6ba..9585dcd01d1b 100644
+> > --- a/drivers/hwmon/Kconfig
+> > +++ b/drivers/hwmon/Kconfig
+> > @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
+> >         This driver can also be built as a module. If so, the module
+> >         will be called raspberrypi-hwmon.
+> >
+> > +config SENSORS_SBTSI
+> > +     tristate "Emulated SB-TSI temperature sensor"
+> > +     depends on I2C
+> > +     help
+> > +       If you say yes here you get support for emulated temperature
+> > +       sensors on AMD SoCs with SB-TSI interface connected to a BMC device.
+> > +
+> > +       This driver can also be built as a module. If so, the module will
+> > +       be called sbtsi_temp.
+> > +
+> >  config SENSORS_SHT15
+> >       tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
+> >       depends on GPIOLIB || COMPILE_TEST
+> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> > index b0b9c8e57176..cd109f003ce4 100644
+> > --- a/drivers/hwmon/Makefile
+> > +++ b/drivers/hwmon/Makefile
+> > @@ -152,6 +152,7 @@ obj-$(CONFIG_SENSORS_POWR1220)  += powr1220.o
+> >  obj-$(CONFIG_SENSORS_PWM_FAN)        += pwm-fan.o
+> >  obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)      += raspberrypi-hwmon.o
+> >  obj-$(CONFIG_SENSORS_S3C)    += s3c-hwmon.o
+> > +obj-$(CONFIG_SENSORS_SBTSI)  += sbtsi_temp.o
+> >  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+> >  obj-$(CONFIG_SENSORS_SCH5627)        += sch5627.o
+> >  obj-$(CONFIG_SENSORS_SCH5636)        += sch5636.o
+> > diff --git a/drivers/hwmon/sbtsi_temp.c b/drivers/hwmon/sbtsi_temp.c
+> > new file mode 100644
+> > index 000000000000..cc452cb29c2c
+> > --- /dev/null
+> > +++ b/drivers/hwmon/sbtsi_temp.c
+> > @@ -0,0 +1,261 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * sbtsi_temp.c - hwmon driver for a SBI Temperature Sensor Interface (SB-TSI)
+> > + *                compliant AMD SoC temperature device.
+> > + *
+> > + * Copyright (c) 2020, Google Inc.
+> > + * Copyright (c) 2020, Kun Yi <kunyi@google.com>
+> > + */
+> > +
+> > +#include <linux/err.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/init.h>
+> > +#include <linux/hwmon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/of.h>
+> > +
+> > +/*
+> > + * SB-TSI registers only support SMBus byte data access. "_INT" registers are
+> > + * the integer part of a temperature value or limit, and "_DEC" registers are
+> > + * corresponding decimal parts.
+> > + */
+> > +#define SBTSI_REG_TEMP_INT           0x01 /* RO */
+> > +#define SBTSI_REG_STATUS             0x02 /* RO */
+> > +#define SBTSI_REG_CONFIG             0x03 /* RO */
+> > +#define SBTSI_REG_TEMP_HIGH_INT              0x07 /* RW */
+> > +#define SBTSI_REG_TEMP_LOW_INT               0x08 /* RW */
+> > +#define SBTSI_REG_TEMP_DEC           0x10 /* RW */
+> > +#define SBTSI_REG_TEMP_HIGH_DEC              0x13 /* RW */
+> > +#define SBTSI_REG_TEMP_LOW_DEC               0x14 /* RW */
+> > +#define SBTSI_REG_REV                        0xFF /* RO */
+> > +
+> > +#define SBTSI_CONFIG_READ_ORDER_SHIFT        5
+> > +
+> > +#define SBTSI_TEMP_MIN       0
+> > +#define SBTSI_TEMP_MAX       255875
+> > +#define SBTSI_REV_MAX_VALID_ID       4
+> > +
+> > +/* Each client has this additional data */
+> > +struct sbtsi_data {
+> > +     struct i2c_client *client;
+> > +     struct mutex lock;
+> > +};
+> > +
+> > +/*
+> > + * From SB-TSI spec: CPU temperature readings and limit registers encode the
+> > + * temperature in increments of 0.125 from 0 to 255.875. The "high byte"
+> > + * register encodes the base-2 of the integer portion, and the upper 3 bits of
+> > + * the "low byte" encode in base-2 the decimal portion.
+> > + *
+> > + * e.g. INT=0x19, DEC=0x20 represents 25.125 degrees Celsius
+> > + *
+> > + * Therefore temperature in millidegree Celsius =
+> > + *   (INT + DEC / 256) * 1000 = (INT * 8 + DEC / 32) * 125
+> > + */
+> > +static inline int sbtsi_reg_to_mc(s32 integer, s32 decimal)
+> > +{
+> > +     return ((integer << 3) + (decimal >> 5)) * 125;
+> > +}
+> > +
+> > +/*
+> > + * Inversely, given temperature in millidegree Celsius
+> > + *   INT = (TEMP / 125) / 8
+> > + *   DEC = ((TEMP / 125) % 8) * 32
+> > + * Caller have to make sure temp doesn't exceed 255875, the max valid value.
+> > + */
+> > +static inline void sbtsi_mc_to_reg(s32 temp, u8 *integer, u8 *decimal)
+> > +{
+> > +     temp /= 125;
+> > +     *integer = temp >> 3;
+> > +     *decimal = (temp & 0x7) << 5;
+> > +}
+> > +
+> > +static int sbtsi_read(struct device *dev, enum hwmon_sensor_types type,
+> > +                   u32 attr, int channel, long *val)
+> > +{
+> > +     struct sbtsi_data *data = dev_get_drvdata(dev);
+> > +     s32 temp_int, temp_dec;
+> > +     int err, reg_int, reg_dec;
+> > +     u8 read_order;
+> > +
+> > +     if (type != hwmon_temp)
+> > +             return -EINVAL;
+> > +
+> > +     read_order = 0;
+> > +     switch (attr) {
+> > +     case hwmon_temp_input:
+> > +             /*
+> > +              * ReadOrder bit specifies the reading order of integer and
+> > +              * decimal part of CPU temp for atomic reads. If bit == 0,
+> > +              * reading integer part triggers latching of the decimal part,
+> > +              * so integer part should be read first. If bit == 1, read
+> > +              * order should be reversed.
+> > +              */
+> > +             err = i2c_smbus_read_byte_data(data->client, SBTSI_REG_CONFIG);
+> > +             if (err < 0)
+> > +                     return err;
+> > +
+> > +             read_order = (u8)err & BIT(SBTSI_CONFIG_READ_ORDER_SHIFT);
+> > +             reg_int = SBTSI_REG_TEMP_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_DEC;
+> > +             break;
+> > +     case hwmon_temp_max:
+> > +             reg_int = SBTSI_REG_TEMP_HIGH_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_HIGH_DEC;
+> > +             break;
+> > +     case hwmon_temp_min:
+> > +             reg_int = SBTSI_REG_TEMP_LOW_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_LOW_DEC;
+> > +             break;
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if (read_order == 0) {
+> > +             temp_int = i2c_smbus_read_byte_data(data->client, reg_int);
+> > +             temp_dec = i2c_smbus_read_byte_data(data->client, reg_dec);
+> > +     } else {
+> > +             temp_dec = i2c_smbus_read_byte_data(data->client, reg_dec);
+> > +             temp_int = i2c_smbus_read_byte_data(data->client, reg_int);
+> > +     }
+> > +
+> > +     if (temp_int < 0)
+> > +             return temp_int;
+> > +     if (temp_dec < 0)
+> > +             return temp_dec;
+> > +
+> > +     *val = sbtsi_reg_to_mc(temp_int, temp_dec);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int sbtsi_write(struct device *dev, enum hwmon_sensor_types type,
+> > +                    u32 attr, int channel, long val)
+> > +{
+> > +     struct sbtsi_data *data = dev_get_drvdata(dev);
+> > +     int reg_int, reg_dec, err;
+> > +     u8 temp_int, temp_dec;
+> > +
+> > +     if (type != hwmon_temp)
+> > +             return -EINVAL;
+> > +
+> > +     switch (attr) {
+> > +     case hwmon_temp_max:
+> > +             reg_int = SBTSI_REG_TEMP_HIGH_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_HIGH_DEC;
+> > +             break;
+> > +     case hwmon_temp_min:
+> > +             reg_int = SBTSI_REG_TEMP_LOW_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_LOW_DEC;
+> > +             break;
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     val = clamp_val(val, SBTSI_TEMP_MIN, SBTSI_TEMP_MAX);
+> > +     mutex_lock(&data->lock);
+> > +     sbtsi_mc_to_reg(val, &temp_int, &temp_dec);
+> > +     err = i2c_smbus_write_byte_data(data->client, reg_int, temp_int);
+> > +     if (err)
+> > +             goto exit;
+> > +
+> > +     err = i2c_smbus_write_byte_data(data->client, reg_dec, temp_dec);
+> > +exit:
+> > +     mutex_unlock(&data->lock);
+> > +     return err;
+> > +}
+> > +
+> > +static umode_t sbtsi_is_visible(const void *data,
+> > +                             enum hwmon_sensor_types type,
+> > +                             u32 attr, int channel)
+> > +{
+> > +     switch (type) {
+> > +     case hwmon_temp:
+> > +             switch (attr) {
+> > +             case hwmon_temp_input:
+> > +                     return 0444;
+> > +             case hwmon_temp_min:
+> > +                     return 0644;
+> > +             case hwmon_temp_max:
+> > +                     return 0644;
+> > +             }
+> > +             break;
+> > +     default:
+> > +             break;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct hwmon_channel_info *sbtsi_info[] = {
+> > +     HWMON_CHANNEL_INFO(chip,
+> > +                        HWMON_C_REGISTER_TZ),
+> > +     HWMON_CHANNEL_INFO(temp,
+> > +                        HWMON_T_INPUT | HWMON_T_MIN | HWMON_T_MAX),
+> > +     NULL
+> > +};
+> > +
+> > +static const struct hwmon_ops sbtsi_hwmon_ops = {
+> > +     .is_visible = sbtsi_is_visible,
+> > +     .read = sbtsi_read,
+> > +     .write = sbtsi_write,
+> > +};
+> > +
+> > +static const struct hwmon_chip_info sbtsi_chip_info = {
+> > +     .ops = &sbtsi_hwmon_ops,
+> > +     .info = sbtsi_info,
+> > +};
+> > +
+> > +static int sbtsi_probe(struct i2c_client *client,
+> > +                    const struct i2c_device_id *id)
+> > +{
+> > +     struct device *dev = &client->dev;
+> > +     struct device *hwmon_dev;
+> > +     struct sbtsi_data *data;
+> > +
+> > +     data = devm_kzalloc(dev, sizeof(struct sbtsi_data), GFP_KERNEL);
+> > +     if (!data)
+> > +             return -ENOMEM;
+> > +
+> > +     data->client = client;
+> > +     mutex_init(&data->lock);
+> > +
+> > +     dev_set_drvdata(dev, data);
+> > +
+>
+> This is not needed.
+Thanks. Removed in v3.
+>
+> Guenter
+>
+> > +     hwmon_dev =
+> > +             devm_hwmon_device_register_with_info(dev, client->name, data,
+> > +                                                  &sbtsi_chip_info, NULL);
+> > +
+> > +     return PTR_ERR_OR_ZERO(hwmon_dev);
+> > +}
+> > +
+> > +static const struct i2c_device_id sbtsi_id[] = {
+> > +     {"sbtsi", 0},
+> > +     {}
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, sbtsi_id);
+> > +
+> > +static const struct of_device_id __maybe_unused sbtsi_of_match[] = {
+> > +     {
+> > +             .compatible = "amd,sbtsi",
+> > +     },
+> > +     { },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, sbtsi_of_match);
+> > +
+> > +static struct i2c_driver sbtsi_driver = {
+> > +     .class = I2C_CLASS_HWMON,
+> > +     .driver = {
+> > +             .name = "sbtsi",
+> > +             .of_match_table = of_match_ptr(sbtsi_of_match),
+> > +     },
+> > +     .probe = sbtsi_probe,
+> > +     .id_table = sbtsi_id,
+> > +};
+> > +
+> > +module_i2c_driver(sbtsi_driver);
+> > +
+> > +MODULE_AUTHOR("Kun Yi <kunyi@google.com>");
+> > +MODULE_DESCRIPTION("Hwmon driver for AMD SB-TSI emulated sensor");
+> > +MODULE_LICENSE("GPL");
 
-The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
-Thus omit a redundant message for the exception handling in the
-calling function.
 
-This issue was detected by using the Coccinelle software.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/char/hw_random/omap-rng.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/char/hw_random/omap-rng.c b/drivers/char/hw_random/om=
-ap-rng.c
-index 65952393e1bb..7290c603fcb8 100644
-=2D-- a/drivers/char/hw_random/omap-rng.c
-+++ b/drivers/char/hw_random/omap-rng.c
-@@ -392,11 +392,8 @@ static int of_get_omap_rng_device_details(struct omap=
-_rng_dev *priv,
- 	if (of_device_is_compatible(dev->of_node, "ti,omap4-rng") ||
- 	    of_device_is_compatible(dev->of_node, "inside-secure,safexcel-eip76"=
-)) {
- 		irq =3D platform_get_irq(pdev, 0);
--		if (irq < 0) {
--			dev_err(dev, "%s: error getting IRQ resource - %d\n",
--				__func__, irq);
-+		if (irq < 0)
- 			return irq;
--		}
-
- 		err =3D devm_request_irq(dev, irq, omap4_rng_irq,
- 				       IRQF_TRIGGER_NONE, dev_name(dev), priv);
-=2D-
-2.26.0
-
+-- 
+Regards,
+Kun
