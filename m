@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C43C2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24518C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9694F20752
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F9720CC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbgDDInm (ORCPT
+        id S1727528AbgDDInn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:43:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41677 "EHLO
+        Sat, 4 Apr 2020 04:43:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41666 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbgDDImM (ORCPT
+        with ESMTP id S1726057AbgDDImL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:42:12 -0400
+        Sat, 4 Apr 2020 04:42:11 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeNP-00018T-5h; Sat, 04 Apr 2020 10:42:03 +0200
+        id 1jKeNM-0001BN-EH; Sat, 04 Apr 2020 10:42:00 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C6A521C07EC;
-        Sat,  4 Apr 2020 10:41:53 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:41:53 -0000
-From:   "tip-bot2 for Christophe JAILLET" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D5CAF1C0809;
+        Sat,  4 Apr 2020 10:41:55 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:41:55 -0000
+From:   "tip-bot2 for John Garry" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf cpumap: Fix snprintf overflow check
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Don Zickus <dzickus@redhat.com>, He Zhe <zhe.he@windriver.com>,
-        Jan Stancek <jstancek@redhat.com>,
+Subject: [tip: perf/urgent] perf test: Add pmu-events test
+Cc:     John Garry <john.garry@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        kernel-janitors@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Will Deacon <will@kernel.org>, linuxarm@huawei.com,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200324070319.10901-1-christophe.jaillet@wanadoo.fr>
-References: <20200324070319.10901-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <1584442939-8911-5-git-send-email-john.garry@huawei.com>
+References: <1584442939-8911-5-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Message-ID: <158598971346.28353.11677112853050770868.tip-bot2@tip-bot2>
+Message-ID: <158598971550.28353.11400211213936783028.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,89 +65,336 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     d74b181a028bb5a468f0c609553eff6a8fdf4887
-Gitweb:        https://git.kernel.org/tip/d74b181a028bb5a468f0c609553eff6a8fdf4887
-Author:        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-AuthorDate:    Tue, 24 Mar 2020 08:03:19 +01:00
+Commit-ID:     a6c925fd3aa2aba043a73b0ad57ffd296e1c42c9
+Gitweb:        https://git.kernel.org/tip/a6c925fd3aa2aba043a73b0ad57ffd296e1c42c9
+Author:        John Garry <john.garry@huawei.com>
+AuthorDate:    Tue, 17 Mar 2020 19:02:16 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 24 Mar 2020 10:36:00 -03:00
+CommitterDate: Tue, 24 Mar 2020 10:35:59 -03:00
 
-perf cpumap: Fix snprintf overflow check
+perf test: Add pmu-events test
 
-'snprintf' returns the number of characters which would be generated for
-the given input.
+The initial test will verify that the test tables in generated pmu-events.c
+match against known, expected values.
 
-If the returned value is *greater than* or equal to the buffer size, it
-means that the output has been truncated.
+For known events added in pmu-events/arch/test, we need to add an entry
+in test_cpu_aliases_events[] or test_uncore_events[].
 
-Fix the overflow test accordingly.
+A sample run is as follows for x86:
 
-Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
-Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Suggested-by: David Laight <David.Laight@ACULAB.COM>
+  john@linux-3c19:~/linux> tools/perf/perf test -vv 10
+  10: PMU event aliases                                     :
+  --- start ---
+  test child forked, pid 5316
+  testing event table bp_l1_btb_correct: pass
+  testing event table bp_l2_btb_correct: pass
+  testing event table segment_reg_loads.any: pass
+  testing event table dispatch_blocked.any: pass
+  testing event table eist_trans: pass
+  testing event table uncore_hisi_ddrc.flux_wcmd: pass
+  testing event table unc_cbo_xsnp_response.miss_eviction: pass
+  test child finished with 0
+  ---- end ----
+  PMU event aliases: Ok
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Don Zickus <dzickus@redhat.com>
-Cc: He Zhe <zhe.he@windriver.com>
-Cc: Jan Stancek <jstancek@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Joakim Zhang <qiangqing.zhang@nxp.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel-janitors@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200324070319.10901-1-christophe.jaillet@wanadoo.fr
+Cc: Will Deacon <will@kernel.org>
+Cc: linuxarm@huawei.com
+[ Fixup test_cpu_events[] and test_uncore_events[] sentinels to initialize one of its members to NULL, fixing the build in older compilers ]
+Link: http://lore.kernel.org/lkml/1584442939-8911-5-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cpumap.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/tests/Build          |   1 +-
+ tools/perf/tests/builtin-test.c |   4 +-
+ tools/perf/tests/pmu-events.c   | 233 +++++++++++++++++++++++++++++++-
+ tools/perf/tests/tests.h        |   1 +-
+ 4 files changed, 239 insertions(+)
+ create mode 100644 tools/perf/tests/pmu-events.c
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 983b738..dc5c5e6 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -317,7 +317,7 @@ static void set_max_cpu_num(void)
- 
- 	/* get the highest possible cpu number for a sparse allocation */
- 	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
--	if (ret == PATH_MAX) {
-+	if (ret >= PATH_MAX) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		goto out;
- 	}
-@@ -328,7 +328,7 @@ static void set_max_cpu_num(void)
- 
- 	/* get the highest present cpu number for a sparse allocation */
- 	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
--	if (ret == PATH_MAX) {
-+	if (ret >= PATH_MAX) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		goto out;
- 	}
-@@ -356,7 +356,7 @@ static void set_max_node_num(void)
- 
- 	/* get the highest possible cpu number for a sparse allocation */
- 	ret = snprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
--	if (ret == PATH_MAX) {
-+	if (ret >= PATH_MAX) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		goto out;
- 	}
-@@ -441,7 +441,7 @@ int cpu__setup_cpunode_map(void)
- 		return 0;
- 
- 	n = snprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
--	if (n == PATH_MAX) {
-+	if (n >= PATH_MAX) {
- 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 		return -1;
- 	}
-@@ -456,7 +456,7 @@ int cpu__setup_cpunode_map(void)
- 			continue;
- 
- 		n = snprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
--		if (n == PATH_MAX) {
-+		if (n >= PATH_MAX) {
- 			pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
- 			continue;
- 		}
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 1692529..b3d1bf1 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -14,6 +14,7 @@ perf-y += evsel-roundtrip-name.o
+ perf-y += evsel-tp-sched.o
+ perf-y += fdarray.o
+ perf-y += pmu.o
++perf-y += pmu-events.o
+ perf-y += hists_common.o
+ perf-y += hists_link.o
+ perf-y += hists_filter.o
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 54d9516..b6322eb 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -73,6 +73,10 @@ static struct test generic_tests[] = {
+ 		.func = test__pmu,
+ 	},
+ 	{
++		.desc = "PMU events",
++		.func = test__pmu_events,
++	},
++	{
+ 		.desc = "DSO data read",
+ 		.func = test__dso_data,
+ 	},
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+new file mode 100644
+index 0000000..12fc297
+--- /dev/null
++++ b/tools/perf/tests/pmu-events.c
+@@ -0,0 +1,233 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "parse-events.h"
++#include "pmu.h"
++#include "tests.h"
++#include <errno.h>
++#include <stdio.h>
++#include <linux/kernel.h>
++
++#include "debug.h"
++#include "../pmu-events/pmu-events.h"
++
++struct perf_pmu_test_event {
++	struct pmu_event event;
++};
++static struct perf_pmu_test_event test_cpu_events[] = {
++	{
++		.event = {
++			.name = "bp_l1_btb_correct",
++			.event = "event=0x8a",
++			.desc = "L1 BTB Correction",
++			.topic = "branch",
++		},
++	},
++	{
++		.event = {
++			.name = "bp_l2_btb_correct",
++			.event = "event=0x8b",
++			.desc = "L2 BTB Correction",
++			.topic = "branch",
++		},
++	},
++	{
++		.event = {
++			.name = "segment_reg_loads.any",
++			.event = "umask=0x80,period=200000,event=0x6",
++			.desc = "Number of segment register loads",
++			.topic = "other",
++		},
++	},
++	{
++		.event = {
++			.name = "dispatch_blocked.any",
++			.event = "umask=0x20,period=200000,event=0x9",
++			.desc = "Memory cluster signals to block micro-op dispatch for any reason",
++			.topic = "other",
++		},
++	},
++	{
++		.event = {
++			.name = "eist_trans",
++			.event = "umask=0x0,period=200000,event=0x3a",
++			.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
++			.topic = "other",
++		},
++	},
++	{ /* sentinel */
++		.event = {
++			.name = NULL,
++		},
++	},
++};
++
++static struct perf_pmu_test_event test_uncore_events[] = {
++	{
++		.event = {
++			.name = "uncore_hisi_ddrc.flux_wcmd",
++			.event = "event=0x2",
++			.desc = "DDRC write commands. Unit: hisi_sccl,ddrc ",
++			.topic = "uncore",
++			.long_desc = "DDRC write commands",
++			.pmu = "hisi_sccl,ddrc",
++		},
++	},
++	{
++		.event = {
++			.name = "unc_cbo_xsnp_response.miss_eviction",
++			.event = "umask=0x81,event=0x22",
++			.desc = "Unit: uncore_cbox A cross-core snoop resulted from L3 Eviction which misses in some processor core",
++			.topic = "uncore",
++			.long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
++			.pmu = "uncore_cbox",
++		},
++	},
++	{ /* sentinel */
++		.event = {
++			.name = NULL,
++		},
++	}
++};
++
++const int total_test_events_size = ARRAY_SIZE(test_uncore_events);
++
++static bool is_same(const char *reference, const char *test)
++{
++	if (!reference && !test)
++		return true;
++
++	if (reference && !test)
++		return false;
++
++	if (!reference && test)
++		return false;
++
++	return !strcmp(reference, test);
++}
++
++static struct pmu_events_map *__test_pmu_get_events_map(void)
++{
++	struct pmu_events_map *map;
++
++	for (map = &pmu_events_map[0]; map->cpuid; map++) {
++		if (!strcmp(map->cpuid, "testcpu"))
++			return map;
++	}
++
++	pr_err("could not find test events map\n");
++
++	return NULL;
++}
++
++/* Verify generated events from pmu-events.c is as expected */
++static int __test_pmu_event_table(void)
++{
++	struct pmu_events_map *map = __test_pmu_get_events_map();
++	struct pmu_event *table;
++	int map_events = 0, expected_events;
++
++	/* ignore 2x sentinels */
++	expected_events = ARRAY_SIZE(test_cpu_events) +
++			  ARRAY_SIZE(test_uncore_events) - 2;
++
++	if (!map)
++		return -1;
++
++	for (table = map->table; table->name; table++) {
++		struct perf_pmu_test_event *test;
++		struct pmu_event *te;
++		bool found = false;
++
++		if (table->pmu)
++			test = &test_uncore_events[0];
++		else
++			test = &test_cpu_events[0];
++
++		te = &test->event;
++
++		for (; te->name; test++, te = &test->event) {
++			if (strcmp(table->name, te->name))
++				continue;
++			found = true;
++			map_events++;
++
++			if (!is_same(table->desc, te->desc)) {
++				pr_debug2("testing event table %s: mismatched desc, %s vs %s\n",
++					  table->name, table->desc, te->desc);
++				return -1;
++			}
++
++			if (!is_same(table->topic, te->topic)) {
++				pr_debug2("testing event table %s: mismatched topic, %s vs %s\n",
++					  table->name, table->topic,
++					  te->topic);
++				return -1;
++			}
++
++			if (!is_same(table->long_desc, te->long_desc)) {
++				pr_debug2("testing event table %s: mismatched long_desc, %s vs %s\n",
++					  table->name, table->long_desc,
++					  te->long_desc);
++				return -1;
++			}
++
++			if (!is_same(table->unit, te->unit)) {
++				pr_debug2("testing event table %s: mismatched unit, %s vs %s\n",
++					  table->name, table->unit,
++					  te->unit);
++				return -1;
++			}
++
++			if (!is_same(table->perpkg, te->perpkg)) {
++				pr_debug2("testing event table %s: mismatched perpkg, %s vs %s\n",
++					  table->name, table->perpkg,
++					  te->perpkg);
++				return -1;
++			}
++
++			if (!is_same(table->metric_expr, te->metric_expr)) {
++				pr_debug2("testing event table %s: mismatched metric_expr, %s vs %s\n",
++					  table->name, table->metric_expr,
++					  te->metric_expr);
++				return -1;
++			}
++
++			if (!is_same(table->metric_name, te->metric_name)) {
++				pr_debug2("testing event table %s: mismatched metric_name, %s vs %s\n",
++					  table->name,  table->metric_name,
++					  te->metric_name);
++				return -1;
++			}
++
++			if (!is_same(table->deprecated, te->deprecated)) {
++				pr_debug2("testing event table %s: mismatched deprecated, %s vs %s\n",
++					  table->name, table->deprecated,
++					  te->deprecated);
++				return -1;
++			}
++
++			pr_debug("testing event table %s: pass\n", table->name);
++		}
++
++		if (!found) {
++			pr_err("testing event table: could not find event %s\n",
++			       table->name);
++			return -1;
++		}
++	}
++
++	if (map_events != expected_events) {
++		pr_err("testing event table: found %d, but expected %d\n",
++		       map_events, expected_events);
++		return -1;
++	}
++
++	return 0;
++}
++int test__pmu_events(struct test *test __maybe_unused,
++		     int subtest __maybe_unused)
++{
++	if (__test_pmu_event_table())
++		return -1;
++
++	return 0;
++}
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 9a160fe..61a1ab0 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -49,6 +49,7 @@ int test__perf_evsel__roundtrip_name_test(struct test *test, int subtest);
+ int test__perf_evsel__tp_sched_test(struct test *test, int subtest);
+ int test__syscall_openat_tp_fields(struct test *test, int subtest);
+ int test__pmu(struct test *test, int subtest);
++int test__pmu_events(struct test *test, int subtest);
+ int test__attr(struct test *test, int subtest);
+ int test__dso_data(struct test *test, int subtest);
+ int test__dso_data_cache(struct test *test, int subtest);
