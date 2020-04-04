@@ -2,67 +2,94 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACF2C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBA0C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6A0206F8
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586026506;
-	bh=co6S5nqk9pXW3GBobrf6g6ZQMvkXKDKPOJe2G/9W3Js=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=cca5IwE6l9L81PXDUZLxeKV0poNDl1JyAvq7RSWljLybpLYoY2ZIOlK+wIeEqLLzx
-	 9ox9ifaQxZXoYQ1Po6Rjq7yc1V9+3b0O/C9TczEZ95eVl934bo4gXYEvxZIDfcNMjM
-	 7ezaimBBkma4GuVcvxVw4Vr6gVqwuozRnm/34Wfo=
+	by mail.kernel.org (Postfix) with ESMTP id 404DC206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgDDSzE (ORCPT
+        id S1726328AbgDDS5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 14:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59858 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 14:57:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57942 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgDDSzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 14:55:03 -0400
-Subject: Re: [git pull] exfat
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586026503;
-        bh=co6S5nqk9pXW3GBobrf6g6ZQMvkXKDKPOJe2G/9W3Js=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=IPrwhwMAXEDEUDILHSKQp5KMKBKHu9YNGKk10p7aZgjSBPbx+U49aCWxSASyJxWbA
-         gORGgtfyGbZMS2y1MMggzKXTqVd34CfFW2DfH7XCqqZRTjWCR6OGJYL6URppLPNKbW
-         3FN3Tzc66le5Hb/W9CDW0ycUCVsjYr7by5gu9QHE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200404183528.GO23230@ZenIV.linux.org.uk>
-References: <20200404183528.GO23230@ZenIV.linux.org.uk>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200404183528.GO23230@ZenIV.linux.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.exfat
-X-PR-Tracked-Commit-Id: 9acd0d53800c55c6e2186e29b6433daf24617451
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 83eb69f3b80f7cf2ca6357fb9c23adc48632a0e3
-Message-Id: <158602650335.4238.17886859766655851150.pr-tracker-bot@kernel.org>
-Date:   Sat, 04 Apr 2020 18:55:03 +0000
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+        id S1726207AbgDDS5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 14:57:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0F0F4AC1D;
+        Sat,  4 Apr 2020 18:56:58 +0000 (UTC)
+Message-ID: <c481353b58fb31a07cb4e46e958524d6a76f6bba.camel@suse.de>
+Subject: Re: [PATCH v6 2/4] firmware: raspberrypi: Introduce vl805 init
+ routine
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
+Date:   Sat, 04 Apr 2020 20:56:54 +0200
+In-Reply-To: <20200402194005.GA35725@google.com>
+References: <20200402194005.GA35725@google.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-p9pbaJPFripypjQjuxEN"
+User-Agent: Evolution 3.34.2 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 4 Apr 2020 19:35:28 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.exfat
+--=-p9pbaJPFripypjQjuxEN
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/83eb69f3b80f7cf2ca6357fb9c23adc48632a0e3
+On Thu, 2020-04-02 at 14:40 -0500, Bjorn Helgaas wrote:
+> On Thu, Apr 02, 2020 at 01:32:35PM +0200, Nicolas Saenz Julienne wrote:
+> > On Wed, 2020-04-01 at 15:37 -0500, Bjorn Helgaas wrote:
+> > > On Tue, Mar 24, 2020 at 07:28:10PM +0100, Nicolas Saenz Julienne wrot=
+e:
+> > > > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may
+> > > > either be loaded directly from an EEPROM or, if not present, by
+> > > > the SoC's VideCore. The function informs VideCore that VL805 was
+> > > > just reset, or requests for a probe defer.
+>=20
+> Is VL805 the XHCI USB device?  A hint here would help non-RPi experts
+> know how this fits into the topology.
 
-Thank you!
+Yes, VL805 is the XHCI USB device. I'll keep it in mind for the next series=
+.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Regards,
+Nicolas
+
+
+--=-p9pbaJPFripypjQjuxEN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6I2HYACgkQlfZmHno8
+x/60Swf/dHo4U3CvX6bsiKxokbAwApPj1NiCCdvWHdfOj3JGJFeJiSE8WFwbv9zv
++jDO9Z90fC0euf2TVeg5msEHjcBzlfjNQezZX38k9XNLGVElcRDDDOI6Lu8n7s86
+Cn8ftjDDiD7Ykx0XUgBfgYC1g2hKRofw9C0ry2qPzYMZ9REpnC8ea9Vybng77DGF
+WA6nzjrS7yVqzzyzzmg8d2FEU0AonJQS5QFVyA0f0ged7QSyykWoAgM8SmL1nIYc
+VSw0Ve90xvAifAy1IUUh8TLqKAKa3kLU1ibktQqOtIapI6GXXiNtTLXjLIVdhZxm
+5YGazz8bz28YbzNjd8x2rKUDyRd7pw==
+=vU+J
+-----END PGP SIGNATURE-----
+
+--=-p9pbaJPFripypjQjuxEN--
+
