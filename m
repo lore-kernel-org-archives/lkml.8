@@ -2,84 +2,127 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A11C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC1AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37182206D4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40273206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586009199;
-	bh=wjN6og/BdgQiXgjgfs18wtB2fwB8t82/B8/axoPpm0o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZOx332wcqGtBZZYnCX0c1q0n9haUYKu5rd0DS9THs78axppM8kcoTIKDptIEQFY6x
-	 Qs2bczhMkfo++ckfku+f9YJhZ0h34nCzxHebdE9orAAN7rv1cCSbJa36pHOodYkqpL
-	 e77D8GijJgL9aE5FSk7yPiRS8YwLV1jzPMZwUWF0=
+	s=default; t=1586009218;
+	bh=+b0oTb1t16JA3+0YlDERGnAPMV5kIMdS/LTGfcOX41U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MPI7FFfbIa8QRTll/SqL6Y7e9yXt3gcpJjr8wceFH/JpzrcAaSVkgE4u07oD0mE18
+	 tAtAn0F49w5LnyehKDgZGEY9mwOGPY7WaPTqgcTZPB1nvzvJp7TWhIwTQ8iuXO4YZu
+	 IVaTVoHAPGLn33Ckm7/LHkgwf4C5FpqRyikQ1WcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgDDOGi (ORCPT
+        id S1726365AbgDDOG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:06:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47994 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 10:06:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbgDDOGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:06:38 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726307AbgDDOG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 10:06:56 -0400
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAD93206D4;
-        Sat,  4 Apr 2020 14:06:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD7282074B;
+        Sat,  4 Apr 2020 14:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586009197;
-        bh=wjN6og/BdgQiXgjgfs18wtB2fwB8t82/B8/axoPpm0o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ktl7UJTQFM1lv/2svEtlYwjB5jadi3E+SxqcjnIoT+DrdEOdxruQp33fAud7E9wGU
-         Lmm3JfFFvxTJcvzh9nQC+3rEzUKC7nx+CL8nrFDXlw95rkO3EejbNiA9H1/Myhz6gJ
-         w1tqJQFiljIxUtprhkZM92e8O2FDhXs/gmxT95d0=
-Date:   Sat, 4 Apr 2020 15:06:33 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] counter: 104-quad-8: Add lock guards - generic
- interface
-Message-ID: <20200404150633.2421decd@archlinux>
-In-Reply-To: <CACG_h5qctM0S2buQHHNnJ_qVY6YY2wYruj9aTKH9RiJ=9_LfoQ@mail.gmail.com>
-References: <20200316124929.GA389@syed.domain.name>
-        <20200318020506.GA45571@icarus>
-        <20200322175831.74e10aa7@archlinux>
-        <CACG_h5qctM0S2buQHHNnJ_qVY6YY2wYruj9aTKH9RiJ=9_LfoQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1586009216;
+        bh=+b0oTb1t16JA3+0YlDERGnAPMV5kIMdS/LTGfcOX41U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d19ZLvzaDmpCW357gTjPA1TjMezn/zxJIORTvB5Io2yYEqf47IY2Ttzkt/UFraWx/
+         m1Nf9yUj8JbBzv871OwE2FZWGNOeLDsgfR+0VRl6IiDJx3nHlpu83X7kJN288/saoO
+         um2bO/Sr5PCPtS8pflCCHBQzzEFDmp/M1y//Yv+o=
+Received: by mail-ed1-f54.google.com with SMTP id i16so12813642edy.11;
+        Sat, 04 Apr 2020 07:06:55 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ388S4rvzdEpptNGBIl+gZ8ID0kHz/qJ6x6yUxO1RgKtSHSqRp
+        AbtstoHO0yh7YViQILrIntSjvLlTz7quSRt0KQ==
+X-Google-Smtp-Source: APiQypKLXINGBOt97ZZpI29BPDjcTt7cZyRUT5zbCMljkyv5Paew8tAP2fOKpbz9k7takTeCmHk4vVxNJHxo+pWOLBU=
+X-Received: by 2002:a05:6402:b70:: with SMTP id cb16mr11854658edb.48.1586009214144;
+ Sat, 04 Apr 2020 07:06:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200403080350.95826-1-jitao.shi@mediatek.com> <20200403080350.95826-2-jitao.shi@mediatek.com>
+In-Reply-To: <20200403080350.95826-2-jitao.shi@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 4 Apr 2020 22:06:42 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-0xddwEvo+v8KsyfSVbtYpe_cZGLFoz-5BBnx5MEwHEQ@mail.gmail.com>
+Message-ID: <CAAOTY_-0xddwEvo+v8KsyfSVbtYpe_cZGLFoz-5BBnx5MEwHEQ@mail.gmail.com>
+Subject: Re: [PATCH v14 1/3] dt-bindings: display: mediatek: control dpi pins
+ mode to avoid leakage
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, huijuan.xie@mediatek.com,
+        stonea168@163.com, cawa.cheng@mediatek.com,
+        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 23:54:32 +0530
-Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+Hi, Jitao:
 
-> Hi Jonathan
-> 
-> >Looks good.  I'm not sure right now which tree I'll take this through
-> >(depends on whether it looks like we'll get an rc8 and hence I can sneak
-> >it in for the coming merge window or not).
-> >
-> >So poke me if I seem to have forgotten to apply this in a week or so.  
-> 
-> Gentle Reminder.
-> Thanks !
-> Syed Nayyar Waris
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=883=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:04=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. =
+Set
+> the dpi pins to gpio mode and output-low to avoid leakage current when dp=
+i
+> disabled.
+>
 
-Thanks.  I've applied it to the fixes-togreg branch of iio.git which will go
-upstream after the merge window closes.
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-Thanks,
-
-Jonathan
-
-
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.t=
+xt
+> index 58914cf681b8..77def4456706 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> @@ -17,6 +17,9 @@ Required properties:
+>    Documentation/devicetree/bindings/graph.txt. This port should be conne=
+cted
+>    to the input port of an attached HDMI or LVDS encoder chip.
+>
+> +Optional properties:
+> +- pinctrl-names: Contain "default" and "sleep".
+> +
+>  Example:
+>
+>  dpi0: dpi@1401d000 {
+> @@ -27,6 +30,9 @@ dpi0: dpi@1401d000 {
+>                  <&mmsys CLK_MM_DPI_ENGINE>,
+>                  <&apmixedsys CLK_APMIXED_TVDPLL>;
+>         clock-names =3D "pixel", "engine", "pll";
+> +       pinctrl-names =3D "default", "sleep";
+> +       pinctrl-0 =3D <&dpi_pin_func>;
+> +       pinctrl-1 =3D <&dpi_pin_idle>;
+>
+>         port {
+>                 dpi0_out: endpoint {
+> --
+> 2.21.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
