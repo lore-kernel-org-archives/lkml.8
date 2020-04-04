@@ -2,133 +2,236 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A01FC4332B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D59EC2BA18
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A31206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nd+WcLU8"
+	by mail.kernel.org (Postfix) with ESMTP id 4E7B42063A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgDDRSg (ORCPT
+        id S1726353AbgDDRUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 13:18:36 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34420 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgDDRSg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 13:18:36 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p10so10275842ljn.1;
-        Sat, 04 Apr 2020 10:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+uhxRGX6MPG3FC6JHWtiYmK6qLmp1QIoL6oQZjfRONY=;
-        b=nd+WcLU8Nkb3NCybgzvxt5VvOktuAe/AqLpVnjLRMi1zhdqSwGot8V+Wntg2eoytm4
-         UYw+VXJ6se7MqMNVECQGMqZyn4Dtfg3FBpju68UAzafwtNqJPASMLh6NoNAtnHDIx5Dc
-         LisWSh2BUCh+q/qdErQZdpILL+qDYCibSb/ZaELWTwkDGSd104JClCdzlImF5lgGwYbM
-         VY90nOWQj9th3yD97HjIp8kcx3AJhJeLugb1FGGnZVzu1JL+PkTEBQuwy0h16ejB5tp0
-         UnTFokM4kcyiZJHcez78Qda6TEUOKgGvuRjpUbY0Ztf0jdCPUcFLewwUC6Rl1IdkxSz/
-         U3EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+uhxRGX6MPG3FC6JHWtiYmK6qLmp1QIoL6oQZjfRONY=;
-        b=heFe5iXOKv2oZldsxyuZJFKtKfVZzi3H9gfy3pcxVfvhiguK9+elOK2WA1HH1mft5o
-         4S3930WfZCUBg+WFC8hZxZKMLlgeRrUbuLj1FnLDb9JE3nA3Oz86HblCMlozxROfNK6J
-         OYbR70jUJKcQnKHkU5jxjUw3ISgOptvzccf7z5T/drn5HdqDvkVkTJKx3NJ0zBJcqqAd
-         0jOnQkFF3xQtJGxpJBoHfmqBy09piWVf/dFsFxZxJpWN9QsSzNNeQ3J6odomdh2gOOMC
-         7VZ/W+7tTGSxDBSLvA3Vhmpc9LzVzhWXfCsEjEN9E2TapP6k7XPLMEYN8nfvoMz9OFel
-         HHPA==
-X-Gm-Message-State: AGi0PuY9BmTKwycYmqjYAYi6D9E+wtIg4NbT89Vk6+UNDel00YekAMmd
-        KEdnis9jYzFGrPE0pLRjRVWR0gOCh3BTXW45tEI=
-X-Google-Smtp-Source: APiQypKbneMMaFHfEv8AYv4pXWPjoKLLu9YejArU/08n/11tmBWhsBVTZ41q0GYynLf1gxAoQxMR37qxtV7jCEj2kmI=
-X-Received: by 2002:a2e:81cc:: with SMTP id s12mr7960117ljg.90.1586020713555;
- Sat, 04 Apr 2020 10:18:33 -0700 (PDT)
+        Sat, 4 Apr 2020 13:20:22 -0400
+Received: from mail-oln040092009068.outbound.protection.outlook.com ([40.92.9.68]:42988
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726066AbgDDRUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 13:20:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JBYCyBQj4C9SKaf/vn0M57ou5kVdAv5iBrGA/pSG3QKWDKZl9eUCZSSpyKiCceA64gy/tOphuDxfZU7E8si45hDEUwzk48zGQpld8QHK+/NS1TR2bWzME0cOv6QcjFISql2sxN9RQTGXdpI8ZMYYeF+La68wtjDk3nFqDzW/2c57uK1CFjViU8lH8sjW1zqPaEMHoEGmR6kbK3+YYOiQQN4b9nfOYtYWk2FF12+JHqonwfIZczcVLtzSfPVSrw7C/6WRrD8g4JLt61PZAxmKpOicoPVAPMSqa/gXXsCP+s5mXxKjlHz37Xef8A2t4+gCcKjAGVu8QS24R3+ZPsW6SA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fdrFjQhC4RTgH2t8+RYT/LGmHJ/bDys3+vyZf5Ea9Q8=;
+ b=aY4iVzJPKb5f5XiBi1OQHhLyWE3/4Tytjvdcs1cgptq4VMgmpIqhEkRqWNx0O7vhPQcl2H5sxofyhk0hqdykwPEXs0NbYwaLwreQD16SF4XUDVQP4Bj0puQplk3mu3T4Ea0xP0z2NLPNjBCeOy9EuqQJ1/nekQTREo1eiMvNzPoeUbMVEUUucj8VO7CZ6p8pBqzPXQVEsA2CZ1ymDguYSI4NtYsFz4kCuvIi+fUB8/oqKbF1CLrNBSpB5Via8qZjSdei5X+AQ1hUsMOV2oJ3qMbCqauj/q9m6ICg0qB6cEHmSZRQH93KQt4ovljVFUTT1bUJMkYxp/EMIDweKdVi7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from BN3NAM04FT019.eop-NAM04.prod.protection.outlook.com
+ (10.152.92.58) by BN3NAM04HT154.eop-NAM04.prod.protection.outlook.com
+ (10.152.93.148) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Sat, 4 Apr
+ 2020 17:20:18 +0000
+Received: from BYAPR10MB3479.namprd10.prod.outlook.com
+ (2a01:111:e400:7e4e::4f) by BN3NAM04FT019.mail.protection.outlook.com
+ (2a01:111:e400:7e4e::173) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19 via Frontend
+ Transport; Sat, 4 Apr 2020 17:20:18 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:945D559C09AC2F49B59F553698D54B91807AFD3DC69F582653470DCFF18F0A66;UpperCasedChecksum:16C04AF2120C2854D453EAA4C9A9000D8039B1A4675E33E4E9C0FE54D0AE0399;SizeAsReceived:7783;Count:48
+Received: from BYAPR10MB3479.namprd10.prod.outlook.com
+ ([fe80::e144:8ace:8677:a1bd]) by BYAPR10MB3479.namprd10.prod.outlook.com
+ ([fe80::e144:8ace:8677:a1bd%4]) with mapi id 15.20.2878.014; Sat, 4 Apr 2020
+ 17:20:18 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     tomasz.figa@gmail.com, krzk@kernel.org, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH] pinctrl: samsung: Correct setting of eint wakeup mask on s5pv210
+Date:   Sat,  4 Apr 2020 10:08:49 -0700
+Message-ID: <BYAPR10MB3479E878C547053C6B952E01A3C40@BYAPR10MB3479.namprd10.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR2001CA0015.namprd20.prod.outlook.com
+ (2603:10b6:301:15::25) To BYAPR10MB3479.namprd10.prod.outlook.com
+ (2603:10b6:a03:11a::16)
+X-Microsoft-Original-Message-ID: <20200404170848.16372-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-References: <20200404141909.26399-1-ap420073@gmail.com> <20200404155122.GD1476305@kroah.com>
-In-Reply-To: <20200404155122.GD1476305@kroah.com>
-From:   Taehee Yoo <ap420073@gmail.com>
-Date:   Sun, 5 Apr 2020 02:18:22 +0900
-Message-ID: <CAMArcTVdn7FcfX-BCnZ+LUzdct4yj2BLyhpTu832_VGt_O+xWA@mail.gmail.com>
-Subject: Re: [PATCH net v2 2/3] net: core: add netdev_class_has_file_ns()
- helper function
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, rafael@kernel.org,
-        j.vosburgh@gmail.com, vfalico@gmail.com,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, mitch.a.williams@intel.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR2001CA0015.namprd20.prod.outlook.com (2603:10b6:301:15::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Sat, 4 Apr 2020 17:20:17 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200404170848.16372-1-xc-racer2@live.ca>
+X-TMN:  [5f6Q7YgA8UacrHNp2VQ/+jkm+NLv/XQ41l5hVvjxFMDsNCv/0+It1smRKpQt/qkq]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 758aab2a-d7eb-4849-8948-08d7d8bc7260
+X-MS-TrafficTypeDiagnostic: BN3NAM04HT154:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jHob2zY3LdcjtoV34gF2cD69v52hYZA11RIdOhwyFIEanMb77OIv+ptpNbM/ayUpgzLn6CCaGFHt9S4PRGE+QE5LGuAqIwaswCD0gjQdioo5Q3ELnk2/ESabX/IxGCO67nUDbGRbmC3hWTjf7nSMM/xMhAzwbC5MmTNOdJ+QmXS2Rltu8v2Ow4aOc5IEotVH
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3479.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: Z8+M3gSDCxbtYYtoDlo7K0lgTigr+H49vq9aE+iQWj6N5c0HL4eZwO/BeD6jYcVedArqQd+PVgjYCHyYuWIxcddhSqF8MQX52lZuqX0SSH97fCMt9oWBN9xTtzXxgsm9G2r7+lvbTqpTyvad8BboKBJOBHdFS/sWSUrQEfLCnWCxKxu2M23LzI6rHhcJo284iBQ7njMlzeih6Gmpp0yK8g==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 758aab2a-d7eb-4849-8948-08d7d8bc7260
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2020 17:20:18.4152
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3NAM04HT154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 5 Apr 2020 at 00:51, Greg KH <gregkh@linuxfoundation.org> wrote:
->
+Commit a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt
+mask") started writing the eint wakeup mask from the pinctrl driver.
+Unfortunately, it made the assumption that the private retention data
+was always a regmap while in the case of s5pv210 it is a raw pointer
+to the clock base (as the eint wakeup mask not in the PMU as with newer
+Exynos platforms).
 
-Hi Greg,
-Thank you for your review!
+Fixes: a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt mask")
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+---
+ drivers/pinctrl/samsung/pinctrl-exynos.c | 73 ++++++++++++++++--------
+ 1 file changed, 49 insertions(+), 24 deletions(-)
 
-> On Sat, Apr 04, 2020 at 02:19:09PM +0000, Taehee Yoo wrote:
-> > This helper function is to check whether the class file "/sys/class/net/*"
-> > is existing or not.
-> > In the next patch, this helper function will be used.
-> >
-> > Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
-> > Fixes: b76cdba9cdb2 ("[PATCH] bonding: add sysfs functionality to bonding (large)")
-> > Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-> > ---
-> >
-> > v1 -> v2:
-> >  - use class_has_file_ns(), which is introduced by the first patch.
-> >
-> >  include/linux/netdevice.h | 2 +-
-> >  net/core/net-sysfs.c      | 6 ++++++
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> > index 130a668049ab..a04c487c0975 100644
-> > --- a/include/linux/netdevice.h
-> > +++ b/include/linux/netdevice.h
-> > @@ -4555,7 +4555,7 @@ int netdev_class_create_file_ns(const struct class_attribute *class_attr,
-> >                               const void *ns);
-> >  void netdev_class_remove_file_ns(const struct class_attribute *class_attr,
-> >                                const void *ns);
-> > -
-> > +bool netdev_class_has_file_ns(const char *name, const void *ns);
-> >  static inline int netdev_class_create_file(const struct class_attribute *class_attr)
-> >  {
-> >       return netdev_class_create_file_ns(class_attr, NULL);
-> > diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-> > index cf0215734ceb..8a20d658eff0 100644
-> > --- a/net/core/net-sysfs.c
-> > +++ b/net/core/net-sysfs.c
-> > @@ -1914,6 +1914,12 @@ void netdev_class_remove_file_ns(const struct class_attribute *class_attr,
-> >  }
-> >  EXPORT_SYMBOL(netdev_class_remove_file_ns);
-> >
-> > +bool netdev_class_has_file_ns(const char *name, const void *ns)
-> > +{
-> > +     return class_has_file_ns(&net_class, name, ns);
-> > +}
-> > +EXPORT_SYMBOL(netdev_class_has_file_ns);
->
-> Again, this feels broken, it can not solve a race condition.
->
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+index 0599f5127b01..5126a5a6d4c0 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -40,6 +40,8 @@ struct exynos_irq_chip {
+ 	u32 eint_pend;
+ 	u32 eint_wake_mask_value;
+ 	u32 eint_wake_mask_reg;
++	void (*set_eint_wakeup_mask)(struct samsung_pinctrl_drv_data *drvdata,
++				     struct exynos_irq_chip *irq_chip);
+ };
+ 
+ static inline struct exynos_irq_chip *to_exynos_irq_chip(struct irq_chip *chip)
+@@ -342,6 +344,47 @@ static int exynos_wkup_irq_set_wake(struct irq_data *irqd, unsigned int on)
+ 	return 0;
+ }
+ 
++static void
++exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
++				    struct exynos_irq_chip *irq_chip)
++{
++	struct regmap *pmu_regs;
++
++	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
++		dev_warn(drvdata->dev,
++			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
++		return;
++	}
++
++	pmu_regs = drvdata->retention_ctrl->priv;
++	dev_info(drvdata->dev,
++		 "Setting external wakeup interrupt mask: 0x%x\n",
++		 irq_chip->eint_wake_mask_value);
++
++	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
++		     irq_chip->eint_wake_mask_value);
++}
++
++static void
++s5pv210_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
++				    struct exynos_irq_chip *irq_chip)
++
++{
++	void __iomem *clk_base;
++
++	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
++		dev_warn(drvdata->dev,
++			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
++		return;
++	}
++
++
++	clk_base = (void __iomem *) drvdata->retention_ctrl->priv;
++
++	__raw_writel(irq_chip->eint_wake_mask_value,
++		     clk_base + irq_chip->eint_wake_mask_reg);
++}
++
+ /*
+  * irq_chip for wakeup interrupts
+  */
+@@ -360,8 +403,9 @@ static const struct exynos_irq_chip s5pv210_wkup_irq_chip __initconst = {
+ 	.eint_mask = EXYNOS_WKUP_EMASK_OFFSET,
+ 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
+ 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
+-	/* Only difference with exynos4210_wkup_irq_chip: */
++	/* Only differences with exynos4210_wkup_irq_chip: */
+ 	.eint_wake_mask_reg = S5PV210_EINT_WAKEUP_MASK,
++	.set_eint_wakeup_mask = s5pv210_pinctrl_set_eint_wakeup_mask,
+ };
+ 
+ static const struct exynos_irq_chip exynos4210_wkup_irq_chip __initconst = {
+@@ -380,6 +424,7 @@ static const struct exynos_irq_chip exynos4210_wkup_irq_chip __initconst = {
+ 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
+ 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
+ 	.eint_wake_mask_reg = EXYNOS_EINT_WAKEUP_MASK,
++	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
+ };
+ 
+ static const struct exynos_irq_chip exynos7_wkup_irq_chip __initconst = {
+@@ -398,6 +443,7 @@ static const struct exynos_irq_chip exynos7_wkup_irq_chip __initconst = {
+ 	.eint_pend = EXYNOS7_WKUP_EPEND_OFFSET,
+ 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
+ 	.eint_wake_mask_reg = EXYNOS5433_EINT_WAKEUP_MASK,
++	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
+ };
+ 
+ /* list of external wakeup controllers supported */
+@@ -574,27 +620,6 @@ int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
+ 	return 0;
+ }
+ 
+-static void
+-exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
+-				    struct exynos_irq_chip *irq_chip)
+-{
+-	struct regmap *pmu_regs;
+-
+-	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
+-		dev_warn(drvdata->dev,
+-			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
+-		return;
+-	}
+-
+-	pmu_regs = drvdata->retention_ctrl->priv;
+-	dev_info(drvdata->dev,
+-		 "Setting external wakeup interrupt mask: 0x%x\n",
+-		 irq_chip->eint_wake_mask_value);
+-
+-	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
+-		     irq_chip->eint_wake_mask_value);
+-}
+-
+ static void exynos_pinctrl_suspend_bank(
+ 				struct samsung_pinctrl_drv_data *drvdata,
+ 				struct samsung_pin_bank *bank)
+@@ -626,8 +651,8 @@ void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
+ 		else if (bank->eint_type == EINT_TYPE_WKUP) {
+ 			if (!irq_chip) {
+ 				irq_chip = bank->irq_chip;
+-				exynos_pinctrl_set_eint_wakeup_mask(drvdata,
+-								    irq_chip);
++				irq_chip->set_eint_wakeup_mask(drvdata,
++							       irq_chip);
+ 			} else if (bank->irq_chip != irq_chip) {
+ 				dev_warn(drvdata->dev,
+ 					 "More than one external wakeup interrupt chip configured (bank: %s). This is not supported by hardware nor by driver.\n",
+-- 
+2.20.1
 
-This function is considered to be used under rtnl mutex and
-I assume that no one could use "/sys/class/net/*" outside of rtnl mutex.
-So, I think it returns the correct information under rtnl mutex.
-
-Thanks a lot!
-Taehee Yoo
