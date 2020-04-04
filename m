@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3338DC2BA17
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDB9C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77C8206F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B386B206F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:37:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vSl82A1j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vilvo8lM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgDDVhB (ORCPT
+        id S1726510AbgDDVha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 17:37:01 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55834 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgDDVhA (ORCPT
+        Sat, 4 Apr 2020 17:37:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36062 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbgDDVha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 17:37:00 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r16so10831345wmg.5
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 14:36:57 -0700 (PDT)
+        Sat, 4 Apr 2020 17:37:30 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k1so3442185wrm.3
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 14:37:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nsUmvNL8sjda7kyTK9AZ69fRxOGj+XDjFfXoJZYIvM8=;
-        b=vSl82A1jjSShVEKVgcXvj1Bhq6/091gPYLcpmrDvA4LQXGtXXC913dC1wd8m4SAyMC
-         nFVRljxpVzfV8eyb5Ahgz9eo6dPSR57iy8SknCeg5Sxh9Xm+r/hnA/dPPuodBrgbjf0E
-         yWEaGzHpCgzx92I0Li+y4csac+sgxD8rCOcxka89p4ho+g1rjnDQxalcq7wKAg1ZWwQN
-         wYS/Kmgsg6ok/QHSuiBlzhE1NIQoEMihggPBkH80ooTyBGoeUH29ibyg68USIaSlhTQY
-         OdOEZ8IXIeK/UzakbZ5m6EMFXfTVAe/fpSATqScWdK/KaA0yAkbsmC9RCuOZ+8+gkdUu
-         WZPA==
+        bh=sTWYnLDyyUvYklDKnfWTkeU3tZV47oZykcdBK4V2YI4=;
+        b=Vilvo8lMxm5bGinJMwlDRi1kGOzhrOoR9I8TIcXtxrVTCX0yRhA9VDRr7/5i92NURr
+         nAzVe7rfjY0QcBFHq1gjVXoEBZGFZMftPDS4llmy8sGxE/g2T4CU2p7qdWVNtBTDm1ZP
+         WauGWAmxV1ZnFGnh8o7H32Jlhrp7KbG3K8D5Id2CFJTngjNOO2dFy/4wKNkmG9INWx2a
+         aLT3bjjc6UcE3tfkR97uyCRL0l3AjLWx/NUWA+QFCHMWM8b57SWVAGnQXSkZXA5V4GLL
+         y3mI1wHmMauvVL6ELWHhY0TKtvcQYIifRQZPZMarE1d+WMxtvBk7pcsGzEqmdjOElx1J
+         BDsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=nsUmvNL8sjda7kyTK9AZ69fRxOGj+XDjFfXoJZYIvM8=;
-        b=JjtT77OF5tlFy5S1AmpoZ5lDu2mnrtcVQDF+qdNltKg8g1cgkx2a38tuRd60lyQbQV
-         duLlLoi9DhMWnLsD/nh95QYD84dEX5AbrMfmqlsDVljcE7FWhEHVIkiQLlueEXjFnr7E
-         DxKe3H98Gl3p8BBfHuCntXyMOjwJ4gU12dB1tniv92r4j30zjgCLk1Xz5jOHGCJvp2tw
-         k6fGMZCEBDLv5o6UHXXEzR5pMJB9yu8cj0+Lsnl0JU6o9LzgB+EGMx4d2xgor9KmU264
-         0dYtF57eWPu2B0NzdxH14TeC1zq0O4CYN22/M7NmwqBJ5JMwtmQ1NmuyN3RrXY5NauIj
-         /CTQ==
-X-Gm-Message-State: AGi0PubUs3bBPCtJk33EqsEB70zYI+v/3VNEcv7hZlGpTspXJKBwEdbD
-        2yWJ6p74XNb2m9VWamwdqMOL+CJy
-X-Google-Smtp-Source: APiQypI8wjblbC1p2epxBJI1h9aGQh+wwCoHzaw6KAPrVkJ40P88jx/H2TCNTOFFF0h0ccwmfToxcg==
-X-Received: by 2002:a1c:c90a:: with SMTP id f10mr14831521wmb.179.1586036216933;
-        Sat, 04 Apr 2020 14:36:56 -0700 (PDT)
+        bh=sTWYnLDyyUvYklDKnfWTkeU3tZV47oZykcdBK4V2YI4=;
+        b=UOV7f4HczwgYK596YFmtJHqV+Pbxc9ixuZAQipPayDpdxY+tcoqPt25ZMVZLzSfO+v
+         ERGUF3yhDEB0QiYKetgJDpZkkmvGCN9qXGUT7CEHIF/xkFutmEu+1SQ/4tmBu4nEi21V
+         DeGWgwO8bUtft9kKuIQ/uVx5+5Lgg33XuOYOu6EIRs2J2D52lzSidyEzYsP1Yt3A0x7B
+         FDtciydGb//36F9HohKXsYSWN9PsIqcxTaoBGmnmJYC15DrvhV7jCpj5DI+yu08vLdDV
+         xmmxxVyZOWGoBVO0Cky1PZIUBTO5tw5k3RG879qqEm8cG4mqp+ucSEbth3bJc2NBKnXV
+         LJYg==
+X-Gm-Message-State: AGi0PubN8FEGc0OKr0wfR3KDDEbzsPlxCKlby67FkqZ9LjvsvVwTmKjx
+        zFGUWma8Ng66UlD73PnaVRE=
+X-Google-Smtp-Source: APiQypKb9tCp1arMeO9EWwlBg8L4VU0oPxNDyxmKks8PsvTZODWjP/leGKvSOdl6lCruaEHrsgVlow==
+X-Received: by 2002:a5d:4246:: with SMTP id s6mr15799330wrr.321.1586036248473;
+        Sat, 04 Apr 2020 14:37:28 -0700 (PDT)
 Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id h188sm3670104wme.8.2020.04.04.14.36.54
+        by smtp.gmail.com with ESMTPSA id t67sm17726439wmt.48.2020.04.04.14.37.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Apr 2020 14:36:56 -0700 (PDT)
-Subject: Re: [GIT PULL 2/3] bcm2835-dt-next-2020-03-27
+        Sat, 04 Apr 2020 14:37:27 -0700 (PDT)
+Subject: Re: [GIT PULL 3/3] bcm2835-defconfig-next-2020-03-27
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Florian Fainelli <f.fainelli@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
@@ -66,7 +66,7 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 References: <20200327211632.32346-1-nsaenzjulienne@suse.de>
- <20200327211632.32346-2-nsaenzjulienne@suse.de>
+ <20200327211632.32346-3-nsaenzjulienne@suse.de>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
  mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -122,12 +122,12 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <cecb31b9-beaf-860f-9c1d-a06b5fb4ac82@gmail.com>
-Date:   Sat, 4 Apr 2020 14:36:53 -0700
+Message-ID: <6a10a2ae-aa1b-83ca-2347-5e445bcc55b2@gmail.com>
+Date:   Sat, 4 Apr 2020 14:37:25 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Firefox/68.0 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200327211632.32346-2-nsaenzjulienne@suse.de>
+In-Reply-To: <20200327211632.32346-3-nsaenzjulienne@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -141,33 +141,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On 3/27/2020 2:16 PM, Nicolas Saenz Julienne wrote:
 > Hi Florian,
 > 
-> The following changes since commit 14e1eb5a91a96d9e1ce8051f752b7b6645bc8e10:
+> The following changes since commit 8068b7b63583764b46416a62856e42fb1f954ab6:
 > 
->   dt-bindings: arm: Document Broadcom SoCs 'secondary-boot-reg' (2020-03-10 12:43:15 -0700)
+>   Merge tag 'tags/bcm2835-defconfig-next-2020-03-09' into defconfig/next (2020-03-10 11:13:21 -0700)
 > 
 > are available in the Git repository at:
 > 
->   ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/nsaenz/linux-rpi.git tags/bcm2835-dt-next-2020-03-27
+>   ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/nsaenz/linux-rpi.git tags/bcm2835-defconfig-next-2020-03-27
 > 
-> for you to fetch changes up to 3ac395a5b3f3b678663fbb58381fdae2b1b57588:
+> for you to fetch changes up to f06f924a65fb3991614fb23a783d4fef9c8d14ea:
 > 
->   ARM: dts: bcm283x: Use firmware PM driver for V3D (2020-03-27 21:25:35 +0100)
-> 
-> ----------------------------------------------------------------
-> - First patch updates RPi4's expgpio's GPIO labels, adding the SD power rail.
-> 
-> - Second patch adds a fixed regulator that controls the SD power and
-> hooks it up with emmc2.
-> 
-> - Third patch rolls back to the firmware based power driver as the MMIO
-> version is unstable.
+>   ARM: bcm2835_defconfig: Enable fixed-regulator (2020-03-27 21:27:47 +0100)
 > 
 > ----------------------------------------------------------------
-> Nicolas Saenz Julienne (3):
->       ARM: dts: bcm2711: Update expgpio's GPIO labels
->       ARM: dts: bcm2711: Add vmmc regulator in emmc2
->       ARM: dts: bcm283x: Use firmware PM driver for V3D
+> Enables fixed regulator in bcm2835_defconfig
+> 
+> ----------------------------------------------------------------
 
-Merged into devicetree/next, thanks!
+Merged into defconfig/next, thanks!
 -- 
 Florian
