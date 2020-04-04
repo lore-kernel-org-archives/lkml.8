@@ -2,94 +2,139 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBA0C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B416C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404DC206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2973206F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Se6bVwp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgDDS5A (ORCPT
+        id S1726303AbgDDTAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 14:57:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57942 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgDDS5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 14:57:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0F0F4AC1D;
-        Sat,  4 Apr 2020 18:56:58 +0000 (UTC)
-Message-ID: <c481353b58fb31a07cb4e46e958524d6a76f6bba.camel@suse.de>
-Subject: Re: [PATCH v6 2/4] firmware: raspberrypi: Introduce vl805 init
- routine
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
-Date:   Sat, 04 Apr 2020 20:56:54 +0200
-In-Reply-To: <20200402194005.GA35725@google.com>
-References: <20200402194005.GA35725@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-p9pbaJPFripypjQjuxEN"
-User-Agent: Evolution 3.34.2 
+        Sat, 4 Apr 2020 15:00:19 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42768 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgDDTAS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 15:00:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q19so10343551ljp.9
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 12:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YeDkwAMRYs+8ztmifHIoEPIXNMJQCvkCAGpkS5dmvN8=;
+        b=Se6bVwp29Lk9h32ohyXnkTxpZWN2oAfGGVMd9atHYZHwssaXsgVFNMSGf5DdlCbS5n
+         6oMYxUg+7Gpue3tjRTBS5k89CcsgtLlf71rBX1TwAMW2RoZyQ6FqPCmuVCnXoewymFwr
+         u8+V2GzQKBi9LBHXE+i+WUEonct7JWKbF9uOLGAFPcxz/w5tqvXSsh5bJ2QSnNb/8xkJ
+         CktrwX+nNwrI50JmXZzyqCqgE4gdaweoPfW9MysIEhaLZKxZJrfXXq8wukhQKtvBR8UY
+         e4Z4+lFcL9gkfyE3SXe+R69AUCZGXnq9OAx8sH1b/+xvqhgGUG72/UY/Z2MQ1iYTTBl4
+         NoIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YeDkwAMRYs+8ztmifHIoEPIXNMJQCvkCAGpkS5dmvN8=;
+        b=S7g02SqyPde9iZ2P1DNQsQKm/u9OcDMGGAJDnRi4kBwFQ4Zw/xa875X2KpXwuu6PkS
+         Kp0SjZMyUoclodGrRlGV4M3cNoHbDZ8EJaIYlO4Ebdsr0Hr5kWTAUeWH4FQw9HCcrCRA
+         evbYBpjmieY2IZdBpYOvBXBwLuNKXf+lScxWihRt5Qi7dnB3EUsTA0YbBtAWRtHVpuCL
+         dUPv1x0g58xU2c3WSRjp4FFkYg3hP3ViG6+Q0cLRJqJ30/sO9fpStNipTCYSpZ/jL3Dy
+         ZGnPaS7hvxB3gjNF3b9XewPcQp/E0qwRdNsseSCHmMjX81X4mwzTGO80elY1P8dKD//T
+         PuTw==
+X-Gm-Message-State: AGi0PuZjBswJTLq4GqhxTrKXd8X+45s5WNfZbAoRlneN5HnMvvo+x27T
+        7ngv5uWmjDFy2RijBJej09Y=
+X-Google-Smtp-Source: APiQypKQao45kx5IAtNq8FzqB2IyR/T1wX8CRcNWAOFeyv7EXc1A4vq3Xc8Q6zeR4/1eKhFwlFJs+A==
+X-Received: by 2002:a2e:98d7:: with SMTP id s23mr7671487ljj.154.1586026814726;
+        Sat, 04 Apr 2020 12:00:14 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id d6sm10327196lfn.72.2020.04.04.12.00.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Apr 2020 12:00:13 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Sat, 4 Apr 2020 21:00:07 +0200
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jroedel@suse.de,
+        vbabka@suse.cz, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] mm/vmalloc: Sanitize __get_vm_area() arguments
+Message-ID: <20200404190007.GB424@pc636>
+References: <20200403163253.GU20730@hirez.programming.kicks-ass.net>
+ <20200403181818.GA5538@pc636>
+ <20200403185300.GD20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403185300.GD20730@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 03, 2020 at 08:53:00PM +0200, Peter Zijlstra wrote:
+> On Fri, Apr 03, 2020 at 08:18:18PM +0200, Uladzislau Rezki wrote:
+> > On Fri, Apr 03, 2020 at 06:32:53PM +0200, Peter Zijlstra wrote:
+> > > 
+> > > __get_vm_area() is an exported symbol, make sure the callers stay in
+> > > the expected memory range. When calling this function with memory
+> > > ranges outside of the VMALLOC range *bad* things can happen.
+> > > 
+> > > (I noticed this when I managed to corrupt the kernel text by accident)
+> > > 
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > ---
+> > >  mm/vmalloc.c |    7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > > 
+> > > --- a/mm/vmalloc.c
+> > > +++ b/mm/vmalloc.c
+> > > @@ -2130,6 +2130,13 @@ static struct vm_struct *__get_vm_area_n
+> > >  struct vm_struct *__get_vm_area(unsigned long size, unsigned long flags,
+> > >  				unsigned long start, unsigned long end)
+> > >  {
+> > > +	/*
+> > > +	 * Ensure callers stay in the vmalloc range.
+> > > +	 */
+> > > +	if (WARN_ON(start < VMALLOC_START || start > VMALLOC_END ||
+> > > +		    end < VMALLOC_START || end > VMALLOC_END))
+> > > +		return NULL;
+> > > +
+> > >  	return __get_vm_area_node(size, 1, flags, start, end, NUMA_NO_NODE,
+> > >  				  GFP_KERNEL, __builtin_return_address(0));
+> > >  }
+> > Peter, could you please clarify what kind of issues you had and how you
+> > tested?
+> 
+> Well, I had a bug and corrupted text; but then I tested:
+> 
+> 	__get_vm_area(PAGE_SIZE, VM_ALLOC, __START_KERNEL_map,
+> 		      __START_KERNEL_map + KERNEL_IMAGE_SIZE);
+> 
+> and that *works*.
+> 
+Do you mean that you corrupted "text" by calling __get_vm_area(...)
+with special parameters? If so could you please show how you used it.
 
---=-p9pbaJPFripypjQjuxEN
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> > __get_vm_area() is not limited by allocating only with vmalloc space,
+> > it can use whole virtual address space/range, i.e. 1 - ULONG_MAX.
+> 
+> Yeah, I know, I'm saying it perhaps should be, because not limiting it
+> while exposing it to modules seems risky at best, downright dangerous if
+> you consider map_vm_area() is also exported.
+> 
+Doing it to secure modules, probably is OK, but modules can also be reside
+within vmalloc address space.
 
-On Thu, 2020-04-02 at 14:40 -0500, Bjorn Helgaas wrote:
-> On Thu, Apr 02, 2020 at 01:32:35PM +0200, Nicolas Saenz Julienne wrote:
-> > On Wed, 2020-04-01 at 15:37 -0500, Bjorn Helgaas wrote:
-> > > On Tue, Mar 24, 2020 at 07:28:10PM +0100, Nicolas Saenz Julienne wrot=
-e:
-> > > > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may
-> > > > either be loaded directly from an EEPROM or, if not present, by
-> > > > the SoC's VideCore. The function informs VideCore that VL805 was
-> > > > just reset, or requests for a probe defer.
->=20
-> Is VL805 the XHCI USB device?  A hint here would help non-RPi experts
-> know how this fits into the topology.
+Thank you in advance!
 
-Yes, VL805 is the XHCI USB device. I'll keep it in mind for the next series=
-.
-
-Regards,
-Nicolas
-
-
---=-p9pbaJPFripypjQjuxEN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6I2HYACgkQlfZmHno8
-x/60Swf/dHo4U3CvX6bsiKxokbAwApPj1NiCCdvWHdfOj3JGJFeJiSE8WFwbv9zv
-+jDO9Z90fC0euf2TVeg5msEHjcBzlfjNQezZX38k9XNLGVElcRDDDOI6Lu8n7s86
-Cn8ftjDDiD7Ykx0XUgBfgYC1g2hKRofw9C0ry2qPzYMZ9REpnC8ea9Vybng77DGF
-WA6nzjrS7yVqzzyzzmg8d2FEU0AonJQS5QFVyA0f0ged7QSyykWoAgM8SmL1nIYc
-VSw0Ve90xvAifAy1IUUh8TLqKAKa3kLU1ibktQqOtIapI6GXXiNtTLXjLIVdhZxm
-5YGazz8bz28YbzNjd8x2rKUDyRd7pw==
-=vU+J
------END PGP SIGNATURE-----
-
---=-p9pbaJPFripypjQjuxEN--
-
+--
+Vlad Rezki
