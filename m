@@ -2,219 +2,93 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8977C2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397D3C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 06:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD7C206CC
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 05:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036EB206A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 06:01:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RBoxCyyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgDDFzv (ORCPT
+        id S1725995AbgDDGBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 01:55:51 -0400
-Received: from mga04.intel.com ([192.55.52.120]:50512 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgDDFzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 01:55:50 -0400
-IronPort-SDR: etPNhnc6HKAJZgQtS+x5GbMXbBxmtZwKf8vlyTVjvQIVGCNBftA4p9UoPdhpxv8U3CHYIFUtnZ
- O3l6maiMSPSA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 22:55:49 -0700
-IronPort-SDR: Eq4SyEw4Bmyc6LHn2YN/ti7Q2wz/+QVx8bS6bYUAmIAEezubwYF0jwTj+2YhbYyCNRdPdXZaR3
- Netmkspauh4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,342,1580803200"; 
-   d="scan'208";a="285337244"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Apr 2020 22:55:48 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jKbmV-00060c-E0; Sat, 04 Apr 2020 13:55:47 +0800
-Date:   Sat, 04 Apr 2020 13:55:32 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.04.01a] BUILD REGRESSION
- ffebabde5e80e76612fd06a934cd2a147128054c
-Message-ID: <5e882154.k5Wg7DONTR/ADXus%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Sat, 4 Apr 2020 02:01:45 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37956 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbgDDGBp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 02:01:45 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c21so4731644pfo.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 23:01:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=oG21IWxF/admIV9XheyanlxC7Api1UGcfx99b/IxXf4=;
+        b=RBoxCyyx5PaP/hm3fxv/oXDtR9089AFmXU2RchLbcoBr/fBLdV5LNzoyPzUvuNX2sF
+         hwyBtf27DgTduH+edBK4DeiGWYjyTsXdgXWEP8ADS1ng64laIxTo+EsYsS/zkz0+ilI2
+         UO0XwZW3NrBUpNpVb0Sg4bzQKLUIYsTpdPqM1kMPTA4mZsTL1p/v57r+u8kQvx+oGpZz
+         +G+1J19/XqXjxdGIupNLKDrg1Ma8vDokWwcOa1tPG1J6yh+Y3Gom/BoXhMcgVA1p00Z5
+         OuTbD9HZ/sPJ+uia/vZuxf7GQ6VFApKgpFcOFpkgoczx9OO96+/2GzpiLNbPi/q3nA/V
+         i7tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oG21IWxF/admIV9XheyanlxC7Api1UGcfx99b/IxXf4=;
+        b=A0n/z3pbaJ+ZcYo6JlE94gXHsnCxkEWpQg4365ih5ysANMrZhBhaJhkD3Pyc5hMdvO
+         D1SZPAgU507UlUA9AA/nO8WEioDbGUy7xyun17wCKDv1OJXsNCt/j+8UwVJEnoHMY+mX
+         NUsJgSWJ3KpGJZHK58vZo7nobAdCitsvLnRk1gXFed8qPEHKmhR6jFONvyxJGXvFXxEF
+         TA/C5vzAtYXzuwcamVB4kwdEknJ3gKvYMvdlJ/IrnCwkoTJYMcvtZ1dub814aWlSsVRH
+         ricA6mFTdRx6jsYVrq+CSjqY0BIQ8FF/o7gcCnfl04L6G4xEMIDJo4A4N4Dx7d9Gq1Gc
+         ky5w==
+X-Gm-Message-State: AGi0PubiL8aRjifc21kSIrZlMbAZKtcZJzRZ/Zm5k4h99wwnXqwTw41f
+        1g7cdG6vI29AsvwFHZqVIAk=
+X-Google-Smtp-Source: APiQypIKh+/En219vNNNq7J28XjQeMUj70c9mPZ6BgWOEzSyh3+Y7u6ey+aPWrZNc0TmAmajZ0LcqQ==
+X-Received: by 2002:a62:e307:: with SMTP id g7mr11331286pfh.197.1585980104062;
+        Fri, 03 Apr 2020 23:01:44 -0700 (PDT)
+Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
+        by smtp.gmail.com with ESMTPSA id o29sm7074326pfp.208.2020.04.03.23.01.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 Apr 2020 23:01:43 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] mm/vmalloc: Fix a typo in comment
+Date:   Sat,  4 Apr 2020 14:01:36 +0800
+Message-Id: <20200404060136.10838-1-hqjagain@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.04.01a
-branch HEAD: ffebabde5e80e76612fd06a934cd2a147128054c  rcu: Remove self-stack-trace when all quiescent states seen
+There is a typo in comment, fix it.
+"exeeds" -> "exceeds"
 
-Regressions in current branch:
-
-ftrace.c:(.text+0x3ccc): undefined reference to `synchronize_rcu_tasks_rude'
-kernel/trace/ftrace.c:238:2: error: implicit declaration of function 'synchronize_rcu_tasks_rude'; did you mean 'synchronize_rcu_tasks'? [-Werror=implicit-function-declaration]
-kernel/trace/ftrace.c:2914:3: error: implicit declaration of function 'synchronize_rcu_tasks_rude'; did you mean 'synchronize_rcu_tasks'? [-Werror=implicit-function-declaration]
-
-Error ids grouped by kconfigs:
-
-recent_errors
-|-- arm-pxa_defconfig
-|   `-- ftrace.c:(.text):undefined-reference-to-synchronize_rcu_tasks_rude
-|-- powerpc-ppc64_defconfig
-|   `-- kernel-trace-ftrace.c:error:implicit-declaration-of-function-synchronize_rcu_tasks_rude
-|-- powerpc-rhel-kconfig
-|   `-- kernel-trace-ftrace.c:error:implicit-declaration-of-function-synchronize_rcu_tasks_rude
-|-- s390-randconfig-a001-20200403
-|   `-- kernel-trace-ftrace.c:error:implicit-declaration-of-function-synchronize_rcu_tasks_rude
-`-- x86_64-randconfig-d003-20200404
-    `-- kernel-trace-ftrace.c:error:implicit-declaration-of-function-synchronize_rcu_tasks_rude
-
-elapsed time: 509m
-
-configs tested: 135
-configs skipped: 0
-
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-riscv                    nommu_virt_defconfig
-mips                             allyesconfig
-riscv                            allmodconfig
-ia64                                defconfig
-powerpc                             defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-c6x                  randconfig-a001-20200403
-h8300                randconfig-a001-20200403
-microblaze           randconfig-a001-20200403
-nios2                randconfig-a001-20200403
-sparc64              randconfig-a001-20200403
-csky                 randconfig-a001-20200403
-openrisc             randconfig-a001-20200403
-s390                 randconfig-a001-20200403
-sh                   randconfig-a001-20200403
-xtensa               randconfig-a001-20200403
-csky                 randconfig-a001-20200404
-openrisc             randconfig-a001-20200404
-s390                 randconfig-a001-20200404
-sh                   randconfig-a001-20200404
-xtensa               randconfig-a001-20200404
-x86_64               randconfig-d003-20200404
-x86_64               randconfig-d001-20200404
-i386                 randconfig-d003-20200404
-i386                 randconfig-d001-20200404
-x86_64               randconfig-d002-20200404
-i386                 randconfig-d002-20200404
-i386                 randconfig-f001-20200404
-x86_64               randconfig-f003-20200404
-i386                 randconfig-f003-20200404
-x86_64               randconfig-f002-20200404
-i386                 randconfig-f002-20200404
-i386                 randconfig-g003-20200404
-x86_64               randconfig-g002-20200404
-i386                 randconfig-g001-20200404
-i386                 randconfig-g002-20200404
-x86_64               randconfig-g001-20200404
-x86_64               randconfig-h002-20200404
-i386                 randconfig-h002-20200404
-i386                 randconfig-h003-20200404
-i386                 randconfig-h001-20200404
-arm64                randconfig-a001-20200403
-sparc                randconfig-a001-20200403
-ia64                 randconfig-a001-20200403
-arc                  randconfig-a001-20200403
-arm                  randconfig-a001-20200403
-powerpc              randconfig-a001-20200403
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ mm/vmalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 1f46c3b86f9f..7d90159e84ba 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -3365,7 +3365,7 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
+ 			goto overflow;
+ 
+ 		/*
+-		 * If required width exeeds current VA block, move
++		 * If required width exceeds current VA block, move
+ 		 * base downwards and then recheck.
+ 		 */
+ 		if (base + end > va->va_end) {
+-- 
+2.17.1
+
