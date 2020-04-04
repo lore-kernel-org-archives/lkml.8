@@ -2,91 +2,75 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0449C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 04:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607B4C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 04:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CC92074B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 04:02:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIAUI0LB"
+	by mail.kernel.org (Postfix) with ESMTP id 274A6206D4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 04:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbgDDECo (ORCPT
+        id S1726005AbgDDEJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 00:02:44 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34652 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgDDECo (ORCPT
+        Sat, 4 Apr 2020 00:09:06 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:54215 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgDDEJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 00:02:44 -0400
-Received: by mail-oi1-f193.google.com with SMTP id d3so8149632oic.1;
-        Fri, 03 Apr 2020 21:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HGQtBy/Y1NLvvkMjbES/Jv6f17twJdxb+OF5qTeiXgQ=;
-        b=BIAUI0LBOaQDGKRe47/4i+hAgK3nJrfqyXHRiKf7Kdy82NHFpdIqy5Q6mdiPbEL9Rk
-         FMjiw8VSi0r151xr25Y45fHsuWG6Bf9BzOSPU+TrRtKP9m2pcOZ/Z6T9XgIx7U6Nv/LK
-         Fu/4TQUQxZOi3PqCjYHu8tgeLSFfLz9iwTvyaExLwY+I2J40kN5zoEmzGN7CbuWACbRF
-         DameoPYfbrTT3ypa95xXmSA/KLPbDnLNAjOiOF87ZlEOSYl3t2aLEC0YN8QU+GlnoROZ
-         hJrxStMcGA0053Nt22EhgFlXly8JB6Q83SMJGbA4s327TFoudZklfH3Z0wnaeENqx6Tc
-         FnTw==
+        Sat, 4 Apr 2020 00:09:05 -0400
+Received: by mail-il1-f200.google.com with SMTP id a15so9130237ilh.20
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 21:09:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HGQtBy/Y1NLvvkMjbES/Jv6f17twJdxb+OF5qTeiXgQ=;
-        b=p3hwU1lIx8Rsopi/twFsXize/9UsrAY/D44yUQ2h5jbvw3KzoEXL1X3ImqU/FrNwPH
-         ppc6dZNFY2q91mx3ThDnzWCV3MrUNdVQRcecXSkQ8yht3dAKqSXxkZ/F8Tesu+/xFbg7
-         F/ukomYG0xAfEztJyAZHZSg57+Pi8w+9rSjkdE+1vGk9KTPdLU6wkdfTND0FAUs7SrJ2
-         K3W0V7vWxjPuMcA2zF9n9Jfxy+b7h1jKk4LfEyCJBSiCBgoEl+D53JU14vHXPnt4lhn9
-         o3vkrsh5Z1tXdV+lvXkHGRZLoLTQ91919IGbaQLV+NF2QXIbbhCP4cuL/Rn7VOBqVT31
-         E6jA==
-X-Gm-Message-State: AGi0PuYS8SMqBqYnaWtGyqLRl5xnRYMhka89T/vmQZqefdGzJoHkiO5v
-        jxO+YU4d1ucdG6w5k7mfjlw=
-X-Google-Smtp-Source: APiQypIh23+8/UlthZbcuHVsMA3NTNp5LFyre/YiWhPzNGi9vX7BiDG7fzPVg3WPvserQAFcfYyEhg==
-X-Received: by 2002:aca:5c44:: with SMTP id q65mr5623823oib.139.1585972963355;
-        Fri, 03 Apr 2020 21:02:43 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id t3sm2719866oth.0.2020.04.03.21.02.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Apr 2020 21:02:42 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 21:02:41 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: mkcompile_h: Include $LD version in /proc/version
-Message-ID: <20200404040241.GA41628@ubuntu-m2-xlarge-x86>
-References: <202004020117.6E434C035@keescook>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=diBIYrBkL43yhmYF0/S2uMZTr+kD81tZauofr3nRl24=;
+        b=pE5PsyutVncTjUAKVaKKVZ/jSBLmVAxXn2YkpfFv6cS1kR74JJfOw1YMKsGGmYsJag
+         MIMqvEd++NANMNwVoM1P9C143PEkkoWdhwAtZYpx7Euw6vm3ReQWuRN2fL/1MhUbvIpO
+         j1b+g49FSi/S32PWa89W/xZ9k9YytTJxB8fWeG8v0wNVG8tJ59EWT52N9lkLREk1rpab
+         ulsITjMGTNwnmIza4/5QjfBFkpFf4hShC4QySnnd98chA4dJGdpVxm8ljSBIIyEuzl+1
+         DT51+mUpWC3/cQ+38PZcYAvx3cs53nBN5HEjDRxp5exniSdzi1KjpmCuBSacQ1+Qm6BA
+         YvsA==
+X-Gm-Message-State: AGi0PubAtcixjUpk8+g/K5SZnljRzL7on6YCLmargN0APMpdgV6w9z76
+        BCPHUz+arSzJUwzl2liy5SYTruR4c2Qxv9prsE+PRMronw2N
+X-Google-Smtp-Source: APiQypJ5efjfRCN5u7ZAYjDOHXe+DOFRnUU7zbwH7K1RJaIG4HFLng7f7L5dljhYeD3j82EhyOQlk1THoej8y+TkewC+4f/Gn6uz
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202004020117.6E434C035@keescook>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a92:d108:: with SMTP id a8mr12182305ilb.107.1585973345184;
+ Fri, 03 Apr 2020 21:09:05 -0700 (PDT)
+Date:   Fri, 03 Apr 2020 21:09:05 -0700
+In-Reply-To: <CADG63jDQEbMbmRsmQ=xVQyG_Gy=vqTYhFZ1J+3k1dTX_K75s6w@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dcf19a05a26f3110@google.com>
+Subject: Re: KASAN: use-after-free Read in ath9k_wmi_ctrl_rx
+From:   syzbot <syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, anenbupt@gmail.com,
+        ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 02, 2020 at 01:18:37AM -0700, Kees Cook wrote:
-> When doing Clang builds of the kernel, it is possible to link with
-> either ld.bfd (binutils) or ld.lld (LLVM), but it is not possible to
-> discover this from a running kernel. Add the "$LD -v" output to
-> /proc/version.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Hello,
 
-With this patch + Masahiro's fold in:
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-and-tested-by: syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a782c087b1f425c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=5d338854440137ea0fef
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11646f93e00000
+
+Note: testing is done by a robot and is best-effort only.
