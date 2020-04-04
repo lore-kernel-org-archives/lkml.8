@@ -2,178 +2,234 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86A0C2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694C3C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7258E20719
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1B120719
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:23:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJitEaM1"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="x88wNBSR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UfJcgdkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgDDJWh (ORCPT
+        id S1726272AbgDDJXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 05:22:37 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35349 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgDDJWg (ORCPT
+        Sat, 4 Apr 2020 05:23:07 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:45337 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725916AbgDDJXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 05:22:36 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i19so10380918wmb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 02:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VaZ61SKUHp7an+3kDV0hcVK7pcsS2BDQgBYtbRGo0Ao=;
-        b=NJitEaM1WiqcZpIHhZWB/JObWP47Di3prSuIuSIPejCSNN3QAqLmhfE61pzotYEY8x
-         oJ4l5GOt4jKn62/YWedpAnJLqG6CEFVdFJGyRSGi0riMYS2mrLdvJJtJlXTtN+p188is
-         JTQpCdffTxuX/JI0sQ5tAqoWgmgIZONOTmsuFYcf3/3TXJeBEr++B0awUpew/4rCHfQu
-         hW6o1N53cYfbRCNMWF29WaWSS5KtgjDYSi+rI5k+wdSAUaTGM1jcp1QRQjmIcpodvwWQ
-         opB7VkF3zWSSe+tPQGh4gBoKSoDoaFOJQPLeHTJ03Su1kbc7gIqROKRPWm56VdjhrGQg
-         ZYFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=VaZ61SKUHp7an+3kDV0hcVK7pcsS2BDQgBYtbRGo0Ao=;
-        b=q/ioqld3xDD1AApsXxP1O1Sv2/m7ZzoM5gvpu4fzduSD1jfscC0gKLFlIVLERFp5Kc
-         IOi4YKXoDXKfJo8f3SnW49GQRwcVclwTB6LvqLKSYmc/F/252uPxiTkkE9m5b4PvDnjG
-         ScTuJG2uAb4OMSJerEG8R74ys477ZNgnhBjMAMdJUd2G6Q6zmLoiVGe3bDl2skv+GJeD
-         lD5NtqaFOlv0us0VRGHY1eI90LEBuqX00MHe1fLolaU+96i2QBBfFjk5LOj4RYwaIWxz
-         ThBK+5OvRTGehJfpUTVsRfgCikGG/9eZUJAEFXw/kAB4S6kdjMB8FJrWZKEj6n0Fhosq
-         KUKg==
-X-Gm-Message-State: AGi0PuZjRp+GB3LhUzg1J7LrGNJ0EgeR4Z+g12hRoxLKguh9aCvKI9pG
-        pFuXZQDA5E+lxUPIMAdE9PWLFA==
-X-Google-Smtp-Source: APiQypLMMEINjoXwAvx3i+IZSgz1cEqky5zi+EArYlzMxHvOb5JG39Y6+gxwHT0+fxVDME/DCELsHw==
-X-Received: by 2002:a1c:6605:: with SMTP id a5mr12936275wmc.32.1585992153686;
-        Sat, 04 Apr 2020 02:22:33 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:b929:c9ac:10ec:b646? ([2a01:e34:ed2f:f020:b929:c9ac:10ec:b646])
-        by smtp.googlemail.com with ESMTPSA id p17sm14720153wmb.30.2020.04.04.02.22.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Apr 2020 02:22:33 -0700 (PDT)
-Subject: Re: [PATCH] Documentation: cpu-idle-cooling: fix diagram for 33% duty
- cycle
-To:     Sergey Vidishev <sergeyv@yandex-team.ru>,
-        linux-kernel@vger.kernel.org
-Cc:     trivial@kernel.org, Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <2374188.AZIXMmL6Zy@sergeyv-box>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <525c21fd-f89d-97aa-2dc8-05f9bf4f51e2@linaro.org>
-Date:   Sat, 4 Apr 2020 11:22:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 4 Apr 2020 05:23:06 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id E4D20559;
+        Sat,  4 Apr 2020 05:23:04 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Sat, 04 Apr 2020 05:23:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=zAXUKspQq5prgl6hzmsLOhCpbcD
+        vY33t8hPLzfl3Mpk=; b=x88wNBSRuL9WgOstkO9oxX9XHxgOKoeZbRnZRTJ0JRl
+        /uDDGJ/aYg0FZ/WlQU/Ujmyka2mOjidrq+9g3XKJzpOsRmjHon8sMBLkidXO/eBt
+        OUrLj1nyiNmjKGOxXjpRp8iPcPtbEzLHE1f6qJzfRRTg7rsGg0oUM6KOXpvtKw+x
+        yH/toqc6nDCOVHESJiswU/JKy0GETM+grra03JW3hQpNPZXSE5JqNoRMY4A0mcop
+        W89E1JrSzUoRUScKw7yUCyehKZjpDW7Zhkqi+XJK9FMBma+UZEDWtPu8wr9VnxwD
+        ZhZvKHp3EswONOlY5XiiMIXPnhfZKSnSc/u2AJsHsHg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zAXUKs
+        pQq5prgl6hzmsLOhCpbcDvY33t8hPLzfl3Mpk=; b=UfJcgdkS6DCpxNFAcEAbQ7
+        L2HW72+htWtkh83xNuooQS/5KtdBS9OcutltS5JC414KVNFMYHdlEtIIppolGrBt
+        0cpm8XRpw+i4h/fer6yu7+jWu13XR4xeIx8k/kIqgBW0RF/s94SP/8+LBFWz43jg
+        SwUKZlOVz+om95yyvJfKndhEllCLIKaKkdwe+K1Omn/pm6662cApHJHXx0idGouo
+        iDza70xbLiHAKVjyvyqn/DRCEw99cfkVIzjdWcdgk7hPzr6sN8mY3nwI1yD7L0Kj
+        4eBb2gyhv75pGjyJTS7Xtv6NpYQUTQhEKgqm4BSj5mzwhrhRSEiJO3ByGWzpSVaw
+        ==
+X-ME-Sender: <xms:91GIXi4atU7v-qfzvFlqUgNstppMxQNOLmrz9Wom7wR_SzrtWXyVog>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdekgddugecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:91GIXsXss3L2fc5gU-JusSxmijMlvIgN_GqmZcCku4rCQDeaJUiEVg>
+    <xmx:91GIXhM-1PkeSjuTvTZuO22AWf1Vf1AMvKXovoIqy8z5Pl-h2Pzujg>
+    <xmx:91GIXrhPORme2B6RZ0K27Lzp9nGQPrwaDR0C-8VoForoTVhNAm65FQ>
+    <xmx:-FGIXuP1fb34VNnFnuoysS5qZyN_FsNMFD1R9yV7bpnbXECnDBobUQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2A9573280064;
+        Sat,  4 Apr 2020 05:23:03 -0400 (EDT)
+Date:   Sat, 4 Apr 2020 11:23:01 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200404092301.rb6imy7mlawm3qyk@gilmour.lan>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org>
+ <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
+ <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <2374188.AZIXMmL6Zy@sergeyv-box>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fbziyfywvt4qmj3b"
+Content-Disposition: inline
+In-Reply-To: <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2020 21:12, Sergey Vidishev wrote:
-> Signed-off-by: Sergey Vidishev <sergeyv@yandex-team.ru>
 
-Applied, thanks
+--fbziyfywvt4qmj3b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> --- Documentation/driver-api/thermal/cpu-idle-cooling.rst | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-> b/ Documentation/driver-api/thermal/cpu-idle-cooling.rst index
-> 9f0016ee4cfb..a1c3edecae00 100644 ---
-> a/Documentation/driver-api/thermal/cpu-idle-cooling.rst +++
-> b/Documentation/driver-api/thermal/cpu-idle-cooling.rst @@ -95,28
-> +95,28 @@ and this variation will modulate the cooling effect.
->
-> ::
->
-> ^ | | |-------                 -------
-> |_______|_______________|_______|___________
->
-> <------> idle  <--------------> running
->
-> -      <-----------------------------> -              duty cycle
-> 33% +      <---------------------> +          duty cycle 33%
->
->
-> ^ | | |-------         -------
-> |_______|_______|_______|___________
->
-> <------> idle  <------> running
->
-> <------------->
->
+Hi Robert,
 
+On Thu, Apr 02, 2020 at 12:10:00PM +0200, Robert Foss wrote:
+> On Wed, 1 Apr 2020 at 10:07, Maxime Ripard <maxime@cerno.tech> wrote:
+> > On Tue, Mar 31, 2020 at 03:33:44PM +0200, Robert Foss wrote:
+> > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > >
+> > > This patch adds documentation of device tree in YAML schema for the
+> > > OV8856 CMOS image sensor.
+> > >
+> > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> > > ---
+> > >
+> > > - Changes since v5:
+> > >   * Add assigned-clocks and assigned-clock-rates
+> > >   * robher: dt-schema errors
+> > >
+> > > - Changes since v4:
+> > >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+> > >   * Add clock-lanes property to example
+> > >   * robher: Fix syntax error in devicetree example
+> > >
+> > > - Changes since v3:
+> > >   * robher: Fix syntax error
+> > >   * robher: Removed maxItems
+> > >   * Fixes yaml 'make dt-binding-check' errors
+> > >
+> > > - Changes since v2:
+> > >   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+> > >   * Convert text documentation to YAML schema.
+> > >
+> > > - Changes since v1:
+> > >   Fixes comments from Sakari, Tomasz
+> > >   * Add clock-frequency and link-frequencies in DT
+> > >
+> > >  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
+> > >  MAINTAINERS                                   |   1 +
+> > >  2 files changed, 151 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > new file mode 100644
+> > > index 000000000000..beeddfbb8709
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > @@ -0,0 +1,150 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +# Copyright (c) 2019 MediaTek Inc.
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Ben Kao <ben.kao@intel.com>
+> > > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > +
+> > > +description: |-
+> > > +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> > > +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> > > +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> > > +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> > > +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> > > +  serial data output (up to 4-lane).
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: ovti,ov8856
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    description:
+> > > +      Input clock for the sensor.
+> > > +    items:
+> > > +      - const: xvclk
+> > > +
+> > > +  clock-frequency:
+> > > +    description:
+> > > +      Frequency of the xvclk clock in Hertz.
+> >
+> > We also had that discussion recently for another omnivision sensor
+> > (ov5645 iirc), but what is clock-frequency useful for?
+> >
+> > It seems that the sensor is passed in clocks, so if you need to
+> > retrieve the clock rate you should use the clock API instead.
+> >
+> > Looking at the driver, it looks like it first retrieves the clock, set
+> > it to clock-frequency, and then checks that this is OV8856_XVCLK_19_2
+> > (19.2 MHz).
+>
+> As far as I understand it, 19.2MHz is requirement for the sensor mode
+> that currently defaults to. Some modes require higher clock speeds
+> than this however.
+>
+> >
+> > The datasheet says that the sensor can have any frequency in the 6 -
+> > 27 MHz range, so this is a driver limitation and should be set in the
+> > driver using the clock API, and you can always bail out if it doesn't
+> > provide a rate that is not acceptable for the drivers assumption.
+> >
+> > In any case, you don't need clock-frequency here...
+>
+> So your suggestion is that we remove all clocks-rate properties, and
+> replace the clk_get_rate() calls in the driver with clk_set_rate()
+> calls for the desired frequencies?
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Yep, and if you need to make sure that the frequency that your
+provider rounded to is matching 19.2MHz like you were doing, then you
+can throw a clk_get_rate after it. It seems overly-restrictive to me,
+but the device might be picky
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Maxime
+
+--fbziyfywvt4qmj3b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXohR9QAKCRDj7w1vZxhR
+xYMIAP9O3aHTl6TJZQh2I4fW24DKoOLFc28VD+Ru6S6bXreuxAD/bREvO1EVpsOY
+fXas/arjWZ3N/JkpIRHokGYpS2LGIQw=
+=sQRP
+-----END PGP SIGNATURE-----
+
+--fbziyfywvt4qmj3b--
