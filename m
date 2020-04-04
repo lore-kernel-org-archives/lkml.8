@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9F7C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAE8C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D3F206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CF52072B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgDDIoR (ORCPT
+        id S1727770AbgDDIoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:44:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41527 "EHLO
+        Sat, 4 Apr 2020 04:44:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41521 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgDDImB (ORCPT
+        with ESMTP id S1726370AbgDDImA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:42:01 -0400
+        Sat, 4 Apr 2020 04:42:00 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeNC-00011Y-0Y; Sat, 04 Apr 2020 10:41:50 +0200
+        id 1jKeNC-0000z4-73; Sat, 04 Apr 2020 10:41:50 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 390491C04E3;
-        Sat,  4 Apr 2020 10:41:47 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:41:46 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DB36F1C0493;
+        Sat,  4 Apr 2020 10:41:44 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:41:44 -0000
 From:   "tip-bot2 for Namhyung Kim" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf cgroup: Maintain cgroup hierarchy
+Subject: [tip: perf/urgent] perf script: Add --show-cgroup-events option
 Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200325124536.2800725-5-namhyung@kernel.org>
-References: <20200325124536.2800725-5-namhyung@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200325124536.2800725-10-namhyung@kernel.org>
+References: <20200325124536.2800725-10-namhyung@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158598970685.28353.1240498154608229451.tip-bot2@tip-bot2>
+Message-ID: <158598970455.28353.2995259969187721305.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,228 +60,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     d1277aa36bff4bfc1a187a469fc6a6a1d17cf59c
-Gitweb:        https://git.kernel.org/tip/d1277aa36bff4bfc1a187a469fc6a6a1d17cf59c
+Commit-ID:     160d4af97b831c87e680c607c639d55ae027087f
+Gitweb:        https://git.kernel.org/tip/160d4af97b831c87e680c607c639d55ae027087f
 Author:        Namhyung Kim <namhyung@kernel.org>
-AuthorDate:    Wed, 25 Mar 2020 21:45:31 +09:00
+AuthorDate:    Wed, 25 Mar 2020 21:45:36 +09:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Fri, 03 Apr 2020 09:37:55 -03:00
 
-perf cgroup: Maintain cgroup hierarchy
+perf script: Add --show-cgroup-events option
 
-Each cgroup is kept in the perf_env's cgroup_tree sorted by the cgroup
-id.  Hist entries have cgroup id can compare it directly and later it
-can be used to find a group name using this tree.
+The --show-cgroup-events option is to print CGROUP events in the
+output like others.
+
+Committer testing:
+
+  [root@seventh ~]# perf record --all-cgroups --namespaces /wb/cgtest
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.039 MB perf.data (487 samples) ]
+  [root@seventh ~]# perf script --show-cgroup-events | grep PERF_RECORD_CGROUP -B2 -A2
+           swapper     0     0.000000: PERF_RECORD_CGROUP cgroup: 1 /
+              perf 12145 11200.440730:          1 cycles:  ffffffffb900d58b __intel_pmu_enable_all.constprop.0+0x3b (/lib/modules/5.6.0-rc6-00008-gfe2413eefd7f/build/vmlinux)
+              perf 12145 11200.440733:          1 cycles:  ffffffffb900d58b __intel_pmu_enable_all.constprop.0+0x3b (/lib/modules/5.6.0-rc6-00008-gfe2413eefd7f/build/vmlinux)
+  --
+            cgtest 12145 11200.440739:     193472 cycles:  ffffffffb90f6fbc commit_creds+0x1fc (/lib/modules/5.6.0-rc6-00008-gfe2413eefd7f/build/vmlinux)
+            cgtest 12145 11200.440790:    2691608 cycles:      7fa2cb43019b _dl_sysdep_start+0x7cb (/usr/lib64/ld-2.29.so)
+            cgtest 12145 11200.440962: PERF_RECORD_CGROUP cgroup: 83 /sub
+            cgtest 12147 11200.441054:          1 cycles:  ffffffffb900d58b __intel_pmu_enable_all.constprop.0+0x3b (/lib/modules/5.6.0-rc6-00008-gfe2413eefd7f/build/vmlinux)
+            cgtest 12147 11200.441057:          1 cycles:  ffffffffb900d58b __intel_pmu_enable_all.constprop.0+0x3b (/lib/modules/5.6.0-rc6-00008-gfe2413eefd7f/build/vmlinux)
+  --
+            cgtest 12148 11200.441103:      10227 cycles:  ffffffffb9a0153d end_repeat_nmi+0x48 (/lib/modules/5.6.0-rc6-00008-gfe2413eefd7f/build/vmlinux)
+            cgtest 12148 11200.441106:     273295 cycles:  ffffffffb99ecbc7 copy_page+0x7 (/lib/modules/5.6.0-rc6-00008-gfe2413eefd7f/build/vmlinux)
+            cgtest 12147 11200.441133: PERF_RECORD_CGROUP cgroup: 88 /sub/cgrp1
+            cgtest 12147 11200.441143:    2788845 cycles:  ffffffffb94676c2 security_genfs_sid+0x102 (/lib/modules/5.6.0-rc6-00008-gfe2413eefd7f/build/vmlinux)
+            cgtest 12148 11200.441162: PERF_RECORD_CGROUP cgroup: 93 /sub/cgrp2
+            cgtest 12148 11200.441182:    2669546 cycles:            401020 _init+0x20 (/wb/cgtest)
+            cgtest 12149 11200.441247:          1 cycles:  ffffffffb900d58b __intel_pmu_enable_all.constprop.0+0x3b (/lib/modules/5.6.0-rc6-00008-gfe2413eefd7f/build/vmlinux)
+  [root@seventh ~]#
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200325124536.2800725-5-namhyung@kernel.org
+Link: http://lore.kernel.org/lkml/20200325124536.2800725-10-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cgroup.c  | 80 ++++++++++++++++++++++++++++++++++++++-
- tools/perf/util/cgroup.h  | 17 ++++++--
- tools/perf/util/env.c     |  2 +-
- tools/perf/util/env.h     |  6 +++-
- tools/perf/util/machine.c |  9 +++-
- 5 files changed, 109 insertions(+), 5 deletions(-)
+ tools/perf/Documentation/perf-script.txt |  3 ++-
+ tools/perf/builtin-script.c              | 41 +++++++++++++++++++++++-
+ 2 files changed, 44 insertions(+)
 
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 5bc9d3b..b73fb78 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -191,3 +191,83 @@ int parse_cgroups(const struct option *opt, const char *str,
- 	}
- 	return 0;
- }
-+
-+static struct cgroup *__cgroup__findnew(struct rb_root *root, uint64_t id,
-+					bool create, const char *path)
-+{
-+	struct rb_node **p = &root->rb_node;
-+	struct rb_node *parent = NULL;
-+	struct cgroup *cgrp;
-+
-+	while (*p != NULL) {
-+		parent = *p;
-+		cgrp = rb_entry(parent, struct cgroup, node);
-+
-+		if (cgrp->id == id)
-+			return cgrp;
-+
-+		if (cgrp->id < id)
-+			p = &(*p)->rb_left;
-+		else
-+			p = &(*p)->rb_right;
-+	}
-+
-+	if (!create)
-+		return NULL;
-+
-+	cgrp = malloc(sizeof(*cgrp));
-+	if (cgrp == NULL)
-+		return NULL;
-+
-+	cgrp->name = strdup(path);
-+	if (cgrp->name == NULL) {
-+		free(cgrp);
-+		return NULL;
-+	}
-+
-+	cgrp->fd = -1;
-+	cgrp->id = id;
-+	refcount_set(&cgrp->refcnt, 1);
-+
-+	rb_link_node(&cgrp->node, parent, p);
-+	rb_insert_color(&cgrp->node, root);
-+
-+	return cgrp;
-+}
-+
-+struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
-+			       const char *path)
-+{
-+	struct cgroup *cgrp;
-+
-+	down_write(&env->cgroups.lock);
-+	cgrp = __cgroup__findnew(&env->cgroups.tree, id, true, path);
-+	up_write(&env->cgroups.lock);
-+	return cgrp;
-+}
-+
-+struct cgroup *cgroup__find(struct perf_env *env, uint64_t id)
-+{
-+	struct cgroup *cgrp;
-+
-+	down_read(&env->cgroups.lock);
-+	cgrp = __cgroup__findnew(&env->cgroups.tree, id, false, NULL);
-+	up_read(&env->cgroups.lock);
-+	return cgrp;
-+}
-+
-+void perf_env__purge_cgroups(struct perf_env *env)
-+{
-+	struct rb_node *node;
-+	struct cgroup *cgrp;
-+
-+	down_write(&env->cgroups.lock);
-+	while (!RB_EMPTY_ROOT(&env->cgroups.tree)) {
-+		node = rb_first(&env->cgroups.tree);
-+		cgrp = rb_entry(node, struct cgroup, node);
-+
-+		rb_erase(node, &env->cgroups.tree);
-+		cgroup__put(cgrp);
-+	}
-+	up_write(&env->cgroups.lock);
-+}
-diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
-index 2ec11f0..e98d597 100644
---- a/tools/perf/util/cgroup.h
-+++ b/tools/perf/util/cgroup.h
-@@ -3,16 +3,19 @@
- #define __CGROUP_H__
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 4af255b..99a9853 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -319,6 +319,9 @@ OPTIONS
+ --show-bpf-events
+ 	Display bpf events i.e. events of type PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT.
  
- #include <linux/refcount.h>
-+#include <linux/rbtree.h>
-+#include "util/env.h"
- 
- struct option;
- 
- struct cgroup {
--	char *name;
--	int fd;
--	refcount_t refcnt;
-+	struct rb_node		node;
-+	u64			id;
-+	char			*name;
-+	int			fd;
-+	refcount_t		refcnt;
- };
- 
--
- extern int nr_cgroups; /* number of explicit cgroups defined */
- 
- struct cgroup *cgroup__get(struct cgroup *cgroup);
-@@ -26,4 +29,10 @@ void evlist__set_default_cgroup(struct evlist *evlist, struct cgroup *cgroup);
- 
- int parse_cgroups(const struct option *opt, const char *str, int unset);
- 
-+struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
-+			       const char *path);
-+struct cgroup *cgroup__find(struct perf_env *env, uint64_t id);
++--show-cgroup-events
++	Display cgroup events i.e. events of type PERF_RECORD_CGROUP.
 +
-+void perf_env__purge_cgroups(struct perf_env *env);
-+
- #endif /* __CGROUP_H__ */
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 4154f94..fadc597 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -6,6 +6,7 @@
- #include <linux/ctype.h>
- #include <linux/zalloc.h>
- #include "bpf-event.h"
-+#include "cgroup.h"
- #include <errno.h>
- #include <sys/utsname.h>
- #include <bpf/libbpf.h>
-@@ -168,6 +169,7 @@ void perf_env__exit(struct perf_env *env)
- 	int i;
- 
- 	perf_env__purge_bpf(env);
-+	perf_env__purge_cgroups(env);
- 	zfree(&env->hostname);
- 	zfree(&env->os_release);
- 	zfree(&env->version);
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 11d05ae..7632075 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -88,6 +88,12 @@ struct perf_env {
- 		u32			btfs_cnt;
- 	} bpf_progs;
- 
-+	/* same reason as above (for perf-top) */
-+	struct {
-+		struct rw_semaphore	lock;
-+		struct rb_root		tree;
-+	} cgroups;
-+
- 	/* For fast cpu to numa node lookup via perf_env__numa_node */
- 	int			*numa_map;
- 	int			 nr_numa_map;
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 399b473..97142e9 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -33,6 +33,7 @@
- #include "asm/bug.h"
- #include "bpf-event.h"
- #include <internal/lib.h> // page_size
-+#include "cgroup.h"
- 
- #include <linux/ctype.h>
- #include <symbol/kallsyms.h>
-@@ -654,13 +655,19 @@ int machine__process_namespaces_event(struct machine *machine __maybe_unused,
- 	return err;
+ --demangle::
+ 	Demangle symbol names to human readable form. It's enabled by default,
+ 	disable with --no-demangle.
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index f63869a..186ebf8 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1694,6 +1694,7 @@ struct perf_script {
+ 	bool			show_lost_events;
+ 	bool			show_round_events;
+ 	bool			show_bpf_events;
++	bool			show_cgroup_events;
+ 	bool			allocated;
+ 	bool			per_event_dump;
+ 	struct evswitch		evswitch;
+@@ -2212,6 +2213,41 @@ out:
+ 	return ret;
  }
  
--int machine__process_cgroup_event(struct machine *machine __maybe_unused,
-+int machine__process_cgroup_event(struct machine *machine,
- 				  union perf_event *event,
- 				  struct perf_sample *sample __maybe_unused)
- {
-+	struct cgroup *cgrp;
++static int process_cgroup_event(struct perf_tool *tool,
++				union perf_event *event,
++				struct perf_sample *sample,
++				struct machine *machine)
++{
++	struct thread *thread;
++	struct perf_script *script = container_of(tool, struct perf_script, tool);
++	struct perf_session *session = script->session;
++	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
++	int ret = -1;
 +
- 	if (dump_trace)
- 		perf_event__fprintf_cgroup(event, stdout);
- 
-+	cgrp = cgroup__findnew(machine->env, event->cgroup.id, event->cgroup.path);
-+	if (cgrp == NULL)
-+		return -ENOMEM;
++	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
++	if (thread == NULL) {
++		pr_debug("problem processing CGROUP event, skipping it.\n");
++		return -1;
++	}
 +
- 	return 0;
- }
- 
++	if (perf_event__process_cgroup(tool, event, sample, machine) < 0)
++		goto out;
++
++	if (!evsel->core.attr.sample_id_all) {
++		sample->cpu = 0;
++		sample->time = 0;
++	}
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
++					   PERF_RECORD_CGROUP, stdout);
++		perf_event__fprintf(event, stdout);
++	}
++	ret = 0;
++out:
++	thread__put(thread);
++	return ret;
++}
++
+ static int process_fork_event(struct perf_tool *tool,
+ 			      union perf_event *event,
+ 			      struct perf_sample *sample,
+@@ -2551,6 +2587,8 @@ static int __cmd_script(struct perf_script *script)
+ 		script->tool.context_switch = process_switch_event;
+ 	if (script->show_namespace_events)
+ 		script->tool.namespaces = process_namespaces_event;
++	if (script->show_cgroup_events)
++		script->tool.cgroup = process_cgroup_event;
+ 	if (script->show_lost_events)
+ 		script->tool.lost = process_lost_event;
+ 	if (script->show_round_events) {
+@@ -3476,6 +3514,7 @@ int cmd_script(int argc, const char **argv)
+ 			.mmap2		 = perf_event__process_mmap2,
+ 			.comm		 = perf_event__process_comm,
+ 			.namespaces	 = perf_event__process_namespaces,
++			.cgroup		 = perf_event__process_cgroup,
+ 			.exit		 = perf_event__process_exit,
+ 			.fork		 = perf_event__process_fork,
+ 			.attr		 = process_attr,
+@@ -3577,6 +3616,8 @@ int cmd_script(int argc, const char **argv)
+ 		    "Show context switch events (if recorded)"),
+ 	OPT_BOOLEAN('\0', "show-namespace-events", &script.show_namespace_events,
+ 		    "Show namespace events (if recorded)"),
++	OPT_BOOLEAN('\0', "show-cgroup-events", &script.show_cgroup_events,
++		    "Show cgroup events (if recorded)"),
+ 	OPT_BOOLEAN('\0', "show-lost-events", &script.show_lost_events,
+ 		    "Show lost events (if recorded)"),
+ 	OPT_BOOLEAN('\0', "show-round-events", &script.show_round_events,
