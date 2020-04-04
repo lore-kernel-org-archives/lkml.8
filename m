@@ -2,167 +2,101 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E567CC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABBAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6FF2070E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586014454;
-	bh=eFw0G1rocYNSMkmx7wbHY89J3Z5jhHzNptxaDoSpimM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ppPxRee9rdsOWFZhM9wR8MT+2NXjv5CofwfWCtFTF79uyChgfyvO9yTpADMGJvpKF
-	 zDsjb1f0/aOt13BtWpDtgyXlB3gbmyrz6rf3UR6Zd/R5plEdEB3bJfqukl3ZtAW/DY
-	 gJmLChpMiVHCWQMdpgv4+HUL73Wzef46cSqb9q2I=
+	by mail.kernel.org (Postfix) with ESMTP id 5290A2071C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:34:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvWQiF5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgDDPeO (ORCPT
+        id S1726416AbgDDPen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 11:34:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgDDPeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 11:34:13 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2919020644;
-        Sat,  4 Apr 2020 15:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586014452;
-        bh=eFw0G1rocYNSMkmx7wbHY89J3Z5jhHzNptxaDoSpimM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WlZPRrACYhx0Ap0AeWIvBtTAi2cs2uJYr8O6o3wyVmSK2sPgJTlGIg6QmF9nU8lm7
-         3KfHvoUtYY4R8H/vZCf5JbqPquMyRFAf5lNXtj5ObMOaeMt3R4nK4XFh5W2SjH2MXS
-         mfVU4uYL2PQt9fqTlh5trli5EmddiwqkOisBGJCE=
-Date:   Sat, 4 Apr 2020 16:34:08 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     Rohit Sarkar <rohitsarkar5398@gmail.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] iio: imu: adis16460: use
- DEFINE_DEBUGFS_ATTRIBUTE instead of DEFINE_SIMPLE_ATTRIBUTE
-Message-ID: <20200404163408.61a8c77e@archlinux>
-In-Reply-To: <BN6PR03MB33478A31AA2CF52CF3A81AB999C80@BN6PR03MB3347.namprd03.prod.outlook.com>
-References: <20200328063456.24012-1-rohitsarkar5398@gmail.com>
-        <20200331114732.14739-1-rohitsarkar5398@gmail.com>
-        <20200331114732.14739-3-rohitsarkar5398@gmail.com>
-        <BN6PR03MB33478A31AA2CF52CF3A81AB999C80@BN6PR03MB3347.namprd03.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 4 Apr 2020 11:34:43 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46223 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgDDPem (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 11:34:42 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 111so10537805oth.13;
+        Sat, 04 Apr 2020 08:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wJJHt0CSx4rCuEsqr8ESfPqtz2SvcHs+oQjfrjV6kEc=;
+        b=rvWQiF5F8bJnmlWbMT7R49NetVKvTAdp4EJoY3L86knHIuMiThiWt9GN38kOhTFKJh
+         R/puK9Sr3rH99oncCgmc1eK4NIkt+fy8pJp82Uj0vAMSBEQnbAGzU5HSBYLjcU31y0Hq
+         4yaatE2LPEJ5lgaSEd+1NuCPVvtORn+cSTnedW8fICKr4mMw9NT+KjMSLPPB7sN4dlZC
+         dLsMVRtTOT7xshyqN4Uaiqm3NnxvOoKvRkQmkMqQn3LongPZHMloOdNa73uECn/jAC9x
+         dkVQTIIDejHXp9ieN+gkTLpU7d54CHS/0Ks69XfSwNU+pS+nL+vefjtCj7Al4RwaRHRj
+         jSGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wJJHt0CSx4rCuEsqr8ESfPqtz2SvcHs+oQjfrjV6kEc=;
+        b=qvrzP2zJZuma8eBENfjixEQZSgXoh9tiuwNs/hnBp+0tx/iQaepfGS0CvDBcBP2TjF
+         klgYZmoAnbliOaWJEg//04Eij7dhyIEdEIzNvy9I2ulwk31K3+JjOZBs7AtE7Nx1Fl+C
+         vDa0oH8/Ztu78FpsG0GEQH6of2bJbjZ0fJeynaMWqP6qYphGiMNl/mFPjFwvQRW8rn3u
+         yaQLmy2e4CcJxq/lJf56PNb/MoNjS3Zc2r6stsvjFJefUNW3t+XBqyZXVc7e74iAQAmf
+         wnYbeHpcwP3kNpNrzi8f0ErQVNM9J8aKmzT3fPOVK1vWxY2SoksV3pJ+m+4Mprv+dQGt
+         vUKQ==
+X-Gm-Message-State: AGi0PuYGM1M4Kc6mqRFnjd239hP2meLsH+7zGofk7MrZ0ZA9uW4GNVHc
+        f5TLcb1UH2xlqa9qR634WDeK+Q6l8W0WKeMTZqY=
+X-Google-Smtp-Source: APiQypJurN6kKeueDqM6o5vZ2pCFzzx2u9sVqqily6xPz9KLmAwCuSMsRcuswvGToxGksPlnBUBs6hgZxPamk8aeaiQ=
+X-Received: by 2002:a9d:7a45:: with SMTP id z5mr10438979otm.181.1586014481828;
+ Sat, 04 Apr 2020 08:34:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200403112830.505720-1-gch981213@gmail.com> <20200403180911.Horde.9xqnJvjcRDe-ttshlJbG6WE@www.vdorst.com>
+ <CAJsYDVJj1JajVxeGifaOprXYstG-gC_OYwd5LrALUY_4BdtR3A@mail.gmail.com> <20200404150810.GA161768@lunn.ch>
+In-Reply-To: <20200404150810.GA161768@lunn.ch>
+From:   Chuanhong Guo <gch981213@gmail.com>
+Date:   Sat, 4 Apr 2020 23:34:30 +0800
+Message-ID: <CAJsYDV+NY90r=PV0dYRRaTEuxQAMTbakLvguX-1jOu3OQwYfSQ@mail.gmail.com>
+Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
+        netdev@vger.kernel.org, stable@vger.kernel.org,
+        Sean Wang <sean.wang@mediatek.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 31 Mar 2020 15:28:22 +0000
-"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+Hi!
 
-> > From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org>=
- On
-> > Behalf Of Rohit Sarkar
-> > Sent: Dienstag, 31. M=C3=A4rz 2020 13:48
-> > To: linux-iio@vger.kernel.org
-> > Cc: Bogdan, Dragos <Dragos.Bogdan@analog.com>; Rohit Sarkar
-> > <rohitsarkar5398@gmail.com>; Lars-Peter Clausen <lars@metafoo.de>;
-> > Hennerich, Michael <Michael.Hennerich@analog.com>; Stefan Popa
-> > <stefan.popa@analog.com>; Jonathan Cameron <jic23@kernel.org>; Hartmut
-> > Knaack <knaack.h@gmx.de>; Peter Meerwald-Stadler
-> > <pmeerw@pmeerw.net>; linux-kernel@vger.kernel.org
-> > Subject: [PATCH v2 2/2] iio: imu: adis16460: use
-> > DEFINE_DEBUGFS_ATTRIBUTE instead of DEFINE_SIMPLE_ATTRIBUTE
-> >=20
-> > debugfs_create_file_unsafe does not protect the fops handed to it
-> > against file removal. DEFINE_DEBUGFS_ATTRIBUTE makes the fops aware of
-> > the file lifetime and thus protects it against removal.
-> >=20
-> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
-> > ---
-> >  drivers/iio/imu/adis16460.c | 27 +++++++++++++++------------
-> >  1 file changed, 15 insertions(+), 12 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/imu/adis16460.c b/drivers/iio/imu/adis16460.c
-> > index 9539cfe4a259..f96cfd007957 100644
-> > --- a/drivers/iio/imu/adis16460.c
-> > +++ b/drivers/iio/imu/adis16460.c
-> > @@ -87,8 +87,8 @@ static int adis16460_show_serial_number(void *arg,
-> > u64 *val)
-> >=20
-> >  	return 0;
-> >  }
-> > -DEFINE_SIMPLE_ATTRIBUTE(adis16460_serial_number_fops,
-> > -	adis16460_show_serial_number, NULL, "0x%.4llx\n");
-> > +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_serial_number_fops,
-> > +		adis16460_show_serial_number, NULL, "0x%.4llx\n");
-> >=20
-> >  static int adis16460_show_product_id(void *arg, u64 *val)
-> >  {
-> > @@ -105,8 +105,8 @@ static int adis16460_show_product_id(void *arg, u64
-> > *val)
-> >=20
-> >  	return 0;
-> >  }
-> > -DEFINE_SIMPLE_ATTRIBUTE(adis16460_product_id_fops,
-> > -	adis16460_show_product_id, NULL, "%llu\n");
-> > +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_product_id_fops,
-> > +		adis16460_show_product_id, NULL, "%llu\n");
-> >=20
-> >  static int adis16460_show_flash_count(void *arg, u64 *val)
-> >  {
-> > @@ -123,19 +123,22 @@ static int adis16460_show_flash_count(void *arg,
-> > u64 *val)
-> >=20
-> >  	return 0;
-> >  }
-> > -DEFINE_SIMPLE_ATTRIBUTE(adis16460_flash_count_fops,
-> > -	adis16460_show_flash_count, NULL, "%lld\n");
-> > +DEFINE_DEBUGFS_ATTRIBUTE(adis16460_flash_count_fops,
-> > +		adis16460_show_flash_count, NULL, "%lld\n");
-> >=20
-> >  static int adis16460_debugfs_init(struct iio_dev *indio_dev)
-> >  {
-> >  	struct adis16460 *adis16460 =3D iio_priv(indio_dev);
-> >=20
-> > -	debugfs_create_file("serial_number", 0400, indio_dev- =20
-> > >debugfs_dentry, =20
-> > -		adis16460, &adis16460_serial_number_fops);
-> > -	debugfs_create_file("product_id", 0400, indio_dev->debugfs_dentry,
-> > -		adis16460, &adis16460_product_id_fops);
-> > -	debugfs_create_file("flash_count", 0400, indio_dev->debugfs_dentry,
-> > -		adis16460, &adis16460_flash_count_fops);
-> > +	debugfs_create_file_unsafe("serial_number", 0400,
-> > +			indio_dev->debugfs_dentry, adis16460,
-> > +			&adis16460_serial_number_fops);
-> > +	debugfs_create_file_unsafe("product_id", 0400,
-> > +			indio_dev->debugfs_dentry, adis16460,
-> > +			&adis16460_product_id_fops);
-> > +	debugfs_create_file_unsafe("flash_count", 0400,
-> > +			indio_dev->debugfs_dentry, adis16460,
-> > +			&adis16460_flash_count_fops);
-> >=20
-> >  	return 0;
-> >  } =20
->=20
-> Tested-by Nuno S=C3=A1 <nuno.sa@analog.com>
-Applied.  Thanks,
+On Sat, Apr 4, 2020 at 11:08 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> > > MT7530 tries to detect if 2nd GMAC is using a phy with phy-address 0 or 4.
+> >
+> > What if the 2nd GMAC connects to an external PHY on address 0 on a
+> > different mdio-bus?
+>
+> In general, you using a phy-handle to cover such a situation. If there
+> is a phy-handle, just use it.
 
-Jonathan
+If it's determining where switch mac5 is wired, a phy-handle is fine.
+Here we are determining where exposed rgmii2 pins are wired.
+It can be wired to switch mac5 or skip the switch mac completely
+and connected to phy0/phy4.
+Current driver is determining rgmii2 wiring on mt7530 using phy-handle
+on *another unrelated ethernet node* which doesn't sound right.
 
->=20
-> > --
-> > 2.23.0.385.gbc12974a89 =20
->=20
-
+-- 
+Regards,
+Chuanhong Guo
