@@ -2,163 +2,118 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDA9C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B670CC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5979F206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:45:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="OyhynnDm"
+	by mail.kernel.org (Postfix) with ESMTP id 9180E206F8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgDDSp4 (ORCPT
+        id S1726315AbgDDSrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 14:45:56 -0400
-Received: from mout.web.de ([212.227.17.11]:42253 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgDDSpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 14:45:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586025938;
-        bh=1cv7GZMRsxz/iQJWYDwvY7I9F4CuXN5gGyZqWSBpVTo=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=OyhynnDm+sI4j59e+C8JOGchNBvbqGkTf4/AneKjrcbcoxRlFRCt5BXGR+XoFM38c
-         qU3NJrVRhnlXJuDwtYoTlJS1cy9txsdzvzhsLgFRkB8ksK71trhktqRra01AT9yYRv
-         Nkq6fC8p8VqsJ+iN8XNl0IcY9AnEop0laYXPsACI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.132.181.229]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M9ojk-1jRRe61hQu-00B1ph; Sat, 04
- Apr 2020 20:45:38 +0200
-To:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] PM / devfreq: tegra30: Delete an error message in
- tegra_devfreq_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <ba67e238-43a7-6c53-363e-7a2c12f09949@web.de>
-Date:   Sat, 4 Apr 2020 20:45:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 4 Apr 2020 14:47:35 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:38826 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgDDSrf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 14:47:35 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7115C1C3C15; Sat,  4 Apr 2020 20:47:33 +0200 (CEST)
+Date:   Sat, 4 Apr 2020 20:47:32 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>, hverkuil@xs4all.nl,
+        linux-media@vger.kernel.org
+Cc:     linux@rainbow-software.org, kilgota@auburn.edu, moinejf@free.fr
+Subject: gspca webcam: need to plug it 5 times before it works
+Message-ID: <20200404184732.GA17534@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+RzL0jC8GHo98AKqDvL7PkpfFDCleYAHzx3/9kMfe8iXhd+Dq9c
- 1jrSN0wymTqkp+U7ay+GeW+UBWOAzkOtCeJdAyzmt6JaZ1rAxqLA8fZreqp2XjZfXixhD61
- PZ28nYrrUxbB5suzB2Uf3pAg5YMFnCjNovnQLc6WAqK2VsaH609A9MhkFlZdotUnGwV2H7U
- 5nmOasHNlos2kkED1jpkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VGiNLo6JLfU=:rTb6F7LBf8Nc5+Hnx1hWbq
- uKB35VAJVPLB8nNBtBvngglmi17zfB+34jQHvSUdFDF7vM0wxoBr9ES7OFzapj27ytJwnhC/o
- 1rmfFBkv87swXajajsEW26uCrrkNd2L3+yJrF2IwFrwhoa224qsSXeOJI/HqBS+Y0BkMlpJP5
- wFgOiuGhAWHCHkp2f6fg8F6DxoL0b/dDHhJED7m86YidWK86EZJ0MwHpqaix/+MGFZr8nC27X
- 0rp93sKFjfTQ9NDizL1SFXYaaHonoCZcpckxwBVmiTdko2u2RaTuxBMLUd4OTwPzeh92ZuKNc
- +h3/y3B6q27TbtSMASGnK0yM/jI3YBubjQYuonysXk7KB6Xv6wWJC2GindWCcyVB6U/KBqobL
- t1Pvh0C9sfmSM78yonru5tmWH80t6SOwer8PK0kJaTZvGuydRmhbInRpfZArO7b2Io7LUJUYn
- rpkFO319g0MndzlhXBao/dwLEO9WLvrwUnr2ognuDWxnyCDR90mrSWje90EWWD7D24L2yoFlk
- Eh4z4f9yhXS9a/KIBSAajjyv+ytlSkZOFddwFGGqTu+blWj62lYddqMr+QkksnEyee89kYNTJ
- d3UNo9glb0M57SUCrzbzW65gjF380Wl71n54Iu+Q/EpKomjuDiuv6U5lVB07KOAgotaAPVKRC
- EvgRzEZH88+6przX1Gq/6aSPp3UUH4Kfol1jDIQDv81cDc+APGuwSANXgE70RaEwWamVQe6Wd
- 4Z7nNfWAlIGPvxrNPUGDzBvykiW6bsEFia0MAGZk1blrAhvDedU5DQRdsMVqrDG8Dt343ZN9n
- LaZiO2/CV2U7lNMgHRZxm5o2PRjnO6taeQzB1sRvV/HZtSXtuV6QYXCCKy1PZcnh7M7/x8AGh
- hMhzaYSYY4/nn2GaB4R26xF7azWhpgreqM8rgq8UDioW61aYKoPgXTHZQf/8tBUyjLEyVQtUb
- ghPSkEsEATtkEZsFkM0RI9P3jDnqRwBzeUrn8vYA49ekP6lpfpTwri6SqOOHPcX7/GIB/aqcJ
- /ww7HmZr+NxxmOARh/a69QKgTiHCGVF/LAnojGiy23DzP8b/HKgaP7sry5xlmEwwuZbvTLgV9
- RgaadQZUx0q0HRWjhCJEDzvMqJcHt2k3/EjmMSkqXFWNW4Bl7JfpsEVszlUco06NT2uOMqc3m
- vUU7ExyCvdLmlBripTvJoC+l6Q4LGoW/WLk1xCR+Lyx/wiC+KHgPyKkDSRLHiLhRGrPms6TP/
- 4857SU6KWQG+s3YYv
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 4 Apr 2020 20:34:02 +0200
 
-The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
-Thus omit a redundant message for the exception handling in the
-calling function.
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This issue was detected by using the Coccinelle software.
+Hi!
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/devfreq/tegra30-devfreq.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+=2E.but if I'm patient enough, it eventually starts working... somehow.
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-d=
-evfreq.c
-index 28b2c7ca416e..93e6f4b25b04 100644
-=2D-- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -807,10 +807,9 @@ static int tegra_devfreq_probe(struct platform_device=
- *pdev)
- 	}
+Incoming data seems to go in reliably. Outgoing commands (such as
+change gain) don't seem to be unreliable.
 
- 	err =3D platform_get_irq(pdev, 0);
--	if (err < 0) {
--		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
-+	if (err < 0)
- 		return err;
--	}
-+
- 	tegra->irq =3D err;
+Any idea how to debug / what could be wrong?
 
- 	irq_set_status_flags(tegra->irq, IRQ_NOAUTOEN);
-=2D-
-2.26.0
+Thanks,
+								Pavel
 
+
+[36790.733135] usb 2-1.1: USB disconnect, device number 30
+[39686.814093] usb 2-1.1: new high-speed USB device number 33 using ehci-pci
+[39686.853138] usb 2-1.1: New USB device found, idVendor=3D2770, idProduct=
+=3D930c, bcdDevice=3D 1.00
+[39686.853162] usb 2-1.1: New USB device strings: Mfr=3D1, Product=3D2, Ser=
+ialNumber=3D0
+[39686.853178] usb 2-1.1: Product: USB 2.0 PC camera=20
+[39686.853193] usb 2-1.1: Manufacturer: SQ Tech CO., LTD.
+[39686.859210] gspca_main: sq930x-2.14.0 probing 2770:930c
+[39688.769984] gspca_sq930x: Unknown sensor
+[39688.770037] sq930x: probe of 2-1.1:1.0 failed with error -22
+[39748.021772] usb 2-1.1: USB disconnect, device number 33
+[39754.901755] usb 2-1.1: new high-speed USB device number 34 using ehci-pci
+[39754.940668] usb 2-1.1: New USB device found, idVendor=3D2770, idProduct=
+=3D930c, bcdDevice=3D 1.00
+[39754.940688] usb 2-1.1: New USB device strings: Mfr=3D1, Product=3D2, Ser=
+ialNumber=3D0
+[39754.940700] usb 2-1.1: Product: USB 2.0 PC camera=20
+[39754.940710] usb 2-1.1: Manufacturer: SQ Tech CO., LTD.
+[39754.944401] gspca_main: sq930x-2.14.0 probing 2770:930c
+[39756.845672] gspca_sq930x: Unknown sensor
+[39756.845750] sq930x: probe of 2-1.1:1.0 failed with error -22
+[39759.797800] usb 2-1.1: USB disconnect, device number 34
+[39763.349750] usb 2-1.1: new high-speed USB device number 35 using ehci-pci
+[39763.389838] usb 2-1.1: New USB device found, idVendor=3D2770, idProduct=
+=3D930c, bcdDevice=3D 1.00
+[39763.389859] usb 2-1.1: New USB device strings: Mfr=3D1, Product=3D2, Ser=
+ialNumber=3D0
+[39763.389871] usb 2-1.1: Product: USB 2.0 PC camera=20
+[39763.389882] usb 2-1.1: Manufacturer: SQ Tech CO., LTD.
+[39763.391369] gspca_main: sq930x-2.14.0 probing 2770:930c
+[39765.297703] gspca_sq930x: Unknown sensor
+[39765.297787] sq930x: probe of 2-1.1:1.0 failed with error -22
+[39775.669563] usb 2-1.1: USB disconnect, device number 35
+[39779.477651] usb 2-1.1: new high-speed USB device number 36 using ehci-pci
+[39779.517205] usb 2-1.1: New USB device found, idVendor=3D2770, idProduct=
+=3D930c, bcdDevice=3D 1.00
+[39779.517227] usb 2-1.1: New USB device strings: Mfr=3D1, Product=3D2, Ser=
+ialNumber=3D0
+[39779.517239] usb 2-1.1: Product: USB 2.0 PC camera=20
+[39779.517250] usb 2-1.1: Manufacturer: SQ Tech CO., LTD.
+[39779.519033] gspca_main: sq930x-2.14.0 probing 2770:930c
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXojWRAAKCRAw5/Bqldv6
+8knuAJ9SVived2HfGdraT8vKHgIh3RiOtACgq3je1WDkSUk2wWjhg9/rirKWrl8=
+=/iKo
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
