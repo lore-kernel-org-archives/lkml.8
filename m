@@ -2,89 +2,96 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F0BC2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35231C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24BE620735
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34B5206F8
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lm9kPC0c"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="O3RWMiL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgDDTVb (ORCPT
+        id S1726307AbgDDT3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 15:21:31 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35165 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgDDTVb (ORCPT
+        Sat, 4 Apr 2020 15:29:23 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2454 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgDDT3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 15:21:31 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t25so9413010oij.2;
-        Sat, 04 Apr 2020 12:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z0CB3EQF9UD+0fLIe/MYfF3PosbEA1dLe15Mmt1FMSw=;
-        b=lm9kPC0cG5nIrHMBUSj2bELw+jg37M9VQ174fAaALZ8u56W4/703ed3hB4cgKP9oss
-         O7SMhDZHzxCEpESc2yzNJ1sG/HBQ72apJ90uinc5e8i6zpL24KmuVP7TAfjZAx5YG6lt
-         7M5WFFtri9SRV9zNFtLiCpaRGTfFNZRB/QaZgxWp0JBjYiWh/xYErWsZOEvrduStrIcn
-         6keLykIK4wX0D9ldsobGQrauIA1QhD4bK8SRRBapTy5IGM/UMFtaxpD5IevP7jJa/YNW
-         hj4h/eZbb7BsvXwtMRmjEXyfIJHKOv47Ehf/g+Gbd0Nvn/lZeJ1D3TH13PhIJgDlId5D
-         2JYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z0CB3EQF9UD+0fLIe/MYfF3PosbEA1dLe15Mmt1FMSw=;
-        b=QIOLnTmWdrVjBDVnnBt3vox5TfAOVOY+Yv+hDmLfG1VwxqvCOTfaec/qpBJLXvHhmr
-         eXnVi5HnRJx9tv3Y9IM6QQNCGDbnqgI4e48752ntimnKjmnRA6+Unap7tGnBLXTG4W1I
-         cXw7yaaJo9/lfJ4BznajjKUooDw+nFSkvVGt/0JF4dqK1ZMFefrjyDwLmGO1pBCkW+aY
-         qfUKN3MeWvrymB2JCuoWSrEFT5tmrK39MWwNxkNfOHsNwtn2NPoPgLTL+mmsB1Am3S1O
-         RsmrLhQStpCIGhLR5S3DvBX3+lTLZ68aopZzniy26D9Eeg1KblJ/jE1xYTA2JZvd/oQ0
-         TQQQ==
-X-Gm-Message-State: AGi0PuZrEobGrJVZRW6CYMzdB3md6ZpeAlFwYvpPAyhIpn45M90YjWVi
-        lCHFOi+MZmQxy8bu1wFzcgEn9aePPRLZDv1Smzrr0A==
-X-Google-Smtp-Source: APiQypL6O/df8+1cvS2PqUA2r/EvUBw1NrY1x43zaqhXB0hKOeWy/oNmo5Qd3jfEDW1V7qMMB3liwgNpxbk8v6Vn+AQ=
-X-Received: by 2002:aca:b803:: with SMTP id i3mr7421515oif.92.1586028090586;
- Sat, 04 Apr 2020 12:21:30 -0700 (PDT)
+        Sat, 4 Apr 2020 15:29:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e88e0040000>; Sat, 04 Apr 2020 12:29:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 04 Apr 2020 12:29:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 04 Apr 2020 12:29:22 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 4 Apr
+ 2020 19:29:21 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 4 Apr 2020 19:29:21 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.37.103]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e88e00e0000>; Sat, 04 Apr 2020 12:29:21 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <bbasu@nvidia.com>, <sumitg@nvidia.com>, <mperttunen@nvidia.com>
+Subject: [TEGRA194_CPUFREQ Patch v2 0/3] Add cpufreq driver for Tegra194 
+Date:   Sun, 5 Apr 2020 00:59:04 +0530
+Message-ID: <1586028547-14993-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20200403235324.27437-1-TheSven73@gmail.com> <20200404175836.GB55833@workstation.tuxnet>
-In-Reply-To: <20200404175836.GB55833@workstation.tuxnet>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Sat, 4 Apr 2020 15:21:19 -0400
-Message-ID: <CAGngYiX75gxrK+rKQcTVG6byAB+o5enC++J_0tHe6-6pRPMczQ@mail.gmail.com>
-Subject: Re: [PATCH v1] pwm: pca9685: re-enable active pwm channels on pwm
- period change
-To:     Clemens Gruber <clemens.gruber@pqgruber.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586028549; bh=ITK3P8Lpo3/BUJoeRA6qOlDnXfyv8xAa8YmjBZBRX2o=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=O3RWMiL78Yri78v66kd2ilnAGd0zonL7JvmgbMnVo9ZURwhZZRVaYR95PJV8eHXCe
+         0MtuxKwZ5kZBwCtYmJ0qaydDUCpiTEfUIScBK65yM8qzt3areo2cMmRMCw9r8ERlC+
+         jrM+oqV/oLAbi2HreKbIDbKXhOehsbfgVm1Mzhcgps+HeI5sQxJb9AmILbrDto03bv
+         PcqNCG+aL1UTWex68BN0OYJmbyzCaDRNKiMwu3ybZG2NZ0bdLMvefc8Miq1OBPHTP3
+         ScoS5lZAahHg7gJKgtY5RhS7PiOOU4lUxo/TbzP358iH57vFDSJ+muBmHDGuN+OXdH
+         wAw14V+fcMJxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 4, 2020 at 1:58 PM Clemens Gruber
-<clemens.gruber@pqgruber.com> wrote:
->
-> According to the PCA9685 datasheet revision 4, page 15, the RESTART bit
-> is not only cleared by writing a 1 to it, but also by other actions like
-> a write to any of the PWM registers.
->
-> This seems to be the reason why I could not reproduce the reported
-> problem.
+The patch series adds cpufreq driver for Tegra194 SOC.
 
-Thanks Clemens for checking this. If .config will always write at least one
-of the pwm registers (which seems to be the case), then all pwm channels
-should stay on after a period change. And we (fortunately) won't need this
-patch.
+v1[1] -> v2:
+- Remove cpufreq_lock mutex from tegra194_cpufreq_set_target [Viresh].
+- Remove CPUFREQ_ASYNC_NOTIFICATION flag [Viresh].
+- Remove redundant _begin|end() call from tegra194_cpufreq_set_target.
+- Rename opp_table to freq_table [Viresh].
+
+Sumit Gupta (3):
+  firmware: tegra: adding function to get BPMP data
+  cpufreq: Add Tegra194 cpufreq driver
+  arm64: defconfig: Enable CONFIG_ARM_TEGRA194_CPUFREQ
+
+ arch/arm64/configs/defconfig       |   1 +
+ drivers/cpufreq/Kconfig.arm        |   6 +
+ drivers/cpufreq/Makefile           |   1 +
+ drivers/cpufreq/tegra194-cpufreq.c | 412 +++++++++++++++++++++++++++++++++++++
+ drivers/firmware/tegra/bpmp.c      |  38 ++++
+ include/soc/tegra/bpmp.h           |   5 +
+ 6 files changed, 463 insertions(+)
+ create mode 100644 drivers/cpufreq/tegra194-cpufreq.c
+
+[1] https://marc.info/?t=157539452300001&r=1&w=2
+-- 
+2.7.4
+
