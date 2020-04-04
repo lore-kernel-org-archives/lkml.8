@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475B8C2BA18
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76025C4332B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247542076C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BB82070E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586022627;
-	bh=cKK4vs/ElMxlmbk52kFAcJUDROfeksg+vPch0uqr/Hw=;
+	s=default; t=1586022629;
+	bh=QR0SRq7v4sEsNOTfmR2H46SgRrsCKg2QnhZJxkPR4ys=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=fhbj5ZOd9kpQepkfpJh6FtIMwf3BBZ7eNF3ta4s10b4y6flPSMeLVu3pZd2DoNa2s
-	 8b22MXQuSzK/qq4VvtAkS5bQ1pLXtqB6cFfk1kfantW5qTb3PIKno/yIcyY7Iw6/vm
-	 9gpAseywgm7rVKCAdnUiY/9MvOfXsOUzTCGkLL84=
+	b=KMLFsG4+yqVnUfVwQyQO/6JlZH6fzM0ZbrKqrHOXAIrTNJHyecrX1Xv2VsdGkCOtp
+	 f7BuEKH4dFxL899xR1WKwuZi0r5cTUG+KdPgr4mAR08MWZiMHB7nl85FkJI8sX8UKQ
+	 tR6n/g2KtTK/mSPG5zwEXhH0Wn18b2UBAfoOp6s4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgDDRu0 (ORCPT
+        id S1726512AbgDDRu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 13:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40328 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 13:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgDDRuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 13:50:24 -0400
-Subject: Re: [GIT PULL] dma-mapping updates for 5.7
+        id S1726315AbgDDRu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 13:50:26 -0400
+Subject: Re: [GIT PULL] GPIO bulk changes for v5.7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586022624;
-        bh=cKK4vs/ElMxlmbk52kFAcJUDROfeksg+vPch0uqr/Hw=;
+        s=default; t=1586022626;
+        bh=QR0SRq7v4sEsNOTfmR2H46SgRrsCKg2QnhZJxkPR4ys=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Pt0NybnfUbUjG+K9PWNQgx3n0++R+6EAhGcraUZ46TT5jqQIUzZ6K2vfl+h6WSzQg
-         qS9i+ves0qvlDDPFgCwTNVS3Yb12Tjp35v8fXYdWYg2TNuaaCNitE4+9rMLTf3By5k
-         TT5eLz1fI9VqCF6c6OL+l0rbzKkF4O3xqb2TjUKQ=
+        b=JOzX6GcCwq7BK3jmrZXTkySAQXy/nokw3MKUUubPZnInBnPg9FHnMG50xjEf7HpKg
+         NELN0YbJJcQfcX9i9R8RqrXYqwr795lijQJlGD1rWAgzv1QJC+GPUhdYgBoL1fhXmc
+         EezLCpn84XNEpFdCJZPXm3weunQd3o4UGYXJPqfE=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200404065855.GA656254@infradead.org>
-References: <20200404065855.GA656254@infradead.org>
+In-Reply-To: <CACRpkdYMcy0ctKsUTdeXQ7EKZ40AeQVEo4fE4BpgXODJ+U6K1Q@mail.gmail.com>
+References: <CACRpkdYMcy0ctKsUTdeXQ7EKZ40AeQVEo4fE4BpgXODJ+U6K1Q@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200404065855.GA656254@infradead.org>
-X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git
- tags/dma-mapping-5.7
-X-PR-Tracked-Commit-Id: fd27a526bb381f43dded6db30b3b016468ab0e6c
+X-PR-Tracked-Message-Id: <CACRpkdYMcy0ctKsUTdeXQ7EKZ40AeQVEo4fE4BpgXODJ+U6K1Q@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+ tags/gpio-v5.7-1
+X-PR-Tracked-Commit-Id: 4ed7d7dd4890bb8120a3e77c16191a695fdfcc5a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6f43bae38269a55534e1f86a9917318167de6639
-Message-Id: <158602262410.31764.10662666727749617192.pr-tracker-bot@kernel.org>
-Date:   Sat, 04 Apr 2020 17:50:24 +0000
-To:     Christoph Hellwig <hch@infradead.org>
+X-PR-Merge-Commit-Id: 828907ef25e0133f50c346ef5a3c79a707a9b100
+Message-Id: <158602262630.31764.14239984515947823534.pr-tracker-bot@kernel.org>
+Date:   Sat, 04 Apr 2020 17:50:26 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 4 Apr 2020 08:58:55 +0200:
+The pull request you sent on Sat, 4 Apr 2020 14:08:34 +0200:
 
-> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.7
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.7-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6f43bae38269a55534e1f86a9917318167de6639
+https://git.kernel.org/torvalds/c/828907ef25e0133f50c346ef5a3c79a707a9b100
 
 Thank you!
 
