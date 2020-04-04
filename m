@@ -2,129 +2,183 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B08C4332B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 16:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DCDC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 16:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1605F2063A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 16:35:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUY1lkeI"
+	by mail.kernel.org (Postfix) with ESMTP id 2E85720659
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 16:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgDDQfa (ORCPT
+        id S1726297AbgDDQnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 12:35:30 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33596 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgDDQf3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 12:35:29 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f20so10203338ljm.0;
-        Sat, 04 Apr 2020 09:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TcZGIpZFtsXQnB9IM08ZO9Vrk1h6ZXgf7qgWlNa11hY=;
-        b=hUY1lkeI80CHymemQMT2uF4IhmhhZhgY8dFrQIX+4laKtyHJNVGCd10YpYGNBDmf8d
-         LKOLEObwgKE9KfsVT2Gk5vnQxkov3L7FkCbemeaM2p600g2ZXHDfFa4Tm9e1jx5uwjxX
-         BHyug1lXYg9GJAGNttowFSA33mKP1QwLnV3CU+2GZoxId1KgHR9ctXERL06I+QEnQd03
-         szDsKjH6W1VSKRvxtxzqBvFAftKjcnWUcWtxsqoFZwiSyQq7C1F62cDj3/bJu+yyWpSd
-         xzK5hwXFV7H3LS4QZUZQHKfwp8VTSf+aDJoaUlaw42XWugoGCA1ebLpAZCLZ3IZtiaOx
-         0bUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TcZGIpZFtsXQnB9IM08ZO9Vrk1h6ZXgf7qgWlNa11hY=;
-        b=F4x0zhTINI4XOGQzoWYDf8hnbH09/HDUmjCFTz/EDaiGdZHRhuSxFwbGfFv5/r2pWe
-         Q1py+ZUNiADLOL963hKw2wQSqJvLMKBzpaYWcw/8BVu9rU1mVRa+UXAglEOR8GVldkA1
-         M+wK2fPP6AISxAKyOty6crJ8P0e60LeZZaDljXjG+UdJ1qAUoSJAn/qITBx1QEpLqIHz
-         wacjJk/LpSFrjHoUcNnfKuqbaHyaPxbMdwWajLEuTVK/Jug43CEKDG0IrujSht45+Taa
-         6UzrYAErDW5mOHPQtJT+FkaGh2om4ZngZGVkgEGW+RbqgBOdm07BQ14wxCexSMU42nbz
-         6IxA==
-X-Gm-Message-State: AGi0PuYwRPCq59j691ZZKUn+yzZl1aYAZA9tgQS/D4/2gpEBNv4ZLM8Z
-        FZRcewT2+w8zfl/gaS4CPNqTJCubC4Bbudtkud4=
-X-Google-Smtp-Source: APiQypIe+DtLDZ6Yy6a7w+4neV8cfXmY7x+lCE8hWWOYcjUAAb0I8sPBi8KtcYImnj02TLzzvlScEeSl45FEjsLC5Z0=
-X-Received: by 2002:a2e:4942:: with SMTP id b2mr8092892ljd.135.1586018127540;
- Sat, 04 Apr 2020 09:35:27 -0700 (PDT)
+        Sat, 4 Apr 2020 12:43:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:17558 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbgDDQna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 12:43:30 -0400
+IronPort-SDR: meBxrhJNHUNdXSRdRuHkBXR7mbGFYfuZ8f8kBCraffO3LZJywyZvAj9XuJvDqVFhwIM/uBU0FN
+ xWuASW7VJhOw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2020 09:43:29 -0700
+IronPort-SDR: cxxqeWy1cgeXhnc3x20ZmgteExAIV5lnq4/bZKJ1zQXdz0cRlc995VVTWIJnnbEVTbCDs6ow2m
+ e/98S8Jh4Ktw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,344,1580803200"; 
+   d="scan'208";a="274277970"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Apr 2020 09:43:28 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jKltI-000DHh-9S; Sun, 05 Apr 2020 00:43:28 +0800
+Date:   Sun, 05 Apr 2020 00:42:41 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ b6f2835f2878311d82b610994511a946dde89ac9
+Message-ID: <5e88b901.Ed6YiGtaIqt/2ccu%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200404141827.26255-1-ap420073@gmail.com> <20200404155040.GC1476305@kroah.com>
-In-Reply-To: <20200404155040.GC1476305@kroah.com>
-From:   Taehee Yoo <ap420073@gmail.com>
-Date:   Sun, 5 Apr 2020 01:35:16 +0900
-Message-ID: <CAMArcTX6j5bCLmLOcD13W8NkXtMHO-uouOnhnRAi4i5xdU+B3Q@mail.gmail.com>
-Subject: Re: [PATCH net v2 1/3] class: add class_has_file_ns() helper function
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, rafael@kernel.org,
-        j.vosburgh@gmail.com, vfalico@gmail.com,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, mitch.a.williams@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 5 Apr 2020 at 00:50, Greg KH <gregkh@linuxfoundation.org> wrote:
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: b6f2835f2878311d82b610994511a946dde89ac9  Merge branch 'perf/urgent'
 
-Hi Greg,
-Thank you for your review!
+elapsed time: 484m
 
-> On Sat, Apr 04, 2020 at 02:18:27PM +0000, Taehee Yoo wrote:
-> > The new helper function is to check whether the class file is existing
-> > or not. This function will be used by networking stack to
-> > check "/sys/class/net/*" file.
-> >
-> > Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
-> > Fixes: b76cdba9cdb2 ("[PATCH] bonding: add sysfs functionality to bonding (large)")
-> > Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-> > ---
-> >
-> > v1 -> v2:
-> >  - Implement class_has_file_ns() instead of class_find_and_get_file_ns().
-> >  - Change headline.
-> >  - Add kernel documentation comment.
-> >
-> >  drivers/base/class.c         | 22 ++++++++++++++++++++++
-> >  include/linux/device/class.h |  3 ++-
-> >  2 files changed, 24 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/class.c b/drivers/base/class.c
-> > index bcd410e6d70a..a2f2787f6aa7 100644
-> > --- a/drivers/base/class.c
-> > +++ b/drivers/base/class.c
-> > @@ -105,6 +105,28 @@ void class_remove_file_ns(struct class *cls, const struct class_attribute *attr,
-> >               sysfs_remove_file_ns(&cls->p->subsys.kobj, &attr->attr, ns);
-> >  }
-> >
-> > +/**
-> > + * class_has_file_ns - check whether file is existing or not
-> > + * @cls: the compatibility class
-> > + * @name: name to look for
-> > + * @ns: the namespace tag to use
-> > + */
-> > +bool class_has_file_ns(struct class *cls, const char *name,
-> > +                    const void *ns)
->
-> Why would you use this?  And what happens if the file shows up, or goes
-> away, instantly after this call is made?
->
-> This feels very broken.
->
+configs tested: 116
+configs skipped: 0
 
-Ah, I missed considering other usescases.
-If other users don't use locks, this function would return incorrect
-information. The problem seems to become from that this function
-calls kernfs_put().
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks a lot!
-Taehee Yoo
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+mips                 randconfig-a001-20200404
+nds32                randconfig-a001-20200404
+m68k                 randconfig-a001-20200404
+parisc               randconfig-a001-20200404
+alpha                randconfig-a001-20200404
+riscv                randconfig-a001-20200404
+sparc64              randconfig-a001-20200404
+h8300                randconfig-a001-20200404
+nios2                randconfig-a001-20200404
+microblaze           randconfig-a001-20200404
+c6x                  randconfig-a001-20200404
+i386                 randconfig-f001-20200404
+x86_64               randconfig-f003-20200404
+i386                 randconfig-f003-20200404
+x86_64               randconfig-f002-20200404
+i386                 randconfig-f002-20200404
+x86_64               randconfig-h002-20200404
+arm64                randconfig-a001-20200404
+sparc                randconfig-a001-20200404
+ia64                 randconfig-a001-20200404
+arc                  randconfig-a001-20200404
+arm                  randconfig-a001-20200404
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
