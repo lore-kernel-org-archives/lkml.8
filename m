@@ -2,109 +2,104 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846AAC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701A6C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6463220737
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E9820737
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:53:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dt9CEVTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgDDIts (ORCPT
+        id S1726132AbgDDIx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:49:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41857 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgDDItr (ORCPT
+        Sat, 4 Apr 2020 04:53:26 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:33337 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbgDDIxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:49:47 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeUi-0001bp-Gv; Sat, 04 Apr 2020 10:49:36 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 958861C0243;
-        Sat,  4 Apr 2020 10:41:48 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:41:48 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf python: Include rwsem.c in the pythong biding
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200403123606.GC23243@kernel.org>
-References: <20200403123606.GC23243@kernel.org>
+        Sat, 4 Apr 2020 04:53:25 -0400
+Received: by mail-wr1-f49.google.com with SMTP id a25so11351635wrd.0
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 01:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qGdwKA9rmdIyqGKO0IjJWKsmKZR9VJYYBo9155sisOo=;
+        b=Dt9CEVTdqEmMLAO1mtlk74STBgT6iGX9OjtHBujDJ+Jgci0EanrXBeHNLpdjlzsvV/
+         srUe2OIiA16QcFcPrdmX+SLBIEmfJcr9gYfwkqciAmG2Xx9oAtopNzbup0M2Ut4GJ1Hn
+         QrrPGdpp4gLByLRZSARQyq3xBBgK/wNPM1sZqbMZ0hYGrJ/oYevZZFHezef0GFCg0Y96
+         IFSpWCiP1FJSJKJe0d9AtE3qEeejI99oIWDe/z8cHSuUz+jAOpet+0pByI32L8ChzGSf
+         d4sZH7vRd3aRDXKy0PPC1CgCaUVivQc3O7960iZ1WWnkvmNPEBgVbubhba/sWcs5JBty
+         vVCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qGdwKA9rmdIyqGKO0IjJWKsmKZR9VJYYBo9155sisOo=;
+        b=tIloPf0A9ZxYAE3AzzOG6MGHEd0qJIpXIzVt/kYntL+yQZaFXgoFYATlWtOFmhgCjb
+         zHlNzjtWhtHnbKzdkLZ49Vtm68o+wpk1MGULmUAlyWFAt5jeaPABJYHZAKbih98DKLaj
+         Jnsce2qJCEzLZD8lSE6rYJvDBNps20jLKzYm3mS457iiVLnACu6ZoB3pf+XrUPG2fNGS
+         Bl/8DT0erdQkwBff5M6nVTGI8w0uLb6iLv7ebamxMx/lZgdAD1JNbRe4pxhjlUz/WG0d
+         eF5Ut1emyz4mA/UGULI30Rl1sT7tNpqJe1kBwiWtwSdVrDlTwdVLoh4Qk8WiIMinNH9D
+         8hPA==
+X-Gm-Message-State: AGi0Pua3G8vTaihCBkWKdkHjX3wUrPUeEfGhXhenT0rhFeyd3ZhPNvOq
+        1wogJ2Yw15RZWQkL+qUlt5MNjg==
+X-Google-Smtp-Source: APiQypK9PqT30ndf6uW1fLOStsShr8XNEwiUSzUk9TRlUoeG69t6S9nVpMwjr4mhhaNACQZYeWdpwA==
+X-Received: by 2002:adf:ce07:: with SMTP id p7mr13058752wrn.261.1585990402779;
+        Sat, 04 Apr 2020 01:53:22 -0700 (PDT)
+Received: from localhost ([185.67.209.71])
+        by smtp.gmail.com with ESMTPSA id v186sm14900096wme.24.2020.04.04.01.53.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Apr 2020 01:53:22 -0700 (PDT)
+Date:   Sat, 4 Apr 2020 10:53:09 +0200
+From:   Jorge Amoros-Argos <joramar76@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     hauke@hauke-m.de, john@phrozen.org,
+        martin.blumenstingl@googlemail.com
+Subject: clk: Lantiq/Intel: XWAY CGU support
+Message-ID: <20200404105309.0000745d@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Message-ID: <158598970825.28353.17098687600421476935.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+Dear community,
 
-Commit-ID:     460c3ed999d700fa84c953f83141f580ef456b3c
-Gitweb:        https://git.kernel.org/tip/460c3ed999d700fa84c953f83141f580ef456b3c
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Fri, 03 Apr 2020 09:29:52 -03:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 03 Apr 2020 09:37:55 -03:00
+This is addresed to the Lantiq/Intel developers for the SoC's VRX200 and
+XWAY in general.
 
-perf python: Include rwsem.c in the pythong biding
+I'm trying to port the current sources to the common clock framework for
+Openwrt.
 
-We'll need it for the cgroup patches, and its better to have it in a
-separate patch in case we need to later revert the cgroup patches.
+For this purpose, I'd need to have a good knowledge of both clock
+providers and consumers in order to update the device tree and also the
+drivers. This means hardware (how devices are connected) and software
+(what registers do what?)
 
-I.e. without this we have:
+There's no such low level detail after all my investigations, which are
+shown here:
 
-  [root@five ~]# perf test -v python
-  19: 'import perf' in python                               :
-  --- start ---
-  test child forked, pid 148447
-  Traceback (most recent call last):
-    File "<stdin>", line 1, in <module>
-  ImportError: /tmp/build/perf/python/perf.cpython-37m-x86_64-linux-gnu.so: undefined symbol: down_write
-  test child finished with -1
-  ---- end ----
-  'import perf' in python: FAILED!
-  [root@five ~]#
+     https://github.com/Mandrake-Lee/Lantiq_XWAY_CGU
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200403123606.GC23243@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/python-ext-sources | 1 +
- 1 file changed, 1 insertion(+)
+For instance, the full structure of PLL2 register remains a mistery and
+also its output; OCP selector, is a kind of divider?; PCIe generator is
+located where? PMU, is just a gate controller or a provider itself?
 
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index e7279ea..a9d9c14 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -34,3 +34,4 @@ util/string.c
- util/symbol_fprintf.c
- util/units.c
- util/affinity.c
-+util/rwsem.c
+I'd really appreciate if you could share some details in order to start
+the job.
+
+Please keep me CC'd of this thread.
+
+Thank you very much in advance,
+
+Jorge Amor=F3s-Argos=20
