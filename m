@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82C2C2BA18
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 00:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900ECC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 00:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E95A2074B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 00:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C99820737
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 00:00:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="GetNmysi"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="T0YSsb4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgDDAAK (ORCPT
+        id S1726582AbgDDAAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 20:00:10 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:53768 "EHLO rere.qmqm.pl"
+        Fri, 3 Apr 2020 20:00:15 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:2456 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbgDDAAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 20:00:08 -0400
+        id S1726339AbgDDAAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 20:00:09 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 48vH463jZhzpX;
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48vH465jf5zqB;
         Sat,  4 Apr 2020 02:00:06 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1585958406; bh=8/z3OJqgrWtCMOo2sXfQJgsdpXMe6hRzbfTaYY95jtc=;
+        t=1585958406; bh=ERaR7ygM77SbTRq+ee9gcCX1NXRy6uMU4qvMkPRl8pk=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=GetNmysilR8dQtbOKFH+tS3RSXNSdlMcS/ur/FLnDiA/eiI747DNN/du3ZIAw3BD2
-         UHLYWtwl8EKYYn3jSsE6YYl1sLXtNFTcRsar67IuTtRFquqHZBSf+9WPdI5rxJ6ut9
-         Djcfhf0XIIXqPL3waDIjExVqejAd+yJl0l8cS0DK1S+A6FuF6AvFtQBANkmeep+PS8
-         U1RP9aFzTW26GyLvlEvZM0Z7u5BDW4iEFz16SYE5q/3C5j6pX0wqgNNipxNpmu6WFM
-         bN5YOOrYmGWf4UjJPdhTQA953/qMeL5jV9lwxanXb5nA2FX7u1QnYWb1AMWUM+wy/n
-         YHtdOnYocWVUg==
+        b=T0YSsb4jOs8jPx/dRCcVRaaPL+VAs1GTk4ed+4c/4HbhcftgsFR0WcFvaxOam/jp1
+         CyEhpbfGmYOoWbNLX4E0zAGcD4UK5SIpBYZYZlqPuDxhUzR4YvYfefasta6eD6BjfV
+         ZZECMM2LnpioEIDw+62+FGj95JRGg5TPuomH04jY+m/kLmbI5p6PR6W6MGzMu0FjYZ
+         7oLoSmFw3ivPVZR0wIWWU4X61jfKFV+72RM8kv5ea6ZJDS1ZRfzPb5BS9zeJ2H8KSA
+         YqDMyA6IXPAxE6ncUnCJ7yV6iOqdlqXIQLVXDKrWcj58tHBopE2uVMFUdQ1BWdVVcF
+         Oho3eV0ciBzeA==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
 Date:   Sat, 04 Apr 2020 02:00:06 +0200
-Message-Id: <5b7c0cdc715d1dbdfcc5f8b8217da6878bcc6b93.1585958250.git.mirq-linux@rere.qmqm.pl>
+Message-Id: <1bf89d4301baa8632daf48b3e28858aff5371954.1585958250.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <2b6d70595475a3ddbd5bb8ae1765868a98c404b6.1585958250.git.mirq-linux@rere.qmqm.pl>
 References: <2b6d70595475a3ddbd5bb8ae1765868a98c404b6.1585958250.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 4/5] usb: chipidea: usb2: absorb zevio glue driver
+Subject: [PATCH 5/5] usb: chipidea: allow disabling glue drivers if EMBEDDED
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -53,121 +53,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ZEVIO glue code is is identical to generic binding now, but doesn't
-enable runtime PM. Let's squash the driver and get runtime PM for free.
+Allow to cut down on driver size for embedded config.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/usb/chipidea/Makefile        |  1 -
- drivers/usb/chipidea/ci_hdrc_usb2.c  |  6 +++
- drivers/usb/chipidea/ci_hdrc_zevio.c | 67 ----------------------------
- 3 files changed, 6 insertions(+), 68 deletions(-)
+ drivers/usb/chipidea/Kconfig  | 37 ++++++++++++++++++++++++-----------
+ drivers/usb/chipidea/Makefile | 12 +++++-------
+ 2 files changed, 31 insertions(+), 18 deletions(-)
 
+diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
+index d53db520e209..8bafcfc6080d 100644
+--- a/drivers/usb/chipidea/Kconfig
++++ b/drivers/usb/chipidea/Kconfig
+@@ -18,17 +18,6 @@ config USB_CHIPIDEA
+ 
+ if USB_CHIPIDEA
+ 
+-config USB_CHIPIDEA_OF
+-	tristate
+-	depends on OF
+-	default USB_CHIPIDEA
+-
+-config USB_CHIPIDEA_PCI
+-	tristate
+-	depends on USB_PCI
+-	depends on NOP_USB_XCEIV
+-	default USB_CHIPIDEA
+-
+ config USB_CHIPIDEA_UDC
+ 	bool "ChipIdea device controller"
+ 	depends on USB_GADGET
+@@ -43,4 +32,30 @@ config USB_CHIPIDEA_HOST
+ 	help
+ 	  Say Y here to enable host controller functionality of the
+ 	  ChipIdea driver.
++
++config USB_CHIPIDEA_PCI
++	tristate "Enable PCI glue driver" if EMBEDDED
++	depends on USB_PCI
++	depends on NOP_USB_XCEIV
++	default USB_CHIPIDEA
++
++config USB_CHIPIDEA_MSM
++	tristate "Enable MSM hsusb glue driver" if EMBEDDED
++	default USB_CHIPIDEA
++
++config USB_CHIPIDEA_IMX
++	tristate "Enable i.MX USB glue driver" if EMBEDDED
++	depends on OF
++	default USB_CHIPIDEA
++
++config USB_CHIPIDEA_GENERIC
++	tristate "Enable generic USB2 glue driver" if EMBEDDED
++	default USB_CHIPIDEA
++
++config USB_CHIPIDEA_TEGRA
++	tristate "Enable Tegra UDC glue driver" if EMBEDDED
++	depends on OF
++	depends on USB_CHIPIDEA_UDC
++	default USB_CHIPIDEA
++
+ endif
 diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-index 12df94f78f72..985663ba6e68 100644
+index 985663ba6e68..fae779a23866 100644
 --- a/drivers/usb/chipidea/Makefile
 +++ b/drivers/usb/chipidea/Makefile
-@@ -10,7 +10,6 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
+@@ -8,10 +8,8 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
  
- obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_usb2.o
- obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
--obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
+ # Glue/Bridge layers go here
  
- obj-$(CONFIG_USB_CHIPIDEA_PCI)	+= ci_hdrc_pci.o
- 
-diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
-index 9086514840ed..93c864759135 100644
---- a/drivers/usb/chipidea/ci_hdrc_usb2.c
-+++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
-@@ -32,9 +32,15 @@ static const struct ci_hdrc_platform_data ci_zynq_pdata = {
- 	.capoffset	= DEF_CAPOFFSET,
- };
- 
-+static const struct ci_hdrc_platform_data ci_zevio_pdata = {
-+	.capoffset	= DEF_CAPOFFSET,
-+	.flags		= CI_HDRC_REGS_SHARED | CI_HDRC_FORCE_FULLSPEED,
-+};
-+
- static const struct of_device_id ci_hdrc_usb2_of_match[] = {
- 	{ .compatible = "chipidea,usb2" },
- 	{ .compatible = "xlnx,zynq-usb-2.20a", .data = &ci_zynq_pdata },
-+	{ .compatible = "lsi,zevio-usb", .data = &ci_zevio_pdata },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
-diff --git a/drivers/usb/chipidea/ci_hdrc_zevio.c b/drivers/usb/chipidea/ci_hdrc_zevio.c
-deleted file mode 100644
-index e1634da4a4b1..000000000000
---- a/drivers/usb/chipidea/ci_hdrc_zevio.c
-+++ /dev/null
-@@ -1,67 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- *	Copyright (C) 2013 Daniel Tang <tangrs@tangrs.id.au>
-- *
-- * Based off drivers/usb/chipidea/ci_hdrc_msm.c
-- */
+-obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_usb2.o
+-obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
 -
--#include <linux/module.h>
--#include <linux/platform_device.h>
--#include <linux/usb/gadget.h>
--#include <linux/usb/chipidea.h>
+-obj-$(CONFIG_USB_CHIPIDEA_PCI)	+= ci_hdrc_pci.o
 -
--#include "ci.h"
--
--static struct ci_hdrc_platform_data ci_hdrc_zevio_platdata = {
--	.name			= "ci_hdrc_zevio",
--	.flags			= CI_HDRC_REGS_SHARED | CI_HDRC_FORCE_FULLSPEED,
--	.capoffset		= DEF_CAPOFFSET,
--};
--
--static int ci_hdrc_zevio_probe(struct platform_device *pdev)
--{
--	struct platform_device *ci_pdev;
--
--	dev_dbg(&pdev->dev, "ci_hdrc_zevio_probe\n");
--
--	ci_pdev = ci_hdrc_add_device(&pdev->dev,
--				pdev->resource, pdev->num_resources,
--				&ci_hdrc_zevio_platdata);
--
--	if (IS_ERR(ci_pdev)) {
--		dev_err(&pdev->dev, "ci_hdrc_add_device failed!\n");
--		return PTR_ERR(ci_pdev);
--	}
--
--	platform_set_drvdata(pdev, ci_pdev);
--
--	return 0;
--}
--
--static int ci_hdrc_zevio_remove(struct platform_device *pdev)
--{
--	struct platform_device *ci_pdev = platform_get_drvdata(pdev);
--
--	ci_hdrc_remove_device(ci_pdev);
--
--	return 0;
--}
--
--static const struct of_device_id ci_hdrc_zevio_dt_ids[] = {
--	{ .compatible = "lsi,zevio-usb", },
--	{ /* sentinel */ }
--};
--
--static struct platform_driver ci_hdrc_zevio_driver = {
--	.probe = ci_hdrc_zevio_probe,
--	.remove = ci_hdrc_zevio_remove,
--	.driver = {
--		.name = "zevio_usb",
--		.of_match_table = ci_hdrc_zevio_dt_ids,
--	},
--};
--
--MODULE_DEVICE_TABLE(of, ci_hdrc_zevio_dt_ids);
--module_platform_driver(ci_hdrc_zevio_driver);
--
--MODULE_LICENSE("GPL v2");
+-obj-$(CONFIG_USB_CHIPIDEA_OF)	+= usbmisc_imx.o ci_hdrc_imx.o
+-obj-$(CONFIG_USB_CHIPIDEA_OF)	+= ci_hdrc_tegra.o
++obj-$(CONFIG_USB_CHIPIDEA_GENERIC)	+= ci_hdrc_usb2.o
++obj-$(CONFIG_USB_CHIPIDEA_MSM)		+= ci_hdrc_msm.o
++obj-$(CONFIG_USB_CHIPIDEA_PCI)		+= ci_hdrc_pci.o
++obj-$(CONFIG_USB_CHIPIDEA_IMX)		+= ci_hdrc_imx.o usbmisc_imx.o
++obj-$(CONFIG_USB_CHIPIDEA_TEGRA)	+= ci_hdrc_tegra.o
 -- 
 2.20.1
 
