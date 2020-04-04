@@ -2,90 +2,71 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF1EC2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 23:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9369BC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 23:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 586AE206D4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 23:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB6C20672
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 23:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExXdZCSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgDDXfa (ORCPT
+        id S1726407AbgDDXzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 19:35:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40792 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgDDXfa (ORCPT
+        Sat, 4 Apr 2020 19:55:51 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35392 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgDDXzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 19:35:30 -0400
-Received: from static-50-53-47-111.bvtn.or.frontiernet.net ([50.53.47.111] helo=[192.168.192.153])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <john.johansen@canonical.com>)
-        id 1jKsJs-0006aA-0h; Sat, 04 Apr 2020 23:35:20 +0000
-Subject: Re: [PATCH] apparmor: fix potential label refcnt leak in
- aa_change_profile
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xin Tan <tanxin.ctf@gmail.com>
-References: <1585493861-9867-1-git-send-email-xiyuyang19@fudan.edu.cn>
-From:   John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Canonical
-Message-ID: <2d905eaf-749f-e2c5-f1fa-51806848e50f@canonical.com>
-Date:   Sat, 4 Apr 2020 16:35:16 -0700
+        Sat, 4 Apr 2020 19:55:51 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g3so10753235wrx.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 16:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=OEqfbUW4EdwQWkEKUVSfhdZIagLpVMlg6Ov4FrszOWU=;
+        b=ExXdZCSXdqH0LfiiEruCb7ZNy8S8Wqgl+1beU7sIwS/4GwQAQ0tHx8ixmxHsmLkpIz
+         yUXprcrlRHsDv/BwuMETXv5Ni+8PF8heo4rbha+w2bm1mBU0yKxdLgL8zolFhTdUpH1p
+         Gt1CiFN8EDDFN7kWnPpS8btasOL+Gr//ASTX8LDO9WtQszvPN498lig1AOxEIAAalXhR
+         Xrcw3V2CPEGaRuWvOahtQQoCLvWfzEpPmt7mRX2TaJMRDTclRQPySUXhLXyjvkDupqeY
+         dlonWq3WJMwlpu1J9nMk8RmrMWNxHP2UhXzqn+9Bky+dbv5suTFlgvqmDZEWFeYhNn14
+         hJeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=OEqfbUW4EdwQWkEKUVSfhdZIagLpVMlg6Ov4FrszOWU=;
+        b=CT+OkkWhUJUQAsvLUkAKsAP1ZnzTpoMFBN0VmCooyKPGY1bK9/LDARnwWbsjFV87pz
+         v+FyAiuPhivTKKqfuWg1j2tO1hD3b2ZLliV8SDuheVAhqpyuLNSDkVTsS2pqfvdYCnQD
+         yVomFn5PoTCxrMPFklqvdWDGpb1/pqtMfbYE1dTQzTtRCe3u0nVpBl2HqWqzuli81vZl
+         wyoSmwCP948V/ZaLizlb3FA5BODh9T8lQLMzyOQd+XfcVgp9IsR1NUdnF05pKDFXYLhC
+         NY0GedLIDWRez+PCRcLrYml4d/MLpjtIz2QWi+R9/B0RdRfjIJNUxqSp1PjqV0tP0irY
+         RVXg==
+X-Gm-Message-State: AGi0PuYBWlTyGpi3EtvpkQDVP6y/mksJgbKAQ2C6AO5ETldQBxPY/UWl
+        buZgwd6yT7B6ROpIXN+cqL4noELW
+X-Google-Smtp-Source: APiQypJrOm/E31kEqRrDNX9TpWOBFUHhbNuJUP6JpxHmuovz9jrF0HkCkS5FiLLEQe48A4XbDCweng==
+X-Received: by 2002:a5d:670f:: with SMTP id o15mr10433416wru.120.1586044548590;
+        Sat, 04 Apr 2020 16:55:48 -0700 (PDT)
+Received: from [192.168.1.131] ([93.176.137.11])
+        by smtp.gmail.com with ESMTPSA id y33sm2860140wrd.84.2020.04.04.16.55.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Apr 2020 16:55:48 -0700 (PDT)
+From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
+Subject: Re: [GIT] Networking
+To:     linux-kernel@vger.kernel.org
+Message-ID: <8a58c60f-dfca-6dba-6ea5-0684b1c5e900@gmail.com>
+Date:   Sun, 5 Apr 2020 01:55:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1585493861-9867-1-git-send-email-xiyuyang19@fudan.edu.cn>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -93,52 +74,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/20 7:57 AM, Xiyu Yang wrote:
-> aa_change_profile() invokes aa_get_current_label(), which returns
-> a reference of the current task's label.
-> 
-> According to the comment of aa_get_current_label(), the returned
-> reference must be put with aa_put_label().
-> However, when the original object pointed by "label" becomes
-> unreachable because aa_change_profile() returns or a new object
-> is assigned to "label", reference count increased by
-> aa_get_current_label() is not decreased, causing a refcnt leak.
-> 
-> Fix this by calling aa_put_label() before the original object pointed
-> by "label" becomes unreachable.
-> 
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-> ---
->  security/apparmor/domain.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
-> index 6ceb74e0f789..b99145ae34c0 100644
-> --- a/security/apparmor/domain.c
-> +++ b/security/apparmor/domain.c
-> @@ -1328,6 +1328,7 @@ int aa_change_profile(const char *fqname, int flags)
->  		ctx->nnp = aa_get_label(label);
->  
->  	if (!fqname || !*fqname) {
-> +		aa_put_label(label);
->  		AA_DEBUG("no profile name");
->  		return -EINVAL;
->  	}
-> @@ -1346,6 +1347,7 @@ int aa_change_profile(const char *fqname, int flags)
->  			op = OP_CHANGE_PROFILE;
->  	}
->  
-> +	aa_put_label(label);
->  	label = aa_get_current_label();
+On Thu, Sep 3, 2015 at 11:31 AM, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 
-this isn't quite right. Instead of adding the put_label here,
-the aa_get_current_label needs to be dropped, as it isn't needed because
-it gets called earlier in the fn.
+ >> [-Wsizeof-array-argument]
 
-can you refresh with this change
+ > Ahh. Google shows that it's an old clang warning that gcc has recently
+ > picked up.
 
->  
->  	if (*fqname == '&') {
-> 
+ > But even clang doesn't seem to have any way for a project to say
+ > "please warn about arrays in function argument declaration". It *is*
+ > very traditional idiomatic C, it's just that I personally think it's
+ > one of those bad traditional C things exactly because it's so
+ > misleading about what actually goes on. But I guess that in practice,
+ > the only thing that it actually *affects* is "sizeof" (and assignment
+ > to the variable name - something that would be invalid for a real
+ > array, but works on argument arrays because they are really just
+ > pointers).
+
+ > The "array as function argument" syntax is occasionally useful
+ > (particularly for the multi-dimensional array case), so I very much
+ > understand why it exists, I just think that in the kernel we'd be
+ > better off with the rule that it's against our coding practices.
+
+ >                   Linus
+
+
+Hi Linus,
+
+First of all, this is my first message to this mailing list, and I'm
+trying to reply to a very old thread, so sorry if I don't know how I
+should do it.
+
+I have a different approach in my code to avoid that whole class of bugs
+relating sizeof and false arrays in function argument declarations.
+I do like the sintactic sugar that they provide, so I decided to ban
+"sizeof(array)" completely off my code.
+
+I have developed the following macro:
+
+#define ARRAY_BYTES(arr)	(sizeof((arr)[0]) * ARRAY_SIZE(arr))
+
+which compiles to a simple "sizeof(arr)" by undoing the division in
+"ARRAY_SIZE()", but with the added benefit that it checks that the
+argument is an array (due to "ARRAY_SIZE()"), and if not, compilation
+breaks which means that the array is not an array but a pointer.
+
+My rules are:
+
+  - Size of an array (number of elements):
+	ARRAY_SIZE(arr)
+  - Signed size of an array (normally for loops where I compare against a
+  signed variable):
+	ARRAY_SSIZE(arr)	defined as: ((ptrdiff_t)ARRAY_SIZE(arr))
+  - Size of an array in bytes (normally for buffers):
+	ARRAY_BYTES(arr)
+
+No use of "sizeof" is allowed for arrays, which completely rules
+out bugs of that class, because I never pass an array to "sizeof", which
+is the core of the problem.  I've been using those macros in my code for
+8 months, and they work really nice.
+
+I propose to include the macro "ARRAY_BYTES()" in <linux/kernel.h> just
+after "ARRAY_SIZE()" and replace every appearance of "sizeof(array)" in
+Linux by "ARRAY_BYTES(array)", and modify the coding style guide to ban
+"sizeof(array)" completely off the kernel.
+
+Below is a patch with two commits:  one that adds the macro to
+<linux/kernel.h>, and another one that serves as an example of usage
+for the macro (that one is just as an example).
+
+
+		Alex.
+
+Please CC me <colomar.6.4.3@gmail.com> in any response to this thread.
+
+ From b5b674d39b28e703300698fa63e4ab4be646df8f Mon Sep 17 00:00:00 2001
+From: Alejandro Colomar <colomar.6.4.3@gmail.com>
+Date: Sun, 5 Apr 2020 01:45:35 +0200
+Subject: [PATCH 1/2] linux/kernel.h: add ARRAY_BYTES() macro
+
+---
+  include/linux/kernel.h | 6 ++++++
+  1 file changed, 6 insertions(+)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 9b7a8d74a9d6..dc806e2a7799 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -46,6 +46,12 @@
+   */
+  #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + 
+__must_be_array(arr))
+
++/**
++ * ARRAY_BYTES - get the number of bytes in array @arr
++ * @arr: array to be sized
++ */
++#define ARRAY_BYTES(arr)	(sizeof((arr)[0]) * ARRAY_SIZE(arr))
++
+  #define u64_to_user_ptr(x) (		\
+  {					\
+  	typecheck(u64, (x));		\
+-- 
+2.25.1
+
+
+ From 3e7bcf70b708b51a7807c336c5d1b01403989d3b Mon Sep 17 00:00:00 2001
+From: Alejandro Colomar <colomar.6.4.3@gmail.com>
+Date: Sun, 5 Apr 2020 01:48:17 +0200
+Subject: [PATCH 2/2] block, bfq: Use ARRAY_BYTES() for arrays instead of
+  sizeof()
+
+---
+  block/bfq-cgroup.c | 4 +++-
+  1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 68882b9b8f11..51ba9b9a8855 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -7,6 +7,7 @@
+  #include <linux/blkdev.h>
+  #include <linux/cgroup.h>
+  #include <linux/elevator.h>
++#include <linux/kernel.h>
+  #include <linux/ktime.h>
+  #include <linux/rbtree.h>
+  #include <linux/ioprio.h>
+@@ -794,7 +795,8 @@ void bfq_bic_update_cgroup(struct bfq_io_cq *bic, 
+struct bio *bio)
+  	 * refcounter for bfqg, to let it disappear only after no
+  	 * bfq_queue refers to it any longer.
+  	 */
+-	blkg_path(bfqg_to_blkg(bfqg), bfqg->blkg_path, sizeof(bfqg->blkg_path));
++	blkg_path(bfqg_to_blkg(bfqg), bfqg->blkg_path,
++						ARRAY_BYTES(bfqg->blkg_path));
+  	bic->blkcg_serial_nr = serial_nr;
+  out:
+  	rcu_read_unlock();
+-- 
+2.25.1
 
