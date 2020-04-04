@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E35DC2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90479C2BA18
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DE6221EA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638DC20842
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgDDImK (ORCPT
+        id S1726719AbgDDImX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:42:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41564 "EHLO
+        Sat, 4 Apr 2020 04:42:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41735 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgDDImE (ORCPT
+        with ESMTP id S1726554AbgDDImP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:42:04 -0400
+        Sat, 4 Apr 2020 04:42:15 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeNC-00012a-Sm; Sat, 04 Apr 2020 10:41:51 +0200
+        id 1jKeNQ-0001AG-CF; Sat, 04 Apr 2020 10:42:04 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 07B371C047B;
-        Sat,  4 Apr 2020 10:41:49 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:41:48 -0000
-From:   "tip-bot2 for Namhyung Kim" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 65ADE1C04DD;
+        Sat,  4 Apr 2020 10:41:55 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:41:55 -0000
+From:   "tip-bot2 for John Garry" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] tools headers UAPI: Update tools's copy of
- linux/perf_event.h
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Subject: [tip: perf/urgent] perf pmu: Add is_pmu_core()
+Cc:     John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>, http:
-        //lore.kernel.org/lkml/20200325124536.2800725-4-namhyung@kernel.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, linuxarm@huawei.com,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, ;
-Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
-        Cc:     ;
-                        ^-missing semicolon to end mail group, extraneous tokens in mailbox, missing end of mailbox
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1584442939-8911-6-git-send-email-john.garry@huawei.com>
+References: <1584442939-8911-6-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Message-ID: <158598970868.28353.2028689385124855746.tip-bot2@tip-bot2>
+Message-ID: <158598971502.28353.1893341793306423695.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,80 +64,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     03590fb409bce428bce0b4535a488dedfbed0c00
-Gitweb:        https://git.kernel.org/tip/03590fb409bce428bce0b4535a488dedfbed0c00
-Author:        Namhyung Kim <namhyung@kernel.org>
-AuthorDate:    Fri, 27 Mar 2020 11:07:17 -03:00
+Commit-ID:     d504fae93dd61b734aefc403c7653d958aef655a
+Gitweb:        https://git.kernel.org/tip/d504fae93dd61b734aefc403c7653d958aef655a
+Author:        John Garry <john.garry@huawei.com>
+AuthorDate:    Tue, 17 Mar 2020 19:02:17 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 02 Apr 2020 12:51:49 -03:00
+CommitterDate: Tue, 24 Mar 2020 10:35:59 -03:00
 
-tools headers UAPI: Update tools's copy of linux/perf_event.h
+perf pmu: Add is_pmu_core()
 
-To get the changes in:
+Add a function to decide whether a PMU is a core PMU.
 
-  6546b19f95ac ("perf/core: Add PERF_SAMPLE_CGROUP feature")
-  96aaab686505 ("perf/core: Add PERF_RECORD_CGROUP event")
-
-This silences this perf tools build warning:
-
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/perf_event.h' differs from latest version at 'include/uapi/linux/perf_event.h'
-  diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
-
-This update is a prerequisite to adding support for the HW index of raw
-branch records.
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Joakim Zhang <qiangqing.zhang@nxp.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: http://lore.kernel.org/lkml/20200325124536.2800725-4-namhyung@kernel.org
-[ split from a larger patch ]
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: linuxarm@huawei.com
+Link: http://lore.kernel.org/lkml/1584442939-8911-6-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/perf_event.h | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ tools/perf/util/pmu.c | 5 +++++
+ tools/perf/util/pmu.h | 1 +
+ 2 files changed, 6 insertions(+)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 397cfd6..7b2d6fc 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -142,8 +142,9 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
- 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
- 	PERF_SAMPLE_AUX				= 1U << 20,
-+	PERF_SAMPLE_CGROUP			= 1U << 21,
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index c616a06..55129d0 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1400,6 +1400,11 @@ static void wordwrap(char *s, int start, int max, int corr)
+ 	}
+ }
  
--	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
-+	PERF_SAMPLE_MAX = 1U << 22,		/* non-ABI */
- 
- 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
- };
-@@ -381,7 +382,8 @@ struct perf_event_attr {
- 				ksymbol        :  1, /* include ksymbol events */
- 				bpf_event      :  1, /* include bpf events */
- 				aux_output     :  1, /* generate AUX records instead of events */
--				__reserved_1   : 32;
-+				cgroup         :  1, /* include cgroup events */
-+				__reserved_1   : 31;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-@@ -1012,6 +1014,16 @@ enum perf_event_type {
- 	 */
- 	PERF_RECORD_BPF_EVENT			= 18,
- 
-+	/*
-+	 * struct {
-+	 *	struct perf_event_header	header;
-+	 *	u64				id;
-+	 *	char				path[];
-+	 *	struct sample_id		sample_id;
-+	 * };
-+	 */
-+	PERF_RECORD_CGROUP			= 19,
++bool is_pmu_core(const char *name)
++{
++	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
++}
 +
- 	PERF_RECORD_MAX,			/* non-ABI */
- };
+ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 			bool long_desc, bool details_flag, bool deprecated)
+ {
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 0b4a0ef..b756946 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -88,6 +88,7 @@ int perf_pmu__format_parse(char *dir, struct list_head *head);
  
+ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
+ 
++bool is_pmu_core(const char *name);
+ void print_pmu_events(const char *event_glob, bool name_only, bool quiet,
+ 		      bool long_desc, bool details_flag,
+ 		      bool deprecated);
