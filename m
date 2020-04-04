@@ -2,91 +2,133 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125C5C2BA18
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A01FC4332B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B822063A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586020705;
-	bh=2GKxK9yuIqBmycyNhbmoT0w3v/xwWvHjh1hFwxF2vLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h6g2yM45HnUwyogHSAGF3K7IHQX5YSSzUtPndtImZQNy+Ux2PDzDoUcupG2Zno4xw
-	 4xFIy9exyjIEMDlpQKazRnTiC/GKKYO28fUrxLydV5Vuj3GWwbcSOHhtHBklh6HlvF
-	 Ixxci1e5nETHLudnJkP7PqoEK0KTYTDPKLd/iTgU=
+	by mail.kernel.org (Postfix) with ESMTP id 15A31206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 17:18:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nd+WcLU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDDRSZ (ORCPT
+        id S1726403AbgDDRSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 13:18:25 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46360 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgDDRSY (ORCPT
+        Sat, 4 Apr 2020 13:18:36 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34420 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgDDRSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 13:18:24 -0400
-Received: by mail-il1-f196.google.com with SMTP id i75so10521350ild.13;
-        Sat, 04 Apr 2020 10:18:24 -0700 (PDT)
+        Sat, 4 Apr 2020 13:18:36 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p10so10275842ljn.1;
+        Sat, 04 Apr 2020 10:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+uhxRGX6MPG3FC6JHWtiYmK6qLmp1QIoL6oQZjfRONY=;
+        b=nd+WcLU8Nkb3NCybgzvxt5VvOktuAe/AqLpVnjLRMi1zhdqSwGot8V+Wntg2eoytm4
+         UYw+VXJ6se7MqMNVECQGMqZyn4Dtfg3FBpju68UAzafwtNqJPASMLh6NoNAtnHDIx5Dc
+         LisWSh2BUCh+q/qdErQZdpILL+qDYCibSb/ZaELWTwkDGSd104JClCdzlImF5lgGwYbM
+         VY90nOWQj9th3yD97HjIp8kcx3AJhJeLugb1FGGnZVzu1JL+PkTEBQuwy0h16ejB5tp0
+         UnTFokM4kcyiZJHcez78Qda6TEUOKgGvuRjpUbY0Ztf0jdCPUcFLewwUC6Rl1IdkxSz/
+         U3EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6/+9ql20CpFx44LIbrTXEaI2rIrP2FNLIFPT9pvv1Qs=;
-        b=MYIYJVxMWv/NMrikK5DZ6Br2UTzYCDXlYlp+yYH9MnI/7It1gV2Z1vbxyrHDkcB74E
-         9XrZJ4mVI7KHF6rZ6Uw7nO21YckyU5K5IcdgNZRvYCSyIRtqIzdI//P1GFrlnH7qYZz+
-         EeYqKDSrJ8MAIML3X5F1NZN/GwzGOpoeAjM2OR302hiLMu4n/pVHy1W9b8kRKh2BZYj0
-         dtLG3B8q6iv4F694dalRMD0nQtEhO6SiUSt4r8gcEChU2fr3OHSgvqOrycHl4Vu8rJpC
-         JvmY7YDJhud9KqB0whe31gqoCNuT3I6Am77Rp99Dsqaa8IfvV/htBaWVX7NMmH5/zTED
-         Wnhw==
-X-Gm-Message-State: AGi0PubGA2CD6xLUdH5I/7qLvbIDHCLcQ7w7RYOl8SZVSYY+n+VXkVRw
-        d6lkwpbvw3nYfPvae93nww==
-X-Google-Smtp-Source: APiQypIzCX8GwLPGwwKuqPKkuY3KZcZx+/fEOhsdfxnj62kPmcdX91ySH0xxjFk/0PA6YlV8wtmF0A==
-X-Received: by 2002:a92:d347:: with SMTP id a7mr14714839ilh.289.1586020703682;
-        Sat, 04 Apr 2020 10:18:23 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id h24sm3416997iog.29.2020.04.04.10.18.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 10:18:23 -0700 (PDT)
-Received: (nullmailer pid 24101 invoked by uid 1000);
-        Sat, 04 Apr 2020 17:18:20 -0000
-Date:   Sat, 4 Apr 2020 11:18:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com, alain.volmat@st.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: i2c: i2c-stm32f7: allow
- clock-frequency range
-Message-ID: <20200404171820.GA24040@bogus>
-References: <1585226661-26262-1-git-send-email-alain.volmat@st.com>
- <1585226661-26262-2-git-send-email-alain.volmat@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+uhxRGX6MPG3FC6JHWtiYmK6qLmp1QIoL6oQZjfRONY=;
+        b=heFe5iXOKv2oZldsxyuZJFKtKfVZzi3H9gfy3pcxVfvhiguK9+elOK2WA1HH1mft5o
+         4S3930WfZCUBg+WFC8hZxZKMLlgeRrUbuLj1FnLDb9JE3nA3Oz86HblCMlozxROfNK6J
+         OYbR70jUJKcQnKHkU5jxjUw3ISgOptvzccf7z5T/drn5HdqDvkVkTJKx3NJ0zBJcqqAd
+         0jOnQkFF3xQtJGxpJBoHfmqBy09piWVf/dFsFxZxJpWN9QsSzNNeQ3J6odomdh2gOOMC
+         7VZ/W+7tTGSxDBSLvA3Vhmpc9LzVzhWXfCsEjEN9E2TapP6k7XPLMEYN8nfvoMz9OFel
+         HHPA==
+X-Gm-Message-State: AGi0PuY9BmTKwycYmqjYAYi6D9E+wtIg4NbT89Vk6+UNDel00YekAMmd
+        KEdnis9jYzFGrPE0pLRjRVWR0gOCh3BTXW45tEI=
+X-Google-Smtp-Source: APiQypKbneMMaFHfEv8AYv4pXWPjoKLLu9YejArU/08n/11tmBWhsBVTZ41q0GYynLf1gxAoQxMR37qxtV7jCEj2kmI=
+X-Received: by 2002:a2e:81cc:: with SMTP id s12mr7960117ljg.90.1586020713555;
+ Sat, 04 Apr 2020 10:18:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585226661-26262-2-git-send-email-alain.volmat@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200404141909.26399-1-ap420073@gmail.com> <20200404155122.GD1476305@kroah.com>
+In-Reply-To: <20200404155122.GD1476305@kroah.com>
+From:   Taehee Yoo <ap420073@gmail.com>
+Date:   Sun, 5 Apr 2020 02:18:22 +0900
+Message-ID: <CAMArcTVdn7FcfX-BCnZ+LUzdct4yj2BLyhpTu832_VGt_O+xWA@mail.gmail.com>
+Subject: Re: [PATCH net v2 2/3] net: core: add netdev_class_has_file_ns()
+ helper function
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, rafael@kernel.org,
+        j.vosburgh@gmail.com, vfalico@gmail.com,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, mitch.a.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020 13:44:20 +0100, Alain Volmat wrote:
-> For STM32F7, STM32H7 and STM32MP1 SoCs, if timing parameters
-> match, the bus clock frequency can be from 1Hz to 1MHz.
-> 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
-> v2: identical to v1
-> 
->  Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
+On Sun, 5 Apr 2020 at 00:51, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hi Greg,
+Thank you for your review!
+
+> On Sat, Apr 04, 2020 at 02:19:09PM +0000, Taehee Yoo wrote:
+> > This helper function is to check whether the class file "/sys/class/net/*"
+> > is existing or not.
+> > In the next patch, this helper function will be used.
+> >
+> > Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
+> > Fixes: b76cdba9cdb2 ("[PATCH] bonding: add sysfs functionality to bonding (large)")
+> > Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+> > ---
+> >
+> > v1 -> v2:
+> >  - use class_has_file_ns(), which is introduced by the first patch.
+> >
+> >  include/linux/netdevice.h | 2 +-
+> >  net/core/net-sysfs.c      | 6 ++++++
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> > index 130a668049ab..a04c487c0975 100644
+> > --- a/include/linux/netdevice.h
+> > +++ b/include/linux/netdevice.h
+> > @@ -4555,7 +4555,7 @@ int netdev_class_create_file_ns(const struct class_attribute *class_attr,
+> >                               const void *ns);
+> >  void netdev_class_remove_file_ns(const struct class_attribute *class_attr,
+> >                                const void *ns);
+> > -
+> > +bool netdev_class_has_file_ns(const char *name, const void *ns);
+> >  static inline int netdev_class_create_file(const struct class_attribute *class_attr)
+> >  {
+> >       return netdev_class_create_file_ns(class_attr, NULL);
+> > diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> > index cf0215734ceb..8a20d658eff0 100644
+> > --- a/net/core/net-sysfs.c
+> > +++ b/net/core/net-sysfs.c
+> > @@ -1914,6 +1914,12 @@ void netdev_class_remove_file_ns(const struct class_attribute *class_attr,
+> >  }
+> >  EXPORT_SYMBOL(netdev_class_remove_file_ns);
+> >
+> > +bool netdev_class_has_file_ns(const char *name, const void *ns)
+> > +{
+> > +     return class_has_file_ns(&net_class, name, ns);
+> > +}
+> > +EXPORT_SYMBOL(netdev_class_has_file_ns);
+>
+> Again, this feels broken, it can not solve a race condition.
+>
+
+This function is considered to be used under rtnl mutex and
+I assume that no one could use "/sys/class/net/*" outside of rtnl mutex.
+So, I think it returns the correct information under rtnl mutex.
+
+Thanks a lot!
+Taehee Yoo
