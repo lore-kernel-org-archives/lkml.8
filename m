@@ -2,139 +2,157 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB79C2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DC8C2BA18
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA05206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B2B206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:58:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fu+71osx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXDfgQGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgDDJqx (ORCPT
+        id S1726084AbgDDJ6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 05:46:53 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44231 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgDDJqx (ORCPT
+        Sat, 4 Apr 2020 05:58:45 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55732 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgDDJ6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 05:46:53 -0400
-Received: by mail-pl1-f195.google.com with SMTP id h11so3815091plr.11;
-        Sat, 04 Apr 2020 02:46:51 -0700 (PDT)
+        Sat, 4 Apr 2020 05:58:44 -0400
+Received: by mail-pj1-f66.google.com with SMTP id fh8so4212823pjb.5;
+        Sat, 04 Apr 2020 02:58:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=7GDPmcK6SJHRuf12SL7H5kks1bkdILcC7vA7ejas/BI=;
-        b=Fu+71osxmBa4Pi4TAUAFCefneyfNuFc6lMXThG8RWB8m1nG4GM86saiHEJDRjo+pzr
-         JI1m8vE6u6oYIcvuIWHTRqDuJadA41+YlpsH1XYTLimoupz4ol7MziXZoFy/cMFBDkNX
-         W9HFdyAOqwl57IwUynVUa0YAChrMOX6UQwlB4fF4PtIlWw2WimKEnAC87LQMcitsY6+/
-         IxVAg0topsI4Ji5q+1O9gZwqCnfIVxMjsRrZZfpPgZgQmJbM9UYO9Qu5GO0VS2TlKs9i
-         v0vW4JFEM+v4s92lNVCgPdq/vBl75YkvzV9v5MpeHELuFcruyb9nka95DSHD2Z7XoC5u
-         amww==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ft8HSD7UsUrD7cFjLoCUpLGYHcAoeTVcF8sVzqPS/y8=;
+        b=VXDfgQGb576L8wK7O0C87RvbKj5mqewuepd973cSA2ZixvCL/IuBi9/E+he2oDdr3C
+         51e3ZYKEnSx6uYljwEuILDa/7P5jTnXs1gTrvDhcyYroxcbKjaOidcHR9DOOmPTXkBA6
+         pV0f3bR1q+M67pxacwYhyg3u/IJ+ga+LijyEYnYEc6vNyWm8YcRrfxEiI49465ShXmTL
+         /Z2XuIstFDsQRYB3GWQLFPjyMWgTYSzhHXx8GDBwig4PJ1huWIlcyHt3zwi/zGV2yILc
+         rpstPZ0PY/FPc0Bw9BZqRk895/JvlEA0Ze0dfv67mEwQXuWC12BRLUyoM9CVa+QX3NvE
+         Bf8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=7GDPmcK6SJHRuf12SL7H5kks1bkdILcC7vA7ejas/BI=;
-        b=iWRvLJcYH05CzUMJog5QMk7dxdpzzGfzFujObvGr6kbUlc6PqV5rW/NG+i+hW7UhPt
-         jHMsiJ7oiRxfbHUdliAXkjakM2zB0eteJgMqweZlGMoXP253DPKlNfrMb4K1a8mGxzaV
-         Xm2x0cP/mCE+AFjv8EeY6RFAyj/s6YCTIhdKYhrW+Ae5HFki5PEX9TgD+Kn97zzP7WXB
-         GazGkdijeQxgcUOvNT4Jr6jvKSZN9Ny30B8eWj5fJI5DjYRH6TywFRW+451ZY4oG6I6/
-         O+wL6m/UI6Tn74nUrK0x7W9VPdUlXT/CSKUf7ajrLsVpQ2zqG0uFeUYSWNEmHCWieO8s
-         0HmA==
-X-Gm-Message-State: AGi0PuYZg1E0xe2Ysj5im4TYnXxjaikIGAPwD9Dkft7RlbfLQQJWrYAE
-        bVIWDh2fO3poxmWuY3bKQzT6yD00io0=
-X-Google-Smtp-Source: APiQypKlJqFw5oLJaP3DJtFrcGkMX6zh/o/z3j1IX+UszO2IgqlnUHMYe5xaOyUBTmXkReCqzE7z6Q==
-X-Received: by 2002:a17:90a:2601:: with SMTP id l1mr15063331pje.74.1585993610826;
-        Sat, 04 Apr 2020 02:46:50 -0700 (PDT)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id 3sm3681088pfd.140.2020.04.04.02.46.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Apr 2020 02:46:50 -0700 (PDT)
-Date:   Sat, 4 Apr 2020 15:16:43 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Thomas Winischhofer <thomas@winischhofer.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] USB: misc: Use the correct style for SPDX License Identifier
-Message-ID: <20200404094638.GA5319@nishad>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ft8HSD7UsUrD7cFjLoCUpLGYHcAoeTVcF8sVzqPS/y8=;
+        b=HxwSp/nm4hn+Z6KZag8b5fO51vPHV43JMQY9ZzGSPQ3rFmFOAUB+Pr78MI9XBrmjfj
+         u85zXcfDmDXsDOakIYktaJNlqfATfCRD/NszoUUsfu+pmxrNCKYtSh+XD8nT6Nlsmvba
+         7oq575WgtRy3VavKw/5oH+iLLcU7oXT21TrXm3fhal7NQ75lcdsiHnHd5TgMVI38zIsV
+         jpDRuPVqqYi8PqDzTSAK7AgA6g8UeRHZvvwnuLKbed7WKiVVKxLo0gwfiRXgdaIBfhOw
+         X1QCzQA5Z9ITUm3PNecGwK6AnwcoHcc3hvBnsQyIzNKGj36FIQA7Lw12CzntsOF+8tFG
+         Hkqg==
+X-Gm-Message-State: AGi0PuauEv8q2yw2XHedw8B0Royt8wQrFPUzssZNch2urGSSlsyW0asq
+        NMjHTwvzv+qYCz81Mqyxt4oE2mr9j2hG/3c4Fi9ZVx61zHMCKg==
+X-Google-Smtp-Source: APiQypKBPJ48Tmyap/R0p+vz2QVBZNYh5Kpz+LJPocOhG7glVfW8vY1reKxEdtwrG2Zg/WY2DjTAxitlaclgogeBvOI=
+X-Received: by 2002:a17:90a:3602:: with SMTP id s2mr14578311pjb.143.1585994323275;
+ Sat, 04 Apr 2020 02:58:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200330194757.2645388-1-luca@z3ntu.xyz> <20200330194757.2645388-3-luca@z3ntu.xyz>
+In-Reply-To: <20200330194757.2645388-3-luca@z3ntu.xyz>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 4 Apr 2020 12:58:31 +0300
+Message-ID: <CAHp75Vf6ZS1UGUv-okzzcDNnMtjjBjGbjsXb8w6TmGcgKdhhfA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] leds: add sgm3140 driver
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header files related to USB Miscellaneous drivers.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used).
+On Mon, Mar 30, 2020 at 10:49 PM Luca Weiss <luca@z3ntu.xyz> wrote:
+>
+> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+>
+> This device is controlled by two GPIO pins, one for enabling and the
+> second one for switching between torch and flash mode.
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+...
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/usb/misc/sisusbvga/sisusb.h        | 2 +-
- drivers/usb/misc/sisusbvga/sisusb_init.h   | 2 +-
- drivers/usb/misc/sisusbvga/sisusb_struct.h | 2 +-
- drivers/usb/misc/usb_u132.h                | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+> +config LEDS_SGM3140
+> +       tristate "LED support for the SGM3140"
+> +       depends on LEDS_CLASS_FLASH
+> +       depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
 
-diff --git a/drivers/usb/misc/sisusbvga/sisusb.h b/drivers/usb/misc/sisusbvga/sisusb.h
-index 8a5e6bb07d05..c0fb9e1c5361 100644
---- a/drivers/usb/misc/sisusbvga/sisusb.h
-+++ b/drivers/usb/misc/sisusbvga/sisusb.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
- /*
-  * sisusb - usb kernel driver for Net2280/SiS315 based USB2VGA dongles
-  *
-diff --git a/drivers/usb/misc/sisusbvga/sisusb_init.h b/drivers/usb/misc/sisusbvga/sisusb_init.h
-index 1782c759c4ad..24c2e71d06e7 100644
---- a/drivers/usb/misc/sisusbvga/sisusb_init.h
-+++ b/drivers/usb/misc/sisusbvga/sisusb_init.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
- /* $XFree86$ */
- /* $XdotOrg$ */
- /*
-diff --git a/drivers/usb/misc/sisusbvga/sisusb_struct.h b/drivers/usb/misc/sisusbvga/sisusb_struct.h
-index 706d77090e00..3df64d2a9d43 100644
---- a/drivers/usb/misc/sisusbvga/sisusb_struct.h
-+++ b/drivers/usb/misc/sisusbvga/sisusb_struct.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
- /*
-  * General structure definitions for universal mode switching modules
-  *
-diff --git a/drivers/usb/misc/usb_u132.h b/drivers/usb/misc/usb_u132.h
-index 4bf77736914f..1584efbbd704 100644
---- a/drivers/usb/misc/usb_u132.h
-+++ b/drivers/usb/misc/usb_u132.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
- * Common Header File for the Elan Digital Systems U132 adapter
- * this file should be included by both the "ftdi-u132" and
--- 
-2.17.1
+> +       depends on OF
 
+depends on OF || COMPILE_TEST ?
+But hold on...
+
+...
+
+> +#include <linux/of.h>
+
+Perhaps switch this to property.h and replace OF with more generic
+device property / fwnode API?
+
+...
+
+> +struct sgm3140 {
+> +       bool enabled;
+> +       struct gpio_desc *flash_gpio;
+> +       struct gpio_desc *enable_gpio;
+> +       struct regulator *vin_regulator;
+> +
+> +       /* current timeout in us */
+> +       u32 timeout;
+> +       /* maximum timeout in us */
+> +       u32 max_timeout;
+> +
+
+> +       struct led_classdev_flash fled_cdev;
+
+I guess it might be slightly better to make it first member of the
+struct (I didn't check but the rationale is to put more often used
+members at the beginning to utilize cachelines).
+
+> +       struct v4l2_flash *v4l2_flash;
+> +
+> +       struct timer_list powerdown_timer;
+> +};
+
+...
+
+> +static struct sgm3140 *flcdev_to_sgm3140(struct led_classdev_flash *flcdev)
+> +{
+> +       return container_of(flcdev, struct sgm3140, fled_cdev);
+> +}
+
+...and this becomes a no-op AFAICS (doesn't mean you need to remove it).
+
+...
+
+> +       struct device_node *child_node;
+
+> +       child_node = of_get_next_available_child(pdev->dev.of_node, NULL);
+
+> +       ret = of_property_read_u32(child_node, "flash-max-timeout-us",
+> +                                  &priv->max_timeout);
+
+> +       init_data.fwnode = of_fwnode_handle(child_node);
+
+> +       of_node_put(child_node);
+
+Device property / fwnode API?
+
+--
+With Best Regards,
+Andy Shevchenko
