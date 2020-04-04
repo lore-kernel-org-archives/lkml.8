@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C416CC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C43C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0BCB20752
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9694F20752
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgDDIne (ORCPT
+        id S1727481AbgDDInm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:43:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41722 "EHLO
+        Sat, 4 Apr 2020 04:43:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41677 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgDDImO (ORCPT
+        with ESMTP id S1726508AbgDDImM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 04:42:14 -0400
+        Sat, 4 Apr 2020 04:42:12 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeNN-0001Bi-Te; Sat, 04 Apr 2020 10:42:02 +0200
+        id 1jKeNP-00018T-5h; Sat, 04 Apr 2020 10:42:03 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 597371C0813;
-        Sat,  4 Apr 2020 10:41:56 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:41:55 -0000
-From:   "tip-bot2 for John Garry" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C6A521C07EC;
+        Sat,  4 Apr 2020 10:41:53 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:41:53 -0000
+From:   "tip-bot2 for Christophe JAILLET" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf pmu: Refactor pmu_add_cpu_aliases()
-Cc:     John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/urgent] perf cpumap: Fix snprintf overflow check
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        David Laight <David.Laight@ACULAB.COM>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Don Zickus <dzickus@redhat.com>, He Zhe <zhe.he@windriver.com>,
+        Jan Stancek <jstancek@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, linuxarm@huawei.com,
+        kernel-janitors@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1584442939-8911-4-git-send-email-john.garry@huawei.com>
-References: <1584442939-8911-4-git-send-email-john.garry@huawei.com>
+In-Reply-To: <20200324070319.10901-1-christophe.jaillet@wanadoo.fr>
+References: <20200324070319.10901-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Message-ID: <158598971596.28353.16146351074016231140.tip-bot2@tip-bot2>
+Message-ID: <158598971346.28353.11677112853050770868.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,104 +66,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     e45ad701e784e0eed8a07b537b47afb302c59dab
-Gitweb:        https://git.kernel.org/tip/e45ad701e784e0eed8a07b537b47afb302c59dab
-Author:        John Garry <john.garry@huawei.com>
-AuthorDate:    Tue, 17 Mar 2020 19:02:15 +08:00
+Commit-ID:     d74b181a028bb5a468f0c609553eff6a8fdf4887
+Gitweb:        https://git.kernel.org/tip/d74b181a028bb5a468f0c609553eff6a8fdf4887
+Author:        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+AuthorDate:    Tue, 24 Mar 2020 08:03:19 +01:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 24 Mar 2020 10:35:59 -03:00
+CommitterDate: Tue, 24 Mar 2020 10:36:00 -03:00
 
-perf pmu: Refactor pmu_add_cpu_aliases()
+perf cpumap: Fix snprintf overflow check
 
-Create pmu_add_cpu_aliases_map() from pmu_add_cpu_aliases(), so the caller
-can pass the map; the pmu-events test would use this since there would
-be no CPUID matching to a mapfile there.
+'snprintf' returns the number of characters which would be generated for
+the given input.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+If the returned value is *greater than* or equal to the buffer size, it
+means that the output has been truncated.
+
+Fix the overflow test accordingly.
+
+Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
+Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Suggested-by: David Laight <David.Laight@ACULAB.COM>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: Don Zickus <dzickus@redhat.com>
+Cc: He Zhe <zhe.he@windriver.com>
+Cc: Jan Stancek <jstancek@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: linuxarm@huawei.com
-Link: http://lore.kernel.org/lkml/1584442939-8911-4-git-send-email-john.garry@huawei.com
+Cc: kernel-janitors@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200324070319.10901-1-christophe.jaillet@wanadoo.fr
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 21 +++++++++++++--------
- tools/perf/util/pmu.h |  3 +++
- 2 files changed, 16 insertions(+), 8 deletions(-)
+ tools/perf/util/cpumap.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 8b99fd3..c616a06 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -21,7 +21,6 @@
- #include "pmu.h"
- #include "parse-events.h"
- #include "header.h"
--#include "pmu-events/pmu-events.h"
- #include "string2.h"
- #include "strbuf.h"
- #include "fncache.h"
-@@ -744,16 +743,11 @@ out:
-  * to the current running CPU. Then, add all PMU events from that table
-  * as aliases.
-  */
--static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
-+void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
-+			     struct pmu_events_map *map)
- {
- 	int i;
--	struct pmu_events_map *map;
- 	const char *name = pmu->name;
--
--	map = perf_pmu__find_map(pmu);
--	if (!map)
--		return;
--
- 	/*
- 	 * Found a matching PMU events table. Create aliases
- 	 */
-@@ -788,6 +782,17 @@ new_alias:
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 983b738..dc5c5e6 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -317,7 +317,7 @@ static void set_max_cpu_num(void)
+ 
+ 	/* get the highest possible cpu number for a sparse allocation */
+ 	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
+-	if (ret == PATH_MAX) {
++	if (ret >= PATH_MAX) {
+ 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 		goto out;
  	}
- }
+@@ -328,7 +328,7 @@ static void set_max_cpu_num(void)
  
-+static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
-+{
-+	struct pmu_events_map *map;
-+
-+	map = perf_pmu__find_map(pmu);
-+	if (!map)
-+		return;
-+
-+	pmu_add_cpu_aliases_map(head, pmu, map);
-+}
-+
- struct perf_event_attr * __weak
- perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
- {
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 6737e3d..0b4a0ef 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -7,6 +7,7 @@
- #include <linux/perf_event.h>
- #include <stdbool.h>
- #include "parse-events.h"
-+#include "pmu-events/pmu-events.h"
+ 	/* get the highest present cpu number for a sparse allocation */
+ 	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
+-	if (ret == PATH_MAX) {
++	if (ret >= PATH_MAX) {
+ 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 		goto out;
+ 	}
+@@ -356,7 +356,7 @@ static void set_max_node_num(void)
  
- struct perf_evsel_config_term;
+ 	/* get the highest possible cpu number for a sparse allocation */
+ 	ret = snprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
+-	if (ret == PATH_MAX) {
++	if (ret >= PATH_MAX) {
+ 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 		goto out;
+ 	}
+@@ -441,7 +441,7 @@ int cpu__setup_cpunode_map(void)
+ 		return 0;
  
-@@ -97,6 +98,8 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
- int perf_pmu__test(void);
+ 	n = snprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
+-	if (n == PATH_MAX) {
++	if (n >= PATH_MAX) {
+ 		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 		return -1;
+ 	}
+@@ -456,7 +456,7 @@ int cpu__setup_cpunode_map(void)
+ 			continue;
  
- struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
-+void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
-+			     struct pmu_events_map *map);
- 
- struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
- 
+ 		n = snprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
+-		if (n == PATH_MAX) {
++		if (n >= PATH_MAX) {
+ 			pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+ 			continue;
+ 		}
