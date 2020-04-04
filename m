@@ -2,139 +2,89 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC761C2BA17
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F0BC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B4320735
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24BE620735
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:21:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lm9kPC0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgDDTUi (ORCPT
+        id S1726393AbgDDTVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 15:20:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34398 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgDDTUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 15:20:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 634ADAEF7;
-        Sat,  4 Apr 2020 19:20:35 +0000 (UTC)
-Message-ID: <6b81402dd7ab6431f69dba301ce07822cb8dd753.camel@suse.de>
-Subject: Re: [PATCH v6 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
- when present
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Sat, 04 Apr 2020 21:20:27 +0200
-In-Reply-To: <20200402193820.GA32107@google.com>
-References: <20200402193820.GA32107@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-LNav0Mbq0jkFum1SVnUz"
-User-Agent: Evolution 3.34.2 
+        Sat, 4 Apr 2020 15:21:31 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35165 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgDDTVb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 15:21:31 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t25so9413010oij.2;
+        Sat, 04 Apr 2020 12:21:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z0CB3EQF9UD+0fLIe/MYfF3PosbEA1dLe15Mmt1FMSw=;
+        b=lm9kPC0cG5nIrHMBUSj2bELw+jg37M9VQ174fAaALZ8u56W4/703ed3hB4cgKP9oss
+         O7SMhDZHzxCEpESc2yzNJ1sG/HBQ72apJ90uinc5e8i6zpL24KmuVP7TAfjZAx5YG6lt
+         7M5WFFtri9SRV9zNFtLiCpaRGTfFNZRB/QaZgxWp0JBjYiWh/xYErWsZOEvrduStrIcn
+         6keLykIK4wX0D9ldsobGQrauIA1QhD4bK8SRRBapTy5IGM/UMFtaxpD5IevP7jJa/YNW
+         hj4h/eZbb7BsvXwtMRmjEXyfIJHKOv47Ehf/g+Gbd0Nvn/lZeJ1D3TH13PhIJgDlId5D
+         2JYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z0CB3EQF9UD+0fLIe/MYfF3PosbEA1dLe15Mmt1FMSw=;
+        b=QIOLnTmWdrVjBDVnnBt3vox5TfAOVOY+Yv+hDmLfG1VwxqvCOTfaec/qpBJLXvHhmr
+         eXnVi5HnRJx9tv3Y9IM6QQNCGDbnqgI4e48752ntimnKjmnRA6+Unap7tGnBLXTG4W1I
+         cXw7yaaJo9/lfJ4BznajjKUooDw+nFSkvVGt/0JF4dqK1ZMFefrjyDwLmGO1pBCkW+aY
+         qfUKN3MeWvrymB2JCuoWSrEFT5tmrK39MWwNxkNfOHsNwtn2NPoPgLTL+mmsB1Am3S1O
+         RsmrLhQStpCIGhLR5S3DvBX3+lTLZ68aopZzniy26D9Eeg1KblJ/jE1xYTA2JZvd/oQ0
+         TQQQ==
+X-Gm-Message-State: AGi0PuZrEobGrJVZRW6CYMzdB3md6ZpeAlFwYvpPAyhIpn45M90YjWVi
+        lCHFOi+MZmQxy8bu1wFzcgEn9aePPRLZDv1Smzrr0A==
+X-Google-Smtp-Source: APiQypL6O/df8+1cvS2PqUA2r/EvUBw1NrY1x43zaqhXB0hKOeWy/oNmo5Qd3jfEDW1V7qMMB3liwgNpxbk8v6Vn+AQ=
+X-Received: by 2002:aca:b803:: with SMTP id i3mr7421515oif.92.1586028090586;
+ Sat, 04 Apr 2020 12:21:30 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200403235324.27437-1-TheSven73@gmail.com> <20200404175836.GB55833@workstation.tuxnet>
+In-Reply-To: <20200404175836.GB55833@workstation.tuxnet>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Sat, 4 Apr 2020 15:21:19 -0400
+Message-ID: <CAGngYiX75gxrK+rKQcTVG6byAB+o5enC++J_0tHe6-6pRPMczQ@mail.gmail.com>
+Subject: Re: [PATCH v1] pwm: pca9685: re-enable active pwm channels on pwm
+ period change
+To:     Clemens Gruber <clemens.gruber@pqgruber.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-LNav0Mbq0jkFum1SVnUz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2020-04-02 at 14:38 -0500, Bjorn Helgaas wrote:
-> [+cc Rob for DT platform device dependency question]
->=20
-> On Thu, Apr 02, 2020 at 04:27:23PM +0200, Nicolas Saenz Julienne wrote:
-
-[...]
-
-> > Sorry it wasn't clear enough, I'll redo this comment. Also note that
-> > the PCIe bus and the XHCI chip are hardwired, so that's the only
-> > device that'll ever be available on the bus.
-> >=20
-> > VIA805's XHCI firmware has to be loaded trough RPi's firmware
-> > mailbox in between the PCIe bus probe and the subsequent USB probe.
-> > Note that a PCI reset clears the firmware. The only mechanism
-> > available in between the two operations are PCI Fixups. These are
-> > limited in their own way, as I can't return -EPROBE_DEFER if the
-> > firmware interface isn't available yet. Hence the need for an
-> > explicit dependency between pcie-brcmstb and raspberrypi's firmware
-> > mailbox device.
-> >=20
-> > Your concern here showcases this series' limitations. From a high
-> > level perspective it's not clear to me who should be responsible for
-> > downloading the firmware.=20
->=20
-> I think it's fairly common for drivers to download firmware to their
-> devices.  I guess there's not really any need to download the firmware
-> until a driver wants to use the device, right?
->=20
-> > And I get the feeling I'm abusing PCI fixups. I haven't found any
-> > smart way to deal with this three way dependency of
-> > platform/non-platform devices.
->=20
-> So IIUC, the three-way dependency involves:
->=20
->   1) brcm_pcie_probe(), which initialize the PCI host controller
->   platform device, enumerates PCI devices, and makes them available
->   for driver binding,
-
-Yes, and also resets the PCI bus, which will clear VL805's firmware (the XH=
-CI
-chip).
-
->   2) the firmware mailbox initialization (maybe
->   rpi_firmware_probe()?),
+On Sat, Apr 4, 2020 at 1:58 PM Clemens Gruber
+<clemens.gruber@pqgruber.com> wrote:
 >
->   3) quirk_usb_early_handoff(), which downloads firmware to the VL805
->   PCI USB adapter via rpi_firmware_init_vl805(), which uses the
->   firmware mailbox?
+> According to the PCA9685 datasheet revision 4, page 15, the RESTART bit
+> is not only cleared by writing a 1 to it, but also by other actions like
+> a write to any of the PWM registers.
+>
+> This seems to be the reason why I could not reproduce the reported
+> problem.
 
-And yes, that's the general idea.
-
-> Is there some way to express a dependency between
-> "raspberrypi,bcm2835-firmware" (the platform device claimed by
-> rpi_firmware_probe() and "brcm,bcm2711-pcie"?  If we could ensure that
-> rpi_firmware_probe() runs before brcm_pcie_probe(), would that solve
-> part of this?
-
-That's ultimately what this patch tries to achieve. If there was a way to
-offload it to DT it would be way nicer.
-
-Regards,
-Nicolas
-
-
---=-LNav0Mbq0jkFum1SVnUz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6I3fwACgkQlfZmHno8
-x/7yVwf/WCJwmohpLUsUVej5HvbKKbr47tjWtIup3ZkGd73iGu0ksx2odYhV02XX
-i++eva/mzXf9XTFBvpfpaExqIrEiKjbzPhpm6Vgt0J7q4uB/T1LYN6q+jfKP5Dbo
-sCrxifMx7JSqM1r5ZKFUPHd1rOqiTzR+MpLsgcjvqI/NwDdm8dramibWKiIR74OU
-7n1hvoW5S2nMfLjSbwW7UAxv9XIg9WLpobebE94QaYGAsGSDzqTPI4ZDXpP+9Y9p
-zE8KUuxi611Nus5Pz6DrgUTrnz2tMvZBOxiIbClGduGRQdy/U1oRLOf2SK3/LD0Q
-zu9X6I23eZhtVtQ5l4Wtynxkx6oK8A==
-=N5AC
------END PGP SIGNATURE-----
-
---=-LNav0Mbq0jkFum1SVnUz--
-
+Thanks Clemens for checking this. If .config will always write at least one
+of the pwm registers (which seems to be the case), then all pwm channels
+should stay on after a period change. And we (fortunately) won't need this
+patch.
