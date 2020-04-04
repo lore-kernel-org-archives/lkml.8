@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE50C2BA18
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2904DC2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCCB20739
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66D620739
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 08:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDDIl7 (ORCPT
+        id S1726421AbgDDImC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 04:41:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41481 "EHLO
+        Sat, 4 Apr 2020 04:42:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41475 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgDDIl4 (ORCPT
+        with ESMTP id S1726302AbgDDIl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 4 Apr 2020 04:41:56 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKeN3-0000uj-Ps; Sat, 04 Apr 2020 10:41:41 +0200
+        id 1jKeN2-0000uW-Dy; Sat, 04 Apr 2020 10:41:40 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5C1501C047B;
-        Sat,  4 Apr 2020 10:41:41 +0200 (CEST)
-Date:   Sat, 04 Apr 2020 08:41:40 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F38711C0243;
+        Sat,  4 Apr 2020 10:41:39 +0200 (CEST)
+Date:   Sat, 04 Apr 2020 08:41:39 -0000
+From:   "tip-bot2 for Andreas Gerstmayr" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf pmu-events x86: Use CPU_CLK_UNHALTED.THREAD
- in Kernel_Utilization metric
-Cc:     Jin Yao <yao.jin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+Subject: [tip: perf/urgent] perf script: Fix invalid read of directory entry
+ after closedir()
+Cc:     Andreas Gerstmayr <agerstmayr@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jin Yao <yao.jin@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200309013125.7559-1-yao.jin@linux.intel.com>
-References: <20200309013125.7559-1-yao.jin@linux.intel.com>
+In-Reply-To: <20200402124337.419456-1-agerstmayr@redhat.com>
+References: <20200402124337.419456-1-agerstmayr@redhat.com>
 MIME-Version: 1.0
-Message-ID: <158598970097.28353.12664504602421300829.tip-bot2@tip-bot2>
+Message-ID: <158598969966.28353.9977084020476897493.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,215 +62,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     8ed1faf0156e569c46f1b3d59e74c9cbd5e557ff
-Gitweb:        https://git.kernel.org/tip/8ed1faf0156e569c46f1b3d59e74c9cbd5e557ff
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Mon, 09 Mar 2020 09:31:25 +08:00
+Commit-ID:     27486a85cb65bd258a9a213b3e95bdf8c24fd781
+Gitweb:        https://git.kernel.org/tip/27486a85cb65bd258a9a213b3e95bdf8c24fd781
+Author:        Andreas Gerstmayr <agerstmayr@redhat.com>
+AuthorDate:    Thu, 02 Apr 2020 14:43:38 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 03 Apr 2020 09:37:56 -03:00
+CommitterDate: Fri, 03 Apr 2020 10:03:18 -03:00
 
-perf pmu-events x86: Use CPU_CLK_UNHALTED.THREAD in Kernel_Utilization metric
+perf script: Fix invalid read of directory entry after closedir()
 
-The kernel utilization metric does multiplexing currently and is somewhat
-unreliable. The problem is that it uses two instances of the fixed counter,
-and the kernel has to multipleplex which causes errors. So should use
-CPU_CLK_UNHALTED.THREAD instead.
+closedir(lang_dir) frees the memory of script_dirent->d_name, which
+gets accessed in the next line in a call to scnprintf().
 
-Before:
+Valgrind report:
 
-  # perf stat -M Kernel_Utilization -- sleep 1
+  Invalid read of size 1
+  ==413557==    at 0x483CBE6: strlen (vg_replace_strmem.c:461)
+  ==413557==    by 0x4DD45FD: __vfprintf_internal (vfprintf-internal.c:1688)
+  ==413557==    by 0x4DE6679: __vsnprintf_internal (vsnprintf.c:114)
+  ==413557==    by 0x53A037: vsnprintf (stdio2.h:80)
+  ==413557==    by 0x53A037: scnprintf (vsprintf.c:21)
+  ==413557==    by 0x435202: get_script_path (builtin-script.c:3223)
+  ==413557==  Address 0x52e7313 is 1,139 bytes inside a block of size 32,816 free'd
+  ==413557==    at 0x483AA0C: free (vg_replace_malloc.c:540)
+  ==413557==    by 0x4E303C0: closedir (closedir.c:50)
+  ==413557==    by 0x4351DC: get_script_path (builtin-script.c:3222)
 
-  Performance counter stats for 'sleep 1':
-
-          1,419,425      cpu_clk_unhalted.ref_tsc:k
-      <not counted>      cpu_clk_unhalted.ref_tsc	(0.00%)
-
-After:
-
-  # perf stat -M Kernel_Utilization -- sleep 1
-
-  Performance counter stats for 'sleep 1':
-
-            746,688      cpu_clk_unhalted.thread:k #      0.7 Kernel_Utilization
-          1,088,348      cpu_clk_unhalted.thread
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200309013125.7559-1-yao.jin@linux.intel.com
+Link: http://lore.kernel.org/lkml/20200402124337.419456-1-agerstmayr@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json     | 2 +-
- tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json | 2 +-
- tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json    | 2 +-
- tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 2 +-
- tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json       | 2 +-
- tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json      | 2 +-
- tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json     | 2 +-
- tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json       | 2 +-
- tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json      | 2 +-
- tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json   | 2 +-
- tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json       | 2 +-
- tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json      | 2 +-
- 12 files changed, 12 insertions(+), 12 deletions(-)
+ tools/perf/builtin-script.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-index 45a34ce..8cdc7c1 100644
---- a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-@@ -297,7 +297,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-index 961fe43..16fd8a7 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-@@ -115,7 +115,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-index 746734c..1eb0415 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-@@ -297,7 +297,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-index a728c6e..7fde0d2 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-@@ -316,7 +316,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
-index 5402cd3..f57c5f3 100644
---- a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
-@@ -267,7 +267,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-index 832f3cb..311a005 100644
---- a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-@@ -267,7 +267,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
-index d69b2a8..28e2544 100644
---- a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
-@@ -285,7 +285,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
-index 5f465fd..db23db2 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
-@@ -285,7 +285,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-index 3e909b3..dbb33e0 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-@@ -171,7 +171,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-index 50c0532..fb2d7b8 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-@@ -171,7 +171,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-index f97e831..8704efe 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-@@ -304,7 +304,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-index 35f5db1..b4f9113 100644
---- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-@@ -316,7 +316,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 186ebf8..1f57a7e 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3265,10 +3265,10 @@ static char *get_script_path(const char *script_root, const char *suffix)
+ 			__script_root = get_script_root(script_dirent, suffix);
+ 			if (__script_root && !strcmp(script_root, __script_root)) {
+ 				free(__script_root);
+-				closedir(lang_dir);
+ 				closedir(scripts_dir);
+ 				scnprintf(script_path, MAXPATHLEN, "%s/%s",
+ 					  lang_path, script_dirent->d_name);
++				closedir(lang_dir);
+ 				return strdup(script_path);
+ 			}
+ 			free(__script_root);
