@@ -2,201 +2,174 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35968C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 04:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F99C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 04:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00FF32051A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 04:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889572075E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 04:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4t01GSB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bk8YVcnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgDDETE (ORCPT
+        id S1726269AbgDDETG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 00:19:04 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34031 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgDDETD (ORCPT
+        Sat, 4 Apr 2020 00:19:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35950 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgDDETF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 00:19:03 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v23so1740778pfm.1;
-        Fri, 03 Apr 2020 21:19:01 -0700 (PDT)
+        Sat, 4 Apr 2020 00:19:05 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k18so8162197oib.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 21:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=euDpQFiZ1RAaW/+LlG7KHJEwy5w9kMD7b+KEHHzS6hw=;
-        b=P4t01GSBwBuF6wK8/X25kGN/AWhm+HsIKuNw4nDZTRgGJNNlIuy934CghpHqlckPL2
-         j36+dZox0Ut/GmRGTptevh4kVmU0HCAHd1qaWvkTVA8uWAVnA+jI4mK7HVXhey6DK8Xp
-         ludLlIOCgtWnCkYws80YipnRHctpKFGT609uoqwyZJZU20bTMfme7xYnXbuvNY0UQXEO
-         W5zgf/OFHQI1EcUVh6Voojqlhkt7ZDJDdfZlMNjcfEa0oKV3PR01OY3P0lZuj83/N6Vp
-         EeCTcyVam/Dt+hv+eMfwnPg5joi6dDKHLAVsuFI2OKnlQTQy3bL/fvXDuN21g7adY15k
-         +s1A==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=je7nuNsfXk26lRmkb6ciZHwSXJTBCDyjnYltMGy9GKw=;
+        b=Bk8YVcnE/cBJl2ujaD7DGjNm//e+RUaeMJE3R4oTnEdfER1QAwCHybt2WimOnaczqF
+         1UQOyXoQ5Ng6kLHJ49G+EIv+Hp/OFZPCGcmy+f4NwDYWKCk+BOUadj6lUbHedg82lHBR
+         aAx/e06OeA3U0eb5Hx5UBQ1gvFdpxplndrMBMnx5B85/dam1NdoOJBBTMzFG784StGTe
+         5AyOdVM3AakZGc1Z0N11r2ZZwEg+1tpABlQzQ9+PZSXdXahsklsQqJZURGFY0Zy4FH3y
+         2IVsQg9Z9Y0CW14QOuODdQpbGCdj6CcArqPWQe1KA+rV8YGGieKYlryjTjtfk8bxgvVK
+         kctQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=euDpQFiZ1RAaW/+LlG7KHJEwy5w9kMD7b+KEHHzS6hw=;
-        b=NfdbsQXRlOOVPSpJv3NFXNW5HztgikfLPtJYZb7zu6iC196OlBhH2KQ0HTg61mkQrD
-         mIEQo+IFsSnT2ZA0PHlVKa7gSUoD/aIgnIGg74etgoqahv3maDOetCWNrSLM20sk4Alv
-         Uh00CjxLmhI8/tAS8zrCUnfZLooiJcC1n/92XOhizRF0y0HK4TnqzHO4OtsaIUmUqB17
-         laazEZFvdjeZIXX4iDff1UgkOLrW8Tfp4w0UZYbSybA0rP0FwB3v09omkMjwN7D9mniK
-         dOKccnMHQtI4yGM6iHZcqXb7Fn50z2+iWA/ilCDQXB7QqosDg/pofJQAI06uP7b7u0pr
-         XONw==
-X-Gm-Message-State: AGi0PubUanVqjtk7S5WD72qZ2Bo4/Xsa7wr7GFMo5ZjHpMB6/DOBh7m4
-        owcsHWOQk8mFvJerkgyMTgHP6k5v
-X-Google-Smtp-Source: APiQypKa/6upTr/pEi2tecWTrshow8t42Rqlg3aIj8kBNZz4tDfa4MCBAsOw4Tu0Ep9vOO92TkT1jw==
-X-Received: by 2002:a62:7b4c:: with SMTP id w73mr11798690pfc.115.1585973940895;
-        Fri, 03 Apr 2020 21:19:00 -0700 (PDT)
-Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
-        by smtp.gmail.com with ESMTPSA id r7sm6918175pfg.38.2020.04.03.21.19.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 Apr 2020 21:19:00 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     kvalo@codeaurora.org, ath9k-devel@qca.qualcomm.com
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        anenbupt@gmail.com, syzkaller-bugs@googlegroups.com,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH 1/5] ath9k: Fix use-after-free Read in htc_connect_service
-Date:   Sat,  4 Apr 2020 12:18:34 +0800
-Message-Id: <20200404041838.10426-2-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200404041838.10426-1-hqjagain@gmail.com>
-References: <20200404041838.10426-1-hqjagain@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=je7nuNsfXk26lRmkb6ciZHwSXJTBCDyjnYltMGy9GKw=;
+        b=cQYpciwYrfVgJA6p0j4a215uugTCZMFSq9IMLvsW4+z3p2EZ/8VjKD8AJ6U6443Pm2
+         jJ587gHIF1anMT28GQSlS5biMRF+8ENrN6T5wqe6C/c66BOIbd8EdTKZIX0WZ1toi0gA
+         o0XcKL2qR/RJamqGdTb6gHcfEPCBerjw1l2mvtJExuMqugjkSWEJ/kFLeGNwZeRYsypw
+         XJoNNEtLiyDTLpQZrAhUaCpVtFMxJnlzXQJvN7nyuyhQ4JN8VDkkVu9KKaYOCpCEtMPu
+         O8vj7/Xy3f4gMi+hT1jy27BioYN2pblTkqyItZBVnH/oi053PfHnOP4MG9M6RHborKy4
+         T2AQ==
+X-Gm-Message-State: AGi0PuYf1IuCdTt5a0ZT3zeA6Glp7VEOsl2kPGyTAgu+xQxe3RECfjNf
+        IYohN/bvXQB+I8shpLo8DdYQDcmfQbKj/27FghTMGg==
+X-Google-Smtp-Source: APiQypLmrSfzfYdNvicoaCyhCetap9MoAIFDaZdmEHGJohfwM7HjZ6WmIj82QvstEFNnMH986goMroldCiSCq9icpyk=
+X-Received: by 2002:a05:6808:a0a:: with SMTP id n10mr5721046oij.10.1585973942770;
+ Fri, 03 Apr 2020 21:19:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <TYAPR01MB45443DF63B9EF29054F7C41FD8C60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <CALAqxLWopjCkiM=NR868DTcX-apPc1MPnONJMppm1jzCboAheg@mail.gmail.com> <CAMuHMdVtHhq9Nef1pBtBUKfRU2L-KgDffiOv28VqhrewR_j1Dw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVtHhq9Nef1pBtBUKfRU2L-KgDffiOv28VqhrewR_j1Dw@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 3 Apr 2020 21:18:50 -0700
+Message-ID: <CALAqxLX2AEFJxqXXXKPs8SU7Su2FqNjwbSt5BxwmQJqYQuST9A@mail.gmail.com>
+Subject: Re: How to fix WARN from drivers/base/dd.c in next-20200401 if CONFIG_MODULES=y?
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The skb is consumed by htc_send_epid, so it needn't release again.
+On Fri, Apr 3, 2020 at 4:47 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Apr 2, 2020 at 7:27 PM John Stultz <john.stultz@linaro.org> wrote:
+> > On Thu, Apr 2, 2020 at 3:17 AM Yoshihiro Shimoda
+> > <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > >
+> > > I found an issue after applied the following patches:
+> > > ---
+> > > 64c775f driver core: Rename deferred_probe_timeout and make it global
+> > > 0e9f8d0 driver core: Remove driver_deferred_probe_check_state_continue()
+> > > bec6c0e pinctrl: Remove use of driver_deferred_probe_check_state_continue()
+> > > e2cec7d driver core: Set deferred_probe_timeout to a longer default if CONFIG_MODULES is set
+>
+> Note that just setting deferred_probe_timeout = -1 like for the
+> CONFIG_MODULES=n case doesn't help.
 
-The case reported by syzbot:
+Yea. I can see why in that case, as we're checking
+!IS_ENABLED(CONFIG_MODULES) directly in
+driver_deferred_probe_check_state.
 
-https://lore.kernel.org/linux-usb/000000000000590f6b05a1c05d15@google.com
-usb 1-1: ath9k_htc: Firmware ath9k_htc/htc_9271-1.4.0.fw requested
-usb 1-1: ath9k_htc: Transferred FW: ath9k_htc/htc_9271-1.4.0.fw, size:
-51008
-usb 1-1: Service connection timeout for: 256
-==================================================================
-BUG: KASAN: use-after-free in atomic_read
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in refcount_read include/linux/refcount.h:134
-[inline]
-BUG: KASAN: use-after-free in skb_unref include/linux/skbuff.h:1042
-[inline]
-BUG: KASAN: use-after-free in kfree_skb+0x32/0x3d0 net/core/skbuff.c:692
-Read of size 4 at addr ffff8881d0957994 by task kworker/1:2/83
+I guess we could switch that to checking
+(driver_deferred_probe_timeout == -1) which would have the same logic
+and at least make it consistent if someone specifies -1 on the command
+line (since now it will effectively have it EPROBE_DEFER forever in
+that case). But also having a timeout=infinity could be useful if
+folks don't want the deferring to time out.  Maybe in the !modules
+case setting it to =0 would be the most clear.
 
-Call Trace:
-kfree_skb+0x32/0x3d0 net/core/skbuff.c:692
-htc_connect_service.cold+0xa9/0x109
-drivers/net/wireless/ath/ath9k/htc_hst.c:282
-ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
-ath9k_init_htc_services.constprop.0+0xb4/0x650
-drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
-ath9k_htc_probe_device+0x25a/0x1d80
-drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
-ath9k_htc_hw_init+0x31/0x60
-drivers/net/wireless/ath/ath9k/htc_hst.c:501
-ath9k_hif_usb_firmware_cb+0x26b/0x500
-drivers/net/wireless/ath/ath9k/hif_usb.c:1187
-request_firmware_work_func+0x126/0x242
-drivers/base/firmware_loader/main.c:976
-process_one_work+0x94b/0x1620 kernel/workqueue.c:2264
-worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-kthread+0x318/0x420 kernel/kthread.c:255
-ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+But that's sort of a further cleanup. I'm still more worried about the
+NFS failure below.
 
-Allocated by task 83:
-kmem_cache_alloc_node+0xdc/0x330 mm/slub.c:2814
-__alloc_skb+0xba/0x5a0 net/core/skbuff.c:198
-alloc_skb include/linux/skbuff.h:1081 [inline]
-htc_connect_service+0x2cc/0x840
-drivers/net/wireless/ath/ath9k/htc_hst.c:257
-ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
-ath9k_init_htc_services.constprop.0+0xb4/0x650
-drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
-ath9k_htc_probe_device+0x25a/0x1d80
-drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
-ath9k_htc_hw_init+0x31/0x60
-drivers/net/wireless/ath/ath9k/htc_hst.c:501
-ath9k_hif_usb_firmware_cb+0x26b/0x500
-drivers/net/wireless/ath/ath9k/hif_usb.c:1187
-request_firmware_work_func+0x126/0x242
-drivers/base/firmware_loader/main.c:976
-process_one_work+0x94b/0x1620 kernel/workqueue.c:2264
-worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-kthread+0x318/0x420 kernel/kthread.c:255
-ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Freed by task 0:
-kfree_skb+0x102/0x3d0 net/core/skbuff.c:690
-ath9k_htc_txcompletion_cb+0x1f8/0x2b0
-drivers/net/wireless/ath/ath9k/htc_hst.c:356
-hif_usb_regout_cb+0x10b/0x1b0
-drivers/net/wireless/ath/ath9k/hif_usb.c:90
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-__do_softirq+0x21e/0x950 kernel/softirq.c:292
+> > Hey,
+> >   Terribly sorry for the trouble. So as Robin mentioned I have a patch
+> > to remove the WARN messages, but I'm a bit more concerned about why
+> > after the 30 second delay, the ethernet driver loads:
+> >   [   36.218666] ravb e6800000.ethernet eth0: Base address at
+> > 0xe6800000, 2e:09:0a:02:eb:2d, IRQ 117.
+> > but NFS fails.
+> >
+> > Is it just that the 30 second delay is too long and NFS gives up?
+>
+> I added some debug code to mount_nfs_root(), which shows that the first
+> 3 tries happen before ravb is instantiated, and the last 3 tries happen
+> after.  So NFS root should work, if the network works.
+>
+> However, it seems the Ethernet PHY is never initialized, hence the link
+> never becomes ready.  Dmesg before/after:
+>
+>      ravb e6800000.ethernet eth0: Base address at 0xe6800000,
+> 2e:09:0a:02:ea:ff, IRQ 108.
+>
+> Good.
+>
+>      ...
+>     -gpio_rcar e6052000.gpio: sense irq = 11, type = 8
+>
+> This is the GPIO the PHY IRQ is connected to.
+> Note that that GPIO controller has been instantiated before.
+>
+>      ...
+>     -Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00:
+> attached PHY driver [Micrel KSZ9031 Gigabit PHY]
+> (mii_bus:phy_addr=e6800000.ethernet-ffffffff:00, irq=197)
+>      ...
+>     -ravb e6800000.ethernet eth0: Link is Up - 1Gbps/Full - flow control off
+>
+> Oops.
+>
+>     -Sending DHCP requests .., OK
+>     -IP-Config: Got DHCP answer from ...
+>      ...
+>     +VFS: Unable to mount root fs via NFS, trying floppy.
+>     +VFS: Cannot open root device "nfs" or unknown-block(2,0): error -6
+>
+> > Does booting with deferred_probe_timeout=0 work?
+>
+> It does, as now everything using optional links (DMA and IOMMU) is now
+> instantiated on first try.
 
-Reported-and-tested-by: syzbot+9505af1ae303dabdc646@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/net/wireless/ath/ath9k/htc_hst.c | 3 ---
- drivers/net/wireless/ath/ath9k/wmi.c     | 1 -
- 2 files changed, 4 deletions(-)
+Thanks so much for helping clarify this!
 
-diff --git a/drivers/net/wireless/ath/ath9k/htc_hst.c b/drivers/net/wireless/ath/ath9k/htc_hst.c
-index d091c8ebdcf0..1bf63a4efb4c 100644
---- a/drivers/net/wireless/ath/ath9k/htc_hst.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
-@@ -170,7 +170,6 @@ static int htc_config_pipe_credits(struct htc_target *target)
- 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
- 	if (!time_left) {
- 		dev_err(target->dev, "HTC credit config timeout\n");
--		kfree_skb(skb);
- 		return -ETIMEDOUT;
- 	}
- 
-@@ -206,7 +205,6 @@ static int htc_setup_complete(struct htc_target *target)
- 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
- 	if (!time_left) {
- 		dev_err(target->dev, "HTC start timeout\n");
--		kfree_skb(skb);
- 		return -ETIMEDOUT;
- 	}
- 
-@@ -279,7 +277,6 @@ int htc_connect_service(struct htc_target *target,
- 	if (!time_left) {
- 		dev_err(target->dev, "Service connection timeout for: %d\n",
- 			service_connreq->service_id);
--		kfree_skb(skb);
- 		return -ETIMEDOUT;
- 	}
- 
-diff --git a/drivers/net/wireless/ath/ath9k/wmi.c b/drivers/net/wireless/ath/ath9k/wmi.c
-index cdc146091194..d1f6710ca63b 100644
---- a/drivers/net/wireless/ath/ath9k/wmi.c
-+++ b/drivers/net/wireless/ath/ath9k/wmi.c
-@@ -336,7 +336,6 @@ int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
- 		ath_dbg(common, WMI, "Timeout waiting for WMI command: %s\n",
- 			wmi_cmd_to_name(cmd_id));
- 		mutex_unlock(&wmi->op_mutex);
--		kfree_skb(skb);
- 		return -ETIMEDOUT;
- 	}
- 
--- 
-2.17.1
+So it's at least good to hear that booting with
+deferred_probe_timeout=0 is working!  But I'm bummed the NFS (or as
+you pointed out in your later mail,  ip_auto_config) falls over
+because the network isn't immediately there.
 
+Looking a little closer at the ip_auto_config() code, I think the
+issue may be that wait_for_device_probe() is effectively returning too
+early, since the probe_defer_timeout is still active? I need to dig a
+bit more on that code, on Monday, as I don't fully understand it yet.
+
+If I can't find a way to address that, I think the best course will be
+to set the driver_deferred_probe_timeout value to default to 0
+regardless of the value of CONFIG_MODULES, so we don't cause any
+apparent regression from previous behavior. That will also sort out
+the less intuitive = -1 initialization in the non-modules case.
+
+In any case, I'll try to have a patch to send out on Monday.
+
+thanks
+-john
