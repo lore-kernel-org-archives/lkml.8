@@ -2,252 +2,221 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6493DC2BA17
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB80C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313A420659
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88DB20659
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4E8Wx4p"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z3OHSHnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgDDLwf (ORCPT
+        id S1726332AbgDDLwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 07:52:35 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50312 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgDDLwf (ORCPT
+        Sat, 4 Apr 2020 07:52:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22828 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726303AbgDDLwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 07:52:35 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t128so9876211wma.0;
-        Sat, 04 Apr 2020 04:52:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WdnAbDTj6jtP4VOMCJVjHgxV4qgpznX9InRBomX1p1U=;
-        b=J4E8Wx4pFqTYQ7rSPhEuNAo18XhTGgqc93isY+r8lRW8JlqL4VLWPVkNXDV3cHGQ9d
-         z1XXfTpQM9AF4+JDVVIUq5vfxYmmqJhuaDVy59FS0UEiJre7Tn+D4dvtzcpQQvzsAE+r
-         hvZECd7kZGJu0pSPWrIR/7Ry69C1ipi/47hKON1ZifHQ80qKgQSX7pPhYD6xxYWkknfX
-         Kq/ekhgWQIQgYy1tQgW5pGFkLWEW9VoBtIwrJPG/aLRQjcKQHRf74QabqtQtE8gQjXLN
-         hqT/KeB5AEcZLVBIDUyL9kjcg68Sz6O4XvmdfN40hR0/hH93yxlSA99yWBu0UEEQ2e4q
-         bG3w==
+        Sat, 4 Apr 2020 07:52:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586001173;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=f64FR+wQwG4Rf+1Nwf9deQLAxinVjgUZ9huOaCrREcU=;
+        b=Z3OHSHnWPWsWIyIGN/wtzxXfwRCbOzgoDMqprZpfeMmNuoRNLuu0mV4ryC6WHKcV5lU+jk
+        NaQnC7XcMk0xBeaXYyczpDqj2fgxvPSleYPHilcUqJL/8IUDe4y6w1l6QzBQzva/yi1ZcQ
+        lsjoUPEKUW7H0aOPQI8uyqsEzod3qkQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-oaFdpjrKOD6fPgR02xN1ZQ-1; Sat, 04 Apr 2020 07:52:51 -0400
+X-MC-Unique: oaFdpjrKOD6fPgR02xN1ZQ-1
+Received: by mail-wm1-f72.google.com with SMTP id a4so1365870wmb.3
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 04:52:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WdnAbDTj6jtP4VOMCJVjHgxV4qgpznX9InRBomX1p1U=;
-        b=QntM3aNZpJ3DGo+YwJo2mSz5b1bto67AFFf3HvhINUDVFmu8zyHqEY1NxzOerAZ+24
-         0QLYuUhrPEf42oQnAuSIxDllZ2mCiRtDxDGlwSmUqt7Kpzt+gqugHCNzoqpXP6IzKgr/
-         UWEaof2EFtY57UQTVFrl5xYsGg60tS4ca/P5r8cVkLenxVP5N9cQCMq44t0UkyKPcJdQ
-         o8thMPy62OnmNSd45POTQDdnCiC/XEZ90G+K9P4EdiwwM0o3/a+oMDK/8vdhihBUGZmP
-         5r9urtfibcV9GmW367RJlU+Zy0vWFsmkeo4VFq2nFTB9DKejqq1Hu4XdlWpoFsrF6Pwo
-         mJPg==
-X-Gm-Message-State: AGi0PuZfeWvJ62fq+ujHXYOhUKCgQGLv90UBacDckrud2qrEvJSgwiWU
-        qiAjRAaBbn4Aza9uOWsW2y0=
-X-Google-Smtp-Source: APiQypLgvsrDXCY+fxQ+1NshaZ3Bzn9yeGXWoAfPDWIG/qG982FurHXkaoXmgyUD9FAl58gmD4wFrQ==
-X-Received: by 2002:a1c:f21a:: with SMTP id s26mr13636483wmc.187.1586001152742;
-        Sat, 04 Apr 2020 04:52:32 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g186sm16183276wmg.36.2020.04.04.04.52.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 Apr 2020 04:52:32 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     lgirdwood@gmail.com
-Cc:     broonie@kernel.org, heiko@sntech.de, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/3] dt-bindings: sound: convert rockchip spdif bindings to yaml
-Date:   Sat,  4 Apr 2020 13:52:23 +0200
-Message-Id: <20200404115225.4314-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f64FR+wQwG4Rf+1Nwf9deQLAxinVjgUZ9huOaCrREcU=;
+        b=I0AkRZEQH3F4nniu5sZwnO6lfpi00w4LIxNTg43O5T8PgTaMxXOYUkBPc+ak936IZy
+         +clhU5X8fB6BPg2cXDwYuUe4DsLrRrDugWqXEVNtLPDrxJOTFe7+Sv6orSwPWsCWioiT
+         IliKhbT/sY8cRjgja6ZxtIbrcVm/ywNMEflgIgXF9yB2f+wywkCjAxvaSNHMKdVx6JFj
+         +Jrz4h/qoucnKM7DQVSfo5vDm2UoHpSxKR1ltyj3o0hyk10fMhh/ctt2L3wnSrimCQvO
+         Ul9oRdzaDKyujI0xpkK5gpH4CCAuy5gt28pfLs+OZXHnplGgWj58I0RHZjV3gndbVcfy
+         bb7g==
+X-Gm-Message-State: AGi0PuZD5kbnt+qi0DXnaQsfL307GyTJqa7b8e+2J+zWXXVamoawmgMB
+        PNd6wzs38SlWZY+MigQoHjeLGvpjX8vOJOxJxTDlauF1CizZsFv7s5yMpN+f2ieKWatr41pnb0q
+        GJChzylHpzma1XeXADXehyTT1
+X-Received: by 2002:a7b:cb59:: with SMTP id v25mr13986480wmj.13.1586001170108;
+        Sat, 04 Apr 2020 04:52:50 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK0AZLIM+VFnAkYrCUNC87FZEsHxgjBLzBFl6igf0XOnAGiRT//XV5W7FDIbXfi3Leu5nrGlA==
+X-Received: by 2002:a7b:cb59:: with SMTP id v25mr13986456wmj.13.1586001169826;
+        Sat, 04 Apr 2020 04:52:49 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id z16sm346059wrg.66.2020.04.04.04.52.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Apr 2020 04:52:49 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] platform/x86: intel_int0002_vgpio: Use
+ acpi_register_wakeup_handler()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "5 . 4+" <stable@vger.kernel.org>
+References: <20200403154834.303105-1-hdegoede@redhat.com>
+ <20200403154834.303105-2-hdegoede@redhat.com> <3798902.sSGyZ91sKY@kreacher>
+ <CAHp75VfThW1CrkneP5kEm_7KejQgS2dhDi0YyDrL4y3=uY9ZbA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <f054f195-d5e7-8041-4995-8a52d2bd7674@redhat.com>
+Date:   Sat, 4 Apr 2020 13:52:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VfThW1CrkneP5kEm_7KejQgS2dhDi0YyDrL4y3=uY9ZbA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files with 'spdif' nodes are manually verified.
-In order to automate this process rockchip-spdif.txt
-has to be converted to yaml.
+Hi,
 
-Also rk3188.dtsi, rk3288.dtsi use an extra fallback string,
-so change this in the documentation.
+On 4/3/20 6:23 PM, Andy Shevchenko wrote:
+> On Fri, Apr 3, 2020 at 7:08 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>>
+>> On Friday, April 3, 2020 5:48:34 PM CEST Hans de Goede wrote:
+>>> The Power Management Events (PMEs) the INT0002 driver listens for get
+>>> signalled by the Power Management Controller (PMC) using the same IRQ
+>>> as used for the ACPI SCI.
+>>>
+>>> Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+>>> waking up the system") the SCI triggering, without there being a wakeup
+>>> cause recognized by the ACPI sleep code, will no longer wakeup the system.
+>>>
+>>> This breaks PMEs / wakeups signalled to the INT0002 driver, the system
+>>> never leaves the s2idle_loop() now.
+>>>
+>>> Use acpi_register_wakeup_handler() to register a function which checks
+>>> the GPE0a_STS register for a PME and trigger a wakeup when a PME has
+>>> been signalled.
+>>>
+>>> Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+>>> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>
+>> Andy, any objections?
+> 
+> No,
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> Hans, just today when testing some other stuff noticed this
+> 
+> [   49.279001] irq 9: nobody cared (try booting with the "irqpoll" option)
+> [   49.289176] CPU: 0 PID: 168 Comm: irq/123-ATML100 Not tainted
+> 5.6.0-next-20200403+ #212
+> [   49.300915] Hardware name: Intel Corporation CHERRYVIEW D0
+> PLATFORM/Braswell CRB, BIOS BRAS.X64.B082.R00.150727 0557 07/27/2015
+> [   49.316520] Call Trace:
+> [   49.322093]  <IRQ>
+> [   49.327193]  dump_stack+0x50/0x70
+> [   49.333744]  __report_bad_irq+0x30/0xa2
+> [   49.340858]  note_interrupt.cold+0xb/0x62
+> ...
+> [   49.685087] handlers:
+> [   49.690307] [<000000000ab3cf88>] acpi_irq
+> [   49.697463] [<00000000e5d78029>] int0002_irq [intel_int0002_vgpio]
+> [   49.707063] Disabling IRQ #9
+> 
+> Is this what your series fixes?
 
-Changed:
-"rockchip,rk3188-spdif", "rockchip,rk3066-spdif"
-"rockchip,rk3288-spdif", "rockchip,rk3066-spdif"
+I don't think that my series fixes this.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes v3:
-  Add reviewed by
-  Fix irq.h already included in arm-gic.h
-  Change rk3188-cru-common.h to rk3188-cru.h
+My series fixes CHT devices no longer waking up from s2idle
+when woken by pressing a key on the USB attached keyboard dock
+of various 2-in-1s. Before we were relying on the ACPI code
+also waking up on IRQs which from the ACPI SCI handler pov where
+spurious. Rafael fixed the ACPI SCI handling during s2idle
+also waking the system on spurious events. My patch hooks
+the INT0002 driver into the ACPI SCI handling / wakeup checks
+during s2idle.
 
-Changed v2:
-  dmas and dma-names layout
----
- .../devicetree/bindings/sound/rockchip-spdif.txt   | 45 -----------
- .../devicetree/bindings/sound/rockchip-spdif.yaml  | 93 ++++++++++++++++++++++
- 2 files changed, 93 insertions(+), 45 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/rockchip-spdif.txt
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+I guess Rafael may have made some related changes elsewhere
+though where the SCI no longer returns IRQ_HANDLED in some cases?
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-deleted file mode 100644
-index ec20c1271..000000000
---- a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--* Rockchip SPDIF transceiver
--
--The S/PDIF audio block is a stereo transceiver that allows the
--processor to receive and transmit digital audio via an coaxial cable or
--a fibre cable.
--
--Required properties:
--
--- compatible: should be one of the following:
--   - "rockchip,rk3066-spdif"
--   - "rockchip,rk3188-spdif"
--   - "rockchip,rk3228-spdif"
--   - "rockchip,rk3288-spdif"
--   - "rockchip,rk3328-spdif"
--   - "rockchip,rk3366-spdif"
--   - "rockchip,rk3368-spdif"
--   - "rockchip,rk3399-spdif"
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- interrupts: should contain the SPDIF interrupt.
--- dmas: DMA specifiers for tx dma. See the DMA client binding,
--  Documentation/devicetree/bindings/dma/dma.txt
--- dma-names: should be "tx"
--- clocks: a list of phandle + clock-specifier pairs, one for each entry
--  in clock-names.
--- clock-names: should contain following:
--   - "hclk": clock for SPDIF controller
--   - "mclk" : clock for SPDIF bus
--
--Required properties on RK3288:
--  - rockchip,grf: the phandle of the syscon node for the general register
--                   file (GRF)
--
--Example for the rk3188 SPDIF controller:
--
--spdif: spdif@1011e000 {
--	compatible = "rockchip,rk3188-spdif", "rockchip,rk3066-spdif";
--	reg = <0x1011e000 0x2000>;
--	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
--	dmas = <&dmac1_s 8>;
--	dma-names = "tx";
--	clock-names = "hclk", "mclk";
--	clocks = <&cru HCLK_SPDIF>, <&cru SCLK_SPDIF>;
--	#sound-dai-cells = <0>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-new file mode 100644
-index 000000000..bfd44fd8e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-@@ -0,0 +1,93 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/rockchip-spdif.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip SPDIF transceiver
-+
-+description:
-+  The S/PDIF audio block is a stereo transceiver that allows the
-+  processor to receive and transmit digital audio via a coaxial or
-+  fibre cable.
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: rockchip,rk3066-spdif
-+      - const: rockchip,rk3228-spdif
-+      - const: rockchip,rk3328-spdif
-+      - const: rockchip,rk3366-spdif
-+      - const: rockchip,rk3368-spdif
-+      - const: rockchip,rk3399-spdif
-+      - items:
-+          - enum:
-+            - rockchip,rk3188-spdif
-+            - rockchip,rk3288-spdif
-+          - const: rockchip,rk3066-spdif
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock for SPDIF bus
-+      - description: clock for SPDIF controller
-+
-+  clock-names:
-+    items:
-+      - const: mclk
-+      - const: hclk
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    const: tx
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the syscon node for the GRF register.
-+      Required property on RK3288.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: rockchip,rk3288-spdif
-+
-+then:
-+  required:
-+    - rockchip,grf
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3188-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    spdif: spdif@1011e000 {
-+      compatible = "rockchip,rk3188-spdif", "rockchip,rk3066-spdif";
-+      reg = <0x1011e000 0x2000>;
-+      interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru SCLK_SPDIF>, <&cru HCLK_SPDIF>;
-+      clock-names = "mclk", "hclk";
-+      dmas = <&dmac1_s 8>;
-+      dma-names = "tx";
-+    };
--- 
-2.11.0
+Rafael?
+
+Regards,
+
+Hans
+
+
+
+
+> 
+>>
+>>> ---
+>>> Changes in v3:
+>>> - Keep the pm_wakeup_hard_event() call
+>>>
+>>> Changes in v2:
+>>> - Adjust for the wakeup-handler registration function being renamed to
+>>>    acpi_register_wakeup_handler()
+>>> ---
+>>>   drivers/platform/x86/intel_int0002_vgpio.c | 10 ++++++++++
+>>>   1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+>>> index f14e2c5f9da5..55f088f535e2 100644
+>>> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+>>> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+>>> @@ -127,6 +127,14 @@ static irqreturn_t int0002_irq(int irq, void *data)
+>>>        return IRQ_HANDLED;
+>>>   }
+>>>
+>>> +static bool int0002_check_wake(void *data)
+>>> +{
+>>> +     u32 gpe_sts_reg;
+>>> +
+>>> +     gpe_sts_reg = inl(GPE0A_STS_PORT);
+>>> +     return (gpe_sts_reg & GPE0A_PME_B0_STS_BIT);
+>>> +}
+>>> +
+>>>   static struct irq_chip int0002_byt_irqchip = {
+>>>        .name                   = DRV_NAME,
+>>>        .irq_ack                = int0002_irq_ack,
+>>> @@ -220,6 +228,7 @@ static int int0002_probe(struct platform_device *pdev)
+>>>                return ret;
+>>>        }
+>>>
+>>> +     acpi_register_wakeup_handler(irq, int0002_check_wake, NULL);
+>>>        device_init_wakeup(dev, true);
+>>>        return 0;
+>>>   }
+>>> @@ -227,6 +236,7 @@ static int int0002_probe(struct platform_device *pdev)
+>>>   static int int0002_remove(struct platform_device *pdev)
+>>>   {
+>>>        device_init_wakeup(&pdev->dev, false);
+>>> +     acpi_unregister_wakeup_handler(int0002_check_wake, NULL);
+>>>        return 0;
+>>>   }
+>>>
+>>>
+>>
+>>
+>>
+>>
+> 
+> 
 
