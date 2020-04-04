@@ -2,416 +2,156 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1201DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35B2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DA6206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NBCKst4i"
+	by mail.kernel.org (Postfix) with ESMTP id A6FAF2070E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586012495;
+	bh=2+OkZnOX6aKz/aqxQT7vTReb2mbwYBZHxLGB897/sIY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PKEov9vcwdp+YqPJaLgjF1YU25MHF3jnih2dS3tAHkEoLc+9duuk2edhUXP4h9qFd
+	 ggMpjpQ9jj/hg8FJiCL88RP7Chqmlu61WMZzfC8VJ3aDMb/CMbs6efjSoSsebHnmm/
+	 gxXOMu+9kkdaLFgWMbo5gQ3iCC49s3/PrygMAAOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgDDPBQ (ORCPT
+        id S1726491AbgDDPBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 11:01:16 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:35488 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgDDPBQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 11:01:16 -0400
-Received: by mail-qv1-f65.google.com with SMTP id q73so5176458qvq.2
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 08:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AsJPI0kgDCKGswo0+xFUMj9ekMPPjTHCNOTX6rTxeB8=;
-        b=NBCKst4iqQqjP8k5jOCubePQx47OOiWEBhIj5jzxri9gtnvjZpDv3O09t/bhD2SVoX
-         QUAdujBotIBRYcG7u+gkn2Ti1NQ8IY9BxX35UH+V+Uas3pbHmeP/X8c7hRRMK5Y20rr1
-         T8hIVUKnVOFNV7XaSelIE9S+Vi6Sn9aM8iovCibmdAviYHEcjUO+eB49oSxT6k+hDepf
-         Y0CxtlBW2zZPdoyVwy23EiJw75+AFsH0TeRJXrP/VCSYLQLBubwK00Zckc/YNgidDA+y
-         ivpzLAYAiO6t8KMCvpi8Lb4r3uVtZ1/f6QNzq+7SfOfWkaOJBhEK6jU3gXvHD4CN40VG
-         ZIBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AsJPI0kgDCKGswo0+xFUMj9ekMPPjTHCNOTX6rTxeB8=;
-        b=grMzdPW152Q23FsRefORFcq8bkwaSkXKeTcjr8Dp2+0Ryw7P5NvMkcrGre8qowqU/c
-         Bq7u1cFJzXnaauIls2bF5FWZIEmQUdcapJDq5XRGTkEOjfyImdGi1DMEZL70E7RVa3tZ
-         ZOPD1zU5SzSxiZrW/oc3NPbPwWA2hlSi7sR5Bx6s3xA/ThHi1ZS5sez6lqWaOc4004qD
-         JydY4m+urB9ifnHhAxWcHcj5W8A90kvvpjmSL5s2kdwOarWWMBv5eS/haQEDzPAL+A0l
-         SNvPQY4+Ruq+c+TfIonQ3huP9G/v9b3cZOB+CMIa0DzGStwo+kVTqy5xIgCzuxqws+5L
-         AYpg==
-X-Gm-Message-State: AGi0PuahuRQ5TzRt2OFrjGy9/Oe4B89GKhgEovbfoxvEpv5Lh0OXofYI
-        aYp/Tp/sQqiVUiUGrRIm4bgDYecAA0xvT65bfG+kJg==
-X-Google-Smtp-Source: APiQypI+Y25nGgXrD7Ut0TNZeTXXfBz7/2dPd5u0GfPZ64ekcp3Fqw+axoRmDDBqjRVZVq/lt5GCNJGL+Vy12LFHaMQ=
-X-Received: by 2002:a0c:a2a2:: with SMTP id g31mr42043qva.31.1586012474420;
- Sat, 04 Apr 2020 08:01:14 -0700 (PDT)
+        Sat, 4 Apr 2020 11:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbgDDPBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 11:01:34 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32F8A206C3;
+        Sat,  4 Apr 2020 15:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586012493;
+        bh=2+OkZnOX6aKz/aqxQT7vTReb2mbwYBZHxLGB897/sIY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sJ+gJGt7bKVvIMypf8n4UtxCGgpbiXT7Ut1AB6LiYBb9zVfRVGTahre/AzeO3ks2E
+         V8SETT36BCtDVnC7OT1j3hhu6R4JiBDCYGaKEythyi3C3kL4iZYiNBErxFOag65hEH
+         IwaFu6+FUy0msTf7kjbF7eRJktYMB9Fco+E25O0g=
+Date:   Sat, 4 Apr 2020 16:01:27 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>,
+        Tomas Novotny <tomas@novotny.cz>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: iio: light: vcnl4000: Add
+ near-level
+Message-ID: <20200404160127.1ef9d1ac@archlinux>
+In-Reply-To: <20200331214517.GA24128@bogus>
+References: <cover.1585134362.git.agx@sigxcpu.org>
+        <f0ad40351d7ab12f79d2c29f738443514ae0fb76.1585134362.git.agx@sigxcpu.org>
+        <20200329102526.1ee85e96@archlinux>
+        <20200331214517.GA24128@bogus>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200323233354.239365-1-kunyi@google.com> <20200323233354.239365-2-kunyi@google.com>
- <20200331154630.GA41691@roeck-us.net>
-In-Reply-To: <20200331154630.GA41691@roeck-us.net>
-From:   Kun Yi <kunyi@google.com>
-Date:   Sat, 4 Apr 2020 08:00:00 -0700
-Message-ID: <CAGMNF6WQ4FLZOiHf6cL43oMtREV+Zi8gbZbnNbgxVaHHcp-FYQ@mail.gmail.com>
-Subject: Re: [PATCH linux hwmon-next v2 1/3] hwmon: (sbtsi) Add basic support
- for SB-TSI sensors
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Joel Stanley <joel@jms.id.au>, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 8:46 AM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Mon, Mar 23, 2020 at 04:33:52PM -0700, Kun Yi wrote:
-> > SB Temperature Sensor Interface (SB-TSI) is an SMBus compatible
-> > interface that reports AMD SoC's Ttcl (normalized temperature),
-> > and resembles a typical 8-pin remote temperature sensor's I2C interface
-> > to BMC.
-> >
-> > This commit adds basic support using this interface to read CPU
-> > temperature, and read/write high/low CPU temp thresholds.
-> >
-> > To instantiate this driver on an AMD CPU with SB-TSI
-> > support, the i2c bus number would be the bus connected from the board
-> > management controller (BMC) to the CPU. The i2c address is specified in
-> > Section 6.3.1 of the spec [1]: The SB-TSI address is normally 98h for socket 0
-> > and 90h for socket 1, but it could vary based on hardware address select pins.
-> >
-> > [1]: https://www.amd.com/system/files/TechDocs/56255_OSRR.pdf
-> >
-> > Test status: tested reading temp1_input, and reading/writing
-> > temp1_max/min.
-> >
-> > Signed-off-by: Kun Yi <kunyi@google.com>
-> > Change-Id: I85ec65a57e8d73d7343aa9e250860ec85bfa79e5
-> > ---
-> >  drivers/hwmon/Kconfig      |  10 ++
-> >  drivers/hwmon/Makefile     |   1 +
-> >  drivers/hwmon/sbtsi_temp.c | 261 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 272 insertions(+)
-> >  create mode 100644 drivers/hwmon/sbtsi_temp.c
-> >
-> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> > index 05a30832c6ba..9585dcd01d1b 100644
-> > --- a/drivers/hwmon/Kconfig
-> > +++ b/drivers/hwmon/Kconfig
-> > @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
-> >         This driver can also be built as a module. If so, the module
-> >         will be called raspberrypi-hwmon.
-> >
-> > +config SENSORS_SBTSI
-> > +     tristate "Emulated SB-TSI temperature sensor"
-> > +     depends on I2C
-> > +     help
-> > +       If you say yes here you get support for emulated temperature
-> > +       sensors on AMD SoCs with SB-TSI interface connected to a BMC device.
-> > +
-> > +       This driver can also be built as a module. If so, the module will
-> > +       be called sbtsi_temp.
-> > +
-> >  config SENSORS_SHT15
-> >       tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
-> >       depends on GPIOLIB || COMPILE_TEST
-> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> > index b0b9c8e57176..cd109f003ce4 100644
-> > --- a/drivers/hwmon/Makefile
-> > +++ b/drivers/hwmon/Makefile
-> > @@ -152,6 +152,7 @@ obj-$(CONFIG_SENSORS_POWR1220)  += powr1220.o
-> >  obj-$(CONFIG_SENSORS_PWM_FAN)        += pwm-fan.o
-> >  obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)      += raspberrypi-hwmon.o
-> >  obj-$(CONFIG_SENSORS_S3C)    += s3c-hwmon.o
-> > +obj-$(CONFIG_SENSORS_SBTSI)  += sbtsi_temp.o
-> >  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
-> >  obj-$(CONFIG_SENSORS_SCH5627)        += sch5627.o
-> >  obj-$(CONFIG_SENSORS_SCH5636)        += sch5636.o
-> > diff --git a/drivers/hwmon/sbtsi_temp.c b/drivers/hwmon/sbtsi_temp.c
-> > new file mode 100644
-> > index 000000000000..cc452cb29c2c
-> > --- /dev/null
-> > +++ b/drivers/hwmon/sbtsi_temp.c
-> > @@ -0,0 +1,261 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * sbtsi_temp.c - hwmon driver for a SBI Temperature Sensor Interface (SB-TSI)
-> > + *                compliant AMD SoC temperature device.
-> > + *
-> > + * Copyright (c) 2020, Google Inc.
-> > + * Copyright (c) 2020, Kun Yi <kunyi@google.com>
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/init.h>
-> > +#include <linux/hwmon.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of.h>
-> > +
-> > +/*
-> > + * SB-TSI registers only support SMBus byte data access. "_INT" registers are
-> > + * the integer part of a temperature value or limit, and "_DEC" registers are
-> > + * corresponding decimal parts.
-> > + */
-> > +#define SBTSI_REG_TEMP_INT           0x01 /* RO */
-> > +#define SBTSI_REG_STATUS             0x02 /* RO */
-> > +#define SBTSI_REG_CONFIG             0x03 /* RO */
-> > +#define SBTSI_REG_TEMP_HIGH_INT              0x07 /* RW */
-> > +#define SBTSI_REG_TEMP_LOW_INT               0x08 /* RW */
-> > +#define SBTSI_REG_TEMP_DEC           0x10 /* RW */
-> > +#define SBTSI_REG_TEMP_HIGH_DEC              0x13 /* RW */
-> > +#define SBTSI_REG_TEMP_LOW_DEC               0x14 /* RW */
-> > +#define SBTSI_REG_REV                        0xFF /* RO */
-> > +
-> > +#define SBTSI_CONFIG_READ_ORDER_SHIFT        5
-> > +
-> > +#define SBTSI_TEMP_MIN       0
-> > +#define SBTSI_TEMP_MAX       255875
-> > +#define SBTSI_REV_MAX_VALID_ID       4
-> > +
-> > +/* Each client has this additional data */
-> > +struct sbtsi_data {
-> > +     struct i2c_client *client;
-> > +     struct mutex lock;
-> > +};
-> > +
-> > +/*
-> > + * From SB-TSI spec: CPU temperature readings and limit registers encode the
-> > + * temperature in increments of 0.125 from 0 to 255.875. The "high byte"
-> > + * register encodes the base-2 of the integer portion, and the upper 3 bits of
-> > + * the "low byte" encode in base-2 the decimal portion.
-> > + *
-> > + * e.g. INT=0x19, DEC=0x20 represents 25.125 degrees Celsius
-> > + *
-> > + * Therefore temperature in millidegree Celsius =
-> > + *   (INT + DEC / 256) * 1000 = (INT * 8 + DEC / 32) * 125
-> > + */
-> > +static inline int sbtsi_reg_to_mc(s32 integer, s32 decimal)
-> > +{
-> > +     return ((integer << 3) + (decimal >> 5)) * 125;
-> > +}
-> > +
-> > +/*
-> > + * Inversely, given temperature in millidegree Celsius
-> > + *   INT = (TEMP / 125) / 8
-> > + *   DEC = ((TEMP / 125) % 8) * 32
-> > + * Caller have to make sure temp doesn't exceed 255875, the max valid value.
-> > + */
-> > +static inline void sbtsi_mc_to_reg(s32 temp, u8 *integer, u8 *decimal)
-> > +{
-> > +     temp /= 125;
-> > +     *integer = temp >> 3;
-> > +     *decimal = (temp & 0x7) << 5;
-> > +}
-> > +
-> > +static int sbtsi_read(struct device *dev, enum hwmon_sensor_types type,
-> > +                   u32 attr, int channel, long *val)
-> > +{
-> > +     struct sbtsi_data *data = dev_get_drvdata(dev);
-> > +     s32 temp_int, temp_dec;
-> > +     int err, reg_int, reg_dec;
-> > +     u8 read_order;
-> > +
-> > +     if (type != hwmon_temp)
-> > +             return -EINVAL;
-> > +
-> > +     read_order = 0;
-> > +     switch (attr) {
-> > +     case hwmon_temp_input:
-> > +             /*
-> > +              * ReadOrder bit specifies the reading order of integer and
-> > +              * decimal part of CPU temp for atomic reads. If bit == 0,
-> > +              * reading integer part triggers latching of the decimal part,
-> > +              * so integer part should be read first. If bit == 1, read
-> > +              * order should be reversed.
-> > +              */
-> > +             err = i2c_smbus_read_byte_data(data->client, SBTSI_REG_CONFIG);
-> > +             if (err < 0)
-> > +                     return err;
-> > +
-> > +             read_order = (u8)err & BIT(SBTSI_CONFIG_READ_ORDER_SHIFT);
-> > +             reg_int = SBTSI_REG_TEMP_INT;
-> > +             reg_dec = SBTSI_REG_TEMP_DEC;
-> > +             break;
-> > +     case hwmon_temp_max:
-> > +             reg_int = SBTSI_REG_TEMP_HIGH_INT;
-> > +             reg_dec = SBTSI_REG_TEMP_HIGH_DEC;
-> > +             break;
-> > +     case hwmon_temp_min:
-> > +             reg_int = SBTSI_REG_TEMP_LOW_INT;
-> > +             reg_dec = SBTSI_REG_TEMP_LOW_DEC;
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     if (read_order == 0) {
-> > +             temp_int = i2c_smbus_read_byte_data(data->client, reg_int);
-> > +             temp_dec = i2c_smbus_read_byte_data(data->client, reg_dec);
-> > +     } else {
-> > +             temp_dec = i2c_smbus_read_byte_data(data->client, reg_dec);
-> > +             temp_int = i2c_smbus_read_byte_data(data->client, reg_int);
-> > +     }
-> > +
-> > +     if (temp_int < 0)
-> > +             return temp_int;
-> > +     if (temp_dec < 0)
-> > +             return temp_dec;
-> > +
-> > +     *val = sbtsi_reg_to_mc(temp_int, temp_dec);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int sbtsi_write(struct device *dev, enum hwmon_sensor_types type,
-> > +                    u32 attr, int channel, long val)
-> > +{
-> > +     struct sbtsi_data *data = dev_get_drvdata(dev);
-> > +     int reg_int, reg_dec, err;
-> > +     u8 temp_int, temp_dec;
-> > +
-> > +     if (type != hwmon_temp)
-> > +             return -EINVAL;
-> > +
-> > +     switch (attr) {
-> > +     case hwmon_temp_max:
-> > +             reg_int = SBTSI_REG_TEMP_HIGH_INT;
-> > +             reg_dec = SBTSI_REG_TEMP_HIGH_DEC;
-> > +             break;
-> > +     case hwmon_temp_min:
-> > +             reg_int = SBTSI_REG_TEMP_LOW_INT;
-> > +             reg_dec = SBTSI_REG_TEMP_LOW_DEC;
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     val = clamp_val(val, SBTSI_TEMP_MIN, SBTSI_TEMP_MAX);
-> > +     mutex_lock(&data->lock);
-> > +     sbtsi_mc_to_reg(val, &temp_int, &temp_dec);
-> > +     err = i2c_smbus_write_byte_data(data->client, reg_int, temp_int);
-> > +     if (err)
-> > +             goto exit;
-> > +
-> > +     err = i2c_smbus_write_byte_data(data->client, reg_dec, temp_dec);
-> > +exit:
-> > +     mutex_unlock(&data->lock);
-> > +     return err;
-> > +}
-> > +
-> > +static umode_t sbtsi_is_visible(const void *data,
-> > +                             enum hwmon_sensor_types type,
-> > +                             u32 attr, int channel)
-> > +{
-> > +     switch (type) {
-> > +     case hwmon_temp:
-> > +             switch (attr) {
-> > +             case hwmon_temp_input:
-> > +                     return 0444;
-> > +             case hwmon_temp_min:
-> > +                     return 0644;
-> > +             case hwmon_temp_max:
-> > +                     return 0644;
-> > +             }
-> > +             break;
-> > +     default:
-> > +             break;
-> > +     }
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct hwmon_channel_info *sbtsi_info[] = {
-> > +     HWMON_CHANNEL_INFO(chip,
-> > +                        HWMON_C_REGISTER_TZ),
-> > +     HWMON_CHANNEL_INFO(temp,
-> > +                        HWMON_T_INPUT | HWMON_T_MIN | HWMON_T_MAX),
-> > +     NULL
-> > +};
-> > +
-> > +static const struct hwmon_ops sbtsi_hwmon_ops = {
-> > +     .is_visible = sbtsi_is_visible,
-> > +     .read = sbtsi_read,
-> > +     .write = sbtsi_write,
-> > +};
-> > +
-> > +static const struct hwmon_chip_info sbtsi_chip_info = {
-> > +     .ops = &sbtsi_hwmon_ops,
-> > +     .info = sbtsi_info,
-> > +};
-> > +
-> > +static int sbtsi_probe(struct i2c_client *client,
-> > +                    const struct i2c_device_id *id)
-> > +{
-> > +     struct device *dev = &client->dev;
-> > +     struct device *hwmon_dev;
-> > +     struct sbtsi_data *data;
-> > +
-> > +     data = devm_kzalloc(dev, sizeof(struct sbtsi_data), GFP_KERNEL);
-> > +     if (!data)
-> > +             return -ENOMEM;
-> > +
-> > +     data->client = client;
-> > +     mutex_init(&data->lock);
-> > +
-> > +     dev_set_drvdata(dev, data);
-> > +
->
-> This is not needed.
-Thanks. Removed in v3.
->
-> Guenter
->
-> > +     hwmon_dev =
-> > +             devm_hwmon_device_register_with_info(dev, client->name, data,
-> > +                                                  &sbtsi_chip_info, NULL);
-> > +
-> > +     return PTR_ERR_OR_ZERO(hwmon_dev);
-> > +}
-> > +
-> > +static const struct i2c_device_id sbtsi_id[] = {
-> > +     {"sbtsi", 0},
-> > +     {}
-> > +};
-> > +MODULE_DEVICE_TABLE(i2c, sbtsi_id);
-> > +
-> > +static const struct of_device_id __maybe_unused sbtsi_of_match[] = {
-> > +     {
-> > +             .compatible = "amd,sbtsi",
-> > +     },
-> > +     { },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, sbtsi_of_match);
-> > +
-> > +static struct i2c_driver sbtsi_driver = {
-> > +     .class = I2C_CLASS_HWMON,
-> > +     .driver = {
-> > +             .name = "sbtsi",
-> > +             .of_match_table = of_match_ptr(sbtsi_of_match),
-> > +     },
-> > +     .probe = sbtsi_probe,
-> > +     .id_table = sbtsi_id,
-> > +};
-> > +
-> > +module_i2c_driver(sbtsi_driver);
-> > +
-> > +MODULE_AUTHOR("Kun Yi <kunyi@google.com>");
-> > +MODULE_DESCRIPTION("Hwmon driver for AMD SB-TSI emulated sensor");
-> > +MODULE_LICENSE("GPL");
+On Tue, 31 Mar 2020 15:45:17 -0600
+Rob Herring <robh@kernel.org> wrote:
 
+> On Sun, Mar 29, 2020 at 10:25:26AM +0100, Jonathan Cameron wrote:
+> > On Wed, 25 Mar 2020 12:09:06 +0100
+> > Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+> >  =20
+> > > This value indicates when userspace should consider an object
+> > > near to the sensor/device.
+> > >=20
+> > > Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org> =20
+> >=20
+> > I'm fine with this.  Note for Rob or other DT people.
+> >=20
+> > This is a new generic binding hence no vendor prefix. =20
+>=20
+> Then document in a common place.
 
+Ok.=20
 
--- 
-Regards,
-Kun
+I guess we need to create a proximity specific binding file.
+
+Documentation/devicetree/bindings/iio/proximity.yaml
+
+Guido, could you do a v4 adding such a file.  For now I think
+this is pretty much all that is proximity specific.
+
+At somepoint we should convert the subsystem wide iio-bindings.txt
+but not today!
+
+Thanks,
+
+Jonathan
+
+>=20
+> >=20
+> > I will ideally want review of both the dt patches though
+> > before applying.  As we've missed the merge window anyway
+> > there is no particular rush.
+> >=20
+> > Thanks,
+> >=20
+> > Jonathan
+> >  =20
+> > > ---
+> > >  .../devicetree/bindings/iio/light/vishay,vcnl4000.yaml    | 8 ++++++=
+++
+> > >  1 file changed, 8 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4=
+000.yaml b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
+> > > index 21ef2eb7a205..ac9e3bb6a505 100644
+> > > --- a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
+> > > +++ b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
+> > > @@ -25,6 +25,13 @@ properties:
+> > >    reg:
+> > >      maxItems: 1
+> > > =20
+> > > +  near-level: =20
+>=20
+> Perhaps proximity-near-level instead.
+
+Makes sense.
+
+>=20
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description:
+> > > +      Raw proximity values equal or above this level should be
+> > > +      considered 'near' to the device (an object is near to the
+> > > +      sensor).
+> > > +
+> > >  required:
+> > >    - compatible
+> > >    - reg
+> > > @@ -40,6 +47,7 @@ examples:
+> > >        light-sensor@51 {
+> > >                compatible =3D "vishay,vcnl4200";
+> > >                reg =3D <0x51>;
+> > > +              near-level =3D <220>;
+> > >        };
+> > >    };
+> > >  ... =20
+> >  =20
+
