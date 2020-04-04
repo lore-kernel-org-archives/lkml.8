@@ -2,156 +2,90 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35B2C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9EEC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FAF2070E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586012495;
-	bh=2+OkZnOX6aKz/aqxQT7vTReb2mbwYBZHxLGB897/sIY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PKEov9vcwdp+YqPJaLgjF1YU25MHF3jnih2dS3tAHkEoLc+9duuk2edhUXP4h9qFd
-	 ggMpjpQ9jj/hg8FJiCL88RP7Chqmlu61WMZzfC8VJ3aDMb/CMbs6efjSoSsebHnmm/
-	 gxXOMu+9kkdaLFgWMbo5gQ3iCC49s3/PrygMAAOY=
+	by mail.kernel.org (Postfix) with ESMTP id 381AE206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 15:08:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="c4fufxCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgDDPBe (ORCPT
+        id S1726417AbgDDPIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 11:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59560 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 11:08:47 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:48146 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbgDDPBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 11:01:34 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32F8A206C3;
-        Sat,  4 Apr 2020 15:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586012493;
-        bh=2+OkZnOX6aKz/aqxQT7vTReb2mbwYBZHxLGB897/sIY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sJ+gJGt7bKVvIMypf8n4UtxCGgpbiXT7Ut1AB6LiYBb9zVfRVGTahre/AzeO3ks2E
-         V8SETT36BCtDVnC7OT1j3hhu6R4JiBDCYGaKEythyi3C3kL4iZYiNBErxFOag65hEH
-         IwaFu6+FUy0msTf7kjbF7eRJktYMB9Fco+E25O0g=
-Date:   Sat, 4 Apr 2020 16:01:27 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>,
-        Tomas Novotny <tomas@novotny.cz>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: iio: light: vcnl4000: Add
- near-level
-Message-ID: <20200404160127.1ef9d1ac@archlinux>
-In-Reply-To: <20200331214517.GA24128@bogus>
-References: <cover.1585134362.git.agx@sigxcpu.org>
-        <f0ad40351d7ab12f79d2c29f738443514ae0fb76.1585134362.git.agx@sigxcpu.org>
-        <20200329102526.1ee85e96@archlinux>
-        <20200331214517.GA24128@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726130AbgDDPIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 11:08:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=vp27F8VCbpDyMug+E/DkoFiqJ0iXvSFB3dG9NhdVtJ4=; b=c4fufxCNaxCfxlabO36Hw9VuYU
+        Iy7BaNe3r6MvvPPy9rhjqGjZJpP9y0GM9FWH6DappHyVFuggm31hWHqH+YqpzuLjkqxjiY+lCXKRh
+        qEj3F2/EgI8g3uP6a3Lm8t5Z4mb59eooVu3rTup4yLq4VA8REUq6oXm6aucvLfNwtXf8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jKkP4-000xRF-B9; Sat, 04 Apr 2020 17:08:10 +0200
+Date:   Sat, 4 Apr 2020 17:08:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
+        netdev@vger.kernel.org, stable@vger.kernel.org,
+        Sean Wang <sean.wang@mediatek.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in
+ port5 setup
+Message-ID: <20200404150810.GA161768@lunn.ch>
+References: <20200403112830.505720-1-gch981213@gmail.com>
+ <20200403180911.Horde.9xqnJvjcRDe-ttshlJbG6WE@www.vdorst.com>
+ <CAJsYDVJj1JajVxeGifaOprXYstG-gC_OYwd5LrALUY_4BdtR3A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJsYDVJj1JajVxeGifaOprXYstG-gC_OYwd5LrALUY_4BdtR3A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 31 Mar 2020 15:45:17 -0600
-Rob Herring <robh@kernel.org> wrote:
+On Sat, Apr 04, 2020 at 11:19:10AM +0800, Chuanhong Guo wrote:
+> Hi!
+> 
+> On Sat, Apr 4, 2020 at 2:09 AM René van Dorst <opensource@vdorst.com> wrote:
+> >
+> > Quoting Chuanhong Guo <gch981213@gmail.com>:
+> >
+> > Hi Chuanhong,
+> >
+> > > The 2nd gmac of mediatek soc ethernet may not be connected to a PHY
+> > > and a phy-handle isn't always available.
+> > > Unfortunately, mt7530 dsa driver assumes that the 2nd gmac is always
+> > > connected to switch port 5 and setup mt7530 according to phy address
+> > > of 2nd gmac node, causing null pointer dereferencing when phy-handle
+> > > isn't defined in dts.
+> >
+> > MT7530 tries to detect if 2nd GMAC is using a phy with phy-address 0 or 4.
+> 
+> What if the 2nd GMAC connects to an external PHY on address 0 on a
+> different mdio-bus?
 
-> On Sun, Mar 29, 2020 at 10:25:26AM +0100, Jonathan Cameron wrote:
-> > On Wed, 25 Mar 2020 12:09:06 +0100
-> > Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
-> >  =20
-> > > This value indicates when userspace should consider an object
-> > > near to the sensor/device.
-> > >=20
-> > > Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org> =20
-> >=20
-> > I'm fine with this.  Note for Rob or other DT people.
-> >=20
-> > This is a new generic binding hence no vendor prefix. =20
->=20
-> Then document in a common place.
+In general, you using a phy-handle to cover such a situation. If there
+is a phy-handle, just use it.
 
-Ok.=20
-
-I guess we need to create a proximity specific binding file.
-
-Documentation/devicetree/bindings/iio/proximity.yaml
-
-Guido, could you do a v4 adding such a file.  For now I think
-this is pretty much all that is proximity specific.
-
-At somepoint we should convert the subsystem wide iio-bindings.txt
-but not today!
-
-Thanks,
-
-Jonathan
-
->=20
-> >=20
-> > I will ideally want review of both the dt patches though
-> > before applying.  As we've missed the merge window anyway
-> > there is no particular rush.
-> >=20
-> > Thanks,
-> >=20
-> > Jonathan
-> >  =20
-> > > ---
-> > >  .../devicetree/bindings/iio/light/vishay,vcnl4000.yaml    | 8 ++++++=
-++
-> > >  1 file changed, 8 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4=
-000.yaml b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
-> > > index 21ef2eb7a205..ac9e3bb6a505 100644
-> > > --- a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
-> > > +++ b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
-> > > @@ -25,6 +25,13 @@ properties:
-> > >    reg:
-> > >      maxItems: 1
-> > > =20
-> > > +  near-level: =20
->=20
-> Perhaps proximity-near-level instead.
-
-Makes sense.
-
->=20
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description:
-> > > +      Raw proximity values equal or above this level should be
-> > > +      considered 'near' to the device (an object is near to the
-> > > +      sensor).
-> > > +
-> > >  required:
-> > >    - compatible
-> > >    - reg
-> > > @@ -40,6 +47,7 @@ examples:
-> > >        light-sensor@51 {
-> > >                compatible =3D "vishay,vcnl4200";
-> > >                reg =3D <0x51>;
-> > > +              near-level =3D <220>;
-> > >        };
-> > >    };
-> > >  ... =20
-> >  =20
-
+   Andrew
