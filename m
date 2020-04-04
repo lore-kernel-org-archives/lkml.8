@@ -2,213 +2,104 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E2BC2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B65C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF6F320659
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5AE20769
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 11:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgDDLgN convert rfc822-to-8bit (ORCPT
+        id S1726121AbgDDLoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 07:36:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:56642 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgDDLgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 07:36:13 -0400
-IronPort-SDR: WUN5SoA+jJ1DLr1mWa97sXjX2oEYPgZR8owb+PMDxT1I/O6q991SzLtI/CBAgQnav309ghgM6U
- 7cs1gEXhy2Ow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2020 04:36:12 -0700
-IronPort-SDR: 2eP0Nt9qDX4mdk6GECzSVxxk+t0i2u3uat50f2AR8lOiwfkAnoRYsiMOQvmhVG4XY9TIOpcVrs
- VQTg5Oe3Crng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,343,1580803200"; 
-   d="scan'208";a="253628078"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga006.jf.intel.com with ESMTP; 04 Apr 2020 04:36:11 -0700
-Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 4 Apr 2020 04:36:11 -0700
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- FMSMSX119.amr.corp.intel.com (10.18.124.207) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 4 Apr 2020 04:36:10 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.146]) with mapi id 14.03.0439.000;
- Sat, 4 Apr 2020 19:36:07 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
- userspace
-Thread-Topic: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
- userspace
-Thread-Index: AQHWAEUdmZ6qeWVhq0GPreoHiPHgtahlqq4AgAF03/CAABRGgIABtdZg
-Date:   Sat, 4 Apr 2020 11:36:07 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A221B6E@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-4-git-send-email-yi.l.liu@intel.com>
-        <20200402120100.19e43c72@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A220662@SHSMSX104.ccr.corp.intel.com>
- <20200403112807.30a56c48@w520.home>
-In-Reply-To: <20200403112807.30a56c48@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sat, 4 Apr 2020 07:44:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59677 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgDDLoN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 07:44:13 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jKhDf-0004L2-39; Sat, 04 Apr 2020 11:44:11 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] thread changes for v5.7
+Date:   Sat,  4 Apr 2020 13:43:57 +0200
+Message-Id: <20200404114357.1359783-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Hi Linus,
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Saturday, April 4, 2020 1:28 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Cc: eric.auger@redhat.com; Tian, Kevin <kevin.tian@intel.com>;
-> jacob.jun.pan@linux.intel.com; joro@8bytes.org; Raj, Ashok <ashok.raj@intel.com>;
-> Tian, Jun J <jun.j.tian@intel.com>; Sun, Yi Y <yi.y.sun@intel.com>; jean-
-> philippe@linaro.org; peterx@redhat.com; iommu@lists.linux-foundation.org;
-> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; Wu, Hao <hao.wu@intel.com>
-> Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free support to
-> userspace
-> 
-> On Fri, 3 Apr 2020 08:17:44 +0000
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > > From: Alex Williamson < alex.williamson@redhat.com >
-> > > Sent: Friday, April 3, 2020 2:01 AM
-> > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > Subject: Re: [PATCH v1 3/8] vfio/type1: Report PASID alloc/free
-> > > support to userspace
-> > >
-> > > On Sun, 22 Mar 2020 05:32:00 -0700
-> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > >
-> > > > From: Liu Yi L <yi.l.liu@intel.com>
-> > > >
-> > > > This patch reports PASID alloc/free availability to userspace (e.g.
-> > > > QEMU) thus userspace could do a pre-check before utilizing this feature.
-> > > >
-> > > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > > ---
-> > > >  drivers/vfio/vfio_iommu_type1.c | 28 ++++++++++++++++++++++++++++
-> > > >  include/uapi/linux/vfio.h       |  8 ++++++++
-> > > >  2 files changed, 36 insertions(+)
-> > > >
-> > > > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > > > b/drivers/vfio/vfio_iommu_type1.c index e40afc0..ddd1ffe 100644
-> > > > --- a/drivers/vfio/vfio_iommu_type1.c
-> > > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > > @@ -2234,6 +2234,30 @@ static int
-> > > > vfio_iommu_type1_pasid_free(struct
-> > > vfio_iommu *iommu,
-> > > >  	return ret;
-> > > >  }
-> > > >
-> > > > +static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
-> > > > +					 struct vfio_info_cap *caps) {
-> > > > +	struct vfio_info_cap_header *header;
-> > > > +	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
-> > > > +
-> > > > +	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
-> > > > +				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-> > > > +	if (IS_ERR(header))
-> > > > +		return PTR_ERR(header);
-> > > > +
-> > > > +	nesting_cap = container_of(header,
-> > > > +				struct vfio_iommu_type1_info_cap_nesting,
-> > > > +				header);
-> > > > +
-> > > > +	nesting_cap->nesting_capabilities = 0;
-> > > > +	if (iommu->nesting) {
-> > > > +		/* nesting iommu type supports PASID requests (alloc/free) */
-> > > > +		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > > >  				   unsigned int cmd, unsigned long arg)  { @@ -
-> > > 2283,6 +2307,10 @@
-> > > > static long vfio_iommu_type1_ioctl(void *iommu_data,
-> > > >  		if (ret)
-> > > >  			return ret;
-> > > >
-> > > > +		ret = vfio_iommu_info_add_nesting_cap(iommu, &caps);
-> > > > +		if (ret)
-> > > > +			return ret;
-> > > > +
-> > > >  		if (caps.size) {
-> > > >  			info.flags |= VFIO_IOMMU_INFO_CAPS;
-> > > >
-> > > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > > index 298ac80..8837219 100644
-> > > > --- a/include/uapi/linux/vfio.h
-> > > > +++ b/include/uapi/linux/vfio.h
-> > > > @@ -748,6 +748,14 @@ struct vfio_iommu_type1_info_cap_iova_range {
-> > > >  	struct	vfio_iova_range iova_ranges[];
-> > > >  };
-> > > >
-> > > > +#define VFIO_IOMMU_TYPE1_INFO_CAP_NESTING  2
-> > > > +
-> > > > +struct vfio_iommu_type1_info_cap_nesting {
-> > > > +	struct	vfio_info_cap_header header;
-> > > > +#define VFIO_IOMMU_PASID_REQS	(1 << 0)
-> > > > +	__u32	nesting_capabilities;
-> > > > +};
-> > > > +
-> > > >  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
-> > > >
-> > > >  /**
-> > >
-> > > I think this answers my PROBE question on patch 1/.
-> > yep.
-> > > Should the quota/usage be exposed to the user here?  Thanks,
-> >
-> > Do you mean report the quota available for this user in this cap info as well?
-> 
-> Yes.  Would it be useful?
+Here is a simple change for this cycle. The rest being routed through another
+tree but see below for that.
 
-I think so.
+/* Summary */
+The main changes for this cycle is the extension for clone3() to support
+spawning processes directly into cgroups via CLONE_INTO_CGROUP now in mainline
+as ef2c41cf38a7 ("clone3: allow spawning processes into cgroups"). Since I had
+to touch kernel/cgroup/ quite a bit I had Tejun route it through his tree this
+time to make it easier for him to handle other changes and I see that you've
+pulled already. So here are just unexciting leftovers.
 
-> > For usage, do you mean the alloc and free or others?
-> 
-> I mean how many of the quota are currently in allocated, or alternatively, how
-> many remain.  Thanks,
+As promised in addcb1d0ee31 here's a regression test for the ENOMEM regression
+we fixed in b26ebfe12f34 ("pid: Fix error return value in some cases")
+verifying that we report ENOMEM when trying to create a new process in a pid
+namespace whose init process/subreaper has already exited.
 
-ok, got it, maybe report the remain. thanks.
+The following changes since commit 2c523b344dfa65a3738e7039832044aa133c75fb:
 
-Regards,
-Yi Liu
+  Linux 5.6-rc5 (2020-03-08 17:44:44 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/threads-v5.7
+
+for you to fetch changes up to 6952a4f646446fde9e190b62c5e45f84c6cf91aa:
+
+  selftests: add pid namespace ENOMEM regression test (2020-03-25 13:50:34 +0100)
+
+/* Testing */
+All patches are based on v5.6-rc6 and have been sitting in linux-next for a
+while. (Full disclosure, I had these patches sitting in my tree locally for
+quite longer but missed to merge them into my for-next branch so they have
+only been in linux-next for about 10 days but without any issues.)
+
+/* Conflicts */
+At the time of creating this PR no merge conflicts were observed in
+linux-next.
+
+Please consider pulling these changes from the signed threads-v5.7 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+threads-v5.7
+
+----------------------------------------------------------------
+Christian Brauner (1):
+      selftests: add pid namespace ENOMEM regression test
+
+ MAINTAINERS                                        |  1 +
+ tools/testing/selftests/Makefile                   |  1 +
+ tools/testing/selftests/pid_namespace/.gitignore   |  1 +
+ tools/testing/selftests/pid_namespace/Makefile     |  8 ++++
+ tools/testing/selftests/pid_namespace/config       |  2 +
+ .../selftests/pid_namespace/regression_enomem.c    | 45 ++++++++++++++++++++++
+ tools/testing/selftests/pidfd/pidfd.h              |  2 +
+ 7 files changed, 60 insertions(+)
+ create mode 100644 tools/testing/selftests/pid_namespace/.gitignore
+ create mode 100644 tools/testing/selftests/pid_namespace/Makefile
+ create mode 100644 tools/testing/selftests/pid_namespace/config
+ create mode 100644 tools/testing/selftests/pid_namespace/regression_enomem.c
