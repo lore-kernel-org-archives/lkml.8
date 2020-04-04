@@ -2,158 +2,156 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8B5C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 00:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC09DC43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 00:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527752072B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 00:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750E520737
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 00:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lRTq8VWX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VFe4WHje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDDAkZ (ORCPT
+        id S1726364AbgDDA61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 20:40:25 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41632 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbgDDAkY (ORCPT
+        Fri, 3 Apr 2020 20:58:27 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34104 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgDDA60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 20:40:24 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a24so4441034pfc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 Apr 2020 17:40:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tAgxV2Mx2tEoH3/n8njjHOTY7Xv1RNdnq1oeOLGcdWw=;
-        b=lRTq8VWX1bpLn4dLrWlGfqfwsgkiJJ7ykirmVp5TVssF4qc6+DbiJ4a0Sd4fZ9pcoX
-         qF3DN4b18kfMXatIWcFcwrbOjbLKAUsm0x7tU3Xz0zUR2C5cE11o2YWuESVWZDMdFlF8
-         KCj5vo05CCASThwVF8t6eqIi/GOtgbDKWSpCHxAkUBPhMmI8I+Ricb8RyCjRFQife44G
-         zay4Id6u8dAJSvgEBOSV/T6jIS2RIzOwwMoHfR/KMaJYHhc44Jq1MpX+klYxs2s2PcL+
-         ePgI2CSbQ1sOfyQ8FW0wvXm7wUEbE9cSJWjp8114kDQYg82zpdDgvFmcpXLmJdFTwTpM
-         9m1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tAgxV2Mx2tEoH3/n8njjHOTY7Xv1RNdnq1oeOLGcdWw=;
-        b=p7F5h7EEnJzDs1w5d0AdmETX7TdJOG3KHDsbs0n6zYUTPj3CNnwm47brbVoQK7+h4C
-         YSkxExv0uNDM7pkGVO+lLcBi7ec22gHXrhUQYEhpSdaRcU7E6q2hLU1166UdAq5SsrhF
-         iMAFcACuMe5n6eQMSIQSSXpU8OWPQW3XuovblxGjbWj7fomCmXi0HOqIOUTh8F0TWryi
-         7nMRScQGmMZIsi9OMZ8YNiM/ReBib1U9pw6uDRYkpAzum9VNB1T7E+09Fu3fPOiVdln3
-         e989XlBkTCu6F1d8HRcg+sS8Z56i8tbxLfdTSyydpdwn+w97B5dIhZ4DUGc8rvI54/TX
-         3aDw==
-X-Gm-Message-State: AGi0PuYtlt6VDQOKl3Ti6yMK8VZg5uVCMm+n685vhGwgJEVYaVsHq/L+
-        ZLLfl5ny3Rkz2lIe5TAxCHcWvw==
-X-Google-Smtp-Source: APiQypJ9HAHD47+2nEL+0hUg9udMsodf9rUFIwQ2IhnsWsbdRe8BpTZ99dRH/DaE8VuvJh70PntS9w==
-X-Received: by 2002:a63:8c5b:: with SMTP id q27mr9497123pgn.301.1585960823589;
-        Fri, 03 Apr 2020 17:40:23 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id c190sm6570392pfa.66.2020.04.03.17.40.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 17:40:22 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 17:40:20 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] elfnote: mark all .note sections SHF_ALLOC
-Message-ID: <20200404004020.jilng63qqyccbgke@google.com>
-References: <20200325231250.99205-1-ndesaulniers@google.com>
- <CAKwvOdm8tQaa6BW7EQAz4TxFZETnJCS3z9isY4HvcU7UYqWZUA@mail.gmail.com>
- <20200403222458.GA49554@ubuntu-m2-xlarge-x86>
+        Fri, 3 Apr 2020 20:58:26 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0340vxCh054966;
+        Sat, 4 Apr 2020 00:57:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=AUOoCEr8maoYNjNVwB7f4TeT0WpxutYk9SOwhLZTUqQ=;
+ b=VFe4WHje6JxT2AWuxtdMoHuSTIq2muQXZA+W0Qz/gcUMxF22bd0/MMNH15Mmk2CvBHQ2
+ KyQJCOLw1xhX5eS2g3h2zip5Ni5zupQ0nKUhE0Fz2sLQ5XfkkErX/lY5GzZE1WGXcrp8
+ 0V9XD/+aW3NktIRKfWP9360oDvmfgTKGbVOC2fm3LRWGokh3GTcxSJDl7IdNWKHGKbAc
+ 9lL+acUMCyulXNjm1Auj66BIarvq6iG51cqioAti3mGkqimcIkQMIpyqtF2T+KR0XvOC
+ zAKBUauYCk5JpdC9577eflFQ54IpBAQHrI3X3s7cE8aHVUWMiuWd/SAd1wtZ+y5BYytd eg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 303yunpae6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 04 Apr 2020 00:57:59 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0340r8Bx028325;
+        Sat, 4 Apr 2020 00:55:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 306fbr3jnq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 04 Apr 2020 00:55:58 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0340tsk8018532;
+        Sat, 4 Apr 2020 00:55:55 GMT
+Received: from localhost.localdomain (/10.159.159.117)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 Apr 2020 17:55:54 -0700
+Subject: Re: [PATCH v6 14/14] KVM: x86: Add kexec support for SEV Live
+ Migration.
+To:     Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rientjes@google.com, srutherford@google.com, luto@kernel.org,
+        brijesh.singh@amd.com
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <0caf809845d2fdb1a1ec17955826df9777f502fb.1585548051.git.ashish.kalra@amd.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <c5977ca2-2fbd-8c71-54dc-b978da05a16e@oracle.com>
+Date:   Fri, 3 Apr 2020 17:55:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200403222458.GA49554@ubuntu-m2-xlarge-x86>
+In-Reply-To: <0caf809845d2fdb1a1ec17955826df9777f502fb.1585548051.git.ashish.kalra@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 mlxlogscore=999 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004040006
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9580 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004040007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-03, Nathan Chancellor wrote:
->On Fri, Apr 03, 2020 at 03:13:34PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
->> dropping Jeremy; I got bounceback from the email address. Ping for review?
->>
->> On Wed, Mar 25, 2020 at 4:13 PM Nick Desaulniers
->> <ndesaulniers@google.com> wrote:
->> >
->> > ELFNOTE_START allows callers to specify flags for .pushsection assembler
->> > directives.  All callsites but ELF_NOTE use "a" for SHF_ALLOC. For
->> > vdso's that explicitly use ELF_NOTE_START and BUILD_SALT, the same
->> > section is specified twice after preprocessing, once with "a" flag, once
->> > without. Example:
->> >
->> > .pushsection .note.Linux, "a", @note ;
->> > .pushsection .note.Linux, "", @note ;
->> >
->> > While GNU as allows this ordering, it warns for the opposite ordering,
->> > making these directives position dependent. We'd prefer not to precisely
->> > match this behavior in Clang's integrated assembler.  Instead, the non
->> > __ASSEMBLY__ definition of ELF_NOTE uses
->> > __attribute__((section(".note.Linux"))) which is created with SHF_ALLOC,
->> > so let's make the __ASSEMBLY__ definition of ELF_NOTE consistent with C
->> > and just always use "a" flag.
->> >
->> > This allows Clang to assemble a working mainline (5.6) kernel via:
->> > $ make CC=clang AS=clang
->> >
->> > Link: https://github.com/ClangBuiltLinux/linux/issues/913
->> > Cc: Jeremy Fitzhardinge <jeremy@xensource.com>
->> > Debugged-by: Ilie Halip <ilie.halip@gmail.com>
->> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+
+On 3/29/20 11:23 PM, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
 >
->Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Reset the host's page encryption bitmap related to kernel
+> specific page encryption status settings before we load a
+> new kernel by kexec. We cannot reset the complete
+> page encryption bitmap here as we need to retain the
+> UEFI/OVMF firmware specific settings.
 
-I asked on binutils@sourceware.org whether GNU as is willing to change.
-https://sourceware.org/pipermail/binutils/2020-March/109997.html
-I'll also ping that thread.
 
+Can the commit message mention why host page encryption needs to be 
+reset ? Since the theme of these patches is guest migration in-SEV 
+context, it might be useful to mention why the host context comes in here.
 
-Reviewed-by: Fangrui Song <maskray@google.com>
-
->> > ---
->> > Ilie has further treewide cleanups:
->> > https://github.com/ihalip/linux/commits/elfnote
->> > This patch is the simplest to move us forwards.
->> >
->> >  include/linux/elfnote.h | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/include/linux/elfnote.h b/include/linux/elfnote.h
->> > index 594d4e78654f..69b136e4dd2b 100644
->> > --- a/include/linux/elfnote.h
->> > +++ b/include/linux/elfnote.h
->> > @@ -54,7 +54,7 @@
->> >  .popsection                            ;
->> >
->> >  #define ELFNOTE(name, type, desc)              \
->> > -       ELFNOTE_START(name, type, "")           \
->> > +       ELFNOTE_START(name, type, "a")          \
->> >                 desc                    ;       \
->> >         ELFNOTE_END
->> >
->> > --
->> > 2.26.0.rc2.310.g2932bb562d-goog
->> >
->>
->>
->> --
->> Thanks,
->> ~Nick Desaulniers
 >
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>   arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
+>   1 file changed, 28 insertions(+)
 >
->-- 
->You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
->To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
->To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200403222458.GA49554%40ubuntu-m2-xlarge-x86.
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 8fcee0b45231..ba6cce3c84af 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -34,6 +34,7 @@
+>   #include <asm/hypervisor.h>
+>   #include <asm/tlb.h>
+>   #include <asm/cpuidle_haltpoll.h>
+> +#include <asm/e820/api.h>
+>   
+>   static int kvmapf = 1;
+>   
+> @@ -357,6 +358,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
+>   	 */
+>   	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+>   		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
+> +	/*
+> +	 * Reset the host's page encryption bitmap related to kernel
+> +	 * specific page encryption status settings before we load a
+> +	 * new kernel by kexec. NOTE: We cannot reset the complete
+> +	 * page encryption bitmap here as we need to retain the
+> +	 * UEFI/OVMF firmware specific settings.
+> +	 */
+> +	if (kvm_para_has_feature(KVM_FEATURE_SEV_LIVE_MIGRATION) &&
+> +		(smp_processor_id() == 0)) {
+> +		unsigned long nr_pages;
+> +		int i;
+> +
+> +		for (i = 0; i < e820_table->nr_entries; i++) {
+> +			struct e820_entry *entry = &e820_table->entries[i];
+> +			unsigned long start_pfn, end_pfn;
+> +
+> +			if (entry->type != E820_TYPE_RAM)
+> +				continue;
+> +
+> +			start_pfn = entry->addr >> PAGE_SHIFT;
+> +			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
+> +			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
+> +
+> +			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
+> +				entry->addr, nr_pages, 1);
+> +		}
+> +	}
+>   	kvm_pv_disable_apf();
+>   	kvm_disable_steal_time();
+>   }
